@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Standard Bank Concession Management Tool </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../content/css/bootstrap.css">
+    <link rel="stylesheet" href="../content/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="../content/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../content/css/style.css">
+</head>
+
+<body>
+    <div class="col-md-12 header">
+        <div class="logo"></div>
+    </div>
+    <div class="col-md-12 nav-pills-container">
+        <ul class="nav nav-pills">
+            <li><a href="pending-inbox.html">Inbox</a></li>
+            <li><a href="approved-concessions.html">Approved Concessions</a></li>
+            <li><a href="conditions.html">Conditions</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+            <li class="logout-li"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+        </ul>
+    </div>
+    <!-- banner-->
+    <div class=" row lending-view-banner">
+        <div class="col-md-4 title"><i class="fa fa-chevron-circle-left" aria-hidden="true"></i> Back</div>
+        <div class="col-md-4 title"><i class="fa fa-handshake-o" aria-hidden="true"></i>Lending</div>
+    </div>
+    <div class="col-md-12">
+        <div class="row lending-banner">
+            <div class="col-md-4">
+                <p class="subHeading">EDCON</p>
+                <p class="date">1989</p>
+            </div>
+            <div class="col-md-1">
+                <p class="subHeading">Total Exposure</p>
+                <p class="score">0.00</p>
+            </div>
+            <div class="col-md-2">
+                <p class="subHeading"> Weighted Avarage MAP</p>
+                <p class="score">0.00</p>
+            </div>
+            <div class="col-md-2">
+                <p class="subHeading"> Weighted CRS / MRS</p>
+                <p class="score">0.00</p>
+            </div>
+            <div class="col-md-2">
+                <i class="fa fa-compress" aria-hidden="true"></i>
+            </div>
+        </div>
+    </div>
+    <!-- headings-->
+    <div class="lending-headings col-md-12">
+        <div class="col-md-6">
+            <h2 class="resultsHeading">Products</h2>
+        </div>
+        <div class="col-md-5">
+            <h2 class="resultsHeading">Concessions</h2>
+        </div>
+        <div class="col-md-1">
+            <h2> <button type="button" class="btn btn-primary concessionBtn">Add Concession</button></h2>
+        </div>
+    </div>
+    <!-- lending concessions and products-->
+    <div class="col-md-12">
+        <div class="col-md-6">
+            <div class="product-section">
+                <p class="product-name"> Real People</p>
+                <p>
+                    <div class="product-account">Account No: 12345</div>
+                    <div class="product-code">Product: VAF</div>
+                </p>
+            </div>
+            <div class="product-table-container">
+                <table class="table table-bordered table-hover header-fixed table-striped ">
+                    <thead>
+                        <tr>
+                            <th>Limit</th>
+                            <th>Avarage Balance</th>
+                            <th>Loaded MAP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td> 5000000</td>
+                            <td> 5000000</td>
+                            <td> 1</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="input-group add-on">
+                <input class="form-control" placeholder="Concession ID" name="srch-term" id="srch-term" type="text">
+                <div class="input-group-btn">
+                    <button class="btn btn-default-search" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                </div>
+            </div>
+            <div class="consessionID-section"> ED0023</div>
+            <div class="table-container">
+                <table class="table table-bordered table-hover header-fixed table-striped">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Limit</th>
+                            <th>Avarage Balance</th>
+                            <th>Term</th>
+                            <th>MAP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <p class="customerInfo">Real People</p>
+                                <p class="accInfo">Acc No :1123</p>
+                            </td>
+                            <td>5,0000.0</td>
+                            <td>23.33535</td>
+                            <td>60</td>
+                            <td>
+                                <p class="mapInfo">Loaded:1</p>
+                                <p class="mapInfo">Approved:1</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p class="customerInfo">Mtech Electronic</p>
+                                <p class="accInfo">Acc No :1123</p>
+                            </td>
+                            <td>5,0000.0</td>
+                            <td>120.33535</td>
+                            <td>120</td>
+                            <td>
+                                <p class="mapInfo">Loaded:1</p>
+                                <p class="mapInfo">Approved:1</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+
+</html>

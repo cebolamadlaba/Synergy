@@ -1,0 +1,16 @@
+.search-container{
+     padding-top: 20px;  
+     margin-left:10px;
+    .form-horizontal
+    {  
+        background-color: $white;
+        padding-top: 20px;
+        color:gray;
+        
+    }
+}
+
+.searchEmptyState {
+    text-align: center;
+    padding:100px;
+}

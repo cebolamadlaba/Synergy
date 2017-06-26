@@ -1,0 +1,32 @@
+
+//overriding default bootstrap buttons      
+     .pagination{
+       float: right;
+       margin:0;
+      }
+     .btn-no{
+            background-color:#c03343;
+            box-shadow: 1px 2px 1px #c03343; 
+            color: white;
+     }
+     .btn-yes{
+            background-color:#739c3c;
+            box-shadow: 1px 2px 1px #739c3c; 
+            color: white;
+     }
+     .btn-print{
+           background-color:$navBlue; 
+           color:white;
+          box-shadow: 1px 2px 1px $navBlue; 
+          &:hover{
+             color: white;
+          }
+     }
+     .concessionBtn{
+         background: $navBlue;
+         box-shadow: 1px 2px 1px $navBlue; 
+          &:hover{
+             color: white;
+              background: $navBlue;
+          }
+     }

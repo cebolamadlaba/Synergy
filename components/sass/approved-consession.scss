@@ -1,0 +1,18 @@
+
+    .panel-concession {
+      padding: 0px; 
+    }
+    .panel-heading{
+        padding: 0px;
+        font-size:1em;
+        .concession-name{
+            color: $tableHeaderColour;
+            font-size:1.1em;
+        }
+       
+    }
+.single-print{
+    float:right;
+    padding-right:10px;
+    padding-top:5px;
+}

@@ -1,0 +1,21 @@
+.header{
+    background:$navBlue;
+    .logo {
+        background-image: url("../img/standard-bank-logo-mark.svg");
+        height: 50px;
+        width: 240px;
+        background-repeat: no-repeat;
+        margin: 10px 10px 10px 0;
+    }
+}
+.search-and-results-container{
+    padding-top:20px;
+}
+
+.centerText {
+    text-align: center;
+}
+
+body{
+    background-color: #ededed;
+}

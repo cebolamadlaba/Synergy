@@ -1,0 +1,26 @@
+{
+  "name": "standardbank",
+  "version": "1.0.0",
+  "description": "Standard Bank CMS  Concession Management ",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kohde.io",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-connect": "^4.1.0",
+    "gulp-cssnano": "^2.1.2",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.3.2",
+    "gulp-concat": "2.5.2",
+    "gulp-uglify": "1.2.0"
+  },
+  "dependencies": {
+    "gulp-install": "^0.6.0",
+    "normalize.scss": "^0.1.0",
+    "gulp-angular-templatecache": "2.0.0"
+  },
+  "keywords": []
+}

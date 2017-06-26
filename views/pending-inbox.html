@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Standard Bank Concession Management Tool </title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../content/css/bootstrap.css">
+  <link rel="stylesheet" href="../content/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="../content/css/font-awesome.min.css">
+   <link rel="stylesheet" href="../content/css/style.css">
+</head>
+<body>
+    <div class="col-md-12 header" >
+         <div class="logo"></div>    
+    </div>
+    <div class="col-md-12 nav-pills-container">
+        <ul class="nav nav-pills">
+             <li ><a href="pending-inbox.html">Inbox</a></li>
+            <li><a href="approved-concessions.html">Approved Concessions</a></li>   
+            <li><a href="conditions.html">Conditions</a></li>   
+            <li><a href="pricing.html">Pricing</a></li>                 
+            <li class="logout-li"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li> 
+        </ul>      
+   </div> 
+    <!-- Total widgets -->
+    <div class="col-md-12">
+            <div class="totalsWidget outer " >
+                <div class="activeWidget">
+                    <div class="cornered"><p>Pending</p></div>
+                    <div class="main"><p>16</p></div>
+                </div>
+            </div>
+            <div class="totalsWidget outer" style="margin-left: 20px;" onclick="location.href='due-expiry.html'">
+                <div class="cornered"><p>Due For Expiry</p></div>
+                <div class="main"><p>2</p></div>
+            </div>  
+            <div class="totalsWidget outer" style="margin-left: 20px;">
+                <div class="cornered"><p>Expired</p></div>
+                <div class="main"><p>10</p></div>
+            </div>
+            <div class="totalsWidget outer" style="margin-left: 20px;">
+                <div class="cornered"><p>Declined</p></div>
+                <div class="main"><p>4</p></div>
+            </div>     
+    </div>
+    <div class="col-md-12 search-and-results-container">
+          <!-- Search bar -->
+         <div class="input-group add-on">
+             <input class="form-control" placeholder="Search Concession ID or Risk Group Number" name="srch-term" id="srch-term" type="text">
+               <div class="input-group-btn">
+                    <button class="btn btn-default-search" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+             </div>
+          </div>
+      <!-- Results table -->
+     <div class="table-container">             
+            <table class="table table-bordered table-hover header-fixed table-striped">
+                <thead>
+                <tr>
+                     <th>Risk Group</th>
+                     <th>Customer Name</th>
+                     <th>Type</th>
+                     <th>Date Opened</th>
+                     <th>Concession ID</th>
+                     <th>Segment</th>
+                     <th>Sent For Approval</th>                      
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <p class="customerName">APPLE</p>
+                        <p class="date">1989</p>
+                    </td>
+                    <td>Mac</td>
+                    <td>Transactional</td>
+                    <td>
+                        <p class="date">2017/05/02 </p>
+                    </td>
+                    <td>L00000</td>
+                    <td>Expert</td>
+                    <td> 
+                        <p class="date">2017/05/02 </p>
+                    </td>
+                   
+                </tr>
+                <tr>
+                    <td>
+                        <p class="customerName">EDCON</p>
+                        <p class="date">1989</p>
+                    </td>
+                    <td>CNA</td>
+                    <td>Transactional</td>
+                    <td>
+                        <p class="date">2017/05/02 </p>
+                    </td>
+                    <td>L11111</td>
+                    <td>Expert</td>
+                    <td> 
+                        <p class="date">2017/05/02 </p>
+                    </td>
+                   
+                </tr>
+                 <tr>
+                    <td>
+                        <p class="customerName">VIRGIN</p>
+                        <p class="date">1989</p>
+                    </td>
+                    <td>Virgin Money</td>
+                    <td>BOL</td>
+                    <td>
+                        <p class="date">2017/05/02 </p>
+                    </td>
+                    <td>B309864</td>
+                    <td>Franchising</td>
+                    <td> 
+                        <p class="date">2017/05/02 </p>
+                    </td>
+                   
+                </tr>
+              </tbody>
+        </table>
+     </div>
+        <!-- pagination-->
+        <ul class="pagination">
+            <li><a href="#">First</a></li>
+            <li><a href="#">Prev</a></li>
+            <li class="active"><a href="#">1</a></li>
+            <li ><a href="#">2</a></li>
+            <li><a href="#">Next</a></li>
+            <li><a href="#">Last</a></li>
+        </ul>
+  </div>
+
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Standard Bank Concession Management Tool </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../content/css/bootstrap.css">
+    <link rel="stylesheet" href="../content/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="../content/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../content/css/style.css">
+</head>
+
+<body>
+    <div class="col-md-12 header">
+        <div class="logo"></div>
+    </div>
+    <div class="col-md-12 nav-pills-container">
+        <ul class="nav nav-pills">
+            <li><a href="pending-inbox.html">Inbox</a></li>
+            <li><a href="approved-concessions.html">Approved Concessions</a></li>
+            <li><a href="conditions.html">Conditions</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+            <li class="logout-li"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+        </ul>
+    </div>
+    <!-- Total widgets -->
+    <div class="col-md-12">
+        <div class="totalsWidget outer ">
+            <div class="activeWidget">
+                <div class="cornered">
+                    <p>Standard</p>
+                </div>
+                <div class="main">
+                    <p>27</p>
+                </div>
+            </div>
+        </div>
+        <div class="totalsWidget outer" style="margin-left: 20px;">
+            <div class="cornered">
+                <p>Ongoing</p>
+            </div>
+            <div class="main">
+                <p>13</p>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-12 search-and-results-container">
+        <!-- Search bar -->
+        <div class="input-group add-on">
+            <input class="form-control" placeholder="Search Concession ID or Risk Group Number" name="srch-term" id="srch-term" type="text">
+            <div class="input-group-btn">
+                <button class="btn btn-default-search" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+            </div>
+        </div>
+        <!-- filter-->
+        <div class="form-group  filter-group">
+            <label for="sort" class="col-sm-1 control-label"> Filter </label>
+            <div class="col-sm-2">
+                <select class="form-control">
+                    <option >3 Months</option>
+                    <option >6 Months</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Results table -->
+        <div class="table-container">
+            <table class="table table-bordered table-hover header-fixed table-striped">
+                <thead>
+                    <tr>
+                        <th>Risk Group Number</th>
+                        <th>Customer</th>
+                        <th>Concession ID</th>
+                        <th>Condition Type</th>
+                        <th>Expected Turnover</th>
+                        <th>Interest</th>
+                        <th>Volume</th>
+                        <th>Value</th>
+                        <th>Condition Met</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="status-red">
+                        <td>
+                            <p class="customerName">APPLE</p>
+                            <p>1989</p>
+                        </td>
+                        <td>
+                            <p>Mac</p>
+                            <p>Cashman</p>
+                        </td>
+                        <td> L00000</td>
+                        <td>
+                            Full Transaction
+                        </td>
+                        <td>100 000000</td>
+                        <td>0.5</td>
+                        <td>
+                            5000 00
+                        </td>
+                        <td>500 0000</td>
+                        <td>
+                            <button type="button" class="btn btn-no">No</button> <button type="button" class="btn btn-yes">Yes</button>
+                        </td>
+                    </tr>
+                    <tr class="status-green">
+                        <td>
+                            <p class="customerName">EDCON</p>
+                            <p>1989</p>
+                        </td>
+                        <td>
+                            <p>CNA</p>
+                            <p>overdraft</p>
+                        </td>
+                        <td> L00000</td>
+                        <td>Cash Turnover</td>
+                        <td>100 000000</td>
+                        <td>0.5</td>
+                        <td> 5000 00</td>
+                        <td>500 0000</td>
+                        <td>
+                            <button type="button" class="btn btn-no">No</button> <button type="button" class="btn btn-yes">Yes</button>
+                        </td>
+
+                    </tr>
+                    <tr class="status-yellow">
+                        <td>
+                            <p class="customerName">EDCON</p>
+                            <p>1989</p>
+                        </td>
+                        <td>
+                            <p>CNA</p>
+                            <p>overdraft</p>
+                        </td>
+                        <td> L00000</td>
+                        <td>Cash Turnover</td>
+                        <td>100 000000</td>
+                        <td>0.5</td>
+                        <td> 5000 00</td>
+                        <td>500 0000</td>
+                        <td>
+                            <button type="button" class="btn btn-no">No</button> <button type="button" class="btn btn-yes">Yes</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+
+</html>

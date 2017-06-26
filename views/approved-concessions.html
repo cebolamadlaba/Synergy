@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Standard Bank Concession Management Tool </title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../content/css/bootstrap.css">
+  <link rel="stylesheet" href="../content/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="../content/css/font-awesome.min.css">
+   <link rel="stylesheet" href="../content/css/style.css">
+</head>
+<body>
+    <div class="col-md-12 header" >
+         <div class="logo"></div>    
+    </div>
+    <div class="col-md-12 nav-pills-container">
+        <ul class="nav nav-pills">
+            <li ><a href="pending-inbox.html">Inbox</a></li>
+            <li><a href="approved-concessions.html">Approved Concessions</a></li>   
+            <li><a href="conditions.html">Conditions</a></li>   
+            <li><a href="pricing.html">Pricing</a></li>                        
+            <li class="logout-li"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li> 
+        </ul>      
+   </div> 
+    <div class="col-md-12 search-and-results-container">
+          <!-- Search bar -->
+         <div class="input-group add-on">
+             <input class="form-control" placeholder="Search Concession ID or Risk Group Number" name="srch-term" id="srch-term" type="text">
+               <div class="input-group-btn">
+                    <button class="btn btn-default-search" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+             </div>
+          </div>
+       <!-- search results -->        
+        <div class="panel   panel-default ">
+               <div class="panel-heading">                
+                      <div class="col-md-1">
+                         <input type="checkbox" >
+                      </div>
+                      <div class="col-md-2">                     
+                         <p class="concession-name">EDCON</p>
+                         <P>1989</P>
+                      </div>
+                      <div class="col-md-2">             
+                           Concession ID :ED0023
+                      </div>  
+                       <div class="col-md-2">                       
+                           Segment:Expert
+                      </div>                                  
+                </div>    
+               <div class="panel-body panel-concession">                  
+                <div class="table-container">             
+                    <table class="table table-bordered table-hover header-fixed table-striped">
+                        <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Date Opened</th>
+                            <th>Date Sent For Approval</th>                                     
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td> CNA </td>
+                            <td>Lending</td>
+                            <td>Approved</td>
+                            <td>2017/05/02 </td>
+                            <td> 2017/05/03 </td>
+                        </tr>                          
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel   panel-default ">
+               <div class="panel-heading">                
+                      <div class="col-md-1">
+                         <input type="checkbox" >
+                      </div>
+                      <div class="col-md-2">                     
+                         <p class="concession-name">APPLE</p>
+                         <P>1989</P>
+                      </div>
+                      <div class="col-md-2">             
+                           Concession ID :AP0023
+                      </div>  
+                       <div class="col-md-2">                       
+                           Segment:Expert
+                      </div>  
+                     <div class="single-print">                       
+                            <span class="glyphicon glyphicon-print"></span>
+                     </div>                                  
+                </div>    
+               <div class="panel-body panel-concession">                  
+                <div class="table-container">             
+                    <table class="table table-bordered table-hover header-fixed table-striped">
+                        <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Date Opened</th>
+                            <th>Date Sent For Approval</th>                                     
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td> CNA </td>
+                            <td>Lending</td>
+                            <td>Approved</td>
+                            <td>2017/05/02 </td>
+                            <td> 2017/05/03 </td>
+                        </tr>                          
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+          <!-- footer-->
+         <div class="concession-footer">
+                <!--print button-->
+                <button type="button" class="btn btn-print">
+                    <span class="glyphicon glyphicon-print"></span> Print 2 Files
+                </button>
+                <!-- pagination-->
+                <ul class="pagination">
+                    <li><a href="#">First</a></li>
+                    <li><a href="#">Prev</a></li>
+                    <li class="active"><a href="#">1</a></li>
+                    <li ><a href="#">2</a></li>
+                    <li><a href="#">Next</a></li>
+                    <li><a href="#">Last</a></li>
+                </ul>
+        </div>
+    </div>
+ 
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>

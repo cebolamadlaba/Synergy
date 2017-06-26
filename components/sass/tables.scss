@@ -1,0 +1,54 @@
+//overriding default bootstrap tables style       
+.table-container{
+
+    th {
+        background-color:$tableHeaderColour;
+        color: $white;
+        border-width:0px;
+      }
+     
+     thead>tr>th{
+            border-width: 0px 0px 0px 0px;
+    }
+    td{
+        font-size:0.9em;
+       
+    }
+    tbody > tr{
+          &:hover {
+              background-color: $lightGray;
+              
+           }
+    }
+
+    .status-red{
+        background-color: red !important;
+        color: white;
+    }
+
+    .status-green{
+        background-color: green;
+         color: white;
+    }
+
+    .status-yellow{
+        background-color: #efad1e !important;
+         color: white;
+    }
+
+   
+}
+.product-table-container{
+   
+    th {
+        background-color:$lightGray;
+        color: $white;
+
+        border-width:0px;
+      }
+
+       thead>tr>th{
+            border-width: 0px 0px 0px 0px;
+       }
+}
+
