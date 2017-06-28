@@ -33,3 +33,26 @@ body{
 .rightAlign{
     text-align: right;
 }
+
+.section {
+    border:1px solid $tableHeaderColour;
+    background-color: white;
+    margin-bottom: 15px;
+
+    .section-header {
+        padding: 10px;
+        color: white;
+        background-color: $tableHeaderColour;
+        margin: -1px -1px 0 -1px;
+    }
+
+    .section-body {
+        padding: 10px;
+    }
+
+    .section-footer {
+        padding: 5px;
+        text-align: right;
+    }
+
+}
