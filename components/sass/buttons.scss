@@ -27,7 +27,15 @@
          box-shadow: 1px 2px 1px $navBlue; 
          width:100%;
           &:hover{
-             color: white;
-              background: $navBlue;
+                color: white;
+                background: $navBlue;
           }
+     }
+
+     .btn-default-search{
+         background: $navBlue;
+         color: $white;
+         &:hover{
+            background: $navBlueHover;
+         }
      }
