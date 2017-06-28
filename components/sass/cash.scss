@@ -1,0 +1,113 @@
+.compress{
+    display: block; 
+    float: right;
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.summary-banner{
+    color: $white;
+    background-color: $bannerBackground;
+    width: 100%;
+    display: grid;
+    .summary-banner-title{
+        background-color: $bannerTitle;
+        padding: 10px;
+        margin-bottom: 10px;
+        text-align: center;
+        font-size: 1.5em;
+
+        .banner-main-title{
+            text-justify: center;
+        }
+    }
+
+    .summary-items-sub{
+        margin-bottom: 10px;
+        padding-left: 0;
+        .summary-item-value{
+            font-weight: bold;
+            font-size: 1.6em;
+            padding: 0;
+        }
+    }
+}
+
+.lightText{
+    color: $grayTint;
+}
+
+.table-title{
+        margin: 20px 0px;
+        font-weight: bold;
+        color: $navText;
+}
+
+.table-info{
+    padding: 5px 0;
+    .product-item{
+            background-color: $white;
+            display: grid;
+            box-shadow: 0.5px 2px 5px $lightGray;
+
+            .product-item-heading{
+                color: $tableHeaderColour;
+                padding-left: 5px;
+                padding-top: 5px;
+                font-weight: bold;
+            }
+
+            .product-item-info{
+                padding-left: 5px;
+            }
+
+            td{
+                background-color: $grayTint;
+                padding: 5px;
+            }
+
+            thead{
+                background-color: $cashProductTableHead;
+                color: $white;
+            }
+        }
+} 
+
+.concessions-table-head{
+    background-color: $tableHeaderColour;
+    color: $white;
+}
+
+.secondaryText{
+                color: $secondaryText;
+                padding-left: 0;
+                .normalText{
+                    display: inline-block;
+                    color: $black;
+                }
+            }
+
+.cash-table{
+    border-collapse: collapse;
+    background-color: $white;
+
+    th, td{
+        padding: 0 5px 0 5px;
+        border: 1px solid $cashProductTableHead;
+    }
+}
+
+.concessions-top-title{
+    h3, button{
+        display: inline;
+    }
+
+    button{
+        float: right;
+        background-color: $navBlue;
+        padding: 5px 20px;
+    }
+
+    padding-top: 20px;
+    margin-bottom: 20px;
+}

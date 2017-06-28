@@ -12,10 +12,24 @@
     padding-top:20px;
 }
 
+.glyphicon-search{
+    background-color: $white;
+}
+
+.btn-default-search{
+    background-color: $white;
+    border: 1px solid $cashProductTableHead;
+    border-left: none;
+}
+
 .centerText {
     text-align: center;
 }
 
 body{
     background-color: #ededed;
+}
+
+.rightAlign{
+    text-align: right;
 }

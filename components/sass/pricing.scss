@@ -1,19 +1,98 @@
 
 .pricing-banner{
     background-color:$tableHeaderColour !important;
-    padding-top:100px;
-    padding-left:60px;   
+    padding: 10px 0;
+
+    .pricing-user-image{
+        display: inline-block;
+        color: $white;
+        font-size: 50px;
+        
+    } 
+}
+
+.padding-div{
+    padding: 10px;
 }
 
 .pricing-form{
-  color: white !important;
-}
-
-.pricing-group-container{
-   padding-top:100px;
-   .well{
-       height: 300px;
-       background: white;
+    color: white !important;
+    .row{
+        margin: 0px;
     }
 }
 
+.pricing-group-container{
+   margin-top:80px;
+   background-color: $white;
+   .pricing-group-info{
+       display: grid;
+       justify-content: center;
+
+       h3{
+            margin-bottom: -10px;
+       }
+       .secondaryText{
+           color: $secondaryText;
+           text-align: center;
+           font-size: 1.25em;
+       }
+   }
+
+   .pricing-icon{
+       width: 100px;
+       border-radius: 50px;
+       text-align: center;
+       font-size: 50px;
+       box-shadow: 0px 3px 5px  $lightGray;
+       color: $tableHeaderColour;
+       margin: 0 auto -50px auto;
+       position: relative;
+       top: -50px;
+       background: $white;
+
+       .building-icon{
+           i{
+               display: block;
+           }
+            padding: 25px;
+       }
+   }
+
+   .pricing-group-container-items{
+       display: flex;
+       width:100%;
+       padding: 20px;
+       background-color: inherit;
+       .item{
+            display: table;
+            justify-content: space-between;
+            margin: 2px;
+            background-color: $unselectedItem;
+            width: 12.5%;
+            height: 100px;
+            color: $white;
+            padding: 10px;
+
+            .container-item-icon{
+                margin-top: 10px;
+                background-color: $pricingIconBlue;
+                width: 50px;
+                height: 50px;
+                border-radius: 25px;
+                border: 1px solid $white;
+                padding-top: 12.5px;
+                float: right;
+
+                i{
+                    display: block;
+                    text-align: center;
+                    font-size: 25px;
+                }
+            }
+       }
+       .selected-item{
+                background-color: $selectedItem;
+            }
+    }
+}
