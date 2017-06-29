@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Standard Bank Concession Management Tool </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../content/css/bootstrap.css">
+    <link rel="stylesheet" href="../content/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="../content/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../content/css/style.css">
+</head>
+
+<body>
+    <div class="col-md-12 header">
+        <div class="logo"></div>
+    </div>
+    <div class="col-md-12 nav-pills-container">
+        <ul class="nav nav-pills">
+            <li><a href="pending-inbox.html">Inbox</a></li>
+            <li><a href="approved-concessions.html">Approved Concessions</a></li>
+            <li><a href="conditions.html">Conditions</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+            <li class="logout-li"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- summary bar -->
+    <div class="col-md-12 summary-banner">
+        <div class="row">
+            <div class="col-md-12 summary-banner-title">
+                <div class="col-md-1">
+                    <i class="fa fa-chevron-circle-left" aria-hidden="true"></i> Back
+                </div>
+                <div class="col-md-10 banner-main-title">
+                    <i class="fa fa-handshake-o" aria-hidden="true"></i> Lending - Concessions
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 summary-main">
+                <div class="col-md-5 summary-sub-title">
+                    <h5>EDCON</h5>
+                    <span class="lightText">1989</span>
+                </div>
+
+
+                <div class="col-md-7 summary-items">
+                    <p>
+                        <h5>Latest CRS / MRS <i class="fa fa-compress compress" aria-hidden="true"></i></h5>
+                        <span class="summary-item-value">0.00</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form entries -->
+
+    <form class="col-md-12 concession-top-table">
+        <div class="col-md-4">
+            <div class="row">
+                <label>MRS/CRS</label>
+                <input class="col-md-12">
+            </div>
+            <div class="row">
+                <label>SMT Deal Number</label>
+                <input class="col-md-12">
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-7">
+            <label>Motivation</label>
+            <input class="col-md-12 large-input">
+        </div>
+    </form>
+
+    <form class="col-md-12">
+        <div class="concessions-top">
+            <div class="concessions-top-title">
+                <h3 class="table-title">Concessions</h3>
+                <button type="button" class="btn btn-print">Add Concession</button>
+            </div>
+        </div>
+
+        <div class="form-concessions-table">
+            <div class="form-concessions-headings">
+                <label class="length-long">Product Type</label>
+                <label class="length-long">Account No</label>
+                <label class="length-long">Limit</label>
+                <label class="length-short">Term</label>
+                <label class="length-short">MAP</label>
+                <label class="length-long">Initiation Fee</label>
+                <label class="length-medium">Review Fee</label>
+                <label class="length-medium"></label>
+                <label class="length-medium">UFF Fee</label>
+                <div class="length-icon"></div>
+            </div>
+            <div class="form-concessions-row">
+                <input class="length-long" value="VAF">
+                <input class="length-long" value="12345">
+                <input class="length-long" value="5,000,000.00">
+                <input class="length-short" value="60">
+                <input class="length-short" value="1">
+                <input class="length-long">
+                <select class="length-medium">
+                    <option>  </option>
+                </select>
+                <input class="length-medium">
+                <input class="length-medium">
+                <div class="delete"><i class="fa fa-trash length-icon" aria-hidden="true"></i></div>
+            </div>
+        </div>
+    </form>
+
+    <div class="col-md-12 conditions">
+        <div class="concessions-top">
+            <div class="concessions-top-title">
+                <h3 class="table-title">Conditions</h3>
+                <button type="button" class="btn btn-print">Manage Conditions</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-body">
+                <div class="table-container">
+                    <table class="table table-bordered table-hover header-fixed table-striped">
+                        <thead>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Cash Table</th>
+                                <th>BP ID</th>
+                                <th>Volume</th>
+                                <th>Value</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <td>
+                                <div class="table-row-top">Tester Inc.</div>
+                                <div class="table-row-bottom">
+                                    <div class="secondaryText">Acc No:
+                                        <div class="normalText">12345</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rightAlign">45</td>
+                            <td class="rightAlign">343</td>
+                            <td>230</td>
+                            <td>150,000.00</td>
+                            <td>
+                                <div class="table-row-top">
+                                    <div class="secondaryText">Loaded:
+                                        <div class="normalText">R7 + 0.45</div>
+                                    </div>
+                                </div>
+                                <div class="table-row-bottom">
+                                    <div class="secondaryText">Approved:
+                                        <div class="normalText">R7 + 0.45</div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form class="col-md-12 lending-bottom-buttons">
+        <button class="bnt btn-cancel">Cancel</button>
+        <button class="btn btn-print" type="submit">Submit</button>
+    </form>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+
+</html>

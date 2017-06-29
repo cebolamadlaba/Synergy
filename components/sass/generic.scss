@@ -36,18 +36,25 @@ body{
 
 .section {
     border:1px solid $tableHeaderColour;
-    background-color: white;
     margin-bottom: 15px;
 
+    .section-body{
+        background-color: white;
+    }
+
     .section-header {
-        padding: 10px;
-        color: white;
-        background-color: $tableHeaderColour;
-        margin: -1px -1px 0 -1px;
+        margin-top: 10px;
+        padding: 5px;
+        background: $white;
+        width: 20%; 
+        background-color: $white;
+        border: 1px solid $borderGray;
+        border-bottom: none;
     }
 
     .section-body {
         padding: 10px;
+        box-shadow: 0 2px 2px $lightGray;
     }
 
     .section-footer {
@@ -55,4 +62,39 @@ body{
         text-align: right;
     }
 
+}
+
+.compress{
+    display: block; 
+    float: right;
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.summary-banner{
+    color: $white;
+    background-color: $bannerBackground;
+    width: 100%;
+    .summary-banner-title{
+        background-color: $bannerTitle;
+        padding: 10px 0;
+        margin-bottom: 10px;
+        text-align: center;
+        font-size: 1.5em;
+
+        .banner-main-title{
+            text-justify: center;
+        }
+    }
+
+    .summary-items-sub{
+        margin-bottom: 10px;
+        padding-left: 0;
+    }
+}
+
+.summary-item-value{
+    font-weight: bold;
+    font-size: 1.6em;
+    padding: 0;
 }

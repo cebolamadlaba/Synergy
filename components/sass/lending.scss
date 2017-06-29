@@ -1,4 +1,4 @@
-.lending-view-banner{
+/*.lending-view-banner{
      background: $pricingView; 
      color:white;
      margin-bottom:-10px;
@@ -11,20 +11,38 @@
     }
     margin-left:0;
     margin-right:0;
-}
-.lending-banner{
+}*/
+
+.lending-banner-title{
+        background-color: $bannerTitle;
+        padding: 10px 0;
+        margin-bottom: 10px;
+        text-align: center;
+        font-size: 1.5em;
+        color: $white;
+        display: flex;
+
+        .banner-main-title{
+            text-justify: center;
+        }
+    }
+
+.lending-view-banner{
     background: $bannerBackground;
-    color:white;
-    margin-top:10px;
-    padding-top:10px;
-    .subHeading{
-        font-size: 1.1em;
+    .lending-banner{
+        background: $bannerBackground;
+        color:white;
+        margin-top:10px;
+        padding-top:10px;
+        .subHeading{
+            font-size: 1.1em;
+        }
+        .score{
+            font-size:1.9em;
+        }   
     }
-    .score{
-        font-size:1.9em;
-    }
-    
 }
+
 .lending-headings {
     color:$secondaryText;  
 }
@@ -53,6 +71,7 @@
       padding-right:60px;
       font-size:1em;
       color: $secondaryText;
+
      }
      .product-account{
         float: left;
@@ -64,3 +83,4 @@
   .rightAlign{
       text-align: right;
   }
+  

@@ -1,0 +1,54 @@
+.form-concessions-table{
+    
+    label, input, select{
+        margin: 0 2px;
+    }
+
+    .form-concessions-row{
+        .delete{
+            font-size: 25px;
+            display: inline;
+
+            i{
+                vertical-align: middle;
+            }
+        }
+    }
+}
+
+.lending-bottom-buttons{
+    button{
+        float: right;
+        margin-left: 20px;
+    }
+}
+
+.concession-top-table{
+    label{
+        padding-top: 10px;
+    }
+
+    .large-input{
+        height: 88px;
+    }
+}
+
+label{
+    color: $lightGray;
+}
+
+.length-long{
+    width: 12.5%;
+}
+
+.length-medium{
+    width: 8%;
+}
+
+.length-short{
+    width: 5%;
+}
+
+.length-icon{
+    width: 5%;
+}

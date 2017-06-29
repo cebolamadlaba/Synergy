@@ -1,38 +1,3 @@
-.compress{
-    display: block; 
-    float: right;
-    font-weight: bold;
-    font-size: 1.5em;
-}
-
-.summary-banner{
-    color: $white;
-    background-color: $bannerBackground;
-    width: 100%;
-    display: grid;
-    .summary-banner-title{
-        background-color: $bannerTitle;
-        padding: 10px 0;
-        margin-bottom: 10px;
-        text-align: center;
-        font-size: 1.5em;
-
-        .banner-main-title{
-            text-justify: center;
-        }
-    }
-
-    .summary-items-sub{
-        margin-bottom: 10px;
-        padding-left: 0;
-        .summary-item-value{
-            font-weight: bold;
-            font-size: 1.6em;
-            padding: 0;
-        }
-    }
-}
-
 .lightText{
     color: $grayTint;
 }
@@ -43,35 +8,37 @@
         color: $navText;
 }
 
-.table-info{
-    padding: 5px 0;
-    .product-item{
-            background-color: $white;
-            display: grid;
-            box-shadow: 0.5px 2px 5px $lightGray;
+.section{
+    padding: 0;
+    border: none;
 
-            .product-item-heading{
-                color: $tableHeaderColour;
-                padding-left: 5px;
-                padding-top: 5px;
-                font-weight: bold;
-            }
+    .section-body{
+        padding: 0;
+    }
+}
 
-            .product-item-info{
-                padding-left: 5px;
-            }
+.concessions{
+    .section{
+        background: none;
+        .section-header{
+            background: $white;
+            width: 20%;
+            padding: 5px 10px;  
+        }
 
-            td{
-                background-color: $grayTint;
-                padding: 5px;
-            }
+        .concessionID-section{
+           color: $black;
+        }
 
-            thead{
-                background-color: $cashProductTableHead;
-                color: $white;
+        table{
+            background: $white;
+
+            tr{
+                background: $white;
             }
         }
-} 
+    }
+}
 
 .concessions-table-head{
     background-color: $tableHeaderColour;
@@ -104,8 +71,6 @@
 
     button{
         float: right;
-        background-color: $navBlue;
-        padding: 5px 20px;
     }
 
     padding-top: 20px;

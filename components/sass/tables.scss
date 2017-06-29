@@ -39,7 +39,11 @@
    
 }
 .product-table-container{
-   
+
+    .table{
+        border: none;
+    }
+
     th {
         background-color:$lightGray;
         color: $white;
