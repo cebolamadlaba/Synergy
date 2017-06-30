@@ -29,7 +29,8 @@
         <div class="row">
             <div class="lending-banner-title">
                 <div class="col-md-1">
-                    <i class="fa fa-chevron-circle-left" aria-hidden="true"></i> Back
+                    <i class="fa fa-chevron-circle-left" aria-hidden="true"></i> 
+                    <span class="back-button-text" onclick="location.href = 'pricing.html'">Back</span>
                 </div>
                 <div class="col-md-10 banner-main-title">
                     <i class="fa fa-handshake-o" aria-hidden="true"></i> Lending
@@ -37,24 +38,32 @@
                 <div class="col-md-1"></div>
             </div>
             <div class="col-md-12 lending-banner">
-                <div class="col-md-4">
-                    <p class="subHeading">EDCON</p>
-                    <p class="date">1989</p>
+                <div class="col-md-11">
+                    <div>
+                        <div class="col-md-5">
+                            <div class="subHeading">EDCON</div>
+                            <div class="date lightTitle hidden-element">1989</div>
+                        </div>
+                        <div class="col-md-2  hidden-element">
+                            <div class="subHeading lightTitle">Total Exposure</div>
+                            <div class="score"><b>0.00</b></div>
+                        </div>
+                        <div class="col-md-2  hidden-element">
+                            <div class="subHeading lightTitle"> Weighted Avarage MAP</div>
+                            <div class="score"><b>0.00</b></div>
+                        </div>
+                        <div class="col-md-2  hidden-element">
+                            <div class="subHeading lightTitle"> Weighted CRS / MRS</div>
+                            <div class="score"><b>0.00</b></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-2">
-                    <p class="subHeading">Total Exposure</p>
-                    <p class="score">0.00</p>
-                </div>
-                <div class="col-md-2">
-                    <p class="subHeading"> Weighted Avarage MAP</p>
-                    <p class="score">0.00</p>
-                </div>
-                <div class="col-md-2">
-                    <p class="subHeading"> Weighted CRS / MRS</p>
-                    <p class="score">0.00</p>
-                </div>
-                <div class="col-md-2">
-                    <div class="compress"><i class="fa fa-compress" aria-hidden="true"></i></div>
+                <div class="col-md-1">
+                    <div class="compress">
+                        <div onclick="hideElement('hidden-element')">
+                            <i class="fa fa-compress" aria-hidden="true" id="compress-icon"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -64,11 +73,11 @@
         <div class="col-md-5">
             <h2 class="resultsHeading">Products</h2>
         </div>
-        <div class="col-md-5">
-            <h2 class="resultsHeading">Concessions</h2>
-        </div>
-        <div class="col-md-2">
-            <h2> <button type="button" class="btn btn-primary concessionBtn">Add Concession</button></h2>
+        <div class="col-md-7">
+            <h2 class="resultsHeading">Concessions
+                <button type="button" class="btn btn-primary concessionBtn" onclick="location.href = 'lending-concessions.html'">Add Concession</button>
+            </h2>
+
         </div>
     </div>
     <!-- lending concessions and products-->
@@ -77,11 +86,11 @@
             <div class="section">
                 <div class="section-body">
                     <div class="product-section">
-                        <p class="product-name"> Real People</p>
-                        <p>
+                        <div class="product-name"> Real People</div>
+                        <div>
                             <div class="product-account">Account No: 12345</div>
                             <div class="product-code">Product: VAF</div>
-                        </p>
+                        </div>
                     </div>
                     <div class="product-table-container">
                         <table class="table table-bordered table-hover header-fixed table-striped ">
@@ -104,16 +113,13 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-7">
+        <div class="col-md-7 search-and-results-container" id="lending-search-container">
             <div class="input-group add-on">
                 <input class="form-control" placeholder="Concession ID" name="srch-term" id="srch-term" type="text">
-                <div class="input-group-btn">
-                    <button class="btn btn-default-search" type="submit">Search</button>
-                </div>
             </div>
 
             <div class="section">
-                <div class="section-header">
+                <div class="section-header small-table-title">
                     <div class="concessionID-section"> ED0023</div>
                 </div>
                 <div class="section-body">
@@ -164,6 +170,7 @@
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../scripts/visual.js"></script>
 </body>
 
 </html>

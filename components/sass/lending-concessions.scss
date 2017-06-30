@@ -22,46 +22,6 @@
 }
 
 label, th{
-    color: $lightGray;
+    color: $darkGrayText;
+    font-weight: normal;
 }
-
-#manageConditions{
-    .modal-dialog{
-        margin: 10%;
-        width: 80%;
-        background: $bodyBackground;
-    
-        .modal-header{
-            background: $navBlue;
-            color: $white;
-        }
-
-        .modal-title{
-            padding-bottom: 15px;
-        }
-
-        .modal-body{
-            .form-concessions-table-content tr{
-                td{
-                    padding-right: 10px;
-                    height: 25px;
-                }
-
-                .length-long{
-                    width: 20%;
-                }
-
-                .length-medium{
-                    width: 9.5%;
-                }
-
-                .delete{
-                    width: 2%;
-                }
-            }
-        }
-
-        
-    }
-}
-

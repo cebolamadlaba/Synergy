@@ -12,11 +12,34 @@
     padding-top:20px;
     .input-group{
         width: 100%;
-        padding-bottom: 20px;
+        padding-bottom: 10px;
         
         #srch-term{
             border-radius: 5px;
-            margin-bottom: 10px;
+        }
+    }
+
+    .section .small-table-title{
+        width: 200px;
+        font-weight: 500;
+        font-size: 1.25em;
+
+        .concessionID-section{
+            padding-left: 7px;
+            margin : -7px 0;
+        }
+    }
+}
+
+.table-hover-highlight{
+    &:hover{
+        .section-header{
+            border: 1px solid $navBlue;
+            border-bottom: none;
+            background: $tableSelect;
+            .single-print{
+                visibility: visible;
+            }
         }
     }
 }
@@ -66,13 +89,6 @@ body{
 
 }
 
-.compress{
-    display: block; 
-    float: right;
-    font-weight: bold;
-    font-size: 1.5em;
-}
-
 .summary-banner{
     color: $white;
     background-color: $bannerBackground;
@@ -107,4 +123,28 @@ input{
 
 .darkGrayText{
     color: $darkGray;
+}
+
+.lightTitle{
+    color: $lightGrayText;
+}
+
+#compress-box{
+    position: fixed;
+   // left: -999999px;
+
+    &:checked > div > .hiding-banner{
+            visibility: hidden;
+            height: 100px;
+    }
+}
+
+.compress{
+    float: right;
+    font-size: 1.25em;
+    cursor: pointer;
+}
+
+.hidden-element{
+    display: block;
 }

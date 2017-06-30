@@ -38,15 +38,4 @@
     .section-header{
         padding: 10px 0;
     }
-
-    &:hover{
-        .section-header{
-            border: 1px solid $navBlue;
-            border-bottom: none;
-            background: $tableSelect;
-            .single-print{
-                visibility: visible;
-            }
-        }
-    }
 }

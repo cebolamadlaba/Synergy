@@ -13,4 +13,16 @@
 .searchEmptyState {
     text-align: center;
     padding:100px;
+    color: $darkGray;
+    vertical-align: middle;
+
+    i{
+        font-size: 1.5em;
+    }
+
+    div{
+        display: inline;
+        margin: 0;
+        padding: 5px 0;
+    }
 }

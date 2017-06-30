@@ -29,31 +29,38 @@
     </div>
 
     <!-- summary bar -->
-    <div class="col-md-12 summary-banner">
+
+    <div class="col-md-12 lending-view-banner">
         <div class="row">
-            <div class="col-md-12 summary-banner-title">
+            <div class="lending-banner-title">
                 <div class="col-md-1">
-                    <i class="fa fa-chevron-circle-left" aria-hidden="true"></i> Back
+                    <i class="fa fa-chevron-circle-left" aria-hidden="true"></i> 
+                    <span class="back-button-text" onclick="location.href = 'lending.html'">Back</span>
                 </div>
                 <div class="col-md-10 banner-main-title">
-                    <i class="fa fa-handshake-o" aria-hidden="true"></i> Lending - Concessions
+                    <i class="fa fa-handshake-o" aria-hidden="true"></i> Lending
                 </div>
                 <div class="col-md-1"></div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12 summary-main">
-                <div class="col-md-5 summary-sub-title">
-                    <h5>EDCON</h5>
-                    <div class="lightText">1989</div>
+            <div class="col-md-12 lending-banner">
+                <div class="col-md-11">
+                    <div>
+                        <div class="col-md-5">
+                            <div class="subHeading">EDCON</div>
+                            <div class="date lightTitle hidden-element">1989</div>
+                        </div>
+                        <div class="col-md-2  hidden-element">
+                            <div class="subHeading lightTitle"> Latest CRS / MRS</div>
+                            <div class="score"><b>0.00</b></div>
+                        </div>
+                    </div>
                 </div>
-
-
-                <div class="col-md-7 summary-items">
-                    <p>
-                        <h5>Latest CRS / MRS <i class="fa fa-compress compress" aria-hidden="true"></i></h5>
-                        <div class="summary-item-value">0.00</div>
-                    </p>
+                <div class="col-md-1">
+                    <div class="compress">
+                        <div onclick="hideElement('hidden-element')">
+                            <i class="fa fa-compress" aria-hidden="true" id="compress-icon"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -115,7 +122,7 @@
                     <td class="length-medium"><select></select></td>
                     <td class="length-medium"><input></td>
                     <td class="length-medium"><input></td>
-                    <td class="delete"><i class="fa fa-trash" aria-hidden="true"></i></td>
+                    <td class="delete"><i class="fa fa-trash-o" aria-hidden="true"></i></td>
                 </tr>
             </tbody>
         </table>
@@ -171,7 +178,7 @@
                                                     <option>3 Months</option>
                                                 </select>
                                             </td>
-                                            <td class="delete"><i class="fa fa-trash" aria-hidden="true"></i></td>
+                                            <td class="delete"><i class="fa fa-trash-o" aria-hidden="true"></i></td>
                                         </tr>
                                         <tr>
                                             <td class="length-long"><input value=""></td>
@@ -189,7 +196,7 @@
                                                     <option></option>
                                                 </select>
                                             </td>
-                                            <td class="delete"><i class="fa fa-trash" aria-hidden="true"></i></td>
+                                            <td class="delete"><i class="fa fa-trash-o" aria-hidden="true"></i></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -247,6 +254,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../scripts/visual.js"></script>
 </body>
 
 </html>

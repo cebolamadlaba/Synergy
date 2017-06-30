@@ -2,7 +2,7 @@
 //overriding default bootstrap buttons      
      .pagination{
        float: right;
-       margin:0;
+       margin: 10px 0;
       }
      .btn-no{
             background-color: $buttonNo;
@@ -32,14 +32,25 @@
           &:hover{
              color: white;
           }
+          
+        &:focus{
+            color:white;
+            background:$navBlue;
+        }
      }
      .concessionBtn{
          background: $navBlue;
          box-shadow: 1px 2px 1px $navBlue; 
-         width:100%;
+         float: right;
+
           &:hover{
                 color: white;
-                background: $navBlue;
+                background: $navBlueHover;
+          }
+
+          &:focus{
+              color: $white;
+              background:$navBlue;
           }
      }
 
@@ -50,6 +61,11 @@
             background: $navBlueHover;
             color: white;
          }
+         
+        &:focus{
+            color:white;
+            background:$navBlue;
+        }
      }
 
      .btn-submit{
@@ -63,6 +79,11 @@
             background: $navBlueHover;
             color: white;
         }
+        
+        &:focus{
+            color:white;
+            background:$navBlue;
+        }
      }
 
      .btn-cancel{
@@ -72,7 +93,7 @@
        box-shadow: 0px 2px 5px ;
 
        &:hover{
-
+            background: $grayTint;
        }
      }
 
@@ -85,7 +106,22 @@
         border: none;
 
         &:hover{
+            background-color: $navBlueHover;
+            color: white;
+        }
+
+        &:active{
             background: $navBlueHover;
             color: white;
         }
-     }
+
+        &:focus{
+            background: $navBlueHover;
+            color: white;
+        }
+         &:active:hover{
+                background: $navBlueHover;
+                color: white;
+         }
+    }
+     
