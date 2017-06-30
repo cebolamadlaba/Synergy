@@ -1,5 +1,14 @@
 //overriding default bootstrap tables style       
 .table-container{
+    table{
+        border: none;
+        margin-bottom: 0;
+        background: $tableRowGray;
+
+        tr:hover td{
+            background: $tableRowGray;
+        }
+    }
 
     th {
         background-color:$tableHeaderColour;
@@ -8,32 +17,38 @@
       }
      
      thead>tr>th{
-            border-width: 0px 0px 0px 0px;
+        border-width: 0px 0px 0px 0px;
     }
     td{
         font-size:0.9em;
        
     }
-    tbody > tr{
-          &:hover {
-              background-color: $lightGray;
-              
-           }
-    }
 
     .status-red{
-        background-color: red !important;
+        background-color: $validationRed !important;
         color: white;
+
+        &:hover td{
+            background: $validationRed;
+        }
     }
 
     .status-green{
-        background-color: green;
+        background-color: $validationGreen;
          color: white;
+
+         &:hover td{
+            background: $validationGreen;
+        }
     }
 
     .status-yellow{
-        background-color: #efad1e !important;
+        background-color: $validationYellow !important;
          color: white;
+
+         &:hover td{
+            background: $validationYellow;
+        }
     }
 
    
@@ -56,3 +71,45 @@
        }
 }
 
+//Lending concessions
+.form-concessions-table{
+    margin-bottom: 25px;
+    .form-concessions-table-content{
+        tr input, tr select{
+            width: 100%;
+            height: 28px;
+            padding-left: 3px;
+            border: 1px solid $lightGray;
+        }
+        tr{
+            td{
+                padding-right: 10px;
+                height: 25px;
+            }
+
+            .length-long{
+                width: 15%;
+            }
+
+            .length-medium{
+                width: 8%;
+            }
+
+            .length-short{
+                width: 7%;
+            }
+
+            .delete{
+                width: 2%;
+            }
+        }
+    }
+
+    .delete{
+            font-size: 25px;
+            display: inline;
+            div{
+                width: 100%;
+            }
+        }
+}

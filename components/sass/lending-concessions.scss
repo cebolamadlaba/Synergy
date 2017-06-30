@@ -1,29 +1,17 @@
-.form-concessions-table{
-    
-    label, input, select{
-        margin: 0 2px;
-    }
+.lending-bottom-buttons{
+    padding-bottom: 20px;
+    position: relative;
+    bottom: 0;
 
-    .form-concessions-row{
-        .delete{
-            font-size: 25px;
-            display: inline;
-
-            i{
-                vertical-align: middle;
-            }
+    .float-right{
+        float: right;
+        button{
+            margin-left: 15px;
         }
     }
 }
 
-.lending-bottom-buttons{
-    button{
-        float: right;
-        margin-left: 20px;
-    }
-}
-
-.concession-top-table{
+.concession-information-form{
     label{
         padding-top: 10px;
     }
@@ -33,22 +21,47 @@
     }
 }
 
-label{
+label, th{
     color: $lightGray;
 }
 
-.length-long{
-    width: 12.5%;
+#manageConditions{
+    .modal-dialog{
+        margin: 10%;
+        width: 80%;
+        background: $bodyBackground;
+    
+        .modal-header{
+            background: $navBlue;
+            color: $white;
+        }
+
+        .modal-title{
+            padding-bottom: 15px;
+        }
+
+        .modal-body{
+            .form-concessions-table-content tr{
+                td{
+                    padding-right: 10px;
+                    height: 25px;
+                }
+
+                .length-long{
+                    width: 20%;
+                }
+
+                .length-medium{
+                    width: 9.5%;
+                }
+
+                .delete{
+                    width: 2%;
+                }
+            }
+        }
+
+        
+    }
 }
 
-.length-medium{
-    width: 8%;
-}
-
-.length-short{
-    width: 5%;
-}
-
-.length-icon{
-    width: 5%;
-}

@@ -12,9 +12,10 @@
                 margin-left:10px;       
                 background-color:$white;
             }         
-            &:hover {                        
+            &:hover a{                        
               text-decoration: none; 
-              background-color:white;
+              color: $lightGray;
+              //background-color:gray;
              
             }
              &:active {
@@ -27,5 +28,10 @@
           .logout-li{
               float:right;            
           }
+
+        
+        .selected-nav-item a{
+            color: $selectedItem;
+        }
       }
 }

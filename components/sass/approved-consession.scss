@@ -1,11 +1,21 @@
 .section{
-        .section-header{
+    .section-header{
         width: 100%;
     }
 }
 
 .single-print{
     float:right;
+    visibility: hidden;
+    cursor: pointer;
+
+    i{
+        font-size: 30px;
+
+        &:hover{
+            color: $lightGray;
+        }
+    }
 }
 
 .no-padding-left{
@@ -13,5 +23,30 @@
 }
 
 .vertical-align-center{
-    padding-top: 10px;
+    margin: 8px;
+}
+
+.concession-name{
+    color: $tableHeaderColour;
+    font-size: 1.15em;
+    font-weight: bold;
+}
+
+.search-and-results-container .section{
+    padding: 0px;
+
+    .section-header{
+        padding: 10px 0;
+    }
+
+    &:hover{
+        .section-header{
+            border: 1px solid $navBlue;
+            border-bottom: none;
+            background: $tableSelect;
+            .single-print{
+                visibility: visible;
+            }
+        }
+    }
 }

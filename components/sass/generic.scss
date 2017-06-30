@@ -10,10 +10,15 @@
 }
 .search-and-results-container{
     padding-top:20px;
-}
-
-.glyphicon-search{
-    background-color: $white;
+    .input-group{
+        width: 100%;
+        padding-bottom: 20px;
+        
+        #srch-term{
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    }
 }
 
 .btn-default-search{
@@ -27,7 +32,7 @@
 }
 
 body{
-    background-color: #ededed;
+    background-color: $bodyBackground;
 }
 
 .rightAlign{
@@ -43,11 +48,8 @@ body{
     }
 
     .section-header {
-        margin-top: 10px;
-        padding: 5px;
         background: $white;
         width: 20%; 
-        background-color: $white;
         border: 1px solid $borderGray;
         border-bottom: none;
     }
@@ -97,4 +99,12 @@ body{
     font-weight: bold;
     font-size: 1.6em;
     padding: 0;
+}
+
+input{
+    border: 1px solid $lightGray;
+}
+
+.darkGrayText{
+    color: $darkGray;
 }

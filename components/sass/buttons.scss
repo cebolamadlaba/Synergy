@@ -5,21 +5,30 @@
        margin:0;
       }
      .btn-no{
-            background-color:#c03343;
-            box-shadow: 1px 2px 1px #c03343; 
+            background-color: $buttonNo;
+            box-shadow: 1px 2px 1px $darkGray; 
             color: white;
+            width: 75px;
+
+            &:hover{
+                background: $buttonNoHover;
+            }
      }
      .btn-yes{
-            background-color:#739c3c;
-            box-shadow: 1px 2px 1px #739c3c; 
-            color: white;
+            background-color: $buttonYes;
+            box-shadow: 1px 2px 1px $darkGray; 
+            color: $white;
+            width: 75px;
+            
+            &:hover{
+                background: $buttonYesHover;
+            }
      }
      .btn-print{
            background-color:$navBlue; 
            color:white;
           box-shadow: 1px 2px 1px $navBlue; 
-          padding: 5px 0px;
-        min-width: 145px;
+          padding: 5px 10px;
           &:hover{
              color: white;
           }
@@ -39,5 +48,44 @@
          color: $white;
          &:hover{
             background: $navBlueHover;
+            color: white;
          }
+     }
+
+     .btn-submit{
+        background:$navBlue; 
+        color:white;
+        box-shadow: 1px 2px 1px $navBlue; 
+        padding: 5px 30px;
+        min-width: 75px;
+
+        &:hover{
+            background: $navBlueHover;
+            color: white;
+        }
+     }
+
+     .btn-cancel{
+       min-width: 75px;
+       padding: 5px 30px;
+       background: $bodyBackground;
+       box-shadow: 0px 2px 5px ;
+
+       &:hover{
+
+       }
+     }
+
+     .btn-default{
+        background:$navBlue; 
+        color:white;
+        box-shadow: 1px 2px 1px $navBlue; 
+        padding: 5px 0px;
+        min-width: 145px;
+        border: none;
+
+        &:hover{
+            background: $navBlueHover;
+            color: white;
+        }
      }

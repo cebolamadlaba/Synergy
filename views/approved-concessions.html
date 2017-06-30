@@ -18,36 +18,33 @@
     <div class="col-md-12 nav-pills-container">
         <ul class="nav nav-pills">
             <li><a href="pending-inbox.html">Inbox</a></li>
-            <li><a href="approved-concessions.html">Approved Concessions</a></li>
+            <li class="selected-nav-item"><a href="approved-concessions.html">Approved Concessions</a></li>
             <li><a href="conditions.html">Conditions</a></li>
             <li><a href="pricing.html">Pricing</a></li>
-            <li class="logout-li"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+            <li class="logout-li"><a href="#"><div class="glyphicon glyphicon-log-out"></div> Logout</a></li>
         </ul>
     </div>
     <div class="col-md-12 search-and-results-container">
         <!-- Search bar -->
         <div class="input-group add-on">
             <input class="form-control" placeholder="Search Concession ID or Risk Group Number" name="srch-term" id="srch-term" type="text">
-            <div class="input-group-btn">
-                <button class="btn btn-default-search" type="submit">Search</button>
-            </div>
         </div>
         <!-- search results -->
         
         <div class="section">
-            <div class="section-header">
+            <div class="col-md-12 section-header">
                 <div class="concessionID-section">
                     <div class="col-md-2 no-padding-left">
                         <div class="col-md-1 no-padding-left vertical-align-center">
                             <input type="checkbox">
                         </div>
-                        <div class="col-md-11 no-padding-left">
+                        <div class="col-md-10 no-padding-left">
                             <div class="concession-name">EDCON</div>
                             <div>1989</div>
                         </div>
                     </div>
                     <div class="col-md-10">
-                        <div class="single-print"><span class="glyphicon glyphicon-print"></span></div>
+                        <div class="single-print"><i class="fa fa-print" aria-hidden="true"></i></div>
                     </div>
                     <div class="col-md-10 no-padding-left">
                         <div class="col-md-2 no-padding-left">
@@ -86,19 +83,19 @@
         </div>
 
         <div class="section">
-            <div class="section-header">
+            <div class="col-md-12 section-header">
                 <div class="concessionID-section">
                     <div class="col-md-2 no-padding-left">
                         <div class="col-md-1 no-padding-left vertical-align-center">
                             <input type="checkbox">
                         </div>
-                        <div class="col-md-11 no-padding-left">
+                        <div class="col-md-10 no-padding-left">
                             <div class="concession-name">APPLE</div>
                             <div>1989</div>
                         </div>
                     </div>
                     <div class="col-md-10">
-                        <div class="single-print"><span class="glyphicon glyphicon-print"></span></div>
+                        <div class="single-print"><i class="fa fa-print" aria-hidden="true"></i></div>
                     </div>
                     <div class="col-md-10 no-padding-left">
                         <div class="col-md-2 no-padding-left">
@@ -140,8 +137,8 @@
         <div class="concession-footer">
             <!--print button-->
             <button type="button" class="btn btn-print">
-                    <span class="glyphicon glyphicon-print"></span> Print 2 Files
-                </button>
+                <i class="fa fa-print" aria-hidden="true"></i> Print 1 Files
+            </button>
             <!-- pagination-->
             <ul class="pagination">
                 <li><a href="#">First</a></li>
