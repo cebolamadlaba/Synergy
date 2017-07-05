@@ -57,6 +57,10 @@
 
     .table{
         border: none;
+
+        tr:hover, td:hover{
+            background: $tableRowGray;
+        }
     }
 
     th {
@@ -64,11 +68,11 @@
         color: $white;
 
         border-width:0px;
-      }
+    }
 
-       thead>tr>th{
-            border-width: 0px 0px 0px 0px;
-       }
+    thead>tr>th{
+        border-width: 0px 0px 0px 0px;
+    }
 }
 
 //Lending concessions
