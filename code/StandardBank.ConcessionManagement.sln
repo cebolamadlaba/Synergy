@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.15
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{869CE2B9-6B12-4BF1-945F-763BC9FD9015}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{AD2A4DAB-6383-47FE-9BA9-976730A8122C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardBank.ConcessionManagement.UI", "src\StandardBank.ConcessionManagement.UI\StandardBank.ConcessionManagement.UI.csproj", "{0C656047-F359-452B-879B-CD25B04F9560}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardBank.ConcessionManagement.UI.Test", "test\StandardBank.ConcessionManagement.UI.Test\StandardBank.ConcessionManagement.UI.Test.csproj", "{81FC71BC-F3BB-41C8-91CF-C7FC2445F01A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0C656047-F359-452B-879B-CD25B04F9560}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C656047-F359-452B-879B-CD25B04F9560}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C656047-F359-452B-879B-CD25B04F9560}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C656047-F359-452B-879B-CD25B04F9560}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81FC71BC-F3BB-41C8-91CF-C7FC2445F01A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81FC71BC-F3BB-41C8-91CF-C7FC2445F01A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81FC71BC-F3BB-41C8-91CF-C7FC2445F01A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81FC71BC-F3BB-41C8-91CF-C7FC2445F01A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0C656047-F359-452B-879B-CD25B04F9560} = {869CE2B9-6B12-4BF1-945F-763BC9FD9015}
+		{81FC71BC-F3BB-41C8-91CF-C7FC2445F01A} = {AD2A4DAB-6383-47FE-9BA9-976730A8122C}
+	EndGlobalSection
+EndGlobal
