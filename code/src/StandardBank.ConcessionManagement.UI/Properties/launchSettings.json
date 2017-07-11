@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:49865/views/pending-inbox.html",
+      "applicationUrl": "http://localhost:49865",
       "sslPort": 0
     }
   },
