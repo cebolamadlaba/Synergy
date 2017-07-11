@@ -1,0 +1,35 @@
+
+.nav-pills-container{
+    background-color:$white;
+     box-shadow: 1px 2px 1px #a5a5a5;
+    .nav-pills{
+        li{
+            border-bottom: 2px solid white;
+
+            a{
+                color:$navText;  
+                font-size: 1.2em;   
+                margin-left:10px;       
+                background-color:$white;
+            }         
+            &:hover a{                        
+              text-decoration: none; 
+              color: $lightGray;
+            }
+             &:active {
+               color: $tableHeaderColour;
+               background: none;
+               background-color:$white;
+             }
+                      
+        }         
+          .logout-li{
+              float:right;            
+          }
+
+        
+        .selected-nav-item a{
+            color: $selectedItem;
+        }
+      }
+}

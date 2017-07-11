@@ -1,0 +1,157 @@
+.header{
+    background:$navBlue;
+    .logo {
+        background-image: url("../img/standard-bank-logo-mark.svg");
+        height: 50px;
+        width: 240px;
+        background-repeat: no-repeat;
+        margin: 10px 10px 10px 0;
+    }
+}
+.search-and-results-container{
+    padding-top:20px;
+    .input-group{
+        width: 100%;
+        padding-bottom: 10px;
+        
+        #srch-term{
+            border-radius: 5px;
+        }
+    }
+
+    .section .small-table-title{
+        width: 200px;
+        font-weight: 500;
+        font-size: 1.25em;
+
+        .concessionID-section{
+            padding-left: 7px;
+            margin : -7px 0;
+        }
+    }
+}
+
+.table-hover-highlight{
+    &:hover{
+        .section-header{
+            border: 1px solid $navBlue;
+            border-bottom: none;
+            background: $tableSelect;
+            .single-print{
+                visibility: visible;
+            }
+        }
+    }
+}
+
+.btn-default-search{
+    background-color: $white;
+    border: 1px solid $cashProductTableHead;
+    border-left: none;
+}
+
+.centerText {
+    text-align: center;
+}
+
+body{
+    background-color: $bodyBackground;
+}
+
+.rightAlign{
+    text-align: right;
+}
+
+.section {
+    border:1px solid $tableHeaderColour;
+    margin-bottom: 15px;
+
+    .section-body{
+        background-color: white;
+    }
+
+    .section-header {
+        background: $white;
+        width: 20%; 
+        border: 1px solid $borderGray;
+        border-bottom: none;
+    }
+
+    .section-body {
+        padding: 10px;
+        box-shadow: 0 2px 2px $lightGray;
+    }
+
+    .section-footer {
+        padding: 5px;
+        text-align: right;
+    }
+
+}
+
+.summary-banner{
+    color: $white;
+    background-color: $bannerBackground;
+    width: 100%;
+    .summary-banner-title{
+        background-color: $bannerTitle;
+        padding: 10px 0;
+        margin-bottom: 10px;
+        text-align: center;
+        font-size: 1.5em;
+
+        .banner-main-title{
+            text-justify: center;
+        }
+    }
+
+    .summary-items-sub{
+        margin-bottom: 10px;
+        padding-left: 0;
+    }
+}
+
+.summary-item-value{
+    font-weight: bold;
+    font-size: 1.6em;
+    padding: 0;
+}
+
+input{
+    border: 1px solid $lightGray;
+}
+
+.darkGrayText{
+    color: $darkGray;
+}
+
+.lightTitle{
+    color: $lightGrayText;
+}
+
+#compress-box{
+    position: fixed;
+   // left: -999999px;
+
+    &:checked > div > .hiding-banner{
+            visibility: hidden;
+            height: 100px;
+    }
+}
+
+.compress{
+    float: right;
+    font-size: 1.25em;
+    cursor: pointer;
+}
+
+.hidden-element{
+    display: block;
+}
+
+.concession-footer{
+    margin-top: 10px;
+    ul{
+        margin: 0;
+    }
+}

@@ -1,0 +1,84 @@
+.lending-banner-title{
+        background-color: $bannerTitle;
+        padding: 10px 0;
+        text-align: center;
+        color: $white;
+        display: flex;
+        font-size: 1.5em;
+
+        .banner-main-title{
+            text-justify: center;
+        }
+
+        .back-button-text{
+            font-size: 0.8em;
+            cursor: pointer;
+            &:hover{
+                text-decoration: underline;
+            }
+        }
+    }
+
+.lending-view-banner{
+    background: $bannerBackground;
+    .lending-banner{
+        background: $bannerBackground;
+        color:white;
+        padding-top:15px;
+        padding-bottom: 15px;
+
+        .subHeading{
+            font-size: 1.1em;
+        }
+        .score{
+            font-size:1.9em;
+        }   
+    }
+}
+
+.lending-headings {
+    color:$secondaryText;  
+}
+
+.consessionID-section{
+    width:20%;
+    padding: 2px 2px 2px 10px;
+    font-size:1.1em;
+    margin-top:12px;
+}
+
+.product-section{
+     background:white;
+     padding-left:7px;
+     font-weight: bold;  
+
+     .product-name{
+       color: $bannerBackground;
+       font-size:1.2em;
+       padding-top:5px;
+       margin: 0;
+   
+     }
+     .product-code{
+      float: right;
+      padding-right:60px;
+      font-size:1em;
+      color: $secondaryText;
+
+     }
+     .product-account{
+        float: left;
+        font-size:1em;
+        color: $secondaryText;
+        padding-bottom: 7px;
+      }
+  }
+
+  .rightAlign{
+      text-align: right;
+  }
+
+  #lending-search-container{
+      padding-top: 0;
+  }
+  

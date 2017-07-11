@@ -1,0 +1,78 @@
+.lightText{
+    color: $grayTint;
+}
+
+.table-title{
+        margin: 20px 0px;
+        font-weight: bold;
+        color: $navText;
+}
+
+.section{
+    padding: 0;
+    border: none;
+
+    .section-body{
+        padding: 0;
+    }
+}
+
+.concessions{
+    .section{
+        background: none;
+        .section-header{
+            background: $white;
+            width: 20%;
+            padding: 5px 10px;  
+        }
+
+        .concessionID-section{
+           color: $black;
+        }
+
+        table{
+            background: $white;
+
+            tr{
+                background: $white;
+            }
+        }
+    }
+}
+
+.concessions-table-head{
+    background-color: $tableHeaderColour;
+    color: $white;
+}
+
+.secondaryText{
+    color: $secondaryText;
+    padding-left: 0;
+    .normalText{
+        display: inline-block;
+        color: $black;
+    }
+}
+
+.cash-table{
+    border-collapse: collapse;
+    background-color: $white;
+
+    th, td{
+        padding: 0 5px 0 5px;
+        border: 1px solid $cashProductTableHead;
+    }
+}
+
+.concessions-top-title{
+    h3, button{
+        display: inline;
+    }
+
+    button{
+        float: right;
+    }
+
+    padding-top: 20px;
+    margin-bottom: 20px;
+}

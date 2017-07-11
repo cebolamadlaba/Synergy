@@ -1,0 +1,127 @@
+
+//overriding default bootstrap buttons      
+     .pagination{
+       float: right;
+       margin: 10px 0;
+      }
+     .btn-no{
+            background-color: $buttonNo;
+            box-shadow: 1px 2px 1px $darkGray; 
+            color: white;
+            width: 75px;
+
+            &:hover{
+                background: $buttonNoHover;
+            }
+     }
+     .btn-yes{
+            background-color: $buttonYes;
+            box-shadow: 1px 2px 1px $darkGray; 
+            color: $white;
+            width: 75px;
+            
+            &:hover{
+                background: $buttonYesHover;
+            }
+     }
+     .btn-print{
+           background-color:$navBlue; 
+           color:white;
+          box-shadow: 1px 2px 1px $navBlue; 
+          padding: 5px 10px;
+          &:hover{
+             color: white;
+          }
+          
+        &:focus{
+            color:white;
+            background:$navBlue;
+        }
+     }
+     .concessionBtn{
+         background: $navBlue;
+         box-shadow: 1px 2px 1px $navBlue; 
+         float: right;
+
+          &:hover{
+                color: white;
+                background: $navBlueHover;
+          }
+
+          &:focus{
+              color: $white;
+              background:$navBlue;
+          }
+     }
+
+     .btn-default-search{
+         background: $navBlue;
+         color: $white;
+         &:hover{
+            background: $navBlueHover;
+            color: white;
+         }
+         
+        &:focus{
+            color:white;
+            background:$navBlue;
+        }
+     }
+
+     .btn-submit{
+        background:$navBlue; 
+        color:white;
+        box-shadow: 1px 2px 1px $navBlue; 
+        padding: 5px 30px;
+        min-width: 75px;
+
+        &:hover{
+            background: $navBlueHover;
+            color: white;
+        }
+        
+        &:focus{
+            color:white;
+            background:$navBlue;
+        }
+     }
+
+     .btn-cancel{
+       min-width: 75px;
+       padding: 5px 30px;
+       background: $bodyBackground;
+       box-shadow: 0px 2px 5px ;
+
+       &:hover{
+            background: $grayTint;
+       }
+     }
+
+     .btn-default{
+        background:$navBlue; 
+        color:white;
+        box-shadow: 1px 2px 1px $navBlue; 
+        padding: 5px 0px;
+        min-width: 145px;
+        border: none;
+
+        &:hover{
+            background-color: $navBlueHover;
+            color: white;
+        }
+
+        &:active{
+            background: $navBlueHover;
+            color: white;
+        }
+
+        &:focus{
+            background: $navBlueHover;
+            color: white;
+        }
+         &:active:hover{
+                background: $navBlueHover;
+                color: white;
+         }
+    }
+     

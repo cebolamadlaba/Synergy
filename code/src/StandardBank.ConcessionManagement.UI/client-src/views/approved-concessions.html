@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Standard Bank Concession Management Tool </title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../content/css/bootstrap.css">
+  <link rel="stylesheet" href="../content/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="../content/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../content/css/style.css">
+
+  <link rel="icon" type="image/x-icon" href="../content/img/favicon.ico">
+</head>
+
+<body>
+  <div class="col-md-12 header">
+    <div class="logo"></div>
+  </div>
+  <div class="col-md-12 nav-pills-container">
+    <ul class="nav nav-pills">
+      <li><a href="pending-inbox.html">Inbox</a></li>
+      <li class="selected-nav-item"><a href="approved-concessions.html">Approved Concessions</a></li>
+      <li><a href="conditions.html">Conditions</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li class="logout-li"><a href="#"><div class="glyphicon glyphicon-log-out"></div> Logout</a></li>
+    </ul>
+  </div>
+  <div class="col-md-12 search-and-results-container">
+    <!-- Search bar -->
+    <div class="input-group add-on">
+      <input class="form-control" placeholder="Search Concession ID or Risk Group Number" name="srch-term" id="srch-term" type="text">
+    </div>
+    <!-- search results -->
+
+    <div class="section table-hover-highlight">
+      <div class="col-md-12 section-header">
+        <div class="concessionID-section">
+          <div class="col-md-2 no-padding-left">
+            <div class="col-md-1 no-padding-left vertical-align-center">
+              <input type="checkbox">
+            </div>
+            <div class="col-md-10 no-padding-left">
+              <div class="concession-name">EDCON</div>
+              <div>1989</div>
+            </div>
+          </div>
+          <div class="col-md-10">
+            <div class="single-print"><i class="fa fa-print" aria-hidden="true"></i></div>
+          </div>
+          <div class="col-md-10 no-padding-left">
+            <div class="col-md-2 no-padding-left">
+              Concession ID :ED0023
+            </div>
+            <div class="col-md-2">
+              Segment:Expert
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="table-container">
+          <table class="table table-bordered table-hover header-fixed table-striped">
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Date Opened</th>
+                <th>Date Sent For Approval</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td> CNA </td>
+                <td>Lending</td>
+                <td>Approved</td>
+                <td>2017/05/02 </td>
+                <td> 2017/05/03 </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="section table-hover-highlight">
+      <div class="col-md-12 section-header">
+        <div class="concessionID-section">
+          <div class="col-md-2 no-padding-left">
+            <div class="col-md-1 no-padding-left vertical-align-center">
+              <input type="checkbox">
+            </div>
+            <div class="col-md-10 no-padding-left">
+              <div class="concession-name">APPLE</div>
+              <div>1989</div>
+            </div>
+          </div>
+          <div class="col-md-10">
+            <div class="single-print"><i class="fa fa-print" aria-hidden="true"></i></div>
+          </div>
+          <div class="col-md-10 no-padding-left">
+            <div class="col-md-2 no-padding-left">
+              Concession ID :AP0023
+            </div>
+            <div class="col-md-2">
+              Segment:Expert
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="table-container">
+          <table class="table table-bordered table-hover header-fixed table-striped">
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Date Opened</th>
+                <th>Date Sent For Approval</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td> CNA </td>
+                <td>Lending</td>
+                <td>Approved</td>
+                <td>2017/05/02 </td>
+                <td> 2017/05/03 </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- footer-->
+    <div class="concession-footer">
+      <!--print button-->
+      <button type="button" class="btn btn-print">
+        <i class="fa fa-print" aria-hidden="true"></i> Print 1 Files
+      </button>
+      <!-- pagination-->
+      <ul class="pagination">
+        <li><a href="#">First</a></li>
+        <li><a href="#">Prev</a></li>
+        <li class="active"><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">Next</a></li>
+        <li><a href="#">Last</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+
+</html>

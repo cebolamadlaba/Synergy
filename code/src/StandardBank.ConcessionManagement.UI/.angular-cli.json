@@ -9,9 +9,10 @@
       "outDir": "wwwroot",
       "assets": [
         "assets",
-        "favicon.ico"
+        "scripts",
+        "views",
+        "content"
       ],
-      "index": "index.html",
       "main": "main.ts",
       "polyfills": "polyfills.ts",
       "test": "test.ts",
@@ -19,7 +20,7 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "styles.css"
+        "content/css/style.css"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",

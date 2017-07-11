@@ -1,0 +1,41 @@
+.section{
+    .section-header{
+        width: 100%;
+    }
+}
+
+.single-print{
+    float:right;
+    visibility: hidden;
+    cursor: pointer;
+
+    i{
+        font-size: 30px;
+
+        &:hover{
+            color: $lightGray;
+        }
+    }
+}
+
+.no-padding-left{
+    padding-left: 0;
+}
+
+.vertical-align-center{
+    margin: 8px;
+}
+
+.concession-name{
+    color: $tableHeaderColour;
+    font-size: 1.15em;
+    font-weight: bold;
+}
+
+.search-and-results-container .section{
+    padding: 0px;
+
+    .section-header{
+        padding: 10px 0;
+    }
+}
