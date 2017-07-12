@@ -8,6 +8,10 @@ import { PendingInboxComponent } from './pending-inbox/pending-inbox.component';
 import { ApprovedConcessionsComponent } from './approved-concessions/approved-concessions.component';
 import { ConditionsComponent } from './conditions/conditions.component';
 import { PricingComponent } from './pricing/pricing.component';
+import { DueExpiryInboxComponent } from './due-expiry-inbox/due-expiry-inbox.component';
+import { ExpiredInboxComponent } from './expired-inbox/expired-inbox.component';
+import { DeclinedInboxComponent } from './declined-inbox/declined-inbox.component';
+import { InboxHeaderComponent } from './inbox-header/inbox-header.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +20,11 @@ import { PricingComponent } from './pricing/pricing.component';
     PendingInboxComponent,
     ApprovedConcessionsComponent,
     ConditionsComponent,
-    PricingComponent
+    PricingComponent,
+    DueExpiryInboxComponent,
+    ExpiredInboxComponent,
+    DeclinedInboxComponent,
+    InboxHeaderComponent
   ],
   imports: [
     BrowserModule,

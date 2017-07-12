@@ -11,6 +11,22 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardBank.ConcessionMana
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardBank.ConcessionManagement.UI.Test", "test\StandardBank.ConcessionManagement.UI.Test\StandardBank.ConcessionManagement.UI.Test.csproj", "{81FC71BC-F3BB-41C8-91CF-C7FC2445F01A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardBank.ConcessionManagement.Interface", "src\StandardBank.ConcessionManagement.Interface\StandardBank.ConcessionManagement.Interface.csproj", "{C817E56D-27BE-4A77-AE12-1F018C3479D4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardBank.ConcessionManagement.BusinessLogic", "src\StandardBank.ConcessionManagement.BusinessLogic\StandardBank.ConcessionManagement.BusinessLogic.csproj", "{7082C5E6-EFD2-4FB4-A91F-DDFDBEADF83C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardBank.ConcessionManagement.Common", "src\StandardBank.ConcessionManagement.Common\StandardBank.ConcessionManagement.Common.csproj", "{653861DC-14A5-46CA-B25E-5E7A6FE82050}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardBank.ConcessionManagement.Model", "src\StandardBank.ConcessionManagement.Model\StandardBank.ConcessionManagement.Model.csproj", "{3BCAABD3-B8F4-4985-94C7-006EC8D7E546}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardBank.ConcessionManagement.Repository", "src\StandardBank.ConcessionManagement.Repository\StandardBank.ConcessionManagement.Repository.csproj", "{CF8C6A43-585B-48CC-83E2-D9866C1A14E8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardBank.ConcessionManagement.BusinessLogic.Test", "test\StandardBank.ConcessionManagement.BusinessLogic.Test\StandardBank.ConcessionManagement.BusinessLogic.Test.csproj", "{F3899214-37E0-42A3-9F87-94265D8592EE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardBank.ConcessionManagement.Common.Test", "test\StandardBank.ConcessionManagement.Common.Test\StandardBank.ConcessionManagement.Common.Test.csproj", "{D430623A-90DB-4110-9607-478FE2574C02}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardBank.ConcessionManagement.Repository.Test", "test\StandardBank.ConcessionManagement.Repository.Test\StandardBank.ConcessionManagement.Repository.Test.csproj", "{056DF8C4-CFF5-448F-8932-5C5606A00817}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +41,38 @@ Global
 		{81FC71BC-F3BB-41C8-91CF-C7FC2445F01A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81FC71BC-F3BB-41C8-91CF-C7FC2445F01A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81FC71BC-F3BB-41C8-91CF-C7FC2445F01A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C817E56D-27BE-4A77-AE12-1F018C3479D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C817E56D-27BE-4A77-AE12-1F018C3479D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C817E56D-27BE-4A77-AE12-1F018C3479D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C817E56D-27BE-4A77-AE12-1F018C3479D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7082C5E6-EFD2-4FB4-A91F-DDFDBEADF83C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7082C5E6-EFD2-4FB4-A91F-DDFDBEADF83C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7082C5E6-EFD2-4FB4-A91F-DDFDBEADF83C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7082C5E6-EFD2-4FB4-A91F-DDFDBEADF83C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{653861DC-14A5-46CA-B25E-5E7A6FE82050}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{653861DC-14A5-46CA-B25E-5E7A6FE82050}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{653861DC-14A5-46CA-B25E-5E7A6FE82050}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{653861DC-14A5-46CA-B25E-5E7A6FE82050}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BCAABD3-B8F4-4985-94C7-006EC8D7E546}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BCAABD3-B8F4-4985-94C7-006EC8D7E546}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BCAABD3-B8F4-4985-94C7-006EC8D7E546}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BCAABD3-B8F4-4985-94C7-006EC8D7E546}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF8C6A43-585B-48CC-83E2-D9866C1A14E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF8C6A43-585B-48CC-83E2-D9866C1A14E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF8C6A43-585B-48CC-83E2-D9866C1A14E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF8C6A43-585B-48CC-83E2-D9866C1A14E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3899214-37E0-42A3-9F87-94265D8592EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3899214-37E0-42A3-9F87-94265D8592EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3899214-37E0-42A3-9F87-94265D8592EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3899214-37E0-42A3-9F87-94265D8592EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D430623A-90DB-4110-9607-478FE2574C02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D430623A-90DB-4110-9607-478FE2574C02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D430623A-90DB-4110-9607-478FE2574C02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D430623A-90DB-4110-9607-478FE2574C02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{056DF8C4-CFF5-448F-8932-5C5606A00817}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{056DF8C4-CFF5-448F-8932-5C5606A00817}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{056DF8C4-CFF5-448F-8932-5C5606A00817}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{056DF8C4-CFF5-448F-8932-5C5606A00817}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,5 +80,13 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0C656047-F359-452B-879B-CD25B04F9560} = {869CE2B9-6B12-4BF1-945F-763BC9FD9015}
 		{81FC71BC-F3BB-41C8-91CF-C7FC2445F01A} = {AD2A4DAB-6383-47FE-9BA9-976730A8122C}
+		{C817E56D-27BE-4A77-AE12-1F018C3479D4} = {869CE2B9-6B12-4BF1-945F-763BC9FD9015}
+		{7082C5E6-EFD2-4FB4-A91F-DDFDBEADF83C} = {869CE2B9-6B12-4BF1-945F-763BC9FD9015}
+		{653861DC-14A5-46CA-B25E-5E7A6FE82050} = {869CE2B9-6B12-4BF1-945F-763BC9FD9015}
+		{3BCAABD3-B8F4-4985-94C7-006EC8D7E546} = {869CE2B9-6B12-4BF1-945F-763BC9FD9015}
+		{CF8C6A43-585B-48CC-83E2-D9866C1A14E8} = {869CE2B9-6B12-4BF1-945F-763BC9FD9015}
+		{F3899214-37E0-42A3-9F87-94265D8592EE} = {AD2A4DAB-6383-47FE-9BA9-976730A8122C}
+		{D430623A-90DB-4110-9607-478FE2574C02} = {AD2A4DAB-6383-47FE-9BA9-976730A8122C}
+		{056DF8C4-CFF5-448F-8932-5C5606A00817} = {AD2A4DAB-6383-47FE-9BA9-976730A8122C}
 	EndGlobalSection
 EndGlobal
