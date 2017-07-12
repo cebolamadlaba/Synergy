@@ -1,4 +1,5 @@
 ﻿import { BrowserModule } from '@angular/platform-browser';
+import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -30,6 +31,7 @@ import { InboxSearchBarComponent } from './inbox-search-bar/inbox-search-bar.com
   ],
   imports: [
     BrowserModule,
+    HttpModule,
     AppRoutingModule
   ],
   providers: [],

@@ -12,10 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Integration\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\src\StandardBank.ConcessionManagement.UI\StandardBank.ConcessionManagement.UI.csproj" />
     <ProjectReference Include="..\StandardBank.ConcessionManagement.Test.Helpers\StandardBank.ConcessionManagement.Test.Helpers.csproj" />
   </ItemGroup>

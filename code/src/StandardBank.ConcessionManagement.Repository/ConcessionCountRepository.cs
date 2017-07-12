@@ -19,10 +19,10 @@ namespace StandardBank.ConcessionManagement.Repository
             //TODO: Get this from the database
             return new[]
             {
-                new ConcessionCount {Status = "Pending", Count = 16},
-                new ConcessionCount {Status = "DueForExpiry", Count = 2},
-                new ConcessionCount {Status = "Expired", Count = 10},
-                new ConcessionCount {Status = "Declined", Count = 4}
+                new ConcessionCount {Status = "Pending", Count = 15},
+                new ConcessionCount {Status = "DueForExpiry", Count = 7},
+                new ConcessionCount {Status = "Expired", Count = 2},
+                new ConcessionCount {Status = "Declined", Count = 8}
             };
         }
     }
