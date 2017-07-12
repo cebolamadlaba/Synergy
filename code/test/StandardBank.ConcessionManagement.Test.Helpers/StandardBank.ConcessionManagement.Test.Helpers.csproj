@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Moq" Version="4.7.63" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\StandardBank.ConcessionManagement.Interface\StandardBank.ConcessionManagement.Interface.csproj" />
+    <ProjectReference Include="..\..\src\StandardBank.ConcessionManagement.Repository\StandardBank.ConcessionManagement.Repository.csproj" />
+  </ItemGroup>
+
+</Project>

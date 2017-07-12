@@ -12,6 +12,7 @@ import { DueExpiryInboxComponent } from './due-expiry-inbox/due-expiry-inbox.com
 import { ExpiredInboxComponent } from './expired-inbox/expired-inbox.component';
 import { DeclinedInboxComponent } from './declined-inbox/declined-inbox.component';
 import { InboxHeaderComponent } from './inbox-header/inbox-header.component';
+import { InboxSearchBarComponent } from './inbox-search-bar/inbox-search-bar.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { InboxHeaderComponent } from './inbox-header/inbox-header.component';
     DueExpiryInboxComponent,
     ExpiredInboxComponent,
     DeclinedInboxComponent,
-    InboxHeaderComponent
+    InboxHeaderComponent,
+    InboxSearchBarComponent
   ],
   imports: [
     BrowserModule,

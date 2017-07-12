@@ -6,13 +6,18 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
+    <PackageReference Include="Moq" Version="4.7.63" />
     <PackageReference Include="xunit" Version="2.2.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Integration\" />
-    <Folder Include="UnitTest\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\StandardBank.ConcessionManagement.UI\StandardBank.ConcessionManagement.UI.csproj" />
+    <ProjectReference Include="..\StandardBank.ConcessionManagement.Test.Helpers\StandardBank.ConcessionManagement.Test.Helpers.csproj" />
   </ItemGroup>
 
   <ItemGroup>

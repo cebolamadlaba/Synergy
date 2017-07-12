@@ -140,6 +140,7 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__expired_inbox_expired_inbox_component__ = __webpack_require__("../../../../../client-src/app/expired-inbox/expired-inbox.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__declined_inbox_declined_inbox_component__ = __webpack_require__("../../../../../client-src/app/declined-inbox/declined-inbox.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__inbox_header_inbox_header_component__ = __webpack_require__("../../../../../client-src/app/inbox-header/inbox-header.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__inbox_search_bar_inbox_search_bar_component__ = __webpack_require__("../../../../../client-src/app/inbox-search-bar/inbox-search-bar.component.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -147,6 +148,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -177,7 +179,8 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_9__due_expiry_inbox_due_expiry_inbox_component__["a" /* DueExpiryInboxComponent */],
             __WEBPACK_IMPORTED_MODULE_10__expired_inbox_expired_inbox_component__["a" /* ExpiredInboxComponent */],
             __WEBPACK_IMPORTED_MODULE_11__declined_inbox_declined_inbox_component__["a" /* DeclinedInboxComponent */],
-            __WEBPACK_IMPORTED_MODULE_12__inbox_header_inbox_header_component__["a" /* InboxHeaderComponent */]
+            __WEBPACK_IMPORTED_MODULE_12__inbox_header_inbox_header_component__["a" /* InboxHeaderComponent */],
+            __WEBPACK_IMPORTED_MODULE_13__inbox_search_bar_inbox_search_bar_component__["a" /* InboxSearchBarComponent */]
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
@@ -335,7 +338,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/declined-inbox/declined-inbox.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<app-inbox-header></app-inbox-header>"
+module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n  <app-inbox-search-bar></app-inbox-search-bar>\r\n  <!-- Results table -->\r\n  <div class=\"table-container\">\r\n    <table class=\"table table-bordered table-hover header-fixed table-striped\">\r\n      <thead>\r\n        <tr>\r\n          <th>Risk Group</th>\r\n          <th>Customer Name</th>\r\n          <th>Type</th>\r\n          <th>Date Opened</th>\r\n          <th>Concession ID</th>\r\n          <th>Segment</th>\r\n          <th>Sent For Approval</th>\r\n        </tr>\r\n      </thead>\r\n      <tbody>\r\n        <tr>\r\n          <td>\r\n            <p class=\"customerName\">APPLE</p>\r\n            <p class=\"date\">1989</p>\r\n          </td>\r\n          <td>Mac</td>\r\n          <td>Transactional</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n          <td>L00000</td>\r\n          <td>Expert</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n\r\n        </tr>\r\n        <tr>\r\n          <td>\r\n            <p class=\"customerName\">EDCON</p>\r\n            <p class=\"date\">1989</p>\r\n          </td>\r\n          <td>CNA</td>\r\n          <td>Transactional</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n          <td>L11111</td>\r\n          <td>Expert</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n        </tr>\r\n      </tbody>\r\n    </table>\r\n  </div>\r\n  <!-- pagination-->\r\n  <ul class=\"pagination\">\r\n    <li><a href=\"#\">First</a></li>\r\n    <li><a href=\"#\">Prev</a></li>\r\n    <li class=\"active\"><a href=\"#\">1</a></li>\r\n    <li><a href=\"#\">2</a></li>\r\n    <li><a href=\"#\">Next</a></li>\r\n    <li><a href=\"#\">Last</a></li>\r\n  </ul>\r\n</div>"
 
 /***/ }),
 
@@ -396,7 +399,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/due-expiry-inbox/due-expiry-inbox.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n  <!-- Search bar -->\r\n  <div class=\"input-group add-on\">\r\n    <input class=\"form-control\" placeholder=\"Search Concession ID or Risk Group Number\" name=\"srch-term\" id=\"srch-term\" type=\"text\">\r\n    <div class=\"input-group-btn\">\r\n      <button class=\"btn btn-default-search\" type=\"submit\"><i class=\"glyphicon glyphicon-search\"></i></button>\r\n    </div>\r\n  </div>\r\n  <!-- Results table -->\r\n  <div class=\"table-container\">\r\n    <table class=\"table table-bordered table-hover header-fixed table-striped\">\r\n      <thead>\r\n        <tr>\r\n          <th>Risk Group</th>\r\n          <th>Customer Name</th>\r\n          <th>Type</th>\r\n          <th>Date Opened</th>\r\n          <th>Concession ID</th>\r\n          <th>Segment</th>\r\n          <th>Sent For Approval</th>\r\n        </tr>\r\n      </thead>\r\n      <tbody>\r\n        <tr>\r\n          <td>\r\n            <p class=\"customerName\">APPLE</p>\r\n            <p class=\"date\">1989</p>\r\n          </td>\r\n          <td>Mac</td>\r\n          <td>Transactional</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n          <td>L00000</td>\r\n          <td>Expert</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n\r\n        </tr>\r\n        <tr>\r\n          <td>\r\n            <p class=\"customerName\">EDCON</p>\r\n            <p class=\"date\">1989</p>\r\n          </td>\r\n          <td>CNA</td>\r\n          <td>Transactional</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n          <td>L11111</td>\r\n          <td>Expert</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n        </tr>\r\n      </tbody>\r\n    </table>\r\n  </div>\r\n  <!-- pagination-->\r\n  <ul class=\"pagination\">\r\n    <li><a href=\"#\">First</a></li>\r\n    <li><a href=\"#\">Prev</a></li>\r\n    <li class=\"active\"><a href=\"#\">1</a></li>\r\n    <li><a href=\"#\">2</a></li>\r\n    <li><a href=\"#\">Next</a></li>\r\n    <li><a href=\"#\">Last</a></li>\r\n  </ul>\r\n</div>"
+module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n  <app-inbox-search-bar></app-inbox-search-bar>\r\n  <!-- Results table -->\r\n  <div class=\"table-container\">\r\n    <table class=\"table table-bordered table-hover header-fixed table-striped\">\r\n      <thead>\r\n        <tr>\r\n          <th>Risk Group</th>\r\n          <th>Customer Name</th>\r\n          <th>Type</th>\r\n          <th>Date Opened</th>\r\n          <th>Concession ID</th>\r\n          <th>Segment</th>\r\n          <th>Sent For Approval</th>\r\n        </tr>\r\n      </thead>\r\n      <tbody>\r\n        <tr>\r\n          <td>\r\n            <p class=\"customerName\">APPLE</p>\r\n            <p class=\"date\">1989</p>\r\n          </td>\r\n          <td>Mac</td>\r\n          <td>Transactional</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n          <td>L00000</td>\r\n          <td>Expert</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n\r\n        </tr>\r\n        <tr>\r\n          <td>\r\n            <p class=\"customerName\">EDCON</p>\r\n            <p class=\"date\">1989</p>\r\n          </td>\r\n          <td>CNA</td>\r\n          <td>Transactional</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n          <td>L11111</td>\r\n          <td>Expert</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n        </tr>\r\n      </tbody>\r\n    </table>\r\n  </div>\r\n  <!-- pagination-->\r\n  <ul class=\"pagination\">\r\n    <li><a href=\"#\">First</a></li>\r\n    <li><a href=\"#\">Prev</a></li>\r\n    <li class=\"active\"><a href=\"#\">1</a></li>\r\n    <li><a href=\"#\">2</a></li>\r\n    <li><a href=\"#\">Next</a></li>\r\n    <li><a href=\"#\">Last</a></li>\r\n  </ul>\r\n</div>"
 
 /***/ }),
 
@@ -457,7 +460,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/expired-inbox/expired-inbox.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<app-inbox-header></app-inbox-header>"
+module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n  <app-inbox-search-bar></app-inbox-search-bar>\r\n  <!-- Results table -->\r\n  <div class=\"table-container\">\r\n    <table class=\"table table-bordered table-hover header-fixed table-striped\">\r\n      <thead>\r\n        <tr>\r\n          <th>Risk Group</th>\r\n          <th>Customer Name</th>\r\n          <th>Type</th>\r\n          <th>Date Opened</th>\r\n          <th>Concession ID</th>\r\n          <th>Segment</th>\r\n          <th>Sent For Approval</th>\r\n        </tr>\r\n      </thead>\r\n      <tbody>\r\n        <tr>\r\n          <td>\r\n            <p class=\"customerName\">APPLE</p>\r\n            <p class=\"date\">1989</p>\r\n          </td>\r\n          <td>Mac</td>\r\n          <td>Transactional</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n          <td>L00000</td>\r\n          <td>Expert</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n\r\n        </tr>\r\n        <tr>\r\n          <td>\r\n            <p class=\"customerName\">EDCON</p>\r\n            <p class=\"date\">1989</p>\r\n          </td>\r\n          <td>CNA</td>\r\n          <td>Transactional</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n          <td>L11111</td>\r\n          <td>Expert</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n        </tr>\r\n      </tbody>\r\n    </table>\r\n  </div>\r\n  <!-- pagination-->\r\n  <ul class=\"pagination\">\r\n    <li><a href=\"#\">First</a></li>\r\n    <li><a href=\"#\">Prev</a></li>\r\n    <li class=\"active\"><a href=\"#\">1</a></li>\r\n    <li><a href=\"#\">2</a></li>\r\n    <li><a href=\"#\">Next</a></li>\r\n    <li><a href=\"#\">Last</a></li>\r\n  </ul>\r\n</div>"
 
 /***/ }),
 
@@ -558,6 +561,67 @@ InboxHeaderComponent = __decorate([
 
 /***/ }),
 
+/***/ "../../../../../client-src/app/inbox-search-bar/inbox-search-bar.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../client-src/app/inbox-search-bar/inbox-search-bar.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<!-- Search bar -->\r\n<div class=\"input-group add-on\">\r\n  <input class=\"form-control\" placeholder=\"Search Concession ID or Risk Group Number\" name=\"srch-term\" id=\"srch-term\" type=\"text\">\r\n  <div class=\"input-group-btn\">\r\n    <button class=\"btn btn-default-search\" type=\"submit\"><i class=\"glyphicon glyphicon-search\"></i></button>\r\n  </div>\r\n</div>"
+
+/***/ }),
+
+/***/ "../../../../../client-src/app/inbox-search-bar/inbox-search-bar.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return InboxSearchBarComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var InboxSearchBarComponent = (function () {
+    function InboxSearchBarComponent() {
+    }
+    InboxSearchBarComponent.prototype.ngOnInit = function () {
+    };
+    return InboxSearchBarComponent;
+}());
+InboxSearchBarComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_10" /* Component */])({
+        selector: 'app-inbox-search-bar',
+        template: __webpack_require__("../../../../../client-src/app/inbox-search-bar/inbox-search-bar.component.html"),
+        styles: [__webpack_require__("../../../../../client-src/app/inbox-search-bar/inbox-search-bar.component.css")]
+    }),
+    __metadata("design:paramtypes", [])
+], InboxSearchBarComponent);
+
+//# sourceMappingURL=inbox-search-bar.component.js.map
+
+/***/ }),
+
 /***/ "../../../../../client-src/app/page-header/page-header.component.css":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -640,7 +704,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/pending-inbox/pending-inbox.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n  <!-- Search bar -->\r\n  <div class=\"input-group add-on\">\r\n    <input class=\"form-control\" placeholder=\"Search Concession ID or Risk Group Number\" name=\"srch-term\" id=\"srch-term\" type=\"text\">\r\n  </div>\r\n  <!-- Results table -->\r\n  <div class=\"table-container\">\r\n    <table class=\"table table-bordered table-hover header-fixed table-striped\">\r\n      <thead>\r\n        <tr>\r\n          <th>Risk Group</th>\r\n          <th>Customer Name</th>\r\n          <th>Type</th>\r\n          <th>Date Opened</th>\r\n          <th>Concession ID</th>\r\n          <th>Segment</th>\r\n          <th>Sent For Approval</th>\r\n        </tr>\r\n      </thead>\r\n      <tbody>\r\n        <tr>\r\n          <td>\r\n            <p class=\"customerName\">APPLE</p>\r\n            <p class=\"date\">1989</p>\r\n          </td>\r\n          <td>Mac</td>\r\n          <td>Transactional</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n          <td>L00000</td>\r\n          <td>Expert</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n\r\n        </tr>\r\n        <tr>\r\n          <td>\r\n            <p class=\"customerName\">EDCON</p>\r\n            <p class=\"date\">1989</p>\r\n          </td>\r\n          <td>CNA</td>\r\n          <td>Transactional</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n          <td>L11111</td>\r\n          <td>Expert</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n\r\n        </tr>\r\n        <tr>\r\n          <td>\r\n            <p class=\"customerName\">VIRGIN</p>\r\n            <p class=\"date\">1989</p>\r\n          </td>\r\n          <td>Virgin Money</td>\r\n          <td>BOL</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n          <td>B309864</td>\r\n          <td>Franchising</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n\r\n        </tr>\r\n      </tbody>\r\n    </table>\r\n  </div>\r\n  <!-- pagination-->\r\n  <ul class=\"pagination\">\r\n    <li><a href=\"#\">First</a></li>\r\n    <li><a href=\"#\">Prev</a></li>\r\n    <li class=\"active\"><a href=\"#\">1</a></li>\r\n    <li><a href=\"#\">2</a></li>\r\n    <li><a href=\"#\">Next</a></li>\r\n    <li><a href=\"#\">Last</a></li>\r\n  </ul>\r\n</div>"
+module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n  <app-inbox-search-bar></app-inbox-search-bar>\r\n  <!-- Results table -->\r\n  <div class=\"table-container\">\r\n    <table class=\"table table-bordered table-hover header-fixed table-striped\">\r\n      <thead>\r\n        <tr>\r\n          <th>Risk Group</th>\r\n          <th>Customer Name</th>\r\n          <th>Type</th>\r\n          <th>Date Opened</th>\r\n          <th>Concession ID</th>\r\n          <th>Segment</th>\r\n          <th>Sent For Approval</th>\r\n        </tr>\r\n      </thead>\r\n      <tbody>\r\n        <tr>\r\n          <td>\r\n            <p class=\"customerName\">APPLE</p>\r\n            <p class=\"date\">1989</p>\r\n          </td>\r\n          <td>Mac</td>\r\n          <td>Transactional</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n          <td>L00000</td>\r\n          <td>Expert</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n\r\n        </tr>\r\n        <tr>\r\n          <td>\r\n            <p class=\"customerName\">EDCON</p>\r\n            <p class=\"date\">1989</p>\r\n          </td>\r\n          <td>CNA</td>\r\n          <td>Transactional</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n          <td>L11111</td>\r\n          <td>Expert</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n\r\n        </tr>\r\n        <tr>\r\n          <td>\r\n            <p class=\"customerName\">VIRGIN</p>\r\n            <p class=\"date\">1989</p>\r\n          </td>\r\n          <td>Virgin Money</td>\r\n          <td>BOL</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n          <td>B309864</td>\r\n          <td>Franchising</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n\r\n        </tr>\r\n      </tbody>\r\n    </table>\r\n  </div>\r\n  <!-- pagination-->\r\n  <ul class=\"pagination\">\r\n    <li><a href=\"#\">First</a></li>\r\n    <li><a href=\"#\">Prev</a></li>\r\n    <li class=\"active\"><a href=\"#\">1</a></li>\r\n    <li><a href=\"#\">2</a></li>\r\n    <li><a href=\"#\">Next</a></li>\r\n    <li><a href=\"#\">Last</a></li>\r\n  </ul>\r\n</div>"
 
 /***/ }),
 

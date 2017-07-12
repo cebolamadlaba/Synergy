@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardBank.ConcessionMana
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardBank.ConcessionManagement.Repository.Test", "test\StandardBank.ConcessionManagement.Repository.Test\StandardBank.ConcessionManagement.Repository.Test.csproj", "{056DF8C4-CFF5-448F-8932-5C5606A00817}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardBank.ConcessionManagement.Test.Helpers", "test\StandardBank.ConcessionManagement.Test.Helpers\StandardBank.ConcessionManagement.Test.Helpers.csproj", "{040CE3BF-5ACB-4FBA-B04B-441F01C1CD6C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,10 @@ Global
 		{056DF8C4-CFF5-448F-8932-5C5606A00817}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{056DF8C4-CFF5-448F-8932-5C5606A00817}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{056DF8C4-CFF5-448F-8932-5C5606A00817}.Release|Any CPU.Build.0 = Release|Any CPU
+		{040CE3BF-5ACB-4FBA-B04B-441F01C1CD6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{040CE3BF-5ACB-4FBA-B04B-441F01C1CD6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{040CE3BF-5ACB-4FBA-B04B-441F01C1CD6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{040CE3BF-5ACB-4FBA-B04B-441F01C1CD6C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,5 +94,6 @@ Global
 		{F3899214-37E0-42A3-9F87-94265D8592EE} = {AD2A4DAB-6383-47FE-9BA9-976730A8122C}
 		{D430623A-90DB-4110-9607-478FE2574C02} = {AD2A4DAB-6383-47FE-9BA9-976730A8122C}
 		{056DF8C4-CFF5-448F-8932-5C5606A00817} = {AD2A4DAB-6383-47FE-9BA9-976730A8122C}
+		{040CE3BF-5ACB-4FBA-B04B-441F01C1CD6C} = {AD2A4DAB-6383-47FE-9BA9-976730A8122C}
 	EndGlobalSection
 EndGlobal

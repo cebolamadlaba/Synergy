@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Repository;
 
 namespace StandardBank.ConcessionManagement.UI
 {
@@ -39,6 +40,9 @@ namespace StandardBank.ConcessionManagement.UI
     {
       // Add framework services.
       services.AddMvc();
+
+      // Repository services
+      services.AddScoped<IConcessionCountRepository, ConcessionCountRepository>();
     }
 
     /// <summary>

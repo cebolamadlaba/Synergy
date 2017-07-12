@@ -7,8 +7,11 @@
   <ItemGroup>
     <Folder Include="BusinessLogic\" />
     <Folder Include="Common\" />
-    <Folder Include="Repository\" />
     <Folder Include="UserInterface\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StandardBank.ConcessionManagement.Model\StandardBank.ConcessionManagement.Model.csproj" />
   </ItemGroup>
 
 </Project>
