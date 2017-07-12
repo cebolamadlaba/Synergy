@@ -39,9 +39,10 @@ namespace StandardBank.ConcessionManagement.UI
     public void ConfigureServices(IServiceCollection services)
     {
       // Add framework services.
+      services.AddMemoryCache();
       services.AddMvc();
 
-      // Repository services
+      // Add repository services.
       services.AddScoped<IConcessionCountRepository, ConcessionCountRepository>();
     }
 
