@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\StandardBank.ConcessionManagement.Common\StandardBank.ConcessionManagement.Common.csproj" />
     <ProjectReference Include="..\..\src\StandardBank.ConcessionManagement.Interface\StandardBank.ConcessionManagement.Interface.csproj" />
     <ProjectReference Include="..\..\src\StandardBank.ConcessionManagement.Repository\StandardBank.ConcessionManagement.Repository.csproj" />
   </ItemGroup>

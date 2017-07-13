@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using StandardBank.ConcessionManagement.Common;
+using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Repository;
 
@@ -42,8 +44,21 @@ namespace StandardBank.ConcessionManagement.UI
       services.AddMemoryCache();
       services.AddMvc();
 
+      // Add common services
+      services.AddSingleton<IConfigurationData>(GenerateConfigurationData());
+
       // Add repository services.
       services.AddScoped<IConcessionCountRepository, ConcessionCountRepository>();
+    }
+
+    /// <summary>
+    /// Generates a populated configuration data object using the configuration values from the appSettings.json
+    /// </summary>
+    /// <returns></returns>
+    private ConfigurationData GenerateConfigurationData()
+    {
+      var connectionString = Configuration["ConnectionString"];
+      return new ConfigurationData(connectionString);
     }
 
     /// <summary>
