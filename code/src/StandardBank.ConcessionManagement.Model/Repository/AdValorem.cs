@@ -1,31 +1,33 @@
-﻿namespace StandardBank.ConcessionManagement.Model.Repository
+using System;
+
+namespace StandardBank.ConcessionManagement.Model.Repository
 {
     /// <summary>
-    /// Ad valorem entity
+    /// AdValorem entity
     /// </summary>
     public class AdValorem
     {
         /// <summary>
-        /// Gets or sets the identifier.
+        /// Gets or sets the Id.
         /// </summary>
         /// <value>
-        /// The identifier.
+        /// The Id.
         /// </value>
         public int Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the amount.
+        /// Gets or sets the Amount.
         /// </summary>
         /// <value>
-        /// The amount.
+        /// The Amount.
         /// </value>
-        public decimal Amount { get; set; }
+        public decimal? Amount { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this instance is active.
+        /// Gets or sets the IsActive.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if this instance is active; otherwise, <c>false</c>.
+        /// The IsActive.
         /// </value>
         public bool IsActive { get; set; }
     }

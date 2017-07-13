@@ -1,0 +1,12 @@
+﻿using System;
+
+namespace StandardBank.ConcessionManagement.Model.Repository
+{
+    /// <summary>
+    /// [[ClassName]] entity
+    /// </summary>
+    public class [[ClassName]]
+    {
+[[ClassParameters]]
+    }
+}

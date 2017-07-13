@@ -1,0 +1,7 @@
+﻿        /// <summary>
+        /// Gets or sets the [[ColumnName]].
+        /// </summary>
+        /// <value>
+        /// The [[ColumnName]].
+        /// </value>
+        public [[CodeDataType]][[IsNullable]] [[ColumnName]] { get; set; }
