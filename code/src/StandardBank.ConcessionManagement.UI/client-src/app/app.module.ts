@@ -14,6 +14,7 @@ import { ExpiredInboxComponent } from './expired-inbox/expired-inbox.component';
 import { DeclinedInboxComponent } from './declined-inbox/declined-inbox.component';
 import { InboxHeaderComponent } from './inbox-header/inbox-header.component';
 import { InboxSearchBarComponent } from './inbox-search-bar/inbox-search-bar.component';
+import { InboxConcessionCountService } from './inbox-concession-count/inbox-concession-count.service';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,7 @@ import { InboxSearchBarComponent } from './inbox-search-bar/inbox-search-bar.com
     HttpModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [InboxConcessionCountService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
