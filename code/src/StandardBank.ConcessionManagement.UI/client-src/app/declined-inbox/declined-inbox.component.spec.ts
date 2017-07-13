@@ -1,10 +1,10 @@
 ﻿import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpModule } from '@angular/http';
 import { DeclinedInboxComponent } from './declined-inbox.component';
+import { HttpModule } from '@angular/http';
 import { InboxHeaderComponent } from "../inbox-header/inbox-header.component";
 import { InboxSearchBarComponent } from "../inbox-search-bar/inbox-search-bar.component";
-import { ConcessionsSummary } from "../models/concessions-summary";
 import { InboxConcessionCountService } from "../inbox-concession-count/inbox-concession-count.service";
+import { MockInboxConcessionCountService } from "../inbox-concession-count/inbox-concession-count.service";
 
 describe('DeclinedInboxComponent', () => {
   let component: DeclinedInboxComponent;
@@ -14,13 +14,18 @@ describe('DeclinedInboxComponent', () => {
       TestBed.configureTestingModule({
           imports: [HttpModule],
           declarations: [DeclinedInboxComponent, InboxHeaderComponent, InboxSearchBarComponent],
-          providers: [InboxConcessionCountService]
-      })
-          .compileComponents();
+          providers: [{ provide: InboxConcessionCountService, useClass: MockInboxConcessionCountService }]
+      }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DeclinedInboxComponent);
+    fixture = TestBed.overrideComponent(InboxHeaderComponent, {
+      set: {
+        providers: [
+          { provide: InboxConcessionCountService, useClass: MockInboxConcessionCountService },
+        ]
+      }
+    }).createComponent(DeclinedInboxComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

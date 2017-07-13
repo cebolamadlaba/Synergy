@@ -7,13 +7,13 @@ import { ConcessionsSummary } from "../models/concessions-summary";
 @Injectable()
 export class InboxConcessionCountService {
 
-  constructor(private _http: Http) {
+  constructor(private http : Http) {
   }
 
   getData(): Observable<ConcessionsSummary> {
-    var url = "/api/inbox/ConcessionsSummary";
+    const url = "/api/inbox/ConcessionsSummary";
 
-    return this._http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
   }
 
   private extractData(response: Response) {
@@ -24,5 +24,18 @@ export class InboxConcessionCountService {
   private handleErrorObservable(error: Response | any) {
     console.error(error.message || error);
     return Observable.throw(error.message || error);
+  }
+}
+
+@Injectable()
+export class MockInboxConcessionCountService extends InboxConcessionCountService {
+  model = new ConcessionsSummary();
+
+  getData(): Observable<ConcessionsSummary> {
+    this.model.pendingConcessions = 1;
+    this.model.declinedConcessions = 2;
+    this.model.dueForExpiryConcessions = 3;
+    this.model.expiredConcessions = 4;
+    return Observable.of(this.model);
   }
 }

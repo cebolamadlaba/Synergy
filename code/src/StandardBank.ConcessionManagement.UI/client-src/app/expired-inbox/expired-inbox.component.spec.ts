@@ -1,6 +1,10 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+﻿import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ExpiredInboxComponent } from './expired-inbox.component';
+import { HttpModule } from '@angular/http';
+import { InboxHeaderComponent } from "../inbox-header/inbox-header.component";
+import { InboxSearchBarComponent } from "../inbox-search-bar/inbox-search-bar.component";
+import { InboxConcessionCountService } from "../inbox-concession-count/inbox-concession-count.service";
+import { MockInboxConcessionCountService } from "../inbox-concession-count/inbox-concession-count.service";
 
 describe('ExpiredInboxComponent', () => {
   let component: ExpiredInboxComponent;
@@ -8,9 +12,11 @@ describe('ExpiredInboxComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ExpiredInboxComponent ]
+      imports: [HttpModule],
+      declarations: [ExpiredInboxComponent, InboxHeaderComponent, InboxSearchBarComponent],
+      providers: [{ provide: InboxConcessionCountService, useClass: MockInboxConcessionCountService }]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

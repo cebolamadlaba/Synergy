@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit, Inject } from '@angular/core';
 import { InboxConcessionCountService } from "../inbox-concession-count/inbox-concession-count.service";
 import { Observable } from "rxjs";
 import { ConcessionsSummary } from "../models/concessions-summary";
@@ -6,18 +6,17 @@ import { ConcessionsSummary } from "../models/concessions-summary";
 @Component({
   selector: 'app-inbox-header',
   templateUrl: './inbox-header.component.html',
-  styleUrls: ['./inbox-header.component.css'],
-  providers: [InboxConcessionCountService]
+  styleUrls: ['./inbox-header.component.css']
 })
 export class InboxHeaderComponent implements OnInit {
-  observableConcessionsSummary: Observable<ConcessionsSummary>
+  observableConcessionsSummary: Observable<ConcessionsSummary>;
   concessionsSummary: ConcessionsSummary;
   errorMessage: String;
 
-  constructor(private _inboxConcessionCountService: InboxConcessionCountService) { }
+  constructor(@Inject(InboxConcessionCountService) private inboxConcessionCountService) { }
 
   ngOnInit() {
-    this.observableConcessionsSummary = this._inboxConcessionCountService.getData();
+    this.observableConcessionsSummary = this.inboxConcessionCountService.getData();
     this.observableConcessionsSummary.subscribe(concessionsSummary => this.concessionsSummary = concessionsSummary,
       error => this.errorMessage = <any>error);
   }

@@ -513,7 +513,9 @@ ExpiredInboxComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_concessions_summary__ = __webpack_require__("../../../../../client-src/app/models/concessions-summary.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return InboxConcessionCountService; });
+/* unused harmony export MockInboxConcessionCountService */
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -523,6 +525,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 
@@ -549,6 +552,23 @@ InboxConcessionCountService = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["v" /* Injectable */])(),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _a || Object])
 ], InboxConcessionCountService);
+
+var MockInboxConcessionCountService = (function () {
+    function MockInboxConcessionCountService() {
+        this.model = new __WEBPACK_IMPORTED_MODULE_4__models_concessions_summary__["a" /* ConcessionsSummary */]();
+        console.log("In the MockInboxConcessionCountService constructor");
+    }
+    MockInboxConcessionCountService.prototype.getData = function () {
+        console.log("In the MockInboxConcessionCountService getData");
+        this.model.pendingConcessions = 1;
+        return __WEBPACK_IMPORTED_MODULE_2_rxjs__["Observable"].of(this.model);
+    };
+    return MockInboxConcessionCountService;
+}());
+MockInboxConcessionCountService = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["v" /* Injectable */])(),
+    __metadata("design:paramtypes", [])
+], MockInboxConcessionCountService);
 
 var _a;
 //# sourceMappingURL=inbox-concession-count.service.js.map
@@ -682,6 +702,21 @@ InboxSearchBarComponent = __decorate([
 ], InboxSearchBarComponent);
 
 //# sourceMappingURL=inbox-search-bar.component.js.map
+
+/***/ }),
+
+/***/ "../../../../../client-src/app/models/concessions-summary.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ConcessionsSummary; });
+var ConcessionsSummary = (function () {
+    function ConcessionsSummary() {
+    }
+    return ConcessionsSummary;
+}());
+
+//# sourceMappingURL=concessions-summary.js.map
 
 /***/ }),
 
