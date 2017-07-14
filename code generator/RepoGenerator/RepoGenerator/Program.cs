@@ -110,14 +110,6 @@ namespace RepoGenerator
 
             //8. Generate MockedDependencies
             GenerateMockedDependencies(tables);
-
-            //9. Generate Data Helper
-            GenerateDataHelper(tables);
-        }
-
-        private static void GenerateDataHelper(IEnumerable<Table> tables)
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>
