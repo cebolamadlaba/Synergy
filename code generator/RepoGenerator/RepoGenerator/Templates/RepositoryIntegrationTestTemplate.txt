@@ -1,4 +1,6 @@
-﻿using StandardBank.ConcessionManagement.Model.Repository;
+﻿using System;
+using System.Linq;
+using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Test.Helpers;
 using Xunit;
 
@@ -17,7 +19,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         {
             var model = new [[ClassName]]
             {
-                [[CreatePropertiesAndValues]]
+[[CreatePropertiesAndValues]]
             };
 
             var result = InstantiatedDependencies.[[ClassName]]Repository.Create(model);
@@ -32,10 +34,12 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void ReadById_Executes_Positive()
         {
-            var result = InstantiatedDependencies.[[ClassName]]Repository.ReadById(1);
+            var results = InstantiatedDependencies.[[ClassName]]Repository.ReadAll();
+            var id = results.First().Id;
+            var result = InstantiatedDependencies.[[ClassName]]Repository.ReadById(id);
 
             Assert.NotNull(result);
-            Assert.Equal(result.Id, 1);
+            Assert.Equal(result.Id, id);
         }
 
         /// <summary>
@@ -56,19 +60,18 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void Update_Executes_Positive()
         {
-            var model = InstantiatedDependencies.[[ClassName]]Repository.ReadById(1);
+            var results = InstantiatedDependencies.[[ClassName]]Repository.ReadAll();
+            var id = results.First().Id;
+            var model = InstantiatedDependencies.[[ClassName]]Repository.ReadById(id);
 
-            model.Amount = model.Amount + 1;
-            model.IsActive = !model.IsActive;
+[[UpdateChangeValues]]
 
             InstantiatedDependencies.[[ClassName]]Repository.Update(model);
 
-            var updatedModel = InstantiatedDependencies.[[ClassName]]Repository.ReadById(1);
+            var updatedModel = InstantiatedDependencies.[[ClassName]]Repository.ReadById(id);
 
             Assert.NotNull(updatedModel);
-            Assert.Equal(updatedModel.Id, model.Id);
-            Assert.Equal(updatedModel.Amount, model.Amount);
-            Assert.Equal(updatedModel.IsActive, model.IsActive);
+[[UpdateEqualAssertions]]
         }
 
         /// <summary>
@@ -79,8 +82,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         {
             var model = new [[ClassName]]
             {
-                Amount = 300,
-                IsActive = false
+[[CreatePropertiesAndValues]]
             };
 
             var temporaryEntity = InstantiatedDependencies.[[ClassName]]Repository.Create(model);

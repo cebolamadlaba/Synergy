@@ -7,9 +7,9 @@ using Xunit;
 namespace StandardBank.ConcessionManagement.Repository.Test.Integration
 {
     /// <summary>
-    /// AdValorem repository tests
+    /// RiskGroup repository tests
     /// </summary>
-    public class AdValoremRepositoryTest
+    public class RiskGroupRepositoryTest
     {
         /// <summary>
         /// Tests that Create executes positive.
@@ -17,13 +17,14 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void Create_Executes_Positive()
         {
-            var model = new AdValorem
+            var model = new RiskGroup
             {
-                Amount = 3744,
+                RiskGroupNumber = 9,
+                RiskGroupName = "3b84541fd8",
                 IsActive = false
             };
 
-            var result = InstantiatedDependencies.AdValoremRepository.Create(model);
+            var result = InstantiatedDependencies.RiskGroupRepository.Create(model);
 
             Assert.NotNull(result);
             Assert.NotEqual(result.Id, 0);
@@ -35,9 +36,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void ReadById_Executes_Positive()
         {
-            var results = InstantiatedDependencies.AdValoremRepository.ReadAll();
+            var results = InstantiatedDependencies.RiskGroupRepository.ReadAll();
             var id = results.First().Id;
-            var result = InstantiatedDependencies.AdValoremRepository.ReadById(id);
+            var result = InstantiatedDependencies.RiskGroupRepository.ReadById(id);
 
             Assert.NotNull(result);
             Assert.Equal(result.Id, id);
@@ -49,7 +50,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void ReadAll_Executes_Positive()
         {
-            var result = InstantiatedDependencies.AdValoremRepository.ReadAll();
+            var result = InstantiatedDependencies.RiskGroupRepository.ReadAll();
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
@@ -61,20 +62,22 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void Update_Executes_Positive()
         {
-            var results = InstantiatedDependencies.AdValoremRepository.ReadAll();
+            var results = InstantiatedDependencies.RiskGroupRepository.ReadAll();
             var id = results.First().Id;
-            var model = InstantiatedDependencies.AdValoremRepository.ReadById(id);
+            var model = InstantiatedDependencies.RiskGroupRepository.ReadById(id);
 
-            model.Amount = model.Amount + 100;
+            model.RiskGroupNumber = model.RiskGroupNumber + 1;
+            model.RiskGroupName = "1cb39b8591";
             model.IsActive = !model.IsActive;
 
-            InstantiatedDependencies.AdValoremRepository.Update(model);
+            InstantiatedDependencies.RiskGroupRepository.Update(model);
 
-            var updatedModel = InstantiatedDependencies.AdValoremRepository.ReadById(id);
+            var updatedModel = InstantiatedDependencies.RiskGroupRepository.ReadById(id);
 
             Assert.NotNull(updatedModel);
             Assert.Equal(updatedModel.Id, model.Id);
-            Assert.Equal(updatedModel.Amount, model.Amount);
+            Assert.Equal(updatedModel.RiskGroupNumber, model.RiskGroupNumber);
+            Assert.Equal(updatedModel.RiskGroupName, model.RiskGroupName);
             Assert.Equal(updatedModel.IsActive, model.IsActive);
         }
 
@@ -84,20 +87,21 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void Delete_Executes_Positive()
         {
-            var model = new AdValorem
+            var model = new RiskGroup
             {
-                Amount = 3744,
+                RiskGroupNumber = 9,
+                RiskGroupName = "3b84541fd8",
                 IsActive = false
             };
 
-            var temporaryEntity = InstantiatedDependencies.AdValoremRepository.Create(model);
+            var temporaryEntity = InstantiatedDependencies.RiskGroupRepository.Create(model);
 
             Assert.NotNull(temporaryEntity);
             Assert.NotEqual(temporaryEntity.Id, 0);
 
-            InstantiatedDependencies.AdValoremRepository.Delete(temporaryEntity);
+            InstantiatedDependencies.RiskGroupRepository.Delete(temporaryEntity);
 
-            var result = InstantiatedDependencies.AdValoremRepository.ReadById(temporaryEntity.Id);
+            var result = InstantiatedDependencies.RiskGroupRepository.ReadById(temporaryEntity.Id);
 
             Assert.Null(result);
         }

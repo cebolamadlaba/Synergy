@@ -7,9 +7,9 @@ using Xunit;
 namespace StandardBank.ConcessionManagement.Repository.Test.Integration
 {
     /// <summary>
-    /// AdValorem repository tests
+    /// ConcessionType repository tests
     /// </summary>
-    public class AdValoremRepositoryTest
+    public class ConcessionTypeRepositoryTest
     {
         /// <summary>
         /// Tests that Create executes positive.
@@ -17,13 +17,14 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void Create_Executes_Positive()
         {
-            var model = new AdValorem
+            var model = new ConcessionType
             {
-                Amount = 3744,
+                Description = "aa32f3374f",
+                Code = "2af5560d97",
                 IsActive = false
             };
 
-            var result = InstantiatedDependencies.AdValoremRepository.Create(model);
+            var result = InstantiatedDependencies.ConcessionTypeRepository.Create(model);
 
             Assert.NotNull(result);
             Assert.NotEqual(result.Id, 0);
@@ -35,9 +36,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void ReadById_Executes_Positive()
         {
-            var results = InstantiatedDependencies.AdValoremRepository.ReadAll();
+            var results = InstantiatedDependencies.ConcessionTypeRepository.ReadAll();
             var id = results.First().Id;
-            var result = InstantiatedDependencies.AdValoremRepository.ReadById(id);
+            var result = InstantiatedDependencies.ConcessionTypeRepository.ReadById(id);
 
             Assert.NotNull(result);
             Assert.Equal(result.Id, id);
@@ -49,7 +50,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void ReadAll_Executes_Positive()
         {
-            var result = InstantiatedDependencies.AdValoremRepository.ReadAll();
+            var result = InstantiatedDependencies.ConcessionTypeRepository.ReadAll();
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
@@ -61,20 +62,22 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void Update_Executes_Positive()
         {
-            var results = InstantiatedDependencies.AdValoremRepository.ReadAll();
+            var results = InstantiatedDependencies.ConcessionTypeRepository.ReadAll();
             var id = results.First().Id;
-            var model = InstantiatedDependencies.AdValoremRepository.ReadById(id);
+            var model = InstantiatedDependencies.ConcessionTypeRepository.ReadById(id);
 
-            model.Amount = model.Amount + 100;
+            model.Description = "73a42000e4";
+            model.Code = "a335e40073";
             model.IsActive = !model.IsActive;
 
-            InstantiatedDependencies.AdValoremRepository.Update(model);
+            InstantiatedDependencies.ConcessionTypeRepository.Update(model);
 
-            var updatedModel = InstantiatedDependencies.AdValoremRepository.ReadById(id);
+            var updatedModel = InstantiatedDependencies.ConcessionTypeRepository.ReadById(id);
 
             Assert.NotNull(updatedModel);
             Assert.Equal(updatedModel.Id, model.Id);
-            Assert.Equal(updatedModel.Amount, model.Amount);
+            Assert.Equal(updatedModel.Description, model.Description);
+            Assert.Equal(updatedModel.Code, model.Code);
             Assert.Equal(updatedModel.IsActive, model.IsActive);
         }
 
@@ -84,20 +87,21 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void Delete_Executes_Positive()
         {
-            var model = new AdValorem
+            var model = new ConcessionType
             {
-                Amount = 3744,
+                Description = "aa32f3374f",
+                Code = "2af5560d97",
                 IsActive = false
             };
 
-            var temporaryEntity = InstantiatedDependencies.AdValoremRepository.Create(model);
+            var temporaryEntity = InstantiatedDependencies.ConcessionTypeRepository.Create(model);
 
             Assert.NotNull(temporaryEntity);
             Assert.NotEqual(temporaryEntity.Id, 0);
 
-            InstantiatedDependencies.AdValoremRepository.Delete(temporaryEntity);
+            InstantiatedDependencies.ConcessionTypeRepository.Delete(temporaryEntity);
 
-            var result = InstantiatedDependencies.AdValoremRepository.ReadById(temporaryEntity.Id);
+            var result = InstantiatedDependencies.ConcessionTypeRepository.ReadById(temporaryEntity.Id);
 
             Assert.Null(result);
         }

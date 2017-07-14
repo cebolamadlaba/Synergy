@@ -7,9 +7,9 @@ using Xunit;
 namespace StandardBank.ConcessionManagement.Repository.Test.Integration
 {
     /// <summary>
-    /// AdValorem repository tests
+    /// Role repository tests
     /// </summary>
-    public class AdValoremRepositoryTest
+    public class RoleRepositoryTest
     {
         /// <summary>
         /// Tests that Create executes positive.
@@ -17,13 +17,14 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void Create_Executes_Positive()
         {
-            var model = new AdValorem
+            var model = new Role
             {
-                Amount = 3744,
+                RoleName = "bcf1f77d08",
+                RoleDescription = "43d0fad165",
                 IsActive = false
             };
 
-            var result = InstantiatedDependencies.AdValoremRepository.Create(model);
+            var result = InstantiatedDependencies.RoleRepository.Create(model);
 
             Assert.NotNull(result);
             Assert.NotEqual(result.Id, 0);
@@ -35,9 +36,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void ReadById_Executes_Positive()
         {
-            var results = InstantiatedDependencies.AdValoremRepository.ReadAll();
+            var results = InstantiatedDependencies.RoleRepository.ReadAll();
             var id = results.First().Id;
-            var result = InstantiatedDependencies.AdValoremRepository.ReadById(id);
+            var result = InstantiatedDependencies.RoleRepository.ReadById(id);
 
             Assert.NotNull(result);
             Assert.Equal(result.Id, id);
@@ -49,7 +50,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void ReadAll_Executes_Positive()
         {
-            var result = InstantiatedDependencies.AdValoremRepository.ReadAll();
+            var result = InstantiatedDependencies.RoleRepository.ReadAll();
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
@@ -61,20 +62,22 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void Update_Executes_Positive()
         {
-            var results = InstantiatedDependencies.AdValoremRepository.ReadAll();
+            var results = InstantiatedDependencies.RoleRepository.ReadAll();
             var id = results.First().Id;
-            var model = InstantiatedDependencies.AdValoremRepository.ReadById(id);
+            var model = InstantiatedDependencies.RoleRepository.ReadById(id);
 
-            model.Amount = model.Amount + 100;
+            model.RoleName = "36da1150a7";
+            model.RoleDescription = "ee4e876626";
             model.IsActive = !model.IsActive;
 
-            InstantiatedDependencies.AdValoremRepository.Update(model);
+            InstantiatedDependencies.RoleRepository.Update(model);
 
-            var updatedModel = InstantiatedDependencies.AdValoremRepository.ReadById(id);
+            var updatedModel = InstantiatedDependencies.RoleRepository.ReadById(id);
 
             Assert.NotNull(updatedModel);
             Assert.Equal(updatedModel.Id, model.Id);
-            Assert.Equal(updatedModel.Amount, model.Amount);
+            Assert.Equal(updatedModel.RoleName, model.RoleName);
+            Assert.Equal(updatedModel.RoleDescription, model.RoleDescription);
             Assert.Equal(updatedModel.IsActive, model.IsActive);
         }
 
@@ -84,20 +87,21 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void Delete_Executes_Positive()
         {
-            var model = new AdValorem
+            var model = new Role
             {
-                Amount = 3744,
+                RoleName = "bcf1f77d08",
+                RoleDescription = "43d0fad165",
                 IsActive = false
             };
 
-            var temporaryEntity = InstantiatedDependencies.AdValoremRepository.Create(model);
+            var temporaryEntity = InstantiatedDependencies.RoleRepository.Create(model);
 
             Assert.NotNull(temporaryEntity);
             Assert.NotEqual(temporaryEntity.Id, 0);
 
-            InstantiatedDependencies.AdValoremRepository.Delete(temporaryEntity);
+            InstantiatedDependencies.RoleRepository.Delete(temporaryEntity);
 
-            var result = InstantiatedDependencies.AdValoremRepository.ReadById(temporaryEntity.Id);
+            var result = InstantiatedDependencies.RoleRepository.ReadById(temporaryEntity.Id);
 
             Assert.Null(result);
         }

@@ -7,9 +7,9 @@ using Xunit;
 namespace StandardBank.ConcessionManagement.Repository.Test.Integration
 {
     /// <summary>
-    /// AdValorem repository tests
+    /// Status repository tests
     /// </summary>
-    public class AdValoremRepositoryTest
+    public class StatusRepositoryTest
     {
         /// <summary>
         /// Tests that Create executes positive.
@@ -17,13 +17,13 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void Create_Executes_Positive()
         {
-            var model = new AdValorem
+            var model = new Status
             {
-                Amount = 3744,
+                Description = "2818e7bd68",
                 IsActive = false
             };
 
-            var result = InstantiatedDependencies.AdValoremRepository.Create(model);
+            var result = InstantiatedDependencies.StatusRepository.Create(model);
 
             Assert.NotNull(result);
             Assert.NotEqual(result.Id, 0);
@@ -35,9 +35,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void ReadById_Executes_Positive()
         {
-            var results = InstantiatedDependencies.AdValoremRepository.ReadAll();
+            var results = InstantiatedDependencies.StatusRepository.ReadAll();
             var id = results.First().Id;
-            var result = InstantiatedDependencies.AdValoremRepository.ReadById(id);
+            var result = InstantiatedDependencies.StatusRepository.ReadById(id);
 
             Assert.NotNull(result);
             Assert.Equal(result.Id, id);
@@ -49,7 +49,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void ReadAll_Executes_Positive()
         {
-            var result = InstantiatedDependencies.AdValoremRepository.ReadAll();
+            var result = InstantiatedDependencies.StatusRepository.ReadAll();
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
@@ -61,20 +61,20 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void Update_Executes_Positive()
         {
-            var results = InstantiatedDependencies.AdValoremRepository.ReadAll();
+            var results = InstantiatedDependencies.StatusRepository.ReadAll();
             var id = results.First().Id;
-            var model = InstantiatedDependencies.AdValoremRepository.ReadById(id);
+            var model = InstantiatedDependencies.StatusRepository.ReadById(id);
 
-            model.Amount = model.Amount + 100;
+            model.Description = "3cc7b972ed";
             model.IsActive = !model.IsActive;
 
-            InstantiatedDependencies.AdValoremRepository.Update(model);
+            InstantiatedDependencies.StatusRepository.Update(model);
 
-            var updatedModel = InstantiatedDependencies.AdValoremRepository.ReadById(id);
+            var updatedModel = InstantiatedDependencies.StatusRepository.ReadById(id);
 
             Assert.NotNull(updatedModel);
             Assert.Equal(updatedModel.Id, model.Id);
-            Assert.Equal(updatedModel.Amount, model.Amount);
+            Assert.Equal(updatedModel.Description, model.Description);
             Assert.Equal(updatedModel.IsActive, model.IsActive);
         }
 
@@ -84,20 +84,20 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void Delete_Executes_Positive()
         {
-            var model = new AdValorem
+            var model = new Status
             {
-                Amount = 3744,
+                Description = "2818e7bd68",
                 IsActive = false
             };
 
-            var temporaryEntity = InstantiatedDependencies.AdValoremRepository.Create(model);
+            var temporaryEntity = InstantiatedDependencies.StatusRepository.Create(model);
 
             Assert.NotNull(temporaryEntity);
             Assert.NotEqual(temporaryEntity.Id, 0);
 
-            InstantiatedDependencies.AdValoremRepository.Delete(temporaryEntity);
+            InstantiatedDependencies.StatusRepository.Delete(temporaryEntity);
 
-            var result = InstantiatedDependencies.AdValoremRepository.ReadById(temporaryEntity.Id);
+            var result = InstantiatedDependencies.StatusRepository.ReadById(temporaryEntity.Id);
 
             Assert.Null(result);
         }

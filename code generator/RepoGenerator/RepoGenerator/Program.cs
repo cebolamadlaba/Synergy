@@ -110,6 +110,14 @@ namespace RepoGenerator
 
             //8. Generate MockedDependencies
             GenerateMockedDependencies(tables);
+
+            //9. Generate Data Helper
+            GenerateDataHelper(tables);
+        }
+
+        private static void GenerateDataHelper(IEnumerable<Table> tables)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -203,12 +211,85 @@ namespace RepoGenerator
             var repositoryIntegrationTestTemplate = File.ReadAllText(RepositoryIntegrationTestTemplate);
 
             var repositoryIntegrationTest = repositoryIntegrationTestTemplate.Replace("[[ClassName]]", table.ClassName)
-                .Replace("[[CreatePropertiesAndValues]]", GetCreatePropertiesAndValues(table));
+                .Replace("[[CreatePropertiesAndValues]]", GetCreatePropertiesAndValues(table))
+                .Replace("[[UpdateChangeValues]]", GetUpdateChangeValues(table))
+                .Replace("[[UpdateEqualAssertions]]", GetUpdateEqualAssertions(table));
 
             if (!Directory.Exists("Test"))
                 Directory.CreateDirectory("Test");
 
             File.WriteAllText($"Test\\{table.ClassName}RepositoryTest.cs", repositoryIntegrationTest);
+        }
+
+        /// <summary>
+        /// Gets the update equal assertions.
+        /// </summary>
+        /// <param name="table">The table.</param>
+        /// <returns></returns>
+        private static string GetUpdateEqualAssertions(Table table)
+        {
+            var updateEqualAssertions = new StringBuilder();
+
+            foreach (var column in table.Columns)
+            {
+                if (updateEqualAssertions.Length != 0)
+                    updateEqualAssertions.Append(Environment.NewLine);
+
+                updateEqualAssertions.Append(
+                    $"            Assert.Equal(updatedModel.{column.CodeName}, model.{column.CodeName});");
+            }
+
+            return updateEqualAssertions.ToString();
+        }
+
+        /// <summary>
+        /// Gets the update change values.
+        /// </summary>
+        /// <param name="table">The table.</param>
+        /// <returns></returns>
+        private static string GetUpdateChangeValues(Table table)
+        {
+            var updateChangeValues = new StringBuilder();
+
+            foreach (var column in table.Columns)
+            {
+                if (column.Name.StartsWith("pk"))
+                    continue;
+
+                if (updateChangeValues.Length != 0)
+                    updateChangeValues.Append(Environment.NewLine);
+
+                if (column.Name.StartsWith("fk"))
+                    updateChangeValues.Append(
+                        $"            model.{column.CodeName} = DataHelper.GetAlternate{column.CodeName}(model.{column.CodeName});");
+                else
+                    updateChangeValues.Append(
+                        $"            model.{column.CodeName} = {GetGeneratedUpdateCodeValue(column)};");
+            }
+
+            return updateChangeValues.ToString();
+        }
+
+        /// <summary>
+        /// Gets the generated update code value.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <returns></returns>
+        private static string GetGeneratedUpdateCodeValue(Column column)
+        {
+            switch (column.CodeDataType)
+            {
+                case "bool":
+                    return $"!model.{column.CodeName}";
+                case "DateTime":
+                    return $"DataHelper.ChangeDate(model.{column.CodeName})";
+                case "decimal":
+                    return $"model.{column.CodeName} + 100";
+                case "int":
+                    return $"model.{column.CodeName} + 1";
+                default:
+                    return $"\"{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}\"";
+            }
         }
 
         /// <summary>
@@ -225,15 +306,13 @@ namespace RepoGenerator
                 if (column.Name.StartsWith("pk"))
                     continue;
 
-                if (column.Name.StartsWith("fk"))
-                {
-
-                }
-
                 if (createPropertiesAndValues.Length != 0)
-                    createPropertiesAndValues.Append(", ");
+                    createPropertiesAndValues.Append($",{Environment.NewLine}");
 
-                createPropertiesAndValues.Append($"{column.CodeName} = {GetGeneratedCodeValue(column)}");
+                if (column.Name.StartsWith("fk"))
+                    createPropertiesAndValues.Append($"                {column.CodeName} = DataHelper.Get{column.CodeName}()");
+                else
+                    createPropertiesAndValues.Append($"                {column.CodeName} = {GetGeneratedCodeValue(column)}");
             }
 
             return createPropertiesAndValues.ToString();
@@ -257,7 +336,7 @@ namespace RepoGenerator
                 case "int":
                     return $"{GetRandomNumber(1, 10)}";
                 default:
-                    return Guid.NewGuid().ToString().Substring(0, 10);
+                    return $"\"{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}\"";
             }
         }
 
