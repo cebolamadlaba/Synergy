@@ -46,6 +46,7 @@ namespace StandardBank.ConcessionManagement.UI
 
       // Add common services
       services.AddSingleton<IConfigurationData>(GenerateConfigurationData());
+      services.AddScoped<ICacheManager, MemoryCacheManager>();
 
       // Add repository services.
       services.AddScoped<IConcessionCountRepository, ConcessionCountRepository>();
