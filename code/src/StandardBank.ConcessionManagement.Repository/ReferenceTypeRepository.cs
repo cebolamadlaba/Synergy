@@ -1,3 +1,4 @@
+using System;
 using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
@@ -6,14 +7,15 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
+using StandardBank.ConcessionManagement.Model.Common;
 
 namespace StandardBank.ConcessionManagement.Repository
 {
     /// <summary>
-    /// Type repository
+    /// ReferenceType repository
     /// </summary>
-    /// <seealso cref="StandardBank.ConcessionManagement.Interface.Repository.ITypeRepository" />
-    public class TypeRepository : ITypeRepository
+    /// <seealso cref="StandardBank.ConcessionManagement.Interface.Repository.IReferenceTypeRepository" />
+    public class ReferenceTypeRepository : IReferenceTypeRepository
     {
         /// <summary>
         /// The configuration data
@@ -21,12 +23,19 @@ namespace StandardBank.ConcessionManagement.Repository
         private readonly IConfigurationData _configurationData;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TypeRepository"/> class.
+        /// The cache manager
+        /// </summary>
+        private readonly ICacheManager _cacheManager;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReferenceTypeRepository"/> class.
         /// </summary>
         /// <param name="configurationData">The configuration data.</param>
-        public TypeRepository(IConfigurationData configurationData)
+        /// <param name="cacheManager">The cache manager.</param>
+        public ReferenceTypeRepository(IConfigurationData configurationData, ICacheManager cacheManager)
         {
             _configurationData = configurationData;
+            _cacheManager = cacheManager;
         }
 
         /// <summary>
@@ -34,7 +43,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public Type Create(Type model)
+        public ReferenceType Create(ReferenceType model)
         {
             const string sql = @"INSERT [dbo].[rtblType] ([Description], [IsActive]) 
                                 VALUES (@Description, @IsActive) 
@@ -45,6 +54,9 @@ namespace StandardBank.ConcessionManagement.Repository
                 model.Id = db.Query<int>(sql, new {Description = model.Description, IsActive = model.IsActive}).Single();
             }
 
+            //clear out the cache because the data has changed
+            _cacheManager.Remove(CacheKey.Repository.ReferenceTypeRepository.ReadAll);
+
             return model;
         }
 
@@ -53,33 +65,33 @@ namespace StandardBank.ConcessionManagement.Repository
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        public Type ReadById(int id)
+        public ReferenceType ReadById(int id)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
-            {
-                return db.Query<Type>(
-                    "SELECT [pkTypeId] [Id], [Description], [IsActive] FROM [dbo].[rtblType] WHERE [pkTypeId] = @Id",
-                    new {id}).SingleOrDefault();
-            }
+            return ReadAll().FirstOrDefault(_ => _.Id == id);
         }
 
         /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Type> ReadAll()
+        public IEnumerable<ReferenceType> ReadAll()
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            Func<IEnumerable<ReferenceType>> function = () =>
             {
-                return db.Query<Type>("SELECT [pkTypeId] [Id], [Description], [IsActive] FROM [dbo].[rtblType]");
-            }
+                using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            	{
+                	return db.Query<ReferenceType>("SELECT [pkTypeId] [Id], [Description], [IsActive] FROM [dbo].[rtblType]");
+            	}
+            };
+
+            return _cacheManager.ReturnFromCache(function, 1440, CacheKey.Repository.ReferenceTypeRepository.ReadAll);
         }
 
         /// <summary>
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        public void Update(Type model)
+        public void Update(ReferenceType model)
         {
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
@@ -88,19 +100,25 @@ namespace StandardBank.ConcessionManagement.Repository
                             WHERE [pkTypeId] = @Id",
                     new {Id = model.Id, Description = model.Description, IsActive = model.IsActive});
             }
+
+            //clear out the cache because the data has changed
+            _cacheManager.Remove(CacheKey.Repository.ReferenceTypeRepository.ReadAll);
         }
 
         /// <summary>
         /// Deletes the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        public void Delete(Type model)
+        public void Delete(ReferenceType model)
         {
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
                 db.Execute("DELETE [dbo].[rtblType] WHERE [pkTypeId] = @Id",
                     new {model.Id});
             }
+
+            //clear out the cache because the data has changed
+            _cacheManager.Remove(CacheKey.Repository.ReferenceTypeRepository.ReadAll);
         }
     }
 }

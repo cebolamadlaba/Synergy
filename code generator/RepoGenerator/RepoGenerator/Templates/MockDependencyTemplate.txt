@@ -1,0 +1,4 @@
+﻿        /// <summary>
+        /// The mock [[ClassName]] repository
+        /// </summary>
+        public static Mock<I[[ClassName]]Repository> Mock[[ClassName]]Repository = new Mock<I[[ClassName]]Repository>();

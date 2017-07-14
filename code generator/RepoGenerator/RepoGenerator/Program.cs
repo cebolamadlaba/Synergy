@@ -36,9 +36,34 @@ namespace RepoGenerator
         private const string RepositoryTemplate = "Templates\\RepositoryTemplate.txt";
 
         /// <summary>
+        /// The repository with cache template
+        /// </summary>
+        private const string RepositoryWithCacheTemplate = "Templates\\RepositoryWithCacheTemplate.txt";
+
+        /// <summary>
         /// The repository integration test template
         /// </summary>
         private const string RepositoryIntegrationTestTemplate = "Templates\\RepositoryIntegrationTestTemplate.txt";
+
+        /// <summary>
+        /// The cache key template
+        /// </summary>
+        private const string CacheKeyTemplate = "Templates\\CacheKeyTemplate.txt";
+
+        /// <summary>
+        /// The instantiated dependency template
+        /// </summary>
+        private const string InstantiatedDependencyTemplate = "Templates\\InstantiatedDependencyTemplate.txt";
+
+        /// <summary>
+        /// The instantiated dependency with cache template
+        /// </summary>
+        private const string InstantiatedDependencyWithCacheTemplate = "Templates\\InstantiatedDependencyWithCacheTemplate.txt";
+
+        /// <summary>
+        /// The mock dependency template
+        /// </summary>
+        private const string MockDependencyTemplate = "Templates\\MockDependencyTemplate.txt";
 
         /// <summary>
         /// The random generator
@@ -68,11 +93,105 @@ namespace RepoGenerator
                 //4. Generate integration test
                 GenerateRepositoryIntegrationTests(table);
 
-                //5. Generate startup.cs injection
-                //6. Generate InstantiatedDependencies
-                //7. Generate MockedDependencies
                 Console.WriteLine($"{table.Schema}.{table.Name} - {table.Columns.Count()}");
             }
+
+            if (!Directory.Exists("Other"))
+                Directory.CreateDirectory("Other");
+
+            //5. Generate cache keys for the repo
+            GenerateCacheKeys(tables);
+
+            //6. Generate startup.cs injection
+            GenerateStartUpInjects(tables);
+
+            //7. Generate InstantiatedDependencies
+            GenerateInstantiatedDependencies(tables);
+
+            //8. Generate MockedDependencies
+            GenerateMockedDependencies(tables);
+        }
+
+        /// <summary>
+        /// Generates the mocked dependencies.
+        /// </summary>
+        /// <param name="tables">The tables.</param>
+        private static void GenerateMockedDependencies(IEnumerable<Table> tables)
+        {
+            var mockedDependencyTemplate = File.ReadAllText(MockDependencyTemplate);
+            var mockedDependencies = new StringBuilder();
+
+            foreach (var table in tables)
+            {
+                if (mockedDependencies.Length != 0)
+                    mockedDependencies.Append($"{Environment.NewLine}{Environment.NewLine}");
+
+                mockedDependencies.Append(mockedDependencyTemplate.Replace("[[ClassName]]", table.ClassName));
+            }
+
+            File.WriteAllText("Other\\MockedDependencies.txt", mockedDependencies.ToString());
+        }
+
+        /// <summary>
+        /// Generates the instantiated dependencies.
+        /// </summary>
+        /// <param name="tables">The tables.</param>
+        private static void GenerateInstantiatedDependencies(IEnumerable<Table> tables)
+        {
+            var instantiatedDependencies = new StringBuilder();
+
+            foreach (var table in tables)
+            {
+                var instantiatedDependencyTemplate = table.Name.StartsWith("rtbl")
+                    ? File.ReadAllText(InstantiatedDependencyWithCacheTemplate)
+                    : File.ReadAllText(InstantiatedDependencyTemplate);
+
+                if (instantiatedDependencies.Length != 0)
+                    instantiatedDependencies.Append($"{Environment.NewLine}{Environment.NewLine}");
+
+                instantiatedDependencies.Append(
+                    instantiatedDependencyTemplate.Replace("[[ClassName]]", table.ClassName));
+            }
+
+            File.WriteAllText("Other\\InstantiatedDependencies.txt", instantiatedDependencies.ToString());
+        }
+
+        /// <summary>
+        /// Generates the start up injects.
+        /// </summary>
+        /// <param name="tables">The tables.</param>
+        private static void GenerateStartUpInjects(IEnumerable<Table> tables)
+        {
+            var startUpInjects = new StringBuilder();
+
+            foreach (var table in tables)
+                startUpInjects.Append(
+                  $"services.AddScoped<I{table.ClassName}Repository, {table.ClassName}Repository>();{Environment.NewLine}");
+
+            File.WriteAllText("Other\\StartUpInjects.txt", startUpInjects.ToString());
+        }
+
+        /// <summary>
+        /// Generates the cache keys.
+        /// </summary>
+        /// <param name="tables">The tables.</param>
+        private static void GenerateCacheKeys(IEnumerable<Table> tables)
+        {
+            var cacheKeyTemplate = File.ReadAllText(CacheKeyTemplate);
+            var cacheKeys = new StringBuilder();
+
+            foreach (var table in tables)
+            {
+                if (!table.Name.StartsWith("rtbl"))
+                    continue;
+
+                if (cacheKeys.Length != 0)
+                    cacheKeys.Append($"{Environment.NewLine}{Environment.NewLine}");
+
+                cacheKeys.Append(cacheKeyTemplate.Replace("[[ClassName]]", table.ClassName));
+            }
+
+            File.WriteAllText("Other\\CacheKey.txt", cacheKeys.ToString());
         }
 
         /// <summary>
@@ -108,7 +227,7 @@ namespace RepoGenerator
 
                 if (column.Name.StartsWith("fk"))
                 {
-                    
+
                 }
 
                 if (createPropertiesAndValues.Length != 0)
@@ -160,7 +279,7 @@ namespace RepoGenerator
         /// <param name="table">The table.</param>
         private static void GenerateRepository(Table table)
         {
-            var repositoryTemplate = File.ReadAllText(RepositoryTemplate);
+            var repositoryTemplate = table.Name.StartsWith("rtbl") ? File.ReadAllText(RepositoryWithCacheTemplate) : File.ReadAllText(RepositoryTemplate);
 
             if (!Directory.Exists("Repository"))
                 Directory.CreateDirectory("Repository");
@@ -348,6 +467,10 @@ namespace RepoGenerator
             foreach (var record in GetCsvRecords())
             {
                 var className = record.TABLE_NAME.Replace("rtbl", string.Empty).Replace("tbl", string.Empty);
+
+                if (className == "Type")
+                    className = "ReferenceType";
+
                 var table = tables.FirstOrDefault(_ => _.Schema == record.TABLE_SCHEMA && _.Name == record.TABLE_NAME);
                 var column = new Column
                 {

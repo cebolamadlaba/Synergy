@@ -78,6 +78,22 @@ namespace StandardBank.ConcessionManagement.Common.Test.Integration
         }
 
         /// <summary>
+        /// Tests that ReturnFromCache for null object executes positive
+        /// </summary>
+        [Fact]
+        public void ReturnFromCache_NullObject_Executes_Positive()
+        {
+            object objectToCache = null;
+            Func<object> function = () => objectToCache;
+
+            var cachedItem =
+                InstantiatedDependencies.CacheManager.ReturnFromCache(function, 10,
+                    "ReturnFromCache_NullObject_Executes_Positive");
+
+            Assert.Null(cachedItem);
+        }
+
+        /// <summary>
         /// Tests that Exists with no parameters executes positive
         /// </summary>
         [Fact]
@@ -139,6 +155,30 @@ namespace StandardBank.ConcessionManagement.Common.Test.Integration
                 new CacheKeyParameter("param1", 100), new CacheKeyParameter("param2", 999));
 
             Assert.True(result);
+        }
+
+        /// <summary>
+        /// Tests that Exists for an invalid cache key returns false
+        /// </summary>
+        [Fact]
+        public void Exists_InvalidCacheKey_Returns_False()
+        {
+            var exists = InstantiatedDependencies.CacheManager.Exists("Exists_InvalidCacheKey_Returns_False");
+
+            Assert.False(exists);
+        }
+
+        /// <summary>
+        /// Tests that Exists for an invalid cache key with parameters returns false
+        /// </summary>
+        [Fact]
+        public void Exists_InvalidCacheKeyWithParameters_Returns_False()
+        {
+            var exists =
+                InstantiatedDependencies.CacheManager.Exists("Exists_InvalidCacheKeyWithParameters_Returns_False",
+                    new CacheKeyParameter("param1", "value1"));
+
+            Assert.False(exists);
         }
 
         /// <summary>
@@ -225,6 +265,29 @@ namespace StandardBank.ConcessionManagement.Common.Test.Integration
                 new CacheKeyParameter("param1", 100), new CacheKeyParameter("param2", 999));
 
             Assert.False(exists);
+        }
+
+        /// <summary>
+        /// Tests that Remove for an invalid cache key executes positive
+        /// </summary>
+        [Fact]
+        public void Remove_InvalidCacheKey_Executes_Positive()
+        {
+            InstantiatedDependencies.CacheManager.Remove("Remove_InvalidCacheKey_Executes_Positive");
+
+            Assert.True(true);
+        }
+
+        /// <summary>
+        /// Tests that Remove for an invalid cache key with parameters executes positive
+        /// </summary>
+        [Fact]
+        public void Remove_InvalidCacheKeyWithParameters_Executes_Positive()
+        {
+            InstantiatedDependencies.CacheManager.Remove("Remove_InvalidCacheKeyWithParameters_Executes_Positive",
+                new CacheKeyParameter("param1", "value1"));
+
+            Assert.True(true);
         }
     }
 }

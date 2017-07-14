@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
@@ -12,10 +12,10 @@ using StandardBank.ConcessionManagement.Model.Common;
 namespace StandardBank.ConcessionManagement.Repository
 {
     /// <summary>
-    /// SubStatus repository
+    /// [[ClassName]] repository
     /// </summary>
-    /// <seealso cref="StandardBank.ConcessionManagement.Interface.Repository.ISubStatusRepository" />
-    public class SubStatusRepository : ISubStatusRepository
+    /// <seealso cref="StandardBank.ConcessionManagement.Interface.Repository.I[[ClassName]]Repository" />
+    public class [[ClassName]]Repository : I[[ClassName]]Repository
     {
         /// <summary>
         /// The configuration data
@@ -28,11 +28,11 @@ namespace StandardBank.ConcessionManagement.Repository
         private readonly ICacheManager _cacheManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SubStatusRepository"/> class.
+        /// Initializes a new instance of the <see cref="[[ClassName]]Repository"/> class.
         /// </summary>
         /// <param name="configurationData">The configuration data.</param>
         /// <param name="cacheManager">The cache manager.</param>
-        public SubStatusRepository(IConfigurationData configurationData, ICacheManager cacheManager)
+        public [[ClassName]]Repository(IConfigurationData configurationData, ICacheManager cacheManager)
         {
             _configurationData = configurationData;
             _cacheManager = cacheManager;
@@ -43,19 +43,19 @@ namespace StandardBank.ConcessionManagement.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public SubStatus Create(SubStatus model)
+        public [[ClassName]] Create([[ClassName]] model)
         {
-            const string sql = @"INSERT [dbo].[rtblSubStatus] ([Description], [IsActive]) 
-                                VALUES (@Description, @IsActive) 
+            const string sql = @"INSERT [[TableSchemaAndName]] ([[InsertColumnList]]) 
+                                VALUES ([[InsertParameterList]]) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
-                model.Id = db.Query<int>(sql, new {Description = model.Description, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql, new {[[DapperInsertParameters]]}).Single();
             }
 
             //clear out the cache because the data has changed
-            _cacheManager.Remove(CacheKey.Repository.SubStatusRepository.ReadAll);
+            _cacheManager.Remove(CacheKey.Repository.AdValoremRepository.ReadAll);
 
             return model;
         }
@@ -65,7 +65,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        public SubStatus ReadById(int id)
+        public [[ClassName]] ReadById(int id)
         {
             return ReadAll().FirstOrDefault(_ => _.Id == id);
         }
@@ -74,51 +74,51 @@ namespace StandardBank.ConcessionManagement.Repository
         /// Reads all.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<SubStatus> ReadAll()
+        public IEnumerable<[[ClassName]]> ReadAll()
         {
-            Func<IEnumerable<SubStatus>> function = () =>
+            Func<IEnumerable<[[ClassName]]>> function = () =>
             {
                 using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             	{
-                	return db.Query<SubStatus>("SELECT [pkSubStatusId] [Id], [Description], [IsActive] FROM [dbo].[rtblSubStatus]");
+                	return db.Query<[[ClassName]]>("SELECT [[SelectColumnsAndAliases]] FROM [[TableSchemaAndName]]");
             	}
             };
 
-            return _cacheManager.ReturnFromCache(function, 1440, CacheKey.Repository.SubStatusRepository.ReadAll);
+            return _cacheManager.ReturnFromCache(function, 1440, CacheKey.Repository.[[ClassName]]Repository.ReadAll);
         }
 
         /// <summary>
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        public void Update(SubStatus model)
+        public void Update([[ClassName]] model)
         {
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
-                db.Execute(@"UPDATE [dbo].[rtblSubStatus]
-                            SET [Description] = @Description, [IsActive] = @IsActive
-                            WHERE [pkSubStatusId] = @Id",
-                    new {Id = model.Id, Description = model.Description, IsActive = model.IsActive});
+                db.Execute(@"UPDATE [[TableSchemaAndName]]
+                            SET [[UpdateSetParameters]]
+                            WHERE [[PrimaryKeyColumnName]] = @Id",
+                    new {Id = model.Id, [[DapperInsertParameters]]});
             }
 
             //clear out the cache because the data has changed
-            _cacheManager.Remove(CacheKey.Repository.SubStatusRepository.ReadAll);
+            _cacheManager.Remove(CacheKey.Repository.AdValoremRepository.ReadAll);
         }
 
         /// <summary>
         /// Deletes the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        public void Delete(SubStatus model)
+        public void Delete(AdValorem model)
         {
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
-                db.Execute("DELETE [dbo].[rtblSubStatus] WHERE [pkSubStatusId] = @Id",
+                db.Execute("DELETE [dbo].[rtblAdValorem] WHERE [pkAdValoremId] = @Id",
                     new {model.Id});
             }
 
             //clear out the cache because the data has changed
-            _cacheManager.Remove(CacheKey.Repository.SubStatusRepository.ReadAll);
+            _cacheManager.Remove(CacheKey.Repository.AdValoremRepository.ReadAll);
         }
     }
 }

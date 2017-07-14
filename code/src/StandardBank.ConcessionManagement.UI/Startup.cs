@@ -49,7 +49,58 @@ namespace StandardBank.ConcessionManagement.UI
       services.AddScoped<ICacheManager, MemoryCacheManager>();
 
       // Add repository services.
-      services.AddScoped<IConcessionCountRepository, ConcessionCountRepository>();
+      AddRepositoryServices(services);
+    }
+
+    /// <summary>
+    /// Adds the repository services
+    /// </summary>
+    /// <param name="services"></param>
+    private static void AddRepositoryServices(IServiceCollection services)
+    {
+      services.AddScoped<IAdValoremRepository, AdValoremRepository>();
+      services.AddScoped<IApprovalTypeRepository, ApprovalTypeRepository>();
+      services.AddScoped<IBaseRateRepository, BaseRateRepository>();
+      services.AddScoped<IChannelTypeRepository, ChannelTypeRepository>();
+      services.AddScoped<IConcessionTypeRepository, ConcessionTypeRepository>();
+      services.AddScoped<IConditionProductRepository, ConditionProductRepository>();
+      services.AddScoped<IConditionTypeRepository, ConditionTypeRepository>();
+      services.AddScoped<IMarketSegmentRepository, MarketSegmentRepository>();
+      services.AddScoped<IProductRepository, ProductRepository>();
+      services.AddScoped<IProvinceRepository, ProvinceRepository>();
+      services.AddScoped<IReviewFeeTypeRepository, ReviewFeeTypeRepository>();
+      services.AddScoped<IRoleRepository, RoleRepository>();
+      services.AddScoped<IStatusRepository, StatusRepository>();
+      services.AddScoped<ISubStatusRepository, SubStatusRepository>();
+      services.AddScoped<ITransactionGroupRepository, TransactionGroupRepository>();
+      services.AddScoped<ITransactionTypeRepository, TransactionTypeRepository>();
+      services.AddScoped<IReferenceTypeRepository, ReferenceTypeRepository>();
+      services.AddScoped<IBolUserRepository, BolUserRepository>();
+      services.AddScoped<IBusinesOnlineTransactionTypeRepository, BusinesOnlineTransactionTypeRepository>();
+      services.AddScoped<ICentreRepository, CentreRepository>();
+      services.AddScoped<ICentreBusinessManagerRepository, CentreBusinessManagerRepository>();
+      services.AddScoped<ICentreUserRepository, CentreUserRepository>();
+      services.AddScoped<IChannelTypeBaseRateRepository, ChannelTypeBaseRateRepository>();
+      services.AddScoped<IConcessionRepository, ConcessionRepository>();
+      services.AddScoped<IConcessionAccountRepository, ConcessionAccountRepository>();
+      services.AddScoped<IConcessionApprovalRepository, ConcessionApprovalRepository>();
+      services.AddScoped<IConcessionBolRepository, ConcessionBolRepository>();
+      services.AddScoped<IConcessionCashRepository, ConcessionCashRepository>();
+      services.AddScoped<IConcessionCommentRepository, ConcessionCommentRepository>();
+      services.AddScoped<IConcessionConditionRepository, ConcessionConditionRepository>();
+      services.AddScoped<IConcessionInvestmentRepository, ConcessionInvestmentRepository>();
+      services.AddScoped<IConcessionLendingRepository, ConcessionLendingRepository>();
+      services.AddScoped<IConcessionMasRepository, ConcessionMasRepository>();
+      services.AddScoped<IConcessionRemovalRequestRepository, ConcessionRemovalRequestRepository>();
+      services.AddScoped<IConcessionTradeRepository, ConcessionTradeRepository>();
+      services.AddScoped<IConcessionTransactionalRepository, ConcessionTransactionalRepository>();
+      services.AddScoped<IConditionTypeProductRepository, ConditionTypeProductRepository>();
+      services.AddScoped<ILegalEntityRepository, LegalEntityRepository>();
+      services.AddScoped<ILegalEntityAccountRepository, LegalEntityAccountRepository>();
+      services.AddScoped<IRiskGroupRepository, RiskGroupRepository>();
+      services.AddScoped<IScenarioManagerToolDealRepository, ScenarioManagerToolDealRepository>();
+      services.AddScoped<IUserRepository, UserRepository>();
+      services.AddScoped<IUserRoleRepository, UserRoleRepository>();
     }
 
     /// <summary>

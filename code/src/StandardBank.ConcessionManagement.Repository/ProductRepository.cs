@@ -1,3 +1,4 @@
+using System;
 using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
@@ -6,6 +7,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
+using StandardBank.ConcessionManagement.Model.Common;
 
 namespace StandardBank.ConcessionManagement.Repository
 {
@@ -21,12 +23,19 @@ namespace StandardBank.ConcessionManagement.Repository
         private readonly IConfigurationData _configurationData;
 
         /// <summary>
+        /// The cache manager
+        /// </summary>
+        private readonly ICacheManager _cacheManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ProductRepository"/> class.
         /// </summary>
         /// <param name="configurationData">The configuration data.</param>
-        public ProductRepository(IConfigurationData configurationData)
+        /// <param name="cacheManager">The cache manager.</param>
+        public ProductRepository(IConfigurationData configurationData, ICacheManager cacheManager)
         {
             _configurationData = configurationData;
+            _cacheManager = cacheManager;
         }
 
         /// <summary>
@@ -45,6 +54,9 @@ namespace StandardBank.ConcessionManagement.Repository
                 model.Id = db.Query<int>(sql, new {fkConcessionTypeId = model.ConcessionTypeId, Description = model.Description, IsActive = model.IsActive}).Single();
             }
 
+            //clear out the cache because the data has changed
+            _cacheManager.Remove(CacheKey.Repository.ProductRepository.ReadAll);
+
             return model;
         }
 
@@ -55,12 +67,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public Product ReadById(int id)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
-            {
-                return db.Query<Product>(
-                    "SELECT [pkProductId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [Description], [IsActive] FROM [dbo].[rtblProduct] WHERE [pkProductId] = @Id",
-                    new {id}).SingleOrDefault();
-            }
+            return ReadAll().FirstOrDefault(_ => _.Id == id);
         }
 
         /// <summary>
@@ -69,10 +76,15 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public IEnumerable<Product> ReadAll()
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            Func<IEnumerable<Product>> function = () =>
             {
-                return db.Query<Product>("SELECT [pkProductId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [Description], [IsActive] FROM [dbo].[rtblProduct]");
-            }
+                using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            	{
+                	return db.Query<Product>("SELECT [pkProductId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [Description], [IsActive] FROM [dbo].[rtblProduct]");
+            	}
+            };
+
+            return _cacheManager.ReturnFromCache(function, 1440, CacheKey.Repository.ProductRepository.ReadAll);
         }
 
         /// <summary>
@@ -88,6 +100,9 @@ namespace StandardBank.ConcessionManagement.Repository
                             WHERE [pkProductId] = @Id",
                     new {Id = model.Id, fkConcessionTypeId = model.ConcessionTypeId, Description = model.Description, IsActive = model.IsActive});
             }
+
+            //clear out the cache because the data has changed
+            _cacheManager.Remove(CacheKey.Repository.ProductRepository.ReadAll);
         }
 
         /// <summary>
@@ -101,6 +116,9 @@ namespace StandardBank.ConcessionManagement.Repository
                 db.Execute("DELETE [dbo].[rtblProduct] WHERE [pkProductId] = @Id",
                     new {model.Id});
             }
+
+            //clear out the cache because the data has changed
+            _cacheManager.Remove(CacheKey.Repository.ProductRepository.ReadAll);
         }
     }
 }

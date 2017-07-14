@@ -1,3 +1,4 @@
+using System;
 using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
@@ -6,6 +7,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
+using StandardBank.ConcessionManagement.Model.Common;
 
 namespace StandardBank.ConcessionManagement.Repository
 {
@@ -21,12 +23,19 @@ namespace StandardBank.ConcessionManagement.Repository
         private readonly IConfigurationData _configurationData;
 
         /// <summary>
+        /// The cache manager
+        /// </summary>
+        private readonly ICacheManager _cacheManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="MarketSegmentRepository"/> class.
         /// </summary>
         /// <param name="configurationData">The configuration data.</param>
-        public MarketSegmentRepository(IConfigurationData configurationData)
+        /// <param name="cacheManager">The cache manager.</param>
+        public MarketSegmentRepository(IConfigurationData configurationData, ICacheManager cacheManager)
         {
             _configurationData = configurationData;
+            _cacheManager = cacheManager;
         }
 
         /// <summary>
@@ -45,6 +54,9 @@ namespace StandardBank.ConcessionManagement.Repository
                 model.Id = db.Query<int>(sql, new {Description = model.Description, IsActive = model.IsActive}).Single();
             }
 
+            //clear out the cache because the data has changed
+            _cacheManager.Remove(CacheKey.Repository.MarketSegmentRepository.ReadAll);
+
             return model;
         }
 
@@ -55,12 +67,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public MarketSegment ReadById(int id)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
-            {
-                return db.Query<MarketSegment>(
-                    "SELECT [pkMarketSegmentId] [Id], [Description], [IsActive] FROM [dbo].[rtblMarketSegment] WHERE [pkMarketSegmentId] = @Id",
-                    new {id}).SingleOrDefault();
-            }
+            return ReadAll().FirstOrDefault(_ => _.Id == id);
         }
 
         /// <summary>
@@ -69,10 +76,15 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public IEnumerable<MarketSegment> ReadAll()
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            Func<IEnumerable<MarketSegment>> function = () =>
             {
-                return db.Query<MarketSegment>("SELECT [pkMarketSegmentId] [Id], [Description], [IsActive] FROM [dbo].[rtblMarketSegment]");
-            }
+                using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            	{
+                	return db.Query<MarketSegment>("SELECT [pkMarketSegmentId] [Id], [Description], [IsActive] FROM [dbo].[rtblMarketSegment]");
+            	}
+            };
+
+            return _cacheManager.ReturnFromCache(function, 1440, CacheKey.Repository.MarketSegmentRepository.ReadAll);
         }
 
         /// <summary>
@@ -88,6 +100,9 @@ namespace StandardBank.ConcessionManagement.Repository
                             WHERE [pkMarketSegmentId] = @Id",
                     new {Id = model.Id, Description = model.Description, IsActive = model.IsActive});
             }
+
+            //clear out the cache because the data has changed
+            _cacheManager.Remove(CacheKey.Repository.MarketSegmentRepository.ReadAll);
         }
 
         /// <summary>
@@ -101,6 +116,9 @@ namespace StandardBank.ConcessionManagement.Repository
                 db.Execute("DELETE [dbo].[rtblMarketSegment] WHERE [pkMarketSegmentId] = @Id",
                     new {model.Id});
             }
+
+            //clear out the cache because the data has changed
+            _cacheManager.Remove(CacheKey.Repository.MarketSegmentRepository.ReadAll);
         }
     }
 }

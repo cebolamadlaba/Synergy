@@ -3,9 +3,9 @@ using System;
 namespace StandardBank.ConcessionManagement.Model.Repository
 {
     /// <summary>
-    /// Type entity
+    /// ReferenceType entity
     /// </summary>
-    public class Type
+    public class ReferenceType
     {
         /// <summary>
         /// Gets or sets the Id.

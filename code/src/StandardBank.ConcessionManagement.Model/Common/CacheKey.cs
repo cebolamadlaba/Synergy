@@ -5,5 +5,92 @@
     /// </summary>
     public static class CacheKey
     {
+        public static class Repository
+        {
+            public static class AdValoremRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.AdValoremRepository.ReadAll";
+            }
+
+            public static class ApprovalTypeRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.ApprovalTypeRepository.ReadAll";
+            }
+
+            public static class BaseRateRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.BaseRateRepository.ReadAll";
+            }
+
+            public static class ChannelTypeRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.ChannelTypeRepository.ReadAll";
+            }
+
+            public static class ConcessionTypeRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.ConcessionTypeRepository.ReadAll";
+            }
+
+            public static class ConditionProductRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.ConditionProductRepository.ReadAll";
+            }
+
+            public static class ConditionTypeRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.ConditionTypeRepository.ReadAll";
+            }
+
+            public static class MarketSegmentRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.MarketSegmentRepository.ReadAll";
+            }
+
+            public static class ProductRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.ProductRepository.ReadAll";
+            }
+
+            public static class ProvinceRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.ProvinceRepository.ReadAll";
+            }
+
+            public static class ReviewFeeTypeRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.ReviewFeeTypeRepository.ReadAll";
+            }
+
+            public static class RoleRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.RoleRepository.ReadAll";
+            }
+
+            public static class StatusRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.StatusRepository.ReadAll";
+            }
+
+            public static class SubStatusRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.SubStatusRepository.ReadAll";
+            }
+
+            public static class TransactionGroupRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.TransactionGroupRepository.ReadAll";
+            }
+
+            public static class TransactionTypeRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.TransactionTypeRepository.ReadAll";
+            }
+
+            public static class ReferenceTypeRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.ReferenceTypeRepository.ReadAll";
+            }
+        }
     }
 }
