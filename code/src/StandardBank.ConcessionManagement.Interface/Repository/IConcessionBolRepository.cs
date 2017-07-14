@@ -4,40 +4,40 @@ using StandardBank.ConcessionManagement.Model.Repository;
 namespace StandardBank.ConcessionManagement.Interface.Repository
 {
     /// <summary>
-    /// AdValorem repository interface
+    /// ConcessionBol repository interface
     /// </summary>
-    public interface IAdValoremRepository
+    public interface IConcessionBolRepository
     {
         /// <summary>
         /// Creates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        AdValorem Create(AdValorem model);
+        ConcessionBol Create(ConcessionBol model);
 
         /// <summary>
         /// Reads the by identifier.
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        AdValorem ReadById(int id);
+        ConcessionBol ReadById(int id);
 
         /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<AdValorem> ReadAll();
+        IEnumerable<ConcessionBol> ReadAll();
 
         /// <summary>
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        void Update(AdValorem model);
+        void Update(ConcessionBol model);
 
         /// <summary>
         /// Deletes the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        void Delete(AdValorem model);
+        void Delete(ConcessionBol model);
     }
 }

@@ -10,10 +10,10 @@ using StandardBank.ConcessionManagement.Interface.Common;
 namespace StandardBank.ConcessionManagement.Repository
 {
     /// <summary>
-    /// AdValorem repository
+    /// ConcessionAccount repository
     /// </summary>
-    /// <seealso cref="StandardBank.ConcessionManagement.Interface.Repository.IAdValoremRepository" />
-    public class AdValoremRepository : IAdValoremRepository
+    /// <seealso cref="StandardBank.ConcessionManagement.Interface.Repository.IConcessionAccountRepository" />
+    public class ConcessionAccountRepository : IConcessionAccountRepository
     {
         /// <summary>
         /// The configuration data
@@ -21,10 +21,10 @@ namespace StandardBank.ConcessionManagement.Repository
         private readonly IConfigurationData _configurationData;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AdValoremRepository"/> class.
+        /// Initializes a new instance of the <see cref="ConcessionAccountRepository"/> class.
         /// </summary>
         /// <param name="configurationData">The configuration data.</param>
-        public AdValoremRepository(IConfigurationData configurationData)
+        public ConcessionAccountRepository(IConfigurationData configurationData)
         {
             _configurationData = configurationData;
         }
@@ -34,15 +34,15 @@ namespace StandardBank.ConcessionManagement.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public AdValorem Create(AdValorem model)
+        public ConcessionAccount Create(ConcessionAccount model)
         {
-            const string sql = @"INSERT [dbo].[rtblAdValorem] ([AdValorem], [IsActive]) 
-                                VALUES (@AdValorem, @IsActive) 
+            const string sql = @"INSERT [dbo].[tblConcessionAccount] ([fkConcessionId], [AccountNumber], [IsActive]) 
+                                VALUES (@fkConcessionId, @AccountNumber, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
-                model.Id = db.Query<int>(sql, new {AdValorem = model.Amount, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql, new {fkConcessionId = model.ConcessionId, AccountNumber = model.AccountNumber, IsActive = model.IsActive}).Single();
             }
 
             return model;
@@ -53,12 +53,12 @@ namespace StandardBank.ConcessionManagement.Repository
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        public AdValorem ReadById(int id)
+        public ConcessionAccount ReadById(int id)
         {
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
-                return db.Query<AdValorem>(
-                    "SELECT [pkAdValoremId] [Id], [AdValorem] [Amount], [IsActive] FROM [dbo].[rtblAdValorem] WHERE [pkAdValoremId] = @Id",
+                return db.Query<ConcessionAccount>(
+                    "SELECT [pkConcessionAccountId] [Id], [fkConcessionId] [ConcessionId], [AccountNumber], [IsActive] FROM [dbo].[tblConcessionAccount] WHERE [pkConcessionAccountId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -67,11 +67,11 @@ namespace StandardBank.ConcessionManagement.Repository
         /// Reads all.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<AdValorem> ReadAll()
+        public IEnumerable<ConcessionAccount> ReadAll()
         {
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
-                return db.Query<AdValorem>("SELECT [pkAdValoremId] [Id], [AdValorem] [Amount], [IsActive] FROM [dbo].[rtblAdValorem]");
+                return db.Query<ConcessionAccount>("SELECT [pkConcessionAccountId] [Id], [fkConcessionId] [ConcessionId], [AccountNumber], [IsActive] FROM [dbo].[tblConcessionAccount]");
             }
         }
 
@@ -79,14 +79,14 @@ namespace StandardBank.ConcessionManagement.Repository
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        public void Update(AdValorem model)
+        public void Update(ConcessionAccount model)
         {
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
-                db.Execute(@"UPDATE [dbo].[rtblAdValorem]
-                            SET [AdValorem] = @AdValorem, [IsActive] = @IsActive
-                            WHERE [pkAdValoremId] = @Id",
-                    new {Id = model.Id, AdValorem = model.Amount, IsActive = model.IsActive});
+                db.Execute(@"UPDATE [dbo].[tblConcessionAccount]
+                            SET [fkConcessionId] = @fkConcessionId, [AccountNumber] = @AccountNumber, [IsActive] = @IsActive
+                            WHERE [pkConcessionAccountId] = @Id",
+                    new {Id = model.Id, fkConcessionId = model.ConcessionId, AccountNumber = model.AccountNumber, IsActive = model.IsActive});
             }
         }
 
@@ -94,11 +94,11 @@ namespace StandardBank.ConcessionManagement.Repository
         /// Deletes the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        public void Delete(AdValorem model)
+        public void Delete(ConcessionAccount model)
         {
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
-                db.Execute("DELETE [dbo].[rtblAdValorem] WHERE [pkAdValoremId] = @Id",
+                db.Execute("DELETE [dbo].[tblConcessionAccount] WHERE [pkConcessionAccountId] = @Id",
                     new {model.Id});
             }
         }

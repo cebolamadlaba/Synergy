@@ -10,10 +10,10 @@ using StandardBank.ConcessionManagement.Interface.Common;
 namespace StandardBank.ConcessionManagement.Repository
 {
     /// <summary>
-    /// AdValorem repository
+    /// UserRole repository
     /// </summary>
-    /// <seealso cref="StandardBank.ConcessionManagement.Interface.Repository.IAdValoremRepository" />
-    public class AdValoremRepository : IAdValoremRepository
+    /// <seealso cref="StandardBank.ConcessionManagement.Interface.Repository.IUserRoleRepository" />
+    public class UserRoleRepository : IUserRoleRepository
     {
         /// <summary>
         /// The configuration data
@@ -21,10 +21,10 @@ namespace StandardBank.ConcessionManagement.Repository
         private readonly IConfigurationData _configurationData;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AdValoremRepository"/> class.
+        /// Initializes a new instance of the <see cref="UserRoleRepository"/> class.
         /// </summary>
         /// <param name="configurationData">The configuration data.</param>
-        public AdValoremRepository(IConfigurationData configurationData)
+        public UserRoleRepository(IConfigurationData configurationData)
         {
             _configurationData = configurationData;
         }
@@ -34,15 +34,15 @@ namespace StandardBank.ConcessionManagement.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public AdValorem Create(AdValorem model)
+        public UserRole Create(UserRole model)
         {
-            const string sql = @"INSERT [dbo].[rtblAdValorem] ([AdValorem], [IsActive]) 
-                                VALUES (@AdValorem, @IsActive) 
+            const string sql = @"INSERT [dbo].[tblUserRole] ([fkUserId], [fkRoleId], [IsActive]) 
+                                VALUES (@fkUserId, @fkRoleId, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
-                model.Id = db.Query<int>(sql, new {AdValorem = model.Amount, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql, new {fkUserId = model.UserId, fkRoleId = model.RoleId, IsActive = model.IsActive}).Single();
             }
 
             return model;
@@ -53,12 +53,12 @@ namespace StandardBank.ConcessionManagement.Repository
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        public AdValorem ReadById(int id)
+        public UserRole ReadById(int id)
         {
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
-                return db.Query<AdValorem>(
-                    "SELECT [pkAdValoremId] [Id], [AdValorem] [Amount], [IsActive] FROM [dbo].[rtblAdValorem] WHERE [pkAdValoremId] = @Id",
+                return db.Query<UserRole>(
+                    "SELECT [pkUserRoleId] [Id], [fkUserId] [UserId], [fkRoleId] [RoleId], [IsActive] FROM [dbo].[tblUserRole] WHERE [pkUserRoleId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -67,11 +67,11 @@ namespace StandardBank.ConcessionManagement.Repository
         /// Reads all.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<AdValorem> ReadAll()
+        public IEnumerable<UserRole> ReadAll()
         {
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
-                return db.Query<AdValorem>("SELECT [pkAdValoremId] [Id], [AdValorem] [Amount], [IsActive] FROM [dbo].[rtblAdValorem]");
+                return db.Query<UserRole>("SELECT [pkUserRoleId] [Id], [fkUserId] [UserId], [fkRoleId] [RoleId], [IsActive] FROM [dbo].[tblUserRole]");
             }
         }
 
@@ -79,14 +79,14 @@ namespace StandardBank.ConcessionManagement.Repository
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        public void Update(AdValorem model)
+        public void Update(UserRole model)
         {
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
-                db.Execute(@"UPDATE [dbo].[rtblAdValorem]
-                            SET [AdValorem] = @AdValorem, [IsActive] = @IsActive
-                            WHERE [pkAdValoremId] = @Id",
-                    new {Id = model.Id, AdValorem = model.Amount, IsActive = model.IsActive});
+                db.Execute(@"UPDATE [dbo].[tblUserRole]
+                            SET [fkUserId] = @fkUserId, [fkRoleId] = @fkRoleId, [IsActive] = @IsActive
+                            WHERE [pkUserRoleId] = @Id",
+                    new {Id = model.Id, fkUserId = model.UserId, fkRoleId = model.RoleId, IsActive = model.IsActive});
             }
         }
 
@@ -94,11 +94,11 @@ namespace StandardBank.ConcessionManagement.Repository
         /// Deletes the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        public void Delete(AdValorem model)
+        public void Delete(UserRole model)
         {
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
-                db.Execute("DELETE [dbo].[rtblAdValorem] WHERE [pkAdValoremId] = @Id",
+                db.Execute("DELETE [dbo].[tblUserRole] WHERE [pkUserRoleId] = @Id",
                     new {model.Id});
             }
         }

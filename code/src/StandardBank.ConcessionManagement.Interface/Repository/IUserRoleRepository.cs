@@ -4,40 +4,40 @@ using StandardBank.ConcessionManagement.Model.Repository;
 namespace StandardBank.ConcessionManagement.Interface.Repository
 {
     /// <summary>
-    /// AdValorem repository interface
+    /// UserRole repository interface
     /// </summary>
-    public interface IAdValoremRepository
+    public interface IUserRoleRepository
     {
         /// <summary>
         /// Creates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        AdValorem Create(AdValorem model);
+        UserRole Create(UserRole model);
 
         /// <summary>
         /// Reads the by identifier.
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        AdValorem ReadById(int id);
+        UserRole ReadById(int id);
 
         /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<AdValorem> ReadAll();
+        IEnumerable<UserRole> ReadAll();
 
         /// <summary>
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        void Update(AdValorem model);
+        void Update(UserRole model);
 
         /// <summary>
         /// Deletes the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        void Delete(AdValorem model);
+        void Delete(UserRole model);
     }
 }
