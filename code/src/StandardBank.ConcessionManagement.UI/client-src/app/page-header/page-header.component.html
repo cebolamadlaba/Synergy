@@ -12,7 +12,14 @@
     </li>
     <li routerLinkActive="selected-nav-item"><a routerLink="/approved-concessions">Approved Concessions</a></li>
     <li routerLinkActive="selected-nav-item"><a routerLink="/conditions">Conditions</a></li>
-    <li routerLinkActive="selected-nav-item"><a routerLink="/pricing">Pricing</a></li>
+    <li routerLinkActive="selected-nav-item">
+      <a routerLink="/pricing">Pricing</a>
+      <!-- The following are here so that the router link active class is enabled for any of the pricing routes-->
+      <a routerLink="/pricing-results" style="display: none;">Pricing</a>
+      <a routerLink="/pricing-cash" style="display: none;">Pricing</a>
+      <a routerLink="/pricing-lending" style="display: none;">Pricing</a>
+      <a routerLink="/pricing-transactional" style="display: none;">Pricing</a>
+    </li>
     <li class="logout-li"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
   </ul>
 </div> 

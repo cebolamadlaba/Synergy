@@ -26,6 +26,10 @@ webpackEmptyContext.id = "../../../../../client-src async recursive";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__due_expiry_inbox_due_expiry_inbox_component__ = __webpack_require__("../../../../../client-src/app/due-expiry-inbox/due-expiry-inbox.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__expired_inbox_expired_inbox_component__ = __webpack_require__("../../../../../client-src/app/expired-inbox/expired-inbox.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__declined_inbox_declined_inbox_component__ = __webpack_require__("../../../../../client-src/app/declined-inbox/declined-inbox.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pricing_results_pricing_results_component__ = __webpack_require__("../../../../../client-src/app/pricing-results/pricing-results.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pricing_lending_pricing_lending_component__ = __webpack_require__("../../../../../client-src/app/pricing-lending/pricing-lending.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pricing_cash_pricing_cash_component__ = __webpack_require__("../../../../../client-src/app/pricing-cash/pricing-cash.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pricing_transactional_pricing_transactional_component__ = __webpack_require__("../../../../../client-src/app/pricing-transactional/pricing-transactional.component.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppRoutingModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -33,6 +37,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
+
+
+
 
 
 
@@ -50,7 +58,11 @@ var routes = [
     { path: 'declined-inbox', component: __WEBPACK_IMPORTED_MODULE_8__declined_inbox_declined_inbox_component__["a" /* DeclinedInboxComponent */] },
     { path: 'approved-concessions', component: __WEBPACK_IMPORTED_MODULE_3__approved_concessions_approved_concessions_component__["a" /* ApprovedConcessionsComponent */] },
     { path: 'conditions', component: __WEBPACK_IMPORTED_MODULE_4__conditions_conditions_component__["a" /* ConditionsComponent */] },
-    { path: 'pricing', component: __WEBPACK_IMPORTED_MODULE_5__pricing_pricing_component__["a" /* PricingComponent */] }
+    { path: 'pricing', component: __WEBPACK_IMPORTED_MODULE_5__pricing_pricing_component__["a" /* PricingComponent */] },
+    { path: 'pricing-results', component: __WEBPACK_IMPORTED_MODULE_9__pricing_results_pricing_results_component__["a" /* PricingResultsComponent */] },
+    { path: 'pricing-lending', component: __WEBPACK_IMPORTED_MODULE_10__pricing_lending_pricing_lending_component__["a" /* PricingLendingComponent */] },
+    { path: 'pricing-cash', component: __WEBPACK_IMPORTED_MODULE_11__pricing_cash_pricing_cash_component__["a" /* PricingCashComponent */] },
+    { path: 'pricing-transactional', component: __WEBPACK_IMPORTED_MODULE_12__pricing_transactional_pricing_transactional_component__["a" /* PricingTransactionalComponent */] }
 ];
 var AppRoutingModule = (function () {
     function AppRoutingModule() {
@@ -143,6 +155,10 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__inbox_header_inbox_header_component__ = __webpack_require__("../../../../../client-src/app/inbox-header/inbox-header.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__inbox_search_bar_inbox_search_bar_component__ = __webpack_require__("../../../../../client-src/app/inbox-search-bar/inbox-search-bar.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__inbox_concession_count_inbox_concession_count_service__ = __webpack_require__("../../../../../client-src/app/inbox-concession-count/inbox-concession-count.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__pricing_results_pricing_results_component__ = __webpack_require__("../../../../../client-src/app/pricing-results/pricing-results.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__pricing_lending_pricing_lending_component__ = __webpack_require__("../../../../../client-src/app/pricing-lending/pricing-lending.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__pricing_cash_pricing_cash_component__ = __webpack_require__("../../../../../client-src/app/pricing-cash/pricing-cash.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__pricing_transactional_pricing_transactional_component__ = __webpack_require__("../../../../../client-src/app/pricing-transactional/pricing-transactional.component.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -150,6 +166,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
+
+
+
 
 
 
@@ -184,7 +204,11 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_11__expired_inbox_expired_inbox_component__["a" /* ExpiredInboxComponent */],
             __WEBPACK_IMPORTED_MODULE_12__declined_inbox_declined_inbox_component__["a" /* DeclinedInboxComponent */],
             __WEBPACK_IMPORTED_MODULE_13__inbox_header_inbox_header_component__["a" /* InboxHeaderComponent */],
-            __WEBPACK_IMPORTED_MODULE_14__inbox_search_bar_inbox_search_bar_component__["a" /* InboxSearchBarComponent */]
+            __WEBPACK_IMPORTED_MODULE_14__inbox_search_bar_inbox_search_bar_component__["a" /* InboxSearchBarComponent */],
+            __WEBPACK_IMPORTED_MODULE_16__pricing_results_pricing_results_component__["a" /* PricingResultsComponent */],
+            __WEBPACK_IMPORTED_MODULE_17__pricing_lending_pricing_lending_component__["a" /* PricingLendingComponent */],
+            __WEBPACK_IMPORTED_MODULE_18__pricing_cash_pricing_cash_component__["a" /* PricingCashComponent */],
+            __WEBPACK_IMPORTED_MODULE_19__pricing_transactional_pricing_transactional_component__["a" /* PricingTransactionalComponent */]
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
@@ -548,6 +572,7 @@ var InboxConcessionCountService = (function () {
     }
     InboxConcessionCountService.prototype.getData = function () {
         var url = "/api/inbox/ConcessionsSummary";
+        console.log("here");
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     };
     InboxConcessionCountService.prototype.extractData = function (response) {
@@ -758,7 +783,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/page-header/page-header.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"col-md-12 header\">\r\n  <div class=\"logo\"></div>\r\n</div>\r\n<div class=\"col-md-12 nav-pills-container\">\r\n  <ul class=\"nav nav-pills\">\r\n    <li routerLinkActive=\"selected-nav-item\">\r\n      <a routerLink=\"/pending-inbox\">Inbox</a>\r\n      <!-- The following are here so that the router link active class is enabled for any of the inbox routes-->\r\n      <a routerLink=\"/due-expiry-inbox\" style=\"display: none;\">Inbox</a>\r\n      <a routerLink=\"/expired-inbox\" style=\"display: none;\">Inbox</a>\r\n      <a routerLink=\"/declined-inbox\" style=\"display: none;\">Inbox</a>\r\n    </li>\r\n    <li routerLinkActive=\"selected-nav-item\"><a routerLink=\"/approved-concessions\">Approved Concessions</a></li>\r\n    <li routerLinkActive=\"selected-nav-item\"><a routerLink=\"/conditions\">Conditions</a></li>\r\n    <li routerLinkActive=\"selected-nav-item\"><a routerLink=\"/pricing\">Pricing</a></li>\r\n    <li class=\"logout-li\"><a href=\"#\"><span class=\"glyphicon glyphicon-log-out\"></span> Logout</a></li>\r\n  </ul>\r\n</div> "
+module.exports = "<div class=\"col-md-12 header\">\r\n  <div class=\"logo\"></div>\r\n</div>\r\n<div class=\"col-md-12 nav-pills-container\">\r\n  <ul class=\"nav nav-pills\">\r\n    <li routerLinkActive=\"selected-nav-item\">\r\n      <a routerLink=\"/pending-inbox\">Inbox</a>\r\n      <!-- The following are here so that the router link active class is enabled for any of the inbox routes-->\r\n      <a routerLink=\"/due-expiry-inbox\" style=\"display: none;\">Inbox</a>\r\n      <a routerLink=\"/expired-inbox\" style=\"display: none;\">Inbox</a>\r\n      <a routerLink=\"/declined-inbox\" style=\"display: none;\">Inbox</a>\r\n    </li>\r\n    <li routerLinkActive=\"selected-nav-item\"><a routerLink=\"/approved-concessions\">Approved Concessions</a></li>\r\n    <li routerLinkActive=\"selected-nav-item\"><a routerLink=\"/conditions\">Conditions</a></li>\r\n    <li routerLinkActive=\"selected-nav-item\">\r\n      <a routerLink=\"/pricing\">Pricing</a>\r\n      <!-- The following are here so that the router link active class is enabled for any of the pricing routes-->\r\n      <a routerLink=\"/pricing-results\" style=\"display: none;\">Pricing</a>\r\n      <a routerLink=\"/pricing-cash\" style=\"display: none;\">Pricing</a>\r\n      <a routerLink=\"/pricing-lending\" style=\"display: none;\">Pricing</a>\r\n      <a routerLink=\"/pricing-transactional\" style=\"display: none;\">Pricing</a>\r\n    </li>\r\n    <li class=\"logout-li\"><a href=\"#\"><span class=\"glyphicon glyphicon-log-out\"></span> Logout</a></li>\r\n  </ul>\r\n</div> "
 
 /***/ }),
 
@@ -859,6 +884,250 @@ PendingInboxComponent = __decorate([
 
 /***/ }),
 
+/***/ "../../../../../client-src/app/pricing-cash/pricing-cash.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../client-src/app/pricing-cash/pricing-cash.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<!-- summary bar -->\r\n<div class=\"col-md-12 summary-banner\">\r\n  <div class=\"row\">\r\n    <div class=\"col-md-12 summary-banner-title\">\r\n      <div class=\"col-md-1\">\r\n        <i class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"></i> Back\r\n      </div>\r\n      <div class=\"col-md-10 banner-main-title\">\r\n        <i class=\"fa fa-money\" aria-hidden=\"true\"></i> Cash\r\n      </div>\r\n      <div class=\"col-md-1\"></div>\r\n    </div>\r\n  </div>\r\n  <div class=\"row\">\r\n    <div class=\"col-md-12 summary-main\">\r\n      <div class=\"col-md-3 summary-sub-title\">\r\n        <h5>EDCON</h5>\r\n        <span class=\"lightText\">1989</span>\r\n      </div>\r\n      <div class=\"col-md-3 summary-items\">\r\n          <h5>CASHCENTR</h5>\r\n          <span class=\"col-md-12 summary-items-sub\">Turnover <span class=\"summary-item-value\">0.00</span></span>\r\n          <span class=\"col-md-12 summary-items-sub\">Volume <span class=\"summary-item-value\">0.00</span></span>\r\n          <span class=\"col-md-12 summary-items-sub\">Weighted Avg BRANCH Price <span class=\"col-md-12 summary-item-value\">0.00</span></span>\r\n      </div>\r\n      <div class=\"col-md-3 summary-items\">\r\n          <h5>BRANCH</h5>\r\n          <span class=\"col-md-12 summary-items-sub\">Turnover <span class=\"summary-item-value\">0.00</span></span>\r\n          <span class=\"col-md-12 summary-items-sub\">Volume <span class=\"summary-item-value\">0.00</span></span>\r\n          <span class=\"col-md-12 summary-items-sub\">Weighted Avg BRANCH Price <span class=\"col-md-12 summary-item-value\">0.00</span></span>\r\n      </div>\r\n      <div class=\"col-md-3 summary-items\">\r\n          <h5>AUTOSAFE <i class=\"fa fa-compress compress\" aria-hidden=\"true\"></i></h5>\r\n          <span class=\"col-md-12 summary-items-sub\">Turnover <span class=\"summary-item-value\">0.00</span></span>\r\n          <span class=\"col-md-12 summary-items-sub\">Volume <span class=\"summary-item-value\">0.00</span></span>\r\n          <span class=\"col-md-12 summary-items-sub\">Weighted Avg BRANCH Price <span class=\"col-md-12 summary-item-value\">0.00</span></span>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n\r\n<!--Table information -->\r\n\r\n<div class=\"table-info\">\r\n\r\n  <!-- products -->\r\n  <div class=\"col-md-5\">\r\n    <h3 class=\"table-title\">Products</h3>\r\n    <div class=\"section\">\r\n      <div class=\"section-body\">\r\n        <div class=\"product-section\">\r\n          <p class=\"product-name\"> Real People</p>\r\n\r\n            <div class=\"product-account\">Account No: 12345</div>\r\n            <div class=\"product-code\">Product: VAF</div>\r\n\r\n        </div>\r\n        <div class=\"product-table-container\">\r\n          <table class=\"table table-bordered table-hover header-fixed table-striped \">\r\n            <thead>\r\n              <tr>\r\n                <th>Cash Table No</th>\r\n                <th>BP ID</th>\r\n                <th>Volume</th>\r\n                <th>Loaded Price</th>\r\n              </tr>\r\n            </thead>\r\n            <tbody>\r\n              <tr>\r\n                <td class=\"rightAlign\">45</td>\r\n                <td class=\"rightAlign\">343</td>\r\n                <td class=\"rightAlign\">150,000.000</td>\r\n                <td>R7 + 0.45</td>\r\n              </tr>\r\n            </tbody>\r\n          </table>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n\r\n\r\n</div>\r\n\r\n<!-- concessions -->\r\n\r\n<div class=\"col-md-7 concessions\">\r\n  <div class=\"concessions-top\">\r\n    <div class=\"concessions-top-title\">\r\n      <h3 class=\"table-title\">Concessions</h3>\r\n      <button type=\"button\" class=\"btn btn-default\" onclick=\"location.href='add-concession.html'\">Add Concession</button>\r\n    </div>\r\n    <!-- Search bar -->\r\n    <div class=\"search-and-results-container\">\r\n      <div class=\"input-group add-on\">\r\n        <input class=\"form-control\" placeholder=\"Search Concession ID or Risk Group Number\" name=\"srch-term\" id=\"srch-term\" type=\"text\">\r\n      </div>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"section\">\r\n    <div class=\"section-header small-table-title\">\r\n      <div class=\"concessionID-section\"> 124</div>\r\n    </div>\r\n    <div class=\"section-body\">\r\n      <div class=\"table-container\">\r\n        <table class=\"table table-bordered table-hover header-fixed table-striped\">\r\n          <thead>\r\n            <tr>\r\n              <th>Customer</th>\r\n              <th>Cash Table</th>\r\n              <th>BP ID</th>\r\n              <th>Volume</th>\r\n              <th>Value</th>\r\n              <th>Price</th>\r\n            </tr>\r\n          </thead>\r\n          <tbody>\r\n            <tr>\r\n              <td>\r\n                <div class=\"table-row-top\">Tester Inc.</div>\r\n                <div class=\"table-row-bottom\">\r\n                  <div class=\"secondaryText\">\r\n                    Acc No:\r\n                    <div class=\"normalText\">12345</div>\r\n                  </div>\r\n                </div>\r\n              </td>\r\n              <td class=\"rightAlign\">45</td>\r\n              <td class=\"rightAlign\">343</td>\r\n              <td>230</td>\r\n              <td>150,000.00</td>\r\n              <td>\r\n                <div class=\"table-row-top\">\r\n                  <div class=\"secondaryText\">\r\n                    Loaded:\r\n                    <div class=\"normalText\">R7 + 0.45</div>\r\n                  </div>\r\n                </div>\r\n                <div class=\"table-row-bottom\">\r\n                  <div class=\"secondaryText\">\r\n                    Approved:\r\n                    <div class=\"normalText\">R7 + 0.45</div>\r\n                  </div>\r\n                </div>\r\n              </td>\r\n            </tr>\r\n          </tbody>\r\n        </table>\r\n      </div>\r\n    </div>\r\n  </div>\r\n\r\n  <!-- avg balance -->\r\n\r\n  <div class=\"section\">\r\n    <div class=\"section-header\">\r\n      <div class=\"concessionID-section\"> ED0023</div>\r\n    </div>\r\n    <div class=\"section-body\">\r\n      <div class=\"table-container\">\r\n        <table class=\"table table-bordered table-hover header-fixed table-striped\">\r\n          <thead>\r\n            <tr>\r\n              <th>Customer</th>\r\n              <th>Limit</th>\r\n              <th>Average Balance</th>\r\n              <th>Term</th>\r\n              <th>MAP</th>\r\n            </tr>\r\n          </thead>\r\n          <tbody>\r\n            <tr>\r\n              <td>\r\n                <div class=\"table-row-top\">Tester Inc.</div>\r\n                <div class=\"table-row-bottom\">\r\n                  <div class=\"secondaryText\">\r\n                    Acc No:\r\n                    <div class=\"normalText\">12345</div>\r\n                  </div>\r\n                </div>\r\n              </td>\r\n              <td>5,000,000.00</td>\r\n              <td>3,999,987.00</td>\r\n              <td>60</td>\r\n              <td>\r\n                <div class=\"table-row-top\">\r\n                  <div class=\"secondaryText\">\r\n                    Loaded:\r\n                    <div class=\"normalText\">1</div>\r\n                  </div>\r\n                </div>\r\n                <div class=\"table-row-bottom\">\r\n                  <div class=\"secondaryText\">\r\n                    Approved:\r\n                    <div class=\"normalText\">1</div>\r\n                  </div>\r\n                </div>\r\n              </td>\r\n            </tr>\r\n          </tbody>\r\n        </table>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>"
+
+/***/ }),
+
+/***/ "../../../../../client-src/app/pricing-cash/pricing-cash.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PricingCashComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var PricingCashComponent = (function () {
+    function PricingCashComponent() {
+    }
+    PricingCashComponent.prototype.ngOnInit = function () {
+    };
+    return PricingCashComponent;
+}());
+PricingCashComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_10" /* Component */])({
+        selector: 'app-pricing-cash',
+        template: __webpack_require__("../../../../../client-src/app/pricing-cash/pricing-cash.component.html"),
+        styles: [__webpack_require__("../../../../../client-src/app/pricing-cash/pricing-cash.component.css")]
+    }),
+    __metadata("design:paramtypes", [])
+], PricingCashComponent);
+
+//# sourceMappingURL=pricing-cash.component.js.map
+
+/***/ }),
+
+/***/ "../../../../../client-src/app/pricing-lending/pricing-lending.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../client-src/app/pricing-lending/pricing-lending.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<!-- banner-->\r\n<div class=\"col-md-12 lending-view-banner\">\r\n  <div class=\"row\">\r\n    <div class=\"lending-banner-title\">\r\n      <div class=\"col-md-1\">\r\n        <i class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"></i>\r\n        <span class=\"back-button-text\" onclick=\"location.href = 'pricing.html'\">Back</span>\r\n      </div>\r\n      <div class=\"col-md-10 banner-main-title\">\r\n        <i class=\"fa fa-handshake-o\" aria-hidden=\"true\"></i> Lending\r\n      </div>\r\n      <div class=\"col-md-1\"></div>\r\n    </div>\r\n    <div class=\"col-md-12 lending-banner\">\r\n      <div class=\"col-md-11\">\r\n        <div>\r\n          <div class=\"col-md-5\">\r\n            <div class=\"subHeading\">EDCON</div>\r\n            <div class=\"date lightTitle hidden-element\">1989</div>\r\n          </div>\r\n          <div class=\"col-md-2  hidden-element\">\r\n            <div class=\"subHeading lightTitle\">Total Exposure</div>\r\n            <div class=\"score\"><b>0.00</b></div>\r\n          </div>\r\n          <div class=\"col-md-2  hidden-element\">\r\n            <div class=\"subHeading lightTitle\"> Weighted Avarage MAP</div>\r\n            <div class=\"score\"><b>0.00</b></div>\r\n          </div>\r\n          <div class=\"col-md-2  hidden-element\">\r\n            <div class=\"subHeading lightTitle\"> Weighted CRS / MRS</div>\r\n            <div class=\"score\"><b>0.00</b></div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n      <div class=\"col-md-1\">\r\n        <div class=\"compress\">\r\n          <div onclick=\"hideElement('hidden-element')\">\r\n            <i class=\"fa fa-compress\" aria-hidden=\"true\" id=\"compress-icon\"></i>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n<!-- headings-->\r\n<div class=\"lending-headings col-md-12\">\r\n  <div class=\"col-md-5\">\r\n    <h2 class=\"resultsHeading\">Products</h2>\r\n  </div>\r\n  <div class=\"col-md-7\">\r\n    <h2 class=\"resultsHeading\">\r\n      Concessions\r\n      <button type=\"button\" class=\"btn btn-primary concessionBtn\" onclick=\"location.href = 'lending-concessions.html'\">Add Concession</button>\r\n    </h2>\r\n\r\n  </div>\r\n</div>\r\n<!-- lending concessions and products-->\r\n<div class=\"col-md-12\">\r\n  <div class=\"col-md-5\">\r\n    <div class=\"section\">\r\n      <div class=\"section-body\">\r\n        <div class=\"product-section\">\r\n          <div class=\"product-name\"> Real People</div>\r\n          <div>\r\n            <div class=\"product-account\">Account No: 12345</div>\r\n            <div class=\"product-code\">Product: VAF</div>\r\n          </div>\r\n        </div>\r\n        <div class=\"product-table-container\">\r\n          <table class=\"table table-bordered table-hover header-fixed table-striped \">\r\n            <thead>\r\n              <tr>\r\n                <th>Limit</th>\r\n                <th>Avarage Balance</th>\r\n                <th>Loaded MAP</th>\r\n              </tr>\r\n            </thead>\r\n            <tbody>\r\n              <tr>\r\n                <td class=\"rightAlign\"> 5000000</td>\r\n                <td class=\"rightAlign\"> 5000000</td>\r\n                <td class=\"rightAlign\"> 1</td>\r\n              </tr>\r\n            </tbody>\r\n          </table>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n  <div class=\"col-md-7 search-and-results-container\" id=\"lending-search-container\">\r\n    <!-- Search bar -->\r\n    <div class=\"input-group add-on\">\r\n      <input class=\"form-control\" placeholder=\"Concession ID\" name=\"srch-term\" id=\"srch-term\" type=\"text\">\r\n    </div>\r\n\r\n    <div class=\"section\">\r\n      <div class=\"section-header small-table-title\">\r\n        <div class=\"concessionID-section\"> ED0023</div>\r\n      </div>\r\n      <div class=\"section-body\">\r\n        <div class=\"table-container\">\r\n          <table class=\"table table-bordered table-hover header-fixed table-striped\">\r\n            <thead>\r\n              <tr>\r\n                <th>Customer</th>\r\n                <th>Limit</th>\r\n                <th>Avarage Balance</th>\r\n                <th>Term</th>\r\n                <th>MAP</th>\r\n              </tr>\r\n            </thead>\r\n            <tbody>\r\n              <tr>\r\n                <td>\r\n                  <p class=\"customerInfo\">Real People</p>\r\n                  <p class=\"accInfo\">Acc No :1123</p>\r\n                </td>\r\n                <td class=\"rightAlign\">5,0000.0</td>\r\n                <td class=\"rightAlign\">23.33535</td>\r\n                <td class=\"rightAlign\">60</td>\r\n                <td>\r\n                  <p class=\"mapInfo\">Loaded:1</p>\r\n                  <p class=\"mapInfo\">Approved:1</p>\r\n                </td>\r\n              </tr>\r\n              <tr>\r\n                <td>\r\n                  <p class=\"customerInfo\">Mtech Electronic</p>\r\n                  <p class=\"accInfo\">Acc No :1123</p>\r\n                </td>\r\n                <td class=\"rightAlign\">5,0000.0</td>\r\n                <td class=\"rightAlign\">120.33535</td>\r\n                <td class=\"rightAlign\">120</td>\r\n                <td>\r\n                  <p class=\"mapInfo\">Loaded:1</p>\r\n                  <p class=\"mapInfo\">Approved:1</p>\r\n                </td>\r\n              </tr>\r\n            </tbody>\r\n          </table>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>"
+
+/***/ }),
+
+/***/ "../../../../../client-src/app/pricing-lending/pricing-lending.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PricingLendingComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var PricingLendingComponent = (function () {
+    function PricingLendingComponent() {
+    }
+    PricingLendingComponent.prototype.ngOnInit = function () {
+    };
+    return PricingLendingComponent;
+}());
+PricingLendingComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_10" /* Component */])({
+        selector: 'app-pricing-lending',
+        template: __webpack_require__("../../../../../client-src/app/pricing-lending/pricing-lending.component.html"),
+        styles: [__webpack_require__("../../../../../client-src/app/pricing-lending/pricing-lending.component.css")]
+    }),
+    __metadata("design:paramtypes", [])
+], PricingLendingComponent);
+
+//# sourceMappingURL=pricing-lending.component.js.map
+
+/***/ }),
+
+/***/ "../../../../../client-src/app/pricing-results/pricing-results.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../client-src/app/pricing-results/pricing-results.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "  <!-- banner-->\r\n<div class=\"col-md-12 pricing-banner\">\r\n  <div class=\"col-md-1 pricing-user-image\">\r\n    <i class=\"fa fa-user-o\" aria-hidden=\"true\"></i>\r\n  </div>\r\n  <div class=\"col-md-3\">\r\n    <div class=\"pricing-form\">\r\n      <div class=\"row\">\r\n        <div class=\"col-sm-5\">\r\n          <p class=\"lightTitle\">Region</p>\r\n        </div>\r\n        <div class=\"col-sm-6\">\r\n          <p>Some Region</p>\r\n        </div>\r\n      </div>\r\n      <div class=\"row\">\r\n        <div class=\"col-sm-5\">\r\n          <p class=\"lightTitle\">Business Unit</p>\r\n        </div>\r\n        <div class=\"col-sm-6\">\r\n          <p>Cape Town</p>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n  <div class=\"col-md-4\">\r\n    <div class=\"pricing-form\">\r\n      <div class=\"row\">\r\n        <div class=\"col-sm-3\">\r\n          <p class=\"lightTitle\">Segment</p>\r\n        </div>\r\n        <div class=\"col-sm-6\">\r\n          <p>Expert</p>\r\n        </div>\r\n      </div>\r\n      <div class=\"row\">\r\n        <div class=\"col-sm-3\">\r\n          <p class=\"lightTitle\">Province</p>\r\n        </div>\r\n        <div class=\"col-sm-6\">\r\n          <p>Northen Cape</p>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n<div class=\"col-md-12 search-and-results-container\">\r\n  <!-- Search bar -->\r\n  <div class=\"input-group add-on\">\r\n    <input class=\"form-control\" placeholder=\"Risk Group Number\" name=\"srch-term\" id=\"srch-term\" type=\"text\" onclick=\"location.href='pricing-results.html'\">\r\n    <div class=\"input-group-btn\">\r\n      <!-- updated search bar button -->\r\n      <button class=\"btn btn-default-search\" type=\"submit\">Search</button>\r\n    </div>\r\n  </div>\r\n</div>\r\n<!-- Risk Group details -->\r\n<div class=\"col-md-12\">\r\n  <div class=\"pricing-group-container\">\r\n    <div class=\"pricing-icon\">\r\n      <div class=\"building-icon\">\r\n        <i class=\"fa fa-building-o\" aria-hidden=\"true\"></i>\r\n      </div>\r\n    </div>\r\n    <div class=\"pricing-group-info\">\r\n      <h3 class=\"info-title\">EDCON</h3>\r\n      <br />\r\n      <span class=\"secondaryText\">1989</span>\r\n    </div>\r\n    <div class=\"col-md-12 pricing-group-container-items\">\r\n      <div class=\"selected-item item\" routerLink=\"/pricing-lending\">\r\n        <div>Lending</div>\r\n        <div class=\"container-item-icon\">\r\n          <i class=\"fa fa-handshake-o\" aria-hidden=\"true\"></i>\r\n        </div>\r\n      </div>\r\n      <div class=\"item selected-item\" routerLink=\"/pricing-cash\">\r\n        <div>Cash</div>\r\n        <div class=\"container-item-icon\">\r\n          <i class=\"fa fa-money\" aria-hidden=\"true\"></i>\r\n        </div>\r\n      </div>\r\n      <div class=\"item\">\r\n        <div>Investments</div>\r\n        <div class=\"container-item-icon\">\r\n          <i class=\"fa fa-bar-chart\" aria-hidden=\"true\"></i>\r\n        </div>\r\n      </div>\r\n      <div class=\"item\">\r\n        <div>BOL</div>\r\n        <div class=\"container-item-icon\">\r\n          <i class=\"fa fa-desktop\" aria-hidden=\"true\"></i>\r\n        </div>\r\n      </div>\r\n      <div class=\"item\">\r\n        <div>MAS</div>\r\n        <div class=\"container-item-icon\">\r\n          <i class=\"fa fa-calculator\" aria-hidden=\"true\"></i>\r\n        </div>\r\n      </div>\r\n      <div class=\"item\">\r\n        <div>Trade</div>\r\n        <div class=\"container-item-icon\">\r\n          <i class=\"fa fa-line-chart\" aria-hidden=\"true\"></i>\r\n        </div>\r\n      </div>\r\n      <div class=\"selected-item item\" routerLink=\"/pricing-transactional\">\r\n        <div>Transactional</div>\r\n        <div class=\"container-item-icon\">\r\n          <i class=\"fa fa-exchange\" aria-hidden=\"true\"></i>\r\n        </div>\r\n      </div>\r\n      <div class=\"item\">\r\n        <div>Cashman</div>\r\n        <div class=\"container-item-icon\">\r\n          <i class=\"fa fa-user\" aria-hidden=\"true\"></i>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>"
+
+/***/ }),
+
+/***/ "../../../../../client-src/app/pricing-results/pricing-results.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PricingResultsComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var PricingResultsComponent = (function () {
+    function PricingResultsComponent() {
+    }
+    PricingResultsComponent.prototype.ngOnInit = function () {
+    };
+    return PricingResultsComponent;
+}());
+PricingResultsComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_10" /* Component */])({
+        selector: 'app-pricing-results',
+        template: __webpack_require__("../../../../../client-src/app/pricing-results/pricing-results.component.html"),
+        styles: [__webpack_require__("../../../../../client-src/app/pricing-results/pricing-results.component.css")]
+    }),
+    __metadata("design:paramtypes", [])
+], PricingResultsComponent);
+
+//# sourceMappingURL=pricing-results.component.js.map
+
+/***/ }),
+
+/***/ "../../../../../client-src/app/pricing-transactional/pricing-transactional.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../client-src/app/pricing-transactional/pricing-transactional.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"col-md-12 lending-view-banner\">\r\n  <div class=\"row\">\r\n    <div class=\"lending-banner-title\">\r\n      <div class=\"col-md-1\">\r\n        <i class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"></i>\r\n        <span class=\"back-button-text\" onclick=\"location.href = 'pricing.html'\">Back</span>\r\n      </div>\r\n      <div class=\"col-md-10 banner-main-title\">\r\n        <i class=\"fa fa-exchange\" aria-hidden=\"true\"></i> Transactional\r\n      </div>\r\n      <div class=\"col-md-1\"></div>\r\n    </div>\r\n    <div class=\"col-md-12 lending-banner\">\r\n      <div class=\"col-md-11\">\r\n        <div>\r\n          <div class=\"col-md-2\">\r\n            <div class=\"subHeading\">EDCON</div>\r\n            <div class=\"date lightTitle hidden-element\">1989</div>\r\n          </div>\r\n          <div class=\"col-md-9\">\r\n            <div class=\"col-md-3 lending-items hidden-element\">\r\n              <div>Account</div>\r\n              <div class=\"summary-items-sub\">No. of Accounts: <span class=\"summary-item-value\">0.00</span></div>\r\n              <div class=\"summary-items-sub\">Avg Management Fee <span class=\"summary-item-value\">0.00</span></div>\r\n              <div class=\"summary-items-sub\">Avg Min Monthly Fee <span class=\"col-md-12 summary-item-value\">0.00</span></div>\r\n            </div>\r\n            <div class=\"col-md-3 summary-items hidden-element\">\r\n              <div>Cash</div>\r\n              <div class=\"summary-items-sub\">Total Withdrawal Volumes <span class=\"summary-item-value\">0.00</span></div>\r\n              <div class=\"summary-items-sub\">Total Withdrawal Values <span class=\"summary-item-value\">0.00</span></div>\r\n              <div class=\"summary-items-sub\">Avg Withdrawal Price <span class=\"col-md-12 summary-item-value\">0.00</span></div>\r\n            </div>\r\n            <div class=\"col-md-3 summary-items hidden-element\">\r\n              <div>Total Cheque Volumes</div>\r\n              <div class=\"summary-items-sub\">Issuing <span class=\"summary-item-value\">0.00</span></div>\r\n              <div class=\"summary-items-sub\">Deposit <span class=\"summary-item-value\">0.00</span></div>\r\n              <div class=\"summary-items-sub\">Encashment <span class=\"summary-item-value\">0.00</span></div>\r\n            </div>\r\n            <div class=\"col-md-3 summary-items hidden-element\">\r\n              <div>Average Cheque</div>\r\n              <div class=\"summary-items-sub\">Issuing Value <span class=\"summary-item-value\">0.00</span></div>\r\n              <div class=\"summary-items-sub\">Issuing Price <span class=\"summary-item-value\">0.00</span></div>\r\n              <div class=\"summary-items-sub\">Deposit Value <span class=\"summary-item-value\">0.00</span></div>\r\n              <div class=\"summary-items-sub\">Deposit Price <span class=\"summary-item-value\">0.00</span></div>\r\n              <div class=\"summary-items-sub\">Encashment Price <span class=\"summary-item-value\">0.00</span></div>\r\n            </div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n      <div class=\"col-md-1\">\r\n        <div class=\"compress\">\r\n          <div onclick=\"hideElement('hidden-element')\">\r\n            <i class=\"fa fa-compress\" aria-hidden=\"true\" id=\"compress-icon\"></i>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n\r\n<!--Table information -->\r\n\r\n<div class=\"lending-headings col-md-12\">\r\n  <div class=\"col-md-5\">\r\n    <h2 class=\"resultsHeading\">Products</h2>\r\n  </div>\r\n  <div class=\"col-md-7\">\r\n    <h2 class=\"resultsHeading\">\r\n      Concessions\r\n      <button type=\"button\" class=\"btn btn-primary concessionBtn\" onclick=\"location.href = 'transactional-concessions.html'\">Add Concession</button>\r\n    </h2>\r\n\r\n  </div>\r\n</div>\r\n<!-- lending concessions and products-->\r\n<div class=\"col-md-12\">\r\n  <div class=\"col-md-5\">\r\n    <div class=\"section\">\r\n      <div class=\"section-body\">\r\n        <div class=\"product-section\">\r\n          <div class=\"product-name\"> Real People</div>\r\n          <div>\r\n            <div class=\"product-account\">Account No: 12345</div>\r\n          </div>\r\n        </div>\r\n        <div class=\"product-table-container\">\r\n          <table class=\"table table-bordered table-hover header-fixed table-striped \">\r\n            <thead>\r\n              <tr>\r\n                <th>Transaction Type</th>\r\n                <th>Tariff Table</th>\r\n                <th>Volume</th>\r\n                <th>Value</th>\r\n                <th>Loaded Price</th>\r\n              </tr>\r\n            </thead>\r\n            <tbody>\r\n              <tr>\r\n                <td> Monthly Management</td>\r\n                <td class=\"rightAlign\"> 500</td>\r\n                <td class=\"rightAlign\"> N/A</td>\r\n                <td class=\"rightAlign\"> N/A</td>\r\n                <td> R60.00</td>\r\n              </tr>\r\n            </tbody>\r\n          </table>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n\r\n  <!-- Concessions table -->\r\n\r\n  <div class=\"col-md-7 search-and-results-container\" id=\"lending-search-container\">\r\n    <div class=\"input-group add-on\">\r\n      <input class=\"form-control\" placeholder=\"Concession ID\" name=\"srch-term\" id=\"srch-term\" type=\"text\">\r\n    </div>\r\n\r\n    <div class=\"section\">\r\n      <div class=\"section-header small-table-title\">\r\n        <div class=\"concessionID-section\"> 127</div>\r\n      </div>\r\n      <div class=\"section-body\">\r\n        <div class=\"table-container\">\r\n          <table class=\"table table-bordered table-hover header-fixed table-striped\">\r\n            <thead>\r\n              <tr>\r\n                <th>Customer</th>\r\n                <th>Transaction Type</th>\r\n                <th>Tariff Table</th>\r\n                <th>Volume</th>\r\n                <th>Value</th>\r\n                <th>Price</th>\r\n                <th>Concession ID</th>\r\n              </tr>\r\n            </thead>\r\n            <tbody>\r\n              <tr>\r\n                <td>\r\n                  <p class=\"customerInfo\">Tester Inc.</p>\r\n                  <p class=\"accInfo\">Acc No :1234</p>\r\n                </td>\r\n                <td class=\"rightAlign\">Minimum Monthly Fee</td>\r\n                <td class=\"rightAlign\">502</td>\r\n                <td class=\"rightAlign\">N/A</td>\r\n                <td class=\"rightAlign\">N/A</td>\r\n                <td>\r\n                  <p class=\"mapInfo\">Loaded:R0.00</p>\r\n                  <p class=\"mapInfo\">Approved:R60.00</p>\r\n                </td>\r\n                <td>127</td>\r\n              </tr>\r\n              <tr>\r\n                <td>\r\n                  <p class=\"customerInfo\">Tester Inc.</p>\r\n                  <p class=\"accInfo\">Acc No :1234</p>\r\n                </td>\r\n                <td class=\"rightAlign\">Cheque Issued</td>\r\n                <td class=\"rightAlign\">62</td>\r\n                <td class=\"rightAlign\">23</td>\r\n                <td class=\"rightAlign\">50,000</td>\r\n                <td>\r\n                  <p class=\"mapInfo\">Loaded:R45.00</p>\r\n                  <p class=\"mapInfo\">Approved:R45.00</p>\r\n                </td>\r\n                <td>128</td>\r\n              </tr>\r\n            </tbody>\r\n          </table>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>"
+
+/***/ }),
+
+/***/ "../../../../../client-src/app/pricing-transactional/pricing-transactional.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PricingTransactionalComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var PricingTransactionalComponent = (function () {
+    function PricingTransactionalComponent() {
+    }
+    PricingTransactionalComponent.prototype.ngOnInit = function () {
+    };
+    return PricingTransactionalComponent;
+}());
+PricingTransactionalComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_10" /* Component */])({
+        selector: 'app-pricing-transactional',
+        template: __webpack_require__("../../../../../client-src/app/pricing-transactional/pricing-transactional.component.html"),
+        styles: [__webpack_require__("../../../../../client-src/app/pricing-transactional/pricing-transactional.component.css")]
+    }),
+    __metadata("design:paramtypes", [])
+], PricingTransactionalComponent);
+
+//# sourceMappingURL=pricing-transactional.component.js.map
+
+/***/ }),
+
 /***/ "../../../../../client-src/app/pricing/pricing.component.css":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -880,7 +1149,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/pricing/pricing.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "  <!-- banner-->\r\n<div class=\"col-md-12 pricing-banner\">\r\n  <div class=\"col-md-1 pricing-user-image\">\r\n    <i class=\"fa fa-user-o\" aria-hidden=\"true\"></i>\r\n  </div>\r\n  <div class=\"col-md-3\">\r\n    <div class=\"pricing-form\">\r\n      <div class=\"row\">\r\n        <div class=\"col-sm-5\">\r\n          <p class=\"lightTitle\">Region</p>\r\n        </div>\r\n        <div class=\"col-sm-6\">\r\n          <p>Some Region</p>\r\n        </div>\r\n      </div>\r\n      <div class=\"row\">\r\n        <div class=\"col-sm-5\">\r\n          <p class=\"lightTitle\">Business Unit</p>\r\n        </div>\r\n        <div class=\"col-sm-6\">\r\n          <p>Cape Town</p>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n  <div class=\"col-md-4\">\r\n    <div class=\"pricing-form\">\r\n      <div class=\"row\">\r\n        <div class=\"col-sm-3\">\r\n          <p class=\"lightTitle\">Segment</p>\r\n        </div>\r\n        <div class=\"col-sm-6\">\r\n          <p>Expert</p>\r\n        </div>\r\n      </div>\r\n      <div class=\"row\">\r\n        <div class=\"col-sm-3\">\r\n          <p class=\"lightTitle\">Province</p>\r\n        </div>\r\n        <div class=\"col-sm-6\">\r\n          <p>Northen Cape</p>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n<div class=\"col-md-12 search-and-results-container\">\r\n  <!-- Search bar -->\r\n  <div class=\"input-group add-on\">\r\n    <input class=\"form-control\" placeholder=\"Risk Group Number\" name=\"srch-term\" id=\"srch-term\" type=\"text\" onclick=\"location.href='pricing-results.html'\">\r\n    <div class=\"input-group-btn\">\r\n      <!-- updated search bar button -->\r\n      <button class=\"btn btn-default-search\" type=\"submit\">Search</button>\r\n    </div>\r\n  </div>\r\n</div>\r\n<!-- Risk Group details -->\r\n<div class=\"col-md-12\">\r\n  <div class=searchEmptyState>\r\n    <i class=\"fa fa-info-circle\" aria-hidden=\"true\"></i>\r\n    <div>\r\n      Enter risk group number to return customer products\r\n    </div>\r\n  </div>\r\n</div>\r\n"
+module.exports = "  <!-- banner-->\r\n<div class=\"col-md-12 pricing-banner\">\r\n  <div class=\"col-md-1 pricing-user-image\">\r\n    <i class=\"fa fa-user-o\" aria-hidden=\"true\"></i>\r\n  </div>\r\n  <div class=\"col-md-3\">\r\n    <div class=\"pricing-form\">\r\n      <div class=\"row\">\r\n        <div class=\"col-sm-5\">\r\n          <p class=\"lightTitle\">Region</p>\r\n        </div>\r\n        <div class=\"col-sm-6\">\r\n          <p>Some Region</p>\r\n        </div>\r\n      </div>\r\n      <div class=\"row\">\r\n        <div class=\"col-sm-5\">\r\n          <p class=\"lightTitle\">Business Unit</p>\r\n        </div>\r\n        <div class=\"col-sm-6\">\r\n          <p>Cape Town</p>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n  <div class=\"col-md-4\">\r\n    <div class=\"pricing-form\">\r\n      <div class=\"row\">\r\n        <div class=\"col-sm-3\">\r\n          <p class=\"lightTitle\">Segment</p>\r\n        </div>\r\n        <div class=\"col-sm-6\">\r\n          <p>Expert</p>\r\n        </div>\r\n      </div>\r\n      <div class=\"row\">\r\n        <div class=\"col-sm-3\">\r\n          <p class=\"lightTitle\">Province</p>\r\n        </div>\r\n        <div class=\"col-sm-6\">\r\n          <p>Northen Cape</p>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n<div class=\"col-md-12 search-and-results-container\">\r\n  <!-- Search bar -->\r\n  <div class=\"input-group add-on\">\r\n    <input class=\"form-control\" placeholder=\"Risk Group Number\" name=\"srch-term\" id=\"srch-term\" type=\"text\" routerLink=\"/pricing-results\">\r\n    <div class=\"input-group-btn\">\r\n      <!-- updated search bar button -->\r\n      <button class=\"btn btn-default-search\" type=\"submit\">Search</button>\r\n    </div>\r\n  </div>\r\n</div>\r\n<!-- Risk Group details -->\r\n<div class=\"col-md-12\">\r\n  <div class=searchEmptyState>\r\n    <i class=\"fa fa-info-circle\" aria-hidden=\"true\"></i>\r\n    <div>\r\n      Enter risk group number to return customer products\r\n    </div>\r\n  </div>\r\n</div>\r\n"
 
 /***/ }),
 

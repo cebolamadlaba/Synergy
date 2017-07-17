@@ -15,6 +15,10 @@ import { DeclinedInboxComponent } from './declined-inbox/declined-inbox.componen
 import { InboxHeaderComponent } from './inbox-header/inbox-header.component';
 import { InboxSearchBarComponent } from './inbox-search-bar/inbox-search-bar.component';
 import { InboxConcessionCountService } from './inbox-concession-count/inbox-concession-count.service';
+import { PricingResultsComponent } from './pricing-results/pricing-results.component';
+import { PricingLendingComponent } from './pricing-lending/pricing-lending.component';
+import { PricingCashComponent } from './pricing-cash/pricing-cash.component';
+import { PricingTransactionalComponent } from './pricing-transactional/pricing-transactional.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +32,11 @@ import { InboxConcessionCountService } from './inbox-concession-count/inbox-conc
     ExpiredInboxComponent,
     DeclinedInboxComponent,
     InboxHeaderComponent,
-    InboxSearchBarComponent
+    InboxSearchBarComponent,
+    PricingResultsComponent,
+    PricingLendingComponent,
+    PricingCashComponent,
+    PricingTransactionalComponent
   ],
   imports: [
     BrowserModule,

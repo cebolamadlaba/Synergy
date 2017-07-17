@@ -1,0 +1,146 @@
+﻿<!-- banner-->
+<div class="col-md-12 lending-view-banner">
+  <div class="row">
+    <div class="lending-banner-title">
+      <div class="col-md-1">
+        <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+        <span class="back-button-text" onclick="location.href = 'pricing.html'">Back</span>
+      </div>
+      <div class="col-md-10 banner-main-title">
+        <i class="fa fa-handshake-o" aria-hidden="true"></i> Lending
+      </div>
+      <div class="col-md-1"></div>
+    </div>
+    <div class="col-md-12 lending-banner">
+      <div class="col-md-11">
+        <div>
+          <div class="col-md-5">
+            <div class="subHeading">EDCON</div>
+            <div class="date lightTitle hidden-element">1989</div>
+          </div>
+          <div class="col-md-2  hidden-element">
+            <div class="subHeading lightTitle">Total Exposure</div>
+            <div class="score"><b>0.00</b></div>
+          </div>
+          <div class="col-md-2  hidden-element">
+            <div class="subHeading lightTitle"> Weighted Avarage MAP</div>
+            <div class="score"><b>0.00</b></div>
+          </div>
+          <div class="col-md-2  hidden-element">
+            <div class="subHeading lightTitle"> Weighted CRS / MRS</div>
+            <div class="score"><b>0.00</b></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-1">
+        <div class="compress">
+          <div onclick="hideElement('hidden-element')">
+            <i class="fa fa-compress" aria-hidden="true" id="compress-icon"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- headings-->
+<div class="lending-headings col-md-12">
+  <div class="col-md-5">
+    <h2 class="resultsHeading">Products</h2>
+  </div>
+  <div class="col-md-7">
+    <h2 class="resultsHeading">
+      Concessions
+      <button type="button" class="btn btn-primary concessionBtn" onclick="location.href = 'lending-concessions.html'">Add Concession</button>
+    </h2>
+
+  </div>
+</div>
+<!-- lending concessions and products-->
+<div class="col-md-12">
+  <div class="col-md-5">
+    <div class="section">
+      <div class="section-body">
+        <div class="product-section">
+          <div class="product-name"> Real People</div>
+          <div>
+            <div class="product-account">Account No: 12345</div>
+            <div class="product-code">Product: VAF</div>
+          </div>
+        </div>
+        <div class="product-table-container">
+          <table class="table table-bordered table-hover header-fixed table-striped ">
+            <thead>
+              <tr>
+                <th>Limit</th>
+                <th>Avarage Balance</th>
+                <th>Loaded MAP</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="rightAlign"> 5000000</td>
+                <td class="rightAlign"> 5000000</td>
+                <td class="rightAlign"> 1</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-7 search-and-results-container" id="lending-search-container">
+    <!-- Search bar -->
+    <div class="input-group add-on">
+      <input class="form-control" placeholder="Concession ID" name="srch-term" id="srch-term" type="text">
+    </div>
+
+    <div class="section">
+      <div class="section-header small-table-title">
+        <div class="concessionID-section"> ED0023</div>
+      </div>
+      <div class="section-body">
+        <div class="table-container">
+          <table class="table table-bordered table-hover header-fixed table-striped">
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Limit</th>
+                <th>Avarage Balance</th>
+                <th>Term</th>
+                <th>MAP</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <p class="customerInfo">Real People</p>
+                  <p class="accInfo">Acc No :1123</p>
+                </td>
+                <td class="rightAlign">5,0000.0</td>
+                <td class="rightAlign">23.33535</td>
+                <td class="rightAlign">60</td>
+                <td>
+                  <p class="mapInfo">Loaded:1</p>
+                  <p class="mapInfo">Approved:1</p>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <p class="customerInfo">Mtech Electronic</p>
+                  <p class="accInfo">Acc No :1123</p>
+                </td>
+                <td class="rightAlign">5,0000.0</td>
+                <td class="rightAlign">120.33535</td>
+                <td class="rightAlign">120</td>
+                <td>
+                  <p class="mapInfo">Loaded:1</p>
+                  <p class="mapInfo">Approved:1</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

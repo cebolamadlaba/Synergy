@@ -12,7 +12,7 @@ export class InboxConcessionCountService {
 
   getData(): Observable<ConcessionsSummary> {
     const url = "/api/inbox/ConcessionsSummary";
-
+    console.log("here");
     return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
   }
 
