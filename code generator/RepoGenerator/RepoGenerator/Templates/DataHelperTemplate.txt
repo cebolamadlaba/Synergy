@@ -1,0 +1,49 @@
+﻿        /// <summary>
+        /// Gets the [[ClassName]] id
+        /// </summary>
+        /// <returns></returns>
+        public static int Get[[ClassName]]Id()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.[[ClassName]]Repository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return Insert[[ClassName]]();
+        }
+
+        /// <summary>
+        /// Inserts a [[ClassName]] and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int Insert[[ClassName]]()
+        {
+            var model = new [[ClassName]]
+            {
+[[GeneratedModelValues]]
+            };
+
+            InstantiatedDependencies.[[ClassName]]Repository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate [[ClassName]] id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternate[[ClassName]]Id(int? model)
+        {
+            if (!model.HasValue)
+                return Get[[ClassName]]Id();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.[[ClassName]]Repository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return Insert[[ClassName]]();
+        }

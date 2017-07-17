@@ -10,6 +10,19 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
     public static class DataHelper
     {
         /// <summary>
+        /// Changes the date value from whatever it is to something different
+        /// </summary>
+        /// <param name="modelSystemDate"></param>
+        /// <returns></returns>
+        public static DateTime ChangeDate(DateTime? modelSystemDate)
+        {
+            if (!modelSystemDate.HasValue)
+                return DateTime.Now;
+
+            return modelSystemDate.Value.AddHours(1);
+        }
+
+        /// <summary>
         /// Gets the channel type id
         /// </summary>
         /// <returns></returns>
@@ -22,6 +35,15 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 return models.First().Id;
 
             //if there are none, insert one
+            return InsertChannelType();
+        }
+
+        /// <summary>
+        /// Inserts a channel type and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertChannelType()
+        {
             var model = new ChannelType
             {
                 Description = $"{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}",
@@ -50,15 +72,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 return models.First(_ => _.Id != modelChannelTypeId.Value).Id;
 
             //if there are none, insert one
-            var model = new ChannelType
-            {
-                Description = $"{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}",
-                IsActive = false
-            };
-
-            InstantiatedDependencies.ChannelTypeRepository.Create(model);
-
-            return model.Id;
+            return InsertChannelType();
         }
 
         /// <summary>
@@ -74,6 +88,15 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 return models.First().Id;
 
             //if there are none, insert one
+            return InsertBaseRate();
+        }
+
+        /// <summary>
+        /// Inserts a base rate and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertBaseRate()
+        {
             var model = new BaseRate
             {
                 Amount = 10000,
@@ -102,15 +125,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 return models.First(_ => _.Id != modelBaseRateId.Value).Id;
 
             //if there are none, insert one
-            var model = new BaseRate
-            {
-                Amount = 10000,
-                IsActive = false
-            };
-
-            InstantiatedDependencies.BaseRateRepository.Create(model);
-
-            return model.Id;
+            return InsertBaseRate();
         }
 
         /// <summary>
@@ -126,6 +141,15 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 return models.First().Id;
 
             //if there are none, insert one
+            return InsertTransactionGroup();
+        }
+
+        /// <summary>
+        /// Insert the transaction group and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertTransactionGroup()
+        {
             var model = new TransactionGroup
             {
                 Description = $"{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}",
@@ -154,15 +178,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 return models.First(_ => _.Id != modelTransactionGroupId.Value).Id;
 
             //if there are none, insert one
-            var model = new TransactionGroup
-            {
-                Description = $"{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}",
-                IsActive = false
-            };
-
-            InstantiatedDependencies.TransactionGroupRepository.Create(model);
-
-            return model.Id;
+            return InsertTransactionGroup();
         }
 
         /// <summary>
@@ -178,6 +194,15 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 return models.First().Id;
 
             //if there are none, insert one
+            return InsertProvince();
+        }
+
+        /// <summary>
+        /// Inserts a province and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertProvince()
+        {
             var model = new Province
             {
                 Description = $"{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}",
@@ -206,15 +231,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 return models.First(_ => _.Id != modelProvinceId.Value).Id;
 
             //if there are none, insert one
-            var model = new Province
-            {
-                Description = $"{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}",
-                IsActive = false
-            };
-
-            InstantiatedDependencies.ProvinceRepository.Create(model);
-
-            return model.Id;
+            return InsertProvince();
         }
 
         /// <summary>
@@ -230,6 +247,15 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 return models.First().Id;
 
             //if there are none, insert one
+            return InsertCentre();
+        }
+
+        /// <summary>
+        /// Inserts a centre and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertCentre()
+        {
             var model = new Centre
             {
                 ProvinceId = GetProvinceId(),
@@ -259,16 +285,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 return models.First(_ => _.Id != modelCentreId.Value).Id;
 
             //if there are none, insert one
-            var model = new Centre
-            {
-                ProvinceId = GetProvinceId(),
-                CentreName = $"{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}",
-                IsActive = false
-            };
-
-            InstantiatedDependencies.CentreRepository.Create(model);
-
-            return model.Id;
+            return InsertCentre();
         }
 
         /// <summary>
@@ -284,6 +301,15 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 return models.First().Id;
 
             //if there are none, insert one
+            return InsertUser();
+        }
+
+        /// <summary>
+        /// Inserts a user and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertUser()
+        {
             var model = new User
             {
                 ANumber = $"{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}",
@@ -315,18 +341,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 return models.First(_ => _.Id != modelUserId.Value).Id;
 
             //if there are none, insert one
-            var model = new User
-            {
-                ANumber = $"{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}",
-                EmailAddress = $"{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}@gmail.com",
-                FirstName = $"{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}",
-                Surname = $"{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}",
-                IsActive = false
-            };
-
-            InstantiatedDependencies.UserRepository.Create(model);
-
-            return model.Id;
+            return InsertUser();
         }
 
         /// <summary>
@@ -342,6 +357,15 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 return models.First().Id;
 
             //if there are none, insert one
+            return InsertConcessionType();
+        }
+
+        /// <summary>
+        /// Inserts a concession type and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertConcessionType()
+        {
             var model = new ConcessionType
             {
                 Description = $"{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}",
@@ -371,22 +395,246 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 return models.First(_ => _.Id != modelConcessionTypeId.Value).Id;
 
             //if there are none, insert one
-            var model = new ConcessionType
+            return InsertConcessionType();
+        }
+
+        /// <summary>
+        /// Gets the concession id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetConcessionId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.ConcessionRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertConcession();
+        }
+
+        /// <summary>
+        /// Inserts a concession and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertConcession()
+        {
+            //if there are none, insert one
+            var model = new Concession
             {
-                Description = $"{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}",
-                Code = $"{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}",
-                IsActive = false
+                TypeId = GetTypeId(),
+                BCMUserId = GetBCMUserId(),
+                CentreId = GetCentreId(),
+                ConcessionDate = DateTime.Now,
+                ConcessionRef = $"{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}",
+                ConcessionTypeId = GetConcessionTypeId(),
+                DateActionedByBCM = DateTime.Now,
+                DateActionedByHO = DateTime.Now,
+                DateActionedByPCM = DateTime.Now,
+                DateApproved = DateTime.Now,
+                DatesentForApproval = DateTime.Now,
+                ExpiryDate = DateTime.Now,
+                HOUserId = GetHOUserId(),
+                IsActive = false,
+                IsCurrent = false,
+                LegalEntityId = GetLegalEntityId(),
+                Motivation = $"{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}",
+                PCMUserId = GetPCMUserId(),
+                RequestorId = GetRequestorId(),
+                SMTDealNumber = $"{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}",
+                StatusId = GetStatusId(),
+                SubStatusId = GetSubStatusId()
             };
 
-            InstantiatedDependencies.ConcessionTypeRepository.Create(model);
+            InstantiatedDependencies.ConcessionRepository.Create(model);
 
             return model.Id;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelConcessionId"></param>
+        /// <returns></returns>
         public static int GetAlternateConcessionId(int? modelConcessionId)
         {
-            throw new System.NotImplementedException();
+            if (!modelConcessionId.HasValue)
+                GetConcessionId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.ConcessionRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != modelConcessionId.Value))
+                return models.First(_ => _.Id != modelConcessionId.Value).Id;
+
+            return InsertConcession();
         }
+
+        /// <summary>
+        /// Gets the review fee type id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetReviewFeeTypeId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.ReviewFeeTypeRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertReviewFeeType();
+        }
+
+        /// <summary>
+        /// Inserts a review fee type and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertReviewFeeType()
+        {
+            var model = new ReviewFeeType
+            {
+                Description = $"{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}",
+                IsActive = false
+            };
+
+            InstantiatedDependencies.ReviewFeeTypeRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate review fee type id
+        /// </summary>
+        /// <param name="modelReviewFeeTypeId"></param>
+        /// <returns></returns>
+        public static int GetAlternateReviewFeeTypeId(int? modelReviewFeeTypeId)
+        {
+            if (!modelReviewFeeTypeId.HasValue)
+                return GetReviewFeeTypeId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.ReviewFeeTypeRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != modelReviewFeeTypeId.Value))
+                return models.First(_ => _.Id != modelReviewFeeTypeId.Value).Id;
+
+            return InsertReviewFeeType();
+        }
+
+        /// <summary>
+        /// Gets the transaction type id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetTransactionTypeId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.TransactionTypeRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertTransactionType();
+        }
+
+        /// <summary>
+        /// Inserts a transaction type and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertTransactionType()
+        {
+            var model = new TransactionType
+            {
+                Description = $"{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}",
+                IsActive = false,
+                ConcessionTypeId = GetConcessionTypeId()
+            };
+
+            InstantiatedDependencies.TransactionTypeRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate transaction type id
+        /// </summary>
+        /// <param name="modelTransactionTypeId"></param>
+        /// <returns></returns>
+        public static int GetAlternateTransactionTypeId(int? modelTransactionTypeId)
+        {
+            if (!modelTransactionTypeId.HasValue)
+                return GetTransactionTypeId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.TransactionTypeRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != modelTransactionTypeId.Value))
+                return models.First(_ => _.Id != modelTransactionTypeId.Value).Id;
+
+            return InsertTransactionType();
+        }
+
+        /// <summary>
+        /// Gets the role id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetRoleId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.RoleRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertRole();
+        }
+
+        /// <summary>
+        /// Inserts a role and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertRole()
+        {
+            var model = new Role
+            {
+                RoleDescription = $"{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}",
+                RoleName = $"{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}",
+                IsActive = false
+            };
+
+            InstantiatedDependencies.RoleRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate role id
+        /// </summary>
+        /// <param name="modelRoleId"></param>
+        /// <returns></returns>
+        public static int GetAlternateRoleId(int? modelRoleId)
+        {
+            if (!modelRoleId.HasValue)
+                return GetRoleId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.RoleRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != modelRoleId.Value))
+                return models.First(_ => _.Id != modelRoleId.Value).Id;
+
+            return InsertRole();
+        }
+
+        public static int GetAlternateProductTypeId(int? modelProductTypeId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static int GetProductTypeId()
+        {
+            throw new NotImplementedException();
+        }
+
 
         public static int GetAlternateBCMUserId(int? modelBcmUserId)
         {
@@ -406,16 +654,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static int GetAlternateSubStatusId(int? modelSubStatusId)
         {
             throw new System.NotImplementedException();
-        }
-
-        public static DateTime ChangeDate(DateTime? modelSystemDate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static int GetConcessionId()
-        {
-            throw new NotImplementedException();
         }
 
         public static int GetBCMUserId()
@@ -554,46 +792,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         }
 
         public static int GetNewSubStatusId()
-        {
-            throw new NotImplementedException();
-        }
-
-        public static int GetAlternateProductTypeId(int? modelProductTypeId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static int GetProductTypeId()
-        {
-            throw new NotImplementedException();
-        }
-
-        public static int GetAlternateReviewFeeTypeId(int? modelReviewFeeTypeId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static int GetAlternateRoleId(int? modelRoleId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static int GetRoleId()
-        {
-            throw new NotImplementedException();
-        }
-
-        public static int GetAlternateTransactionTypeId(int? modelTransactionTypeId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static int GetTransactionTypeId()
-        {
-            throw new NotImplementedException();
-        }
-
-        public static int GetReviewFeeTypeId()
         {
             throw new NotImplementedException();
         }

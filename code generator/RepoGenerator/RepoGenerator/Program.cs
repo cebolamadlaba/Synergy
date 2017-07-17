@@ -66,6 +66,11 @@ namespace RepoGenerator
         private const string MockDependencyTemplate = "Templates\\MockDependencyTemplate.txt";
 
         /// <summary>
+        /// The data helper template
+        /// </summary>
+        private const string DataHelperTemplate = "Templates\\DataHelperTemplate.txt";
+
+        /// <summary>
         /// The random generator
         /// </summary>
         private static readonly Random RandomGenerator = new Random();
@@ -110,6 +115,57 @@ namespace RepoGenerator
 
             //8. Generate MockedDependencies
             GenerateMockedDependencies(tables);
+
+            //9. Generated DataHelperTemplate
+            GenerateDataHelperTemplate(tables);
+        }
+
+        /// <summary>
+        /// Generates the data helper template.
+        /// </summary>
+        /// <param name="tables">The tables.</param>
+        private static void GenerateDataHelperTemplate(IEnumerable<Table> tables)
+        {
+            var dataHelperTemplate = File.ReadAllText(DataHelperTemplate);
+            var dataHelper = new StringBuilder();
+
+            foreach (var table in tables)
+            {
+                if (dataHelper.Length != 0)
+                    dataHelper.Append($"{Environment.NewLine}{Environment.NewLine}");
+
+                dataHelper.Append(dataHelperTemplate
+                    .Replace("[[ClassName]]", table.ClassName)
+                    .Replace("[[GeneratedModelValues]]", GetGeneratedModelValues(table)));
+            }
+
+            File.WriteAllText("Other\\DataHelper.txt", dataHelper.ToString());
+        }
+
+        /// <summary>
+        /// Gets the generated model values.
+        /// </summary>
+        /// <param name="table">The table.</param>
+        /// <returns></returns>
+        private static string GetGeneratedModelValues(Table table)
+        {
+            var generatedModelValues = new StringBuilder();
+
+            foreach (var column in table.Columns)
+            {
+                if (column.Name.StartsWith("pk"))
+                    continue;
+
+                if (generatedModelValues.Length != 0)
+                    generatedModelValues.Append($",{Environment.NewLine}");
+
+                if (column.Name.StartsWith("fk"))
+                    generatedModelValues.Append($"                {column.CodeName} = Get{column.CodeName}Id()");
+                else
+                    generatedModelValues.Append($"                {column.CodeName} = {GetGeneratedCodeValue(column)}");
+            }
+
+            return generatedModelValues.ToString();
         }
 
         /// <summary>
