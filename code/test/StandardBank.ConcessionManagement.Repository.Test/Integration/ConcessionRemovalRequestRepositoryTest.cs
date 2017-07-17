@@ -21,9 +21,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 ConcessionId = DataHelper.GetConcessionId(),
                 RequestorId = 5,
-                BCMUserId = DataHelper.GetBCMUserId(),
-                PCMUserId = DataHelper.GetPCMUserId(),
-                HOUserId = DataHelper.GetHOUserId(),
+                BCMUserId = DataHelper.GetUserId(),
+                PCMUserId = DataHelper.GetUserId(),
+                HOUserId = DataHelper.GetUserId(),
                 SubStatusId = DataHelper.GetSubStatusId(),
                 SystemDate = DateTime.Now,
                 DateApproved = DateTime.Now
@@ -73,9 +73,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
 
             model.ConcessionId = DataHelper.GetAlternateConcessionId(model.ConcessionId);
             model.RequestorId = model.RequestorId + 1;
-            model.BCMUserId = DataHelper.GetAlternateBCMUserId(model.BCMUserId);
-            model.PCMUserId = DataHelper.GetAlternatePCMUserId(model.PCMUserId);
-            model.HOUserId = DataHelper.GetAlternateHOUserId(model.HOUserId);
+            model.BCMUserId = DataHelper.GetAlternateUserId(model.BCMUserId);
+            model.PCMUserId = DataHelper.GetAlternateUserId(model.PCMUserId);
+            model.HOUserId = DataHelper.GetAlternateUserId(model.HOUserId);
             model.SubStatusId = DataHelper.GetAlternateSubStatusId(model.SubStatusId);
             model.SystemDate = DataHelper.ChangeDate(model.SystemDate);
             model.DateApproved = DataHelper.ChangeDate(model.DateApproved);
@@ -106,9 +106,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 ConcessionId = DataHelper.GetConcessionId(),
                 RequestorId = 5,
-                BCMUserId = DataHelper.GetBCMUserId(),
-                PCMUserId = DataHelper.GetPCMUserId(),
-                HOUserId = DataHelper.GetHOUserId(),
+                BCMUserId = DataHelper.GetUserId(),
+                PCMUserId = DataHelper.GetUserId(),
+                HOUserId = DataHelper.GetUserId(),
                 SubStatusId = DataHelper.GetSubStatusId(),
                 SystemDate = DateTime.Now,
                 DateApproved = DateTime.Now

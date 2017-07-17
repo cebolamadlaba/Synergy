@@ -22,7 +22,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ConcessionId = DataHelper.GetConcessionId(),
                 TransactionGroupId = DataHelper.GetTransactionGroupId(),
                 BusinesOnlineTransactionTypeId = DataHelper.GetBusinesOnlineTransactionTypeId(),
-                BolUseId = 6,
+                BolUseId = DataHelper.GetBolUserId(),
                 TransactionVolume = 4,
                 TransactionValue = 9692,
                 Fee = 6453
@@ -73,7 +73,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.ConcessionId = DataHelper.GetAlternateConcessionId(model.ConcessionId);
             model.TransactionGroupId = DataHelper.GetAlternateTransactionGroupId(model.TransactionGroupId);
             model.BusinesOnlineTransactionTypeId = DataHelper.GetAlternateBusinesOnlineTransactionTypeId(model.BusinesOnlineTransactionTypeId);
-            model.BolUseId = model.BolUseId + 1;
+            model.BolUseId = DataHelper.GetAlternateBolUserId(model.BolUseId);
             model.TransactionVolume = model.TransactionVolume + 1;
             model.TransactionValue = model.TransactionValue + 100;
             model.Fee = model.Fee + 100;
@@ -104,7 +104,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ConcessionId = DataHelper.GetConcessionId(),
                 TransactionGroupId = DataHelper.GetTransactionGroupId(),
                 BusinesOnlineTransactionTypeId = DataHelper.GetBusinesOnlineTransactionTypeId(),
-                BolUseId = 6,
+                BolUseId = DataHelper.GetBolUserId(),
                 TransactionVolume = 4,
                 TransactionValue = 9692,
                 Fee = 6453

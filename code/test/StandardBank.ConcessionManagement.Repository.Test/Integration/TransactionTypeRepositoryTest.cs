@@ -19,6 +19,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         {
             var model = new TransactionType
             {
+                Id = DataHelper.GetNewTransactionTypeIdForInsert(),
                 ConcessionTypeId = DataHelper.GetConcessionTypeId(),
                 Description = "aed25144ff",
                 IsActive = false
@@ -89,6 +90,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         {
             var model = new TransactionType
             {
+                Id = DataHelper.GetNewTransactionTypeIdForInsert(),
                 ConcessionTypeId = DataHelper.GetConcessionTypeId(),
                 Description = "aed25144ff",
                 IsActive = false

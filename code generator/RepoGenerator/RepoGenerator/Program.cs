@@ -160,7 +160,7 @@ namespace RepoGenerator
                     generatedModelValues.Append($",{Environment.NewLine}");
 
                 if (column.Name.StartsWith("fk"))
-                    generatedModelValues.Append($"                {column.CodeName} = Get{column.CodeName}Id()");
+                    generatedModelValues.Append($"                {column.CodeName} = Get{column.CodeName}()");
                 else
                     generatedModelValues.Append($"                {column.CodeName} = {GetGeneratedCodeValue(column)}");
             }

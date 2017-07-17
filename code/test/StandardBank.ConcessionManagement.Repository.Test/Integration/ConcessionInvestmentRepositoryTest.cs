@@ -20,7 +20,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = new ConcessionInvestment
             {
                 ConcessionId = DataHelper.GetConcessionId(),
-                ProductTypeId = DataHelper.GetProductTypeId(),
+                ProductTypeId = DataHelper.GetProductId(),
                 Balance = 2501,
                 Term = 6,
                 InterestToCustomer = 5484
@@ -69,7 +69,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = InstantiatedDependencies.ConcessionInvestmentRepository.ReadById(id);
 
             model.ConcessionId = DataHelper.GetAlternateConcessionId(model.ConcessionId);
-            model.ProductTypeId = DataHelper.GetAlternateProductTypeId(model.ProductTypeId);
+            model.ProductTypeId = DataHelper.GetAlternateProductId(model.ProductTypeId);
             model.Balance = model.Balance + 100;
             model.Term = model.Term + 1;
             model.InterestToCustomer = model.InterestToCustomer + 100;
@@ -96,7 +96,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = new ConcessionInvestment
             {
                 ConcessionId = DataHelper.GetConcessionId(),
-                ProductTypeId = DataHelper.GetProductTypeId(),
+                ProductTypeId = DataHelper.GetProductId(),
                 Balance = 2501,
                 Term = 6,
                 InterestToCustomer = 5484

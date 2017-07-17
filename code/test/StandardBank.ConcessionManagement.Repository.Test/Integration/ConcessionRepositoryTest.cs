@@ -19,7 +19,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         {
             var model = new Concession
             {
-                TypeId = DataHelper.GetTypeId(),
+                TypeId = DataHelper.GetReferenceTypeId(),
                 ConcessionRef = "47c038861f",
                 LegalEntityId = DataHelper.GetLegalEntityId(),
                 ConcessionTypeId = DataHelper.GetConcessionTypeId(),
@@ -30,15 +30,15 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 DatesentForApproval = DateTime.Now,
                 Motivation = "455d28a04b",
                 DateApproved = DateTime.Now,
-                RequestorId = DataHelper.GetRequestorId(),
-                BCMUserId = DataHelper.GetBCMUserId(),
+                RequestorId = DataHelper.GetUserId(),
+                BCMUserId = DataHelper.GetUserId(),
                 DateActionedByBCM = DateTime.Now,
-                PCMUserId = DataHelper.GetPCMUserId(),
+                PCMUserId = DataHelper.GetUserId(),
                 DateActionedByPCM = DateTime.Now,
-                HOUserId = DataHelper.GetHOUserId(),
+                HOUserId = DataHelper.GetUserId(),
                 DateActionedByHO = DateTime.Now,
                 ExpiryDate = DateTime.Now,
-                CentreId = 3,
+                CentreId = DataHelper.GetCentreId(),
                 IsCurrent = false,
                 IsActive = false
             };
@@ -85,7 +85,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var id = results.First().Id;
             var model = InstantiatedDependencies.ConcessionRepository.ReadById(id);
 
-            model.TypeId = DataHelper.GetAlternateTypeId(model.TypeId);
+            model.TypeId = DataHelper.GetAlternateReferenceTypeId(model.TypeId);
             model.ConcessionRef = "325e0ffb67";
             model.LegalEntityId = DataHelper.GetAlternateLegalEntityId(model.LegalEntityId);
             model.ConcessionTypeId = DataHelper.GetAlternateConcessionTypeId(model.ConcessionTypeId);
@@ -96,15 +96,15 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.DatesentForApproval = DataHelper.ChangeDate(model.DatesentForApproval);
             model.Motivation = "902f5e8b15";
             model.DateApproved = DataHelper.ChangeDate(model.DateApproved);
-            model.RequestorId = DataHelper.GetAlternateRequestorId(model.RequestorId);
-            model.BCMUserId = DataHelper.GetAlternateBCMUserId(model.BCMUserId);
+            model.RequestorId = DataHelper.GetAlternateUserId(model.RequestorId);
+            model.BCMUserId = DataHelper.GetAlternateUserId(model.BCMUserId);
             model.DateActionedByBCM = DataHelper.ChangeDate(model.DateActionedByBCM);
-            model.PCMUserId = DataHelper.GetAlternatePCMUserId(model.PCMUserId);
+            model.PCMUserId = DataHelper.GetAlternateUserId(model.PCMUserId);
             model.DateActionedByPCM = DataHelper.ChangeDate(model.DateActionedByPCM);
-            model.HOUserId = DataHelper.GetAlternateHOUserId(model.HOUserId);
+            model.HOUserId = DataHelper.GetAlternateUserId(model.HOUserId);
             model.DateActionedByHO = DataHelper.ChangeDate(model.DateActionedByHO);
             model.ExpiryDate = DataHelper.ChangeDate(model.ExpiryDate);
-            model.CentreId = model.CentreId + 1;
+            model.CentreId = DataHelper.GetAlternateCentreId(model.CentreId);
             model.IsCurrent = !model.IsCurrent;
             model.IsActive = !model.IsActive;
 
@@ -146,7 +146,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         {
             var model = new Concession
             {
-                TypeId = DataHelper.GetTypeId(),
+                TypeId = DataHelper.GetReferenceTypeId(),
                 ConcessionRef = "47c038861f",
                 LegalEntityId = DataHelper.GetLegalEntityId(),
                 ConcessionTypeId = DataHelper.GetConcessionTypeId(),
@@ -157,15 +157,15 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 DatesentForApproval = DateTime.Now,
                 Motivation = "455d28a04b",
                 DateApproved = DateTime.Now,
-                RequestorId = DataHelper.GetRequestorId(),
-                BCMUserId = DataHelper.GetBCMUserId(),
+                RequestorId = DataHelper.GetUserId(),
+                BCMUserId = DataHelper.GetUserId(),
                 DateActionedByBCM = DateTime.Now,
-                PCMUserId = DataHelper.GetPCMUserId(),
+                PCMUserId = DataHelper.GetUserId(),
                 DateActionedByPCM = DateTime.Now,
-                HOUserId = DataHelper.GetHOUserId(),
+                HOUserId = DataHelper.GetUserId(),
                 DateActionedByHO = DateTime.Now,
                 ExpiryDate = DateTime.Now,
-                CentreId = 3,
+                CentreId = DataHelper.GetCentreId(),
                 IsCurrent = false,
                 IsActive = false
             };

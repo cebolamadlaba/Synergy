@@ -20,8 +20,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = new ConcessionApproval
             {
                 ConcessionId = DataHelper.GetConcessionId(),
-                OldSubStatusId = DataHelper.GetOldSubStatusId(),
-                NewSubStatusId = DataHelper.GetNewSubStatusId(),
+                OldSubStatusId = DataHelper.GetSubStatusId(),
+                NewSubStatusId = DataHelper.GetSubStatusId(),
                 UserId = DataHelper.GetUserId(),
                 SystemDate = DateTime.Now,
                 IsActive = false
@@ -70,8 +70,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = InstantiatedDependencies.ConcessionApprovalRepository.ReadById(id);
 
             model.ConcessionId = DataHelper.GetAlternateConcessionId(model.ConcessionId);
-            model.OldSubStatusId = DataHelper.GetAlternateOldSubStatusId(model.OldSubStatusId);
-            model.NewSubStatusId = DataHelper.GetAlternateNewSubStatusId(model.NewSubStatusId);
+            model.OldSubStatusId = DataHelper.GetAlternateSubStatusId(model.OldSubStatusId);
+            model.NewSubStatusId = DataHelper.GetAlternateSubStatusId(model.NewSubStatusId);
             model.UserId = DataHelper.GetAlternateUserId(model.UserId);
             model.SystemDate = DataHelper.ChangeDate(model.SystemDate);
             model.IsActive = !model.IsActive;
@@ -99,8 +99,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = new ConcessionApproval
             {
                 ConcessionId = DataHelper.GetConcessionId(),
-                OldSubStatusId = DataHelper.GetOldSubStatusId(),
-                NewSubStatusId = DataHelper.GetNewSubStatusId(),
+                OldSubStatusId = DataHelper.GetSubStatusId(),
+                NewSubStatusId = DataHelper.GetSubStatusId(),
                 UserId = DataHelper.GetUserId(),
                 SystemDate = DateTime.Now,
                 IsActive = false

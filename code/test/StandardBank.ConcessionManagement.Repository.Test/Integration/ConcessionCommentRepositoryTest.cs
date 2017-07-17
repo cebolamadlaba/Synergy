@@ -21,7 +21,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 ConcessionId = DataHelper.GetConcessionId(),
                 UserId = DataHelper.GetUserId(),
-                ConcessionSubStatusId = DataHelper.GetConcessionSubStatusId(),
+                ConcessionSubStatusId = DataHelper.GetSubStatusId(),
                 Comment = "65a2826633",
                 SystemDate = DateTime.Now,
                 IsActive = false
@@ -71,7 +71,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
 
             model.ConcessionId = DataHelper.GetAlternateConcessionId(model.ConcessionId);
             model.UserId = DataHelper.GetAlternateUserId(model.UserId);
-            model.ConcessionSubStatusId = DataHelper.GetAlternateConcessionSubStatusId(model.ConcessionSubStatusId);
+            model.ConcessionSubStatusId = DataHelper.GetAlternateSubStatusId(model.ConcessionSubStatusId);
             model.Comment = "5e4d9db259";
             model.SystemDate = DataHelper.ChangeDate(model.SystemDate);
             model.IsActive = !model.IsActive;
@@ -100,7 +100,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 ConcessionId = DataHelper.GetConcessionId(),
                 UserId = DataHelper.GetUserId(),
-                ConcessionSubStatusId = DataHelper.GetConcessionSubStatusId(),
+                ConcessionSubStatusId = DataHelper.GetSubStatusId(),
                 Comment = "65a2826633",
                 SystemDate = DateTime.Now,
                 IsActive = false

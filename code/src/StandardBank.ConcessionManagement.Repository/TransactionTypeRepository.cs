@@ -45,14 +45,18 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public TransactionType Create(TransactionType model)
         {
-            const string sql = @"INSERT [dbo].[rtblTransactionType] ([fkConcessionTypeId], [Description], [IsActive]) 
-                                VALUES (@fkConcessionTypeId, @Description, @IsActive) 
-                                SELECT CAST(SCOPE_IDENTITY() as int)";
+            const string sql = @"INSERT [dbo].[rtblTransactionType] ([pkTransactionTypeId], [fkConcessionTypeId], [Description], [IsActive]) 
+                                VALUES (@pkTransactionTypeId, @fkConcessionTypeId, @Description, @IsActive)";
 
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
-            {
-                model.Id = db.Query<int>(sql, new {fkConcessionTypeId = model.ConcessionTypeId, Description = model.Description, IsActive = model.IsActive}).Single();
-            }
+                db.Execute(sql,
+                    new
+                    {
+                        pkTransactionTypeId = model.Id,
+                        fkConcessionTypeId = model.ConcessionTypeId,
+                        Description = model.Description,
+                        IsActive = model.IsActive
+                    });
 
             //clear out the cache because the data has changed
             _cacheManager.Remove(CacheKey.Repository.TransactionTypeRepository.ReadAll);
