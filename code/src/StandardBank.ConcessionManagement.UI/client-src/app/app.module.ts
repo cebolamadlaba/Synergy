@@ -19,6 +19,9 @@ import { PricingResultsComponent } from './pricing-results/pricing-results.compo
 import { PricingLendingComponent } from './pricing-lending/pricing-lending.component';
 import { PricingCashComponent } from './pricing-cash/pricing-cash.component';
 import { PricingTransactionalComponent } from './pricing-transactional/pricing-transactional.component';
+import { CashAddConcessionComponent } from './cash-add-concession/cash-add-concession.component';
+import { LendingAddConcessionComponent } from './lending-add-concession/lending-add-concession.component';
+import { TransactionalAddConcessionComponent } from './transactional-add-concession/transactional-add-concession.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +39,10 @@ import { PricingTransactionalComponent } from './pricing-transactional/pricing-t
     PricingResultsComponent,
     PricingLendingComponent,
     PricingCashComponent,
-    PricingTransactionalComponent
+    PricingTransactionalComponent,
+    CashAddConcessionComponent,
+    LendingAddConcessionComponent,
+    TransactionalAddConcessionComponent
   ],
   imports: [
     BrowserModule,

@@ -11,6 +11,9 @@ import { PricingResultsComponent } from "./pricing-results/pricing-results.compo
 import { PricingLendingComponent } from "./pricing-lending/pricing-lending.component";
 import { PricingCashComponent } from "./pricing-cash/pricing-cash.component";
 import { PricingTransactionalComponent } from "./pricing-transactional/pricing-transactional.component";
+import { TransactionalAddConcessionComponent } from "./transactional-add-concession/transactional-add-concession.component";
+import { CashAddConcessionComponent } from "./cash-add-concession/cash-add-concession.component";
+import { LendingAddConcessionComponent } from "./lending-add-concession/lending-add-concession.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/pending-inbox', pathMatch: 'full' },
@@ -24,7 +27,10 @@ const routes: Routes = [
   { path: 'pricing-results', component: PricingResultsComponent },
   { path: 'pricing-lending', component: PricingLendingComponent },
   { path: 'pricing-cash', component: PricingCashComponent },
-  { path: 'pricing-transactional', component: PricingTransactionalComponent }
+  { path: 'pricing-transactional', component: PricingTransactionalComponent },
+  { path: 'transactional-add-concession', component: TransactionalAddConcessionComponent },
+  { path: 'cash-add-concession', component: CashAddConcessionComponent },
+  { path: 'lending-add-concession', component: LendingAddConcessionComponent }
 ];
 
 @NgModule({
