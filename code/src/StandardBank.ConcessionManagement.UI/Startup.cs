@@ -59,6 +59,7 @@ namespace StandardBank.ConcessionManagement.UI
     private static void AddRepositoryServices(IServiceCollection services)
     {
       services.AddScoped<IConcessionCountRepository, ConcessionCountRepository>();
+      services.AddScoped<IAuthorizingUserRepository, AuthorizingUserRepository>();
 
       services.AddScoped<IAdValoremRepository, AdValoremRepository>();
       services.AddScoped<IApprovalTypeRepository, ApprovalTypeRepository>();

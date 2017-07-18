@@ -27,6 +27,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static IConcessionCountRepository ConcessionCountRepository = new ConcessionCountRepository();
 
         /// <summary>
+        /// Authorizing user repository
+        /// </summary>
+        public static IAuthorizingUserRepository AuthorizingUserRepository = new AuthorizingUserRepository(ConfigurationData);
+
+        /// <summary>
         /// The AdValorem repository
         /// </summary>
         public static IAdValoremRepository AdValoremRepository = new AdValoremRepository(ConfigurationData, CacheManager);
