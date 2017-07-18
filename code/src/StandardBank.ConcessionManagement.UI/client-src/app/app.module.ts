@@ -23,6 +23,8 @@ import { CashAddConcessionComponent } from './cash-add-concession/cash-add-conce
 import { LendingAddConcessionComponent } from './lending-add-concession/lending-add-concession.component';
 import { TransactionalAddConcessionComponent } from './transactional-add-concession/transactional-add-concession.component';
 
+import { ModalModule } from 'ngx-bootstrap/modal';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,7 +49,8 @@ import { TransactionalAddConcessionComponent } from './transactional-add-concess
   imports: [
     BrowserModule,
     HttpModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ModalModule.forRoot()
   ],
   providers: [InboxConcessionCountService],
   bootstrap: [AppComponent]

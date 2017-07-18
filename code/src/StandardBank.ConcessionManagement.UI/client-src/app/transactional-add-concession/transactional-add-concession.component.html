@@ -101,12 +101,12 @@
   <div class="concessions-top">
     <div class="concessions-top-title">
       <h3 class="table-title">Conditions</h3>
-      <button type="button" class="btn btn-default" data-toggle="modal" data-target="#manageConditions" data-backdrop="static">Manage Conditions</button>
+      <button type="button" class="btn btn-default" (click)="manageConditionsModal.show()">Manage Conditions</button>
       <!-- modal content -->
 
-      <div id="manageConditions" class="modal fade">
+      <div bsModal #manageConditionsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="manageConditionsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-          <div class="model-content">
+          <div class="modal-content">
             <div class="col-md-12 modal-header">
               <h4>Manage Conditions</h4>
             </div>

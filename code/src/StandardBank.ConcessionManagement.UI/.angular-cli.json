@@ -10,7 +10,6 @@
       "assets": [
         "assets",
         "scripts",
-        "views",
         "content"
       ],
       "main": "main.ts",
