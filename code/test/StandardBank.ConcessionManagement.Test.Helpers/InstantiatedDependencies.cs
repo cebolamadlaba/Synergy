@@ -37,6 +37,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static ISMTRawDataRepository SMTRawDataRepository = new SMTRawDataRepository(ConfigurationData);
 
         /// <summary>
+        /// The ExceptionLog repository
+        /// </summary>
+        public static IExceptionLogRepository ExceptionLogRepository = new ExceptionLogRepository(ConfigurationData);
+
+        /// <summary>
         /// The AdValorem repository
         /// </summary>
         public static IAdValoremRepository AdValoremRepository = new AdValoremRepository(ConfigurationData, CacheManager);

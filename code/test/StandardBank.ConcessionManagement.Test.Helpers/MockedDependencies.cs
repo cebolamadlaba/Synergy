@@ -24,6 +24,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static Mock<ISMTRawDataRepository> MockSMTRawDataRepository = new Mock<ISMTRawDataRepository>();
 
         /// <summary>
+        /// The mock ExceptionLog repository
+        /// </summary>
+        public static Mock<IExceptionLogRepository> MockExceptionLogRepository = new Mock<IExceptionLogRepository>();
+
+        /// <summary>
         /// The mock AdValorem repository
         /// </summary>
         public static Mock<IAdValoremRepository> MockAdValoremRepository = new Mock<IAdValoremRepository>();
