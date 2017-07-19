@@ -24,6 +24,7 @@
     "bootstrap": "^3.3.7",
     "classlist-polyfill": "^1.2.0",
     "classlist.js": "^1.1.20150312",
+    "console-polyfill": "^0.3.0",
     "core-js": "^2.4.1",
     "ngx-bootstrap": "^1.7.1",
     "rxjs": "^5.1.0",

@@ -41,6 +41,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_core_js_es7_reflect___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_16_core_js_es7_reflect__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17_zone_js_dist_zone__ = __webpack_require__("../../../../zone.js/dist/zone.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17_zone_js_dist_zone___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_17_zone_js_dist_zone__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18_console_polyfill_index__ = __webpack_require__("../../../../console-polyfill/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18_console_polyfill_index___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_18_console_polyfill_index__);
 /**
  * This file includes polyfills needed by Angular and is loaded before the app.
  * You can add your own extra polyfills to this file.
@@ -100,6 +102,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  * Need to import at least one locale-data with intl.
  */
 // import 'intl/locale-data/jsonp/en';
+
 //# sourceMappingURL=polyfills.js.map
 
 /***/ }),
@@ -347,6 +350,32 @@ if (objCtr.defineProperty) {
 
 }
 
+
+
+/***/ }),
+
+/***/ "../../../../console-polyfill/index.js":
+/***/ (function(module, exports) {
+
+// Console-polyfill. MIT license.
+// https://github.com/paulmillr/console-polyfill
+// Make it safe to do console.log() always.
+(function(global) {
+  'use strict';
+  if (!global.console) {
+    global.console = {};
+  }
+  var con = global.console;
+  var prop, method;
+  var dummy = function() {};
+  var properties = ['memory'];
+  var methods = ('assert,clear,count,debug,dir,dirxml,error,exception,group,' +
+     'groupCollapsed,groupEnd,info,log,markTimeline,profile,profiles,profileEnd,' +
+     'show,table,time,timeEnd,timeline,timelineEnd,timeStamp,trace,warn').split(',');
+  while (prop = properties.pop()) if (!con[prop]) con[prop] = {};
+  while (method = methods.pop()) if (!con[method]) con[method] = dummy;
+  // Using `this` for web workers & supports Browserify / Webpack.
+})(typeof window === 'undefined' ? this : window);
 
 
 /***/ }),
