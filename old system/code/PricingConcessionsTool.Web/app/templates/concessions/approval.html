@@ -1,0 +1,153 @@
+﻿
+
+<div class="row" ng-init="main()">
+
+    <div class="panel-body">
+        <form class="form-horizontal" name="concessionForm" role="form" novalidate>
+
+
+            <div class="row">
+                <table class="standardbank-table">
+                    <tr>
+
+                        <td class="panel-standardbank-lite" style="padding:5px">
+                            <span>&nbsp;&nbsp;<i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;<strong>Client Info</strong></span>
+                        </td>
+                        <td class="panel-standardbank-lite" ng-if="Customer.IsNewCustomer==false">
+                            <span>&nbsp;&nbsp;<i class="glyphicon glyphicon-briefcase"></i>&nbsp;&nbsp;<strong>Financial Info</strong></span>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <customer-Summary></customer-Summary>
+                        </td>
+                        <td ng-if="Customer.IsNewCustomer==false" ng-class="{'oldClient':Customer.IsNewCustomer==false}">
+                            <financial-Info-Lending ng-if="Concession.ConcessionTypeCode=='Lending'"></financial-Info-Lending>
+                            <financial-Info-Cash ng-if="Concession.ConcessionTypeCode=='Cash'"></financial-Info-Cash>
+                            <financial-Info-Bol ng-if="Concession.ConcessionTypeCode=='Bol'"></financial-Info-Bol>
+                            <financial-Info-Mas ng-if="Concession.ConcessionTypeCode=='Mas'"></financial-Info-Mas>
+                            <financial-Info-Trade ng-if="Concession.ConcessionTypeCode=='Trade'"></financial-Info-Trade>
+                            <financial-Info-Investement ng-if="Concession.ConcessionTypeCode=='Investement'"></financial-Info-Investement>
+                            <financial-Info-Transactional ng-if="Concession.ConcessionTypeCode=='Transactional'"></financial-Info-Transactional>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+
+            <div class="row row-padding">
+
+                <pending-Concession-List></pending-Concession-List>
+
+            </div>
+
+
+            <div class="row row-padding">
+
+                <span us-spinner="{radius:80, width:6, length: 8}" ng-show="IsLoadingView"></span>
+
+                <div ui-view>
+                </div>
+
+            </div>
+
+            <div class="row row-padding">
+
+                <existing-Concession-List></existing-Concession-List>
+
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="col-md-12 text-center panel-footer">
+
+
+                <div class="col-md-12 pull-right">
+
+                    <button class="btn btn-primary"
+                            type="submit"
+                            ng-if="user.IsPCM==true || (user.IsBCM==true && Concession.Type==3)"                       
+                            ng-click="concessionForm.$valid && onApprove(Concession)">
+
+                        <i class="fa fa-save"></i>
+                        &nbsp;
+                        Approve
+                        &nbsp;
+
+                    </button>
+
+                    <button class="btn btn-primary"
+                            type="submit"
+                            ng-click="concessionForm.$valid && onApproveWithChanges(Concession)"                          
+                            ng-if="user.IsPCM==true">
+
+
+
+                        <i class="fa fa-edit"></i>
+                        &nbsp;
+                        Approve with changes
+                        &nbsp;
+
+                    </button>
+
+                    <button class="btn btn-danger"
+                            type="submit"
+                            ng-if="user.IsPCM==true"
+                            ng-click="concessionForm.$valid &&  onDecline(Concession)">
+
+                        <i class="fa fa-stop"></i>
+                        &nbsp;
+                        Decline
+                        &nbsp;
+
+                    </button>
+
+                    <button ng-if="user.IsBCM==true"
+                            class="btn btn-primary"
+                            type="submit"
+                            ng-click="concessionForm.$valid && onForward(Concession)">
+
+                        <i class="fa fa-fast-forward"></i>
+                        &nbsp;
+                        Forward to Provincial Pricing Manager
+                        &nbsp;
+
+                    </button>
+
+
+                    <button type="button" class="btn btn-primary" ng-click="onBack()">
+                        <i class="fa fa-backward"></i>
+                        &nbsp;
+                        Back
+                        &nbsp;
+                    </button>
+
+
+                </div>
+
+            </div>
+
+
+        </form>
+    </div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

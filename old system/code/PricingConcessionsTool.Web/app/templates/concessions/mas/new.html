@@ -1,0 +1,77 @@
+﻿
+<div>
+
+    <form class="form-horizontal" name="concessionForm" ng-submit="concessionForm.$valid && onSaveConcession(Concession)" role="form" novalidate>
+     
+
+        <div class="row">
+          
+                <table class="standardbank-table">
+                    <tr>
+
+                        <td class="panel-standardbank-lite" style="padding:5px">
+                            <span>&nbsp;&nbsp;<i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;<strong>Client Info</strong></span>
+                        </td>
+                        <td class="panel-standardbank-lite" ng-if="Customer.IsNewCustomer==false">
+                            <span>&nbsp;&nbsp;<i class="glyphicon glyphicon-briefcase"></i>&nbsp;&nbsp;<strong>Financial Info</strong></span>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <customer-Summary></customer-Summary>
+                        </td>
+                        <td ng-if="Customer.IsNewCustomer==false" ng-class="{'oldClient':Customer.IsNewCustomer==false}">
+                            <financial-Info-Mas></financial-Info-Mas>
+                        </td>
+                    </tr>
+                </table>
+          
+        </div>
+
+      
+        <div class="row">
+            <mas-Concession></mas-Concession>
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="col-md-12 text-center panel-footer">
+
+
+            <div class="col-md-12 pull-right">
+
+                <button class="btn btn-primary" type="submit" ng-disabled="CanEdit==false">
+
+                    <i class="fa fa-save"></i>
+                    &nbsp;
+                    Submit
+                    &nbsp;
+
+                </button>
+
+
+                <button type="button" class="btn btn-primary" ng-click="onClear()">
+                    <i class="fa fa-close"></i>
+                    &nbsp;
+                    Clear
+                    &nbsp;
+                </button>
+
+                <button type="button" class="btn btn-primary" ng-click="onBack()">
+                    <i class="fa fa-backward"></i>
+                    &nbsp;
+                    Back
+                    &nbsp;
+                </button>
+
+
+
+            </div>
+
+            <!-- /.container-fluid -->
+        </div>
+
+
+    </form>
+
+</div>

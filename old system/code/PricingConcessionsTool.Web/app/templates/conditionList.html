@@ -1,0 +1,152 @@
+﻿
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <strong><i class="fa fa-question-circle"></i>&nbsp;&nbsp;Conditions of Grant</strong>
+
+        <a class="btn btn-link pull-right" 
+           style="margin-top:-5px;color:white" 
+           ng-click="onAddNewConditionRow()">
+
+            <i class="glyphicon glyphicon-plus-sign"></i>
+          
+            Add New Row 
+           
+
+        </a>
+    </div>
+    <div class="panel-body">
+
+        <!--<div class="col-sm-12 text-center" ng-if="ConditionList.length==0"><h4> Add atleast one condition of grant</h4></div>-->
+
+
+        <table class="table table-striped table-condensed table-bordered table-hover" ng-if="ConditionList.length>0">
+
+            <thead>
+                <tr>
+                    <th>
+                        Condition Type
+                    </th>
+
+                    <th>
+                        Product Type
+                    </th>
+
+                    <th>
+                        Interest Rate
+                    </th>
+
+                    <th>
+                        Condition Volume
+                    </th>
+
+                    <th>
+                        Condition Value
+
+                    </th>          
+                    
+                    <th>
+                        Condition Period
+
+                    </th>
+
+                    <th>
+                         Period in Months
+
+                    </th>
+        
+
+                </tr>
+            </thead>
+
+            <tbody>
+
+               
+
+                <tr ng-repeat="condition in ConditionList track by $index">
+
+                    <td>
+
+                        <select name="ConditionType"
+                                data-ng-model="condition.ConditionType"
+                                required
+                                ng-required="true"
+                                data-ng-options="item as item.Description for item in $parent.ConditionTypeList track by item.ConditionTypeId"
+                                ng-change="onConditionType(condition)"
+                                class="form-control">
+
+                            <option value="" selected>--please select--</option>
+
+                        </select>
+
+                    </td>
+
+                    <td>
+
+                        <select name="ConditionProduct"
+                                data-ng-model="condition.ConditionProduct"
+                                required
+                                ng-required="true"
+                                data-ng-options="item as item.Description for item in condition.ConditionTypeProductList track by item.ConditionProductId"
+                                class="form-control">
+
+                            <option value="" selected>--please select--</option>
+
+                        </select>
+
+                    </td>
+
+                    <td><input required ng-model="condition.InterestRate" class="form-control" /></td>
+
+                    <td><input required ng-model="condition.Volume" class="form-control" /></td>
+
+                    <td><input required ng-model="condition.Value" class="form-control" /></td>
+
+                    <td>
+
+                        <select name="ConditionPeriod"
+                                data-ng-model="condition.ConditionPeriod"
+                                required
+                                ng-required="true"
+                                data-ng-options="item as item.Description for item in ConditionPeriodList track by item.ConditionPeriodId"
+                                class="form-control">
+
+                            <option value="" selected>--please select--</option>
+
+                        </select>
+
+                    </td>
+                    
+                 
+                    <td>
+
+                        <select name="ConditionPeriod"
+                                data-ng-model="condition.Period"
+                                required
+                                ng-required="true"
+                                data-ng-options="p for p in PeriodList"
+                                class="form-control">
+
+                            <option value="" selected>--please select--</option>
+
+                        </select>
+
+                    </td>
+
+                   
+                    <td >
+
+                        <button title="Delete Condition" type="button" class="btn btn-sm btn-danger" ng-click="onDeleteConditionOfGrant(condition,$index)">
+                            <i class="fa fa-trash-o"></i>
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+
+    </div>
+</div>

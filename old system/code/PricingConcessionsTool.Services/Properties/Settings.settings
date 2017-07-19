@@ -1,0 +1,27 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PricingConcessionsTool.Services.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="EmailHost" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">00172msgjnb0001.za.sbicdirectory.com</Value>
+    </Setting>
+    <Setting Name="FromEmail" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">PricingConcessionsTool@Standardbank.co.za</Value>
+    </Setting>
+    <Setting Name="EmailUserName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">sa180052</Value>
+    </Setting>
+    <Setting Name="EmailUserPassword" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">L@XMa99</Value>
+    </Setting>
+    <Setting Name="SendEmails" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ConcessionLifetimeMonths" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">12</Value>
+    </Setting>
+    <Setting Name="LettersFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">GeneratedLetters</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

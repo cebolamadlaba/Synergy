@@ -1,0 +1,97 @@
+﻿<div id="page-wrappern">
+    <div class="container-fluid" ng-init="init()">
+        <form role="form">
+    <div>
+    <div class="col-md-10">
+
+
+
+        <div class="col-md-4 text-center">
+            <img src="content/img/stblogo.png" class="PerfMan-login-logo" />
+        </div>
+
+
+        <div class="col-md-8">
+
+           
+            <div class="login-container">
+                <div class="col-md-12">
+
+                    <div class="row row-padding text-center" style="color:white;font-weight:bold;margin-bottom:35px;font-size:medium">
+                        <span style="color:white;font-weight:bold;margin-bottom:35px;font-size:medium"> Welcome to the Concessions Management Tool </span>
+                    </div>
+
+                    <div class="row row-padding">
+                        <label class="col-md-4" style="color:white">User ID</label>
+                        <div class="col-md-8">
+                            <input readonly="readonly" class="form-control" type="text" ng-model="user.ANumber" />
+                            <span us-spinner="{radius:10, width:2, length: 4}" ng-show="IsGettingData"></span>
+                        </div>
+                    </div>
+                    <div class="row row-padding">
+                        <label class="col-md-4" style="color:white">First Name</label>
+                        <div class="col-md-8">
+                            <input readonly="readonly" class="form-control" type="text" ng-model="user.FirstName" />
+                            <span us-spinner="{radius:10, width:2, length: 4}" ng-show="IsGettingData"></span>
+                        </div>
+                    </div>
+                    <div class="row row-padding">
+                        <label class="col-md-4" style="color:white">Last Name</label>
+                        <div class="col-md-8">
+                            <input readonly="readonly" class="form-control" type="text" ng-model="user.LastName" />
+
+                            <span us-spinner="{radius:10, width:2, length: 4}" ng-show="IsGettingData"></span>
+
+                        </div>
+                    </div>
+
+                    <div class="row row-padding">
+                        <label class="col-md-4" style="color:white">Email</label>
+                        <div class="col-md-8">
+                            <input readonly="readonly" class="form-control" type="text" ng-model="user.EmailAddress" />
+                            <span us-spinner="{radius:10, width:2, length: 4}" ng-show="IsGettingData"></span>
+                        </div>
+                    </div>
+
+                    <div class="row row-padding">
+                        <label class="col-md-4" style="color:white">Province</label>
+                        <div class="col-md-8">
+                            <select name="Province"
+                                    data-ng-model="user.ProvinceId"
+                                    data-ng-options="a.ProvinceId as a.Description for a in ProvinceList"
+                                    class="form-control"
+                                    ng-required="true">
+
+                                <option value="" selected>--please select--</option>
+
+                            </select>
+                            <span us-spinner="{radius:10, width:2, length: 4}" ng-show="IsGettingData"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="row row-padding">
+                        <div class="col-md-8">&nbsp;</div>
+                        <div class="col-md-4">
+                            <button class="btn btn-block btn-primary text-center" type="submit" data-ng-click="login()" ng-disabled="IsGettingData">Log In <i class="fa fa-refresh fa-spin" ng-show="loading"></i></button>
+                        </div>
+
+                    </div>
+                </div>
+                </div>
+                <div ng-hide="error == null" class="alert alert-danger alert-danger-login">
+                    {{error}}
+                </div>
+                <div ng-hide="message == null" class="alert alert-warning alert-danger-login">
+                    {{message}}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+    </form>
+</div>
+</div>
+    <!-- Login for larger screen sizes-->
+

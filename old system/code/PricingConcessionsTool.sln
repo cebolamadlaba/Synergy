@@ -1,0 +1,79 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PricingConcessionsTool.Web", "PricingConcessionsTool.Web\PricingConcessionsTool.Web.csproj", "{9D9EC594-EB17-4215-9400-4F8B48F6CD53}"
+	ProjectSection(ProjectDependencies) = postProject
+		{17AE7AB9-1C06-4C36-9EB9-34429C2507B7} = {17AE7AB9-1C06-4C36-9EB9-34429C2507B7}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PricingConcessionsTool.Services", "PricingConcessionsTool.Services\PricingConcessionsTool.Services.csproj", "{E277097E-94F7-4D79-B15D-A917E8A2721B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PricingConcessionsTool.Core", "PricingConcessionsTool.Core\PricingConcessionsTool.Core.csproj", "{7962D7A0-6497-474F-8A92-5FFC2DA87EE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PricingConcessionsTool.DTO", "PricingConcessionsTool.DTO\PricingConcessionsTool.DTO.csproj", "{185DDD74-4199-40A7-B738-16598C431F40}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PricingConcessionsTool.API", "PricingConcessionsTool.API\PricingConcessionsTool.API.csproj", "{17AE7AB9-1C06-4C36-9EB9-34429C2507B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PricingConcessionsTool.ServicesTests", "PricingConcessionsTool.ServicesTests\PricingConcessionsTool.ServicesTests.csproj", "{A4CAD300-E954-4C9B-A7F9-E82CD614EB78}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9D9EC594-EB17-4215-9400-4F8B48F6CD53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D9EC594-EB17-4215-9400-4F8B48F6CD53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D9EC594-EB17-4215-9400-4F8B48F6CD53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D9EC594-EB17-4215-9400-4F8B48F6CD53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E277097E-94F7-4D79-B15D-A917E8A2721B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E277097E-94F7-4D79-B15D-A917E8A2721B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E277097E-94F7-4D79-B15D-A917E8A2721B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E277097E-94F7-4D79-B15D-A917E8A2721B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7962D7A0-6497-474F-8A92-5FFC2DA87EE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7962D7A0-6497-474F-8A92-5FFC2DA87EE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7962D7A0-6497-474F-8A92-5FFC2DA87EE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7962D7A0-6497-474F-8A92-5FFC2DA87EE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{185DDD74-4199-40A7-B738-16598C431F40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{185DDD74-4199-40A7-B738-16598C431F40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{185DDD74-4199-40A7-B738-16598C431F40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{185DDD74-4199-40A7-B738-16598C431F40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17AE7AB9-1C06-4C36-9EB9-34429C2507B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17AE7AB9-1C06-4C36-9EB9-34429C2507B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17AE7AB9-1C06-4C36-9EB9-34429C2507B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17AE7AB9-1C06-4C36-9EB9-34429C2507B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4CAD300-E954-4C9B-A7F9-E82CD614EB78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4CAD300-E954-4C9B-A7F9-E82CD614EB78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4CAD300-E954-4C9B-A7F9-E82CD614EB78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4CAD300-E954-4C9B-A7F9-E82CD614EB78}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 7
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://10952iisprdsdc1:8080/tfs/webdevelopmentcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = PricingConcessionsTool.API\\PricingConcessionsTool.API.csproj
+		SccProjectName1 = PricingConcessionsTool.API
+		SccLocalPath1 = PricingConcessionsTool.API
+		SccProjectUniqueName2 = PricingConcessionsTool.Core\\PricingConcessionsTool.Core.csproj
+		SccProjectName2 = PricingConcessionsTool.Core
+		SccLocalPath2 = PricingConcessionsTool.Core
+		SccProjectUniqueName3 = PricingConcessionsTool.DTO\\PricingConcessionsTool.DTO.csproj
+		SccProjectName3 = PricingConcessionsTool.DTO
+		SccLocalPath3 = PricingConcessionsTool.DTO
+		SccProjectUniqueName4 = PricingConcessionsTool.Services\\PricingConcessionsTool.Services.csproj
+		SccProjectName4 = PricingConcessionsTool.Services
+		SccLocalPath4 = PricingConcessionsTool.Services
+		SccProjectUniqueName5 = PricingConcessionsTool.Web\\PricingConcessionsTool.Web.csproj
+		SccProjectName5 = PricingConcessionsTool.Web
+		SccLocalPath5 = PricingConcessionsTool.Web
+		SccProjectUniqueName6 = PricingConcessionsTool.ServicesTests\\PricingConcessionsTool.ServicesTests.csproj
+		SccProjectName6 = PricingConcessionsTool.ServicesTests
+		SccLocalPath6 = PricingConcessionsTool.ServicesTests
+	EndGlobalSection
+EndGlobal

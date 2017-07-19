@@ -1,0 +1,151 @@
+﻿<div ng-cloak style="width:850px !important;">
+
+    <div class="modal-header">
+        <h3 class="modal-title">{{SelectedProduct.Description}}</h3>
+        <em>{{MetricTypeDescription}}</em>
+    </div>
+
+    <form name="slaForm" role="form" novalidate>
+
+        <div class="modal-body">
+
+            <div>
+
+
+                <div class="row col-md-12 row-padding ">
+
+                    <table class="table table-condensed">
+
+                        <thead>
+                            <tr class="group">
+
+                                <th>
+
+                                    Sub-product
+
+                                </th>
+
+                                <th align="center" style="align-content:center">
+
+                                    Rand value
+
+                                </th>
+
+                                <th align="center">
+
+                                    Percentage (%)
+
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+
+                            <tr ng-repeat="subProduct in SelectedSubProduct">
+
+                                <td width="30%">
+                                    {{subProduct.Description}}
+                                </td>
+
+                                <td width="30%">
+
+                          
+                                    <input name="prod{{$index}}" 
+                                           ng-model="subProduct.MeasurementText"
+                                            ng-change="onMeasurementValueChange(subProduct)"                                           
+                                            class="form-control pull-right"
+                                             maxlength="19"
+                                       ng-maxlength="19"
+                                            ng-required="true"                                           
+                                            format="number" />
+                                   
+                                    
+                                   
+
+                                    <div class="haserror" ng-show="subProduct.MeasurementValue > SelectedMetric.MeasurementValue">
+                                        Rand value exceeds first level value <em>({{SelectedMetric.MeasurementValue | currency}})</em>.
+                                    </div>
+
+                                </td>
+
+                                <td width="10%">
+                                    <input ng-model="subProduct.Percentage"
+                                           ng-change="onPercentageValueChange(subProduct)"
+                                              ng-model-options="{debounce: '1000'}" 
+                                           class="form-control pull-right"
+                                            maxlength="5"
+                                           ng-maxlength="5"
+                                           ng-required="true" />
+                                </td>
+                                <!--ng-model-options="{updateOn: 'blur'}"-->
+                            </tr>
+
+                        </tbody>
+
+                        <tfoot>
+                            <tr class="group">
+                                <td align="right">
+                                    <strong> Running Total</strong>
+                                </td>
+
+                                <td align="center">
+                                    {{CalculateRunningTotal()  | currency}}
+                                </td>
+                                <td align="center">
+                                    {{CalculateRunningTotalPercentage()}}
+                                </td>
+                            </tr>
+                            <tr class="group">
+                                <td align="right">
+                                    <strong>Metric Total</strong>
+                                </td>
+
+                                <td align="center">
+                                    {{SelectedMetric.MeasurementValue  | currency}}
+                                </td>
+                                <td align="center">
+                                    {{TotalPercentage()}}
+                                </td>
+                            </tr>
+                        </tfoot>
+
+                    </table>
+                </div>
+
+                <div class="row col-md-12 row-padding text-center haserror" ng-show="CalculateRunningTotal() != SelectedMetric.MeasurementValue">
+                    The Running Total  <strong>({{CalculateRunningTotal() | currency}})</strong> must equal the Metric Total <strong>({{SelectedMetric.MeasurementValue | currency}})</strong>.
+                </div>
+
+                <div class="row col-md-12 row-padding ">
+                    <div class="text-center">
+                        <button class="btn btn-primary" type="submit" ng-click="slaForm.$valid && ok()" ng-disabled="onCanContinue()==false">
+
+                            &nbsp;
+                            Continue
+                            &nbsp;
+
+                            <i class="fa fa-forward"></i>
+
+                        </button>
+                        <button class="btn btn-danger" type="button" ng-click="cancel()">
+
+                            <i class="fa fa-close"></i>
+                            &nbsp;
+                            Cancel
+                            &nbsp;
+                        </button>
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+
+
+    </form>
+</div>
+

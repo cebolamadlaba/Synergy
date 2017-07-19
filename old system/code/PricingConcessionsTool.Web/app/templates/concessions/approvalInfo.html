@@ -1,0 +1,26 @@
+﻿
+<div class="row row-padding" ng-if="Concession.StatusDescription=='Approved'">
+    <div class="col-md-4">
+        <label class="small">  Approve Date</label>
+    </div>
+
+    <div class="col-md-8">
+
+        <input type="text" class="form-control" ng-model="Concession.DateApproved" ng-disabled="true" />
+
+    </div>
+
+</div>
+
+<div class="row row-padding" ng-if="Concession.StatusDescription=='Approved'">
+    <div class="col-md-4">
+        <label class="small">  Expiry Date</label>
+    </div>
+
+    <div class="col-md-8">
+
+        <input type="text" class="form-control" ng-model="Concession.ExpiryDate" ng-disabled="true" />
+
+    </div>
+
+</div>

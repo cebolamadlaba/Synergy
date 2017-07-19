@@ -1,0 +1,101 @@
+﻿    <div ng-init="main()">
+
+        <div class="row">
+                        <div class="col-md-12">
+
+                            <form class="form-horizontal" name="concessionForm" role="form" novalidate>
+                                
+                                <div class="row">
+                                    <table class="standardbank-table">
+                                        <tr>
+
+                                            <td class="panel-standardbank-lite" style="padding:5px">
+                                                <span>&nbsp;&nbsp;<i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;<strong>Client Info</strong></span>
+                                            </td>
+                                            <td class="panel-standardbank-lite" ng-if="Customer.IsNewCustomer==false">
+                                                <span>&nbsp;&nbsp;<i class="glyphicon glyphicon-briefcase"></i>&nbsp;&nbsp;<strong>Financial Info</strong></span>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <customer-Summary></customer-Summary>
+                                            </td>
+                                            <td ng-if="Customer.IsNewCustomer==false" ng-class="{'oldClient':Customer.IsNewCustomer==false}">
+                                                <financial-Info-Lending ng-if="Concession.ConcessionTypeCode=='Lending'"></financial-Info-Lending>
+                                                <financial-Info-Cash ng-if="Concession.ConcessionTypeCode=='Cash'"></financial-Info-Cash>
+                                                <financial-Info-Bol ng-if="Concession.ConcessionTypeCode=='Bol'"></financial-Info-Bol>
+                                                <financial-Info-Mas ng-if="Concession.ConcessionTypeCode=='Mas'"></financial-Info-Mas>
+                                                <financial-Info-Trade ng-if="Concession.ConcessionTypeCode=='Trade'"></financial-Info-Trade>
+                                                <financial-Info-Investement ng-if="Concession.ConcessionTypeCode=='Investement'"></financial-Info-Investement>
+                                                <financial-Info-Transactional ng-if="Concession.ConcessionTypeCode=='Transactional'"></financial-Info-Transactional>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>                              
+
+                                
+                                <div class="row" ui-view>
+                                </div>
+
+                                <div class="clearfix"></div>
+
+                                <div class="col-md-12 text-center panel-footer">
+
+
+                                    <div class="col-md-12 pull-right">
+
+                                        <button class="btn btn-primary" 
+                                                type="submit" 
+                                                ng-if="user.IsRequestor==true"
+                                                ng-click="concessionForm.$valid && onAcceptChanges(Concession)">
+
+                                            <i class="fa fa-save"></i>
+                                            &nbsp;
+                                            Accept Changes
+                                            &nbsp;
+
+                                        </button>
+
+                                        <button class="btn btn-primary" 
+                                                type="submit"   
+                                                ng-click="concessionForm.$valid && onDeclineChanges(Concession)"
+                                                ng-if="user.IsRequestor==true">
+
+                                            <i class="fa fa-edit"></i>
+                                            &nbsp;
+                                            Reject Changes
+                                            &nbsp;
+
+                                        </button>
+
+                                        <button type="button" class="btn btn-primary" ng-click="onBack()">
+                                            <i class="fa fa-backward"></i>
+                                            &nbsp;
+                                            Back
+                                            &nbsp;
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            
+
+
+
+
+
+
+
+
+
+
+
+
+

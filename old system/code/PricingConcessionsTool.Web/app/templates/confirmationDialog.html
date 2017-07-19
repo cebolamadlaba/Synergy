@@ -1,0 +1,51 @@
+﻿<div ng-cloak style="width:600px !important;">
+
+    <div class="modal-header">
+        <h3 class="modal-title">{{DialogTitle}}</h3>
+    </div>
+
+    <form name="slaForm" role="form" novalidate>
+        <div class="modal-body">
+
+            <div class="col-md-2">
+                <i class="fa fa-warning fa-5x"></i>
+            </div>
+
+
+            <div class="col-md-10">
+
+
+                <div class="row text-warning text-center" ng-if="DialogMessage.length>0">
+                    <h4><em>{{DialogMessage}}</em></h4>
+                </div>
+
+
+                <div class="row text-warning text-center" ng-if="DialogSubMessage.length>0">
+                    <h4>{{DialogSubMessage}}</h4>
+                </div>
+            </div>
+
+            </div>
+
+
+
+        <div class="clearfix"></div>
+        <div class="modal-footer">
+            <div class="text-right">
+                <button class="btn btn-danger" type="button" ng-click="ok()" ng-if="ShowDialogYesBtn==true">
+
+                    &nbsp;
+                    Yes
+                    &nbsp;
+                </button>
+                <button class="btn btn-primary" type="button" ng-click="cancel()">
+
+                    &nbsp;
+                    {{DialogNoBtnText}}
+                    &nbsp;
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+

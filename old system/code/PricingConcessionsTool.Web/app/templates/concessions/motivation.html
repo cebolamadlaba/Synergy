@@ -1,0 +1,27 @@
+﻿<div class="panel panel-standardbank">
+    <div class="panel-heading ">
+        <span><i class="fa fa-comments-o"></i>&nbsp;&nbsp;<strong> Motivation</strong> </span>
+    </div>
+
+    <div class="panel-body">
+
+        <textarea name="Motivation"
+                  ng-model="Concession.Motivation"
+                  class="form-control"
+                  rows="4"
+                  ng-required="true"
+                  ng-disabled="Concession.ConcessionId>0"
+                  ng-maxlength="800"
+                  maxlength="800"></textarea>
+
+        <div class="row col-md-12" ng-if="concessionForm.$submitted || concessionForm.Motivation.$touched"
+             ng-messages="concessionForm.Motivation.$error">
+            <div ng-message="required">
+                <div class="haserror">
+                    please specify Motivation
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

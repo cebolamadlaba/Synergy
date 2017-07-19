@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="e91e05aa6b924813b25789aa4c023a85" Name="Diagram1" ZoomLevel="65">
+        <EntityTypeShape EntityType="PricingModel.rtblApprovalType" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PricingModel.rtblBaseRate" Width="1.5" PointX="9" PointY="10.875" />
+        <EntityTypeShape EntityType="PricingModel.rtblChannelType" Width="1.5" PointX="9" PointY="14.75" />
+        <EntityTypeShape EntityType="PricingModel.rtblConcessionType" Width="1.5" PointX="3.75" PointY="35.75" />
+        <EntityTypeShape EntityType="PricingModel.rtblConditionProduct" Width="1.5" PointX="6" PointY="20.5" />
+        <EntityTypeShape EntityType="PricingModel.rtblConditionType" Width="1.5" PointX="6" PointY="17.75" />
+        <EntityTypeShape EntityType="PricingModel.rtblMarketSegment" Width="1.5" PointX="1.5" PointY="17.125" />
+        <EntityTypeShape EntityType="PricingModel.rtblProduct" Width="1.5" PointX="12" PointY="18" />
+        <EntityTypeShape EntityType="PricingModel.rtblProvince" Width="1.5" PointX="1.5" PointY="20.25" />
+        <EntityTypeShape EntityType="PricingModel.rtblReviewFeeType" Width="1.5" PointX="9" PointY="39.25" />
+        <EntityTypeShape EntityType="PricingModel.rtblRole" Width="1.5" PointX="0.75" PointY="31.125" />
+        <EntityTypeShape EntityType="PricingModel.rtblStatu" Width="1.5" PointX="3.75" PointY="20.625" />
+        <EntityTypeShape EntityType="PricingModel.rtblSubStatu" Width="1.5" PointX="3.75" PointY="38.625" />
+        <EntityTypeShape EntityType="PricingModel.rtblTransactionGroup" Width="1.5" PointX="6" PointY="14.375" />
+        <EntityTypeShape EntityType="PricingModel.rtblTransactionType" Width="1.5" PointX="9" PointY="34.875" />
+        <EntityTypeShape EntityType="PricingModel.rtblType" Width="1.5" PointX="3.75" PointY="33.125" />
+        <EntityTypeShape EntityType="PricingModel.tblBolUser" Width="1.5" PointX="6" PointY="37" />
+        <EntityTypeShape EntityType="PricingModel.tblBusinesOnlineTransactionType" Width="1.5" PointX="6" PointY="34.125" />
+        <EntityTypeShape EntityType="PricingModel.tblCentre" Width="1.5" PointX="0.75" PointY="22.875" />
+        <EntityTypeShape EntityType="PricingModel.tblCentreBusinessManager" Width="1.5" PointX="3" PointY="27" />
+        <EntityTypeShape EntityType="PricingModel.tblCentreUser" Width="1.5" PointX="3" PointY="24" />
+        <EntityTypeShape EntityType="PricingModel.tblChannelTypeBaseRate" Width="1.5" PointX="11.25" PointY="12" />
+        <EntityTypeShape EntityType="PricingModel.tblConcessionAccount" Width="1.5" PointX="8.25" PointY="66" />
+        <EntityTypeShape EntityType="PricingModel.tblConcessionApproval" Width="1.5" PointX="14.25" PointY="22.5" />
+        <EntityTypeShape EntityType="PricingModel.tblConcessionBol" Width="1.5" PointX="8.25" PointY="22.375" />
+        <EntityTypeShape EntityType="PricingModel.tblConcessionCash" Width="1.5" PointX="8.25" PointY="26.5" />
+        <EntityTypeShape EntityType="PricingModel.tblConcessionComment" Width="1.5" PointX="8.25" PointY="30.75" />
+        <EntityTypeShape EntityType="PricingModel.tblConcessionCondition" Width="1.5" PointX="8.25" PointY="18.5" />
+        <EntityTypeShape EntityType="PricingModel.tblConcessionInvestment" Width="1.5" PointX="14.25" PointY="26.875" />
+        <EntityTypeShape EntityType="PricingModel.tblConcessionLending" Width="1.5" PointX="11.25" PointY="31.375" />
+        <EntityTypeShape EntityType="PricingModel.tblConcessionMa" Width="1.5" PointX="14.25" PointY="30.875" />
+        <EntityTypeShape EntityType="PricingModel.tblConcessionTrade" Width="1.5" PointX="11.25" PointY="21.25" />
+        <EntityTypeShape EntityType="PricingModel.tblConcessionTransactional" Width="1.5" PointX="11.25" PointY="26.375" />
+        <EntityTypeShape EntityType="PricingModel.tblConditionTypeProduct" Width="1.5" PointX="11.25" PointY="15" />
+        <EntityTypeShape EntityType="PricingModel.tblExceptionLog" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PricingModel.tblLegalEntity" Width="1.5" PointX="3.75" PointY="15.125" />
+        <EntityTypeShape EntityType="PricingModel.tblLegalEntityAccount" Width="1.5" PointX="6" PointY="11.625" />
+        <EntityTypeShape EntityType="PricingModel.tblRiskGroup" Width="1.5" PointX="1.5" PointY="14.375" />
+        <EntityTypeShape EntityType="PricingModel.tblScenarioManagerToolDeal" Width="1.5" PointX="0.75" PointY="3.75" />
+        <EntityTypeShape EntityType="PricingModel.tblUser" Width="1.5" PointX="0.75" PointY="26.125" />
+        <EntityTypeShape EntityType="PricingModel.tblUserRole" Width="1.5" PointX="3" PointY="30" />
+        <AssociationConnector Association="PricingModel.FK_tblChannelTypeBaseRate_rtblBaseRate" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionCash_rtblBaseRate" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionTrade_rtblBaseRate" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionTransactional_rtblBaseRate" />
+        <AssociationConnector Association="PricingModel.FK_tblChannelTypeBaseRate_rtblChannelType" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionCash_rtblChannelType" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionTrade_rtblChannelType" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionTransactional_rtblChannelType" />
+        <AssociationConnector Association="PricingModel.FK_rtblTransactionType_rtblConcessionType" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionCondition_rtblConditionProduct" />
+        <AssociationConnector Association="PricingModel.FK_tblConditionTypeProduct_rtblConditionProduct" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionCondition_rtblConditionType" />
+        <AssociationConnector Association="PricingModel.FK_tblConditionTypeProduct_rtblConditionType" />
+        <AssociationConnector Association="PricingModel.FK_tblCustomer_rtblMarketSegment" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionInvestment_rtblProduct" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionLending_rtblProductType" />
+        <AssociationConnector Association="PricingModel.FK_tblCentre_rtblProvince" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionLending_rtblReviewFeeType" />
+        <AssociationConnector Association="PricingModel.FK_tblUserRole_tblRole" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionApproval_rtblSubStatusNew" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionApproval_rtblSubStatusOld" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionBol_rtblTransactionGroup" />
+        <AssociationConnector Association="PricingModel.FK_tblTransactionTypeGroup_rtblTransactionGroup" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionMas_rtblTransactionType" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionTrade_rtblTransactionType" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionTransactional_rtblTransactionType" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionBol_tblBolUser" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionBol_tblBusinesOnlineTransactionType" />
+        <AssociationConnector Association="PricingModel.FK_tblCentreBusinessManager_tblCentre" />
+        <AssociationConnector Association="PricingModel.FK_tblCentreUser_tblCentre" />
+        <AssociationConnector Association="PricingModel.FK_tblCentreBusinessManager_tblUser" />
+        <AssociationConnector Association="PricingModel.FK_tblCentreUser_tblUser" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionApproval_tblUser" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionComment_tblUser" />
+        <AssociationConnector Association="PricingModel.FK_tblCustomer_tblRiskGroup" />
+        <AssociationConnector Association="PricingModel.FK_tblLegalEntityAccount_tblLegalEntity" />
+        <AssociationConnector Association="PricingModel.FK_tblUserRole_tblUser" />
+        <EntityTypeShape EntityType="PricingModel.tblConcession" Width="1.5" PointX="17" PointY="23.125" />
+        <AssociationConnector Association="PricingModel.FK_tblConcession_rtblConcessionType" />
+        <AssociationConnector Association="PricingModel.FK_tblConcession_rtblStatus" />
+        <AssociationConnector Association="PricingModel.FK_tblConcession_rtblSubStatus" />
+        <AssociationConnector Association="PricingModel.FK_tblConcession_rtblType" />
+        <AssociationConnector Association="PricingModel.FK_tblConcession_tblCentre" />
+        <AssociationConnector Association="PricingModel.FK_tblConcession_tblLegalEntity" />
+        <AssociationConnector Association="PricingModel.FK_tblConcession_tblUser" />
+        <AssociationConnector Association="PricingModel.FK_tblConcession_tblUserBCM" />
+        <AssociationConnector Association="PricingModel.FK_tblConcession_tblUserHO" />
+        <AssociationConnector Association="PricingModel.FK_tblConcession_tblUserPCM" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionAccount_tblConcession" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionApproval_tblConcession" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionBol_tblConcession" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionCash_tblConcession" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionComment_tblConcession" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionCondition_tblConcession" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionInvestment_tblConcession" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionLending_tblConcession" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionMas_tblConcession" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionTrade_tblConcession" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionTrade_tblConcession1" />
+        <AssociationConnector Association="PricingModel.FK_tblConcessionTransactional_tblConcession" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

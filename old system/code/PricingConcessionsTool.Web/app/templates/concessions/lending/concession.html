@@ -1,0 +1,606 @@
+﻿<div class="row row-padding" ng-init="init()">
+    <div class="col-md-12">
+
+
+        <div class="panel panel-primary">
+
+            <div class="panel-heading ">
+                <span><i class="glyphicon glyphicon-check"></i>&nbsp;&nbsp;<strong>New Concessions</strong> </span>
+
+                <button type="button" class="btn btn-link pull-right" style="color:white; margin-top:-5px;" ng-click="onAddNewRow()">
+                    <i class="glyphicon glyphicon-plus-sign"></i>&nbsp;&nbsp;Add New Row
+                </button>
+           
+
+            </div>
+            <div class="panel-body">
+
+                <div class="row">
+
+                 
+                    <table class="table table-condensed" >
+
+                        <thead  ng-if="LendingProductList.length>0">
+
+                            <tr>
+
+                                <th class="text-center">
+                                    Product Type
+                                </th>
+
+                                <th class="text-center">
+                                    Account  Number
+                                </th>
+
+                                <th class="text-center">
+                                    Limit
+                                </th>
+
+                                <th class="text-center">
+                                    Term
+                                </th>
+
+                                <th class="text-center">
+                                    MAP
+                                </th>
+
+                                <th class="text-center">
+                                    Initiation Fee
+                                </th>
+
+                                <th class="text-center">
+                                    Review Fee
+                                </th>
+
+                                <th class="text-center">
+                                    UFF Fee
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr ng-repeat="c in LendingProductList">
+                                <td>
+                                    <select name="ProductType"
+                                            data-ng-model="c.ProductType"
+                                            data-ng-options="item as item.Description for item in ProductTypeList track by item.ProductTypeId"
+                                            ng-change="onProductType(c)"
+                                            class="form-control"
+                                            ng-disabled="user.IsBCM==true"
+                                            ng-required="true">
+
+                                        <option value="" selected>--please select--</option>
+
+                                    </select>
+
+
+
+                                </td>
+                                <td>
+                                    <p class="form-group">
+
+
+                                        <select name="AccountNumber{{$index}}"
+                                                data-ng-model="c.AccountNumber"
+                                                required
+                                                ng-required="true"
+                                                data-ng-options="p for p in c.AccountList"
+                                                class="form-control">
+
+                                            <option value="" selected>--please select--</option>
+
+                                        </select>
+
+                                    </p>
+
+
+                                </td>
+                                <td>
+
+                                    <input type="text"
+                                           name="Limit{{$index}}"
+                                           ng-required="true"
+                                           restrict-input="Decimal"
+                                           format="currency"
+                                           ng-model="c.Limit"
+                                           class="form-control" />
+                                </td>
+                                <td>
+
+                                    <input type="text"
+                                           name="Term{{$index}}"
+                                           ng-required="true"
+                                           restrict-input="Decimal"
+                                           format="currency"
+                                           ng-model="c.Term"
+                                           class="form-control" />
+                                </td>
+                                <td>
+
+                                    <input type="text"
+                                           name="Map{{$index}}"
+                                           ng-required="true"
+                                           restrict-input="Decimal"
+                                           format="currency"
+                                           ng-model="c.Map"
+                                           class="form-control" />
+                                </td>
+                                <td>
+                                    <input type="text"
+                                           name="InitiationFee{{$index}}"
+                                           ng-required="true"
+                                           restrict-input="Decimal"
+                                           format="currency"
+                                           ng-model="c.InitiationFee"
+                                           class="form-control" />
+                                </td>
+                                <td>
+
+
+                                    <input type="text"
+                                           name="ReviewFee{{$index}}"
+                                           ng-required="true"
+                                           restrict-input="Decimal"
+                                           format="currency"
+                                           ng-model="c.ReviewFee"
+                                           class="form-control" />
+                                </td>
+                                <td>
+
+                                    <input type="text"
+                                           name="UFFFee{{$index}}"
+                                           ng-required="true"
+                                           restrict-input="Decimal"
+                                           format="currency"
+                                           ng-model="c.UFFFee"
+                                           class="form-control" />
+
+                                </td>
+                                <th>
+                                    <button title="Delete Concession" type="button" class="btn btn-sm btn-danger" ng-click="onRemoveRow($index)">
+                                        <i class="fa fa-trash-o"></i>
+                                    </button>
+                                </th>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+              
+
+               
+
+                <div class="col-md-6">
+                    <div class="row row-padding">
+                        <div class="col-md-4">
+                            <label class="small">  SMT Deal NR</label>
+                        </div>
+
+                        <div class="col-md-8">
+
+                            <input type="text"
+                                   name="DealNumber"
+                                   ng-required="true"
+                                   ng-maxlength="16"
+                                   maxlength="16"
+                                   ng-disabled="user.IsBCM==true"
+                                   ng-model="Concession.DealNumber"
+                                   class="form-control" />
+
+
+                            <div ng-if="concessionForm.$submitted || concessionForm.DealNumber.$touched"
+                                 ng-messages="concessionForm.DealNumber.$error">
+                                <div ng-message="required">
+                                    <div class="haserror">
+                                        please specify SMT Deal NR
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="row  row-padding">
+
+                        <div class="col-md-4">
+                            <label class="small">  CRS / MRS </label>
+                        </div>
+
+                        <div class="col-md-8">
+
+                            <input type="text"
+                                   name="CRSMRS"
+                                   ng-required="true"
+                                   ng-model="Concession.CRSMRS"
+                                   class="form-control" />
+
+
+                            <div ng-if="concessionForm.$submitted || concessionForm.CRSMRS.$touched"
+                                 ng-messages="concessionForm.CRSMRS .$error">
+                                <div ng-message="required">
+                                    <div class="haserror">
+                                        please specify CRS / MRS 
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="col-md-6">
+                  
+                        <motivation></motivation>
+                    </div>
+             
+
+                        <!--<div class="col-md-6">
+
+            <div class="row row-padding" ng-if="Concession.ConcessionId>0">
+                <div class="col-md-4">
+                    <label class="small">  Concession ID</label>
+                </div>
+
+                <div class="col-md-8">
+
+                    <input type="text" class="form-control" ng-model="Concession.ReferenceNumber" ng-disabled="true" />
+
+                </div>
+
+            </div>
+
+            <div class="row row-padding">
+                <div class="col-md-4">
+                    <label class="small">  Product Type</label>
+                </div>
+
+                <div class="col-md-8">
+
+                    <select name="ProductType"
+                            data-ng-model="Concession.ProductType"
+                            data-ng-options="item as item.Description for item in ProductTypeList track by item.ProductTypeId"
+                            ng-change="onProductType(Concession.ProductType)"
+                            class="form-control"
+                            ng-disabled="user.IsBCM==true"
+                            ng-required="true">
+
+                        <option value="" selected>--please select--</option>
+
+                    </select>
+
+                    <div ng-if="concessionForm.$submitted || concessionForm.ProductType.$touched"
+                         ng-messages="concessionForm.ProductType.$error">
+                        <div ng-message="required">
+                            <div class="haserror">
+                                please select Product Type
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+            <div class="row row-padding">
+                <div class="col-md-4">
+                    <label class="small">  Account Number</label>
+
+                </div>
+
+                <div class="col-md-8">
+
+
+                    <input ng-if="Customer.IsNewCustomer==true"
+                           type="text"
+                           name="AccountNumber"
+                           ng-required="true"
+                           ng-disabled="user.IsBCM==true"
+                           ng-model="Concession.Customer.AccountNumber"
+                           class="form-control" />
+
+
+                    <multiselect ng-if="Customer.IsNewCustomer==false"
+                                 name="AccountNumber"
+                                 ng-model="Concession.AccountList"
+                                 options="AccountList"
+                                 show-select-all="true"
+                                 ng-required="true"
+                                 ng-disabled="user.IsBCM==true"
+                                 require="true"
+                                 show-unselect-all="true">
+
+                    </multiselect>
+
+                    <div ng-if="concessionForm.$submitted || concessionForm.AccountNumber.$touched"
+                         ng-messages="concessionForm.AccountNumber.$error">
+                        <div ng-message="required">
+                            <div class="haserror">
+                                please specify Account
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="row row-padding">
+                <div class="col-md-4">
+                    <label class="small">Limit </label>
+
+                </div>
+
+                <div class="col-md-8">
+
+                    <input type="text"
+                           name="Limit"
+                           ng-required="true"
+                               restrict-input="Decimal"
+                           ng-model="Concession.Limit"
+                           format="currency"
+                           ng-disabled="user.IsBCM==true"
+                           class="form-control" />
+
+                    <div ng-if="concessionForm.$submitted || concessionForm.Limit.$touched"
+                         ng-messages="concessionForm.Limit.$error">
+                        <div ng-message="required">
+                            <div class="haserror">
+                                please specify Limit
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row row-padding">
+                <div class="col-md-4">
+                    <label class="small"> Term </label>
+                </div>
+
+                <div class="col-md-8">
+
+
+                    <input type="text"
+                           name="Term"
+                           ng-required="true"
+                           restrict-input="Number"
+                           ng-model="Concession.Term"
+                           ng-disabled="user.IsBCM==true"
+                           class="form-control" />
+
+                    <div ng-if="concessionForm.$submitted || concessionForm.Term.$touched"
+                         ng-messages="concessionForm.Term.$error">
+                        <div ng-message="required">
+                            <div class="haserror">
+                                please specify Term
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="row row-padding">
+                <div class="col-md-4">
+                    <label class="small">Margin Above prime  </label>
+
+                </div>
+
+                <div class="col-md-8">
+
+                        <input type="text"
+                               name="MarginAbovePrime"
+                               ng-required="true"
+                               ng-model="Concession.MarginAbovePrime"
+                               ng-disabled="user.IsBCM==true"
+                               restrict-input="Decimal"
+                               class="form-control" />
+
+                    <div ng-if="concessionForm.$submitted || concessionForm.MarginAbovePrime.$touched"
+                         ng-messages="concessionForm.MarginAbovePrime.$error">
+                        <div ng-message="required">
+                            <div class="haserror">
+                                please specify Margin Above prime
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+            <div class="row row-padding">
+                <div class="col-md-4">
+                    <label class="small">  Initiation Fee </label>
+                </div>
+
+                <div class="col-md-8">
+
+                    <input type="text"
+                           name="InitiationFee"
+                           ng-required="true"
+                           restrict-input="Decimal"
+                           format="currency"
+                           ng-disabled="user.IsBCM==true"
+                           ng-model="Concession.InitiationFee"
+                           class="form-control" />
+
+                    <div ng-if="concessionForm.$submitted || concessionForm.InitiationFee.$touched"
+                         ng-messages="concessionForm.InitiationFee.$error">
+                        <div ng-message="required">
+                            <div class="haserror">
+                                please specify Initiation Fee
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="row row-padding" ng-if="IsOverdraft==true">
+                <div class="col-md-4">
+                    <label class="small"> Review fee type</label>
+                </div>
+
+                <div class="col-md-8">
+
+                    <select name="ReviewFeeType"
+                            data-ng-model="Concession.ReviewFeeType"
+                            data-ng-options="item as item.Description for item in ReviewFeeTypeList track by item.ReviewFeeTypeId"
+                            class="form-control"
+                            ng-disabled="user.IsBCM==true"
+                            ng-if="IsOverdraft==true"
+                            ng-required="true">
+
+                        <option value="" selected>--please select--</option>
+
+                    </select>
+
+                    <div ng-if="concessionForm.$submitted || concessionForm.ReviewFeeType.$touched"
+                         ng-messages="concessionForm.ReviewFeeType.$error">
+                        <div ng-message="required">
+                            <div class="haserror">
+                                please specify  Review fee type
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+            </div>
+
+
+            <div class="row row-padding" ng-if="IsOverdraft==true">
+                <div class="col-md-4">
+                    <label class="small"> Review Fee</label>
+                </div>
+
+                <div class="col-md-8">
+
+                    <input type="text"
+                           name="ReviewFee"
+                           ng-required="true"
+                           restrict-input="Decimal"
+                           ng-if="IsOverdraft==true"
+                             format="currency"
+                           ng-disabled="user.IsBCM==true"
+                           ng-model="Concession.ReviewFee"
+                           class="form-control" />
+
+                    <div ng-if="concessionForm.$submitted || concessionForm.ReviewFee.$touched"
+                         ng-messages="concessionForm.ReviewFee.$error">
+                        <div ng-message="required">
+                            <div class="haserror">
+                                please specify  Review Fee
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="row row-padding" ng-if="IsOverdraft==true">
+                <div class="col-md-4">
+                    <label class="small"> UFF Fee</label>
+                </div>
+
+                <div class="col-md-8">
+
+
+                    <input type="text"
+                           name="UnutilizedFacilityFee"
+                           ng-required="true"
+                           restrict-input="Decimal"
+                           format="currency"
+                           ng-disabled="user.IsBCM==true"
+                           ng-if="IsOverdraft==true"
+                           ng-model="Concession.UnutilizedFacilityFee"
+                           class="form-control" />
+
+                    <div ng-if="concessionForm.$submitted || concessionForm.UnutilizedFacilityFee.$touched"
+                         ng-messages="concessionForm.UnutilizedFacilityFee.$error">
+                        <div ng-message="required">
+                            <div class="haserror">
+                                please specify  UFF Fee
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+            </div>
+
+            <div class="row row-padding">
+                <div class="col-md-4">
+                    <label class="small">  SMT Deal NR</label>
+                </div>
+
+                <div class="col-md-8">
+
+                    <input type="text"
+                           name="DealNumber"
+                           ng-required="true"
+                           ng-maxlength="16"
+                           maxlength="16"
+                           ng-disabled="user.IsBCM==true"
+                           ng-model="Concession.DealNumber"
+                           class="form-control" />
+
+
+                    <div ng-if="concessionForm.$submitted || concessionForm.DealNumber.$touched"
+                         ng-messages="concessionForm.DealNumber.$error">
+                        <div ng-message="required">
+                            <div class="haserror">
+                                please specify SMT Deal NR
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+
+
+        </div>
+
+        <!--left side-->
+                        <!--right side-->
+                        <!--<div class="col-md-6">
+
+            <approval-Info></approval-Info>
+
+            <motivation></motivation>
+
+            <comments></comments>
+
+        </div>-->
+                        <!--right side-->
+                    </div>
+        </div>
+    </div>
+</div>
+
+<div class="row row-padding">
+    <div class="col-md-12">
+        <condition-List></condition-List>
+    </div>
+</div>

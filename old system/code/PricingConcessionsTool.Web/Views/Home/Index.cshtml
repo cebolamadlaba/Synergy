@@ -1,0 +1,261 @@
+﻿@using PricingConcessionsTool.Utils
+<!DOCTYPE html>
+<html ng-app="myApp" ng-strict-di>
+<head>
+
+    <base href="/PricingConcessionsTool/" />
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Expires" content="Sat, 01 Dec 2001 00:00:00 GMT">
+
+    <title>Pricing Concessions Tool</title>
+
+
+    <!-- Bootstrap Core CSS -->
+    @Styles.Render("~/Content/css")
+
+    <link href="~/dist/css/sb-admin-2.css" rel="stylesheet" />
+
+    @*<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+        <link href="~/bower_components/metisMenu/dist/metisMenu.css" rel="stylesheet" />
+        <link href="~/dist/css/sb-admin-2.css" rel="stylesheet" />*@
+    <link href="~/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+
+
+    <![endif]-->
+
+</head>
+<body ng-controller="appLevelController">
+
+
+    <script type="text/javascript">
+
+
+        document.onkeydown = function (event) {
+
+            if (!event) { /* This will happen in IE */
+                event = window.event;
+            }
+
+            var keyCode = event.keyCode;
+
+            if (keyCode == 8 &&
+                ((event.target || event.srcElement).tagName != "TEXTAREA") &&
+                ((event.target || event.srcElement).tagName != "INPUT")) {
+
+                if (navigator.userAgent.toLowerCase().indexOf("msie") == -1) {
+                    event.stopPropagation();
+                } else {
+                    event.returnValue = false;
+                }
+                return false;
+            }
+        };
+
+
+    </script>
+
+    <div id="wrapper" ng-init="initLookupData()">
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0; background-color :rgb(56, 75, 137);border-bottom-color:#022f5a;">
+            @*<div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#/" style="color:#ffffff">Pricing Concessions Tool</a>
+
+
+
+
+                </div>*@
+            
+            <div class="navbar-header">
+
+                <img style="padding-top:15px;padding-left:5px;" src="content/img/StbNavLogo.png" class="pull-left" />
+                <span class="navbar-brand" href="#/" style="color:#ffffff">
+                
+                <span>Concessions Management Tool</span>
+                </span>
+
+            </div>
+
+            <ul class="nav navbar-top-links navbar-left" ng-if="HideMenu==false" >
+
+                <!-- /.dropdown -->
+                <li class="dropdown" style="color:white;">
+                    <a class="dropdown-toggle" data-toggle="dropdown" onclick="return false;">
+                        <i class="fa fa-tasks fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-tasks" style="color:white;">
+
+                        <li style="color:white;">
+                            <a ui-sref="mypending">
+
+                                <i class="glyphicon glyphicon-list"></i>  My Pending Concessions
+
+
+</a>
+
+                        </li>
+
+                        <li ng-if="user.IsRequestor==false">
+
+                            <a ui-sref="myactionedconcessions">
+
+                                <i class="glyphicon glyphicon-tasks"></i> My Actioned Concessions
+
+
+                            </a>
+
+                        </li>
+
+                       
+                        <li ng-if="user.IsRequestor==true">
+
+                            <a ui-sref="myapprovedconcessions">
+                                <i class="glyphicon glyphicon-check"></i> My Approved Concessions
+                              </a>
+
+                        </li>
+                      
+                        <li ng-if="user.IsRequestor==true">
+                            <a ui-sref="mypricing">
+                                <i class="fa fa-bank"></i> My Pricing
+                            </a>
+                        </li>                      
+                        <li class="divider"></li>
+                        <li>
+                            <a ng-click="logout()"><i class="glyphicon glyphicon-log-out"></i> Logout</a>
+                        </li>
+
+                    </ul>
+                    <!-- /.dropdown-tasks -->
+                </li>
+
+            </ul>
+
+
+            <!-- /.navbar-header -->
+            <div class="pull-right" style="color:#ffffff; margin-right:10px; padding-top:10px" ng-cloak>
+                <span style="color:#ffffff; margin-right:10px; padding-top:50px" ng-if="user.FullName.length>0">
+                    <i class="fa fa-user fa-fw"></i> {{user.FullName}} </i>                 
+                </span>
+            </div>
+            <!-- /.navbar-top-links -->
+            <div class="navbar-default sidebar" role="navigation" ng-cloak="" ng-if="HideMenu==false">
+
+
+
+
+
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+        <!-- Page Content -->
+
+        <div class="col-md-12" ng-cloak>
+            <div class="row">
+                <h2 class="page-header">&nbsp;&nbsp;{{Title}}</h2>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="clearfix"></div>
+        @*<div class="col-md-12" ng-if="1==2">
+            <div class="alert alert-danger">
+                <strong>Danger!</strong> Indicates a dangerous or potentially negative action.
+            </div>
+        </div>*@
+            <div class="col-md-12">
+
+                <div ng-show="IsLoading"
+                     class="modal-backdrop fade in"
+                     style="z-index: 1040;">
+
+                    <div class="modal-body text-center" style="top:10%;">
+
+                        <i class="fa fa-spinner fa-spin fa-fw fa-5x"></i>
+
+                        <h1 ng-show="IsLoading">  loading . . . . . </h1>
+
+                    </div>
+                </div>
+
+                <div class="container-fluid">
+
+                    <div ui-view></div>
+
+                    @*<div class="row" ng-view style="min-height:500px;">
+
+                    </div>*@
+
+                </div>
+
+
+
+
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+
+    @*<div class="row">
+            <small>© 2016 - BPI Performance Measurement</small>
+        </div>*@
+
+
+    <!-- /#page-wrapper -->
+    <!-- /#wrapper -->
+    <!-- jQuery -->
+    @*<script src="~/Scripts/jquery-1.10.2.js"></script>*@
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/angular")
+
+
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/templateScripts")
+
+
+    <script src="~/bower_components/spin.js"></script>
+    <script src="~/bower_components/dirPagination.js"></script>
+    <script src="~/bower_components/angular-spinner.js"></script>
+
+    <script src="~/Scripts/angular-loading-overlay.js"></script>
+
+    <script src="~/Scripts/SweetAlert.min.js"></script>
+
+    <script src="~/Scripts/ng-currency.js"></script>
+
+    <script src="~/Scripts/i18n/angular-locale_en-za.js"></script>
+
+    <script src="~/Scripts/jquery-price-format.js"></script>
+
+    <script src="~/Scripts/angular-price-format.js"></script>
+
+    <script src="~/Scripts/angularjs-dropdown-multiselect.js"></script>
+
+
+    <script src="~/Scripts/alertify/alertify.js"></script>
+
+
+</body>
+</html>
+
+

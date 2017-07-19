@@ -1,0 +1,52 @@
+﻿
+    <div class="chat-panel panel panel-primary"  ng-if="ViewCommentBox==true">
+        <div class="panel-heading">
+            <i class="fa fa-comments fa-fw"></i>
+            &nbsp;  <strong>  Comments</strong>
+
+        </div>
+
+        <div class="panel-body" style="height:100px">
+
+            <div class="list-group" ng-show="Concession.CommentList.length>0">
+                <span class="list-group-item" ng-repeat="comment in Concession.CommentList">
+
+                    <i class="fa fa-comment fa-fw"></i>
+                    <i ng-if="log.ActionType==2" class="fa fa-comments-o fa-fw"></i>
+
+                    <span class="text-muted small">
+                        <em>{{comment.User.FullName}}</em>
+                        (<em>{{comment.SystemDate | date:'dd-MMM-yy HH:mm' }}</em>)
+                    </span>
+                    <span>&nbsp;-&nbsp;</span>
+                    <span class="text-muted small">
+                        <em> {{comment.Comment}}</em>
+                    </span>
+                </span>
+            </div>
+
+        </div>
+
+        <div class="panel-footer">
+
+            <div class="col-sm-12">
+                <textarea name="NewComment"
+                          ng-model="Concession.NewComment"
+                          class="form-control"
+                          rows="4"
+                          ng-disabled="IsFormReadOnly"
+                          ng-maxlength="800"
+                          maxlength="800"></textarea>
+            </div>
+
+            <div class="input-group">
+
+                <span class="input-group-btn" style="padding:5px;">
+                    <button class="btn btn-warning btn-sm pull-right" id="btn-chat" ng-if="IsFormReadOnly==false">
+                        Save
+                    </button>
+                </span>
+            </div>
+        </div>
+
+    </div>

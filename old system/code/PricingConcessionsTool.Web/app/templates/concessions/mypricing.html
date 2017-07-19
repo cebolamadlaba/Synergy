@@ -1,0 +1,345 @@
+﻿<div  class="row" ng-init="init()">
+        
+
+        <form class="form-horizontal" name="myPricingForm"  role="form" novalidate>
+
+            <div class="row">
+                <div class="col-md-6">                  
+
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <span><i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;<strong>My Info</strong></span>
+                        </div>
+
+                        <div class="panel-body" style="min-height:260px !important">
+
+                            <div class="col-md-12">
+
+                                <div class="row row-padding">
+
+                                    <div class="col-md-4">
+                                        <label class="small"> Region </label>
+                                    </div>
+
+                                    <div class="col-md-8">
+                                        <input ng-model="user.UserBusinessInfo.Region" class="form-control" disabled="disabled" />
+                                    </div>
+                                </div>
+                                <div class="row row-padding">
+                                    <div class="col-md-4">
+                                        <label class="small"> Business Unit </label>
+                                    </div>
+
+                                    <div class="col-md-8">
+                                        <input ng-model="user.UserBusinessInfo.BusinessUnit" class="form-control" disabled="disabled" />
+                                    </div>
+                                </div>
+                                <div class="row row-padding">
+                                    <div class="col-md-4">
+                                        <label class="small"> Branch </label>
+                                    </div>
+
+                                    <div class="col-md-8">
+                                        <input ng-model="user.UserBusinessInfo.Branch" class="form-control" disabled="disabled" />
+                                    </div>
+                                </div>
+                                <div class="row row-padding">
+                                    <div class="col-md-4">
+                                        <label class="small"> Province </label>
+                                    </div>
+
+                                    <div class="col-md-8">
+                                        <input ng-model="user.UserBusinessInfo.Province" class="form-control" disabled="disabled" />
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <!-- /.col-lg-12 -->
+
+                <div class="col-md-6">
+
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <span><i class="fa fa-building-o"></i>&nbsp;&nbsp;<strong>Customer Info</strong></span>
+                        </div>
+
+                        <div class="panel-body" style="min-height:260px !important">
+
+
+                            <div class="row col-md-12">
+                                <!--<div class="row row-padding">
+
+                                    <div class="col-md-4">
+                                        <label class="small"> Customer Type </label>
+                                    </div>
+
+                                    <div class="col-md-8">
+                                        <div class="funkyradio row col-md-6">
+
+                                            <div class="funkyradio-primary">
+
+                                                <input type="radio"
+                                                       name="CustomerType"
+                                                       id="radioStatus1"
+                                                       ng-value="1"
+                                                       ng-required="true"
+                                                       ng-model="Status"
+                                                       ng-click="OnCustomerType('1')" />
+                                                <label for="radioStatus1">New </label>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="funkyradio row col-md-6">
+                                            <div class="funkyradio-primary" style="margin-left:5px;">
+
+                                                <input type="radio"
+                                                       name="CustomerType"
+                                                       id="radioStatus2"
+                                                       ng-model="Status"
+                                                       ng-required="true"
+                                                       ng-value="2"
+                                                       ng-click="OnCustomerType('2')" />
+                                                <label for="radioStatus2">Existing </label>
+
+
+                                            </div>
+                                        </div>
+
+
+                                        <div ng-if="myPricingForm.$submitted || myPricingForm.CustomerType.$touched"
+                                             ng-messages="concessionForm.CustomerType.$error">
+                                            <div ng-message="required">
+                                                <div class="haserror">
+                                                    please specify customer type
+                                                </div>
+                                            </div>
+                                        </div>  
+
+                                    </div>
+
+                                </div>-->
+
+                                <div class="row row-padding">
+                                    <div class="col-md-4">
+                                        <label class="small"> Risk Group NR </label>
+                                    </div>
+
+                                    <div class="col-md-8">
+                                        <input name="RiskGroupNumber"
+                                               ng-model="Customer.RiskgroupNumber"
+                                               ng-change="OnRiskGroupNumberChange()"
+                                               class="form-control"
+                                               ng-disabled="CustomerType==null"
+                                               ng-model-options="{updateOn: 'blur'}"
+                                               maxlength="7"
+                                               restrict-input="Number"     
+                                               ng-required="true"
+                                               ng-maxlength="7" />
+
+                                        <div ng-if="myPricingForm.$submitted || myPricingForm.RiskGroupNumber.$touched"
+                                             ng-messages="concessionForm.RiskGroupNumber.$error">
+                                            <div ng-message="required">
+                                                <div class="haserror">
+                                                    please specify  Risk Group NR
+                                                </div>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </div>
+
+                                <div class="row row-padding">
+                                    <div class="col-md-4">
+                                   <label class="small"> Risk Group Name </label>
+                                    </div>
+
+                                    <div class="col-md-8">
+                                        <input ng-model="Customer.RiskgroupName"
+                                               ng-required="true"
+                                                ng-disabled="CustomerType==null"
+                                               class="form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="row row-padding">
+                                    <div class="col-md-4">
+                                        <label class="small"> Segment </label>
+                                    </div>
+
+                                    <div class="col-md-8">
+
+                                        <select name="MarketSegment"
+                                                data-ng-model="Customer.Entity.MarketSegment"
+                                                data-ng-options="item as item.Description for item in MarketSegmentList track by item.MarketSegmentId"
+                                                class="form-control"                                             
+                                                ng-disabled="CustomerType==null"
+                                                ng-if="Customer.IsNewCustomer==null || Customer.IsNewCustomer==true">
+
+                                            <option value="" selected>--please select--</option>
+
+                                        </select>
+
+                                        <input ng-model="Customer.Entity.MarketSegment.Description"
+                                               class="form-control"
+                                               ng-if="Customer.IsNewCustomer==false"
+                                               disabled="disabled" />
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row row-padding">
+                                    <div class="col-md-4">
+                                        <label class="small"> Customer Name (s)</label>
+                                    </div>
+
+                                    <div class="col-md-8">
+
+
+
+
+                                        <multiselect name="AccountNumber"
+                                                     ng-model="Concession.SelectedEntityList"
+                                                     options="EntityList"
+                                                     show-select-all="true"
+                                                                                                       
+                                                     display-prop="DisplayName"
+                                                     id-prop="CustomerId"
+                                                     show-unselect-all="true">
+                                        </multiselect>
+
+
+
+                                        <!--<input ng-model="Customer.Entity.CustomerName"
+                                               class="form-control"
+                                               ng-if="Customer.IsNewCustomer==null || Customer.IsNewCustomer==true"
+                                                 ng-disabled="CustomerType==null"
+                                               ng-required="Customer.IsNewCustomer==true" />
+
+                                        <select name="Customer"
+                                                data-ng-model="Customer.Entity"
+                                                data-ng-options="item as item.CustomerName for item in EntityList track by item.CustomerId"class="form-control"
+                                                ng-required="Customer.IsNewCustomer==false"
+                                                ng-if="Customer.IsNewCustomer==false">
+
+                                            <option value="" selected>--please select--</option>
+
+                                        </select>-->
+
+
+                                    </div>
+                                </div>
+
+                              
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-12">
+
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <span><i class="glyphicon glyphicon-shopping-cart"></i>&nbsp;&nbsp;<strong>Products</strong> </span>
+                        </div>
+
+                        <div class="panel-body">
+                            <div class="col-md-12 text-center row-padding">
+
+                                <table style="width:100%">
+
+                                    <tr>
+                                        <td>
+                                            <img src="content/img/lending.png"  />                                       
+                                        </td>
+                                        <td style="margin:5px;">
+                                            <img src="content/img/cash.png" />
+                                        </td>
+                                        <td>
+                                            <img src="content/img/investment.png" />
+                                        </td>
+                                        <td>
+                                            <img src="content/img/bol.png" />
+                                        </td>
+                                        <td>
+                                            <img src="content/img/mas.png" />
+                                        </td>
+                                        <td>
+                                            <img src="content/img/investment.png" />
+                                        </td>
+                                        <td>
+                                            <img src="content/img/mas.png" />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+
+                                        <td>
+
+                                            <button type="submit" class="btn btn-primary btn-block" ng-click="myPricingForm.$valid && OnProductSelection('lending')">
+                                                Lending
+                                            </button>
+                                        </td>
+
+                                        <td style="padding-left:5px;">
+                                            
+                                            <button type="submit" class="btn btn-primary btn-block" ng-click="myPricingForm.$valid && OnProductSelection('Cash')">
+                                                Cash
+                                            </button>
+                                        </td>
+
+                                        <td style="padding-left:5px;">
+
+                                            <button type="submit" class="btn btn-primary btn-block" ng-click="myPricingForm.$valid && OnProductSelection('Investment')">
+                                                Investment
+                                            </button>
+                                        </td>
+                                        <td style="padding-left:5px;">
+                                            <button type="submit" class="btn btn-primary btn-block" ng-click="myPricingForm.$valid && OnProductSelection('Bol')">
+                                                Business Online
+                                            </button>
+                                        </td>
+                                        <td style="padding-left:5px;">
+                                            <button type="submit" class="btn btn-primary btn-block" ng-click="myPricingForm.$valid && OnProductSelection('Mas')">
+                                                Merchant Acquiring
+                                            </button>
+                                        </td>
+                                        <td style="padding-left:5px;">
+                                            <button type="submit" class="btn btn-primary btn-block" ng-click="myPricingForm.$valid && OnProductSelection('Trade')">
+                                                Trade
+                                            </button>
+                                        </td>
+
+                                        <td style="padding-left:5px;">
+
+                                            <button type="submit" class="btn btn-primary btn-block" ng-click="myPricingForm.$valid && OnProductSelection('Transactional')">
+                                                Transactional
+                                            </button>
+
+
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+
+        </form>
+
+            <!-- /.row -->
+
+    <!-- /.container-fluid -->
+</div>

@@ -1,0 +1,272 @@
+﻿
+<div class="row row-padding" ng-init="init()">
+
+    <div class="col-md-12">
+        <!--left side-->
+
+        <div class="panel panel-primary">
+
+            <div class="panel-heading ">
+                <span><i class="glyphicon glyphicon-check"></i>&nbsp;&nbsp;<strong>Concession Detail</strong> </span>
+
+                <a ng-if="Concession.StatusDescription=='Approved' && user.IsRequestor==true" class="btn btn-link pull-right" style="color:white; margin-top:-5px;" ng-click="RemoveConcession(Concession)">
+                    <i class="glyphicon glyphicon-plus-sign"></i>&nbsp;&nbsp;Remove Concession
+                </a>
+
+            </div>
+            <div class="panel-body">
+
+                <div class="col-md-6">
+
+
+
+                    <div class="row row-padding" ng-if="Concession.ConcessionId>0">
+                        <div class="col-md-4">
+                            <label class="small">  Concession ID</label>
+                        </div>
+
+                        <div class="col-md-8">
+
+                            <input type="text" class="form-control" ng-model="Concession.ReferenceNumber" ng-disabled="true" />
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="row row-padding">
+                        <div class="col-md-4">
+                            <label class="small">  Transaction Group</label>
+                        </div>
+
+                        <div class="col-md-8">
+
+                            <select name="TransactionGroup"
+                                    data-ng-model="Concession.TransactionGroup"
+                                    data-ng-options="item as item.Description for item in TransactionGroupList track by item.TransactionGroupId"
+                                    class="form-control"
+                                    ng-change="onTransactionGroupChange(Concession.TransactionGroup)"
+                                    ng-disabled="IsReadOnly"
+                                    ng-required="true">
+
+                                <option value="" selected>--please select--</option>
+
+                            </select>
+
+                            <div ng-if="concessionForm.$submitted || concessionForm.TransactionGroup.$touched"
+                                 ng-messages="concessionForm.TransactionGroup.$error">
+                                <div ng-message="required">
+                                    <div class="haserror">
+                                        please select Transaction Group
+                                    </div>
+                                </div>
+                            </div>   
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="row row-padding">
+                        <div class="col-md-4">
+                            <label class="small">  Transaction Type</label>
+                        </div>
+
+                        <div class="col-md-8">
+
+                            <select name="BusinesOnlineTransactionType"
+                                    data-ng-model="Concession.BusinesOnlineTransactionType"
+                                    data-ng-options="item as item.Description for item in BusinesOnlineTransactionTypeList track by item.BusinesOnlineTransactionTypeId"
+                                    class="form-control"
+                                    ng-disabled="IsReadOnly"
+                                    ng-required="true">
+
+                                <option value="" selected>--please select--</option>
+
+                            </select>
+
+                            <div ng-if="concessionForm.$submitted || concessionForm.TransactionGroup.$touched"
+                                 ng-messages="concessionForm.TransactionGroup.$error">
+                                <div ng-message="required">
+                                    <div class="haserror">
+                                        please select Transaction Type
+                                    </div>
+                                </div>
+                            </div>   
+
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="row row-padding">
+                        <div class="col-md-4">
+                            <label class="small">  Fee</label>
+
+                        </div>
+
+                        <div class="col-md-8">
+
+
+                            <input type="text"
+                                   name="Fee"
+                                   ng-disabled="IsReadOnly"
+                                   ng-required="true"
+                                   ng-model="Concession.BaseFee"                                                                                                   
+                                   format="currency"
+                                   class="form-control" />
+
+                            <div ng-if="concessionForm.$submitted || concessionForm.Fee.$touched"
+                                 ng-messages="concessionForm.Fee.$error">
+                                <div ng-message="required">
+                                    <div class="haserror">
+                                        please specify Fee
+                                    </div>
+                                </div>
+                            </div>   
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="row row-padding">
+                        <div class="col-md-4">
+                            <label class="small"> Business Online User</label>
+                        </div>
+
+                        <div class="col-md-8">
+
+                            <select name="BusinesOnlineUser"
+                                    data-ng-model="Concession.BusinesOnlineUser"
+                                    data-ng-options="item as item.UserName for item in BusinesOnlineUserList track by item.BusinesOnlineUserId"
+                                    class="form-control"
+                                    ng-disabled="IsFormReadOnly"
+                                    ng-required="true">
+
+                                <option value="" selected>--please select--</option>
+
+                            </select>
+
+                            <div ng-if="concessionForm.$submitted || concessionForm.BusinesOnlineUser.$touched"
+                                 ng-messages="concessionForm.BusinesOnlineUser.$error">
+                                <div ng-message="required">
+                                    <div class="haserror">
+                                        please select Business Online User
+                                    </div>
+                                </div>
+                            </div>   
+                        </div>
+
+                    </div>
+                    <div class="row row-padding">
+                        <div class="col-md-4">
+                            <label class="small">Transaction Volume </label>
+
+                        </div>
+
+                        <div class="col-md-8">
+
+                            <input type="text"
+                                   name="Volume"
+                                   ng-required="true"
+                                   restrict-input="Number"     
+                                   ng-disabled="IsFormReadOnly"
+                                   ng-model="Concession.Volume"
+                                   class="form-control" />
+                            <div ng-if="concessionForm.$submitted || concessionForm.Volume.$touched"
+                                 ng-messages="concessionForm.Volume.$error">
+                                <div ng-message="required">
+                                    <div class="haserror">
+                                        please specify Transaction Volume
+                                    </div>
+                                </div>
+                            </div>  
+                        </div>
+
+                    </div>
+
+                    <div class="row row-padding">
+                        <div class="col-md-4">
+                            <label class="small">Transaction Value </label>
+
+                        </div>
+
+                        <div class="col-md-8">
+
+                            <input type="text"
+                                   name="Value"
+                                   ng-required="true"                                                                                                   
+                                   format="currency"
+                                   ng-model="Concession.Value"
+                                   ng-disabled="IsFormReadOnly"
+                                   class="form-control" />
+
+                            <div ng-if="concessionForm.$submitted || concessionForm.Value.$touched"
+                                 ng-messages="concessionForm.Value.$error">
+                                <div ng-message="required">
+                                    <div class="haserror">
+                                        please specify Transaction Value
+                                    </div>
+                                </div>
+                            </div>  
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="row row-padding">
+                        <div class="col-md-4">
+                            <label class="small">  SMT Deal NR</label>
+                        </div>
+
+                        <div class="col-md-8">
+
+                            <input type="text"
+                                   name="DealNumber"
+                                   ng-required="true"
+                                   ng-maxlength="16"
+                                   maxlength="16"
+                                   ng-model="Concession.DealNumber"
+                                   ng-disabled="IsFormReadOnly"
+                                   class="form-control" />
+
+                            <div ng-if="concessionForm.$submitted || concessionForm.DealNumber.$touched"
+                                 ng-messages="concessionForm.DealNumber.$error">
+                                <div ng-message="required">
+                                    <div class="haserror">
+                                        please specify SMT Deal NR
+                                    </div>
+                                </div>
+                            </div>  
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!--left side-->
+                <!--right side-->
+                <div class="col-md-6">
+                    
+                    <approval-Info></approval-Info>
+                   
+                    <motivation></motivation>
+
+                    <comments></comments>
+               
+                </div>
+                <!--right side-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row row-padding">
+    <div class="col-md-12">
+        <condition-List></condition-List>
+    </div>
+</div>

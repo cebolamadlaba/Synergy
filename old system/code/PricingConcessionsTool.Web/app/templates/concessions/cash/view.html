@@ -1,0 +1,190 @@
+﻿
+<div ng-init="init()">
+    <form class="form-horizontal" name="concessionForm" ng-submit="concessionForm.$valid && onSaveConcession(Concession)" role="form" novalidate>
+
+        <!--/.col-lg-12-->
+
+        <div class="row">
+            <div class="col-md-12">
+                <table class="standardbank-table">
+                    <tr>
+
+                        <td class="panel-standardbank-lite" style="padding:5px">
+                            <span>&nbsp;&nbsp;<i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;<strong>Client Info</strong></span>
+                        </td>
+                        <td class="panel-standardbank-lite" ng-if="Customer.IsNewCustomer==false">
+                            <span>&nbsp;&nbsp;<i class="glyphicon glyphicon-briefcase"></i>&nbsp;&nbsp;<strong>Financial Info</strong></span>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <customer-Summary></customer-Summary>
+                        </td>
+                        <td ng-if="Customer.IsNewCustomer==false" ng-class="{'oldClient':Customer.IsNewCustomer==false}">
+                            <financial-Info-Cash></financial-Info-Cash>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="row row-padding">
+            <div class="col-md-12">
+
+
+                <div class="panel panel-primary">
+
+
+                    <div class="panel-heading ">
+                        <span><i class="glyphicon glyphicon-shopping-cart"></i>&nbsp;&nbsp;<strong>My products</strong> </span>
+                    </div>
+
+                    <div class="panel-body">
+
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row row-padding">
+            <div class="col-md-12">
+
+
+                <div class="panel panel-primary">
+
+
+                    <div class="panel-heading ">
+                        <span><i class="glyphicon glyphicon-edit"></i>&nbsp;&nbsp;<strong>My concessions</strong> </span>
+
+                        <button class="btn btn-primary pull-right" type="button" style="margin-top:-5px;" ng-click="addConcession()"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;Add Concession</button>
+                        <div class="clearFix"></div>
+                    </div>
+
+                    <div class="panel-body">
+
+                        <table class="table table-striped table-bordered table-condensed table-hover">
+
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Channel
+                                    </th>
+
+                                    <th>
+                                        Cash Table Number
+                                    </th>
+
+                                    <th>
+                                        Customer Name
+                                    </th>
+
+                                    <th>
+                                        Account Number
+                                    </th>
+                                    <th>
+                                        Volume
+                                    </th>
+                                    <th>
+                                        Value
+                                    </th>
+                                    <th>
+                                        Loaded Price
+                                    </th>
+
+                                    <th>
+                                        Approved Price
+                                    </th>
+
+                                    <th colspan="1">
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+
+                                <!--<tr ng-if="ConcessionListLending.length==0">
+                                    <td colspan="10">
+                                        <div class="text-info">
+                                            <h4>
+                                                No items to display
+                                            </h4>
+                                        </div>
+                                    </td>
+                                </tr>-->
+                                <!--<tr ng-if="filteredItems.length===0">
+                                    <td colspan="10">
+                                        <div class="text-info">
+                                            <h4>
+                                                Item not found
+                                            </h4>
+                                        </div>
+                                    </td>
+                                </tr>-->
+
+
+                                <tr dir-paginate="concession in filteredItems = (ConcessionList | filter:searchKeyword | itemsPerPage: pageSize)" current-page="currentPage">
+
+                                    <td>{{concession.ChannelType.Description}}</td>
+                                    <td>{{concession.TableNumber}}</td>
+                                    <td>{{concession.Customer.CustomerName}}</td>
+                                    <td>{{concession.AccountNumber}}</td>
+                                    <td>{{concession.Volume}}</td>
+                                    <td>{{concession.Value}}</td>
+                                    
+                                    <td>{{concession.BaseRate.Rate}} + {{concession.AdValorem}} </td>
+                                    <td>{{concession.ApprovedBaseRate.Rate}} + {{concession.ApprovedAdValorem}} </td>
+
+                                    <td>
+                                        <!--<a style="display: block;" href="#" ng-click="onRedirect(concession.ConcessionId)">
+                                            view
+                                        </a>-->
+                                        <a class="btn btn-bitbucket" style="margin:0" ui-sref="CashEdit({ConcessionId:'{{concession.ConcessionId}}'})">
+
+                                            <i class="fa fa-edit"></i> Edit
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+     
+        <div class="clearfix"></div>
+
+        <div class="col-md-12 text-center panel-footer">
+
+
+            <div class="col-md-12 pull-right">
+
+                <button type="button" class="btn btn-primary" ng-click="onBack()">
+                    <i class="fa fa-backward"></i>
+                    &nbsp;
+                    Back
+                    &nbsp;
+                </button>
+
+
+            </div>
+
+            <!-- /.container-fluid -->
+        </div>
+
+
+    </form>
+</div>

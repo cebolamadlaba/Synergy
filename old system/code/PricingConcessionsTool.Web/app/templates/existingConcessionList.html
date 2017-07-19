@@ -1,0 +1,87 @@
+﻿<div class="row row-padding">
+    <div class="col-md-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <strong><i class="fa fa-check"></i>&nbsp;&nbsp;Existing Concessions</strong>
+
+                <button ng-if="user.IsRequestor==true" class="btn btn-primary pull-right" type="button" style="margin-top:-5px;" ng-click="addConcession()"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;Add Concession</button>
+                <div class="clearFix"></div>
+
+            </div>
+            <div class="panel-body">
+
+                <table class="table table-striped table-bordered table-condensed table-hover" ng-if="ExistingConcessionList.length>0">
+
+                    <thead>
+                        <tr>
+                            <th>
+                                Concession Id
+                            </th>
+
+
+                            <th>
+                                Product
+                            </th>
+
+                            <th>
+                                Type
+                            </th>
+
+                            <th>
+                                Tariff
+                            </th>
+
+                            <th>
+                                Initiation Fee
+                            </th>
+                            <th>
+                                Review Fee
+                            </th>
+
+                            <th>
+                                UFF Fee
+                            </th>
+
+                            <th>
+                                Base Fee
+                            </th>
+
+                            <th>
+                                Approve Date
+                            </th>
+
+                            <th>
+                                Expiry Date
+                            </th>
+
+
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr dir-paginate="concession in filteredItems = (ExistingConcessionList | filter:searchKeyword | itemsPerPage: pageSize)" current-page="currentPage">
+
+                            <td>{{concession.ReferenceNumber}}</td>
+                            <td>{{concession.ConcessionTypeDescription}}</td>
+                            <td>{{concession.ProductType.Description}}</td>
+                            <td>{{concession.TableNumber}}</td>
+                            <td>{{concession.InitiationFee}}</td>
+                            <td>{{concession.ReviewFee}}</td>
+                            <td>{{concession.UnutilizedFacilityFee}}</td>
+                            <td>{{concession.BaseFee}}</td>
+                            <td>{{concession.DateApproved | date:'dd-MM-yyyy'}}</td>
+                            <td>{{concession.ExpiryDate | date:'dd-MM-yyyy'}}</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+                <span ng-if="ExistingConcessionList.length==0">No existing concessions</span>
+
+            </div>
+        </div>
+    </div>
+</div>
