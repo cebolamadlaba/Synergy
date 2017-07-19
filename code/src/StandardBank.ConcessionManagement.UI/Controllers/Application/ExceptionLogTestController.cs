@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using StandardBank.ConcessionManagement.Interface.Repository;
@@ -29,7 +28,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers.Application
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="exceptionLogRepository">The exception log repository.</param>
-        public ExceptionLogTestController(ILogger<ExceptionLogTestController> logger,  IExceptionLogRepository exceptionLogRepository)
+        public ExceptionLogTestController(ILogger<ExceptionLogTestController> logger, IExceptionLogRepository exceptionLogRepository)
         {
             _logger = logger;
             _exceptionLogRepository = exceptionLogRepository;
@@ -48,14 +47,14 @@ namespace StandardBank.ConcessionManagement.UI.Controllers.Application
                 {
                     ExceptionMessage = "Exception test from the application",
                     ExceptionData = "Exception test",
-                    ExceptionSource = this.Request.GetDisplayUrl(),
+                    ExceptionSource = "Standard Bank CMS Application",
                     ExceptionType = "ExceptionTest",
                     Logdate = DateTime.Now
                 };
 
-                _exceptionLogRepository.Create(exceptionLog);
+                var exceptionLogResult = _exceptionLogRepository.Create(exceptionLog);
 
-                return "Success";
+                return exceptionLogResult.ExceptionLogId != 0 ? "Success" : "Failed";
             }
             catch (Exception ex)
             {
