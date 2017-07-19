@@ -17,6 +17,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The mock authorizing user repository
         /// </summary>
         public static Mock<IAuthorizingUserRepository> MockAuthorizingUserRepository = new Mock<IAuthorizingUserRepository>();
+        
+        /// <summary>
+        /// The mock SMTRawData repository
+        /// </summary>
+        public static Mock<ISMTRawDataRepository> MockSMTRawDataRepository = new Mock<ISMTRawDataRepository>();
 
         /// <summary>
         /// The mock AdValorem repository

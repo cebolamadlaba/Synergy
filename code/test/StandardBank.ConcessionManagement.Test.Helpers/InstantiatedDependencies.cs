@@ -32,6 +32,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static IAuthorizingUserRepository AuthorizingUserRepository = new AuthorizingUserRepository(ConfigurationData);
 
         /// <summary>
+        /// The SMTRawData repository
+        /// </summary>
+        public static ISMTRawDataRepository SMTRawDataRepository = new SMTRawDataRepository(ConfigurationData);
+
+        /// <summary>
         /// The AdValorem repository
         /// </summary>
         public static IAdValoremRepository AdValoremRepository = new AdValoremRepository(ConfigurationData, CacheManager);

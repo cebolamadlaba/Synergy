@@ -440,7 +440,7 @@ namespace RepoGenerator
                 if (updateSetParameters.Length != 0)
                     updateSetParameters.Append(", ");
 
-                updateSetParameters.Append($"[{column.Name}] = @{column.Name}");
+                updateSetParameters.Append($"[{column.Name}] = @{column.CodeName}");
             }
 
             return updateSetParameters.ToString();
@@ -486,7 +486,7 @@ namespace RepoGenerator
                 if (dapperInsertParameters.Length != 0)
                     dapperInsertParameters.Append(", ");
 
-                dapperInsertParameters.Append($"{column.Name} = model.{column.CodeName}");
+                dapperInsertParameters.Append($"{column.CodeName} = model.{column.CodeName}");
             }
 
             return dapperInsertParameters.ToString();
@@ -509,7 +509,7 @@ namespace RepoGenerator
                 if (insertParameterList.Length != 0)
                     insertParameterList.Append(", ");
 
-                insertParameterList.Append($"@{column.Name}");
+                insertParameterList.Append($"@{column.CodeName}");
             }
 
             return insertParameterList.ToString();
