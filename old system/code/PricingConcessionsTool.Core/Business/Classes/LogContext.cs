@@ -20,7 +20,9 @@ namespace PricingConcessionsTool.Core.Business.Classes
                 {
                     Logdate = DateTime.Now,
                     ExceptionType = ex.GetType().Name.ToString(),
-                    ExceptionMessage = ex.Message,
+                    ExceptionMessage = !string.IsNullOrWhiteSpace(ex.Message) && ex.Message.Length > 100
+                        ? ex.Message.Substring(0, 99)
+                        : ex.Message,
                     ExceptionSource = ex.StackTrace
                 };
 

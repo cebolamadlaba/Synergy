@@ -11,7 +11,7 @@
         {
             return $http({
                 method: 'GET',
-                url: $rootScope.BaseUrl + 'api/api/user/GetAdUser'
+                url: $rootScope.BaseUrl + 'api/api/user/GetUserAdUser'
             })
         }
 

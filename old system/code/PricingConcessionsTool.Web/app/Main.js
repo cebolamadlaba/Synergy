@@ -44,7 +44,7 @@
     }]);
 
 
-    var serviceBase = 'http://localhost:24888/PricingConcessionsTool/api/api/';
+    var serviceBase = 'http://localhost:24888/PricingConcessionsTool/API/api/';
     //var serviceBase = 'http://localhost:24876/api/'
 
     myApp.constant('AppSettings', {
@@ -111,8 +111,7 @@
             templateUrl: 'app/templates/concessions/lending/concession.html',
             controller: 'approvalLendingController',
         }
-
-
+        
         var approvalInvestmentState =
         {
             name: 'Approval.Investment',

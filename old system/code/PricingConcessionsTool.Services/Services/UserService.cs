@@ -111,9 +111,13 @@ namespace PricingConcessionsTool.Services.Services
             catch (Exception ex)
             {
 #if DEBUG
-                user.ANumber = "A225347";
-                user.FullName = "Test User";
-                user.AdUserFound = true;
+                user = new UserProfile
+                {
+                    ANumber = "A209089",
+                    FullName = "Test User",
+                    AdUserFound = true,
+                    RoleId = 3
+                };
 #endif
                 _log.LogException(ex);
 
