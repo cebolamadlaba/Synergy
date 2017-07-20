@@ -78,12 +78,15 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
-        /// Reads all the records for the requestor id and the status id
+        /// Reads all the records for the requestor id, status id, sub status id and is active
         /// </summary>
         /// <param name="requestorId"></param>
         /// <param name="statusId"></param>
+        /// <param name="subStatusId"></param>
+        /// <param name="isActive"></param>
         /// <returns></returns>
-        public IEnumerable<Concession> ReadByRequestorIdAndStatusId(int requestorId, int statusId)
+        public IEnumerable<Concession> ReadByRequestorIdStatusIdSubStatusIdIsActive(int requestorId, int statusId,
+            int subStatusId, bool isActive)
         {
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
@@ -91,8 +94,10 @@ namespace StandardBank.ConcessionManagement.Repository
                     @"SELECT [pkConcessionId] [Id], [fkTypeId] [TypeId], [ConcessionRef], [fkLegalEntityId] [LegalEntityId], [fkConcessionTypeId] [ConcessionTypeId], [SMTDealNumber], [fkStatusId] [StatusId], [fkSubStatusId] [SubStatusId], [ConcessionDate], [DatesentForApproval], [Motivation], [DateApproved], [fkRequestorId] [RequestorId], [fkBCMUserId] [BCMUserId], [DateActionedByBCM], [fkPCMUserId] [PCMUserId], [DateActionedByPCM], [fkHOUserId] [HOUserId], [DateActionedByHO], [ExpiryDate], [CentreId], [IsCurrent], [IsActive] 
                     FROM [dbo].[tblConcession] 
                     WHERE [fkRequestorId] = @requestorId
-                    AND [fkStatusId] = @statusId",
-                    new { requestorId, statusId });
+                    AND [fkStatusId] = @statusId
+                    AND [fkSubStatusId] = @subStatusId
+                    AND [IsActive] = @isActive",
+                    new {requestorId, statusId, subStatusId, isActive});
             }
         }
 

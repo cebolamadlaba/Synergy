@@ -25,7 +25,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 FirstName = "Unit",
                 EmailAddress = "unit.test@standardbank.co.za",
                 Surname = "Test",
-                UserRoles = new[] {1, 2, 3, 4, 5}
+                UserRoles = new[] {new Role {Description = "Unit Test", Name = "Test", Id = 1}}
             };
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.Interface.Common;
@@ -36,19 +37,26 @@ namespace StandardBank.ConcessionManagement.UI.Helpers.Implementation
         private readonly ICacheManager _cacheManager;
 
         /// <summary>
+        /// The role repository
+        /// </summary>
+        private readonly IRoleRepository _roleRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SiteHelper"/> class.
         /// </summary>
         /// <param name="userRepository">The user repository.</param>
         /// <param name="userRoleRepository">The user role repository.</param>
         /// <param name="configurationData">The configuration data.</param>
         /// <param name="cacheManager">The cache manager.</param>
+        /// <param name="roleRepository"></param>
         public SiteHelper(IUserRepository userRepository, IUserRoleRepository userRoleRepository,
-            IConfigurationData configurationData, ICacheManager cacheManager)
+            IConfigurationData configurationData, ICacheManager cacheManager, IRoleRepository roleRepository)
         {
             _userRepository = userRepository;
             _userRoleRepository = userRoleRepository;
             _configurationData = configurationData;
             _cacheManager = cacheManager;
+            _roleRepository = roleRepository;
         }
 
         /// <summary>
@@ -68,9 +76,6 @@ namespace StandardBank.ConcessionManagement.UI.Helpers.Implementation
 
                     if (user != null)
                     {
-                        var userRoles = _userRoleRepository.ReadByUserId(user.Id);
-                        var roles = from userRole in userRoles select userRole.Id;
-
                         return new User
                         {
                             ANumber = user.ANumber,
@@ -79,7 +84,7 @@ namespace StandardBank.ConcessionManagement.UI.Helpers.Implementation
                             EmailAddress = user.EmailAddress,
                             FirstName = user.FirstName,
                             Surname = user.Surname,
-                            UserRoles = roles
+                            UserRoles = GetUserRoles(user.Id)
                         };
                     }
 
@@ -91,6 +96,37 @@ namespace StandardBank.ConcessionManagement.UI.Helpers.Implementation
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Gets the user roles
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        private IEnumerable<Role> GetUserRoles(int userId)
+        {
+            var userRoles = new List<Role>();
+            var userRoleIds = _userRoleRepository.ReadByUserId(userId);
+
+            if (userRoleIds != null && userRoleIds.Any())
+            {
+                var roles = _roleRepository.ReadAll();
+
+                foreach (var role in roles)
+                {
+                    if (userRoleIds.Any(_ => _.RoleId == role.Id && _.IsActive))
+                    {
+                        userRoles.Add(new Role
+                        {
+                            Description = role.RoleDescription,
+                            Id = role.Id,
+                            Name = role.RoleName
+                        });
+                    }
+                }
+            }
+
+            return userRoles;
         }
 
         /// <summary>

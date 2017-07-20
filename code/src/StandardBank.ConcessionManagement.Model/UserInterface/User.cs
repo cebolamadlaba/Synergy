@@ -61,6 +61,6 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// <value>
         /// The user roles.
         /// </value>
-        public IEnumerable<int> UserRoles { get; set; }
+        public IEnumerable<Role> UserRoles { get; set; }
     }
 }

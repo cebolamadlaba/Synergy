@@ -1,4 +1,5 @@
 ﻿using Moq;
+using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 
@@ -9,11 +10,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
     /// </summary>
     public static class MockedDependencies
     {
-        /// <summary>
-        /// The mock concession count repository
-        /// </summary>
-        public static Mock<IConcessionCountRepository> MockConcessionCountRepository = new Mock<IConcessionCountRepository>();
-
         /// <summary>
         /// The mock authorizing user repository
         /// </summary>
@@ -248,5 +244,15 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The mock SiteHelper
         /// </summary>
         public static Mock<ISiteHelper> MockSiteHelper = new Mock<ISiteHelper>();
+
+        /// <summary>
+        /// The mock LookupTableManager
+        /// </summary>
+        public static Mock<ILookupTableManager> MockLookupTableManager= new Mock<ILookupTableManager>();
+
+        /// <summary>
+        /// The mock ConcessionManager
+        /// </summary>
+        public static Mock<IConcessionManager> MockConcessionManager = new Mock<IConcessionManager>();
     }
 }

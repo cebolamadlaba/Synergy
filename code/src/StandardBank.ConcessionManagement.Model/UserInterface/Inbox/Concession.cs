@@ -16,67 +16,38 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Inbox
         public int Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the risk group.
+        /// Gets or sets the risk group number
         /// </summary>
-        /// <value>
-        /// The risk group.
-        /// </value>
-        public string RiskGroup { get; set; }
+        public int RiskGroupNumber { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the customer.
+        /// Gets or sets the risk group name
         /// </summary>
-        /// <value>
-        /// The name of the customer.
-        /// </value>
+        public string RiskGroupName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the customer name
+        /// </summary>
         public string CustomerName { get; set; }
-
+        
         /// <summary>
-        /// Gets or sets the type.
+        /// Gets or sets the type
         /// </summary>
-        /// <value>
-        /// The type.
-        /// </value>
         public string Type { get; set; }
 
         /// <summary>
-        /// Gets or sets the date opened.
+        /// Gets or sets the date opened
         /// </summary>
-        /// <value>
-        /// The date opened.
-        /// </value>
         public DateTime DateOpened { get; set; }
-
+        
         /// <summary>
-        /// Gets or sets the concession identifier.
+        /// Gets or sets the segment
         /// </summary>
-        /// <value>
-        /// The concession identifier.
-        /// </value>
-        public string ConcessionId { get; set; }
-
+        public string Seqment { get; set; }
+        
         /// <summary>
-        /// Gets or sets the segment.
+        /// Gets or sets the date sent for approval
         /// </summary>
-        /// <value>
-        /// The segment.
-        /// </value>
-        public string Segment { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [sent for approval].
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [sent for approval]; otherwise, <c>false</c>.
-        /// </value>
-        public bool SentForApproval { get; set; }
-
-        /// <summary>
-        /// Gets or sets the status.
-        /// </summary>
-        /// <value>
-        /// The status.
-        /// </value>
-        public ConcessionStatus Status { get; set; }
+        public DateTime? DateSentForApproval { get; set; }
     }
 }

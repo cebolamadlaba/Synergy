@@ -12,10 +12,10 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
     public class ConcessionRepositoryTest
     {
         /// <summary>
-        /// Tests that Create executes positive.
+        /// Tests that Create an active record executes positive.
         /// </summary>
         [Fact]
-        public void Create_Executes_Positive()
+        public void Create_Active_Executes_Positive()
         {
             var model = new Concession
             {
@@ -39,7 +39,45 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 DateActionedByHO = DateTime.Now,
                 ExpiryDate = DateTime.Now,
                 CentreId = DataHelper.GetCentreId(),
-                IsCurrent = false,
+                IsCurrent = true,
+                IsActive = true
+            };
+
+            var result = InstantiatedDependencies.ConcessionRepository.Create(model);
+
+            Assert.NotNull(result);
+            Assert.NotEqual(result.Id, 0);
+        }
+
+        /// <summary>
+        /// Tests that Create an inactive record executes positive.
+        /// </summary>
+        [Fact]
+        public void Create_InActive_Executes_Positive()
+        {
+            var model = new Concession
+            {
+                TypeId = DataHelper.GetReferenceTypeId(),
+                ConcessionRef = "47c038861f",
+                LegalEntityId = DataHelper.GetLegalEntityId(),
+                ConcessionTypeId = DataHelper.GetConcessionTypeId(),
+                SMTDealNumber = "777f9e1b48",
+                StatusId = DataHelper.GetStatusId(),
+                SubStatusId = DataHelper.GetSubStatusId(),
+                ConcessionDate = DateTime.Now,
+                DatesentForApproval = DateTime.Now,
+                Motivation = "455d28a04b",
+                DateApproved = DateTime.Now,
+                RequestorId = DataHelper.GetUserId(),
+                BCMUserId = DataHelper.GetUserId(),
+                DateActionedByBCM = DateTime.Now,
+                PCMUserId = DataHelper.GetUserId(),
+                DateActionedByPCM = DateTime.Now,
+                HOUserId = DataHelper.GetUserId(),
+                DateActionedByHO = DateTime.Now,
+                ExpiryDate = DateTime.Now,
+                CentreId = DataHelper.GetCentreId(),
+                IsCurrent = true,
                 IsActive = false
             };
 
@@ -64,17 +102,34 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         }
 
         /// <summary>
-        /// Tests that ReadByRequestorIdAndStatusId executes positive
+        /// Tests that ReadByRequestorIdStatusIdSubStatusIdIsActive for active records executes positive
         /// </summary>
         [Fact]
-        public void ReadByRequestorIdAndStatusId_Executes_Positive()
+        public void ReadByRequestorIdStatusIdSubStatusIdIsActive_Active_Executes_Positive()
         {
             var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
-            var resultToTestWith = results.First();
+            var resultToTestWith = results.First(_ => _.IsActive && _.SubStatusId.HasValue);
 
             var result =
-                InstantiatedDependencies.ConcessionRepository.ReadByRequestorIdAndStatusId(
-                    resultToTestWith.RequestorId, resultToTestWith.StatusId);
+                InstantiatedDependencies.ConcessionRepository.ReadByRequestorIdStatusIdSubStatusIdIsActive(
+                    resultToTestWith.RequestorId, resultToTestWith.StatusId, resultToTestWith.SubStatusId.Value, true);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that ReadByRequestorIdStatusIdSubStatusIdIsActive for inactive records executes positive
+        /// </summary>
+        [Fact]
+        public void ReadByRequestorIdStatusIdSubStatusIdIsActive_InActive_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
+            var resultToTestWith = results.First(_ => !_.IsActive && _.SubStatusId.HasValue);
+
+            var result =
+                InstantiatedDependencies.ConcessionRepository.ReadByRequestorIdStatusIdSubStatusIdIsActive(
+                    resultToTestWith.RequestorId, resultToTestWith.StatusId, resultToTestWith.SubStatusId.Value, false);
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);

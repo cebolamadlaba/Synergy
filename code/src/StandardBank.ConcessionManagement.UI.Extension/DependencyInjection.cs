@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using StandardBank.ConcessionManagement.BusinessLogic;
 using StandardBank.ConcessionManagement.Common;
+using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Repository;
@@ -24,6 +26,19 @@ namespace StandardBank.ConcessionManagement.UI.Extension
 
             // Add repository services.
             AddRepositoryServices(services);
+
+            // Add business logic services
+            AddBusinessLogicServices(services);
+        }
+
+        /// <summary>
+        /// Add the business logic services
+        /// </summary>
+        /// <param name="services"></param>
+        private static void AddBusinessLogicServices(IServiceCollection services)
+        {
+            services.AddScoped<IConcessionManager, ConcessionManager>();
+            services.AddScoped<ILookupTableManager, LookupTableManager>();
         }
 
         /// <summary>
@@ -32,7 +47,6 @@ namespace StandardBank.ConcessionManagement.UI.Extension
         /// <param name="services"></param>
         private static void AddRepositoryServices(IServiceCollection services)
         {
-            services.AddScoped<IConcessionCountRepository, ConcessionCountRepository>();
             services.AddScoped<IAuthorizingUserRepository, AuthorizingUserRepository>();
             services.AddScoped<ISMTRawDataRepository, SMTRawDataRepository>();
             services.AddScoped<IExceptionLogRepository, ExceptionLogRepository>();

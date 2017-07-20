@@ -11,11 +11,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+    <ProjectReference Include="..\StandardBank.ConcessionManagement.Test.Helpers\StandardBank.ConcessionManagement.Test.Helpers.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Integration\" />
+    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
 
 </Project>

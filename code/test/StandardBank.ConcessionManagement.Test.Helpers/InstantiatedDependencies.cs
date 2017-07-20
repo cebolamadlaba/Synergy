@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
+using StandardBank.ConcessionManagement.BusinessLogic;
 using StandardBank.ConcessionManagement.Common;
+using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Repository;
@@ -26,11 +28,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The site helper
         /// </summary>
         public static ISiteHelper SiteHelper = new FakeSiteHelper();
-
-        /// <summary>
-        /// Concession count repository
-        /// </summary>
-        public static IConcessionCountRepository ConcessionCountRepository = new ConcessionCountRepository();
 
         /// <summary>
         /// Authorizing user repository
@@ -261,5 +258,17 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The UserRole repository
         /// </summary>
         public static IUserRoleRepository UserRoleRepository = new UserRoleRepository(ConfigurationData);
+
+        /// <summary>
+        /// The look up table manager
+        /// </summary>
+        public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,
+            SubStatusRepository, ReferenceTypeRepository, MarketSegmentRepository);
+
+        /// <summary>
+        /// The concession manager
+        /// </summary>
+        public static IConcessionManager ConcessionManager =
+            new ConcessionManager(ConcessionRepository, LookupTableManager, LegalEntityRepository, RiskGroupRepository);
     }
 }
