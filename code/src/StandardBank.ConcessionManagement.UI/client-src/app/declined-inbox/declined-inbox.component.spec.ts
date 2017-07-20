@@ -7,30 +7,30 @@ import { InboxConcessionCountService } from "../inbox-concession-count/inbox-con
 import { MockInboxConcessionCountService } from "../inbox-concession-count/inbox-concession-count.service";
 
 describe('DeclinedInboxComponent', () => {
-  let component: DeclinedInboxComponent;
-  let fixture: ComponentFixture<DeclinedInboxComponent>;
+    let component: DeclinedInboxComponent;
+    let fixture: ComponentFixture<DeclinedInboxComponent>;
 
-  beforeEach(async(() => {
-      TestBed.configureTestingModule({
-          imports: [HttpModule],
-          declarations: [DeclinedInboxComponent, InboxHeaderComponent, InboxSearchBarComponent],
-          providers: [{ provide: InboxConcessionCountService, useClass: MockInboxConcessionCountService }]
-      }).compileComponents();
-  }));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            imports: [HttpModule],
+            declarations: [DeclinedInboxComponent, InboxHeaderComponent, InboxSearchBarComponent],
+            providers: [{ provide: InboxConcessionCountService, useClass: MockInboxConcessionCountService }]
+        }).compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.overrideComponent(InboxHeaderComponent, {
-      set: {
-        providers: [
-          { provide: InboxConcessionCountService, useClass: MockInboxConcessionCountService },
-        ]
-      }
-    }).createComponent(DeclinedInboxComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.overrideComponent(InboxHeaderComponent, {
+            set: {
+                providers: [
+                    { provide: InboxConcessionCountService, useClass: MockInboxConcessionCountService },
+                ]
+            }
+        }).createComponent(DeclinedInboxComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should be created', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should be created', () => {
+        expect(component).toBeTruthy();
+    });
 });
