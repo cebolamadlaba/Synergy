@@ -44,6 +44,7 @@
     <ProjectReference Include="..\StandardBank.ConcessionManagement.Interface\StandardBank.ConcessionManagement.Interface.csproj" />
     <ProjectReference Include="..\StandardBank.ConcessionManagement.Model\StandardBank.ConcessionManagement.Model.csproj" />
     <ProjectReference Include="..\StandardBank.ConcessionManagement.Repository\StandardBank.ConcessionManagement.Repository.csproj" />
+    <ProjectReference Include="..\StandardBank.ConcessionManagement.UI.Extension\StandardBank.ConcessionManagement.UI.Extension.csproj" />
   </ItemGroup>
 
 </Project>

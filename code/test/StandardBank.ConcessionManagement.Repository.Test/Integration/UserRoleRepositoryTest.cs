@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Test.Helpers;
@@ -42,6 +41,23 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
 
             Assert.NotNull(result);
             Assert.Equal(result.Id, id);
+        }
+
+        /// <summary>
+        /// Tests that ReadByUserId executes positive
+        /// </summary>
+        [Fact]
+        public void ReadByUserId_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.UserRoleRepository.ReadAll();
+            var userId = results.First().UserId;
+            var resultsForUserId = InstantiatedDependencies.UserRoleRepository.ReadByUserId(userId);
+
+            Assert.NotNull(resultsForUserId);
+            Assert.NotEmpty(resultsForUserId);
+            
+            foreach (var resultForUserId in resultsForUserId)
+                Assert.Equal(resultForUserId.UserId, userId);
         }
 
         /// <summary>

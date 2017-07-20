@@ -23,6 +23,13 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         User ReadById(int id);
 
         /// <summary>
+        /// Reads by the a number
+        /// </summary>
+        /// <param name="aNumber"></param>
+        /// <returns></returns>
+        User ReadByANumber(string aNumber);
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>

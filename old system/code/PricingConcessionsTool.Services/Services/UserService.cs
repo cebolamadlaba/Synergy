@@ -113,7 +113,7 @@ namespace PricingConcessionsTool.Services.Services
 #if DEBUG
                 user = new UserProfile
                 {
-                    ANumber = "A209089",
+                    ANumber = "A223160",
                     FullName = "Test User",
                     AdUserFound = true,
                     RoleId = 3

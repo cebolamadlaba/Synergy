@@ -12,5 +12,10 @@
         /// The connection string.
         /// </value>
         string ConnectionString { get; }
+
+        /// <summary>
+        /// Gets the override logged in user
+        /// </summary>
+        string OverrideLoggedInUser { get; }
     }
 }

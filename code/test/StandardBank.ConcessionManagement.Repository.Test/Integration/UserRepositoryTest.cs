@@ -47,6 +47,20 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         }
 
         /// <summary>
+        /// Tests that ReadByANumber executes positive
+        /// </summary>
+        [Fact]
+        public void ReadByANumber_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.UserRepository.ReadAll();
+            var aNumber = results.First().ANumber;
+            var result = InstantiatedDependencies.UserRepository.ReadByANumber(aNumber);
+
+            Assert.NotNull(result);
+            Assert.Equal(result.ANumber, aNumber);
+        }
+
+        /// <summary>
         /// Tests that ReadAll executes positive.
         /// </summary>
         [Fact]

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.15
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{869CE2B9-6B12-4BF1-945F-763BC9FD9015}"
 EndProject
@@ -32,6 +32,20 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "db", "db", "{AB117191-71F0-485F-B515-1809D2768EDA}"
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "StandardBank.ConcessionManagement.Database", "db\StandardBank.ConcessionManagement.Database\StandardBank.ConcessionManagement.Database.sqlproj", "{1AC675EE-4839-4188-82A1-303B2F9B3C60}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardBank.ConcessionManagement.UI.Extension", "src\StandardBank.ConcessionManagement.UI.Extension\StandardBank.ConcessionManagement.UI.Extension.csproj", "{10EE6CA7-BAB8-4C7D-B5A6-694AEA858689}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "configuration", "configuration", "{A666A38D-8285-422F-9FB1-7EF14196A38E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "10952iisprdsdc3", "10952iisprdsdc3", "{0C19AD24-F9AD-4D02-89DB-D19872F4106D}"
+	ProjectSection(SolutionItems) = preProject
+		configuration\10952iisprdsdc3\appsettings.json = configuration\10952iisprdsdc3\appsettings.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Properties", "Properties", "{243331CD-7F83-4965-A24D-D337A26F55C1}"
+	ProjectSection(SolutionItems) = preProject
+		configuration\10952iisprdsdc3\Properties\launchSettings.json = configuration\10952iisprdsdc3\Properties\launchSettings.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,6 +99,10 @@ Global
 		{040CE3BF-5ACB-4FBA-B04B-441F01C1CD6C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1AC675EE-4839-4188-82A1-303B2F9B3C60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1AC675EE-4839-4188-82A1-303B2F9B3C60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10EE6CA7-BAB8-4C7D-B5A6-694AEA858689}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10EE6CA7-BAB8-4C7D-B5A6-694AEA858689}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10EE6CA7-BAB8-4C7D-B5A6-694AEA858689}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10EE6CA7-BAB8-4C7D-B5A6-694AEA858689}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -102,5 +120,8 @@ Global
 		{056DF8C4-CFF5-448F-8932-5C5606A00817} = {AD2A4DAB-6383-47FE-9BA9-976730A8122C}
 		{040CE3BF-5ACB-4FBA-B04B-441F01C1CD6C} = {AD2A4DAB-6383-47FE-9BA9-976730A8122C}
 		{1AC675EE-4839-4188-82A1-303B2F9B3C60} = {AB117191-71F0-485F-B515-1809D2768EDA}
+		{10EE6CA7-BAB8-4C7D-B5A6-694AEA858689} = {869CE2B9-6B12-4BF1-945F-763BC9FD9015}
+		{0C19AD24-F9AD-4D02-89DB-D19872F4106D} = {A666A38D-8285-422F-9FB1-7EF14196A38E}
+		{243331CD-7F83-4965-A24D-D337A26F55C1} = {0C19AD24-F9AD-4D02-89DB-D19872F4106D}
 	EndGlobalSection
 EndGlobal

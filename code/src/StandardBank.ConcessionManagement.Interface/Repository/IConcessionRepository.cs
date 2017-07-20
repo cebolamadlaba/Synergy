@@ -29,6 +29,14 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         IEnumerable<Concession> ReadAll();
 
         /// <summary>
+        /// Reads all the records for the requestor id and the status id supplied
+        /// </summary>
+        /// <param name="requestorId"></param>
+        /// <param name="statusId"></param>
+        /// <returns></returns>
+        IEnumerable<Concession> ReadByRequestorIdAndStatusId(int requestorId, int statusId);
+
+        /// <summary>
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>

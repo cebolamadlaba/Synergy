@@ -11,7 +11,7 @@ namespace PricingConcessionsTool.Utils
         public static string GetUserName(ApiController controller)
         {
 #if DEBUG
-            return "A209089";
+            return "A223160";
 #endif
             var name = controller.ControllerContext.RequestContext.Principal.Identity.Name;
 

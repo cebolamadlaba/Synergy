@@ -5,6 +5,14 @@
     /// </summary>
     public static class CacheKey
     {
+        public static class UserInterface
+        {
+            public static class SiteHelper
+            {
+                public const string LoggedInUser = "CacheKey.UserInterface.SiteHelper.LoggedInUser";
+            }
+        }
+
         public static class Repository
         {
             public static class AdValoremRepository

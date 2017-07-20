@@ -1,5 +1,6 @@
 ﻿using Moq;
 using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 
 namespace StandardBank.ConcessionManagement.Test.Helpers
 {
@@ -242,5 +243,10 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The mock UserRole repository
         /// </summary>
         public static Mock<IUserRoleRepository> MockUserRoleRepository = new Mock<IUserRoleRepository>();
+
+        /// <summary>
+        /// The mock SiteHelper
+        /// </summary>
+        public static Mock<ISiteHelper> MockSiteHelper = new Mock<ISiteHelper>();
     }
 }

@@ -23,6 +23,13 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         UserRole ReadById(int id);
 
         /// <summary>
+        /// Reads by the user id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        IEnumerable<UserRole> ReadByUserId(int userId);
+
+            /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>

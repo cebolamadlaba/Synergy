@@ -42,7 +42,15 @@ namespace StandardBank.ConcessionManagement.Repository
 
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
-                model.Id = db.Query<int>(sql, new {ANumber = model.ANumber, EmailAddress = model.EmailAddress, FirstName = model.FirstName, Surname = model.Surname, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql,
+                    new
+                    {
+                        ANumber = model.ANumber,
+                        EmailAddress = model.EmailAddress,
+                        FirstName = model.FirstName,
+                        Surname = model.Surname,
+                        IsActive = model.IsActive
+                    }).Single();
             }
 
             return model;
@@ -64,6 +72,23 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Reads by the a number
+        /// </summary>
+        /// <param name="aNumber"></param>
+        /// <returns></returns>
+        public User ReadByANumber(string aNumber)
+        {
+            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            {
+                return db.Query<User>(
+                    @"SELECT [pkUserId] [Id], [ANumber], [EmailAddress], [FirstName], [Surname], [IsActive] 
+                    FROM [dbo].[tblUser] 
+                    WHERE [ANumber] = @aNumber",
+                    new { aNumber }).SingleOrDefault();
+            }
+        }
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>
@@ -71,7 +96,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
-                return db.Query<User>("SELECT [pkUserId] [Id], [ANumber], [EmailAddress], [FirstName], [Surname], [IsActive] FROM [dbo].[tblUser]");
+                return db.Query<User>(
+                    "SELECT [pkUserId] [Id], [ANumber], [EmailAddress], [FirstName], [Surname], [IsActive] FROM [dbo].[tblUser]");
             }
         }
 
@@ -86,7 +112,15 @@ namespace StandardBank.ConcessionManagement.Repository
                 db.Execute(@"UPDATE [dbo].[tblUser]
                             SET [ANumber] = @ANumber, [EmailAddress] = @EmailAddress, [FirstName] = @FirstName, [Surname] = @Surname, [IsActive] = @IsActive
                             WHERE [pkUserId] = @Id",
-                    new {Id = model.Id, ANumber = model.ANumber, EmailAddress = model.EmailAddress, FirstName = model.FirstName, Surname = model.Surname, IsActive = model.IsActive});
+                    new
+                    {
+                        Id = model.Id,
+                        ANumber = model.ANumber,
+                        EmailAddress = model.EmailAddress,
+                        FirstName = model.FirstName,
+                        Surname = model.Surname,
+                        IsActive = model.IsActive
+                    });
             }
         }
 

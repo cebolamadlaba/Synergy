@@ -12,9 +12,11 @@ namespace StandardBank.ConcessionManagement.Common
         /// Initializes a new instance of the <see cref="ConfigurationData"/> class.
         /// </summary>
         /// <param name="connectionString">The connection string.</param>
-        public ConfigurationData(string connectionString)
+        /// <param name="overrideLoggedInUser"></param>
+        public ConfigurationData(string connectionString, string overrideLoggedInUser)
         {
             ConnectionString = connectionString;
+            OverrideLoggedInUser = overrideLoggedInUser;
         }
 
         /// <summary>
@@ -24,5 +26,10 @@ namespace StandardBank.ConcessionManagement.Common
         /// The connection string.
         /// </value>
         public string ConnectionString { get; }
+
+        /// <summary>
+        /// Gets the override logged in user
+        /// </summary>
+        public string OverrideLoggedInUser { get; }
     }
 }

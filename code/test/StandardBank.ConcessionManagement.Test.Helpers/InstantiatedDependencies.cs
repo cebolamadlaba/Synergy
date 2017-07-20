@@ -3,6 +3,7 @@ using StandardBank.ConcessionManagement.Common;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Repository;
+using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 
 namespace StandardBank.ConcessionManagement.Test.Helpers
 {
@@ -20,6 +21,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The cache manager
         /// </summary>
         public static ICacheManager CacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions()));
+
+        /// <summary>
+        /// The site helper
+        /// </summary>
+        public static ISiteHelper SiteHelper = new FakeSiteHelper();
 
         /// <summary>
         /// Concession count repository
