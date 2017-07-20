@@ -15,7 +15,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The configuration data
         /// </summary>
-        public static IConfigurationData ConfigurationData = new ConfigurationData(Configuration.ConnectionString);
+        public static IConfigurationData ConfigurationData = new ConfigurationData(Configuration.ConnectionString, string.Empty);
 
         /// <summary>
         /// The cache manager
