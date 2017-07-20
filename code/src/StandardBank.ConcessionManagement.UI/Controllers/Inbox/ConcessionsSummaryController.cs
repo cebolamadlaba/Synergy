@@ -52,6 +52,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers.Inbox
                     case "Expired":
                         concessionsSummary.ExpiredConcessions = concessionCount.Count;
                         break;
+                    case "Mismatched":
+                        concessionsSummary.MismatchedConcessions = concessionCount.Count;
+                        break;
                 }
             }
 

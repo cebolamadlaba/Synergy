@@ -1,27 +1,33 @@
 ﻿  <!-- Total widgets -->
 <div class="col-md-12">
-  <div class="totalsWidget outer">
-    <div routerLink="/pending-inbox" routerLinkActive="activeWidget">
-      <div class="cornered"><p>Pending</p></div>
-      <div class="main"><p>{{concessionsSummary.pendingConcessions}}</p></div>
+    <div class="totalsWidget outer">
+        <div routerLink="/pending-inbox" routerLinkActive="activeWidget">
+            <div class="cornered"><p>Pending</p></div>
+            <div class="main"><p>{{concessionsSummary.pendingConcessions}}</p></div>
+        </div>
     </div>
-  </div>
-  <div class="totalsWidget outer" style="margin-left: 20px;">
-    <div routerLink="/due-expiry-inbox" routerLinkActive="activeWidget">
-      <div class="cornered"><p>Due For Expiry</p></div>
-      <div class="main"><p>{{concessionsSummary.dueForExpiryConcessions}}</p></div>
+    <div class="totalsWidget outer" style="margin-left: 20px;">
+        <div routerLink="/due-expiry-inbox" routerLinkActive="activeWidget">
+            <div class="cornered"><p>Due For Expiry</p></div>
+            <div class="main"><p>{{concessionsSummary.dueForExpiryConcessions}}</p></div>
+        </div>
     </div>
-  </div>
-  <div class="totalsWidget outer" style="margin-left: 20px;">
-    <div routerLink="/expired-inbox" routerLinkActive="activeWidget">
-      <div class="cornered"><p>Expired</p></div>
-      <div class="main"><p>{{concessionsSummary.expiredConcessions}}</p></div>
+    <div class="totalsWidget outer" style="margin-left: 20px;">
+        <div routerLink="/expired-inbox" routerLinkActive="activeWidget">
+            <div class="cornered"><p>Expired</p></div>
+            <div class="main"><p>{{concessionsSummary.expiredConcessions}}</p></div>
+        </div>
     </div>
-  </div>
-  <div class="totalsWidget outer" style="margin-left: 20px;">
-    <div routerLink="/declined-inbox" routerLinkActive="activeWidget">
-      <div class="cornered"><p>Declined</p></div>
-      <div class="main"><p>{{concessionsSummary.declinedConcessions}}</p></div>
+    <div class="totalsWidget outer" style="margin-left: 20px;">
+        <div routerLink="/mismatched-inbox" routerLinkActive="activeWidget">
+            <div class="cornered"><p>Mismatched</p></div>
+            <div class="main"><p>{{concessionsSummary.mismatchedConcessions}}</p></div>
+        </div>
     </div>
-  </div>
+    <div class="totalsWidget outer" style="margin-left: 20px;">
+        <div routerLink="/declined-inbox" routerLinkActive="activeWidget">
+            <div class="cornered"><p>Declined</p></div>
+            <div class="main"><p>{{concessionsSummary.declinedConcessions}}</p></div>
+        </div>
+    </div>
 </div>

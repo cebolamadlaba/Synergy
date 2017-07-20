@@ -24,6 +24,7 @@ import { LendingAddConcessionComponent } from './lending-add-concession/lending-
 import { TransactionalAddConcessionComponent } from './transactional-add-concession/transactional-add-concession.component';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { MismatchedInboxComponent } from './mismatched-inbox/mismatched-inbox.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     PricingTransactionalComponent,
     CashAddConcessionComponent,
     LendingAddConcessionComponent,
-    TransactionalAddConcessionComponent
+    TransactionalAddConcessionComponent,
+    MismatchedInboxComponent
   ],
   imports: [
     BrowserModule,

@@ -33,6 +33,7 @@ webpackEmptyContext.id = "../../../../../client-src async recursive";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__transactional_add_concession_transactional_add_concession_component__ = __webpack_require__("../../../../../client-src/app/transactional-add-concession/transactional-add-concession.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__cash_add_concession_cash_add_concession_component__ = __webpack_require__("../../../../../client-src/app/cash-add-concession/cash-add-concession.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__lending_add_concession_lending_add_concession_component__ = __webpack_require__("../../../../../client-src/app/lending-add-concession/lending-add-concession.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__mismatched_inbox_mismatched_inbox_component__ = __webpack_require__("../../../../../client-src/app/mismatched-inbox/mismatched-inbox.component.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppRoutingModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -56,11 +57,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
+
 var routes = [
     { path: '', redirectTo: '/pending-inbox', pathMatch: 'full' },
     { path: 'pending-inbox', component: __WEBPACK_IMPORTED_MODULE_2__pending_inbox_pending_inbox_component__["a" /* PendingInboxComponent */] },
     { path: 'due-expiry-inbox', component: __WEBPACK_IMPORTED_MODULE_6__due_expiry_inbox_due_expiry_inbox_component__["a" /* DueExpiryInboxComponent */] },
     { path: 'expired-inbox', component: __WEBPACK_IMPORTED_MODULE_7__expired_inbox_expired_inbox_component__["a" /* ExpiredInboxComponent */] },
+    { path: 'mismatched-inbox', component: __WEBPACK_IMPORTED_MODULE_16__mismatched_inbox_mismatched_inbox_component__["a" /* MismatchedInboxComponent */] },
     { path: 'declined-inbox', component: __WEBPACK_IMPORTED_MODULE_8__declined_inbox_declined_inbox_component__["a" /* DeclinedInboxComponent */] },
     { path: 'approved-concessions', component: __WEBPACK_IMPORTED_MODULE_3__approved_concessions_approved_concessions_component__["a" /* ApprovedConcessionsComponent */] },
     { path: 'conditions', component: __WEBPACK_IMPORTED_MODULE_4__conditions_conditions_component__["a" /* ConditionsComponent */] },
@@ -172,6 +175,7 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__lending_add_concession_lending_add_concession_component__ = __webpack_require__("../../../../../client-src/app/lending-add-concession/lending-add-concession.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__transactional_add_concession_transactional_add_concession_component__ = __webpack_require__("../../../../../client-src/app/transactional-add-concession/transactional-add-concession.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_23_ngx_bootstrap_modal__ = __webpack_require__("../../../../ngx-bootstrap/modal/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__mismatched_inbox_mismatched_inbox_component__ = __webpack_require__("../../../../../client-src/app/mismatched-inbox/mismatched-inbox.component.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -179,6 +183,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -228,7 +233,8 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_19__pricing_transactional_pricing_transactional_component__["a" /* PricingTransactionalComponent */],
             __WEBPACK_IMPORTED_MODULE_20__cash_add_concession_cash_add_concession_component__["a" /* CashAddConcessionComponent */],
             __WEBPACK_IMPORTED_MODULE_21__lending_add_concession_lending_add_concession_component__["a" /* LendingAddConcessionComponent */],
-            __WEBPACK_IMPORTED_MODULE_22__transactional_add_concession_transactional_add_concession_component__["a" /* TransactionalAddConcessionComponent */]
+            __WEBPACK_IMPORTED_MODULE_22__transactional_add_concession_transactional_add_concession_component__["a" /* TransactionalAddConcessionComponent */],
+            __WEBPACK_IMPORTED_MODULE_24__mismatched_inbox_mismatched_inbox_component__["a" /* MismatchedInboxComponent */]
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
@@ -684,6 +690,7 @@ var MockInboxConcessionCountService = (function (_super) {
         this.model.declinedConcessions = 2;
         this.model.dueForExpiryConcessions = 3;
         this.model.expiredConcessions = 4;
+        this.model.mismatchedConcessions = 5;
         return __WEBPACK_IMPORTED_MODULE_2_rxjs__["Observable"].of(this.model);
     };
     return MockInboxConcessionCountService;
@@ -718,7 +725,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/inbox-header/inbox-header.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "  <!-- Total widgets -->\r\n<div class=\"col-md-12\">\r\n  <div class=\"totalsWidget outer\">\r\n    <div routerLink=\"/pending-inbox\" routerLinkActive=\"activeWidget\">\r\n      <div class=\"cornered\"><p>Pending</p></div>\r\n      <div class=\"main\"><p>{{concessionsSummary.pendingConcessions}}</p></div>\r\n    </div>\r\n  </div>\r\n  <div class=\"totalsWidget outer\" style=\"margin-left: 20px;\">\r\n    <div routerLink=\"/due-expiry-inbox\" routerLinkActive=\"activeWidget\">\r\n      <div class=\"cornered\"><p>Due For Expiry</p></div>\r\n      <div class=\"main\"><p>{{concessionsSummary.dueForExpiryConcessions}}</p></div>\r\n    </div>\r\n  </div>\r\n  <div class=\"totalsWidget outer\" style=\"margin-left: 20px;\">\r\n    <div routerLink=\"/expired-inbox\" routerLinkActive=\"activeWidget\">\r\n      <div class=\"cornered\"><p>Expired</p></div>\r\n      <div class=\"main\"><p>{{concessionsSummary.expiredConcessions}}</p></div>\r\n    </div>\r\n  </div>\r\n  <div class=\"totalsWidget outer\" style=\"margin-left: 20px;\">\r\n    <div routerLink=\"/declined-inbox\" routerLinkActive=\"activeWidget\">\r\n      <div class=\"cornered\"><p>Declined</p></div>\r\n      <div class=\"main\"><p>{{concessionsSummary.declinedConcessions}}</p></div>\r\n    </div>\r\n  </div>\r\n</div>"
+module.exports = "  <!-- Total widgets -->\r\n<div class=\"col-md-12\">\r\n    <div class=\"totalsWidget outer\">\r\n        <div routerLink=\"/pending-inbox\" routerLinkActive=\"activeWidget\">\r\n            <div class=\"cornered\"><p>Pending</p></div>\r\n            <div class=\"main\"><p>{{concessionsSummary.pendingConcessions}}</p></div>\r\n        </div>\r\n    </div>\r\n    <div class=\"totalsWidget outer\" style=\"margin-left: 20px;\">\r\n        <div routerLink=\"/due-expiry-inbox\" routerLinkActive=\"activeWidget\">\r\n            <div class=\"cornered\"><p>Due For Expiry</p></div>\r\n            <div class=\"main\"><p>{{concessionsSummary.dueForExpiryConcessions}}</p></div>\r\n        </div>\r\n    </div>\r\n    <div class=\"totalsWidget outer\" style=\"margin-left: 20px;\">\r\n        <div routerLink=\"/expired-inbox\" routerLinkActive=\"activeWidget\">\r\n            <div class=\"cornered\"><p>Expired</p></div>\r\n            <div class=\"main\"><p>{{concessionsSummary.expiredConcessions}}</p></div>\r\n        </div>\r\n    </div>\r\n    <div class=\"totalsWidget outer\" style=\"margin-left: 20px;\">\r\n        <div routerLink=\"/mismatched-inbox\" routerLinkActive=\"activeWidget\">\r\n            <div class=\"cornered\"><p>Mismatched</p></div>\r\n            <div class=\"main\"><p>{{concessionsSummary.mismatchedConcessions}}</p></div>\r\n        </div>\r\n    </div>\r\n    <div class=\"totalsWidget outer\" style=\"margin-left: 20px;\">\r\n        <div routerLink=\"/declined-inbox\" routerLinkActive=\"activeWidget\">\r\n            <div class=\"cornered\"><p>Declined</p></div>\r\n            <div class=\"main\"><p>{{concessionsSummary.declinedConcessions}}</p></div>\r\n        </div>\r\n    </div>\r\n</div>"
 
 /***/ }),
 
@@ -890,6 +897,67 @@ LendingAddConcessionComponent = __decorate([
 
 /***/ }),
 
+/***/ "../../../../../client-src/app/mismatched-inbox/mismatched-inbox.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../client-src/app/mismatched-inbox/mismatched-inbox.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <app-inbox-search-bar></app-inbox-search-bar>\r\n    <!-- Results table -->\r\n    <div class=\"table-container\">\r\n        <table class=\"table table-bordered table-hover header-fixed table-striped\">\r\n            <thead>\r\n                <tr>\r\n                    <th>Risk Group</th>\r\n                    <th>Customer Name</th>\r\n                    <th>Type</th>\r\n                    <th>Date Opened</th>\r\n                    <th>Concession ID</th>\r\n                    <th>Segment</th>\r\n                    <th>Sent For Approval</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr>\r\n                    <td>\r\n                        <p class=\"customerName\">APPLE</p>\r\n                        <p class=\"date\">1989</p>\r\n                    </td>\r\n                    <td>Mac</td>\r\n                    <td>Transactional</td>\r\n                    <td>\r\n                        <p class=\"date\">2017/05/02 </p>\r\n                    </td>\r\n                    <td>L00000</td>\r\n                    <td>Expert</td>\r\n                    <td>\r\n                        <p class=\"date\">2017/05/02 </p>\r\n                    </td>\r\n\r\n                </tr>\r\n                <tr>\r\n                    <td>\r\n                        <p class=\"customerName\">EDCON</p>\r\n                        <p class=\"date\">1989</p>\r\n                    </td>\r\n                    <td>CNA</td>\r\n                    <td>Transactional</td>\r\n                    <td>\r\n                        <p class=\"date\">2017/05/02 </p>\r\n                    </td>\r\n                    <td>L11111</td>\r\n                    <td>Expert</td>\r\n                    <td>\r\n                        <p class=\"date\">2017/05/02 </p>\r\n                    </td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n    <!-- pagination-->\r\n    <ul class=\"pagination\">\r\n        <li><a href=\"#\">First</a></li>\r\n        <li><a href=\"#\">Prev</a></li>\r\n        <li class=\"active\"><a href=\"#\">1</a></li>\r\n        <li><a href=\"#\">2</a></li>\r\n        <li><a href=\"#\">Next</a></li>\r\n        <li><a href=\"#\">Last</a></li>\r\n    </ul>\r\n</div>"
+
+/***/ }),
+
+/***/ "../../../../../client-src/app/mismatched-inbox/mismatched-inbox.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MismatchedInboxComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var MismatchedInboxComponent = (function () {
+    function MismatchedInboxComponent() {
+    }
+    MismatchedInboxComponent.prototype.ngOnInit = function () {
+    };
+    return MismatchedInboxComponent;
+}());
+MismatchedInboxComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_3" /* Component */])({
+        selector: 'app-mismatched-inbox',
+        template: __webpack_require__("../../../../../client-src/app/mismatched-inbox/mismatched-inbox.component.html"),
+        styles: [__webpack_require__("../../../../../client-src/app/mismatched-inbox/mismatched-inbox.component.css")]
+    }),
+    __metadata("design:paramtypes", [])
+], MismatchedInboxComponent);
+
+//# sourceMappingURL=mismatched-inbox.component.js.map
+
+/***/ }),
+
 /***/ "../../../../../client-src/app/models/concessions-summary.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -926,7 +994,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/page-header/page-header.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"col-md-12 header\">\r\n  <div class=\"logo\"></div>\r\n</div>\r\n<div class=\"col-md-12 nav-pills-container\">\r\n  <ul class=\"nav nav-pills\">\r\n    <li routerLinkActive=\"selected-nav-item\">\r\n      <a routerLink=\"/pending-inbox\">Inbox</a>\r\n      <!-- The following are here so that the router link active class is enabled for any of the inbox routes-->\r\n      <a routerLink=\"/due-expiry-inbox\" style=\"display: none;\">Inbox</a>\r\n      <a routerLink=\"/expired-inbox\" style=\"display: none;\">Inbox</a>\r\n      <a routerLink=\"/declined-inbox\" style=\"display: none;\">Inbox</a>\r\n    </li>\r\n    <li routerLinkActive=\"selected-nav-item\"><a routerLink=\"/approved-concessions\">Approved Concessions</a></li>\r\n    <li routerLinkActive=\"selected-nav-item\"><a routerLink=\"/conditions\">Conditions</a></li>\r\n    <li routerLinkActive=\"selected-nav-item\">\r\n      <a routerLink=\"/pricing\">Pricing</a>\r\n      <!-- The following are here so that the router link active class is enabled for any of the pricing routes-->\r\n      <a routerLink=\"/pricing-results\" style=\"display: none;\">Pricing</a>\r\n      <a routerLink=\"/pricing-cash\" style=\"display: none;\">Pricing</a>\r\n      <a routerLink=\"/pricing-lending\" style=\"display: none;\">Pricing</a>\r\n      <a routerLink=\"/pricing-transactional\" style=\"display: none;\">Pricing</a>\r\n      <a routerLink=\"/cash-add-concession\" style=\"display: none;\">Pricing</a>\r\n      <a routerLink=\"/lending-add-concession\" style=\"display: none;\">Pricing</a>\r\n      <a routerLink=\"/transactional-add-concession\" style=\"display: none;\">Pricing</a>\r\n    </li>\r\n    <li class=\"logout-li\"><a href=\"#\"><span class=\"glyphicon glyphicon-log-out\"></span> Logout</a></li>\r\n  </ul>\r\n</div> "
+module.exports = "<div class=\"col-md-12 header\">\r\n    <div class=\"logo\"></div>\r\n</div>\r\n<div class=\"col-md-12 nav-pills-container\">\r\n    <ul class=\"nav nav-pills\">\r\n        <li routerLinkActive=\"selected-nav-item\">\r\n            <a routerLink=\"/pending-inbox\">Inbox</a>\r\n            <!-- The following are here so that the router link active class is enabled for any of the inbox routes-->\r\n            <a routerLink=\"/due-expiry-inbox\" style=\"display: none;\">Inbox</a>\r\n            <a routerLink=\"/expired-inbox\" style=\"display: none;\">Inbox</a>\r\n            <a routerLink=\"/mismatched-inbox\" style=\"display: none;\">Inbox</a>\r\n            <a routerLink=\"/declined-inbox\" style=\"display: none;\">Inbox</a>\r\n        </li>\r\n        <li routerLinkActive=\"selected-nav-item\"><a routerLink=\"/approved-concessions\">Approved Concessions</a></li>\r\n        <li routerLinkActive=\"selected-nav-item\"><a routerLink=\"/conditions\">Conditions</a></li>\r\n        <li routerLinkActive=\"selected-nav-item\">\r\n            <a routerLink=\"/pricing\">Pricing</a>\r\n            <!-- The following are here so that the router link active class is enabled for any of the pricing routes-->\r\n            <a routerLink=\"/pricing-results\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/pricing-cash\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/pricing-lending\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/pricing-transactional\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/cash-add-concession\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/lending-add-concession\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/transactional-add-concession\" style=\"display: none;\">Pricing</a>\r\n        </li>\r\n        <li class=\"logout-li\"><a href=\"#\"><span class=\"glyphicon glyphicon-log-out\"></span> Logout</a></li>\r\n    </ul>\r\n</div> "
 
 /***/ }),
 

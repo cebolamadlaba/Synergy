@@ -21,6 +21,11 @@
         public int ExpiredConcessions { get; set; }
 
         /// <summary>
+        /// Gets or sets the mismatched concessions count
+        /// </summary>
+        public int MismatchedConcessions { get; set; }
+
+        /// <summary>
         /// Gets or sets the declinced concessions count
         /// </summary>
         public int DeclinedConcessions { get; set; }

@@ -14,27 +14,29 @@ import { PricingTransactionalComponent } from "./pricing-transactional/pricing-t
 import { TransactionalAddConcessionComponent } from "./transactional-add-concession/transactional-add-concession.component";
 import { CashAddConcessionComponent } from "./cash-add-concession/cash-add-concession.component";
 import { LendingAddConcessionComponent } from "./lending-add-concession/lending-add-concession.component";
+import { MismatchedInboxComponent } from "./mismatched-inbox/mismatched-inbox.component";
 
 const routes: Routes = [
-  { path: '', redirectTo: '/pending-inbox', pathMatch: 'full' },
-  { path: 'pending-inbox', component: PendingInboxComponent },
-  { path: 'due-expiry-inbox', component: DueExpiryInboxComponent },
-  { path: 'expired-inbox', component: ExpiredInboxComponent },
-  { path: 'declined-inbox', component: DeclinedInboxComponent },
-  { path: 'approved-concessions', component: ApprovedConcessionsComponent },
-  { path: 'conditions', component: ConditionsComponent },
-  { path: 'pricing', component: PricingComponent },
-  { path: 'pricing-results', component: PricingResultsComponent },
-  { path: 'pricing-lending', component: PricingLendingComponent },
-  { path: 'pricing-cash', component: PricingCashComponent },
-  { path: 'pricing-transactional', component: PricingTransactionalComponent },
-  { path: 'transactional-add-concession', component: TransactionalAddConcessionComponent },
-  { path: 'cash-add-concession', component: CashAddConcessionComponent },
-  { path: 'lending-add-concession', component: LendingAddConcessionComponent }
+    { path: '', redirectTo: '/pending-inbox', pathMatch: 'full' },
+    { path: 'pending-inbox', component: PendingInboxComponent },
+    { path: 'due-expiry-inbox', component: DueExpiryInboxComponent },
+    { path: 'expired-inbox', component: ExpiredInboxComponent },
+    { path: 'mismatched-inbox', component: MismatchedInboxComponent },
+    { path: 'declined-inbox', component: DeclinedInboxComponent },
+    { path: 'approved-concessions', component: ApprovedConcessionsComponent },
+    { path: 'conditions', component: ConditionsComponent },
+    { path: 'pricing', component: PricingComponent },
+    { path: 'pricing-results', component: PricingResultsComponent },
+    { path: 'pricing-lending', component: PricingLendingComponent },
+    { path: 'pricing-cash', component: PricingCashComponent },
+    { path: 'pricing-transactional', component: PricingTransactionalComponent },
+    { path: 'transactional-add-concession', component: TransactionalAddConcessionComponent },
+    { path: 'cash-add-concession', component: CashAddConcessionComponent },
+    { path: 'lending-add-concession', component: LendingAddConcessionComponent }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule]
 })
 export class AppRoutingModule { }

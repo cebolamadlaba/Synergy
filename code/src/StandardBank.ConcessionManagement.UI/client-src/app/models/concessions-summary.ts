@@ -3,4 +3,5 @@
     dueForExpiryConcessions: number;
     expiredConcessions: number;
     declinedConcessions: number;
+    mismatchedConcessions: number;
 }

@@ -47,7 +47,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers.Application
                 {
                     ExceptionMessage = "Exception test from the application",
                     ExceptionData = "Exception test",
-                    ExceptionSource = "Standard Bank CMS Application",
+                    ExceptionSource = "ExceptionLogTestController",
                     ExceptionType = "ExceptionTest",
                     Logdate = DateTime.Now
                 };
