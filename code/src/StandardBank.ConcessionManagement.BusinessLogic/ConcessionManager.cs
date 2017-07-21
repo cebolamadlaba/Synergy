@@ -274,6 +274,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 concessions.Add(new Concession
                 {
                     Id = concession.Id,
+                    ReferenceNumber = concession.ConcessionRef,
                     CustomerName = legalEntity.CustomerName,
                     DateOpened = concession.ConcessionDate,
                     DateSentForApproval = concession.DatesentForApproval,

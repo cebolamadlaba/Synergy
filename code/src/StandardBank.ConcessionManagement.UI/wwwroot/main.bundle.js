@@ -455,7 +455,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/declined-inbox/declined-inbox.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n  <app-inbox-search-bar></app-inbox-search-bar>\r\n  <!-- Results table -->\r\n  <div class=\"table-container\">\r\n    <table class=\"table table-bordered table-hover header-fixed table-striped\">\r\n      <thead>\r\n        <tr>\r\n          <th>Risk Group</th>\r\n          <th>Customer Name</th>\r\n          <th>Type</th>\r\n          <th>Date Opened</th>\r\n          <th>Concession ID</th>\r\n          <th>Segment</th>\r\n          <th>Sent For Approval</th>\r\n        </tr>\r\n      </thead>\r\n      <tbody>\r\n        <tr>\r\n          <td>\r\n            <p class=\"customerName\">APPLE</p>\r\n            <p class=\"date\">1989</p>\r\n          </td>\r\n          <td>Mac</td>\r\n          <td>Transactional</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n          <td>L00000</td>\r\n          <td>Expert</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n\r\n        </tr>\r\n        <tr>\r\n          <td>\r\n            <p class=\"customerName\">EDCON</p>\r\n            <p class=\"date\">1989</p>\r\n          </td>\r\n          <td>CNA</td>\r\n          <td>Transactional</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n          <td>L11111</td>\r\n          <td>Expert</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n        </tr>\r\n      </tbody>\r\n    </table>\r\n  </div>\r\n  <!-- pagination-->\r\n  <ul class=\"pagination\">\r\n    <li><a href=\"#\">First</a></li>\r\n    <li><a href=\"#\">Prev</a></li>\r\n    <li class=\"active\"><a href=\"#\">1</a></li>\r\n    <li><a href=\"#\">2</a></li>\r\n    <li><a href=\"#\">Next</a></li>\r\n    <li><a href=\"#\">Last</a></li>\r\n  </ul>\r\n</div>"
+module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <app-inbox-search-bar></app-inbox-search-bar>\r\n\r\n    <!-- Results table -->\r\n    <div class=\"table-container\">\r\n        <table class=\"table table-bordered table-hover table-striped\">\r\n            <thead>\r\n                <tr>\r\n                    <th>Risk Group Number</th>\r\n                    <th>Risk Group Name</th>\r\n                    <th>Customer Name</th>\r\n                    <th>Type</th>\r\n                    <th>Date Opened</th>\r\n                    <th>Concession Id</th>\r\n                    <th>Segment</th>\r\n                    <th>Date Sent For Approval</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr *ngFor='let concession of userConcessions.declinedConcessions; trackBy: index;'>\r\n                    <td>{{concession.riskGroupNumber}}</td>\r\n                    <td>{{concession.riskGroupName}}</td>\r\n                    <td class=\"customerName\">{{concession.customerName}}</td>\r\n                    <td>{{concession.type}}</td>\r\n                    <td class=\"date\">{{concession.dateOpened | date: 'yyyy/MM/dd'}}</td>\r\n                    <td>{{concession.referenceNumber}}</td>\r\n                    <td>{{concession.seqment}}</td>\r\n                    <td class=\"date\">{{concession.dateSentForApproval| date: 'yyyy/MM/dd'}}</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n\r\n</div>"
 
 /***/ }),
 
@@ -464,6 +464,7 @@ module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__user_concessions_user_concessions_service__ = __webpack_require__("../../../../../client-src/app/user-concessions/user-concessions.service.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DeclinedInboxComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -474,11 +475,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+
 
 var DeclinedInboxComponent = (function () {
-    function DeclinedInboxComponent() {
+    function DeclinedInboxComponent(userConcessionsService) {
+        this.userConcessionsService = userConcessionsService;
     }
     DeclinedInboxComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.observableUserConcessions = this.userConcessionsService.getData();
+        this.observableUserConcessions.subscribe(function (userConcessions) { return _this.userConcessions = userConcessions; }, function (error) { return _this.errorMessage = error; });
     };
     return DeclinedInboxComponent;
 }());
@@ -488,7 +497,8 @@ DeclinedInboxComponent = __decorate([
         template: __webpack_require__("../../../../../client-src/app/declined-inbox/declined-inbox.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/declined-inbox/declined-inbox.component.css")]
     }),
-    __metadata("design:paramtypes", [])
+    __param(0, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Inject */])(__WEBPACK_IMPORTED_MODULE_1__user_concessions_user_concessions_service__["a" /* UserConcessionsService */])),
+    __metadata("design:paramtypes", [Object])
 ], DeclinedInboxComponent);
 
 //# sourceMappingURL=declined-inbox.component.js.map
@@ -516,7 +526,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/due-expiry-inbox/due-expiry-inbox.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n  <app-inbox-search-bar></app-inbox-search-bar>\r\n  <!-- Results table -->\r\n  <div class=\"table-container\">\r\n    <table class=\"table table-bordered table-hover header-fixed table-striped\">\r\n      <thead>\r\n        <tr>\r\n          <th>Risk Group</th>\r\n          <th>Customer Name</th>\r\n          <th>Type</th>\r\n          <th>Date Opened</th>\r\n          <th>Concession ID</th>\r\n          <th>Segment</th>\r\n          <th>Sent For Approval</th>\r\n        </tr>\r\n      </thead>\r\n      <tbody>\r\n        <tr>\r\n          <td>\r\n            <p class=\"customerName\">APPLE</p>\r\n            <p class=\"date\">1989</p>\r\n          </td>\r\n          <td>Mac</td>\r\n          <td>Transactional</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n          <td>L00000</td>\r\n          <td>Expert</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n\r\n        </tr>\r\n        <tr>\r\n          <td>\r\n            <p class=\"customerName\">EDCON</p>\r\n            <p class=\"date\">1989</p>\r\n          </td>\r\n          <td>CNA</td>\r\n          <td>Transactional</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n          <td>L11111</td>\r\n          <td>Expert</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n        </tr>\r\n      </tbody>\r\n    </table>\r\n  </div>\r\n  <!-- pagination-->\r\n  <ul class=\"pagination\">\r\n    <li><a href=\"#\">First</a></li>\r\n    <li><a href=\"#\">Prev</a></li>\r\n    <li class=\"active\"><a href=\"#\">1</a></li>\r\n    <li><a href=\"#\">2</a></li>\r\n    <li><a href=\"#\">Next</a></li>\r\n    <li><a href=\"#\">Last</a></li>\r\n  </ul>\r\n</div>"
+module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <app-inbox-search-bar></app-inbox-search-bar>\r\n\r\n    <!-- Results table -->\r\n    <div class=\"table-container\">\r\n        <table class=\"table table-bordered table-hover table-striped\">\r\n            <thead>\r\n                <tr>\r\n                    <th>Risk Group Number</th>\r\n                    <th>Risk Group Name</th>\r\n                    <th>Customer Name</th>\r\n                    <th>Type</th>\r\n                    <th>Date Opened</th>\r\n                    <th>Concession Id</th>\r\n                    <th>Segment</th>\r\n                    <th>Date Sent For Approval</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr *ngFor='let concession of userConcessions.dueForExpiryConcessions; trackBy: index;'>\r\n                    <td>{{concession.riskGroupNumber}}</td>\r\n                    <td>{{concession.riskGroupName}}</td>\r\n                    <td class=\"customerName\">{{concession.customerName}}</td>\r\n                    <td>{{concession.type}}</td>\r\n                    <td class=\"date\">{{concession.dateOpened | date: 'yyyy/MM/dd'}}</td>\r\n                    <td>{{concession.referenceNumber}}</td>\r\n                    <td>{{concession.seqment}}</td>\r\n                    <td class=\"date\">{{concession.dateSentForApproval| date: 'yyyy/MM/dd'}}</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n</div>"
 
 /***/ }),
 
@@ -525,6 +535,7 @@ module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__user_concessions_user_concessions_service__ = __webpack_require__("../../../../../client-src/app/user-concessions/user-concessions.service.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DueExpiryInboxComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -535,11 +546,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+
 
 var DueExpiryInboxComponent = (function () {
-    function DueExpiryInboxComponent() {
+    function DueExpiryInboxComponent(userConcessionsService) {
+        this.userConcessionsService = userConcessionsService;
     }
     DueExpiryInboxComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.observableUserConcessions = this.userConcessionsService.getData();
+        this.observableUserConcessions.subscribe(function (userConcessions) { return _this.userConcessions = userConcessions; }, function (error) { return _this.errorMessage = error; });
     };
     return DueExpiryInboxComponent;
 }());
@@ -549,7 +568,8 @@ DueExpiryInboxComponent = __decorate([
         template: __webpack_require__("../../../../../client-src/app/due-expiry-inbox/due-expiry-inbox.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/due-expiry-inbox/due-expiry-inbox.component.css")]
     }),
-    __metadata("design:paramtypes", [])
+    __param(0, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Inject */])(__WEBPACK_IMPORTED_MODULE_1__user_concessions_user_concessions_service__["a" /* UserConcessionsService */])),
+    __metadata("design:paramtypes", [Object])
 ], DueExpiryInboxComponent);
 
 //# sourceMappingURL=due-expiry-inbox.component.js.map
@@ -577,7 +597,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/expired-inbox/expired-inbox.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n  <app-inbox-search-bar></app-inbox-search-bar>\r\n  <!-- Results table -->\r\n  <div class=\"table-container\">\r\n    <table class=\"table table-bordered table-hover header-fixed table-striped\">\r\n      <thead>\r\n        <tr>\r\n          <th>Risk Group</th>\r\n          <th>Customer Name</th>\r\n          <th>Type</th>\r\n          <th>Date Opened</th>\r\n          <th>Concession ID</th>\r\n          <th>Segment</th>\r\n          <th>Sent For Approval</th>\r\n        </tr>\r\n      </thead>\r\n      <tbody>\r\n        <tr>\r\n          <td>\r\n            <p class=\"customerName\">APPLE</p>\r\n            <p class=\"date\">1989</p>\r\n          </td>\r\n          <td>Mac</td>\r\n          <td>Transactional</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n          <td>L00000</td>\r\n          <td>Expert</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n\r\n        </tr>\r\n        <tr>\r\n          <td>\r\n            <p class=\"customerName\">EDCON</p>\r\n            <p class=\"date\">1989</p>\r\n          </td>\r\n          <td>CNA</td>\r\n          <td>Transactional</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n          <td>L11111</td>\r\n          <td>Expert</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n        </tr>\r\n      </tbody>\r\n    </table>\r\n  </div>\r\n  <!-- pagination-->\r\n  <ul class=\"pagination\">\r\n    <li><a href=\"#\">First</a></li>\r\n    <li><a href=\"#\">Prev</a></li>\r\n    <li class=\"active\"><a href=\"#\">1</a></li>\r\n    <li><a href=\"#\">2</a></li>\r\n    <li><a href=\"#\">Next</a></li>\r\n    <li><a href=\"#\">Last</a></li>\r\n  </ul>\r\n</div>"
+module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <app-inbox-search-bar></app-inbox-search-bar>\r\n    \r\n    <!-- Results table -->\r\n    <div class=\"table-container\">\r\n        <table class=\"table table-bordered table-hover table-striped\">\r\n            <thead>\r\n            <tr>\r\n                <th>Risk Group Number</th>\r\n                <th>Risk Group Name</th>\r\n                <th>Customer Name</th>\r\n                <th>Type</th>\r\n                <th>Date Opened</th>\r\n                <th>Concession Id</th>\r\n                <th>Segment</th>\r\n                <th>Date Sent For Approval</th>\r\n            </tr>\r\n            </thead>\r\n            <tbody>\r\n            <tr *ngFor='let concession of userConcessions.expiredConcessions; trackBy: index;'>\r\n                <td>{{concession.riskGroupNumber}}</td>\r\n                <td>{{concession.riskGroupName}}</td>\r\n                <td class=\"customerName\">{{concession.customerName}}</td>\r\n                <td>{{concession.type}}</td>\r\n                <td class=\"date\">{{concession.dateOpened | date: 'yyyy/MM/dd'}}</td>\r\n                <td>{{concession.referenceNumber}}</td>\r\n                <td>{{concession.seqment}}</td>\r\n                <td class=\"date\">{{concession.dateSentForApproval| date: 'yyyy/MM/dd'}}</td>\r\n            </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n</div>"
 
 /***/ }),
 
@@ -586,6 +606,7 @@ module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__user_concessions_user_concessions_service__ = __webpack_require__("../../../../../client-src/app/user-concessions/user-concessions.service.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ExpiredInboxComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -596,11 +617,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+
 
 var ExpiredInboxComponent = (function () {
-    function ExpiredInboxComponent() {
+    function ExpiredInboxComponent(userConcessionsService) {
+        this.userConcessionsService = userConcessionsService;
     }
     ExpiredInboxComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.observableUserConcessions = this.userConcessionsService.getData();
+        this.observableUserConcessions.subscribe(function (userConcessions) { return _this.userConcessions = userConcessions; }, function (error) { return _this.errorMessage = error; });
     };
     return ExpiredInboxComponent;
 }());
@@ -610,7 +639,8 @@ ExpiredInboxComponent = __decorate([
         template: __webpack_require__("../../../../../client-src/app/expired-inbox/expired-inbox.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/expired-inbox/expired-inbox.component.css")]
     }),
-    __metadata("design:paramtypes", [])
+    __param(0, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Inject */])(__WEBPACK_IMPORTED_MODULE_1__user_concessions_user_concessions_service__["a" /* UserConcessionsService */])),
+    __metadata("design:paramtypes", [Object])
 ], ExpiredInboxComponent);
 
 //# sourceMappingURL=expired-inbox.component.js.map
@@ -831,7 +861,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/mismatched-inbox/mismatched-inbox.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <app-inbox-search-bar></app-inbox-search-bar>\r\n    <!-- Results table -->\r\n    <div class=\"table-container\">\r\n        <table class=\"table table-bordered table-hover header-fixed table-striped\">\r\n            <thead>\r\n                <tr>\r\n                    <th>Risk Group</th>\r\n                    <th>Customer Name</th>\r\n                    <th>Type</th>\r\n                    <th>Date Opened</th>\r\n                    <th>Concession ID</th>\r\n                    <th>Segment</th>\r\n                    <th>Sent For Approval</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr>\r\n                    <td>\r\n                        <p class=\"customerName\">APPLE</p>\r\n                        <p class=\"date\">1989</p>\r\n                    </td>\r\n                    <td>Mac</td>\r\n                    <td>Transactional</td>\r\n                    <td>\r\n                        <p class=\"date\">2017/05/02 </p>\r\n                    </td>\r\n                    <td>L00000</td>\r\n                    <td>Expert</td>\r\n                    <td>\r\n                        <p class=\"date\">2017/05/02 </p>\r\n                    </td>\r\n\r\n                </tr>\r\n                <tr>\r\n                    <td>\r\n                        <p class=\"customerName\">EDCON</p>\r\n                        <p class=\"date\">1989</p>\r\n                    </td>\r\n                    <td>CNA</td>\r\n                    <td>Transactional</td>\r\n                    <td>\r\n                        <p class=\"date\">2017/05/02 </p>\r\n                    </td>\r\n                    <td>L11111</td>\r\n                    <td>Expert</td>\r\n                    <td>\r\n                        <p class=\"date\">2017/05/02 </p>\r\n                    </td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n    <!-- pagination-->\r\n    <ul class=\"pagination\">\r\n        <li><a href=\"#\">First</a></li>\r\n        <li><a href=\"#\">Prev</a></li>\r\n        <li class=\"active\"><a href=\"#\">1</a></li>\r\n        <li><a href=\"#\">2</a></li>\r\n        <li><a href=\"#\">Next</a></li>\r\n        <li><a href=\"#\">Last</a></li>\r\n    </ul>\r\n</div>"
+module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <app-inbox-search-bar></app-inbox-search-bar>\r\n\r\n    <!-- Results table -->\r\n    <div class=\"table-container\">\r\n        <table class=\"table table-bordered table-hover table-striped\">\r\n            <thead>\r\n                <tr>\r\n                    <th>Risk Group Number</th>\r\n                    <th>Risk Group Name</th>\r\n                    <th>Customer Name</th>\r\n                    <th>Type</th>\r\n                    <th>Date Opened</th>\r\n                    <th>Concession Id</th>\r\n                    <th>Segment</th>\r\n                    <th>Date Sent For Approval</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr *ngFor='let concession of userConcessions.mismatchedConcessions; trackBy: index;'>\r\n                    <td>{{concession.riskGroupNumber}}</td>\r\n                    <td>{{concession.riskGroupName}}</td>\r\n                    <td class=\"customerName\">{{concession.customerName}}</td>\r\n                    <td>{{concession.type}}</td>\r\n                    <td class=\"date\">{{concession.dateOpened | date: 'yyyy/MM/dd'}}</td>\r\n                    <td>{{concession.referenceNumber}}</td>\r\n                    <td>{{concession.seqment}}</td>\r\n                    <td class=\"date\">{{concession.dateSentForApproval| date: 'yyyy/MM/dd'}}</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n</div>"
 
 /***/ }),
 
@@ -840,6 +870,7 @@ module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__user_concessions_user_concessions_service__ = __webpack_require__("../../../../../client-src/app/user-concessions/user-concessions.service.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MismatchedInboxComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -850,11 +881,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+
 
 var MismatchedInboxComponent = (function () {
-    function MismatchedInboxComponent() {
+    function MismatchedInboxComponent(userConcessionsService) {
+        this.userConcessionsService = userConcessionsService;
     }
     MismatchedInboxComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.observableUserConcessions = this.userConcessionsService.getData();
+        this.observableUserConcessions.subscribe(function (userConcessions) { return _this.userConcessions = userConcessions; }, function (error) { return _this.errorMessage = error; });
     };
     return MismatchedInboxComponent;
 }());
@@ -864,7 +903,8 @@ MismatchedInboxComponent = __decorate([
         template: __webpack_require__("../../../../../client-src/app/mismatched-inbox/mismatched-inbox.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/mismatched-inbox/mismatched-inbox.component.css")]
     }),
-    __metadata("design:paramtypes", [])
+    __param(0, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Inject */])(__WEBPACK_IMPORTED_MODULE_1__user_concessions_user_concessions_service__["a" /* UserConcessionsService */])),
+    __metadata("design:paramtypes", [Object])
 ], MismatchedInboxComponent);
 
 //# sourceMappingURL=mismatched-inbox.component.js.map
@@ -968,7 +1008,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/pending-inbox/pending-inbox.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n  <app-inbox-search-bar></app-inbox-search-bar>\r\n  <!-- Results table -->\r\n  <div class=\"table-container\">\r\n    <table class=\"table table-bordered table-hover header-fixed table-striped\">\r\n      <thead>\r\n        <tr>\r\n          <th>Risk Group</th>\r\n          <th>Customer Name</th>\r\n          <th>Type</th>\r\n          <th>Date Opened</th>\r\n          <th>Concession ID</th>\r\n          <th>Segment</th>\r\n          <th>Sent For Approval</th>\r\n        </tr>\r\n      </thead>\r\n      <tbody>\r\n        <tr>\r\n          <td>\r\n            <p class=\"customerName\">APPLE</p>\r\n            <p class=\"date\">1989</p>\r\n          </td>\r\n          <td>Mac</td>\r\n          <td>Transactional</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n          <td>L00000</td>\r\n          <td>Expert</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n\r\n        </tr>\r\n        <tr>\r\n          <td>\r\n            <p class=\"customerName\">EDCON</p>\r\n            <p class=\"date\">1989</p>\r\n          </td>\r\n          <td>CNA</td>\r\n          <td>Transactional</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n          <td>L11111</td>\r\n          <td>Expert</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n\r\n        </tr>\r\n        <tr>\r\n          <td>\r\n            <p class=\"customerName\">VIRGIN</p>\r\n            <p class=\"date\">1989</p>\r\n          </td>\r\n          <td>Virgin Money</td>\r\n          <td>BOL</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n          <td>B309864</td>\r\n          <td>Franchising</td>\r\n          <td>\r\n            <p class=\"date\">2017/05/02 </p>\r\n          </td>\r\n\r\n        </tr>\r\n      </tbody>\r\n    </table>\r\n  </div>\r\n  <!-- pagination-->\r\n  <ul class=\"pagination\">\r\n    <li><a href=\"#\">First</a></li>\r\n    <li><a href=\"#\">Prev</a></li>\r\n    <li class=\"active\"><a href=\"#\">1</a></li>\r\n    <li><a href=\"#\">2</a></li>\r\n    <li><a href=\"#\">Next</a></li>\r\n    <li><a href=\"#\">Last</a></li>\r\n  </ul>\r\n</div>"
+module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <app-inbox-search-bar></app-inbox-search-bar>\r\n    \r\n    <!-- Results table -->\r\n    <div class=\"table-container\">\r\n        <table class=\"table table-bordered table-hover table-striped\">\r\n            <thead>\r\n                <tr>\r\n                    <th>Risk Group Number</th>\r\n                    <th>Risk Group Name</th>\r\n                    <th>Customer Name</th>\r\n                    <th>Type</th>\r\n                    <th>Date Opened</th>\r\n                    <th>Concession Id</th>\r\n                    <th>Segment</th>\r\n                    <th>Date Sent For Approval</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr *ngFor='let concession of userConcessions.pendingConcessions; trackBy: index;'>\r\n                    <td>{{concession.riskGroupNumber}}</td>\r\n                    <td>{{concession.riskGroupName}}</td>\r\n                    <td class=\"customerName\">{{concession.customerName}}</td>\r\n                    <td>{{concession.type}}</td>\r\n                    <td class=\"date\">{{concession.dateOpened | date: 'yyyy/MM/dd'}}</td>\r\n                    <td>{{concession.referenceNumber}}</td>\r\n                    <td>{{concession.seqment}}</td>\r\n                    <td class=\"date\">{{concession.dateSentForApproval| date: 'yyyy/MM/dd'}}</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n</div>"
 
 /***/ }),
 
@@ -977,6 +1017,7 @@ module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__user_concessions_user_concessions_service__ = __webpack_require__("../../../../../client-src/app/user-concessions/user-concessions.service.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PendingInboxComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -987,11 +1028,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+
 
 var PendingInboxComponent = (function () {
-    function PendingInboxComponent() {
+    function PendingInboxComponent(userConcessionsService) {
+        this.userConcessionsService = userConcessionsService;
     }
     PendingInboxComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.observableUserConcessions = this.userConcessionsService.getData();
+        this.observableUserConcessions.subscribe(function (userConcessions) { return _this.userConcessions = userConcessions; }, function (error) { return _this.errorMessage = error; });
     };
     return PendingInboxComponent;
 }());
@@ -1001,7 +1050,8 @@ PendingInboxComponent = __decorate([
         template: __webpack_require__("../../../../../client-src/app/pending-inbox/pending-inbox.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/pending-inbox/pending-inbox.component.css")]
     }),
-    __metadata("design:paramtypes", [])
+    __param(0, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Inject */])(__WEBPACK_IMPORTED_MODULE_1__user_concessions_user_concessions_service__["a" /* UserConcessionsService */])),
+    __metadata("design:paramtypes", [Object])
 ], PendingInboxComponent);
 
 //# sourceMappingURL=pending-inbox.component.js.map

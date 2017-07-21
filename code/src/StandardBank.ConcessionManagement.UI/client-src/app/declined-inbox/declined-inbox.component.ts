@@ -1,15 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit, Inject } from '@angular/core';
+import { Observable } from "rxjs";
+import { UserConcessionsService } from "../user-concessions/user-concessions.service";
+import { UserConcessions } from "../models/user-concessions";
 
 @Component({
-  selector: 'app-declined-inbox',
-  templateUrl: './declined-inbox.component.html',
-  styleUrls: ['./declined-inbox.component.css']
+    selector: 'app-declined-inbox',
+    templateUrl: './declined-inbox.component.html',
+    styleUrls: ['./declined-inbox.component.css']
 })
 export class DeclinedInboxComponent implements OnInit {
+    observableUserConcessions: Observable<UserConcessions>;
+    userConcessions: UserConcessions;
+    errorMessage: String;
 
-  constructor() { }
+    constructor( @Inject(UserConcessionsService) private userConcessionsService) { }
 
-  ngOnInit() {
-  }
-
+    ngOnInit() {
+        this.observableUserConcessions = this.userConcessionsService.getData();
+        this.observableUserConcessions.subscribe(userConcessions => this.userConcessions = userConcessions,
+            error => this.errorMessage = <any>error);
+    }
 }

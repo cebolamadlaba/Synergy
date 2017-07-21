@@ -16,6 +16,11 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Inbox
         public int Id { get; set; }
 
         /// <summary>
+        /// Gets or sets the reference number
+        /// </summary>
+        public string ReferenceNumber { get; set; }
+
+        /// <summary>
         /// Gets or sets the risk group number
         /// </summary>
         public int RiskGroupNumber { get; set; }
