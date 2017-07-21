@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using StandardBank.ConcessionManagement.Model.Repository;
 
@@ -38,6 +39,26 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <returns></returns>
         IEnumerable<Concession> ReadByRequestorIdStatusIdSubStatusIdIsActive(int requestorId, int statusId,
             int subStatusId, bool isActive);
+
+        /// <summary>
+        /// Reads by the requestor id, status id and is active flag
+        /// </summary>
+        /// <param name="requestorId"></param>
+        /// <param name="statusId"></param>
+        /// <param name="isActive"></param>
+        /// <returns></returns>
+        IEnumerable<Concession> ReadByRequestorIdStatusIdIsActive(int requestorId, int statusId, bool isActive);
+
+        /// <summary>
+        /// Reads by the requestor id, between the start and end expiry date and is active 
+        /// </summary>
+        /// <param name="requestorId"></param>
+        /// <param name="startExpiryDate"></param>
+        /// <param name="endExpiryDate"></param>
+        /// <param name="isActive"></param>
+        /// <returns></returns>
+        IEnumerable<Concession> ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive(int requestorId,
+            DateTime startExpiryDate, DateTime endExpiryDate, bool isActive);
 
         /// <summary>
         /// Updates the specified model.

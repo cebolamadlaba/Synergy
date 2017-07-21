@@ -166,16 +166,16 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__declined_inbox_declined_inbox_component__ = __webpack_require__("../../../../../client-src/app/declined-inbox/declined-inbox.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__inbox_header_inbox_header_component__ = __webpack_require__("../../../../../client-src/app/inbox-header/inbox-header.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__inbox_search_bar_inbox_search_bar_component__ = __webpack_require__("../../../../../client-src/app/inbox-search-bar/inbox-search-bar.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__inbox_concession_count_inbox_concession_count_service__ = __webpack_require__("../../../../../client-src/app/inbox-concession-count/inbox-concession-count.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__pricing_results_pricing_results_component__ = __webpack_require__("../../../../../client-src/app/pricing-results/pricing-results.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__pricing_lending_pricing_lending_component__ = __webpack_require__("../../../../../client-src/app/pricing-lending/pricing-lending.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__pricing_cash_pricing_cash_component__ = __webpack_require__("../../../../../client-src/app/pricing-cash/pricing-cash.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__pricing_transactional_pricing_transactional_component__ = __webpack_require__("../../../../../client-src/app/pricing-transactional/pricing-transactional.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__cash_add_concession_cash_add_concession_component__ = __webpack_require__("../../../../../client-src/app/cash-add-concession/cash-add-concession.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__lending_add_concession_lending_add_concession_component__ = __webpack_require__("../../../../../client-src/app/lending-add-concession/lending-add-concession.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__transactional_add_concession_transactional_add_concession_component__ = __webpack_require__("../../../../../client-src/app/transactional-add-concession/transactional-add-concession.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23_ngx_bootstrap_modal__ = __webpack_require__("../../../../ngx-bootstrap/modal/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__mismatched_inbox_mismatched_inbox_component__ = __webpack_require__("../../../../../client-src/app/mismatched-inbox/mismatched-inbox.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__pricing_results_pricing_results_component__ = __webpack_require__("../../../../../client-src/app/pricing-results/pricing-results.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__pricing_lending_pricing_lending_component__ = __webpack_require__("../../../../../client-src/app/pricing-lending/pricing-lending.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__pricing_cash_pricing_cash_component__ = __webpack_require__("../../../../../client-src/app/pricing-cash/pricing-cash.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__pricing_transactional_pricing_transactional_component__ = __webpack_require__("../../../../../client-src/app/pricing-transactional/pricing-transactional.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__cash_add_concession_cash_add_concession_component__ = __webpack_require__("../../../../../client-src/app/cash-add-concession/cash-add-concession.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__lending_add_concession_lending_add_concession_component__ = __webpack_require__("../../../../../client-src/app/lending-add-concession/lending-add-concession.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__transactional_add_concession_transactional_add_concession_component__ = __webpack_require__("../../../../../client-src/app/transactional-add-concession/transactional-add-concession.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22_ngx_bootstrap_modal__ = __webpack_require__("../../../../ngx-bootstrap/modal/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__mismatched_inbox_mismatched_inbox_component__ = __webpack_require__("../../../../../client-src/app/mismatched-inbox/mismatched-inbox.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__user_concessions_user_concessions_service__ = __webpack_require__("../../../../../client-src/app/user-concessions/user-concessions.service.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -227,22 +227,22 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_12__declined_inbox_declined_inbox_component__["a" /* DeclinedInboxComponent */],
             __WEBPACK_IMPORTED_MODULE_13__inbox_header_inbox_header_component__["a" /* InboxHeaderComponent */],
             __WEBPACK_IMPORTED_MODULE_14__inbox_search_bar_inbox_search_bar_component__["a" /* InboxSearchBarComponent */],
-            __WEBPACK_IMPORTED_MODULE_16__pricing_results_pricing_results_component__["a" /* PricingResultsComponent */],
-            __WEBPACK_IMPORTED_MODULE_17__pricing_lending_pricing_lending_component__["a" /* PricingLendingComponent */],
-            __WEBPACK_IMPORTED_MODULE_18__pricing_cash_pricing_cash_component__["a" /* PricingCashComponent */],
-            __WEBPACK_IMPORTED_MODULE_19__pricing_transactional_pricing_transactional_component__["a" /* PricingTransactionalComponent */],
-            __WEBPACK_IMPORTED_MODULE_20__cash_add_concession_cash_add_concession_component__["a" /* CashAddConcessionComponent */],
-            __WEBPACK_IMPORTED_MODULE_21__lending_add_concession_lending_add_concession_component__["a" /* LendingAddConcessionComponent */],
-            __WEBPACK_IMPORTED_MODULE_22__transactional_add_concession_transactional_add_concession_component__["a" /* TransactionalAddConcessionComponent */],
-            __WEBPACK_IMPORTED_MODULE_24__mismatched_inbox_mismatched_inbox_component__["a" /* MismatchedInboxComponent */]
+            __WEBPACK_IMPORTED_MODULE_15__pricing_results_pricing_results_component__["a" /* PricingResultsComponent */],
+            __WEBPACK_IMPORTED_MODULE_16__pricing_lending_pricing_lending_component__["a" /* PricingLendingComponent */],
+            __WEBPACK_IMPORTED_MODULE_17__pricing_cash_pricing_cash_component__["a" /* PricingCashComponent */],
+            __WEBPACK_IMPORTED_MODULE_18__pricing_transactional_pricing_transactional_component__["a" /* PricingTransactionalComponent */],
+            __WEBPACK_IMPORTED_MODULE_19__cash_add_concession_cash_add_concession_component__["a" /* CashAddConcessionComponent */],
+            __WEBPACK_IMPORTED_MODULE_20__lending_add_concession_lending_add_concession_component__["a" /* LendingAddConcessionComponent */],
+            __WEBPACK_IMPORTED_MODULE_21__transactional_add_concession_transactional_add_concession_component__["a" /* TransactionalAddConcessionComponent */],
+            __WEBPACK_IMPORTED_MODULE_23__mismatched_inbox_mismatched_inbox_component__["a" /* MismatchedInboxComponent */]
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
             __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* HttpModule */],
             __WEBPACK_IMPORTED_MODULE_3__app_routing_module__["a" /* AppRoutingModule */],
-            __WEBPACK_IMPORTED_MODULE_23_ngx_bootstrap_modal__["a" /* ModalModule */].forRoot()
+            __WEBPACK_IMPORTED_MODULE_22_ngx_bootstrap_modal__["a" /* ModalModule */].forRoot()
         ],
-        providers: [__WEBPACK_IMPORTED_MODULE_15__inbox_concession_count_inbox_concession_count_service__["a" /* InboxConcessionCountService */]],
+        providers: [__WEBPACK_IMPORTED_MODULE_24__user_concessions_user_concessions_service__["a" /* UserConcessionsService */]],
         bootstrap: [__WEBPACK_IMPORTED_MODULE_4__app_component__["a" /* AppComponent */]]
     })
 ], AppModule);
@@ -617,93 +617,6 @@ ExpiredInboxComponent = __decorate([
 
 /***/ }),
 
-/***/ "../../../../../client-src/app/inbox-concession-count/inbox-concession-count.service.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs__ = __webpack_require__("../../../../rxjs/Rx.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_concessions_summary__ = __webpack_require__("../../../../../client-src/app/models/concessions-summary.ts");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return InboxConcessionCountService; });
-/* unused harmony export MockInboxConcessionCountService */
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-
-var InboxConcessionCountService = (function () {
-    function InboxConcessionCountService(http) {
-        this.http = http;
-    }
-    InboxConcessionCountService.prototype.getData = function () {
-        var url = "/api/inbox/ConcessionsSummary";
-        console.log("here");
-        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
-    };
-    InboxConcessionCountService.prototype.extractData = function (response) {
-        var body = response.json();
-        return body;
-    };
-    InboxConcessionCountService.prototype.handleErrorObservable = function (error) {
-        console.error(error.message || error);
-        return __WEBPACK_IMPORTED_MODULE_2_rxjs__["Observable"].throw(error.message || error);
-    };
-    return InboxConcessionCountService;
-}());
-InboxConcessionCountService = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _a || Object])
-], InboxConcessionCountService);
-
-var MockInboxConcessionCountService = (function (_super) {
-    __extends(MockInboxConcessionCountService, _super);
-    function MockInboxConcessionCountService() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.model = new __WEBPACK_IMPORTED_MODULE_4__models_concessions_summary__["a" /* ConcessionsSummary */]();
-        return _this;
-    }
-    MockInboxConcessionCountService.prototype.getData = function () {
-        this.model.pendingConcessions = 1;
-        this.model.declinedConcessions = 2;
-        this.model.dueForExpiryConcessions = 3;
-        this.model.expiredConcessions = 4;
-        this.model.mismatchedConcessions = 5;
-        return __WEBPACK_IMPORTED_MODULE_2_rxjs__["Observable"].of(this.model);
-    };
-    return MockInboxConcessionCountService;
-}(InboxConcessionCountService));
-MockInboxConcessionCountService = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])()
-], MockInboxConcessionCountService);
-
-var _a;
-//# sourceMappingURL=inbox-concession-count.service.js.map
-
-/***/ }),
-
 /***/ "../../../../../client-src/app/inbox-header/inbox-header.component.css":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -725,7 +638,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/inbox-header/inbox-header.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "  <!-- Total widgets -->\r\n<div class=\"col-md-12\">\r\n    <div class=\"totalsWidget outer\">\r\n        <div routerLink=\"/pending-inbox\" routerLinkActive=\"activeWidget\">\r\n            <div class=\"cornered\"><p>Pending</p></div>\r\n            <div class=\"main\"><p>{{concessionsSummary.pendingConcessions}}</p></div>\r\n        </div>\r\n    </div>\r\n    <div class=\"totalsWidget outer\" style=\"margin-left: 20px;\">\r\n        <div routerLink=\"/due-expiry-inbox\" routerLinkActive=\"activeWidget\">\r\n            <div class=\"cornered\"><p>Due For Expiry</p></div>\r\n            <div class=\"main\"><p>{{concessionsSummary.dueForExpiryConcessions}}</p></div>\r\n        </div>\r\n    </div>\r\n    <div class=\"totalsWidget outer\" style=\"margin-left: 20px;\">\r\n        <div routerLink=\"/expired-inbox\" routerLinkActive=\"activeWidget\">\r\n            <div class=\"cornered\"><p>Expired</p></div>\r\n            <div class=\"main\"><p>{{concessionsSummary.expiredConcessions}}</p></div>\r\n        </div>\r\n    </div>\r\n    <div class=\"totalsWidget outer\" style=\"margin-left: 20px;\">\r\n        <div routerLink=\"/mismatched-inbox\" routerLinkActive=\"activeWidget\">\r\n            <div class=\"cornered\"><p>Mismatched</p></div>\r\n            <div class=\"main\"><p>{{concessionsSummary.mismatchedConcessions}}</p></div>\r\n        </div>\r\n    </div>\r\n    <div class=\"totalsWidget outer\" style=\"margin-left: 20px;\">\r\n        <div routerLink=\"/declined-inbox\" routerLinkActive=\"activeWidget\">\r\n            <div class=\"cornered\"><p>Declined</p></div>\r\n            <div class=\"main\"><p>{{concessionsSummary.declinedConcessions}}</p></div>\r\n        </div>\r\n    </div>\r\n</div>"
+module.exports = "  <!-- Total widgets -->\r\n<div class=\"col-md-12\">\r\n    <div class=\"totalsWidget outer\">\r\n        <div routerLink=\"/pending-inbox\" routerLinkActive=\"activeWidget\">\r\n            <div class=\"cornered\"><p>Pending</p></div>\r\n            <div class=\"main\"><p>{{userConcessions.pendingConcessionsCount}}</p></div>\r\n        </div>\r\n    </div>\r\n    <div class=\"totalsWidget outer\" style=\"margin-left: 20px;\">\r\n        <div routerLink=\"/due-expiry-inbox\" routerLinkActive=\"activeWidget\">\r\n            <div class=\"cornered\"><p>Due For Expiry</p></div>\r\n            <div class=\"main\"><p>{{userConcessions.dueForExpiryConcessionsCount}}</p></div>\r\n        </div>\r\n    </div>\r\n    <div class=\"totalsWidget outer\" style=\"margin-left: 20px;\">\r\n        <div routerLink=\"/expired-inbox\" routerLinkActive=\"activeWidget\">\r\n            <div class=\"cornered\"><p>Expired</p></div>\r\n            <div class=\"main\"><p>{{userConcessions.expiredConcessionsCount}}</p></div>\r\n        </div>\r\n    </div>\r\n    <div class=\"totalsWidget outer\" style=\"margin-left: 20px;\">\r\n        <div routerLink=\"/mismatched-inbox\" routerLinkActive=\"activeWidget\">\r\n            <div class=\"cornered\"><p>Mismatched</p></div>\r\n            <div class=\"main\"><p>{{userConcessions.mismatchedConcessionsCount}}</p></div>\r\n        </div>\r\n    </div>\r\n    <div class=\"totalsWidget outer\" style=\"margin-left: 20px;\">\r\n        <div routerLink=\"/declined-inbox\" routerLinkActive=\"activeWidget\">\r\n            <div class=\"cornered\"><p>Declined</p></div>\r\n            <div class=\"main\"><p>{{userConcessions.declinedConcessionsCount}}</p></div>\r\n        </div>\r\n    </div>\r\n</div>"
 
 /***/ }),
 
@@ -734,7 +647,7 @@ module.exports = "  <!-- Total widgets -->\r\n<div class=\"col-md-12\">\r\n    <
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__inbox_concession_count_inbox_concession_count_service__ = __webpack_require__("../../../../../client-src/app/inbox-concession-count/inbox-concession-count.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__user_concessions_user_concessions_service__ = __webpack_require__("../../../../../client-src/app/user-concessions/user-concessions.service.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return InboxHeaderComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -751,13 +664,13 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 
 
 var InboxHeaderComponent = (function () {
-    function InboxHeaderComponent(inboxConcessionCountService) {
-        this.inboxConcessionCountService = inboxConcessionCountService;
+    function InboxHeaderComponent(userConcessionsService) {
+        this.userConcessionsService = userConcessionsService;
     }
     InboxHeaderComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.observableConcessionsSummary = this.inboxConcessionCountService.getData();
-        this.observableConcessionsSummary.subscribe(function (concessionsSummary) { return _this.concessionsSummary = concessionsSummary; }, function (error) { return _this.errorMessage = error; });
+        this.observableUserConcessions = this.userConcessionsService.getData();
+        this.observableUserConcessions.subscribe(function (userConcessions) { return _this.userConcessions = userConcessions; }, function (error) { return _this.errorMessage = error; });
     };
     return InboxHeaderComponent;
 }());
@@ -767,7 +680,7 @@ InboxHeaderComponent = __decorate([
         template: __webpack_require__("../../../../../client-src/app/inbox-header/inbox-header.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/inbox-header/inbox-header.component.css")]
     }),
-    __param(0, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Inject */])(__WEBPACK_IMPORTED_MODULE_1__inbox_concession_count_inbox_concession_count_service__["a" /* InboxConcessionCountService */])),
+    __param(0, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Inject */])(__WEBPACK_IMPORTED_MODULE_1__user_concessions_user_concessions_service__["a" /* UserConcessionsService */])),
     __metadata("design:paramtypes", [Object])
 ], InboxHeaderComponent);
 
@@ -958,18 +871,18 @@ MismatchedInboxComponent = __decorate([
 
 /***/ }),
 
-/***/ "../../../../../client-src/app/models/concessions-summary.ts":
+/***/ "../../../../../client-src/app/models/user-concessions.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ConcessionsSummary; });
-var ConcessionsSummary = (function () {
-    function ConcessionsSummary() {
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UserConcessions; });
+var UserConcessions = (function () {
+    function UserConcessions() {
     }
-    return ConcessionsSummary;
+    return UserConcessions;
 }());
 
-//# sourceMappingURL=concessions-summary.js.map
+//# sourceMappingURL=user-concessions.js.map
 
 /***/ }),
 
@@ -1458,6 +1371,92 @@ TransactionalAddConcessionComponent = __decorate([
 ], TransactionalAddConcessionComponent);
 
 //# sourceMappingURL=transactional-add-concession.component.js.map
+
+/***/ }),
+
+/***/ "../../../../../client-src/app/user-concessions/user-concessions.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs__ = __webpack_require__("../../../../rxjs/Rx.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_user_concessions__ = __webpack_require__("../../../../../client-src/app/models/user-concessions.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UserConcessionsService; });
+/* unused harmony export MockUserConcessionsService */
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+var UserConcessionsService = (function () {
+    function UserConcessionsService(http) {
+        this.http = http;
+    }
+    UserConcessionsService.prototype.getData = function () {
+        var url = "/api/inbox/UserConcessions";
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    };
+    UserConcessionsService.prototype.extractData = function (response) {
+        var body = response.json();
+        return body;
+    };
+    UserConcessionsService.prototype.handleErrorObservable = function (error) {
+        console.error(error.message || error);
+        return __WEBPACK_IMPORTED_MODULE_2_rxjs__["Observable"].throw(error.message || error);
+    };
+    return UserConcessionsService;
+}());
+UserConcessionsService = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])(),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _a || Object])
+], UserConcessionsService);
+
+var MockUserConcessionsService = (function (_super) {
+    __extends(MockUserConcessionsService, _super);
+    function MockUserConcessionsService() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.model = new __WEBPACK_IMPORTED_MODULE_4__models_user_concessions__["a" /* UserConcessions */]();
+        return _this;
+    }
+    MockUserConcessionsService.prototype.getData = function () {
+        this.model.pendingConcessionsCount = 1;
+        this.model.declinedConcessionsCount = 2;
+        this.model.dueForExpiryConcessionsCount = 3;
+        this.model.expiredConcessionsCount = 4;
+        this.model.mismatchedConcessionsCount = 5;
+        return __WEBPACK_IMPORTED_MODULE_2_rxjs__["Observable"].of(this.model);
+    };
+    return MockUserConcessionsService;
+}(UserConcessionsService));
+MockUserConcessionsService = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])()
+], MockUserConcessionsService);
+
+var _a;
+//# sourceMappingURL=user-concessions.service.js.map
 
 /***/ }),
 

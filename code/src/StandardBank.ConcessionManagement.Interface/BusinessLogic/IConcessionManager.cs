@@ -15,5 +15,40 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="user">The user.</param>
         /// <returns></returns>
         IEnumerable<Concession> GetPendingConcessionsForUser(User user);
+
+        /// <summary>
+        /// Get the due for expiry concessions for the user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        IEnumerable<Concession> GetDueForExpiryConcessionsForUser(User user);
+
+        /// <summary>
+        /// Gets the expired concessions for the user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        IEnumerable<Concession> GetExpiredConcessionsForUser(User user);
+
+        /// <summary>
+        /// Gets the mismatched concessions for the user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        IEnumerable<Concession> GetMismatchedConcessionsForUser(User user);
+
+        /// <summary>
+        /// Gets the declined concessions for the user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        IEnumerable<Concession> GetDeclinedConcessionsForUser(User user);
+
+        /// <summary>
+        /// Gets the user concessions
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        UserConcessions GetUserConcessions(User user);
     }
 }

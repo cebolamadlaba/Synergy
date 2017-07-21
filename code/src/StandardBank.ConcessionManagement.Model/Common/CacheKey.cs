@@ -13,6 +13,14 @@
             }
         }
 
+        public static class BusinessLogic
+        {
+            public static class ConcessionManager
+            {
+                public const string GetUserConcessions = "CacheKey.BusinessLogic.ConcessionManager.GetUserConcessions";
+            }
+        }
+
         public static class Repository
         {
             public static class AdValoremRepository

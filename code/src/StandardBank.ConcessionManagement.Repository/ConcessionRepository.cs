@@ -1,3 +1,4 @@
+using System;
 using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
@@ -36,13 +37,39 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public Concession Create(Concession model)
         {
-            const string sql = @"INSERT [dbo].[tblConcession] ([fkTypeId], [ConcessionRef], [fkLegalEntityId], [fkConcessionTypeId], [SMTDealNumber], [fkStatusId], [fkSubStatusId], [ConcessionDate], [DatesentForApproval], [Motivation], [DateApproved], [fkRequestorId], [fkBCMUserId], [DateActionedByBCM], [fkPCMUserId], [DateActionedByPCM], [fkHOUserId], [DateActionedByHO], [ExpiryDate], [CentreId], [IsCurrent], [IsActive]) 
+            const string sql =
+                @"INSERT [dbo].[tblConcession] ([fkTypeId], [ConcessionRef], [fkLegalEntityId], [fkConcessionTypeId], [SMTDealNumber], [fkStatusId], [fkSubStatusId], [ConcessionDate], [DatesentForApproval], [Motivation], [DateApproved], [fkRequestorId], [fkBCMUserId], [DateActionedByBCM], [fkPCMUserId], [DateActionedByPCM], [fkHOUserId], [DateActionedByHO], [ExpiryDate], [CentreId], [IsCurrent], [IsActive]) 
                                 VALUES (@fkTypeId, @ConcessionRef, @fkLegalEntityId, @fkConcessionTypeId, @SMTDealNumber, @fkStatusId, @fkSubStatusId, @ConcessionDate, @DatesentForApproval, @Motivation, @DateApproved, @fkRequestorId, @fkBCMUserId, @DateActionedByBCM, @fkPCMUserId, @DateActionedByPCM, @fkHOUserId, @DateActionedByHO, @ExpiryDate, @CentreId, @IsCurrent, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
-                model.Id = db.Query<int>(sql, new {fkTypeId = model.TypeId, ConcessionRef = model.ConcessionRef, fkLegalEntityId = model.LegalEntityId, fkConcessionTypeId = model.ConcessionTypeId, SMTDealNumber = model.SMTDealNumber, fkStatusId = model.StatusId, fkSubStatusId = model.SubStatusId, ConcessionDate = model.ConcessionDate, DatesentForApproval = model.DatesentForApproval, Motivation = model.Motivation, DateApproved = model.DateApproved, fkRequestorId = model.RequestorId, fkBCMUserId = model.BCMUserId, DateActionedByBCM = model.DateActionedByBCM, fkPCMUserId = model.PCMUserId, DateActionedByPCM = model.DateActionedByPCM, fkHOUserId = model.HOUserId, DateActionedByHO = model.DateActionedByHO, ExpiryDate = model.ExpiryDate, CentreId = model.CentreId, IsCurrent = model.IsCurrent, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql,
+                    new
+                    {
+                        fkTypeId = model.TypeId,
+                        ConcessionRef = model.ConcessionRef,
+                        fkLegalEntityId = model.LegalEntityId,
+                        fkConcessionTypeId = model.ConcessionTypeId,
+                        SMTDealNumber = model.SMTDealNumber,
+                        fkStatusId = model.StatusId,
+                        fkSubStatusId = model.SubStatusId,
+                        ConcessionDate = model.ConcessionDate,
+                        DatesentForApproval = model.DatesentForApproval,
+                        Motivation = model.Motivation,
+                        DateApproved = model.DateApproved,
+                        fkRequestorId = model.RequestorId,
+                        fkBCMUserId = model.BCMUserId,
+                        DateActionedByBCM = model.DateActionedByBCM,
+                        fkPCMUserId = model.PCMUserId,
+                        DateActionedByPCM = model.DateActionedByPCM,
+                        fkHOUserId = model.HOUserId,
+                        DateActionedByHO = model.DateActionedByHO,
+                        ExpiryDate = model.ExpiryDate,
+                        CentreId = model.CentreId,
+                        IsCurrent = model.IsCurrent,
+                        IsActive = model.IsActive
+                    }).Single();
             }
 
             return model;
@@ -73,7 +100,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
-                return db.Query<Concession>("SELECT [pkConcessionId] [Id], [fkTypeId] [TypeId], [ConcessionRef], [fkLegalEntityId] [LegalEntityId], [fkConcessionTypeId] [ConcessionTypeId], [SMTDealNumber], [fkStatusId] [StatusId], [fkSubStatusId] [SubStatusId], [ConcessionDate], [DatesentForApproval], [Motivation], [DateApproved], [fkRequestorId] [RequestorId], [fkBCMUserId] [BCMUserId], [DateActionedByBCM], [fkPCMUserId] [PCMUserId], [DateActionedByPCM], [fkHOUserId] [HOUserId], [DateActionedByHO], [ExpiryDate], [CentreId], [IsCurrent], [IsActive] FROM [dbo].[tblConcession]");
+                return db.Query<Concession>(
+                    "SELECT [pkConcessionId] [Id], [fkTypeId] [TypeId], [ConcessionRef], [fkLegalEntityId] [LegalEntityId], [fkConcessionTypeId] [ConcessionTypeId], [SMTDealNumber], [fkStatusId] [StatusId], [fkSubStatusId] [SubStatusId], [ConcessionDate], [DatesentForApproval], [Motivation], [DateApproved], [fkRequestorId] [RequestorId], [fkBCMUserId] [BCMUserId], [DateActionedByBCM], [fkPCMUserId] [PCMUserId], [DateActionedByPCM], [fkHOUserId] [HOUserId], [DateActionedByHO], [ExpiryDate], [CentreId], [IsCurrent], [IsActive] FROM [dbo].[tblConcession]");
             }
         }
 
@@ -102,6 +130,54 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Reads by the requestor id, status id and is active flag
+        /// </summary>
+        /// <param name="requestorId"></param>
+        /// <param name="statusId"></param>
+        /// <param name="isActive"></param>
+        /// <returns></returns>
+        public IEnumerable<Concession> ReadByRequestorIdStatusIdIsActive(int requestorId, int statusId, bool isActive)
+        {
+            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            {
+                return db.Query<Concession>(
+                    @"SELECT [pkConcessionId] [Id], [fkTypeId] [TypeId], [ConcessionRef], [fkLegalEntityId] [LegalEntityId], [fkConcessionTypeId] [ConcessionTypeId], [SMTDealNumber], [fkStatusId] [StatusId], [fkSubStatusId] [SubStatusId], [ConcessionDate], [DatesentForApproval], [Motivation], [DateApproved], [fkRequestorId] [RequestorId], [fkBCMUserId] [BCMUserId], [DateActionedByBCM], [fkPCMUserId] [PCMUserId], [DateActionedByPCM], [fkHOUserId] [HOUserId], [DateActionedByHO], [ExpiryDate], [CentreId], [IsCurrent], [IsActive] 
+                    FROM [dbo].[tblConcession] 
+                    WHERE [fkRequestorId] = @requestorId
+                    AND [fkStatusId] = @statusId
+                    AND [IsActive] = @isActive",
+                    new { requestorId, statusId, isActive });
+            }
+        }
+
+        /// <summary>
+        /// Reads by the requestor id, between the start and end expiry date and is active 
+        /// </summary>
+        /// <param name="requestorId"></param>
+        /// <param name="startExpiryDate"></param>
+        /// <param name="endExpiryDate"></param>
+        /// <param name="isActive"></param>
+        /// <returns></returns>
+        public IEnumerable<Concession> ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive(int requestorId,
+            DateTime startExpiryDate,
+            DateTime endExpiryDate, bool isActive)
+        {
+            if (startExpiryDate == DateTime.MinValue)
+                startExpiryDate = new DateTime(1900, 1, 1);
+
+            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            {
+                return db.Query<Concession>(
+                    @"SELECT [pkConcessionId] [Id], [fkTypeId] [TypeId], [ConcessionRef], [fkLegalEntityId] [LegalEntityId], [fkConcessionTypeId] [ConcessionTypeId], [SMTDealNumber], [fkStatusId] [StatusId], [fkSubStatusId] [SubStatusId], [ConcessionDate], [DatesentForApproval], [Motivation], [DateApproved], [fkRequestorId] [RequestorId], [fkBCMUserId] [BCMUserId], [DateActionedByBCM], [fkPCMUserId] [PCMUserId], [DateActionedByPCM], [fkHOUserId] [HOUserId], [DateActionedByHO], [ExpiryDate], [CentreId], [IsCurrent], [IsActive] 
+                    FROM [dbo].[tblConcession] 
+                    WHERE [fkRequestorId] = @requestorId
+                    AND ([ExpiryDate] BETWEEN @startExpiryDate AND @endExpiryDate)
+                    AND [IsActive] = @isActive",
+                    new {requestorId, startExpiryDate, endExpiryDate, isActive});
+            }
+        }
+
+        /// <summary>
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
@@ -112,7 +188,32 @@ namespace StandardBank.ConcessionManagement.Repository
                 db.Execute(@"UPDATE [dbo].[tblConcession]
                             SET [fkTypeId] = @fkTypeId, [ConcessionRef] = @ConcessionRef, [fkLegalEntityId] = @fkLegalEntityId, [fkConcessionTypeId] = @fkConcessionTypeId, [SMTDealNumber] = @SMTDealNumber, [fkStatusId] = @fkStatusId, [fkSubStatusId] = @fkSubStatusId, [ConcessionDate] = @ConcessionDate, [DatesentForApproval] = @DatesentForApproval, [Motivation] = @Motivation, [DateApproved] = @DateApproved, [fkRequestorId] = @fkRequestorId, [fkBCMUserId] = @fkBCMUserId, [DateActionedByBCM] = @DateActionedByBCM, [fkPCMUserId] = @fkPCMUserId, [DateActionedByPCM] = @DateActionedByPCM, [fkHOUserId] = @fkHOUserId, [DateActionedByHO] = @DateActionedByHO, [ExpiryDate] = @ExpiryDate, [CentreId] = @CentreId, [IsCurrent] = @IsCurrent, [IsActive] = @IsActive
                             WHERE [pkConcessionId] = @Id",
-                    new {Id = model.Id, fkTypeId = model.TypeId, ConcessionRef = model.ConcessionRef, fkLegalEntityId = model.LegalEntityId, fkConcessionTypeId = model.ConcessionTypeId, SMTDealNumber = model.SMTDealNumber, fkStatusId = model.StatusId, fkSubStatusId = model.SubStatusId, ConcessionDate = model.ConcessionDate, DatesentForApproval = model.DatesentForApproval, Motivation = model.Motivation, DateApproved = model.DateApproved, fkRequestorId = model.RequestorId, fkBCMUserId = model.BCMUserId, DateActionedByBCM = model.DateActionedByBCM, fkPCMUserId = model.PCMUserId, DateActionedByPCM = model.DateActionedByPCM, fkHOUserId = model.HOUserId, DateActionedByHO = model.DateActionedByHO, ExpiryDate = model.ExpiryDate, CentreId = model.CentreId, IsCurrent = model.IsCurrent, IsActive = model.IsActive});
+                    new
+                    {
+                        Id = model.Id,
+                        fkTypeId = model.TypeId,
+                        ConcessionRef = model.ConcessionRef,
+                        fkLegalEntityId = model.LegalEntityId,
+                        fkConcessionTypeId = model.ConcessionTypeId,
+                        SMTDealNumber = model.SMTDealNumber,
+                        fkStatusId = model.StatusId,
+                        fkSubStatusId = model.SubStatusId,
+                        ConcessionDate = model.ConcessionDate,
+                        DatesentForApproval = model.DatesentForApproval,
+                        Motivation = model.Motivation,
+                        DateApproved = model.DateApproved,
+                        fkRequestorId = model.RequestorId,
+                        fkBCMUserId = model.BCMUserId,
+                        DateActionedByBCM = model.DateActionedByBCM,
+                        fkPCMUserId = model.PCMUserId,
+                        DateActionedByPCM = model.DateActionedByPCM,
+                        fkHOUserId = model.HOUserId,
+                        DateActionedByHO = model.DateActionedByHO,
+                        ExpiryDate = model.ExpiryDate,
+                        CentreId = model.CentreId,
+                        IsCurrent = model.IsCurrent,
+                        IsActive = model.IsActive
+                    });
             }
         }
 

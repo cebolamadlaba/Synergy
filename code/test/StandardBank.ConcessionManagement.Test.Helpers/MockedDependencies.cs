@@ -1,5 +1,6 @@
 ﻿using Moq;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 
@@ -254,5 +255,10 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The mock ConcessionManager
         /// </summary>
         public static Mock<IConcessionManager> MockConcessionManager = new Mock<IConcessionManager>();
+
+        /// <summary>
+        /// The mock CacheManager
+        /// </summary>
+        public static Mock<ICacheManager> MockCacheManager = new Mock<ICacheManager>();
     }
 }

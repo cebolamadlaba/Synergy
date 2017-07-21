@@ -2,17 +2,17 @@
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
-import { ConcessionsSummary } from "../models/concessions-summary";
+import { UserConcessions } from "../models/user-concessions";
+import { Concession } from "../models/concession";
 
 @Injectable()
-export class InboxConcessionCountService {
+export class UserConcessionsService {
 
     constructor(private http: Http) {
     }
 
-    getData(): Observable<ConcessionsSummary> {
-        const url = "/api/inbox/ConcessionsSummary";
-        console.log("here");
+    getData(): Observable<UserConcessions> {
+        const url = "/api/inbox/UserConcessions";
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
@@ -25,18 +25,19 @@ export class InboxConcessionCountService {
         console.error(error.message || error);
         return Observable.throw(error.message || error);
     }
+
 }
 
 @Injectable()
-export class MockInboxConcessionCountService extends InboxConcessionCountService {
-    model = new ConcessionsSummary();
+export class MockUserConcessionsService extends UserConcessionsService {
+    model = new UserConcessions();
 
-    getData(): Observable<ConcessionsSummary> {
-        this.model.pendingConcessions = 1;
-        this.model.declinedConcessions = 2;
-        this.model.dueForExpiryConcessions = 3;
-        this.model.expiredConcessions = 4;
-        this.model.mismatchedConcessions = 5;
+    getData(): Observable<UserConcessions> {
+        this.model.pendingConcessionsCount = 1;
+        this.model.declinedConcessionsCount = 2;
+        this.model.dueForExpiryConcessionsCount = 3;
+        this.model.expiredConcessionsCount = 4;
+        this.model.mismatchedConcessionsCount = 5;
         return Observable.of(this.model);
     }
 }

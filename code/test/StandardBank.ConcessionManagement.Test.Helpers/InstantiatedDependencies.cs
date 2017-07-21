@@ -269,6 +269,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The concession manager
         /// </summary>
         public static IConcessionManager ConcessionManager =
-            new ConcessionManager(ConcessionRepository, LookupTableManager, LegalEntityRepository, RiskGroupRepository);
+            new ConcessionManager(ConcessionRepository, LookupTableManager, LegalEntityRepository, RiskGroupRepository, CacheManager);
     }
 }

@@ -136,6 +136,77 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         }
 
         /// <summary>
+        /// Tests that ReadByRequestorIdStatusIdIsActive for active records executes positive
+        /// </summary>
+        [Fact]
+        public void ReadByRequestorIdStatusIdIsActive_Active_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
+            var resultToTestWith = results.First(_ => _.IsActive && _.SubStatusId.HasValue);
+
+            var result =
+                InstantiatedDependencies.ConcessionRepository.ReadByRequestorIdStatusIdIsActive(
+                    resultToTestWith.RequestorId, resultToTestWith.StatusId, true);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that ReadByRequestorIdStatusIdIsActive for inactive records executes positive
+        /// </summary>
+        [Fact]
+        public void ReadByRequestorIdStatusIdIsActive_InActive_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
+            var resultToTestWith = results.First(_ => !_.IsActive && _.SubStatusId.HasValue);
+
+            var result =
+                InstantiatedDependencies.ConcessionRepository.ReadByRequestorIdStatusIdIsActive(
+                    resultToTestWith.RequestorId, resultToTestWith.StatusId, false);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive for active records executes positive
+        /// </summary>
+        [Fact]
+        public void ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive_Active_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
+            var resultToTestWith = results.First(_ => _.IsActive && _.ExpiryDate.HasValue);
+
+            var result =
+                InstantiatedDependencies.ConcessionRepository
+                    .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive(
+                        resultToTestWith.RequestorId, resultToTestWith.ExpiryDate.Value.AddMinutes(-10),
+                        resultToTestWith.ExpiryDate.Value.AddMinutes(10), true);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive for inactive records executes positive
+        /// </summary>
+        [Fact]
+        public void ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive_InActive_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
+            var resultToTestWith = results.First(_ => !_.IsActive && _.ExpiryDate.HasValue);
+
+            var result =
+                InstantiatedDependencies.ConcessionRepository.ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive(
+                    resultToTestWith.RequestorId, resultToTestWith.ExpiryDate.Value.AddMinutes(-10),
+                    resultToTestWith.ExpiryDate.Value.AddMinutes(10), false);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
         /// Tests that ReadAll executes positive.
         /// </summary>
         [Fact]

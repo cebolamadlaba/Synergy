@@ -14,7 +14,6 @@ import { ExpiredInboxComponent } from './expired-inbox/expired-inbox.component';
 import { DeclinedInboxComponent } from './declined-inbox/declined-inbox.component';
 import { InboxHeaderComponent } from './inbox-header/inbox-header.component';
 import { InboxSearchBarComponent } from './inbox-search-bar/inbox-search-bar.component';
-import { InboxConcessionCountService } from './inbox-concession-count/inbox-concession-count.service';
 import { PricingResultsComponent } from './pricing-results/pricing-results.component';
 import { PricingLendingComponent } from './pricing-lending/pricing-lending.component';
 import { PricingCashComponent } from './pricing-cash/pricing-cash.component';
@@ -25,6 +24,7 @@ import { TransactionalAddConcessionComponent } from './transactional-add-concess
 
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { MismatchedInboxComponent } from './mismatched-inbox/mismatched-inbox.component';
+import { UserConcessionsService } from "./user-concessions/user-concessions.service";
 
 @NgModule({
   declarations: [
@@ -54,7 +54,7 @@ import { MismatchedInboxComponent } from './mismatched-inbox/mismatched-inbox.co
     AppRoutingModule,
     ModalModule.forRoot()
   ],
-  providers: [InboxConcessionCountService],
+  providers: [UserConcessionsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
