@@ -25,6 +25,7 @@ import { TransactionalAddConcessionComponent } from './transactional-add-concess
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { MismatchedInboxComponent } from './mismatched-inbox/mismatched-inbox.component';
 import { UserConcessionsService } from "./user-concessions/user-concessions.service";
+import { UserService } from "./user/user.service";
 
 @NgModule({
   declarations: [
@@ -54,7 +55,7 @@ import { UserConcessionsService } from "./user-concessions/user-concessions.serv
     AppRoutingModule,
     ModalModule.forRoot()
   ],
-  providers: [UserConcessionsService],
+  providers: [UserConcessionsService, UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

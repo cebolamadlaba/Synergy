@@ -176,6 +176,7 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_22_ngx_bootstrap_modal__ = __webpack_require__("../../../../ngx-bootstrap/modal/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__mismatched_inbox_mismatched_inbox_component__ = __webpack_require__("../../../../../client-src/app/mismatched-inbox/mismatched-inbox.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__user_concessions_user_concessions_service__ = __webpack_require__("../../../../../client-src/app/user-concessions/user-concessions.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__user_user_service__ = __webpack_require__("../../../../../client-src/app/user/user.service.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -183,6 +184,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -242,7 +244,7 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_3__app_routing_module__["a" /* AppRoutingModule */],
             __WEBPACK_IMPORTED_MODULE_22_ngx_bootstrap_modal__["a" /* ModalModule */].forRoot()
         ],
-        providers: [__WEBPACK_IMPORTED_MODULE_24__user_concessions_user_concessions_service__["a" /* UserConcessionsService */]],
+        providers: [__WEBPACK_IMPORTED_MODULE_24__user_concessions_user_concessions_service__["a" /* UserConcessionsService */], __WEBPACK_IMPORTED_MODULE_25__user_user_service__["a" /* UserService */]],
         bootstrap: [__WEBPACK_IMPORTED_MODULE_4__app_component__["a" /* AppComponent */]]
     })
 ], AppModule);
@@ -926,6 +928,21 @@ var UserConcessions = (function () {
 
 /***/ }),
 
+/***/ "../../../../../client-src/app/models/user.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return User; });
+var User = (function () {
+    function User() {
+    }
+    return User;
+}());
+
+//# sourceMappingURL=user.js.map
+
+/***/ }),
+
 /***/ "../../../../../client-src/app/page-header/page-header.component.css":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -947,7 +964,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/page-header/page-header.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"col-md-12 header\">\r\n    <div class=\"logo\"></div>\r\n</div>\r\n<div class=\"col-md-12 nav-pills-container\">\r\n    <ul class=\"nav nav-pills\">\r\n        <li routerLinkActive=\"selected-nav-item\">\r\n            <a routerLink=\"/pending-inbox\">Inbox</a>\r\n            <!-- The following are here so that the router link active class is enabled for any of the inbox routes-->\r\n            <a routerLink=\"/due-expiry-inbox\" style=\"display: none;\">Inbox</a>\r\n            <a routerLink=\"/expired-inbox\" style=\"display: none;\">Inbox</a>\r\n            <a routerLink=\"/mismatched-inbox\" style=\"display: none;\">Inbox</a>\r\n            <a routerLink=\"/declined-inbox\" style=\"display: none;\">Inbox</a>\r\n        </li>\r\n        <li routerLinkActive=\"selected-nav-item\"><a routerLink=\"/approved-concessions\">Approved Concessions</a></li>\r\n        <li routerLinkActive=\"selected-nav-item\"><a routerLink=\"/conditions\">Conditions</a></li>\r\n        <li routerLinkActive=\"selected-nav-item\">\r\n            <a routerLink=\"/pricing\">Pricing</a>\r\n            <!-- The following are here so that the router link active class is enabled for any of the pricing routes-->\r\n            <a routerLink=\"/pricing-results\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/pricing-cash\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/pricing-lending\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/pricing-transactional\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/cash-add-concession\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/lending-add-concession\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/transactional-add-concession\" style=\"display: none;\">Pricing</a>\r\n        </li>\r\n        <li class=\"logout-li\"><a href=\"#\"><span class=\"glyphicon glyphicon-log-out\"></span> Logout</a></li>\r\n    </ul>\r\n</div> "
+module.exports = "<div class=\"col-md-12 header\">\r\n    <div class=\"logo\"></div>\r\n</div>\r\n<div class=\"col-md-12 nav-pills-container\">\r\n    <ul class=\"nav nav-pills\">\r\n        <li routerLinkActive=\"selected-nav-item\">\r\n            <a routerLink=\"/pending-inbox\">Inbox</a>\r\n            <!-- The following are here so that the router link active class is enabled for any of the inbox routes-->\r\n            <a routerLink=\"/due-expiry-inbox\" style=\"display: none;\">Inbox</a>\r\n            <a routerLink=\"/expired-inbox\" style=\"display: none;\">Inbox</a>\r\n            <a routerLink=\"/mismatched-inbox\" style=\"display: none;\">Inbox</a>\r\n            <a routerLink=\"/declined-inbox\" style=\"display: none;\">Inbox</a>\r\n        </li>\r\n        <li routerLinkActive=\"selected-nav-item\"><a routerLink=\"/approved-concessions\">Approved Concessions</a></li>\r\n        <li routerLinkActive=\"selected-nav-item\"><a routerLink=\"/conditions\">Conditions</a></li>\r\n        <li routerLinkActive=\"selected-nav-item\">\r\n            <a routerLink=\"/pricing\">Pricing</a>\r\n            <!-- The following are here so that the router link active class is enabled for any of the pricing routes-->\r\n            <a routerLink=\"/pricing-results\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/pricing-cash\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/pricing-lending\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/pricing-transactional\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/cash-add-concession\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/lending-add-concession\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/transactional-add-concession\" style=\"display: none;\">Pricing</a>\r\n        </li>\r\n        <li class=\"logout-li\"><a href=\"#\"><span class=\"glyphicon glyphicon-log-out\"></span> {{user.firstName}} {{user.surname}}</a></li>\r\n    </ul>\r\n</div> "
 
 /***/ }),
 
@@ -956,6 +973,7 @@ module.exports = "<div class=\"col-md-12 header\">\r\n    <div class=\"logo\"></
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__user_user_service__ = __webpack_require__("../../../../../client-src/app/user/user.service.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PageHeaderComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -966,11 +984,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+
 
 var PageHeaderComponent = (function () {
-    function PageHeaderComponent() {
+    function PageHeaderComponent(userService) {
+        this.userService = userService;
     }
     PageHeaderComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.observableLoggedInUser = this.userService.getData();
+        this.observableLoggedInUser.subscribe(function (user) { return _this.user = user; }, function (error) { return _this.errorMessage = error; });
     };
     return PageHeaderComponent;
 }());
@@ -980,7 +1006,8 @@ PageHeaderComponent = __decorate([
         template: __webpack_require__("../../../../../client-src/app/page-header/page-header.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/page-header/page-header.component.css")]
     }),
-    __metadata("design:paramtypes", [])
+    __param(0, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Inject */])(__WEBPACK_IMPORTED_MODULE_1__user_user_service__["a" /* UserService */])),
+    __metadata("design:paramtypes", [Object])
 ], PageHeaderComponent);
 
 //# sourceMappingURL=page-header.component.js.map
@@ -1507,6 +1534,90 @@ MockUserConcessionsService = __decorate([
 
 var _a;
 //# sourceMappingURL=user-concessions.service.js.map
+
+/***/ }),
+
+/***/ "../../../../../client-src/app/user/user.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs__ = __webpack_require__("../../../../rxjs/Rx.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_user__ = __webpack_require__("../../../../../client-src/app/models/user.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UserService; });
+/* unused harmony export MockUserService */
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+var UserService = (function () {
+    function UserService(http) {
+        this.http = http;
+    }
+    UserService.prototype.getData = function () {
+        var url = "/api/Application/LoggedInUser";
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    };
+    UserService.prototype.extractData = function (response) {
+        var body = response.json();
+        return body;
+    };
+    UserService.prototype.handleErrorObservable = function (error) {
+        console.error(error.message || error);
+        return __WEBPACK_IMPORTED_MODULE_2_rxjs__["Observable"].throw(error.message || error);
+    };
+    return UserService;
+}());
+UserService = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])(),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _a || Object])
+], UserService);
+
+var MockUserService = (function (_super) {
+    __extends(MockUserService, _super);
+    function MockUserService() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.model = new __WEBPACK_IMPORTED_MODULE_4__models_user__["a" /* User */]();
+        return _this;
+    }
+    MockUserService.prototype.getData = function () {
+        this.model.id = 1;
+        this.model.firstName = "Mocked";
+        this.model.surname = "User";
+        return __WEBPACK_IMPORTED_MODULE_2_rxjs__["Observable"].of(this.model);
+    };
+    return MockUserService;
+}(UserService));
+MockUserService = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])()
+], MockUserService);
+
+var _a;
+//# sourceMappingURL=user.service.js.map
 
 /***/ }),
 
