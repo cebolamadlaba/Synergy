@@ -270,5 +270,10 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static IConcessionManager ConcessionManager =
             new ConcessionManager(ConcessionRepository, LookupTableManager, LegalEntityRepository, RiskGroupRepository, CacheManager);
+
+        /// <summary>
+        /// The user manager
+        /// </summary>
+        public static IUserManager UserManager = new UserManager(CacheManager, UserRepository, UserRoleRepository, RoleRepository);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
-using StandardBank.ConcessionManagement.Test.Helpers;
 using Xunit;
+using static StandardBank.ConcessionManagement.Test.Helpers.MockedDependencies;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 {
@@ -20,9 +20,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         /// </summary>
         public LookupTableManagerTest()
         {
-            _lookupTableManager = new LookupTableManager(MockedDependencies.MockStatusRepository.Object,
-                MockedDependencies.MockSubStatusRepository.Object, MockedDependencies.MockTypeRepository.Object,
-                MockedDependencies.MockMarketSegmentRepository.Object);
+            _lookupTableManager = new LookupTableManager(MockStatusRepository.Object, MockSubStatusRepository.Object,
+                MockTypeRepository.Object, MockMarketSegmentRepository.Object);
         }
 
         /// <summary>
@@ -33,7 +32,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             var status = new Status {Description = "Status Test", Id = 10, IsActive = true};
 
-            MockedDependencies.MockStatusRepository.Setup(_ => _.ReadAll()).Returns(new[] {status});
+            MockStatusRepository.Setup(_ => _.ReadAll()).Returns(new[] {status});
             var result = _lookupTableManager.GetStatusId(status.Description);
 
             Assert.NotNull(result);
@@ -48,7 +47,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             var subStatus = new SubStatus { Description = "Sub Status Test", Id = 20, IsActive = true };
 
-            MockedDependencies.MockSubStatusRepository.Setup(_ => _.ReadAll()).Returns(new[] { subStatus });
+            MockSubStatusRepository.Setup(_ => _.ReadAll()).Returns(new[] { subStatus });
             var result = _lookupTableManager.GetSubStatusId(subStatus.Description);
 
             Assert.NotNull(result);
@@ -63,7 +62,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             var referenceType = new ReferenceType { Description = "Reference Type Test", Id = 30, IsActive = true };
 
-            MockedDependencies.MockTypeRepository.Setup(_ => _.ReadAll()).Returns(new[] { referenceType });
+            MockTypeRepository.Setup(_ => _.ReadAll()).Returns(new[] { referenceType });
             var result = _lookupTableManager.GetReferenceTypeName(referenceType.Id);
 
             Assert.NotNull(result);
@@ -78,7 +77,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             var marketSegment = new MarketSegment { Description = "Reference Type Test", Id = 30, IsActive = true };
 
-            MockedDependencies.MockMarketSegmentRepository.Setup(_ => _.ReadAll()).Returns(new[] { marketSegment });
+            MockMarketSegmentRepository.Setup(_ => _.ReadAll()).Returns(new[] { marketSegment });
             var result = _lookupTableManager.GetMarketSegmentName(marketSegment.Id);
 
             Assert.NotNull(result);
