@@ -3,42 +3,34 @@
     <div class="col-md-1 pricing-user-image">
         <i class="fa fa-user-o" aria-hidden="true"></i>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-5">
         <div class="pricing-form">
             <div class="row">
-                <div class="col-sm-5">
+                <div class="col-sm-3">
                     <p class="lightTitle">Region</p>
                 </div>
                 <div class="col-sm-6">
-                    <p>Some Region</p>
+                    <p>{{user.userRegions[0].description}}</p>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-5">
+                <div class="col-sm-3">
                     <p class="lightTitle">Business Unit</p>
                 </div>
                 <div class="col-sm-6">
-                    <p>Cape Town</p>
+                    <p>{{user.userCentres[0].name}}</p>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-5">
         <div class="pricing-form">
-            <div class="row">
-                <div class="col-sm-3">
-                    <p class="lightTitle">Segment</p>
-                </div>
-                <div class="col-sm-6">
-                    <p>Expert</p>
-                </div>
-            </div>
             <div class="row">
                 <div class="col-sm-3">
                     <p class="lightTitle">Province</p>
                 </div>
                 <div class="col-sm-6">
-                    <p>Northen Cape</p>
+                    <p>{{user.userCentres[0].province}}</p>
                 </div>
             </div>
         </div>

@@ -1,4 +1,6 @@
 ﻿import { Role } from "./role";
+import { Centre } from "./centre";
+import { Region } from "./region";
 
 export class User {
     id: number;
@@ -8,4 +10,6 @@ export class User {
     surname: string;
     isActive: boolean;
     userRoles: Role[];
+    userRegions: Region[];
+    userCentres: Centre[];
 }
