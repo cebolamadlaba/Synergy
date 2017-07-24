@@ -272,8 +272,19 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             new ConcessionManager(ConcessionRepository, LookupTableManager, LegalEntityRepository, RiskGroupRepository, CacheManager);
 
         /// <summary>
+        /// The Region repository
+        /// </summary>
+        public static IRegionRepository RegionRepository = new RegionRepository(ConfigurationData, CacheManager);
+
+        /// <summary>
+        /// The UserRegion repository
+        /// </summary>
+        public static IUserRegionRepository UserRegionRepository = new UserRegionRepository(ConfigurationData);
+
+        /// <summary>
         /// The user manager
         /// </summary>
-        public static IUserManager UserManager = new UserManager(CacheManager, UserRepository, UserRoleRepository, RoleRepository);
+        public static IUserManager UserManager = new UserManager(CacheManager, UserRepository, UserRoleRepository,
+            RoleRepository, UserRegionRepository, RegionRepository);
     }
 }

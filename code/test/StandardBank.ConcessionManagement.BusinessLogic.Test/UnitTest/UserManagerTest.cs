@@ -23,7 +23,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         public UserManagerTest()
         {
             _userManager = new UserManager(InstantiatedDependencies.CacheManager, MockUserRepository.Object,
-                MockUserRoleRepository.Object, MockRoleRepository.Object);
+                MockUserRoleRepository.Object, MockRoleRepository.Object, MockUserRegionRepository.Object,
+                MockRegionRepository.Object);
         }
 
         /// <summary>
@@ -39,14 +40,26 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 ANumber = aNumber
             });
 
-            MockUserRoleRepository.Setup(_ => _.ReadByUserId(It.IsAny<int>())).Returns(new[] {new UserRole { RoleId = 1}});
+            MockUserRoleRepository.Setup(_ => _.ReadByUserId(It.IsAny<int>()))
+                .Returns(new[] {new UserRole {RoleId = 1, IsActive = true}});
 
-            MockRoleRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new Role());
+            MockRoleRepository.Setup(_ => _.ReadAll()).Returns(new[]
+                {new Role {Id = 1, IsActive = true, RoleName = "Test", RoleDescription = "Unit Test"}});
+
+            MockUserRegionRepository.Setup(_ => _.ReadByUserId(It.IsAny<int>()))
+                .Returns(new[] {new UserRegion {RegionId = 1, IsActive = true}});
+
+            MockRegionRepository.Setup(_ => _.ReadAll()).Returns(new[]
+                {new Region {Id = 1, IsActive = true, Description = "Test"}});
 
             var result = _userManager.GetUser(aNumber);
 
             Assert.NotNull(result);
             Assert.Equal(aNumber, result.ANumber);
+            Assert.NotNull(result.UserRoles);
+            Assert.NotEmpty(result.UserRoles);
+            Assert.NotNull(result.UserRegions);
+            Assert.NotEmpty(result.UserRegions);
         }
     }
 }

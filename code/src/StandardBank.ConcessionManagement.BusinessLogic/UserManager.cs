@@ -36,19 +36,34 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IRoleRepository _roleRepository;
 
         /// <summary>
+        /// The user region repository
+        /// </summary>
+        private readonly IUserRegionRepository _userRegionRepository;
+
+        /// <summary>
+        /// The region repository
+        /// </summary>
+        private readonly IRegionRepository _regionRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="UserManager"/> class.
         /// </summary>
         /// <param name="cacheManager">The cache manager.</param>
         /// <param name="userRepository">The user repository.</param>
         /// <param name="userRoleRepository">The user role repository.</param>
         /// <param name="roleRepository">The role repository.</param>
+        /// <param name="userRegionRepository"></param>
+        /// <param name="regionRepository"></param>
         public UserManager(ICacheManager cacheManager, IUserRepository userRepository,
-            IUserRoleRepository userRoleRepository, IRoleRepository roleRepository)
+            IUserRoleRepository userRoleRepository, IRoleRepository roleRepository,
+            IUserRegionRepository userRegionRepository, IRegionRepository regionRepository)
         {
             _cacheManager = cacheManager;
             _userRepository = userRepository;
             _userRoleRepository = userRoleRepository;
             _roleRepository = roleRepository;
+            _userRegionRepository = userRegionRepository;
+            _regionRepository = regionRepository;
         }
 
         /// <summary>
@@ -72,7 +87,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         EmailAddress = user.EmailAddress,
                         FirstName = user.FirstName,
                         Surname = user.Surname,
-                        UserRoles = GetUserRoles(user.Id)
+                        UserRoles = GetUserRoles(user.Id),
+                        UserRegions = GetUserRegions(user.Id)
                     };
                 }
 
@@ -81,6 +97,36 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return _cacheManager.ReturnFromCache(function, 1440, CacheKey.UserInterface.SiteHelper.LoggedInUser,
                 new CacheKeyParameter(nameof(aNumber), aNumber));
+        }
+
+        /// <summary>
+        /// Gets the user regions
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        private IEnumerable<Region> GetUserRegions(int userId)
+        {
+            var userRegions = new List<Region>();
+            var userRegionIds = _userRegionRepository.ReadByUserId(userId);
+
+            if (userRegionIds != null && userRegionIds.Any())
+            {
+                var regions = _regionRepository.ReadAll();
+
+                foreach (var region in regions)
+                {
+                    if (userRegionIds.Any(_ => _.RegionId == region.Id && _.IsActive && region.IsActive))
+                    {
+                        userRegions.Add(new Region
+                        {
+                            Id = region.Id,
+                            Description = region.Description
+                        });
+                    }
+                }
+            }
+
+            return userRegions;
         }
 
         /// <summary>
@@ -99,7 +145,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 foreach (var role in roles)
                 {
-                    if (userRoleIds.Any(_ => _.RoleId == role.Id && _.IsActive))
+                    if (userRoleIds.Any(_ => _.RoleId == role.Id && _.IsActive && role.IsActive))
                     {
                         userRoles.Add(new Role
                         {

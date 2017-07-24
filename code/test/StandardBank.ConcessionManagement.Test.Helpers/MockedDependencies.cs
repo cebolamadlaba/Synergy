@@ -260,5 +260,15 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The mock CacheManager
         /// </summary>
         public static Mock<ICacheManager> MockCacheManager = new Mock<ICacheManager>();
+
+        /// <summary>
+        /// The mock Region repository
+        /// </summary>
+        public static Mock<IRegionRepository> MockRegionRepository = new Mock<IRegionRepository>();
+
+        /// <summary>
+        /// The mock UserRegion repository
+        /// </summary>
+        public static Mock<IUserRegionRepository> MockUserRegionRepository = new Mock<IUserRegionRepository>();
     }
 }

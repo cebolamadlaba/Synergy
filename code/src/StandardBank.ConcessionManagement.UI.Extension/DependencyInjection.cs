@@ -91,8 +91,10 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             services.AddScoped<IConditionTypeProductRepository, ConditionTypeProductRepository>();
             services.AddScoped<ILegalEntityRepository, LegalEntityRepository>();
             services.AddScoped<ILegalEntityAccountRepository, LegalEntityAccountRepository>();
+            services.AddScoped<IRegionRepository, RegionRepository>();
             services.AddScoped<IRiskGroupRepository, RiskGroupRepository>();
             services.AddScoped<IScenarioManagerToolDealRepository, ScenarioManagerToolDealRepository>();
+            services.AddScoped<IUserRegionRepository, UserRegionRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
         }

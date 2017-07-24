@@ -107,6 +107,11 @@
             {
                 public const string ReadAll = "CacheKey.Repository.ReferenceTypeRepository.ReadAll";
             }
+
+            public static class RegionRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.RegionRepository.ReadAll";
+            }
         }
     }
 }

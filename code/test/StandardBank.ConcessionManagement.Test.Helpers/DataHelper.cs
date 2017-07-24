@@ -2325,5 +2325,108 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
 
             return InsertUserRole();
         }
+
+        /// <summary>
+        /// Gets the Region id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetRegionId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.RegionRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertRegion();
+        }
+
+        /// <summary>
+        /// Inserts a Region and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertRegion()
+        {
+            var model = new Region
+            {
+                Description = "19901ab209",
+                IsActive = false
+            };
+
+            InstantiatedDependencies.RegionRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate Region id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateRegionId(int? model)
+        {
+            if (!model.HasValue)
+                return GetRegionId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.RegionRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertRegion();
+        }
+
+        /// <summary>
+        /// Gets the UserRegion id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetUserRegionId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.UserRegionRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertUserRegion();
+        }
+
+        /// <summary>
+        /// Inserts a UserRegion and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertUserRegion()
+        {
+            var model = new UserRegion
+            {
+                UserId = GetUserId(),
+                RegionId = GetRegionId(),
+                IsActive = false
+            };
+
+            InstantiatedDependencies.UserRegionRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate UserRegion id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateUserRegionId(int? model)
+        {
+            if (!model.HasValue)
+                return GetUserRegionId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.UserRegionRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertUserRegion();
+        }
     }
 }
