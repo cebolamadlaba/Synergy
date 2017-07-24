@@ -1,4 +1,134 @@
-webpackJsonp([3],{
+webpackJsonp([4],{
+
+/***/ "../../../../angular-datatables/index.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_angular_datatables_directive__ = __webpack_require__("../../../../angular-datatables/src/angular-datatables.directive.js");
+/* unused harmony reexport DataTableDirective */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_angular_datatables_module__ = __webpack_require__("../../../../angular-datatables/src/angular-datatables.module.js");
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__src_angular_datatables_module__["a"]; });
+/**
+ * @license
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://raw.githubusercontent.com/l-lin/angular-datatables/master/LICENSE
+ */
+/**
+ * @module
+ * @description
+ * Entry point from which you should import all public library APIs.
+ */
+
+
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+
+/***/ "../../../../angular-datatables/src/angular-datatables.directive.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DataTableDirective; });
+/**
+ * @license
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://raw.githubusercontent.com/l-lin/angular-datatables/master/LICENSE
+ */
+
+var DataTableDirective = (function () {
+    function DataTableDirective(el) {
+        this.el = el;
+        /**
+         * The DataTable option you pass to configure your table.
+         */
+        this.dtOptions = {};
+    }
+    DataTableDirective.prototype.ngOnInit = function () {
+        var _this = this;
+        if (this.dtTrigger) {
+            this.dtTrigger.subscribe(function () {
+                _this.displayTable();
+            });
+        }
+        else {
+            this.displayTable();
+        }
+    };
+    DataTableDirective.prototype.displayTable = function () {
+        var _this = this;
+        this.dtInstance = new Promise(function (resolve, reject) {
+            Promise.resolve(_this.dtOptions).then(function (dtOptions) {
+                // Using setTimeout as a "hack" to be "part" of NgZone
+                setTimeout(function () {
+                    var dt = $(_this.el.nativeElement).DataTable(dtOptions);
+                    resolve(dt);
+                });
+            });
+        });
+    };
+    return DataTableDirective;
+}());
+
+DataTableDirective.decorators = [
+    { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["J" /* Directive */], args: [{
+                selector: '[datatable]'
+            },] },
+];
+/** @nocollapse */
+DataTableDirective.ctorParameters = function () { return [
+    { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["M" /* ElementRef */], },
+]; };
+DataTableDirective.propDecorators = {
+    'dtOptions': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["O" /* Input */] },],
+    'dtTrigger': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["O" /* Input */] },],
+};
+//# sourceMappingURL=angular-datatables.directive.js.map
+
+/***/ }),
+
+/***/ "../../../../angular-datatables/src/angular-datatables.module.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__("../../../common/@angular/common.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_datatables_directive__ = __webpack_require__("../../../../angular-datatables/src/angular-datatables.directive.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DataTablesModule; });
+/**
+ * @license
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://raw.githubusercontent.com/l-lin/angular-datatables/master/LICENSE
+ */
+
+
+
+var DataTablesModule = (function () {
+    function DataTablesModule() {
+    }
+    DataTablesModule.forRoot = function () {
+        return {
+            ngModule: DataTablesModule
+        };
+    };
+    return DataTablesModule;
+}());
+
+DataTablesModule.decorators = [
+    { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["b" /* NgModule */], args: [{
+                imports: [__WEBPACK_IMPORTED_MODULE_1__angular_common__["d" /* CommonModule */]],
+                declarations: [__WEBPACK_IMPORTED_MODULE_2__angular_datatables_directive__["a" /* DataTableDirective */]],
+                exports: [__WEBPACK_IMPORTED_MODULE_2__angular_datatables_directive__["a" /* DataTableDirective */]]
+            },] },
+];
+/** @nocollapse */
+DataTablesModule.ctorParameters = function () { return []; };
+//# sourceMappingURL=angular-datatables.module.js.map
+
+/***/ }),
 
 /***/ "../../../../css-loader/lib/css-base.js":
 /***/ (function(module, exports) {

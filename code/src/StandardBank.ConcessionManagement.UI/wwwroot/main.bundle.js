@@ -155,25 +155,25 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_routing_module__ = __webpack_require__("../../../../../client-src/app/app-routing.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__app_component__ = __webpack_require__("../../../../../client-src/app/app.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__page_header_page_header_component__ = __webpack_require__("../../../../../client-src/app/page-header/page-header.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pending_inbox_pending_inbox_component__ = __webpack_require__("../../../../../client-src/app/pending-inbox/pending-inbox.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__approved_concessions_approved_concessions_component__ = __webpack_require__("../../../../../client-src/app/approved-concessions/approved-concessions.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__conditions_conditions_component__ = __webpack_require__("../../../../../client-src/app/conditions/conditions.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pricing_pricing_component__ = __webpack_require__("../../../../../client-src/app/pricing/pricing.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__due_expiry_inbox_due_expiry_inbox_component__ = __webpack_require__("../../../../../client-src/app/due-expiry-inbox/due-expiry-inbox.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__expired_inbox_expired_inbox_component__ = __webpack_require__("../../../../../client-src/app/expired-inbox/expired-inbox.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__declined_inbox_declined_inbox_component__ = __webpack_require__("../../../../../client-src/app/declined-inbox/declined-inbox.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__inbox_header_inbox_header_component__ = __webpack_require__("../../../../../client-src/app/inbox-header/inbox-header.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__inbox_search_bar_inbox_search_bar_component__ = __webpack_require__("../../../../../client-src/app/inbox-search-bar/inbox-search-bar.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__pricing_results_pricing_results_component__ = __webpack_require__("../../../../../client-src/app/pricing-results/pricing-results.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__pricing_lending_pricing_lending_component__ = __webpack_require__("../../../../../client-src/app/pricing-lending/pricing-lending.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__pricing_cash_pricing_cash_component__ = __webpack_require__("../../../../../client-src/app/pricing-cash/pricing-cash.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__pricing_transactional_pricing_transactional_component__ = __webpack_require__("../../../../../client-src/app/pricing-transactional/pricing-transactional.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__cash_add_concession_cash_add_concession_component__ = __webpack_require__("../../../../../client-src/app/cash-add-concession/cash-add-concession.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__lending_add_concession_lending_add_concession_component__ = __webpack_require__("../../../../../client-src/app/lending-add-concession/lending-add-concession.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__transactional_add_concession_transactional_add_concession_component__ = __webpack_require__("../../../../../client-src/app/transactional-add-concession/transactional-add-concession.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22_ngx_bootstrap_modal__ = __webpack_require__("../../../../ngx-bootstrap/modal/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ngx_bootstrap_modal__ = __webpack_require__("../../../../ngx-bootstrap/modal/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_angular_datatables__ = __webpack_require__("../../../../angular-datatables/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__app_component__ = __webpack_require__("../../../../../client-src/app/app.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__page_header_page_header_component__ = __webpack_require__("../../../../../client-src/app/page-header/page-header.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__pending_inbox_pending_inbox_component__ = __webpack_require__("../../../../../client-src/app/pending-inbox/pending-inbox.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__approved_concessions_approved_concessions_component__ = __webpack_require__("../../../../../client-src/app/approved-concessions/approved-concessions.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__conditions_conditions_component__ = __webpack_require__("../../../../../client-src/app/conditions/conditions.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pricing_pricing_component__ = __webpack_require__("../../../../../client-src/app/pricing/pricing.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__due_expiry_inbox_due_expiry_inbox_component__ = __webpack_require__("../../../../../client-src/app/due-expiry-inbox/due-expiry-inbox.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__expired_inbox_expired_inbox_component__ = __webpack_require__("../../../../../client-src/app/expired-inbox/expired-inbox.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__declined_inbox_declined_inbox_component__ = __webpack_require__("../../../../../client-src/app/declined-inbox/declined-inbox.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__inbox_header_inbox_header_component__ = __webpack_require__("../../../../../client-src/app/inbox-header/inbox-header.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__pricing_results_pricing_results_component__ = __webpack_require__("../../../../../client-src/app/pricing-results/pricing-results.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__pricing_lending_pricing_lending_component__ = __webpack_require__("../../../../../client-src/app/pricing-lending/pricing-lending.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__pricing_cash_pricing_cash_component__ = __webpack_require__("../../../../../client-src/app/pricing-cash/pricing-cash.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__pricing_transactional_pricing_transactional_component__ = __webpack_require__("../../../../../client-src/app/pricing-transactional/pricing-transactional.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__cash_add_concession_cash_add_concession_component__ = __webpack_require__("../../../../../client-src/app/cash-add-concession/cash-add-concession.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__lending_add_concession_lending_add_concession_component__ = __webpack_require__("../../../../../client-src/app/lending-add-concession/lending-add-concession.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__transactional_add_concession_transactional_add_concession_component__ = __webpack_require__("../../../../../client-src/app/transactional-add-concession/transactional-add-concession.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__mismatched_inbox_mismatched_inbox_component__ = __webpack_require__("../../../../../client-src/app/mismatched-inbox/mismatched-inbox.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__user_concessions_user_concessions_service__ = __webpack_require__("../../../../../client-src/app/user-concessions/user-concessions.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__user_user_service__ = __webpack_require__("../../../../../client-src/app/user/user.service.ts");
@@ -218,34 +218,34 @@ var AppModule = (function () {
 AppModule = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__angular_core__["b" /* NgModule */])({
         declarations: [
-            __WEBPACK_IMPORTED_MODULE_4__app_component__["a" /* AppComponent */],
-            __WEBPACK_IMPORTED_MODULE_5__page_header_page_header_component__["a" /* PageHeaderComponent */],
-            __WEBPACK_IMPORTED_MODULE_6__pending_inbox_pending_inbox_component__["a" /* PendingInboxComponent */],
-            __WEBPACK_IMPORTED_MODULE_7__approved_concessions_approved_concessions_component__["a" /* ApprovedConcessionsComponent */],
-            __WEBPACK_IMPORTED_MODULE_8__conditions_conditions_component__["a" /* ConditionsComponent */],
-            __WEBPACK_IMPORTED_MODULE_9__pricing_pricing_component__["a" /* PricingComponent */],
-            __WEBPACK_IMPORTED_MODULE_10__due_expiry_inbox_due_expiry_inbox_component__["a" /* DueExpiryInboxComponent */],
-            __WEBPACK_IMPORTED_MODULE_11__expired_inbox_expired_inbox_component__["a" /* ExpiredInboxComponent */],
-            __WEBPACK_IMPORTED_MODULE_12__declined_inbox_declined_inbox_component__["a" /* DeclinedInboxComponent */],
-            __WEBPACK_IMPORTED_MODULE_13__inbox_header_inbox_header_component__["a" /* InboxHeaderComponent */],
-            __WEBPACK_IMPORTED_MODULE_14__inbox_search_bar_inbox_search_bar_component__["a" /* InboxSearchBarComponent */],
-            __WEBPACK_IMPORTED_MODULE_15__pricing_results_pricing_results_component__["a" /* PricingResultsComponent */],
-            __WEBPACK_IMPORTED_MODULE_16__pricing_lending_pricing_lending_component__["a" /* PricingLendingComponent */],
-            __WEBPACK_IMPORTED_MODULE_17__pricing_cash_pricing_cash_component__["a" /* PricingCashComponent */],
-            __WEBPACK_IMPORTED_MODULE_18__pricing_transactional_pricing_transactional_component__["a" /* PricingTransactionalComponent */],
-            __WEBPACK_IMPORTED_MODULE_19__cash_add_concession_cash_add_concession_component__["a" /* CashAddConcessionComponent */],
-            __WEBPACK_IMPORTED_MODULE_20__lending_add_concession_lending_add_concession_component__["a" /* LendingAddConcessionComponent */],
-            __WEBPACK_IMPORTED_MODULE_21__transactional_add_concession_transactional_add_concession_component__["a" /* TransactionalAddConcessionComponent */],
+            __WEBPACK_IMPORTED_MODULE_6__app_component__["a" /* AppComponent */],
+            __WEBPACK_IMPORTED_MODULE_7__page_header_page_header_component__["a" /* PageHeaderComponent */],
+            __WEBPACK_IMPORTED_MODULE_8__pending_inbox_pending_inbox_component__["a" /* PendingInboxComponent */],
+            __WEBPACK_IMPORTED_MODULE_9__approved_concessions_approved_concessions_component__["a" /* ApprovedConcessionsComponent */],
+            __WEBPACK_IMPORTED_MODULE_10__conditions_conditions_component__["a" /* ConditionsComponent */],
+            __WEBPACK_IMPORTED_MODULE_11__pricing_pricing_component__["a" /* PricingComponent */],
+            __WEBPACK_IMPORTED_MODULE_12__due_expiry_inbox_due_expiry_inbox_component__["a" /* DueExpiryInboxComponent */],
+            __WEBPACK_IMPORTED_MODULE_13__expired_inbox_expired_inbox_component__["a" /* ExpiredInboxComponent */],
+            __WEBPACK_IMPORTED_MODULE_14__declined_inbox_declined_inbox_component__["a" /* DeclinedInboxComponent */],
+            __WEBPACK_IMPORTED_MODULE_15__inbox_header_inbox_header_component__["a" /* InboxHeaderComponent */],
+            __WEBPACK_IMPORTED_MODULE_16__pricing_results_pricing_results_component__["a" /* PricingResultsComponent */],
+            __WEBPACK_IMPORTED_MODULE_17__pricing_lending_pricing_lending_component__["a" /* PricingLendingComponent */],
+            __WEBPACK_IMPORTED_MODULE_18__pricing_cash_pricing_cash_component__["a" /* PricingCashComponent */],
+            __WEBPACK_IMPORTED_MODULE_19__pricing_transactional_pricing_transactional_component__["a" /* PricingTransactionalComponent */],
+            __WEBPACK_IMPORTED_MODULE_20__cash_add_concession_cash_add_concession_component__["a" /* CashAddConcessionComponent */],
+            __WEBPACK_IMPORTED_MODULE_21__lending_add_concession_lending_add_concession_component__["a" /* LendingAddConcessionComponent */],
+            __WEBPACK_IMPORTED_MODULE_22__transactional_add_concession_transactional_add_concession_component__["a" /* TransactionalAddConcessionComponent */],
             __WEBPACK_IMPORTED_MODULE_23__mismatched_inbox_mismatched_inbox_component__["a" /* MismatchedInboxComponent */]
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
             __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* HttpModule */],
             __WEBPACK_IMPORTED_MODULE_3__app_routing_module__["a" /* AppRoutingModule */],
-            __WEBPACK_IMPORTED_MODULE_22_ngx_bootstrap_modal__["a" /* ModalModule */].forRoot()
+            __WEBPACK_IMPORTED_MODULE_4_ngx_bootstrap_modal__["a" /* ModalModule */].forRoot(),
+            __WEBPACK_IMPORTED_MODULE_5_angular_datatables__["a" /* DataTablesModule */]
         ],
         providers: [__WEBPACK_IMPORTED_MODULE_24__user_concessions_user_concessions_service__["a" /* UserConcessionsService */], __WEBPACK_IMPORTED_MODULE_25__user_user_service__["a" /* UserService */]],
-        bootstrap: [__WEBPACK_IMPORTED_MODULE_4__app_component__["a" /* AppComponent */]]
+        bootstrap: [__WEBPACK_IMPORTED_MODULE_6__app_component__["a" /* AppComponent */]]
     })
 ], AppModule);
 
@@ -457,7 +457,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/declined-inbox/declined-inbox.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <app-inbox-search-bar></app-inbox-search-bar>\r\n\r\n    <!-- Results table -->\r\n    <div class=\"table-container\">\r\n        <table class=\"table table-bordered table-hover table-striped\">\r\n            <thead>\r\n                <tr>\r\n                    <th>Risk Group Number</th>\r\n                    <th>Risk Group Name</th>\r\n                    <th>Customer Name</th>\r\n                    <th>Type</th>\r\n                    <th>Date Opened</th>\r\n                    <th>Concession Id</th>\r\n                    <th>Segment</th>\r\n                    <th>Date Sent For Approval</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr *ngFor='let concession of userConcessions.declinedConcessions; trackBy: index;'>\r\n                    <td>{{concession.riskGroupNumber}}</td>\r\n                    <td>{{concession.riskGroupName}}</td>\r\n                    <td class=\"customerName\">{{concession.customerName}}</td>\r\n                    <td>{{concession.type}}</td>\r\n                    <td class=\"date\">{{concession.dateOpened | date: 'yyyy/MM/dd'}}</td>\r\n                    <td>{{concession.referenceNumber}}</td>\r\n                    <td>{{concession.seqment}}</td>\r\n                    <td class=\"date\">{{concession.dateSentForApproval| date: 'yyyy/MM/dd'}}</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n\r\n</div>"
+module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <!-- Results table -->\r\n    <div class=\"table-container\">\r\n        <table datatable [dtOptions]=\"dtOptions\" [dtTrigger]=\"dtTrigger\" class=\"table table-bordered table-hover table-striped\">\r\n            <thead>\r\n                <tr>\r\n                    <th>Risk Group Number</th>\r\n                    <th>Risk Group Name</th>\r\n                    <th>Customer Name</th>\r\n                    <th>Type</th>\r\n                    <th>Date Opened</th>\r\n                    <th>Concession Id</th>\r\n                    <th>Segment</th>\r\n                    <th>Date Sent For Approval</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr *ngFor='let concession of userConcessions.declinedConcessions; trackBy: index;'>\r\n                    <td>{{concession.riskGroupNumber}}</td>\r\n                    <td>{{concession.riskGroupName}}</td>\r\n                    <td class=\"customerName\">{{concession.customerName}}</td>\r\n                    <td>{{concession.type}}</td>\r\n                    <td class=\"date\">{{concession.dateOpened | date: 'yyyy/MM/dd'}}</td>\r\n                    <td>{{concession.referenceNumber}}</td>\r\n                    <td>{{concession.seqment}}</td>\r\n                    <td class=\"date\">{{concession.dateSentForApproval| date: 'yyyy/MM/dd'}}</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n\r\n</div>"
 
 /***/ }),
 
@@ -467,6 +467,10 @@ module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__user_concessions_user_concessions_service__ = __webpack_require__("../../../../../client-src/app/user-concessions/user-concessions.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__ = __webpack_require__("../../../../rxjs/Rx.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DeclinedInboxComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -482,14 +486,29 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 
 
+
+
 var DeclinedInboxComponent = (function () {
     function DeclinedInboxComponent(userConcessionsService) {
         this.userConcessionsService = userConcessionsService;
+        this.dtOptions = {};
+        this.dtTrigger = new __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__["Subject"]();
     }
     DeclinedInboxComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.dtOptions = {
+            pagingType: 'full_numbers',
+            language: {
+                emptyTable: "No records found!",
+                search: "",
+                searchPlaceholder: "Search"
+            }
+        };
         this.observableUserConcessions = this.userConcessionsService.getData();
-        this.observableUserConcessions.subscribe(function (userConcessions) { return _this.userConcessions = userConcessions; }, function (error) { return _this.errorMessage = error; });
+        this.observableUserConcessions.subscribe(function (userConcessions) {
+            _this.userConcessions = userConcessions;
+            _this.dtTrigger.next();
+        }, function (error) { return _this.errorMessage = error; });
     };
     return DeclinedInboxComponent;
 }());
@@ -528,7 +547,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/due-expiry-inbox/due-expiry-inbox.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <app-inbox-search-bar></app-inbox-search-bar>\r\n\r\n    <!-- Results table -->\r\n    <div class=\"table-container\">\r\n        <table class=\"table table-bordered table-hover table-striped\">\r\n            <thead>\r\n                <tr>\r\n                    <th>Risk Group Number</th>\r\n                    <th>Risk Group Name</th>\r\n                    <th>Customer Name</th>\r\n                    <th>Type</th>\r\n                    <th>Date Opened</th>\r\n                    <th>Concession Id</th>\r\n                    <th>Segment</th>\r\n                    <th>Date Sent For Approval</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr *ngFor='let concession of userConcessions.dueForExpiryConcessions; trackBy: index;'>\r\n                    <td>{{concession.riskGroupNumber}}</td>\r\n                    <td>{{concession.riskGroupName}}</td>\r\n                    <td class=\"customerName\">{{concession.customerName}}</td>\r\n                    <td>{{concession.type}}</td>\r\n                    <td class=\"date\">{{concession.dateOpened | date: 'yyyy/MM/dd'}}</td>\r\n                    <td>{{concession.referenceNumber}}</td>\r\n                    <td>{{concession.seqment}}</td>\r\n                    <td class=\"date\">{{concession.dateSentForApproval| date: 'yyyy/MM/dd'}}</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n</div>"
+module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <!-- Results table -->\r\n    <div class=\"table-container\">\r\n        <table datatable [dtOptions]=\"dtOptions\" [dtTrigger]=\"dtTrigger\" class=\"table table-bordered table-hover table-striped\">\r\n            <thead>\r\n                <tr>\r\n                    <th>Risk Group Number</th>\r\n                    <th>Risk Group Name</th>\r\n                    <th>Customer Name</th>\r\n                    <th>Type</th>\r\n                    <th>Date Opened</th>\r\n                    <th>Concession Id</th>\r\n                    <th>Segment</th>\r\n                    <th>Date Sent For Approval</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr *ngFor='let concession of userConcessions.dueForExpiryConcessions; trackBy: index;'>\r\n                    <td>{{concession.riskGroupNumber}}</td>\r\n                    <td>{{concession.riskGroupName}}</td>\r\n                    <td class=\"customerName\">{{concession.customerName}}</td>\r\n                    <td>{{concession.type}}</td>\r\n                    <td class=\"date\">{{concession.dateOpened | date: 'yyyy/MM/dd'}}</td>\r\n                    <td>{{concession.referenceNumber}}</td>\r\n                    <td>{{concession.seqment}}</td>\r\n                    <td class=\"date\">{{concession.dateSentForApproval| date: 'yyyy/MM/dd'}}</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n</div>"
 
 /***/ }),
 
@@ -538,6 +557,10 @@ module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__user_concessions_user_concessions_service__ = __webpack_require__("../../../../../client-src/app/user-concessions/user-concessions.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__ = __webpack_require__("../../../../rxjs/Rx.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DueExpiryInboxComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -553,14 +576,29 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 
 
+
+
 var DueExpiryInboxComponent = (function () {
     function DueExpiryInboxComponent(userConcessionsService) {
         this.userConcessionsService = userConcessionsService;
+        this.dtOptions = {};
+        this.dtTrigger = new __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__["Subject"]();
     }
     DueExpiryInboxComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.dtOptions = {
+            pagingType: 'full_numbers',
+            language: {
+                emptyTable: "No records found!",
+                search: "",
+                searchPlaceholder: "Search"
+            }
+        };
         this.observableUserConcessions = this.userConcessionsService.getData();
-        this.observableUserConcessions.subscribe(function (userConcessions) { return _this.userConcessions = userConcessions; }, function (error) { return _this.errorMessage = error; });
+        this.observableUserConcessions.subscribe(function (userConcessions) {
+            _this.userConcessions = userConcessions;
+            _this.dtTrigger.next();
+        }, function (error) { return _this.errorMessage = error; });
     };
     return DueExpiryInboxComponent;
 }());
@@ -599,7 +637,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/expired-inbox/expired-inbox.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <app-inbox-search-bar></app-inbox-search-bar>\r\n    \r\n    <!-- Results table -->\r\n    <div class=\"table-container\">\r\n        <table class=\"table table-bordered table-hover table-striped\">\r\n            <thead>\r\n            <tr>\r\n                <th>Risk Group Number</th>\r\n                <th>Risk Group Name</th>\r\n                <th>Customer Name</th>\r\n                <th>Type</th>\r\n                <th>Date Opened</th>\r\n                <th>Concession Id</th>\r\n                <th>Segment</th>\r\n                <th>Date Sent For Approval</th>\r\n            </tr>\r\n            </thead>\r\n            <tbody>\r\n            <tr *ngFor='let concession of userConcessions.expiredConcessions; trackBy: index;'>\r\n                <td>{{concession.riskGroupNumber}}</td>\r\n                <td>{{concession.riskGroupName}}</td>\r\n                <td class=\"customerName\">{{concession.customerName}}</td>\r\n                <td>{{concession.type}}</td>\r\n                <td class=\"date\">{{concession.dateOpened | date: 'yyyy/MM/dd'}}</td>\r\n                <td>{{concession.referenceNumber}}</td>\r\n                <td>{{concession.seqment}}</td>\r\n                <td class=\"date\">{{concession.dateSentForApproval| date: 'yyyy/MM/dd'}}</td>\r\n            </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n</div>"
+module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <!-- Results table -->\r\n    <div class=\"table-container\">\r\n        <table datatable [dtOptions]=\"dtOptions\" [dtTrigger]=\"dtTrigger\" class=\"table table-bordered table-hover table-striped\">\r\n            <thead>\r\n            <tr>\r\n                <th>Risk Group Number</th>\r\n                <th>Risk Group Name</th>\r\n                <th>Customer Name</th>\r\n                <th>Type</th>\r\n                <th>Date Opened</th>\r\n                <th>Concession Id</th>\r\n                <th>Segment</th>\r\n                <th>Date Sent For Approval</th>\r\n            </tr>\r\n            </thead>\r\n            <tbody>\r\n            <tr *ngFor='let concession of userConcessions.expiredConcessions; trackBy: index;'>\r\n                <td>{{concession.riskGroupNumber}}</td>\r\n                <td>{{concession.riskGroupName}}</td>\r\n                <td class=\"customerName\">{{concession.customerName}}</td>\r\n                <td>{{concession.type}}</td>\r\n                <td class=\"date\">{{concession.dateOpened | date: 'yyyy/MM/dd'}}</td>\r\n                <td>{{concession.referenceNumber}}</td>\r\n                <td>{{concession.seqment}}</td>\r\n                <td class=\"date\">{{concession.dateSentForApproval| date: 'yyyy/MM/dd'}}</td>\r\n            </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n</div>"
 
 /***/ }),
 
@@ -609,6 +647,10 @@ module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__user_concessions_user_concessions_service__ = __webpack_require__("../../../../../client-src/app/user-concessions/user-concessions.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__ = __webpack_require__("../../../../rxjs/Rx.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ExpiredInboxComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -624,14 +666,29 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 
 
+
+
 var ExpiredInboxComponent = (function () {
     function ExpiredInboxComponent(userConcessionsService) {
         this.userConcessionsService = userConcessionsService;
+        this.dtOptions = {};
+        this.dtTrigger = new __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__["Subject"]();
     }
     ExpiredInboxComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.dtOptions = {
+            pagingType: 'full_numbers',
+            language: {
+                emptyTable: "No records found!",
+                search: "",
+                searchPlaceholder: "Search"
+            }
+        };
         this.observableUserConcessions = this.userConcessionsService.getData();
-        this.observableUserConcessions.subscribe(function (userConcessions) { return _this.userConcessions = userConcessions; }, function (error) { return _this.errorMessage = error; });
+        this.observableUserConcessions.subscribe(function (userConcessions) {
+            _this.userConcessions = userConcessions;
+            _this.dtTrigger.next();
+        }, function (error) { return _this.errorMessage = error; });
     };
     return ExpiredInboxComponent;
 }());
@@ -720,67 +777,6 @@ InboxHeaderComponent = __decorate([
 
 /***/ }),
 
-/***/ "../../../../../client-src/app/inbox-search-bar/inbox-search-bar.component.css":
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
-// imports
-
-
-// module
-exports.push([module.i, "", ""]);
-
-// exports
-
-
-/*** EXPORTS FROM exports-loader ***/
-module.exports = module.exports.toString();
-
-/***/ }),
-
-/***/ "../../../../../client-src/app/inbox-search-bar/inbox-search-bar.component.html":
-/***/ (function(module, exports) {
-
-module.exports = "<!-- Search bar -->\r\n<div class=\"input-group add-on\">\r\n  <input class=\"form-control\" placeholder=\"Search Concession ID or Risk Group Number\" name=\"srch-term\" id=\"srch-term\" type=\"text\">\r\n  <div class=\"input-group-btn\">\r\n    <button class=\"btn btn-default-search\" type=\"submit\"><i class=\"glyphicon glyphicon-search\"></i></button>\r\n  </div>\r\n</div>"
-
-/***/ }),
-
-/***/ "../../../../../client-src/app/inbox-search-bar/inbox-search-bar.component.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return InboxSearchBarComponent; });
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-var InboxSearchBarComponent = (function () {
-    function InboxSearchBarComponent() {
-    }
-    InboxSearchBarComponent.prototype.ngOnInit = function () {
-    };
-    return InboxSearchBarComponent;
-}());
-InboxSearchBarComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_3" /* Component */])({
-        selector: 'app-inbox-search-bar',
-        template: __webpack_require__("../../../../../client-src/app/inbox-search-bar/inbox-search-bar.component.html"),
-        styles: [__webpack_require__("../../../../../client-src/app/inbox-search-bar/inbox-search-bar.component.css")]
-    }),
-    __metadata("design:paramtypes", [])
-], InboxSearchBarComponent);
-
-//# sourceMappingURL=inbox-search-bar.component.js.map
-
-/***/ }),
-
 /***/ "../../../../../client-src/app/lending-add-concession/lending-add-concession.component.css":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -863,7 +859,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/mismatched-inbox/mismatched-inbox.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <app-inbox-search-bar></app-inbox-search-bar>\r\n\r\n    <!-- Results table -->\r\n    <div class=\"table-container\">\r\n        <table class=\"table table-bordered table-hover table-striped\">\r\n            <thead>\r\n                <tr>\r\n                    <th>Risk Group Number</th>\r\n                    <th>Risk Group Name</th>\r\n                    <th>Customer Name</th>\r\n                    <th>Type</th>\r\n                    <th>Date Opened</th>\r\n                    <th>Concession Id</th>\r\n                    <th>Segment</th>\r\n                    <th>Date Sent For Approval</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr *ngFor='let concession of userConcessions.mismatchedConcessions; trackBy: index;'>\r\n                    <td>{{concession.riskGroupNumber}}</td>\r\n                    <td>{{concession.riskGroupName}}</td>\r\n                    <td class=\"customerName\">{{concession.customerName}}</td>\r\n                    <td>{{concession.type}}</td>\r\n                    <td class=\"date\">{{concession.dateOpened | date: 'yyyy/MM/dd'}}</td>\r\n                    <td>{{concession.referenceNumber}}</td>\r\n                    <td>{{concession.seqment}}</td>\r\n                    <td class=\"date\">{{concession.dateSentForApproval| date: 'yyyy/MM/dd'}}</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n</div>"
+module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <!-- Results table -->\r\n    <div class=\"table-container\">\r\n        <table datatable [dtOptions]=\"dtOptions\" [dtTrigger]=\"dtTrigger\" class=\"table table-bordered table-hover table-striped\">\r\n            <thead>\r\n                <tr>\r\n                    <th>Risk Group Number</th>\r\n                    <th>Risk Group Name</th>\r\n                    <th>Customer Name</th>\r\n                    <th>Type</th>\r\n                    <th>Date Opened</th>\r\n                    <th>Concession Id</th>\r\n                    <th>Segment</th>\r\n                    <th>Date Sent For Approval</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr *ngFor='let concession of userConcessions.mismatchedConcessions; trackBy: index;'>\r\n                    <td>{{concession.riskGroupNumber}}</td>\r\n                    <td>{{concession.riskGroupName}}</td>\r\n                    <td class=\"customerName\">{{concession.customerName}}</td>\r\n                    <td>{{concession.type}}</td>\r\n                    <td class=\"date\">{{concession.dateOpened | date: 'yyyy/MM/dd'}}</td>\r\n                    <td>{{concession.referenceNumber}}</td>\r\n                    <td>{{concession.seqment}}</td>\r\n                    <td class=\"date\">{{concession.dateSentForApproval| date: 'yyyy/MM/dd'}}</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n</div>"
 
 /***/ }),
 
@@ -873,6 +869,10 @@ module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__user_concessions_user_concessions_service__ = __webpack_require__("../../../../../client-src/app/user-concessions/user-concessions.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__ = __webpack_require__("../../../../rxjs/Rx.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MismatchedInboxComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -888,14 +888,29 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 
 
+
+
 var MismatchedInboxComponent = (function () {
     function MismatchedInboxComponent(userConcessionsService) {
         this.userConcessionsService = userConcessionsService;
+        this.dtOptions = {};
+        this.dtTrigger = new __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__["Subject"]();
     }
     MismatchedInboxComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.dtOptions = {
+            pagingType: 'full_numbers',
+            language: {
+                emptyTable: "No records found!",
+                search: "",
+                searchPlaceholder: "Search"
+            }
+        };
         this.observableUserConcessions = this.userConcessionsService.getData();
-        this.observableUserConcessions.subscribe(function (userConcessions) { return _this.userConcessions = userConcessions; }, function (error) { return _this.errorMessage = error; });
+        this.observableUserConcessions.subscribe(function (userConcessions) {
+            _this.userConcessions = userConcessions;
+            _this.dtTrigger.next();
+        }, function (error) { return _this.errorMessage = error; });
     };
     return MismatchedInboxComponent;
 }());
@@ -1035,7 +1050,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/pending-inbox/pending-inbox.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <app-inbox-search-bar></app-inbox-search-bar>\r\n    \r\n    <!-- Results table -->\r\n    <div class=\"table-container\">\r\n        <table class=\"table table-bordered table-hover table-striped\">\r\n            <thead>\r\n                <tr>\r\n                    <th>Risk Group Number</th>\r\n                    <th>Risk Group Name</th>\r\n                    <th>Customer Name</th>\r\n                    <th>Type</th>\r\n                    <th>Date Opened</th>\r\n                    <th>Concession Id</th>\r\n                    <th>Segment</th>\r\n                    <th>Date Sent For Approval</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr *ngFor='let concession of userConcessions.pendingConcessions; trackBy: index;'>\r\n                    <td>{{concession.riskGroupNumber}}</td>\r\n                    <td>{{concession.riskGroupName}}</td>\r\n                    <td class=\"customerName\">{{concession.customerName}}</td>\r\n                    <td>{{concession.type}}</td>\r\n                    <td class=\"date\">{{concession.dateOpened | date: 'yyyy/MM/dd'}}</td>\r\n                    <td>{{concession.referenceNumber}}</td>\r\n                    <td>{{concession.seqment}}</td>\r\n                    <td class=\"date\">{{concession.dateSentForApproval| date: 'yyyy/MM/dd'}}</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n</div>"
+module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <!-- Results table -->\r\n    <div class=\"table-container\">\r\n        <table datatable [dtOptions]=\"dtOptions\" [dtTrigger]=\"dtTrigger\" class=\"table table-bordered table-hover table-striped\">\r\n            <thead>\r\n                <tr>\r\n                    <th>Risk Group Number</th>\r\n                    <th>Risk Group Name</th>\r\n                    <th>Customer Name</th>\r\n                    <th>Type</th>\r\n                    <th>Date Opened</th>\r\n                    <th>Concession Id</th>\r\n                    <th>Segment</th>\r\n                    <th>Date Sent For Approval</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr *ngFor='let concession of userConcessions.pendingConcessions; trackBy: index;'>\r\n                    <td>{{concession.riskGroupNumber}}</td>\r\n                    <td>{{concession.riskGroupName}}</td>\r\n                    <td class=\"customerName\">{{concession.customerName}}</td>\r\n                    <td>{{concession.type}}</td>\r\n                    <td class=\"date\">{{concession.dateOpened | date: 'yyyy/MM/dd'}}</td>\r\n                    <td>{{concession.referenceNumber}}</td>\r\n                    <td>{{concession.seqment}}</td>\r\n                    <td class=\"date\">{{concession.dateSentForApproval| date: 'yyyy/MM/dd'}}</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n</div>"
 
 /***/ }),
 
@@ -1045,6 +1060,10 @@ module.exports = "\r\n<app-inbox-header></app-inbox-header>\r\n\r\n<div class=\"
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__user_concessions_user_concessions_service__ = __webpack_require__("../../../../../client-src/app/user-concessions/user-concessions.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__ = __webpack_require__("../../../../rxjs/Rx.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PendingInboxComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1060,14 +1079,29 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 
 
+
+
 var PendingInboxComponent = (function () {
     function PendingInboxComponent(userConcessionsService) {
         this.userConcessionsService = userConcessionsService;
+        this.dtOptions = {};
+        this.dtTrigger = new __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__["Subject"]();
     }
     PendingInboxComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.dtOptions = {
+            pagingType: 'full_numbers',
+            language: {
+                emptyTable: "No records found!",
+                search: "",
+                searchPlaceholder: "Search"
+            }
+        };
         this.observableUserConcessions = this.userConcessionsService.getData();
-        this.observableUserConcessions.subscribe(function (userConcessions) { return _this.userConcessions = userConcessions; }, function (error) { return _this.errorMessage = error; });
+        this.observableUserConcessions.subscribe(function (userConcessions) {
+            _this.userConcessions = userConcessions;
+            _this.dtTrigger.next();
+        }, function (error) { return _this.errorMessage = error; });
     };
     return PendingInboxComponent;
 }());
@@ -1659,7 +1693,7 @@ __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dyna
 
 /***/ }),
 
-/***/ 1:
+/***/ 0:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__("../../../../../client-src/main.ts");
@@ -1667,5 +1701,5 @@ module.exports = __webpack_require__("../../../../../client-src/main.ts");
 
 /***/ })
 
-},[1]);
+},[0]);
 //# sourceMappingURL=main.bundle.js.map

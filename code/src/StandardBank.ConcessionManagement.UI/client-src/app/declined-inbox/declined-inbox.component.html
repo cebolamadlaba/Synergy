@@ -2,11 +2,9 @@
 <app-inbox-header></app-inbox-header>
 
 <div class="col-md-12 search-and-results-container">
-    <app-inbox-search-bar></app-inbox-search-bar>
-
     <!-- Results table -->
     <div class="table-container">
-        <table class="table table-bordered table-hover table-striped">
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-bordered table-hover table-striped">
             <thead>
                 <tr>
                     <th>Risk Group Number</th>
