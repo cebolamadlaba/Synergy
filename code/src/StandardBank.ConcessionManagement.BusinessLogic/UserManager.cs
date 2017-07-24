@@ -21,6 +21,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ICacheManager _cacheManager;
 
         /// <summary>
+        /// The lookup table manager
+        /// </summary>
+        private readonly ILookupTableManager _lookupTableManager;
+
+        /// <summary>
         /// The user repository
         /// </summary>
         private readonly IUserRepository _userRepository;
@@ -46,24 +51,41 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IRegionRepository _regionRepository;
 
         /// <summary>
+        /// The centre repository
+        /// </summary>
+        private readonly ICentreRepository _centreRepository;
+
+        /// <summary>
+        /// The centre user repository
+        /// </summary>
+        private readonly ICentreUserRepository _centreUserRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="UserManager"/> class.
         /// </summary>
         /// <param name="cacheManager">The cache manager.</param>
+        /// <param name="lookupTableManager"></param>
         /// <param name="userRepository">The user repository.</param>
         /// <param name="userRoleRepository">The user role repository.</param>
         /// <param name="roleRepository">The role repository.</param>
         /// <param name="userRegionRepository"></param>
         /// <param name="regionRepository"></param>
-        public UserManager(ICacheManager cacheManager, IUserRepository userRepository,
-            IUserRoleRepository userRoleRepository, IRoleRepository roleRepository,
-            IUserRegionRepository userRegionRepository, IRegionRepository regionRepository)
+        /// <param name="centreRepository"></param>
+        /// <param name="centreUserRepository"></param>
+        public UserManager(ICacheManager cacheManager, ILookupTableManager lookupTableManager,
+            IUserRepository userRepository, IUserRoleRepository userRoleRepository, IRoleRepository roleRepository,
+            IUserRegionRepository userRegionRepository, IRegionRepository regionRepository,
+            ICentreRepository centreRepository, ICentreUserRepository centreUserRepository)
         {
             _cacheManager = cacheManager;
+            _lookupTableManager = lookupTableManager;
             _userRepository = userRepository;
             _userRoleRepository = userRoleRepository;
             _roleRepository = roleRepository;
             _userRegionRepository = userRegionRepository;
             _regionRepository = regionRepository;
+            _centreRepository = centreRepository;
+            _centreUserRepository = centreUserRepository;
         }
 
         /// <summary>
@@ -88,7 +110,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         FirstName = user.FirstName,
                         Surname = user.Surname,
                         UserRoles = GetUserRoles(user.Id),
-                        UserRegions = GetUserRegions(user.Id)
+                        UserRegions = GetUserRegions(user.Id),
+                        UserCentres = GetUserCentres(user.Id)
                     };
                 }
 
@@ -97,6 +120,37 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return _cacheManager.ReturnFromCache(function, 1440, CacheKey.UserInterface.SiteHelper.LoggedInUser,
                 new CacheKeyParameter(nameof(aNumber), aNumber));
+        }
+
+        /// <summary>
+        /// Gets the user centres
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        private IEnumerable<Centre> GetUserCentres(int userId)
+        {
+            var userCentres = new List<Centre>();
+            var userCentreIds = _centreUserRepository.ReadByUserId(userId);
+
+            if (userCentreIds != null && userCentreIds.Any())
+            {
+                var centres = _centreRepository.ReadAll();
+
+                foreach (var centre in centres)
+                {
+                    if (userCentreIds.Any(_ => _.CentreId == centre.Id && _.IsActive && centre.IsActive))
+                    {
+                        userCentres.Add(new Centre
+                        {
+                            Id = centre.Id,
+                            Name = centre.CentreName,
+                            Province = _lookupTableManager.GetProvinceName(centre.ProvinceId)
+                        });
+                    }
+                }
+            }
+
+            return userCentres;
         }
 
         /// <summary>

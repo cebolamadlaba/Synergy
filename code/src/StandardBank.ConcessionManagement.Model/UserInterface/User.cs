@@ -67,5 +67,10 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// Gets or sets the user regions
         /// </summary>
         public IEnumerable<Region> UserRegions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the user centres
+        /// </summary>
+        public IEnumerable<Centre> UserCentres { get; set; }
     }
 }

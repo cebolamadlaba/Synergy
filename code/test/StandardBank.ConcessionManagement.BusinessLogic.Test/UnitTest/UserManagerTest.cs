@@ -22,9 +22,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         /// </summary>
         public UserManagerTest()
         {
-            _userManager = new UserManager(InstantiatedDependencies.CacheManager, MockUserRepository.Object,
-                MockUserRoleRepository.Object, MockRoleRepository.Object, MockUserRegionRepository.Object,
-                MockRegionRepository.Object);
+            _userManager = new UserManager(InstantiatedDependencies.CacheManager, MockLookupTableManager.Object,
+                MockUserRepository.Object, MockUserRoleRepository.Object, MockRoleRepository.Object,
+                MockUserRegionRepository.Object, MockRegionRepository.Object, MockCentreRepository.Object,
+                MockCentreUserRepository.Object);
         }
 
         /// <summary>
@@ -34,6 +35,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         public void GetUser_Executes_Positive()
         {
             var aNumber = "A1234567";
+
+            MockLookupTableManager.Setup(_ => _.GetProvinceName(It.IsAny<int>())).Returns("Unit Test Province");
 
             MockUserRepository.Setup(_ => _.ReadByANumber(It.IsAny<string>())).Returns(new User
             {
@@ -51,6 +54,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             MockRegionRepository.Setup(_ => _.ReadAll()).Returns(new[]
                 {new Region {Id = 1, IsActive = true, Description = "Test"}});
+
+            MockCentreUserRepository.Setup(_ => _.ReadByUserId(It.IsAny<int>()))
+                .Returns(new[] {new CentreUser {CentreId = 1, IsActive = true}});
+
+            MockCentreRepository.Setup(_ => _.ReadAll()).Returns(new[]
+                {new Centre {IsActive = true, CentreName = "Unit Test", Id = 1, ProvinceId = 1}});
 
             var result = _userManager.GetUser(aNumber);
 

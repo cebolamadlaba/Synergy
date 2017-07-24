@@ -45,6 +45,23 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         }
 
         /// <summary>
+        /// Tests that ReadByUserId executes positive
+        /// </summary>
+        [Fact]
+        public void ReadByUserId_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.CentreUserRepository.ReadAll();
+            var userId = results.First().UserId;
+            var result = InstantiatedDependencies.CentreUserRepository.ReadByUserId(userId);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+
+            foreach (var record in results)
+                Assert.Equal(record.UserId, userId);
+        }
+
+        /// <summary>
         /// Tests that ReadAll executes positive.
         /// </summary>
         [Fact]

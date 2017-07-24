@@ -31,19 +31,27 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IMarketSegmentRepository _marketSegmentRepository;
 
         /// <summary>
+        /// The province repository
+        /// </summary>
+        private readonly IProvinceRepository _provinceRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LookupTableManager"/> class.
         /// </summary>
         /// <param name="statusRepository">The status repository.</param>
         /// <param name="subStatusRepository">The sub status repository.</param>
         /// <param name="referenceTypeRepository"></param>
         /// <param name="marketSegmentRepository"></param>
+        /// <param name="provinceRepository"></param>
         public LookupTableManager(IStatusRepository statusRepository, ISubStatusRepository subStatusRepository,
-            IReferenceTypeRepository referenceTypeRepository, IMarketSegmentRepository marketSegmentRepository)
+            IReferenceTypeRepository referenceTypeRepository, IMarketSegmentRepository marketSegmentRepository,
+            IProvinceRepository provinceRepository)
         {
             _statusRepository = statusRepository;
             _subStatusRepository = subStatusRepository;
             _referenceTypeRepository = referenceTypeRepository;
             _marketSegmentRepository = marketSegmentRepository;
+            _provinceRepository = provinceRepository;
         }
 
         /// <summary>
@@ -92,6 +100,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var marketSegments = _marketSegmentRepository.ReadAll();
 
             return marketSegments.First(_ => _.Id == marketSegmentId).Description;
+        }
+
+        /// <summary>
+        /// Gets the province name for the id specified
+        /// </summary>
+        /// <param name="provinceId"></param>
+        /// <returns></returns>
+        public string GetProvinceName(int provinceId)
+        {
+            var provinces = _provinceRepository.ReadAll();
+
+            return provinces.First(_ => _.Id == provinceId).Description;
         }
     }
 }

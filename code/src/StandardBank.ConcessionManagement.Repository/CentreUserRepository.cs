@@ -64,6 +64,23 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Reads by the user id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public IEnumerable<CentreUser> ReadByUserId(int userId)
+        {
+            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            {
+                return db.Query<CentreUser>(
+                    @"SELECT [pkCentreUserId] [Id], [fkCentreId] [CentreId], [fkUserId] [UserId], [IsActive] 
+                    FROM [dbo].[tblCentreUser] 
+                    WHERE [fkUserId] = @userId",
+                    new { userId });
+            }
+        }
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>

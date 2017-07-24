@@ -32,5 +32,12 @@
         /// <param name="marketSegmentId"></param>
         /// <returns></returns>
         string GetMarketSegmentName(int marketSegmentId);
+
+        /// <summary>
+        /// Gets the province name for the id specified
+        /// </summary>
+        /// <param name="provinceId"></param>
+        /// <returns></returns>
+        string GetProvinceName(int provinceId);
     }
 }

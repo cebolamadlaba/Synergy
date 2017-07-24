@@ -263,7 +263,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The look up table manager
         /// </summary>
         public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,
-            SubStatusRepository, ReferenceTypeRepository, MarketSegmentRepository);
+            SubStatusRepository, ReferenceTypeRepository, MarketSegmentRepository, ProvinceRepository);
 
         /// <summary>
         /// The concession manager
@@ -284,7 +284,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The user manager
         /// </summary>
-        public static IUserManager UserManager = new UserManager(CacheManager, UserRepository, UserRoleRepository,
-            RoleRepository, UserRegionRepository, RegionRepository);
+        public static IUserManager UserManager = new UserManager(CacheManager, LookupTableManager, UserRepository, UserRoleRepository,
+            RoleRepository, UserRegionRepository, RegionRepository, CentreRepository, CentreUserRepository);
     }
 }
