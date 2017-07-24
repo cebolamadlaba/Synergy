@@ -57,7 +57,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.NotNull(result);
             Assert.NotEmpty(result);
 
-            foreach (var record in results)
+            foreach (var record in result)
                 Assert.Equal(record.UserId, userId);
         }
 
