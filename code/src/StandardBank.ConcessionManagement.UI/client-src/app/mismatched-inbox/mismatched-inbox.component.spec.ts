@@ -2,8 +2,8 @@
 import { MismatchedInboxComponent } from './mismatched-inbox.component';
 import { HttpModule } from '@angular/http';
 import { InboxHeaderComponent } from "../inbox-header/inbox-header.component";
-import { InboxSearchBarComponent } from "../inbox-search-bar/inbox-search-bar.component";
 import { UserConcessionsService, MockUserConcessionsService } from "../user-concessions/user-concessions.service";
+import { DataTablesModule } from 'angular-datatables';
 
 describe('MismatchedInboxComponent', () => {
     let component: MismatchedInboxComponent;
@@ -11,8 +11,8 @@ describe('MismatchedInboxComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [HttpModule],
-            declarations: [MismatchedInboxComponent, InboxHeaderComponent, InboxSearchBarComponent],
+            imports: [HttpModule, DataTablesModule],
+            declarations: [MismatchedInboxComponent, InboxHeaderComponent],
             providers: [{ provide: UserConcessionsService, useClass: MockUserConcessionsService }]
         }).compileComponents();
     }));

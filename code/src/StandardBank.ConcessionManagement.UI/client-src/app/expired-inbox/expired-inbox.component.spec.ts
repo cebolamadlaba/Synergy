@@ -2,8 +2,8 @@
 import { ExpiredInboxComponent } from './expired-inbox.component';
 import { HttpModule } from '@angular/http';
 import { InboxHeaderComponent } from "../inbox-header/inbox-header.component";
-import { InboxSearchBarComponent } from "../inbox-search-bar/inbox-search-bar.component";
 import { UserConcessionsService, MockUserConcessionsService } from "../user-concessions/user-concessions.service";
+import { DataTablesModule } from 'angular-datatables';
 
 describe('ExpiredInboxComponent', () => {
     let component: ExpiredInboxComponent;
@@ -11,8 +11,8 @@ describe('ExpiredInboxComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [HttpModule],
-            declarations: [ExpiredInboxComponent, InboxHeaderComponent, InboxSearchBarComponent],
+            imports: [HttpModule, DataTablesModule],
+            declarations: [ExpiredInboxComponent, InboxHeaderComponent],
             providers: [{ provide: UserConcessionsService, useClass: MockUserConcessionsService }]
         }).compileComponents();
     }));

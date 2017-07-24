@@ -2,8 +2,8 @@
 import { DeclinedInboxComponent } from './declined-inbox.component';
 import { HttpModule } from '@angular/http';
 import { InboxHeaderComponent } from "../inbox-header/inbox-header.component";
-import { InboxSearchBarComponent } from "../inbox-search-bar/inbox-search-bar.component";
 import { UserConcessionsService, MockUserConcessionsService } from "../user-concessions/user-concessions.service";
+import { DataTablesModule } from 'angular-datatables';
 
 describe('DeclinedInboxComponent', () => {
     let component: DeclinedInboxComponent;
@@ -11,8 +11,8 @@ describe('DeclinedInboxComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [HttpModule],
-            declarations: [DeclinedInboxComponent, InboxHeaderComponent, InboxSearchBarComponent],
+            imports: [HttpModule, DataTablesModule],
+            declarations: [DeclinedInboxComponent, InboxHeaderComponent],
             providers: [{ provide: UserConcessionsService, useClass: MockUserConcessionsService }]
         }).compileComponents();
     }));

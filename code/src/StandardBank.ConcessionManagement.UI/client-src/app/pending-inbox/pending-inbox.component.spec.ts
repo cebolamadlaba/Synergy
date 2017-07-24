@@ -2,8 +2,8 @@
 import { PendingInboxComponent } from './pending-inbox.component';
 import { HttpModule } from '@angular/http';
 import { InboxHeaderComponent } from "../inbox-header/inbox-header.component";
-import { InboxSearchBarComponent } from "../inbox-search-bar/inbox-search-bar.component";
 import { UserConcessionsService, MockUserConcessionsService } from "../user-concessions/user-concessions.service";
+import { DataTablesModule } from 'angular-datatables';
 
 describe('PendingInboxComponent', () => {
     let component: PendingInboxComponent;
@@ -11,8 +11,8 @@ describe('PendingInboxComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [HttpModule],
-            declarations: [PendingInboxComponent, InboxHeaderComponent, InboxSearchBarComponent],
+            imports: [HttpModule, DataTablesModule],
+            declarations: [PendingInboxComponent, InboxHeaderComponent],
             providers: [{ provide: UserConcessionsService, useClass: MockUserConcessionsService }]
         }).compileComponents();
     }));
