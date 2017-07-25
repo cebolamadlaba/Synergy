@@ -23,6 +23,13 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         LegalEntity ReadById(int id);
 
         /// <summary>
+        /// Reads by the risk group id specified
+        /// </summary>
+        /// <param name="riskGroupId"></param>
+        /// <returns></returns>
+        IEnumerable<LegalEntity> ReadByRiskGroupId(int riskGroupId);
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>

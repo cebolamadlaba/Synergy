@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
-using StandardBank.ConcessionManagement.Test.Helpers;
 using StandardBank.ConcessionManagement.UI.Controllers.Application;
 using Xunit;
+using static StandardBank.ConcessionManagement.Test.Helpers.MockedDependencies;
 
 namespace StandardBank.ConcessionManagement.UI.Test.UnitTest.Application
 {
@@ -21,7 +21,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest.Application
         /// </summary>
         public UserIdentityControllerTest()
         {
-            _userIdentityController = new UserIdentityController(MockedDependencies.MockSiteHelper.Object);
+            _userIdentityController = new UserIdentityController(MockSiteHelper.Object);
         }
 
         /// <summary>
@@ -30,8 +30,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest.Application
         [Fact]
         public void Get_Executes_Positive()
         {
-            MockedDependencies.MockSiteHelper.Setup(_ => _.UserIdentity(It.IsAny<Controller>()))
-                .Returns("Unit Test User");
+            MockSiteHelper.Setup(_ => _.UserIdentity(It.IsAny<Controller>())).Returns("Unit Test User");
 
             var result = _userIdentityController.Get();
 

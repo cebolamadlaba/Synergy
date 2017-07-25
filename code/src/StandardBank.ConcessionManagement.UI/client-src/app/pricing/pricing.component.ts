@@ -12,6 +12,7 @@ export class PricingComponent implements OnInit {
     observableLoggedInUser: Observable<User>;
     user: User;
     errorMessage: String;
+    riskGroupNumber: String;
 
     constructor( @Inject(UserService) private userService) { }
 
@@ -19,5 +20,8 @@ export class PricingComponent implements OnInit {
         this.observableLoggedInUser = this.userService.getData();
         this.observableLoggedInUser.subscribe(user => this.user = user,
             error => this.errorMessage = <any>error);
+    }
+
+    searchRiskGroupNumber() {
     }
 }

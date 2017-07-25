@@ -23,6 +23,13 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         RiskGroup ReadById(int id);
 
         /// <summary>
+        /// Reads by the risk group number specified
+        /// </summary>
+        /// <param name="riskGroupNumber"></param>
+        /// <returns></returns>
+        RiskGroup ReadByRiskGroupNumber(int riskGroupNumber); 
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>

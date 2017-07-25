@@ -63,7 +63,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var statuses = _statusRepository.ReadAll();
 
-            return statuses.First(_ => _.Description == statusName).Id;
+            return statuses.First(_ => _.Description == statusName && _.IsActive).Id;
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var subStatuses = _subStatusRepository.ReadAll();
 
-            return subStatuses.First(_ => _.Description == subStatusName).Id;
+            return subStatuses.First(_ => _.Description == subStatusName && _.IsActive).Id;
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var referenceTypes = _referenceTypeRepository.ReadAll();
 
-            return referenceTypes.First(_ => _.Id == referenceTypeId).Description;
+            return referenceTypes.First(_ => _.Id == referenceTypeId && _.IsActive).Description;
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var marketSegments = _marketSegmentRepository.ReadAll();
 
-            return marketSegments.First(_ => _.Id == marketSegmentId).Description;
+            return marketSegments.First(_ => _.Id == marketSegmentId && _.IsActive).Description;
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var provinces = _provinceRepository.ReadAll();
 
-            return provinces.First(_ => _.Id == provinceId).Description;
+            return provinces.First(_ => _.Id == provinceId && _.IsActive).Description;
         }
     }
 }

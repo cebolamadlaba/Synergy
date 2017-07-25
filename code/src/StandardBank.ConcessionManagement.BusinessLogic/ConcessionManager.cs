@@ -5,8 +5,10 @@ using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Common;
-using StandardBank.ConcessionManagement.Model.UserInterface;
+using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Inbox;
+using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Inbox.Concession;
+using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -268,24 +270,47 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             foreach (var concession in repositoryConcessions)
             {
-                var legalEntity = _legalEntityRepository.ReadById(concession.LegalEntityId);
-                var riskGroup = _riskGroupRepository.ReadById(legalEntity.RiskGroupId);
+                var legalEntity = GetLegalEntityIfActive(concession);
+                var riskGroup = GetRiskGroupIfActive(legalEntity);
                 
                 concessions.Add(new Concession
                 {
                     Id = concession.Id,
                     ReferenceNumber = concession.ConcessionRef,
-                    CustomerName = legalEntity.CustomerName,
+                    CustomerName = legalEntity?.CustomerName,
                     DateOpened = concession.ConcessionDate,
                     DateSentForApproval = concession.DatesentForApproval,
-                    RiskGroupName = riskGroup.RiskGroupName,
-                    RiskGroupNumber = riskGroup.RiskGroupNumber,
-                    Seqment = _lookupTableManager.GetMarketSegmentName(legalEntity.MarketSegmentId),
+                    RiskGroupName = riskGroup?.RiskGroupName,
+                    RiskGroupNumber = riskGroup?.RiskGroupNumber,
+                    Seqment = legalEntity != null ? _lookupTableManager.GetMarketSegmentName(legalEntity.MarketSegmentId) : string.Empty,
                     Type = _lookupTableManager.GetReferenceTypeName(concession.TypeId)
                 });
             }
 
             return concessions;
+        }
+
+        /// <summary>
+        /// Gets the risk group if it's in an active state
+        /// </summary>
+        /// <param name="legalEntity"></param>
+        /// <returns></returns>
+        private RiskGroup GetRiskGroupIfActive(LegalEntity legalEntity)
+        {
+            var riskGroup = _riskGroupRepository.ReadById(legalEntity.RiskGroupId);
+            return riskGroup.IsActive ? riskGroup : null;
+        }
+
+        /// <summary>
+        /// Gets the legal entity if it's in an active state
+        /// </summary>
+        /// <param name="concession"></param>
+        /// <returns></returns>
+        private LegalEntity GetLegalEntityIfActive(Model.Repository.Concession concession)
+        {
+            var legalEntity = _legalEntityRepository.ReadById(concession.LegalEntityId);
+
+            return legalEntity.IsActive ? legalEntity : null;
         }
     }
 }

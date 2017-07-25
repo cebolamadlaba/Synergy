@@ -64,6 +64,23 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Reads by the risk group id specified
+        /// </summary>
+        /// <param name="riskGroupId"></param>
+        /// <returns></returns>
+        public IEnumerable<LegalEntity> ReadByRiskGroupId(int riskGroupId)
+        {
+            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            {
+                return db.Query<LegalEntity>(
+                    @"SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [RiskGroupName], [CustomerName], [CustomerNumber], [IsActive] 
+                    FROM [dbo].[tblLegalEntity] 
+                    WHERE [fkRiskGroupId] = @riskGroupId",
+                    new {riskGroupId});
+            }
+        }
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>

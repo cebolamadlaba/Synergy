@@ -2,6 +2,7 @@
 import { HttpModule } from '@angular/http';
 import { PricingComponent } from './pricing.component';
 import { UserService, MockUserService } from "../user/user.service";
+import { FormsModule } from '@angular/forms';
 
 describe('PricingComponent', () => {
     let component: PricingComponent;
@@ -9,7 +10,7 @@ describe('PricingComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [HttpModule],
+            imports: [HttpModule, FormsModule],
             declarations: [PricingComponent],
             providers: [{ provide: UserService, useClass: MockUserService }]
         }).compileComponents();

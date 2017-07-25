@@ -45,9 +45,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                     It.IsAny<int>(), It.IsAny<bool>())).Returns(new[] {new Concession()});
 
             MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
-                .Returns(new LegalEntity());
+                .Returns(new LegalEntity { IsActive = true });
 
-            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup());
+            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup { IsActive = true });
 
             MockLookupTableManager.Setup(_ => _.GetMarketSegmentName(It.IsAny<int>())).Returns("Market Segment Name");
             MockLookupTableManager.Setup(_ => _.GetReferenceTypeName(It.IsAny<int>())).Returns("Type Name");
@@ -73,9 +73,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                     It.IsAny<DateTime>(), It.IsAny<bool>())).Returns(new[] { new Concession() });
 
             MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
-                .Returns(new LegalEntity());
+                .Returns(new LegalEntity { IsActive = true });
 
-            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup());
+            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup { IsActive = true });
 
             MockLookupTableManager.Setup(_ => _.GetMarketSegmentName(It.IsAny<int>())).Returns("Market Segment Name");
             MockLookupTableManager.Setup(_ => _.GetReferenceTypeName(It.IsAny<int>())).Returns("Type Name");
@@ -101,9 +101,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                     It.IsAny<DateTime>(), It.IsAny<bool>())).Returns(new[] { new Concession() });
 
             MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
-                .Returns(new LegalEntity());
+                .Returns(new LegalEntity { IsActive = true });
 
-            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup());
+            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup { IsActive = true });
 
             MockLookupTableManager.Setup(_ => _.GetMarketSegmentName(It.IsAny<int>())).Returns("Market Segment Name");
             MockLookupTableManager.Setup(_ => _.GetReferenceTypeName(It.IsAny<int>())).Returns("Type Name");
@@ -131,9 +131,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 .Returns(new[] {new Concession()});
 
             MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
-                .Returns(new LegalEntity());
+                .Returns(new LegalEntity { IsActive = true });
 
-            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup());
+            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup { IsActive = true });
 
             MockLookupTableManager.Setup(_ => _.GetMarketSegmentName(It.IsAny<int>())).Returns("Market Segment Name");
             MockLookupTableManager.Setup(_ => _.GetReferenceTypeName(It.IsAny<int>())).Returns("Type Name");
@@ -161,9 +161,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 .Returns(new[] { new Concession() });
 
             MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
-                .Returns(new LegalEntity());
+                .Returns(new LegalEntity { IsActive = true});
 
-            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup());
+            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup{ IsActive = true});
 
             MockLookupTableManager.Setup(_ => _.GetMarketSegmentName(It.IsAny<int>())).Returns("Market Segment Name");
             MockLookupTableManager.Setup(_ => _.GetReferenceTypeName(It.IsAny<int>())).Returns("Type Name");
@@ -200,9 +200,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                     It.IsAny<DateTime>(), It.IsAny<bool>())).Returns(new[] { new Concession() });
 
             MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
-                .Returns(new LegalEntity());
+                .Returns(new LegalEntity { IsActive = true });
 
-            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup());
+            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup { IsActive = true });
 
             MockLookupTableManager.Setup(_ => _.GetMarketSegmentName(It.IsAny<int>())).Returns("Market Segment Name");
             MockLookupTableManager.Setup(_ => _.GetReferenceTypeName(It.IsAny<int>())).Returns("Type Name");

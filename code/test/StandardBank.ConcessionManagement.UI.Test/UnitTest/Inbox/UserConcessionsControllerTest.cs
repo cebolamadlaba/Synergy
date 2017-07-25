@@ -1,9 +1,9 @@
 ﻿using Moq;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Inbox;
-using StandardBank.ConcessionManagement.Test.Helpers;
 using StandardBank.ConcessionManagement.UI.Controllers.Inbox;
 using Xunit;
+using static StandardBank.ConcessionManagement.Test.Helpers.MockedDependencies;
 
 namespace StandardBank.ConcessionManagement.UI.Test.UnitTest.Inbox
 {
@@ -23,8 +23,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest.Inbox
         public UserConcessionsControllerTest()
         {
             _userConcessionsController =
-                new UserConcessionsController(MockedDependencies.MockConcessionManager.Object,
-                    MockedDependencies.MockSiteHelper.Object);
+                new UserConcessionsController(MockConcessionManager.Object, MockSiteHelper.Object);
         }
 
         /// <summary>
@@ -33,8 +32,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest.Inbox
         [Fact]
         public void Get_Executes_Positive()
         {
-            MockedDependencies.MockConcessionManager.Setup(_ => _.GetUserConcessions(It.IsAny<User>()))
-                .Returns(new UserConcessions());
+            MockConcessionManager.Setup(_ => _.GetUserConcessions(It.IsAny<User>())).Returns(new UserConcessions());
 
             var result = _userConcessionsController.Get();
 

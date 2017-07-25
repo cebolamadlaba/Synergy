@@ -64,6 +64,23 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Reads by the risk group number specified
+        /// </summary>
+        /// <param name="riskGroupNumber"></param>
+        /// <returns></returns>
+        public RiskGroup ReadByRiskGroupNumber(int riskGroupNumber)
+        {
+            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            {
+                return db.Query<RiskGroup>(
+                    @"SELECT [pkRiskGroupId] [Id], [RiskGroupNumber], [RiskGroupName], [IsActive] 
+                    FROM [dbo].[tblRiskGroup] 
+                    WHERE [RiskGroupNumber] = @riskGroupNumber",
+                    new { riskGroupNumber }).SingleOrDefault();
+            }
+        }
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>

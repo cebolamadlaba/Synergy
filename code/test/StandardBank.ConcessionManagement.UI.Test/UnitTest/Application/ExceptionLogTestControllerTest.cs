@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
 using StandardBank.ConcessionManagement.Model.Repository;
-using StandardBank.ConcessionManagement.Test.Helpers;
 using StandardBank.ConcessionManagement.UI.Controllers.Application;
 using Xunit;
+using static StandardBank.ConcessionManagement.Test.Helpers.MockedDependencies;
 
 namespace StandardBank.ConcessionManagement.UI.Test.UnitTest.Application
 {
@@ -28,7 +28,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest.Application
         public ExceptionLogTestControllerTest()
         {
             _exceptionLogTestController =
-                new ExceptionLogTestController(_logger.Object, MockedDependencies.MockExceptionLogRepository.Object);
+                new ExceptionLogTestController(_logger.Object, MockExceptionLogRepository.Object);
         }
 
         /// <summary>
@@ -37,8 +37,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest.Application
         [Fact]
         public void Get_Executes_Positive()
         {
-            MockedDependencies.MockExceptionLogRepository.Setup(_ => _.Create(It.IsAny<ExceptionLog>()))
-                .Returns(new ExceptionLog {ExceptionLogId = 1});
+            MockExceptionLogRepository.Setup(_ => _.Create(It.IsAny<ExceptionLog>())).Returns(new ExceptionLog {ExceptionLogId = 1});
 
             var result = _exceptionLogTestController.Get();
 

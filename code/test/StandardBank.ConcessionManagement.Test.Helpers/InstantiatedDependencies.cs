@@ -286,5 +286,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static IUserManager UserManager = new UserManager(CacheManager, LookupTableManager, UserRepository, UserRoleRepository,
             RoleRepository, UserRegionRepository, RegionRepository, CentreRepository, CentreUserRepository);
+
+        /// <summary>
+        /// The pricing manager
+        /// </summary>
+        public static IPricingManager PricingManager =
+            new PricingManager(RiskGroupRepository, LegalEntityRepository, LookupTableManager);
     }
 }

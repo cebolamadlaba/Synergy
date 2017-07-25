@@ -45,6 +45,20 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         }
 
         /// <summary>
+        /// Tests that ReadByRiskGroupNumber executes positive
+        /// </summary>
+        [Fact]
+        public void ReadByRiskGroupNumber_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.RiskGroupRepository.ReadAll();
+            var riskGroupNumber = results.First().RiskGroupNumber;
+            var result = InstantiatedDependencies.RiskGroupRepository.ReadByRiskGroupNumber(riskGroupNumber);
+
+            Assert.NotNull(result);
+            Assert.Equal(result.RiskGroupNumber, riskGroupNumber);
+        }
+
+        /// <summary>
         /// Tests that ReadAll executes positive.
         /// </summary>
         [Fact]

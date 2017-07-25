@@ -23,7 +23,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Inbox
         /// <summary>
         /// Gets or sets the risk group number
         /// </summary>
-        public int RiskGroupNumber { get; set; }
+        public int? RiskGroupNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the risk group name

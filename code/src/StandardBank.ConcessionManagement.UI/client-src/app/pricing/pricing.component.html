@@ -39,10 +39,10 @@
 <div class="col-md-12 search-and-results-container">
     <!-- Search bar -->
     <div class="input-group">
-        <input class="form-control" placeholder="Risk Group Number" name="srch-term" id="srch-term" type="text" routerLink="/pricing-results">
+        <input class="form-control" placeholder="Risk Group Number" [(ngModel)]="riskGroupNumber" type="text" ngModel>
         <div class="input-group-btn">
             <!-- updated search bar button -->
-            <button class="btn btn-default-search" type="submit">Search</button>
+            <button class="btn btn-default-search" (click)="searchRiskGroupNumber()">Search</button>
         </div>
     </div>
 </div>
