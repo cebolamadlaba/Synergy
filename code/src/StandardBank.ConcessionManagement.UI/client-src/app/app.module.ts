@@ -16,7 +16,6 @@ import { DueExpiryInboxComponent } from './due-expiry-inbox/due-expiry-inbox.com
 import { ExpiredInboxComponent } from './expired-inbox/expired-inbox.component';
 import { DeclinedInboxComponent } from './declined-inbox/declined-inbox.component';
 import { InboxHeaderComponent } from './inbox-header/inbox-header.component';
-import { PricingResultsComponent } from './pricing-results/pricing-results.component';
 import { PricingLendingComponent } from './pricing-lending/pricing-lending.component';
 import { PricingCashComponent } from './pricing-cash/pricing-cash.component';
 import { PricingTransactionalComponent } from './pricing-transactional/pricing-transactional.component';
@@ -27,6 +26,7 @@ import { MismatchedInboxComponent } from './mismatched-inbox/mismatched-inbox.co
 
 import { UserConcessionsService } from "./user-concessions/user-concessions.service";
 import { UserService } from "./user/user.service";
+import { RiskGroupLegalEntitiesService } from "./risk-group-legal-entities/risk-group-legal-entities.service";
 
 @NgModule({
     declarations: [
@@ -40,7 +40,6 @@ import { UserService } from "./user/user.service";
         ExpiredInboxComponent,
         DeclinedInboxComponent,
         InboxHeaderComponent,
-        PricingResultsComponent,
         PricingLendingComponent,
         PricingCashComponent,
         PricingTransactionalComponent,
@@ -57,7 +56,7 @@ import { UserService } from "./user/user.service";
         ModalModule.forRoot(),
         DataTablesModule
     ],
-    providers: [UserConcessionsService, UserService],
+    providers: [UserConcessionsService, UserService, RiskGroupLegalEntitiesService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

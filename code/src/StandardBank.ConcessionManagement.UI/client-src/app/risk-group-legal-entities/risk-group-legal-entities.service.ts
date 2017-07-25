@@ -2,16 +2,16 @@
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
-import { UserConcessions } from "../models/user-concessions";
+import { LegalEntity } from '../models/legal-entity';
 
 @Injectable()
-export class UserConcessionsService {
+export class RiskGroupLegalEntitiesService {
 
     constructor(private http: Http) {
     }
 
-    getData(): Observable<UserConcessions> {
-        const url = "/api/inbox/UserConcessions";
+    getData(riskGroupNumber): Observable<LegalEntity[]> {
+        const url = "/api/pricing/RiskGroupLegalEntities/" + riskGroupNumber;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
@@ -28,15 +28,13 @@ export class UserConcessionsService {
 }
 
 @Injectable()
-export class MockUserConcessionsService extends UserConcessionsService {
-    model = new UserConcessions();
+export class MockRiskGroupLegalEntitiesService extends RiskGroupLegalEntitiesService {
+    model = [new LegalEntity()];
 
-    getData(): Observable<UserConcessions> {
-        this.model.pendingConcessionsCount = 1;
-        this.model.declinedConcessionsCount = 2;
-        this.model.dueForExpiryConcessionsCount = 3;
-        this.model.expiredConcessionsCount = 4;
-        this.model.mismatchedConcessionsCount = 5;
+    getData(riskGroupNumber): Observable<LegalEntity[]> {
+        this.model[0].id = 1;
+        this.model[0].customerName = "Mocked Customer Name";
+        this.model[0].riskGroupNumber = riskGroupNumber;
         return Observable.of(this.model);
     }
 }

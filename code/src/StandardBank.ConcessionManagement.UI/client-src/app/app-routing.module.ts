@@ -7,7 +7,6 @@ import { PricingComponent } from "./pricing/pricing.component";
 import { DueExpiryInboxComponent } from "./due-expiry-inbox/due-expiry-inbox.component";
 import { ExpiredInboxComponent } from "./expired-inbox/expired-inbox.component";
 import { DeclinedInboxComponent } from "./declined-inbox/declined-inbox.component";
-import { PricingResultsComponent } from "./pricing-results/pricing-results.component";
 import { PricingLendingComponent } from "./pricing-lending/pricing-lending.component";
 import { PricingCashComponent } from "./pricing-cash/pricing-cash.component";
 import { PricingTransactionalComponent } from "./pricing-transactional/pricing-transactional.component";
@@ -26,7 +25,6 @@ const routes: Routes = [
     { path: 'approved-concessions', component: ApprovedConcessionsComponent },
     { path: 'conditions', component: ConditionsComponent },
     { path: 'pricing', component: PricingComponent },
-    { path: 'pricing-results', component: PricingResultsComponent },
     { path: 'pricing-lending', component: PricingLendingComponent },
     { path: 'pricing-cash', component: PricingCashComponent },
     { path: 'pricing-transactional', component: PricingTransactionalComponent },

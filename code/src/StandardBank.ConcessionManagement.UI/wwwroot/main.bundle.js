@@ -26,14 +26,13 @@ webpackEmptyContext.id = "../../../../../client-src async recursive";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__due_expiry_inbox_due_expiry_inbox_component__ = __webpack_require__("../../../../../client-src/app/due-expiry-inbox/due-expiry-inbox.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__expired_inbox_expired_inbox_component__ = __webpack_require__("../../../../../client-src/app/expired-inbox/expired-inbox.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__declined_inbox_declined_inbox_component__ = __webpack_require__("../../../../../client-src/app/declined-inbox/declined-inbox.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pricing_results_pricing_results_component__ = __webpack_require__("../../../../../client-src/app/pricing-results/pricing-results.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pricing_lending_pricing_lending_component__ = __webpack_require__("../../../../../client-src/app/pricing-lending/pricing-lending.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pricing_cash_pricing_cash_component__ = __webpack_require__("../../../../../client-src/app/pricing-cash/pricing-cash.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pricing_transactional_pricing_transactional_component__ = __webpack_require__("../../../../../client-src/app/pricing-transactional/pricing-transactional.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__transactional_add_concession_transactional_add_concession_component__ = __webpack_require__("../../../../../client-src/app/transactional-add-concession/transactional-add-concession.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__cash_add_concession_cash_add_concession_component__ = __webpack_require__("../../../../../client-src/app/cash-add-concession/cash-add-concession.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__lending_add_concession_lending_add_concession_component__ = __webpack_require__("../../../../../client-src/app/lending-add-concession/lending-add-concession.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__mismatched_inbox_mismatched_inbox_component__ = __webpack_require__("../../../../../client-src/app/mismatched-inbox/mismatched-inbox.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pricing_lending_pricing_lending_component__ = __webpack_require__("../../../../../client-src/app/pricing-lending/pricing-lending.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pricing_cash_pricing_cash_component__ = __webpack_require__("../../../../../client-src/app/pricing-cash/pricing-cash.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pricing_transactional_pricing_transactional_component__ = __webpack_require__("../../../../../client-src/app/pricing-transactional/pricing-transactional.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__transactional_add_concession_transactional_add_concession_component__ = __webpack_require__("../../../../../client-src/app/transactional-add-concession/transactional-add-concession.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__cash_add_concession_cash_add_concession_component__ = __webpack_require__("../../../../../client-src/app/cash-add-concession/cash-add-concession.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__lending_add_concession_lending_add_concession_component__ = __webpack_require__("../../../../../client-src/app/lending-add-concession/lending-add-concession.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__mismatched_inbox_mismatched_inbox_component__ = __webpack_require__("../../../../../client-src/app/mismatched-inbox/mismatched-inbox.component.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppRoutingModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -57,24 +56,22 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
-
 var routes = [
     { path: '', redirectTo: '/pending-inbox', pathMatch: 'full' },
     { path: 'pending-inbox', component: __WEBPACK_IMPORTED_MODULE_2__pending_inbox_pending_inbox_component__["a" /* PendingInboxComponent */] },
     { path: 'due-expiry-inbox', component: __WEBPACK_IMPORTED_MODULE_6__due_expiry_inbox_due_expiry_inbox_component__["a" /* DueExpiryInboxComponent */] },
     { path: 'expired-inbox', component: __WEBPACK_IMPORTED_MODULE_7__expired_inbox_expired_inbox_component__["a" /* ExpiredInboxComponent */] },
-    { path: 'mismatched-inbox', component: __WEBPACK_IMPORTED_MODULE_16__mismatched_inbox_mismatched_inbox_component__["a" /* MismatchedInboxComponent */] },
+    { path: 'mismatched-inbox', component: __WEBPACK_IMPORTED_MODULE_15__mismatched_inbox_mismatched_inbox_component__["a" /* MismatchedInboxComponent */] },
     { path: 'declined-inbox', component: __WEBPACK_IMPORTED_MODULE_8__declined_inbox_declined_inbox_component__["a" /* DeclinedInboxComponent */] },
     { path: 'approved-concessions', component: __WEBPACK_IMPORTED_MODULE_3__approved_concessions_approved_concessions_component__["a" /* ApprovedConcessionsComponent */] },
     { path: 'conditions', component: __WEBPACK_IMPORTED_MODULE_4__conditions_conditions_component__["a" /* ConditionsComponent */] },
     { path: 'pricing', component: __WEBPACK_IMPORTED_MODULE_5__pricing_pricing_component__["a" /* PricingComponent */] },
-    { path: 'pricing-results', component: __WEBPACK_IMPORTED_MODULE_9__pricing_results_pricing_results_component__["a" /* PricingResultsComponent */] },
-    { path: 'pricing-lending', component: __WEBPACK_IMPORTED_MODULE_10__pricing_lending_pricing_lending_component__["a" /* PricingLendingComponent */] },
-    { path: 'pricing-cash', component: __WEBPACK_IMPORTED_MODULE_11__pricing_cash_pricing_cash_component__["a" /* PricingCashComponent */] },
-    { path: 'pricing-transactional', component: __WEBPACK_IMPORTED_MODULE_12__pricing_transactional_pricing_transactional_component__["a" /* PricingTransactionalComponent */] },
-    { path: 'transactional-add-concession', component: __WEBPACK_IMPORTED_MODULE_13__transactional_add_concession_transactional_add_concession_component__["a" /* TransactionalAddConcessionComponent */] },
-    { path: 'cash-add-concession', component: __WEBPACK_IMPORTED_MODULE_14__cash_add_concession_cash_add_concession_component__["a" /* CashAddConcessionComponent */] },
-    { path: 'lending-add-concession', component: __WEBPACK_IMPORTED_MODULE_15__lending_add_concession_lending_add_concession_component__["a" /* LendingAddConcessionComponent */] }
+    { path: 'pricing-lending', component: __WEBPACK_IMPORTED_MODULE_9__pricing_lending_pricing_lending_component__["a" /* PricingLendingComponent */] },
+    { path: 'pricing-cash', component: __WEBPACK_IMPORTED_MODULE_10__pricing_cash_pricing_cash_component__["a" /* PricingCashComponent */] },
+    { path: 'pricing-transactional', component: __WEBPACK_IMPORTED_MODULE_11__pricing_transactional_pricing_transactional_component__["a" /* PricingTransactionalComponent */] },
+    { path: 'transactional-add-concession', component: __WEBPACK_IMPORTED_MODULE_12__transactional_add_concession_transactional_add_concession_component__["a" /* TransactionalAddConcessionComponent */] },
+    { path: 'cash-add-concession', component: __WEBPACK_IMPORTED_MODULE_13__cash_add_concession_cash_add_concession_component__["a" /* CashAddConcessionComponent */] },
+    { path: 'lending-add-concession', component: __WEBPACK_IMPORTED_MODULE_14__lending_add_concession_lending_add_concession_component__["a" /* LendingAddConcessionComponent */] }
 ];
 var AppRoutingModule = (function () {
     function AppRoutingModule() {
@@ -168,16 +165,16 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__expired_inbox_expired_inbox_component__ = __webpack_require__("../../../../../client-src/app/expired-inbox/expired-inbox.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__declined_inbox_declined_inbox_component__ = __webpack_require__("../../../../../client-src/app/declined-inbox/declined-inbox.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__inbox_header_inbox_header_component__ = __webpack_require__("../../../../../client-src/app/inbox-header/inbox-header.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__pricing_results_pricing_results_component__ = __webpack_require__("../../../../../client-src/app/pricing-results/pricing-results.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__pricing_lending_pricing_lending_component__ = __webpack_require__("../../../../../client-src/app/pricing-lending/pricing-lending.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__pricing_cash_pricing_cash_component__ = __webpack_require__("../../../../../client-src/app/pricing-cash/pricing-cash.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__pricing_transactional_pricing_transactional_component__ = __webpack_require__("../../../../../client-src/app/pricing-transactional/pricing-transactional.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__cash_add_concession_cash_add_concession_component__ = __webpack_require__("../../../../../client-src/app/cash-add-concession/cash-add-concession.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__lending_add_concession_lending_add_concession_component__ = __webpack_require__("../../../../../client-src/app/lending-add-concession/lending-add-concession.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__transactional_add_concession_transactional_add_concession_component__ = __webpack_require__("../../../../../client-src/app/transactional-add-concession/transactional-add-concession.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__mismatched_inbox_mismatched_inbox_component__ = __webpack_require__("../../../../../client-src/app/mismatched-inbox/mismatched-inbox.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__user_concessions_user_concessions_service__ = __webpack_require__("../../../../../client-src/app/user-concessions/user-concessions.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__user_user_service__ = __webpack_require__("../../../../../client-src/app/user/user.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__pricing_lending_pricing_lending_component__ = __webpack_require__("../../../../../client-src/app/pricing-lending/pricing-lending.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__pricing_cash_pricing_cash_component__ = __webpack_require__("../../../../../client-src/app/pricing-cash/pricing-cash.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__pricing_transactional_pricing_transactional_component__ = __webpack_require__("../../../../../client-src/app/pricing-transactional/pricing-transactional.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__cash_add_concession_cash_add_concession_component__ = __webpack_require__("../../../../../client-src/app/cash-add-concession/cash-add-concession.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__lending_add_concession_lending_add_concession_component__ = __webpack_require__("../../../../../client-src/app/lending-add-concession/lending-add-concession.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__transactional_add_concession_transactional_add_concession_component__ = __webpack_require__("../../../../../client-src/app/transactional-add-concession/transactional-add-concession.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__mismatched_inbox_mismatched_inbox_component__ = __webpack_require__("../../../../../client-src/app/mismatched-inbox/mismatched-inbox.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__user_concessions_user_concessions_service__ = __webpack_require__("../../../../../client-src/app/user-concessions/user-concessions.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__user_user_service__ = __webpack_require__("../../../../../client-src/app/user/user.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__risk_group_legal_entities_risk_group_legal_entities_service__ = __webpack_require__("../../../../../client-src/app/risk-group-legal-entities/risk-group-legal-entities.service.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -230,14 +227,13 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_14__expired_inbox_expired_inbox_component__["a" /* ExpiredInboxComponent */],
             __WEBPACK_IMPORTED_MODULE_15__declined_inbox_declined_inbox_component__["a" /* DeclinedInboxComponent */],
             __WEBPACK_IMPORTED_MODULE_16__inbox_header_inbox_header_component__["a" /* InboxHeaderComponent */],
-            __WEBPACK_IMPORTED_MODULE_17__pricing_results_pricing_results_component__["a" /* PricingResultsComponent */],
-            __WEBPACK_IMPORTED_MODULE_18__pricing_lending_pricing_lending_component__["a" /* PricingLendingComponent */],
-            __WEBPACK_IMPORTED_MODULE_19__pricing_cash_pricing_cash_component__["a" /* PricingCashComponent */],
-            __WEBPACK_IMPORTED_MODULE_20__pricing_transactional_pricing_transactional_component__["a" /* PricingTransactionalComponent */],
-            __WEBPACK_IMPORTED_MODULE_21__cash_add_concession_cash_add_concession_component__["a" /* CashAddConcessionComponent */],
-            __WEBPACK_IMPORTED_MODULE_22__lending_add_concession_lending_add_concession_component__["a" /* LendingAddConcessionComponent */],
-            __WEBPACK_IMPORTED_MODULE_23__transactional_add_concession_transactional_add_concession_component__["a" /* TransactionalAddConcessionComponent */],
-            __WEBPACK_IMPORTED_MODULE_24__mismatched_inbox_mismatched_inbox_component__["a" /* MismatchedInboxComponent */]
+            __WEBPACK_IMPORTED_MODULE_17__pricing_lending_pricing_lending_component__["a" /* PricingLendingComponent */],
+            __WEBPACK_IMPORTED_MODULE_18__pricing_cash_pricing_cash_component__["a" /* PricingCashComponent */],
+            __WEBPACK_IMPORTED_MODULE_19__pricing_transactional_pricing_transactional_component__["a" /* PricingTransactionalComponent */],
+            __WEBPACK_IMPORTED_MODULE_20__cash_add_concession_cash_add_concession_component__["a" /* CashAddConcessionComponent */],
+            __WEBPACK_IMPORTED_MODULE_21__lending_add_concession_lending_add_concession_component__["a" /* LendingAddConcessionComponent */],
+            __WEBPACK_IMPORTED_MODULE_22__transactional_add_concession_transactional_add_concession_component__["a" /* TransactionalAddConcessionComponent */],
+            __WEBPACK_IMPORTED_MODULE_23__mismatched_inbox_mismatched_inbox_component__["a" /* MismatchedInboxComponent */]
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
@@ -247,7 +243,7 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_5_ngx_bootstrap_modal__["a" /* ModalModule */].forRoot(),
             __WEBPACK_IMPORTED_MODULE_6_angular_datatables__["a" /* DataTablesModule */]
         ],
-        providers: [__WEBPACK_IMPORTED_MODULE_25__user_concessions_user_concessions_service__["a" /* UserConcessionsService */], __WEBPACK_IMPORTED_MODULE_26__user_user_service__["a" /* UserService */]],
+        providers: [__WEBPACK_IMPORTED_MODULE_24__user_concessions_user_concessions_service__["a" /* UserConcessionsService */], __WEBPACK_IMPORTED_MODULE_25__user_user_service__["a" /* UserService */], __WEBPACK_IMPORTED_MODULE_26__risk_group_legal_entities_risk_group_legal_entities_service__["a" /* RiskGroupLegalEntitiesService */]],
         bootstrap: [__WEBPACK_IMPORTED_MODULE_7__app_component__["a" /* AppComponent */]]
     })
 ], AppModule);
@@ -946,6 +942,21 @@ var Centre = (function () {
 
 /***/ }),
 
+/***/ "../../../../../client-src/app/models/legal-entity.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LegalEntity; });
+var LegalEntity = (function () {
+    function LegalEntity() {
+    }
+    return LegalEntity;
+}());
+
+//# sourceMappingURL=legal-entity.js.map
+
+/***/ }),
+
 /***/ "../../../../../client-src/app/models/region.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1027,7 +1038,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/page-header/page-header.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"col-md-12 header\">\r\n    <div class=\"logo\"></div>\r\n</div>\r\n<div class=\"col-md-12 nav-pills-container\">\r\n    <ul class=\"nav nav-pills\">\r\n        <li routerLinkActive=\"selected-nav-item\">\r\n            <a routerLink=\"/pending-inbox\">Inbox</a>\r\n            <!-- The following are here so that the router link active class is enabled for any of the inbox routes-->\r\n            <a routerLink=\"/due-expiry-inbox\" style=\"display: none;\">Inbox</a>\r\n            <a routerLink=\"/expired-inbox\" style=\"display: none;\">Inbox</a>\r\n            <a routerLink=\"/mismatched-inbox\" style=\"display: none;\">Inbox</a>\r\n            <a routerLink=\"/declined-inbox\" style=\"display: none;\">Inbox</a>\r\n        </li>\r\n        <li routerLinkActive=\"selected-nav-item\"><a routerLink=\"/approved-concessions\">Approved Concessions</a></li>\r\n        <li routerLinkActive=\"selected-nav-item\"><a routerLink=\"/conditions\">Conditions</a></li>\r\n        <li routerLinkActive=\"selected-nav-item\">\r\n            <a routerLink=\"/pricing\">Pricing</a>\r\n            <!-- The following are here so that the router link active class is enabled for any of the pricing routes-->\r\n            <a routerLink=\"/pricing-results\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/pricing-cash\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/pricing-lending\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/pricing-transactional\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/cash-add-concession\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/lending-add-concession\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/transactional-add-concession\" style=\"display: none;\">Pricing</a>\r\n        </li>\r\n        <li class=\"logout-li\"><a href=\"#\"><span class=\"glyphicon glyphicon-log-out\"></span> {{user.firstName}} {{user.surname}}</a></li>\r\n    </ul>\r\n</div> "
+module.exports = "<div class=\"col-md-12 header\">\r\n    <div class=\"logo\"></div>\r\n</div>\r\n<div class=\"col-md-12 nav-pills-container\">\r\n    <ul class=\"nav nav-pills\">\r\n        <li routerLinkActive=\"selected-nav-item\">\r\n            <a routerLink=\"/pending-inbox\">Inbox</a>\r\n            <!-- The following are here so that the router link active class is enabled for any of the inbox routes-->\r\n            <a routerLink=\"/due-expiry-inbox\" style=\"display: none;\">Inbox</a>\r\n            <a routerLink=\"/expired-inbox\" style=\"display: none;\">Inbox</a>\r\n            <a routerLink=\"/mismatched-inbox\" style=\"display: none;\">Inbox</a>\r\n            <a routerLink=\"/declined-inbox\" style=\"display: none;\">Inbox</a>\r\n        </li>\r\n        <li routerLinkActive=\"selected-nav-item\"><a routerLink=\"/approved-concessions\">Approved Concessions</a></li>\r\n        <li routerLinkActive=\"selected-nav-item\"><a routerLink=\"/conditions\">Conditions</a></li>\r\n        <li routerLinkActive=\"selected-nav-item\">\r\n            <a routerLink=\"/pricing\">Pricing</a>\r\n            <!-- The following are here so that the router link active class is enabled for any of the pricing routes-->\r\n            <a routerLink=\"/pricing-cash\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/pricing-lending\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/pricing-transactional\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/cash-add-concession\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/lending-add-concession\" style=\"display: none;\">Pricing</a>\r\n            <a routerLink=\"/transactional-add-concession\" style=\"display: none;\">Pricing</a>\r\n        </li>\r\n        <li class=\"logout-li\"><a href=\"#\"><span class=\"glyphicon glyphicon-log-out\"></span> {{user.firstName}} {{user.surname}}</a></li>\r\n    </ul>\r\n</div> "
 
 /***/ }),
 
@@ -1289,77 +1300,6 @@ PricingLendingComponent = __decorate([
 
 /***/ }),
 
-/***/ "../../../../../client-src/app/pricing-results/pricing-results.component.css":
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
-// imports
-
-
-// module
-exports.push([module.i, "", ""]);
-
-// exports
-
-
-/*** EXPORTS FROM exports-loader ***/
-module.exports = module.exports.toString();
-
-/***/ }),
-
-/***/ "../../../../../client-src/app/pricing-results/pricing-results.component.html":
-/***/ (function(module, exports) {
-
-module.exports = "  <!-- banner-->\r\n<div class=\"col-md-12 pricing-banner\">\r\n    <div class=\"col-md-1 pricing-user-image\">\r\n        <i class=\"fa fa-user-o\" aria-hidden=\"true\"></i>\r\n    </div>\r\n    <div class=\"col-md-5\">\r\n        <div class=\"pricing-form\">\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Region</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.selectedRegion.description}}</p>\r\n                </div>\r\n            </div>\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Business Unit</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.selectedCentre.name}}</p>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div class=\"col-md-5\">\r\n        <div class=\"pricing-form\">\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Province</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.selectedCentre.province}}</p>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <!-- Search bar -->\r\n    <div class=\"input-group add-on\">\r\n        <input class=\"form-control\" placeholder=\"Risk Group Number\" name=\"srch-term\" id=\"srch-term\" type=\"text\" routerLink=\"./pricing-results\">\r\n        <div class=\"input-group-btn\">\r\n            <!-- updated search bar button -->\r\n            <button class=\"btn btn-default-search\" type=\"submit\">Search</button>\r\n        </div>\r\n    </div>\r\n</div>\r\n<!-- Risk Group details -->\r\n<div class=\"col-md-12\">\r\n    <div class=\"pricing-group-container\">\r\n        <div class=\"pricing-icon\">\r\n            <div class=\"building-icon\">\r\n                <i class=\"fa fa-building-o\" aria-hidden=\"true\"></i>\r\n            </div>\r\n        </div>\r\n        <div class=\"pricing-group-info\">\r\n            <h3>EDCON</h3>\r\n            <br />\r\n            <div class=\"secondaryText\">1989</div>\r\n        </div>\r\n        <div class=\"col-md-12 pricing-group-container-items\">\r\n            <div class=\"selected-item item\" routerLink=\"/pricing-lending\">\r\n                <div>Lending</div>\r\n                <div class=\"container-item-icon\">\r\n                    <i class=\"fa fa-handshake-o\" aria-hidden=\"true\"></i>\r\n                </div>\r\n            </div>\r\n            <div class=\"item selected-item\" routerLink=\"/pricing-cash\">\r\n                <div>Cash</div>\r\n                <div class=\"container-item-icon\">\r\n                    <i class=\"fa fa-money\" aria-hidden=\"true\"></i>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <div>Investments</div>\r\n                <div class=\"container-item-icon\">\r\n                    <i class=\"fa fa-bar-chart\" aria-hidden=\"true\"></i>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <div>BOL</div>\r\n                <div class=\"container-item-icon\">\r\n                    <i class=\"fa fa-desktop\" aria-hidden=\"true\"></i>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <div>MAS</div>\r\n                <div class=\"container-item-icon\">\r\n                    <i class=\"fa fa-calculator\" aria-hidden=\"true\"></i>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <div>Trade</div>\r\n                <div class=\"container-item-icon\">\r\n                    <i class=\"fa fa-line-chart\" aria-hidden=\"true\"></i>\r\n                </div>\r\n            </div>\r\n            <div class=\"selected-item item\" routerLink=\"/pricing-transactional\">\r\n                <div>Transactional</div>\r\n                <div class=\"container-item-icon\">\r\n                    <i class=\"fa fa-exchange\" aria-hidden=\"true\"></i>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <div>Cashman</div>\r\n                <div class=\"container-item-icon\">\r\n                    <i class=\"fa fa-user\" aria-hidden=\"true\"></i>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>"
-
-/***/ }),
-
-/***/ "../../../../../client-src/app/pricing-results/pricing-results.component.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__user_user_service__ = __webpack_require__("../../../../../client-src/app/user/user.service.ts");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PricingResultsComponent; });
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-
-
-var PricingResultsComponent = (function () {
-    function PricingResultsComponent(userService) {
-        this.userService = userService;
-    }
-    PricingResultsComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        this.observableLoggedInUser = this.userService.getData();
-        this.observableLoggedInUser.subscribe(function (user) { return _this.user = user; }, function (error) { return _this.errorMessage = error; });
-    };
-    return PricingResultsComponent;
-}());
-PricingResultsComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_3" /* Component */])({
-        selector: 'app-pricing-results',
-        template: __webpack_require__("../../../../../client-src/app/pricing-results/pricing-results.component.html"),
-        styles: [__webpack_require__("../../../../../client-src/app/pricing-results/pricing-results.component.css")]
-    }),
-    __param(0, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Inject */])(__WEBPACK_IMPORTED_MODULE_1__user_user_service__["a" /* UserService */])),
-    __metadata("design:paramtypes", [Object])
-], PricingResultsComponent);
-
-//# sourceMappingURL=pricing-results.component.js.map
-
-/***/ }),
-
 /***/ "../../../../../client-src/app/pricing-transactional/pricing-transactional.component.css":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1442,7 +1382,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/pricing/pricing.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "  <!-- banner-->\r\n<div class=\"col-md-12 pricing-banner\">\r\n    <div class=\"col-md-1 pricing-user-image\">\r\n        <i class=\"fa fa-user-o\" aria-hidden=\"true\"></i>\r\n    </div>\r\n    <div class=\"col-md-5\">\r\n        <div class=\"pricing-form\">\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Region</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.selectedRegion.description}}</p>\r\n                </div>\r\n            </div>\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Business Unit</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.selectedCentre.name}}</p>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div class=\"col-md-5\">\r\n        <div class=\"pricing-form\">\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Province</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.selectedCentre.province}}</p>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <!-- Search bar -->\r\n    <div class=\"input-group\">\r\n        <input class=\"form-control\" placeholder=\"Risk Group Number\" [(ngModel)]=\"riskGroupNumber\" type=\"text\" ngModel>\r\n        <div class=\"input-group-btn\">\r\n            <!-- updated search bar button -->\r\n            <button class=\"btn btn-default-search\" (click)=\"searchRiskGroupNumber()\">Search</button>\r\n        </div>\r\n    </div>\r\n</div>\r\n<!-- Risk Group details -->\r\n<div class=\"col-md-12\">\r\n    <div class=\"searchEmptyState\">\r\n        <i class=\"fa fa-info-circle\" aria-hidden=\"true\"></i>\r\n        <div>\r\n            Enter risk group number to return customer products\r\n        </div>\r\n    </div>\r\n</div>\r\n"
+module.exports = "  <!-- banner-->\r\n<div class=\"col-md-12 pricing-banner\">\r\n    <div class=\"col-md-1 pricing-user-image\">\r\n        <i class=\"fa fa-user-o\" aria-hidden=\"true\"></i>\r\n    </div>\r\n    <div class=\"col-md-5\">\r\n        <div class=\"pricing-form\">\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Region</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.selectedRegion.description}}</p>\r\n                </div>\r\n            </div>\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Business Unit</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.selectedCentre.name}}</p>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div class=\"col-md-5\">\r\n        <div class=\"pricing-form\">\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Province</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.selectedCentre.province}}</p>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <!-- Search bar -->\r\n    <form (submit)=\"searchRiskGroupNumber(riskGroupNumber)\">\r\n        <div class=\"input-group\">\r\n            <input class=\"form-control\" placeholder=\"Risk Group Number\" [(ngModel)]=\"riskGroupNumber\" type=\"number\" name=\"riskGroupNumber\">\r\n            <div class=\"input-group-btn\">\r\n                <!-- updated search bar button -->\r\n                <button class=\"btn btn-default-search\" type=\"submit\">Search</button>\r\n            </div>\r\n        </div>\r\n    </form>\r\n</div>\r\n\r\n<!-- Risk Group details -->\r\n<div class=\"col-md-12\" *ngIf=\"!hasLegalEntities;else pricing_products\">\r\n    <div class=\"searchEmptyState\">\r\n        <i class=\"fa fa-info-circle\" aria-hidden=\"true\"></i>\r\n        <div>\r\n            Enter risk group number to return customer products\r\n        </div>\r\n    </div>\r\n</div>\r\n\r\n<ng-template #pricing_products>\r\n    <div class=\"row\" *ngIf=\"legalEntities == null || legalEntities.length == 0\">\r\n        <div class=\"col-md-12\">\r\n            <div class=\"searchEmptyState\">\r\n                <i class=\"fa fa-info-circle\" aria-hidden=\"true\"></i>\r\n                <div>\r\n                    No data found for risk group number\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div class=\"row\" *ngFor='let legalEntity of legalEntities; trackBy: index;'>\r\n        <div class=\"col-md-12\">\r\n            <div class=\"pricing-group-container\">\r\n                <div class=\"pricing-icon\">\r\n                    <div class=\"building-icon\">\r\n                        <i class=\"fa fa-building-o\" aria-hidden=\"true\"></i>\r\n                    </div>\r\n                </div>\r\n                <div class=\"pricing-group-info\">\r\n                    <h3>{{legalEntity.customerName}}</h3>\r\n                    <br />\r\n                    <div class=\"secondaryText\">\r\n                        <strong>Risk Group:</strong> {{legalEntity.riskGroupNumber}} - {{legalEntity.riskGroupName}}<br />\r\n                        <strong>Segment:</strong> {{legalEntity.marketSegmentDescription}}\r\n                    </div>\r\n                </div>\r\n                <div class=\"col-md-12 pricing-group-container-items\">\r\n                    <div class=\"item\">\r\n                        <div>Lending</div>\r\n                        <div class=\"container-item-icon\">\r\n                            <i class=\"fa fa-handshake-o\" aria-hidden=\"true\"></i>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"item\">\r\n                        <div>Cash</div>\r\n                        <div class=\"container-item-icon\">\r\n                            <i class=\"fa fa-money\" aria-hidden=\"true\"></i>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"item\">\r\n                        <div>Investments</div>\r\n                        <div class=\"container-item-icon\">\r\n                            <i class=\"fa fa-bar-chart\" aria-hidden=\"true\"></i>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"item\">\r\n                        <div>BOL</div>\r\n                        <div class=\"container-item-icon\">\r\n                            <i class=\"fa fa-desktop\" aria-hidden=\"true\"></i>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"item\">\r\n                        <div>MAS</div>\r\n                        <div class=\"container-item-icon\">\r\n                            <i class=\"fa fa-calculator\" aria-hidden=\"true\"></i>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"item\">\r\n                        <div>Trade</div>\r\n                        <div class=\"container-item-icon\">\r\n                            <i class=\"fa fa-line-chart\" aria-hidden=\"true\"></i>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"item\">\r\n                        <div>Transactional</div>\r\n                        <div class=\"container-item-icon\">\r\n                            <i class=\"fa fa-exchange\" aria-hidden=\"true\"></i>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"item\">\r\n                        <div>Cashman</div>\r\n                        <div class=\"container-item-icon\">\r\n                            <i class=\"fa fa-user\" aria-hidden=\"true\"></i>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</ng-template>"
 
 /***/ }),
 
@@ -1452,6 +1392,7 @@ module.exports = "  <!-- banner-->\r\n<div class=\"col-md-12 pricing-banner\">\r
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__user_user_service__ = __webpack_require__("../../../../../client-src/app/user/user.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__risk_group_legal_entities_risk_group_legal_entities_service__ = __webpack_require__("../../../../../client-src/app/risk-group-legal-entities/risk-group-legal-entities.service.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PricingComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1467,16 +1408,26 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 
 
+
 var PricingComponent = (function () {
-    function PricingComponent(userService) {
+    function PricingComponent(userService, riskGroupLegalEntitiesService) {
         this.userService = userService;
+        this.riskGroupLegalEntitiesService = riskGroupLegalEntitiesService;
+        this.hasLegalEntities = false;
     }
     PricingComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.observableLoggedInUser = this.userService.getData();
         this.observableLoggedInUser.subscribe(function (user) { return _this.user = user; }, function (error) { return _this.errorMessage = error; });
     };
-    PricingComponent.prototype.searchRiskGroupNumber = function () {
+    PricingComponent.prototype.searchRiskGroupNumber = function (riskGroupNumber) {
+        var _this = this;
+        this.legalEntities = [];
+        this.observableLegalEntities = this.riskGroupLegalEntitiesService.getData(riskGroupNumber);
+        this.observableLegalEntities.subscribe(function (legalEntity) {
+            _this.legalEntities = legalEntity;
+            _this.hasLegalEntities = true;
+        }, function (error) { return _this.errorMessage = error; });
     };
     return PricingComponent;
 }());
@@ -1486,11 +1437,95 @@ PricingComponent = __decorate([
         template: __webpack_require__("../../../../../client-src/app/pricing/pricing.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/pricing/pricing.component.css")]
     }),
-    __param(0, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Inject */])(__WEBPACK_IMPORTED_MODULE_1__user_user_service__["a" /* UserService */])),
-    __metadata("design:paramtypes", [Object])
+    __param(0, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Inject */])(__WEBPACK_IMPORTED_MODULE_1__user_user_service__["a" /* UserService */])), __param(1, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Inject */])(__WEBPACK_IMPORTED_MODULE_2__risk_group_legal_entities_risk_group_legal_entities_service__["a" /* RiskGroupLegalEntitiesService */])),
+    __metadata("design:paramtypes", [Object, Object])
 ], PricingComponent);
 
 //# sourceMappingURL=pricing.component.js.map
+
+/***/ }),
+
+/***/ "../../../../../client-src/app/risk-group-legal-entities/risk-group-legal-entities.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs__ = __webpack_require__("../../../../rxjs/Rx.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_legal_entity__ = __webpack_require__("../../../../../client-src/app/models/legal-entity.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RiskGroupLegalEntitiesService; });
+/* unused harmony export MockRiskGroupLegalEntitiesService */
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+var RiskGroupLegalEntitiesService = (function () {
+    function RiskGroupLegalEntitiesService(http) {
+        this.http = http;
+    }
+    RiskGroupLegalEntitiesService.prototype.getData = function (riskGroupNumber) {
+        var url = "/api/pricing/RiskGroupLegalEntities/" + riskGroupNumber;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    };
+    RiskGroupLegalEntitiesService.prototype.extractData = function (response) {
+        var body = response.json();
+        return body;
+    };
+    RiskGroupLegalEntitiesService.prototype.handleErrorObservable = function (error) {
+        console.error(error.message || error);
+        return __WEBPACK_IMPORTED_MODULE_2_rxjs__["Observable"].throw(error.message || error);
+    };
+    return RiskGroupLegalEntitiesService;
+}());
+RiskGroupLegalEntitiesService = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])(),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _a || Object])
+], RiskGroupLegalEntitiesService);
+
+var MockRiskGroupLegalEntitiesService = (function (_super) {
+    __extends(MockRiskGroupLegalEntitiesService, _super);
+    function MockRiskGroupLegalEntitiesService() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.model = [new __WEBPACK_IMPORTED_MODULE_4__models_legal_entity__["a" /* LegalEntity */]()];
+        return _this;
+    }
+    MockRiskGroupLegalEntitiesService.prototype.getData = function (riskGroupNumber) {
+        this.model[0].id = 1;
+        this.model[0].customerName = "Mocked Customer Name";
+        this.model[0].riskGroupNumber = riskGroupNumber;
+        return __WEBPACK_IMPORTED_MODULE_2_rxjs__["Observable"].of(this.model);
+    };
+    return MockRiskGroupLegalEntitiesService;
+}(RiskGroupLegalEntitiesService));
+MockRiskGroupLegalEntitiesService = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])()
+], MockRiskGroupLegalEntitiesService);
+
+var _a;
+//# sourceMappingURL=risk-group-legal-entities.service.js.map
 
 /***/ }),
 
