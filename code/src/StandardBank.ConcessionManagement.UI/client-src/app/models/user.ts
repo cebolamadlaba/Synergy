@@ -11,5 +11,7 @@ export class User {
     isActive: boolean;
     userRoles: Role[];
     userRegions: Region[];
+    selectedRegion: Region;
     userCentres: Centre[];
+    selectedCentre: Centre;
 }

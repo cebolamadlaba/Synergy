@@ -69,8 +69,18 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public IEnumerable<Region> UserRegions { get; set; }
 
         /// <summary>
+        /// Gets or sets the selected region
+        /// </summary>
+        public Region SelectedRegion { get; set; }
+
+        /// <summary>
         /// Gets or sets the user centres
         /// </summary>
         public IEnumerable<Centre> UserCentres { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected centre
+        /// </summary>
+        public Centre SelectedCentre { get; set; }
     }
 }

@@ -21,7 +21,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 UserId = DataHelper.GetUserId(),
                 RegionId = DataHelper.GetRegionId(),
-                IsActive = false
+                IsActive = false,
+                IsSelected = false
             };
 
             var result = InstantiatedDependencies.UserRegionRepository.Create(model);
@@ -86,6 +87,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.UserId = DataHelper.GetAlternateUserId(model.UserId);
             model.RegionId = DataHelper.GetAlternateRegionId(model.RegionId);
             model.IsActive = !model.IsActive;
+            model.IsSelected = !model.IsSelected;
 
             InstantiatedDependencies.UserRegionRepository.Update(model);
 
@@ -96,6 +98,35 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.UserId, model.UserId);
             Assert.Equal(updatedModel.RegionId, model.RegionId);
             Assert.Equal(updatedModel.IsActive, model.IsActive);
+            Assert.Equal(updatedModel.IsSelected, model.IsSelected);
+        }
+
+        /// <summary>
+        /// Tests that UpdateSelectedRegion executes positive
+        /// </summary>
+        [Fact]
+        public void UpdateSelectedRegion_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.UserRegionRepository.ReadAll();
+            var id = results.First().Id;
+            var model = InstantiatedDependencies.UserRegionRepository.ReadById(id);
+
+            //first update the IsSelected to false
+            model.IsSelected = false;
+            InstantiatedDependencies.UserRegionRepository.Update(model);
+
+            var notSelectedModel = InstantiatedDependencies.UserRegionRepository.ReadById(id);
+
+            Assert.NotNull(notSelectedModel);
+            Assert.False(notSelectedModel.IsSelected);
+
+            //now set it to selected
+            InstantiatedDependencies.UserRegionRepository.UpdateSelectedRegion(notSelectedModel.UserId, notSelectedModel.RegionId);
+
+            var selectedModel = InstantiatedDependencies.UserRegionRepository.ReadById(notSelectedModel.Id);
+
+            Assert.NotNull(selectedModel);
+            Assert.True(selectedModel.IsSelected);
         }
 
         /// <summary>
@@ -108,7 +139,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 UserId = DataHelper.GetUserId(),
                 RegionId = DataHelper.GetRegionId(),
-                IsActive = false
+                IsActive = false,
+                IsSelected = false
             };
 
             var temporaryEntity = InstantiatedDependencies.UserRegionRepository.Create(model);

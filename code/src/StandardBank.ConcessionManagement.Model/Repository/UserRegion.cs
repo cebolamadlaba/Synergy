@@ -1,5 +1,3 @@
-using System;
-
 namespace StandardBank.ConcessionManagement.Model.Repository
 {
     /// <summary>
@@ -38,5 +36,10 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The IsActive.
         /// </value>
         public bool IsActive { get; set; }
+
+        /// <summary>
+        /// Gets or sets the is selected flag
+        /// </summary>
+        public bool IsSelected { get; set; }
     }
 }

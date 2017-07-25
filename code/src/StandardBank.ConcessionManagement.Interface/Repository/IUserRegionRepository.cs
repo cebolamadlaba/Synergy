@@ -42,6 +42,13 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         void Update(UserRegion model);
 
         /// <summary>
+        /// Updates the selected region for the user id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="regionId"></param>
+        void UpdateSelectedRegion(int userId, int regionId);
+
+        /// <summary>
         /// Deletes the specified model.
         /// </summary>
         /// <param name="model">The model.</param>

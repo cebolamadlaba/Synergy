@@ -928,6 +928,51 @@ MismatchedInboxComponent = __decorate([
 
 /***/ }),
 
+/***/ "../../../../../client-src/app/models/centre.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Centre; });
+var Centre = (function () {
+    function Centre() {
+    }
+    return Centre;
+}());
+
+//# sourceMappingURL=centre.js.map
+
+/***/ }),
+
+/***/ "../../../../../client-src/app/models/region.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Region; });
+var Region = (function () {
+    function Region() {
+    }
+    return Region;
+}());
+
+//# sourceMappingURL=region.js.map
+
+/***/ }),
+
+/***/ "../../../../../client-src/app/models/role.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Role; });
+var Role = (function () {
+    function Role() {
+    }
+    return Role;
+}());
+
+//# sourceMappingURL=role.js.map
+
+/***/ }),
+
 /***/ "../../../../../client-src/app/models/user-concessions.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1262,7 +1307,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/pricing-results/pricing-results.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "  <!-- banner-->\r\n<div class=\"col-md-12 pricing-banner\">\r\n    <div class=\"col-md-1 pricing-user-image\">\r\n        <i class=\"fa fa-user-o\" aria-hidden=\"true\"></i>\r\n    </div>\r\n    <div class=\"col-md-5\">\r\n        <div class=\"pricing-form\">\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Region</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.userRegions[0].description}}</p>\r\n                </div>\r\n            </div>\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Business Unit</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.userCentres[0].name}}</p>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div class=\"col-md-5\">\r\n        <div class=\"pricing-form\">\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Province</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.userCentres[0].province}}</p>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <!-- Search bar -->\r\n    <div class=\"input-group add-on\">\r\n        <input class=\"form-control\" placeholder=\"Risk Group Number\" name=\"srch-term\" id=\"srch-term\" type=\"text\" routerLink=\"./pricing-results\">\r\n        <div class=\"input-group-btn\">\r\n            <!-- updated search bar button -->\r\n            <button class=\"btn btn-default-search\" type=\"submit\">Search</button>\r\n        </div>\r\n    </div>\r\n</div>\r\n<!-- Risk Group details -->\r\n<div class=\"col-md-12\">\r\n    <div class=\"pricing-group-container\">\r\n        <div class=\"pricing-icon\">\r\n            <div class=\"building-icon\">\r\n                <i class=\"fa fa-building-o\" aria-hidden=\"true\"></i>\r\n            </div>\r\n        </div>\r\n        <div class=\"pricing-group-info\">\r\n            <h3 class=\"info-title\">EDCON</h3>\r\n            <br />\r\n            <span class=\"secondaryText\">1989</span>\r\n        </div>\r\n        <div class=\"col-md-12 pricing-group-container-items\">\r\n            <div class=\"selected-item item\" routerLink=\"/pricing-lending\">\r\n                <div>Lending</div>\r\n                <div class=\"container-item-icon\">\r\n                    <i class=\"fa fa-handshake-o\" aria-hidden=\"true\"></i>\r\n                </div>\r\n            </div>\r\n            <div class=\"item selected-item\" routerLink=\"/pricing-cash\">\r\n                <div>Cash</div>\r\n                <div class=\"container-item-icon\">\r\n                    <i class=\"fa fa-money\" aria-hidden=\"true\"></i>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <div>Investments</div>\r\n                <div class=\"container-item-icon\">\r\n                    <i class=\"fa fa-bar-chart\" aria-hidden=\"true\"></i>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <div>BOL</div>\r\n                <div class=\"container-item-icon\">\r\n                    <i class=\"fa fa-desktop\" aria-hidden=\"true\"></i>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <div>MAS</div>\r\n                <div class=\"container-item-icon\">\r\n                    <i class=\"fa fa-calculator\" aria-hidden=\"true\"></i>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <div>Trade</div>\r\n                <div class=\"container-item-icon\">\r\n                    <i class=\"fa fa-line-chart\" aria-hidden=\"true\"></i>\r\n                </div>\r\n            </div>\r\n            <div class=\"selected-item item\" routerLink=\"/pricing-transactional\">\r\n                <div>Transactional</div>\r\n                <div class=\"container-item-icon\">\r\n                    <i class=\"fa fa-exchange\" aria-hidden=\"true\"></i>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <div>Cashman</div>\r\n                <div class=\"container-item-icon\">\r\n                    <i class=\"fa fa-user\" aria-hidden=\"true\"></i>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>"
+module.exports = "  <!-- banner-->\r\n<div class=\"col-md-12 pricing-banner\">\r\n    <div class=\"col-md-1 pricing-user-image\">\r\n        <i class=\"fa fa-user-o\" aria-hidden=\"true\"></i>\r\n    </div>\r\n    <div class=\"col-md-5\">\r\n        <div class=\"pricing-form\">\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Region</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.selectedRegion.description}}</p>\r\n                </div>\r\n            </div>\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Business Unit</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.selectedCentre.name}}</p>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div class=\"col-md-5\">\r\n        <div class=\"pricing-form\">\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Province</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.selectedCentre.province}}</p>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <!-- Search bar -->\r\n    <div class=\"input-group add-on\">\r\n        <input class=\"form-control\" placeholder=\"Risk Group Number\" name=\"srch-term\" id=\"srch-term\" type=\"text\" routerLink=\"./pricing-results\">\r\n        <div class=\"input-group-btn\">\r\n            <!-- updated search bar button -->\r\n            <button class=\"btn btn-default-search\" type=\"submit\">Search</button>\r\n        </div>\r\n    </div>\r\n</div>\r\n<!-- Risk Group details -->\r\n<div class=\"col-md-12\">\r\n    <div class=\"pricing-group-container\">\r\n        <div class=\"pricing-icon\">\r\n            <div class=\"building-icon\">\r\n                <i class=\"fa fa-building-o\" aria-hidden=\"true\"></i>\r\n            </div>\r\n        </div>\r\n        <div class=\"pricing-group-info\">\r\n            <h3 class=\"info-title\">EDCON</h3>\r\n            <br />\r\n            <span class=\"secondaryText\">1989</span>\r\n        </div>\r\n        <div class=\"col-md-12 pricing-group-container-items\">\r\n            <div class=\"selected-item item\" routerLink=\"/pricing-lending\">\r\n                <div>Lending</div>\r\n                <div class=\"container-item-icon\">\r\n                    <i class=\"fa fa-handshake-o\" aria-hidden=\"true\"></i>\r\n                </div>\r\n            </div>\r\n            <div class=\"item selected-item\" routerLink=\"/pricing-cash\">\r\n                <div>Cash</div>\r\n                <div class=\"container-item-icon\">\r\n                    <i class=\"fa fa-money\" aria-hidden=\"true\"></i>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <div>Investments</div>\r\n                <div class=\"container-item-icon\">\r\n                    <i class=\"fa fa-bar-chart\" aria-hidden=\"true\"></i>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <div>BOL</div>\r\n                <div class=\"container-item-icon\">\r\n                    <i class=\"fa fa-desktop\" aria-hidden=\"true\"></i>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <div>MAS</div>\r\n                <div class=\"container-item-icon\">\r\n                    <i class=\"fa fa-calculator\" aria-hidden=\"true\"></i>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <div>Trade</div>\r\n                <div class=\"container-item-icon\">\r\n                    <i class=\"fa fa-line-chart\" aria-hidden=\"true\"></i>\r\n                </div>\r\n            </div>\r\n            <div class=\"selected-item item\" routerLink=\"/pricing-transactional\">\r\n                <div>Transactional</div>\r\n                <div class=\"container-item-icon\">\r\n                    <i class=\"fa fa-exchange\" aria-hidden=\"true\"></i>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <div>Cashman</div>\r\n                <div class=\"container-item-icon\">\r\n                    <i class=\"fa fa-user\" aria-hidden=\"true\"></i>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>"
 
 /***/ }),
 
@@ -1394,7 +1439,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/pricing/pricing.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "  <!-- banner-->\r\n<div class=\"col-md-12 pricing-banner\">\r\n    <div class=\"col-md-1 pricing-user-image\">\r\n        <i class=\"fa fa-user-o\" aria-hidden=\"true\"></i>\r\n    </div>\r\n    <div class=\"col-md-5\">\r\n        <div class=\"pricing-form\">\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Region</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.userRegions[0].description}}</p>\r\n                </div>\r\n            </div>\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Business Unit</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.userCentres[0].name}}</p>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div class=\"col-md-5\">\r\n        <div class=\"pricing-form\">\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Province</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.userCentres[0].province}}</p>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <!-- Search bar -->\r\n    <div class=\"input-group\">\r\n        <input class=\"form-control\" placeholder=\"Risk Group Number\" name=\"srch-term\" id=\"srch-term\" type=\"text\" routerLink=\"/pricing-results\">\r\n        <div class=\"input-group-btn\">\r\n            <!-- updated search bar button -->\r\n            <button class=\"btn btn-default-search\" type=\"submit\">Search</button>\r\n        </div>\r\n    </div>\r\n</div>\r\n<!-- Risk Group details -->\r\n<div class=\"col-md-12\">\r\n    <div class=\"searchEmptyState\">\r\n        <i class=\"fa fa-info-circle\" aria-hidden=\"true\"></i>\r\n        <div>\r\n            Enter risk group number to return customer products\r\n        </div>\r\n    </div>\r\n</div>\r\n"
+module.exports = "  <!-- banner-->\r\n<div class=\"col-md-12 pricing-banner\">\r\n    <div class=\"col-md-1 pricing-user-image\">\r\n        <i class=\"fa fa-user-o\" aria-hidden=\"true\"></i>\r\n    </div>\r\n    <div class=\"col-md-5\">\r\n        <div class=\"pricing-form\">\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Region</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.selectedRegion.description}}</p>\r\n                </div>\r\n            </div>\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Business Unit</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.selectedCentre.name}}</p>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div class=\"col-md-5\">\r\n        <div class=\"pricing-form\">\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Province</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.selectedCentre.province}}</p>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <!-- Search bar -->\r\n    <div class=\"input-group\">\r\n        <input class=\"form-control\" placeholder=\"Risk Group Number\" name=\"srch-term\" id=\"srch-term\" type=\"text\" routerLink=\"/pricing-results\">\r\n        <div class=\"input-group-btn\">\r\n            <!-- updated search bar button -->\r\n            <button class=\"btn btn-default-search\" type=\"submit\">Search</button>\r\n        </div>\r\n    </div>\r\n</div>\r\n<!-- Risk Group details -->\r\n<div class=\"col-md-12\">\r\n    <div class=\"searchEmptyState\">\r\n        <i class=\"fa fa-info-circle\" aria-hidden=\"true\"></i>\r\n        <div>\r\n            Enter risk group number to return customer products\r\n        </div>\r\n    </div>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -1602,6 +1647,9 @@ var _a;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_user__ = __webpack_require__("../../../../../client-src/app/models/user.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__models_centre__ = __webpack_require__("../../../../../client-src/app/models/centre.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__models_role__ = __webpack_require__("../../../../../client-src/app/models/role.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__models_region__ = __webpack_require__("../../../../../client-src/app/models/region.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UserService; });
 /* unused harmony export MockUserService */
 var __extends = (this && this.__extends) || (function () {
@@ -1623,6 +1671,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
+
+
 
 
 
@@ -1662,6 +1713,11 @@ var MockUserService = (function (_super) {
         this.model.id = 1;
         this.model.firstName = "Mocked";
         this.model.surname = "User";
+        this.model.userCentres = [new __WEBPACK_IMPORTED_MODULE_5__models_centre__["a" /* Centre */]()];
+        this.model.selectedCentre = new __WEBPACK_IMPORTED_MODULE_5__models_centre__["a" /* Centre */]();
+        this.model.userRegions = [new __WEBPACK_IMPORTED_MODULE_7__models_region__["a" /* Region */]()];
+        this.model.selectedRegion = new __WEBPACK_IMPORTED_MODULE_7__models_region__["a" /* Region */]();
+        this.model.userRoles = [new __WEBPACK_IMPORTED_MODULE_6__models_role__["a" /* Role */]()];
         return __WEBPACK_IMPORTED_MODULE_2_rxjs__["Observable"].of(this.model);
     };
     return MockUserService;

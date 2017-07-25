@@ -101,6 +101,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 if (user != null)
                 {
+                    var userRegions = GetUserRegions(user.Id);
+                    var selectedRegion = GetSelectedRegion(userRegions, user);
+
+                    var userCentres = GetUserCentres(user.Id);
+                    var selectedCentre = userCentres.FirstOrDefault();
+
                     return new User
                     {
                         ANumber = user.ANumber,
@@ -110,8 +116,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         FirstName = user.FirstName,
                         Surname = user.Surname,
                         UserRoles = GetUserRoles(user.Id),
-                        UserRegions = GetUserRegions(user.Id),
-                        UserCentres = GetUserCentres(user.Id)
+                        UserRegions = userRegions,
+                        SelectedRegion = selectedRegion,
+                        UserCentres = userCentres,
+                        SelectedCentre = selectedCentre
                     };
                 }
 
@@ -119,6 +127,45 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             };
 
             return _cacheManager.ReturnFromCache(function, 1440, CacheKey.UserInterface.SiteHelper.LoggedInUser,
+                new CacheKeyParameter(nameof(aNumber), aNumber));
+        }
+
+        /// <summary>
+        /// Gets the selected region
+        /// </summary>
+        /// <param name="userRegions"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        private Region GetSelectedRegion(IEnumerable<Region> userRegions, Model.Repository.User user)
+        {
+            var selectedRegion = userRegions.FirstOrDefault(_ => _.IsSelected);
+
+            //if there isn't a selected region but there are user regions, default the selected region to the first one
+            if (selectedRegion == null && userRegions.Any())
+            {
+                selectedRegion = userRegions.First();
+                SetUserSelectedRegion(user.Id, selectedRegion.Id);
+                selectedRegion.IsSelected = true;
+            }
+
+            return selectedRegion;
+        }
+
+        /// <summary>
+        /// Sets the user's selected region
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="regionId"></param>
+        public void SetUserSelectedRegion(int userId, int regionId)
+        {
+            //first update the region accordingly
+            _userRegionRepository.UpdateSelectedRegion(userId, regionId);
+
+            //then delete the user cache so that the user object is populated from scratch with the changes
+            var user = _userRepository.ReadById(userId);
+            var aNumber = user.ANumber;
+
+            _cacheManager.Remove(CacheKey.UserInterface.SiteHelper.LoggedInUser,
                 new CacheKeyParameter(nameof(aNumber), aNumber));
         }
 
@@ -169,12 +216,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 foreach (var region in regions)
                 {
-                    if (userRegionIds.Any(_ => _.RegionId == region.Id && _.IsActive && region.IsActive))
+                    var userRegion =
+                        userRegionIds.FirstOrDefault(_ => _.RegionId == region.Id && _.IsActive && region.IsActive);
+
+                    if (userRegion != null)
                     {
                         userRegions.Add(new Region
                         {
                             Id = region.Id,
-                            Description = region.Description
+                            Description = region.Description,
+                            IsSelected = userRegion.IsSelected
                         });
                     }
                 }

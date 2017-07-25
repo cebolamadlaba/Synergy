@@ -2402,7 +2402,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             {
                 UserId = GetUserId(),
                 RegionId = GetRegionId(),
-                IsActive = false
+                IsActive = false,
+                IsSelected = false
             };
 
             InstantiatedDependencies.UserRegionRepository.Create(model);

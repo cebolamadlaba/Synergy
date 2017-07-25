@@ -36,13 +36,20 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public UserRegion Create(UserRegion model)
         {
-            const string sql = @"INSERT [dbo].[tblUserRegion] ([fkUserId], [fkRegionId], [IsActive]) 
-                                VALUES (@UserId, @RegionId, @IsActive) 
+            const string sql = @"INSERT [dbo].[tblUserRegion] ([fkUserId], [fkRegionId], [IsActive], [IsSelected]) 
+                                VALUES (@UserId, @RegionId, @IsActive, @IsSelected) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
-                model.Id = db.Query<int>(sql, new {UserId = model.UserId, RegionId = model.RegionId, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql,
+                    new
+                    {
+                        UserId = model.UserId,
+                        RegionId = model.RegionId,
+                        IsActive = model.IsActive,
+                        IsSelected = model.IsSelected
+                    }).Single();
             }
 
             return model;
@@ -58,7 +65,9 @@ namespace StandardBank.ConcessionManagement.Repository
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
                 return db.Query<UserRegion>(
-                    "SELECT [pkUserRegionId] [Id], [fkUserId] [UserId], [fkRegionId] [RegionId], [IsActive] FROM [dbo].[tblUserRegion] WHERE [pkUserRegionId] = @Id",
+                    @"SELECT [pkUserRegionId] [Id], [fkUserId] [UserId], [fkRegionId] [RegionId], [IsActive], [IsSelected] 
+                    FROM [dbo].[tblUserRegion] 
+                    WHERE [pkUserRegionId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -73,7 +82,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
                 return db.Query<UserRegion>(
-                    @"SELECT [pkUserRegionId] [Id], [fkUserId] [UserId], [fkRegionId] [RegionId], [IsActive] 
+                    @"SELECT [pkUserRegionId] [Id], [fkUserId] [UserId], [fkRegionId] [RegionId], [IsActive], [IsSelected] 
                     FROM [dbo].[tblUserRegion]
                     WHERE [fkUserId] = @userId", new {userId});
             }
@@ -87,7 +96,9 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
-                return db.Query<UserRegion>("SELECT [pkUserRegionId] [Id], [fkUserId] [UserId], [fkRegionId] [RegionId], [IsActive] FROM [dbo].[tblUserRegion]");
+                return db.Query<UserRegion>(
+                    @"SELECT [pkUserRegionId] [Id], [fkUserId] [UserId], [fkRegionId] [RegionId], [IsActive], [IsSelected] 
+                    FROM [dbo].[tblUserRegion]");
             }
         }
 
@@ -100,9 +111,36 @@ namespace StandardBank.ConcessionManagement.Repository
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
                 db.Execute(@"UPDATE [dbo].[tblUserRegion]
-                            SET [fkUserId] = @UserId, [fkRegionId] = @RegionId, [IsActive] = @IsActive
+                            SET [fkUserId] = @UserId, [fkRegionId] = @RegionId, [IsActive] = @IsActive, [IsSelected] = @IsSelected
                             WHERE [pkUserRegionId] = @Id",
-                    new {Id = model.Id, UserId = model.UserId, RegionId = model.RegionId, IsActive = model.IsActive});
+                    new
+                    {
+                        Id = model.Id,
+                        UserId = model.UserId,
+                        RegionId = model.RegionId,
+                        IsActive = model.IsActive,
+                        IsSelected = model.IsSelected
+                    });
+            }
+        }
+
+        /// <summary>
+        /// Updates the selected region for the user id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="regionId"></param>
+        public void UpdateSelectedRegion(int userId, int regionId)
+        {
+            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            {
+                //first make sure no record is selected
+                db.Execute("UPDATE [dbo].[tblUserRegion] SET [IsSelected] = 0 WHERE [fkUserId] = @userId",
+                    new {userId});
+
+                //then set the request record to selected
+                db.Execute(
+                    "UPDATE [dbo].[tblUserRegion] SET [IsSelected] = 1 WHERE [fkUserId] = @userId AND [fkRegionId] = @regionId",
+                    new {userId, regionId});
             }
         }
 
