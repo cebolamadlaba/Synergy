@@ -290,7 +290,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The pricing manager
         /// </summary>
-        public static IPricingManager PricingManager =
-            new PricingManager(RiskGroupRepository, LegalEntityRepository, LookupTableManager);
+        public static IPricingManager PricingManager = new PricingManager(RiskGroupRepository);
     }
 }

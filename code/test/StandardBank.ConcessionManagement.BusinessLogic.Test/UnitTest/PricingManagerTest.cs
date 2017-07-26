@@ -21,44 +21,52 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         /// </summary>
         public PricingManagerTest()
         {
-            _pricingManager = new PricingManager(MockRiskGroupRepository.Object, MockLegalEntityRepository.Object,
-                MockLookupTableManager.Object);
+            _pricingManager = new PricingManager(MockRiskGroupRepository.Object);
         }
 
         /// <summary>
-        /// Tests that GetLegalEntitiesForRiskGroupNumber executes positive
+        /// Tests that GetRiskGroupName for an active record executes positive
         /// </summary>
         [Fact]
-        public void GetLegalEntitiesForRiskGroupNumber_Executes_Positive()
+        public void GetRiskGroupName_ActiveRecord_Executes_Positive()
         {
-            MockRiskGroupRepository.Setup(_ => _.ReadByRiskGroupNumber(It.IsAny<int>())).Returns(new RiskGroup
+            var riskGroup = new RiskGroup
             {
                 RiskGroupNumber = 1,
                 RiskGroupName = "Unit Test Risk Group",
                 IsActive = true,
                 Id = 1
-            });
+            };
 
-            MockLegalEntityRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>())).Returns(new[]
-            {
-                new LegalEntity
-                {
-                    IsActive = true,
-                    Id = 1,
-                    CustomerName = "Unit Test",
-                    CustomerNumber = "001",
-                    RiskGroupId = 1,
-                    RiskGroupName = "Unit Test Risk Group",
-                    MarketSegmentId = 1
-                }
-            });
+            MockRiskGroupRepository.Setup(_ => _.ReadByRiskGroupNumber(It.IsAny<int>())).Returns(riskGroup);
 
-            MockLookupTableManager.Setup(_ => _.GetMarketSegmentName(It.IsAny<int>())).Returns("Market Segment Test");
-
-            var result = _pricingManager.GetLegalEntitiesForRiskGroupNumber(1);
+            var result = _pricingManager.GetRiskGroupName(1);
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
+            Assert.Equal(result, riskGroup.RiskGroupName);
+        }
+
+        /// <summary>
+        /// Tests that GetRiskGroupName for an in-active record executes positive
+        /// </summary>
+        [Fact]
+        public void GetRiskGroupName_InActiveRecord_Executes_Positive()
+        {
+            var riskGroup = new RiskGroup
+            {
+                RiskGroupNumber = 1,
+                RiskGroupName = "Unit Test Risk Group",
+                IsActive = false,
+                Id = 1
+            };
+
+            MockRiskGroupRepository.Setup(_ => _.ReadByRiskGroupNumber(It.IsAny<int>())).Returns(riskGroup);
+
+            var result = _pricingManager.GetRiskGroupName(1);
+
+            Assert.Empty(result);
+            Assert.NotEqual(result, riskGroup.RiskGroupName);
         }
     }
 }

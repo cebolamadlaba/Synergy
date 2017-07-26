@@ -32,14 +32,6 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int RiskGroupId { get; set; }
 
         /// <summary>
-        /// Gets or sets the RiskGroupName.
-        /// </summary>
-        /// <value>
-        /// The RiskGroupName.
-        /// </value>
-        public string RiskGroupName { get; set; }
-
-        /// <summary>
         /// Gets or sets the CustomerName.
         /// </summary>
         /// <value>

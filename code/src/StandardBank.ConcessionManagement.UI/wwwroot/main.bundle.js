@@ -174,7 +174,7 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__mismatched_inbox_mismatched_inbox_component__ = __webpack_require__("../../../../../client-src/app/mismatched-inbox/mismatched-inbox.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__user_concessions_user_concessions_service__ = __webpack_require__("../../../../../client-src/app/user-concessions/user-concessions.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__user_user_service__ = __webpack_require__("../../../../../client-src/app/user/user.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__risk_group_legal_entities_risk_group_legal_entities_service__ = __webpack_require__("../../../../../client-src/app/risk-group-legal-entities/risk-group-legal-entities.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__risk_group_name_risk_group_name_service__ = __webpack_require__("../../../../../client-src/app/risk-group-name/risk-group-name.service.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -243,7 +243,7 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_5_ngx_bootstrap_modal__["a" /* ModalModule */].forRoot(),
             __WEBPACK_IMPORTED_MODULE_6_angular_datatables__["a" /* DataTablesModule */]
         ],
-        providers: [__WEBPACK_IMPORTED_MODULE_24__user_concessions_user_concessions_service__["a" /* UserConcessionsService */], __WEBPACK_IMPORTED_MODULE_25__user_user_service__["a" /* UserService */], __WEBPACK_IMPORTED_MODULE_26__risk_group_legal_entities_risk_group_legal_entities_service__["a" /* RiskGroupLegalEntitiesService */]],
+        providers: [__WEBPACK_IMPORTED_MODULE_24__user_concessions_user_concessions_service__["a" /* UserConcessionsService */], __WEBPACK_IMPORTED_MODULE_25__user_user_service__["a" /* UserService */], __WEBPACK_IMPORTED_MODULE_26__risk_group_name_risk_group_name_service__["a" /* RiskGroupNameService */]],
         bootstrap: [__WEBPACK_IMPORTED_MODULE_7__app_component__["a" /* AppComponent */]]
     })
 ], AppModule);
@@ -942,21 +942,6 @@ var Centre = (function () {
 
 /***/ }),
 
-/***/ "../../../../../client-src/app/models/legal-entity.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LegalEntity; });
-var LegalEntity = (function () {
-    function LegalEntity() {
-    }
-    return LegalEntity;
-}());
-
-//# sourceMappingURL=legal-entity.js.map
-
-/***/ }),
-
 /***/ "../../../../../client-src/app/models/region.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1382,7 +1367,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/pricing/pricing.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "  <!-- banner-->\r\n<div class=\"col-md-12 pricing-banner\">\r\n    <div class=\"col-md-1 pricing-user-image\">\r\n        <i class=\"fa fa-user-o\" aria-hidden=\"true\"></i>\r\n    </div>\r\n    <div class=\"col-md-5\">\r\n        <div class=\"pricing-form\">\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Region</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.selectedRegion.description}}</p>\r\n                </div>\r\n            </div>\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Business Unit</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.selectedCentre.name}}</p>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div class=\"col-md-5\">\r\n        <div class=\"pricing-form\">\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Province</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.selectedCentre.province}}</p>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <!-- Search bar -->\r\n    <form (submit)=\"searchRiskGroupNumber(riskGroupNumber)\">\r\n        <div class=\"input-group\">\r\n            <input class=\"form-control\" placeholder=\"Risk Group Number\" [(ngModel)]=\"riskGroupNumber\" type=\"number\" name=\"riskGroupNumber\">\r\n            <div class=\"input-group-btn\">\r\n                <!-- updated search bar button -->\r\n                <button class=\"btn btn-default-search\" type=\"submit\">Search</button>\r\n            </div>\r\n        </div>\r\n    </form>\r\n</div>\r\n\r\n<!-- Risk Group details -->\r\n<div class=\"col-md-12\" *ngIf=\"!hasLegalEntities;else pricing_products\">\r\n    <div class=\"searchEmptyState\">\r\n        <i class=\"fa fa-info-circle\" aria-hidden=\"true\"></i>\r\n        <div>\r\n            Enter risk group number to return customer products\r\n        </div>\r\n    </div>\r\n</div>\r\n\r\n<ng-template #pricing_products>\r\n    <div class=\"row\" *ngIf=\"legalEntities == null || legalEntities.length == 0\">\r\n        <div class=\"col-md-12\">\r\n            <div class=\"searchEmptyState\">\r\n                <i class=\"fa fa-info-circle\" aria-hidden=\"true\"></i>\r\n                <div>\r\n                    No data found for risk group number\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div class=\"row\" *ngFor='let legalEntity of legalEntities; trackBy: index;'>\r\n        <div class=\"col-md-12\">\r\n            <div class=\"pricing-group-container\">\r\n                <div class=\"pricing-icon\">\r\n                    <div class=\"building-icon\">\r\n                        <i class=\"fa fa-building-o\" aria-hidden=\"true\"></i>\r\n                    </div>\r\n                </div>\r\n                <div class=\"pricing-group-info\">\r\n                    <h3>{{legalEntity.customerName}}</h3>\r\n                    <br />\r\n                    <div class=\"secondaryText\">\r\n                        <strong>Risk Group:</strong> {{legalEntity.riskGroupNumber}} - {{legalEntity.riskGroupName}}<br />\r\n                        <strong>Segment:</strong> {{legalEntity.marketSegmentDescription}}\r\n                    </div>\r\n                </div>\r\n                <div class=\"col-md-12 pricing-group-container-items\">\r\n                    <div class=\"item\">\r\n                        <div>Lending</div>\r\n                        <div class=\"container-item-icon\">\r\n                            <i class=\"fa fa-handshake-o\" aria-hidden=\"true\"></i>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"item\">\r\n                        <div>Cash</div>\r\n                        <div class=\"container-item-icon\">\r\n                            <i class=\"fa fa-money\" aria-hidden=\"true\"></i>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"item\">\r\n                        <div>Investments</div>\r\n                        <div class=\"container-item-icon\">\r\n                            <i class=\"fa fa-bar-chart\" aria-hidden=\"true\"></i>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"item\">\r\n                        <div>BOL</div>\r\n                        <div class=\"container-item-icon\">\r\n                            <i class=\"fa fa-desktop\" aria-hidden=\"true\"></i>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"item\">\r\n                        <div>MAS</div>\r\n                        <div class=\"container-item-icon\">\r\n                            <i class=\"fa fa-calculator\" aria-hidden=\"true\"></i>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"item\">\r\n                        <div>Trade</div>\r\n                        <div class=\"container-item-icon\">\r\n                            <i class=\"fa fa-line-chart\" aria-hidden=\"true\"></i>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"item\">\r\n                        <div>Transactional</div>\r\n                        <div class=\"container-item-icon\">\r\n                            <i class=\"fa fa-exchange\" aria-hidden=\"true\"></i>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"item\">\r\n                        <div>Cashman</div>\r\n                        <div class=\"container-item-icon\">\r\n                            <i class=\"fa fa-user\" aria-hidden=\"true\"></i>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</ng-template>"
+module.exports = "  <!-- banner-->\r\n<div class=\"col-md-12 pricing-banner\">\r\n    <div class=\"col-md-1 pricing-user-image\">\r\n        <i class=\"fa fa-user-o\" aria-hidden=\"true\"></i>\r\n    </div>\r\n    <div class=\"col-md-5\">\r\n        <div class=\"pricing-form\">\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Region</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.selectedRegion.description}}</p>\r\n                </div>\r\n            </div>\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Business Unit</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.selectedCentre.name}}</p>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div class=\"col-md-5\">\r\n        <div class=\"pricing-form\">\r\n            <div class=\"row\">\r\n                <div class=\"col-sm-3\">\r\n                    <p class=\"lightTitle\">Province</p>\r\n                </div>\r\n                <div class=\"col-sm-6\">\r\n                    <p>{{user.selectedCentre.province}}</p>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n<div class=\"col-md-12 search-and-results-container\">\r\n    <!-- Search bar -->\r\n    <form (submit)=\"searchRiskGroupNumber(riskGroupNumber)\">\r\n        <div class=\"input-group\">\r\n            <input class=\"form-control\" placeholder=\"Risk Group Number\" [(ngModel)]=\"riskGroupNumber\" type=\"number\" name=\"riskGroupNumber\">\r\n            <div class=\"input-group-btn\">\r\n                <!-- updated search bar button -->\r\n                <button class=\"btn btn-default-search\" type=\"submit\">Search</button>\r\n            </div>\r\n        </div>\r\n    </form>\r\n</div>\r\n\r\n<!-- Risk Group details -->\r\n<div class=\"col-md-12\" *ngIf=\"!foundRiskGroup;else pricing_products\">\r\n    <div class=\"searchEmptyState\">\r\n        <i class=\"fa fa-info-circle\" aria-hidden=\"true\"></i>\r\n        <div>\r\n            Enter risk group number to return customer products\r\n        </div>\r\n    </div>\r\n</div>\r\n\r\n<ng-template #pricing_products>\r\n    <div class=\"row\" *ngIf=\"riskGroupName == null || riskGroupName.length == 0\">\r\n        <div class=\"col-md-12\">\r\n            <div class=\"searchEmptyState\">\r\n                <i class=\"fa fa-info-circle\" aria-hidden=\"true\"></i>\r\n                <div>\r\n                    No data found for risk group number\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div class=\"row\">\r\n        <div class=\"col-md-12\">\r\n            <div class=\"pricing-group-container\">\r\n                <div class=\"pricing-icon\">\r\n                    <div class=\"building-icon\">\r\n                        <i class=\"fa fa-building-o\" aria-hidden=\"true\"></i>\r\n                    </div>\r\n                </div>\r\n                <div class=\"pricing-group-info\">\r\n                    <h3>{{riskGroupName}}</h3>\r\n                    <br />\r\n                    <div class=\"secondaryText\">{{riskGroupNumber}}</div>\r\n                    <br />\r\n                </div>\r\n                <div class=\"col-md-12 pricing-group-container-items\">\r\n                    <div class=\"item\">\r\n                        <div>Lending</div>\r\n                        <div class=\"container-item-icon\">\r\n                            <i class=\"fa fa-handshake-o\" aria-hidden=\"true\"></i>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"item\">\r\n                        <div>Cash</div>\r\n                        <div class=\"container-item-icon\">\r\n                            <i class=\"fa fa-money\" aria-hidden=\"true\"></i>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"item\">\r\n                        <div>Investments</div>\r\n                        <div class=\"container-item-icon\">\r\n                            <i class=\"fa fa-bar-chart\" aria-hidden=\"true\"></i>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"item\">\r\n                        <div>BOL</div>\r\n                        <div class=\"container-item-icon\">\r\n                            <i class=\"fa fa-desktop\" aria-hidden=\"true\"></i>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"item\">\r\n                        <div>MAS</div>\r\n                        <div class=\"container-item-icon\">\r\n                            <i class=\"fa fa-calculator\" aria-hidden=\"true\"></i>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"item\">\r\n                        <div>Trade</div>\r\n                        <div class=\"container-item-icon\">\r\n                            <i class=\"fa fa-line-chart\" aria-hidden=\"true\"></i>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"item\">\r\n                        <div>Transactional</div>\r\n                        <div class=\"container-item-icon\">\r\n                            <i class=\"fa fa-exchange\" aria-hidden=\"true\"></i>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"item\">\r\n                        <div>Cashman</div>\r\n                        <div class=\"container-item-icon\">\r\n                            <i class=\"fa fa-user\" aria-hidden=\"true\"></i>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</ng-template>"
 
 /***/ }),
 
@@ -1392,7 +1377,7 @@ module.exports = "  <!-- banner-->\r\n<div class=\"col-md-12 pricing-banner\">\r
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__user_user_service__ = __webpack_require__("../../../../../client-src/app/user/user.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__risk_group_legal_entities_risk_group_legal_entities_service__ = __webpack_require__("../../../../../client-src/app/risk-group-legal-entities/risk-group-legal-entities.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__risk_group_name_risk_group_name_service__ = __webpack_require__("../../../../../client-src/app/risk-group-name/risk-group-name.service.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PricingComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1410,10 +1395,10 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 
 
 var PricingComponent = (function () {
-    function PricingComponent(userService, riskGroupLegalEntitiesService) {
+    function PricingComponent(userService, riskGroupNameService) {
         this.userService = userService;
-        this.riskGroupLegalEntitiesService = riskGroupLegalEntitiesService;
-        this.hasLegalEntities = false;
+        this.riskGroupNameService = riskGroupNameService;
+        this.foundRiskGroup = false;
     }
     PricingComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -1422,11 +1407,12 @@ var PricingComponent = (function () {
     };
     PricingComponent.prototype.searchRiskGroupNumber = function (riskGroupNumber) {
         var _this = this;
-        this.legalEntities = [];
-        this.observableLegalEntities = this.riskGroupLegalEntitiesService.getData(riskGroupNumber);
-        this.observableLegalEntities.subscribe(function (legalEntity) {
-            _this.legalEntities = legalEntity;
-            _this.hasLegalEntities = true;
+        this.foundRiskGroup = false;
+        this.riskGroupNumber = riskGroupNumber;
+        this.observableRiskGroupName = this.riskGroupNameService.getData(riskGroupNumber);
+        this.observableRiskGroupName.subscribe(function (riskGroupName) {
+            _this.riskGroupName = riskGroupName;
+            _this.foundRiskGroup = true;
         }, function (error) { return _this.errorMessage = error; });
     };
     return PricingComponent;
@@ -1437,7 +1423,7 @@ PricingComponent = __decorate([
         template: __webpack_require__("../../../../../client-src/app/pricing/pricing.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/pricing/pricing.component.css")]
     }),
-    __param(0, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Inject */])(__WEBPACK_IMPORTED_MODULE_1__user_user_service__["a" /* UserService */])), __param(1, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Inject */])(__WEBPACK_IMPORTED_MODULE_2__risk_group_legal_entities_risk_group_legal_entities_service__["a" /* RiskGroupLegalEntitiesService */])),
+    __param(0, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Inject */])(__WEBPACK_IMPORTED_MODULE_1__user_user_service__["a" /* UserService */])), __param(1, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Inject */])(__WEBPACK_IMPORTED_MODULE_2__risk_group_name_risk_group_name_service__["a" /* RiskGroupNameService */])),
     __metadata("design:paramtypes", [Object, Object])
 ], PricingComponent);
 
@@ -1445,7 +1431,7 @@ PricingComponent = __decorate([
 
 /***/ }),
 
-/***/ "../../../../../client-src/app/risk-group-legal-entities/risk-group-legal-entities.service.ts":
+/***/ "../../../../../client-src/app/risk-group-name/risk-group-name.service.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1455,9 +1441,8 @@ PricingComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_legal_entity__ = __webpack_require__("../../../../../client-src/app/models/legal-entity.ts");
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RiskGroupLegalEntitiesService; });
-/* unused harmony export MockRiskGroupLegalEntitiesService */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RiskGroupNameService; });
+/* unused harmony export MockRiskGroupNameService */
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -1481,51 +1466,45 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
-var RiskGroupLegalEntitiesService = (function () {
-    function RiskGroupLegalEntitiesService(http) {
+var RiskGroupNameService = (function () {
+    function RiskGroupNameService(http) {
         this.http = http;
     }
-    RiskGroupLegalEntitiesService.prototype.getData = function (riskGroupNumber) {
-        var url = "/api/pricing/RiskGroupLegalEntities/" + riskGroupNumber;
+    RiskGroupNameService.prototype.getData = function (riskGroupNumber) {
+        var url = "/api/Pricing/RiskGroupName/" + riskGroupNumber;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     };
-    RiskGroupLegalEntitiesService.prototype.extractData = function (response) {
-        var body = response.json();
+    RiskGroupNameService.prototype.extractData = function (response) {
+        var body = response.text();
         return body;
     };
-    RiskGroupLegalEntitiesService.prototype.handleErrorObservable = function (error) {
+    RiskGroupNameService.prototype.handleErrorObservable = function (error) {
         console.error(error.message || error);
         return __WEBPACK_IMPORTED_MODULE_2_rxjs__["Observable"].throw(error.message || error);
     };
-    return RiskGroupLegalEntitiesService;
+    return RiskGroupNameService;
 }());
-RiskGroupLegalEntitiesService = __decorate([
+RiskGroupNameService = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])(),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _a || Object])
-], RiskGroupLegalEntitiesService);
+], RiskGroupNameService);
 
-var MockRiskGroupLegalEntitiesService = (function (_super) {
-    __extends(MockRiskGroupLegalEntitiesService, _super);
-    function MockRiskGroupLegalEntitiesService() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.model = [new __WEBPACK_IMPORTED_MODULE_4__models_legal_entity__["a" /* LegalEntity */]()];
-        return _this;
+var MockRiskGroupNameService = (function (_super) {
+    __extends(MockRiskGroupNameService, _super);
+    function MockRiskGroupNameService() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    MockRiskGroupLegalEntitiesService.prototype.getData = function (riskGroupNumber) {
-        this.model[0].id = 1;
-        this.model[0].customerName = "Mocked Customer Name";
-        this.model[0].riskGroupNumber = riskGroupNumber;
-        return __WEBPACK_IMPORTED_MODULE_2_rxjs__["Observable"].of(this.model);
+    MockRiskGroupNameService.prototype.getData = function (riskGroupNumber) {
+        return __WEBPACK_IMPORTED_MODULE_2_rxjs__["Observable"].of("Test Risk Group");
     };
-    return MockRiskGroupLegalEntitiesService;
-}(RiskGroupLegalEntitiesService));
-MockRiskGroupLegalEntitiesService = __decorate([
+    return MockRiskGroupNameService;
+}(RiskGroupNameService));
+MockRiskGroupNameService = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])()
-], MockRiskGroupLegalEntitiesService);
+], MockRiskGroupNameService);
 
 var _a;
-//# sourceMappingURL=risk-group-legal-entities.service.js.map
+//# sourceMappingURL=risk-group-name.service.js.map
 
 /***/ }),
 

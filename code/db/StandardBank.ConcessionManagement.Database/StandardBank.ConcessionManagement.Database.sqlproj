@@ -115,5 +115,6 @@
     <None Include="Change Scripts\02_create_tblUserRegion.sql" />
     <None Include="Change Scripts\03_add_data_rtblRegion.sql" />
     <None Include="Change Scripts\04_add_data_tblUserRegion.sql" />
+    <None Include="Change Scripts\05_alter_tblLegalEntity.sql" />
   </ItemGroup>
 </Project>

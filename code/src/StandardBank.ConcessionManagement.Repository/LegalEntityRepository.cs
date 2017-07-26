@@ -36,13 +36,22 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public LegalEntity Create(LegalEntity model)
         {
-            const string sql = @"INSERT [dbo].[tblLegalEntity] ([fkMarketSegmentId], [fkRiskGroupId], [RiskGroupName], [CustomerName], [CustomerNumber], [IsActive]) 
-                                VALUES (@fkMarketSegmentId, @fkRiskGroupId, @RiskGroupName, @CustomerName, @CustomerNumber, @IsActive) 
-                                SELECT CAST(SCOPE_IDENTITY() as int)";
+            const string sql =
+                @"INSERT [dbo].[tblLegalEntity] ([fkMarketSegmentId], [fkRiskGroupId], [CustomerName], [CustomerNumber], [IsActive]) 
+                VALUES (@fkMarketSegmentId, @fkRiskGroupId, @CustomerName, @CustomerNumber, @IsActive) 
+                SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
-                model.Id = db.Query<int>(sql, new {fkMarketSegmentId = model.MarketSegmentId, fkRiskGroupId = model.RiskGroupId, RiskGroupName = model.RiskGroupName, CustomerName = model.CustomerName, CustomerNumber = model.CustomerNumber, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql,
+                    new
+                    {
+                        fkMarketSegmentId = model.MarketSegmentId,
+                        fkRiskGroupId = model.RiskGroupId,
+                        CustomerName = model.CustomerName,
+                        CustomerNumber = model.CustomerNumber,
+                        IsActive = model.IsActive
+                    }).Single();
             }
 
             return model;
@@ -58,7 +67,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
                 return db.Query<LegalEntity>(
-                    "SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [RiskGroupName], [CustomerName], [CustomerNumber], [IsActive] FROM [dbo].[tblLegalEntity] WHERE [pkLegalEntityId] = @Id",
+                    "SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [CustomerName], [CustomerNumber], [IsActive] FROM [dbo].[tblLegalEntity] WHERE [pkLegalEntityId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -73,7 +82,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
                 return db.Query<LegalEntity>(
-                    @"SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [RiskGroupName], [CustomerName], [CustomerNumber], [IsActive] 
+                    @"SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [CustomerName], [CustomerNumber], [IsActive] 
                     FROM [dbo].[tblLegalEntity] 
                     WHERE [fkRiskGroupId] = @riskGroupId",
                     new {riskGroupId});
@@ -88,7 +97,7 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
-                return db.Query<LegalEntity>("SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [RiskGroupName], [CustomerName], [CustomerNumber], [IsActive] FROM [dbo].[tblLegalEntity]");
+                return db.Query<LegalEntity>("SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [CustomerName], [CustomerNumber], [IsActive] FROM [dbo].[tblLegalEntity]");
             }
         }
 
@@ -101,9 +110,17 @@ namespace StandardBank.ConcessionManagement.Repository
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
                 db.Execute(@"UPDATE [dbo].[tblLegalEntity]
-                            SET [fkMarketSegmentId] = @fkMarketSegmentId, [fkRiskGroupId] = @fkRiskGroupId, [RiskGroupName] = @RiskGroupName, [CustomerName] = @CustomerName, [CustomerNumber] = @CustomerNumber, [IsActive] = @IsActive
+                            SET [fkMarketSegmentId] = @fkMarketSegmentId, [fkRiskGroupId] = @fkRiskGroupId, [CustomerName] = @CustomerName, [CustomerNumber] = @CustomerNumber, [IsActive] = @IsActive
                             WHERE [pkLegalEntityId] = @Id",
-                    new {Id = model.Id, fkMarketSegmentId = model.MarketSegmentId, fkRiskGroupId = model.RiskGroupId, RiskGroupName = model.RiskGroupName, CustomerName = model.CustomerName, CustomerNumber = model.CustomerNumber, IsActive = model.IsActive});
+                    new
+                    {
+                        Id = model.Id,
+                        fkMarketSegmentId = model.MarketSegmentId,
+                        fkRiskGroupId = model.RiskGroupId,
+                        CustomerName = model.CustomerName,
+                        CustomerNumber = model.CustomerNumber,
+                        IsActive = model.IsActive
+                    });
             }
         }
 

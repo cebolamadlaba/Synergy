@@ -1,11 +1,8 @@
 ﻿import { Component, OnInit, Inject } from '@angular/core';
 import { Observable } from "rxjs";
-
 import { UserService } from "../user/user.service";
-import { RiskGroupLegalEntitiesService } from "../risk-group-legal-entities/risk-group-legal-entities.service";
-
 import { User } from "../models/user";
-import { LegalEntity } from "../models/legal-entity";
+import { RiskGroupNameService } from "../risk-group-name/risk-group-name.service";
 
 @Component({
     selector: 'app-pricing',
@@ -15,13 +12,13 @@ import { LegalEntity } from "../models/legal-entity";
 export class PricingComponent implements OnInit {
     observableLoggedInUser: Observable<User>;
     user: User;
-
-    observableLegalEntities: Observable<LegalEntity[]>;
-    legalEntities: LegalEntity[];
-    hasLegalEntities = false;
     errorMessage: String;
+    observableRiskGroupName: Observable<String>;
+    riskGroupName: String;
+    riskGroupNumber: number;
+    foundRiskGroup = false;
 
-    constructor( @Inject(UserService) private userService, @Inject(RiskGroupLegalEntitiesService) private riskGroupLegalEntitiesService) { }
+    constructor( @Inject(UserService) private userService, @Inject(RiskGroupNameService) private riskGroupNameService ) { }
 
     ngOnInit() {
         this.observableLoggedInUser = this.userService.getData();
@@ -30,11 +27,12 @@ export class PricingComponent implements OnInit {
     }
 
     searchRiskGroupNumber(riskGroupNumber: number) {
-        this.legalEntities = [];
-        this.observableLegalEntities = this.riskGroupLegalEntitiesService.getData(riskGroupNumber);
-        this.observableLegalEntities.subscribe(legalEntity => {
-                this.legalEntities = legalEntity;
-                this.hasLegalEntities = true;
+        this.foundRiskGroup = false;
+        this.riskGroupNumber = riskGroupNumber;
+        this.observableRiskGroupName = this.riskGroupNameService.getData(riskGroupNumber);
+        this.observableRiskGroupName.subscribe(riskGroupName => {
+                this.riskGroupName = riskGroupName;
+                this.foundRiskGroup = true;
             },
             error => this.errorMessage = <any>error);
     }

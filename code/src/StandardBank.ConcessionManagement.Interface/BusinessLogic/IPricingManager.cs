@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using StandardBank.ConcessionManagement.Model.UserInterface.Pricing;
-
-namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
+﻿namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 {
     /// <summary>
     /// Pricing manager interface
@@ -9,10 +6,10 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
     public interface IPricingManager
     {
         /// <summary>
-        /// Gets the legal entities for risk group number.
+        /// Gets the risk group name for the risk group number specified
         /// </summary>
-        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <param name="riskGroupNumber"></param>
         /// <returns></returns>
-        IEnumerable<LegalEntity> GetLegalEntitiesForRiskGroupNumber(int riskGroupNumber);
+        string GetRiskGroupName(int riskGroupNumber);
     }
 }

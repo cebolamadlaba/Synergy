@@ -21,7 +21,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 MarketSegmentId = DataHelper.GetMarketSegmentId(),
                 RiskGroupId = DataHelper.GetRiskGroupId(),
-                RiskGroupName = "29bf11668d",
                 CustomerName = "311273f3c2",
                 CustomerNumber = "c46e397eeb",
                 IsActive = false
@@ -88,7 +87,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
 
             model.MarketSegmentId = DataHelper.GetAlternateMarketSegmentId(model.MarketSegmentId);
             model.RiskGroupId = DataHelper.GetAlternateRiskGroupId(model.RiskGroupId);
-            model.RiskGroupName = "9d9679a6b0";
             model.CustomerName = "e300b22636";
             model.CustomerNumber = "6d77d219be";
             model.IsActive = !model.IsActive;
@@ -101,7 +99,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.Id, model.Id);
             Assert.Equal(updatedModel.MarketSegmentId, model.MarketSegmentId);
             Assert.Equal(updatedModel.RiskGroupId, model.RiskGroupId);
-            Assert.Equal(updatedModel.RiskGroupName, model.RiskGroupName);
             Assert.Equal(updatedModel.CustomerName, model.CustomerName);
             Assert.Equal(updatedModel.CustomerNumber, model.CustomerNumber);
             Assert.Equal(updatedModel.IsActive, model.IsActive);
@@ -117,7 +114,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 MarketSegmentId = DataHelper.GetMarketSegmentId(),
                 RiskGroupId = DataHelper.GetRiskGroupId(),
-                RiskGroupName = "29bf11668d",
                 CustomerName = "311273f3c2",
                 CustomerNumber = "c46e397eeb",
                 IsActive = false

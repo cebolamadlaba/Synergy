@@ -2035,7 +2035,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             {
                 MarketSegmentId = GetMarketSegmentId(),
                 RiskGroupId = GetRiskGroupId(),
-                RiskGroupName = "d3123ec05f",
                 CustomerName = "969efde63e",
                 CustomerNumber = "b925857761",
                 IsActive = false

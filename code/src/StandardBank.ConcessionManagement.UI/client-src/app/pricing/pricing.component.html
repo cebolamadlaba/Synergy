@@ -50,7 +50,7 @@
 </div>
 
 <!-- Risk Group details -->
-<div class="col-md-12" *ngIf="!hasLegalEntities;else pricing_products">
+<div class="col-md-12" *ngIf="!foundRiskGroup;else pricing_products">
     <div class="searchEmptyState">
         <i class="fa fa-info-circle" aria-hidden="true"></i>
         <div>
@@ -60,7 +60,7 @@
 </div>
 
 <ng-template #pricing_products>
-    <div class="row" *ngIf="legalEntities == null || legalEntities.length == 0">
+    <div class="row" *ngIf="riskGroupName == null || riskGroupName.length == 0">
         <div class="col-md-12">
             <div class="searchEmptyState">
                 <i class="fa fa-info-circle" aria-hidden="true"></i>
@@ -70,7 +70,7 @@
             </div>
         </div>
     </div>
-    <div class="row" *ngFor='let legalEntity of legalEntities; trackBy: index;'>
+    <div class="row">
         <div class="col-md-12">
             <div class="pricing-group-container">
                 <div class="pricing-icon">
@@ -79,12 +79,10 @@
                     </div>
                 </div>
                 <div class="pricing-group-info">
-                    <h3>{{legalEntity.customerName}}</h3>
+                    <h3>{{riskGroupName}}</h3>
                     <br />
-                    <div class="secondaryText">
-                        <strong>Risk Group:</strong> {{legalEntity.riskGroupNumber}} - {{legalEntity.riskGroupName}}<br />
-                        <strong>Segment:</strong> {{legalEntity.marketSegmentDescription}}
-                    </div>
+                    <div class="secondaryText">{{riskGroupNumber}}</div>
+                    <br />
                 </div>
                 <div class="col-md-12 pricing-group-container-items">
                     <div class="item">

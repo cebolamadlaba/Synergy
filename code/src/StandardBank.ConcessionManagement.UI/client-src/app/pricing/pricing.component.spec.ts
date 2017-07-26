@@ -2,8 +2,8 @@
 import { HttpModule } from '@angular/http';
 import { PricingComponent } from './pricing.component';
 import { UserService, MockUserService } from "../user/user.service";
-import { RiskGroupLegalEntitiesService, MockRiskGroupLegalEntitiesService } from "../risk-group-legal-entities/risk-group-legal-entities.service";
 import { FormsModule } from '@angular/forms';
+import { RiskGroupNameService, MockRiskGroupNameService } from "../risk-group-name/risk-group-name.service";
 
 describe('PricingComponent', () => {
     let component: PricingComponent;
@@ -15,7 +15,7 @@ describe('PricingComponent', () => {
             declarations: [PricingComponent],
             providers: [
                 { provide: UserService, useClass: MockUserService },
-                { provide: RiskGroupLegalEntitiesService, useClass: MockRiskGroupLegalEntitiesService }
+                { provide: RiskGroupNameService, useClass: MockRiskGroupNameService }
             ]
         }).compileComponents();
     }));
