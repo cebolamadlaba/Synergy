@@ -1,4 +1,6 @@
-﻿namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
+﻿using StandardBank.ConcessionManagement.Model.UserInterface.Pricing;
+
+namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 {
     /// <summary>
     /// Pricing manager interface
@@ -6,10 +8,10 @@
     public interface IPricingManager
     {
         /// <summary>
-        /// Gets the risk group name for the risk group number specified
+        /// Gets the risk group for the number specified
         /// </summary>
         /// <param name="riskGroupNumber"></param>
         /// <returns></returns>
-        string GetRiskGroupName(int riskGroupNumber);
+        RiskGroup GetRiskGroupForRiskGroupNumber(int riskGroupNumber);
     }
 }

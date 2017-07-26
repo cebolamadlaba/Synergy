@@ -60,7 +60,7 @@
 </div>
 
 <ng-template #pricing_products>
-    <div class="row" *ngIf="riskGroupName == null || riskGroupName.length == 0">
+    <div class="row" *ngIf="riskGroup == null">
         <div class="col-md-12">
             <div class="searchEmptyState">
                 <i class="fa fa-info-circle" aria-hidden="true"></i>
@@ -70,7 +70,7 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="riskGroup != null">
         <div class="col-md-12">
             <div class="pricing-group-container">
                 <div class="pricing-icon">
@@ -79,13 +79,13 @@
                     </div>
                 </div>
                 <div class="pricing-group-info">
-                    <h3>{{riskGroupName}}</h3>
-                    <br />
-                    <div class="secondaryText">{{riskGroupNumber}}</div>
-                    <br />
+                    <h3>{{riskGroup.name}}</h3>
+                    <br/>
+                    <div class="secondaryText">{{riskGroup.number}}</div>
+                    <br/>
                 </div>
                 <div class="col-md-12 pricing-group-container-items">
-                    <div class="item selected-item" [routerLink]="['/pricing-lending', riskGroupNumber]">
+                    <div class="item selected-item" [routerLink]="['/pricing-lending', riskGroup.number]">
                         <div>Lending</div>
                         <div class="container-item-icon">
                             <i class="fa fa-handshake-o" aria-hidden="true"></i>

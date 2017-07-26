@@ -1,16 +1,16 @@
 ﻿import { TestBed, inject } from '@angular/core/testing';
 import { HttpModule } from '@angular/http';
-import { RiskGroupNameService } from './risk-group-name.service';
+import { RiskGroupService } from "./risk-group.service";
 
-describe('RiskGroupNameService', () => {
+describe('RiskGroupService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpModule],
-            providers: [RiskGroupNameService]
+            providers: [RiskGroupService]
         });
     });
 
-    it('should be created', inject([RiskGroupNameService], (service: RiskGroupNameService) => {
+    it('should be created', inject([RiskGroupService], (service: RiskGroupService) => {
         expect(service).toBeTruthy();
     }));
 });

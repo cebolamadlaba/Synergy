@@ -2,19 +2,20 @@
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
+import { RiskGroup } from "../models/risk-group";
 
 @Injectable()
-export class RiskGroupNameService {
+export class RiskGroupService {
 
     constructor(private http: Http) { }
 
-    getData(riskGroupNumber): Observable<String> {
-        const url = "/api/Pricing/RiskGroupName/" + riskGroupNumber;
+    getData(riskGroupNumber): Observable<RiskGroup> {
+        const url = "/api/Pricing/RiskGroup/" + riskGroupNumber;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
     private extractData(response: Response) {
-        let body = response.text();
+        let body = response.json();
         return body;
     }
 
@@ -26,10 +27,14 @@ export class RiskGroupNameService {
 }
 
 @Injectable()
-export class MockRiskGroupNameService extends RiskGroupNameService {
+export class MockRiskGroupService extends RiskGroupService {
+    model = new RiskGroup();
 
-    getData(riskGroupNumber): Observable<String> {
-        return Observable.of("Test Risk Group");
+    getData(riskGroupNumber): Observable<RiskGroup> {
+        this.model.id = 1;
+        this.model.name = "Risk Group Test";
+        this.model.number = 1;
+        return Observable.of(this.model);
     }
 
 }

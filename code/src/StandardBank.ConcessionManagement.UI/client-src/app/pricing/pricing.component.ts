@@ -2,8 +2,9 @@
 import { Observable } from "rxjs";
 import { UserService } from "../user/user.service";
 import { User } from "../models/user";
-import { RiskGroupNameService } from "../risk-group-name/risk-group-name.service";
 import { ActivatedRoute } from '@angular/router';
+import { RiskGroupService } from "../risk-group/risk-group.service";
+import { RiskGroup } from "../models/risk-group";
 
 @Component({
     selector: 'app-pricing',
@@ -15,14 +16,14 @@ export class PricingComponent implements OnInit, OnDestroy {
     observableLoggedInUser: Observable<User>;
     user: User;
     errorMessage: String;
-    observableRiskGroupName: Observable<String>;
-    riskGroupName: String;
+    observableRiskGroup: Observable<RiskGroup>;
+    riskGroup: RiskGroup;
     riskGroupNumber: number;
     foundRiskGroup = false;
 
     constructor(private route: ActivatedRoute,
         @Inject(UserService) private userService,
-        @Inject(RiskGroupNameService) private riskGroupNameService) {
+        @Inject(RiskGroupService) private riskGroupService) {
     }
 
     ngOnInit() {
@@ -41,9 +42,9 @@ export class PricingComponent implements OnInit, OnDestroy {
     searchRiskGroupNumber(riskGroupNumber: number) {
         this.foundRiskGroup = false;
         this.riskGroupNumber = riskGroupNumber;
-        this.observableRiskGroupName = this.riskGroupNameService.getData(riskGroupNumber);
-        this.observableRiskGroupName.subscribe(riskGroupName => {
-                this.riskGroupName = riskGroupName;
+        this.observableRiskGroup = this.riskGroupService.getData(riskGroupNumber);
+        this.observableRiskGroup.subscribe(riskGroup => {
+                this.riskGroup = riskGroup;
                 this.foundRiskGroup = true;
             },
             error => this.errorMessage = <any>error);

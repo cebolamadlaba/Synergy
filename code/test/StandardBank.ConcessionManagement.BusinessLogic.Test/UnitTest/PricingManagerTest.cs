@@ -25,10 +25,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         }
 
         /// <summary>
-        /// Tests that GetRiskGroupName for an active record executes positive
+        /// Tests that GetRiskGroupForRiskGroupNumber for an active record executes positive
         /// </summary>
         [Fact]
-        public void GetRiskGroupName_ActiveRecord_Executes_Positive()
+        public void GetRiskGroupForRiskGroupNumber_ActiveRecord_Executes_Positive()
         {
             var riskGroup = new RiskGroup
             {
@@ -40,18 +40,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             MockRiskGroupRepository.Setup(_ => _.ReadByRiskGroupNumber(It.IsAny<int>())).Returns(riskGroup);
 
-            var result = _pricingManager.GetRiskGroupName(1);
+            var result = _pricingManager.GetRiskGroupForRiskGroupNumber(1);
 
             Assert.NotNull(result);
-            Assert.NotEmpty(result);
-            Assert.Equal(result, riskGroup.RiskGroupName);
+            Assert.Equal(result.Name, riskGroup.RiskGroupName);
         }
 
         /// <summary>
-        /// Tests that GetRiskGroupName for an in-active record executes positive
+        /// Tests that GetRiskGroupForRiskGroupNumber for an in-active record executes positive
         /// </summary>
         [Fact]
-        public void GetRiskGroupName_InActiveRecord_Executes_Positive()
+        public void GetRiskGroupForRiskGroupNumber_InActiveRecord_Executes_Positive()
         {
             var riskGroup = new RiskGroup
             {
@@ -63,10 +62,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             MockRiskGroupRepository.Setup(_ => _.ReadByRiskGroupNumber(It.IsAny<int>())).Returns(riskGroup);
 
-            var result = _pricingManager.GetRiskGroupName(1);
+            var result = _pricingManager.GetRiskGroupForRiskGroupNumber(1);
 
-            Assert.Empty(result);
-            Assert.NotEqual(result, riskGroup.RiskGroupName);
+            Assert.Null(result);
         }
     }
 }

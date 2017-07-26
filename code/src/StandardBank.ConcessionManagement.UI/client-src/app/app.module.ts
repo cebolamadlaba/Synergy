@@ -26,7 +26,7 @@ import { MismatchedInboxComponent } from './mismatched-inbox/mismatched-inbox.co
 
 import { UserConcessionsService } from "./user-concessions/user-concessions.service";
 import { UserService } from "./user/user.service";
-import { RiskGroupNameService } from "./risk-group-name/risk-group-name.service";
+import { RiskGroupService } from "./risk-group/risk-group.service";
 
 @NgModule({
     declarations: [
@@ -56,7 +56,7 @@ import { RiskGroupNameService } from "./risk-group-name/risk-group-name.service"
         ModalModule.forRoot(),
         DataTablesModule
     ],
-    providers: [UserConcessionsService, UserService, RiskGroupNameService],
+    providers: [UserConcessionsService, UserService, RiskGroupService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
