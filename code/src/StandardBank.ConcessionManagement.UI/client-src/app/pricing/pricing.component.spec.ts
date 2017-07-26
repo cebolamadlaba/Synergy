@@ -4,6 +4,7 @@ import { PricingComponent } from './pricing.component';
 import { UserService, MockUserService } from "../user/user.service";
 import { FormsModule } from '@angular/forms';
 import { RiskGroupNameService, MockRiskGroupNameService } from "../risk-group-name/risk-group-name.service";
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('PricingComponent', () => {
     let component: PricingComponent;
@@ -11,7 +12,7 @@ describe('PricingComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [HttpModule, FormsModule],
+            imports: [HttpModule, FormsModule, RouterTestingModule],
             declarations: [PricingComponent],
             providers: [
                 { provide: UserService, useClass: MockUserService },

@@ -1,15 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-pricing-lending',
-  templateUrl: './pricing-lending.component.html',
-  styleUrls: ['./pricing-lending.component.css']
+    selector: 'app-pricing-lending',
+    templateUrl: './pricing-lending.component.html',
+    styleUrls: ['./pricing-lending.component.css']
 })
-export class PricingLendingComponent implements OnInit {
+export class PricingLendingComponent implements OnInit, OnDestroy {
+    riskGroupNumber: number;
+    private sub: any;
 
-  constructor() { }
+    constructor(private route: ActivatedRoute) { }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+        this.sub = this.route.params.subscribe(params => {
+            this.riskGroupNumber = +params['riskGroupNumber'];
+        });
+    }
 
+    ngOnDestroy() {
+        this.sub.unsubscribe();
+    }
 }
