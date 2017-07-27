@@ -263,7 +263,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The look up table manager
         /// </summary>
         public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,
-            SubStatusRepository, ReferenceTypeRepository, MarketSegmentRepository, ProvinceRepository);
+            SubStatusRepository, ReferenceTypeRepository, MarketSegmentRepository, ProvinceRepository, ConcessionTypeRepository);
 
         /// <summary>
         /// The concession manager
@@ -291,5 +291,10 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The pricing manager
         /// </summary>
         public static IPricingManager PricingManager = new PricingManager(RiskGroupRepository);
+
+        /// <summary>
+        /// The lending manager
+        /// </summary>
+        public static ILendingManager LendingManager = new LendingManager(PricingManager, LegalEntityRepository, LookupTableManager);
     }
 }

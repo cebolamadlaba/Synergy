@@ -21,7 +21,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         public LookupTableManagerTest()
         {
             _lookupTableManager = new LookupTableManager(MockStatusRepository.Object, MockSubStatusRepository.Object,
-                MockTypeRepository.Object, MockMarketSegmentRepository.Object, MockProvinceRepository.Object);
+                MockTypeRepository.Object, MockMarketSegmentRepository.Object, MockProvinceRepository.Object,
+                MockConcessionTypeRepository.Object);
         }
 
         /// <summary>
@@ -98,6 +99,23 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             Assert.NotNull(result);
             Assert.Equal(result, province.Description);
+        }
+
+        /// <summary>
+        /// Tests that GetConcessionTypeId executes positive
+        /// </summary>
+        [Fact]
+        public void GetConcessionTypeId_Executes_Positive()
+        {
+            var concessionType =
+                new ConcessionType {Code = "CODE", Description = "Description", Id = 1, IsActive = true};
+
+            MockConcessionTypeRepository.Setup(_ => _.ReadAll()).Returns(new[] {concessionType});
+
+            var result = _lookupTableManager.GetConcessionTypeId(concessionType.Code);
+
+            Assert.NotNull(result);
+            Assert.Equal(result, concessionType.Id);
         }
     }
 }

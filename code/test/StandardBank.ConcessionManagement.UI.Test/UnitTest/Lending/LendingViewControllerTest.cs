@@ -21,7 +21,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest.Lending
         /// </summary>
         public LendingViewControllerTest()
         {
-            _lendingViewController = new LendingViewController(MockPricingManager.Object);
+            _lendingViewController = new LendingViewController(MockPricingManager.Object, MockLendingManager.Object);
         }
 
         /// <summary>

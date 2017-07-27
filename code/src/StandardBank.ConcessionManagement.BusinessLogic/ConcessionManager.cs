@@ -270,8 +270,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             foreach (var concession in repositoryConcessions)
             {
-                var legalEntity = GetLegalEntityIfActive(concession);
-                var riskGroup = GetRiskGroupIfActive(legalEntity);
+                var legalEntity = _legalEntityRepository.ReadByIdIsActive(concession.LegalEntityId, true);
+                var riskGroup = _riskGroupRepository.ReadByIdIsActive(legalEntity.RiskGroupId, true);
                 
                 concessions.Add(new Concession
                 {
@@ -288,29 +288,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             return concessions;
-        }
-
-        /// <summary>
-        /// Gets the risk group if it's in an active state
-        /// </summary>
-        /// <param name="legalEntity"></param>
-        /// <returns></returns>
-        private RiskGroup GetRiskGroupIfActive(LegalEntity legalEntity)
-        {
-            var riskGroup = _riskGroupRepository.ReadById(legalEntity.RiskGroupId);
-            return riskGroup.IsActive ? riskGroup : null;
-        }
-
-        /// <summary>
-        /// Gets the legal entity if it's in an active state
-        /// </summary>
-        /// <param name="concession"></param>
-        /// <returns></returns>
-        private LegalEntity GetLegalEntityIfActive(Model.Repository.Concession concession)
-        {
-            var legalEntity = _legalEntityRepository.ReadById(concession.LegalEntityId);
-
-            return legalEntity.IsActive ? legalEntity : null;
         }
     }
 }

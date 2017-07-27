@@ -64,19 +64,40 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
-        /// Reads by the risk group number specified
+        /// Reads by the id and is active flag
         /// </summary>
-        /// <param name="riskGroupNumber"></param>
+        /// <param name="id"></param>
+        /// <param name="isActive"></param>
         /// <returns></returns>
-        public RiskGroup ReadByRiskGroupNumber(int riskGroupNumber)
+        public RiskGroup ReadByIdIsActive(int id, bool isActive)
         {
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
                 return db.Query<RiskGroup>(
                     @"SELECT [pkRiskGroupId] [Id], [RiskGroupNumber], [RiskGroupName], [IsActive] 
                     FROM [dbo].[tblRiskGroup] 
-                    WHERE [RiskGroupNumber] = @riskGroupNumber",
-                    new { riskGroupNumber }).SingleOrDefault();
+                    WHERE [pkRiskGroupId] = @Id
+                    AND [IsActive] = @isActive",
+                    new { id, isActive }).SingleOrDefault();
+            }
+        }
+
+        /// <summary>
+        /// Reads by the risk group number specified
+        /// </summary>
+        /// <param name="riskGroupNumber"></param>
+        /// <param name="isActive"></param>
+        /// <returns></returns>
+        public RiskGroup ReadByRiskGroupNumberIsActive(int riskGroupNumber, bool isActive)
+        {
+            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            {
+                return db.Query<RiskGroup>(
+                    @"SELECT [pkRiskGroupId] [Id], [RiskGroupNumber], [RiskGroupName], [IsActive] 
+                    FROM [dbo].[tblRiskGroup] 
+                    WHERE [RiskGroupNumber] = @riskGroupNumber
+                    AND [IsActive] = @isActive",
+                    new { riskGroupNumber, isActive }).FirstOrDefault();
             }
         }
 

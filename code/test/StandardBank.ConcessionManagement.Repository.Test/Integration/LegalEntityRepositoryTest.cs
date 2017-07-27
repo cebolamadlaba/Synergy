@@ -23,7 +23,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 RiskGroupId = DataHelper.GetRiskGroupId(),
                 CustomerName = "311273f3c2",
                 CustomerNumber = "c46e397eeb",
-                IsActive = false
+                IsActive = true
             };
 
             var result = InstantiatedDependencies.LegalEntityRepository.Create(model);
@@ -47,14 +47,59 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         }
 
         /// <summary>
-        /// Tests that ReadByRiskGroupId executes positive
+        /// Tests that ReadByIdIsActive for an active record executes positive
         /// </summary>
         [Fact]
-        public void ReadByRiskGroupId_Executes_Positive()
+        public void ReadByIdIsActive_ActiveRecord_Executes_Positive()
         {
             var results = InstantiatedDependencies.LegalEntityRepository.ReadAll();
-            var riskGroupId = results.First().RiskGroupId;
-            var result = InstantiatedDependencies.LegalEntityRepository.ReadByRiskGroupId(riskGroupId);
+            var id = results.First(_ => _.IsActive).Id;
+            var result = InstantiatedDependencies.LegalEntityRepository.ReadByIdIsActive(id, true);
+
+            Assert.NotNull(result);
+            Assert.Equal(result.Id, id);
+        }
+
+        /// <summary>
+        /// Tests that ReadByIdIsActive for an in-active record executes positive
+        /// </summary>
+        [Fact]
+        public void ReadByIdIsActive_InActiveRecord_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.LegalEntityRepository.ReadAll();
+            var id = results.First(_ => !_.IsActive).Id;
+            var result = InstantiatedDependencies.LegalEntityRepository.ReadByIdIsActive(id, false);
+
+            Assert.NotNull(result);
+            Assert.Equal(result.Id, id);
+        }
+
+        /// <summary>
+        /// Tests that ReadByRiskGroupIdIsActive for an active record executes positive
+        /// </summary>
+        [Fact]
+        public void ReadByRiskGroupIdIsActive_ActiveRecord_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.LegalEntityRepository.ReadAll();
+            var riskGroupId = results.First(_ => _.IsActive).RiskGroupId;
+            var result = InstantiatedDependencies.LegalEntityRepository.ReadByRiskGroupIdIsActive(riskGroupId, true);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+
+            foreach (var record in result)
+                Assert.Equal(record.RiskGroupId, riskGroupId);
+        }
+
+        /// <summary>
+        /// Tests that ReadByRiskGroupIdIsActive for an in-active record executes positive
+        /// </summary>
+        [Fact]
+        public void ReadByRiskGroupIdIsActive_InActiveRecord_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.LegalEntityRepository.ReadAll();
+            var riskGroupId = results.First(_ => !_.IsActive).RiskGroupId;
+            var result = InstantiatedDependencies.LegalEntityRepository.ReadByRiskGroupIdIsActive(riskGroupId, false);
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);

@@ -31,9 +31,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public RiskGroup GetRiskGroupForRiskGroupNumber(int riskGroupNumber)
         {
-            var riskGroup = _riskGroupRepository.ReadByRiskGroupNumber(riskGroupNumber);
+            var riskGroup = _riskGroupRepository.ReadByRiskGroupNumberIsActive(riskGroupNumber, true);
 
-            if (riskGroup != null && riskGroup.IsActive)
+            if (riskGroup != null)
                 return new RiskGroup
                 {
                     Id = riskGroup.Id,

@@ -23,11 +23,20 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         RiskGroup ReadById(int id);
 
         /// <summary>
-        /// Reads by the risk group number specified
+        /// Reads by the id and is active flag
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="isActive"></param>
+        /// <returns></returns>
+        RiskGroup ReadByIdIsActive(int id, bool isActive);
+
+        /// <summary>
+        /// Reads by the risk group number specified and the is active flag
         /// </summary>
         /// <param name="riskGroupNumber"></param>
+        /// <param name="isActive"></param>
         /// <returns></returns>
-        RiskGroup ReadByRiskGroupNumber(int riskGroupNumber); 
+        RiskGroup ReadByRiskGroupNumberIsActive(int riskGroupNumber, bool isActive); 
 
         /// <summary>
         /// Reads all.

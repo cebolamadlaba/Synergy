@@ -41,6 +41,7 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             services.AddScoped<ILookupTableManager, LookupTableManager>();
             services.AddScoped<IUserManager, UserManager>();
             services.AddScoped<IPricingManager, PricingManager>();
+            services.AddScoped<ILendingManager, LendingManager>();
         }
 
         /// <summary>

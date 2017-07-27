@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
 
@@ -36,6 +37,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IProvinceRepository _provinceRepository;
 
         /// <summary>
+        /// The concession type repository
+        /// </summary>
+        private readonly IConcessionTypeRepository _concessionTypeRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LookupTableManager"/> class.
         /// </summary>
         /// <param name="statusRepository">The status repository.</param>
@@ -43,15 +49,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="referenceTypeRepository"></param>
         /// <param name="marketSegmentRepository"></param>
         /// <param name="provinceRepository"></param>
+        /// <param name="concessionTypeRepository"></param>
         public LookupTableManager(IStatusRepository statusRepository, ISubStatusRepository subStatusRepository,
             IReferenceTypeRepository referenceTypeRepository, IMarketSegmentRepository marketSegmentRepository,
-            IProvinceRepository provinceRepository)
+            IProvinceRepository provinceRepository, IConcessionTypeRepository concessionTypeRepository)
         {
             _statusRepository = statusRepository;
             _subStatusRepository = subStatusRepository;
             _referenceTypeRepository = referenceTypeRepository;
             _marketSegmentRepository = marketSegmentRepository;
             _provinceRepository = provinceRepository;
+            _concessionTypeRepository = concessionTypeRepository;
         }
 
         /// <summary>
@@ -112,6 +120,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var provinces = _provinceRepository.ReadAll();
 
             return provinces.First(_ => _.Id == provinceId && _.IsActive).Description;
+        }
+
+        /// <summary>
+        /// Gets the concession type id for the code passed in
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public int GetConcessionTypeId(string code)
+        {
+            var concessionTypes = _concessionTypeRepository.ReadAll();
+
+            return concessionTypes.First(_ => _.Code.Equals(code, StringComparison.CurrentCultureIgnoreCase)).Id;
         }
     }
 }

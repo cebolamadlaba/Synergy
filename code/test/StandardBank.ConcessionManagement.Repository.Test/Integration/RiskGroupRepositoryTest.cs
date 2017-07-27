@@ -21,7 +21,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 RiskGroupNumber = 9,
                 RiskGroupName = "3b84541fd8",
-                IsActive = false
+                IsActive = true
             };
 
             var result = InstantiatedDependencies.RiskGroupRepository.Create(model);
@@ -45,17 +45,59 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         }
 
         /// <summary>
-        /// Tests that ReadByRiskGroupNumber executes positive
+        /// Tests that ReadByRiskGroupNumber for an active record executes positive
         /// </summary>
         [Fact]
-        public void ReadByRiskGroupNumber_Executes_Positive()
+        public void ReadByRiskGroupNumberIsActive_ActiveRecord_Executes_Positive()
         {
             var results = InstantiatedDependencies.RiskGroupRepository.ReadAll();
-            var riskGroupNumber = results.First().RiskGroupNumber;
-            var result = InstantiatedDependencies.RiskGroupRepository.ReadByRiskGroupNumber(riskGroupNumber);
+            var riskGroupNumber = results.First(_ => _.IsActive).RiskGroupNumber;
+            var result = InstantiatedDependencies.RiskGroupRepository.ReadByRiskGroupNumberIsActive(riskGroupNumber, true);
 
             Assert.NotNull(result);
             Assert.Equal(result.RiskGroupNumber, riskGroupNumber);
+        }
+
+        /// <summary>
+        /// Tests that ReadByRiskGroupNumber for an in-active record executes positive
+        /// </summary>
+        [Fact]
+        public void ReadByRiskGroupNumberIsActive_InActiveRecord_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.RiskGroupRepository.ReadAll();
+            var riskGroupNumber = results.First(_ => !_.IsActive).RiskGroupNumber;
+            var result = InstantiatedDependencies.RiskGroupRepository.ReadByRiskGroupNumberIsActive(riskGroupNumber, false);
+
+            Assert.NotNull(result);
+            Assert.Equal(result.RiskGroupNumber, riskGroupNumber);
+        }
+
+        /// <summary>
+        /// Tests that ReadByIdIsActive for an active record executes positive
+        /// </summary>
+        [Fact]
+        public void ReadByIdIsActive_ActiveRecord_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.RiskGroupRepository.ReadAll();
+            var id = results.First(_ => _.IsActive).Id;
+            var result = InstantiatedDependencies.RiskGroupRepository.ReadByIdIsActive(id, true);
+
+            Assert.NotNull(result);
+            Assert.Equal(result.Id, id);
+        }
+
+        /// <summary>
+        /// Tests that ReadByIdIsActive for an in-active record executes positive
+        /// </summary>
+        [Fact]
+        public void ReadByIdIsActive_InActiveRecord_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.RiskGroupRepository.ReadAll();
+            var id = results.First(_ => !_.IsActive).Id;
+            var result = InstantiatedDependencies.RiskGroupRepository.ReadByIdIsActive(id, false);
+
+            Assert.NotNull(result);
+            Assert.Equal(result.Id, id);
         }
 
         /// <summary>

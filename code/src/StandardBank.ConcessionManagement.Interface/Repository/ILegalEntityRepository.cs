@@ -23,11 +23,20 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         LegalEntity ReadById(int id);
 
         /// <summary>
+        /// Reads by the id and the is active flag
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="isActive"></param>
+        /// <returns></returns>
+        LegalEntity ReadByIdIsActive(int id, bool isActive);
+
+        /// <summary>
         /// Reads by the risk group id specified
         /// </summary>
         /// <param name="riskGroupId"></param>
+        /// <param name="isActive"></param>
         /// <returns></returns>
-        IEnumerable<LegalEntity> ReadByRiskGroupId(int riskGroupId);
+        IEnumerable<LegalEntity> ReadByRiskGroupIdIsActive(int riskGroupId, bool isActive);
 
         /// <summary>
         /// Reads all.

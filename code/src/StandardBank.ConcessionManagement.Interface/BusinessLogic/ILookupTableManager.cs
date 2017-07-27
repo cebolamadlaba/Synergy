@@ -39,5 +39,12 @@
         /// <param name="provinceId"></param>
         /// <returns></returns>
         string GetProvinceName(int provinceId);
+
+        /// <summary>
+        /// Gets the concession type id for the code passed in
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        int GetConcessionTypeId(string code);
     }
 }

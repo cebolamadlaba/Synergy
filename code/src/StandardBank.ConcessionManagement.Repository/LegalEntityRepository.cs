@@ -73,19 +73,40 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
-        /// Reads by the risk group id specified
+        /// Reads by the id and is active flag
         /// </summary>
-        /// <param name="riskGroupId"></param>
+        /// <param name="id"></param>
+        /// <param name="isActive"></param>
         /// <returns></returns>
-        public IEnumerable<LegalEntity> ReadByRiskGroupId(int riskGroupId)
+        public LegalEntity ReadByIdIsActive(int id, bool isActive)
         {
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
                 return db.Query<LegalEntity>(
                     @"SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [CustomerName], [CustomerNumber], [IsActive] 
                     FROM [dbo].[tblLegalEntity] 
-                    WHERE [fkRiskGroupId] = @riskGroupId",
-                    new {riskGroupId});
+                    WHERE [pkLegalEntityId] = @Id 
+                    AND [IsActive] = @isActive",
+                    new { id, isActive }).SingleOrDefault();
+            }
+        }
+
+        /// <summary>
+        /// Reads by the risk group id specified
+        /// </summary>
+        /// <param name="riskGroupId"></param>
+        /// <param name="isActive"></param>
+        /// <returns></returns>
+        public IEnumerable<LegalEntity> ReadByRiskGroupIdIsActive(int riskGroupId, bool isActive)
+        {
+            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            {
+                return db.Query<LegalEntity>(
+                    @"SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [CustomerName], [CustomerNumber], [IsActive] 
+                    FROM [dbo].[tblLegalEntity] 
+                    WHERE [fkRiskGroupId] = @riskGroupId
+                    AND [IsActive] = @isActive",
+                    new {riskGroupId, isActive});
             }
         }
 

@@ -38,7 +38,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 Id = 1
             };
 
-            MockRiskGroupRepository.Setup(_ => _.ReadByRiskGroupNumber(It.IsAny<int>())).Returns(riskGroup);
+            MockRiskGroupRepository.Setup(_ => _.ReadByRiskGroupNumberIsActive(It.IsAny<int>(), It.IsAny<bool>())).Returns(riskGroup);
 
             var result = _pricingManager.GetRiskGroupForRiskGroupNumber(1);
 
@@ -60,7 +60,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 Id = 1
             };
 
-            MockRiskGroupRepository.Setup(_ => _.ReadByRiskGroupNumber(It.IsAny<int>())).Returns(riskGroup);
+            MockRiskGroupRepository.Setup(_ => _.ReadByRiskGroupNumberIsActive(It.IsAny<int>(), false)).Returns(riskGroup);
 
             var result = _pricingManager.GetRiskGroupForRiskGroupNumber(1);
 
