@@ -176,6 +176,7 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__user_concessions_user_concessions_service__ = __webpack_require__("../../../../../client-src/app/user-concessions/user-concessions.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__user_user_service__ = __webpack_require__("../../../../../client-src/app/user/user.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__risk_group_risk_group_service__ = __webpack_require__("../../../../../client-src/app/risk-group/risk-group.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__lending_view_lending_view_service__ = __webpack_require__("../../../../../client-src/app/lending-view/lending-view.service.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -183,6 +184,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -244,7 +246,7 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_5_ngx_bootstrap_modal__["a" /* ModalModule */].forRoot(),
             __WEBPACK_IMPORTED_MODULE_6_angular_datatables__["a" /* DataTablesModule */]
         ],
-        providers: [__WEBPACK_IMPORTED_MODULE_24__user_concessions_user_concessions_service__["a" /* UserConcessionsService */], __WEBPACK_IMPORTED_MODULE_25__user_user_service__["a" /* UserService */], __WEBPACK_IMPORTED_MODULE_26__risk_group_risk_group_service__["a" /* RiskGroupService */]],
+        providers: [__WEBPACK_IMPORTED_MODULE_24__user_concessions_user_concessions_service__["a" /* UserConcessionsService */], __WEBPACK_IMPORTED_MODULE_25__user_user_service__["a" /* UserService */], __WEBPACK_IMPORTED_MODULE_26__risk_group_risk_group_service__["a" /* RiskGroupService */], __WEBPACK_IMPORTED_MODULE_27__lending_view_lending_view_service__["a" /* LendingViewService */]],
         bootstrap: [__WEBPACK_IMPORTED_MODULE_7__app_component__["a" /* AppComponent */]]
     })
 ], AppModule);
@@ -838,6 +840,87 @@ LendingAddConcessionComponent = __decorate([
 
 /***/ }),
 
+/***/ "../../../../../client-src/app/lending-view/lending-view.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs__ = __webpack_require__("../../../../rxjs/Rx.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_lending_view__ = __webpack_require__("../../../../../client-src/app/models/lending-view.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__models_risk_group__ = __webpack_require__("../../../../../client-src/app/models/risk-group.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__models_source_system_concession__ = __webpack_require__("../../../../../client-src/app/models/source-system-concession.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__models_source_system_product__ = __webpack_require__("../../../../../client-src/app/models/source-system-product.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LendingViewService; });
+/* unused harmony export MockLendingViewService */
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+
+
+var LendingViewService = (function () {
+    function LendingViewService(http) {
+        this.http = http;
+    }
+    LendingViewService.prototype.getData = function (riskGroupNumber) {
+        var url = "/api/Lending/LendingView/" + riskGroupNumber;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    };
+    LendingViewService.prototype.extractData = function (response) {
+        var body = response.json();
+        return body;
+    };
+    LendingViewService.prototype.handleErrorObservable = function (error) {
+        console.error(error.message || error);
+        return __WEBPACK_IMPORTED_MODULE_2_rxjs__["Observable"].throw(error.message || error);
+    };
+    return LendingViewService;
+}());
+LendingViewService = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])(),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _a || Object])
+], LendingViewService);
+
+var MockLendingViewService = (function () {
+    function MockLendingViewService() {
+        this.model = new __WEBPACK_IMPORTED_MODULE_4__models_lending_view__["a" /* LendingView */]();
+    }
+    MockLendingViewService.prototype.getData = function (riskGroupNumber) {
+        this.model.riskGroup = new __WEBPACK_IMPORTED_MODULE_5__models_risk_group__["a" /* RiskGroup */]();
+        this.model.totalExposure = 1;
+        this.model.weightedAverageMap = 1;
+        this.model.weightedCrsMrs = 1;
+        this.model.sourceSystemProducts = [new __WEBPACK_IMPORTED_MODULE_7__models_source_system_product__["a" /* SourceSystemProduct */]()];
+        this.model.sourceSystemConcessions = [new __WEBPACK_IMPORTED_MODULE_6__models_source_system_concession__["a" /* SourceSystemConcession */]()];
+        return __WEBPACK_IMPORTED_MODULE_2_rxjs__["Observable"].of(this.model);
+    };
+    return MockLendingViewService;
+}());
+MockLendingViewService = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])(),
+    __metadata("design:paramtypes", [])
+], MockLendingViewService);
+
+var _a;
+//# sourceMappingURL=lending-view.service.js.map
+
+/***/ }),
+
 /***/ "../../../../../client-src/app/mismatched-inbox/mismatched-inbox.component.css":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -943,6 +1026,21 @@ var Centre = (function () {
 
 /***/ }),
 
+/***/ "../../../../../client-src/app/models/lending-view.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LendingView; });
+var LendingView = (function () {
+    function LendingView() {
+    }
+    return LendingView;
+}());
+
+//# sourceMappingURL=lending-view.js.map
+
+/***/ }),
+
 /***/ "../../../../../client-src/app/models/region.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -985,6 +1083,36 @@ var Role = (function () {
 }());
 
 //# sourceMappingURL=role.js.map
+
+/***/ }),
+
+/***/ "../../../../../client-src/app/models/source-system-concession.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SourceSystemConcession; });
+var SourceSystemConcession = (function () {
+    function SourceSystemConcession() {
+    }
+    return SourceSystemConcession;
+}());
+
+//# sourceMappingURL=source-system-concession.js.map
+
+/***/ }),
+
+/***/ "../../../../../client-src/app/models/source-system-product.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SourceSystemProduct; });
+var SourceSystemProduct = (function () {
+    function SourceSystemProduct() {
+    }
+    return SourceSystemProduct;
+}());
+
+//# sourceMappingURL=source-system-product.js.map
 
 /***/ }),
 
@@ -1261,7 +1389,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/pricing-lending/pricing-lending.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!-- banner-->\r\n<div class=\"col-md-12 lending-view-banner\">\r\n  <div class=\"row\">\r\n    <div class=\"lending-banner-title\">\r\n      <div class=\"col-md-1\">\r\n        <i class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"></i>\r\n        <span class=\"back-button-text\" [routerLink]=\"['/pricing', riskGroupNumber]\">Back</span>\r\n      </div>\r\n      <div class=\"col-md-10 banner-main-title\">\r\n        <i class=\"fa fa-handshake-o\" aria-hidden=\"true\"></i> Lending\r\n      </div>\r\n      <div class=\"col-md-1\"></div>\r\n    </div>\r\n    <div class=\"col-md-12 lending-banner\">\r\n      <div class=\"col-md-11\">\r\n        <div>\r\n          <div class=\"col-md-5\">\r\n            <div class=\"subHeading\">EDCON</div>\r\n            <div class=\"date lightTitle hidden-element\">{{riskGroupNumber}}</div>\r\n          </div>\r\n          <div class=\"col-md-2  hidden-element\">\r\n            <div class=\"subHeading lightTitle\">Total Exposure</div>\r\n            <div class=\"score\"><b>0.00</b></div>\r\n          </div>\r\n          <div class=\"col-md-2  hidden-element\">\r\n            <div class=\"subHeading lightTitle\"> Weighted Avarage MAP</div>\r\n            <div class=\"score\"><b>0.00</b></div>\r\n          </div>\r\n          <div class=\"col-md-2  hidden-element\">\r\n            <div class=\"subHeading lightTitle\"> Weighted CRS / MRS</div>\r\n            <div class=\"score\"><b>0.00</b></div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n      <div class=\"col-md-1\">\r\n        <div class=\"compress\">\r\n          <div onclick=\"hideElement('hidden-element')\">\r\n            <i class=\"fa fa-compress\" aria-hidden=\"true\" id=\"compress-icon\"></i>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n<!-- headings-->\r\n<div class=\"lending-headings col-md-12\">\r\n  <div class=\"col-md-5\">\r\n    <h2 class=\"resultsHeading\">Products</h2>\r\n  </div>\r\n  <div class=\"col-md-7\">\r\n    <h2 class=\"\">\r\n      Concessions\r\n      <button type=\"button\" class=\"btn btn-primary concessionBtn\" routerLink=\"/lending-add-concession\">Add Concession</button>\r\n    </h2>\r\n\r\n  </div>\r\n</div>\r\n<!-- lending concessions and products-->\r\n<div class=\"col-md-12\">\r\n  <div class=\"col-md-5\">\r\n    <div class=\"section\">\r\n      <div class=\"section-body\">\r\n        <div class=\"product-section\">\r\n          <div class=\"product-name\"> Real People</div>\r\n          <div>\r\n            <div class=\"product-account\">Account No: 12345</div>\r\n            <div class=\"product-code\">Product: VAF</div>\r\n          </div>\r\n        </div>\r\n        <div class=\"product-table-container\">\r\n          <table class=\"table table-bordered table-hover header-fixed table-striped \">\r\n            <thead>\r\n              <tr>\r\n                <th>Limit</th>\r\n                <th>Avarage Balance</th>\r\n                <th>Loaded MAP</th>\r\n              </tr>\r\n            </thead>\r\n            <tbody>\r\n              <tr>\r\n                <td class=\"rightAlign\"> 5000000</td>\r\n                <td class=\"rightAlign\"> 5000000</td>\r\n                <td class=\"rightAlign\"> 1</td>\r\n              </tr>\r\n            </tbody>\r\n          </table>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n  <div class=\"col-md-7 search-and-results-container\" id=\"lending-search-container\">\r\n    <!-- Search bar -->\r\n    <div class=\"input-group add-on\">\r\n      <input class=\"form-control\" placeholder=\"Concession ID\" name=\"srch-term\" id=\"srch-term\" type=\"text\">\r\n    </div>\r\n\r\n    <div class=\"section\">\r\n      <div class=\"section-header small-table-title\">\r\n        <div class=\"concessionID-section\"> ED0023</div>\r\n      </div>\r\n      <div class=\"section-body\">\r\n        <div class=\"table-container\">\r\n          <table class=\"table table-bordered table-hover header-fixed table-striped\">\r\n            <thead>\r\n              <tr>\r\n                <th>Customer</th>\r\n                <th>Limit</th>\r\n                <th>Avarage Balance</th>\r\n                <th>Term</th>\r\n                <th>MAP</th>\r\n              </tr>\r\n            </thead>\r\n            <tbody>\r\n              <tr>\r\n                <td>\r\n                  <p class=\"customerInfo\">Real People</p>\r\n                  <p class=\"accInfo\">Acc No :1123</p>\r\n                </td>\r\n                <td class=\"rightAlign\">5,0000.0</td>\r\n                <td class=\"rightAlign\">23.33535</td>\r\n                <td class=\"rightAlign\">60</td>\r\n                <td>\r\n                  <p class=\"mapInfo\">Loaded:1</p>\r\n                  <p class=\"mapInfo\">Approved:1</p>\r\n                </td>\r\n              </tr>\r\n              <tr>\r\n                <td>\r\n                  <p class=\"customerInfo\">Mtech Electronic</p>\r\n                  <p class=\"accInfo\">Acc No :1123</p>\r\n                </td>\r\n                <td class=\"rightAlign\">5,0000.0</td>\r\n                <td class=\"rightAlign\">120.33535</td>\r\n                <td class=\"rightAlign\">120</td>\r\n                <td>\r\n                  <p class=\"mapInfo\">Loaded:1</p>\r\n                  <p class=\"mapInfo\">Approved:1</p>\r\n                </td>\r\n              </tr>\r\n            </tbody>\r\n          </table>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>"
+module.exports = "<!-- banner-->\r\n<div class=\"col-md-12 lending-view-banner\">\r\n    <div class=\"row\">\r\n        <div class=\"lending-banner-title\">\r\n            <div class=\"col-md-1\">\r\n                <i class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"></i>\r\n                <span class=\"back-button-text\" [routerLink]=\"['/pricing', riskGroupNumber]\">Back</span>\r\n            </div>\r\n            <div class=\"col-md-10 banner-main-title\">\r\n                <i class=\"fa fa-handshake-o\" aria-hidden=\"true\"></i> Lending\r\n            </div>\r\n            <div class=\"col-md-1\"></div>\r\n        </div>\r\n        <div class=\"col-md-12 lending-banner\">\r\n            <div class=\"col-md-11\">\r\n                <div>\r\n                    <div class=\"col-md-5\">\r\n                        <div class=\"subHeading\">{{lendingView.riskGroup.name}}</div>\r\n                        <div class=\"date lightTitle hidden-element\">{{lendingView.riskGroup.number}}</div>\r\n                    </div>\r\n                    <div class=\"col-md-2  hidden-element\">\r\n                        <div class=\"subHeading lightTitle\">Total Exposure</div>\r\n                        <div class=\"score\"><b>{{lendingView.totalExposure | number : '1.2-2'}}</b></div>\r\n                    </div>\r\n                    <div class=\"col-md-2  hidden-element\">\r\n                        <div class=\"subHeading lightTitle\"> Weighted Avarage MAP</div>\r\n                        <div class=\"score\"><b>{{lendingView.weightedAverageMap | number : '1.2-2'}}</b></div>\r\n                    </div>\r\n                    <div class=\"col-md-2  hidden-element\">\r\n                        <div class=\"subHeading lightTitle\"> Weighted CRS / MRS</div>\r\n                        <div class=\"score\"><b>{{lendingView.weightedCrsMrs | number : '1.2-2'}}</b></div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n            <div class=\"col-md-1\">\r\n                <div class=\"compress\">\r\n                    <div onclick=\"hideElement('hidden-element')\">\r\n                        <i class=\"fa fa-compress\" aria-hidden=\"true\" id=\"compress-icon\"></i>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n<!-- headings-->\r\n<div class=\"lending-headings col-md-12\">\r\n    <div class=\"col-md-5\">\r\n        <h2 class=\"resultsHeading\">Products</h2>\r\n    </div>\r\n    <div class=\"col-md-7\">\r\n        <h2 class=\"\">\r\n            Concessions\r\n            <button type=\"button\" class=\"btn btn-primary concessionBtn\" disabled=\"disabled\">Add Concession</button>\r\n        </h2>\r\n    </div>\r\n</div>\r\n<!-- lending concessions and products-->\r\n<div class=\"col-md-12\">\r\n    <div class=\"col-md-5\">\r\n        <div class=\"section\">\r\n            <div class=\"section-body\" *ngFor=\"let sourceSystemProduct of lendingView.sourceSystemProducts; trackBy: index;\">\r\n                <div class=\"product-section\">\r\n                    <div class=\"product-name\"> {{sourceSystemProduct.customerName}}</div>\r\n                    <div>\r\n                        <div class=\"product-account\">Account No: {{sourceSystemProduct.accountNumber}}</div>\r\n                        <div class=\"product-code\">Product: {{sourceSystemProduct.productName}}</div>\r\n                    </div>\r\n                </div>\r\n                <div class=\"product-table-container\">\r\n                    <table class=\"table table-bordered table-hover header-fixed table-striped \">\r\n                        <thead>\r\n                            <tr>\r\n                                <th>Limit</th>\r\n                                <th>Average Balance</th>\r\n                                <th>Loaded MAP</th>\r\n                            </tr>\r\n                        </thead>\r\n                        <tbody>\r\n                            <tr>\r\n                                <td class=\"rightAlign\"> {{sourceSystemProduct.limit}}</td>\r\n                                <td class=\"rightAlign\"> {{sourceSystemProduct.averageBalance}}</td>\r\n                                <td class=\"rightAlign\"> {{sourceSystemProduct.loadedMap}}</td>\r\n                            </tr>\r\n                        </tbody>\r\n                    </table>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div class=\"col-md-7 search-and-results-container\" id=\"lending-search-container\">\r\n        <!-- Search bar -->\r\n        <div class=\"input-group add-on\">\r\n            <input class=\"form-control\" placeholder=\"Concession ID\" name=\"srch-term\" id=\"srch-term\" type=\"text\">\r\n        </div>\r\n\r\n        <div class=\"section\" *ngFor=\"let sourceSystemConcession of lendingView.sourceSystemConcessions; trackBy: index;\">\r\n            <div class=\"section-header small-table-title\">\r\n                <div class=\"concessionID-section\"> {{sourceSystemConcession.concessionId}}</div>\r\n            </div>\r\n            <div class=\"section-body\">\r\n                <div class=\"table-container\">\r\n                    <table class=\"table table-bordered table-hover header-fixed table-striped\">\r\n                        <thead>\r\n                            <tr>\r\n                                <th>Customer</th>\r\n                                <th>Limit</th>\r\n                                <th>Avarage Balance</th>\r\n                                <th>Term</th>\r\n                                <th>MAP</th>\r\n                            </tr>\r\n                        </thead>\r\n                        <tbody>\r\n                            <tr *ngFor=\"let concession of sourceSystemConcession.concessions; trackBy: index;\">\r\n                                <td>\r\n                                    <p class=\"customerInfo\">{{concession.customerName}}</p>\r\n                                    <p class=\"accInfo\">Acc No : {{concession.accountNumber}}</p>\r\n                                </td>\r\n                                <td class=\"rightAlign\">{{concession.limit}}</td>\r\n                                <td class=\"rightAlign\">{{concession.averageBalance}}</td>\r\n                                <td class=\"rightAlign\">{{concession.term}}</td>\r\n                                <td>\r\n                                    <p class=\"mapInfo\">Loaded:{{concession.loadedMap}}</p>\r\n                                    <p class=\"mapInfo\">Approved:{{concession.approvedMap}}</p>\r\n                                </td>\r\n                            </tr>\r\n                        </tbody>\r\n                    </table>\r\n                </div>\r\n            </div>\r\n        </div>\r\n\r\n    </div>\r\n</div>"
 
 /***/ }),
 
@@ -1271,6 +1399,11 @@ module.exports = "<!-- banner-->\r\n<div class=\"col-md-12 lending-view-banner\"
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_lending_view__ = __webpack_require__("../../../../../client-src/app/models/lending-view.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lending_view_lending_view_service__ = __webpack_require__("../../../../../client-src/app/lending-view/lending-view.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_risk_group__ = __webpack_require__("../../../../../client-src/app/models/risk-group.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__models_source_system_concession__ = __webpack_require__("../../../../../client-src/app/models/source-system-concession.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__models_source_system_product__ = __webpack_require__("../../../../../client-src/app/models/source-system-product.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PricingLendingComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1281,16 +1414,33 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+
+
+
+
+
 
 
 var PricingLendingComponent = (function () {
-    function PricingLendingComponent(route) {
+    function PricingLendingComponent(route, lendingViewService) {
         this.route = route;
+        this.lendingViewService = lendingViewService;
+        this.lendingView = new __WEBPACK_IMPORTED_MODULE_2__models_lending_view__["a" /* LendingView */]();
+        this.lendingView.riskGroup = new __WEBPACK_IMPORTED_MODULE_4__models_risk_group__["a" /* RiskGroup */]();
+        this.lendingView.sourceSystemProducts = [new __WEBPACK_IMPORTED_MODULE_6__models_source_system_product__["a" /* SourceSystemProduct */]()];
+        this.lendingView.sourceSystemConcessions = [new __WEBPACK_IMPORTED_MODULE_5__models_source_system_concession__["a" /* SourceSystemConcession */]()];
     }
     PricingLendingComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.sub = this.route.params.subscribe(function (params) {
             _this.riskGroupNumber = +params['riskGroupNumber'];
+            if (_this.riskGroupNumber) {
+                _this.observableLendingView = _this.lendingViewService.getData(_this.riskGroupNumber);
+                _this.observableLendingView.subscribe(function (lendingView) { return _this.lendingView = lendingView; }, function (error) { return _this.errorMessage = error; });
+            }
         });
     };
     PricingLendingComponent.prototype.ngOnDestroy = function () {
@@ -1304,7 +1454,8 @@ PricingLendingComponent = __decorate([
         template: __webpack_require__("../../../../../client-src/app/pricing-lending/pricing-lending.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/pricing-lending/pricing-lending.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* ActivatedRoute */]) === "function" && _a || Object])
+    __param(1, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Inject */])(__WEBPACK_IMPORTED_MODULE_3__lending_view_lending_view_service__["a" /* LendingViewService */])),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* ActivatedRoute */]) === "function" && _a || Object, Object])
 ], PricingLendingComponent);
 
 var _a;

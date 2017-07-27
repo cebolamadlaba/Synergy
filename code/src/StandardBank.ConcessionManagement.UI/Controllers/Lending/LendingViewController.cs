@@ -43,13 +43,25 @@ namespace StandardBank.ConcessionManagement.UI.Controllers.Lending
                 {
                     new SourceSystemProduct
                     {
-                        AccountNumber = 1,
-                        CustomerName = "Test Customer",
-                        RiskGroupNumber = 1,
-                        AverageBalance = 1,
-                        Limit = 1,
-                        LoadedMap = 1,
-                        ProductName = "Test Product",
+                        AccountNumber = 234324,
+                        CustomerName = "Test Customer Alpha",
+                        RiskGroupNumber = riskGroupNumber,
+                        AverageBalance = 1500000,
+                        Limit = 1000000,
+                        LoadedMap = 1.0m,
+                        ProductName = "Test Product Alpha",
+                        SourceSystemIdentifier = "1",
+                        SourceSystemName = "Test"
+                    },
+                    new SourceSystemProduct
+                    {
+                        AccountNumber = 4565465,
+                        CustomerName = "Test Customer Beta",
+                        RiskGroupNumber = riskGroupNumber,
+                        AverageBalance = 3000000,
+                        Limit = 1500000,
+                        LoadedMap = 1.5m,
+                        ProductName = "Test Product Beta",
                         SourceSystemIdentifier = "1",
                         SourceSystemName = "Test"
                     }
@@ -58,17 +70,65 @@ namespace StandardBank.ConcessionManagement.UI.Controllers.Lending
                 {
                     new SourceSystemConcession
                     {
-                        CustomerName = "Test Customer",
-                        AccountNumber = 1,
                         SourceSystemName = "Test Source System",
-                        LoadedMap = 1,
-                        AverageBalance = 1,
-                        Limit = 1,
                         SourceSystemIdentifier = "1",
-                        ApprovedMap = 1,
-                        ConcessionId = 1,
-                        ProductType = "Test Product",
-                        Term = 1
+                        ConcessionId = "T001",
+                        Concessions = new[]
+                        {
+                            new SourceSystemCustomerConcession
+                            {
+                                CustomerName = "Test Customer Alpha",
+                                AccountNumber = 435345,
+                                LoadedMap = 1.0m,
+                                AverageBalance = 6000000,
+                                Limit = 5000000,
+                                ApprovedMap = 1.5m,
+                                ProductType = "Test Product Alpha",
+                                Term = 60
+                            },
+                            new SourceSystemCustomerConcession
+                            {
+                                CustomerName = "Test Customer Beta",
+                                AccountNumber = 994545,
+                                LoadedMap = 3.0m,
+                                AverageBalance = 4000000,
+                                Limit = 3000000,
+                                ApprovedMap = 4.5m,
+                                ProductType = "Test Product Beta",
+                                Term = 48
+                            }
+                        }
+                    },
+                    new SourceSystemConcession
+                    {
+                        SourceSystemName = "Test Source System",
+                        SourceSystemIdentifier = "2",
+                        ConcessionId = "T002",
+                        Concessions = new[]
+                        {
+                            new SourceSystemCustomerConcession
+                            {
+                                CustomerName = "Test Customer Gamma",
+                                AccountNumber = 435345,
+                                LoadedMap = 1.0m,
+                                AverageBalance = 6000000,
+                                Limit = 5000000,
+                                ApprovedMap = 1.5m,
+                                ProductType = "Test Product Gamma",
+                                Term = 60
+                            },
+                            new SourceSystemCustomerConcession
+                            {
+                                CustomerName = "Test Customer Delta",
+                                AccountNumber = 994545,
+                                LoadedMap = 3.0m,
+                                AverageBalance = 4000000,
+                                Limit = 3000000,
+                                ApprovedMap = 4.5m,
+                                ProductType = "Test Product Delta",
+                                Term = 48
+                            }
+                        }
                     }
                 }
             };

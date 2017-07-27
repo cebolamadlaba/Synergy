@@ -1,146 +1,133 @@
 ﻿<!-- banner-->
 <div class="col-md-12 lending-view-banner">
-  <div class="row">
-    <div class="lending-banner-title">
-      <div class="col-md-1">
-        <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
-        <span class="back-button-text" [routerLink]="['/pricing', riskGroupNumber]">Back</span>
-      </div>
-      <div class="col-md-10 banner-main-title">
-        <i class="fa fa-handshake-o" aria-hidden="true"></i> Lending
-      </div>
-      <div class="col-md-1"></div>
-    </div>
-    <div class="col-md-12 lending-banner">
-      <div class="col-md-11">
-        <div>
-          <div class="col-md-5">
-            <div class="subHeading">EDCON</div>
-            <div class="date lightTitle hidden-element">{{riskGroupNumber}}</div>
-          </div>
-          <div class="col-md-2  hidden-element">
-            <div class="subHeading lightTitle">Total Exposure</div>
-            <div class="score"><b>0.00</b></div>
-          </div>
-          <div class="col-md-2  hidden-element">
-            <div class="subHeading lightTitle"> Weighted Avarage MAP</div>
-            <div class="score"><b>0.00</b></div>
-          </div>
-          <div class="col-md-2  hidden-element">
-            <div class="subHeading lightTitle"> Weighted CRS / MRS</div>
-            <div class="score"><b>0.00</b></div>
-          </div>
+    <div class="row">
+        <div class="lending-banner-title">
+            <div class="col-md-1">
+                <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+                <span class="back-button-text" [routerLink]="['/pricing', riskGroupNumber]">Back</span>
+            </div>
+            <div class="col-md-10 banner-main-title">
+                <i class="fa fa-handshake-o" aria-hidden="true"></i> Lending
+            </div>
+            <div class="col-md-1"></div>
         </div>
-      </div>
-      <div class="col-md-1">
-        <div class="compress">
-          <div onclick="hideElement('hidden-element')">
-            <i class="fa fa-compress" aria-hidden="true" id="compress-icon"></i>
-          </div>
+        <div class="col-md-12 lending-banner">
+            <div class="col-md-11">
+                <div>
+                    <div class="col-md-5">
+                        <div class="subHeading">{{lendingView.riskGroup.name}}</div>
+                        <div class="date lightTitle hidden-element">{{lendingView.riskGroup.number}}</div>
+                    </div>
+                    <div class="col-md-2  hidden-element">
+                        <div class="subHeading lightTitle">Total Exposure</div>
+                        <div class="score"><b>{{lendingView.totalExposure | number : '1.2-2'}}</b></div>
+                    </div>
+                    <div class="col-md-2  hidden-element">
+                        <div class="subHeading lightTitle"> Weighted Avarage MAP</div>
+                        <div class="score"><b>{{lendingView.weightedAverageMap | number : '1.2-2'}}</b></div>
+                    </div>
+                    <div class="col-md-2  hidden-element">
+                        <div class="subHeading lightTitle"> Weighted CRS / MRS</div>
+                        <div class="score"><b>{{lendingView.weightedCrsMrs | number : '1.2-2'}}</b></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="compress">
+                    <div onclick="hideElement('hidden-element')">
+                        <i class="fa fa-compress" aria-hidden="true" id="compress-icon"></i>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
 <!-- headings-->
 <div class="lending-headings col-md-12">
-  <div class="col-md-5">
-    <h2 class="resultsHeading">Products</h2>
-  </div>
-  <div class="col-md-7">
-    <h2 class="">
-      Concessions
-      <button type="button" class="btn btn-primary concessionBtn" routerLink="/lending-add-concession">Add Concession</button>
-    </h2>
-
-  </div>
+    <div class="col-md-5">
+        <h2 class="resultsHeading">Products</h2>
+    </div>
+    <div class="col-md-7">
+        <h2 class="">
+            Concessions
+            <button type="button" class="btn btn-primary concessionBtn" disabled="disabled">Add Concession</button>
+        </h2>
+    </div>
 </div>
 <!-- lending concessions and products-->
 <div class="col-md-12">
-  <div class="col-md-5">
-    <div class="section">
-      <div class="section-body">
-        <div class="product-section">
-          <div class="product-name"> Real People</div>
-          <div>
-            <div class="product-account">Account No: 12345</div>
-            <div class="product-code">Product: VAF</div>
-          </div>
+    <div class="col-md-5">
+        <div class="section">
+            <div class="section-body" *ngFor="let sourceSystemProduct of lendingView.sourceSystemProducts; trackBy: index;">
+                <div class="product-section">
+                    <div class="product-name"> {{sourceSystemProduct.customerName}}</div>
+                    <div>
+                        <div class="product-account">Account No: {{sourceSystemProduct.accountNumber}}</div>
+                        <div class="product-code">Product: {{sourceSystemProduct.productName}}</div>
+                    </div>
+                </div>
+                <div class="product-table-container">
+                    <table class="table table-bordered table-hover header-fixed table-striped ">
+                        <thead>
+                            <tr>
+                                <th>Limit</th>
+                                <th>Average Balance</th>
+                                <th>Loaded MAP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="rightAlign"> {{sourceSystemProduct.limit}}</td>
+                                <td class="rightAlign"> {{sourceSystemProduct.averageBalance}}</td>
+                                <td class="rightAlign"> {{sourceSystemProduct.loadedMap}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <div class="product-table-container">
-          <table class="table table-bordered table-hover header-fixed table-striped ">
-            <thead>
-              <tr>
-                <th>Limit</th>
-                <th>Avarage Balance</th>
-                <th>Loaded MAP</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="rightAlign"> 5000000</td>
-                <td class="rightAlign"> 5000000</td>
-                <td class="rightAlign"> 1</td>
-              </tr>
-            </tbody>
-          </table>
+    </div>
+    <div class="col-md-7 search-and-results-container" id="lending-search-container">
+        <!-- Search bar -->
+        <div class="input-group add-on">
+            <input class="form-control" placeholder="Concession ID" name="srch-term" id="srch-term" type="text">
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-7 search-and-results-container" id="lending-search-container">
-    <!-- Search bar -->
-    <div class="input-group add-on">
-      <input class="form-control" placeholder="Concession ID" name="srch-term" id="srch-term" type="text">
-    </div>
 
-    <div class="section">
-      <div class="section-header small-table-title">
-        <div class="concessionID-section"> ED0023</div>
-      </div>
-      <div class="section-body">
-        <div class="table-container">
-          <table class="table table-bordered table-hover header-fixed table-striped">
-            <thead>
-              <tr>
-                <th>Customer</th>
-                <th>Limit</th>
-                <th>Avarage Balance</th>
-                <th>Term</th>
-                <th>MAP</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <p class="customerInfo">Real People</p>
-                  <p class="accInfo">Acc No :1123</p>
-                </td>
-                <td class="rightAlign">5,0000.0</td>
-                <td class="rightAlign">23.33535</td>
-                <td class="rightAlign">60</td>
-                <td>
-                  <p class="mapInfo">Loaded:1</p>
-                  <p class="mapInfo">Approved:1</p>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <p class="customerInfo">Mtech Electronic</p>
-                  <p class="accInfo">Acc No :1123</p>
-                </td>
-                <td class="rightAlign">5,0000.0</td>
-                <td class="rightAlign">120.33535</td>
-                <td class="rightAlign">120</td>
-                <td>
-                  <p class="mapInfo">Loaded:1</p>
-                  <p class="mapInfo">Approved:1</p>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="section" *ngFor="let sourceSystemConcession of lendingView.sourceSystemConcessions; trackBy: index;">
+            <div class="section-header small-table-title">
+                <div class="concessionID-section"> {{sourceSystemConcession.concessionId}}</div>
+            </div>
+            <div class="section-body">
+                <div class="table-container">
+                    <table class="table table-bordered table-hover header-fixed table-striped">
+                        <thead>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Limit</th>
+                                <th>Avarage Balance</th>
+                                <th>Term</th>
+                                <th>MAP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let concession of sourceSystemConcession.concessions; trackBy: index;">
+                                <td>
+                                    <p class="customerInfo">{{concession.customerName}}</p>
+                                    <p class="accInfo">Acc No : {{concession.accountNumber}}</p>
+                                </td>
+                                <td class="rightAlign">{{concession.limit}}</td>
+                                <td class="rightAlign">{{concession.averageBalance}}</td>
+                                <td class="rightAlign">{{concession.term}}</td>
+                                <td>
+                                    <p class="mapInfo">Loaded:{{concession.loadedMap}}</p>
+                                    <p class="mapInfo">Approved:{{concession.approvedMap}}</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-      </div>
+
     </div>
-  </div>
 </div>
