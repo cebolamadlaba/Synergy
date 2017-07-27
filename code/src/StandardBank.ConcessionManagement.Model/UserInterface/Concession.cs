@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace StandardBank.ConcessionManagement.Model.UserInterface.Inbox
+namespace StandardBank.ConcessionManagement.Model.UserInterface
 {
     /// <summary>
     /// Concession entity

@@ -4,8 +4,9 @@ import { ActivatedRoute } from '@angular/router';
 import { LendingView } from "../models/lending-view";
 import { LendingViewService } from "../lending-view/lending-view.service";
 import { RiskGroup } from "../models/risk-group";
-import { SourceSystemConcession } from "../models/source-system-concession";
 import { SourceSystemProduct } from "../models/source-system-product";
+import { LendingConcession } from "../models/lending-concession";
+import { Concession } from "../models/concession";
 
 @Component({
     selector: 'app-pricing-lending',
@@ -21,8 +22,10 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
 
     constructor(private route: ActivatedRoute, @Inject(LendingViewService) private lendingViewService) {
         this.lendingView.riskGroup = new RiskGroup();
+        this.lendingView
         this.lendingView.sourceSystemProducts = [new SourceSystemProduct()];
-        this.lendingView.sourceSystemConcessions = [new SourceSystemConcession()];
+        this.lendingView.lendingConcessions = [new LendingConcession()];
+        this.lendingView.lendingConcessions[0].concession = new Concession();
     }
 
     ngOnInit() {

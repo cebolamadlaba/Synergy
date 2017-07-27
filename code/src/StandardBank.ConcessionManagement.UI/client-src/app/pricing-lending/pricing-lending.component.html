@@ -93,9 +93,9 @@
             <input class="form-control" placeholder="Concession ID" name="srch-term" id="srch-term" type="text">
         </div>
 
-        <div class="section" *ngFor="let sourceSystemConcession of lendingView.sourceSystemConcessions; trackBy: index;">
+        <div class="section" *ngFor="let lendingConcession of lendingView.lendingConcessions; trackBy: index;">
             <div class="section-header small-table-title">
-                <div class="concessionID-section"> {{sourceSystemConcession.concessionId}}</div>
+                <div class="concessionID-section"> {{lendingConcession.concession.referenceNumber}}</div>
             </div>
             <div class="section-body">
                 <div class="table-container">
@@ -110,7 +110,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let concession of sourceSystemConcession.concessions; trackBy: index;">
+                            <tr *ngFor="let concession of lendingConcession.lendingConcessionDetails; trackBy: index;">
                                 <td>
                                     <p class="customerInfo">{{concession.customerName}}</p>
                                     <p class="accInfo">Acc No : {{concession.accountNumber}}</p>

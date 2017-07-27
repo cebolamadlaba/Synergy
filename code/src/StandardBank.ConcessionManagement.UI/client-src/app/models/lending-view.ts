@@ -1,6 +1,6 @@
-﻿import { SourceSystemConcession } from "./source-system-concession";
+﻿import { RiskGroup } from "./risk-group";
 import { SourceSystemProduct } from "./source-system-product";
-import { RiskGroup } from "./risk-group";
+import { LendingConcession } from "./lending-concession";
 
 export class LendingView {
     riskGroup: RiskGroup;
@@ -8,5 +8,5 @@ export class LendingView {
     weightedAverageMap: number;
     weightedCrsMrs: number;
     sourceSystemProducts: SourceSystemProduct[];
-    sourceSystemConcessions: SourceSystemConcession[];
+    lendingConcessions: LendingConcession[];
 }

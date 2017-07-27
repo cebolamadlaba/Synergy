@@ -1,9 +1,9 @@
-﻿namespace StandardBank.ConcessionManagement.Model.UserInterface.Integration
+﻿namespace StandardBank.ConcessionManagement.Model.UserInterface.Lending
 {
     /// <summary>
-    /// Source system customer concession
+    /// Lending concession detail
     /// </summary>
-    public class SourceSystemCustomerConcession
+    public class LendingConcessionDetail
     {
         /// <summary>
         /// Gets or sets the type of the product.

@@ -1,4 +1,4 @@
-﻿export class SourceSystemCustomerConcession {
+﻿export class LendingConcessionDetail {
     productType: string;
     customerName: string;
     accountNumber: number;

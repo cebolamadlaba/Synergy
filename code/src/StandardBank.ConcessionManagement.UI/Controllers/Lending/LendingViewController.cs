@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Integration;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 
@@ -66,67 +67,63 @@ namespace StandardBank.ConcessionManagement.UI.Controllers.Lending
                         SourceSystemName = "Test"
                     }
                 },
-                SourceSystemConcessions = new[]
+                LendingConcessions = new[]
                 {
-                    new SourceSystemConcession
+                    new LendingConcession
                     {
-                        SourceSystemName = "Test Source System",
-                        SourceSystemIdentifier = "1",
-                        ConcessionId = "T001",
-                        Concessions = new[]
+                        Concession = new Concession { ReferenceNumber = "L00001" },
+                        LendingConcessionDetails = new[]
                         {
-                            new SourceSystemCustomerConcession
+                            new LendingConcessionDetail
                             {
+                                AccountNumber = 1,
+                                ApprovedMap = 2,
+                                AverageBalance = 3,
                                 CustomerName = "Test Customer Alpha",
-                                AccountNumber = 435345,
-                                LoadedMap = 1.0m,
-                                AverageBalance = 6000000,
-                                Limit = 5000000,
-                                ApprovedMap = 1.5m,
+                                Limit = 4,
+                                LoadedMap = 5,
                                 ProductType = "Test Product Alpha",
-                                Term = 60
+                                Term = 6
                             },
-                            new SourceSystemCustomerConcession
+                            new LendingConcessionDetail
                             {
+                                AccountNumber = 8,
+                                ApprovedMap = 9,
+                                AverageBalance = 10,
                                 CustomerName = "Test Customer Beta",
-                                AccountNumber = 994545,
-                                LoadedMap = 3.0m,
-                                AverageBalance = 4000000,
-                                Limit = 3000000,
-                                ApprovedMap = 4.5m,
+                                Limit = 11,
+                                LoadedMap = 12,
                                 ProductType = "Test Product Beta",
-                                Term = 48
+                                Term = 13
                             }
                         }
                     },
-                    new SourceSystemConcession
+                    new LendingConcession
                     {
-                        SourceSystemName = "Test Source System",
-                        SourceSystemIdentifier = "2",
-                        ConcessionId = "T002",
-                        Concessions = new[]
+                        Concession = new Concession { ReferenceNumber = "L00002" },
+                        LendingConcessionDetails = new[]
                         {
-                            new SourceSystemCustomerConcession
+                            new LendingConcessionDetail
                             {
+                                AccountNumber = 14,
+                                ApprovedMap = 15,
+                                AverageBalance = 16,
                                 CustomerName = "Test Customer Gamma",
-                                AccountNumber = 435345,
-                                LoadedMap = 1.0m,
-                                AverageBalance = 6000000,
-                                Limit = 5000000,
-                                ApprovedMap = 1.5m,
+                                Limit = 17,
+                                LoadedMap = 18,
                                 ProductType = "Test Product Gamma",
-                                Term = 60
+                                Term = 19
                             },
-                            new SourceSystemCustomerConcession
+                            new LendingConcessionDetail
                             {
+                                AccountNumber = 20,
+                                ApprovedMap = 21,
+                                AverageBalance = 22,
                                 CustomerName = "Test Customer Delta",
-                                AccountNumber = 994545,
-                                LoadedMap = 3.0m,
-                                AverageBalance = 4000000,
-                                Limit = 3000000,
-                                ApprovedMap = 4.5m,
+                                Limit = 23,
+                                LoadedMap = 24,
                                 ProductType = "Test Product Delta",
-                                Term = 48
+                                Term = 25
                             }
                         }
                     }

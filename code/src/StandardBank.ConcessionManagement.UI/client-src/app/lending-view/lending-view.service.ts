@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import { LendingView } from "../models/lending-view";
 import { RiskGroup } from "../models/risk-group";
-import { SourceSystemConcession } from "../models/source-system-concession";
 import { SourceSystemProduct } from "../models/source-system-product";
+import { LendingConcession } from "../models/lending-concession";
 
 @Injectable()
 export class LendingViewService {
@@ -40,7 +40,7 @@ export class MockLendingViewService {
         this.model.weightedAverageMap = 1;
         this.model.weightedCrsMrs = 1;
         this.model.sourceSystemProducts = [new SourceSystemProduct()];
-        this.model.sourceSystemConcessions = [new SourceSystemConcession()];
+        this.model.lendingConcessions = [new LendingConcession()];
         return Observable.of(this.model);
     }
 }

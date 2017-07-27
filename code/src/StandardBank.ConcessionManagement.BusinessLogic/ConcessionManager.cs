@@ -7,7 +7,7 @@ using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Common;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Inbox;
-using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Inbox.Concession;
+using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic

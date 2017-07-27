@@ -1,4 +1,5 @@
-﻿using StandardBank.ConcessionManagement.Model.UserInterface.Integration;
+﻿using System.Collections.Generic;
+using StandardBank.ConcessionManagement.Model.UserInterface.Integration;
 using StandardBank.ConcessionManagement.Model.UserInterface.Pricing;
 
 namespace StandardBank.ConcessionManagement.Model.UserInterface.Lending
@@ -46,14 +47,14 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Lending
         /// <value>
         /// The source system products.
         /// </value>
-        public SourceSystemProduct[] SourceSystemProducts { get; set; }
+        public IEnumerable<SourceSystemProduct> SourceSystemProducts { get; set; }
 
         /// <summary>
-        /// Gets or sets the source system concessions.
+        /// Gets or sets the lending concessions.
         /// </summary>
         /// <value>
-        /// The source system concessions.
+        /// The lending concessions.
         /// </value>
-        public SourceSystemConcession[] SourceSystemConcessions { get; set; }
+        public IEnumerable<LendingConcession> LendingConcessions { get; set; }
     }
 }
