@@ -28,7 +28,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             _concessionManager = new ConcessionManager(MockConcessionRepository.Object, MockLookupTableManager.Object,
                 MockLegalEntityRepository.Object, MockRiskGroupRepository.Object,
-                InstantiatedDependencies.CacheManager);
+                InstantiatedDependencies.CacheManager, MockConcessionAccountRepository.Object);
         }
 
         /// <summary>
@@ -220,6 +220,33 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             });
 
             Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Tests that GetConcessionsForLegalEntityIdAndConcessionType executes positive
+        /// </summary>
+        [Fact]
+        public void GetConcessionsForLegalEntityIdAndConcessionType_Executes_Positive()
+        {
+            MockLookupTableManager.Setup(_ => _.GetConcessionTypeId(It.IsAny<string>())).Returns(1);
+
+            MockConcessionRepository
+                .Setup(_ => _.ReadByLegalEntityIdConcessionTypeIdIsActive(It.IsAny<int>(), It.IsAny<int>(),
+                    It.IsAny<bool>())).Returns(new[] {new Concession()});
+
+            MockLegalEntityRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(new LegalEntity { IsActive = true });
+
+            MockRiskGroupRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(new RiskGroup { IsActive = true });
+
+            MockConcessionAccountRepository.Setup(_ => _.ReadByConcessionIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(new ConcessionAccount());
+
+            var result = _concessionManager.GetConcessionsForLegalEntityIdAndConcessionType(1, "Unit Test");
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
         }
     }
 }

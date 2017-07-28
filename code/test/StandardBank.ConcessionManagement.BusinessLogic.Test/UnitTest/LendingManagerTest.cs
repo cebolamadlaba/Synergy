@@ -1,6 +1,10 @@
-﻿using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+﻿using Moq;
+using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+using StandardBank.ConcessionManagement.Model.Repository;
+using StandardBank.ConcessionManagement.Model.UserInterface;
 using Xunit;
 using static StandardBank.ConcessionManagement.Test.Helpers.MockedDependencies;
+using RiskGroup = StandardBank.ConcessionManagement.Model.UserInterface.Pricing.RiskGroup;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 {
@@ -19,15 +23,28 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         /// </summary>
         public LendingManagerTest()
         {
-            _lendingManager = new LendingManager(MockPricingManager.Object, MockLegalEntityRepository.Object, MockLookupTableManager.Object);
+            _lendingManager = new LendingManager(MockPricingManager.Object, MockConcessionManager.Object,
+                MockLegalEntityRepository.Object, MockConcessionLendingRepository.Object);
         }
 
         /// <summary>
         /// Tests that GetLendingConcessionsForRiskGroupNumber executes positive.
         /// </summary>
-        //[Fact] //TODO: Get this working once the method is done
+        [Fact]
         public void GetLendingConcessionsForRiskGroupNumber_Executes_Positive()
         {
+            MockPricingManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>())).Returns(new RiskGroup());
+
+            MockLegalEntityRepository.Setup(_ => _.ReadByRiskGroupIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(new[] {new LegalEntity()});
+
+            MockConcessionManager
+                .Setup(_ => _.GetConcessionsForLegalEntityIdAndConcessionType(It.IsAny<int>(), It.IsAny<string>()))
+                .Returns(new[] {new Model.UserInterface.Concession()});
+
+            MockConcessionLendingRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
+                .Returns(new ConcessionLending());
+
             var result = _lendingManager.GetLendingConcessionsForRiskGroupNumber(1);
 
             Assert.NotNull(result);

@@ -2,7 +2,9 @@
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
+using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -18,20 +20,34 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IPricingManager _pricingManager;
 
         /// <summary>
+        /// The concession manager
+        /// </summary>
+        private readonly IConcessionManager _concessionManager;
+
+        /// <summary>
         /// The legal entity repository
         /// </summary>
         private readonly ILegalEntityRepository _legalEntityRepository;
 
         /// <summary>
-        /// The lookup table manager
+        /// The concession lending repository
         /// </summary>
-        private readonly ILookupTableManager _lookupTableManager;
+        private readonly IConcessionLendingRepository _concessionLendingRepository;
 
-        public LendingManager(IPricingManager pricingManager, ILegalEntityRepository legalEntityRepository, ILookupTableManager lookupTableManager)
+        /// <summary>
+        /// Intializes an instance of the class
+        /// </summary>
+        /// <param name="pricingManager"></param>
+        /// <param name="concessionManager"></param>
+        /// <param name="legalEntityRepository"></param>
+        /// <param name="concessionLendingRepository"></param>
+        public LendingManager(IPricingManager pricingManager, IConcessionManager concessionManager,
+            ILegalEntityRepository legalEntityRepository, IConcessionLendingRepository concessionLendingRepository)
         {
             _pricingManager = pricingManager;
+            _concessionManager = concessionManager;
             _legalEntityRepository = legalEntityRepository;
-            _lookupTableManager = lookupTableManager;
+            _concessionLendingRepository = concessionLendingRepository;
         }
 
         /// <summary>
@@ -43,8 +59,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var lendingConcessions = new List<LendingConcession>();
             var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
-            var lendingConcessionTypeId = _lookupTableManager.GetConcessionTypeId("Lending");
-
+            
             if (riskGroup != null)
             {
                 var legalEntities = _legalEntityRepository.ReadByRiskGroupIdIsActive(riskGroup.Id, true);
@@ -53,12 +68,55 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 {
                     foreach (var legalEntity in legalEntities)
                     {
-                        //TODO: finish this
+                        var concessions = _concessionManager.GetConcessionsForLegalEntityIdAndConcessionType(legalEntity.Id, "Lending");
+
+                        foreach (var concession in concessions)
+                            AddLendingConcessionData(concession, lendingConcessions, legalEntity);
                     }
                 }
             }
 
             return lendingConcessions;
+        }
+
+        /// <summary>
+        /// Adds the lending concession data
+        /// </summary>
+        /// <param name="concession"></param>
+        /// <param name="lendingConcessions"></param>
+        /// <param name="legalEntity"></param>
+        private void AddLendingConcessionData(Concession concession, ICollection<LendingConcession> lendingConcessions, LegalEntity legalEntity)
+        {
+            var lendingConcessionData = _concessionLendingRepository.ReadByConcessionId(concession.Id);
+            var lendingConcessionDetails = new List<LendingConcessionDetail>();
+
+            var lendingConcession =
+                lendingConcessions.FirstOrDefault(
+                    _ => _.Concession.CustomerName == legalEntity.CustomerName
+                         && _.Concession.ReferenceNumber == concession.ReferenceNumber);
+
+            if (lendingConcession == null)
+            {
+                lendingConcession = new LendingConcession
+                {
+                    Concession = concession,
+                    LendingConcessionDetails = new List<LendingConcessionDetail>()
+                };
+
+                lendingConcessions.Add(lendingConcession);
+            }
+
+            lendingConcessionDetails.AddRange(lendingConcession.LendingConcessionDetails);
+
+            lendingConcessionDetails.Add(new LendingConcessionDetail
+            {
+                CustomerName = legalEntity.CustomerName,
+                AccountNumber = concession.AccountNumber,
+                Limit = lendingConcessionData?.Limit ?? 0,
+                Term = lendingConcessionData?.Term ?? 0
+            });
+
+            lendingConcession.LendingConcessionDetails = lendingConcessionDetails;
         }
     }
 }

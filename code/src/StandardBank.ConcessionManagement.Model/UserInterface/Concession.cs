@@ -54,5 +54,10 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// Gets or sets the date sent for approval
         /// </summary>
         public DateTime? DateSentForApproval { get; set; }
+
+        /// <summary>
+        /// Gets or sets the account number
+        /// </summary>
+        public string AccountNumber { get; set; }
     }
 }

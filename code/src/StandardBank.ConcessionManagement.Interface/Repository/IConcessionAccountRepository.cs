@@ -23,6 +23,14 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         ConcessionAccount ReadById(int id);
 
         /// <summary>
+        /// Reads by the concession id and is active flag
+        /// </summary>
+        /// <param name="concessionId"></param>
+        /// <param name="isActive"></param>
+        /// <returns></returns>
+        ConcessionAccount ReadByConcessionIdIsActive(int concessionId, bool isActive);
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>

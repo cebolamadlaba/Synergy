@@ -5,7 +5,6 @@ using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Common;
-using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Inbox;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
@@ -44,6 +43,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ICacheManager _cacheManager;
 
         /// <summary>
+        /// The concession account repository
+        /// </summary>
+        private readonly IConcessionAccountRepository _concessionAccountRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionManager"/> class.
         /// </summary>
         /// <param name="concessionRepository">The concession repository.</param>
@@ -51,14 +55,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="legalEntityRepository">The legal entity repository.</param>
         /// <param name="riskGroupRepository">The risk group repository.</param>
         /// <param name="cacheManager"></param>
+        /// <param name="concessionAccountRepository"></param>
         public ConcessionManager(IConcessionRepository concessionRepository, ILookupTableManager lookupTableManager,
-            ILegalEntityRepository legalEntityRepository, IRiskGroupRepository riskGroupRepository, ICacheManager cacheManager)
+            ILegalEntityRepository legalEntityRepository, IRiskGroupRepository riskGroupRepository,
+            ICacheManager cacheManager, IConcessionAccountRepository concessionAccountRepository)
         {
             _concessionRepository = concessionRepository;
             _lookupTableManager = lookupTableManager;
             _legalEntityRepository = legalEntityRepository;
             _riskGroupRepository = riskGroupRepository;
             _cacheManager = cacheManager;
+            _concessionAccountRepository = concessionAccountRepository;
         }
 
         /// <summary>
@@ -260,6 +267,23 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Gets the concessions for the legal entity id and the concession type
+        /// </summary>
+        /// <param name="legalEntityId"></param>
+        /// <param name="concessionType"></param>
+        /// <returns></returns>
+        public IEnumerable<Concession> GetConcessionsForLegalEntityIdAndConcessionType(int legalEntityId, string concessionType)
+        {
+            var concessionTypeId = _lookupTableManager.GetConcessionTypeId(concessionType);
+
+            var concessions =
+                _concessionRepository
+                    .ReadByLegalEntityIdConcessionTypeIdIsActive(legalEntityId, concessionTypeId, true);
+
+            return Map(concessions);
+        }
+
+        /// <summary>
         /// Maps the specified repository concessions.
         /// </summary>
         /// <param name="repositoryConcessions">The repository concessions.</param>
@@ -272,7 +296,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 var legalEntity = _legalEntityRepository.ReadByIdIsActive(concession.LegalEntityId, true);
                 var riskGroup = _riskGroupRepository.ReadByIdIsActive(legalEntity.RiskGroupId, true);
-                
+                var concessionAccount = _concessionAccountRepository.ReadByConcessionIdIsActive(concession.Id, true);
+
                 concessions.Add(new Concession
                 {
                     Id = concession.Id,
@@ -282,8 +307,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     DateSentForApproval = concession.DatesentForApproval,
                     RiskGroupName = riskGroup?.RiskGroupName,
                     RiskGroupNumber = riskGroup?.RiskGroupNumber,
-                    Seqment = legalEntity != null ? _lookupTableManager.GetMarketSegmentName(legalEntity.MarketSegmentId) : string.Empty,
-                    Type = _lookupTableManager.GetReferenceTypeName(concession.TypeId)
+                    Seqment = legalEntity != null
+                        ? _lookupTableManager.GetMarketSegmentName(legalEntity.MarketSegmentId)
+                        : string.Empty,
+                    Type = _lookupTableManager.GetReferenceTypeName(concession.TypeId),
+                    AccountNumber = concessionAccount?.AccountNumber
                 });
             }
 

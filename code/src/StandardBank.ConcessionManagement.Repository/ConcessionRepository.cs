@@ -178,6 +178,27 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Reads by the legal entity id, concession type id and the is active flag
+        /// </summary>
+        /// <param name="legalEntityId"></param>
+        /// <param name="concessionTypeId"></param>
+        /// <param name="isActive"></param>
+        /// <returns></returns>
+        public IEnumerable<Concession> ReadByLegalEntityIdConcessionTypeIdIsActive(int legalEntityId, int concessionTypeId, bool isActive)
+        {
+            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            {
+                return db.Query<Concession>(
+                    @"SELECT [pkConcessionId] [Id], [fkTypeId] [TypeId], [ConcessionRef], [fkLegalEntityId] [LegalEntityId], [fkConcessionTypeId] [ConcessionTypeId], [SMTDealNumber], [fkStatusId] [StatusId], [fkSubStatusId] [SubStatusId], [ConcessionDate], [DatesentForApproval], [Motivation], [DateApproved], [fkRequestorId] [RequestorId], [fkBCMUserId] [BCMUserId], [DateActionedByBCM], [fkPCMUserId] [PCMUserId], [DateActionedByPCM], [fkHOUserId] [HOUserId], [DateActionedByHO], [ExpiryDate], [CentreId], [IsCurrent], [IsActive] 
+                    FROM [dbo].[tblConcession] 
+                    WHERE [fkLegalEntityId] = @legalEntityId
+                    AND [fkConcessionTypeId] = @concessionTypeId
+                    AND [IsActive] = @isActive",
+                    new {legalEntityId, concessionTypeId, isActive});
+            }
+        }
+
+        /// <summary>
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>

@@ -64,6 +64,25 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Reads by the concession id and is active flag
+        /// </summary>
+        /// <param name="concessionId"></param>
+        /// <param name="isActive"></param>
+        /// <returns></returns>
+        public ConcessionAccount ReadByConcessionIdIsActive(int concessionId, bool isActive)
+        {
+            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            {
+                return db.Query<ConcessionAccount>(
+                    @"SELECT [pkConcessionAccountId] [Id], [fkConcessionId] [ConcessionId], [AccountNumber], [IsActive] 
+                    FROM [dbo].[tblConcessionAccount] 
+                    WHERE [fkConcessionId] = @concessionId
+                    AND [IsActive] = @isActive",
+                    new { concessionId, isActive }).FirstOrDefault();
+            }
+        }
+        
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>

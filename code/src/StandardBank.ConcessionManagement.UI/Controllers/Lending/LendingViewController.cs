@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
-using StandardBank.ConcessionManagement.Model.UserInterface;
-using StandardBank.ConcessionManagement.Model.UserInterface.Integration;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 
 namespace StandardBank.ConcessionManagement.UI.Controllers.Lending

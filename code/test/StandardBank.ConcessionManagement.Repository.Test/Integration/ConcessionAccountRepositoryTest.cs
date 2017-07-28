@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Test.Helpers;
@@ -21,7 +20,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 ConcessionId = DataHelper.GetConcessionId(),
                 AccountNumber = "7d3f4e378a",
-                IsActive = false
+                IsActive = true
             };
 
             var result = InstantiatedDependencies.ConcessionAccountRepository.Create(model);
@@ -42,6 +41,21 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
 
             Assert.NotNull(result);
             Assert.Equal(result.Id, id);
+        }
+
+        /// <summary>
+        /// Tests that ReadByConcessionIdIsActive for and active record executes positive
+        /// </summary>
+        [Fact]
+        public void ReadByConcessionIdIsActive_ActiveRecord_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.ConcessionAccountRepository.ReadAll();
+            var concessionId = results.First().ConcessionId;
+            var result =
+                InstantiatedDependencies.ConcessionAccountRepository.ReadByConcessionIdIsActive(concessionId, true);
+
+            Assert.NotNull(result);
+            Assert.Equal(result.ConcessionId, concessionId);
         }
 
         /// <summary>

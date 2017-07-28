@@ -27,7 +27,7 @@
         /// <value>
         /// The account number.
         /// </value>
-        public int AccountNumber { get; set; }
+        public string AccountNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the limit.

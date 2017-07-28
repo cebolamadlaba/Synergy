@@ -1,7 +1,7 @@
 ﻿export class LendingConcessionDetail {
     productType: string;
     customerName: string;
-    accountNumber: number;
+    accountNumber: string;
     limit: number;
     averageBalance: number;
     term: number;

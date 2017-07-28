@@ -269,7 +269,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The concession manager
         /// </summary>
         public static IConcessionManager ConcessionManager =
-            new ConcessionManager(ConcessionRepository, LookupTableManager, LegalEntityRepository, RiskGroupRepository, CacheManager);
+            new ConcessionManager(ConcessionRepository, LookupTableManager, LegalEntityRepository, RiskGroupRepository,
+                CacheManager, ConcessionAccountRepository);
 
         /// <summary>
         /// The Region repository
@@ -295,6 +296,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The lending manager
         /// </summary>
-        public static ILendingManager LendingManager = new LendingManager(PricingManager, LegalEntityRepository, LookupTableManager);
+        public static ILendingManager LendingManager = new LendingManager(PricingManager, ConcessionManager,
+            LegalEntityRepository, ConcessionLendingRepository);
     }
 }

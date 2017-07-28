@@ -52,6 +52,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         [Fact]
         public void GetRiskGroupForRiskGroupNumber_InActiveRecord_Executes_Positive()
         {
+            RiskGroup riskGroup = null;
+            MockRiskGroupRepository.Setup(_ => _.ReadByRiskGroupNumberIsActive(It.IsAny<int>(), true)).Returns(riskGroup);
+
             var result = _pricingManager.GetRiskGroupForRiskGroupNumber(1);
 
             Assert.Null(result);

@@ -51,6 +51,20 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         }
 
         /// <summary>
+        /// Reads by concession id executes positive
+        /// </summary>
+        [Fact]
+        public void ReadByConcessionId_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.ConcessionLendingRepository.ReadAll();
+            var concessionId = results.First().ConcessionId;
+            var result = InstantiatedDependencies.ConcessionLendingRepository.ReadByConcessionId(concessionId);
+
+            Assert.NotNull(result);
+            Assert.Equal(result.ConcessionId, concessionId);
+        }
+
+        /// <summary>
         /// Tests that ReadAll executes positive.
         /// </summary>
         [Fact]

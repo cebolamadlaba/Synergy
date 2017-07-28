@@ -64,6 +64,23 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Reads by the concession id
+        /// </summary>
+        /// <param name="concessionId"></param>
+        /// <returns></returns>
+        public ConcessionLending ReadByConcessionId(int concessionId)
+        {
+            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            {
+                return db.Query<ConcessionLending>(
+                    @"SELECT [pkConcessionLendingId] [Id], [fkConcessionId] [ConcessionId], [fkProductTypeId] [ProductTypeId], [Limit], [Term], [MarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [fkReviewFeeTypeId] [ReviewFeeTypeId] 
+                    FROM [dbo].[tblConcessionLending] 
+                    WHERE [fkConcessionId] = @concessionId",
+                    new { concessionId }).FirstOrDefault();
+            }
+        }
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>

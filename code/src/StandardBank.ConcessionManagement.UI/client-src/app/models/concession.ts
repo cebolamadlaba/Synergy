@@ -8,4 +8,5 @@
     dateOpened: Date;
     seqment: string;
     dateSentForApproval: Date;
+    accountNumber: string;
 }
