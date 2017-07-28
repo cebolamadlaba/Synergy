@@ -31,7 +31,7 @@ const routes: Routes = [
     { path: 'pricing-transactional', component: PricingTransactionalComponent },
     { path: 'transactional-add-concession', component: TransactionalAddConcessionComponent },
     { path: 'cash-add-concession', component: CashAddConcessionComponent },
-    { path: 'lending-add-concession', component: LendingAddConcessionComponent }
+    { path: 'lending-add-concession/:riskGroupNumber', component: LendingAddConcessionComponent }
 ];
 
 @NgModule({

@@ -5,7 +5,7 @@
     <div class="lending-banner-title">
       <div class="col-md-1">
         <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
-        <span class="back-button-text" routerLink="/pricing-lending">Back</span>
+        <span class="back-button-text" [routerLink]="['/pricing-lending', riskGroup.number]">Back</span>
       </div>
       <div class="col-md-10 banner-main-title">
         <i class="fa fa-handshake-o" aria-hidden="true"></i> Lending
@@ -16,8 +16,8 @@
       <div class="col-md-11">
         <div>
           <div class="col-md-5">
-            <div class="subHeading">EDCON</div>
-            <div class="date lightTitle hidden-element">1989</div>
+            <div class="subHeading">{{riskGroup.name}}</div>
+            <div class="date lightTitle hidden-element">{{riskGroup.number}}</div>
           </div>
           <div class="col-md-2  hidden-element">
             <div class="subHeading lightTitle"> Latest CRS / MRS</div>

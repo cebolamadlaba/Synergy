@@ -113,7 +113,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 CustomerName = legalEntity.CustomerName,
                 AccountNumber = concession.AccountNumber,
                 Limit = lendingConcessionData?.Limit ?? 0,
-                Term = lendingConcessionData?.Term ?? 0
+                Term = lendingConcessionData?.Term ?? 0,
+                LoadedMap = lendingConcessionData?.MarginToPrime ?? 0
             });
 
             lendingConcession.LendingConcessionDetails = lendingConcessionDetails;
