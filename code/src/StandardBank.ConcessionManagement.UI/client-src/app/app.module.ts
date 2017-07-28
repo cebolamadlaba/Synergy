@@ -28,6 +28,7 @@ import { UserConcessionsService } from "./user-concessions/user-concessions.serv
 import { UserService } from "./user/user.service";
 import { RiskGroupService } from "./risk-group/risk-group.service";
 import { LendingViewService } from "./lending-view/lending-view.service";
+import { LendingConcessionFilterPipe } from './lending-concession-filter/lending-concession-filter.pipe';
 
 @NgModule({
     declarations: [
@@ -47,7 +48,8 @@ import { LendingViewService } from "./lending-view/lending-view.service";
         CashAddConcessionComponent,
         LendingAddConcessionComponent,
         TransactionalAddConcessionComponent,
-        MismatchedInboxComponent
+        MismatchedInboxComponent,
+        LendingConcessionFilterPipe
     ],
     imports: [
         BrowserModule,

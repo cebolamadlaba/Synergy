@@ -90,10 +90,10 @@
     <div class="col-md-7 search-and-results-container" id="lending-search-container">
         <!-- Search bar -->
         <div class="input-group add-on">
-            <input class="form-control" placeholder="Concession ID" name="srch-term" id="srch-term" type="text">
+            <input class="form-control" placeholder="Concession ID" [(ngModel)]="filterConcessionId" type="text">
         </div>
 
-        <div class="section" *ngFor="let lendingConcession of lendingView.lendingConcessions; trackBy: index;">
+        <div class="section" *ngFor="let lendingConcession of lendingView.lendingConcessions | lendingConcessionFilter : filterConcessionId; trackBy: index;">
             <div class="section-header small-table-title">
                 <div class="concessionID-section"> {{lendingConcession.concession.referenceNumber}}</div>
             </div>

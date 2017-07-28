@@ -2,6 +2,8 @@
 import { PricingLendingComponent } from './pricing-lending.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LendingViewService, MockLendingViewService } from "../lending-view/lending-view.service";
+import { FormsModule } from '@angular/forms';
+import { LendingConcessionFilterPipe } from "../lending-concession-filter/lending-concession-filter.pipe";
 
 describe('PricingLendingComponent', () => {
     let component: PricingLendingComponent;
@@ -9,8 +11,8 @@ describe('PricingLendingComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule],
-            declarations: [PricingLendingComponent],
+            imports: [RouterTestingModule, FormsModule],
+            declarations: [PricingLendingComponent, LendingConcessionFilterPipe],
             providers: [{ provide: LendingViewService, useClass: MockLendingViewService }]
         }).compileComponents();
     }));
