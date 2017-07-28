@@ -38,7 +38,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 Id = 1
             };
 
-            MockRiskGroupRepository.Setup(_ => _.ReadByRiskGroupNumberIsActive(It.IsAny<int>(), It.IsAny<bool>())).Returns(riskGroup);
+            MockRiskGroupRepository.Setup(_ => _.ReadByRiskGroupNumberIsActive(It.IsAny<int>(), true)).Returns(riskGroup);
 
             var result = _pricingManager.GetRiskGroupForRiskGroupNumber(1);
 
@@ -52,16 +52,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         [Fact]
         public void GetRiskGroupForRiskGroupNumber_InActiveRecord_Executes_Positive()
         {
-            var riskGroup = new RiskGroup
-            {
-                RiskGroupNumber = 1,
-                RiskGroupName = "Unit Test Risk Group",
-                IsActive = false,
-                Id = 1
-            };
-
-            MockRiskGroupRepository.Setup(_ => _.ReadByRiskGroupNumberIsActive(It.IsAny<int>(), false)).Returns(riskGroup);
-
             var result = _pricingManager.GetRiskGroupForRiskGroupNumber(1);
 
             Assert.Null(result);
