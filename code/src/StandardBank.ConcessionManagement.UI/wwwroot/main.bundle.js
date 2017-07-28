@@ -814,6 +814,7 @@ module.exports = "    <!-- summary bar -->\r\n\r\n<div class=\"col-md-12 lending
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__risk_group_risk_group_service__ = __webpack_require__("../../../../../client-src/app/risk-group/risk-group.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_risk_group__ = __webpack_require__("../../../../../client-src/app/models/risk-group.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LendingAddConcessionComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -830,10 +831,12 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 
 
 
+
 var LendingAddConcessionComponent = (function () {
     function LendingAddConcessionComponent(route, riskGroupService) {
         this.route = route;
         this.riskGroupService = riskGroupService;
+        this.riskGroup = new __WEBPACK_IMPORTED_MODULE_3__models_risk_group__["a" /* RiskGroup */]();
     }
     LendingAddConcessionComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -882,7 +885,6 @@ var LendingConcessionFilterPipe = (function () {
     function LendingConcessionFilterPipe() {
     }
     LendingConcessionFilterPipe.prototype.transform = function (items, filterConcessionId) {
-        console.log('filterConcessionId', filterConcessionId);
         return filterConcessionId
             ? items.filter(function (item) { return item.concession.referenceNumber.indexOf(filterConcessionId) !== -1; })
             : items;
