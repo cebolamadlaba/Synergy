@@ -1703,6 +1703,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 Limit = 5337,
                 Term = 5,
                 MarginToPrime = 6756,
+                ApprovedMarginToPrime = 9876,
                 InitiationFee = 3112,
                 ReviewFee = 7441,
                 UFFFee = 1095,

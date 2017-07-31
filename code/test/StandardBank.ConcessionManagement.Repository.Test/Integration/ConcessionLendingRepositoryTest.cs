@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Test.Helpers;
@@ -24,6 +23,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 Limit = 1681,
                 Term = 9,
                 MarginToPrime = 3015,
+                ApprovedMarginToPrime = 2343,
                 InitiationFee = 4019,
                 ReviewFee = 939,
                 UFFFee = 8999,
@@ -91,6 +91,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.Limit = model.Limit + 100;
             model.Term = model.Term + 1;
             model.MarginToPrime = model.MarginToPrime + 100;
+            model.ApprovedMarginToPrime = model.ApprovedMarginToPrime + 123;
             model.InitiationFee = model.InitiationFee + 100;
             model.ReviewFee = model.ReviewFee + 100;
             model.UFFFee = model.UFFFee + 100;
@@ -107,6 +108,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.Limit, model.Limit);
             Assert.Equal(updatedModel.Term, model.Term);
             Assert.Equal(updatedModel.MarginToPrime, model.MarginToPrime);
+            Assert.Equal(updatedModel.ApprovedMarginToPrime, model.ApprovedMarginToPrime);
             Assert.Equal(updatedModel.InitiationFee, model.InitiationFee);
             Assert.Equal(updatedModel.ReviewFee, model.ReviewFee);
             Assert.Equal(updatedModel.UFFFee, model.UFFFee);
@@ -126,6 +128,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 Limit = 1681,
                 Term = 9,
                 MarginToPrime = 3015,
+                ApprovedMarginToPrime = 2234,
                 InitiationFee = 4019,
                 ReviewFee = 939,
                 UFFFee = 8999,

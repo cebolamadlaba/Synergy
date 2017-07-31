@@ -36,13 +36,26 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ConcessionLending Create(ConcessionLending model)
         {
-            const string sql = @"INSERT [dbo].[tblConcessionLending] ([fkConcessionId], [fkProductTypeId], [Limit], [Term], [MarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [fkReviewFeeTypeId]) 
-                                VALUES (@fkConcessionId, @fkProductTypeId, @Limit, @Term, @MarginToPrime, @InitiationFee, @ReviewFee, @UFFFee, @fkReviewFeeTypeId) 
+            const string sql = @"INSERT [dbo].[tblConcessionLending] ([fkConcessionId], [fkProductTypeId], [Limit], [Term], [MarginToPrime], [ApprovedMarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [fkReviewFeeTypeId]) 
+                                VALUES (@fkConcessionId, @fkProductTypeId, @Limit, @Term, @MarginToPrime, @ApprovedMarginToPrime, @InitiationFee, @ReviewFee, @UFFFee, @fkReviewFeeTypeId) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
-                model.Id = db.Query<int>(sql, new {fkConcessionId = model.ConcessionId, fkProductTypeId = model.ProductTypeId, Limit = model.Limit, Term = model.Term, MarginToPrime = model.MarginToPrime, InitiationFee = model.InitiationFee, ReviewFee = model.ReviewFee, UFFFee = model.UFFFee, fkReviewFeeTypeId = model.ReviewFeeTypeId}).Single();
+                model.Id = db.Query<int>(sql,
+                    new
+                    {
+                        fkConcessionId = model.ConcessionId,
+                        fkProductTypeId = model.ProductTypeId,
+                        Limit = model.Limit,
+                        Term = model.Term,
+                        MarginToPrime = model.MarginToPrime,
+                        ApprovedMarginToPrime = model.ApprovedMarginToPrime,
+                        InitiationFee = model.InitiationFee,
+                        ReviewFee = model.ReviewFee,
+                        UFFFee = model.UFFFee,
+                        fkReviewFeeTypeId = model.ReviewFeeTypeId
+                    }).Single();
             }
 
             return model;
@@ -58,7 +71,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
                 return db.Query<ConcessionLending>(
-                    "SELECT [pkConcessionLendingId] [Id], [fkConcessionId] [ConcessionId], [fkProductTypeId] [ProductTypeId], [Limit], [Term], [MarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [fkReviewFeeTypeId] [ReviewFeeTypeId] FROM [dbo].[tblConcessionLending] WHERE [pkConcessionLendingId] = @Id",
+                    "SELECT [pkConcessionLendingId] [Id], [fkConcessionId] [ConcessionId], [fkProductTypeId] [ProductTypeId], [Limit], [Term], [MarginToPrime], [ApprovedMarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [fkReviewFeeTypeId] [ReviewFeeTypeId] FROM [dbo].[tblConcessionLending] WHERE [pkConcessionLendingId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -73,7 +86,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
                 return db.Query<ConcessionLending>(
-                    @"SELECT [pkConcessionLendingId] [Id], [fkConcessionId] [ConcessionId], [fkProductTypeId] [ProductTypeId], [Limit], [Term], [MarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [fkReviewFeeTypeId] [ReviewFeeTypeId] 
+                    @"SELECT [pkConcessionLendingId] [Id], [fkConcessionId] [ConcessionId], [fkProductTypeId] [ProductTypeId], [Limit], [Term], [MarginToPrime], [ApprovedMarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [fkReviewFeeTypeId] [ReviewFeeTypeId] 
                     FROM [dbo].[tblConcessionLending] 
                     WHERE [fkConcessionId] = @concessionId",
                     new { concessionId }).FirstOrDefault();
@@ -88,7 +101,7 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
-                return db.Query<ConcessionLending>("SELECT [pkConcessionLendingId] [Id], [fkConcessionId] [ConcessionId], [fkProductTypeId] [ProductTypeId], [Limit], [Term], [MarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [fkReviewFeeTypeId] [ReviewFeeTypeId] FROM [dbo].[tblConcessionLending]");
+                return db.Query<ConcessionLending>("SELECT [pkConcessionLendingId] [Id], [fkConcessionId] [ConcessionId], [fkProductTypeId] [ProductTypeId], [Limit], [Term], [MarginToPrime], [ApprovedMarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [fkReviewFeeTypeId] [ReviewFeeTypeId] FROM [dbo].[tblConcessionLending]");
             }
         }
 
@@ -101,9 +114,22 @@ namespace StandardBank.ConcessionManagement.Repository
             using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
             {
                 db.Execute(@"UPDATE [dbo].[tblConcessionLending]
-                            SET [fkConcessionId] = @fkConcessionId, [fkProductTypeId] = @fkProductTypeId, [Limit] = @Limit, [Term] = @Term, [MarginToPrime] = @MarginToPrime, [InitiationFee] = @InitiationFee, [ReviewFee] = @ReviewFee, [UFFFee] = @UFFFee, [fkReviewFeeTypeId] = @fkReviewFeeTypeId
+                            SET [fkConcessionId] = @fkConcessionId, [fkProductTypeId] = @fkProductTypeId, [Limit] = @Limit, [Term] = @Term, [MarginToPrime] = @MarginToPrime, [ApprovedMarginToPrime] = @ApprovedMarginToPrime, [InitiationFee] = @InitiationFee, [ReviewFee] = @ReviewFee, [UFFFee] = @UFFFee, [fkReviewFeeTypeId] = @fkReviewFeeTypeId
                             WHERE [pkConcessionLendingId] = @Id",
-                    new {Id = model.Id, fkConcessionId = model.ConcessionId, fkProductTypeId = model.ProductTypeId, Limit = model.Limit, Term = model.Term, MarginToPrime = model.MarginToPrime, InitiationFee = model.InitiationFee, ReviewFee = model.ReviewFee, UFFFee = model.UFFFee, fkReviewFeeTypeId = model.ReviewFeeTypeId});
+                    new
+                    {
+                        Id = model.Id,
+                        fkConcessionId = model.ConcessionId,
+                        fkProductTypeId = model.ProductTypeId,
+                        Limit = model.Limit,
+                        Term = model.Term,
+                        MarginToPrime = model.MarginToPrime,
+                        ApprovedMarginToPrime = model.ApprovedMarginToPrime,
+                        InitiationFee = model.InitiationFee,
+                        ReviewFee = model.ReviewFee,
+                        UFFFee = model.UFFFee,
+                        fkReviewFeeTypeId = model.ReviewFeeTypeId
+                    });
             }
         }
 

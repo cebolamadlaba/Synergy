@@ -114,7 +114,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 AccountNumber = concession.AccountNumber,
                 Limit = lendingConcessionData?.Limit ?? 0,
                 Term = lendingConcessionData?.Term ?? 0,
-                LoadedMap = lendingConcessionData?.MarginToPrime ?? 0
+                LoadedMap = lendingConcessionData?.MarginToPrime ?? 0,
+                ApprovedMap = lendingConcessionData?.ApprovedMarginToPrime ?? 0
             });
 
             lendingConcession.LendingConcessionDetails = lendingConcessionDetails;

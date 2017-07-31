@@ -119,8 +119,8 @@
                                 <td class="rightAlign">{{concession.averageBalance}}</td>
                                 <td class="rightAlign">{{concession.term}}</td>
                                 <td>
-                                    <p class="mapInfo">Loaded:{{concession.loadedMap}}</p>
-                                    <p class="mapInfo">Approved:{{concession.approvedMap}}</p>
+                                    <p class="mapInfo">Loaded:{{concession.loadedMap | number : '1.2-2'}}</p>
+                                    <p class="mapInfo">Approved:{{concession.approvedMap | number : '1.2-2'}}</p>
                                 </td>
                             </tr>
                         </tbody>

@@ -116,5 +116,7 @@
     <None Include="Change Scripts\03_add_data_rtblRegion.sql" />
     <None Include="Change Scripts\04_add_data_tblUserRegion.sql" />
     <None Include="Change Scripts\05_alter_tblLegalEntity.sql" />
+    <None Include="Change Scripts\06_alter_tblConcessionLending.sql" />
+    <None Include="Change Scripts\07_update_data_tblConcessionLending.sql" />
   </ItemGroup>
 </Project>

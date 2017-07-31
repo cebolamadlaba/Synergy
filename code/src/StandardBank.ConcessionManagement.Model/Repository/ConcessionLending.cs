@@ -56,6 +56,11 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public decimal? MarginToPrime { get; set; }
 
         /// <summary>
+        /// Gets or sets the approved margin to prime
+        /// </summary>
+        public decimal? ApprovedMarginToPrime { get; set; }
+
+        /// <summary>
         /// Gets or sets the InitiationFee.
         /// </summary>
         /// <value>
