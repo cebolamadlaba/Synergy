@@ -1,57 +1,57 @@
-//overriding default bootstrap tables style       
-.table-container{
-    table{
+﻿//overriding default bootstrap tables style
+.table-container {
+    table {
         border: none;
         margin-bottom: 0;
         background: $tableRowGray;
 
-        tr:hover td{
-            background: $tableRowGray;
+        tr:hover td {
+            background-color: $tableRowHover;
+            cursor: pointer;
         }
     }
 
     th {
-        background-color:$tableHeaderColour;
+        background-color: $standardBankBlue;
         color: $white;
-        border-width:0px;
-      }
-     
-     thead>tr>th{
+        border-width: 0px;
+    }
+
+    thead > tr > th {
         border-width: 0px 0px 0px 0px;
     }
-    td{
-        font-size:0.9em;
+
+    td {
+        font-size: 0.9em;
         vertical-align: middle;
     }
 
-    .status-red{
+    .status-red {
         background-color: $validationRed !important;
         color: white;
 
-        &:hover td{
+        &:hover td {
             background: $validationRed;
         }
     }
 
-    .status-green{
+    .status-green {
         background-color: $validationGreen;
-         color: white;
+        color: white;
 
-         &:hover td{
+        &:hover td {
             background: $validationGreen;
         }
     }
 
-    .status-yellow{
+    .status-yellow {
         background-color: $validationYellow !important;
-         color: white;
+        color: white;
 
-         &:hover td{
+        &:hover td {
             background: $validationYellow;
         }
     }
-
-   
 }
 .product-table-container{
 
@@ -166,4 +166,8 @@
         cursor: pointer;
         color: $darkGray;
     }
+}
+
+table.dataTable.no-footer {
+    border-bottom: none;
 }
