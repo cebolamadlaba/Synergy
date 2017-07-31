@@ -1,7 +1,7 @@
 ﻿import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { DataTablesModule } from 'angular-datatables';
@@ -57,7 +57,8 @@ import { LendingConcessionFilterPipe } from './lending-concession-filter/lending
         FormsModule,
         AppRoutingModule,
         ModalModule.forRoot(),
-        DataTablesModule
+        DataTablesModule,
+        ReactiveFormsModule
     ],
     providers: [UserConcessionsService, UserService, RiskGroupService, LendingViewService],
     bootstrap: [AppComponent]

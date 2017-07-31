@@ -134,7 +134,7 @@ var AppComponent = (function () {
     return AppComponent;
 }());
 AppComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_3" /* Component */])({
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_6" /* Component */])({
         selector: 'app-root',
         template: __webpack_require__("../../../../../client-src/app/app.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/app.component.css")]
@@ -247,7 +247,8 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_3__angular_forms__["a" /* FormsModule */],
             __WEBPACK_IMPORTED_MODULE_4__app_routing_module__["a" /* AppRoutingModule */],
             __WEBPACK_IMPORTED_MODULE_5_ngx_bootstrap_modal__["a" /* ModalModule */].forRoot(),
-            __WEBPACK_IMPORTED_MODULE_6_angular_datatables__["a" /* DataTablesModule */]
+            __WEBPACK_IMPORTED_MODULE_6_angular_datatables__["a" /* DataTablesModule */],
+            __WEBPACK_IMPORTED_MODULE_3__angular_forms__["b" /* ReactiveFormsModule */]
         ],
         providers: [__WEBPACK_IMPORTED_MODULE_24__user_concessions_user_concessions_service__["a" /* UserConcessionsService */], __WEBPACK_IMPORTED_MODULE_25__user_user_service__["a" /* UserService */], __WEBPACK_IMPORTED_MODULE_26__risk_group_risk_group_service__["a" /* RiskGroupService */], __WEBPACK_IMPORTED_MODULE_27__lending_view_lending_view_service__["a" /* LendingViewService */]],
         bootstrap: [__WEBPACK_IMPORTED_MODULE_7__app_component__["a" /* AppComponent */]]
@@ -307,7 +308,7 @@ var ApprovedConcessionsComponent = (function () {
     return ApprovedConcessionsComponent;
 }());
 ApprovedConcessionsComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_3" /* Component */])({
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_6" /* Component */])({
         selector: 'app-approved-concessions',
         template: __webpack_require__("../../../../../client-src/app/approved-concessions/approved-concessions.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/approved-concessions/approved-concessions.component.css")]
@@ -368,7 +369,7 @@ var CashAddConcessionComponent = (function () {
     return CashAddConcessionComponent;
 }());
 CashAddConcessionComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_3" /* Component */])({
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_6" /* Component */])({
         selector: 'app-cash-add-concession',
         template: __webpack_require__("../../../../../client-src/app/cash-add-concession/cash-add-concession.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/cash-add-concession/cash-add-concession.component.css")]
@@ -429,7 +430,7 @@ var ConditionsComponent = (function () {
     return ConditionsComponent;
 }());
 ConditionsComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_3" /* Component */])({
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_6" /* Component */])({
         selector: 'app-conditions',
         template: __webpack_require__("../../../../../client-src/app/conditions/conditions.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/conditions/conditions.component.css")]
@@ -518,7 +519,7 @@ var DeclinedInboxComponent = (function () {
     return DeclinedInboxComponent;
 }());
 DeclinedInboxComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_3" /* Component */])({
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_6" /* Component */])({
         selector: 'app-declined-inbox',
         template: __webpack_require__("../../../../../client-src/app/declined-inbox/declined-inbox.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/declined-inbox/declined-inbox.component.css")]
@@ -608,7 +609,7 @@ var DueExpiryInboxComponent = (function () {
     return DueExpiryInboxComponent;
 }());
 DueExpiryInboxComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_3" /* Component */])({
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_6" /* Component */])({
         selector: 'app-due-expiry-inbox',
         template: __webpack_require__("../../../../../client-src/app/due-expiry-inbox/due-expiry-inbox.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/due-expiry-inbox/due-expiry-inbox.component.css")]
@@ -698,7 +699,7 @@ var ExpiredInboxComponent = (function () {
     return ExpiredInboxComponent;
 }());
 ExpiredInboxComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_3" /* Component */])({
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_6" /* Component */])({
         selector: 'app-expired-inbox',
         template: __webpack_require__("../../../../../client-src/app/expired-inbox/expired-inbox.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/expired-inbox/expired-inbox.component.css")]
@@ -769,7 +770,7 @@ var InboxHeaderComponent = (function () {
     return InboxHeaderComponent;
 }());
 InboxHeaderComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_3" /* Component */])({
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_6" /* Component */])({
         selector: 'app-inbox-header',
         template: __webpack_require__("../../../../../client-src/app/inbox-header/inbox-header.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/inbox-header/inbox-header.component.css")]
@@ -803,7 +804,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/lending-add-concession/lending-add-concession.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "    <!-- summary bar -->\r\n\r\n<div class=\"col-md-12 lending-view-banner\">\r\n  <div class=\"row\">\r\n    <div class=\"lending-banner-title\">\r\n      <div class=\"col-md-1\">\r\n        <i class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"></i>\r\n        <span class=\"back-button-text\" [routerLink]=\"['/pricing-lending', riskGroup.number]\">Back</span>\r\n      </div>\r\n      <div class=\"col-md-10 banner-main-title\">\r\n        <i class=\"fa fa-handshake-o\" aria-hidden=\"true\"></i> Lending\r\n      </div>\r\n      <div class=\"col-md-1\"></div>\r\n    </div>\r\n    <div class=\"col-md-12 lending-banner\">\r\n      <div class=\"col-md-11\">\r\n        <div>\r\n          <div class=\"col-md-5\">\r\n            <div class=\"subHeading\">{{riskGroup.name}}</div>\r\n            <div class=\"date lightTitle hidden-element\">{{riskGroup.number}}</div>\r\n          </div>\r\n          <div class=\"col-md-2  hidden-element\">\r\n            <div class=\"subHeading lightTitle\"> Latest CRS / MRS</div>\r\n            <div class=\"score\"><b>//TODO 0.00</b></div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n      <div class=\"col-md-1\">\r\n        <div class=\"compress\">\r\n          <div onclick=\"hideElement('hidden-element')\">\r\n            <i class=\"fa fa-compress\" aria-hidden=\"true\" id=\"compress-icon\"></i>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n\r\n<!-- Form entries -->\r\n\r\n<form class=\"col-md-12 concession-information-form\">\r\n  <div class=\"col-md-4\">\r\n    <div class=\"row\">\r\n      <label>MRS/CRS</label>\r\n      <input class=\"col-md-12\">\r\n    </div>\r\n    <div class=\"row\">\r\n      <label>SMT Deal Number</label>\r\n      <input class=\"col-md-12\">\r\n    </div>\r\n  </div>\r\n  <div class=\"col-md-1\"></div>\r\n  <div class=\"col-md-7\">\r\n    <div class=\"row\">\r\n      <label>Motivation</label>\r\n      <input class=\"col-md-12 large-input\">\r\n    </div>\r\n  </div>\r\n</form>\r\n\r\n<form class=\"col-md-12\">\r\n  <div class=\"concessions-top\">\r\n    <div class=\"concessions-top-title\">\r\n      <h3 class=\"table-title\">Concessions</h3>\r\n      <button type=\"button\" class=\"btn btn-default\">New Concession</button>\r\n    </div>\r\n  </div>\r\n\r\n  <table class=\"form-concessions-table\">\r\n    <thead class=\"form-concessions-table-headings\">\r\n      <tr>\r\n        <th>Product Type</th>\r\n        <th>Account No</th>\r\n        <th>Limit</th>\r\n        <th>Term</th>\r\n        <th>MAP</th>\r\n        <th>Initiation Fee</th>\r\n        <th>Review Fee</th>\r\n        <th></th>\r\n        <th>UFF Fee</th>\r\n        <th></th>\r\n      </tr>\r\n    </thead>\r\n    <tbody class=\"form-concessions-table-content\">\r\n      <tr>\r\n        <td class=\"length-long\"><input value=\"VAF\"></td>\r\n        <td class=\"length-long\"><input value=\"12345\"></td>\r\n        <td class=\"length-long\"><input value=\"5,000,000.00\"></td>\r\n        <td class=\"length-short\"><input value=\"60\"></td>\r\n        <td class=\"length-short\"><input value=\"1\"></td>\r\n        <td class=\"length-long\"><input></td>\r\n        <td class=\"length-medium\"><select></select></td>\r\n        <td class=\"length-medium\"><input></td>\r\n        <td class=\"length-medium\"><input></td>\r\n        <td class=\"delete\"><i class=\"fa fa-trash-o\" aria-hidden=\"true\"></i></td>\r\n      </tr>\r\n    </tbody>\r\n  </table>\r\n</form>\r\n\r\n<div class=\"col-md-12 conditions\">\r\n  <div class=\"concessions-top\">\r\n    <div class=\"concessions-top-title\">\r\n      <h3 class=\"table-title\">Conditions</h3>\r\n      <button type=\"button\" class=\"btn btn-default\" (click)=\"manageConditionsModal.show()\">Manage Conditions</button>\r\n\r\n      <!-- modal content -->\r\n\r\n      <div bsModal #manageConditionsModal=\"bs-modal\" class=\"modal fade\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"manageConditionsModalLabel\" aria-hidden=\"true\">\r\n        <div class=\"modal-dialog modal-lg\">\r\n          <div class=\"modal-content\">\r\n            <div class=\"col-md-12 modal-header\">\r\n              <h4>Manage Conditions</h4>\r\n            </div>\r\n            <div class=\"col-md-12 modal-body\">\r\n              <div class=\"row\">\r\n                <div class=\"col-md-12 modal-title\">\r\n                  <button class=\"btn btn-default\">New Conditions</button>\r\n                </div>\r\n              </div>\r\n              <table class=\"form-concessions-table\">\r\n                <thead class=\"form-concessions-table-headings\">\r\n                  <tr>\r\n                    <th>Condition Type</th>\r\n                    <th>Product Type</th>\r\n                    <th>Interest Rate</th>\r\n                    <th>Volume</th>\r\n                    <th>Value</th>\r\n                    <th>Period Type</th>\r\n                    <th>Period</th>\r\n                    <th></th>\r\n                  </tr>\r\n                </thead>\r\n                <tbody class=\"form-concessions-table-content\">\r\n                  <tr>\r\n                    <td class=\"length-long\"><input value=\"MIN AVG Balance\"></td>\r\n                    <td class=\"length-long\"><input value=\"Cashman\"></td>\r\n                    <td class=\"length-medium\"><input value=\"4.5\"></td>\r\n                    <td class=\"length-long\"><input value=\"1\"></td>\r\n                    <td class=\"length-medium\"><input value=\"20,000.00\"></td>\r\n                    <td class=\"length-medium\">\r\n                      <select>\r\n                        <option>Standard</option>\r\n                      </select>\r\n                    </td>\r\n                    <td class=\"length-medium\">\r\n                      <select>\r\n                        <option>3 Months</option>\r\n                      </select>\r\n                    </td>\r\n                    <td class=\"delete\"><i class=\"fa fa-trash-o\" aria-hidden=\"true\"></i></td>\r\n                  </tr>\r\n                  <tr>\r\n                    <td class=\"length-long\"><input value=\"\"></td>\r\n                    <td class=\"length-long\"><input value=\"\"></td>\r\n                    <td class=\"length-medium\"><input value=\"\"></td>\r\n                    <td class=\"length-long\"><input value=\"\"></td>\r\n                    <td class=\"length-medium\"><input value=\"\"></td>\r\n                    <td class=\"length-medium\">\r\n                      <select>\r\n                        <option></option>\r\n                      </select>\r\n                    </td>\r\n                    <td class=\"length-medium\">\r\n                      <select>\r\n                        <option></option>\r\n                      </select>\r\n                    </td>\r\n                    <td class=\"delete\"><i class=\"fa fa-trash-o\" aria-hidden=\"true\"></i></td>\r\n                  </tr>\r\n                </tbody>\r\n              </table>\r\n            </div>\r\n            <div class=\"modal-footer\">\r\n              <form class=\"lending-bottom-buttons\">\r\n                <div class=\"float-right\">\r\n                  <button class=\"btn btn-submit\" type=\"submit\">Submit</button>\r\n                  <button class=\"btn btn-cancel\">Cancel</button>\r\n                </div>\r\n              </form>\r\n            </div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"section\">\r\n    <div class=\"section-body\">\r\n      <div class=\"table-container\">\r\n        <table class=\"table table-bordered table-hover header-fixed table-striped\">\r\n          <thead>\r\n            <tr>\r\n              <th>ID</th>\r\n              <th>Condition Type</th>\r\n              <th>Product Type</th>\r\n              <th>Interest Rate</th>\r\n              <th>Volume</th>\r\n              <th>Value</th>\r\n              <th>Period</th>\r\n            </tr>\r\n          </thead>\r\n          <tbody class=\"secondary-text\">\r\n            <tr>\r\n              <td>01</td>\r\n              <td>MIN AVG Balance</td>\r\n              <td>Cashman</td>\r\n              <td>4.5</td>\r\n              <td>1</td>\r\n              <td>20,000.00</td>\r\n              <td></td>\r\n            </tr>\r\n          </tbody>\r\n        </table>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>\r\n\r\n<form class=\"col-md-12 lending-bottom-buttons\">\r\n  <div class=\"float-right\">\r\n    <button type=\"button\" class=\"btn btn-cancel\" routerLink=\"/pricing-lending\">Cancel</button>\r\n    <button class=\"btn btn-submit\" type=\"submit\">Submit</button>\r\n  </div>\r\n</form>"
+module.exports = "    <!-- summary bar -->\r\n\r\n<div class=\"col-md-12 lending-view-banner\">\r\n    <div class=\"row\">\r\n        <div class=\"lending-banner-title\">\r\n            <div class=\"col-md-1\">\r\n                <i class=\"fa fa-chevron-circle-left\" aria-hidden=\"true\"></i>\r\n                <span class=\"back-button-text\" [routerLink]=\"['/pricing-lending', riskGroup.number]\">Back</span>\r\n            </div>\r\n            <div class=\"col-md-10 banner-main-title\">\r\n                <i class=\"fa fa-handshake-o\" aria-hidden=\"true\"></i> Lending\r\n            </div>\r\n            <div class=\"col-md-1\"></div>\r\n        </div>\r\n        <div class=\"col-md-12 lending-banner\">\r\n            <div class=\"col-md-11\">\r\n                <div>\r\n                    <div class=\"col-md-5\">\r\n                        <div class=\"subHeading\">{{riskGroup.name}}</div>\r\n                        <div class=\"date lightTitle hidden-element\">{{riskGroup.number}}</div>\r\n                    </div>\r\n                    <div class=\"col-md-2  hidden-element\">\r\n                        <div class=\"subHeading lightTitle\"> Latest CRS / MRS</div>\r\n                        <div class=\"score\"><b>//TODO 0.00</b></div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n            <div class=\"col-md-1\">\r\n                <div class=\"compress\">\r\n                    <div onclick=\"hideElement('hidden-element')\">\r\n                        <i class=\"fa fa-compress\" aria-hidden=\"true\" id=\"compress-icon\"></i>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n\r\n<!-- Form entries -->\r\n\r\n<form class=\"col-md-12 concession-information-form\" [formGroup]=\"lendingConcessionForm\">\r\n    <div class=\"col-md-4\">\r\n        <div class=\"row\">\r\n            <label>MRS/CRS</label>\r\n            <input class=\"col-md-12\" formControlName=\"mrsCrs\" type=\"number\" />\r\n        </div>\r\n        <div class=\"row\">\r\n            <label>SMT Deal Number</label>\r\n            <input class=\"col-md-12\" formControlName=\"smtDealNumber\" maxlength=\"16\" />\r\n        </div>\r\n    </div>\r\n    <div class=\"col-md-1\"></div>\r\n    <div class=\"col-md-7\">\r\n        <div class=\"row\">\r\n            <label>Motivation</label>\r\n            <textarea class=\"col-md-12 large-input\" maxlength=\"800\" formControlName=\"motivation\"></textarea>\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"concessions-top\">\r\n        <div class=\"concessions-top-title\">\r\n            <h3 class=\"table-title\">Concessions</h3>\r\n            <button type=\"button\" class=\"btn btn-default\" (click)=\"addNewConcessionRow()\">New Concession</button>\r\n        </div>\r\n    </div>\r\n\r\n    <table class=\"form-concessions-table\" formArrayName=\"concessionItemRows\">\r\n        <thead class=\"form-concessions-table-headings\">\r\n            <tr>\r\n                <th>Product Type</th>\r\n                <th>Account No</th>\r\n                <th>Limit</th>\r\n                <th>Term</th>\r\n                <th>MAP</th>\r\n                <th>Initiation Fee</th>\r\n                <th>Review Fee</th>\r\n                <th></th>\r\n                <th>UFF Fee</th>\r\n                <th></th>\r\n            </tr>\r\n        </thead>\r\n        <tbody class=\"form-concessions-table-content\">\r\n            <tr *ngFor=\"let itemrow of lendingConcessionForm.controls.concessionItemRows.controls; let i=index\" [formGroupName]=\"i\">\r\n                <td class=\"length-long\"><input value=\"VAF\" formControlName=\"productType\" /></td>\r\n                <td class=\"length-long\"><input value=\"12345\" formControlName=\"accountNumber\" /></td>\r\n                <td class=\"length-long\"><input value=\"5,000,000.00\" formControlName=\"limit\" /></td>\r\n                <td class=\"length-short\"><input value=\"60\" formControlName=\"term\" /></td>\r\n                <td class=\"length-short\"><input value=\"1\" formControlName=\"marginAgainstPrime\" /></td>\r\n                <td class=\"length-long\"><input formControlName=\"initiationFee\" /></td>\r\n                <td class=\"length-medium\"><select formControlName=\"reviewFeeType\"></select></td>\r\n                <td class=\"length-medium\"><input formControlName=\"reviewFee\" /></td>\r\n                <td class=\"length-medium\"><input formControlName=\"uffFee\" /></td>\r\n                <td class=\"delete\"><button *ngIf=\"lendingConcessionForm.controls.concessionItemRows.controls.length > 1\" (click)=\"deleteConcessionRow(i)\"><i class=\"fa fa-trash-o\" aria-hidden=\"true\"></i></button></td>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n\r\n    <div class=\"col-md-12 conditions\">\r\n        <div class=\"concessions-top\">\r\n            <div class=\"concessions-top-title\">\r\n                <h3 class=\"table-title\">Conditions</h3>\r\n                <button type=\"button\" class=\"btn btn-default\" (click)=\"manageConditionsModal.show()\">Manage Conditions</button>\r\n\r\n                <!-- modal content -->\r\n\r\n                <div bsModal #manageConditionsModal=\"bs-modal\" class=\"modal fade\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"manageConditionsModalLabel\" aria-hidden=\"true\">\r\n                    <div class=\"modal-dialog modal-lg\">\r\n                        <div class=\"modal-content\">\r\n                            <div class=\"col-md-12 modal-header\">\r\n                                <h4>Manage Conditions</h4>\r\n                            </div>\r\n                            <div class=\"col-md-12 modal-body\">\r\n                                <div class=\"row\">\r\n                                    <div class=\"col-md-12 modal-title\">\r\n                                        <button class=\"btn btn-default\" (click)=\"addNewConditionRow()\">New Conditions</button>\r\n                                    </div>\r\n                                </div>\r\n                                <table class=\"form-concessions-table\" formArrayName=\"conditionItemsRows\">\r\n                                    <thead class=\"form-concessions-table-headings\">\r\n                                        <tr>\r\n                                            <th>Condition Type</th>\r\n                                            <th>Product Type</th>\r\n                                            <th>Interest Rate</th>\r\n                                            <th>Volume</th>\r\n                                            <th>Value</th>\r\n                                            <th>Period Type</th>\r\n                                            <th>Period</th>\r\n                                            <th></th>\r\n                                        </tr>\r\n                                    </thead>\r\n                                    <tbody class=\"form-concessions-table-content\">\r\n                                        <tr *ngFor=\"let itemrow of lendingConcessionForm.controls.conditionItemsRows.controls; let i=index\" [formGroupName]=\"i\">\r\n                                            <td class=\"length-long\"><input value=\"MIN AVG Balance\" formControlName=\"conditionType\" /></td>\r\n                                            <td class=\"length-long\"><input value=\"Cashman\" formControlName=\"productType\" /></td>\r\n                                            <td class=\"length-medium\"><input value=\"4.5\" formControlName=\"interestRate\" /></td>\r\n                                            <td class=\"length-long\"><input value=\"1\" formControlName=\"volume\" /></td>\r\n                                            <td class=\"length-medium\"><input value=\"20,000.00\" formControlName=\"value\" /></td>\r\n                                            <td class=\"length-medium\">\r\n                                                <select formControlName=\"periodType\">\r\n                                                    <option>Standard</option>\r\n                                                </select>\r\n                                            </td>\r\n                                            <td class=\"length-medium\">\r\n                                                <select formControlName=\"period\">\r\n                                                    <option>3 Months</option>\r\n                                                </select>\r\n                                            </td>\r\n                                            <td class=\"delete\"><button *ngIf=\"lendingConcessionForm.controls.conditionItemsRows.controls.length > 1\" (click)=\"deleteConditionRow(i)\"><i class=\"fa fa-trash-o\" aria-hidden=\"true\"></i></button></td>\r\n                                        </tr>\r\n                                    </tbody>\r\n                                </table>\r\n                            </div>\r\n                            <div class=\"modal-footer\">\r\n                                <div class=\"float-right\">\r\n                                    <button class=\"btn btn-submit\" type=\"submit\">Submit</button>\r\n                                    <button class=\"btn btn-cancel\">Cancel</button>\r\n                                </div>\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"section\">\r\n            <div class=\"section-body\">\r\n                <div class=\"table-container\">\r\n                    <table class=\"table table-bordered table-hover header-fixed table-striped\">\r\n                        <thead>\r\n                            <tr>\r\n                                <th>ID</th>\r\n                                <th>Condition Type</th>\r\n                                <th>Product Type</th>\r\n                                <th>Interest Rate</th>\r\n                                <th>Volume</th>\r\n                                <th>Value</th>\r\n                                <th>Period</th>\r\n                            </tr>\r\n                        </thead>\r\n                        <tbody class=\"secondary-text\">\r\n                            <tr>\r\n                                <td>01</td>\r\n                                <td>MIN AVG Balance</td>\r\n                                <td>Cashman</td>\r\n                                <td>4.5</td>\r\n                                <td>1</td>\r\n                                <td>20,000.00</td>\r\n                                <td></td>\r\n                            </tr>\r\n                        </tbody>\r\n                    </table>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"float-right\">\r\n        <button type=\"button\" class=\"btn btn-cancel\" routerLink=\"/pricing-lending\">Cancel</button>\r\n        <button class=\"btn btn-submit\" type=\"submit\">Submit</button>\r\n    </div>\r\n</form>\r\n\r\n<!--<pre>{{lendingConcessionForm.value | json}}</pre>-->"
 
 /***/ }),
 
@@ -815,6 +816,7 @@ module.exports = "    <!-- summary bar -->\r\n\r\n<div class=\"col-md-12 lending
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__risk_group_risk_group_service__ = __webpack_require__("../../../../../client-src/app/risk-group/risk-group.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_risk_group__ = __webpack_require__("../../../../../client-src/app/models/risk-group.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LendingAddConcessionComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -832,9 +834,11 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 
 
 
+
 var LendingAddConcessionComponent = (function () {
-    function LendingAddConcessionComponent(route, riskGroupService) {
+    function LendingAddConcessionComponent(route, formBuilder, riskGroupService) {
         this.route = route;
+        this.formBuilder = formBuilder;
         this.riskGroupService = riskGroupService;
         this.riskGroup = new __WEBPACK_IMPORTED_MODULE_3__models_risk_group__["a" /* RiskGroup */]();
     }
@@ -847,6 +851,53 @@ var LendingAddConcessionComponent = (function () {
                 _this.observableRiskGroup.subscribe(function (riskGroup) { return _this.riskGroup = riskGroup; }, function (error) { return _this.errorMessage = error; });
             }
         });
+        this.lendingConcessionForm = this.formBuilder.group({
+            concessionItemRows: this.formBuilder.array([this.initConcessionItemRows()]),
+            conditionItemsRows: this.formBuilder.array([this.initConditionItemRows()]),
+            mrsCrs: new __WEBPACK_IMPORTED_MODULE_4__angular_forms__["c" /* FormControl */](),
+            smtDealNumber: new __WEBPACK_IMPORTED_MODULE_4__angular_forms__["c" /* FormControl */](),
+            motivation: new __WEBPACK_IMPORTED_MODULE_4__angular_forms__["c" /* FormControl */]()
+        });
+    };
+    LendingAddConcessionComponent.prototype.initConcessionItemRows = function () {
+        return this.formBuilder.group({
+            productType: [''],
+            accountNumber: [''],
+            limit: [''],
+            term: [''],
+            marginAgainstPrime: [''],
+            initiationFee: [''],
+            reviewFeeType: [''],
+            reviewFee: [''],
+            uffFee: ['']
+        });
+    };
+    LendingAddConcessionComponent.prototype.initConditionItemRows = function () {
+        return this.formBuilder.group({
+            conditionType: [''],
+            productType: [''],
+            interestRate: [''],
+            volume: [''],
+            value: [''],
+            periodType: [''],
+            period: ['']
+        });
+    };
+    LendingAddConcessionComponent.prototype.addNewConcessionRow = function () {
+        var control = this.lendingConcessionForm.controls['concessionItemRows'];
+        control.push(this.initConcessionItemRows());
+    };
+    LendingAddConcessionComponent.prototype.addNewConditionRow = function () {
+        var control = this.lendingConcessionForm.controls['conditionItemsRows'];
+        control.push(this.initConditionItemRows());
+    };
+    LendingAddConcessionComponent.prototype.deleteConcessionRow = function (index) {
+        var control = this.lendingConcessionForm.controls['concessionItemRows'];
+        control.removeAt(index);
+    };
+    LendingAddConcessionComponent.prototype.deleteConditionRow = function (index) {
+        var control = this.lendingConcessionForm.controls['conditionItemsRows'];
+        control.removeAt(index);
     };
     LendingAddConcessionComponent.prototype.ngOnDestroy = function () {
         this.sub.unsubscribe();
@@ -854,16 +905,16 @@ var LendingAddConcessionComponent = (function () {
     return LendingAddConcessionComponent;
 }());
 LendingAddConcessionComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_3" /* Component */])({
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_6" /* Component */])({
         selector: 'app-lending-add-concession',
         template: __webpack_require__("../../../../../client-src/app/lending-add-concession/lending-add-concession.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/lending-add-concession/lending-add-concession.component.css")]
     }),
-    __param(1, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Inject */])(__WEBPACK_IMPORTED_MODULE_2__risk_group_risk_group_service__["a" /* RiskGroupService */])),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* ActivatedRoute */]) === "function" && _a || Object, Object])
+    __param(2, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* Inject */])(__WEBPACK_IMPORTED_MODULE_2__risk_group_risk_group_service__["a" /* RiskGroupService */])),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* ActivatedRoute */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_4__angular_forms__["d" /* FormBuilder */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_forms__["d" /* FormBuilder */]) === "function" && _b || Object, Object])
 ], LendingAddConcessionComponent);
 
-var _a;
+var _a, _b;
 //# sourceMappingURL=lending-add-concession.component.js.map
 
 /***/ }),
@@ -1059,7 +1110,7 @@ var MismatchedInboxComponent = (function () {
     return MismatchedInboxComponent;
 }());
 MismatchedInboxComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_3" /* Component */])({
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_6" /* Component */])({
         selector: 'app-mismatched-inbox',
         template: __webpack_require__("../../../../../client-src/app/mismatched-inbox/mismatched-inbox.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/mismatched-inbox/mismatched-inbox.component.css")]
@@ -1280,7 +1331,7 @@ var PageHeaderComponent = (function () {
     return PageHeaderComponent;
 }());
 PageHeaderComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_3" /* Component */])({
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_6" /* Component */])({
         selector: 'app-page-header',
         template: __webpack_require__("../../../../../client-src/app/page-header/page-header.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/page-header/page-header.component.css")]
@@ -1370,7 +1421,7 @@ var PendingInboxComponent = (function () {
     return PendingInboxComponent;
 }());
 PendingInboxComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_3" /* Component */])({
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_6" /* Component */])({
         selector: 'app-pending-inbox',
         template: __webpack_require__("../../../../../client-src/app/pending-inbox/pending-inbox.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/pending-inbox/pending-inbox.component.css")]
@@ -1432,7 +1483,7 @@ var PricingCashComponent = (function () {
     return PricingCashComponent;
 }());
 PricingCashComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_3" /* Component */])({
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_6" /* Component */])({
         selector: 'app-pricing-cash',
         template: __webpack_require__("../../../../../client-src/app/pricing-cash/pricing-cash.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/pricing-cash/pricing-cash.component.css")]
@@ -1529,7 +1580,7 @@ var PricingLendingComponent = (function () {
     return PricingLendingComponent;
 }());
 PricingLendingComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_3" /* Component */])({
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_6" /* Component */])({
         selector: 'app-pricing-lending',
         template: __webpack_require__("../../../../../client-src/app/pricing-lending/pricing-lending.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/pricing-lending/pricing-lending.component.css")]
@@ -1592,7 +1643,7 @@ var PricingTransactionalComponent = (function () {
     return PricingTransactionalComponent;
 }());
 PricingTransactionalComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_3" /* Component */])({
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_6" /* Component */])({
         selector: 'app-pricing-transactional',
         template: __webpack_require__("../../../../../client-src/app/pricing-transactional/pricing-transactional.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/pricing-transactional/pricing-transactional.component.css")]
@@ -1687,7 +1738,7 @@ var PricingComponent = (function () {
     return PricingComponent;
 }());
 PricingComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_3" /* Component */])({
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_6" /* Component */])({
         selector: 'app-pricing',
         template: __webpack_require__("../../../../../client-src/app/pricing/pricing.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/pricing/pricing.component.css")]
@@ -1835,7 +1886,7 @@ var TransactionalAddConcessionComponent = (function () {
     return TransactionalAddConcessionComponent;
 }());
 TransactionalAddConcessionComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_3" /* Component */])({
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_6" /* Component */])({
         selector: 'app-transactional-add-concession',
         template: __webpack_require__("../../../../../client-src/app/transactional-add-concession/transactional-add-concession.component.html"),
         styles: [__webpack_require__("../../../../../client-src/app/transactional-add-concession/transactional-add-concession.component.css")]

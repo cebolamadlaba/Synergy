@@ -4,6 +4,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { LendingAddConcessionComponent } from './lending-add-concession.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { RiskGroupService, MockRiskGroupService } from "../risk-group/risk-group.service";
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
 
 describe('LendingAddConcessionComponent', () => {
     let component: LendingAddConcessionComponent;
@@ -11,7 +13,7 @@ describe('LendingAddConcessionComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [HttpModule, ModalModule.forRoot(), RouterTestingModule],
+            imports: [HttpModule, ModalModule.forRoot(), RouterTestingModule, FormsModule, ReactiveFormsModule],
             declarations: [LendingAddConcessionComponent],
             providers: [{ provide: RiskGroupService, useClass: MockRiskGroupService }]
         }).compileComponents();
