@@ -1,4 +1,5 @@
-﻿using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+﻿using Moq;
+using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using Xunit;
 using static StandardBank.ConcessionManagement.Test.Helpers.MockedDependencies;
@@ -22,7 +23,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             _lookupTableManager = new LookupTableManager(MockStatusRepository.Object, MockSubStatusRepository.Object,
                 MockTypeRepository.Object, MockMarketSegmentRepository.Object, MockProvinceRepository.Object,
-                MockConcessionTypeRepository.Object);
+                MockConcessionTypeRepository.Object, MockProductRepository.Object);
         }
 
         /// <summary>
@@ -116,6 +117,44 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             Assert.NotNull(result);
             Assert.Equal(result, concessionType.Id);
+        }
+
+        /// <summary>
+        /// Tests that GetProductTypesForConcessionType executes positive
+        /// </summary>
+        [Fact]
+        public void GetProductTypesForConcessionType_Executes_Positive()
+        {
+            var concessionType =
+                new ConcessionType { Code = "CODE", Description = "Description", Id = 1, IsActive = true };
+
+            MockConcessionTypeRepository.Setup(_ => _.ReadAll()).Returns(new[] { concessionType });
+
+            MockProductRepository.Setup(_ => _.ReadByConcessionTypeIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(new[]
+                {
+                    new Product
+                    {
+                        ConcessionTypeId = concessionType.Id,
+                        Id = 1,
+                        Description = "Test Product",
+                        IsActive = true
+                    }
+                });
+
+            MockConcessionTypeRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(concessionType);
+
+            var result = _lookupTableManager.GetProductTypesForConcessionType(concessionType.Code);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+
+            foreach (var record in result)
+            {
+                Assert.NotNull(record);
+                Assert.NotNull(record.ConcessionType);
+                Assert.Equal(record.ConcessionType.Code, concessionType.Code);
+            }
         }
     }
 }

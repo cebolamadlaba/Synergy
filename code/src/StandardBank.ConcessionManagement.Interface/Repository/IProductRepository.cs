@@ -23,6 +23,14 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         Product ReadById(int id);
 
         /// <summary>
+        /// Reads by the concession type id and the is active flag
+        /// </summary>
+        /// <param name="concessionTypeId"></param>
+        /// <param name="isActive"></param>
+        /// <returns></returns>
+        IEnumerable<Product> ReadByConcessionTypeIdIsActive(int concessionTypeId, bool isActive);
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>

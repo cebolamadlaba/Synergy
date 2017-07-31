@@ -1,4 +1,7 @@
-﻿namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
+﻿using System.Collections.Generic;
+using StandardBank.ConcessionManagement.Model.UserInterface;
+
+namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 {
     /// <summary>
     /// Lookup table manager
@@ -46,5 +49,12 @@
         /// <param name="code"></param>
         /// <returns></returns>
         int GetConcessionTypeId(string code);
+
+        /// <summary>
+        /// Gets the product types for the concession type specified
+        /// </summary>
+        /// <param name="concessionType"></param>
+        /// <returns></returns>
+        IEnumerable<ProductType> GetProductTypesForConcessionType(string concessionType);
     }
 }

@@ -71,6 +71,17 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Reads by the concession type id and the is active flag
+        /// </summary>
+        /// <param name="concessionTypeId"></param>
+        /// <param name="isActive"></param>
+        /// <returns></returns>
+        public IEnumerable<Product> ReadByConcessionTypeIdIsActive(int concessionTypeId, bool isActive)
+        {
+            return ReadAll().Where(_ => _.ConcessionTypeId == concessionTypeId && _.IsActive == isActive);
+        }
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>
