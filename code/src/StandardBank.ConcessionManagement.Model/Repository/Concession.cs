@@ -190,5 +190,10 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The IsActive.
         /// </value>
         public bool IsActive { get; set; }
+
+        /// <summary>
+        /// Gets or sets the mrs or crs
+        /// </summary>
+        public decimal? MrsCrs { get; set; }
     }
 }

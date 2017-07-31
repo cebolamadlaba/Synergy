@@ -40,7 +40,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ExpiryDate = DateTime.Now,
                 CentreId = DataHelper.GetCentreId(),
                 IsCurrent = true,
-                IsActive = true
+                IsActive = true,
+                MrsCrs = 1232
             };
 
             var result = InstantiatedDependencies.ConcessionRepository.Create(model);
@@ -78,7 +79,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ExpiryDate = DateTime.Now,
                 CentreId = DataHelper.GetCentreId(),
                 IsCurrent = true,
-                IsActive = false
+                IsActive = false,
+                MrsCrs = 1233
             };
 
             var result = InstantiatedDependencies.ConcessionRepository.Create(model);
@@ -267,6 +269,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.CentreId = DataHelper.GetAlternateCentreId(model.CentreId);
             model.IsCurrent = !model.IsCurrent;
             model.IsActive = !model.IsActive;
+            model.MrsCrs = model.MrsCrs + 123;
 
             InstantiatedDependencies.ConcessionRepository.Update(model);
 
@@ -296,6 +299,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.CentreId, model.CentreId);
             Assert.Equal(updatedModel.IsCurrent, model.IsCurrent);
             Assert.Equal(updatedModel.IsActive, model.IsActive);
+            Assert.Equal(updatedModel.MrsCrs, model.MrsCrs);
         }
 
         /// <summary>
@@ -327,7 +331,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ExpiryDate = DateTime.Now,
                 CentreId = DataHelper.GetCentreId(),
                 IsCurrent = false,
-                IsActive = false
+                IsActive = false,
+                MrsCrs = 6533
             };
 
             var temporaryEntity = InstantiatedDependencies.ConcessionRepository.Create(model);

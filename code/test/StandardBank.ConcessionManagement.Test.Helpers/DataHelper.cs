@@ -1264,7 +1264,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 ExpiryDate = DateTime.Now,
                 CentreId = 6,
                 IsCurrent = false,
-                IsActive = false
+                IsActive = false,
+                MrsCrs = 4354
             };
 
             InstantiatedDependencies.ConcessionRepository.Create(model);
