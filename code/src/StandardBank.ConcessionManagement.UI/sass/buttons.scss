@@ -1,4 +1,4 @@
-
+﻿
 //overriding default bootstrap buttons      
      .pagination{
        float: right;
@@ -24,67 +24,69 @@
                 background: $buttonYesHover;
             }
      }
-     .btn-print{
-           background-color:$navBlue; 
-           color:white;
-          box-shadow: 1px 2px 1px $navBlue; 
-          padding: 5px 10px;
-          &:hover{
-             color: white;
-          }
-          
-        &:focus{
-            color:white;
-            background:$navBlue;
-        }
-     }
-     .concessionBtn{
-         background: $navBlue;
-         box-shadow: 1px 2px 1px $navBlue; 
-         float: right;
+.btn-print {
+    background-color: $standardBankBlue;
+    color: white;
+    box-shadow: 1px 2px 1px $standardBankBlue;
+    padding: 5px 10px;
 
-          &:hover{
-                color: white;
-                background: $navBlueHover;
-          }
+    &:hover {
+        color: white;
+    }
 
-          &:focus{
-              color: $white;
-              background:$navBlue;
-          }
-     }
+    &:focus {
+        color: white;
+        background: $standardBankBlue;
+    }
+}
+.concessionBtn {
+    background: $standardBankBlue;
+    box-shadow: 1px 2px 1px $standardBankBlue;
+    float: right;
 
-     .btn-default-search{
-         background: $navBlue;
-         color: $white;
-         &:hover{
-            background: $navBlueHover;
-            color: white;
-         }
-         
-        &:focus{
-            color:white;
-            background:$navBlue;
-        }
-     }
+    &:hover {
+        color: white;
+        background: $standardBankBlueHover;
+    }
 
-     .btn-submit{
-        background:$navBlue; 
-        color:white;
-        box-shadow: 1px 2px 1px $navBlue; 
-        padding: 5px 30px;
-        min-width: 75px;
+    &:focus {
+        color: $white;
+        background: $standardBankBlue;
+    }
+}
 
-        &:hover{
-            background: $navBlueHover;
-            color: white;
-        }
-        
-        &:focus{
-            color:white;
-            background:$navBlue;
-        }
-     }
+.btn-default-search {
+    background: $standardBankBlue;
+    color: $white;
+
+    &:hover {
+        background: $standardBankBlueHover;
+        color: white;
+    }
+
+    &:focus {
+        color: white;
+        background: $standardBankBlue;
+    }
+}
+
+.btn-submit {
+    background: $standardBankBlue;
+    color: white;
+    box-shadow: 1px 2px 1px $standardBankBlue;
+    padding: 5px 30px;
+    min-width: 75px;
+
+    &:hover {
+        background: $standardBankBlueHover;
+        color: white;
+    }
+
+    &:focus {
+        color: white;
+        background: $standardBankBlue;
+    }
+}
 
      .btn-cancel{
        min-width: 75px;
@@ -97,31 +99,32 @@
        }
      }
 
-     .btn-default{
-        background:$navBlue; 
-        color:white;
-        box-shadow: 1px 2px 1px $navBlue; 
-        padding: 5px 0px;
-        min-width: 145px;
-        border: none;
+.btn-default {
+    background: $standardBankBlue;
+    color: white;
+    box-shadow: 1px 2px 1px $standardBankBlue;
+    padding: 5px 0px;
+    min-width: 145px;
+    border: none;
 
-        &:hover{
-            background-color: $navBlueHover;
-            color: white;
-        }
-
-        &:active{
-            background: $navBlueHover;
-            color: white;
-        }
-
-        &:focus{
-            background: $navBlueHover;
-            color: white;
-        }
-         &:active:hover{
-                background: $navBlueHover;
-                color: white;
-         }
+    &:hover {
+        background-color: $standardBankBlueHover;
+        color: white;
     }
+
+    &:active {
+        background: $standardBankBlueHover;
+        color: white;
+    }
+
+    &:focus {
+        background: $standardBankBlueHover;
+        color: white;
+    }
+
+    &:active:hover {
+        background: $standardBankBlueHover;
+        color: white;
+    }
+}
      

@@ -1,0 +1,11 @@
+﻿.nav-pills-container .nav-pills li {
+   border-bottom: none;
+}
+
+.nav-pills > li > a {
+    border-radius: 0px;
+}
+
+.nav-pills-container .nav-pills .selected-nav-item a {
+    border-bottom: 2px solid $standardBankBlue;
+}

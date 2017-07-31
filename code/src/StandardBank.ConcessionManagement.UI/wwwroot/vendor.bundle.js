@@ -218,8 +218,8 @@ function toComment(sourceMap) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__content_ref_class__ = __webpack_require__("../../../../ngx-bootstrap/component-loader/content-ref.class.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_triggers__ = __webpack_require__("../../../../ngx-bootstrap/utils/triggers.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_triggers__ = __webpack_require__("../../../../ngx-bootstrap/utils/triggers.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__content_ref_class__ = __webpack_require__("../../../../ngx-bootstrap/component-loader/content-ref.class.js");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ComponentLoader; });
 
 
@@ -229,28 +229,22 @@ var ComponentLoader = (function () {
      * Do not use this directly, it should be instanced via
      * `ComponentLoadFactory.attach`
      * @internal
-     * @param _viewContainerRef
-     * @param _elementRef
-     * @param _injector
-     * @param _renderer
-     * @param _componentFactoryResolver
-     * @param _ngZone
-     * @param _posService
      */
     // tslint:disable-next-line
-    function ComponentLoader(_viewContainerRef, _renderer, _elementRef, _injector, _componentFactoryResolver, _ngZone, _posService) {
+    function ComponentLoader(_viewContainerRef, _renderer, _elementRef, _injector, _componentFactoryResolver, _ngZone, _applicationRef, _posService) {
+        this._viewContainerRef = _viewContainerRef;
+        this._renderer = _renderer;
+        this._elementRef = _elementRef;
+        this._injector = _injector;
+        this._componentFactoryResolver = _componentFactoryResolver;
+        this._ngZone = _ngZone;
+        this._applicationRef = _applicationRef;
+        this._posService = _posService;
         this.onBeforeShow = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* EventEmitter */]();
         this.onShown = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* EventEmitter */]();
         this.onBeforeHide = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* EventEmitter */]();
         this.onHidden = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["F" /* EventEmitter */]();
         this._providers = [];
-        this._ngZone = _ngZone;
-        this._injector = _injector;
-        this._renderer = _renderer;
-        this._elementRef = _elementRef;
-        this._posService = _posService;
-        this._viewContainerRef = _viewContainerRef;
-        this._componentFactoryResolver = _componentFactoryResolver;
     }
     Object.defineProperty(ComponentLoader.prototype, "isShown", {
         get: function () {
@@ -279,42 +273,66 @@ var ComponentLoader = (function () {
         this._providers.push(provider);
         return this;
     };
+    // todo: appendChild to element or document.querySelector(this.container)
     ComponentLoader.prototype.show = function (opts) {
         if (opts === void 0) { opts = {}; }
         this._subscribePositioning();
+        this._innerComponent = null;
         if (!this._componentRef) {
             this.onBeforeShow.emit();
             this._contentRef = this._getContentRef(opts.content);
-            var injector = __WEBPACK_IMPORTED_MODULE_0__angular_core__["_5" /* ReflectiveInjector */].resolveAndCreate(this._providers, this._injector);
-            this._componentRef = this._viewContainerRef
-                .createComponent(this._componentFactory, 0, injector, this._contentRef.nodes);
+            var injector = __WEBPACK_IMPORTED_MODULE_0__angular_core__["_4" /* ReflectiveInjector */].resolveAndCreate(this._providers, this._injector);
+            this._componentRef = this._componentFactory.create(injector, this._contentRef.nodes);
+            this._applicationRef.attachView(this._componentRef.hostView);
+            // this._componentRef = this._viewContainerRef
+            //   .createComponent(this._componentFactory, 0, injector, this._contentRef.nodes);
             this.instance = this._componentRef.instance;
             Object.assign(this._componentRef.instance, opts);
+            if (this.container instanceof __WEBPACK_IMPORTED_MODULE_0__angular_core__["M" /* ElementRef */]) {
+                this.container.nativeElement
+                    .appendChild(this._componentRef.location.nativeElement);
+            }
             if (this.container === 'body' && typeof document !== 'undefined') {
                 document.querySelector(this.container)
+                    .appendChild(this._componentRef.location.nativeElement);
+            }
+            if (!this.container && this._elementRef) {
+                this._elementRef.nativeElement.parentElement
                     .appendChild(this._componentRef.location.nativeElement);
             }
             // we need to manually invoke change detection since events registered
             // via
             // Renderer::listen() are not picked up by change detection with the
             // OnPush strategy
+            if (this._contentRef.componentRef) {
+                this._innerComponent = this._contentRef.componentRef.instance;
+                this._contentRef.componentRef.changeDetectorRef.markForCheck();
+                this._contentRef.componentRef.changeDetectorRef.detectChanges();
+            }
             this._componentRef.changeDetectorRef.markForCheck();
             this.onShown.emit(this._componentRef.instance);
         }
         return this._componentRef;
     };
     ComponentLoader.prototype.hide = function () {
-        if (this._componentRef) {
-            this.onBeforeHide.emit(this._componentRef.instance);
-            this._viewContainerRef.remove(this._viewContainerRef.indexOf(this._componentRef.hostView));
-            this._componentRef = null;
-            if (this._contentRef.viewRef) {
-                this._viewContainerRef.remove(this._viewContainerRef.indexOf(this._contentRef.viewRef));
-                this._contentRef = null;
-            }
-            this._componentRef = null;
-            this.onHidden.emit();
+        if (!this._componentRef) {
+            return this;
         }
+        this.onBeforeHide.emit(this._componentRef.instance);
+        var componentEl = this._componentRef.location.nativeElement;
+        componentEl.parentNode.removeChild(componentEl);
+        this._componentRef.destroy();
+        if (this._viewContainerRef && this._contentRef.viewRef) {
+            this._viewContainerRef.remove(this._viewContainerRef.indexOf(this._contentRef.viewRef));
+        }
+        // this._viewContainerRef.remove(this._viewContainerRef.indexOf(this._componentRef.hostView));
+        //
+        // if (this._contentRef.viewRef && this._viewContainerRef.indexOf(this._contentRef.viewRef) !== -1) {
+        //   this._viewContainerRef.remove(this._viewContainerRef.indexOf(this._contentRef.viewRef));
+        // }
+        this._contentRef = null;
+        this._componentRef = null;
+        this.onHidden.emit();
         return this;
     };
     ComponentLoader.prototype.toggle = function () {
@@ -342,8 +360,11 @@ var ComponentLoader = (function () {
         listenOpts.toggle = listenOpts.toggle || (function () { return _this.isShown
             ? listenOpts.hide()
             : listenOpts.show(); });
-        this._unregisterListenersFn = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__utils_triggers__["a" /* listenToTriggers */])(this._renderer, listenOpts.target.nativeElement, this.triggers, listenOpts.show, listenOpts.hide, listenOpts.toggle);
+        this._unregisterListenersFn = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__utils_triggers__["a" /* listenToTriggers */])(this._renderer, listenOpts.target.nativeElement, this.triggers, listenOpts.show, listenOpts.hide, listenOpts.toggle);
         return this;
+    };
+    ComponentLoader.prototype.getInnerComponent = function () {
+        return this._innerComponent;
     };
     ComponentLoader.prototype._subscribePositioning = function () {
         var _this = this;
@@ -372,14 +393,24 @@ var ComponentLoader = (function () {
     };
     ComponentLoader.prototype._getContentRef = function (content) {
         if (!content) {
-            return new __WEBPACK_IMPORTED_MODULE_1__content_ref_class__["a" /* ContentRef */]([]);
+            return new __WEBPACK_IMPORTED_MODULE_2__content_ref_class__["a" /* ContentRef */]([]);
         }
         if (content instanceof __WEBPACK_IMPORTED_MODULE_0__angular_core__["S" /* TemplateRef */]) {
-            var viewRef = this._viewContainerRef
-                .createEmbeddedView(content);
-            return new __WEBPACK_IMPORTED_MODULE_1__content_ref_class__["a" /* ContentRef */]([viewRef.rootNodes], viewRef);
+            if (this._viewContainerRef) {
+                var viewRef_1 = this._viewContainerRef.createEmbeddedView(content);
+                return new __WEBPACK_IMPORTED_MODULE_2__content_ref_class__["a" /* ContentRef */]([viewRef_1.rootNodes], viewRef_1);
+            }
+            var viewRef = content.createEmbeddedView({});
+            this._applicationRef.attachView(viewRef);
+            return new __WEBPACK_IMPORTED_MODULE_2__content_ref_class__["a" /* ContentRef */]([viewRef.rootNodes], viewRef);
         }
-        return new __WEBPACK_IMPORTED_MODULE_1__content_ref_class__["a" /* ContentRef */]([[this._renderer.createText(null, "" + content)]]);
+        if (typeof content === 'function') {
+            var contentCmptFactory = this._componentFactoryResolver.resolveComponentFactory(content);
+            var modalContentInjector = __WEBPACK_IMPORTED_MODULE_0__angular_core__["_4" /* ReflectiveInjector */].resolveAndCreate(this._providers.concat([content]), this._injector);
+            var componentRef = contentCmptFactory.create(modalContentInjector);
+            return new __WEBPACK_IMPORTED_MODULE_2__content_ref_class__["a" /* ContentRef */]([[componentRef.location.nativeElement]], componentRef.hostView, componentRef);
+        }
+        return new __WEBPACK_IMPORTED_MODULE_2__content_ref_class__["a" /* ContentRef */]([[this._renderer.createText(null, "" + content)]]);
     };
     return ComponentLoader;
 }());
@@ -399,11 +430,12 @@ var ComponentLoader = (function () {
 
 
 var ComponentLoaderFactory = (function () {
-    function ComponentLoaderFactory(componentFactoryResolver, ngZone, injector, posService) {
-        this._ngZone = ngZone;
-        this._injector = injector;
-        this._posService = posService;
-        this._componentFactoryResolver = componentFactoryResolver;
+    function ComponentLoaderFactory(_componentFactoryResolver, _ngZone, _injector, _posService, _applicationRef) {
+        this._componentFactoryResolver = _componentFactoryResolver;
+        this._ngZone = _ngZone;
+        this._injector = _injector;
+        this._posService = _posService;
+        this._applicationRef = _applicationRef;
     }
     /**
      *
@@ -413,7 +445,7 @@ var ComponentLoaderFactory = (function () {
      * @returns {ComponentLoader}
      */
     ComponentLoaderFactory.prototype.createLoader = function (_elementRef, _viewContainerRef, _renderer) {
-        return new __WEBPACK_IMPORTED_MODULE_1__component_loader_class__["a" /* ComponentLoader */](_viewContainerRef, _renderer, _elementRef, this._injector, this._componentFactoryResolver, this._ngZone, this._posService);
+        return new __WEBPACK_IMPORTED_MODULE_1__component_loader_class__["a" /* ComponentLoader */](_viewContainerRef, _renderer, _elementRef, this._injector, this._componentFactoryResolver, this._ngZone, this._applicationRef, this._posService);
     };
     ComponentLoaderFactory.decorators = [
         { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */] },
@@ -424,6 +456,7 @@ var ComponentLoaderFactory = (function () {
         { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* NgZone */], },
         { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["j" /* Injector */], },
         { type: __WEBPACK_IMPORTED_MODULE_2__positioning__["a" /* PositioningService */], },
+        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["l" /* ApplicationRef */], },
     ]; };
     return ComponentLoaderFactory;
 }());
@@ -469,17 +502,176 @@ var ContentRef = (function () {
 
 /***/ }),
 
+/***/ "../../../../ngx-bootstrap/modal/bs-modal.service.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__component_loader_component_loader_factory__ = __webpack_require__("../../../../ngx-bootstrap/component-loader/component-loader.factory.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__modal_backdrop_component__ = __webpack_require__("../../../../ngx-bootstrap/modal/modal-backdrop.component.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modal_container_component__ = __webpack_require__("../../../../ngx-bootstrap/modal/modal-container.component.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__modal_options_class__ = __webpack_require__("../../../../ngx-bootstrap/modal/modal-options.class.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BsModalService; });
+
+
+
+
+
+var BsModalService = (function () {
+    function BsModalService(clf) {
+        this.clf = clf;
+        // constructor props
+        this.config = __WEBPACK_IMPORTED_MODULE_4__modal_options_class__["a" /* modalConfigDefaults */];
+        this.isBodyOverflowing = false;
+        this.originalBodyPadding = 0;
+        this.scrollbarWidth = 0;
+        this.modalsCount = 0;
+        this.loaders = [];
+        this._backdropLoader = this.clf.createLoader(null, null, null);
+    }
+    /** Shows a modal */
+    BsModalService.prototype.show = function (content, config) {
+        this.modalsCount++;
+        this._createLoaders();
+        this.config = Object.assign({}, __WEBPACK_IMPORTED_MODULE_4__modal_options_class__["a" /* modalConfigDefaults */], config);
+        this._showBackdrop();
+        return this._showModal(content);
+    };
+    BsModalService.prototype.hide = function (level) {
+        var _this = this;
+        if (this.modalsCount === 1) {
+            this._hideBackdrop();
+            this.resetScrollbar();
+        }
+        this.modalsCount = this.modalsCount >= 1 ? this.modalsCount - 1 : 0;
+        setTimeout(function () {
+            _this._hideModal(level);
+            _this.removeLoaders(level);
+        }, this.config.animated ? __WEBPACK_IMPORTED_MODULE_4__modal_options_class__["b" /* TransitionDurations */].BACKDROP : 0);
+    };
+    BsModalService.prototype._showBackdrop = function () {
+        var isBackdropEnabled = this.config.backdrop || this.config.backdrop === 'static';
+        var isBackdropInDOM = !this.backdropRef || !this.backdropRef.instance.isShown;
+        if (this.modalsCount === 1) {
+            this.removeBackdrop();
+            if (isBackdropEnabled && isBackdropInDOM) {
+                this._backdropLoader
+                    .attach(__WEBPACK_IMPORTED_MODULE_2__modal_backdrop_component__["a" /* ModalBackdropComponent */])
+                    .to('body')
+                    .show({ isAnimated: this.config.animated });
+                this.backdropRef = this._backdropLoader._componentRef;
+            }
+        }
+    };
+    BsModalService.prototype._hideBackdrop = function () {
+        var _this = this;
+        if (!this.backdropRef) {
+            return;
+        }
+        this.backdropRef.instance.isShown = false;
+        var duration = this.config.animated ? __WEBPACK_IMPORTED_MODULE_4__modal_options_class__["b" /* TransitionDurations */].BACKDROP : 0;
+        setTimeout(function () { return _this.removeBackdrop(); }, duration);
+    };
+    BsModalService.prototype._showModal = function (content) {
+        var modalLoader = this.loaders[this.loaders.length - 1];
+        var bsModalRef = new __WEBPACK_IMPORTED_MODULE_4__modal_options_class__["c" /* BsModalRef */]();
+        var modalContainerRef = modalLoader
+            .provide({ provide: __WEBPACK_IMPORTED_MODULE_4__modal_options_class__["d" /* ModalOptions */], useValue: this.config })
+            .provide({ provide: __WEBPACK_IMPORTED_MODULE_4__modal_options_class__["c" /* BsModalRef */], useValue: bsModalRef })
+            .attach(__WEBPACK_IMPORTED_MODULE_3__modal_container_component__["a" /* ModalContainerComponent */])
+            .to('body')
+            .show({ content: content, isAnimated: this.config.animated });
+        modalContainerRef.instance.level = this.getModalsCount();
+        bsModalRef.hide = function () {
+            modalContainerRef.instance.hide();
+        };
+        bsModalRef.content = modalLoader.getInnerComponent() || null;
+        return bsModalRef;
+    };
+    BsModalService.prototype._hideModal = function (level) {
+        var modalLoader = this.loaders[level - 1];
+        if (modalLoader) {
+            modalLoader.hide();
+        }
+    };
+    BsModalService.prototype.getModalsCount = function () {
+        return this.modalsCount;
+    };
+    BsModalService.prototype.removeBackdrop = function () {
+        this._backdropLoader.hide();
+        this.backdropRef = null;
+    };
+    /** AFTER PR MERGE MODAL.COMPONENT WILL BE USING THIS CODE*/
+    /** Scroll bar tricks */
+    /** @internal */
+    BsModalService.prototype.checkScrollbar = function () {
+        this.isBodyOverflowing = document.body.clientWidth < window.innerWidth;
+        this.scrollbarWidth = this.getScrollbarWidth();
+    };
+    BsModalService.prototype.setScrollbar = function () {
+        if (!document) {
+            return;
+        }
+        this.originalBodyPadding = parseInt(window.getComputedStyle(document.body).getPropertyValue('padding-right') || '0', 10);
+        if (this.isBodyOverflowing) {
+            document.body.style.paddingRight = (this.originalBodyPadding + this.scrollbarWidth) + "px";
+        }
+    };
+    BsModalService.prototype.resetScrollbar = function () {
+        document.body.style.paddingRight = this.originalBodyPadding + 'px';
+    };
+    // thx d.walsh
+    BsModalService.prototype.getScrollbarWidth = function () {
+        var scrollDiv = document.createElement('div');
+        scrollDiv.className = __WEBPACK_IMPORTED_MODULE_4__modal_options_class__["e" /* ClassName */].SCROLLBAR_MEASURER;
+        document.body.appendChild(scrollDiv);
+        var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+        document.body.removeChild(scrollDiv);
+        return scrollbarWidth;
+    };
+    BsModalService.prototype._createLoaders = function () {
+        this.loaders.push(this.clf.createLoader(null, null, null));
+    };
+    BsModalService.prototype.removeLoaders = function (level) {
+        this.loaders.splice(level - 1, 1);
+        this.loaders.forEach(function (loader, i) {
+            loader.instance.level = i + 1;
+        });
+    };
+    BsModalService.decorators = [
+        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */] },
+    ];
+    /** @nocollapse */
+    BsModalService.ctorParameters = function () { return [
+        { type: __WEBPACK_IMPORTED_MODULE_1__component_loader_component_loader_factory__["a" /* ComponentLoaderFactory */], },
+    ]; };
+    return BsModalService;
+}());
+//# sourceMappingURL=bs-modal.service.js.map
+
+/***/ }),
+
 /***/ "../../../../ngx-bootstrap/modal/index.js":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modal_backdrop_component__ = __webpack_require__("../../../../ngx-bootstrap/modal/modal-backdrop.component.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modal_container_component__ = __webpack_require__("../../../../ngx-bootstrap/modal/modal-container.component.js");
+/* unused harmony reexport ModalContainerComponent */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__modal_backdrop_component__ = __webpack_require__("../../../../ngx-bootstrap/modal/modal-backdrop.component.js");
 /* unused harmony reexport ModalBackdropComponent */
 /* unused harmony reexport ModalBackdropOptions */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__modal_component__ = __webpack_require__("../../../../ngx-bootstrap/modal/modal.component.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__modal_options_class__ = __webpack_require__("../../../../ngx-bootstrap/modal/modal-options.class.js");
+/* unused harmony reexport ModalOptions */
+/* unused harmony reexport BsModalRef */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modal_component__ = __webpack_require__("../../../../ngx-bootstrap/modal/modal.component.js");
 /* unused harmony reexport ModalDirective */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__modal_module__ = __webpack_require__("../../../../ngx-bootstrap/modal/modal.module.js");
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_2__modal_module__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__modal_module__ = __webpack_require__("../../../../ngx-bootstrap/modal/modal.module.js");
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_4__modal_module__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__bs_modal_service__ = __webpack_require__("../../../../ngx-bootstrap/modal/bs-modal.service.js");
+/* unused harmony reexport BsModalService */
+
+
+
 
 
 
@@ -494,8 +686,10 @@ var ContentRef = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__modal_options_class__ = __webpack_require__("../../../../ngx-bootstrap/modal/modal-options.class.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_ng2_bootstrap_config__ = __webpack_require__("../../../../ngx-bootstrap/utils/ng2-bootstrap-config.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_utils_class__ = __webpack_require__("../../../../ngx-bootstrap/utils/utils.class.js");
 /* unused harmony export ModalBackdropOptions */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ModalBackdropComponent; });
+
 
 
 
@@ -519,7 +713,7 @@ var ModalBackdropComponent = (function () {
         },
         set: function (value) {
             this._isAnimated = value;
-            this.renderer.setElementClass(this.element.nativeElement, "" + __WEBPACK_IMPORTED_MODULE_1__modal_options_class__["a" /* ClassName */].FADE, value);
+            // this.renderer.setElementClass(this.element.nativeElement, `${ClassName.FADE}`, value);
         },
         enumerable: true,
         configurable: true
@@ -530,20 +724,27 @@ var ModalBackdropComponent = (function () {
         },
         set: function (value) {
             this._isShown = value;
-            this.renderer.setElementClass(this.element.nativeElement, "" + __WEBPACK_IMPORTED_MODULE_1__modal_options_class__["a" /* ClassName */].IN, value);
+            this.renderer.setElementClass(this.element.nativeElement, "" + __WEBPACK_IMPORTED_MODULE_1__modal_options_class__["e" /* ClassName */].IN, value);
             if (!__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__utils_ng2_bootstrap_config__["a" /* isBs3 */])()) {
-                this.renderer.setElementClass(this.element.nativeElement, "" + __WEBPACK_IMPORTED_MODULE_1__modal_options_class__["a" /* ClassName */].SHOW, value);
+                this.renderer.setElementClass(this.element.nativeElement, "" + __WEBPACK_IMPORTED_MODULE_1__modal_options_class__["e" /* ClassName */].SHOW, value);
             }
         },
         enumerable: true,
         configurable: true
     });
+    ModalBackdropComponent.prototype.ngOnInit = function () {
+        if (this.isAnimated) {
+            this.renderer.setElementClass(this.element.nativeElement, "" + __WEBPACK_IMPORTED_MODULE_1__modal_options_class__["e" /* ClassName */].FADE, this.isAnimated);
+            __WEBPACK_IMPORTED_MODULE_3__utils_utils_class__["a" /* Utils */].reflow(this.element.nativeElement);
+        }
+        this.isShown = true;
+    };
     ModalBackdropComponent.decorators = [
-        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["_6" /* Component */], args: [{
+        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["_5" /* Component */], args: [{
                     selector: 'bs-modal-backdrop',
                     template: '',
                     // tslint:disable-next-line
-                    host: { 'class': __WEBPACK_IMPORTED_MODULE_1__modal_options_class__["a" /* ClassName */].BACKDROP }
+                    host: { 'class': __WEBPACK_IMPORTED_MODULE_1__modal_options_class__["e" /* ClassName */].BACKDROP }
                 },] },
     ];
     /** @nocollapse */
@@ -557,19 +758,163 @@ var ModalBackdropComponent = (function () {
 
 /***/ }),
 
+/***/ "../../../../ngx-bootstrap/modal/modal-container.component.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__modal_options_class__ = __webpack_require__("../../../../ngx-bootstrap/modal/modal-options.class.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__bs_modal_service__ = __webpack_require__("../../../../ngx-bootstrap/modal/bs-modal.service.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_ng2_bootstrap_config__ = __webpack_require__("../../../../ngx-bootstrap/utils/ng2-bootstrap-config.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ModalContainerComponent; });
+
+
+
+
+var ModalContainerComponent = (function () {
+    // @HostListener('window:focusin', ['$event'])
+    // public enforceFocus($event:any): void {
+    //   if (!(this._element.nativeElement === $event.target || this._element.nativeElement.contains($event.target))) {
+    //     this._element.nativeElement.focus();
+    //   }
+    // }
+    // @HostListener('focusout', ['$event'])
+    // public preventFocusOut($event:any): void {
+    //   if (!$event.relatedTarget) {
+    //     this._element.nativeElement.focus();
+    //   }
+    // }
+    function ModalContainerComponent(options, _element, bsModalService, _renderer) {
+        this.bsModalService = bsModalService;
+        this._renderer = _renderer;
+        this.isShown = false;
+        this.isModalHiding = false;
+        this._element = _element;
+        this.config = Object.assign({}, options);
+    }
+    ModalContainerComponent.prototype.onClick = function (event) {
+        if (this.config.ignoreBackdropClick || this.config.backdrop === 'static' || event.target !== this._element.nativeElement) {
+            return;
+        }
+        this.hide();
+    };
+    ModalContainerComponent.prototype.onEsc = function () {
+        if (this.config.keyboard && this.level === this.bsModalService.getModalsCount()) {
+            this.hide();
+        }
+    };
+    ModalContainerComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        if (this.isAnimated) {
+            this._renderer.setElementClass(this._element.nativeElement, __WEBPACK_IMPORTED_MODULE_1__modal_options_class__["e" /* ClassName */].FADE, true);
+        }
+        this._renderer.setElementStyle(this._element.nativeElement, 'display', 'block');
+        setTimeout(function () {
+            _this.isShown = true;
+            _this._renderer.setElementClass(_this._element.nativeElement, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__utils_ng2_bootstrap_config__["a" /* isBs3 */])() ? __WEBPACK_IMPORTED_MODULE_1__modal_options_class__["e" /* ClassName */].IN : __WEBPACK_IMPORTED_MODULE_1__modal_options_class__["e" /* ClassName */].SHOW, true);
+        }, this.isAnimated ? __WEBPACK_IMPORTED_MODULE_1__modal_options_class__["b" /* TransitionDurations */].BACKDROP : 0);
+        if (document && document.body) {
+            if (this.bsModalService.getModalsCount() === 1) {
+                this.bsModalService.checkScrollbar();
+                this.bsModalService.setScrollbar();
+            }
+            this._renderer.setElementClass(document.body, __WEBPACK_IMPORTED_MODULE_1__modal_options_class__["e" /* ClassName */].OPEN, true);
+        }
+    };
+    ModalContainerComponent.prototype.ngOnDestroy = function () {
+        if (this.isShown) {
+            this.hide();
+        }
+    };
+    ModalContainerComponent.prototype.hide = function () {
+        var _this = this;
+        if (this.isModalHiding || !this.isShown) {
+            return;
+        }
+        this.isModalHiding = true;
+        this._renderer.setElementClass(this._element.nativeElement, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__utils_ng2_bootstrap_config__["a" /* isBs3 */])() ? __WEBPACK_IMPORTED_MODULE_1__modal_options_class__["e" /* ClassName */].IN : __WEBPACK_IMPORTED_MODULE_1__modal_options_class__["e" /* ClassName */].SHOW, false);
+        setTimeout(function () {
+            _this.isShown = false;
+            if (document && document.body && _this.bsModalService.getModalsCount() === 1) {
+                _this._renderer.setElementClass(document.body, __WEBPACK_IMPORTED_MODULE_1__modal_options_class__["e" /* ClassName */].OPEN, false);
+            }
+            _this.bsModalService.hide(_this.level);
+            _this.isModalHiding = false;
+        }, this.isAnimated ? __WEBPACK_IMPORTED_MODULE_1__modal_options_class__["b" /* TransitionDurations */].MODAL : 0);
+    };
+    ModalContainerComponent.decorators = [
+        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["_5" /* Component */], args: [{
+                    selector: 'modal-container',
+                    template: "\n    <div [class]=\"'modal-dialog' + (config.class ? ' ' + config.class : '')\" role=\"document\">\n      <div class=\"modal-content\"><ng-content></ng-content></div>\n    </div>\n  ",
+                    // tslint:disable-next-line
+                    host: {
+                        class: 'modal',
+                        role: 'dialog',
+                        tabindex: '-1'
+                    }
+                },] },
+    ];
+    /** @nocollapse */
+    ModalContainerComponent.ctorParameters = function () { return [
+        { type: __WEBPACK_IMPORTED_MODULE_1__modal_options_class__["d" /* ModalOptions */], },
+        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["M" /* ElementRef */], },
+        { type: __WEBPACK_IMPORTED_MODULE_2__bs_modal_service__["a" /* BsModalService */], },
+        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["N" /* Renderer */], },
+    ]; };
+    ModalContainerComponent.propDecorators = {
+        'onClick': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["_6" /* HostListener */], args: ['click', ['$event'],] },],
+        'onEsc': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["_6" /* HostListener */], args: ['window:keydown.esc',] },],
+    };
+    return ModalContainerComponent;
+}());
+//# sourceMappingURL=modal-container.component.js.map
+
+/***/ }),
+
 /***/ "../../../../ngx-bootstrap/modal/modal-options.class.js":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return modalConfigDefaults; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ClassName; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return Selector; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return ModalOptions; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return BsModalRef; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return modalConfigDefaults; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return ClassName; });
+/* unused harmony export Selector */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return TransitionDurations; });
+
+var ModalOptions = (function () {
+    function ModalOptions() {
+    }
+    ModalOptions.decorators = [
+        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */] },
+    ];
+    /** @nocollapse */
+    ModalOptions.ctorParameters = function () { return []; };
+    return ModalOptions;
+}());
+var BsModalRef = (function () {
+    function BsModalRef() {
+    }
+    /**
+     * Hides the modal
+     */
+    BsModalRef.prototype.hide = function () { };
+    BsModalRef.decorators = [
+        { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */] },
+    ];
+    /** @nocollapse */
+    BsModalRef.ctorParameters = function () { return []; };
+    return BsModalRef;
+}());
 var modalConfigDefaults = {
     backdrop: true,
     keyboard: true,
     focus: true,
     show: false,
-    ignoreBackdropClick: false
+    ignoreBackdropClick: false,
+    class: '',
+    animated: true
 };
 var ClassName = {
     SCROLLBAR_MEASURER: 'modal-scrollbar-measure',
@@ -584,6 +929,10 @@ var Selector = {
     DATA_TOGGLE: '[data-toggle="modal"]',
     DATA_DISMISS: '[data-dismiss="modal"]',
     FIXED_CONTENT: '.navbar-fixed-top, .navbar-fixed-bottom, .is-fixed'
+};
+var TransitionDurations = {
+    MODAL: 300,
+    BACKDROP: 150
 };
 //# sourceMappingURL=modal-options.class.js.map
 
@@ -615,6 +964,10 @@ var Selector = {
 
 var TRANSITION_DURATION = 300;
 var BACKDROP_TRANSITION_DURATION = 150;
+var DISMISS_REASONS = {
+    BACKRDOP: 'backdrop-click',
+    ESC: 'esc'
+};
 /** Mark any code with directive to show it's content in modal */
 var ModalDirective = (function () {
     function ModalDirective(_element, _viewContainerRef, _renderer, clf) {
@@ -661,11 +1014,13 @@ var ModalDirective = (function () {
         if (this.config.ignoreBackdropClick || this.config.backdrop === 'static' || event.target !== this._element.nativeElement) {
             return;
         }
+        this.dismissReason = DISMISS_REASONS.BACKRDOP;
         this.hide(event);
     };
     // todo: consider preventing default and stopping propagation
     ModalDirective.prototype.onEsc = function () {
         if (this.config.keyboard) {
+            this.dismissReason = DISMISS_REASONS.ESC;
             this.hide();
         }
     };
@@ -678,10 +1033,13 @@ var ModalDirective = (function () {
         }
     };
     ModalDirective.prototype.ngAfterViewInit = function () {
+        var _this = this;
         this._config = this._config || this.getConfig();
-        if (this._config.show) {
-            this.show();
-        }
+        setTimeout(function () {
+            if (_this._config.show) {
+                _this.show();
+            }
+        }, 0);
     };
     /* Public methods */
     /** Allows to manually toggle modal visibility */
@@ -691,6 +1049,7 @@ var ModalDirective = (function () {
     /** Allows to manually open modal */
     ModalDirective.prototype.show = function () {
         var _this = this;
+        this.dismissReason = null;
         this.onShow.emit(this);
         if (this._isShown) {
             return;
@@ -700,12 +1059,12 @@ var ModalDirective = (function () {
         this._isShown = true;
         this.checkScrollbar();
         this.setScrollbar();
-        if (__WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["a" /* document */] && __WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["a" /* document */].body) {
-            if (__WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["a" /* document */].body.classList.contains(__WEBPACK_IMPORTED_MODULE_5__modal_options_class__["a" /* ClassName */].OPEN)) {
+        if (__WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["b" /* document */] && __WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["b" /* document */].body) {
+            if (__WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["b" /* document */].body.classList.contains(__WEBPACK_IMPORTED_MODULE_5__modal_options_class__["e" /* ClassName */].OPEN)) {
                 this.isNested = true;
             }
             else {
-                this._renderer.setElementClass(__WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["a" /* document */].body, __WEBPACK_IMPORTED_MODULE_5__modal_options_class__["a" /* ClassName */].OPEN, true);
+                this._renderer.setElementClass(__WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["b" /* document */].body, __WEBPACK_IMPORTED_MODULE_5__modal_options_class__["e" /* ClassName */].OPEN, true);
             }
         }
         this.showBackdrop(function () {
@@ -726,9 +1085,9 @@ var ModalDirective = (function () {
         clearTimeout(this.timerHideModal);
         clearTimeout(this.timerRmBackDrop);
         this._isShown = false;
-        this._renderer.setElementClass(this._element.nativeElement, __WEBPACK_IMPORTED_MODULE_5__modal_options_class__["a" /* ClassName */].IN, false);
+        this._renderer.setElementClass(this._element.nativeElement, __WEBPACK_IMPORTED_MODULE_5__modal_options_class__["e" /* ClassName */].IN, false);
         if (!__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__utils_ng2_bootstrap_config__["a" /* isBs3 */])()) {
-            this._renderer.setElementClass(this._element.nativeElement, __WEBPACK_IMPORTED_MODULE_5__modal_options_class__["a" /* ClassName */].SHOW, false);
+            this._renderer.setElementClass(this._element.nativeElement, __WEBPACK_IMPORTED_MODULE_5__modal_options_class__["e" /* ClassName */].SHOW, false);
         }
         // this._addClassIn = false;
         if (this.isAnimated) {
@@ -740,7 +1099,7 @@ var ModalDirective = (function () {
     };
     /** Private methods @internal */
     ModalDirective.prototype.getConfig = function (config) {
-        return Object.assign({}, __WEBPACK_IMPORTED_MODULE_5__modal_options_class__["b" /* modalConfigDefaults */], config);
+        return Object.assign({}, __WEBPACK_IMPORTED_MODULE_5__modal_options_class__["a" /* modalConfigDefaults */], config);
     };
     /**
      *  Show dialog
@@ -752,8 +1111,8 @@ var ModalDirective = (function () {
         if (!this._element.nativeElement.parentNode ||
             (this._element.nativeElement.parentNode.nodeType !== Node.ELEMENT_NODE)) {
             // don't move modals dom position
-            if (__WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["a" /* document */] && __WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["a" /* document */].body) {
-                __WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["a" /* document */].body.appendChild(this._element.nativeElement);
+            if (__WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["b" /* document */] && __WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["b" /* document */].body) {
+                __WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["b" /* document */].body.appendChild(this._element.nativeElement);
             }
         }
         this._renderer.setElementAttribute(this._element.nativeElement, 'aria-hidden', 'false');
@@ -763,9 +1122,9 @@ var ModalDirective = (function () {
             __WEBPACK_IMPORTED_MODULE_3__utils_utils_class__["a" /* Utils */].reflow(this._element.nativeElement);
         }
         // this._addClassIn = true;
-        this._renderer.setElementClass(this._element.nativeElement, __WEBPACK_IMPORTED_MODULE_5__modal_options_class__["a" /* ClassName */].IN, true);
+        this._renderer.setElementClass(this._element.nativeElement, __WEBPACK_IMPORTED_MODULE_5__modal_options_class__["e" /* ClassName */].IN, true);
         if (!__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__utils_ng2_bootstrap_config__["a" /* isBs3 */])()) {
-            this._renderer.setElementClass(this._element.nativeElement, __WEBPACK_IMPORTED_MODULE_5__modal_options_class__["a" /* ClassName */].SHOW, true);
+            this._renderer.setElementClass(this._element.nativeElement, __WEBPACK_IMPORTED_MODULE_5__modal_options_class__["e" /* ClassName */].SHOW, true);
         }
         var transitionComplete = function () {
             if (_this._config.focus) {
@@ -787,12 +1146,13 @@ var ModalDirective = (function () {
         this._renderer.setElementStyle(this._element.nativeElement, 'display', 'none');
         this.showBackdrop(function () {
             if (!_this.isNested) {
-                if (__WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["a" /* document */] && __WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["a" /* document */].body) {
-                    _this._renderer.setElementClass(__WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["a" /* document */].body, __WEBPACK_IMPORTED_MODULE_5__modal_options_class__["a" /* ClassName */].OPEN, false);
+                if (__WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["b" /* document */] && __WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["b" /* document */].body) {
+                    _this._renderer.setElementClass(__WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["b" /* document */].body, __WEBPACK_IMPORTED_MODULE_5__modal_options_class__["e" /* ClassName */].OPEN, false);
                 }
                 _this.resetScrollbar();
             }
             _this.resetAdjustments();
+            _this.focusOtherModal();
             _this.onHidden.emit(_this);
         });
     };
@@ -805,13 +1165,8 @@ var ModalDirective = (function () {
             this._backdrop
                 .attach(__WEBPACK_IMPORTED_MODULE_4__modal_backdrop_component__["a" /* ModalBackdropComponent */])
                 .to('body')
-                .show({ isAnimated: false });
+                .show({ isAnimated: this.isAnimated });
             this.backdrop = this._backdrop._componentRef;
-            if (this.isAnimated) {
-                this.backdrop.instance.isAnimated = this.isAnimated;
-                __WEBPACK_IMPORTED_MODULE_3__utils_utils_class__["a" /* Utils */].reflow(this.backdrop.instance.element.nativeElement);
-            }
-            this.backdrop.instance.isShown = true;
             if (!callback) {
                 return;
             }
@@ -866,6 +1221,13 @@ var ModalDirective = (function () {
     //   $(window).off(Event.RESIZE)
     // }
     // }
+    ModalDirective.prototype.focusOtherModal = function () {
+        var otherOpenedModals = this._element.nativeElement.parentElement.querySelectorAll('.in[bsModal]');
+        if (!otherOpenedModals.length) {
+            return;
+        }
+        this._renderer.invokeElementMethod(otherOpenedModals[otherOpenedModals.length - 1], 'focus');
+    };
     /** @internal */
     ModalDirective.prototype.resetAdjustments = function () {
         this._renderer.setElementStyle(this._element.nativeElement, 'paddingLeft', '');
@@ -874,32 +1236,27 @@ var ModalDirective = (function () {
     /** Scroll bar tricks */
     /** @internal */
     ModalDirective.prototype.checkScrollbar = function () {
-        this.isBodyOverflowing = __WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["a" /* document */].body.clientWidth < __WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["b" /* window */].innerWidth;
+        this.isBodyOverflowing = __WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["b" /* document */].body.clientWidth < __WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["a" /* window */].innerWidth;
         this.scrollbarWidth = this.getScrollbarWidth();
     };
     ModalDirective.prototype.setScrollbar = function () {
-        if (!__WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["a" /* document */]) {
+        if (!__WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["b" /* document */]) {
             return;
         }
-        var fixedEl = __WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["a" /* document */].querySelector(__WEBPACK_IMPORTED_MODULE_5__modal_options_class__["c" /* Selector */].FIXED_CONTENT);
-        if (!fixedEl) {
-            return;
-        }
-        var bodyPadding = parseInt(__WEBPACK_IMPORTED_MODULE_3__utils_utils_class__["a" /* Utils */].getStyles(fixedEl).paddingRight || 0, 10);
-        this.originalBodyPadding = parseInt(__WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["a" /* document */].body.style.paddingRight || 0, 10);
+        this.originalBodyPadding = parseInt(__WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["a" /* window */].getComputedStyle(__WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["b" /* document */].body).getPropertyValue('padding-right') || 0, 10);
         if (this.isBodyOverflowing) {
-            __WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["a" /* document */].body.style.paddingRight = (bodyPadding + this.scrollbarWidth) + "px";
+            __WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["b" /* document */].body.style.paddingRight = (this.originalBodyPadding + this.scrollbarWidth) + "px";
         }
     };
     ModalDirective.prototype.resetScrollbar = function () {
-        __WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["a" /* document */].body.style.paddingRight = this.originalBodyPadding;
+        __WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["b" /* document */].body.style.paddingRight = this.originalBodyPadding;
     };
     // thx d.walsh
     ModalDirective.prototype.getScrollbarWidth = function () {
-        var scrollDiv = this._renderer.createElement(__WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["a" /* document */].body, 'div', void 0);
-        scrollDiv.className = __WEBPACK_IMPORTED_MODULE_5__modal_options_class__["a" /* ClassName */].SCROLLBAR_MEASURER;
+        var scrollDiv = this._renderer.createElement(__WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["b" /* document */].body, 'div', void 0);
+        scrollDiv.className = __WEBPACK_IMPORTED_MODULE_5__modal_options_class__["e" /* ClassName */].SCROLLBAR_MEASURER;
         var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
-        __WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["a" /* document */].body.removeChild(scrollDiv);
+        __WEBPACK_IMPORTED_MODULE_1__utils_facade_browser__["b" /* document */].body.removeChild(scrollDiv);
         return scrollbarWidth;
     };
     ModalDirective.decorators = [
@@ -921,8 +1278,8 @@ var ModalDirective = (function () {
         'onShown': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["_3" /* Output */] },],
         'onHide': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["_3" /* Output */] },],
         'onHidden': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["_3" /* Output */] },],
-        'onClick': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["_4" /* HostListener */], args: ['click', ['$event'],] },],
-        'onEsc': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["_4" /* HostListener */], args: ['keydown.esc',] },],
+        'onClick': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["_6" /* HostListener */], args: ['click', ['$event'],] },],
+        'onEsc': [{ type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["_6" /* HostListener */], args: ['keydown.esc',] },],
     };
     return ModalDirective;
 }());
@@ -939,7 +1296,11 @@ var ModalDirective = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__modal_component__ = __webpack_require__("../../../../ngx-bootstrap/modal/modal.component.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__positioning__ = __webpack_require__("../../../../ngx-bootstrap/positioning/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__component_loader__ = __webpack_require__("../../../../ngx-bootstrap/component-loader/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__modal_container_component__ = __webpack_require__("../../../../ngx-bootstrap/modal/modal-container.component.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__bs_modal_service__ = __webpack_require__("../../../../ngx-bootstrap/modal/bs-modal.service.js");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ModalModule; });
+
+
 
 
 
@@ -949,13 +1310,13 @@ var ModalModule = (function () {
     function ModalModule() {
     }
     ModalModule.forRoot = function () {
-        return { ngModule: ModalModule, providers: [__WEBPACK_IMPORTED_MODULE_4__component_loader__["a" /* ComponentLoaderFactory */], __WEBPACK_IMPORTED_MODULE_3__positioning__["a" /* PositioningService */]] };
+        return { ngModule: ModalModule, providers: [__WEBPACK_IMPORTED_MODULE_6__bs_modal_service__["a" /* BsModalService */], __WEBPACK_IMPORTED_MODULE_4__component_loader__["a" /* ComponentLoaderFactory */], __WEBPACK_IMPORTED_MODULE_3__positioning__["a" /* PositioningService */]] };
     };
     ModalModule.decorators = [
         { type: __WEBPACK_IMPORTED_MODULE_0__angular_core__["b" /* NgModule */], args: [{
-                    declarations: [__WEBPACK_IMPORTED_MODULE_1__modal_backdrop_component__["a" /* ModalBackdropComponent */], __WEBPACK_IMPORTED_MODULE_2__modal_component__["a" /* ModalDirective */]],
+                    declarations: [__WEBPACK_IMPORTED_MODULE_1__modal_backdrop_component__["a" /* ModalBackdropComponent */], __WEBPACK_IMPORTED_MODULE_2__modal_component__["a" /* ModalDirective */], __WEBPACK_IMPORTED_MODULE_5__modal_container_component__["a" /* ModalContainerComponent */]],
                     exports: [__WEBPACK_IMPORTED_MODULE_1__modal_backdrop_component__["a" /* ModalBackdropComponent */], __WEBPACK_IMPORTED_MODULE_2__modal_component__["a" /* ModalDirective */]],
-                    entryComponents: [__WEBPACK_IMPORTED_MODULE_1__modal_backdrop_component__["a" /* ModalBackdropComponent */]]
+                    entryComponents: [__WEBPACK_IMPORTED_MODULE_1__modal_backdrop_component__["a" /* ModalBackdropComponent */], __WEBPACK_IMPORTED_MODULE_5__modal_container_component__["a" /* ModalContainerComponent */]]
                 },] },
     ];
     /** @nocollapse */
@@ -1002,7 +1363,15 @@ var Positioning = (function () {
         var elPosition;
         var parentOffset = { width: 0, height: 0, top: 0, bottom: 0, left: 0, right: 0 };
         if (this.getStyle(element, 'position') === 'fixed') {
-            elPosition = element.getBoundingClientRect();
+            var bcRect = element.getBoundingClientRect();
+            elPosition = {
+                width: bcRect.width,
+                height: bcRect.height,
+                top: bcRect.top,
+                bottom: bcRect.bottom,
+                left: bcRect.left,
+                right: bcRect.right
+            };
         }
         else {
             var offsetParentEl = this.offsetParent(element);
@@ -1169,8 +1538,8 @@ var PositioningService = (function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return win; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return document; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return win; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return document; });
 /* unused harmony export location */
 /* unused harmony export gc */
 /* unused harmony export performance */
@@ -1217,7 +1586,7 @@ var EventListener = win['EventListener'];
 /* harmony export (immutable) */ __webpack_exports__["a"] = isBs3;
 
 function isBs3() {
-    return __WEBPACK_IMPORTED_MODULE_0__facade_browser__["b" /* window */].__theme !== 'bs4';
+    return __WEBPACK_IMPORTED_MODULE_0__facade_browser__["a" /* window */].__theme !== 'bs4';
 }
 //# sourceMappingURL=ng2-bootstrap-config.js.map
 
@@ -1253,7 +1622,7 @@ var Trigger = (function () {
 /* harmony export (immutable) */ __webpack_exports__["a"] = listenToTriggers;
 
 var DEFAULT_ALIASES = {
-    hover: ['mouseenter', 'mouseleave'],
+    hover: ['mouseover', 'mouseout'],
     focus: ['focusin', 'focusout']
 };
 function parseTriggers(triggers, aliases) {
@@ -1317,7 +1686,7 @@ var Utils = (function () {
         // FF meanwhile throws on frame elements through "defaultView.getComputedStyle"
         var view = elem.ownerDocument.defaultView;
         if (!view || !view.opener) {
-            view = __WEBPACK_IMPORTED_MODULE_0__facade_browser__["b" /* window */];
+            view = __WEBPACK_IMPORTED_MODULE_0__facade_browser__["a" /* window */];
         }
         return view.getComputedStyle(elem);
     };
@@ -40363,7 +40732,7 @@ var DirectiveResolver = (function () {
                     host["[" + propName + "]"] = propName;
                 }
             });
-            var /** @type {?} */ hostListeners = propertyMetadata[propName].filter(function (a) { return a && a instanceof __WEBPACK_IMPORTED_MODULE_1__angular_core__["_4" /* HostListener */]; });
+            var /** @type {?} */ hostListeners = propertyMetadata[propName].filter(function (a) { return a && a instanceof __WEBPACK_IMPORTED_MODULE_1__angular_core__["_6" /* HostListener */]; });
             hostListeners.forEach(function (hostListener) {
                 var /** @type {?} */ args = hostListener.args || [];
                 host["(" + hostListener.eventName + ")"] = propName + "(" + args.join(',') + ")";
@@ -40412,8 +40781,8 @@ var DirectiveResolver = (function () {
         var /** @type {?} */ mergedOutputs = this._dedupeBindings(directive.outputs ? directive.outputs.concat(outputs) : outputs);
         var /** @type {?} */ mergedHost = directive.host ? Object.assign({}, directive.host, host) : host;
         var /** @type {?} */ mergedQueries = directive.queries ? Object.assign({}, directive.queries, queries) : queries;
-        if (directive instanceof __WEBPACK_IMPORTED_MODULE_1__angular_core__["_6" /* Component */]) {
-            return new __WEBPACK_IMPORTED_MODULE_1__angular_core__["_6" /* Component */]({
+        if (directive instanceof __WEBPACK_IMPORTED_MODULE_1__angular_core__["_5" /* Component */]) {
+            return new __WEBPACK_IMPORTED_MODULE_1__angular_core__["_5" /* Component */]({
                 selector: directive.selector,
                 inputs: mergedInputs,
                 outputs: mergedOutputs,
@@ -41144,7 +41513,7 @@ var CompileMetadataResolver = (function () {
             return null;
         }
         var /** @type {?} */ nonNormalizedTemplateMetadata = ((undefined));
-        if (dirMeta instanceof __WEBPACK_IMPORTED_MODULE_1__angular_core__["_6" /* Component */]) {
+        if (dirMeta instanceof __WEBPACK_IMPORTED_MODULE_1__angular_core__["_5" /* Component */]) {
             // component
             assertArrayOfStrings('styles', dirMeta.styles);
             assertArrayOfStrings('styleUrls', dirMeta.styleUrls);
@@ -41167,7 +41536,7 @@ var CompileMetadataResolver = (function () {
         var /** @type {?} */ viewProviders = [];
         var /** @type {?} */ entryComponentMetadata = [];
         var /** @type {?} */ selector = dirMeta.selector;
-        if (dirMeta instanceof __WEBPACK_IMPORTED_MODULE_1__angular_core__["_6" /* Component */]) {
+        if (dirMeta instanceof __WEBPACK_IMPORTED_MODULE_1__angular_core__["_5" /* Component */]) {
             // Component
             changeDetectionStrategy = ((dirMeta.changeDetection));
             if (dirMeta.viewProviders) {
@@ -50194,12 +50563,12 @@ var StaticReflector = (function () {
         this.initializeConversionMap();
         knownMetadataClasses.forEach(function (kc) { return _this._registerDecoratorOrConstructor(_this.getStaticSymbol(kc.filePath, kc.name), kc.ctor); });
         knownMetadataFunctions.forEach(function (kf) { return _this._registerFunction(_this.getStaticSymbol(kf.filePath, kf.name), kf.fn); });
-        this.annotationForParentClassWithSummaryKind.set(CompileSummaryKind.Directive, [__WEBPACK_IMPORTED_MODULE_1__angular_core__["J" /* Directive */], __WEBPACK_IMPORTED_MODULE_1__angular_core__["_6" /* Component */]]);
+        this.annotationForParentClassWithSummaryKind.set(CompileSummaryKind.Directive, [__WEBPACK_IMPORTED_MODULE_1__angular_core__["J" /* Directive */], __WEBPACK_IMPORTED_MODULE_1__angular_core__["_5" /* Component */]]);
         this.annotationForParentClassWithSummaryKind.set(CompileSummaryKind.Pipe, [__WEBPACK_IMPORTED_MODULE_1__angular_core__["Y" /* Pipe */]]);
         this.annotationForParentClassWithSummaryKind.set(CompileSummaryKind.NgModule, [__WEBPACK_IMPORTED_MODULE_1__angular_core__["b" /* NgModule */]]);
-        this.annotationForParentClassWithSummaryKind.set(CompileSummaryKind.Injectable, [__WEBPACK_IMPORTED_MODULE_1__angular_core__["c" /* Injectable */], __WEBPACK_IMPORTED_MODULE_1__angular_core__["Y" /* Pipe */], __WEBPACK_IMPORTED_MODULE_1__angular_core__["J" /* Directive */], __WEBPACK_IMPORTED_MODULE_1__angular_core__["_6" /* Component */], __WEBPACK_IMPORTED_MODULE_1__angular_core__["b" /* NgModule */]]);
+        this.annotationForParentClassWithSummaryKind.set(CompileSummaryKind.Injectable, [__WEBPACK_IMPORTED_MODULE_1__angular_core__["c" /* Injectable */], __WEBPACK_IMPORTED_MODULE_1__angular_core__["Y" /* Pipe */], __WEBPACK_IMPORTED_MODULE_1__angular_core__["J" /* Directive */], __WEBPACK_IMPORTED_MODULE_1__angular_core__["_5" /* Component */], __WEBPACK_IMPORTED_MODULE_1__angular_core__["b" /* NgModule */]]);
         this.annotationNames.set(__WEBPACK_IMPORTED_MODULE_1__angular_core__["J" /* Directive */], 'Directive');
-        this.annotationNames.set(__WEBPACK_IMPORTED_MODULE_1__angular_core__["_6" /* Component */], 'Component');
+        this.annotationNames.set(__WEBPACK_IMPORTED_MODULE_1__angular_core__["_5" /* Component */], 'Component');
         this.annotationNames.set(__WEBPACK_IMPORTED_MODULE_1__angular_core__["Y" /* Pipe */], 'Pipe');
         this.annotationNames.set(__WEBPACK_IMPORTED_MODULE_1__angular_core__["b" /* NgModule */], 'NgModule');
         this.annotationNames.set(__WEBPACK_IMPORTED_MODULE_1__angular_core__["c" /* Injectable */], 'Injectable');
@@ -50457,9 +50826,9 @@ var StaticReflector = (function () {
         this._registerDecoratorOrConstructor(this.findDeclaration(ANGULAR_CORE, 'Output'), __WEBPACK_IMPORTED_MODULE_1__angular_core__["_3" /* Output */]);
         this._registerDecoratorOrConstructor(this.findDeclaration(ANGULAR_CORE, 'Pipe'), __WEBPACK_IMPORTED_MODULE_1__angular_core__["Y" /* Pipe */]);
         this._registerDecoratorOrConstructor(this.findDeclaration(ANGULAR_CORE, 'HostBinding'), __WEBPACK_IMPORTED_MODULE_1__angular_core__["_8" /* HostBinding */]);
-        this._registerDecoratorOrConstructor(this.findDeclaration(ANGULAR_CORE, 'HostListener'), __WEBPACK_IMPORTED_MODULE_1__angular_core__["_4" /* HostListener */]);
+        this._registerDecoratorOrConstructor(this.findDeclaration(ANGULAR_CORE, 'HostListener'), __WEBPACK_IMPORTED_MODULE_1__angular_core__["_6" /* HostListener */]);
         this._registerDecoratorOrConstructor(this.findDeclaration(ANGULAR_CORE, 'Directive'), __WEBPACK_IMPORTED_MODULE_1__angular_core__["J" /* Directive */]);
-        this._registerDecoratorOrConstructor(this.findDeclaration(ANGULAR_CORE, 'Component'), __WEBPACK_IMPORTED_MODULE_1__angular_core__["_6" /* Component */]);
+        this._registerDecoratorOrConstructor(this.findDeclaration(ANGULAR_CORE, 'Component'), __WEBPACK_IMPORTED_MODULE_1__angular_core__["_5" /* Component */]);
         this._registerDecoratorOrConstructor(this.findDeclaration(ANGULAR_CORE, 'NgModule'), __WEBPACK_IMPORTED_MODULE_1__angular_core__["b" /* NgModule */]);
         // Note: Some metadata classes can be used directly with Provider.deps.
         this._registerDecoratorOrConstructor(this.findDeclaration(ANGULAR_CORE, 'Host'), __WEBPACK_IMPORTED_MODULE_1__angular_core__["T" /* Host */]);
@@ -53398,7 +53767,7 @@ var JitCompilerFactory = (function () {
     JitCompilerFactory.prototype.createCompiler = function (options) {
         if (options === void 0) { options = []; }
         var /** @type {?} */ opts = _mergeOptions(this._defaultOptions.concat(options));
-        var /** @type {?} */ injector = __WEBPACK_IMPORTED_MODULE_1__angular_core__["_5" /* ReflectiveInjector */].resolveAndCreate([
+        var /** @type {?} */ injector = __WEBPACK_IMPORTED_MODULE_1__angular_core__["_4" /* ReflectiveInjector */].resolveAndCreate([
             COMPILER_PROVIDERS, {
                 provide: CompilerConfig,
                 useFactory: function () {
@@ -53574,10 +53943,10 @@ function _mergeArrays(parts) {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_50", function() { return Query; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_57", function() { return ViewChild; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_58", function() { return ViewChildren; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_6", function() { return Component; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_5", function() { return Component; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "J", function() { return Directive; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_8", function() { return HostBinding; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_4", function() { return HostListener; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_6", function() { return HostListener; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "O", function() { return Input; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_3", function() { return Output; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Y", function() { return Pipe; });
@@ -53590,7 +53959,7 @@ function _mergeArrays(parts) {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_0", function() { return forwardRef; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_49", function() { return resolveForwardRef; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return Injector; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_5", function() { return ReflectiveInjector; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_4", function() { return ReflectiveInjector; });
 /* unused harmony export ResolvedReflectiveFactory */
 /* unused harmony export ReflectiveKey */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return InjectionToken; });
@@ -86427,7 +86796,7 @@ RouterLink.propDecorators = {
     'replaceUrl': [{ type: __WEBPACK_IMPORTED_MODULE_2__angular_core__["O" /* Input */] },],
     'routerLink': [{ type: __WEBPACK_IMPORTED_MODULE_2__angular_core__["O" /* Input */] },],
     'preserveQueryParams': [{ type: __WEBPACK_IMPORTED_MODULE_2__angular_core__["O" /* Input */] },],
-    'onClick': [{ type: __WEBPACK_IMPORTED_MODULE_2__angular_core__["_4" /* HostListener */], args: ['click',] },],
+    'onClick': [{ type: __WEBPACK_IMPORTED_MODULE_2__angular_core__["_6" /* HostListener */], args: ['click',] },],
 };
 /**
  * \@whatItDoes Lets you link to specific parts of your app.
@@ -86563,7 +86932,7 @@ RouterLinkWithHref.propDecorators = {
     'href': [{ type: __WEBPACK_IMPORTED_MODULE_2__angular_core__["_8" /* HostBinding */] },],
     'routerLink': [{ type: __WEBPACK_IMPORTED_MODULE_2__angular_core__["O" /* Input */] },],
     'preserveQueryParams': [{ type: __WEBPACK_IMPORTED_MODULE_2__angular_core__["O" /* Input */] },],
-    'onClick': [{ type: __WEBPACK_IMPORTED_MODULE_2__angular_core__["_4" /* HostListener */], args: ['click', ['$event.button', '$event.ctrlKey', '$event.metaKey', '$event.shiftKey'],] },],
+    'onClick': [{ type: __WEBPACK_IMPORTED_MODULE_2__angular_core__["_6" /* HostListener */], args: ['click', ['$event.button', '$event.ctrlKey', '$event.metaKey', '$event.shiftKey'],] },],
 };
 /**
  * @param {?} s
