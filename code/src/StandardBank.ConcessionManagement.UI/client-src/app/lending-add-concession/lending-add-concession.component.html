@@ -178,15 +178,15 @@
                             </tr>
                         </thead>
                         <tbody class="secondary-text">
-                            <tr>
-                                <td>01</td>
-                                <td>MIN AVG Balance</td>
-                                <td>Cashman</td>
-                                <td>4.5</td>
-                                <td>1</td>
-                                <td>20,000.00</td>
-                                <td></td>
-                            </tr>
+                        <tr *ngFor="let itemrow of lendingConcessionForm.controls.conditionItemsRows.controls; let i=index">
+                            <td># {{i + 1}}</td>
+                            <td>{{itemrow.get('conditionType').value}}</td>
+                            <td>{{itemrow.get('productType').value}}</td>
+                            <td>{{itemrow.get('interestRate').value}}</td>
+                            <td>{{itemrow.get('volume').value}}</td>
+                            <td>{{itemrow.get('value').value}}</td>
+                            <td>{{itemrow.get('periodType').value}} {{itemrow.get('period').value}}</td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
