@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Model.UserInterface;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -41,6 +43,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         private readonly IConcessionTypeRepository _concessionTypeRepository;
 
+        private readonly IProductRepository _productRepository;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LookupTableManager"/> class.
         /// </summary>
@@ -50,9 +54,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="marketSegmentRepository"></param>
         /// <param name="provinceRepository"></param>
         /// <param name="concessionTypeRepository"></param>
+        /// <param name="productRepository"></param>
         public LookupTableManager(IStatusRepository statusRepository, ISubStatusRepository subStatusRepository,
             IReferenceTypeRepository referenceTypeRepository, IMarketSegmentRepository marketSegmentRepository,
-            IProvinceRepository provinceRepository, IConcessionTypeRepository concessionTypeRepository)
+            IProvinceRepository provinceRepository, IConcessionTypeRepository concessionTypeRepository,
+            IProductRepository productRepository)
         {
             _statusRepository = statusRepository;
             _subStatusRepository = subStatusRepository;
@@ -60,6 +66,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _marketSegmentRepository = marketSegmentRepository;
             _provinceRepository = provinceRepository;
             _concessionTypeRepository = concessionTypeRepository;
+            _productRepository = productRepository;
         }
 
         /// <summary>
@@ -132,6 +139,47 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var concessionTypes = _concessionTypeRepository.ReadAll();
 
             return concessionTypes.First(_ => _.Code.Equals(code, StringComparison.CurrentCultureIgnoreCase)).Id;
+        }
+
+        /// <summary>
+        /// Gets the product type for the concession type specified
+        /// </summary>
+        /// <param name="concessionType"></param>
+        /// <returns></returns>
+        public IEnumerable<ProductType> GetProductTypesForConcessionType(string concessionType)
+        {
+            var productTypes = new List<ProductType>();
+
+            var concessionTypeId = GetConcessionTypeId(concessionType);
+
+            foreach (var productType in _productRepository.ReadByConcessionTypeIdIsActive(concessionTypeId, true))
+            {
+                productTypes.Add(new ProductType
+                {
+                    Id = productType.Id,
+                    ConcessionType = GetConcessionType(concessionTypeId),
+                    Description = productType.Description
+                });
+            }
+
+            return productTypes;
+        }
+
+        /// <summary>
+        /// Gets the concession type of the id specified
+        /// </summary>
+        /// <param name="concessionTypeId"></param>
+        /// <returns></returns>
+        private ConcessionType GetConcessionType(int concessionTypeId)
+        {
+            var concessionType = _concessionTypeRepository.ReadById(concessionTypeId);
+
+            return new ConcessionType
+            {
+                Code = concessionType.Code,
+                Description = concessionType.Description,
+                Id = concessionType.Id
+            };
         }
     }
 }
