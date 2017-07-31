@@ -1,6 +1,7 @@
 bin
 obj
 packages
+wwwroot
 *.csproj.user
 *.csproj.DotSettings
 Debug
