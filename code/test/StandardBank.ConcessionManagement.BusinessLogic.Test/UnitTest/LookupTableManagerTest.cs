@@ -23,7 +23,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             _lookupTableManager = new LookupTableManager(MockStatusRepository.Object, MockSubStatusRepository.Object,
                 MockTypeRepository.Object, MockMarketSegmentRepository.Object, MockProvinceRepository.Object,
-                MockConcessionTypeRepository.Object, MockProductRepository.Object);
+                MockConcessionTypeRepository.Object, MockProductRepository.Object, MockReviewFeeTypeRepository.Object);
         }
 
         /// <summary>
@@ -155,6 +155,21 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 Assert.NotNull(record.ConcessionType);
                 Assert.Equal(record.ConcessionType.Code, concessionType.Code);
             }
+        }
+
+        /// <summary>
+        /// Tests that GetReviewFeeTypes executes positive
+        /// </summary>
+        [Fact]
+        public void GetReviewFeeTypes_Executes_Positive()
+        {
+            MockReviewFeeTypeRepository.Setup(_ => _.ReadAll()).Returns(new[]
+                {new ReviewFeeType {Description = "Test 1", Id = 1, IsActive = true}});
+
+            var result = _lookupTableManager.GetReviewFeeTypes();
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
         }
     }
 }

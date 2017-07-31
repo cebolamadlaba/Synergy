@@ -43,22 +43,31 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         private readonly IConcessionTypeRepository _concessionTypeRepository;
 
+        /// <summary>
+        /// The product repository
+        /// </summary>
         private readonly IProductRepository _productRepository;
+
+        /// <summary>
+        /// The review fee type repository
+        /// </summary>
+        private readonly IReviewFeeTypeRepository _reviewFeeTypeRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LookupTableManager"/> class.
         /// </summary>
         /// <param name="statusRepository">The status repository.</param>
         /// <param name="subStatusRepository">The sub status repository.</param>
-        /// <param name="referenceTypeRepository"></param>
-        /// <param name="marketSegmentRepository"></param>
-        /// <param name="provinceRepository"></param>
-        /// <param name="concessionTypeRepository"></param>
-        /// <param name="productRepository"></param>
+        /// <param name="referenceTypeRepository">The reference type repository.</param>
+        /// <param name="marketSegmentRepository">The market segment repository.</param>
+        /// <param name="provinceRepository">The province repository.</param>
+        /// <param name="concessionTypeRepository">The concession type repository.</param>
+        /// <param name="productRepository">The product repository.</param>
+        /// <param name="reviewFeeTypeRepository">The review fee type repository.</param>
         public LookupTableManager(IStatusRepository statusRepository, ISubStatusRepository subStatusRepository,
             IReferenceTypeRepository referenceTypeRepository, IMarketSegmentRepository marketSegmentRepository,
             IProvinceRepository provinceRepository, IConcessionTypeRepository concessionTypeRepository,
-            IProductRepository productRepository)
+            IProductRepository productRepository, IReviewFeeTypeRepository reviewFeeTypeRepository)
         {
             _statusRepository = statusRepository;
             _subStatusRepository = subStatusRepository;
@@ -67,6 +76,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _provinceRepository = provinceRepository;
             _concessionTypeRepository = concessionTypeRepository;
             _productRepository = productRepository;
+            _reviewFeeTypeRepository = reviewFeeTypeRepository;
         }
 
         /// <summary>
@@ -180,6 +190,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 Description = concessionType.Description,
                 Id = concessionType.Id
             };
+        }
+
+        /// <summary>
+        /// Gets the review fee types.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<ReviewFeeType> GetReviewFeeTypes()
+        {
+            var reviewFeeTypes = _reviewFeeTypeRepository.ReadAll();
+
+            foreach (var reviewFeeType in reviewFeeTypes.Where(_ => _.IsActive))
+                yield return new ReviewFeeType
+                {
+                    Id = reviewFeeType.Id,
+                    Description = reviewFeeType.Description
+                };
         }
     }
 }
