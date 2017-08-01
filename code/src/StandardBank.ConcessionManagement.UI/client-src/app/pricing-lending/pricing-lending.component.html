@@ -42,22 +42,25 @@
         </div>
     </div>
 </div>
-<!-- headings-->
-<div class="lending-headings col-md-12">
-    <div class="col-md-5">
-        <h2 class="resultsHeading">Products //TODO </h2>
-    </div>
-    <div class="col-md-7">
-        <h2 class="">
-            Concessions
-            <button type="button" class="btn btn-primary concessionBtn" [routerLink]="['/lending-add-concession', lendingView.riskGroup.number]">Add Concession</button>
-        </h2>
-    </div>
-</div>
+
 <!-- lending concessions and products-->
 <div class="col-md-12">
     <div class="col-md-5">
+        <h2 class="headings">Products</h2>
         <div class="section">
+
+            <!-- Empty state for products if no data is found -->
+            <div *ngIf="!lendingView.sourceSystemProducts">
+                <div class="section-body">
+                    <div class="searchEmptyState">
+                        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                        <p>No product data found</p>
+                    </div>                    
+                </div>
+            </div>
+            <!-- End of empty state -->
+
+            <!-- Products list -->
             <div class="section-body" *ngFor="let sourceSystemProduct of lendingView.sourceSystemProducts; trackBy: index;">
                 <div class="product-section">
                     <div class="product-name"> {{sourceSystemProduct.customerName}}</div>
@@ -85,15 +88,27 @@
                     </table>
                 </div>
             </div>
+            <!-- End of products list -->
+
         </div>
     </div>
+
+    <!-- Concessions list -->
     <div class="col-md-7 search-and-results-container" id="lending-search-container">
+        <h2 class="headings">
+            Concessions
+            <button type="button" class="btn btn-primary concessionBtn" [routerLink]="['/lending-add-concession', lendingView.riskGroup.number]">Add Concession</button>
+        </h2>
+        
         <!-- Search bar -->
         <div class="input-group add-on">
             <input class="form-control" placeholder="Concession ID" [(ngModel)]="filterConcessionId" type="text">
         </div>
 
         <div class="section" *ngFor="let lendingConcession of lendingView.lendingConcessions | lendingConcessionFilter : filterConcessionId; trackBy: index;">
+            
+            
+
             <div class="section-header small-table-title">
                 <div class="concessionID-section"> {{lendingConcession.concession.referenceNumber}}</div>
             </div>
@@ -127,6 +142,12 @@
                     </table>
                 </div>
             </div>
+        </div>
+
+        <!-- Empty state if no concessions found -->
+        <div class="searchEmptyState" *ngIf="(lendingView.lendingConcessions | lendingConcessionFilter: filterConcessionId).length === 0">
+            <i class="fa fa-inbox" aria-hidden="true"></i>
+            <p>No concessions found matching your search</p>
         </div>
 
     </div>
