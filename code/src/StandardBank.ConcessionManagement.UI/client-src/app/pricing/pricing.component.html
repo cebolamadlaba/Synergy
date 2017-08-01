@@ -53,88 +53,128 @@
 <div class="col-md-12" *ngIf="!foundRiskGroup;else pricing_products">
     <div class="searchEmptyState">
         <i class="fa fa-info-circle" aria-hidden="true"></i>
-        <div>
+        <p>
             Enter risk group number to return customer products
-        </div>
+        </p>
     </div>
 </div>
 
 <ng-template #pricing_products>
-    <div class="row" *ngIf="riskGroup == null">
+    <div *ngIf="riskGroup == null">
         <div class="col-md-12">
             <div class="searchEmptyState">
-                <i class="fa fa-info-circle" aria-hidden="true"></i>
-                <div>
+                <i class="fa fa-inbox" aria-hidden="true"></i>
+                <p>
                     No data found for risk group number
-                </div>
+                </p>
             </div>
         </div>
     </div>
-    <div class="row" *ngIf="riskGroup != null">
-        <div class="col-md-12">
-            <div class="pricing-group-container">
+    <div *ngIf="riskGroup != null">
+    
+        <div class="pricing-group-container">
+
+            <div class="col-md-3">
                 <div class="pricing-icon">
-                    <div class="building-icon">
-                        <i class="fa fa-building-o" aria-hidden="true"></i>
-                    </div>
+                    <i class="fa fa-building-o" aria-hidden="true"></i>
                 </div>
                 <div class="pricing-group-info">
                     <h3>{{riskGroup.name}}</h3>
-                    <br/>
-                    <div class="secondaryText">{{riskGroup.number}}</div>
-                    <br/>
+                    <span class="secondaryText">{{riskGroup.number}}</span>
                 </div>
-                <div class="col-md-12 pricing-group-container-items">
-                    <div class="item selected-item" [routerLink]="['/pricing-lending', riskGroup.number]">
-                        <div>Lending</div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="products-container">
+                    <p>Available Products</p>
+
+                    <!-- Lending -->
+                    <div class="product-item" [routerLink]="['/pricing-lending', riskGroup.number]">
                         <div class="container-item-icon">
                             <i class="fa fa-handshake-o" aria-hidden="true"></i>
                         </div>
+                        <div class="product-heading">Lending</div>
                     </div>
-                    <div class="item">
-                        <div>Cash</div>
+                    <!-- Cash -->
+                    <div class="product-item">
                         <div class="container-item-icon">
                             <i class="fa fa-money" aria-hidden="true"></i>
                         </div>
+                        <div class="product-heading">Cash</div>
                     </div>
-                    <div class="item">
-                        <div>Investments</div>
+                    <!-- Cash -->
+                    <div class="product-item">
                         <div class="container-item-icon">
                             <i class="fa fa-bar-chart" aria-hidden="true"></i>
                         </div>
+                        <div class="product-heading">Investments</div>
                     </div>
-                    <div class="item">
-                        <div>BOL</div>
+                    <!-- BOL -->
+                    <div class="product-item">
                         <div class="container-item-icon">
                             <i class="fa fa-desktop" aria-hidden="true"></i>
                         </div>
+                        <div class="product-heading">BOL</div>
                     </div>
-                    <div class="item">
-                        <div>MAS</div>
+                    <!-- MAS -->
+                    <div class="product-item">
                         <div class="container-item-icon">
                             <i class="fa fa-calculator" aria-hidden="true"></i>
                         </div>
+                        <div class="product-heading">MAS</div>
                     </div>
-                    <div class="item">
-                        <div>Trade</div>
+                    <!-- Trade -->
+                    <div class="product-item">
                         <div class="container-item-icon">
                             <i class="fa fa-line-chart" aria-hidden="true"></i>
                         </div>
+                        <div class="product-heading">Trade</div>
                     </div>
-                    <div class="item">
-                        <div>Transactional</div>
+                    <!-- Transactional -->
+                    <div class="product-item">
                         <div class="container-item-icon">
                             <i class="fa fa-exchange" aria-hidden="true"></i>
                         </div>
+                        <div class="product-heading">Transactional</div>
                     </div>
-                    <div class="item">
-                        <div>Cashman</div>
+                    <!-- Cashman -->
+                    <div class="product-item">
                         <div class="container-item-icon">
                             <i class="fa fa-user" aria-hidden="true"></i>
                         </div>
+                        <div class="product-heading">Cashman</div>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
+
+
+                <!--
+            <div class="col-md-12">
+                <div class="pricing-group-container">
+
+                    <div class="pricing-group-info">
+                        <h3>{{riskGroup.name}}</h3>
+                        <br/>
+                        <div class="secondaryText">{{riskGroup.number}}</div>
+                        <br/>
+                    </div>
+                    <div class="col-md-12 pricing-group-container-items">
+                        
+                        
+                     
+                     
+                        <div class="item">
+                            <div>Cashman</div>
+                            <div class="container-item-icon">
+                                <i class="fa fa-user" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            -->
+   
 </ng-template>

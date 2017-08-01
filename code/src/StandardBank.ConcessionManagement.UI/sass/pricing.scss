@@ -1,96 +1,103 @@
+﻿
+.pricing-banner {
+    background-color: $tableHeaderColour !important;
+    padding: 10px 0;
 
-.pricing-banner{
-    background-color:$tableHeaderColour !important;
-    padding: 20px 0;
-
-    .pricing-user-image{
+    .pricing-user-image {
+        display: inline-block;
         color: $white;
         font-size: 50px;
-    } 
-
-    p{
-        margin: 10px 0 0 0;
     }
 }
 
-.padding-div{
+.padding-div {
     padding: 10px;
 }
 
-.pricing-form{
+.pricing-form {
     color: white !important;
+
+    .row {
+        margin: 0px;
+    }
 }
 
-.pricing-group-container{
-   margin-top:80px;
-   background-color: $white;
-   .pricing-group-info{
-       display: grid;
-       justify-content: center;
+.pricing-group-container {
 
-       h3{
-            margin-bottom: -10px;
-       }
-       .secondaryText{
-           color: $secondaryText;
-           text-align: center;
-           font-size: 1.25em;
-       }
-   }
+    .products-container {
+        margin: 10px 0 0 0;
 
-   .pricing-icon{
-       width: 100px;
-       border-radius: 50px;
-       text-align: center;
-       font-size: 50px;
-       box-shadow: 0px 3px 5px  $lightGray;
-       color: $tableHeaderColour;
-       margin: 0 auto -50px auto;
-       position: relative;
-       top: -50px;
-       background: $white;
+        p {
+            border-bottom: 1px solid gray;
+        }
 
-       .building-icon{
-           i{
-               display: block;
-           }
-            padding: 25px;
-       }
-   }
+        .product-item {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0px 2px 4px $lightGray;
+            overflow: hidden;
+            padding: 5px;
+            margin-bottom: 5px;
 
-   .pricing-group-container-items{
-       display: flex;
-       width:100%;
-       padding: 20px;
-       background-color: inherit;
-       .item{
-            margin: 2px;
-            background-color: $unselectedItem;
-            width: 12.5%;
-            height: 100px;
-            color: $white;
-            padding: 10px;
-            cursor: pointer;
+            &:hover {
+                background-color: $tableRowHover;
+                cursor: pointer
+            }
 
-            .container-item-icon{
-                margin-top: 10px;
-                background-color: $pricingIconBlue;
-                width: 50px;
-                height: 50px;
+            .container-item-icon {
+                background-color: $bannerBackground;
+                border: 2px solid $lightGray;
+                width: 35px;
+                height: 35px;
                 border-radius: 25px;
                 border: 1px solid $white;
                 padding-top: 12.5px;
-                float: right;
+                float: left;
+                margin-right: 15px;
 
-                i{
+                i {
                     display: block;
                     text-align: center;
-                    font-size: 25px;
+                    font-size: 0.9em;
+                    color: white;
                 }
             }
-       }
-       .selected-item{
-                background-color: $selectedItem;
+
+            .product-heading {
+                padding-top: 10px;
             }
+        }
+    }
+
+    .pricing-group-info {
+
+        h3 {
+            margin: 20px 0 0 0;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .secondaryText {
+            color: $secondaryText;
+            font-size: 1.15em;
+            margin: 0;
+        }
+    }
+
+    .pricing-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 100px;
+        background-color: $standardBankBlue;
+        padding: 10px;
+        text-align: center;
+        float: left;
+        margin: 10px 15px 0 0;
+
+        i {
+            color: white;
+            font-size: 1.5em;
+            margin-top: 5px;
+        }
     }
 }
