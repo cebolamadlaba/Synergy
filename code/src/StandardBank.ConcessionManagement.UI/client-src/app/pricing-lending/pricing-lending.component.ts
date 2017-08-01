@@ -19,6 +19,7 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
     observableLendingView: Observable<LendingView>;
     lendingView: LendingView = new LendingView();
     errorMessage: String;
+    showHide: true;
 
     constructor(private route: ActivatedRoute, @Inject(LendingViewService) private lendingViewService) {
         this.lendingView.riskGroup = new RiskGroup();

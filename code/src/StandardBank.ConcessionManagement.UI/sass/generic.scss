@@ -145,6 +145,10 @@ input{
     float: right;
     font-size: 1.25em;
     cursor: pointer;
+
+    &:hover {
+        font-size: 1.45em;
+    }
 }
 
 .hidden-element{
