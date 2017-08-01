@@ -56,5 +56,11 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="concessionType"></param>
         /// <returns></returns>
         IEnumerable<ProductType> GetProductTypesForConcessionType(string concessionType);
+
+        /// <summary>
+        /// Gets the review fee types.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<ReviewFeeType> GetReviewFeeTypes();
     }
 }

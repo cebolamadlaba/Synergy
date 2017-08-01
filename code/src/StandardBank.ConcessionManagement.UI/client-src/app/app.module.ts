@@ -29,6 +29,8 @@ import { UserService } from "./user/user.service";
 import { RiskGroupService } from "./risk-group/risk-group.service";
 import { LendingViewService } from "./lending-view/lending-view.service";
 import { LendingConcessionFilterPipe } from './lending-concession-filter/lending-concession-filter.pipe';
+import { ReviewFeeTypeService } from "./review-fee-type/review-fee-type.service";
+import { ProductTypeService } from "./product-type/product-type.service";
 
 @NgModule({
     declarations: [
@@ -60,7 +62,14 @@ import { LendingConcessionFilterPipe } from './lending-concession-filter/lending
         DataTablesModule,
         ReactiveFormsModule
     ],
-    providers: [UserConcessionsService, UserService, RiskGroupService, LendingViewService],
+    providers: [
+        UserConcessionsService,
+        UserService,
+        RiskGroupService,
+        LendingViewService,
+        ReviewFeeTypeService,
+        ProductTypeService
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -87,7 +87,11 @@
                 <td class="length-short"><input value="60" formControlName="term" /></td>
                 <td class="length-short"><input value="1" formControlName="marginAgainstPrime" /></td>
                 <td class="length-long"><input formControlName="initiationFee" /></td>
-                <td class="length-medium"><select formControlName="reviewFeeType"></select></td>
+                <td class="length-medium">
+                    <select formControlName="reviewFeeType">
+                        <option *ngFor="let reviewFeeTypeOption of reviewFeeTypes" [ngValue]="reviewFeeTypeOption.description">{{reviewFeeTypeOption.description}}</option>
+                    </select>
+                </td>
                 <td class="length-medium"><input formControlName="reviewFee" /></td>
                 <td class="length-medium"><input formControlName="uffFee" /></td>
                 <td class="delete"><button *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
@@ -130,11 +134,15 @@
                                     </thead>
                                     <tbody class="form-concessions-table-content">
                                         <tr *ngFor="let itemrow of lendingConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
-                                            <td class="length-long"><input value="MIN AVG Balance" formControlName="conditionType" /></td>
-                                            <td class="length-long"><input value="Cashman" formControlName="productType" /></td>
-                                            <td class="length-medium"><input value="4.5" formControlName="interestRate" /></td>
-                                            <td class="length-long"><input value="1" formControlName="volume" /></td>
-                                            <td class="length-medium"><input value="20,000.00" formControlName="value" /></td>
+                                            <td class="length-long"><input formControlName="conditionType" /></td>
+                                            <td class="length-long">
+                                                <select formControlName="productType">
+                                                    <option *ngFor="let productTypeOption of productTypes" [ngValue]="productTypeOption.description">{{productTypeOption.description}}</option>
+                                                </select>
+                                            </td>
+                                            <td class="length-medium"><input formControlName="interestRate" /></td>
+                                            <td class="length-long"><input formControlName="volume" /></td>
+                                            <td class="length-medium"><input formControlName="value" /></td>
                                             <td class="length-medium">
                                                 <select formControlName="periodType">
                                                     <option>Standard</option>

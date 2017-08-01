@@ -5,6 +5,10 @@ import { RiskGroupService } from "../risk-group/risk-group.service";
 import { RiskGroup } from "../models/risk-group";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { ReviewFeeType } from "../models/review-fee-type";
+import { ProductType } from "../models/product-type";
+import { ReviewFeeTypeService } from "../review-fee-type/review-fee-type.service";
+import { ProductTypeService } from "../product-type/product-type.service";
 
 @Component({
     selector: 'app-lending-add-concession',
@@ -18,9 +22,22 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
-    
-    constructor(private route: ActivatedRoute, private formBuilder: FormBuilder, @Inject(RiskGroupService) private riskGroupService) {
+
+    observableReviewFeeTypes: Observable<ReviewFeeType[]>;
+    reviewFeeTypes: ReviewFeeType[];
+
+    observableProductTypes: Observable<ProductType[]>;
+    productTypes: ProductType[];
+
+    constructor(
+        private route: ActivatedRoute,
+        private formBuilder: FormBuilder,
+        @Inject(RiskGroupService) private riskGroupService,
+        @Inject(ReviewFeeTypeService) private reviewFeeTypeService,
+        @Inject(ProductTypeService) private productTypeService) {
         this.riskGroup = new RiskGroup();
+        this.reviewFeeTypes = [new ReviewFeeType()];
+        this.productTypes = [new ProductType()];
     }
 
     ngOnInit() {
@@ -40,6 +57,12 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             smtDealNumber: new FormControl(),
             motivation: new FormControl()
         });
+
+        this.observableReviewFeeTypes = this.reviewFeeTypeService.getData();
+        this.observableReviewFeeTypes.subscribe(reviewFeeTypes => this.reviewFeeTypes = reviewFeeTypes, error => this.errorMessage = <any>error);
+
+        this.observableProductTypes = this.productTypeService.getData("Lending");
+        this.observableProductTypes.subscribe(productTypes => this.productTypes = productTypes, error => this.errorMessage = <any>error);
     }
 
     initConcessionItemRows() {
