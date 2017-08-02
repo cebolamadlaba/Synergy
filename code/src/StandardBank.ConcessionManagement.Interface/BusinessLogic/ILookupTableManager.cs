@@ -62,5 +62,17 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// </summary>
         /// <returns></returns>
         IEnumerable<ReviewFeeType> GetReviewFeeTypes();
+
+        /// <summary>
+        /// Gets the periods.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<Period> GetPeriods();
+
+        /// <summary>
+        /// Gets the period types.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<PeriodType> GetPeriodTypes();
     }
 }

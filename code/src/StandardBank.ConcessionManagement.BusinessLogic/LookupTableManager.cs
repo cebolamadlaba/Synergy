@@ -54,6 +54,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IReviewFeeTypeRepository _reviewFeeTypeRepository;
 
         /// <summary>
+        /// The period repository
+        /// </summary>
+        private readonly IPeriodRepository _periodRepository;
+
+        /// <summary>
+        /// The period type repository
+        /// </summary>
+        private readonly IPeriodTypeRepository _periodTypeRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LookupTableManager"/> class.
         /// </summary>
         /// <param name="statusRepository">The status repository.</param>
@@ -64,10 +74,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="concessionTypeRepository">The concession type repository.</param>
         /// <param name="productRepository">The product repository.</param>
         /// <param name="reviewFeeTypeRepository">The review fee type repository.</param>
+        /// <param name="periodRepository">The period repository.</param>
+        /// <param name="periodTypeRepository">The period type repository.</param>
         public LookupTableManager(IStatusRepository statusRepository, ISubStatusRepository subStatusRepository,
             IReferenceTypeRepository referenceTypeRepository, IMarketSegmentRepository marketSegmentRepository,
             IProvinceRepository provinceRepository, IConcessionTypeRepository concessionTypeRepository,
-            IProductRepository productRepository, IReviewFeeTypeRepository reviewFeeTypeRepository)
+            IProductRepository productRepository, IReviewFeeTypeRepository reviewFeeTypeRepository,
+            IPeriodRepository periodRepository, IPeriodTypeRepository periodTypeRepository)
         {
             _statusRepository = statusRepository;
             _subStatusRepository = subStatusRepository;
@@ -77,6 +90,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionTypeRepository = concessionTypeRepository;
             _productRepository = productRepository;
             _reviewFeeTypeRepository = reviewFeeTypeRepository;
+            _periodRepository = periodRepository;
+            _periodTypeRepository = periodTypeRepository;
         }
 
         /// <summary>
@@ -205,6 +220,38 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 {
                     Id = reviewFeeType.Id,
                     Description = reviewFeeType.Description
+                };
+        }
+
+        /// <summary>
+        /// Gets the periods.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Period> GetPeriods()
+        {
+            var periods = _periodRepository.ReadAll();
+
+            foreach (var period in periods.Where(_ => _.IsActive))
+                yield return new Period
+                {
+                    Id = period.Id,
+                    Description = period.Description
+                };
+        }
+
+        /// <summary>
+        /// Gets the period types.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<PeriodType> GetPeriodTypes()
+        {
+            var periodTypes = _periodTypeRepository.ReadAll();
+
+            foreach (var periodType in periodTypes.Where(_ => _.IsActive))
+                yield return new PeriodType
+                {
+                    Id = periodType.Id,
+                    Description = periodType.Description
                 };
         }
     }

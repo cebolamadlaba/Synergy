@@ -9,6 +9,10 @@ import { ReviewFeeType } from "../models/review-fee-type";
 import { ProductType } from "../models/product-type";
 import { ReviewFeeTypeService } from "../review-fee-type/review-fee-type.service";
 import { ProductTypeService } from "../product-type/product-type.service";
+import { PeriodService } from "../period/period.service";
+import { PeriodTypeService } from "../period-type/period-type.service";
+import { Period } from "../models/period";
+import { PeriodType } from "../models/period-type";
 
 @Component({
     selector: 'app-lending-add-concession',
@@ -29,15 +33,25 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     observableProductTypes: Observable<ProductType[]>;
     productTypes: ProductType[];
 
+    observablePeriods: Observable<Period[]>;
+    periods: Period[];
+
+    observablePeriodTypes: Observable<PeriodType[]>;
+    periodTypes: PeriodType[];
+
     constructor(
         private route: ActivatedRoute,
         private formBuilder: FormBuilder,
         @Inject(RiskGroupService) private riskGroupService,
         @Inject(ReviewFeeTypeService) private reviewFeeTypeService,
-        @Inject(ProductTypeService) private productTypeService) {
+        @Inject(ProductTypeService) private productTypeService,
+        @Inject(PeriodService) private periodService,
+        @Inject(PeriodTypeService) private periodTypeService) {
         this.riskGroup = new RiskGroup();
         this.reviewFeeTypes = [new ReviewFeeType()];
         this.productTypes = [new ProductType()];
+        this.periods = [new Period()];
+        this.periodTypes = [new PeriodType()];
     }
 
     ngOnInit() {
@@ -63,6 +77,12 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
         this.observableProductTypes = this.productTypeService.getData("Lending");
         this.observableProductTypes.subscribe(productTypes => this.productTypes = productTypes, error => this.errorMessage = <any>error);
+
+        this.observablePeriods = this.periodService.getData();
+        this.observablePeriods.subscribe(periods => this.periods = periods, error => this.errorMessage = <any>error);
+
+        this.observablePeriodTypes = this.periodTypeService.getData();
+        this.observablePeriodTypes.subscribe(periodTypes => this.periodTypes = periodTypes, error => this.errorMessage = <any>error);
     }
 
     initConcessionItemRows() {

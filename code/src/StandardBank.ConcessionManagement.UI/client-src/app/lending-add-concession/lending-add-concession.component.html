@@ -145,12 +145,12 @@
                                             <td class="length-medium"><input formControlName="value" /></td>
                                             <td class="length-medium">
                                                 <select formControlName="periodType">
-                                                    <option>Standard</option>
+                                                    <option *ngFor="let periodTypeOption of periodTypes" [ngValue]="periodTypeOption.description">{{periodTypeOption.description}}</option>
                                                 </select>
                                             </td>
                                             <td class="length-medium">
                                                 <select formControlName="period">
-                                                    <option>3 Months</option>
+                                                    <option *ngFor="let periodOption of periods" [ngValue]="periodOption.description">{{periodOption.description}}</option>
                                                 </select>
                                             </td>
                                             <td class="delete"><button *ngIf="lendingConcessionForm.controls.conditionItemsRows.controls.length > 1" (click)="deleteConditionRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>

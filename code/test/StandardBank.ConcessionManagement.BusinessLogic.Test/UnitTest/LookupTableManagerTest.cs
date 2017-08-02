@@ -23,7 +23,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             _lookupTableManager = new LookupTableManager(MockStatusRepository.Object, MockSubStatusRepository.Object,
                 MockTypeRepository.Object, MockMarketSegmentRepository.Object, MockProvinceRepository.Object,
-                MockConcessionTypeRepository.Object, MockProductRepository.Object, MockReviewFeeTypeRepository.Object);
+                MockConcessionTypeRepository.Object, MockProductRepository.Object, MockReviewFeeTypeRepository.Object,
+                MockPeriodRepository.Object, MockPeriodTypeRepository.Object);
         }
 
         /// <summary>
@@ -167,6 +168,36 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 {new ReviewFeeType {Description = "Test 1", Id = 1, IsActive = true}});
 
             var result = _lookupTableManager.GetReviewFeeTypes();
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that GetPeriods executes positive.
+        /// </summary>
+        [Fact]
+        public void GetPeriods_Executes_Positive()
+        {
+            MockPeriodRepository.Setup(_ => _.ReadAll()).Returns(new[]
+                {new Period {Description = "Test", Id = 1, IsActive = true}});
+
+            var result = _lookupTableManager.GetPeriods();
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that GetPeriodTypes executes positive.
+        /// </summary>
+        [Fact]
+        public void GetPeriodTypes_Executes_Positive()
+        {
+            MockPeriodTypeRepository.Setup(_ => _.ReadAll()).Returns(new[]
+                {new PeriodType {Description = "Test", Id = 1, IsActive = true}});
+
+            var result = _lookupTableManager.GetPeriodTypes();
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);

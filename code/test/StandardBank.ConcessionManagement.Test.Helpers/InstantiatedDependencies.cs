@@ -274,7 +274,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,
             SubStatusRepository, ReferenceTypeRepository, MarketSegmentRepository, ProvinceRepository,
-            ConcessionTypeRepository, ProductRepository, ReviewFeeTypeRepository);
+            ConcessionTypeRepository, ProductRepository, ReviewFeeTypeRepository, PeriodRepository,
+            PeriodTypeRepository);
 
         /// <summary>
         /// The concession manager

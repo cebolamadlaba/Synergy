@@ -8,6 +8,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ReviewFeeTypeService, MockReviewFeeTypeService } from "../review-fee-type/review-fee-type.service";
 import { ProductTypeService, MockProductTypeService } from "../product-type/product-type.service";
+import { PeriodService, MockPeriodService } from "../period/period.service";
+import { PeriodTypeService, MockPeriodTypeService } from "../period-type/period-type.service";
 
 describe('LendingAddConcessionComponent', () => {
     let component: LendingAddConcessionComponent;
@@ -20,7 +22,9 @@ describe('LendingAddConcessionComponent', () => {
             providers: [
                 { provide: RiskGroupService, useClass: MockRiskGroupService },
                 { provide: ReviewFeeTypeService, useClass: MockReviewFeeTypeService },
-                { provide: ProductTypeService, useClass: MockProductTypeService }
+                { provide: ProductTypeService, useClass: MockProductTypeService },
+                { provide: PeriodService, useClass: MockPeriodService },
+                { provide: PeriodTypeService, useClass: MockPeriodTypeService }
             ]
         }).compileComponents();
     }));
