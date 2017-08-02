@@ -2430,5 +2430,107 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
 
             return InsertUserRegion();
         }
+
+        /// <summary>
+        /// Gets the Period id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetPeriodId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.PeriodRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertPeriod();
+        }
+
+        /// <summary>
+        /// Inserts a Period and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertPeriod()
+        {
+            var model = new Period
+            {
+                Description = "e4c25acce2",
+                IsActive = false
+            };
+
+            InstantiatedDependencies.PeriodRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate Period id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternatePeriodId(int? model)
+        {
+            if (!model.HasValue)
+                return GetPeriodId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.PeriodRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertPeriod();
+        }
+
+        /// <summary>
+        /// Gets the PeriodType id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetPeriodTypeId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.PeriodTypeRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertPeriodType();
+        }
+
+        /// <summary>
+        /// Inserts a PeriodType and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertPeriodType()
+        {
+            var model = new PeriodType
+            {
+                Description = "a71b3deb80",
+                IsActive = false
+            };
+
+            InstantiatedDependencies.PeriodTypeRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate PeriodType id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternatePeriodTypeId(int? model)
+        {
+            if (!model.HasValue)
+                return GetPeriodTypeId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.PeriodTypeRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertPeriodType();
+        }
     }
 }

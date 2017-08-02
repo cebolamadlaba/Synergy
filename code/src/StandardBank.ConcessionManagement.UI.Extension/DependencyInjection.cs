@@ -99,6 +99,8 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             services.AddScoped<IUserRegionRepository, UserRegionRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+            services.AddScoped<IPeriodRepository, PeriodRepository>();
+            services.AddScoped<IPeriodTypeRepository, PeriodTypeRepository>();
         }
     }
 }

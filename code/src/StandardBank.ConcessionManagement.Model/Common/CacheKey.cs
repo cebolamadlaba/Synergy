@@ -112,6 +112,16 @@
             {
                 public const string ReadAll = "CacheKey.Repository.RegionRepository.ReadAll";
             }
+
+            public static class PeriodRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.PeriodRepository.ReadAll";
+            }
+
+            public static class PeriodTypeRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.PeriodTypeRepository.ReadAll";
+            }
         }
     }
 }

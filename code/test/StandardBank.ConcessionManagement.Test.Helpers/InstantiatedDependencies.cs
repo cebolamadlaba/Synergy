@@ -260,6 +260,16 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static IUserRoleRepository UserRoleRepository = new UserRoleRepository(ConfigurationData);
 
         /// <summary>
+        /// The Period repository
+        /// </summary>
+        public static IPeriodRepository PeriodRepository = new PeriodRepository(ConfigurationData, CacheManager);
+
+        /// <summary>
+        /// The PeriodType repository
+        /// </summary>
+        public static IPeriodTypeRepository PeriodTypeRepository = new PeriodTypeRepository(ConfigurationData, CacheManager);
+
+        /// <summary>
         /// The look up table manager
         /// </summary>
         public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,
