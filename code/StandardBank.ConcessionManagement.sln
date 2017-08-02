@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{869CE2B9-6B12-4BF1-945F-763BC9FD9015}"
 EndProject
@@ -56,6 +56,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Properties", "Properties", 
 	ProjectSection(SolutionItems) = preProject
 		configuration\10952iisprdsdc1\Properties\launchSettings.json = configuration\10952iisprdsdc1\Properties\launchSettings.json
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StandardBank.ConcessionManagement.Database.Migrator", "db\StandardBank.ConcessionManagement.Database.Migrator\StandardBank.ConcessionManagement.Database.Migrator.csproj", "{6E5CCE08-8B46-4C3C-92DE-8D78677488E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -113,6 +115,10 @@ Global
 		{10EE6CA7-BAB8-4C7D-B5A6-694AEA858689}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10EE6CA7-BAB8-4C7D-B5A6-694AEA858689}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10EE6CA7-BAB8-4C7D-B5A6-694AEA858689}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E5CCE08-8B46-4C3C-92DE-8D78677488E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E5CCE08-8B46-4C3C-92DE-8D78677488E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E5CCE08-8B46-4C3C-92DE-8D78677488E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E5CCE08-8B46-4C3C-92DE-8D78677488E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -135,5 +141,6 @@ Global
 		{243331CD-7F83-4965-A24D-D337A26F55C1} = {0C19AD24-F9AD-4D02-89DB-D19872F4106D}
 		{6E7851CA-2FBD-429C-BF23-22F18EC7E755} = {A666A38D-8285-422F-9FB1-7EF14196A38E}
 		{34069A15-B9BD-4B1E-B74F-B2779B941242} = {6E7851CA-2FBD-429C-BF23-22F18EC7E755}
+		{6E5CCE08-8B46-4C3C-92DE-8D78677488E4} = {AB117191-71F0-485F-B515-1809D2768EDA}
 	EndGlobalSection
 EndGlobal
