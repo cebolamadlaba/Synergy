@@ -10,6 +10,7 @@ import { ReviewFeeTypeService, MockReviewFeeTypeService } from "../review-fee-ty
 import { ProductTypeService, MockProductTypeService } from "../product-type/product-type.service";
 import { PeriodService, MockPeriodService } from "../period/period.service";
 import { PeriodTypeService, MockPeriodTypeService } from "../period-type/period-type.service";
+import { ConditionTypeService, MockConditionTypeService } from "../condition-type/condition-type.service";
 
 describe('LendingAddConcessionComponent', () => {
     let component: LendingAddConcessionComponent;
@@ -24,7 +25,8 @@ describe('LendingAddConcessionComponent', () => {
                 { provide: ReviewFeeTypeService, useClass: MockReviewFeeTypeService },
                 { provide: ProductTypeService, useClass: MockProductTypeService },
                 { provide: PeriodService, useClass: MockPeriodService },
-                { provide: PeriodTypeService, useClass: MockPeriodTypeService }
+                { provide: PeriodTypeService, useClass: MockPeriodTypeService },
+                { provide: ConditionTypeService, useClass: MockConditionTypeService }
             ]
         }).compileComponents();
     }));

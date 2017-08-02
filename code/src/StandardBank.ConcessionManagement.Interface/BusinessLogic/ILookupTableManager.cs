@@ -74,5 +74,11 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// </summary>
         /// <returns></returns>
         IEnumerable<PeriodType> GetPeriodTypes();
+
+        /// <summary>
+        /// Gets the condition types
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<ConditionType> GetConditionTypes();
     }
 }

@@ -13,6 +13,8 @@ import { PeriodService } from "../period/period.service";
 import { PeriodTypeService } from "../period-type/period-type.service";
 import { Period } from "../models/period";
 import { PeriodType } from "../models/period-type";
+import { ConditionTypeService } from "../condition-type/condition-type.service";
+import { ConditionType } from "../models/condition-type";
 
 @Component({
     selector: 'app-lending-add-concession',
@@ -39,6 +41,9 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     observablePeriodTypes: Observable<PeriodType[]>;
     periodTypes: PeriodType[];
 
+    observableConditionTypes: Observable<ConditionType[]>;
+    conditionTypes: ConditionType[];
+
     constructor(
         private route: ActivatedRoute,
         private formBuilder: FormBuilder,
@@ -46,12 +51,14 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         @Inject(ReviewFeeTypeService) private reviewFeeTypeService,
         @Inject(ProductTypeService) private productTypeService,
         @Inject(PeriodService) private periodService,
-        @Inject(PeriodTypeService) private periodTypeService) {
+        @Inject(PeriodTypeService) private periodTypeService,
+        @Inject(ConditionTypeService) private conditionTypeService) {
         this.riskGroup = new RiskGroup();
         this.reviewFeeTypes = [new ReviewFeeType()];
         this.productTypes = [new ProductType()];
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
+        this.conditionTypes = [new ConditionType()];
     }
 
     ngOnInit() {
@@ -83,6 +90,9 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
         this.observablePeriodTypes = this.periodTypeService.getData();
         this.observablePeriodTypes.subscribe(periodTypes => this.periodTypes = periodTypes, error => this.errorMessage = <any>error);
+
+        this.observableConditionTypes = this.conditionTypeService.getData();
+        this.observableConditionTypes.subscribe(conditionTypes => this.conditionTypes = conditionTypes, error => this.errorMessage = <any>error);
     }
 
     initConcessionItemRows() {

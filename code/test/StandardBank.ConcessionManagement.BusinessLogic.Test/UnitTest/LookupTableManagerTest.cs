@@ -24,7 +24,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             _lookupTableManager = new LookupTableManager(MockStatusRepository.Object, MockSubStatusRepository.Object,
                 MockTypeRepository.Object, MockMarketSegmentRepository.Object, MockProvinceRepository.Object,
                 MockConcessionTypeRepository.Object, MockProductRepository.Object, MockReviewFeeTypeRepository.Object,
-                MockPeriodRepository.Object, MockPeriodTypeRepository.Object);
+                MockPeriodRepository.Object, MockPeriodTypeRepository.Object, MockConditionTypeRepository.Object);
         }
 
         /// <summary>
@@ -198,6 +198,28 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 {new PeriodType {Description = "Test", Id = 1, IsActive = true}});
 
             var result = _lookupTableManager.GetPeriodTypes();
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that GetConditionTypes executes positive
+        /// </summary>
+        [Fact]
+        public void GetConditionTypes_Executes_Positive()
+        {
+            MockConditionTypeRepository.Setup(_ => _.ReadAll()).Returns(new[]
+            {
+                new ConditionType
+                {
+                    Description = "Test",
+                    Id = 1,
+                    IsActive = true
+                }
+            });
+
+            var result = _lookupTableManager.GetConditionTypes();
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);

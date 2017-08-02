@@ -64,6 +64,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IPeriodTypeRepository _periodTypeRepository;
 
         /// <summary>
+        /// The condition type repository
+        /// </summary>
+        private readonly IConditionTypeRepository _conditionTypeRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LookupTableManager"/> class.
         /// </summary>
         /// <param name="statusRepository">The status repository.</param>
@@ -76,11 +81,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="reviewFeeTypeRepository">The review fee type repository.</param>
         /// <param name="periodRepository">The period repository.</param>
         /// <param name="periodTypeRepository">The period type repository.</param>
+        /// <param name="conditionTypeRepository"></param>
         public LookupTableManager(IStatusRepository statusRepository, ISubStatusRepository subStatusRepository,
             IReferenceTypeRepository referenceTypeRepository, IMarketSegmentRepository marketSegmentRepository,
             IProvinceRepository provinceRepository, IConcessionTypeRepository concessionTypeRepository,
             IProductRepository productRepository, IReviewFeeTypeRepository reviewFeeTypeRepository,
-            IPeriodRepository periodRepository, IPeriodTypeRepository periodTypeRepository)
+            IPeriodRepository periodRepository, IPeriodTypeRepository periodTypeRepository,
+            IConditionTypeRepository conditionTypeRepository)
         {
             _statusRepository = statusRepository;
             _subStatusRepository = subStatusRepository;
@@ -92,6 +99,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _reviewFeeTypeRepository = reviewFeeTypeRepository;
             _periodRepository = periodRepository;
             _periodTypeRepository = periodTypeRepository;
+            _conditionTypeRepository = conditionTypeRepository;
         }
 
         /// <summary>
@@ -252,6 +260,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 {
                     Id = periodType.Id,
                     Description = periodType.Description
+                };
+        }
+
+        /// <summary>
+        /// Gets the condition types
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<ConditionType> GetConditionTypes()
+        {
+            var conditionTypes = _concessionTypeRepository.ReadAll();
+
+            foreach (var conditionType in conditionTypes.Where(_ => _.IsActive))
+                yield return new ConditionType
+                {
+                    Id = conditionType.Id,
+                    Description = conditionType.Description
                 };
         }
     }

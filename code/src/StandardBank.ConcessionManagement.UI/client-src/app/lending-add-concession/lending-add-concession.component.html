@@ -134,7 +134,11 @@
                                     </thead>
                                     <tbody class="form-concessions-table-content">
                                         <tr *ngFor="let itemrow of lendingConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
-                                            <td class="length-long"><input formControlName="conditionType" /></td>
+                                            <td class="length-long">
+                                                <select formControlName="conditionType">
+                                                    <option *ngFor="let conditionTypeOption of conditionTypes" [ngValue]="conditionTypeOption.description">{{conditionTypeOption.description}}</option>
+                                                </select>
+                                            </td>
                                             <td class="length-long">
                                                 <select formControlName="productType">
                                                     <option *ngFor="let productTypeOption of productTypes" [ngValue]="productTypeOption.description">{{productTypeOption.description}}</option>

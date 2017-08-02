@@ -33,6 +33,7 @@ import { ReviewFeeTypeService } from "./review-fee-type/review-fee-type.service"
 import { ProductTypeService } from "./product-type/product-type.service";
 import { PeriodService } from "./period/period.service";
 import { PeriodTypeService } from "./period-type/period-type.service";
+import { ConditionTypeService } from "./condition-type/condition-type.service";
 
 @NgModule({
     declarations: [
@@ -72,7 +73,8 @@ import { PeriodTypeService } from "./period-type/period-type.service";
         ReviewFeeTypeService,
         ProductTypeService,
         PeriodService,
-        PeriodTypeService
+        PeriodTypeService,
+        ConditionTypeService
     ],
     bootstrap: [AppComponent]
 })
