@@ -171,6 +171,54 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Gets the condition type name
+        /// </summary>
+        /// <param name="conditionTypeId"></param>
+        /// <returns></returns>
+        public string GetConditionTypeName(int conditionTypeId)
+        {
+            var conditionTypes = _conditionTypeRepository.ReadAll();
+
+            return conditionTypes.First(_ => _.Id == conditionTypeId && _.IsActive).Description;
+        }
+
+        /// <summary>
+        /// Gets the product type name
+        /// </summary>
+        /// <param name="productTypeId"></param>
+        /// <returns></returns>
+        public string GetProductTypeName(int productTypeId)
+        {
+            var productTypes = _productRepository.ReadAll();
+
+            return productTypes.First(_ => _.Id == productTypeId && _.IsActive).Description;
+        }
+
+        /// <summary>
+        /// Gets the period type name
+        /// </summary>
+        /// <param name="periodTypeId"></param>
+        /// <returns></returns>
+        public string GetPeriodTypeName(int periodTypeId)
+        {
+            var periodTypes = _periodTypeRepository.ReadAll();
+
+            return periodTypes.First(_ => _.Id == periodTypeId && _.IsActive).Description;
+        }
+
+        /// <summary>
+        /// Gets the period name
+        /// </summary>
+        /// <param name="periodId"></param>
+        /// <returns></returns>
+        public string GetPeriodName(int periodId)
+        {
+            var periods = _periodRepository.ReadAll();
+
+            return periods.First(_ => _.Id == periodId && _.IsActive).Description;
+        }
+
+        /// <summary>
         /// Gets the concession type id for the code passed in
         /// </summary>
         /// <param name="code"></param>

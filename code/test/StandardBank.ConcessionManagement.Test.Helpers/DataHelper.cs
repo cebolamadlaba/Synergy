@@ -1595,7 +1595,9 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 InterestRate = 507,
                 Volume = 8,
                 Value = 2525,
-                IsActive = false
+                IsActive = false,
+                PeriodTypeId =  GetPeriodTypeId(),
+                PeriodId = GetPeriodId()
             };
 
             InstantiatedDependencies.ConcessionConditionRepository.Create(model);

@@ -29,33 +29,35 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                 .ForMember(target => target.ConcessionDate, _ => _.MapFrom(source => source.DateOpened))
                 .ForMember(target => target.DatesentForApproval, _ => _.MapFrom(source => source.DateSentForApproval));
 
+            //ConcessionCondition
+            CreateMap<Model.Repository.ConcessionCondition, Model.UserInterface.ConcessionCondition>()
+                .ForMember(target => target.ConditionVolume, _ => _.MapFrom(source => source.Volume))
+                .ForMember(target => target.ConditionValue, _ => _.MapFrom(source => source.Value));
+            CreateMap<Model.UserInterface.ConcessionCondition, Model.Repository.ConcessionCondition>()
+                .ForMember(target => target.Volume, _ => _.MapFrom(source => source.ConditionVolume))
+                .ForMember(target => target.Value, _ => _.MapFrom(source => source.ConditionValue));
+
             //ConcessionType
             CreateMap<Model.Repository.ConcessionType, Model.UserInterface.ConcessionType>().ReverseMap();
            
-
             //ConditionType
             CreateMap<Model.Repository.ConditionType, Model.UserInterface.ConditionType>().ReverseMap();
           
-
             //Period
             CreateMap<Model.Repository.Period, Model.UserInterface.Period>().ReverseMap();
           
-
             //PeriodType
             CreateMap<Model.Repository.PeriodType, Model.UserInterface.PeriodType>().ReverseMap();
           
             //ProductType
             CreateMap<Model.Repository.Product, Model.UserInterface.ProductType>().ReverseMap();
         
-
             //Region
             CreateMap<Model.Repository.Region, Model.UserInterface.Region>().ReverseMap();
            
-
             //ReviewFeeType
             CreateMap<Model.Repository.ReviewFeeType, Model.UserInterface.ReviewFeeType>().ReverseMap();
      
-
             //RiskGroup
             CreateMap<Model.Repository.RiskGroup, Model.UserInterface.Pricing.RiskGroup>()
                 .ForMember(target => target.Name, _ => _.MapFrom(source => source.RiskGroupName))
@@ -74,7 +76,6 @@ namespace StandardBank.ConcessionManagement.UI.Extension
 
             //User 
             CreateMap<Model.Repository.User, Model.UserInterface.User>().ReverseMap();
-          
         }
     }
 }

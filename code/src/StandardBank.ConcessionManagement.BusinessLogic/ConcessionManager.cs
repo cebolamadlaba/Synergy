@@ -6,6 +6,7 @@ using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Common;
+using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Inbox;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
@@ -54,6 +55,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IMapper _mapper;
 
         /// <summary>
+        /// The concession condition repository
+        /// </summary>
+        private readonly IConcessionConditionRepository _concessionConditionRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionManager"/> class.
         /// </summary>
         /// <param name="concessionRepository">The concession repository.</param>
@@ -63,9 +69,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="cacheManager"></param>
         /// <param name="concessionAccountRepository"></param>
         /// <param name="mapper"></param>
+        /// <param name="concessionConditionRepository"></param>
         public ConcessionManager(IConcessionRepository concessionRepository, ILookupTableManager lookupTableManager,
             ILegalEntityRepository legalEntityRepository, IRiskGroupRepository riskGroupRepository,
-            ICacheManager cacheManager, IConcessionAccountRepository concessionAccountRepository, IMapper mapper)
+            ICacheManager cacheManager, IConcessionAccountRepository concessionAccountRepository, IMapper mapper,
+            IConcessionConditionRepository concessionConditionRepository)
         {
             _concessionRepository = concessionRepository;
             _lookupTableManager = lookupTableManager;
@@ -74,6 +82,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _cacheManager = cacheManager;
             _concessionAccountRepository = concessionAccountRepository;
             _mapper = mapper;
+            _concessionConditionRepository = concessionConditionRepository;
         }
 
         /// <summary>
@@ -287,6 +296,40 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     .ReadByLegalEntityIdConcessionTypeIdIsActive(legalEntityId, concessionTypeId, true);
 
             return Map(concessions);
+        }
+
+        /// <summary>
+        /// Gets the concession conditions
+        /// </summary>
+        /// <param name="concessionId"></param>
+        /// <returns></returns>
+        public IEnumerable<ConcessionCondition> GetConcessionConditions(int concessionId)
+        {
+            var concessionConditions = new List<ConcessionCondition>();
+            var concessionConditionsData = _concessionConditionRepository.ReadByConcessionId(concessionId);
+
+            foreach (var concessionCondition in concessionConditionsData.Where(_ => _.IsActive))
+            {
+                var mappedConcessionCondition = _mapper.Map<ConcessionCondition>(concessionCondition);
+
+                mappedConcessionCondition.ConditionType =
+                    _lookupTableManager.GetConditionTypeName(concessionCondition.ConditionTypeId);
+
+                mappedConcessionCondition.ProductType =
+                    _lookupTableManager.GetProductTypeName(concessionCondition.ConditionProductId);
+
+                if (concessionCondition.PeriodTypeId.HasValue)
+                    mappedConcessionCondition.PeriodType =
+                        _lookupTableManager.GetPeriodTypeName(concessionCondition.PeriodTypeId.Value);
+
+                if (concessionCondition.PeriodId.HasValue)
+                    mappedConcessionCondition.Period =
+                        _lookupTableManager.GetPeriodName(concessionCondition.PeriodId.Value);
+
+                concessionConditions.Add(mappedConcessionCondition);
+            }
+
+            return concessionConditions;
         }
 
         /// <summary>

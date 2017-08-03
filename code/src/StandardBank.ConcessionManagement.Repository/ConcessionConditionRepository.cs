@@ -2,8 +2,6 @@ using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
 
@@ -36,13 +34,26 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ConcessionCondition Create(ConcessionCondition model)
         {
-            const string sql = @"INSERT [dbo].[tblConcessionCondition] ([fkConcessionId], [fkConditionTypeId], [fkConditionProductId], [InterestRate], [Volume], [Value], [IsActive]) 
-                                VALUES (@fkConcessionId, @fkConditionTypeId, @fkConditionProductId, @InterestRate, @Volume, @Value, @IsActive) 
+            const string sql =
+                @"INSERT [dbo].[tblConcessionCondition] ([fkConcessionId], [fkConditionTypeId], [fkConditionProductId], [InterestRate], [Volume], [Value], [IsActive], [fkPeriodTypeId], [fkPeriodId]) 
+                                VALUES (@fkConcessionId, @fkConditionTypeId, @fkConditionProductId, @InterestRate, @Volume, @Value, @IsActive, @PeriodTypeId, @PeriodId) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {fkConcessionId = model.ConcessionId, fkConditionTypeId = model.ConditionTypeId, fkConditionProductId = model.ConditionProductId, InterestRate = model.InterestRate, Volume = model.Volume, Value = model.Value, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql,
+                    new
+                    {
+                        fkConcessionId = model.ConcessionId,
+                        fkConditionTypeId = model.ConditionTypeId,
+                        fkConditionProductId = model.ConditionProductId,
+                        InterestRate = model.InterestRate,
+                        Volume = model.Volume,
+                        Value = model.Value,
+                        IsActive = model.IsActive,
+                        PeriodTypeId = model.PeriodTypeId,
+                        PeriodId = model.PeriodId
+                    }).Single();
             }
 
             return model;
@@ -58,8 +69,27 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionCondition>(
-                    "SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [InterestRate], [Volume], [Value], [IsActive] FROM [dbo].[tblConcessionCondition] WHERE [pkConcessionConditionId] = @Id",
+                    @"SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [InterestRate], [Volume], [Value], [IsActive], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId] 
+                    FROM [dbo].[tblConcessionCondition] 
+                    WHERE [pkConcessionConditionId] = @Id",
                     new {id}).SingleOrDefault();
+            }
+        }
+
+        /// <summary>
+        /// Reads by the concession id
+        /// </summary>
+        /// <param name="concessionId"></param>
+        /// <returns></returns>
+        public IEnumerable<ConcessionCondition> ReadByConcessionId(int concessionId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<ConcessionCondition>(
+                    @"SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [InterestRate], [Volume], [Value], [IsActive], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId] 
+                    FROM [dbo].[tblConcessionCondition] 
+                    WHERE [fkConcessionId] = @concessionId",
+                    new { concessionId });
             }
         }
 
@@ -71,7 +101,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<ConcessionCondition>("SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [InterestRate], [Volume], [Value], [IsActive] FROM [dbo].[tblConcessionCondition]");
+                return db.Query<ConcessionCondition>(
+                    "SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [InterestRate], [Volume], [Value], [IsActive], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId] FROM [dbo].[tblConcessionCondition]");
             }
         }
 
@@ -84,9 +115,21 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblConcessionCondition]
-                            SET [fkConcessionId] = @fkConcessionId, [fkConditionTypeId] = @fkConditionTypeId, [fkConditionProductId] = @fkConditionProductId, [InterestRate] = @InterestRate, [Volume] = @Volume, [Value] = @Value, [IsActive] = @IsActive
+                            SET [fkConcessionId] = @fkConcessionId, [fkConditionTypeId] = @fkConditionTypeId, [fkConditionProductId] = @fkConditionProductId, [InterestRate] = @InterestRate, [Volume] = @Volume, [Value] = @Value, [IsActive] = @IsActive, [fkPeriodTypeId] = @PeriodTypeId, [fkPeriodId]  = @PeriodId
                             WHERE [pkConcessionConditionId] = @Id",
-                    new {Id = model.Id, fkConcessionId = model.ConcessionId, fkConditionTypeId = model.ConditionTypeId, fkConditionProductId = model.ConditionProductId, InterestRate = model.InterestRate, Volume = model.Volume, Value = model.Value, IsActive = model.IsActive});
+                    new
+                    {
+                        Id = model.Id,
+                        fkConcessionId = model.ConcessionId,
+                        fkConditionTypeId = model.ConditionTypeId,
+                        fkConditionProductId = model.ConditionProductId,
+                        InterestRate = model.InterestRate,
+                        Volume = model.Volume,
+                        Value = model.Value,
+                        IsActive = model.IsActive,
+                        PeriodTypeId = model.PeriodTypeId,
+                        PeriodId = model.PeriodId
+                    });
             }
         }
 

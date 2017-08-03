@@ -29,7 +29,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             _concessionManager = new ConcessionManager(MockConcessionRepository.Object, MockLookupTableManager.Object,
                 MockLegalEntityRepository.Object, MockRiskGroupRepository.Object,
                 InstantiatedDependencies.CacheManager, MockConcessionAccountRepository.Object,
-                InstantiatedDependencies.Mapper);
+                InstantiatedDependencies.Mapper, MockConcessionConditionRepository.Object);
         }
 
         /// <summary>
@@ -247,6 +247,60 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that GetConcessionConditions executes positive
+        /// </summary>
+        [Fact]
+        public void GetConcessionConditions_Executes_Positive()
+        {
+            MockConcessionConditionRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>())).Returns(new[]
+            {
+                new ConcessionCondition
+                {
+                    PeriodId = 1,
+                    PeriodTypeId = 1,
+                    Id = 1,
+                    IsActive = true,
+                    Value = 1,
+                    ConcessionId = 1,
+                    Volume = 1,
+                    ConditionTypeId = 1,
+                    ConditionProductId = 1,
+                    InterestRate = 1
+                }
+            });
+
+            var conditionTypeName = "Test Condition Type Name";
+
+            MockLookupTableManager.Setup(_ => _.GetConditionTypeName(It.IsAny<int>()))
+                .Returns(conditionTypeName);
+
+            var productTypeName = "Test Product Type Name";
+
+            MockLookupTableManager.Setup(_ => _.GetProductTypeName(It.IsAny<int>())).Returns(productTypeName);
+
+            var periodTypeName = "Test Period Type Name";
+
+            MockLookupTableManager.Setup(_ => _.GetPeriodTypeName(It.IsAny<int>())).Returns(periodTypeName);
+
+            var periodName = "Test Period Name";
+
+            MockLookupTableManager.Setup(_ => _.GetPeriodName(It.IsAny<int>())).Returns(periodName);
+
+            var result = _concessionManager.GetConcessionConditions(1);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+
+            foreach (var record in result)
+            {
+                Assert.Equal(record.ConditionType, conditionTypeName);
+                Assert.Equal(record.ProductType, productTypeName);
+                Assert.Equal(record.PeriodType, periodTypeName);
+                Assert.Equal(record.Period, periodName);
+            }
         }
     }
 }

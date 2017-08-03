@@ -25,7 +25,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 InterestRate = 6563,
                 Volume = 3,
                 Value = 3092,
-                IsActive = false
+                IsActive = false,
+                PeriodTypeId = DataHelper.GetPeriodTypeId(),
+                PeriodId =  DataHelper.GetPeriodId()
             };
 
             var result = InstantiatedDependencies.ConcessionConditionRepository.Create(model);
@@ -46,6 +48,23 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
 
             Assert.NotNull(result);
             Assert.Equal(result.Id, id);
+        }
+
+        /// <summary>
+        /// Tests that ReadByConcessionId executes positive
+        /// </summary>
+        [Fact]
+        public void ReadByConcessionId_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.ConcessionConditionRepository.ReadAll();
+            var concessionId = results.First().ConcessionId;
+            var result = InstantiatedDependencies.ConcessionConditionRepository.ReadByConcessionId(concessionId);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+
+            foreach (var record in result)
+                Assert.Equal(record.ConcessionId, concessionId);
         }
 
         /// <summary>
@@ -77,6 +96,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.Volume = model.Volume + 1;
             model.Value = model.Value + 100;
             model.IsActive = !model.IsActive;
+            model.PeriodTypeId = DataHelper.GetAlternatePeriodTypeId(model.PeriodTypeId);
+            model.PeriodId = DataHelper.GetAlternatePeriodId(model.PeriodId);
 
             InstantiatedDependencies.ConcessionConditionRepository.Update(model);
 
@@ -91,6 +112,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.Volume, model.Volume);
             Assert.Equal(updatedModel.Value, model.Value);
             Assert.Equal(updatedModel.IsActive, model.IsActive);
+            Assert.Equal(updatedModel.PeriodTypeId, model.PeriodTypeId);
+            Assert.Equal(updatedModel.PeriodId, model.PeriodId);
         }
 
         /// <summary>
@@ -107,7 +130,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 InterestRate = 6563,
                 Volume = 3,
                 Value = 3092,
-                IsActive = false
+                IsActive = false,
+                PeriodTypeId = DataHelper.GetPeriodTypeId(),
+                PeriodId = DataHelper.GetPeriodId()
             };
 
             var temporaryEntity = InstantiatedDependencies.ConcessionConditionRepository.Create(model);
