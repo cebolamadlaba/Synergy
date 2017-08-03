@@ -59,7 +59,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var lendingConcessions = new List<LendingConcession>();
             var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
-            
+
             if (riskGroup != null)
             {
                 var legalEntities = _legalEntityRepository.ReadByRiskGroupIdIsActive(riskGroup.Id, true);
@@ -68,7 +68,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 {
                     foreach (var legalEntity in legalEntities)
                     {
-                        var concessions = _concessionManager.GetConcessionsForLegalEntityIdAndConcessionType(legalEntity.Id, "Lending");
+                        var concessions =
+                            _concessionManager.GetConcessionsForLegalEntityIdAndConcessionType(legalEntity.Id,
+                                "Lending");
 
                         foreach (var concession in concessions)
                             AddLendingConcessionData(concession, lendingConcessions, legalEntity);
@@ -85,7 +87,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="concession"></param>
         /// <param name="lendingConcessions"></param>
         /// <param name="legalEntity"></param>
-        private void AddLendingConcessionData(Concession concession, ICollection<LendingConcession> lendingConcessions, LegalEntity legalEntity)
+        private void AddLendingConcessionData(Concession concession, ICollection<LendingConcession> lendingConcessions,
+            LegalEntity legalEntity)
         {
             var lendingConcessionData = _concessionLendingRepository.ReadByConcessionId(concession.Id);
             var lendingConcessionDetails = new List<LendingConcessionDetail>();

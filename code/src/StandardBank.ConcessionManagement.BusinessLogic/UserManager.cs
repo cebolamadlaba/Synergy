@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
@@ -61,6 +62,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ICentreUserRepository _centreUserRepository;
 
         /// <summary>
+        /// The mapper
+        /// </summary>
+        private readonly IMapper _mapper;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="UserManager"/> class.
         /// </summary>
         /// <param name="cacheManager">The cache manager.</param>
@@ -72,10 +78,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="regionRepository"></param>
         /// <param name="centreRepository"></param>
         /// <param name="centreUserRepository"></param>
+        /// <param name="mapper"></param>
         public UserManager(ICacheManager cacheManager, ILookupTableManager lookupTableManager,
             IUserRepository userRepository, IUserRoleRepository userRoleRepository, IRoleRepository roleRepository,
             IUserRegionRepository userRegionRepository, IRegionRepository regionRepository,
-            ICentreRepository centreRepository, ICentreUserRepository centreUserRepository)
+            ICentreRepository centreRepository, ICentreUserRepository centreUserRepository, IMapper mapper)
         {
             _cacheManager = cacheManager;
             _lookupTableManager = lookupTableManager;
@@ -86,6 +93,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _regionRepository = regionRepository;
             _centreRepository = centreRepository;
             _centreUserRepository = centreUserRepository;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -101,26 +109,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 if (user != null)
                 {
-                    var userRegions = GetUserRegions(user.Id);
-                    var selectedRegion = GetSelectedRegion(userRegions, user);
+                    var mappedUser = _mapper.Map<User>(user);
 
-                    var userCentres = GetUserCentres(user.Id);
-                    var selectedCentre = userCentres.FirstOrDefault();
+                    mappedUser.UserRoles = GetUserRoles(user.Id);
+                    mappedUser.UserRegions = GetUserRegions(user.Id);
+                    mappedUser.SelectedRegion = GetSelectedRegion(mappedUser.UserRegions, user);
+                    mappedUser.UserCentres = GetUserCentres(user.Id);
+                    mappedUser.SelectedCentre = mappedUser.UserCentres.FirstOrDefault();
 
-                    return new User
-                    {
-                        ANumber = user.ANumber,
-                        Id = user.Id,
-                        IsActive = user.IsActive,
-                        EmailAddress = user.EmailAddress,
-                        FirstName = user.FirstName,
-                        Surname = user.Surname,
-                        UserRoles = GetUserRoles(user.Id),
-                        UserRegions = userRegions,
-                        SelectedRegion = selectedRegion,
-                        UserCentres = userCentres,
-                        SelectedCentre = selectedCentre
-                    };
+                    return mappedUser;
                 }
 
                 return null;
@@ -187,12 +184,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 {
                     if (userCentreIds.Any(_ => _.CentreId == centre.Id && _.IsActive && centre.IsActive))
                     {
-                        userCentres.Add(new Centre
-                        {
-                            Id = centre.Id,
-                            Name = centre.CentreName,
-                            Province = _lookupTableManager.GetProvinceName(centre.ProvinceId)
-                        });
+                        var mappedCentre = _mapper.Map<Centre>(centre);
+                        mappedCentre.Province = _lookupTableManager.GetProvinceName(centre.ProvinceId);
+                        userCentres.Add(mappedCentre);
                     }
                 }
             }
@@ -221,12 +215,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                     if (userRegion != null)
                     {
-                        userRegions.Add(new Region
-                        {
-                            Id = region.Id,
-                            Description = region.Description,
-                            IsSelected = userRegion.IsSelected
-                        });
+                        var mappedRegion = _mapper.Map<Region>(region);
+                        mappedRegion.IsSelected = userRegion.IsSelected;
+                        userRegions.Add(mappedRegion);
                     }
                 }
             }
@@ -249,17 +240,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 var roles = _roleRepository.ReadAll();
 
                 foreach (var role in roles)
-                {
                     if (userRoleIds.Any(_ => _.RoleId == role.Id && _.IsActive && role.IsActive))
-                    {
-                        userRoles.Add(new Role
-                        {
-                            Description = role.RoleDescription,
-                            Id = role.Id,
-                            Name = role.RoleName
-                        });
-                    }
-                }
+                        userRoles.Add(_mapper.Map<Role>(role));
             }
 
             return userRoles;

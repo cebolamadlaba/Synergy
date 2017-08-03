@@ -1,10 +1,12 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using AutoMapper;
+using Microsoft.Extensions.Caching.Memory;
 using StandardBank.ConcessionManagement.BusinessLogic;
 using StandardBank.ConcessionManagement.Common;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Repository;
+using StandardBank.ConcessionManagement.UI.Extension;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 
 namespace StandardBank.ConcessionManagement.Test.Helpers
@@ -14,6 +16,17 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
     /// </summary>
     public static class InstantiatedDependencies
     {
+        /// <summary>
+        /// Mapper configuration provider
+        /// </summary>
+        private static readonly IConfigurationProvider MapperConfigurationProvider =
+            new MapperConfiguration(_ => _.AddProfile<MappingProfile>());
+
+        /// <summary>
+        /// Mapper
+        /// </summary>
+        public static IMapper Mapper = new Mapper(MapperConfigurationProvider);
+
         /// <summary>
         /// The configuration data
         /// </summary>
@@ -275,14 +288,14 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,
             SubStatusRepository, ReferenceTypeRepository, MarketSegmentRepository, ProvinceRepository,
             ConcessionTypeRepository, ProductRepository, ReviewFeeTypeRepository, PeriodRepository,
-            PeriodTypeRepository, ConditionTypeRepository);
+            PeriodTypeRepository, ConditionTypeRepository, Mapper);
 
         /// <summary>
         /// The concession manager
         /// </summary>
         public static IConcessionManager ConcessionManager =
             new ConcessionManager(ConcessionRepository, LookupTableManager, LegalEntityRepository, RiskGroupRepository,
-                CacheManager, ConcessionAccountRepository);
+                CacheManager, ConcessionAccountRepository, Mapper);
 
         /// <summary>
         /// The Region repository
@@ -298,12 +311,12 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The user manager
         /// </summary>
         public static IUserManager UserManager = new UserManager(CacheManager, LookupTableManager, UserRepository, UserRoleRepository,
-            RoleRepository, UserRegionRepository, RegionRepository, CentreRepository, CentreUserRepository);
+            RoleRepository, UserRegionRepository, RegionRepository, CentreRepository, CentreUserRepository, Mapper);
 
         /// <summary>
         /// The pricing manager
         /// </summary>
-        public static IPricingManager PricingManager = new PricingManager(RiskGroupRepository);
+        public static IPricingManager PricingManager = new PricingManager(RiskGroupRepository, Mapper);
 
         /// <summary>
         /// The lending manager

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -48,6 +49,9 @@ namespace StandardBank.ConcessionManagement.UI
             // Add framework services.
             services.AddMemoryCache();
             services.AddMvc();
+
+            // Add automapper
+            services.AddAutoMapper();
 
             // Add the custom services we've created
             DependencyInjection.ConfigureServices(services, GenerateConfigurationData());
