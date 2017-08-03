@@ -77,7 +77,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var concessions = new List<Concession>();
             var pendingStatusId = _lookupTableManager.GetStatusId("Pending");
-            var bcmPendingStatusId = _lookupTableManager.GetSubStatusId("BCM Pending");
 
             //loop through the user roles and get the concessions for the particular user
             foreach (var userRole in user.UserRoles)
@@ -86,8 +85,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 {
                     case "Requestor":
                         concessions.AddRange(Map(
-                            _concessionRepository.ReadByRequestorIdStatusIdSubStatusIdIsActive(user.Id, pendingStatusId,
-                                bcmPendingStatusId, true)));
+                            _concessionRepository.ReadByRequestorIdStatusIdIsActive(user.Id, pendingStatusId, true)));
                         break;
                     case "Suite Head":
                     case "BCM":

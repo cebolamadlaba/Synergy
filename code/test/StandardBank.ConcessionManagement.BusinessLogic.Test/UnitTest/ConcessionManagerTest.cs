@@ -38,11 +38,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         public void GetPendingConcessionsForUser_Requestor_Executes_Positive()
         {
             MockLookupTableManager.Setup(_ => _.GetStatusId(It.IsAny<string>())).Returns(1);
-            MockLookupTableManager.Setup(_ => _.GetSubStatusId(It.IsAny<string>())).Returns(1);
 
             MockConcessionRepository
-                .Setup(_ => _.ReadByRequestorIdStatusIdSubStatusIdIsActive(It.IsAny<int>(), It.IsAny<int>(),
-                    It.IsAny<int>(), It.IsAny<bool>())).Returns(new[] {new Concession()});
+                .Setup(_ => _.ReadByRequestorIdStatusIdIsActive(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(new[] {new Concession()});
 
             MockLegalEntityRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
                 .Returns(new LegalEntity { IsActive = true });
