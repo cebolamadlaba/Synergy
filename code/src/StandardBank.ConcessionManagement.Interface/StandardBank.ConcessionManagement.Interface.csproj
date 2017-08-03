@@ -9,13 +9,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StandardBank.ConcessionManagement.Model\StandardBank.ConcessionManagement.Model.csproj" />
+    <PackageReference Include="System.Data.Common" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="System.Data.Common">
-      <HintPath>..\..\..\..\..\..\Users\Heathesh\.nuget\packages\system.data.common\4.1.0\ref\netstandard1.2\System.Data.Common.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\StandardBank.ConcessionManagement.Model\StandardBank.ConcessionManagement.Model.csproj" />
   </ItemGroup>
 
 </Project>
