@@ -34,6 +34,7 @@ import { ProductTypeService } from "./product-type/product-type.service";
 import { PeriodService } from "./period/period.service";
 import { PeriodTypeService } from "./period-type/period-type.service";
 import { ConditionTypeService } from "./condition-type/condition-type.service";
+import { ConcessionConditionsService } from "./concession-conditions/concession-conditions.service";
 
 @NgModule({
     declarations: [
@@ -74,7 +75,8 @@ import { ConditionTypeService } from "./condition-type/condition-type.service";
         ProductTypeService,
         PeriodService,
         PeriodTypeService,
-        ConditionTypeService
+        ConditionTypeService,
+        ConcessionConditionsService
     ],
     bootstrap: [AppComponent]
 })
