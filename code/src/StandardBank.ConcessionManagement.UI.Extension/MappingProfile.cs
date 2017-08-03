@@ -30,32 +30,31 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                 .ForMember(target => target.DatesentForApproval, _ => _.MapFrom(source => source.DateSentForApproval));
 
             //ConcessionType
-            CreateMap<Model.Repository.ConcessionType, Model.UserInterface.ConcessionType>();
-            CreateMap<Model.UserInterface.ConcessionType, Model.Repository.ConcessionType>();
+            CreateMap<Model.Repository.ConcessionType, Model.UserInterface.ConcessionType>().ReverseMap();
+           
 
             //ConditionType
-            CreateMap<Model.Repository.ConditionType, Model.UserInterface.ConditionType>();
-            CreateMap<Model.UserInterface.ConditionType, Model.Repository.ConditionType>();
+            CreateMap<Model.Repository.ConditionType, Model.UserInterface.ConditionType>().ReverseMap();
+          
 
             //Period
-            CreateMap<Model.Repository.Period, Model.UserInterface.Period>();
-            CreateMap<Model.UserInterface.Period, Model.Repository.Period>();
+            CreateMap<Model.Repository.Period, Model.UserInterface.Period>().ReverseMap();
+          
 
             //PeriodType
-            CreateMap<Model.Repository.PeriodType, Model.UserInterface.PeriodType>();
-            CreateMap<Model.UserInterface.PeriodType, Model.Repository.PeriodType>();
-
+            CreateMap<Model.Repository.PeriodType, Model.UserInterface.PeriodType>().ReverseMap();
+          
             //ProductType
-            CreateMap<Model.Repository.Product, Model.UserInterface.ProductType>();
-            CreateMap<Model.UserInterface.ProductType, Model.Repository.Product>();
+            CreateMap<Model.Repository.Product, Model.UserInterface.ProductType>().ReverseMap();
+        
 
             //Region
-            CreateMap<Model.Repository.Region, Model.UserInterface.Region>();
-            CreateMap<Model.UserInterface.Region, Model.Repository.Region>();
+            CreateMap<Model.Repository.Region, Model.UserInterface.Region>().ReverseMap();
+           
 
             //ReviewFeeType
-            CreateMap<Model.Repository.ReviewFeeType, Model.UserInterface.ReviewFeeType>();
-            CreateMap<Model.UserInterface.ReviewFeeType, Model.Repository.ReviewFeeType>();
+            CreateMap<Model.Repository.ReviewFeeType, Model.UserInterface.ReviewFeeType>().ReverseMap();
+     
 
             //RiskGroup
             CreateMap<Model.Repository.RiskGroup, Model.UserInterface.Pricing.RiskGroup>()
@@ -74,8 +73,8 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                 .ForMember(target => target.RoleDescription, _ => _.MapFrom(source => source.Description));
 
             //User 
-            CreateMap<Model.Repository.User, Model.UserInterface.User>();
-            CreateMap<Model.UserInterface.User, Model.Repository.User>();
+            CreateMap<Model.Repository.User, Model.UserInterface.User>().ReverseMap();
+          
         }
     }
 }
