@@ -14,9 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="System.Data.Common">
-      <HintPath>..\..\..\..\..\..\Users\Heathesh\.nuget\packages\system.data.common\4.1.0\ref\netstandard1.2\System.Data.Common.dll</HintPath>
-    </Reference>
     <Reference Include="System.Data.SqlClient">
       <HintPath>..\..\..\..\..\..\Users\Heathesh\.nuget\packages\system.data.sqlclient\4.1.0\ref\netstandard1.3\System.Data.SqlClient.dll</HintPath>
     </Reference>
