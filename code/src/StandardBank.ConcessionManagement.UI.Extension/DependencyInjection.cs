@@ -23,6 +23,7 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             // Add common services
             services.AddSingleton<IConfigurationData>(configurationData);
             services.AddScoped<ICacheManager, MemoryCacheManager>();
+            services.AddTransient<IDbConnectionFactory, DbConnectionFactory>();
 
             // Add repository services.
             AddRepositoryServices(services);

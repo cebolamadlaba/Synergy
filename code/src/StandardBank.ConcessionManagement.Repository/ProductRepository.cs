@@ -18,9 +18,9 @@ namespace StandardBank.ConcessionManagement.Repository
     public class ProductRepository : IProductRepository
     {
         /// <summary>
-        /// The configuration data
+        /// The db connection factory
         /// </summary>
-        private readonly IConfigurationData _configurationData;
+        private readonly IDbConnectionFactory _dbConnectionFactory;
 
         /// <summary>
         /// The cache manager
@@ -30,11 +30,11 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <summary>
         /// Initializes a new instance of the <see cref="ProductRepository"/> class.
         /// </summary>
-        /// <param name="configurationData">The configuration data.</param>
+        /// <param name="dbConnectionFactory">The db connection factory.</param>
         /// <param name="cacheManager">The cache manager.</param>
-        public ProductRepository(IConfigurationData configurationData, ICacheManager cacheManager)
+        public ProductRepository(IDbConnectionFactory dbConnectionFactory, ICacheManager cacheManager)
         {
-            _configurationData = configurationData;
+            _dbConnectionFactory = dbConnectionFactory;
             _cacheManager = cacheManager;
         }
 
@@ -49,7 +49,7 @@ namespace StandardBank.ConcessionManagement.Repository
                                 VALUES (@fkConcessionTypeId, @Description, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 model.Id = db.Query<int>(sql, new {fkConcessionTypeId = model.ConcessionTypeId, Description = model.Description, IsActive = model.IsActive}).Single();
             }
@@ -89,7 +89,7 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             Func<IEnumerable<Product>> function = () =>
             {
-                using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+                using (var db = _dbConnectionFactory.Connection())
             	{
                 	return db.Query<Product>("SELECT [pkProductId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [Description], [IsActive] FROM [dbo].[rtblProduct]");
             	}
@@ -104,7 +104,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Update(Product model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[rtblProduct]
                             SET [fkConcessionTypeId] = @fkConcessionTypeId, [Description] = @Description, [IsActive] = @IsActive
@@ -122,7 +122,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Delete(Product model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[rtblProduct] WHERE [pkProductId] = @Id",
                     new {model.Id});

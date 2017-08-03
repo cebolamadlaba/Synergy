@@ -16,17 +16,17 @@ namespace StandardBank.ConcessionManagement.Repository
     public class ExceptionLogRepository : IExceptionLogRepository
     {
         /// <summary>
-        /// The configuration data
+        /// The db connection factory
         /// </summary>
-        private readonly IConfigurationData _configurationData;
+        private readonly IDbConnectionFactory _dbConnectionFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExceptionLogRepository"/> class.
         /// </summary>
-        /// <param name="configurationData">The configuration data.</param>
-        public ExceptionLogRepository(IConfigurationData configurationData)
+        /// <param name="dbConnectionFactory">The db connection factory.</param>
+        public ExceptionLogRepository(IDbConnectionFactory dbConnectionFactory)
         {
-            _configurationData = configurationData;
+            _dbConnectionFactory = dbConnectionFactory;
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace StandardBank.ConcessionManagement.Repository
                                 VALUES (@ExceptionMessage, @ExceptionType, @ExceptionSource, @ExceptionData, @Logdate) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 model.ExceptionLogId = db.Query<int>(sql,
                     new
@@ -64,7 +64,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ExceptionLog ReadById(int id)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ExceptionLog>(
                     "SELECT [ExceptionLogId], [ExceptionMessage], [ExceptionType], [ExceptionSource], [ExceptionData], [Logdate] FROM [dbo].[tblExceptionLog] WHERE [ExceptionLogId] = @Id",
@@ -78,7 +78,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public IEnumerable<ExceptionLog> ReadAll()
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ExceptionLog>(
                     "SELECT [ExceptionLogId], [ExceptionMessage], [ExceptionType], [ExceptionSource], [ExceptionData], [Logdate] FROM [dbo].[tblExceptionLog]");
@@ -91,7 +91,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Update(ExceptionLog model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblExceptionLog]
                             SET [ExceptionMessage] = @ExceptionMessage, [ExceptionType] = @ExceptionType, [ExceptionSource] = @ExceptionSource, [ExceptionData] = @ExceptionData, [Logdate] = @Logdate
@@ -114,7 +114,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Delete(ExceptionLog model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[tblExceptionLog] WHERE [ExceptionLogId] = @ExceptionLogId",
                     new {model.ExceptionLogId});

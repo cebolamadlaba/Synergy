@@ -16,17 +16,17 @@ namespace StandardBank.ConcessionManagement.Repository
     public class ChannelTypeBaseRateRepository : IChannelTypeBaseRateRepository
     {
         /// <summary>
-        /// The configuration data
+        /// The db connection factory
         /// </summary>
-        private readonly IConfigurationData _configurationData;
+        private readonly IDbConnectionFactory _dbConnectionFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChannelTypeBaseRateRepository"/> class.
         /// </summary>
-        /// <param name="configurationData">The configuration data.</param>
-        public ChannelTypeBaseRateRepository(IConfigurationData configurationData)
+        /// <param name="dbConnectionFactory">The db connection factory.</param>
+        public ChannelTypeBaseRateRepository(IDbConnectionFactory dbConnectionFactory)
         {
-            _configurationData = configurationData;
+            _dbConnectionFactory = dbConnectionFactory;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace StandardBank.ConcessionManagement.Repository
                                 VALUES (@fkChannelTypeId, @fkBaseRateId) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 model.Id = db.Query<int>(sql, new {fkChannelTypeId = model.ChannelTypeId, fkBaseRateId = model.BaseRateId}).Single();
             }
@@ -55,7 +55,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ChannelTypeBaseRate ReadById(int id)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ChannelTypeBaseRate>(
                     "SELECT [pkChannelTypeBaseRateId] [Id], [fkChannelTypeId] [ChannelTypeId], [fkBaseRateId] [BaseRateId] FROM [dbo].[tblChannelTypeBaseRate] WHERE [pkChannelTypeBaseRateId] = @Id",
@@ -69,7 +69,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public IEnumerable<ChannelTypeBaseRate> ReadAll()
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ChannelTypeBaseRate>("SELECT [pkChannelTypeBaseRateId] [Id], [fkChannelTypeId] [ChannelTypeId], [fkBaseRateId] [BaseRateId] FROM [dbo].[tblChannelTypeBaseRate]");
             }
@@ -81,7 +81,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Update(ChannelTypeBaseRate model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblChannelTypeBaseRate]
                             SET [fkChannelTypeId] = @fkChannelTypeId, [fkBaseRateId] = @fkBaseRateId
@@ -96,7 +96,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Delete(ChannelTypeBaseRate model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[tblChannelTypeBaseRate] WHERE [pkChannelTypeBaseRateId] = @Id",
                     new {model.Id});

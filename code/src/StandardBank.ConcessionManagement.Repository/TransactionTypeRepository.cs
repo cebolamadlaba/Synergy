@@ -18,9 +18,9 @@ namespace StandardBank.ConcessionManagement.Repository
     public class TransactionTypeRepository : ITransactionTypeRepository
     {
         /// <summary>
-        /// The configuration data
+        /// The db connection factory
         /// </summary>
-        private readonly IConfigurationData _configurationData;
+        private readonly IDbConnectionFactory _dbConnectionFactory;
 
         /// <summary>
         /// The cache manager
@@ -30,11 +30,11 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <summary>
         /// Initializes a new instance of the <see cref="TransactionTypeRepository"/> class.
         /// </summary>
-        /// <param name="configurationData">The configuration data.</param>
+        /// <param name="dbConnectionFactory">The db connection factory.</param>
         /// <param name="cacheManager">The cache manager.</param>
-        public TransactionTypeRepository(IConfigurationData configurationData, ICacheManager cacheManager)
+        public TransactionTypeRepository(IDbConnectionFactory dbConnectionFactory, ICacheManager cacheManager)
         {
-            _configurationData = configurationData;
+            _dbConnectionFactory = dbConnectionFactory;
             _cacheManager = cacheManager;
         }
 
@@ -48,7 +48,7 @@ namespace StandardBank.ConcessionManagement.Repository
             const string sql = @"INSERT [dbo].[rtblTransactionType] ([pkTransactionTypeId], [fkConcessionTypeId], [Description], [IsActive]) 
                                 VALUES (@pkTransactionTypeId, @fkConcessionTypeId, @Description, @IsActive)";
 
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
                 db.Execute(sql,
                     new
                     {
@@ -82,7 +82,7 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             Func<IEnumerable<TransactionType>> function = () =>
             {
-                using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+                using (var db = _dbConnectionFactory.Connection())
             	{
                 	return db.Query<TransactionType>("SELECT [pkTransactionTypeId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [Description], [IsActive] FROM [dbo].[rtblTransactionType]");
             	}
@@ -97,7 +97,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Update(TransactionType model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[rtblTransactionType]
                             SET [fkConcessionTypeId] = @fkConcessionTypeId, [Description] = @Description, [IsActive] = @IsActive
@@ -115,7 +115,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Delete(TransactionType model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[rtblTransactionType] WHERE [pkTransactionTypeId] = @Id",
                     new {model.Id});

@@ -67,7 +67,8 @@ namespace StandardBank.ConcessionManagement.UI
         private ConfigurationData GenerateConfigurationData()
         {
             var connectionString = Configuration["ConnectionString"];
-            return new ConfigurationData(connectionString, Configuration["OverrideLoggedInUser"]);
+            var databaseType = Configuration["DatabaseType"];
+            return new ConfigurationData(connectionString, Configuration["OverrideLoggedInUser"], databaseType);
         }
 
         /// <summary>

@@ -16,17 +16,17 @@ namespace StandardBank.ConcessionManagement.Repository
     public class ConcessionRemovalRequestRepository : IConcessionRemovalRequestRepository
     {
         /// <summary>
-        /// The configuration data
+        /// The db connection factory
         /// </summary>
-        private readonly IConfigurationData _configurationData;
+        private readonly IDbConnectionFactory _dbConnectionFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionRemovalRequestRepository"/> class.
         /// </summary>
-        /// <param name="configurationData">The configuration data.</param>
-        public ConcessionRemovalRequestRepository(IConfigurationData configurationData)
+        /// <param name="dbConnectionFactory">The db connection factory.</param>
+        public ConcessionRemovalRequestRepository(IDbConnectionFactory dbConnectionFactory)
         {
-            _configurationData = configurationData;
+            _dbConnectionFactory = dbConnectionFactory;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace StandardBank.ConcessionManagement.Repository
                                 VALUES (@fkConcessionId, @RequestorId, @fkBCMUserId, @fkPCMUserId, @fkHOUserId, @fkSubStatusId, @SystemDate, @DateApproved) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 model.Id = db.Query<int>(sql, new {fkConcessionId = model.ConcessionId, RequestorId = model.RequestorId, fkBCMUserId = model.BCMUserId, fkPCMUserId = model.PCMUserId, fkHOUserId = model.HOUserId, fkSubStatusId = model.SubStatusId, SystemDate = model.SystemDate, DateApproved = model.DateApproved}).Single();
             }
@@ -55,7 +55,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ConcessionRemovalRequest ReadById(int id)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionRemovalRequest>(
                     "SELECT [pkConcessionRemovalRequestId] [Id], [fkConcessionId] [ConcessionId], [RequestorId], [fkBCMUserId] [BCMUserId], [fkPCMUserId] [PCMUserId], [fkHOUserId] [HOUserId], [fkSubStatusId] [SubStatusId], [SystemDate], [DateApproved] FROM [dbo].[tblConcessionRemovalRequest] WHERE [pkConcessionRemovalRequestId] = @Id",
@@ -69,7 +69,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public IEnumerable<ConcessionRemovalRequest> ReadAll()
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionRemovalRequest>("SELECT [pkConcessionRemovalRequestId] [Id], [fkConcessionId] [ConcessionId], [RequestorId], [fkBCMUserId] [BCMUserId], [fkPCMUserId] [PCMUserId], [fkHOUserId] [HOUserId], [fkSubStatusId] [SubStatusId], [SystemDate], [DateApproved] FROM [dbo].[tblConcessionRemovalRequest]");
             }
@@ -81,7 +81,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Update(ConcessionRemovalRequest model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblConcessionRemovalRequest]
                             SET [fkConcessionId] = @fkConcessionId, [RequestorId] = @RequestorId, [fkBCMUserId] = @fkBCMUserId, [fkPCMUserId] = @fkPCMUserId, [fkHOUserId] = @fkHOUserId, [fkSubStatusId] = @fkSubStatusId, [SystemDate] = @SystemDate, [DateApproved] = @DateApproved
@@ -96,7 +96,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Delete(ConcessionRemovalRequest model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[tblConcessionRemovalRequest] WHERE [pkConcessionRemovalRequestId] = @Id",
                     new {model.Id});

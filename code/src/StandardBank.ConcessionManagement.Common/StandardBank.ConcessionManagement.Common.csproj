@@ -5,11 +5,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SQLite" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="1.1.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\StandardBank.ConcessionManagement.Interface\StandardBank.ConcessionManagement.Interface.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Data.Common">
+      <HintPath>..\..\..\..\..\..\Users\Heathesh\.nuget\packages\system.data.common\4.1.0\ref\netstandard1.2\System.Data.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SqlClient">
+      <HintPath>..\..\..\..\..\..\Users\Heathesh\.nuget\packages\system.data.sqlclient\4.1.0\ref\netstandard1.3\System.Data.SqlClient.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

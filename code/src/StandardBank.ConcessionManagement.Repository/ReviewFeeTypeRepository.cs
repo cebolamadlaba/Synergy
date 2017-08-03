@@ -18,9 +18,9 @@ namespace StandardBank.ConcessionManagement.Repository
     public class ReviewFeeTypeRepository : IReviewFeeTypeRepository
     {
         /// <summary>
-        /// The configuration data
+        /// The db connection factory
         /// </summary>
-        private readonly IConfigurationData _configurationData;
+        private readonly IDbConnectionFactory _dbConnectionFactory;
 
         /// <summary>
         /// The cache manager
@@ -30,11 +30,11 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <summary>
         /// Initializes a new instance of the <see cref="ReviewFeeTypeRepository"/> class.
         /// </summary>
-        /// <param name="configurationData">The configuration data.</param>
+        /// <param name="dbConnectionFactory">The db connection factory.</param>
         /// <param name="cacheManager">The cache manager.</param>
-        public ReviewFeeTypeRepository(IConfigurationData configurationData, ICacheManager cacheManager)
+        public ReviewFeeTypeRepository(IDbConnectionFactory dbConnectionFactory, ICacheManager cacheManager)
         {
-            _configurationData = configurationData;
+            _dbConnectionFactory = dbConnectionFactory;
             _cacheManager = cacheManager;
         }
 
@@ -49,7 +49,7 @@ namespace StandardBank.ConcessionManagement.Repository
                                 VALUES (@Description, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 model.Id = db.Query<int>(sql, new {Description = model.Description, IsActive = model.IsActive}).Single();
             }
@@ -78,7 +78,7 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             Func<IEnumerable<ReviewFeeType>> function = () =>
             {
-                using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+                using (var db = _dbConnectionFactory.Connection())
             	{
                 	return db.Query<ReviewFeeType>("SELECT [pkReviewFeeTypeId] [Id], [Description], [IsActive] FROM [dbo].[rtblReviewFeeType]");
             	}
@@ -93,7 +93,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Update(ReviewFeeType model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[rtblReviewFeeType]
                             SET [Description] = @Description, [IsActive] = @IsActive
@@ -111,7 +111,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Delete(ReviewFeeType model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[rtblReviewFeeType] WHERE [pkReviewFeeTypeId] = @Id",
                     new {model.Id});

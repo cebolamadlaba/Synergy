@@ -16,17 +16,17 @@ namespace StandardBank.ConcessionManagement.Repository
     public class UserRegionRepository : IUserRegionRepository
     {
         /// <summary>
-        /// The configuration data
+        /// The db connection factory
         /// </summary>
-        private readonly IConfigurationData _configurationData;
+        private readonly IDbConnectionFactory _dbConnectionFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserRegionRepository"/> class.
         /// </summary>
-        /// <param name="configurationData">The configuration data.</param>
-        public UserRegionRepository(IConfigurationData configurationData)
+        /// <param name="dbConnectionFactory">The db connection factory.</param>
+        public UserRegionRepository(IDbConnectionFactory dbConnectionFactory)
         {
-            _configurationData = configurationData;
+            _dbConnectionFactory = dbConnectionFactory;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace StandardBank.ConcessionManagement.Repository
                                 VALUES (@UserId, @RegionId, @IsActive, @IsSelected) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 model.Id = db.Query<int>(sql,
                     new
@@ -62,7 +62,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public UserRegion ReadById(int id)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<UserRegion>(
                     @"SELECT [pkUserRegionId] [Id], [fkUserId] [UserId], [fkRegionId] [RegionId], [IsActive], [IsSelected] 
@@ -79,7 +79,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public IEnumerable<UserRegion> ReadByUserId(int userId)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<UserRegion>(
                     @"SELECT [pkUserRegionId] [Id], [fkUserId] [UserId], [fkRegionId] [RegionId], [IsActive], [IsSelected] 
@@ -94,7 +94,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public IEnumerable<UserRegion> ReadAll()
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<UserRegion>(
                     @"SELECT [pkUserRegionId] [Id], [fkUserId] [UserId], [fkRegionId] [RegionId], [IsActive], [IsSelected] 
@@ -108,7 +108,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Update(UserRegion model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblUserRegion]
                             SET [fkUserId] = @UserId, [fkRegionId] = @RegionId, [IsActive] = @IsActive, [IsSelected] = @IsSelected
@@ -131,7 +131,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="regionId"></param>
         public void UpdateSelectedRegion(int userId, int regionId)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 //first make sure no record is selected
                 db.Execute("UPDATE [dbo].[tblUserRegion] SET [IsSelected] = 0 WHERE [fkUserId] = @userId",
@@ -150,7 +150,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Delete(UserRegion model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[tblUserRegion] WHERE [pkUserRegionId] = @Id",
                     new {model.Id});
