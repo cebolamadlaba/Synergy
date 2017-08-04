@@ -3,6 +3,7 @@ import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import { ConditionType } from "../models/condition-type";
+import { ConditionProduct } from "../models/condition-product";
 
 @Injectable()
 export class ConditionTypeService {
@@ -34,6 +35,7 @@ export class MockConditionTypeService extends ConditionTypeService {
     getData(): Observable<ConditionType[]> {
         this.model[0].id = 1;
         this.model[0].description = "Test Condition Type";
+        this.model[0].conditionProducts = [new ConditionProduct()];
         return Observable.of(this.model);
     }
 }

@@ -15,6 +15,7 @@ import { Period } from "../models/period";
 import { PeriodType } from "../models/period-type";
 import { ConditionTypeService } from "../condition-type/condition-type.service";
 import { ConditionType } from "../models/condition-type";
+import { ConditionProduct } from "../models/condition-product";
 
 @Component({
     selector: 'app-lending-add-concession',
@@ -28,6 +29,8 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
+    selectedConditionType: ConditionType;
+    selectedConditionTypes: ConditionType[];
 
     observableReviewFeeTypes: Observable<ReviewFeeType[]>;
     reviewFeeTypes: ReviewFeeType[];
@@ -59,6 +62,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
         this.conditionTypes = [new ConditionType()];
+        this.selectedConditionTypes = [new ConditionType()];
     }
 
     ngOnInit() {
@@ -73,7 +77,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
         this.lendingConcessionForm = this.formBuilder.group({
             concessionItemRows: this.formBuilder.array([this.initConcessionItemRows()]),
-            conditionItemsRows: this.formBuilder.array([this.initConditionItemRows()]),
+            conditionItemsRows: this.formBuilder.array([]),
             mrsCrs: new FormControl(),
             smtDealNumber: new FormControl(),
             motivation: new FormControl()
@@ -110,9 +114,12 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     initConditionItemRows() {
+        this.selectedConditionTypes.push(new ConditionType());
+
         return this.formBuilder.group({
             conditionType: [''],
-            productType: [''],
+            selectedConditionType: ConditionType,
+            conditionProduct: [''],
             interestRate: [''],
             volume: [''],
             value: [''],
@@ -131,6 +138,12 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         control.push(this.initConditionItemRows());
     }
 
+    addNewConditionRowIfNone() {
+        const control = <FormArray>this.lendingConcessionForm.controls['conditionItemsRows'];
+        if (control.length == 0)
+            control.push(this.initConditionItemRows());
+    }
+
     deleteConcessionRow(index: number) {
         const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
         control.removeAt(index);
@@ -139,6 +152,13 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     deleteConditionRow(index: number) {
         const control = <FormArray>this.lendingConcessionForm.controls['conditionItemsRows'];
         control.removeAt(index);
+
+        this.selectedConditionTypes.splice(index, 1);
+    }
+
+    conditionTypeChanged(rowIndex) {
+        const control = <FormArray>this.lendingConcessionForm.controls['conditionItemsRows'];
+        this.selectedConditionTypes[rowIndex] = control.controls[rowIndex].get('conditionType').value;
     }
 
     ngOnDestroy() {

@@ -1,36 +1,36 @@
 <?xml version="1.0"?>
-<testsuite name="PhantomJS 2.1.1 (Windows 8 0.0.0)" package="" timestamp="2017-08-03T16:20:55" id="0" hostname="DESKTOP-F8IOVVO" tests="28" errors="0" failures="0" time="25.943">
+<testsuite name="PhantomJS 2.1.1 (Windows 8 0.0.0)" package="" timestamp="2017-08-04T17:24:23" id="0" hostname="DESKTOP-F8IOVVO" tests="28" errors="0" failures="0" time="15.374">
   <properties>
     <property name="browser.fullName" value="Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/538.1 (KHTML, like Gecko) PhantomJS/2.1.1 Safari/538.1"/>
   </properties>
-  <testcase name="AppComponent should create the app" time="1.301" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).AppComponent"/>
-  <testcase name="ApprovedConcessionsComponent should be created" time="1.288" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).ApprovedConcessionsComponent"/>
-  <testcase name="CashAddConcessionComponent should be created" time="0.269" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).CashAddConcessionComponent"/>
-  <testcase name="ConcessionConditionsService should be created" time="0.255" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).ConcessionConditionsService"/>
-  <testcase name="ConditionTypeService should be created" time="0.255" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).ConditionTypeService"/>
-  <testcase name="ConditionsComponent should be created" time="1.575" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).ConditionsComponent"/>
-  <testcase name="DeclinedInboxComponent should be created" time="0.984" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).DeclinedInboxComponent"/>
-  <testcase name="DueExpiryInboxComponent should be created" time="0.966" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).DueExpiryInboxComponent"/>
-  <testcase name="ExpiredInboxComponent should be created" time="1.104" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).ExpiredInboxComponent"/>
-  <testcase name="InboxHeaderComponent should be created" time="0.642" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).InboxHeaderComponent"/>
-  <testcase name="LendingAddConcessionComponent should be created" time="4.337" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).LendingAddConcessionComponent"/>
-  <testcase name="LendingConcessionFilterPipe create an instance" time="0.022" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).LendingConcessionFilterPipe"/>
-  <testcase name="LendingViewService should be created" time="0.224" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).LendingViewService"/>
-  <testcase name="MismatchedInboxComponent should be created" time="1.005" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).MismatchedInboxComponent"/>
-  <testcase name="PageHeaderComponent should be created" time="0.517" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).PageHeaderComponent"/>
-  <testcase name="PendingInboxComponent should be created" time="0.912" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).PendingInboxComponent"/>
-  <testcase name="PeriodTypeService should be created" time="0.205" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).PeriodTypeService"/>
-  <testcase name="PeriodService should be created" time="0.208" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).PeriodService"/>
-  <testcase name="PricingCashComponent should be created" time="1.792" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).PricingCashComponent"/>
-  <testcase name="PricingLendingComponent should be created" time="2.086" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).PricingLendingComponent"/>
-  <testcase name="PricingTransactionalComponent should be created" time="1.86" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).PricingTransactionalComponent"/>
-  <testcase name="PricingComponent should be created" time="1.398" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).PricingComponent"/>
-  <testcase name="ProductTypeService should be created" time="0.175" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).ProductTypeService"/>
-  <testcase name="ReviewFeeTypeService should be created" time="0.176" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).ReviewFeeTypeService"/>
-  <testcase name="RiskGroupService should be created" time="0.169" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).RiskGroupService"/>
-  <testcase name="TransactionalAddConcessionComponent should be created" time="1.827" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).TransactionalAddConcessionComponent"/>
-  <testcase name="UserConcessionsService should be created" time="0.197" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).UserConcessionsService"/>
-  <testcase name="UserService should be created" time="0.194" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).UserService"/>
+  <testcase name="AppComponent should create the app" time="0.876" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).AppComponent"/>
+  <testcase name="ApprovedConcessionsComponent should be created" time="0.683" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).ApprovedConcessionsComponent"/>
+  <testcase name="CashAddConcessionComponent should be created" time="0.126" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).CashAddConcessionComponent"/>
+  <testcase name="ConcessionConditionsService should be created" time="0.137" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).ConcessionConditionsService"/>
+  <testcase name="ConditionTypeService should be created" time="0.11" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).ConditionTypeService"/>
+  <testcase name="ConditionsComponent should be created" time="0.818" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).ConditionsComponent"/>
+  <testcase name="DeclinedInboxComponent should be created" time="0.566" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).DeclinedInboxComponent"/>
+  <testcase name="DueExpiryInboxComponent should be created" time="0.544" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).DueExpiryInboxComponent"/>
+  <testcase name="ExpiredInboxComponent should be created" time="0.57" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).ExpiredInboxComponent"/>
+  <testcase name="InboxHeaderComponent should be created" time="0.359" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).InboxHeaderComponent"/>
+  <testcase name="LendingAddConcessionComponent should be created" time="2.623" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).LendingAddConcessionComponent"/>
+  <testcase name="LendingConcessionFilterPipe create an instance" time="0.011" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).LendingConcessionFilterPipe"/>
+  <testcase name="LendingViewService should be created" time="0.12" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).LendingViewService"/>
+  <testcase name="MismatchedInboxComponent should be created" time="0.571" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).MismatchedInboxComponent"/>
+  <testcase name="PageHeaderComponent should be created" time="0.335" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).PageHeaderComponent"/>
+  <testcase name="PendingInboxComponent should be created" time="0.545" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).PendingInboxComponent"/>
+  <testcase name="PeriodTypeService should be created" time="0.112" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).PeriodTypeService"/>
+  <testcase name="PeriodService should be created" time="0.118" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).PeriodService"/>
+  <testcase name="PricingCashComponent should be created" time="1.062" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).PricingCashComponent"/>
+  <testcase name="PricingLendingComponent should be created" time="1.163" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).PricingLendingComponent"/>
+  <testcase name="PricingTransactionalComponent should be created" time="1.139" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).PricingTransactionalComponent"/>
+  <testcase name="PricingComponent should be created" time="1.014" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).PricingComponent"/>
+  <testcase name="ProductTypeService should be created" time="0.115" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).ProductTypeService"/>
+  <testcase name="ReviewFeeTypeService should be created" time="0.106" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).ReviewFeeTypeService"/>
+  <testcase name="RiskGroupService should be created" time="0.115" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).RiskGroupService"/>
+  <testcase name="TransactionalAddConcessionComponent should be created" time="1.129" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).TransactionalAddConcessionComponent"/>
+  <testcase name="UserConcessionsService should be created" time="0.115" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).UserConcessionsService"/>
+  <testcase name="UserService should be created" time="0.192" classname="PhantomJS_2_1_1_(Windows_8_0_0_0).UserService"/>
   <system-out>
     <![CDATA[
 ]]>

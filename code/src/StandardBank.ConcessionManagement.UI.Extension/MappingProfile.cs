@@ -39,7 +39,10 @@ namespace StandardBank.ConcessionManagement.UI.Extension
 
             //ConcessionType
             CreateMap<Model.Repository.ConcessionType, Model.UserInterface.ConcessionType>().ReverseMap();
-           
+
+            //ConditionProduct
+            CreateMap<Model.Repository.ConditionProduct, Model.UserInterface.ConditionProduct>().ReverseMap();
+
             //ConditionType
             CreateMap<Model.Repository.ConditionType, Model.UserInterface.ConditionType>().ReverseMap();
           
