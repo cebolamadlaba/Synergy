@@ -4,7 +4,14 @@ using System.Linq;
 using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface;
+using ConcessionType = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionType;
+using ConditionProduct = StandardBank.ConcessionManagement.Model.UserInterface.ConditionProduct;
+using ConditionType = StandardBank.ConcessionManagement.Model.UserInterface.ConditionType;
+using Period = StandardBank.ConcessionManagement.Model.UserInterface.Period;
+using PeriodType = StandardBank.ConcessionManagement.Model.UserInterface.PeriodType;
+using ReviewFeeType = StandardBank.ConcessionManagement.Model.UserInterface.ReviewFeeType;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -75,6 +82,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IMapper _mapper;
 
         /// <summary>
+        /// The condition product repository
+        /// </summary>
+        private readonly IConditionProductRepository _conditionProductRepository;
+
+        /// <summary>
+        /// The condition type product repository
+        /// </summary>
+        private readonly IConditionTypeProductRepository _conditionTypeProductRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LookupTableManager"/> class.
         /// </summary>
         /// <param name="statusRepository">The status repository.</param>
@@ -89,12 +106,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="periodTypeRepository">The period type repository.</param>
         /// <param name="conditionTypeRepository"></param>
         /// <param name="mapper"></param>
+        /// <param name="conditionProductRepository"></param>
+        /// <param name="conditionTypeProductRepository"></param>
         public LookupTableManager(IStatusRepository statusRepository, ISubStatusRepository subStatusRepository,
             IReferenceTypeRepository referenceTypeRepository, IMarketSegmentRepository marketSegmentRepository,
             IProvinceRepository provinceRepository, IConcessionTypeRepository concessionTypeRepository,
             IProductRepository productRepository, IReviewFeeTypeRepository reviewFeeTypeRepository,
             IPeriodRepository periodRepository, IPeriodTypeRepository periodTypeRepository,
-            IConditionTypeRepository conditionTypeRepository, IMapper mapper)
+            IConditionTypeRepository conditionTypeRepository, IMapper mapper,
+            IConditionProductRepository conditionProductRepository, IConditionTypeProductRepository conditionTypeProductRepository)
         {
             _statusRepository = statusRepository;
             _subStatusRepository = subStatusRepository;
@@ -108,6 +128,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _periodTypeRepository = periodTypeRepository;
             _conditionTypeRepository = conditionTypeRepository;
             _mapper = mapper;
+            _conditionProductRepository = conditionProductRepository;
+            _conditionTypeProductRepository = conditionTypeProductRepository;
         }
 
         /// <summary>
@@ -297,8 +319,39 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<ConditionType> GetConditionTypes()
         {
+            var mappedConditionTypes = new List<ConditionType>();
             var conditionTypes = _conditionTypeRepository.ReadAll();
-            return _mapper.Map<IEnumerable<ConditionType>>(conditionTypes.Where(_ => _.IsActive));
+            var conditionProducts = _conditionProductRepository.ReadAll().Where(_ => _.IsActive);
+            var conditionTypeProducts = _conditionTypeProductRepository.ReadAll().Where(_ => _.IsActive);
+
+            foreach (var conditionType in conditionTypes.Where(_ => _.IsActive))
+            {
+                var mappedConditionType = _mapper.Map<ConditionType>(conditionType);
+                mappedConditionType.ConditionProducts =
+                    GetConditionProducts(conditionType.Id, conditionProducts, conditionTypeProducts);
+                mappedConditionTypes.Add(mappedConditionType);
+            }
+
+            return mappedConditionTypes;
+        }
+
+        /// <summary>
+        /// Gets the condition products
+        /// </summary>
+        /// <param name="conditionTypeId"></param>
+        /// <param name="conditionProducts"></param>
+        /// <param name="conditionTypeProducts"></param>
+        /// <returns></returns>
+        private IEnumerable<ConditionProduct> GetConditionProducts(int conditionTypeId,
+            IEnumerable<Model.Repository.ConditionProduct> conditionProducts,
+            IEnumerable<ConditionTypeProduct> conditionTypeProducts)
+        {
+            var conditionTypeProductsForConditionType =
+                conditionTypeProducts.Where(_ => _.ConditionTypeId == conditionTypeId);
+
+            foreach (var conditionTypeProduct in conditionTypeProductsForConditionType)
+                yield return _mapper.Map<ConditionProduct>(
+                    conditionProducts.First(_ => _.Id == conditionTypeProduct.ConditionProductId));
         }
     }
 }

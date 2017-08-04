@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace StandardBank.ConcessionManagement.Model.UserInterface
+﻿namespace StandardBank.ConcessionManagement.Model.UserInterface
 {
     /// <summary>
-    /// Condition type entity
+    /// Condition product entity
     /// </summary>
-    public class ConditionType
+    public class ConditionProduct
     {
         /// <summary>
         /// Gets or sets the identifier.
@@ -22,10 +20,5 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// The description.
         /// </value>
         public string Description { get; set; }
-
-        /// <summary>
-        /// Gets or sets the condition products
-        /// </summary>
-        public IEnumerable<ConditionProduct> ConditionProducts { get; set; }
     }
 }

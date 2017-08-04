@@ -26,7 +26,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 MockTypeRepository.Object, MockMarketSegmentRepository.Object, MockProvinceRepository.Object,
                 MockConcessionTypeRepository.Object, MockProductRepository.Object, MockReviewFeeTypeRepository.Object,
                 MockPeriodRepository.Object, MockPeriodTypeRepository.Object, MockConditionTypeRepository.Object,
-                InstantiatedDependencies.Mapper);
+                InstantiatedDependencies.Mapper, MockConditionProductRepository.Object,
+                MockConditionTypeProductRepository.Object);
         }
 
         /// <summary>
@@ -221,10 +222,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 }
             });
 
+            MockConditionProductRepository.Setup(_ => _.ReadAll()).Returns(new[]
+                {new ConditionProduct {Description = "Test Condition Product", Id = 1, IsActive = true}});
+
+            MockConditionTypeProductRepository.Setup(_ => _.ReadAll()).Returns(new[]
+                {new ConditionTypeProduct {ConditionProductId = 1, ConditionTypeId = 1, Id = 1, IsActive = true}});
+
             var result = _lookupTableManager.GetConditionTypes();
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
+
+            foreach (var record in result)
+            {
+                Assert.NotNull(record.ConditionProducts);
+                Assert.NotEmpty(record.ConditionProducts);
+            }
         }
 
         /// <summary>
