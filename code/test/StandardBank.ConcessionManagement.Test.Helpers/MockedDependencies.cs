@@ -280,5 +280,15 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The mock LendingManager
         /// </summary>
         public static Mock<ILendingManager> MockLendingManager = new Mock<ILendingManager>();
+
+        /// <summary>
+        /// The mock Period repository
+        /// </summary>
+        public static Mock<IPeriodRepository> MockPeriodRepository = new Mock<IPeriodRepository>();
+
+        /// <summary>
+        /// The mock PeriodType repository
+        /// </summary>
+        public static Mock<IPeriodTypeRepository> MockPeriodTypeRepository = new Mock<IPeriodTypeRepository>();
     }
 }

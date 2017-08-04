@@ -16,17 +16,17 @@ namespace StandardBank.ConcessionManagement.Repository
     public class ConcessionCashRepository : IConcessionCashRepository
     {
         /// <summary>
-        /// The configuration data
+        /// The db connection factory
         /// </summary>
-        private readonly IConfigurationData _configurationData;
+        private readonly IDbConnectionFactory _dbConnectionFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionCashRepository"/> class.
         /// </summary>
-        /// <param name="configurationData">The configuration data.</param>
-        public ConcessionCashRepository(IConfigurationData configurationData)
+        /// <param name="dbConnectionFactory">The db connection factory.</param>
+        public ConcessionCashRepository(IDbConnectionFactory dbConnectionFactory)
         {
-            _configurationData = configurationData;
+            _dbConnectionFactory = dbConnectionFactory;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace StandardBank.ConcessionManagement.Repository
                                 VALUES (@fkConcessionId, @fkChannelTypeId, @TableNumber, @CashVolume, @CashValue, @fkBaseRateId, @AdValorem) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 model.Id = db.Query<int>(sql, new {fkConcessionId = model.ConcessionId, fkChannelTypeId = model.ChannelTypeId, TableNumber = model.TableNumber, CashVolume = model.CashVolume, CashValue = model.CashValue, fkBaseRateId = model.BaseRateId, AdValorem = model.AdValorem}).Single();
             }
@@ -55,7 +55,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ConcessionCash ReadById(int id)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionCash>(
                     "SELECT [pkConcessionCashId] [Id], [fkConcessionId] [ConcessionId], [fkChannelTypeId] [ChannelTypeId], [TableNumber], [CashVolume], [CashValue], [fkBaseRateId] [BaseRateId], [AdValorem] FROM [dbo].[tblConcessionCash] WHERE [pkConcessionCashId] = @Id",
@@ -69,7 +69,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public IEnumerable<ConcessionCash> ReadAll()
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionCash>("SELECT [pkConcessionCashId] [Id], [fkConcessionId] [ConcessionId], [fkChannelTypeId] [ChannelTypeId], [TableNumber], [CashVolume], [CashValue], [fkBaseRateId] [BaseRateId], [AdValorem] FROM [dbo].[tblConcessionCash]");
             }
@@ -81,7 +81,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Update(ConcessionCash model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblConcessionCash]
                             SET [fkConcessionId] = @fkConcessionId, [fkChannelTypeId] = @fkChannelTypeId, [TableNumber] = @TableNumber, [CashVolume] = @CashVolume, [CashValue] = @CashValue, [fkBaseRateId] = @fkBaseRateId, [AdValorem] = @AdValorem
@@ -96,7 +96,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Delete(ConcessionCash model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[tblConcessionCash] WHERE [pkConcessionCashId] = @Id",
                     new {model.Id});

@@ -59,5 +59,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <returns></returns>
         IEnumerable<Concession> GetConcessionsForLegalEntityIdAndConcessionType(int legalEntityId,
             string concessionType);
+
+        /// <summary>
+        /// Gets the concession conditions
+        /// </summary>
+        /// <param name="concessionId"></param>
+        /// <returns></returns>
+        IEnumerable<ConcessionCondition> GetConcessionConditions(int concessionId);
     }
 }

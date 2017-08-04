@@ -1,4 +1,5 @@
 ﻿using StandardBank.ConcessionManagement.Interface.Common;
+using StandardBank.ConcessionManagement.Model.Common;
 
 namespace StandardBank.ConcessionManagement.Common
 {
@@ -13,10 +14,12 @@ namespace StandardBank.ConcessionManagement.Common
         /// </summary>
         /// <param name="connectionString">The connection string.</param>
         /// <param name="overrideLoggedInUser"></param>
-        public ConfigurationData(string connectionString, string overrideLoggedInUser)
+        /// <param name="databaseType"></param>
+        public ConfigurationData(string connectionString, string overrideLoggedInUser, string databaseType)
         {
             ConnectionString = connectionString;
             OverrideLoggedInUser = overrideLoggedInUser;
+            DatabaseType = databaseType == "SqlServer" ? DatabaseType.SqlServer : DatabaseType.SqlLite;
         }
 
         /// <summary>
@@ -26,6 +29,11 @@ namespace StandardBank.ConcessionManagement.Common
         /// The connection string.
         /// </value>
         public string ConnectionString { get; }
+
+        /// <summary>
+        /// Gets the database type
+        /// </summary>
+        public DatabaseType DatabaseType { get; }
 
         /// <summary>
         /// Gets the override logged in user

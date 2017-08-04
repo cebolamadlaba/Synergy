@@ -16,17 +16,17 @@ namespace StandardBank.ConcessionManagement.Repository
     public class RiskGroupRepository : IRiskGroupRepository
     {
         /// <summary>
-        /// The configuration data
+        /// The db connection factory
         /// </summary>
-        private readonly IConfigurationData _configurationData;
+        private readonly IDbConnectionFactory _dbConnectionFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RiskGroupRepository"/> class.
         /// </summary>
-        /// <param name="configurationData">The configuration data.</param>
-        public RiskGroupRepository(IConfigurationData configurationData)
+        /// <param name="dbConnectionFactory">The db connection factory.</param>
+        public RiskGroupRepository(IDbConnectionFactory dbConnectionFactory)
         {
-            _configurationData = configurationData;
+            _dbConnectionFactory = dbConnectionFactory;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace StandardBank.ConcessionManagement.Repository
                                 VALUES (@RiskGroupNumber, @RiskGroupName, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 model.Id = db.Query<int>(sql, new {RiskGroupNumber = model.RiskGroupNumber, RiskGroupName = model.RiskGroupName, IsActive = model.IsActive}).Single();
             }
@@ -55,7 +55,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public RiskGroup ReadById(int id)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<RiskGroup>(
                     "SELECT [pkRiskGroupId] [Id], [RiskGroupNumber], [RiskGroupName], [IsActive] FROM [dbo].[tblRiskGroup] WHERE [pkRiskGroupId] = @Id",
@@ -71,7 +71,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public RiskGroup ReadByIdIsActive(int id, bool isActive)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<RiskGroup>(
                     @"SELECT [pkRiskGroupId] [Id], [RiskGroupNumber], [RiskGroupName], [IsActive] 
@@ -90,7 +90,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public RiskGroup ReadByRiskGroupNumberIsActive(int riskGroupNumber, bool isActive)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<RiskGroup>(
                     @"SELECT [pkRiskGroupId] [Id], [RiskGroupNumber], [RiskGroupName], [IsActive] 
@@ -107,7 +107,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public IEnumerable<RiskGroup> ReadAll()
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<RiskGroup>("SELECT [pkRiskGroupId] [Id], [RiskGroupNumber], [RiskGroupName], [IsActive] FROM [dbo].[tblRiskGroup]");
             }
@@ -119,7 +119,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Update(RiskGroup model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblRiskGroup]
                             SET [RiskGroupNumber] = @RiskGroupNumber, [RiskGroupName] = @RiskGroupName, [IsActive] = @IsActive
@@ -134,7 +134,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Delete(RiskGroup model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[tblRiskGroup] WHERE [pkRiskGroupId] = @Id",
                     new {model.Id});

@@ -23,6 +23,7 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             // Add common services
             services.AddSingleton<IConfigurationData>(configurationData);
             services.AddScoped<ICacheManager, MemoryCacheManager>();
+            services.AddTransient<IDbConnectionFactory, DbConnectionFactory>();
 
             // Add repository services.
             AddRepositoryServices(services);
@@ -99,6 +100,8 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             services.AddScoped<IUserRegionRepository, UserRegionRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+            services.AddScoped<IPeriodRepository, PeriodRepository>();
+            services.AddScoped<IPeriodTypeRepository, PeriodTypeRepository>();
         }
     }
 }

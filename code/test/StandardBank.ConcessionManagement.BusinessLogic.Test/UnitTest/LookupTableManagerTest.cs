@@ -1,6 +1,7 @@
 ﻿using Moq;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
+using StandardBank.ConcessionManagement.Test.Helpers;
 using Xunit;
 using static StandardBank.ConcessionManagement.Test.Helpers.MockedDependencies;
 
@@ -23,7 +24,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             _lookupTableManager = new LookupTableManager(MockStatusRepository.Object, MockSubStatusRepository.Object,
                 MockTypeRepository.Object, MockMarketSegmentRepository.Object, MockProvinceRepository.Object,
-                MockConcessionTypeRepository.Object, MockProductRepository.Object, MockReviewFeeTypeRepository.Object);
+                MockConcessionTypeRepository.Object, MockProductRepository.Object, MockReviewFeeTypeRepository.Object,
+                MockPeriodRepository.Object, MockPeriodTypeRepository.Object, MockConditionTypeRepository.Object,
+                InstantiatedDependencies.Mapper);
         }
 
         /// <summary>
@@ -170,6 +173,122 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that GetPeriods executes positive.
+        /// </summary>
+        [Fact]
+        public void GetPeriods_Executes_Positive()
+        {
+            MockPeriodRepository.Setup(_ => _.ReadAll()).Returns(new[]
+                {new Period {Description = "Test", Id = 1, IsActive = true}});
+
+            var result = _lookupTableManager.GetPeriods();
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that GetPeriodTypes executes positive.
+        /// </summary>
+        [Fact]
+        public void GetPeriodTypes_Executes_Positive()
+        {
+            MockPeriodTypeRepository.Setup(_ => _.ReadAll()).Returns(new[]
+                {new PeriodType {Description = "Test", Id = 1, IsActive = true}});
+
+            var result = _lookupTableManager.GetPeriodTypes();
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that GetConditionTypes executes positive
+        /// </summary>
+        [Fact]
+        public void GetConditionTypes_Executes_Positive()
+        {
+            MockConditionTypeRepository.Setup(_ => _.ReadAll()).Returns(new[]
+            {
+                new ConditionType
+                {
+                    Description = "Test",
+                    Id = 1,
+                    IsActive = true
+                }
+            });
+
+            var result = _lookupTableManager.GetConditionTypes();
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that GetConditionTypeName executes positive
+        /// </summary>
+        [Fact]
+        public void GetConditionTypeName_Executes_Positive()
+        {
+            var conditionType = new ConditionType {Id = 1, Description = "Unit Test Condition Type", IsActive = true};
+
+            MockConditionTypeRepository.Setup(_ => _.ReadAll()).Returns(new[] { conditionType });
+
+            var result = _lookupTableManager.GetConditionTypeName(conditionType.Id);
+
+            Assert.NotNull(result);
+            Assert.Equal(result, conditionType.Description);
+        }
+
+        /// <summary>
+        /// Tests that GetProductTypeName executes positive
+        /// </summary>
+        [Fact]
+        public void GetProductTypeName_Executes_Positive()
+        {
+            var productType = new Product { Id = 1, Description = "Unit Test Product Type", IsActive = true };
+
+            MockProductRepository.Setup(_ => _.ReadAll()).Returns(new[] { productType });
+
+            var result = _lookupTableManager.GetProductTypeName(productType.Id);
+
+            Assert.NotNull(result);
+            Assert.Equal(result, productType.Description);
+        }
+
+        /// <summary>
+        /// Tests that GetPeriodTypeName executes positive
+        /// </summary>
+        [Fact]
+        public void GetPeriodTypeName_Executes_Positive()
+        {
+            var periodType = new PeriodType { Id = 1, Description = "Unit Test Period Type", IsActive = true };
+
+            MockPeriodTypeRepository.Setup(_ => _.ReadAll()).Returns(new[] { periodType });
+
+            var result = _lookupTableManager.GetPeriodTypeName(periodType.Id);
+
+            Assert.NotNull(result);
+            Assert.Equal(result, periodType.Description);
+        }
+
+        /// <summary>
+        /// Tests that GetPeriodName executes positive
+        /// </summary>
+        [Fact]
+        public void GetPeriodName_Executes_Positive()
+        {
+            var period = new Period { Id = 1, Description = "Unit Test Period", IsActive = true };
+
+            MockPeriodRepository.Setup(_ => _.ReadAll()).Returns(new[] { period });
+
+            var result = _lookupTableManager.GetPeriodName(period.Id);
+
+            Assert.NotNull(result);
+            Assert.Equal(result, period.Description);
         }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Common;
+using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Inbox;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
@@ -48,6 +50,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IConcessionAccountRepository _concessionAccountRepository;
 
         /// <summary>
+        /// The mapper
+        /// </summary>
+        private readonly IMapper _mapper;
+
+        /// <summary>
+        /// The concession condition repository
+        /// </summary>
+        private readonly IConcessionConditionRepository _concessionConditionRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionManager"/> class.
         /// </summary>
         /// <param name="concessionRepository">The concession repository.</param>
@@ -56,9 +68,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="riskGroupRepository">The risk group repository.</param>
         /// <param name="cacheManager"></param>
         /// <param name="concessionAccountRepository"></param>
+        /// <param name="mapper"></param>
+        /// <param name="concessionConditionRepository"></param>
         public ConcessionManager(IConcessionRepository concessionRepository, ILookupTableManager lookupTableManager,
             ILegalEntityRepository legalEntityRepository, IRiskGroupRepository riskGroupRepository,
-            ICacheManager cacheManager, IConcessionAccountRepository concessionAccountRepository)
+            ICacheManager cacheManager, IConcessionAccountRepository concessionAccountRepository, IMapper mapper,
+            IConcessionConditionRepository concessionConditionRepository)
         {
             _concessionRepository = concessionRepository;
             _lookupTableManager = lookupTableManager;
@@ -66,6 +81,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _riskGroupRepository = riskGroupRepository;
             _cacheManager = cacheManager;
             _concessionAccountRepository = concessionAccountRepository;
+            _mapper = mapper;
+            _concessionConditionRepository = concessionConditionRepository;
         }
 
         /// <summary>
@@ -77,7 +94,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var concessions = new List<Concession>();
             var pendingStatusId = _lookupTableManager.GetStatusId("Pending");
-            var bcmPendingStatusId = _lookupTableManager.GetSubStatusId("BCM Pending");
 
             //loop through the user roles and get the concessions for the particular user
             foreach (var userRole in user.UserRoles)
@@ -86,8 +102,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 {
                     case "Requestor":
                         concessions.AddRange(Map(
-                            _concessionRepository.ReadByRequestorIdStatusIdSubStatusIdIsActive(user.Id, pendingStatusId,
-                                bcmPendingStatusId, true)));
+                            _concessionRepository.ReadByRequestorIdStatusIdIsActive(user.Id, pendingStatusId, true)));
                         break;
                     case "Suite Head":
                     case "BCM":
@@ -284,6 +299,40 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Gets the concession conditions
+        /// </summary>
+        /// <param name="concessionId"></param>
+        /// <returns></returns>
+        public IEnumerable<ConcessionCondition> GetConcessionConditions(int concessionId)
+        {
+            var concessionConditions = new List<ConcessionCondition>();
+            var concessionConditionsData = _concessionConditionRepository.ReadByConcessionId(concessionId);
+
+            foreach (var concessionCondition in concessionConditionsData.Where(_ => _.IsActive))
+            {
+                var mappedConcessionCondition = _mapper.Map<ConcessionCondition>(concessionCondition);
+
+                mappedConcessionCondition.ConditionType =
+                    _lookupTableManager.GetConditionTypeName(concessionCondition.ConditionTypeId);
+
+                mappedConcessionCondition.ProductType =
+                    _lookupTableManager.GetProductTypeName(concessionCondition.ConditionProductId);
+
+                if (concessionCondition.PeriodTypeId.HasValue)
+                    mappedConcessionCondition.PeriodType =
+                        _lookupTableManager.GetPeriodTypeName(concessionCondition.PeriodTypeId.Value);
+
+                if (concessionCondition.PeriodId.HasValue)
+                    mappedConcessionCondition.Period =
+                        _lookupTableManager.GetPeriodName(concessionCondition.PeriodId.Value);
+
+                concessionConditions.Add(mappedConcessionCondition);
+            }
+
+            return concessionConditions;
+        }
+
+        /// <summary>
         /// Maps the specified repository concessions.
         /// </summary>
         /// <param name="repositoryConcessions">The repository concessions.</param>
@@ -298,21 +347,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 var riskGroup = _riskGroupRepository.ReadByIdIsActive(legalEntity.RiskGroupId, true);
                 var concessionAccount = _concessionAccountRepository.ReadByConcessionIdIsActive(concession.Id, true);
 
-                concessions.Add(new Concession
-                {
-                    Id = concession.Id,
-                    ReferenceNumber = concession.ConcessionRef,
-                    CustomerName = legalEntity?.CustomerName,
-                    DateOpened = concession.ConcessionDate,
-                    DateSentForApproval = concession.DatesentForApproval,
-                    RiskGroupName = riskGroup?.RiskGroupName,
-                    RiskGroupNumber = riskGroup?.RiskGroupNumber,
-                    Seqment = legalEntity != null
-                        ? _lookupTableManager.GetMarketSegmentName(legalEntity.MarketSegmentId)
-                        : string.Empty,
-                    Type = _lookupTableManager.GetReferenceTypeName(concession.TypeId),
-                    AccountNumber = concessionAccount?.AccountNumber
-                });
+                var mappedConcession = _mapper.Map<Concession>(concession);
+
+                mappedConcession.Seqment = legalEntity != null
+                    ? _lookupTableManager.GetMarketSegmentName(legalEntity.MarketSegmentId)
+                    : string.Empty;
+
+                mappedConcession.Type = _lookupTableManager.GetReferenceTypeName(concession.TypeId);
+
+                mappedConcession.RiskGroupName = riskGroup?.RiskGroupName;
+                mappedConcession.RiskGroupNumber = riskGroup?.RiskGroupNumber;
+                mappedConcession.AccountNumber = concessionAccount?.AccountNumber;
+
+                concessions.Add(mappedConcession);
             }
 
             return concessions;

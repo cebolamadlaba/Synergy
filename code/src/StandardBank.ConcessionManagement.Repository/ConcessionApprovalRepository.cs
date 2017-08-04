@@ -16,17 +16,17 @@ namespace StandardBank.ConcessionManagement.Repository
     public class ConcessionApprovalRepository : IConcessionApprovalRepository
     {
         /// <summary>
-        /// The configuration data
+        /// The db connection factory
         /// </summary>
-        private readonly IConfigurationData _configurationData;
+        private readonly IDbConnectionFactory _dbConnectionFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionApprovalRepository"/> class.
         /// </summary>
-        /// <param name="configurationData">The configuration data.</param>
-        public ConcessionApprovalRepository(IConfigurationData configurationData)
+        /// <param name="dbConnectionFactory">The db connection factory.</param>
+        public ConcessionApprovalRepository(IDbConnectionFactory dbConnectionFactory)
         {
-            _configurationData = configurationData;
+            _dbConnectionFactory = dbConnectionFactory;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace StandardBank.ConcessionManagement.Repository
                                 VALUES (@fkConcessionId, @fkOldSubStatusId, @fkNewSubStatusId, @fkUserId, @SystemDate, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 model.Id = db.Query<int>(sql, new {fkConcessionId = model.ConcessionId, fkOldSubStatusId = model.OldSubStatusId, fkNewSubStatusId = model.NewSubStatusId, fkUserId = model.UserId, SystemDate = model.SystemDate, IsActive = model.IsActive}).Single();
             }
@@ -55,7 +55,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ConcessionApproval ReadById(int id)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionApproval>(
                     "SELECT [pkConcessionApprovalId] [Id], [fkConcessionId] [ConcessionId], [fkOldSubStatusId] [OldSubStatusId], [fkNewSubStatusId] [NewSubStatusId], [fkUserId] [UserId], [SystemDate], [IsActive] FROM [dbo].[tblConcessionApproval] WHERE [pkConcessionApprovalId] = @Id",
@@ -69,7 +69,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public IEnumerable<ConcessionApproval> ReadAll()
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionApproval>("SELECT [pkConcessionApprovalId] [Id], [fkConcessionId] [ConcessionId], [fkOldSubStatusId] [OldSubStatusId], [fkNewSubStatusId] [NewSubStatusId], [fkUserId] [UserId], [SystemDate], [IsActive] FROM [dbo].[tblConcessionApproval]");
             }
@@ -81,7 +81,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Update(ConcessionApproval model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblConcessionApproval]
                             SET [fkConcessionId] = @fkConcessionId, [fkOldSubStatusId] = @fkOldSubStatusId, [fkNewSubStatusId] = @fkNewSubStatusId, [fkUserId] = @fkUserId, [SystemDate] = @SystemDate, [IsActive] = @IsActive
@@ -96,7 +96,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Delete(ConcessionApproval model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[tblConcessionApproval] WHERE [pkConcessionApprovalId] = @Id",
                     new {model.Id});

@@ -16,17 +16,17 @@ namespace StandardBank.ConcessionManagement.Repository
     public class BusinesOnlineTransactionTypeRepository : IBusinesOnlineTransactionTypeRepository
     {
         /// <summary>
-        /// The configuration data
+        /// The db connection factory
         /// </summary>
-        private readonly IConfigurationData _configurationData;
+        private readonly IDbConnectionFactory _dbConnectionFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BusinesOnlineTransactionTypeRepository"/> class.
         /// </summary>
-        /// <param name="configurationData">The configuration data.</param>
-        public BusinesOnlineTransactionTypeRepository(IConfigurationData configurationData)
+        /// <param name="dbConnectionFactory">The db connection factory.</param>
+        public BusinesOnlineTransactionTypeRepository(IDbConnectionFactory dbConnectionFactory)
         {
-            _configurationData = configurationData;
+            _dbConnectionFactory = dbConnectionFactory;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace StandardBank.ConcessionManagement.Repository
                                 VALUES (@fkTransactionGroupId, @Description, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 model.Id = db.Query<int>(sql, new {fkTransactionGroupId = model.TransactionGroupId, Description = model.Description, IsActive = model.IsActive}).Single();
             }
@@ -55,7 +55,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public BusinesOnlineTransactionType ReadById(int id)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<BusinesOnlineTransactionType>(
                     "SELECT [pkBusinesOnlineTransactionTypeId] [Id], [fkTransactionGroupId] [TransactionGroupId], [Description], [IsActive] FROM [dbo].[tblBusinesOnlineTransactionType] WHERE [pkBusinesOnlineTransactionTypeId] = @Id",
@@ -69,7 +69,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public IEnumerable<BusinesOnlineTransactionType> ReadAll()
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<BusinesOnlineTransactionType>("SELECT [pkBusinesOnlineTransactionTypeId] [Id], [fkTransactionGroupId] [TransactionGroupId], [Description], [IsActive] FROM [dbo].[tblBusinesOnlineTransactionType]");
             }
@@ -81,7 +81,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Update(BusinesOnlineTransactionType model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblBusinesOnlineTransactionType]
                             SET [fkTransactionGroupId] = @fkTransactionGroupId, [Description] = @Description, [IsActive] = @IsActive
@@ -96,7 +96,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Delete(BusinesOnlineTransactionType model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[tblBusinesOnlineTransactionType] WHERE [pkBusinesOnlineTransactionTypeId] = @Id",
                     new {model.Id});

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,6 +50,9 @@ namespace StandardBank.ConcessionManagement.UI
             services.AddMemoryCache();
             services.AddMvc();
 
+            // Add automapper
+            services.AddAutoMapper();
+
             // Add the custom services we've created
             DependencyInjection.ConfigureServices(services, GenerateConfigurationData());
 
@@ -63,7 +67,8 @@ namespace StandardBank.ConcessionManagement.UI
         private ConfigurationData GenerateConfigurationData()
         {
             var connectionString = Configuration["ConnectionString"];
-            return new ConfigurationData(connectionString, Configuration["OverrideLoggedInUser"]);
+            var databaseType = Configuration["DatabaseType"];
+            return new ConfigurationData(connectionString, Configuration["OverrideLoggedInUser"], databaseType);
         }
 
         /// <summary>

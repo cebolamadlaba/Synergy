@@ -1,4 +1,5 @@
-﻿using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+﻿using AutoMapper;
+using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Pricing;
 
@@ -16,12 +17,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IRiskGroupRepository _riskGroupRepository;
 
         /// <summary>
+        /// The mapper
+        /// </summary>
+        private readonly IMapper _mapper;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="PricingManager"/> class.
         /// </summary>
         /// <param name="riskGroupRepository">The risk group repository.</param>
-        public PricingManager(IRiskGroupRepository riskGroupRepository)
+        /// <param name="mapper"></param>
+        public PricingManager(IRiskGroupRepository riskGroupRepository, IMapper mapper)
         {
             _riskGroupRepository = riskGroupRepository;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -33,15 +41,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var riskGroup = _riskGroupRepository.ReadByRiskGroupNumberIsActive(riskGroupNumber, true);
 
-            if (riskGroup != null)
-                return new RiskGroup
-                {
-                    Id = riskGroup.Id,
-                    Name = riskGroup.RiskGroupName,
-                    Number = riskGroup.RiskGroupNumber
-                };
-
-            return null;
+            return riskGroup != null ? _mapper.Map<RiskGroup>(riskGroup) : null;
         }
     }
 }

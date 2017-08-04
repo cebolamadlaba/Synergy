@@ -16,17 +16,17 @@ namespace StandardBank.ConcessionManagement.Repository
     public class ConditionTypeProductRepository : IConditionTypeProductRepository
     {
         /// <summary>
-        /// The configuration data
+        /// The db connection factory
         /// </summary>
-        private readonly IConfigurationData _configurationData;
+        private readonly IDbConnectionFactory _dbConnectionFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConditionTypeProductRepository"/> class.
         /// </summary>
-        /// <param name="configurationData">The configuration data.</param>
-        public ConditionTypeProductRepository(IConfigurationData configurationData)
+        /// <param name="dbConnectionFactory">The db connection factory.</param>
+        public ConditionTypeProductRepository(IDbConnectionFactory dbConnectionFactory)
         {
-            _configurationData = configurationData;
+            _dbConnectionFactory = dbConnectionFactory;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace StandardBank.ConcessionManagement.Repository
                                 VALUES (@fkConditionTypeId, @fkConditionProductId, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 model.Id = db.Query<int>(sql, new {fkConditionTypeId = model.ConditionTypeId, fkConditionProductId = model.ConditionProductId, IsActive = model.IsActive}).Single();
             }
@@ -55,7 +55,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ConditionTypeProduct ReadById(int id)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConditionTypeProduct>(
                     "SELECT [pkConditionTypeProductId] [Id], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [IsActive] FROM [dbo].[tblConditionTypeProduct] WHERE [pkConditionTypeProductId] = @Id",
@@ -69,7 +69,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public IEnumerable<ConditionTypeProduct> ReadAll()
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConditionTypeProduct>("SELECT [pkConditionTypeProductId] [Id], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [IsActive] FROM [dbo].[tblConditionTypeProduct]");
             }
@@ -81,7 +81,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Update(ConditionTypeProduct model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblConditionTypeProduct]
                             SET [fkConditionTypeId] = @fkConditionTypeId, [fkConditionProductId] = @fkConditionProductId, [IsActive] = @IsActive
@@ -96,7 +96,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Delete(ConditionTypeProduct model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[tblConditionTypeProduct] WHERE [pkConditionTypeProductId] = @Id",
                     new {model.Id});

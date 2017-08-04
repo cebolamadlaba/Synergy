@@ -31,6 +31,10 @@ import { LendingViewService } from "./lending-view/lending-view.service";
 import { LendingConcessionFilterPipe } from './lending-concession-filter/lending-concession-filter.pipe';
 import { ReviewFeeTypeService } from "./review-fee-type/review-fee-type.service";
 import { ProductTypeService } from "./product-type/product-type.service";
+import { PeriodService } from "./period/period.service";
+import { PeriodTypeService } from "./period-type/period-type.service";
+import { ConditionTypeService } from "./condition-type/condition-type.service";
+import { ConcessionConditionsService } from "./concession-conditions/concession-conditions.service";
 
 @NgModule({
     declarations: [
@@ -68,7 +72,11 @@ import { ProductTypeService } from "./product-type/product-type.service";
         RiskGroupService,
         LendingViewService,
         ReviewFeeTypeService,
-        ProductTypeService
+        ProductTypeService,
+        PeriodService,
+        PeriodTypeService,
+        ConditionTypeService,
+        ConcessionConditionsService
     ],
     bootstrap: [AppComponent]
 })

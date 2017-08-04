@@ -16,17 +16,17 @@ namespace StandardBank.ConcessionManagement.Repository
     public class ScenarioManagerToolDealRepository : IScenarioManagerToolDealRepository
     {
         /// <summary>
-        /// The configuration data
+        /// The db connection factory
         /// </summary>
-        private readonly IConfigurationData _configurationData;
+        private readonly IDbConnectionFactory _dbConnectionFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ScenarioManagerToolDealRepository"/> class.
         /// </summary>
-        /// <param name="configurationData">The configuration data.</param>
-        public ScenarioManagerToolDealRepository(IConfigurationData configurationData)
+        /// <param name="dbConnectionFactory">The db connection factory.</param>
+        public ScenarioManagerToolDealRepository(IDbConnectionFactory dbConnectionFactory)
         {
-            _configurationData = configurationData;
+            _dbConnectionFactory = dbConnectionFactory;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace StandardBank.ConcessionManagement.Repository
                                 VALUES (@DealNumber, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 model.Id = db.Query<int>(sql, new {DealNumber = model.DealNumber, IsActive = model.IsActive}).Single();
             }
@@ -55,7 +55,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ScenarioManagerToolDeal ReadById(int id)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ScenarioManagerToolDeal>(
                     "SELECT [pkScenarioManagerToolDealId] [Id], [DealNumber], [IsActive] FROM [dbo].[tblScenarioManagerToolDeal] WHERE [pkScenarioManagerToolDealId] = @Id",
@@ -69,7 +69,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public IEnumerable<ScenarioManagerToolDeal> ReadAll()
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ScenarioManagerToolDeal>("SELECT [pkScenarioManagerToolDealId] [Id], [DealNumber], [IsActive] FROM [dbo].[tblScenarioManagerToolDeal]");
             }
@@ -81,7 +81,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Update(ScenarioManagerToolDeal model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblScenarioManagerToolDeal]
                             SET [DealNumber] = @DealNumber, [IsActive] = @IsActive
@@ -96,7 +96,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Delete(ScenarioManagerToolDeal model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[tblScenarioManagerToolDeal] WHERE [pkScenarioManagerToolDealId] = @Id",
                     new {model.Id});

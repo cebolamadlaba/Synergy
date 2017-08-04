@@ -28,7 +28,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             _concessionManager = new ConcessionManager(MockConcessionRepository.Object, MockLookupTableManager.Object,
                 MockLegalEntityRepository.Object, MockRiskGroupRepository.Object,
-                InstantiatedDependencies.CacheManager, MockConcessionAccountRepository.Object);
+                InstantiatedDependencies.CacheManager, MockConcessionAccountRepository.Object,
+                InstantiatedDependencies.Mapper, MockConcessionConditionRepository.Object);
         }
 
         /// <summary>
@@ -38,11 +39,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         public void GetPendingConcessionsForUser_Requestor_Executes_Positive()
         {
             MockLookupTableManager.Setup(_ => _.GetStatusId(It.IsAny<string>())).Returns(1);
-            MockLookupTableManager.Setup(_ => _.GetSubStatusId(It.IsAny<string>())).Returns(1);
 
             MockConcessionRepository
-                .Setup(_ => _.ReadByRequestorIdStatusIdSubStatusIdIsActive(It.IsAny<int>(), It.IsAny<int>(),
-                    It.IsAny<int>(), It.IsAny<bool>())).Returns(new[] {new Concession()});
+                .Setup(_ => _.ReadByRequestorIdStatusIdIsActive(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(new[] {new Concession()});
 
             MockLegalEntityRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
                 .Returns(new LegalEntity { IsActive = true });
@@ -247,6 +247,60 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that GetConcessionConditions executes positive
+        /// </summary>
+        [Fact]
+        public void GetConcessionConditions_Executes_Positive()
+        {
+            MockConcessionConditionRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>())).Returns(new[]
+            {
+                new ConcessionCondition
+                {
+                    PeriodId = 1,
+                    PeriodTypeId = 1,
+                    Id = 1,
+                    IsActive = true,
+                    Value = 1,
+                    ConcessionId = 1,
+                    Volume = 1,
+                    ConditionTypeId = 1,
+                    ConditionProductId = 1,
+                    InterestRate = 1
+                }
+            });
+
+            var conditionTypeName = "Test Condition Type Name";
+
+            MockLookupTableManager.Setup(_ => _.GetConditionTypeName(It.IsAny<int>()))
+                .Returns(conditionTypeName);
+
+            var productTypeName = "Test Product Type Name";
+
+            MockLookupTableManager.Setup(_ => _.GetProductTypeName(It.IsAny<int>())).Returns(productTypeName);
+
+            var periodTypeName = "Test Period Type Name";
+
+            MockLookupTableManager.Setup(_ => _.GetPeriodTypeName(It.IsAny<int>())).Returns(periodTypeName);
+
+            var periodName = "Test Period Name";
+
+            MockLookupTableManager.Setup(_ => _.GetPeriodName(It.IsAny<int>())).Returns(periodName);
+
+            var result = _concessionManager.GetConcessionConditions(1);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+
+            foreach (var record in result)
+            {
+                Assert.Equal(record.ConditionType, conditionTypeName);
+                Assert.Equal(record.ProductType, productTypeName);
+                Assert.Equal(record.PeriodType, periodTypeName);
+                Assert.Equal(record.Period, periodName);
+            }
         }
     }
 }

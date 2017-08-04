@@ -16,17 +16,17 @@ namespace StandardBank.ConcessionManagement.Repository
     public class ConcessionInvestmentRepository : IConcessionInvestmentRepository
     {
         /// <summary>
-        /// The configuration data
+        /// The db connection factory
         /// </summary>
-        private readonly IConfigurationData _configurationData;
+        private readonly IDbConnectionFactory _dbConnectionFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionInvestmentRepository"/> class.
         /// </summary>
-        /// <param name="configurationData">The configuration data.</param>
-        public ConcessionInvestmentRepository(IConfigurationData configurationData)
+        /// <param name="dbConnectionFactory">The db connection factory.</param>
+        public ConcessionInvestmentRepository(IDbConnectionFactory dbConnectionFactory)
         {
-            _configurationData = configurationData;
+            _dbConnectionFactory = dbConnectionFactory;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace StandardBank.ConcessionManagement.Repository
                                 VALUES (@fkConcessionId, @fkProductTypeId, @Balance, @Term, @InterestToCustomer) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 model.Id = db.Query<int>(sql, new {fkConcessionId = model.ConcessionId, fkProductTypeId = model.ProductTypeId, Balance = model.Balance, Term = model.Term, InterestToCustomer = model.InterestToCustomer}).Single();
             }
@@ -55,7 +55,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ConcessionInvestment ReadById(int id)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionInvestment>(
                     "SELECT [pkConcessionInvestmentId] [Id], [fkConcessionId] [ConcessionId], [fkProductTypeId] [ProductTypeId], [Balance], [Term], [InterestToCustomer] FROM [dbo].[tblConcessionInvestment] WHERE [pkConcessionInvestmentId] = @Id",
@@ -69,7 +69,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public IEnumerable<ConcessionInvestment> ReadAll()
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionInvestment>("SELECT [pkConcessionInvestmentId] [Id], [fkConcessionId] [ConcessionId], [fkProductTypeId] [ProductTypeId], [Balance], [Term], [InterestToCustomer] FROM [dbo].[tblConcessionInvestment]");
             }
@@ -81,7 +81,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Update(ConcessionInvestment model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblConcessionInvestment]
                             SET [fkConcessionId] = @fkConcessionId, [fkProductTypeId] = @fkProductTypeId, [Balance] = @Balance, [Term] = @Term, [InterestToCustomer] = @InterestToCustomer
@@ -96,7 +96,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Delete(ConcessionInvestment model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[tblConcessionInvestment] WHERE [pkConcessionInvestmentId] = @Id",
                     new {model.Id});

@@ -44,6 +44,34 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         string GetProvinceName(int provinceId);
 
         /// <summary>
+        /// Gets the condition type name
+        /// </summary>
+        /// <param name="conditionTypeId"></param>
+        /// <returns></returns>
+        string GetConditionTypeName(int conditionTypeId);
+
+        /// <summary>
+        /// Gets the product type name
+        /// </summary>
+        /// <param name="productTypeId"></param>
+        /// <returns></returns>
+        string GetProductTypeName(int productTypeId);
+
+        /// <summary>
+        /// Gets the period type name
+        /// </summary>
+        /// <param name="periodTypeId"></param>
+        /// <returns></returns>
+        string GetPeriodTypeName(int periodTypeId);
+
+        /// <summary>
+        /// Gets the period name
+        /// </summary>
+        /// <param name="periodId"></param>
+        /// <returns></returns>
+        string GetPeriodName(int periodId);
+
+        /// <summary>
         /// Gets the concession type id for the code passed in
         /// </summary>
         /// <param name="code"></param>
@@ -62,5 +90,23 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// </summary>
         /// <returns></returns>
         IEnumerable<ReviewFeeType> GetReviewFeeTypes();
+
+        /// <summary>
+        /// Gets the periods.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<Period> GetPeriods();
+
+        /// <summary>
+        /// Gets the period types.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<PeriodType> GetPeriodTypes();
+
+        /// <summary>
+        /// Gets the condition types
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<ConditionType> GetConditionTypes();
     }
 }

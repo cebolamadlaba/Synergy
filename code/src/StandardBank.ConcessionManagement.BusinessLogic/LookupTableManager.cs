@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface;
@@ -54,6 +55,26 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IReviewFeeTypeRepository _reviewFeeTypeRepository;
 
         /// <summary>
+        /// The period repository
+        /// </summary>
+        private readonly IPeriodRepository _periodRepository;
+
+        /// <summary>
+        /// The period type repository
+        /// </summary>
+        private readonly IPeriodTypeRepository _periodTypeRepository;
+
+        /// <summary>
+        /// The condition type repository
+        /// </summary>
+        private readonly IConditionTypeRepository _conditionTypeRepository;
+
+        /// <summary>
+        /// The mapper
+        /// </summary>
+        private readonly IMapper _mapper;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LookupTableManager"/> class.
         /// </summary>
         /// <param name="statusRepository">The status repository.</param>
@@ -64,10 +85,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="concessionTypeRepository">The concession type repository.</param>
         /// <param name="productRepository">The product repository.</param>
         /// <param name="reviewFeeTypeRepository">The review fee type repository.</param>
+        /// <param name="periodRepository">The period repository.</param>
+        /// <param name="periodTypeRepository">The period type repository.</param>
+        /// <param name="conditionTypeRepository"></param>
+        /// <param name="mapper"></param>
         public LookupTableManager(IStatusRepository statusRepository, ISubStatusRepository subStatusRepository,
             IReferenceTypeRepository referenceTypeRepository, IMarketSegmentRepository marketSegmentRepository,
             IProvinceRepository provinceRepository, IConcessionTypeRepository concessionTypeRepository,
-            IProductRepository productRepository, IReviewFeeTypeRepository reviewFeeTypeRepository)
+            IProductRepository productRepository, IReviewFeeTypeRepository reviewFeeTypeRepository,
+            IPeriodRepository periodRepository, IPeriodTypeRepository periodTypeRepository,
+            IConditionTypeRepository conditionTypeRepository, IMapper mapper)
         {
             _statusRepository = statusRepository;
             _subStatusRepository = subStatusRepository;
@@ -77,6 +104,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionTypeRepository = concessionTypeRepository;
             _productRepository = productRepository;
             _reviewFeeTypeRepository = reviewFeeTypeRepository;
+            _periodRepository = periodRepository;
+            _periodTypeRepository = periodTypeRepository;
+            _conditionTypeRepository = conditionTypeRepository;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -140,6 +171,54 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Gets the condition type name
+        /// </summary>
+        /// <param name="conditionTypeId"></param>
+        /// <returns></returns>
+        public string GetConditionTypeName(int conditionTypeId)
+        {
+            var conditionTypes = _conditionTypeRepository.ReadAll();
+
+            return conditionTypes.First(_ => _.Id == conditionTypeId && _.IsActive).Description;
+        }
+
+        /// <summary>
+        /// Gets the product type name
+        /// </summary>
+        /// <param name="productTypeId"></param>
+        /// <returns></returns>
+        public string GetProductTypeName(int productTypeId)
+        {
+            var productTypes = _productRepository.ReadAll();
+
+            return productTypes.First(_ => _.Id == productTypeId && _.IsActive).Description;
+        }
+
+        /// <summary>
+        /// Gets the period type name
+        /// </summary>
+        /// <param name="periodTypeId"></param>
+        /// <returns></returns>
+        public string GetPeriodTypeName(int periodTypeId)
+        {
+            var periodTypes = _periodTypeRepository.ReadAll();
+
+            return periodTypes.First(_ => _.Id == periodTypeId && _.IsActive).Description;
+        }
+
+        /// <summary>
+        /// Gets the period name
+        /// </summary>
+        /// <param name="periodId"></param>
+        /// <returns></returns>
+        public string GetPeriodName(int periodId)
+        {
+            var periods = _periodRepository.ReadAll();
+
+            return periods.First(_ => _.Id == periodId && _.IsActive).Description;
+        }
+
+        /// <summary>
         /// Gets the concession type id for the code passed in
         /// </summary>
         /// <param name="code"></param>
@@ -164,12 +243,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             foreach (var productType in _productRepository.ReadByConcessionTypeIdIsActive(concessionTypeId, true))
             {
-                productTypes.Add(new ProductType
-                {
-                    Id = productType.Id,
-                    ConcessionType = GetConcessionType(concessionTypeId),
-                    Description = productType.Description
-                });
+                var mappedProductType = _mapper.Map<ProductType>(productType);
+                mappedProductType.ConcessionType = GetConcessionType(concessionTypeId);
+                productTypes.Add(mappedProductType);
             }
 
             return productTypes;
@@ -182,14 +258,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         private ConcessionType GetConcessionType(int concessionTypeId)
         {
-            var concessionType = _concessionTypeRepository.ReadById(concessionTypeId);
-
-            return new ConcessionType
-            {
-                Code = concessionType.Code,
-                Description = concessionType.Description,
-                Id = concessionType.Id
-            };
+            return _mapper.Map<ConcessionType>(_concessionTypeRepository.ReadById(concessionTypeId));
         }
 
         /// <summary>
@@ -199,13 +268,37 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public IEnumerable<ReviewFeeType> GetReviewFeeTypes()
         {
             var reviewFeeTypes = _reviewFeeTypeRepository.ReadAll();
+            return _mapper.Map<IEnumerable<ReviewFeeType>>(reviewFeeTypes.Where(_ => _.IsActive));
+        }
 
-            foreach (var reviewFeeType in reviewFeeTypes.Where(_ => _.IsActive))
-                yield return new ReviewFeeType
-                {
-                    Id = reviewFeeType.Id,
-                    Description = reviewFeeType.Description
-                };
+        /// <summary>
+        /// Gets the periods.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Period> GetPeriods()
+        {
+            var periods = _periodRepository.ReadAll();
+            return _mapper.Map<IEnumerable<Period>>(periods.Where(_ => _.IsActive));
+        }
+
+        /// <summary>
+        /// Gets the period types.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<PeriodType> GetPeriodTypes()
+        {
+            var periodTypes = _periodTypeRepository.ReadAll();
+            return _mapper.Map<IEnumerable<PeriodType>>(periodTypes.Where(_ => _.IsActive));
+        }
+
+        /// <summary>
+        /// Gets the condition types
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<ConditionType> GetConditionTypes()
+        {
+            var conditionTypes = _conditionTypeRepository.ReadAll();
+            return _mapper.Map<IEnumerable<ConditionType>>(conditionTypes.Where(_ => _.IsActive));
         }
     }
 }

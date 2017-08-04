@@ -15,17 +15,17 @@ namespace StandardBank.ConcessionManagement.Repository
     public class AuthorizingUserRepository : IAuthorizingUserRepository
     {
         /// <summary>
-        /// The configuration data
+        /// The db connection factory
         /// </summary>
-        private readonly IConfigurationData _configurationData;
+        private readonly IDbConnectionFactory _dbConnectionFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthorizingUserRepository"/> class.
         /// </summary>
-        /// <param name="configurationData">The configuration data.</param>
-        public AuthorizingUserRepository(IConfigurationData configurationData)
+        /// <param name="dbConnectionFactory">The db connection factory.</param>
+        public AuthorizingUserRepository(IDbConnectionFactory dbConnectionFactory)
         {
-            _configurationData = configurationData;
+            _dbConnectionFactory = dbConnectionFactory;
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace StandardBank.ConcessionManagement.Repository
                 @"INSERT INTO [dbo].['Autorizing Users$'] ([Center], [Segment], [Authorizing User ID], [Provincial User ID], [Pricing User ID])
                                 VALUES (@Center, @Segment, @AuthorizingUserId, @ProvincialUserId, @PricingUserId)";
 
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(sql, new { model.Center, model.Segment, model.AuthorizingUserId, model.ProvincialUserId, model.PricingUserId });
             }
@@ -53,7 +53,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public IEnumerable<AuthorizingUser> ReadAll()
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<AuthorizingUser>(
                     @"SELECT [Center], [Segment], [Authorizing User ID], [Provincial User ID], [Pricing User ID] FROM [dbo].['Autorizing Users$']");
@@ -66,7 +66,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Delete(AuthorizingUser model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"DELETE FROM [dbo].['Autorizing Users$'] 
                             WHERE [Center] = @Center

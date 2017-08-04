@@ -1,6 +1,7 @@
 ﻿using Moq;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
+using StandardBank.ConcessionManagement.Test.Helpers;
 using Xunit;
 using static StandardBank.ConcessionManagement.Test.Helpers.MockedDependencies;
 
@@ -21,7 +22,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         /// </summary>
         public PricingManagerTest()
         {
-            _pricingManager = new PricingManager(MockRiskGroupRepository.Object);
+            _pricingManager = new PricingManager(MockRiskGroupRepository.Object, InstantiatedDependencies.Mapper);
         }
 
         /// <summary>

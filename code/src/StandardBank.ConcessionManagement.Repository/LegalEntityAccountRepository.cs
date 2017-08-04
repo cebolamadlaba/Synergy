@@ -16,17 +16,17 @@ namespace StandardBank.ConcessionManagement.Repository
     public class LegalEntityAccountRepository : ILegalEntityAccountRepository
     {
         /// <summary>
-        /// The configuration data
+        /// The db connection factory
         /// </summary>
-        private readonly IConfigurationData _configurationData;
+        private readonly IDbConnectionFactory _dbConnectionFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LegalEntityAccountRepository"/> class.
         /// </summary>
-        /// <param name="configurationData">The configuration data.</param>
-        public LegalEntityAccountRepository(IConfigurationData configurationData)
+        /// <param name="dbConnectionFactory">The db connection factory.</param>
+        public LegalEntityAccountRepository(IDbConnectionFactory dbConnectionFactory)
         {
-            _configurationData = configurationData;
+            _dbConnectionFactory = dbConnectionFactory;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace StandardBank.ConcessionManagement.Repository
                                 VALUES (@fkLegalEntityId, @AccountNumber, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 model.Id = db.Query<int>(sql, new {fkLegalEntityId = model.LegalEntityId, AccountNumber = model.AccountNumber, IsActive = model.IsActive}).Single();
             }
@@ -55,7 +55,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public LegalEntityAccount ReadById(int id)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<LegalEntityAccount>(
                     "SELECT [pkLegalEntityAccountId] [Id], [fkLegalEntityId] [LegalEntityId], [AccountNumber], [IsActive] FROM [dbo].[tblLegalEntityAccount] WHERE [pkLegalEntityAccountId] = @Id",
@@ -69,7 +69,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public IEnumerable<LegalEntityAccount> ReadAll()
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<LegalEntityAccount>("SELECT [pkLegalEntityAccountId] [Id], [fkLegalEntityId] [LegalEntityId], [AccountNumber], [IsActive] FROM [dbo].[tblLegalEntityAccount]");
             }
@@ -81,7 +81,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Update(LegalEntityAccount model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblLegalEntityAccount]
                             SET [fkLegalEntityId] = @fkLegalEntityId, [AccountNumber] = @AccountNumber, [IsActive] = @IsActive
@@ -96,7 +96,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Delete(LegalEntityAccount model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[tblLegalEntityAccount] WHERE [pkLegalEntityAccountId] = @Id",
                     new {model.Id});

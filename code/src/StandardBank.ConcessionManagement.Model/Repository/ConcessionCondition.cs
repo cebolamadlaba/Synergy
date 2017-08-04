@@ -70,5 +70,15 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The IsActive.
         /// </value>
         public bool IsActive { get; set; }
+
+        /// <summary>
+        /// Gets or sets the period type id
+        /// </summary>
+        public int? PeriodTypeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the period id
+        /// </summary>
+        public int? PeriodId { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace StandardBank.ConcessionManagement.Interface.Common
+﻿using StandardBank.ConcessionManagement.Model.Common;
+
+namespace StandardBank.ConcessionManagement.Interface.Common
 {
     /// <summary>
     /// Configuration data interface
@@ -12,6 +14,11 @@
         /// The connection string.
         /// </value>
         string ConnectionString { get; }
+
+        /// <summary>
+        /// Gets the database type
+        /// </summary>
+        DatabaseType DatabaseType { get; }
 
         /// <summary>
         /// Gets the override logged in user

@@ -61,6 +61,7 @@
     <Folder Include="dbo\" />
     <Folder Include="dbo\Tables\" />
     <Folder Include="Change Scripts" />
+    <Folder Include="Change Scripts\Deployed to UAT" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Users_.sql" />
@@ -110,15 +111,19 @@
     <Build Include="dbo\Tables\rtblApprovalType.sql" />
     <Build Include="dbo\Tables\rtblAdValorem.sql" />
     <Build Include="dbo\Tables\%27Autorizing Users_%27.sql" />
+    <None Include="Change Scripts\Deployed to UAT\01_create_rtblRegion.sql" />
+    <None Include="Change Scripts\Deployed to UAT\02_create_tblUserRegion.sql" />
+    <None Include="Change Scripts\Deployed to UAT\03_add_data_rtblRegion.sql" />
+    <None Include="Change Scripts\Deployed to UAT\04_add_data_tblUserRegion.sql" />
+    <None Include="Change Scripts\Deployed to UAT\05_alter_tblLegalEntity.sql" />
+    <None Include="Change Scripts\Deployed to UAT\06_alter_tblConcessionLending.sql" />
+    <None Include="Change Scripts\Deployed to UAT\07_update_data_tblConcessionLending.sql" />
+    <None Include="Change Scripts\Deployed to UAT\08_alter_tblConcession.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Change Scripts\01_create_rtblRegion.sql" />
-    <None Include="Change Scripts\02_create_tblUserRegion.sql" />
-    <None Include="Change Scripts\03_add_data_rtblRegion.sql" />
-    <None Include="Change Scripts\04_add_data_tblUserRegion.sql" />
-    <None Include="Change Scripts\05_alter_tblLegalEntity.sql" />
-    <None Include="Change Scripts\06_alter_tblConcessionLending.sql" />
-    <None Include="Change Scripts\07_update_data_tblConcessionLending.sql" />
-    <None Include="Change Scripts\08_alter_tblConcession.sql" />
+    <None Include="Change Scripts\09_create_rtblPeriod.sql" />
+    <None Include="Change Scripts\10_create_rtblPeriodType.sql" />
+    <None Include="Change Scripts\11_add_data_rtlbPeriod.sql" />
+    <None Include="Change Scripts\12_add_data_rtblPeriodType.sql" />
   </ItemGroup>
 </Project>

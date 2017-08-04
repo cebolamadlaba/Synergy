@@ -16,17 +16,17 @@ namespace StandardBank.ConcessionManagement.Repository
     public class CentreUserRepository : ICentreUserRepository
     {
         /// <summary>
-        /// The configuration data
+        /// The db connection factory
         /// </summary>
-        private readonly IConfigurationData _configurationData;
+        private readonly IDbConnectionFactory _dbConnectionFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CentreUserRepository"/> class.
         /// </summary>
-        /// <param name="configurationData">The configuration data.</param>
-        public CentreUserRepository(IConfigurationData configurationData)
+        /// <param name="dbConnectionFactory">The db connection factory.</param>
+        public CentreUserRepository(IDbConnectionFactory dbConnectionFactory)
         {
-            _configurationData = configurationData;
+            _dbConnectionFactory = dbConnectionFactory;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace StandardBank.ConcessionManagement.Repository
                                 VALUES (@fkCentreId, @fkUserId, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 model.Id = db.Query<int>(sql, new {fkCentreId = model.CentreId, fkUserId = model.UserId, IsActive = model.IsActive}).Single();
             }
@@ -55,7 +55,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public CentreUser ReadById(int id)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<CentreUser>(
                     "SELECT [pkCentreUserId] [Id], [fkCentreId] [CentreId], [fkUserId] [UserId], [IsActive] FROM [dbo].[tblCentreUser] WHERE [pkCentreUserId] = @Id",
@@ -70,7 +70,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public IEnumerable<CentreUser> ReadByUserId(int userId)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<CentreUser>(
                     @"SELECT [pkCentreUserId] [Id], [fkCentreId] [CentreId], [fkUserId] [UserId], [IsActive] 
@@ -86,7 +86,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public IEnumerable<CentreUser> ReadAll()
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<CentreUser>("SELECT [pkCentreUserId] [Id], [fkCentreId] [CentreId], [fkUserId] [UserId], [IsActive] FROM [dbo].[tblCentreUser]");
             }
@@ -98,7 +98,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Update(CentreUser model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblCentreUser]
                             SET [fkCentreId] = @fkCentreId, [fkUserId] = @fkUserId, [IsActive] = @IsActive
@@ -113,7 +113,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Delete(CentreUser model)
         {
-            using (IDbConnection db = new SqlConnection(_configurationData.ConnectionString))
+            using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[tblCentreUser] WHERE [pkCentreUserId] = @Id",
                     new {model.Id});
