@@ -38,19 +38,9 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                     _.AssemblyContainingType(typeof(ConcessionManager));
                     _.AssemblyContainingType(typeof(AuthorizingUserRepository));
                     _.WithDefaultConventions();
-                    _.ConnectImplementationsToTypesClosing(typeof(IRequestHandler<>)); // Handlers with no response
-                    _.ConnectImplementationsToTypesClosing(typeof(IRequestHandler<,>)); // Handlers with a response
-                    _.ConnectImplementationsToTypesClosing(typeof(IAsyncRequestHandler<>)); // Async handlers with no response
-                    _.ConnectImplementationsToTypesClosing(typeof(IAsyncRequestHandler<,>)); // Async Handlers with a response
-                    _.ConnectImplementationsToTypesClosing(typeof(INotificationHandler<>));
-                    _.ConnectImplementationsToTypesClosing(typeof(IAsyncNotificationHandler<>));
-                    _.ConnectImplementationsToTypesClosing(typeof(IPipelineBehavior<,>));
-                    _.ConnectImplementationsToTypesClosing(typeof(IRequestPostProcessor<,>));
-                });
-                
 
-                config.For<SingleInstanceFactory>().Use<SingleInstanceFactory>(ctx => t => ctx.GetInstance(t));
-                config.For<MultiInstanceFactory>().Use<MultiInstanceFactory>(ctx => t => ctx.GetAllInstances(t));
+                    _.ConnectImplementationsToTypesClosing(typeof(IPipelineBehavior<,>));
+                });
 
                 //Populate the container using the service collection
                 config.Populate(services);
