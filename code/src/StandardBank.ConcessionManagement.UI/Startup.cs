@@ -9,6 +9,7 @@ using StandardBank.ConcessionManagement.Common;
 using StandardBank.ConcessionManagement.UI.Extension;
 using StandardBank.ConcessionManagement.UI.Helpers.Implementation;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
+using System.IO;
 
 namespace StandardBank.ConcessionManagement.UI
 {
@@ -30,6 +31,7 @@ namespace StandardBank.ConcessionManagement.UI
                 .AddEnvironmentVariables();
 
             Configuration = builder.Build();
+            Environment = env;
 
             //setup the application logger
             ApplicationLogging.SetupLogger(Configuration["LogLevel"], Configuration["LogFileFolder"]);
@@ -40,6 +42,7 @@ namespace StandardBank.ConcessionManagement.UI
         /// </summary>
         public IConfigurationRoot Configuration { get; }
 
+        IHostingEnvironment Environment { get; }
         /// <summary>
         /// This method gets called by the runtime. Use this method to add services to the container.
         /// </summary>
@@ -54,7 +57,7 @@ namespace StandardBank.ConcessionManagement.UI
             services.AddAutoMapper();
 
             // Add the custom services we've created
-            DependencyInjection.ConfigureServices(services, GenerateConfigurationData());
+            DependencyInjection.ConfigureServices(services, GenerateConfigurationData(Environment));
 
             // Add the local project services
             services.AddScoped<ISiteHelper, SiteHelper>();
@@ -64,11 +67,12 @@ namespace StandardBank.ConcessionManagement.UI
         /// Generates a populated configuration data object using the configuration values from the appSettings.json
         /// </summary>
         /// <returns></returns>
-        private ConfigurationData GenerateConfigurationData()
+        private ConfigurationData GenerateConfigurationData(IHostingEnvironment env)
         {
-            var connectionString = Configuration["ConnectionString"];
-            var databaseType = Configuration["DatabaseType"];
-            return new ConfigurationData(connectionString, Configuration["OverrideLoggedInUser"], databaseType);
+            var config = new ConfigurationData();
+            config.TemplatePath = Path.Combine(env.ContentRootPath,"EmailTemplates");
+            Configuration.Bind(config);
+            return config;
         }
 
         /// <summary>
