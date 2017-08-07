@@ -18,6 +18,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
         public Concession Concession { get; set; }
 
         /// <summary>
+        /// Gets or sets the repository concession
+        /// </summary>
+        public Model.Repository.Concession RepositoryConcession { get; set; }
+
+        /// <summary>
         /// Gets or sets the user.
         /// </summary>
         /// <value>

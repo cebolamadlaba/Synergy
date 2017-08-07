@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Inbox;
-using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 {
@@ -67,5 +66,13 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="concessionId"></param>
         /// <returns></returns>
         IEnumerable<ConcessionCondition> GetConcessionConditions(int concessionId);
+
+        /// <summary>
+        /// Creates a concession and returns the repository entity
+        /// </summary>
+        /// <param name="concession"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        Model.Repository.Concession CreateConcession(Concession concession, User user);
     }
 }

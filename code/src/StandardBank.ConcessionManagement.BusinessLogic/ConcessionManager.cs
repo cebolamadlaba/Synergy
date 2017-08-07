@@ -333,6 +333,55 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Creates a concession and returns the repository object
+        /// </summary>
+        /// <param name="concession"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public Model.Repository.Concession CreateConcession(Concession concession, User user)
+        {
+            var mappedConcession = _mapper.Map<Model.Repository.Concession>(concession);
+            mappedConcession.TypeId = _lookupTableManager.GetReferenceTypeId(concession.Type);
+
+            //TODO: Get legal entity id
+            //message.Concession.CustomerName
+            //message.Concession.RiskGroupNumber
+            //message.Concession.RiskGroupName
+            //mappedConcession.LegalEntityId = _legalEntityRepository.
+            if (concession.RiskGroupNumber.HasValue)
+            {
+                var riskGroup = _riskGroupRepository.ReadByRiskGroupNumberIsActive(concession.RiskGroupNumber.Value, true);
+                var legalEntity = _legalEntityRepository.ReadByRiskGroupIdIsActive(riskGroup.Id, true).First();
+
+                mappedConcession.LegalEntityId = legalEntity.Id;
+            }
+
+            mappedConcession.ConcessionTypeId =
+                _lookupTableManager.GetConcessionTypeId(concession.ConcessionType);
+
+            mappedConcession.StatusId = _lookupTableManager.GetStatusId("Pending");
+            mappedConcession.SubStatusId = _lookupTableManager.GetSubStatusId("BCM Pending");
+            mappedConcession.ConcessionDate = DateTime.Now;
+            mappedConcession.RequestorId = user.Id;
+
+            mappedConcession.CentreId = user.SelectedCentre.Id;
+            mappedConcession.IsCurrent = true;
+            mappedConcession.IsActive = true;
+
+            var result = _concessionRepository.Create(mappedConcession);
+
+            //need to generate the concession reference based on the id returned
+            var concessionReference =
+                $"{concession.ConcessionType.Substring(0, 1)}{Convert.ToString(result.Id).PadLeft(12, '0')}";
+
+            result.ConcessionRef = concessionReference;
+
+            _concessionRepository.Update(result);
+
+            return result;
+        }
+
+        /// <summary>
         /// Maps the specified repository concessions.
         /// </summary>
         /// <param name="repositoryConcessions">The repository concessions.</param>

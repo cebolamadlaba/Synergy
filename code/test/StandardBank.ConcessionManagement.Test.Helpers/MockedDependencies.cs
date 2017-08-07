@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using MediatR;
+using Moq;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
@@ -290,5 +291,10 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The mock PeriodType repository
         /// </summary>
         public static Mock<IPeriodTypeRepository> MockPeriodTypeRepository = new Mock<IPeriodTypeRepository>();
+
+        /// <summary>
+        /// The mock Mediatr
+        /// </summary>
+        public static Mock<IMediator> MockMediator = new Mock<IMediator>();
     }
 }

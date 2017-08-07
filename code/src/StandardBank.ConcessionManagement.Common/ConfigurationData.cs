@@ -16,7 +16,9 @@ namespace StandardBank.ConcessionManagement.Common
         /// <param name="connectionString">The connection string.</param>
         /// <param name="overrideLoggedInUser"></param>
         /// <param name="databaseType"></param>
-        public ConfigurationData(string connectionString, string overrideLoggedInUser, string databaseType , string smtpServer , string smtpUserName , string smtpPassword , string defaultEmail , int smtpPort , string templatePath)
+        public ConfigurationData(string connectionString, string overrideLoggedInUser, string databaseType,
+            string smtpServer, string smtpUserName, string smtpPassword, string defaultEmail, int smtpPort,
+            string templatePath)
         {
             ConnectionString = connectionString;
             OverrideLoggedInUser = overrideLoggedInUser;
@@ -29,6 +31,7 @@ namespace StandardBank.ConcessionManagement.Common
             TemplatePath = templatePath;
 
         }
+
         public ConfigurationData(string connectionString, string overrideLoggedInUser, string databaseType)
         {
             ConnectionString = connectionString;

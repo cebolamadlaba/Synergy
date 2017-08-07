@@ -1,7 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
+using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 
@@ -43,6 +46,26 @@ namespace StandardBank.ConcessionManagement.UI.Controllers.Lending
         public async Task<Model.UserInterface.Concession> Post([FromBody]LendingConcession lendingConcession)
         {
             var user = _siteHelper.LoggedInUser(this);
+
+            lendingConcession = new LendingConcession
+            {
+                Concession = new Model.UserInterface.Concession
+                {
+                    AccountNumber = "001122334455",
+                    ConcessionType = "Lending",
+                    CustomerName = "Test Customer",
+                    DateOpened = DateTime.Now,
+                    Motivation = "Testing the system",
+                    MrsCrs = 32.53m,
+                    RiskGroupName = "EDCON",
+                    RiskGroupNumber = 2006,
+                    SmtDealNumber = "SMT00001",
+                    Type = "New"
+                },
+                ConcessionConditions = new List<ConcessionCondition>(),
+                LendingConcessionDetails = new List<LendingConcessionDetail>()
+            };
+
             var concession = lendingConcession.Concession;
             concession.ConcessionType = "Lending";
 

@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.IO;
+using MediatR;
+using MediatR.Pipeline;
+using Microsoft.Extensions.DependencyInjection;
 using StandardBank.ConcessionManagement.BusinessLogic;
 using StandardBank.ConcessionManagement.Common;
 using StandardBank.ConcessionManagement.Interface.Common;
@@ -20,10 +24,12 @@ namespace StandardBank.ConcessionManagement.UI.Extension
         public static Container ConfigureServices(IServiceCollection services, ConfigurationData configurationData)
         {
             var container = new Container();
+            
             // Add common services
             services.AddSingleton<IConfigurationData>(configurationData);
             services.AddScoped<ICacheManager, MemoryCacheManager>();
             services.AddTransient<IDbConnectionFactory, DbConnectionFactory>();
+
             container.Configure(config =>
             {
                 // Register stuff in container, using the StructureMap APIs...
@@ -32,7 +38,19 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                     _.AssemblyContainingType(typeof(ConcessionManager));
                     _.AssemblyContainingType(typeof(AuthorizingUserRepository));
                     _.WithDefaultConventions();
+                    _.ConnectImplementationsToTypesClosing(typeof(IRequestHandler<>)); // Handlers with no response
+                    _.ConnectImplementationsToTypesClosing(typeof(IRequestHandler<,>)); // Handlers with a response
+                    _.ConnectImplementationsToTypesClosing(typeof(IAsyncRequestHandler<>)); // Async handlers with no response
+                    _.ConnectImplementationsToTypesClosing(typeof(IAsyncRequestHandler<,>)); // Async Handlers with a response
+                    _.ConnectImplementationsToTypesClosing(typeof(INotificationHandler<>));
+                    _.ConnectImplementationsToTypesClosing(typeof(IAsyncNotificationHandler<>));
+                    _.ConnectImplementationsToTypesClosing(typeof(IPipelineBehavior<,>));
+                    _.ConnectImplementationsToTypesClosing(typeof(IRequestPostProcessor<,>));
                 });
+                
+
+                config.For<SingleInstanceFactory>().Use<SingleInstanceFactory>(ctx => t => ctx.GetInstance(t));
+                config.For<MultiInstanceFactory>().Use<MultiInstanceFactory>(ctx => t => ctx.GetAllInstances(t));
 
                 //Populate the container using the service collection
                 config.Populate(services);

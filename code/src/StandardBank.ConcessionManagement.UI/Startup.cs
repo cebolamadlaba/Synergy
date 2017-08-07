@@ -9,9 +9,9 @@ using StandardBank.ConcessionManagement.Common;
 using StandardBank.ConcessionManagement.UI.Extension;
 using StandardBank.ConcessionManagement.UI.Helpers.Implementation;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
-using StructureMap;
 using System;
 using System.IO;
+using MediatR;
 
 namespace StandardBank.ConcessionManagement.UI
 {
@@ -44,7 +44,11 @@ namespace StandardBank.ConcessionManagement.UI
         /// </summary>
         public IConfigurationRoot Configuration { get; }
 
+        /// <summary>
+        /// Gets the hosting environment
+        /// </summary>
         IHostingEnvironment Environment { get; }
+
         /// <summary>
         /// This method gets called by the runtime. Use this method to add services to the container.
         /// </summary>
@@ -53,6 +57,7 @@ namespace StandardBank.ConcessionManagement.UI
         {
             // Add the local project services
             services.AddScoped<ISiteHelper, SiteHelper>();
+
             // Add framework services.
             services.AddMemoryCache();
             services.AddMvc();
@@ -60,10 +65,11 @@ namespace StandardBank.ConcessionManagement.UI
             // Add automapper
             services.AddAutoMapper();
 
+            // Add MediatR
+            services.AddMediatR();
+
             // Add the custom services we've created
             var container = DependencyInjection.ConfigureServices(services, GenerateConfigurationData(Environment));
-
-           
 
             return container.GetInstance<IServiceProvider>();
         }
@@ -74,8 +80,7 @@ namespace StandardBank.ConcessionManagement.UI
         /// <returns></returns>
         private ConfigurationData GenerateConfigurationData(IHostingEnvironment env)
         {
-            var config = new ConfigurationData();
-            config.TemplatePath = Path.Combine(env.ContentRootPath,"EmailTemplates");
+            var config = new ConfigurationData {TemplatePath = Path.Combine(env.ContentRootPath, "EmailTemplates")};
             Configuration.Bind(config);
             return config;
         }
@@ -89,6 +94,9 @@ namespace StandardBank.ConcessionManagement.UI
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddSerilog();
+
+            //use the developer exception page
+            app.UseDeveloperExceptionPage();
 
             //this allows the anuglar routing to work
             app.UseStatusCodePagesWithReExecute("/");
