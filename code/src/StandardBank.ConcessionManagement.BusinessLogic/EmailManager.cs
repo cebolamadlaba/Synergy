@@ -42,7 +42,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 .From(DefaultEmail)
                 .To(recipient)
                 .Subject(subject)
-                .UsingTemplateFromFile(Path.Combine(TempaltePath,templateName), model);
+                .UsingTemplateFromFile(Path.Combine(TempaltePath,templateName+".cshtml"), model);
             var response = await email.SendAsync();
             return response.Successful;
         }

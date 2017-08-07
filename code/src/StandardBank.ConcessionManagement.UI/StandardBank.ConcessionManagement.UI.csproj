@@ -53,4 +53,11 @@
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="1.0.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="EmailTemplates\Approved.cshtml" />
+    <None Include="EmailTemplates\ApprovedWithChanges.cshtml" />
+    <None Include="EmailTemplates\Declined.cshtml" />
+    <None Include="EmailTemplates\NewConcession.cshtml" />
+  </ItemGroup>
 </Project>
