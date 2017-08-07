@@ -9,6 +9,8 @@ using StandardBank.ConcessionManagement.Common;
 using StandardBank.ConcessionManagement.UI.Extension;
 using StandardBank.ConcessionManagement.UI.Helpers.Implementation;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
+using StructureMap;
+using System;
 using System.IO;
 
 namespace StandardBank.ConcessionManagement.UI
@@ -47,8 +49,10 @@ namespace StandardBank.ConcessionManagement.UI
         /// This method gets called by the runtime. Use this method to add services to the container.
         /// </summary>
         /// <param name="services"></param>
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            // Add the local project services
+            services.AddScoped<ISiteHelper, SiteHelper>();
             // Add framework services.
             services.AddMemoryCache();
             services.AddMvc();
@@ -57,10 +61,11 @@ namespace StandardBank.ConcessionManagement.UI
             services.AddAutoMapper();
 
             // Add the custom services we've created
-            DependencyInjection.ConfigureServices(services, GenerateConfigurationData(Environment));
+            var container = DependencyInjection.ConfigureServices(services, GenerateConfigurationData(Environment));
 
-            // Add the local project services
-            services.AddScoped<ISiteHelper, SiteHelper>();
+           
+
+            return container.GetInstance<IServiceProvider>();
         }
 
         /// <summary>
