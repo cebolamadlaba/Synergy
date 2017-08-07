@@ -3,6 +3,9 @@ using FluentEmail.Core;
 using System.Threading.Tasks;
 using StandardBank.ConcessionManagement.Interface.Common;
 using System.IO;
+using FluentEmail.Razor;
+using System.Dynamic;
+using RazorLight.Extensions;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -13,6 +16,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public EmailManager(IConfigurationData config)
         {
             Email.DefaultSender = new MailKitEmailSender(config);
+            Email.DefaultRenderer = new RazorRenderer();
             DefaultEmail = config.DefaultEmail;
             TempaltePath = config.TemplatePath;
         }
@@ -38,11 +42,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         public async Task<bool> SendTemplatedEmail(string recipient, string subject, string message, string templateName, object model)
         {
+          
+            
             var email = Email
                 .From(DefaultEmail)
                 .To(recipient)
                 .Subject(subject)
-                .UsingTemplateFromFile(Path.Combine(TempaltePath,templateName+".cshtml"), model);
+                .UsingTemplateFromFile(Path.Combine(TempaltePath,templateName+".cshtml"), model.ToExpando());
             var response = await email.SendAsync();
             return response.Successful;
         }
