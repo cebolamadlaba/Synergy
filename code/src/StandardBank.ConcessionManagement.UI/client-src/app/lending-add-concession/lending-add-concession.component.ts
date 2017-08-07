@@ -29,7 +29,6 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
-    selectedConditionType: ConditionType;
     selectedConditionTypes: ConditionType[];
 
     observableReviewFeeTypes: Observable<ReviewFeeType[]>;
@@ -118,7 +117,6 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
         return this.formBuilder.group({
             conditionType: [''],
-            selectedConditionType: ConditionType,
             conditionProduct: [''],
             interestRate: [''],
             volume: [''],

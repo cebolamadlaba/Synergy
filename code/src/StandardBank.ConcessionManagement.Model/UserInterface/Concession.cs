@@ -31,6 +31,26 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public string RiskGroupName { get; set; }
 
         /// <summary>
+        /// Gets or sets the concession type
+        /// </summary>
+        public string ConcessionType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the smt deal number
+        /// </summary>
+        public string SmtDealNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets the motivation
+        /// </summary>
+        public string Motivation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the mrs crs
+        /// </summary>
+        public decimal MrsCrs { get; set; }
+
+        /// <summary>
         /// Gets or sets the customer name
         /// </summary>
         public string CustomerName { get; set; }

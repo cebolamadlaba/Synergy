@@ -169,6 +169,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Gets the reference type id for the reference type name supplied
+        /// </summary>
+        /// <param name="referenceTypeName"></param>
+        /// <returns></returns>
+        public int GetReferenceTypeId(string referenceTypeName)
+        {
+            var referenceTypes = _referenceTypeRepository.ReadAll();
+
+            return referenceTypes.First(_ => _.Description == referenceTypeName && _.IsActive).Id;
+        }
+
+        /// <summary>
         /// Gets the market segment name for the id specified
         /// </summary>
         /// <param name="marketSegmentId"></param>

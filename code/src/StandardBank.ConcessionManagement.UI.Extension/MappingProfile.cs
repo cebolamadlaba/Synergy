@@ -23,11 +23,13 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             CreateMap<Model.Repository.Concession, Model.UserInterface.Concession>()
                 .ForMember(target => target.ReferenceNumber, _ => _.MapFrom(source => source.ConcessionRef))
                 .ForMember(target => target.DateOpened, _ => _.MapFrom(source => source.ConcessionDate))
-                .ForMember(target => target.DateSentForApproval, _ => _.MapFrom(source => source.DatesentForApproval));
+                .ForMember(target => target.DateSentForApproval, _ => _.MapFrom(source => source.DatesentForApproval))
+                .ForMember(target => target.SmtDealNumber, _ => _.MapFrom(source => source.SMTDealNumber));
             CreateMap<Model.UserInterface.Concession, Model.Repository.Concession>()
                 .ForMember(target => target.ConcessionRef, _ => _.MapFrom(source => source.ReferenceNumber))
                 .ForMember(target => target.ConcessionDate, _ => _.MapFrom(source => source.DateOpened))
-                .ForMember(target => target.DatesentForApproval, _ => _.MapFrom(source => source.DateSentForApproval));
+                .ForMember(target => target.DatesentForApproval, _ => _.MapFrom(source => source.DateSentForApproval))
+                .ForMember(target => target.SMTDealNumber, _ => _.MapFrom(source => source.SmtDealNumber));
 
             //ConcessionCondition
             CreateMap<Model.Repository.ConcessionCondition, Model.UserInterface.ConcessionCondition>()

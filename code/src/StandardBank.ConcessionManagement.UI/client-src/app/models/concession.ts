@@ -9,4 +9,8 @@
     seqment: string;
     dateSentForApproval: Date;
     accountNumber: string;
+    concessionType: string;
+    smtDealNumber: string;
+    motivation: string;
+    mrsCrs: number;
 }

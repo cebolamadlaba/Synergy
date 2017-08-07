@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using StandardBank.ConcessionManagement.BusinessLogic;
 using StandardBank.ConcessionManagement.Common;
-using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Common;
-using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Repository;
 using StructureMap;
 
@@ -34,7 +32,7 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                     _.AssemblyContainingType(typeof(ConcessionManager));
                     _.AssemblyContainingType(typeof(AuthorizingUserRepository));
                     _.WithDefaultConventions();
-                });        
+                });
 
                 //Populate the container using the service collection
                 config.Populate(services);
@@ -43,6 +41,6 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             return container;
         }
 
-     
+
     }
 }

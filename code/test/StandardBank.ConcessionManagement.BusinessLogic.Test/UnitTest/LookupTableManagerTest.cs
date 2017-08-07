@@ -76,6 +76,21 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         }
 
         /// <summary>
+        /// Tests that GetReferenceTypeId executes positive
+        /// </summary>
+        [Fact]
+        public void GetReferenceTypeId_Executes_Positive()
+        {
+            var referenceType = new ReferenceType { Description = "Reference Type Test", Id = 30, IsActive = true };
+
+            MockTypeRepository.Setup(_ => _.ReadAll()).Returns(new[] { referenceType });
+            var result = _lookupTableManager.GetReferenceTypeId(referenceType.Description);
+
+            Assert.NotNull(result);
+            Assert.Equal(result, referenceType.Id);
+        }
+
+        /// <summary>
         /// Tests that GetMarketSegmentName executes positive.
         /// </summary>
         [Fact]

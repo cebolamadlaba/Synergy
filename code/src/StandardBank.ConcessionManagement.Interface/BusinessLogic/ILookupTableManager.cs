@@ -30,6 +30,13 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         string GetReferenceTypeName(int referenceTypeId);
 
         /// <summary>
+        /// Gets the reference type id for the reference type name supplied
+        /// </summary>
+        /// <param name="referenceTypeName"></param>
+        /// <returns></returns>
+        int GetReferenceTypeId(string referenceTypeName);
+
+        /// <summary>
         /// Gets the market segment name for the id specified
         /// </summary>
         /// <param name="marketSegmentId"></param>

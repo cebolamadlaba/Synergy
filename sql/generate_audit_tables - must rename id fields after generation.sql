@@ -1,0 +1,45 @@
+DECLARE myCursor CURSOR FOR
+SELECT 'CREATE TABLE [Audit].[' + t.TABLE_NAME + '] (
+	[pkAudit' + t.TABLE_NAME + 'Id] int IDENTITY(1,1) NOT NULL,
+	[' + c.COLUMN_NAME + '] int NOT NULL,
+	[fkAuditTypeId] int NOT NULL,
+	[Entity] xml NOT NULL,
+	[Username] varchar(50) NOT NULL,
+	[DateStamp] datetime NOT NULL,
+CONSTRAINT [PK_Audit_' + t.TABLE_NAME + '] PRIMARY KEY CLUSTERED 
+(
+	[pkAudit' + t.TABLE_NAME + 'Id] ASC
+) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [Audit].[' + t.TABLE_NAME + '] ADD  CONSTRAINT [DF_Audit_' + t.TABLE_NAME + '_DateStamp]  DEFAULT (getdate()) FOR [DateStamp]
+GO
+
+ALTER TABLE [Audit].[' + t.TABLE_NAME + '] WITH CHECK ADD  CONSTRAINT [FK_Audit_' + t.TABLE_NAME + '_AuditType] FOREIGN KEY([fkAuditTypeId])
+REFERENCES [Audit].[AuditType] ([Id])
+GO
+
+ALTER TABLE [Audit].[' + t.TABLE_NAME + '] CHECK CONSTRAINT [FK_Audit_' + t.TABLE_NAME + '_AuditType]
+GO
+
+' FROM INFORMATION_SCHEMA.TABLES t
+JOIN INFORMATION_SCHEMA.COLUMNS c on c.TABLE_SCHEMA = t.TABLE_SCHEMA AND c.TABLE_NAME = t.TABLE_NAME
+WHERE c.COLUMN_NAME like 'pk%'
+
+DECLARE
+	@sql varchar(MAX)
+
+OPEN myCursor
+
+FETCH NEXT FROM myCursor INTO @sql
+
+WHILE @@FETCH_STATUS <> -1
+BEGIN
+	PRINT @sql
+	FETCH NEXT FROM myCursor INTO @sql
+END
+
+CLOSE myCursor
+DEALLOCATE myCursor

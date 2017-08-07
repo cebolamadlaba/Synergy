@@ -23,5 +23,10 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Lending
         /// The lending concession details.
         /// </value>
         public IEnumerable<LendingConcessionDetail> LendingConcessionDetails { get; set; }
+
+        /// <summary>
+        /// Gets or sets the concession conditions
+        /// </summary>
+        public IEnumerable<ConcessionCondition> ConcessionConditions { get; set; }
     }
 }

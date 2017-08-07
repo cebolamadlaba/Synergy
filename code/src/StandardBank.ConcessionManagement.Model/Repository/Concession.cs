@@ -5,7 +5,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
     /// <summary>
     /// Concession entity
     /// </summary>
-    public class Concession
+    public class Concession : IAuditable
     {
         /// <summary>
         /// Gets or sets the Id.
@@ -195,5 +195,10 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// Gets or sets the mrs or crs
         /// </summary>
         public decimal? MrsCrs { get; set; }
+
+        /// <summary>
+        /// Gets the table name
+        /// </summary>
+        public string TableName => "tblConcession";
     }
 }
