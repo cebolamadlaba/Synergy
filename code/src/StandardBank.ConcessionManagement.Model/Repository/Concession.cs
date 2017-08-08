@@ -200,5 +200,15 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// Gets the table name
         /// </summary>
         public string TableName => "tblConcession";
+
+        /// <summary>
+        /// Gets the primary key column name
+        /// </summary>
+        public string PrimaryKeyColumnName => "pkConcessionId";
+
+        /// <summary>
+        /// Gets the primary key value
+        /// </summary>
+        public object PrimaryKeyValue => Id;
     }
 }

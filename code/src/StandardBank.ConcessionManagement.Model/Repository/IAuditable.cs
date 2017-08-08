@@ -12,5 +12,15 @@
         /// The name of the table.
         /// </value>
         string TableName { get; }
+
+        /// <summary>
+        /// Gets the primary key column name
+        /// </summary>
+        string PrimaryKeyColumnName { get; }
+
+        /// <summary>
+        /// Gets the primary key value
+        /// </summary>
+        object PrimaryKeyValue { get; }
     }
 }

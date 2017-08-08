@@ -1,9 +1,8 @@
-﻿using System;
-using System.IO;
-using MediatR;
+﻿using MediatR;
 using MediatR.Pipeline;
 using Microsoft.Extensions.DependencyInjection;
 using StandardBank.ConcessionManagement.BusinessLogic;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.AuditRecordPostHandler;
 using StandardBank.ConcessionManagement.Common;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Repository;
@@ -24,10 +23,11 @@ namespace StandardBank.ConcessionManagement.UI.Extension
         public static Container ConfigureServices(IServiceCollection services, ConfigurationData configurationData)
         {
             var container = new Container();
-            
+
             // Add common services
             services.AddSingleton<IConfigurationData>(configurationData);
             services.AddScoped<ICacheManager, MemoryCacheManager>();
+            services.AddScoped<IMarshaller, XmlMarshaller>();
             services.AddTransient<IDbConnectionFactory, DbConnectionFactory>();
 
             container.Configure(config =>
@@ -38,9 +38,10 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                     _.AssemblyContainingType(typeof(ConcessionManager));
                     _.AssemblyContainingType(typeof(AuthorizingUserRepository));
                     _.WithDefaultConventions();
-
-                    _.ConnectImplementationsToTypesClosing(typeof(IPipelineBehavior<,>));
                 });
+
+                config.For(typeof(IPipelineBehavior<,>)).Add(typeof(RequestPreProcessorBehavior<,>));
+                config.For(typeof(IPipelineBehavior<,>)).Add(typeof(RequestPostProcessorBehavior<,>));
 
                 //Populate the container using the service collection
                 config.Populate(services);

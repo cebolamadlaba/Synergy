@@ -5,8 +5,8 @@
     /// </summary>
     public enum AuditType
     {
-        Insert = 0,
-        Update = 1,
-        Delete = 2
+        Insert = 1,
+        Update = 2,
+        Delete = 3
     }
 }
