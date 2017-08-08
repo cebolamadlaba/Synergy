@@ -12,6 +12,9 @@ using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 using System;
 using System.IO;
 using MediatR;
+using MediatR.Pipeline;
+using StandardBank.ConcessionManagement.BusinessLogic;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
 
 namespace StandardBank.ConcessionManagement.UI
 {
@@ -66,7 +69,7 @@ namespace StandardBank.ConcessionManagement.UI
             services.AddAutoMapper();
 
             // Add MediatR
-            services.AddMediatR();
+            services.AddMediatR(typeof(ConcessionManager));
 
             // Add the custom services we've created
             var container = DependencyInjection.ConfigureServices(services, GenerateConfigurationData(Environment));

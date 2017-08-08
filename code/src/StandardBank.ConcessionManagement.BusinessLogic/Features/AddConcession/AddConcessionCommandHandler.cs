@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
-using StandardBank.ConcessionManagement.Model.UserInterface;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
+using StandardBank.ConcessionManagement.Model.Repository;
+using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
 {
@@ -33,7 +35,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
         {
             var result = _concessionManager.CreateConcession(message.Concession, message.User);
 
-            message.RepositoryConcession = result;
+            message.AuditRecord = new AuditRecord(result, message.User, AuditType.Insert);
 
             message.Concession.ReferenceNumber = result.ConcessionRef;
             message.Concession.Id = result.Id;

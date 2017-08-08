@@ -1,4 +1,5 @@
-﻿using StandardBank.ConcessionManagement.Model.Repository;
+﻿using System.Threading.Tasks;
+using StandardBank.ConcessionManagement.Model.Repository;
 
 namespace StandardBank.ConcessionManagement.Interface.Repository
 {
@@ -14,6 +15,6 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <param name="entity">The entity.</param>
         /// <param name="auditType">Type of the audit.</param>
         /// <param name="username">The username.</param>
-        void Audit<T>(T entity, AuditType auditType, string username) where T : IAuditable;
+        Task Audit<T>(T entity, AuditType auditType, string username) where T : IAuditable;
     }
 }

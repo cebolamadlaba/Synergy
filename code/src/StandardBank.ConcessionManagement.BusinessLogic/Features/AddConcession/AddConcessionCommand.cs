@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using StandardBank.ConcessionManagement.Interface.BusinessLogic.Features;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
@@ -7,7 +9,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
     /// Add concession command
     /// </summary>
     /// <seealso cref="MediatR.IRequest{Concession}" />
-    public class AddConcessionCommand : IRequest<Concession>
+    public class AddConcessionCommand : IRequest<Concession>, IAuditableCommand
     {
         /// <summary>
         /// Gets or sets the concession.
@@ -18,17 +20,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
         public Concession Concession { get; set; }
 
         /// <summary>
-        /// Gets or sets the repository concession
-        /// </summary>
-        public Model.Repository.Concession RepositoryConcession { get; set; }
-
-        /// <summary>
         /// Gets or sets the user.
         /// </summary>
         /// <value>
         /// The user.
         /// </value>
         public User User { get; set; }
+
+        /// <summary>
+        /// Gets or sets the audit record
+        /// </summary>
+        public AuditRecord AuditRecord { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AddConcessionCommand"/> class.

@@ -13,7 +13,7 @@ namespace StandardBank.ConcessionManagement.Model.BusinessLogic
         /// <param name="entity">The entity.</param>
         /// <param name="user">The user.</param>
         /// <param name="auditType">Type of the audit.</param>
-        public AuditRecord(IAuditable entity, User user, AuditType auditType)
+        public AuditRecord(IAuditable entity, UserInterface.User user, AuditType auditType)
         {
             Entity = entity;
             User = user;
@@ -34,7 +34,7 @@ namespace StandardBank.ConcessionManagement.Model.BusinessLogic
         /// <value>
         /// The user.
         /// </value>
-        public User User { get; set; }
+        public UserInterface.User User { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the audit.
