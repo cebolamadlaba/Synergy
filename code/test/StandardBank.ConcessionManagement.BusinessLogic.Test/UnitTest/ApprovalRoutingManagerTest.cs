@@ -16,8 +16,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         Mock<IApprovalWorkflowRepository> approvalWorkflowRepository = new Mock<IApprovalWorkflowRepository>();
         public ApprovalRoutingManagerTest()
         {
-          
-          
             sut = new ApprovalRoutingManager(InstantiatedDependencies.Mapper,roleRepository.Object, approvalWorkflowRepository.Object);
         }
 
