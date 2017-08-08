@@ -1,4 +1,5 @@
 ﻿using Moq;
+using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Test.Helpers;
 using System;
@@ -11,10 +12,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
     public class ApprovalRoutingManagerTest
     {
         private ApprovalRoutingManager sut;
+        Mock<IRoleRepository> roleRepository= new Mock<IRoleRepository>();
+        Mock<IApprovalWorkflowRepository> approvalWorkflowRepository = new Mock<IApprovalWorkflowRepository>();
         public ApprovalRoutingManagerTest()
         {
-
-            sut = new ApprovalRoutingManager(InstantiatedDependencies.Mapper, MockedDependencies.MockRoleRepository.Object, MockedDependencies.MockApprovalWorkflowRepository.Object);
+          
+          
+            sut = new ApprovalRoutingManager(InstantiatedDependencies.Mapper,roleRepository.Object, approvalWorkflowRepository.Object);
         }
 
         [Fact]
@@ -22,12 +26,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             var roles = new List<Role> { new Role { Id = 1 } };
             var users = new List<User> { new User { ANumber = "A1" } , new User { ANumber ="A2" } };
-            MockedDependencies.MockRoleRepository.Setup(x => x.ReadAll()).Returns(roles);
-            MockedDependencies.MockApprovalWorkflowRepository.Setup(_ => _.GetApproversByRoles(It.IsAny<int>(), It.IsAny<IEnumerable<int>>())).Returns(users);
+            roleRepository.Setup(x => x.ReadAll()).Returns(roles);
+            approvalWorkflowRepository.Setup(_ => _.GetApproversByRoles(It.IsAny<int>(), It.IsAny<IEnumerable<int>>())).Returns(users);
             var approvers = sut.GetApproversByRole(1, Model.Constants.ApprovalStep.BCMApproval).ToList();
             Assert.True(users.Count == approvers.Count);
-            MockedDependencies.MockRoleRepository.Verify(_ => _.ReadAll(), Times.Once());
-            MockedDependencies.MockApprovalWorkflowRepository.Verify(_ => _.GetApproversByRoles(It.IsAny<int>(), It.IsAny<IEnumerable<int>>()), Times.AtLeastOnce());
+            roleRepository.Verify(_ => _.ReadAll(), Times.Once());
+            approvalWorkflowRepository.Verify(_ => _.GetApproversByRoles(It.IsAny<int>(), It.IsAny<IEnumerable<int>>()), Times.Once());
 
         }
 
@@ -36,12 +40,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             var roles = new List<Role> { new Role { Id = 1 } };
             var users = new List<User> { new User { ANumber = "A1" }, new User { ANumber = "A2" } };
-            MockedDependencies.MockRoleRepository.Setup(x => x.ReadAll()).Returns(roles);
-            MockedDependencies.MockApprovalWorkflowRepository.Setup(_ => _.GetApproversByRoles(It.IsAny<int>(), It.IsAny<IEnumerable<int>>())).Returns(users);
+            roleRepository.Setup(x => x.ReadAll()).Returns(roles);
+            approvalWorkflowRepository.Setup(_ => _.GetApproversByRoles(It.IsAny<int>(), It.IsAny<IEnumerable<int>>())).Returns(users);
             var approvers = sut.GetApproversByRole(1, Model.Constants.ApprovalStep.PCMApproval).ToList();
             Assert.True(users.Count == approvers.Count);
-            MockedDependencies.MockRoleRepository.Verify(_ => _.ReadAll(),Times.Once());
-            MockedDependencies.MockApprovalWorkflowRepository.Verify(_ => _.GetApproversByRoles(It.IsAny<int>(), It.IsAny<IEnumerable<int>>()), Times.AtLeastOnce());
+            roleRepository.Verify(_ => _.ReadAll(), Times.Once());
+            approvalWorkflowRepository.Verify(_ => _.GetApproversByRoles(It.IsAny<int>(), It.IsAny<IEnumerable<int>>()), Times.Once());
         }
     }
 }
