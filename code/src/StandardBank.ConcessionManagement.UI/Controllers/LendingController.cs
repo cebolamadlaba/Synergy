@@ -8,6 +8,7 @@ using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
+using StandardBank.ConcessionManagement.UI.Validation;
 
 namespace StandardBank.ConcessionManagement.UI.Controllers
 {
@@ -72,6 +73,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="lendingConcession"></param>
         /// <returns></returns>
         [Route("NewLending")]
+        [ValidateModel]
         public async Task<IActionResult> NewLending([FromBody] LendingConcession lendingConcession)
         {
             var user = _siteHelper.LoggedInUser(this);

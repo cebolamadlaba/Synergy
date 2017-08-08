@@ -13,6 +13,7 @@ using System;
 using System.IO;
 using MediatR;
 using StandardBank.ConcessionManagement.BusinessLogic;
+using FluentValidation.AspNetCore;
 
 namespace StandardBank.ConcessionManagement.UI
 {
@@ -61,7 +62,7 @@ namespace StandardBank.ConcessionManagement.UI
 
             // Add framework services.
             services.AddMemoryCache();
-            services.AddMvc();
+            services.AddMvc().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>()); ;
 
             // Add automapper
             services.AddAutoMapper();
