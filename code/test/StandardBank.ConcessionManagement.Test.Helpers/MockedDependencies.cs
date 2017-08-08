@@ -296,5 +296,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The mock Mediatr
         /// </summary>
         public static Mock<IMediator> MockMediator = new Mock<IMediator>();
+        public static Mock<IApprovalRoutingManager> MockApprovalRoutingManager = new Mock<IApprovalRoutingManager>();
+        public static Mock<IApprovalWorkflowRepository> MockApprovalWorkflowRepository = new Mock<IApprovalWorkflowRepository>();
+
     }
 }

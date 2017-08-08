@@ -2,6 +2,7 @@
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
+using System.Threading.Tasks;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
@@ -10,20 +11,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
     /// Add concession command handler
     /// </summary>
     /// <seealso cref="MediatR.IRequestHandler{AddConcessionCommand, Concession}" />
-    public class AddConcessionCommandHandler : IRequestHandler<AddConcessionCommand, Concession>
+    public class AddConcessionCommandHandler : IAsyncRequestHandler<AddConcessionCommand, Concession>
     {
         /// <summary>
         /// The concession manager
         /// </summary>
         private readonly IConcessionManager _concessionManager;
+        private readonly IMediator _mediator;
         
         /// <summary>
         /// Initializes a new instance of the <see cref="AddConcessionCommandHandler"/> class.
         /// </summary>
         /// <param name="concessionManager"></param>
-        public AddConcessionCommandHandler(IConcessionManager concessionManager)
+        public AddConcessionCommandHandler(IConcessionManager concessionManager , IMediator mediator)
         {
             _concessionManager = concessionManager;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -31,7 +34,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public Concession Handle(AddConcessionCommand message)
+        public async Task<Concession> Handle(AddConcessionCommand message)
         {
             var result = _concessionManager.CreateConcession(message.Concession, message.User);
 
@@ -39,6 +42,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
 
             message.Concession.ReferenceNumber = result.ConcessionRef;
             message.Concession.Id = result.Id;
+            if(message.User.SelectedCentre?.Id > 0)
+            await _mediator.Publish(new ConcessionAddedEvent { CenterId = message.User.SelectedCentre.Id , ConsessionId = result.Id });
 
             return message.Concession;
         }
