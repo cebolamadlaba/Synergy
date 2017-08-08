@@ -3,89 +3,47 @@
 <head>
     <title></title>
     <meta charset="utf-8" />
-
 </head>
-<body>
+<body style="font-family:Arial; margin: 0;">
 
+    <div style="background-color: #1f3c5a; color: white; padding: 10px; text-align:center; font-size: 22px;">
+        Concession Management System Notification
+    </div>
 
-    <table style="height:350px; border:solid;background-color: transparent;width:700px !important;border-width:thin;border-color:rgb(66, 139, 202); font:Helvetica Neue,Helvetica,Arial,sans-serif">
-        <thead style="width:100%; background-color:rgb(66, 139, 202);height:30px;">
+    <div style="padding: 15px">
+        <p>Dear @Model.Name,</p>
+        <p>Please be advised that a concession you applied for has been <span style="color: #7ecd13;font-weight: bold;">approved</span>. Please check your inbox for the details of the concession.</p>
 
+        <p>Concession Summary:</p>
+        <hr>
+        <table>
             <tr>
-                <th colspan="2">
-                    <!--Complaint re-assigned-->
-
-                    <h3 style="font:Helvetica Neue,Helvetica,Arial,sans-serif; color:white">
-                        Pricing Tool Notification
-                    </h3>
-                </th>
-            </tr>
-
-        </thead>
-        <tbody>
-
-            <tr style="padding-top:15px;padding-bottom:15px;">
-                <td colspan="2">
-                    Dear @Model.Name,
-                </td>
-
-            </tr>
-
-            <tr style="padding-top:15px;padding-bottom:15px;">
-                <td style="width:150px"> Concession ID</td>
-                <td>
-                    <strong> @Model.ConcessionId</strong> 
-                </td>
-
-            </tr>
-
-
-            <tr style="padding-top:15px;padding-bottom:15px;">
-                <td style="width:150px"> Decision </td>
-                <td>
-                    <strong>Approved</strong>  
-                </td>
-
-            </tr>
-
-
-
-            <tr>               
-                <td colspan="2">
-                    This concession was approved and once the requestor is happy with all customer's requested concessions,they may print a cocessions letter for signing.
-                </td>
-
-            </tr>           
-
-            <tr style="padding-top:15px;padding-bottom:15px;">
-                <td colspan="2">
-                    Regards,
-                </td>
-
-            </tr>
-
-            <tr>
-                <td colspan="2">
-                    Pricing Tool
-                </td>
-
-            </tr>
-
-            <tr style="padding-top:15px;padding-bottom:15px;">
-                <td colspan="2">
-                    Please do not reply to this e-mail.
-                </td>
+                <td>Date of request:</td>
+                <td></td>
             </tr>
             <tr>
-                <td colspan="2"></td>
-
+                <td>Date actioned:</td>
+                <td></td>
             </tr>
+            <tr>
+                <td>Risk group name:</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Concession ID:</td>
+                <td>@Model.ConcessionId</td>
+            </tr>
+            <tr>
+                <td>Product:</td>
+                <td></td>
+            </tr>
+        </table>
 
-        </tbody>
+        <p>Regards,</p>
+        <p>Concession management system</p>
 
-
-    </table>
-
+        <p style="font-style: italic;">Please do not reply to this email.</p>
+    </div>
 
 </body>
 </html>
