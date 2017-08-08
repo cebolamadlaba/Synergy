@@ -18,6 +18,9 @@ import { ConditionType } from "../models/condition-type";
 import { ConditionProduct } from "../models/condition-product";
 import { ClientAccountService } from "../client-account/client-account.service";
 import { ClientAccount } from "../models/client-account";
+import { LendingConcession } from "../models/lending-concession";
+import { LendingNewService } from "../lending-new/lending-new.service";
+import { Concession } from "../models/concession";
 
 @Component({
     selector: 'app-lending-add-concession',
@@ -60,7 +63,8 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         @Inject(PeriodService) private periodService,
         @Inject(PeriodTypeService) private periodTypeService,
         @Inject(ConditionTypeService) private conditionTypeService,
-        @Inject(ClientAccountService) private clientAccountService) {
+        @Inject(ClientAccountService) private clientAccountService,
+        @Inject(LendingNewService) private lendingNewService) {
         this.riskGroup = new RiskGroup();
         this.reviewFeeTypes = [new ReviewFeeType()];
         this.productTypes = [new ProductType()];
@@ -167,6 +171,20 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     conditionTypeChanged(rowIndex) {
         const control = <FormArray>this.lendingConcessionForm.controls['conditionItemsRows'];
         this.selectedConditionTypes[rowIndex] = control.controls[rowIndex].get('conditionType').value;
+    }
+
+    onSubmit() {
+        var lendingConcession = new LendingConcession();
+        lendingConcession.concession = new Concession();
+        lendingConcession.concession.motivation = this.lendingConcessionForm.controls['motivation'].value;
+        lendingConcession.concession.mrsCrs = this.lendingConcessionForm.controls['mrsCrs'].value;
+        lendingConcession.concession.smtDealNumber = this.lendingConcessionForm.controls['smtDealNumber'].value;
+
+        this.lendingNewService.postData(lendingConcession)
+            .subscribe(entity => {
+                console.log("data saved");
+            },
+            error => this.errorMessage = <any>error);
     }
 
     ngOnDestroy() {

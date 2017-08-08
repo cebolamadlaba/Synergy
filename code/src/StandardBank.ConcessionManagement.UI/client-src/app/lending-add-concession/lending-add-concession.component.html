@@ -38,7 +38,7 @@
 
 <!-- Form entries -->
 
-<form class="col-md-12 concession-information-form" [formGroup]="lendingConcessionForm">
+<form class="col-md-12 concession-information-form" [formGroup]="lendingConcessionForm" (ngSubmit)="onSubmit()">
     <div class="col-md-4">
         <div class="row">
             <label>MRS/CRS</label>

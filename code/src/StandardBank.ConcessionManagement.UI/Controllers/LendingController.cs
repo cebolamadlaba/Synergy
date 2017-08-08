@@ -76,29 +76,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
 
-            var tempLendingConcession = new LendingConcession
-            {
-                Concession = new Concession
-                {
-                    AccountNumber = "001122334455",
-                    ConcessionType = "Lending",
-                    CustomerName = "Test Customer",
-                    DateOpened = DateTime.Now,
-                    Motivation = "Testing the system",
-                    MrsCrs = 32.53m,
-                    RiskGroupName = "EDCON",
-                    RiskGroupNumber = 2006,
-                    SmtDealNumber = "SMT00001",
-                    Type = "New"
-                },
-                ConcessionConditions = new List<ConcessionCondition>(),
-                LendingConcessionDetails = new List<LendingConcessionDetail>()
-            };
+            lendingConcession.Concession.ConcessionType = "Lending";
 
-            var concession = tempLendingConcession.Concession;
-            concession.ConcessionType = "Lending";
-
-            return Ok(await _mediator.Send(new AddConcessionCommand(concession, user)));
+            return Ok(await _mediator.Send(new AddConcessionCommand(lendingConcession.Concession, user)));
         }
     }
 }

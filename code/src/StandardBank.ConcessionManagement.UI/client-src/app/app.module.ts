@@ -36,6 +36,7 @@ import { PeriodTypeService } from "./period-type/period-type.service";
 import { ConditionTypeService } from "./condition-type/condition-type.service";
 import { ConcessionConditionsService } from "./concession-conditions/concession-conditions.service";
 import { ClientAccountService } from "./client-account/client-account.service";
+import { LendingNewService } from "./lending-new/lending-new.service";
 
 @NgModule({
     declarations: [
@@ -78,7 +79,8 @@ import { ClientAccountService } from "./client-account/client-account.service";
         PeriodTypeService,
         ConditionTypeService,
         ConcessionConditionsService,
-        ClientAccountService
+        ClientAccountService,
+        LendingNewService
     ],
     bootstrap: [AppComponent]
 })
