@@ -11,7 +11,7 @@ export class PeriodTypeService {
     }
 
     getData(): Observable<PeriodType[]> {
-        const url = "/api/Condition/PeriodType";
+        const url = "/api/Condition/PeriodTypes";
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 

@@ -12,9 +12,7 @@ using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 using System;
 using System.IO;
 using MediatR;
-using MediatR.Pipeline;
 using StandardBank.ConcessionManagement.BusinessLogic;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
 
 namespace StandardBank.ConcessionManagement.UI
 {
@@ -106,6 +104,7 @@ namespace StandardBank.ConcessionManagement.UI
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
+
             app.UseMvc();
         }
     }

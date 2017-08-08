@@ -11,7 +11,7 @@ export class PeriodService {
     }
 
     getData(): Observable<Period[]> {
-        const url = "/api/Condition/Period";
+        const url = "/api/Condition/Periods";
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 

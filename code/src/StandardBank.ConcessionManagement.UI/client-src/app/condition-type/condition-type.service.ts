@@ -12,7 +12,7 @@ export class ConditionTypeService {
     }
 
     getData(): Observable<ConditionType[]> {
-        const url = "/api/Condition/ConditionType";
+        const url = "/api/Condition/ConditionTypes";
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 

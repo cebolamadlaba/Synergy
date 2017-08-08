@@ -1,16 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
-using StandardBank.ConcessionManagement.Model.UserInterface.Inbox;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 
-namespace StandardBank.ConcessionManagement.UI.Controllers.Inbox
+namespace StandardBank.ConcessionManagement.UI.Controllers
 {
     /// <summary>
-    /// User concessions controller
+    /// Inbox controller
     /// </summary>
-    /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
-    [Route("api/inbox/[controller]")]
-    public class UserConcessionsController : Controller
+    [Produces("application/json")]
+    [Route("api/Inbox")]
+    public class InboxController : Controller
     {
         /// <summary>
         /// The concession manager
@@ -23,24 +22,24 @@ namespace StandardBank.ConcessionManagement.UI.Controllers.Inbox
         private readonly ISiteHelper _siteHelper;
 
         /// <summary>
-        /// User concessions controller
+        /// Initializes the controller
         /// </summary>
         /// <param name="concessionManager"></param>
         /// <param name="siteHelper"></param>
-        public UserConcessionsController(IConcessionManager concessionManager, ISiteHelper siteHelper)
+        public InboxController(IConcessionManager concessionManager, ISiteHelper siteHelper)
         {
             _concessionManager = concessionManager;
             _siteHelper = siteHelper;
         }
 
         /// <summary>
-        /// Gets this instance.
+        /// Gets the user concessions
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        public UserConcessions Get()
+        [Route("UserConcessions")]
+        public IActionResult UserConcessions()
         {
-            return _concessionManager.GetUserConcessions(_siteHelper.LoggedInUser(this));
+            return Ok(_concessionManager.GetUserConcessions(_siteHelper.LoggedInUser(this)));
         }
     }
 }
