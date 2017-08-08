@@ -21,7 +21,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 LegalEntityId = DataHelper.GetLegalEntityId(),
                 AccountNumber = "2dec4034da",
-                IsActive = false
+                IsActive = true
             };
 
             var result = InstantiatedDependencies.LegalEntityAccountRepository.Create(model);
@@ -42,6 +42,22 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
 
             Assert.NotNull(result);
             Assert.Equal(result.Id, id);
+        }
+
+        /// <summary>
+        /// Tests that ReadByLegalEntityIdIsActive executes positive
+        /// </summary>
+        [Fact]
+        public void ReadByLegalEntityIdIsActive_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.LegalEntityAccountRepository.ReadAll();
+            var legalEntityId = results.First(_ => _.IsActive).LegalEntityId;
+            var result = InstantiatedDependencies.LegalEntityAccountRepository.ReadByLegalEntityIdIsActive(legalEntityId, true);
+
+            Assert.NotNull(result);
+
+            foreach (var record in result)
+                Assert.Equal(record.LegalEntityId, legalEntityId);
         }
 
         /// <summary>

@@ -60,6 +60,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IConcessionConditionRepository _concessionConditionRepository;
 
         /// <summary>
+        /// The legal entity account repository
+        /// </summary>
+        private readonly ILegalEntityAccountRepository _legalEntityAccountRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionManager"/> class.
         /// </summary>
         /// <param name="concessionRepository">The concession repository.</param>
@@ -70,10 +75,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="concessionAccountRepository"></param>
         /// <param name="mapper"></param>
         /// <param name="concessionConditionRepository"></param>
+        /// <param name="legalEntityAccountRepository"></param>
         public ConcessionManager(IConcessionRepository concessionRepository, ILookupTableManager lookupTableManager,
             ILegalEntityRepository legalEntityRepository, IRiskGroupRepository riskGroupRepository,
             ICacheManager cacheManager, IConcessionAccountRepository concessionAccountRepository, IMapper mapper,
-            IConcessionConditionRepository concessionConditionRepository)
+            IConcessionConditionRepository concessionConditionRepository, ILegalEntityAccountRepository legalEntityAccountRepository)
         {
             _concessionRepository = concessionRepository;
             _lookupTableManager = lookupTableManager;
@@ -83,6 +89,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionAccountRepository = concessionAccountRepository;
             _mapper = mapper;
             _concessionConditionRepository = concessionConditionRepository;
+            _legalEntityAccountRepository = legalEntityAccountRepository;
         }
 
         /// <summary>
@@ -379,6 +386,40 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionRepository.Update(result);
 
             return result;
+        }
+
+        /// <summary>
+        /// Gets the client accounts for the risk group number specified
+        /// </summary>
+        /// <param name="riskGroupNumber"></param>
+        /// <returns></returns>
+        public IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber)
+        {
+            var clientAccounts = new List<ClientAccount>();
+
+            var riskGroup = _riskGroupRepository.ReadByRiskGroupNumberIsActive(riskGroupNumber, true);
+
+            var legalEntities = _legalEntityRepository.ReadByRiskGroupIdIsActive(riskGroup.Id, true);
+
+            foreach (var legalEntity in legalEntities)
+            {
+                var legalEntityAccounts =
+                    _legalEntityAccountRepository.ReadByLegalEntityIdIsActive(legalEntity.Id, true);
+
+                foreach (var legalEntityAccount in legalEntityAccounts)
+                {
+                    clientAccounts.Add(new ClientAccount
+                    {
+                        AccountNumber = legalEntityAccount.AccountNumber,
+                        LegalEntityId = legalEntity.Id,
+                        RiskGroupId = riskGroup.Id,
+                        LegalEntityAccountId = legalEntityAccount.Id,
+                        CustomerName = legalEntity.CustomerName
+                    });
+                }
+            }
+
+            return clientAccounts;
         }
 
         /// <summary>

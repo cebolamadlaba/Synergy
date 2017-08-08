@@ -74,5 +74,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="user"></param>
         /// <returns></returns>
         Model.Repository.Concession CreateConcession(Concession concession, User user);
+
+        /// <summary>
+        /// Gets the client accounts for the risk group number specified
+        /// </summary>
+        /// <param name="riskGroupNumber"></param>
+        /// <returns></returns>
+        IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber);
     }
 }

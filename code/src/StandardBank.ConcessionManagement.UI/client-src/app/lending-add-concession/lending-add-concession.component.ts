@@ -16,6 +16,8 @@ import { PeriodType } from "../models/period-type";
 import { ConditionTypeService } from "../condition-type/condition-type.service";
 import { ConditionType } from "../models/condition-type";
 import { ConditionProduct } from "../models/condition-product";
+import { ClientAccountService } from "../client-account/client-account.service";
+import { ClientAccount } from "../models/client-account";
 
 @Component({
     selector: 'app-lending-add-concession',
@@ -46,6 +48,9 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     observableConditionTypes: Observable<ConditionType[]>;
     conditionTypes: ConditionType[];
 
+    observableClientAccounts: Observable<ClientAccount[]>;
+    clientAccounts: ClientAccount[];
+
     constructor(
         private route: ActivatedRoute,
         private formBuilder: FormBuilder,
@@ -54,7 +59,8 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         @Inject(ProductTypeService) private productTypeService,
         @Inject(PeriodService) private periodService,
         @Inject(PeriodTypeService) private periodTypeService,
-        @Inject(ConditionTypeService) private conditionTypeService) {
+        @Inject(ConditionTypeService) private conditionTypeService,
+        @Inject(ClientAccountService) private clientAccountService) {
         this.riskGroup = new RiskGroup();
         this.reviewFeeTypes = [new ReviewFeeType()];
         this.productTypes = [new ProductType()];
@@ -62,6 +68,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         this.periodTypes = [new PeriodType()];
         this.conditionTypes = [new ConditionType()];
         this.selectedConditionTypes = [new ConditionType()];
+        this.clientAccounts = [new ClientAccount()];
     }
 
     ngOnInit() {
@@ -71,6 +78,9 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             if (this.riskGroupNumber) {
                 this.observableRiskGroup = this.riskGroupService.getData(this.riskGroupNumber);
                 this.observableRiskGroup.subscribe(riskGroup => this.riskGroup = riskGroup, error => this.errorMessage = <any>error);
+
+                this.observableClientAccounts = this.clientAccountService.getData(this.riskGroupNumber);
+                this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
             }
         });
 

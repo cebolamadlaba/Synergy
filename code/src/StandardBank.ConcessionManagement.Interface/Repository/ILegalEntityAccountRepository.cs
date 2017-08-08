@@ -23,6 +23,14 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         LegalEntityAccount ReadById(int id);
 
         /// <summary>
+        /// Reads by the legal entity id specified
+        /// </summary>
+        /// <param name="legalEntityId"></param>
+        /// <param name="isActive"></param>
+        /// <returns></returns>
+        IEnumerable<LegalEntityAccount> ReadByLegalEntityIdIsActive(int legalEntityId, bool isActive);
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>

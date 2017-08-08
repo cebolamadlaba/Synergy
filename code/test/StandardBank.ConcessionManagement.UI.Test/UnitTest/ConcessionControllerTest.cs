@@ -72,5 +72,20 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
             Assert.NotNull(apiResult.Value);
             Assert.True(apiResult.Value is IEnumerable<ReviewFeeType>);
         }
+
+        /// <summary>
+        /// Tests that ClientAccounts executes positive
+        /// </summary>
+        [Fact]
+        public void ClientAccounts_Executes_Positive()
+        {
+            MockConcessionManager.Setup(_ => _.GetClientAccounts(It.IsAny<int>())).Returns(new[] { new ClientAccount() });
+
+            var result = _concessionController.ClientAccounts(1);
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is IEnumerable<ClientAccount>);
+        }
     }
 }

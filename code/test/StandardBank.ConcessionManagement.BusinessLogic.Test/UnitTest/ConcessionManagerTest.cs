@@ -29,7 +29,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             _concessionManager = new ConcessionManager(MockConcessionRepository.Object, MockLookupTableManager.Object,
                 MockLegalEntityRepository.Object, MockRiskGroupRepository.Object,
                 InstantiatedDependencies.CacheManager, MockConcessionAccountRepository.Object,
-                InstantiatedDependencies.Mapper, MockConcessionConditionRepository.Object);
+                InstantiatedDependencies.Mapper, MockConcessionConditionRepository.Object, MockLegalEntityAccountRepository.Object);
         }
 
         /// <summary>
@@ -301,6 +301,50 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 Assert.Equal(record.PeriodType, periodTypeName);
                 Assert.Equal(record.Period, periodName);
             }
+        }
+
+        /// <summary>
+        /// Tests that GetClientAccounts executes positive
+        /// </summary>
+        [Fact]
+        public void GetClientAccounts_Executes_Positive()
+        {
+            MockRiskGroupRepository.Setup(_ => _.ReadByRiskGroupNumberIsActive(It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(new RiskGroup
+                {
+                    Id = 1, IsActive = true, RiskGroupNumber = 1, RiskGroupName = "Test Risk Group"
+                });
+
+            MockLegalEntityRepository.Setup(_ => _.ReadByRiskGroupIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(new[]
+                {
+                    new LegalEntity
+                    {
+                        Id = 1,
+                        IsActive = true,
+                        CustomerName = "Test Customer Name",
+                        RiskGroupId = 1,
+                        CustomerNumber = "Test Customer Number",
+                        MarketSegmentId = 1
+                    }
+                });
+
+            MockLegalEntityAccountRepository
+                .Setup(_ => _.ReadByLegalEntityIdIsActive(It.IsAny<int>(), It.IsAny<bool>())).Returns(new[]
+                {
+                    new LegalEntityAccount
+                    {
+                        AccountNumber = "Test Account Number",
+                        Id = 1,
+                        IsActive = true,
+                        LegalEntityId = 1
+                    }
+                });
+
+            var result = _concessionManager.GetClientAccounts(1);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
         }
     }
 }

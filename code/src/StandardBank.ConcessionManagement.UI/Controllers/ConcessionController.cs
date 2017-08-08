@@ -62,5 +62,16 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             return Ok(_lookupTableManager.GetReviewFeeTypes());
         }
+
+        /// <summary>
+        /// Gets the client accounts for the risk group number specified
+        /// </summary>
+        /// <param name="riskGroupNumber"></param>
+        /// <returns></returns>
+        [Route("ClientAccounts/{riskGroupNumber}")]
+        public IActionResult ClientAccounts(int riskGroupNumber)
+        {
+            return Ok(_concessionManager.GetClientAccounts(riskGroupNumber));
+        }
     }
 }

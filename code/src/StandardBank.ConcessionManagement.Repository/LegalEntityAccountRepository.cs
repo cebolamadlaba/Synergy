@@ -2,8 +2,6 @@ using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
 
@@ -60,6 +58,25 @@ namespace StandardBank.ConcessionManagement.Repository
                 return db.Query<LegalEntityAccount>(
                     "SELECT [pkLegalEntityAccountId] [Id], [fkLegalEntityId] [LegalEntityId], [AccountNumber], [IsActive] FROM [dbo].[tblLegalEntityAccount] WHERE [pkLegalEntityAccountId] = @Id",
                     new {id}).SingleOrDefault();
+            }
+        }
+
+        /// <summary>
+        /// Reads by the legal entity id and the is active flag
+        /// </summary>
+        /// <param name="legalEntityId"></param>
+        /// <param name="isActive"></param>
+        /// <returns></returns>
+        public IEnumerable<LegalEntityAccount> ReadByLegalEntityIdIsActive(int legalEntityId, bool isActive)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<LegalEntityAccount>(
+                    @"SELECT [pkLegalEntityAccountId] [Id], [fkLegalEntityId] [LegalEntityId], [AccountNumber], [IsActive] 
+                    FROM [dbo].[tblLegalEntityAccount] 
+                    WHERE [fkLegalEntityId] = @fkLegalEntityId
+                    and [IsActive] = @isActive",
+                    new {fkLegalEntityId = legalEntityId, isActive = isActive});
             }
         }
 
