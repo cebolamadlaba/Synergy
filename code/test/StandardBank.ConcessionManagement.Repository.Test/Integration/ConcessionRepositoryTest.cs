@@ -40,7 +40,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 CentreId = DataHelper.GetCentreId(),
                 IsCurrent = true,
                 IsActive = true,
-                MrsCrs = 1232
+                MrsCrs = 1232,
+                RiskGroupId = DataHelper.GetRiskGroupId()
             };
 
             var result = InstantiatedDependencies.ConcessionRepository.Create(model);
@@ -78,7 +79,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 CentreId = DataHelper.GetCentreId(),
                 IsCurrent = true,
                 IsActive = false,
-                MrsCrs = 1233
+                MrsCrs = 1233,
+                RiskGroupId = DataHelper.GetRiskGroupId()
             };
 
             var result = InstantiatedDependencies.ConcessionRepository.Create(model);
@@ -250,6 +252,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.IsCurrent = !model.IsCurrent;
             model.IsActive = !model.IsActive;
             model.MrsCrs = model.MrsCrs + 123;
+            model.RiskGroupId = DataHelper.GetAlternateRiskGroupId(model.RiskGroupId);
 
             InstantiatedDependencies.ConcessionRepository.Update(model);
 
@@ -279,6 +282,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.IsCurrent, model.IsCurrent);
             Assert.Equal(updatedModel.IsActive, model.IsActive);
             Assert.Equal(updatedModel.MrsCrs, model.MrsCrs);
+            Assert.Equal(updatedModel.RiskGroupId, model.RiskGroupId);
         }
 
         /// <summary>
@@ -310,7 +314,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 CentreId = DataHelper.GetCentreId(),
                 IsCurrent = false,
                 IsActive = false,
-                MrsCrs = 6533
+                MrsCrs = 6533,
+                RiskGroupId = DataHelper.GetRiskGroupId()
             };
 
             var temporaryEntity = InstantiatedDependencies.ConcessionRepository.Create(model);

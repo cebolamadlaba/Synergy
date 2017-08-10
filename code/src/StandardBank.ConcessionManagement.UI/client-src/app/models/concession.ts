@@ -3,7 +3,6 @@
     referenceNumber: string;
     riskGroupNumber: number;
     riskGroupName: string;
-    customerName: string;
     type: string;
     dateOpened: Date;
     seqment: string;

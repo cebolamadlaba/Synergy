@@ -409,6 +409,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 var concessionAccount = _concessionAccountRepository.ReadByConcessionIdIsActive(concession.Id, true);
 
                 var mappedConcession = _mapper.Map<Concession>(concession);
+                
 
                 mappedConcession.Type = _lookupTableManager.GetReferenceTypeName(concession.TypeId);
                 mappedConcession.AccountNumber = concessionAccount?.AccountNumber;

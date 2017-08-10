@@ -24,6 +24,11 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int TypeId { get; set; }
 
         /// <summary>
+        /// Gets or sets the risk group id
+        /// </summary>
+        public int RiskGroupId { get; set; }
+
+        /// <summary>
         /// Gets or sets the ConcessionRef.
         /// </summary>
         /// <value>
