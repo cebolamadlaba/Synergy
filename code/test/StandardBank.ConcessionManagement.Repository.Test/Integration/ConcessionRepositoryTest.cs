@@ -21,7 +21,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 TypeId = DataHelper.GetReferenceTypeId(),
                 ConcessionRef = "47c038861f",
-                LegalEntityId = DataHelper.GetLegalEntityId(),
                 ConcessionTypeId = DataHelper.GetConcessionTypeId(),
                 SMTDealNumber = "777f9e1b48",
                 StatusId = DataHelper.GetStatusId(),
@@ -60,7 +59,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 TypeId = DataHelper.GetReferenceTypeId(),
                 ConcessionRef = "47c038861f",
-                LegalEntityId = DataHelper.GetLegalEntityId(),
                 ConcessionTypeId = DataHelper.GetConcessionTypeId(),
                 SMTDealNumber = "777f9e1b48",
                 StatusId = DataHelper.GetStatusId(),
@@ -209,23 +207,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         }
 
         /// <summary>
-        /// Tests that ReadByLegalEntityIdConcessionTypeIdIsActive executes positive
-        /// </summary>
-        [Fact]
-        public void ReadByLegalEntityIdConcessionTypeIdIsActive_Executes_Positive()
-        {
-            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
-            var resultToTestWith = results.First(_ => _.IsActive);
-
-            var result =
-                InstantiatedDependencies.ConcessionRepository.ReadByLegalEntityIdConcessionTypeIdIsActive(
-                    resultToTestWith.LegalEntityId, resultToTestWith.ConcessionTypeId, resultToTestWith.IsActive);
-
-            Assert.NotNull(result);
-            Assert.NotEmpty(result);
-        }
-
-        /// <summary>
         /// Tests that ReadAll executes positive.
         /// </summary>
         [Fact]
@@ -249,7 +230,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
 
             model.TypeId = DataHelper.GetAlternateReferenceTypeId(model.TypeId);
             model.ConcessionRef = "325e0ffb67";
-            model.LegalEntityId = DataHelper.GetAlternateLegalEntityId(model.LegalEntityId);
             model.ConcessionTypeId = DataHelper.GetAlternateConcessionTypeId(model.ConcessionTypeId);
             model.SMTDealNumber = "8d2fbe86c2";
             model.StatusId = DataHelper.GetAlternateStatusId(model.StatusId);
@@ -279,7 +259,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.Id, model.Id);
             Assert.Equal(updatedModel.TypeId, model.TypeId);
             Assert.Equal(updatedModel.ConcessionRef, model.ConcessionRef);
-            Assert.Equal(updatedModel.LegalEntityId, model.LegalEntityId);
             Assert.Equal(updatedModel.ConcessionTypeId, model.ConcessionTypeId);
             Assert.Equal(updatedModel.SMTDealNumber, model.SMTDealNumber);
             Assert.Equal(updatedModel.StatusId, model.StatusId);
@@ -312,7 +291,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 TypeId = DataHelper.GetReferenceTypeId(),
                 ConcessionRef = "47c038861f",
-                LegalEntityId = DataHelper.GetLegalEntityId(),
                 ConcessionTypeId = DataHelper.GetConcessionTypeId(),
                 SMTDealNumber = "777f9e1b48",
                 StatusId = DataHelper.GetStatusId(),

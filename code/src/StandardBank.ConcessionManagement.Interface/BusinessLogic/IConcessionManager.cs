@@ -52,15 +52,6 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         UserConcessions GetUserConcessions(User user);
 
         /// <summary>
-        /// Gets the concessions for the legal entity id and the concession type
-        /// </summary>
-        /// <param name="legalEntityId"></param>
-        /// <param name="concessionType"></param>
-        /// <returns></returns>
-        IEnumerable<Concession> GetConcessionsForLegalEntityIdAndConcessionType(int legalEntityId,
-            string concessionType);
-
-        /// <summary>
         /// Gets the concession conditions
         /// </summary>
         /// <param name="concessionId"></param>

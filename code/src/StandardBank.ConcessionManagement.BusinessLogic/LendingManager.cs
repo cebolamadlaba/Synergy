@@ -62,20 +62,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (riskGroup != null)
             {
-                var legalEntities = _legalEntityRepository.ReadByRiskGroupIdIsActive(riskGroup.Id, true);
-
-                if (legalEntities != null && legalEntities.Any())
-                {
-                    foreach (var legalEntity in legalEntities)
-                    {
-                        var concessions =
-                            _concessionManager.GetConcessionsForLegalEntityIdAndConcessionType(legalEntity.Id,
-                                "Lending");
-
-                        foreach (var concession in concessions)
-                            AddLendingConcessionData(concession, lendingConcessions, legalEntity);
-                    }
-                }
+                //TODO
             }
 
             return lendingConcessions;

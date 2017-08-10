@@ -1245,7 +1245,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             {
                 TypeId = GetReferenceTypeId(),
                 ConcessionRef = "e552f7ceaf",
-                LegalEntityId = GetLegalEntityId(),
                 ConcessionTypeId = GetConcessionTypeId(),
                 SMTDealNumber = "b708e70719",
                 StatusId = GetStatusId(),

@@ -289,23 +289,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
-        /// Gets the concessions for the legal entity id and the concession type
-        /// </summary>
-        /// <param name="legalEntityId"></param>
-        /// <param name="concessionType"></param>
-        /// <returns></returns>
-        public IEnumerable<Concession> GetConcessionsForLegalEntityIdAndConcessionType(int legalEntityId, string concessionType)
-        {
-            var concessionTypeId = _lookupTableManager.GetConcessionTypeId(concessionType);
-
-            var concessions =
-                _concessionRepository
-                    .ReadByLegalEntityIdConcessionTypeIdIsActive(legalEntityId, concessionTypeId, true);
-
-            return Map(concessions);
-        }
-
-        /// <summary>
         /// Gets the concession conditions
         /// </summary>
         /// <param name="concessionId"></param>
@@ -349,19 +332,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var mappedConcession = _mapper.Map<Model.Repository.Concession>(concession);
             mappedConcession.TypeId = _lookupTableManager.GetReferenceTypeId(concession.Type);
-
-            //TODO: Get legal entity id
-            //message.Concession.CustomerName
-            //message.Concession.RiskGroupNumber
-            //message.Concession.RiskGroupName
-            //mappedConcession.LegalEntityId = _legalEntityRepository.
-            if (concession.RiskGroupNumber.HasValue)
-            {
-                var riskGroup = _riskGroupRepository.ReadByRiskGroupNumberIsActive(concession.RiskGroupNumber.Value, true);
-                var legalEntity = _legalEntityRepository.ReadByRiskGroupIdIsActive(riskGroup.Id, true).First();
-
-                mappedConcession.LegalEntityId = legalEntity.Id;
-            }
 
             mappedConcession.ConcessionTypeId =
                 _lookupTableManager.GetConcessionTypeId(concession.ConcessionType);
@@ -433,20 +403,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             foreach (var concession in repositoryConcessions)
             {
-                var legalEntity = _legalEntityRepository.ReadByIdIsActive(concession.LegalEntityId, true);
-                var riskGroup = _riskGroupRepository.ReadByIdIsActive(legalEntity.RiskGroupId, true);
                 var concessionAccount = _concessionAccountRepository.ReadByConcessionIdIsActive(concession.Id, true);
 
                 var mappedConcession = _mapper.Map<Concession>(concession);
 
-                mappedConcession.Seqment = legalEntity != null
-                    ? _lookupTableManager.GetMarketSegmentName(legalEntity.MarketSegmentId)
-                    : string.Empty;
-
                 mappedConcession.Type = _lookupTableManager.GetReferenceTypeName(concession.TypeId);
-
-                mappedConcession.RiskGroupName = riskGroup?.RiskGroupName;
-                mappedConcession.RiskGroupNumber = riskGroup?.RiskGroupNumber;
                 mappedConcession.AccountNumber = concessionAccount?.AccountNumber;
 
                 concessions.Add(mappedConcession);

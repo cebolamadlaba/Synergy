@@ -32,14 +32,6 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public string ConcessionRef { get; set; }
 
         /// <summary>
-        /// Gets or sets the LegalEntityId.
-        /// </summary>
-        /// <value>
-        /// The LegalEntityId.
-        /// </value>
-        public int LegalEntityId { get; set; }
-
-        /// <summary>
         /// Gets or sets the ConcessionTypeId.
         /// </summary>
         /// <value>
