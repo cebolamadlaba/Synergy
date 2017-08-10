@@ -106,8 +106,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockLegalEntityRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
                 .Returns(new LegalEntity { IsActive = true });
 
-            MockRiskGroupRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new RiskGroup { IsActive = true });
+            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup { IsActive = true });
 
             MockLookupTableManager.Setup(_ => _.GetMarketSegmentName(It.IsAny<int>())).Returns("Market Segment Name");
             MockLookupTableManager.Setup(_ => _.GetReferenceTypeName(It.IsAny<int>())).Returns("Type Name");
@@ -324,10 +323,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         [Fact]
         public void GetActionedConcessionsForBCMUser_Executes_Positive()
         {
-            MockConcessionRepository
-            .Setup(_ => _.GetActionedByBCMUser(It.IsAny<int>())).Returns(new[] { new Concession() });
-            var result = _concessionManager.GetActionedConcessionsForUser(new User {UserRoles = new List<Role> { new Role { Name = "BCM" } } });
+            MockConcessionRepository.Setup(_ => _.GetActionedByBCMUser(It.IsAny<int>())).Returns(new[] { new Concession() });
 
+            MockConcessionAccountRepository.Setup(_ => _.ReadByConcessionIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(new ConcessionAccount());
+
+            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup
+            {
+                Id = 1,
+                IsActive = true,
+                RiskGroupNumber = 10,
+                RiskGroupName = "Test Risk Group"
+            });
+
+            var result = _concessionManager.GetActionedConcessionsForUser(new User {UserRoles = new List<Role> { new Role { Name = "BCM" } } });
           
             Assert.NotEmpty(result);
 
@@ -338,6 +347,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             MockConcessionRepository
             .Setup(_ => _.GetActionedByPCMUser(It.IsAny<int>())).Returns(new[] { new Concession() });
+
+            MockConcessionAccountRepository.Setup(_ => _.ReadByConcessionIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(new ConcessionAccount());
+
+            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup
+            {
+                Id = 1,
+                IsActive = true,
+                RiskGroupNumber = 10,
+                RiskGroupName = "Test Risk Group"
+            });
+
             var result = _concessionManager.GetActionedConcessionsForUser(new User { UserRoles = new List<Role> { new Role { Name = "PCM" } } });
 
 
@@ -349,11 +370,38 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             MockConcessionRepository
             .Setup(_ => _.GetActionedByHOUser(It.IsAny<int>())).Returns(new[] { new Concession() });
+
+            MockConcessionAccountRepository.Setup(_ => _.ReadByConcessionIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(new ConcessionAccount());
+
+            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup
+            {
+                Id = 1,
+                IsActive = true,
+                RiskGroupNumber = 10,
+                RiskGroupName = "Test Risk Group"
+            });
+
             var result = _concessionManager.GetActionedConcessionsForUser(new User { UserRoles = new List<Role> { new Role { Name = "Head Office" } } });
 
 
             Assert.NotEmpty(result);
 
+        }
+
+        /// <summary>
+        /// Tests that GetConcessionsForRiskGroup executes positive
+        /// </summary>
+        [Fact]
+        public void GetConcessionsForRiskGroup_Executes_Positive()
+        {
+            MockConcessionRepository.Setup(_ => _.ReadByRiskGroupIdConcessionTypeIdIsActive(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(new[] {new Concession()});
+
+            var result = _concessionManager.GetConcessionsForRiskGroup(1, "Test");
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
         }
     }
 }

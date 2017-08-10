@@ -177,6 +177,27 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Reads by the risk group id, concession type is and the is active flag
+        /// </summary>
+        /// <param name="riskGroupId"></param>
+        /// <param name="concessionTypeId"></param>
+        /// <param name="isActive"></param>
+        /// <returns></returns>
+        public IEnumerable<Concession> ReadByRiskGroupIdConcessionTypeIdIsActive(int riskGroupId, int concessionTypeId, bool isActive)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<Concession>(
+                    @"SELECT [pkConcessionId] [Id], [fkTypeId] [TypeId], [ConcessionRef], [fkConcessionTypeId] [ConcessionTypeId], [SMTDealNumber], [fkStatusId] [StatusId], [fkSubStatusId] [SubStatusId], [ConcessionDate], [DatesentForApproval], [Motivation], [DateApproved], [fkRequestorId] [RequestorId], [fkBCMUserId] [BCMUserId], [DateActionedByBCM], [fkPCMUserId] [PCMUserId], [DateActionedByPCM], [fkHOUserId] [HOUserId], [DateActionedByHO], [ExpiryDate], [CentreId], [IsCurrent], [IsActive], [MRS_CRS] [MrsCrs], [fkRiskGroupId] [RiskGroupId] 
+                    FROM [dbo].[tblConcession] 
+                    WHERE [fkRiskGroupId] = @riskGroupId
+                    AND [fkConcessionTypeId] = @concessionTypeId
+                    AND [IsActive] = @isActive",
+                    new { riskGroupId, concessionTypeId, isActive });
+            }
+        }
+
+        /// <summary>
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>

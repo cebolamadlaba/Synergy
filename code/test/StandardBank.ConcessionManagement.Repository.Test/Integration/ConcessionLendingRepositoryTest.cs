@@ -27,7 +27,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 InitiationFee = 4019,
                 ReviewFee = 939,
                 UFFFee = 8999,
-                ReviewFeeTypeId = DataHelper.GetReviewFeeTypeId()
+                ReviewFeeTypeId = DataHelper.GetReviewFeeTypeId(),
+                LegalEntityId = DataHelper.GetLegalEntityId()
             };
 
             var result = InstantiatedDependencies.ConcessionLendingRepository.Create(model);
@@ -96,6 +97,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.ReviewFee = model.ReviewFee + 100;
             model.UFFFee = model.UFFFee + 100;
             model.ReviewFeeTypeId = DataHelper.GetAlternateReviewFeeTypeId(model.ReviewFeeTypeId);
+            model.LegalEntityId = DataHelper.GetAlternateLegalEntityId(model.LegalEntityId);
 
             InstantiatedDependencies.ConcessionLendingRepository.Update(model);
 
@@ -113,6 +115,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.ReviewFee, model.ReviewFee);
             Assert.Equal(updatedModel.UFFFee, model.UFFFee);
             Assert.Equal(updatedModel.ReviewFeeTypeId, model.ReviewFeeTypeId);
+            Assert.Equal(updatedModel.LegalEntityId, model.LegalEntityId);
         }
 
         /// <summary>
@@ -132,7 +135,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 InitiationFee = 4019,
                 ReviewFee = 939,
                 UFFFee = 8999,
-                ReviewFeeTypeId = DataHelper.GetReviewFeeTypeId()
+                ReviewFeeTypeId = DataHelper.GetReviewFeeTypeId(),
+                LegalEntityId = DataHelper.GetLegalEntityId()
             };
 
             var temporaryEntity = InstantiatedDependencies.ConcessionLendingRepository.Create(model);

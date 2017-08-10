@@ -209,6 +209,23 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         }
 
         /// <summary>
+        /// Tests that ReadByRiskGroupIdConcessionTypeIdIsActive executes positive
+        /// </summary>
+        [Fact]
+        public void ReadByRiskGroupIdConcessionTypeIdIsActive_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
+            var resultToTestWith = results.First(_ => _.IsActive);
+
+            var result =
+                InstantiatedDependencies.ConcessionRepository.ReadByRiskGroupIdConcessionTypeIdIsActive(
+                    resultToTestWith.RiskGroupId, resultToTestWith.ConcessionTypeId, true);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
         /// Tests that ReadAll executes positive.
         /// </summary>
         [Fact]

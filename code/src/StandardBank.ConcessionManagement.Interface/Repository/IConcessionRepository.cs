@@ -61,6 +61,15 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
             DateTime startExpiryDate, DateTime endExpiryDate, bool isActive);
 
         /// <summary>
+        /// Reads by the risk group id and is active
+        /// </summary>
+        /// <param name="riskGroupId"></param>
+        /// <param name="concessionTypeId"></param>
+        /// <param name="isActive"></param>
+        /// <returns></returns>
+        IEnumerable<Concession> ReadByRiskGroupIdConcessionTypeIdIsActive(int riskGroupId, int concessionTypeId, bool isActive);
+
+        /// <summary>
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>

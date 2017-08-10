@@ -409,7 +409,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 var concessionAccount = _concessionAccountRepository.ReadByConcessionIdIsActive(concession.Id, true);
 
                 var mappedConcession = _mapper.Map<Concession>(concession);
-                
+                var riskGroup = _riskGroupRepository.ReadById(concession.RiskGroupId);
+
+                mappedConcession.RiskGroupNumber = riskGroup.RiskGroupNumber;
+                mappedConcession.RiskGroupName = riskGroup.RiskGroupName;
 
                 mappedConcession.Type = _lookupTableManager.GetReferenceTypeName(concession.TypeId);
                 mappedConcession.AccountNumber = concessionAccount?.AccountNumber;
@@ -445,6 +448,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             return concessions;
+        }
+
+        /// <summary>
+        /// Gets the concessions for the risk group for the concession type
+        /// </summary>
+        /// <param name="riskGroupId"></param>
+        /// <param name="concessionType"></param>
+        /// <returns></returns>
+        public IEnumerable<Concession> GetConcessionsForRiskGroup(int riskGroupId, string concessionType)
+        {
+            var concessionTypeId = _lookupTableManager.GetConcessionTypeId(concessionType);
+            return Map(_concessionRepository.ReadByRiskGroupIdConcessionTypeIdIsActive(riskGroupId, concessionTypeId, true));
         }
     }
 }

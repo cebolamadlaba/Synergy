@@ -2,7 +2,6 @@
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
-using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 
@@ -62,7 +61,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (riskGroup != null)
             {
-                //TODO
+                var concessions = _concessionManager.GetConcessionsForRiskGroup(riskGroup.Id, "Lending");
+
+                foreach (var concession in concessions)
+                    AddLendingConcessionData(concession, lendingConcessions);
             }
 
             return lendingConcessions;
@@ -73,17 +75,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         /// <param name="concession"></param>
         /// <param name="lendingConcessions"></param>
-        /// <param name="legalEntity"></param>
-        private void AddLendingConcessionData(Concession concession, ICollection<LendingConcession> lendingConcessions,
-            LegalEntity legalEntity)
+        private void AddLendingConcessionData(Concession concession, ICollection<LendingConcession> lendingConcessions)
         {
             var lendingConcessionData = _concessionLendingRepository.ReadByConcessionId(concession.Id);
             var lendingConcessionDetails = new List<LendingConcessionDetail>();
 
             var lendingConcession =
                 lendingConcessions.FirstOrDefault(
-                    _ => _.Concession.CustomerName == legalEntity.CustomerName
-                         && _.Concession.ReferenceNumber == concession.ReferenceNumber);
+                    _ => _.Concession.ReferenceNumber == concession.ReferenceNumber);
 
             if (lendingConcession == null)
             {
@@ -97,6 +96,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             lendingConcessionDetails.AddRange(lendingConcession.LendingConcessionDetails);
+
+            var legalEntity = _legalEntityRepository.ReadById(lendingConcessionData.LegalEntityId);
 
             lendingConcessionDetails.Add(new LendingConcessionDetail
             {

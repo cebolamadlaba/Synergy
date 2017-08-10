@@ -73,5 +73,13 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <returns></returns>
         IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber);
         IEnumerable<Concession> GetActionedConcessionsForUser(User user);
+
+        /// <summary>
+        /// Gets the concessions for the risk group id and the concession type
+        /// </summary>
+        /// <param name="riskGroupId"></param>
+        /// <param name="concessionType"></param>
+        /// <returns></returns>
+        IEnumerable<Concession> GetConcessionsForRiskGroup(int riskGroupId, string concessionType);
     }
 }

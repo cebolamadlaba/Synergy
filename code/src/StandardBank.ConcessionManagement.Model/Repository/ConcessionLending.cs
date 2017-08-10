@@ -91,5 +91,10 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The ReviewFeeTypeId.
         /// </value>
         public int? ReviewFeeTypeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the legal entity id
+        /// </summary>
+        public int LegalEntityId { get; set; }
     }
 }
