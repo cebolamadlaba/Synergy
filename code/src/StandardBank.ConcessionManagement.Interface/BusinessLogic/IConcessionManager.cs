@@ -72,5 +72,6 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="riskGroupNumber"></param>
         /// <returns></returns>
         IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber);
+        IEnumerable<Concession> GetActionedConcessionsForUser(User user);
     }
 }

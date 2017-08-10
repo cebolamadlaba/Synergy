@@ -8,6 +8,7 @@ using Concession = StandardBank.ConcessionManagement.Model.Repository.Concession
 using Role = StandardBank.ConcessionManagement.Model.UserInterface.Role;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 using static StandardBank.ConcessionManagement.Test.Helpers.MockedDependencies;
+using System.Collections.Generic;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 {
@@ -318,6 +319,41 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
+        }
+
+        [Fact]
+        public void GetActionedConcessionsForBCMUser_Executes_Positive()
+        {
+            MockConcessionRepository
+            .Setup(_ => _.GetActionedByBCMUser(It.IsAny<int>())).Returns(new[] { new Concession() });
+            var result = _concessionManager.GetActionedConcessionsForUser(new User {UserRoles = new List<Role> { new Role { Name = "BCM" } } });
+
+          
+            Assert.NotEmpty(result);
+
+        }
+
+        [Fact]
+        public void GetActionedConcessionsForPCMUser_Executes_Positive()
+        {
+            MockConcessionRepository
+            .Setup(_ => _.GetActionedByPCMUser(It.IsAny<int>())).Returns(new[] { new Concession() });
+            var result = _concessionManager.GetActionedConcessionsForUser(new User { UserRoles = new List<Role> { new Role { Name = "PCM" } } });
+
+
+            Assert.NotEmpty(result);
+
+        }
+        [Fact]
+        public void GetActionedConcessionsForHOUser_Executes_Positive()
+        {
+            MockConcessionRepository
+            .Setup(_ => _.GetActionedByHOUser(It.IsAny<int>())).Returns(new[] { new Concession() });
+            var result = _concessionManager.GetActionedConcessionsForUser(new User { UserRoles = new List<Role> { new Role { Name = "Head Office" } } });
+
+
+            Assert.NotEmpty(result);
+
         }
     }
 }

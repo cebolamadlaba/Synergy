@@ -41,5 +41,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             return Ok(_concessionManager.GetUserConcessions(_siteHelper.LoggedInUser(this)));
         }
+
+        [Route("ActionedConcessions")]
+        public IActionResult ActionedConcessions()
+        {
+            return Ok(_concessionManager.GetActionedConcessionsForUser(_siteHelper.LoggedInUser(this)));
+        }
     }
 }

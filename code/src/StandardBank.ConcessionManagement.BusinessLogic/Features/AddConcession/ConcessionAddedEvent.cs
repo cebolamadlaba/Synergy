@@ -7,7 +7,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
 {
     public class ConcessionAddedEvent : INotification
     {
-        public int ConsessionId { get; set; }
+        public string ConsessionId { get; set; }
         public int CenterId { get; set; }
     }
 }

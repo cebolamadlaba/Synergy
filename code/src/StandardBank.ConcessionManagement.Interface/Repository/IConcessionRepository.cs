@@ -71,5 +71,9 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         void Delete(Concession model);
+
+        IEnumerable<Concession> GetActionedByBCMUser(int userId);
+        IEnumerable<Concession> GetActionedByPCMUser(int userId);
+        IEnumerable<Concession> GetActionedByHOUser(int userId);
     }
 }

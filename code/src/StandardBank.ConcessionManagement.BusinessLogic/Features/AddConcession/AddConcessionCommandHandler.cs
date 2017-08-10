@@ -46,7 +46,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
             message.Concession.ReferenceNumber = result.ConcessionRef;
             message.Concession.Id = result.Id;
             if (message.User.SelectedCentre?.Id > 0)
-                await _mediator.Publish(new ConcessionAddedEvent { CenterId = message.User.SelectedCentre.Id, ConsessionId = result.Id });
+                await _mediator.Publish(new ConcessionAddedEvent { CenterId = message.User.SelectedCentre.Id, ConsessionId = result.ConcessionRef });
             else
                 _logger.LogWarning(new EventId(1,"ApprovalEmailNotSent"),"Consession # {0} has no selected center",result.Id);
 

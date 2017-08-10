@@ -101,6 +101,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var concessions = new List<Concession>();
             var pendingStatusId = _lookupTableManager.GetStatusId("Pending");
+            var bcmpendingStatusId = _lookupTableManager.GetSubStatusId("BCM Pending");
+            var pcmpendingStatusId = _lookupTableManager.GetSubStatusId("PCM Pending");
 
             //loop through the user roles and get the concessions for the particular user
             foreach (var userRole in user.UserRoles)
@@ -113,6 +115,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         break;
                     case "Suite Head":
                     case "BCM":
+                        concessions.AddRange(Map(_concessionRepository.ReadByRequestorIdStatusIdSubStatusIdIsActive(0,pendingStatusId,bcmpendingStatusId,true)));
                         break;
                     case "PCM":
                     case "Head Office":
@@ -411,6 +414,33 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 mappedConcession.AccountNumber = concessionAccount?.AccountNumber;
 
                 concessions.Add(mappedConcession);
+            }
+
+            return concessions;
+        }
+
+        public IEnumerable<Concession> GetActionedConcessionsForUser(User user)
+        {
+            var concessions = new List<Concession>();
+          
+
+            //loop through the user roles and get the concessions for the particular user
+            foreach (var userRole in user.UserRoles)
+            {
+                switch (userRole.Name.Trim())
+                {
+                   
+                    case "Suite Head":
+                    case "BCM":
+                        concessions.AddRange(Map(_concessionRepository.GetActionedByBCMUser(user.Id)));
+                        break;
+                    case "PCM":
+                        concessions.AddRange(Map(_concessionRepository.GetActionedByPCMUser(user.Id)));
+                        break;
+                    case "Head Office":
+                        concessions.AddRange(Map(_concessionRepository.GetActionedByHOUser(user.Id)));
+                        break;
+                }
             }
 
             return concessions;
