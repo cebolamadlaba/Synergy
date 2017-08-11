@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -86,8 +87,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
                 await _mediator.Send(new AddLendingConcessionDetailCommand(lendingConcessionDetail, user, concession));
 
-            foreach (var concessionCondition in lendingConcession.ConcessionConditions)
-                await _mediator.Send(new AddConcessionConditionCommand(concessionCondition, user, concession));
+            if (lendingConcession.ConcessionConditions != null && lendingConcession.ConcessionConditions.Any())
+                foreach (var concessionCondition in lendingConcession.ConcessionConditions)
+                    await _mediator.Send(new AddConcessionConditionCommand(concessionCondition, user, concession));
 
             return Ok(lendingConcession);
         }
