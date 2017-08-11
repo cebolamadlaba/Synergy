@@ -39,6 +39,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     riskGroup: RiskGroup;
     riskGroupNumber: number;
     selectedConditionTypes: ConditionType[];
+    isLoading = false;
 
     observableReviewFeeTypes: Observable<ReviewFeeType[]>;
     reviewFeeTypes: ReviewFeeType[];
@@ -178,6 +179,8 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     onSubmit() {
+        this.isLoading = true;
+
         this.errorMessage = null;
         this.validationError = null;
 
@@ -281,8 +284,18 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             lendingConcession.concessionConditions.push(concessionCondition);
         }
 
-        if (!this.validationError)
-            this.lendingNewService.postData(lendingConcession).subscribe(entity => { console.log("data saved"); this.saveMessage = entity.concession.referenceNumber; }, error => this.errorMessage = <any>error);
+        if (!this.validationError) {
+            this.lendingNewService.postData(lendingConcession).subscribe(entity => {
+                console.log("data saved");
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
     }
 
     addValidationError(validationDetail) {

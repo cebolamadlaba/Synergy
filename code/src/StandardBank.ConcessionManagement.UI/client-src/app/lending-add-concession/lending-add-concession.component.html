@@ -36,7 +36,7 @@
     </div>
 </div>
 
-<div class="row alert-danger" *ngIf="errorMessage || validationError">
+<div class="row alert-danger" *ngIf="(errorMessage || validationError) && !isLoading">
     <div class="col-md-12">
         <h1>Errors</h1>
         {{errorMessage}}
@@ -47,7 +47,7 @@
     </div>
 </div>
 
-<div class="row alert alert-success" *ngIf="saveMessage">
+<div class="row alert alert-success" *ngIf="saveMessage && !isLoading">
     <div class="col-md-12">
         <h1>Success</h1>
         Record has been saved successfully!
@@ -55,9 +55,15 @@
     </div>
 </div>
 
+<div class="row alert alert-info" *ngIf="isLoading">
+    <div class="col-md-12">
+        <h1>Loading...</h1>
+    </div>
+</div>
+
 <!-- Form entries -->
 
-<form class="col-md-12 concession-information-form" [formGroup]="lendingConcessionForm">
+<form class="col-md-12 concession-information-form" [formGroup]="lendingConcessionForm" *ngIf="!isLoading">
     <div class="col-md-4">
         <div class="row">
             <label>MRS/CRS</label>
