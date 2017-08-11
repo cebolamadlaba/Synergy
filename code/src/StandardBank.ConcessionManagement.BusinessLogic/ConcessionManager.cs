@@ -454,5 +454,21 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var concessionTypeId = _lookupTableManager.GetConcessionTypeId(concessionType);
             return Map(_concessionRepository.ReadByRiskGroupIdConcessionTypeIdIsActive(riskGroupId, concessionTypeId, true));
         }
+
+        /// <summary>
+        /// Creates a concession condition
+        /// </summary>
+        /// <param name="concessionCondition"></param>
+        /// <param name="concession"></param>
+        /// <returns></returns>
+        public Model.Repository.ConcessionCondition CreateConcessionCondition(ConcessionCondition concessionCondition, Concession concession)
+        {
+            var mappedConcessionCondition = _mapper.Map<Model.Repository.ConcessionCondition>(concessionCondition);
+
+            mappedConcessionCondition.ConcessionId = concession.Id;
+            mappedConcessionCondition.IsActive = true;
+
+            return _concessionConditionRepository.Create(mappedConcessionCondition);
+        }
     }
 }

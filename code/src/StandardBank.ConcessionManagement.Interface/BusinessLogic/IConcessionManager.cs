@@ -81,5 +81,13 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="concessionType"></param>
         /// <returns></returns>
         IEnumerable<Concession> GetConcessionsForRiskGroup(int riskGroupId, string concessionType);
+
+        /// <summary>
+        /// Creates a concession condition
+        /// </summary>
+        /// <param name="concessionCondition"></param>
+        /// <param name="concession"></param>
+        /// <returns></returns>
+        Model.Repository.ConcessionCondition CreateConcessionCondition(ConcessionCondition concessionCondition, Concession concession);
     }
 }

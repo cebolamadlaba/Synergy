@@ -403,5 +403,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             Assert.NotNull(result);
             Assert.NotEmpty(result);
         }
+
+        /// <summary>
+        /// Tests that CreateConcessionCondition executes positive
+        /// </summary>
+        [Fact]
+        public void CreateConcessionCondition_Executes_Positive()
+        {
+            MockConcessionConditionRepository.Setup(_ => _.Create(It.IsAny<ConcessionCondition>()))
+                .Returns(new ConcessionCondition());
+
+            var result = _concessionManager.CreateConcessionCondition(new Model.UserInterface.ConcessionCondition(),
+                new Model.UserInterface.Concession());
+
+            Assert.NotNull(result);
+        }
     }
 }
