@@ -91,9 +91,9 @@
                         <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
                 </td>
-                <td class="length-long"><input value="5,000,000.00" formControlName="limit" /></td>
-                <td class="length-short"><input value="60" formControlName="term" /></td>
-                <td class="length-short"><input value="1" formControlName="marginAgainstPrime" /></td>
+                <td class="length-long"><input formControlName="limit" /></td>
+                <td class="length-short"><input formControlName="term" /></td>
+                <td class="length-short"><input formControlName="marginAgainstPrime" /></td>
                 <td class="length-long"><input formControlName="initiationFee" /></td>
                 <td class="length-medium">
                     <select formControlName="reviewFeeType">

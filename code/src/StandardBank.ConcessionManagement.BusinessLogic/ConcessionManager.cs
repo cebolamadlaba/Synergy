@@ -258,37 +258,30 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public UserConcessions GetUserConcessions(User user)
         {
-            Func<UserConcessions> function = () =>
-            {
-                var userConcessions = new UserConcessions();
+            var userConcessions = new UserConcessions();
 
-                var pendingConcessions = GetPendingConcessionsForUser(user);
-                var dueForExpiryConcessions = GetDueForExpiryConcessionsForUser(user);
-                var expiredConcessions = GetExpiredConcessionsForUser(user);
-                var mismatchedConcessions = GetMismatchedConcessionsForUser(user);
-                var declinedConcessions = GetDeclinedConcessionsForUser(user);
+            var pendingConcessions = GetPendingConcessionsForUser(user);
+            var dueForExpiryConcessions = GetDueForExpiryConcessionsForUser(user);
+            var expiredConcessions = GetExpiredConcessionsForUser(user);
+            var mismatchedConcessions = GetMismatchedConcessionsForUser(user);
+            var declinedConcessions = GetDeclinedConcessionsForUser(user);
 
-                userConcessions.PendingConcessions = pendingConcessions;
-                userConcessions.PendingConcessionsCount = pendingConcessions.Count();
+            userConcessions.PendingConcessions = pendingConcessions;
+            userConcessions.PendingConcessionsCount = pendingConcessions.Count();
 
-                userConcessions.DueForExpiryConcessions = dueForExpiryConcessions;
-                userConcessions.DueForExpiryConcessionsCount = dueForExpiryConcessions.Count();
+            userConcessions.DueForExpiryConcessions = dueForExpiryConcessions;
+            userConcessions.DueForExpiryConcessionsCount = dueForExpiryConcessions.Count();
 
-                userConcessions.ExpiredConcessions = expiredConcessions;
-                userConcessions.ExpiredConcessionsCount = expiredConcessions.Count();
+            userConcessions.ExpiredConcessions = expiredConcessions;
+            userConcessions.ExpiredConcessionsCount = expiredConcessions.Count();
 
-                userConcessions.MismatchedConcessions = mismatchedConcessions;
-                userConcessions.MismatchedConcessionsCount = mismatchedConcessions.Count();
+            userConcessions.MismatchedConcessions = mismatchedConcessions;
+            userConcessions.MismatchedConcessionsCount = mismatchedConcessions.Count();
 
-                userConcessions.DeclinedConcessions = declinedConcessions;
-                userConcessions.DeclinedConcessionsCount = declinedConcessions.Count();
+            userConcessions.DeclinedConcessions = declinedConcessions;
+            userConcessions.DeclinedConcessionsCount = declinedConcessions.Count();
 
-                return userConcessions;
-            };
-
-            return _cacheManager.ReturnFromCache(function, 60,
-                CacheKey.BusinessLogic.ConcessionManager.GetUserConcessions,
-                new CacheKeyParameter(nameof(user.ANumber), user.ANumber));
+            return userConcessions;
         }
 
         /// <summary>

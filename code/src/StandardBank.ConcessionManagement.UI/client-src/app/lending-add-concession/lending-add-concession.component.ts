@@ -179,6 +179,9 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         lendingConcession.concession.motivation = this.lendingConcessionForm.controls['motivation'].value;
         lendingConcession.concession.mrsCrs = this.lendingConcessionForm.controls['mrsCrs'].value;
         lendingConcession.concession.smtDealNumber = this.lendingConcessionForm.controls['smtDealNumber'].value;
+        lendingConcession.concession.riskGroupId = this.riskGroup.id;
+        lendingConcession.concession.concessionType = "Lending";
+        lendingConcession.concession.type = "New";
 
         this.lendingNewService.postData(lendingConcession)
             .subscribe(entity => {

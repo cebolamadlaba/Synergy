@@ -79,6 +79,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var user = _siteHelper.LoggedInUser(this);
 
             lendingConcession.Concession.ConcessionType = "Lending";
+            lendingConcession.Concession.Type = "New";
 
             return Ok(await _mediator.Send(new AddConcessionCommand(lendingConcession.Concession, user)));
         }

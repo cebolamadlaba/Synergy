@@ -1,6 +1,7 @@
 ﻿export class Concession {
     id: number;
     referenceNumber: string;
+    riskGroupId: number;
     riskGroupNumber: number;
     riskGroupName: string;
     type: string;

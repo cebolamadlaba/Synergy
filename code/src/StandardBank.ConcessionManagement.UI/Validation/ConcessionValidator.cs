@@ -14,7 +14,7 @@ namespace StandardBank.ConcessionManagement.UI.Validation
         {
             RuleFor(x => x.Concession.Type).NotEmpty();
             RuleFor(x => x.Concession.ConcessionType).NotEmpty();
-            RuleFor(x => x.Concession.RiskGroupNumber).NotEmpty();
+            RuleFor(x => x.Concession.RiskGroupId).NotEmpty();
             RuleFor(x => x.Concession.SmtDealNumber).NotEmpty();
             RuleFor(x => x.Concession.Motivation).NotEmpty();
            

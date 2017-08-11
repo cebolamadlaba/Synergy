@@ -21,6 +21,11 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public string ReferenceNumber { get; set; }
 
         /// <summary>
+        /// Gets or sets the risk group id
+        /// </summary>
+        public int RiskGroupId { get; set; }
+
+        /// <summary>
         /// Gets or sets the risk group number
         /// </summary>
         public int? RiskGroupNumber { get; set; }

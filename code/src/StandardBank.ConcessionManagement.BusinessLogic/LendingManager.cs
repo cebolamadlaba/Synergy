@@ -78,38 +78,42 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private void AddLendingConcessionData(Concession concession, ICollection<LendingConcession> lendingConcessions)
         {
             var lendingConcessionData = _concessionLendingRepository.ReadByConcessionId(concession.Id);
-            var lendingConcessionDetails = new List<LendingConcessionDetail>();
 
-            var lendingConcession =
-                lendingConcessions.FirstOrDefault(
-                    _ => _.Concession.ReferenceNumber == concession.ReferenceNumber);
-
-            if (lendingConcession == null)
+            if (lendingConcessionData != null)
             {
-                lendingConcession = new LendingConcession
+                var lendingConcessionDetails = new List<LendingConcessionDetail>();
+
+                var lendingConcession =
+                    lendingConcessions.FirstOrDefault(
+                        _ => _.Concession.ReferenceNumber == concession.ReferenceNumber);
+
+                if (lendingConcession == null)
                 {
-                    Concession = concession,
-                    LendingConcessionDetails = new List<LendingConcessionDetail>()
-                };
+                    lendingConcession = new LendingConcession
+                    {
+                        Concession = concession,
+                        LendingConcessionDetails = new List<LendingConcessionDetail>()
+                    };
 
-                lendingConcessions.Add(lendingConcession);
+                    lendingConcessions.Add(lendingConcession);
+                }
+
+                lendingConcessionDetails.AddRange(lendingConcession.LendingConcessionDetails);
+
+                var legalEntity = _legalEntityRepository.ReadById(lendingConcessionData.LegalEntityId);
+
+                lendingConcessionDetails.Add(new LendingConcessionDetail
+                {
+                    CustomerName = legalEntity.CustomerName,
+                    AccountNumber = concession.AccountNumber,
+                    Limit = lendingConcessionData?.Limit ?? 0,
+                    Term = lendingConcessionData?.Term ?? 0,
+                    LoadedMap = lendingConcessionData?.MarginToPrime ?? 0,
+                    ApprovedMap = lendingConcessionData?.ApprovedMarginToPrime ?? 0
+                });
+
+                lendingConcession.LendingConcessionDetails = lendingConcessionDetails;
             }
-
-            lendingConcessionDetails.AddRange(lendingConcession.LendingConcessionDetails);
-
-            var legalEntity = _legalEntityRepository.ReadById(lendingConcessionData.LegalEntityId);
-
-            lendingConcessionDetails.Add(new LendingConcessionDetail
-            {
-                CustomerName = legalEntity.CustomerName,
-                AccountNumber = concession.AccountNumber,
-                Limit = lendingConcessionData?.Limit ?? 0,
-                Term = lendingConcessionData?.Term ?? 0,
-                LoadedMap = lendingConcessionData?.MarginToPrime ?? 0,
-                ApprovedMap = lendingConcessionData?.ApprovedMarginToPrime ?? 0
-            });
-
-            lendingConcession.LendingConcessionDetails = lendingConcessionDetails;
         }
     }
 }
