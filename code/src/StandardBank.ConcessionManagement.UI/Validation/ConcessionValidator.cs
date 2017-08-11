@@ -1,14 +1,10 @@
-﻿using FluentValidation;
-using StandardBank.ConcessionManagement.Model.UserInterface;
+﻿using System.Linq;
+using FluentValidation;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace StandardBank.ConcessionManagement.UI.Validation
 {
-    public class ConcessionValidator: AbstractValidator<LendingConcession>
+    public class ConcessionValidator : AbstractValidator<LendingConcession>
     {
         public ConcessionValidator()
         {
@@ -17,7 +13,10 @@ namespace StandardBank.ConcessionManagement.UI.Validation
             RuleFor(x => x.Concession.RiskGroupId).NotEmpty();
             RuleFor(x => x.Concession.SmtDealNumber).NotEmpty();
             RuleFor(x => x.Concession.Motivation).NotEmpty();
-           
+            RuleFor(x => x.LendingConcessionDetails).NotEmpty();
+            RuleFor(x => x.LendingConcessionDetails.First()).NotEmpty();
+            RuleFor(x => x.LendingConcessionDetails.First().ProductTypeId).NotEmpty();
+            RuleFor(x => x.LendingConcessionDetails.First().LegalEntityId).NotNull();
         }
     }
 }

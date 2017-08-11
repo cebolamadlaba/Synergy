@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
-using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 using StandardBank.ConcessionManagement.UI.Validation;
@@ -81,7 +78,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             lendingConcession.Concession.ConcessionType = "Lending";
             lendingConcession.Concession.Type = "New";
 
-            return Ok(await _mediator.Send(new AddConcessionCommand(lendingConcession.Concession, user)));
+            await _mediator.Send(new AddConcessionCommand(lendingConcession.Concession, user));
+
+            return Ok(lendingConcession);
         }
     }
 }

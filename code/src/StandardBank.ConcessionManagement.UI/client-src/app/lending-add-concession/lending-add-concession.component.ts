@@ -33,6 +33,8 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     public lendingConcessionForm: FormGroup;
     private sub: any;
     errorMessage: String;
+    validationError: String[];
+    saveMessage: String;
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
@@ -176,11 +178,27 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     onSubmit() {
+        this.errorMessage = null;
+        this.validationError = null;
+
         var lendingConcession = new LendingConcession();
         lendingConcession.concession = new Concession();
-        lendingConcession.concession.motivation = this.lendingConcessionForm.controls['motivation'].value;
-        lendingConcession.concession.mrsCrs = this.lendingConcessionForm.controls['mrsCrs'].value;
-        lendingConcession.concession.smtDealNumber = this.lendingConcessionForm.controls['smtDealNumber'].value;
+
+        if (this.lendingConcessionForm.controls['mrsCrs'].value)
+            lendingConcession.concession.mrsCrs = this.lendingConcessionForm.controls['mrsCrs'].value;
+        else
+            this.addValidationError("MRS/CRS not captured");
+
+        if (this.lendingConcessionForm.controls['smtDealNumber'].value)
+            lendingConcession.concession.smtDealNumber = this.lendingConcessionForm.controls['smtDealNumber'].value;
+        else
+            this.addValidationError("SMT Deal Number not captured");
+
+        if (this.lendingConcessionForm.controls['motivation'].value)
+            lendingConcession.concession.motivation = this.lendingConcessionForm.controls['motivation'].value;
+        else
+            this.addValidationError("Motivation not captured");
+
         lendingConcession.concession.riskGroupId = this.riskGroup.id;
         lendingConcession.concession.concessionType = "Lending";
         lendingConcession.concession.type = "New";
@@ -195,9 +213,13 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
             if (concessionFormItem.get('productType').value)
                 lendingConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;
+            else
+                this.addValidationError("Product type not selected");
 
             if (concessionFormItem.get('accountNumber').value)
                 lendingConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
+            else
+                this.addValidationError("Client account not selected");
 
             if (concessionFormItem.get('limit').value)
                 lendingConcessionDetail.limit = concessionFormItem.get('limit').value;
@@ -233,9 +255,13 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
             if (conditionFormItem.get('conditionType').value)
                 concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;
+            else
+                this.addValidationError("Condition type not selected");
 
             if (conditionFormItem.get('conditionProduct').value)
                 concessionCondition.conditionProductId = conditionFormItem.get('conditionProduct').value.id;
+            else
+                this.addValidationError("Condition product not selected");
 
             if (conditionFormItem.get('interestRate').value)
                 concessionCondition.interestRate = conditionFormItem.get('interestRate').value;
@@ -255,11 +281,15 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             lendingConcession.concessionConditions.push(concessionCondition);
         }
 
-        this.lendingNewService.postData(lendingConcession)
-            .subscribe(entity => {
-                console.log("data saved");
-            },
-            error => this.errorMessage = <any>error);
+        if (!this.validationError)
+            this.lendingNewService.postData(lendingConcession).subscribe(entity => { console.log("data saved"); this.saveMessage = entity.concession.referenceNumber; }, error => this.errorMessage = <any>error);
+    }
+
+    addValidationError(validationDetail) {
+        if (!this.validationError)
+            this.validationError = [];
+
+        this.validationError.push(validationDetail);
     }
 
     ngOnDestroy() {

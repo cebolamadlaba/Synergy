@@ -36,17 +36,36 @@
     </div>
 </div>
 
+<div class="row alert-danger" *ngIf="errorMessage || validationError">
+    <div class="col-md-12">
+        <h1>Errors</h1>
+        {{errorMessage}}
+        
+        <ul *ngIf="validationError">
+            <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
+        </ul>
+    </div>
+</div>
+
+<div class="row alert alert-success" *ngIf="saveMessage">
+    <div class="col-md-12">
+        <h1>Success</h1>
+        Record has been saved successfully!
+        {{saveMessage}}
+    </div>
+</div>
+
 <!-- Form entries -->
 
 <form class="col-md-12 concession-information-form" [formGroup]="lendingConcessionForm">
     <div class="col-md-4">
         <div class="row">
             <label>MRS/CRS</label>
-            <input class="col-md-12" formControlName="mrsCrs" type="number" />
+            <input class="col-md-12" formControlName="mrsCrs" type="number" required />
         </div>
         <div class="row">
             <label>SMT Deal Number</label>
-            <input class="col-md-12" formControlName="smtDealNumber" maxlength="16" />
+            <input class="col-md-12" formControlName="smtDealNumber" maxlength="16" required />
         </div>
     </div>
     <div class="col-md-1"></div>
@@ -224,4 +243,4 @@
     </div>
 </form>
 
-<pre>{{lendingConcessionForm.value | json}}</pre>
+<!--<pre>{{lendingConcessionForm.value | json}}</pre>-->
