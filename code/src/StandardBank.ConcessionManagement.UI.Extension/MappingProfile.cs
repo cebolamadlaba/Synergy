@@ -39,6 +39,12 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                 .ForMember(target => target.Volume, _ => _.MapFrom(source => source.ConditionVolume))
                 .ForMember(target => target.Value, _ => _.MapFrom(source => source.ConditionValue));
 
+            //ConcessionLending
+            CreateMap<Model.Repository.ConcessionLending, Model.UserInterface.Lending.LendingConcessionDetail>()
+                .ForMember(target => target.MarginAgainstPrime, _ => _.MapFrom(source => source.MarginToPrime));
+            CreateMap<Model.UserInterface.Lending.LendingConcessionDetail, Model.Repository.ConcessionLending>()
+                .ForMember(target => target.MarginToPrime, _ => _.MapFrom(source => source.MarginAgainstPrime));
+
             //ConcessionType
             CreateMap<Model.Repository.ConcessionType, Model.UserInterface.ConcessionType>().ReverseMap();
 

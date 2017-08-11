@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 
@@ -34,19 +36,26 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IConcessionLendingRepository _concessionLendingRepository;
 
         /// <summary>
+        /// The mapper
+        /// </summary>
+        private readonly IMapper _mapper;
+
+        /// <summary>
         /// Intializes an instance of the class
         /// </summary>
         /// <param name="pricingManager"></param>
         /// <param name="concessionManager"></param>
         /// <param name="legalEntityRepository"></param>
         /// <param name="concessionLendingRepository"></param>
+        /// <param name="mapper"></param>
         public LendingManager(IPricingManager pricingManager, IConcessionManager concessionManager,
-            ILegalEntityRepository legalEntityRepository, IConcessionLendingRepository concessionLendingRepository)
+            ILegalEntityRepository legalEntityRepository, IConcessionLendingRepository concessionLendingRepository, IMapper mapper)
         {
             _pricingManager = pricingManager;
             _concessionManager = concessionManager;
             _legalEntityRepository = legalEntityRepository;
             _concessionLendingRepository = concessionLendingRepository;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -68,6 +77,21 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             return lendingConcessions;
+        }
+
+        /// <summary>
+        /// Creates a concession lending
+        /// </summary>
+        /// <param name="lendingConcessionDetail"></param>
+        /// <param name="concession"></param>
+        /// <returns></returns>
+        public ConcessionLending CreateConcessionLending(LendingConcessionDetail lendingConcessionDetail, Concession concession)
+        {
+            var concessionLending = _mapper.Map<ConcessionLending>(lendingConcessionDetail);
+
+            concessionLending.ConcessionId = concession.Id;
+
+            return _concessionLendingRepository.Create(concessionLending);
         }
 
         /// <summary>
