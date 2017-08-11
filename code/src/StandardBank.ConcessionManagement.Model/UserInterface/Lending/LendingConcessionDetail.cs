@@ -14,6 +14,11 @@
         public string ProductType { get; set; }
 
         /// <summary>
+        /// Gets or sets the product type id
+        /// </summary>
+        public int? ProductTypeId { get; set; }
+
+        /// <summary>
         /// Gets or sets the name of the customer.
         /// </summary>
         /// <value>
@@ -28,6 +33,11 @@
         /// The account number.
         /// </value>
         public string AccountNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets the legal entity id
+        /// </summary>
+        public int? LegalEntityId { get; set; }
 
         /// <summary>
         /// Gets or sets the limit.
@@ -68,5 +78,35 @@
         /// The approved map.
         /// </value>
         public decimal ApprovedMap { get; set; }
+
+        /// <summary>
+        /// Gets or sets the margin against prime
+        /// </summary>
+        public decimal MarginAgainstPrime { get; set; }
+
+        /// <summary>
+        /// Gets or sets the intiation fee
+        /// </summary>
+        public decimal InitiationFee { get; set; }
+
+        /// <summary>
+        /// Gets or sets the review fee type
+        /// </summary>
+        public string ReviewFeeType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the review fee type id
+        /// </summary>
+        public int? ReviewFeeTypeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the review fee
+        /// </summary>
+        public decimal ReviewFee { get; set; }
+
+        /// <summary>
+        /// Gets or sets the uff fee
+        /// </summary>
+        public decimal UffFee { get; set; }
     }
 }

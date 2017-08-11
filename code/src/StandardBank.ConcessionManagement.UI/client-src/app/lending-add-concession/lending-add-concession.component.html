@@ -38,7 +38,7 @@
 
 <!-- Form entries -->
 
-<form class="col-md-12 concession-information-form" [formGroup]="lendingConcessionForm" (ngSubmit)="onSubmit()">
+<form class="col-md-12 concession-information-form" [formGroup]="lendingConcessionForm">
     <div class="col-md-4">
         <div class="row">
             <label>MRS/CRS</label>
@@ -102,7 +102,7 @@
                 </td>
                 <td class="length-medium"><input formControlName="reviewFee" /></td>
                 <td class="length-medium"><input formControlName="uffFee" /></td>
-                <td class="delete"><button *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                <td class="delete"><button type="button" *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
         </tbody>
     </table>
@@ -124,7 +124,7 @@
                             <div class="col-md-12 modal-body">
                                 <div class="row">
                                     <div class="col-md-12 modal-title">
-                                        <button class="btn btn-default" (click)="addNewConditionRow()">New Conditions</button>
+                                        <button type="button" class="btn btn-default" (click)="addNewConditionRow()">New Conditions</button>
                                     </div>
                                 </div>
                                 <table class="form-concessions-table" formArrayName="conditionItemsRows">
@@ -165,14 +165,14 @@
                                                     <option *ngFor="let periodOption of periods" [ngValue]="periodOption">{{periodOption.description}}</option>
                                                 </select>
                                             </td>
-                                            <td class="delete"><button (click)="deleteConditionRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                                            <td class="delete"><button type="button" (click)="deleteConditionRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="modal-footer">
                                 <div class="float-right">
-                                    <button class="btn btn-submit" (click)="manageConditionsModal.hide()">Done</button>
+                                    <button type="button" class="btn btn-default" (click)="manageConditionsModal.hide()">Done</button>
                                 </div>
                             </div>
                         </div>
@@ -220,7 +220,7 @@
 
     <div class="float-right">
         <button type="button" class="btn btn-cancel" [routerLink]="['/pricing-lending', riskGroup.number]">Cancel</button>
-        <button class="btn btn-submit" type="submit">Submit</button>
+        <button class="btn btn-submit" type="button" (click)="onSubmit()">Submit</button>
     </div>
 </form>
 

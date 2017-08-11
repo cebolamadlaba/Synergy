@@ -21,6 +21,8 @@ import { ClientAccount } from "../models/client-account";
 import { LendingConcession } from "../models/lending-concession";
 import { LendingNewService } from "../lending-new/lending-new.service";
 import { Concession } from "../models/concession";
+import { LendingConcessionDetail } from "../models/lending-concession-detail";
+import { ConcessionCondition } from "../models/concession-condition";
 
 @Component({
     selector: 'app-lending-add-concession',
@@ -182,6 +184,76 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         lendingConcession.concession.riskGroupId = this.riskGroup.id;
         lendingConcession.concession.concessionType = "Lending";
         lendingConcession.concession.type = "New";
+
+        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+
+        for (let concessionFormItem of concessions.controls) {
+            if (!lendingConcession.lendingConcessionDetails)
+                lendingConcession.lendingConcessionDetails = [];
+
+            let lendingConcessionDetail = new LendingConcessionDetail();
+
+            if (concessionFormItem.get('productType').value)
+                lendingConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;
+
+            if (concessionFormItem.get('accountNumber').value)
+                lendingConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
+
+            if (concessionFormItem.get('limit').value)
+                lendingConcessionDetail.limit = concessionFormItem.get('limit').value;
+
+            if (concessionFormItem.get('term').value)
+                lendingConcessionDetail.term = concessionFormItem.get('term').value;
+
+            if (concessionFormItem.get('marginAgainstPrime').value)
+                lendingConcessionDetail.marginAgainstPrime = concessionFormItem.get('marginAgainstPrime').value;
+
+            if (concessionFormItem.get('initiationFee').value)
+                lendingConcessionDetail.initiationFee = concessionFormItem.get('initiationFee').value;
+
+            if (concessionFormItem.get('reviewFeeType').value)
+                lendingConcessionDetail.reviewFeeTypeId = concessionFormItem.get('reviewFeeType').value.id;
+
+            if (concessionFormItem.get('reviewFee').value)
+                lendingConcessionDetail.reviewFee = concessionFormItem.get('reviewFee').value;
+
+            if (concessionFormItem.get('uffFee').value)
+                lendingConcessionDetail.uffFee = concessionFormItem.get('uffFee').value;
+
+            lendingConcession.lendingConcessionDetails.push(lendingConcessionDetail);
+        }
+
+        const conditions = <FormArray>this.lendingConcessionForm.controls['conditionItemsRows'];
+
+        for (let conditionFormItem of conditions.controls) {
+            if (!lendingConcession.concessionConditions)
+                lendingConcession.concessionConditions = [];
+
+            let concessionCondition = new ConcessionCondition();
+
+            if (conditionFormItem.get('conditionType').value)
+                concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;
+
+            if (conditionFormItem.get('conditionProduct').value)
+                concessionCondition.conditionProductId = conditionFormItem.get('conditionProduct').value.id;
+
+            if (conditionFormItem.get('interestRate').value)
+                concessionCondition.interestRate = conditionFormItem.get('interestRate').value;
+
+            if (conditionFormItem.get('volume').value)
+                concessionCondition.conditionVolume = conditionFormItem.get('volume').value;
+
+            if (conditionFormItem.get('value').value)
+                concessionCondition.conditionValue = conditionFormItem.get('value').value;
+
+            if (conditionFormItem.get('periodType').value)
+                concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
+
+            if (conditionFormItem.get('period').value)
+                concessionCondition.periodId = conditionFormItem.get('period').value.id;
+
+            lendingConcession.concessionConditions.push(concessionCondition);
+        }
 
         this.lendingNewService.postData(lendingConcession)
             .subscribe(entity => {
