@@ -40,6 +40,11 @@
         public int? LegalEntityId { get; set; }
 
         /// <summary>
+        /// Gets or sets the legal entity account id
+        /// </summary>
+        public int? LegalEntityAccountId { get; set; }
+
+        /// <summary>
         /// Gets or sets the limit.
         /// </summary>
         /// <value>

@@ -28,7 +28,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ReviewFee = 939,
                 UFFFee = 8999,
                 ReviewFeeTypeId = DataHelper.GetReviewFeeTypeId(),
-                LegalEntityId = DataHelper.GetLegalEntityId()
+                LegalEntityId = DataHelper.GetLegalEntityId(),
+                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
             };
 
             var result = InstantiatedDependencies.ConcessionLendingRepository.Create(model);
@@ -101,6 +102,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.UFFFee = model.UFFFee + 100;
             model.ReviewFeeTypeId = DataHelper.GetAlternateReviewFeeTypeId(model.ReviewFeeTypeId);
             model.LegalEntityId = DataHelper.GetAlternateLegalEntityId(model.LegalEntityId);
+            model.LegalEntityAccountId = DataHelper.GetAlternateLegalEntityAccountId(model.LegalEntityAccountId);
 
             InstantiatedDependencies.ConcessionLendingRepository.Update(model);
 
@@ -119,6 +121,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.UFFFee, model.UFFFee);
             Assert.Equal(updatedModel.ReviewFeeTypeId, model.ReviewFeeTypeId);
             Assert.Equal(updatedModel.LegalEntityId, model.LegalEntityId);
+            Assert.Equal(updatedModel.LegalEntityAccountId, model.LegalEntityAccountId);
         }
 
         /// <summary>
@@ -139,7 +142,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ReviewFee = 939,
                 UFFFee = 8999,
                 ReviewFeeTypeId = DataHelper.GetReviewFeeTypeId(),
-                LegalEntityId = DataHelper.GetLegalEntityId()
+                LegalEntityId = DataHelper.GetLegalEntityId(),
+                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
             };
 
             var temporaryEntity = InstantiatedDependencies.ConcessionLendingRepository.Create(model);

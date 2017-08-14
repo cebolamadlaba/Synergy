@@ -4,6 +4,7 @@
     customerName: string;
     accountNumber: string;
     legalEntityId: number;
+    legalEntityAccountId: number;
     limit: number;
     averageBalance: number;
     term: number;

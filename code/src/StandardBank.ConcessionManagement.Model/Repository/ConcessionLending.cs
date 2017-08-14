@@ -97,6 +97,11 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// </summary>
         public int LegalEntityId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the legal entity account id
+        /// </summary>
+        public int LegalEntityAccountId { get; set; }
+
         public string TableName => "tblConcessionLending";
         public string PrimaryKeyColumnName => "pkConcessionLendingId";
         public object PrimaryKeyValue => Id;

@@ -258,10 +258,12 @@ export class LendingEditConcessionComponent implements OnInit, OnDestroy {
             else
                 this.addValidationError("Product type not selected");
 
-            if (concessionFormItem.get('accountNumber').value)
+            if (concessionFormItem.get('accountNumber').value) {
                 lendingConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
-            else
+                lendingConcessionDetail.legalEntityAccountId = concessionFormItem.get('accountNumber').value.legalEntityAccountId;
+            } else {
                 this.addValidationError("Client account not selected");
+            }
 
             if (concessionFormItem.get('limit').value)
                 lendingConcessionDetail.limit = concessionFormItem.get('limit').value;

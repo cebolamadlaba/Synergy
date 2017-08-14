@@ -1710,7 +1710,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 ReviewFee = 7441,
                 UFFFee = 1095,
                 ReviewFeeTypeId = GetReviewFeeTypeId(),
-                LegalEntityId = GetLegalEntityId()
+                LegalEntityId = GetLegalEntityId(),
+                LegalEntityAccountId = GetLegalEntityAccountId()
             };
 
             InstantiatedDependencies.ConcessionLendingRepository.Create(model);

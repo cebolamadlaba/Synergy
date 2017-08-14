@@ -176,10 +176,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 mappedLendingConcessionDetail.CustomerName = legalEntity.CustomerName;
 
                 var legalEntityAccount =
-                    _legalEntityAccountRepository.ReadByLegalEntityIdIsActive(legalEntity.Id, true);
+                    _legalEntityAccountRepository.ReadById(concessionLending.LegalEntityAccountId);
 
-                if (legalEntityAccount != null && legalEntityAccount.Any())
-                    mappedLendingConcessionDetail.AccountNumber = legalEntityAccount.First().AccountNumber;
+                if (legalEntityAccount != null)
+                    mappedLendingConcessionDetail.AccountNumber = legalEntityAccount.AccountNumber;
 
                 mappedLendingConcessionDetail.LoadedMap = concessionLending?.MarginToPrime ?? 0;
                 mappedLendingConcessionDetail.ApprovedMap = concessionLending?.ApprovedMarginToPrime ?? 0;
