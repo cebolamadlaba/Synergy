@@ -62,7 +62,10 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var result = InstantiatedDependencies.ConcessionLendingRepository.ReadByConcessionId(concessionId);
 
             Assert.NotNull(result);
-            Assert.Equal(result.ConcessionId, concessionId);
+            Assert.NotEmpty(result);
+
+            foreach (var record in result)
+                Assert.Equal(record.ConcessionId, concessionId);
         }
 
         /// <summary>

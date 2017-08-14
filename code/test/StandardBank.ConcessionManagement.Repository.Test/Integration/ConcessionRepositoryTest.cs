@@ -238,6 +238,23 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         }
 
         /// <summary>
+        /// Tests that ReadByConcessionRefIsActive executes positive
+        /// </summary>
+        [Fact]
+        public void ReadByConcessionRefIsActive_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
+            var resultToTestWith = results.First(_ => _.IsActive);
+
+            var result =
+                InstantiatedDependencies.ConcessionRepository.ReadByConcessionRefIsActive(
+                    resultToTestWith.ConcessionRef, true);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
         /// Tests that Update executes positive.
         /// </summary>
         [Fact]

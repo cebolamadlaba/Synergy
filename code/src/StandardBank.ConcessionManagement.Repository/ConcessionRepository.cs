@@ -198,6 +198,25 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Reads by the concession reference and the is active flag
+        /// </summary>
+        /// <param name="concessionRef"></param>
+        /// <param name="isActive"></param>
+        /// <returns></returns>
+        public IEnumerable<Concession> ReadByConcessionRefIsActive(string concessionRef, bool isActive)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<Concession>(
+                    @"SELECT [pkConcessionId] [Id], [fkTypeId] [TypeId], [ConcessionRef], [fkConcessionTypeId] [ConcessionTypeId], [SMTDealNumber], [fkStatusId] [StatusId], [fkSubStatusId] [SubStatusId], [ConcessionDate], [DatesentForApproval], [Motivation], [DateApproved], [fkRequestorId] [RequestorId], [fkBCMUserId] [BCMUserId], [DateActionedByBCM], [fkPCMUserId] [PCMUserId], [DateActionedByPCM], [fkHOUserId] [HOUserId], [DateActionedByHO], [ExpiryDate], [CentreId], [IsCurrent], [IsActive], [MRS_CRS] [MrsCrs], [fkRiskGroupId] [RiskGroupId] 
+                    FROM [dbo].[tblConcession] 
+                    WHERE [ConcessionRef] = @concessionRef
+                    AND [IsActive] = @isActive",
+                    new { concessionRef, isActive });
+            }
+        }
+
+        /// <summary>
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>

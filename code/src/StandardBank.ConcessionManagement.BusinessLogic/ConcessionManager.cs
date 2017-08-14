@@ -5,7 +5,6 @@ using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
-using StandardBank.ConcessionManagement.Model.Common;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Inbox;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
@@ -469,6 +468,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedConcessionCondition.IsActive = true;
 
             return _concessionConditionRepository.Create(mappedConcessionCondition);
+        }
+
+        /// <summary>
+        /// Gets the concessions for the concession reference id
+        /// </summary>
+        /// <param name="concessionReferenceId"></param>
+        /// <returns></returns>
+        public Concession GetConcessionForConcessionReferenceId(string concessionReferenceId)
+        {
+            var concessions = _concessionRepository.ReadByConcessionRefIsActive(concessionReferenceId, true);
+
+            //if there is more than one record returned then there is something wrong,
+            //there shouldn't be two active concessions with the same concession reference number
+            return Map(concessions).Single();
         }
     }
 }

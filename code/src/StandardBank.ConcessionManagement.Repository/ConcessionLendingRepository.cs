@@ -80,7 +80,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// </summary>
         /// <param name="concessionId"></param>
         /// <returns></returns>
-        public ConcessionLending ReadByConcessionId(int concessionId)
+        public IEnumerable<ConcessionLending> ReadByConcessionId(int concessionId)
         {
             using (var db = _dbConnectionFactory.Connection())
             {
@@ -88,7 +88,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     @"SELECT [pkConcessionLendingId] [Id], [fkConcessionId] [ConcessionId], [fkProductTypeId] [ProductTypeId], [Limit], [Term], [MarginToPrime], [ApprovedMarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [fkReviewFeeTypeId] [ReviewFeeTypeId], [fkLegalEntityId] [LegalEntityId] 
                     FROM [dbo].[tblConcessionLending] 
                     WHERE [fkConcessionId] = @concessionId",
-                    new { concessionId }).FirstOrDefault();
+                    new { concessionId });
             }
         }
 

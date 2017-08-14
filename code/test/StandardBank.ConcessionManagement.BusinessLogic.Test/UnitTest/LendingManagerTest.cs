@@ -40,5 +40,27 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             Assert.NotNull(result);
         }
+
+        /// <summary>
+        /// Tests that GetLendingConcession executes positive
+        /// </summary>
+        [Fact]
+        public void GetLendingConcession_Executes_Positive()
+        {
+            MockConcessionManager.Setup(_ => _.GetConcessionForConcessionReferenceId(It.IsAny<string>()))
+                .Returns(new Model.UserInterface.Concession());
+
+            MockConcessionLendingRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
+                .Returns(new[] {new ConcessionLending()});
+
+            MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new LegalEntity());
+
+            MockConcessionManager.Setup(_ => _.GetConcessionConditions(It.IsAny<int>()))
+                .Returns(new[] {new Model.UserInterface.ConcessionCondition()});
+
+            var result = _lendingManager.GetLendingConcession("L001");
+
+            Assert.NotNull(result);
+        }
     }
 }

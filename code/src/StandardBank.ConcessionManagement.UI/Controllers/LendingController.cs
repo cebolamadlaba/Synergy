@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -92,6 +91,17 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                     await _mediator.Send(new AddConcessionConditionCommand(concessionCondition, user, concession));
 
             return Ok(lendingConcession);
+        }
+
+        /// <summary>
+        /// Gets the lending concession data for the concession reference id specified
+        /// </summary>
+        /// <param name="concessionReferenceId"></param>
+        /// <returns></returns>
+        [Route("LendingConcessionData/{concessionReferenceId}")]
+        public IActionResult LendingConcessionData(string concessionReferenceId)
+        {
+            return Ok(_lendingManager.GetLendingConcession(concessionReferenceId));
         }
     }
 }

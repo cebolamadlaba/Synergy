@@ -95,15 +95,37 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Gets the lending concession for the concession reference id specified
+        /// </summary>
+        /// <param name="concessionReferenceId"></param>
+        /// <returns></returns>
+        public LendingConcession GetLendingConcession(string concessionReferenceId)
+        {
+            var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
+            var concessionLendings = _concessionLendingRepository.ReadByConcessionId(concession.Id);
+
+            var lendingConcessionDetails = new List<LendingConcessionDetail>();
+
+            AddMappedConcessionLendings(concession, concessionLendings, lendingConcessionDetails);
+
+            return new LendingConcession
+            {
+                Concession = concession,
+                LendingConcessionDetails = lendingConcessionDetails,
+                ConcessionConditions = _concessionManager.GetConcessionConditions(concession.Id)
+            };
+        }
+
+        /// <summary>
         /// Adds the lending concession data
         /// </summary>
         /// <param name="concession"></param>
         /// <param name="lendingConcessions"></param>
         private void AddLendingConcessionData(Concession concession, ICollection<LendingConcession> lendingConcessions)
         {
-            var lendingConcessionData = _concessionLendingRepository.ReadByConcessionId(concession.Id);
+            var concessionLendings = _concessionLendingRepository.ReadByConcessionId(concession.Id);
 
-            if (lendingConcessionData != null)
+            if (concessionLendings != null && concessionLendings.Any())
             {
                 var lendingConcessionDetails = new List<LendingConcessionDetail>();
 
@@ -124,19 +146,35 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 lendingConcessionDetails.AddRange(lendingConcession.LendingConcessionDetails);
 
-                var legalEntity = _legalEntityRepository.ReadById(lendingConcessionData.LegalEntityId);
-
-                lendingConcessionDetails.Add(new LendingConcessionDetail
-                {
-                    CustomerName = legalEntity.CustomerName,
-                    AccountNumber = concession.AccountNumber,
-                    Limit = lendingConcessionData?.Limit ?? 0,
-                    Term = lendingConcessionData?.Term ?? 0,
-                    LoadedMap = lendingConcessionData?.MarginToPrime ?? 0,
-                    ApprovedMap = lendingConcessionData?.ApprovedMarginToPrime ?? 0
-                });
+                AddMappedConcessionLendings(concession, concessionLendings, lendingConcessionDetails);
 
                 lendingConcession.LendingConcessionDetails = lendingConcessionDetails;
+            }
+        }
+
+        /// <summary>
+        /// Adds the mapped concession lendings
+        /// </summary>
+        /// <param name="concession"></param>
+        /// <param name="concessionLendings"></param>
+        /// <param name="lendingConcessionDetails"></param>
+        private void AddMappedConcessionLendings(Concession concession, IEnumerable<ConcessionLending> concessionLendings,
+            ICollection<LendingConcessionDetail> lendingConcessionDetails)
+        {
+            foreach (var concessionLending in concessionLendings)
+            {
+                var legalEntity = _legalEntityRepository.ReadById(concessionLending.LegalEntityId);
+                var mappedLendingConcessionDetail = _mapper.Map<LendingConcessionDetail>(concessionLending);
+
+                mappedLendingConcessionDetail.CustomerName = legalEntity.CustomerName;
+
+                //TODO: GET THIS
+                //mappedLendingConcessionDetail.AccountNumber = legalEntity.;
+
+                mappedLendingConcessionDetail.LoadedMap = concessionLending?.MarginToPrime ?? 0;
+                mappedLendingConcessionDetail.ApprovedMap = concessionLending?.ApprovedMarginToPrime ?? 0;
+
+                lendingConcessionDetails.Add(mappedLendingConcessionDetail);
             }
         }
     }

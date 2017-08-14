@@ -89,5 +89,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="concession"></param>
         /// <returns></returns>
         Model.Repository.ConcessionCondition CreateConcessionCondition(ConcessionCondition concessionCondition, Concession concession);
+
+        /// <summary>
+        /// Gets the concession for the concession reference id specified
+        /// </summary>
+        /// <param name="concessionReferenceId"></param>
+        /// <returns></returns>
+        Concession GetConcessionForConcessionReferenceId(string concessionReferenceId);
     }
 }

@@ -418,5 +418,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             Assert.NotNull(result);
         }
+
+        /// <summary>
+        /// Tests that GetConcessionForConcessionReferenceId executes positive
+        /// </summary>
+        [Fact]
+        public void GetConcessionForConcessionReferenceId_Executes_Positive()
+        {
+            MockConcessionRepository.Setup(_ => _.ReadByConcessionRefIsActive(It.IsAny<string>(), It.IsAny<bool>()))
+                .Returns(new[] {new Concession {IsActive = true}});
+
+            var result = _concessionManager.GetConcessionForConcessionReferenceId("L001");
+
+            Assert.NotNull(result);
+        }
     }
 }

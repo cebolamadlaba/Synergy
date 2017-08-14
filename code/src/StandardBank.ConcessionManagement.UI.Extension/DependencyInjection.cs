@@ -2,7 +2,6 @@
 using MediatR.Pipeline;
 using Microsoft.Extensions.DependencyInjection;
 using StandardBank.ConcessionManagement.BusinessLogic;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.AuditRecordPostHandler;
 using StandardBank.ConcessionManagement.Common;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Repository;

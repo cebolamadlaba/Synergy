@@ -7,7 +7,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 {
     public class LetterGeneratorManager : ILetterGeneratorManager
     {
-        public LetterGeneratorManager(ICon)
+        public LetterGeneratorManager()
         {
 
         }
