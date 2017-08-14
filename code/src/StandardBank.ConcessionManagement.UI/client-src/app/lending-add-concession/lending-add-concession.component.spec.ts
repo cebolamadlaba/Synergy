@@ -41,7 +41,8 @@ describe('LendingAddConcessionComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should be created', () => {
+    it('should be created', function(done) {
         expect(component).toBeTruthy();
+        done();
     });
 });
