@@ -84,5 +84,6 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         IEnumerable<Concession> GetActionedByBCMUser(int userId);
         IEnumerable<Concession> GetActionedByPCMUser(int userId);
         IEnumerable<Concession> GetActionedByHOUser(int userId);
+        IEnumerable<Concession> GetConcessions(IEnumerable<int> concessionIds);
     }
 }
