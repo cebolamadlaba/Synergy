@@ -115,16 +115,56 @@ export class LendingEditConcessionComponent implements OnInit, OnDestroy {
                             this.addNewConcessionRow();
                         }
 
-                        //const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
-                        //let currentConcession = concessions[concessions.length - 1];
+                        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+                        let currentConcession = concessions.controls[concessions.length - 1];
 
-                        //currentConcession.get('productType').setValue(lendingConcessionDetail.productType);
+                        let selectedProductType = this.productTypes.filter(_ => _.id === lendingConcessionDetail.productTypeId);
+                        currentConcession.get('productType').setValue(selectedProductType[0]);
+
+                        let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == lendingConcessionDetail.legalEntityAccountId);
+                        currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
+
+                        currentConcession.get('limit').setValue(lendingConcessionDetail.limit);
+                        currentConcession.get('term').setValue(lendingConcessionDetail.term);
+                        currentConcession.get('marginAgainstPrime').setValue(lendingConcessionDetail.marginAgainstPrime);
+                        currentConcession.get('initiationFee').setValue(lendingConcessionDetail.initiationFee);
+
+                        let selectedReviewFeeType = this.reviewFeeTypes.filter(_ => _.id == lendingConcessionDetail.reviewFeeTypeId);
+                        currentConcession.get('reviewFeeType').setValue(selectedReviewFeeType[0]);
+
+                        currentConcession.get('reviewFee').setValue(lendingConcessionDetail.reviewFee);
+                        currentConcession.get('uffFee').setValue(lendingConcessionDetail.uffFee);
 
                         rowIndex++;
                     }
 
+                    rowIndex = 0;
+
                     for (let concessionCondition of this.lendingConcession.concessionConditions) {
                         this.addNewConditionRow();
+
+                        const conditions = <FormArray>this.lendingConcessionForm.controls['conditionItemsRows'];
+                        let currentCondition = conditions.controls[conditions.length - 1];
+
+                        let selectedConditionType = this.conditionTypes.filter(_ => _.id == concessionCondition.conditionTypeId);
+                        currentCondition.get('conditionType').setValue(selectedConditionType[0]);
+
+                        this.selectedConditionTypes[rowIndex] = selectedConditionType[0];
+
+                        let selectedConditionProduct = selectedConditionType[0].conditionProducts.filter(_ => _.id == concessionCondition.conditionProductId);
+                        currentCondition.get('conditionProduct').setValue(selectedConditionProduct[0]);
+
+                        currentCondition.get('interestRate').setValue(concessionCondition.interestRate);
+                        currentCondition.get('volume').setValue(concessionCondition.conditionVolume);
+                        currentCondition.get('value').setValue(concessionCondition.conditionValue);
+
+                        let selectedPeriodType = this.periodTypes.filter(_ => _.id == concessionCondition.periodTypeId);
+                        currentCondition.get('periodType').setValue(selectedPeriodType[0]);
+
+                        let selectedPeriod = this.periods.filter(_ => _.id == concessionCondition.periodId);
+                        currentCondition.get('period').setValue(selectedPeriod[0]);
+
+                        rowIndex++;
                     }
 
                 }, error => this.errorMessage = <any>error);
