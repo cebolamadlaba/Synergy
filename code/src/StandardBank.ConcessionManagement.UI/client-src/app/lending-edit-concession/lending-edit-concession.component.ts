@@ -19,11 +19,11 @@ import { ConditionProduct } from "../models/condition-product";
 import { ClientAccountService } from "../client-account/client-account.service";
 import { ClientAccount } from "../models/client-account";
 import { LendingConcession } from "../models/lending-concession";
-import { LendingNewService } from "../lending-new/lending-new.service";
 import { Concession } from "../models/concession";
 import { LendingConcessionDetail } from "../models/lending-concession-detail";
 import { ConcessionCondition } from "../models/concession-condition";
 import { LendingService } from "../lending/lending.service";
+import { LendingUpdateService } from "../lending-update/lending-update.service";
 
 @Component({
     selector: 'app-lending-edit-concession',
@@ -76,7 +76,7 @@ export class LendingEditConcessionComponent implements OnInit, OnDestroy {
         @Inject(PeriodTypeService) private periodTypeService,
         @Inject(ConditionTypeService) private conditionTypeService,
         @Inject(ClientAccountService) private clientAccountService,
-        @Inject(LendingNewService) private lendingNewService,
+        @Inject(LendingUpdateService) private lendingUpdateService,
         @Inject(LendingService) private lendingService) {
         this.riskGroup = new RiskGroup();
         this.reviewFeeTypes = [new ReviewFeeType()];
@@ -281,6 +281,7 @@ export class LendingEditConcessionComponent implements OnInit, OnDestroy {
         else
             this.addValidationError("Motivation not captured");
 
+        lendingConcession.concession.referenceNumber = this.concessionReferenceId;
         lendingConcession.concession.riskGroupId = this.riskGroup.id;
         lendingConcession.concession.concessionType = "Lending";
         lendingConcession.concession.type = "Existing";
@@ -366,7 +367,7 @@ export class LendingEditConcessionComponent implements OnInit, OnDestroy {
         }
 
         if (!this.validationError) {
-            this.lendingNewService.postData(lendingConcession).subscribe(entity => {
+            this.lendingUpdateService.postData(lendingConcession).subscribe(entity => {
                 console.log("data saved");
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;

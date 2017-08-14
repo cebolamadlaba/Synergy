@@ -483,5 +483,27 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             //there shouldn't be two active concessions with the same concession reference number
             return Map(concessions).Single();
         }
+
+        /// <summary>
+        /// Deactivates the concession
+        /// </summary>
+        /// <param name="concessionReferenceId"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public Model.Repository.Concession DeactivateConcession(string concessionReferenceId, User user)
+        {
+            var concessions = _concessionRepository.ReadByConcessionRefIsActive(concessionReferenceId, true);
+
+            //if there is more than one record returned then there is something wrong,
+            //there shouldn't be two active concessions with the same concession reference number
+            var concession = concessions.Single();
+
+            concession.IsActive = false;
+            concession.IsCurrent = false;
+
+            _concessionRepository.Update(concession);
+
+            return concession;
+        }
     }
 }

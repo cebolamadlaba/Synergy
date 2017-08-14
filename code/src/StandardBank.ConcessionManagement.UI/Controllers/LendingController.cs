@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionCondition;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddLendingConcessionDetail;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.DeactivateConcession;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
@@ -43,7 +44,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="lendingManager"></param>
         /// <param name="siteHelper"></param>
         /// <param name="mediator"></param>
-        public LendingController(IPricingManager pricingManager, ILendingManager lendingManager, ISiteHelper siteHelper, IMediator mediator)
+        public LendingController(IPricingManager pricingManager, ILendingManager lendingManager, ISiteHelper siteHelper,
+            IMediator mediator)
         {
             _pricingManager = pricingManager;
             _lendingManager = lendingManager;
@@ -80,6 +82,35 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             lendingConcession.Concession.ConcessionType = "Lending";
             lendingConcession.Concession.Type = "New";
+
+            var concession = await _mediator.Send(new AddConcessionCommand(lendingConcession.Concession, user));
+
+            foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
+                await _mediator.Send(new AddLendingConcessionDetailCommand(lendingConcessionDetail, user, concession));
+
+            if (lendingConcession.ConcessionConditions != null && lendingConcession.ConcessionConditions.Any())
+                foreach (var concessionCondition in lendingConcession.ConcessionConditions)
+                    await _mediator.Send(new AddConcessionConditionCommand(concessionCondition, user, concession));
+
+            return Ok(lendingConcession);
+        }
+
+        /// <summary>
+        /// Updates the lending
+        /// </summary>
+        /// <param name="lendingConcession"></param>
+        /// <returns></returns>
+        [Route("UpdateLending")]
+        [ValidateModel]
+        public async Task<IActionResult> UpdateLending([FromBody] LendingConcession lendingConcession)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            //deactive the current concession
+            await _mediator.Send(new DeactiveConcessionCommand(lendingConcession.Concession, user));
+
+            lendingConcession.Concession.ConcessionType = "Lending";
+            lendingConcession.Concession.Type = "Existing";
 
             var concession = await _mediator.Send(new AddConcessionCommand(lendingConcession.Concession, user));
 
