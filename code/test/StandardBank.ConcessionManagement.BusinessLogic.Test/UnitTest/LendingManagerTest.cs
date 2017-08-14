@@ -24,7 +24,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         public LendingManagerTest()
         {
             _lendingManager = new LendingManager(MockPricingManager.Object, MockConcessionManager.Object,
-                MockLegalEntityRepository.Object, MockConcessionLendingRepository.Object, InstantiatedDependencies.Mapper);
+                MockLegalEntityRepository.Object, MockConcessionLendingRepository.Object,
+                InstantiatedDependencies.Mapper, MockLegalEntityAccountRepository.Object);
         }
 
         /// <summary>

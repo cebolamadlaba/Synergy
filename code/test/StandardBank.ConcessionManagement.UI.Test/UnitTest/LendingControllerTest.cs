@@ -49,5 +49,18 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
             Assert.Equal(riskGroup.Name, returnedLendingView.RiskGroup.Name);
             Assert.Equal(riskGroup.Number, returnedLendingView.RiskGroup.Number);
         }
+
+        /// <summary>
+        /// Tests that LendingConcessionData executes positive
+        /// </summary>
+        [Fact]
+        public void LendingConcessionData_Executes_Positive()
+        {
+            MockLendingManager.Setup(_ => _.GetLendingConcession(It.IsAny<string>())).Returns(new LendingConcession());
+
+            var result = _lendingController.LendingConcessionData("L001");
+
+            Assert.NotNull(result);
+        }
     }
 }

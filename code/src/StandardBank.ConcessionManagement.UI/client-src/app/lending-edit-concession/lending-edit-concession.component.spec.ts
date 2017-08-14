@@ -13,6 +13,7 @@ import { PeriodTypeService, MockPeriodTypeService } from "../period-type/period-
 import { ConditionTypeService, MockConditionTypeService } from "../condition-type/condition-type.service";
 import { ClientAccountService, MockClientAccountService } from "../client-account/client-account.service";
 import { LendingNewService, MockLendingNewService } from "../lending-new/lending-new.service";
+import { LendingService, MockLendingService } from "../lending/lending.service";
 
 describe('LendingEditConcessionComponent', () => {
     let component: LendingEditConcessionComponent;
@@ -30,7 +31,8 @@ describe('LendingEditConcessionComponent', () => {
                 { provide: PeriodTypeService, useClass: MockPeriodTypeService },
                 { provide: ConditionTypeService, useClass: MockConditionTypeService },
                 { provide: ClientAccountService, useClass: MockClientAccountService },
-                { provide: LendingNewService, useClass: MockLendingNewService }
+                { provide: LendingNewService, useClass: MockLendingNewService },
+                { provide: LendingService, useClass: MockLendingService }
             ]
         })
             .compileComponents();

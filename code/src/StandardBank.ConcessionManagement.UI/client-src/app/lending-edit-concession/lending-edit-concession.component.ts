@@ -23,6 +23,7 @@ import { LendingNewService } from "../lending-new/lending-new.service";
 import { Concession } from "../models/concession";
 import { LendingConcessionDetail } from "../models/lending-concession-detail";
 import { ConcessionCondition } from "../models/concession-condition";
+import { LendingService } from "../lending/lending.service";
 
 @Component({
     selector: 'app-lending-edit-concession',
@@ -31,17 +32,21 @@ import { ConcessionCondition } from "../models/concession-condition";
 })
 
 export class LendingEditConcessionComponent implements OnInit, OnDestroy {
-    concessionReferenceId: String;
+    concessionReferenceId: string;
     public lendingConcessionForm: FormGroup;
     private sub: any;
     errorMessage: String;
     validationError: String[];
     saveMessage: String;
-    observableRiskGroup: Observable<RiskGroup>;
-    riskGroup: RiskGroup;
     riskGroupNumber: number;
     selectedConditionTypes: ConditionType[];
     isLoading = false;
+
+    observableRiskGroup: Observable<RiskGroup>;
+    riskGroup: RiskGroup;
+
+    observableLendingConcession: Observable<LendingConcession>;
+    lendingConcession: LendingConcession;
 
     observableReviewFeeTypes: Observable<ReviewFeeType[]>;
     reviewFeeTypes: ReviewFeeType[];
@@ -71,7 +76,8 @@ export class LendingEditConcessionComponent implements OnInit, OnDestroy {
         @Inject(PeriodTypeService) private periodTypeService,
         @Inject(ConditionTypeService) private conditionTypeService,
         @Inject(ClientAccountService) private clientAccountService,
-        @Inject(LendingNewService) private lendingNewService) {
+        @Inject(LendingNewService) private lendingNewService,
+        @Inject(LendingService) private lendingService) {
         this.riskGroup = new RiskGroup();
         this.reviewFeeTypes = [new ReviewFeeType()];
         this.productTypes = [new ProductType()];
@@ -93,6 +99,35 @@ export class LendingEditConcessionComponent implements OnInit, OnDestroy {
 
                 this.observableClientAccounts = this.clientAccountService.getData(this.riskGroupNumber);
                 this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
+
+                this.observableLendingConcession = this.lendingService.getData(this.concessionReferenceId);
+                this.observableLendingConcession.subscribe(lendingConcession => {
+                    this.lendingConcession = lendingConcession;
+                    this.lendingConcessionForm.controls['mrsCrs'].setValue(this.lendingConcession.concession.mrsCrs);
+                    this.lendingConcessionForm.controls['smtDealNumber'].setValue(this.lendingConcession.concession.smtDealNumber);
+                    this.lendingConcessionForm.controls['motivation'].setValue(this.lendingConcession.concession.motivation);
+
+                    let rowIndex = 0;
+
+                    for (let lendingConcessionDetail of this.lendingConcession.lendingConcessionDetails) {
+
+                        if (rowIndex != 0) {
+                            this.addNewConcessionRow();
+                        }
+
+                        //const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+                        //let currentConcession = concessions[concessions.length - 1];
+
+                        //currentConcession.get('productType').setValue(lendingConcessionDetail.productType);
+
+                        rowIndex++;
+                    }
+
+                    for (let concessionCondition of this.lendingConcession.concessionConditions) {
+                        this.addNewConditionRow();
+                    }
+
+                }, error => this.errorMessage = <any>error);
             }
         });
 
@@ -189,6 +224,7 @@ export class LendingEditConcessionComponent implements OnInit, OnDestroy {
 
         var lendingConcession = new LendingConcession();
         lendingConcession.concession = new Concession();
+        lendingConcession.concession.referenceNumber = this.concessionReferenceId;
 
         if (this.lendingConcessionForm.controls['mrsCrs'].value)
             lendingConcession.concession.mrsCrs = this.lendingConcessionForm.controls['mrsCrs'].value;
@@ -207,7 +243,7 @@ export class LendingEditConcessionComponent implements OnInit, OnDestroy {
 
         lendingConcession.concession.riskGroupId = this.riskGroup.id;
         lendingConcession.concession.concessionType = "Lending";
-        lendingConcession.concession.type = "New";
+        lendingConcession.concession.type = "Existing";
 
         const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
 

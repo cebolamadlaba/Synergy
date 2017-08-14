@@ -41,6 +41,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IMapper _mapper;
 
         /// <summary>
+        /// The legal entity account repository
+        /// </summary>
+        private readonly ILegalEntityAccountRepository _legalEntityAccountRepository;
+
+        /// <summary>
         /// Intializes an instance of the class
         /// </summary>
         /// <param name="pricingManager"></param>
@@ -48,14 +53,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="legalEntityRepository"></param>
         /// <param name="concessionLendingRepository"></param>
         /// <param name="mapper"></param>
+        /// <param name="legalEntityAccountRepository"></param>
         public LendingManager(IPricingManager pricingManager, IConcessionManager concessionManager,
-            ILegalEntityRepository legalEntityRepository, IConcessionLendingRepository concessionLendingRepository, IMapper mapper)
+            ILegalEntityRepository legalEntityRepository, IConcessionLendingRepository concessionLendingRepository,
+            IMapper mapper, ILegalEntityAccountRepository legalEntityAccountRepository)
         {
             _pricingManager = pricingManager;
             _concessionManager = concessionManager;
             _legalEntityRepository = legalEntityRepository;
             _concessionLendingRepository = concessionLendingRepository;
             _mapper = mapper;
+            _legalEntityAccountRepository = legalEntityAccountRepository;
         }
 
         /// <summary>
@@ -106,7 +114,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var lendingConcessionDetails = new List<LendingConcessionDetail>();
 
-            AddMappedConcessionLendings(concession, concessionLendings, lendingConcessionDetails);
+            AddMappedConcessionLendings(concessionLendings, lendingConcessionDetails);
 
             return new LendingConcession
             {
@@ -146,7 +154,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 lendingConcessionDetails.AddRange(lendingConcession.LendingConcessionDetails);
 
-                AddMappedConcessionLendings(concession, concessionLendings, lendingConcessionDetails);
+                AddMappedConcessionLendings(concessionLendings, lendingConcessionDetails);
 
                 lendingConcession.LendingConcessionDetails = lendingConcessionDetails;
             }
@@ -155,10 +163,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <summary>
         /// Adds the mapped concession lendings
         /// </summary>
-        /// <param name="concession"></param>
         /// <param name="concessionLendings"></param>
         /// <param name="lendingConcessionDetails"></param>
-        private void AddMappedConcessionLendings(Concession concession, IEnumerable<ConcessionLending> concessionLendings,
+        private void AddMappedConcessionLendings(IEnumerable<ConcessionLending> concessionLendings,
             ICollection<LendingConcessionDetail> lendingConcessionDetails)
         {
             foreach (var concessionLending in concessionLendings)
@@ -168,8 +175,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 mappedLendingConcessionDetail.CustomerName = legalEntity.CustomerName;
 
-                //TODO: GET THIS
-                //mappedLendingConcessionDetail.AccountNumber = legalEntity.;
+                var legalEntityAccount =
+                    _legalEntityAccountRepository.ReadByLegalEntityIdIsActive(legalEntity.Id, true);
+
+                if (legalEntityAccount != null && legalEntityAccount.Any())
+                    mappedLendingConcessionDetail.AccountNumber = legalEntityAccount.First().AccountNumber;
 
                 mappedLendingConcessionDetail.LoadedMap = concessionLending?.MarginToPrime ?? 0;
                 mappedLendingConcessionDetail.ApprovedMap = concessionLending?.ApprovedMarginToPrime ?? 0;

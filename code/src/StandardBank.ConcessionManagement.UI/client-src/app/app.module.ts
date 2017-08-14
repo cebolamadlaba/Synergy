@@ -38,6 +38,7 @@ import { ConcessionConditionsService } from "./concession-conditions/concession-
 import { ClientAccountService } from "./client-account/client-account.service";
 import { LendingNewService } from "./lending-new/lending-new.service";
 import { LendingEditConcessionComponent } from './lending-edit-concession/lending-edit-concession.component';
+import { LendingService } from "./lending/lending.service";
 
 @NgModule({
     declarations: [
@@ -82,7 +83,8 @@ import { LendingEditConcessionComponent } from './lending-edit-concession/lendin
         ConditionTypeService,
         ConcessionConditionsService,
         ClientAccountService,
-        LendingNewService
+        LendingNewService,
+        LendingService
     ],
     bootstrap: [AppComponent]
 })
