@@ -14,6 +14,7 @@ import { TransactionalAddConcessionComponent } from "./transactional-add-concess
 import { CashAddConcessionComponent } from "./cash-add-concession/cash-add-concession.component";
 import { LendingAddConcessionComponent } from "./lending-add-concession/lending-add-concession.component";
 import { MismatchedInboxComponent } from "./mismatched-inbox/mismatched-inbox.component";
+import { LendingEditConcessionComponent } from "./lending-edit-concession/lending-edit-concession.component";
 
 const routes: Routes = [
     { path: '', redirectTo: '/pending-inbox', pathMatch: 'full' },
@@ -31,7 +32,8 @@ const routes: Routes = [
     { path: 'pricing-transactional', component: PricingTransactionalComponent },
     { path: 'transactional-add-concession', component: TransactionalAddConcessionComponent },
     { path: 'cash-add-concession', component: CashAddConcessionComponent },
-    { path: 'lending-add-concession/:riskGroupNumber', component: LendingAddConcessionComponent }
+    { path: 'lending-add-concession/:riskGroupNumber', component: LendingAddConcessionComponent },
+    { path: 'lending-edit-concession/:riskGroupNumber/:concessionReferenceId', component: LendingEditConcessionComponent }
 ];
 
 @NgModule({
