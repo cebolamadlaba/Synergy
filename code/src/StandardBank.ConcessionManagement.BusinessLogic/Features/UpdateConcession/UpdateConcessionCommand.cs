@@ -3,23 +3,15 @@ using StandardBank.ConcessionManagement.Interface.BusinessLogic.Features;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 
-namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionCondition
+namespace StandardBank.ConcessionManagement.BusinessLogic.Features.UpdateConcession
 {
     /// <summary>
-    /// Add concession condition command
+    /// Update concession command
     /// </summary>
-    /// <seealso cref="MediatR.IRequest{ConcessionCondition}" />
+    /// <seealso cref="MediatR.IRequest{Concession}" />
     /// <seealso cref="IAuditableCommand" />
-    public class AddConcessionConditionCommand : IRequest<ConcessionCondition>, IAuditableCommand
+    public class UpdateConcessionCommand : IRequest<Concession>, IAuditableCommand
     {
-        /// <summary>
-        /// Gets or sets the concession condition.
-        /// </summary>
-        /// <value>
-        /// The concession condition.
-        /// </value>
-        public ConcessionCondition ConcessionCondition { get; set; }
-
         /// <summary>
         /// Gets or sets the concession.
         /// </summary>
@@ -45,16 +37,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
         public AuditRecord AuditRecord { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AddConcessionConditionCommand"/> class.
+        /// Initializes a new instance of the <see cref="UpdateConcessionCommand"/> class.
         /// </summary>
-        /// <param name="concessionCondition">The concession condition.</param>
+        /// <param name="concession">The concession.</param>
         /// <param name="user">The user.</param>
-        /// <param name="concession"></param>
-        public AddConcessionConditionCommand(ConcessionCondition concessionCondition, User user, Concession concession)
+        public UpdateConcessionCommand(Concession concession, User user)
         {
-            ConcessionCondition = concessionCondition;
-            User = user;
             Concession = concession;
+            User = user;
         }
     }
 }

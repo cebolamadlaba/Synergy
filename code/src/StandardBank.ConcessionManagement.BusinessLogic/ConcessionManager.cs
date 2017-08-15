@@ -542,5 +542,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return mappedConcession;
         }
+
+        /// <summary>
+        /// Deletes the concession condition.
+        /// </summary>
+        /// <param name="concessionCondition">The concession condition.</param>
+        /// <returns></returns>
+        public Model.Repository.ConcessionCondition DeleteConcessionCondition(ConcessionCondition concessionCondition)
+        {
+            var concessionCondtion = _concessionConditionRepository.ReadById(concessionCondition.Id);
+
+            _concessionConditionRepository.Delete(concessionCondtion);
+
+            return concessionCondtion;
+        }
     }
 }

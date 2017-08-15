@@ -6,6 +6,9 @@ using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionCondition;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddLendingConcessionDetail;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.DeactivateConcession;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteConcessionCondition;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteLendingConcessionDetail;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.UpdateConcession;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
@@ -105,15 +108,23 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public async Task<IActionResult> UpdateLending([FromBody] LendingConcession lendingConcession)
         {
             var user = _siteHelper.LoggedInUser(this);
+            var databaseLendingConcession =
+                _lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber);
 
-            //deactive the current concession
-            await _mediator.Send(new DeactiveConcessionCommand(lendingConcession.Concession, user));
+            //first delete all the conditions and the lending details
+            foreach (var condition in databaseLendingConcession.ConcessionConditions)
+                await _mediator.Send(new DeleteConcessionConditionCommand(condition, user));
 
+            foreach (var lendingConcessionDetail in databaseLendingConcession.LendingConcessionDetails)
+                await _mediator.Send(new DeleteLendingConcessionDetailCommand(lendingConcessionDetail, user));
+
+            //second update the concession
             lendingConcession.Concession.ConcessionType = "Lending";
             lendingConcession.Concession.Type = "Existing";
 
-            var concession = await _mediator.Send(new AddConcessionCommand(lendingConcession.Concession, user));
+            var concession = await _mediator.Send(new UpdateConcessionCommand(lendingConcession.Concession, user));
 
+            //then add all the new conditions and lending details
             foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
                 await _mediator.Send(new AddLendingConcessionDetailCommand(lendingConcessionDetail, user, concession));
 

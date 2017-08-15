@@ -30,5 +30,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="concessionReferenceId"></param>
         /// <returns></returns>
         LendingConcession GetLendingConcession(string concessionReferenceId);
+
+        /// <summary>
+        /// Deletes the concession lending.
+        /// </summary>
+        /// <param name="lendingConcessionDetail">The lending concession detail.</param>
+        /// <returns></returns>
+        Model.Repository.ConcessionLending DeleteConcessionLending(LendingConcessionDetail lendingConcessionDetail);
     }
 }

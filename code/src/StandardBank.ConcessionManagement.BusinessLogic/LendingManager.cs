@@ -125,6 +125,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Deletes the concession lending.
+        /// </summary>
+        /// <param name="lendingConcessionDetail">The lending concession detail.</param>
+        /// <returns></returns>
+        public ConcessionLending DeleteConcessionLending(LendingConcessionDetail lendingConcessionDetail)
+        {
+            var concessionLending = _concessionLendingRepository.ReadById(lendingConcessionDetail.Id);
+
+            _concessionLendingRepository.Delete(concessionLending);
+
+            return concessionLending;
+        }
+
+        /// <summary>
         /// Adds the lending concession data
         /// </summary>
         /// <param name="concession"></param>

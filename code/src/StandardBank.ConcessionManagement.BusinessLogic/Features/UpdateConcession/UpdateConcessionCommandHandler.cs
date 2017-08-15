@@ -1,19 +1,20 @@
 ﻿using System;
+using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
-using System.Threading.Tasks;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 
-namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
+namespace StandardBank.ConcessionManagement.BusinessLogic.Features.UpdateConcession
 {
     /// <summary>
-    /// Add concession command handler
+    /// Update concession command handler
     /// </summary>
-    /// <seealso cref="MediatR.IRequestHandler{AddConcessionCommand, Concession}" />
-    public class AddConcessionCommandHandler : IAsyncRequestHandler<AddConcessionCommand, Concession>
+    /// <seealso cref="MediatR.IAsyncRequestHandler{UpdateConcessionCommand, Concession}" />
+    public class UpdateConcessionCommandHandler : IAsyncRequestHandler<UpdateConcessionCommand, Concession>
     {
         /// <summary>
         /// The concession manager
@@ -31,12 +32,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
         private readonly ILogger _logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AddConcessionCommandHandler"/> class.
+        /// Initializes a new instance of the <see cref="UpdateConcessionCommandHandler"/> class.
         /// </summary>
         /// <param name="concessionManager">The concession manager.</param>
         /// <param name="mediator">The mediator.</param>
         /// <param name="loggerFactory">The logger factory.</param>
-        public AddConcessionCommandHandler(IConcessionManager concessionManager, IMediator mediator,
+        public UpdateConcessionCommandHandler(IConcessionManager concessionManager, IMediator mediator,
             ILoggerFactory loggerFactory)
         {
             _concessionManager = concessionManager;
@@ -49,18 +50,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public async Task<Concession> Handle(AddConcessionCommand message)
+        public async Task<Concession> Handle(UpdateConcessionCommand message)
         {
-            var result = _concessionManager.CreateConcession(message.Concession, message.User);
+            var result = _concessionManager.UpdateConcession(message.Concession, message.User);
 
-            message.AuditRecord = new AuditRecord(result, message.User, AuditType.Insert);
-
-            message.Concession.ReferenceNumber = result.ConcessionRef;
+            message.AuditRecord = new AuditRecord(result, message.User, AuditType.Update);
             message.Concession.Id = result.Id;
+
             if (message.User.SelectedCentre?.Id > 0)
                 await TryAndSendEmail(message, result);
             else
-                _logger.LogWarning(new EventId(1,"ApprovalEmailNotSent"),"Consession # {0} has no selected center",result.Id);
+                _logger.LogWarning(new EventId(1, "ApprovalEmailNotSent"), "Consession # {0} has no selected center", result.Id);
 
             return message.Concession;
         }
@@ -71,7 +71,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
         /// <param name="message"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        private async Task TryAndSendEmail(AddConcessionCommand message, Model.Repository.Concession result)
+        private async Task TryAndSendEmail(UpdateConcessionCommand message, Model.Repository.Concession result)
         {
             try
             {
@@ -85,7 +85,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
             {
                 _logger.LogError(ex.ToString());
             }
-            
         }
     }
 }

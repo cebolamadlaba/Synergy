@@ -3,14 +3,14 @@ using StandardBank.ConcessionManagement.Interface.BusinessLogic.Features;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 
-namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionCondition
+namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteConcessionCondition
 {
     /// <summary>
-    /// Add concession condition command
+    /// Deletes the concession condition
     /// </summary>
     /// <seealso cref="MediatR.IRequest{ConcessionCondition}" />
     /// <seealso cref="IAuditableCommand" />
-    public class AddConcessionConditionCommand : IRequest<ConcessionCondition>, IAuditableCommand
+    public class DeleteConcessionConditionCommand : IRequest<ConcessionCondition>, IAuditableCommand
     {
         /// <summary>
         /// Gets or sets the concession condition.
@@ -19,14 +19,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
         /// The concession condition.
         /// </value>
         public ConcessionCondition ConcessionCondition { get; set; }
-
-        /// <summary>
-        /// Gets or sets the concession.
-        /// </summary>
-        /// <value>
-        /// The concession.
-        /// </value>
-        public Concession Concession { get; set; }
 
         /// <summary>
         /// Gets or sets the user.
@@ -45,16 +37,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
         public AuditRecord AuditRecord { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AddConcessionConditionCommand"/> class.
+        /// Initializes a new instance of the <see cref="DeleteConcessionConditionCommand"/> class.
         /// </summary>
         /// <param name="concessionCondition">The concession condition.</param>
         /// <param name="user">The user.</param>
-        /// <param name="concession"></param>
-        public AddConcessionConditionCommand(ConcessionCondition concessionCondition, User user, Concession concession)
+        public DeleteConcessionConditionCommand(ConcessionCondition concessionCondition, User user)
         {
             ConcessionCondition = concessionCondition;
             User = user;
-            Concession = concession;
         }
     }
 }
