@@ -177,6 +177,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         }
 
         /// <summary>
+        /// Tests that GetConcessionType executes positive.
+        /// </summary>
+        [Fact]
+        public void GetConcessionType_Executes_Positive()
+        {
+            MockConcessionTypeRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new ConcessionType());
+
+            var result = _lookupTableManager.GetConcessionType(1);
+
+            Assert.NotNull(result);
+        }
+
+        /// <summary>
         /// Tests that GetReviewFeeTypes executes positive
         /// </summary>
         [Fact]

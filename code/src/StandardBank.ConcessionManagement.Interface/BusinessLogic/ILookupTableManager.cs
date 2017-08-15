@@ -93,6 +93,13 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         IEnumerable<ProductType> GetProductTypesForConcessionType(string concessionType);
 
         /// <summary>
+        /// Gets the type of the concession.
+        /// </summary>
+        /// <param name="concessionTypeId">The concession type identifier.</param>
+        /// <returns></returns>
+        ConcessionType GetConcessionType(int concessionTypeId);
+
+        /// <summary>
         /// Gets the review fee types.
         /// </summary>
         /// <returns></returns>

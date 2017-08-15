@@ -35,7 +35,8 @@ const routes: Routes = [
     { path: 'cash-add-concession', component: CashAddConcessionComponent },
     { path: 'lending-add-concession/:riskGroupNumber', component: LendingAddConcessionComponent },
     { path: 'lending-edit-concession/:riskGroupNumber/:concessionReferenceId', component: LendingEditConcessionComponent },
-    { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent }
+    { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
+    { path: 'lending-inbox-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent }
 ];
 
 @NgModule({

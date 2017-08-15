@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RiskGroupService } from "../risk-group/risk-group.service";
 import { RiskGroup } from "../models/risk-group";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -67,6 +67,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     clientAccounts: ClientAccount[];
 
     constructor(
+        private router: Router,
         private route: ActivatedRoute,
         private formBuilder: FormBuilder,
         @Inject(RiskGroupService) private riskGroupService,
@@ -385,6 +386,14 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             this.validationError = [];
 
         this.validationError.push(validationDetail);
+    }
+
+    goBack() {
+        if (this.router.url.indexOf("inbox") > 0) {
+            this.router.navigate(['/pending-inbox']);
+        } else {
+            this.router.navigate(['/pricing-lending', this.riskGroup.number]);
+        }
     }
 
     ngOnDestroy() {

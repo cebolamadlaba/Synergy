@@ -290,7 +290,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         /// <param name="concessionTypeId"></param>
         /// <returns></returns>
-        private ConcessionType GetConcessionType(int concessionTypeId)
+        public ConcessionType GetConcessionType(int concessionTypeId)
         {
             return _mapper.Map<ConcessionType>(_concessionTypeRepository.ReadById(concessionTypeId));
         }

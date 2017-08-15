@@ -407,6 +407,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 mappedConcession.RiskGroupName = riskGroup.RiskGroupName;
 
                 mappedConcession.Type = _lookupTableManager.GetReferenceTypeName(concession.TypeId);
+                mappedConcession.ConcessionType = _lookupTableManager.GetConcessionType(concession.ConcessionTypeId)
+                    ?.Code;
                 mappedConcession.AccountNumber = concessionAccount?.AccountNumber;
 
                 concessions.Add(mappedConcession);
