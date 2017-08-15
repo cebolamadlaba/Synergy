@@ -13,6 +13,7 @@
                     <th>Concession Id</th>
                     <th>Segment</th>
                     <th>Sent For Approval</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -26,6 +27,7 @@
                     <td>{{concession.referenceNumber}}</td>
                     <td>{{concession.seqment}}</td>
                     <td class="date">{{concession.dateSentForApproval| date: 'yyyy/MM/dd'}}</td>
+                    <td><a (click)="openConcessionEdit(concession)">Recall</a></td>
                 </tr>
             </tbody>
         </table>
