@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
@@ -46,11 +47,34 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
             message.Concession.ReferenceNumber = result.ConcessionRef;
             message.Concession.Id = result.Id;
             if (message.User.SelectedCentre?.Id > 0)
-                await _mediator.Publish(new ConcessionAddedEvent { CenterId = message.User.SelectedCentre.Id, ConsessionId = result.ConcessionRef });
+                await TryAndSendEmail(message, result);
             else
                 _logger.LogWarning(new EventId(1,"ApprovalEmailNotSent"),"Consession # {0} has no selected center",result.Id);
 
             return message.Concession;
+        }
+
+        /// <summary>
+        /// Tries and sends the email, if it fails will just log the exception for now
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        private async Task TryAndSendEmail(AddConcessionCommand message, Model.Repository.Concession result)
+        {
+            try
+            {
+                await _mediator.Publish(new ConcessionAddedEvent
+                {
+                    CenterId = message.User.SelectedCentre.Id,
+                    ConsessionId = result.ConcessionRef
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+            }
+            
         }
     }
 }
