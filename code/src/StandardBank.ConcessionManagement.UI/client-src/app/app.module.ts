@@ -40,6 +40,7 @@ import { LendingNewService } from "./lending-new/lending-new.service";
 import { LendingEditConcessionComponent } from './lending-edit-concession/lending-edit-concession.component';
 import { LendingService } from "./lending/lending.service";
 import { LendingUpdateService } from "./lending-update/lending-update.service";
+import { LendingViewConcessionComponent } from './lending-view-concession/lending-view-concession.component';
 
 @NgModule({
     declarations: [
@@ -61,7 +62,8 @@ import { LendingUpdateService } from "./lending-update/lending-update.service";
         TransactionalAddConcessionComponent,
         MismatchedInboxComponent,
         LendingConcessionFilterPipe,
-        LendingEditConcessionComponent
+        LendingEditConcessionComponent,
+        LendingViewConcessionComponent
     ],
     imports: [
         BrowserModule,

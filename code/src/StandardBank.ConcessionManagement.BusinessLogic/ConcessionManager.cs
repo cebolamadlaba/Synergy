@@ -505,5 +505,40 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return concession;
         }
+
+        /// <summary>
+        /// Updates the concession
+        /// </summary>
+        /// <param name="concession"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public Model.Repository.Concession UpdateConcession(Concession concession, User user)
+        {
+            var concessions = _concessionRepository.ReadByConcessionRefIsActive(concession.ReferenceNumber, true);
+
+            //if there is more than one record returned then there is something wrong,
+            //there shouldn't be two active concessions with the same concession reference number
+            var currentConcession = concessions.Single();
+
+            var mappedConcession = _mapper.Map<Model.Repository.Concession>(concession);
+            mappedConcession.TypeId = _lookupTableManager.GetReferenceTypeId(concession.Type);
+
+            mappedConcession.ConcessionTypeId = currentConcession.ConcessionTypeId;
+
+            mappedConcession.StatusId = currentConcession.StatusId;
+            mappedConcession.SubStatusId = currentConcession.SubStatusId;
+            mappedConcession.ConcessionDate = DateTime.Now;
+            mappedConcession.RequestorId = user.Id;
+
+            mappedConcession.CentreId = currentConcession.CentreId;
+            mappedConcession.IsCurrent = currentConcession.IsCurrent;
+            mappedConcession.IsActive = currentConcession.IsActive;
+            mappedConcession.Id = currentConcession.Id;
+            mappedConcession.ConcessionRef = currentConcession.ConcessionRef;
+
+            _concessionRepository.Update(mappedConcession);
+
+            return mappedConcession;
+        }
     }
 }

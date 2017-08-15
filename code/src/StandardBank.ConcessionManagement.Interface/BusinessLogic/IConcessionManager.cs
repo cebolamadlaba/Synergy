@@ -108,5 +108,13 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="user"></param>
         /// <returns></returns>
         Model.Repository.Concession DeactivateConcession(string concessionReferenceId, User user);
+
+        /// <summary>
+        /// Updates the concession
+        /// </summary>
+        /// <param name="concession"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        Model.Repository.Concession UpdateConcession(Concession concession, User user);
     }
 }
