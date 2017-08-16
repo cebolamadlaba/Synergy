@@ -4,6 +4,8 @@ import { UserConcessionsService } from "../user-concessions/user-concessions.ser
 import { UserConcessions } from "../models/user-concessions";
 import { Subject } from 'rxjs/Rx'
 import 'rxjs/add/operator/map';
+import { Router, RouterModule } from '@angular/router';
+import { Concession } from "../models/concession";
 
 @Component({
     selector: 'app-due-expiry-inbox',
@@ -17,7 +19,8 @@ export class DueExpiryInboxComponent implements OnInit {
     userConcessions: UserConcessions;
     errorMessage: String;
 
-    constructor( @Inject(UserConcessionsService) private userConcessionsService) { }
+    constructor( @Inject(UserConcessionsService) private userConcessionsService,
+        private router: Router) { }
 
     ngOnInit() {
         this.dtOptions = {
@@ -36,5 +39,25 @@ export class DueExpiryInboxComponent implements OnInit {
                 this.dtTrigger.next();
             },
             error => this.errorMessage = <any>error);
+    }
+
+    openConcessionView(concession: Concession) {
+        switch (concession.concessionType) {
+            case "Lending":
+                this.router.navigate(['/lending-inbox-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                break;
+        }
+    }
+
+    openConcessionEdit(concession: Concession) {
+        switch (concession.concessionType) {
+            case "Lending":
+                this.router.navigate(['/lending-edit-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                break;
+        }
+    }
+
+    extendConcession(concession: Concession) {
+        alert("//TODO: Extend Concession");
     }
 }

@@ -17,7 +17,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor='let concession of userConcessions.pendingConcessions; trackBy: index;' (click)="openConcessionView(concession)">
+                <tr *ngFor='let concession of userConcessions.pendingConcessions; trackBy: index;'>
                     <td>
                         <p class="riskGroupName">{{concession.riskGroupName}}</p>
                         <p class="riskGroupNumber">{{concession.riskGroupNumber}}</p>
@@ -27,7 +27,10 @@
                     <td>{{concession.referenceNumber}}</td>
                     <td>{{concession.seqment}}</td>
                     <td class="date">{{concession.dateSentForApproval| date: 'yyyy/MM/dd'}}</td>
-                    <td><a (click)="openConcessionEdit(concession)">Recall</a></td>
+                    <td>
+                        <a (click)="openConcessionView(concession)">View</a>
+                        <a (click)="openConcessionEdit(concession)">Recall</a>
+                    </td>
                 </tr>
             </tbody>
         </table>
