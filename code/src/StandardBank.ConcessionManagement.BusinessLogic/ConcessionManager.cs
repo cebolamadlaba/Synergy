@@ -556,5 +556,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return concessionCondtion;
         }
+
+        public IEnumerable<Condition> GetConditions(string periodType, string period)
+        {
+            var statusid = _lookupTableManager.GetStatusId("Approved");
+            var periodId = _lookupTableManager.GetPeriods().First(x => x.Description == period).Id;
+            var periodTypeId = _lookupTableManager.GetPeriodTypes().First(x => x.Description == periodType).Id;
+            return _mapper.Map<IEnumerable<Condition>>(_concessionConditionRepository.ReadByPeriodAndApprovalStatus(statusid,periodId,periodTypeId));
+        }
     }
 }
