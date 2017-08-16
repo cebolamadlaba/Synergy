@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, Inject } from '@angular/core';
+﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { UserConcessionsService } from "../user-concessions/user-concessions.service";
 import { UserConcessions } from "../models/user-concessions";
@@ -12,7 +12,7 @@ import { Concession } from "../models/concession";
     templateUrl: './due-expiry-inbox.component.html',
     styleUrls: ['./due-expiry-inbox.component.css']
 })
-export class DueExpiryInboxComponent implements OnInit {
+export class DueExpiryInboxComponent implements OnInit, OnDestroy {
     dtOptions: DataTables.Settings = {};
     dtTrigger: Subject<UserConcessions> = new Subject();
     observableUserConcessions: Observable<UserConcessions>;
@@ -32,6 +32,10 @@ export class DueExpiryInboxComponent implements OnInit {
             }
         };
 
+        this.loadUserConcessions();
+    }
+
+    loadUserConcessions() {
         this.observableUserConcessions = this.userConcessionsService.getData();
         this.observableUserConcessions.subscribe(
             userConcessions => {
@@ -49,15 +53,27 @@ export class DueExpiryInboxComponent implements OnInit {
         }
     }
 
-    openConcessionEdit(concession: Concession) {
+    renewConcession(concession: Concession) {
         switch (concession.concessionType) {
             case "Lending":
-                this.router.navigate(['/lending-edit-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                alert("renew concession");
                 break;
         }
+
+        this.loadUserConcessions();
     }
 
     extendConcession(concession: Concession) {
-        alert("//TODO: Extend Concession");
+        switch (concession.concessionType) {
+            case "Lending":
+                alert("extend concession");
+                break;
+        }
+
+        this.loadUserConcessions();
+    }
+
+    ngOnDestroy() {
+        this.dtTrigger.unsubscribe();
     }
 }

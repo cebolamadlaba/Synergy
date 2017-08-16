@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionCondition;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddLendingConcessionDetail;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.DeactivateConcession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteConcessionCondition;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteLendingConcessionDetail;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.UpdateConcession;
@@ -134,6 +133,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             return Ok(lendingConcession);
         }
+
+        //public async Task<IActionResult> ExtendConcession(int concessionId)
 
         /// <summary>
         /// Gets the lending concession data for the concession reference id specified

@@ -1,90 +1,90 @@
 ﻿<!-- banner-->
 <div class="col-md-12 lending-view-banner">
-  <div class="row">
-    <div class="lending-banner-title">
-      <div class="col-md-1">
-        <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
-        <span class="back-button-text" routerLink="/pricing-results">Back</span>
-      </div>
-      <div class="col-md-10 banner-main-title">
-        <i class="fa fa-money" aria-hidden="true"></i> Cash
-      </div>
-      <div class="col-md-1"></div>
-    </div>
-    <div class="col-md-12 lending-banner">
-      <div class="col-md-11">
-        <div>
-
-          <div class="col-md-12 summary-main">
-            <div class="col-md-3 summary-sub-title">
-              <h5>EDCON</h5>
-              <span class="lightText">1989</span>
+    <div class="row">
+        <div class="lending-banner-title">
+            <div class="col-md-1">
+                <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+                <span class="back-button-text" [routerLink]="['/pricing', riskGroupNumber]">Back</span>
             </div>
-            <div class="col-md-3 summary-items">
-              <h5>CASHCENTR</h5>
-              <span class="col-md-12 summary-items-sub">Turnover <span class="summary-item-value">0.00</span></span>
-              <span class="col-md-12 summary-items-sub">Volume <span class="summary-item-value">0.00</span></span>
-              <span class="col-md-12 summary-items-sub">Weighted Avg BRANCH Price <span class="col-md-12 summary-item-value">0.00</span></span>
+            <div class="col-md-10 banner-main-title">
+                <i class="fa fa-money" aria-hidden="true"></i> Cash
             </div>
-            <div class="col-md-3 summary-items">
-              <h5>BRANCH</h5>
-              <span class="col-md-12 summary-items-sub">Turnover <span class="summary-item-value">0.00</span></span>
-              <span class="col-md-12 summary-items-sub">Volume <span class="summary-item-value">0.00</span></span>
-              <span class="col-md-12 summary-items-sub">Weighted Avg BRANCH Price <span class="col-md-12 summary-item-value">0.00</span></span>
-            </div>
-            <div class="col-md-3 summary-items">
-              <h5>AUTOSAFE <i class="fa fa-compress compress" aria-hidden="true"></i></h5>
-              <span class="col-md-12 summary-items-sub">Turnover <span class="summary-item-value">0.00</span></span>
-              <span class="col-md-12 summary-items-sub">Volume <span class="summary-item-value">0.00</span></span>
-              <span class="col-md-12 summary-items-sub">Weighted Avg BRANCH Price <span class="col-md-12 summary-item-value">0.00</span></span>
-            </div>
-          </div>
-
+            <div class="col-md-1"></div>
         </div>
-        
-      </div>
+        <div class="col-md-12 lending-banner">
+            <div class="col-md-11">
+                <div>
+
+                    <div class="col-md-12 summary-main">
+                        <div class="col-md-3 summary-sub-title">
+                            <h5>EDCON</h5>
+                            <span class="lightText">1989</span>
+                        </div>
+                        <div class="col-md-3 summary-items">
+                            <h5>CASHCENTR</h5>
+                            <span class="col-md-12 summary-items-sub">Turnover <span class="summary-item-value">//TODO</span></span>
+                            <span class="col-md-12 summary-items-sub">Volume <span class="summary-item-value">//TODO</span></span>
+                            <span class="col-md-12 summary-items-sub">Weighted Avg BRANCH Price <span class="col-md-12 summary-item-value">//TODO</span></span>
+                        </div>
+                        <div class="col-md-3 summary-items">
+                            <h5>BRANCH</h5>
+                            <span class="col-md-12 summary-items-sub">Turnover <span class="summary-item-value">//TODO</span></span>
+                            <span class="col-md-12 summary-items-sub">Volume <span class="summary-item-value">//TODO</span></span>
+                            <span class="col-md-12 summary-items-sub">Weighted Avg BRANCH Price <span class="col-md-12 summary-item-value">//TODO</span></span>
+                        </div>
+                        <div class="col-md-3 summary-items">
+                            <h5>AUTOSAFE <i class="fa fa-compress compress" aria-hidden="true"></i></h5>
+                            <span class="col-md-12 summary-items-sub">Turnover <span class="summary-item-value">//TODO</span></span>
+                            <span class="col-md-12 summary-items-sub">Volume <span class="summary-item-value">//TODO</span></span>
+                            <span class="col-md-12 summary-items-sub">Weighted Avg BRANCH Price <span class="col-md-12 summary-item-value">//TODO</span></span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 <!--Table information -->
 
 <div class="table-info">
 
-  <!-- products -->
-  <div class="col-md-5">
-    <h3 class="table-title">Products</h3>
-    <div class="section">
-      <div class="section-body">
-        <div class="product-section">
-          <p class="product-name"> Real People</p>
+    <!-- products -->
+    <div class="col-md-5">
+        <h3 class="table-title">Products</h3>
+        <div class="section">
+            <div class="section-body">
+                <div class="product-section">
+                    <p class="product-name"> Real People</p>
 
-          <div class="product-account">Account No: 12345</div>
-          <div class="product-code">Product: VAF</div>
+                    <div class="product-account">Account No: 12345</div>
+                    <div class="product-code">Product: VAF</div>
 
+                </div>
+                <div class="product-table-container">
+                    <table class="table table-bordered table-hover header-fixed table-striped ">
+                        <thead>
+                            <tr>
+                                <th>Cash Table No</th>
+                                <th>BP ID</th>
+                                <th>Volume</th>
+                                <th>Loaded Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="rightAlign">45</td>
+                                <td class="rightAlign">343</td>
+                                <td class="rightAlign">150,000.000</td>
+                                <td>R7 + 0.45</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <div class="product-table-container">
-          <table class="table table-bordered table-hover header-fixed table-striped ">
-            <thead>
-              <tr>
-                <th>Cash Table No</th>
-                <th>BP ID</th>
-                <th>Volume</th>
-                <th>Loaded Price</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="rightAlign">45</td>
-                <td class="rightAlign">343</td>
-                <td class="rightAlign">150,000.000</td>
-                <td>R7 + 0.45</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
     </div>
-  </div>
 
 
 </div>
@@ -92,122 +92,122 @@
 <!-- concessions -->
 
 <div class="col-md-7 concessions">
-  <div class="concessions-top">
-    <div class="concessions-top-title">
-      <h3 class="table-title">Concessions</h3>
-      <button type="button" class="btn btn-default" disabled>Add Concession</button>
+    <div class="concessions-top">
+        <div class="concessions-top-title">
+            <h3 class="table-title">Concessions</h3>
+            <button type="button" class="btn btn-default" disabled>Add Concession</button>
+        </div>
+        <!-- Search bar -->
+        <div class="search-and-results-container">
+            <div class="input-group add-on">
+                <input class="form-control" placeholder="Search Concession ID or Risk Group Number" name="srch-term" id="srch-term" type="text">
+            </div>
+        </div>
     </div>
-    <!-- Search bar -->
-    <div class="search-and-results-container">
-      <div class="input-group add-on">
-        <input class="form-control" placeholder="Search Concession ID or Risk Group Number" name="srch-term" id="srch-term" type="text">
-      </div>
-    </div>
-  </div>
 
-  <div class="section">
-    <div class="section-header small-table-title">
-      <div class="concessionID-section"> 124</div>
+    <div class="section">
+        <div class="section-header small-table-title">
+            <div class="concessionID-section"> 124</div>
+        </div>
+        <div class="section-body">
+            <div class="table-container">
+                <table class="table table-bordered table-hover header-fixed table-striped">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Cash Table</th>
+                            <th>BP ID</th>
+                            <th>Volume</th>
+                            <th>Value</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="table-row-top">Tester Inc.</div>
+                                <div class="table-row-bottom">
+                                    <div class="secondaryText">
+                                        Acc No:
+                                        <div class="normalText">12345</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="rightAlign">45</td>
+                            <td class="rightAlign">343</td>
+                            <td>230</td>
+                            <td>150,000.00</td>
+                            <td>
+                                <div class="table-row-top">
+                                    <div class="secondaryText">
+                                        Loaded:
+                                        <div class="normalText">R7 + 0.45</div>
+                                    </div>
+                                </div>
+                                <div class="table-row-bottom">
+                                    <div class="secondaryText">
+                                        Approved:
+                                        <div class="normalText">R7 + 0.45</div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    <div class="section-body">
-      <div class="table-container">
-        <table class="table table-bordered table-hover header-fixed table-striped">
-          <thead>
-            <tr>
-              <th>Customer</th>
-              <th>Cash Table</th>
-              <th>BP ID</th>
-              <th>Volume</th>
-              <th>Value</th>
-              <th>Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <div class="table-row-top">Tester Inc.</div>
-                <div class="table-row-bottom">
-                  <div class="secondaryText">
-                    Acc No:
-                    <div class="normalText">12345</div>
-                  </div>
-                </div>
-              </td>
-              <td class="rightAlign">45</td>
-              <td class="rightAlign">343</td>
-              <td>230</td>
-              <td>150,000.00</td>
-              <td>
-                <div class="table-row-top">
-                  <div class="secondaryText">
-                    Loaded:
-                    <div class="normalText">R7 + 0.45</div>
-                  </div>
-                </div>
-                <div class="table-row-bottom">
-                  <div class="secondaryText">
-                    Approved:
-                    <div class="normalText">R7 + 0.45</div>
-                  </div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
 
-  <!-- avg balance -->
+    <!-- avg balance -->
 
-  <div class="section">
-    <div class="section-header">
-      <div class="concessionID-section"> ED0023</div>
+    <div class="section">
+        <div class="section-header">
+            <div class="concessionID-section"> ED0023</div>
+        </div>
+        <div class="section-body">
+            <div class="table-container">
+                <table class="table table-bordered table-hover header-fixed table-striped">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Limit</th>
+                            <th>Average Balance</th>
+                            <th>Term</th>
+                            <th>MAP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="table-row-top">Tester Inc.</div>
+                                <div class="table-row-bottom">
+                                    <div class="secondaryText">
+                                        Acc No:
+                                        <div class="normalText">12345</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>5,000,000.00</td>
+                            <td>3,999,987.00</td>
+                            <td>60</td>
+                            <td>
+                                <div class="table-row-top">
+                                    <div class="secondaryText">
+                                        Loaded:
+                                        <div class="normalText">1</div>
+                                    </div>
+                                </div>
+                                <div class="table-row-bottom">
+                                    <div class="secondaryText">
+                                        Approved:
+                                        <div class="normalText">1</div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    <div class="section-body">
-      <div class="table-container">
-        <table class="table table-bordered table-hover header-fixed table-striped">
-          <thead>
-            <tr>
-              <th>Customer</th>
-              <th>Limit</th>
-              <th>Average Balance</th>
-              <th>Term</th>
-              <th>MAP</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <div class="table-row-top">Tester Inc.</div>
-                <div class="table-row-bottom">
-                  <div class="secondaryText">
-                    Acc No:
-                    <div class="normalText">12345</div>
-                  </div>
-                </div>
-              </td>
-              <td>5,000,000.00</td>
-              <td>3,999,987.00</td>
-              <td>60</td>
-              <td>
-                <div class="table-row-top">
-                  <div class="secondaryText">
-                    Loaded:
-                    <div class="normalText">1</div>
-                  </div>
-                </div>
-                <div class="table-row-bottom">
-                  <div class="secondaryText">
-                    Approved:
-                    <div class="normalText">1</div>
-                  </div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
 </div>
