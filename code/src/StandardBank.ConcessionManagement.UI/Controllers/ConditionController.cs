@@ -11,14 +11,16 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// The lookup table manager
         /// </summary>
         private readonly ILookupTableManager _lookupTableManager;
+        private readonly IConcessionManager _concessionManager;
 
         /// <summary>
         /// Initializes the controller
         /// </summary>
         /// <param name="lookupTableManager"></param>
-        public ConditionController(ILookupTableManager lookupTableManager)
+        public ConditionController(ILookupTableManager lookupTableManager , IConcessionManager concessionManager)
         {
             _lookupTableManager = lookupTableManager;
+            _concessionManager = concessionManager;
         }
 
         /// <summary>
@@ -49,6 +51,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult PeriodTypes()
         {
             return Ok(_lookupTableManager.GetPeriodTypes());
+        }
+        [Route("MyConditions/{period}/{periodType}")]
+        public IActionResult MyConditions([FromRoute]string period = "3 Months" ,[FromRoute] string periodType = "Standard")
+        {
+            return Ok(_concessionManager.GetConditions(periodType,period));
         }
     }
 }

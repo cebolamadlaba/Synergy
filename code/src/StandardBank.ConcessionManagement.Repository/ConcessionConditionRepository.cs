@@ -4,6 +4,7 @@ using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
+using System;
 
 namespace StandardBank.ConcessionManagement.Repository
 {
@@ -143,6 +144,23 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 db.Execute("DELETE [dbo].[tblConcessionCondition] WHERE [pkConcessionConditionId] = @Id",
                     new {model.Id});
+            }
+        }
+
+        public IEnumerable<Condition> ReadByPeriodAndApprovalStatus(int concessionApprovalStatusId , int periodId , int periodType)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                var query = @"
+                    SELECT rg.RiskGroupName, rg.RiskGroupNumber,c.pkConcessionId 'ConcessionId',ct.Description 'ConditionType',cp.Description 'ProductType',cc.InterestRate,c.ExpiryDate,cc.Volume,cc.Value
+                      FROM [dbo].[tblConcessionCondition] cc
+                      join dbo.rtblConditionType ct on cc.fkConditionTypeId = ct.pkConditionTypeId
+                      join dbo.rtblConditionProduct cp on cp.pkConditionProductId = cc.fkConditionProductId
+                      join tblConcession c on c.pkConcessionId = cc.fkConcessionId
+                      join tblRiskGroup rg on rg.pkRiskGroupId = c.fkRiskGroupId
+                       where c.fkStatusId = @statusId and cc.fkPeriodId = @periodId and cc.fkPeriodTypeId = @periodType
+                        ";
+                return db.Query<Condition>(query,new { statusId = concessionApprovalStatusId , periodId,periodType });
             }
         }
     }

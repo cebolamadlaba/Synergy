@@ -22,30 +22,33 @@
 </div>
 <div class="col-md-12 search-and-results-container">
   <!-- Search bar -->
-  <div class="input-group add-on">
+  <!--<div class="input-group add-on">
     <input class="form-control" placeholder="Search Concession ID or Risk Group Number" name="srch-term" id="srch-term" type="text">
-  </div>
+  </div>-->
   <!-- filter-->
   <div class="form-group  filter-group">
     <div id="filter"><label for="sort" class="col-sm-1 control-label"> Filter</label></div>
     <div class="col-sm-2">
-      <select class="form-control">
-        <option>3 Months</option>
-        <option>6 Months</option>
+      <select (change)="PeriodFilter($event.target.value)" class="form-control">
+          <option *ngFor="let p of periods"
+                  [ngValue]="p.id">
+              {{p.description}}
+          </option>  
       </select>
     </div>
   </div>
 
   <!-- Results table -->
   <div class="table-container">
-    <table class="table table-bordered table-hover header-fixed table-striped">
+    <table  datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-bordered table-hover header-fixed table-striped">
       <thead>
         <tr>
+          <th>Risk Group Name</th>
           <th>Risk Group Number</th>
-          <th>Customer</th>
           <th>Concession ID</th>
           <th>Condition Type</th>
-          <th>Expected Turnover</th>
+          <th>Product Type</th>
+          <th>Expiry Date</th>
           <th>Interest</th>
           <th>Volume</th>
           <th>Value</th>
@@ -53,86 +56,24 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="status-red">
-          <td>
-            <div class="customerName">APPLE</div>
-            <div>1989</div>
-          </td>
-          <td>
-            <div>Mac</div>
-            <div>Cashman</div>
-          </td>
-          <td> L00000</td>
-          <td>
-            Full Transaction
-          </td>
-          <td>100 000000</td>
-          <td>0.5</td>
-          <td>
-            5000 00
-          </td>
-          <td>500 0000</td>
-          <td>
-            <button type="button" class="btn btn-no">No</button> <button type="button" class="btn btn-yes">Yes</button>
-          </td>
-        </tr>
-        <tr class="status-green">
-          <td>
-            <div class="customerName">EDCON</div>
-            <div>1989</div>
-          </td>
-          <td>
-            <div>CNA</div>
-            <div>overdraft</div>
-          </td>
-          <td> L00000</td>
-          <td>Cash Turnover</td>
-          <td>100 000000</td>
-          <td>0.5</td>
-          <td> 5000 00</td>
-          <td>500 0000</td>
-          <td>
-            <button type="button" class="btn btn-no">No</button> <button type="button" class="btn btn-yes">Yes</button>
-          </td>
-
-        </tr>
-        <tr class="status-yellow">
-          <td>
-            <div class="customerName">EDCON</div>
-            <div>1989</div>
-          </td>
-          <td>
-            <div>CNA</div>
-            <div>overdraft</div>
-          </td>
-          <td> L00000</td>
-          <td>Cash Turnover</td>
-          <td>100 000000</td>
-          <td>0.5</td>
-          <td> 5000 00</td>
-          <td>500 0000</td>
-          <td>
-            <button type="button" class="btn btn-no">No</button>
-            <button type="button" class="btn btn-yes">Yes</button>
-          </td>
-        </tr>
+       <tr *ngFor='let condition of observableConditions; trackBy: index;'>
+           <td>{{condition.riskGroupName}}</td>
+           <td>{{condition.riskGroupNumber}}</td>
+           <td>{{condition.concessionId}}</td>
+           <td>{{condition.conditionType }}</td>
+           <td>{{condition.productType}}</td>   
+           <td class="date">{{condition.expiryDate | date: 'yyyy/MM/dd'}}</td>
+           <td>{{condition.interestRate}}</td>
+           <td>{{condition.volume}}</td>
+           <td>{{condition.value}}</td>
+           <td>
+               <button type="button" class="btn btn-no">No</button>
+               <button type="button" class="btn btn-yes">Yes</button>
+           </td>
+       </tr>
       </tbody>
     </table>
   </div>
 
-  <div class="concession-footer">
-    <!--print button-->
-    <button type="button" class="btn btn-print">
-      <i class="fa fa-print" aria-hidden="true"></i> Print 1 Files
-    </button>
-    <!-- pagination-->
-    <ul class="pagination">
-      <li><a href="#">First</a></li>
-      <li><a href="#">Prev</a></li>
-      <li class="active"><a href="#">1</a></li>
-      <li><a href="#">2</a></li>
-      <li><a href="#">Next</a></li>
-      <li><a href="#">Last</a></li>
-    </ul>
-  </div>
+ 
 </div>
