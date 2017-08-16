@@ -15,11 +15,11 @@
                     <th>Concession Id</th>
                     <th>Segment</th>
                     <th>Date Sent For Approval</th>
-                    <th></th>
+                    <!--<th></th>-->
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor='let concession of userConcessions.dueForExpiryConcessions; trackBy: index;'>
+                <tr *ngFor='let concession of userConcessions.dueForExpiryConcessions; trackBy: index;' (click)="openConcessionView(concession)">
                     <td>{{concession.riskGroupNumber}}</td>
                     <td>{{concession.riskGroupName}}</td>
                     <td class="customerName">{{concession.customerName}}</td>
@@ -28,11 +28,11 @@
                     <td>{{concession.referenceNumber}}</td>
                     <td>{{concession.seqment}}</td>
                     <td class="date">{{concession.dateSentForApproval| date: 'yyyy/MM/dd'}}</td>
-                    <td>
+                    <!--<td>
                         <a (click)="openConcessionView(concession)">View</a>
                         <a (click)="extendConcession(concession)">Extend</a>
                         <a (click)="renewConcession(concession)">Renew</a>
-                    </td>
+                    </td>-->
                 </tr>
             </tbody>
         </table>

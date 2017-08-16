@@ -265,20 +265,27 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var mismatchedConcessions = GetMismatchedConcessionsForUser(user);
             var declinedConcessions = GetDeclinedConcessionsForUser(user);
 
+            var isRequestor = user.UserRoles.Any(_ => _.Name == "Requestor");
+
             userConcessions.PendingConcessions = pendingConcessions;
             userConcessions.PendingConcessionsCount = pendingConcessions.Count();
+            userConcessions.ShowPendingConcessions = true;
 
             userConcessions.DueForExpiryConcessions = dueForExpiryConcessions;
             userConcessions.DueForExpiryConcessionsCount = dueForExpiryConcessions.Count();
+            userConcessions.ShowDueForExpiryConcessions = isRequestor;
 
             userConcessions.ExpiredConcessions = expiredConcessions;
             userConcessions.ExpiredConcessionsCount = expiredConcessions.Count();
+            userConcessions.ShowExpiredConcessions = isRequestor;
 
             userConcessions.MismatchedConcessions = mismatchedConcessions;
             userConcessions.MismatchedConcessionsCount = mismatchedConcessions.Count();
+            userConcessions.ShowMismatchedConcessions = isRequestor;
 
             userConcessions.DeclinedConcessions = declinedConcessions;
             userConcessions.DeclinedConcessionsCount = declinedConcessions.Count();
+            userConcessions.ShowDeclinedConcessions = isRequestor;
 
             return userConcessions;
         }
