@@ -114,7 +114,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         break;
                     case "Suite Head":
                     case "BCM":
-                        concessions.AddRange(Map(_concessionRepository.ReadByRequestorIdStatusIdSubStatusIdIsActive(0,pendingStatusId,bcmpendingStatusId,true)));
+                        concessions.AddRange(Map(
+                            _concessionRepository.ReadByCentreIdStatusIdSubStatusIdIsActive(user.SelectedCentre.Id,
+                                pendingStatusId, bcmpendingStatusId, true)));
                         break;
                     case "PCM":
                     case "Head Office":
@@ -344,6 +346,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedConcession.RequestorId = user.Id;
 
             mappedConcession.CentreId = user.SelectedCentre.Id;
+            mappedConcession.RegionId = user.SelectedRegion.Id;
             mappedConcession.IsCurrent = true;
             mappedConcession.IsActive = true;
 

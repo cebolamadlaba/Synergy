@@ -21,3 +21,14 @@ export class MyConditionService {
 
 
 }
+
+@Injectable()
+export class MockMyConditionService {
+    model = [new Condition()];
+
+    getMyConditions(period, periodType): Observable<Condition[]> {
+        this.model[0].concessionId = 1;
+        return Observable.of(this.model);
+    }
+
+}

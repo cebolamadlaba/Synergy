@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit, Inject } from '@angular/core';
 import { Subject } from 'rxjs/Rx';
 import { Condition } from '../models/condition';
 import { MyConditionService } from '../my-condition/my-condition.service';
@@ -18,7 +18,7 @@ export class ConditionsComponent implements OnInit {
     periods: Period[];
     errorMessage: String;
     periodType: string = "Standard";
-    constructor(private conditionService: MyConditionService , private periodService: PeriodService) { }
+    constructor( @Inject(MyConditionService) private conditionService , private periodService: PeriodService) { }
 
   ngOnInit() {
       this.dtOptions = {
