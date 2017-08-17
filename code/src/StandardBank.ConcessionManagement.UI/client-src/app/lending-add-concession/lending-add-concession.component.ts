@@ -23,6 +23,7 @@ import { LendingNewService } from "../lending-new/lending-new.service";
 import { Concession } from "../models/concession";
 import { LendingConcessionDetail } from "../models/lending-concession-detail";
 import { ConcessionCondition } from "../models/concession-condition";
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-lending-add-concession',
@@ -62,6 +63,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     constructor(
         private route: ActivatedRoute,
         private formBuilder: FormBuilder,
+        private location: Location,
         @Inject(RiskGroupService) private riskGroupService,
         @Inject(ReviewFeeTypeService) private reviewFeeTypeService,
         @Inject(ProductTypeService) private productTypeService,
@@ -305,6 +307,10 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             this.validationError = [];
 
         this.validationError.push(validationDetail);
+    }
+
+    goBack() {
+        this.location.back();
     }
 
     ngOnDestroy() {

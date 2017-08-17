@@ -24,6 +24,7 @@ import { LendingConcessionDetail } from "../models/lending-concession-detail";
 import { ConcessionCondition } from "../models/concession-condition";
 import { LendingService } from "../lending/lending.service";
 import { LendingUpdateService } from "../lending-update/lending-update.service";
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-lending-edit-concession',
@@ -70,6 +71,7 @@ export class LendingEditConcessionComponent implements OnInit, OnDestroy {
         private router: Router,
         private route: ActivatedRoute,
         private formBuilder: FormBuilder,
+        private location: Location,
         @Inject(RiskGroupService) private riskGroupService,
         @Inject(ReviewFeeTypeService) private reviewFeeTypeService,
         @Inject(ProductTypeService) private productTypeService,
@@ -389,7 +391,7 @@ export class LendingEditConcessionComponent implements OnInit, OnDestroy {
     }
 
     goBack() {
-        this.router.navigate(['/pending-inbox']);
+        this.location.back();
     }
 
     ngOnDestroy() {

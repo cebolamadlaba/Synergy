@@ -1,6 +1,7 @@
 ﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-pricing-cash',
@@ -11,7 +12,7 @@ export class PricingCashComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
     private sub: any;
 
-    constructor(private route: ActivatedRoute) {
+    constructor(private route: ActivatedRoute, private location: Location) {
     }
 
     ngOnInit() {
@@ -24,6 +25,10 @@ export class PricingCashComponent implements OnInit, OnDestroy {
                 //    error => this.errorMessage = <any>error);
             }
         });
+    }
+
+    goBack() {
+        this.location.back();
     }
 
     ngOnDestroy() {

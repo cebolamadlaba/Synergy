@@ -1,15 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 
 @Component({
-  selector: 'app-pricing-transactional',
-  templateUrl: './pricing-transactional.component.html',
-  styleUrls: ['./pricing-transactional.component.css']
+    selector: 'app-pricing-transactional',
+    templateUrl: './pricing-transactional.component.html',
+    styleUrls: ['./pricing-transactional.component.css']
 })
 export class PricingTransactionalComponent implements OnInit {
 
-  constructor() { }
+    constructor(private location: Location) { }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
+
+    goBack() {
+        this.location.back();
+    }
 
 }
