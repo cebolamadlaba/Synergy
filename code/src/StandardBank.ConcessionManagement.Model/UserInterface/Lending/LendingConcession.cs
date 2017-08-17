@@ -28,5 +28,10 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Lending
         /// Gets or sets the concession conditions
         /// </summary>
         public IEnumerable<ConcessionCondition> ConcessionConditions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the current user
+        /// </summary>
+        public User CurrentUser { get; set; }
     }
 }

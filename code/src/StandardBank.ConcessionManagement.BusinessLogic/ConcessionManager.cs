@@ -421,6 +421,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     ?.Code;
                 mappedConcession.AccountNumber = concessionAccount?.AccountNumber;
 
+                mappedConcession.Status = _lookupTableManager.GetStatusDescription(concession.StatusId);
+
+                if (concession.SubStatusId.HasValue)
+                    mappedConcession.SubStatus =
+                        _lookupTableManager.GetSubStatusDescription(concession.SubStatusId.Value);
+
                 concessions.Add(mappedConcession);
             }
 

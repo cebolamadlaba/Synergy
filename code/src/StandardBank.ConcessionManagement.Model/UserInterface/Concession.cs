@@ -84,5 +84,15 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// Gets or sets the account number
         /// </summary>
         public string AccountNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets the status
+        /// </summary>
+        public string Status { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sub status
+        /// </summary>
+        public string SubStatus { get; set; }
     }
 }

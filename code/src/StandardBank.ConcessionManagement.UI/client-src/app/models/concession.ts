@@ -13,4 +13,6 @@
     smtDealNumber: string;
     motivation: string;
     mrsCrs: number;
+    status: string;
+    subStatus: string;
 }

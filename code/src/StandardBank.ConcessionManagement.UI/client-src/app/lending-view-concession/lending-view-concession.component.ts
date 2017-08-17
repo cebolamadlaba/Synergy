@@ -42,6 +42,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
     selectedConditionTypes: ConditionType[];
     isLoading = false;
+    canBcmApprove = false;
 
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
@@ -106,6 +107,11 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 this.observableLendingConcession = this.lendingService.getData(this.concessionReferenceId);
                 this.observableLendingConcession.subscribe(lendingConcession => {
                     this.lendingConcession = lendingConcession;
+
+                    if (lendingConcession.concession.status == "Pending" && lendingConcession.concession.subStatus == "BCM Pending") {
+                        this.canBcmApprove = lendingConcession.currentUser.canBcmApprove;
+                    }
+
                     this.lendingConcessionForm.controls['mrsCrs'].setValue(this.lendingConcession.concession.mrsCrs);
                     this.lendingConcessionForm.controls['smtDealNumber'].setValue(this.lendingConcession.concession.smtDealNumber);
                     this.lendingConcessionForm.controls['motivation'].setValue(this.lendingConcession.concession.motivation);
@@ -392,6 +398,10 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
     goBack() {
         this.location.back();
+    }
+
+    bcmApproveConcession() {
+
     }
 
     ngOnDestroy() {

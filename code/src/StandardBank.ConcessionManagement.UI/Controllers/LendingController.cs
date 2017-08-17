@@ -108,7 +108,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
             var databaseLendingConcession =
-                _lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber);
+                _lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber, user);
 
             //first delete all the conditions and the lending details
             foreach (var condition in databaseLendingConcession.ConcessionConditions)
@@ -144,7 +144,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("LendingConcessionData/{concessionReferenceId}")]
         public IActionResult LendingConcessionData(string concessionReferenceId)
         {
-            return Ok(_lendingManager.GetLendingConcession(concessionReferenceId));
+            return Ok(_lendingManager.GetLendingConcession(concessionReferenceId, _siteHelper.LoggedInUser(this)));
         }
     }
 }

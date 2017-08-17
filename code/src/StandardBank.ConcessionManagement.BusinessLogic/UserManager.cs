@@ -116,6 +116,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     mappedUser.SelectedRegion = GetSelectedRegion(mappedUser.UserRegions, user);
                     mappedUser.UserCentres = GetUserCentres(user.Id);
                     mappedUser.SelectedCentre = mappedUser.UserCentres.FirstOrDefault();
+                    mappedUser.CanRequest = mappedUser.UserRoles.Any(_ => _.Name == "Requestor");
+                    mappedUser.CanBcmApprove =
+                        mappedUser.UserRoles.Any(_ => _.Name.Trim() == "Suite Head" || _.Name == "BCM");
+                    mappedUser.CanPcmApprove =
+                        mappedUser.UserRoles.Any(_ => _.Name == "PCM" || _.Name == "Head Office");
 
                     return mappedUser;
                 }
