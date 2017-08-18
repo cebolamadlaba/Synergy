@@ -109,5 +109,15 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// Gets or sets the bcm user id
         /// </summary>
         public int? BcmUserId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the pcm user id
+        /// </summary>
+        public int? PcmUserId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ho user id
+        /// </summary>
+        public int? HoUserId { get; set; }
     }
 }

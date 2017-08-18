@@ -121,6 +121,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         mappedUser.UserRoles.Any(_ => _.Name.Trim() == "Suite Head" || _.Name == "BCM");
                     mappedUser.CanPcmApprove =
                         mappedUser.UserRoles.Any(_ => _.Name == "PCM" || _.Name == "Head Office");
+                    mappedUser.IsHO = mappedUser.UserRoles.Any(_ => _.Name == "Head Office");
 
                     return mappedUser;
                 }

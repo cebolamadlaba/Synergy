@@ -17,4 +17,6 @@
     subStatus: string;
     comments: string;
     bcmUserId: number;
+    pcmUserId: number;
+    hoUserId: number;
 }

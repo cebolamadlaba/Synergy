@@ -85,7 +85,7 @@
     <div class="concessions-top">
         <div class="concessions-top-title">
             <h3 class="table-title">Concessions</h3>
-            <button type="button" class="btn btn-default" (click)="addNewConcessionRow()" *ngIf="canBcmApprove">New Concession</button>
+            <button type="button" class="btn btn-default" (click)="addNewConcessionRow()" *ngIf="canBcmApprove || canPcmApprove">New Concession</button>
         </div>
     </div>
 
@@ -127,7 +127,7 @@
                 </td>
                 <td class="length-medium"><input formControlName="reviewFee" /></td>
                 <td class="length-medium"><input formControlName="uffFee" /></td>
-                <td class="delete" *ngIf="canBcmApprove"><button type="button" *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                <td class="delete" *ngIf="canBcmApprove || canPcmApprove"><button type="button" *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
         </tbody>
     </table>
@@ -136,7 +136,7 @@
         <div class="concessions-top">
             <div class="concessions-top-title">
                 <h3 class="table-title">Conditions</h3>
-                <button type="button" class="btn btn-default" (click)="manageConditionsModal.show()" (click)="addNewConditionRowIfNone()" *ngIf="canBcmApprove">Manage Conditions</button>
+                <button type="button" class="btn btn-default" (click)="manageConditionsModal.show()" (click)="addNewConditionRowIfNone()" *ngIf="canBcmApprove || canPcmApprove">Manage Conditions</button>
 
                 <!-- modal content -->
 
@@ -147,7 +147,7 @@
                                 <h4>Manage Conditions</h4>
                             </div>
                             <div class="col-md-12 modal-body">
-                                <div class="row" *ngIf="canBcmApprove">
+                                <div class="row" *ngIf="canBcmApprove || canPcmApprove">
                                     <div class="col-md-12 modal-title">
                                         <button type="button" class="btn btn-default" (click)="addNewConditionRow()">New Conditions</button>
                                     </div>
@@ -243,15 +243,17 @@
         </div>
     </div>
     
-    <div class="col-md-12" *ngIf="canBcmApprove">
+    <div class="col-md-12" *ngIf="canBcmApprove || canPcmApprove">
         Enter your comments:
         <textarea formControlName="comments" placeholder="Comments" style="width: 100%; height: 200px"></textarea>
     </div>
 
     <div class="float-right">
         <button type="button" class="btn btn-cancel" (click)="goBack()">Cancel</button>
-        <button type="button" class="btn btn-success" (click)="bcmApproveConcession()" *ngIf="canBcmApprove">Approve</button>
-        <button type="button" class="btn btn-warning" (click)="bcmDeclineConcession()" *ngIf="canBcmApprove">Decline</button>
+        <button type="button" class="btn btn-success" (click)="bcmApproveConcession()" *ngIf="canBcmApprove">BCM / Suite Head Approve</button>
+        <button type="button" class="btn btn-warning" (click)="bcmDeclineConcession()" *ngIf="canBcmApprove">BCM / Suite Head Decline</button>
+        <button type="button" class="btn btn-success" (click)="pcmApproveConcession()" *ngIf="canPcmApprove">PCM / HO Approve</button>
+        <button type="button" class="btn btn-warning" (click)="pcmDeclineConcession()" *ngIf="canPcmApprove">PCM / HO Decline</button>
         <!--<button class="btn btn-submit" type="button" (click)="onSubmit()">Submit</button>-->
     </div>
 </form>

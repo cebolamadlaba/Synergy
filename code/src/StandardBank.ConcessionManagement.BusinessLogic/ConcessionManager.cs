@@ -127,6 +127,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         break;
                     case "PCM":
                     case "Head Office":
+                        concessions.AddRange(Map(
+                            _concessionRepository.ReadByCentreIdStatusIdSubStatusIdIsActive(user.SelectedCentre.Id,
+                                pendingStatusId, pcmpendingStatusId, true)));
                         break;
                 }
             }
@@ -588,6 +591,32 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
             else
                 mappedConcession.BCMUserId = currentConcession.BCMUserId;
+
+            if (concession.PcmUserId.HasValue)
+            {
+                mappedConcession.PCMUserId = concession.PcmUserId;
+                mappedConcession.DateActionedByPCM = DateTime.Now;
+            }
+            else
+                mappedConcession.PCMUserId = currentConcession.PCMUserId;
+
+            if (concession.HoUserId.HasValue)
+            {
+                mappedConcession.HOUserId = concession.HoUserId;
+                mappedConcession.DateActionedByHO = DateTime.Now;
+            }
+            else
+                mappedConcession.HOUserId = currentConcession.HOUserId;
+
+            if (concession.Status == "Approved")
+            {
+                if (!mappedConcession.DateApproved.HasValue)
+                    mappedConcession.DateApproved = DateTime.Now;
+
+                //TODO: What is the calculation for this?
+                if (!mappedConcession.ExpiryDate.HasValue)
+                    mappedConcession.ExpiryDate = DateTime.Now.AddMonths(12);
+            }
 
             _concessionRepository.Update(mappedConcession);
 

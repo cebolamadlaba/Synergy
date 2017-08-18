@@ -43,6 +43,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     selectedConditionTypes: ConditionType[];
     isLoading = false;
     canBcmApprove = false;
+    canPcmApprove = false;
     hasChanges = false;
 
     observableRiskGroup: Observable<RiskGroup>;
@@ -111,6 +112,10 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
                     if (lendingConcession.concession.status == "Pending" && lendingConcession.concession.subStatus == "BCM Pending") {
                         this.canBcmApprove = lendingConcession.currentUser.canBcmApprove;
+                    }
+
+                    if (lendingConcession.concession.status == "Pending" && lendingConcession.concession.subStatus == "PCM Pending") {
+                        this.canPcmApprove = lendingConcession.currentUser.canPcmApprove;
                     }
 
                     this.lendingConcessionForm.controls['mrsCrs'].setValue(this.lendingConcession.concession.mrsCrs);
@@ -457,6 +462,72 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             this.lendingUpdateService.postData(lendingConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canBcmApprove = false;
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    pcmApproveConcession() {
+        this.isLoading = true;
+
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var lendingConcession = this.getLendingConcession();
+
+        lendingConcession.concession.status = "Approved";
+
+        if (this.lendingConcession.currentUser.isHO) {
+            lendingConcession.concession.subStatus = "HO Approved";
+            lendingConcession.concession.hoUserId = this.lendingConcession.currentUser.id;
+        } else {
+            lendingConcession.concession.subStatus = "PCM Approved";
+            lendingConcession.concession.pcmUserId = this.lendingConcession.currentUser.id;
+        }
+
+        if (!this.validationError) {
+            this.lendingUpdateService.postData(lendingConcession).subscribe(entity => {
+                console.log("data saved");
+                this.canPcmApprove = false;
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    pcmDeclineConcession() {
+        this.isLoading = true;
+
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var lendingConcession = this.getLendingConcession();
+
+        lendingConcession.concession.status = "Declined";
+
+        if (this.lendingConcession.currentUser.isHO) {
+            lendingConcession.concession.subStatus = "HO Declined";
+            lendingConcession.concession.hoUserId = this.lendingConcession.currentUser.id;
+        } else {
+            lendingConcession.concession.subStatus = "PCM Declined";
+            lendingConcession.concession.pcmUserId = this.lendingConcession.currentUser.id;
+        }
+
+        if (!this.validationError) {
+            this.lendingUpdateService.postData(lendingConcession).subscribe(entity => {
+                console.log("data saved");
+                this.canPcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
             }, error => {
