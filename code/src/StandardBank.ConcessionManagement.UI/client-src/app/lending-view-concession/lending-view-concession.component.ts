@@ -449,6 +449,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.validationError = null;
 
         var lendingConcession = this.getLendingConcession();
+        lendingConcession.concession.status = "Declined";
         lendingConcession.concession.subStatus = "BCM Declined";
         lendingConcession.concession.bcmUserId = this.lendingConcession.currentUser.id;
 

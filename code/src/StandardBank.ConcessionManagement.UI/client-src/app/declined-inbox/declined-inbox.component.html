@@ -18,7 +18,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor='let concession of userConcessions.declinedConcessions; trackBy: index;'>
+                <tr *ngFor='let concession of userConcessions.declinedConcessions; trackBy: index;' (click)="openConcessionView(concession)">
                     <td>{{concession.riskGroupNumber}}</td>
                     <td>{{concession.riskGroupName}}</td>
                     <td class="customerName">{{concession.customerName}}</td>
