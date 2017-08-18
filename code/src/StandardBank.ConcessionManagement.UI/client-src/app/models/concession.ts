@@ -15,4 +15,6 @@
     mrsCrs: number;
     status: string;
     subStatus: string;
+    comments: string;
+    bcmUserId: number;
 }

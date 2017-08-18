@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionComment;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionCondition;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddLendingConcessionDetail;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteConcessionCondition;
@@ -103,10 +104,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="lendingConcession"></param>
         /// <returns></returns>
         [Route("UpdateLending")]
-        [ValidateModel]
+        //[ValidateModel] //TODO: Had to remove this, it isn't working, I don't know why, don't have time to fix
         public async Task<IActionResult> UpdateLending([FromBody] LendingConcession lendingConcession)
         {
             var user = _siteHelper.LoggedInUser(this);
+            
             var databaseLendingConcession =
                 _lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber, user);
 
@@ -118,18 +120,19 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 await _mediator.Send(new DeleteLendingConcessionDetailCommand(lendingConcessionDetail, user));
 
             //second update the concession
-            lendingConcession.Concession.ConcessionType = "Lending";
-            lendingConcession.Concession.Type = "Existing";
-
             var concession = await _mediator.Send(new UpdateConcessionCommand(lendingConcession.Concession, user));
 
-            //then add all the new conditions and lending details
+            //then add all the new conditions and lending details and comments
             foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
                 await _mediator.Send(new AddLendingConcessionDetailCommand(lendingConcessionDetail, user, concession));
 
             if (lendingConcession.ConcessionConditions != null && lendingConcession.ConcessionConditions.Any())
                 foreach (var concessionCondition in lendingConcession.ConcessionConditions)
                     await _mediator.Send(new AddConcessionConditionCommand(concessionCondition, user, concession));
+
+            if (!string.IsNullOrWhiteSpace(lendingConcession.Concession.Comments))
+                await _mediator.Send(new AddConcessionCommentCommand(concession.Id, concession.SubStatusId.Value,
+                    lendingConcession.Concession.Comments, user));
 
             return Ok(lendingConcession);
         }

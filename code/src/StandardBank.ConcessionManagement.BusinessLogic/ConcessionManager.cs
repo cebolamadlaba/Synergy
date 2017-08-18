@@ -5,9 +5,12 @@ using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Inbox;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
+using ConcessionCondition = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionCondition;
+using Condition = StandardBank.ConcessionManagement.Model.UserInterface.Condition;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
@@ -63,6 +66,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         private readonly ILegalEntityAccountRepository _legalEntityAccountRepository;
 
+        private readonly IConcessionCommentRepository _concessionCommentRepository;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionManager"/> class.
         /// </summary>
@@ -75,10 +80,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="mapper"></param>
         /// <param name="concessionConditionRepository"></param>
         /// <param name="legalEntityAccountRepository"></param>
+        /// <param name="concessionCommentRepository"></param>
         public ConcessionManager(IConcessionRepository concessionRepository, ILookupTableManager lookupTableManager,
             ILegalEntityRepository legalEntityRepository, IRiskGroupRepository riskGroupRepository,
             ICacheManager cacheManager, IConcessionAccountRepository concessionAccountRepository, IMapper mapper,
-            IConcessionConditionRepository concessionConditionRepository, ILegalEntityAccountRepository legalEntityAccountRepository)
+            IConcessionConditionRepository concessionConditionRepository, ILegalEntityAccountRepository legalEntityAccountRepository, IConcessionCommentRepository concessionCommentRepository)
         {
             _concessionRepository = concessionRepository;
             _lookupTableManager = lookupTableManager;
@@ -89,6 +95,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _mapper = mapper;
             _concessionConditionRepository = concessionConditionRepository;
             _legalEntityAccountRepository = legalEntityAccountRepository;
+            _concessionCommentRepository = concessionCommentRepository;
         }
 
         /// <summary>
@@ -350,6 +357,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedConcession.IsCurrent = true;
             mappedConcession.IsActive = true;
 
+            //TODO: Check if this should be set on create? Because on create the item is sent for approval?
+            mappedConcession.DatesentForApproval = DateTime.Now;
+
             var result = _concessionRepository.Create(mappedConcession);
 
             //need to generate the concession reference based on the id returned
@@ -539,20 +549,45 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var currentConcession = concessions.Single();
 
             var mappedConcession = _mapper.Map<Model.Repository.Concession>(concession);
-            mappedConcession.TypeId = _lookupTableManager.GetReferenceTypeId(concession.Type);
 
-            mappedConcession.ConcessionTypeId = currentConcession.ConcessionTypeId;
+            if (!string.IsNullOrWhiteSpace(concession.Type))
+                mappedConcession.TypeId = _lookupTableManager.GetReferenceTypeId(concession.Type);
+            else
+                mappedConcession.TypeId = currentConcession.TypeId;
 
-            mappedConcession.StatusId = currentConcession.StatusId;
-            mappedConcession.SubStatusId = currentConcession.SubStatusId;
-            mappedConcession.ConcessionDate = DateTime.Now;
-            mappedConcession.RequestorId = user.Id;
+            mappedConcession.StatusId = string.IsNullOrWhiteSpace(concession.Status)
+                ? currentConcession.StatusId
+                : _lookupTableManager.GetStatusId(concession.Status);
+
+            mappedConcession.SubStatusId = string.IsNullOrWhiteSpace(concession.SubStatus)
+                ? currentConcession.SubStatusId
+                : _lookupTableManager.GetSubStatusId(concession.SubStatus);
 
             mappedConcession.CentreId = currentConcession.CentreId;
-            mappedConcession.IsCurrent = currentConcession.IsCurrent;
-            mappedConcession.IsActive = currentConcession.IsActive;
-            mappedConcession.Id = currentConcession.Id;
+            mappedConcession.ConcessionDate = currentConcession.ConcessionDate;
             mappedConcession.ConcessionRef = currentConcession.ConcessionRef;
+            mappedConcession.ConcessionTypeId = currentConcession.ConcessionTypeId;
+            mappedConcession.Id = currentConcession.Id;
+            mappedConcession.IsActive = currentConcession.IsActive;
+            mappedConcession.IsCurrent = currentConcession.IsCurrent;
+            mappedConcession.RequestorId = currentConcession.RequestorId;
+            mappedConcession.DateActionedByBCM = currentConcession.DateActionedByBCM;
+            mappedConcession.DateActionedByHO = currentConcession.DateActionedByHO;
+            mappedConcession.DateActionedByPCM = currentConcession.DateActionedByPCM;
+            mappedConcession.DateApproved = currentConcession.DateApproved;
+            mappedConcession.DatesentForApproval = currentConcession.DatesentForApproval;
+            mappedConcession.ExpiryDate = currentConcession.ExpiryDate;
+            mappedConcession.HOUserId = currentConcession.HOUserId;
+            mappedConcession.PCMUserId = currentConcession.PCMUserId;
+            mappedConcession.RegionId = currentConcession.RegionId;
+
+            if (concession.BcmUserId.HasValue)
+            {
+                mappedConcession.BCMUserId = concession.BcmUserId;
+                mappedConcession.DateActionedByBCM = DateTime.Now;
+            }
+            else
+                mappedConcession.BCMUserId = currentConcession.BCMUserId;
 
             _concessionRepository.Update(mappedConcession);
 
@@ -579,6 +614,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var periodId = _lookupTableManager.GetPeriods().First(x => x.Description == period).Id;
             var periodTypeId = _lookupTableManager.GetPeriodTypes().First(x => x.Description == periodType).Id;
             return _mapper.Map<IEnumerable<Condition>>(_concessionConditionRepository.ReadByPeriodAndApprovalStatus(statusid,periodId,periodTypeId));
+        }
+
+        /// <summary>
+        /// Creates the concession comment
+        /// </summary>
+        /// <param name="concessionComment"></param>
+        /// <returns></returns>
+        public ConcessionComment CreateConcessionComment(ConcessionComment concessionComment)
+        {
+            var result = _concessionCommentRepository.Create(concessionComment);
+
+            return result;
         }
     }
 }

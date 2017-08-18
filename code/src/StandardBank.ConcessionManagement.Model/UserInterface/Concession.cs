@@ -94,5 +94,20 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// Gets or sets the sub status
         /// </summary>
         public string SubStatus { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sub status id
+        /// </summary>
+        public int? SubStatusId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the comments
+        /// </summary>
+        public string Comments { get; set; }
+
+        /// <summary>
+        /// Gets or sets the bcm user id
+        /// </summary>
+        public int? BcmUserId { get; set; }
     }
 }
