@@ -5,5 +5,6 @@ export class ApprovedConcession {
     riskGroupNumber: number;
     concessionId: number;
     concessionReferenceNumber: string;
+    concessionType: string;
     approvedConcessionDetails: ApprovedConcessionDetail[];
 }

@@ -686,6 +686,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     RiskGroupName = concession.RiskGroupName,
                     ConcessionId = concession.Id,
                     ConcessionReferenceNumber = concession.ReferenceNumber,
+                    ConcessionType = concession.ConcessionType,
                     ApprovedConcessionDetails = GetApprovedConcessionDetails(concession)
                 });
             }

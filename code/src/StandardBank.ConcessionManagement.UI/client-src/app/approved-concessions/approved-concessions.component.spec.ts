@@ -4,6 +4,7 @@ import { ApprovedConcessionsComponent } from './approved-concessions.component';
 import { FormsModule } from '@angular/forms';
 import { UserConcessionsService, MockUserConcessionsService } from "../user-concessions/user-concessions.service";
 import { ApprovedConcessionFilterPipe } from "../approved-concession-filter/approved-concession-filter.pipe";
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ApprovedConcessionsComponent', () => {
     let component: ApprovedConcessionsComponent;
@@ -11,7 +12,7 @@ describe('ApprovedConcessionsComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [HttpModule, FormsModule],
+            imports: [HttpModule, FormsModule, RouterTestingModule],
             declarations: [ApprovedConcessionsComponent, ApprovedConcessionFilterPipe],
             providers: [{ provide: UserConcessionsService, useClass: MockUserConcessionsService }]
         })

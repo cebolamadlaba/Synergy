@@ -40,6 +40,14 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public string ConcessionReferenceNumber { get; set; }
 
         /// <summary>
+        /// Gets or sets the type of the concession.
+        /// </summary>
+        /// <value>
+        /// The type of the concession.
+        /// </value>
+        public string ConcessionType { get; set; }
+
+        /// <summary>
         /// Gets or sets the approved concession details.
         /// </summary>
         /// <value>
