@@ -1,15 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 
 @Component({
-  selector: 'app-transactional-add-concession',
-  templateUrl: './transactional-add-concession.component.html',
-  styleUrls: ['./transactional-add-concession.component.css']
+    selector: 'app-transactional-add-concession',
+    templateUrl: './transactional-add-concession.component.html',
+    styleUrls: ['./transactional-add-concession.component.css']
 })
 export class TransactionalAddConcessionComponent implements OnInit {
 
-  constructor() { }
+    constructor(private location: Location) { }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
+
+    goBack() {
+        this.location.back();
+    }
 
 }

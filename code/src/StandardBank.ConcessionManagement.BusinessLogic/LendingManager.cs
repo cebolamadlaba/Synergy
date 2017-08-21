@@ -6,6 +6,7 @@ using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
+using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -106,8 +107,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// Gets the lending concession for the concession reference id specified
         /// </summary>
         /// <param name="concessionReferenceId"></param>
+        /// <param name="currentUser"></param>
         /// <returns></returns>
-        public LendingConcession GetLendingConcession(string concessionReferenceId)
+        public LendingConcession GetLendingConcession(string concessionReferenceId, User currentUser)
         {
             var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
             var concessionLendings = _concessionLendingRepository.ReadByConcessionId(concession.Id);
@@ -120,7 +122,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 Concession = concession,
                 LendingConcessionDetails = lendingConcessionDetails,
-                ConcessionConditions = _concessionManager.GetConcessionConditions(concession.Id)
+                ConcessionConditions = _concessionManager.GetConcessionConditions(concession.Id),
+                CurrentUser = currentUser
             };
         }
 

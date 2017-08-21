@@ -28,8 +28,9 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// Gets the lending concession for the concession reference id
         /// </summary>
         /// <param name="concessionReferenceId"></param>
+        /// <param name="currentUser"></param>
         /// <returns></returns>
-        LendingConcession GetLendingConcession(string concessionReferenceId);
+        LendingConcession GetLendingConcession(string concessionReferenceId, User currentUser);
 
         /// <summary>
         /// Deletes the concession lending.

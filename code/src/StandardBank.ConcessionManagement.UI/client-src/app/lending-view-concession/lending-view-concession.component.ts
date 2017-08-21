@@ -24,6 +24,7 @@ import { LendingConcessionDetail } from "../models/lending-concession-detail";
 import { ConcessionCondition } from "../models/concession-condition";
 import { LendingService } from "../lending/lending.service";
 import { LendingUpdateService } from "../lending-update/lending-update.service";
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-lending-view-concession',
@@ -41,6 +42,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
     selectedConditionTypes: ConditionType[];
     isLoading = false;
+    canBcmApprove = false;
+    canPcmApprove = false;
+    hasChanges = false;
 
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
@@ -70,6 +74,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         private router: Router,
         private route: ActivatedRoute,
         private formBuilder: FormBuilder,
+        private location: Location,
         @Inject(RiskGroupService) private riskGroupService,
         @Inject(ReviewFeeTypeService) private reviewFeeTypeService,
         @Inject(ProductTypeService) private productTypeService,
@@ -104,6 +109,15 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 this.observableLendingConcession = this.lendingService.getData(this.concessionReferenceId);
                 this.observableLendingConcession.subscribe(lendingConcession => {
                     this.lendingConcession = lendingConcession;
+
+                    if (lendingConcession.concession.status == "Pending" && lendingConcession.concession.subStatus == "BCM Pending") {
+                        this.canBcmApprove = lendingConcession.currentUser.canBcmApprove;
+                    }
+
+                    if (lendingConcession.concession.status == "Pending" && lendingConcession.concession.subStatus == "PCM Pending") {
+                        this.canPcmApprove = lendingConcession.currentUser.canPcmApprove;
+                    }
+
                     this.lendingConcessionForm.controls['mrsCrs'].setValue(this.lendingConcession.concession.mrsCrs);
                     this.lendingConcessionForm.controls['smtDealNumber'].setValue(this.lendingConcession.concession.smtDealNumber);
                     this.lendingConcessionForm.controls['motivation'].setValue(this.lendingConcession.concession.motivation);
@@ -177,7 +191,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             conditionItemsRows: this.formBuilder.array([]),
             mrsCrs: new FormControl(),
             smtDealNumber: new FormControl(),
-            motivation: new FormControl()
+            motivation: new FormControl(),
+            comments: new FormControl()
         });
 
         this.observableReviewFeeTypes = this.reviewFeeTypeService.getData();
@@ -194,6 +209,12 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
         this.observableConditionTypes = this.conditionTypeService.getData();
         this.observableConditionTypes.subscribe(conditionTypes => this.conditionTypes = conditionTypes, error => this.errorMessage = <any>error);
+
+        this.lendingConcessionForm.valueChanges.subscribe((value: any) => {
+            if (this.lendingConcessionForm.dirty) {
+                this.hasChanges = true;
+            }
+        });
     }
 
     initConcessionItemRows() {
@@ -263,6 +284,37 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.errorMessage = null;
         this.validationError = null;
 
+        var lendingConcession = this.getLendingConcession();
+        lendingConcession.concession.concessionType = "Lending";
+        lendingConcession.concession.type = "Existing";
+
+        if (!this.validationError) {
+            this.lendingUpdateService.postData(lendingConcession).subscribe(entity => {
+                console.log("data saved");
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    addValidationError(validationDetail) {
+        if (!this.validationError)
+            this.validationError = [];
+
+        this.validationError.push(validationDetail);
+    }
+
+    goBack() {
+        this.location.back();
+    }
+
+    getLendingConcession(): LendingConcession {
+        console.log("in the get lending concession method");
         var lendingConcession = new LendingConcession();
         lendingConcession.concession = new Concession();
         lendingConcession.concession.referenceNumber = this.concessionReferenceId;
@@ -282,10 +334,10 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         else
             this.addValidationError("Motivation not captured");
 
-        lendingConcession.concession.referenceNumber = this.concessionReferenceId;
+        if (this.lendingConcessionForm.controls['comments'].value)
+            lendingConcession.concession.comments = this.lendingConcessionForm.controls['comments'].value;
+
         lendingConcession.concession.riskGroupId = this.riskGroup.id;
-        lendingConcession.concession.concessionType = "Lending";
-        lendingConcession.concession.type = "Existing";
 
         const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
 
@@ -367,9 +419,23 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             lendingConcession.concessionConditions.push(concessionCondition);
         }
 
+        return lendingConcession;
+    }
+
+    bcmApproveConcession() {
+        this.isLoading = true;
+
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var lendingConcession = this.getLendingConcession();
+        lendingConcession.concession.subStatus = "PCM Pending";
+        lendingConcession.concession.bcmUserId = this.lendingConcession.currentUser.id;
+
         if (!this.validationError) {
             this.lendingUpdateService.postData(lendingConcession).subscribe(entity => {
                 console.log("data saved");
+                this.canBcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
             }, error => {
@@ -381,18 +447,95 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
+    bcmDeclineConcession() {
+        this.isLoading = true;
 
-        this.validationError.push(validationDetail);
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var lendingConcession = this.getLendingConcession();
+        lendingConcession.concession.status = "Declined";
+        lendingConcession.concession.subStatus = "BCM Declined";
+        lendingConcession.concession.bcmUserId = this.lendingConcession.currentUser.id;
+
+        if (!this.validationError) {
+            this.lendingUpdateService.postData(lendingConcession).subscribe(entity => {
+                console.log("data saved");
+                this.canBcmApprove = false;
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
     }
 
-    goBack() {
-        if (this.router.url.indexOf("inbox") > 0) {
-            this.router.navigate(['/pending-inbox']);
+    pcmApproveConcession() {
+        this.isLoading = true;
+
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var lendingConcession = this.getLendingConcession();
+
+        lendingConcession.concession.status = "Approved";
+
+        if (this.lendingConcession.currentUser.isHO) {
+            lendingConcession.concession.subStatus = "HO Approved";
+            lendingConcession.concession.hoUserId = this.lendingConcession.currentUser.id;
         } else {
-            this.router.navigate(['/pricing-lending', this.riskGroup.number]);
+            lendingConcession.concession.subStatus = "PCM Approved";
+            lendingConcession.concession.pcmUserId = this.lendingConcession.currentUser.id;
+        }
+
+        if (!this.validationError) {
+            this.lendingUpdateService.postData(lendingConcession).subscribe(entity => {
+                console.log("data saved");
+                this.canPcmApprove = false;
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    pcmDeclineConcession() {
+        this.isLoading = true;
+
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var lendingConcession = this.getLendingConcession();
+
+        lendingConcession.concession.status = "Declined";
+
+        if (this.lendingConcession.currentUser.isHO) {
+            lendingConcession.concession.subStatus = "HO Declined";
+            lendingConcession.concession.hoUserId = this.lendingConcession.currentUser.id;
+        } else {
+            lendingConcession.concession.subStatus = "PCM Declined";
+            lendingConcession.concession.pcmUserId = this.lendingConcession.currentUser.id;
+        }
+
+        if (!this.validationError) {
+            this.lendingUpdateService.postData(lendingConcession).subscribe(entity => {
+                console.log("data saved");
+                this.canPcmApprove = false;
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
         }
     }
 

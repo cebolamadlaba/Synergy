@@ -1,15 +1,41 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Observable } from "rxjs";
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
+import { CashConcession } from "../models/cash-concession";
 
 @Component({
   selector: 'app-pricing-cash',
   templateUrl: './pricing-cash.component.html',
   styleUrls: ['./pricing-cash.component.css']
 })
-export class PricingCashComponent implements OnInit {
+export class PricingCashComponent implements OnInit, OnDestroy {
+    riskGroupNumber: number;
+    private sub: any;
+    observableCashConcession: Observable<CashConcession>;
+    cashConcession: CashConcession = new CashConcession();
+    errorMessage: String;
 
-  constructor() { }
+    constructor(private route: ActivatedRoute, private location: Location) {
+    }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+        this.sub = this.route.params.subscribe(params => {
+            this.riskGroupNumber = +params['riskGroupNumber'];
+
+            if (this.riskGroupNumber) {
+                this.observableCashConcession = this.lendingViewService.getData(this.riskGroupNumber);
+                this.observableCashConcession.subscribe(lendingView => this.lendingView = lendingView, error => this.errorMessage = <any>error);
+            }
+        });
+    }
+
+    goBack() {
+        this.location.back();
+    }
+
+    ngOnDestroy() {
+        this.sub.unsubscribe();
+    }
 
 }

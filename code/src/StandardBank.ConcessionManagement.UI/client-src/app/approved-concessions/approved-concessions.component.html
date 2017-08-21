@@ -1,126 +1,71 @@
-﻿<div class="col-md-12 search-and-results-container">
-  <!-- Search bar -->
-  <div class="input-group add-on">
-    <input class="form-control" placeholder="Search Concession ID or Risk Group Number" name="srch-term" id="srch-term" type="text">
-  </div>
-  <!-- search results -->
+<div class="col-md-12 search-and-results-container">
+    <!-- Search bar -->
+    <div class="input-group add-on">
+        <input class="form-control" placeholder="Search Concession ID or Risk Group Number" [(ngModel)]="concessionIdOrRiskGroupNumber" type="text" [disabled]="concessionsToPrint.length > 0">
+    </div>
 
-  <div class="section table-hover-highlight">
-    <div class="col-md-12 section-header">
-      <div class="concessionID-section">
-        <div class="col-md-2 no-padding-left">
-          <div class="col-md-1 no-padding-left vertical-align-center">
-            <input type="checkbox">
-          </div>
-          <div class="col-md-10 no-padding-left">
-            <div class="concession-name">EDCON</div>
-            <div>1989</div>
-          </div>
+    <div class="section table-hover-highlight" *ngFor="let approvedConcession of approvedConcessions | approvedConcessionFilter : concessionIdOrRiskGroupNumber; trackBy: index;">
+        <div class="col-md-12 section-header">
+            <div class="concessionID-section">
+                <div class="col-md-2 no-padding-left">
+                    <div class="col-md-1 no-padding-left vertical-align-center">
+                        <input type="checkbox" (change)="addToPrintConcessions($event, approvedConcession.concessionId)">
+                    </div>
+                    <div class="col-md-10 no-padding-left">
+                        <div class="concession-name">{{approvedConcession.riskGroupName}}</div>
+                        <div>{{approvedConcession.riskGroupNumber}}</div>
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="single-print"><i class="fa fa-print" aria-hidden="true"></i></div>
+                </div>
+                <div class="col-md-10 no-padding-left">
+                    <div class="col-md-6 no-padding-left">
+                        Concession ID : {{approvedConcession.concessionReferenceNumber}}
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-10">
-          <div class="single-print"><i class="fa fa-print" aria-hidden="true"></i></div>
+        <div class="section-body">
+            <div class="table-container">
+                <table class="table table-bordered table-hover header-fixed table-striped">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Segment</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Date Opened</th>
+                            <th>Date Sent For Approval</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let approvedConcessionDetail of approvedConcession.approvedConcessionDetails" (click)="openConcessionView(approvedConcession)">
+                            <td> {{approvedConcessionDetail.customerName}} </td>
+                            <td> {{approvedConcessionDetail.segment}} </td>
+                            <td> {{approvedConcessionDetail.concessionType}} </td>
+                            <td> {{approvedConcessionDetail.status}} </td>
+                            <td> {{approvedConcessionDetail.dateOpened | date: 'yyyy/MM/dd'}} </td>
+                            <td> {{approvedConcessionDetail.dateSentForApproval | date: 'yyyy/MM/dd'}} </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="col-md-10 no-padding-left">
-          <div class="col-md-2 no-padding-left">
-            Concession ID :ED0023
-          </div>
-          <div class="col-md-2">
-            Segment:Expert
-          </div>
-        </div>
-      </div>
     </div>
-    <div class="section-body">
-      <div class="table-container">
-        <table class="table table-bordered table-hover header-fixed table-striped">
-          <thead>
-            <tr>
-              <th>Customer</th>
-              <th>Type</th>
-              <th>Status</th>
-              <th>Date Opened</th>
-              <th>Date Sent For Approval</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td> CNA </td>
-              <td>Lending</td>
-              <td>Approved</td>
-              <td>2017/05/02 </td>
-              <td> 2017/05/03 </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
 
-  <div class="section table-hover-highlight">
-    <div class="col-md-12 section-header">
-      <div class="concessionID-section">
-        <div class="col-md-2 no-padding-left">
-          <div class="col-md-1 no-padding-left vertical-align-center">
-            <input type="checkbox">
-          </div>
-          <div class="col-md-10 no-padding-left">
-            <div class="concession-name">APPLE</div>
-            <div>1989</div>
-          </div>
-        </div>
-        <div class="col-md-10">
-          <div class="single-print"><i class="fa fa-print" aria-hidden="true"></i></div>
-        </div>
-        <div class="col-md-10 no-padding-left">
-          <div class="col-md-2 no-padding-left">
-            Concession ID :AP0023
-          </div>
-          <div class="col-md-2">
-            Segment:Expert
-          </div>
-        </div>
-      </div>
+    <!-- Empty state if no concessions found -->
+    <div class="searchEmptyState" *ngIf="(approvedConcessions | approvedConcessionFilter: concessionIdOrRiskGroupNumber).length === 0">
+        <i class="fa fa-inbox" aria-hidden="true"></i>
+        <p>No concessions found matching your search</p>
     </div>
-    <div class="section-body">
-      <div class="table-container">
-        <table class="table table-bordered table-hover header-fixed table-striped">
-          <thead>
-            <tr>
-              <th>Customer</th>
-              <th>Type</th>
-              <th>Status</th>
-              <th>Date Opened</th>
-              <th>Date Sent For Approval</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td> CNA </td>
-              <td>Lending</td>
-              <td>Approved</td>
-              <td>2017/05/02 </td>
-              <td> 2017/05/03 </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
 
-  <!-- footer-->
-  <div class="concession-footer">
-    <!--print button-->
-    <button type="button" class="btn btn-print">
-      <i class="fa fa-print" aria-hidden="true"></i> Print 1 Files
-    </button>
-    <!-- pagination-->
-    <ul class="pagination">
-      <li><a href="#">First</a></li>
-      <li><a href="#">Prev</a></li>
-      <li class="active"><a href="#">1</a></li>
-      <li><a href="#">2</a></li>
-      <li><a href="#">Next</a></li>
-      <li><a href="#">Last</a></li>
-    </ul>
-  </div>
+    <!-- footer-->
+    <div class="concession-footer">
+        <!--print button-->
+        <button type="button" class="btn btn-print" (click)="printLetters()">
+            <i class="fa fa-print" aria-hidden="true"></i> Print {{concessionsToPrint.length}} Files
+        </button>
+    </div>
+
 </div>

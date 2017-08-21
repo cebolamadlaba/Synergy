@@ -1,11 +1,10 @@
-﻿    <!-- summary bar -->
-
+﻿<!-- Banner expanded -->
 <div class="col-md-12 lending-view-banner">
     <div class="row">
         <div class="lending-banner-title">
             <div class="col-md-1">
                 <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
-                <span class="back-button-text" [routerLink]="['/pricing-lending', riskGroup.number]">Back</span>
+                <span class="back-button-text" (click)="goBack()">Back</span>
             </div>
             <div class="col-md-10 banner-main-title">
                 <i class="fa fa-handshake-o" aria-hidden="true"></i> Lending
@@ -21,7 +20,7 @@
                     </div>
                     <div class="col-md-2  hidden-element">
                         <div class="subHeading lightTitle"> Latest CRS / MRS</div>
-                        <div class="score"><b>//TODO 0.00</b></div>
+                        <div class="score"><b>0.00</b></div>
                     </div>
                 </div>
             </div>
@@ -67,25 +66,22 @@
     <div class="col-md-4">
         <div class="row">
             <label>MRS/CRS</label>
-            <input class="col-md-12" formControlName="mrsCrs" type="number" required />
+            <input class="form-control" formControlName="mrsCrs" type="number" />
         </div>
         <div class="row">
             <label>SMT Deal Number</label>
-            <input class="col-md-12" formControlName="smtDealNumber" maxlength="16" required />
+            <input class="form-control" formControlName="smtDealNumber" maxlength="16" />
         </div>
     </div>
-    <div class="col-md-1"></div>
-    <div class="col-md-7">
-        <div class="row">
-            <label>Motivation</label>
-            <textarea class="col-md-12 large-input" maxlength="800" formControlName="motivation"></textarea>
-        </div>
+    <div class="col-md-7 col-md-offset-1">
+        <label>Motivation</label>
+        <textarea class="form-control large-input" maxlength="800" formControlName="motivation"></textarea>
     </div>
 
-    <div class="concessions-top">
-        <div class="concessions-top-title">
+    <div class="col-md-12" style="border-bottom: 1px solid gray">
+        <div class="row">
             <h3 class="table-title">Concessions</h3>
-            <button type="button" class="btn btn-default" (click)="addNewConcessionRow()">New Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()">New Concession</button>
         </div>
     </div>
 
@@ -111,6 +107,7 @@
                         <option *ngFor="let productTypeOption of productTypes" [ngValue]="productTypeOption">{{productTypeOption.description}}</option>
                     </select>
                 </td>
+
                 <td class="length-long">
                     <select formControlName="accountNumber">
                         <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
@@ -120,14 +117,15 @@
                 <td class="length-short"><input formControlName="term" /></td>
                 <td class="length-short"><input formControlName="marginAgainstPrime" /></td>
                 <td class="length-long"><input formControlName="initiationFee" /></td>
+
                 <td class="length-medium">
-                    <select formControlName="reviewFeeType">
+                    <select formControlName="reviewFeeType" class="form-control">
                         <option *ngFor="let reviewFeeTypeOption of reviewFeeTypes" [ngValue]="reviewFeeTypeOption">{{reviewFeeTypeOption.description}}</option>
                     </select>
                 </td>
-                <td class="length-medium"><input formControlName="reviewFee" /></td>
-                <td class="length-medium"><input formControlName="uffFee" /></td>
-                <td class="delete"><button type="button" *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                <td class="length-medium"><input class="form-control" formControlName="reviewFee" /></td>
+                <td class="length-medium"><input class="form-control" formControlName="uffFee" /></td>
+                <td class="delete"><button *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
         </tbody>
     </table>

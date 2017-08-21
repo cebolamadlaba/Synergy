@@ -56,6 +56,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.UpdateConcess
 
             message.AuditRecord = new AuditRecord(result, message.User, AuditType.Update);
             message.Concession.Id = result.Id;
+            message.Concession.SubStatusId = result.SubStatusId;
 
             if (message.User.SelectedCentre?.Id > 0)
                 await TryAndSendEmail(message, result);
