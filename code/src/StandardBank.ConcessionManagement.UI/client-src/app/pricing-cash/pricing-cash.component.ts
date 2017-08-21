@@ -24,8 +24,8 @@ export class PricingCashComponent implements OnInit, OnDestroy {
             this.riskGroupNumber = +params['riskGroupNumber'];
 
             if (this.riskGroupNumber) {
-                this.observableCashConcession = this.lendingViewService.getData(this.riskGroupNumber);
-                this.observableCashConcession.subscribe(lendingView => this.lendingView = lendingView, error => this.errorMessage = <any>error);
+                //this.observableCashConcession = this.lendingViewService.getData(this.riskGroupNumber);
+                //this.observableCashConcession.subscribe(lendingView => this.lendingView = lendingView, error => this.errorMessage = <any>error);
             }
         });
     }
