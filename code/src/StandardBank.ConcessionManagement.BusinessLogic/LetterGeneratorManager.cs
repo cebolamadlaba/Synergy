@@ -13,8 +13,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
         public byte[] GenerateLetters(IEnumerable<int> concessionIds)
         {
-            return new byte[0];
-            //throw new NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }
