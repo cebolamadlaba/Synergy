@@ -24,7 +24,8 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         /// </summary>
         public ConcessionControllerTest()
         {
-            _concessionController = new ConcessionController(MockConcessionManager.Object, MockLookupTableManager.Object, new FakeSiteHelper());
+            _concessionController = new ConcessionController(MockConcessionManager.Object,
+                MockLookupTableManager.Object, new FakeSiteHelper(), MockLetterGeneratorManager.Object);
         }
 
         /// <summary>
