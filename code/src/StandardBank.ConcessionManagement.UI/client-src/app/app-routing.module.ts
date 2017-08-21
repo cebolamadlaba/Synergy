@@ -29,14 +29,13 @@ const routes: Routes = [
     { path: 'pricing', component: PricingComponent },
     { path: 'pricing/:riskGroupNumber', component: PricingComponent },
     { path: 'pricing-lending/:riskGroupNumber', component: PricingLendingComponent },
-    { path: 'pricing-cash', component: PricingCashComponent },
+    { path: 'pricing-cash/:riskGroupNumber', component: PricingCashComponent },
     { path: 'pricing-transactional', component: PricingTransactionalComponent },
     { path: 'transactional-add-concession', component: TransactionalAddConcessionComponent },
     { path: 'cash-add-concession', component: CashAddConcessionComponent },
     { path: 'lending-add-concession/:riskGroupNumber', component: LendingAddConcessionComponent },
     { path: 'lending-edit-concession/:riskGroupNumber/:concessionReferenceId', component: LendingEditConcessionComponent },
-    { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
-    { path: 'lending-inbox-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent }
+    { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent }
 ];
 
 @NgModule({

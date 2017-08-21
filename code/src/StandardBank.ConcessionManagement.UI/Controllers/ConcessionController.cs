@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 
 namespace StandardBank.ConcessionManagement.UI.Controllers
 {
@@ -21,14 +23,29 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         private readonly ILookupTableManager _lookupTableManager;
 
         /// <summary>
-        /// Initializes the controller
+        /// The site helper
         /// </summary>
-        /// <param name="concessionManager"></param>
-        /// <param name="lookupTableManager"></param>
-        public ConcessionController(IConcessionManager concessionManager, ILookupTableManager lookupTableManager)
+        private readonly ISiteHelper _siteHelper;
+
+        /// <summary>
+        /// The letter generator manager
+        /// </summary>
+        private readonly ILetterGeneratorManager _letterGeneratorManager;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConcessionController"/> class.
+        /// </summary>
+        /// <param name="concessionManager">The concession manager.</param>
+        /// <param name="lookupTableManager">The lookup table manager.</param>
+        /// <param name="siteHelper">The site helper.</param>
+        /// <param name="letterGeneratorManager">The letter generator manager.</param>
+        public ConcessionController(IConcessionManager concessionManager, ILookupTableManager lookupTableManager,
+            ISiteHelper siteHelper, ILetterGeneratorManager letterGeneratorManager)
         {
             _concessionManager = concessionManager;
             _lookupTableManager = lookupTableManager;
+            _siteHelper = siteHelper;
+            _letterGeneratorManager = letterGeneratorManager;
         }
 
         /// <summary>
@@ -72,6 +89,28 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult ClientAccounts(int riskGroupNumber)
         {
             return Ok(_concessionManager.GetClientAccounts(riskGroupNumber));
+        }
+
+        /// <summary>
+        /// Gets the users approved concessions
+        /// </summary>
+        /// <returns></returns>
+        [Route("UserApprovedConcessions")]
+        public IActionResult UserApprovedConcessions()
+        {
+            var user = _siteHelper.LoggedInUser(this);
+            return Ok(_concessionManager.GetApprovedConcessionsForUser(user.Id));
+        }
+
+        /// <summary>
+        /// Prints the concession letters.
+        /// </summary>
+        /// <param name="concessionIds">The concession ids.</param>
+        /// <returns></returns>
+        [Route("PrintConcessionLetters")]
+        public IActionResult PrintConcessionLetters([FromBody]IEnumerable<int> concessionIds)
+        {
+            return Ok(_letterGeneratorManager.GenerateLetters(concessionIds));
         }
     }
 }

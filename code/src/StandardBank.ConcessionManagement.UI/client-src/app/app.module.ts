@@ -40,7 +40,9 @@ import { LendingNewService } from "./lending-new/lending-new.service";
 import { LendingEditConcessionComponent } from './lending-edit-concession/lending-edit-concession.component';
 import { LendingService } from "./lending/lending.service";
 import { LendingUpdateService } from "./lending-update/lending-update.service";
+import { MyConditionService } from './my-condition/my-condition.service';
 import { LendingViewConcessionComponent } from './lending-view-concession/lending-view-concession.component';
+import { ApprovedConcessionFilterPipe } from './approved-concession-filter/approved-concession-filter.pipe';
 
 @NgModule({
     declarations: [
@@ -63,7 +65,8 @@ import { LendingViewConcessionComponent } from './lending-view-concession/lendin
         MismatchedInboxComponent,
         LendingConcessionFilterPipe,
         LendingEditConcessionComponent,
-        LendingViewConcessionComponent
+        LendingViewConcessionComponent,
+        ApprovedConcessionFilterPipe
     ],
     imports: [
         BrowserModule,
@@ -88,7 +91,8 @@ import { LendingViewConcessionComponent } from './lending-view-concession/lendin
         ClientAccountService,
         LendingNewService,
         LendingService,
-        LendingUpdateService
+        LendingUpdateService,
+        MyConditionService
     ],
     bootstrap: [AppComponent]
 })

@@ -12,4 +12,10 @@ export class UserConcessions {
     expiredConcessions: Concession[];
     mismatchedConcessions: Concession[];
     declinedConcessions: Concession[];
+
+    showPendingConcessions: boolean;
+    showDueForExpiryConcessions: boolean;
+    showExpiredConcessions: boolean;
+    showMismatchedConcessions: boolean;
+    showDeclinedConcessions: boolean;
 }

@@ -5,7 +5,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
     /// <summary>
     /// ConcessionComment entity
     /// </summary>
-    public class ConcessionComment
+    public class ConcessionComment : IAuditable
     {
         /// <summary>
         /// Gets or sets the Id.
@@ -62,5 +62,11 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The IsActive.
         /// </value>
         public bool IsActive { get; set; }
+
+        public string TableName => "tblConcessionComment";
+
+        public string PrimaryKeyColumnName => "pkConcessionCommentId";
+
+        public object PrimaryKeyValue => Id;
     }
 }

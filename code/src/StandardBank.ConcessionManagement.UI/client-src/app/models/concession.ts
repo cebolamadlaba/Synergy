@@ -13,4 +13,10 @@
     smtDealNumber: string;
     motivation: string;
     mrsCrs: number;
+    status: string;
+    subStatus: string;
+    comments: string;
+    bcmUserId: number;
+    pcmUserId: number;
+    hoUserId: number;
 }
