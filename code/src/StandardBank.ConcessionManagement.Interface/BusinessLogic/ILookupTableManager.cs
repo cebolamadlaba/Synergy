@@ -16,25 +16,11 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         int GetStatusId(string statusName);
 
         /// <summary>
-        /// Gets the status description for the status id specified
-        /// </summary>
-        /// <param name="statusId"></param>
-        /// <returns></returns>
-        string GetStatusDescription(int statusId);
-
-        /// <summary>
         /// Gets the sub status identifier.
         /// </summary>
         /// <param name="subStatusName">Name of the sub status.</param>
         /// <returns></returns>
         int GetSubStatusId(string subStatusName);
-
-        /// <summary>
-        /// Gets the sub status description for the sub status id specified
-        /// </summary>
-        /// <param name="subStatusId"></param>
-        /// <returns></returns>
-        string GetSubStatusDescription(int subStatusId);
 
         /// <summary>
         /// Gets the reference type name for the reference type id specified

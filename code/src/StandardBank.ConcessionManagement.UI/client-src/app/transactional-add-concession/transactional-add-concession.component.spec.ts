@@ -1,7 +1,6 @@
 ﻿import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TransactionalAddConcessionComponent } from './transactional-add-concession.component';
-import { RouterTestingModule } from '@angular/router/testing';
 
 describe('TransactionalAddConcessionComponent', () => {
   let component: TransactionalAddConcessionComponent;
@@ -10,7 +9,7 @@ describe('TransactionalAddConcessionComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [TransactionalAddConcessionComponent],
-      imports: [ModalModule.forRoot(), RouterTestingModule]
+      imports: [ModalModule.forRoot()]
     })
     .compileComponents();
   }));

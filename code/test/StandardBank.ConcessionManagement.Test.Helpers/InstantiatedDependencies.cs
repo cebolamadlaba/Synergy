@@ -304,8 +304,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static IConcessionManager ConcessionManager =
             new ConcessionManager(ConcessionRepository, LookupTableManager, LegalEntityRepository, RiskGroupRepository,
-                CacheManager, ConcessionAccountRepository, Mapper, ConcessionConditionRepository,
-                LegalEntityAccountRepository, ConcessionCommentRepository, ConcessionLendingRepository, MarketSegmentRepository);
+                CacheManager, ConcessionAccountRepository, Mapper, ConcessionConditionRepository, LegalEntityAccountRepository);
 
         /// <summary>
         /// The Region repository

@@ -1,7 +1,6 @@
 ﻿using Moq;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
-using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using StandardBank.ConcessionManagement.Test.Helpers;
 using Xunit;
@@ -60,7 +59,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockConcessionManager.Setup(_ => _.GetConcessionConditions(It.IsAny<int>()))
                 .Returns(new[] {new Model.UserInterface.ConcessionCondition()});
 
-            var result = _lendingManager.GetLendingConcession("L001", new Model.UserInterface.User());
+            var result = _lendingManager.GetLendingConcession("L001");
 
             Assert.NotNull(result);
         }

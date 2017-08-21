@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionComment;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionCondition;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddLendingConcessionDetail;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.DeactivateConcession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteConcessionCondition;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteLendingConcessionDetail;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.UpdateConcession;
@@ -104,13 +104,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="lendingConcession"></param>
         /// <returns></returns>
         [Route("UpdateLending")]
-        //[ValidateModel] //TODO: Had to remove this, it isn't working, I don't know why, don't have time to fix
+        [ValidateModel]
         public async Task<IActionResult> UpdateLending([FromBody] LendingConcession lendingConcession)
         {
             var user = _siteHelper.LoggedInUser(this);
-            
             var databaseLendingConcession =
-                _lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber, user);
+                _lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber);
 
             //first delete all the conditions and the lending details
             foreach (var condition in databaseLendingConcession.ConcessionConditions)
@@ -120,9 +119,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 await _mediator.Send(new DeleteLendingConcessionDetailCommand(lendingConcessionDetail, user));
 
             //second update the concession
+            lendingConcession.Concession.ConcessionType = "Lending";
+            lendingConcession.Concession.Type = "Existing";
+
             var concession = await _mediator.Send(new UpdateConcessionCommand(lendingConcession.Concession, user));
 
-            //then add all the new conditions and lending details and comments
+            //then add all the new conditions and lending details
             foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
                 await _mediator.Send(new AddLendingConcessionDetailCommand(lendingConcessionDetail, user, concession));
 
@@ -130,14 +132,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 foreach (var concessionCondition in lendingConcession.ConcessionConditions)
                     await _mediator.Send(new AddConcessionConditionCommand(concessionCondition, user, concession));
 
-            if (!string.IsNullOrWhiteSpace(lendingConcession.Concession.Comments))
-                await _mediator.Send(new AddConcessionCommentCommand(concession.Id, concession.SubStatusId.Value,
-                    lendingConcession.Concession.Comments, user));
-
             return Ok(lendingConcession);
         }
-
-        //public async Task<IActionResult> ExtendConcession(int concessionId)
 
         /// <summary>
         /// Gets the lending concession data for the concession reference id specified
@@ -147,7 +143,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("LendingConcessionData/{concessionReferenceId}")]
         public IActionResult LendingConcessionData(string concessionReferenceId)
         {
-            return Ok(_lendingManager.GetLendingConcession(concessionReferenceId, _siteHelper.LoggedInUser(this)));
+            return Ok(_lendingManager.GetLendingConcession(concessionReferenceId));
         }
     }
 }

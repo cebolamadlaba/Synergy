@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using StandardBank.ConcessionManagement.Model.UserInterface;
-using StandardBank.ConcessionManagement.Test.Helpers;
 using StandardBank.ConcessionManagement.UI.Controllers;
 using Xunit;
 using static StandardBank.ConcessionManagement.Test.Helpers.MockedDependencies;
@@ -24,8 +23,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         /// </summary>
         public ConcessionControllerTest()
         {
-            _concessionController = new ConcessionController(MockConcessionManager.Object,
-                MockLookupTableManager.Object, new FakeSiteHelper(), MockLetterGeneratorManager.Object);
+            _concessionController = new ConcessionController(MockConcessionManager.Object, MockLookupTableManager.Object);
         }
 
         /// <summary>

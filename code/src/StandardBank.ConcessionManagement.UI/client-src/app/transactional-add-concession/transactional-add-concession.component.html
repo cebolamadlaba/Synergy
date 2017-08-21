@@ -1,0 +1,202 @@
+﻿    <!-- summary bar -->
+<div class="col-md-12 lending-view-banner">
+  <div class="row">
+    <div class="lending-banner-title">
+      <div class="col-md-1">
+        <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+        <span class="back-button-text" routerLink="/pricing-transactional">Back</span>
+      </div>
+      <div class="col-md-10 banner-main-title">
+        <i class="fa fa-exchange" aria-hidden="true"></i> Transactional
+      </div>
+      <div class="col-md-1"></div>
+    </div>
+    <div class="col-md-12 lending-banner">
+      <div class="col-md-11">
+        <div>
+          <div class="col-md-5">
+            <div class="subHeading">EDCON</div>
+            <div class="date lightTitle hidden-element">1989</div>
+          </div>
+          <div class="col-md-2  hidden-element">
+            <div class="subHeading lightTitle"> Latest CRS / MRS</div>
+            <div class="score"><b>0.00</b></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-1">
+        <div class="compress">
+          <div onclick="hideElement('hidden-element')">
+            <i class="fa fa-compress" aria-hidden="true" id="compress-icon"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Form entries -->
+
+<form class="col-md-12 concession-information-form">
+  <div class="col-md-4">
+    <div class="row">
+      <label>MRS/CRS</label>
+      <input class="col-md-12">
+    </div>
+    <div class="row">
+      <label>SMT Deal Number</label>
+      <input class="col-md-12">
+    </div>
+  </div>
+  <div class="col-md-1"></div>
+  <div class="col-md-7">
+    <div class="row">
+      <label>Motivation</label>
+      <input class="col-md-12 large-input">
+    </div>
+  </div>
+</form>
+
+<form class="col-md-12">
+  <div class="concessions-top">
+    <div class="concessions-top-title">
+      <h3 class="table-title">Concessions</h3>
+      <button type="button" class="btn btn-default">New Concession</button>
+    </div>
+  </div>
+
+  <table class="form-concessions-table">
+    <thead class="form-concessions-table-headings">
+      <tr>
+        <th>Transaction Type</th>
+        <th>Account Number</th>
+        <th>Flat Fee/Rate</th>
+        <th>Ad Valorem</th>
+        <th>Table Number</th>
+        <th>Approved Date</th>
+        <th>Expiry Date</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody class="form-concessions-table-content">
+      <tr>
+        <td class="length-long"><input value="CEF"></td>
+        <td class="length-long">
+          <select>
+            <option>1234</option>
+          </select>
+        </td>
+        <td class="length-long"><input value="50,000.00"></td>
+        <td class="length-medium"><input value="1"></td>
+        <td class="length-long"><input></td>
+        <td class="length-long"><input type="date"></td>
+        <td class="length-long"><input type="date"></td>
+        <td class="delete"><i class="fa fa-trash-o" aria-hidden="true"></i></td>
+      </tr>
+    </tbody>
+  </table>
+</form>
+
+<div class="col-md-12 conditions">
+  <div class="concessions-top">
+    <div class="concessions-top-title">
+      <h3 class="table-title">Conditions</h3>
+      <button type="button" class="btn btn-default" (click)="manageConditionsModal.show()">Manage Conditions</button>
+      <!-- modal content -->
+
+      <div bsModal #manageConditionsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="manageConditionsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="col-md-12 modal-header">
+              <h4>Manage Conditions</h4>
+            </div>
+            <div class="col-md-12 modal-body">
+              <div class="row">
+                <div class="col-md-12 modal-title">
+                  <button class="btn btn-default">New Conditions</button>
+                </div>
+              </div>
+              <table class="form-concessions-table">
+                <thead class="form-concessions-table-headings">
+                  <tr>
+                    <th>Condition ID</th>
+                    <th>Condition Type</th>
+                    <th>Value</th>
+                    <th>Volume</th>
+                    <th>Product</th>
+                    <th>MAP/RATE (If Applicable)</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody class="form-concessions-table-content">
+                  <tr>
+                    <td class="length-short"><input class="rightAlign" value="1"></td>
+                    <td class="length-long"><input value="MIN AVG Balance"></td>
+                    <td class="length-long"><input value="20 000 000.00"></td>
+                    <td class="length-medium"><input value="1"></td>
+                    <td class="length-long"><input value="Cashman"></td>
+                    <td class="length-medium"><input class="" value="-4"></td>
+                    <td class="delete"><i class="fa fa-trash-o" aria-hidden="true"></i></td>
+                  </tr>
+                  <tr>
+                    <td class="length-short"><input class="rightAlign" value=""></td>
+                    <td class="length-long"><input value=""></td>
+                    <td class="length-long"><input value=""></td>
+                    <td class="length-medium"><input value=""></td>
+                    <td class="length-long"><input value=""></td>
+                    <td class="length-long"><input value=""></td>
+                    <td class="delete"><i class="fa fa-trash-o" aria-hidden="true"></i></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+              <form class="lending-bottom-buttons">
+                <div class="float-right">
+                  <button class="btn btn-submit" type="submit">Submit</button>
+                  <button class="btn btn-cancel">Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-body">
+      <div class="table-container">
+        <table class="table table-bordered table-hover header-fixed table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Condition Type</th>
+              <th>Value</th>
+              <th>Volume</th>
+              <th>Product</th>
+              <th>MAP/Rate (If Applicable)</th>
+            </tr>
+          </thead>
+          <tbody class="secondary-text">
+            <tr>
+              <td class="length-short">01</td>
+              <td>MIN AVG Balance</td>
+              <td>Cashman</td>
+              <td>4.5</td>
+              <td class="length-medium">1</td>
+              <td class="length-short rightAlign">-4</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form class="col-md-12 lending-bottom-buttons">
+  <div class="float-right">
+    <button type="button" class="btn btn-cancel" routerLink="/pricing-transactional">Cancel</button>
+    <button class="btn btn-submit" type="submit">Submit</button>
+  </div>
+</form>

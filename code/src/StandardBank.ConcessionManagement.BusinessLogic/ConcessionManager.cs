@@ -5,14 +5,10 @@ using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
-using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Inbox;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
-using ConcessionCondition = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionCondition;
-using Condition = StandardBank.ConcessionManagement.Model.UserInterface.Condition;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
-using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -67,10 +63,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         private readonly ILegalEntityAccountRepository _legalEntityAccountRepository;
 
-        private readonly IConcessionCommentRepository _concessionCommentRepository;
-        private readonly IConcessionLendingRepository _concessionLendingRepository;
-        private readonly IMarketSegmentRepository _marketSegmentRepository;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionManager"/> class.
         /// </summary>
@@ -83,16 +75,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="mapper"></param>
         /// <param name="concessionConditionRepository"></param>
         /// <param name="legalEntityAccountRepository"></param>
-        /// <param name="concessionCommentRepository"></param>
-        /// <param name="concessionLendingRepository"></param>
-        /// <param name="marketSegmentRepository"></param>
         public ConcessionManager(IConcessionRepository concessionRepository, ILookupTableManager lookupTableManager,
             ILegalEntityRepository legalEntityRepository, IRiskGroupRepository riskGroupRepository,
             ICacheManager cacheManager, IConcessionAccountRepository concessionAccountRepository, IMapper mapper,
-            IConcessionConditionRepository concessionConditionRepository,
-            ILegalEntityAccountRepository legalEntityAccountRepository,
-            IConcessionCommentRepository concessionCommentRepository,
-            IConcessionLendingRepository concessionLendingRepository, IMarketSegmentRepository marketSegmentRepository)
+            IConcessionConditionRepository concessionConditionRepository, ILegalEntityAccountRepository legalEntityAccountRepository)
         {
             _concessionRepository = concessionRepository;
             _lookupTableManager = lookupTableManager;
@@ -103,9 +89,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _mapper = mapper;
             _concessionConditionRepository = concessionConditionRepository;
             _legalEntityAccountRepository = legalEntityAccountRepository;
-            _concessionCommentRepository = concessionCommentRepository;
-            _concessionLendingRepository = concessionLendingRepository;
-            _marketSegmentRepository = marketSegmentRepository;
         }
 
         /// <summary>
@@ -131,15 +114,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         break;
                     case "Suite Head":
                     case "BCM":
-                        concessions.AddRange(Map(
-                            _concessionRepository.ReadByCentreIdStatusIdSubStatusIdIsActive(user.SelectedCentre.Id,
-                                pendingStatusId, bcmpendingStatusId, true)));
+                        concessions.AddRange(Map(_concessionRepository.ReadByRequestorIdStatusIdSubStatusIdIsActive(0,pendingStatusId,bcmpendingStatusId,true)));
                         break;
                     case "PCM":
                     case "Head Office":
-                        concessions.AddRange(Map(
-                            _concessionRepository.ReadByCentreIdStatusIdSubStatusIdIsActive(user.SelectedCentre.Id,
-                                pendingStatusId, pcmpendingStatusId, true)));
                         break;
                 }
             }
@@ -287,27 +265,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var mismatchedConcessions = GetMismatchedConcessionsForUser(user);
             var declinedConcessions = GetDeclinedConcessionsForUser(user);
 
-            var isRequestor = user.UserRoles.Any(_ => _.Name == "Requestor");
-
             userConcessions.PendingConcessions = pendingConcessions;
             userConcessions.PendingConcessionsCount = pendingConcessions.Count();
-            userConcessions.ShowPendingConcessions = true;
 
             userConcessions.DueForExpiryConcessions = dueForExpiryConcessions;
             userConcessions.DueForExpiryConcessionsCount = dueForExpiryConcessions.Count();
-            userConcessions.ShowDueForExpiryConcessions = isRequestor;
 
             userConcessions.ExpiredConcessions = expiredConcessions;
             userConcessions.ExpiredConcessionsCount = expiredConcessions.Count();
-            userConcessions.ShowExpiredConcessions = isRequestor;
 
             userConcessions.MismatchedConcessions = mismatchedConcessions;
             userConcessions.MismatchedConcessionsCount = mismatchedConcessions.Count();
-            userConcessions.ShowMismatchedConcessions = isRequestor;
 
             userConcessions.DeclinedConcessions = declinedConcessions;
             userConcessions.DeclinedConcessionsCount = declinedConcessions.Count();
-            userConcessions.ShowDeclinedConcessions = isRequestor;
 
             return userConcessions;
         }
@@ -366,12 +337,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedConcession.RequestorId = user.Id;
 
             mappedConcession.CentreId = user.SelectedCentre.Id;
-            mappedConcession.RegionId = user.SelectedRegion.Id;
             mappedConcession.IsCurrent = true;
             mappedConcession.IsActive = true;
-
-            //TODO: Check if this should be set on create? Because on create the item is sent for approval?
-            mappedConcession.DatesentForApproval = DateTime.Now;
 
             var result = _concessionRepository.Create(mappedConcession);
 
@@ -443,12 +410,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 mappedConcession.ConcessionType = _lookupTableManager.GetConcessionType(concession.ConcessionTypeId)
                     ?.Code;
                 mappedConcession.AccountNumber = concessionAccount?.AccountNumber;
-
-                mappedConcession.Status = _lookupTableManager.GetStatusDescription(concession.StatusId);
-
-                if (concession.SubStatusId.HasValue)
-                    mappedConcession.SubStatus =
-                        _lookupTableManager.GetSubStatusDescription(concession.SubStatusId.Value);
 
                 concessions.Add(mappedConcession);
             }
@@ -562,71 +523,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var currentConcession = concessions.Single();
 
             var mappedConcession = _mapper.Map<Model.Repository.Concession>(concession);
+            mappedConcession.TypeId = _lookupTableManager.GetReferenceTypeId(concession.Type);
 
-            if (!string.IsNullOrWhiteSpace(concession.Type))
-                mappedConcession.TypeId = _lookupTableManager.GetReferenceTypeId(concession.Type);
-            else
-                mappedConcession.TypeId = currentConcession.TypeId;
+            mappedConcession.ConcessionTypeId = currentConcession.ConcessionTypeId;
 
-            mappedConcession.StatusId = string.IsNullOrWhiteSpace(concession.Status)
-                ? currentConcession.StatusId
-                : _lookupTableManager.GetStatusId(concession.Status);
-
-            mappedConcession.SubStatusId = string.IsNullOrWhiteSpace(concession.SubStatus)
-                ? currentConcession.SubStatusId
-                : _lookupTableManager.GetSubStatusId(concession.SubStatus);
+            mappedConcession.StatusId = currentConcession.StatusId;
+            mappedConcession.SubStatusId = currentConcession.SubStatusId;
+            mappedConcession.ConcessionDate = DateTime.Now;
+            mappedConcession.RequestorId = user.Id;
 
             mappedConcession.CentreId = currentConcession.CentreId;
-            mappedConcession.ConcessionDate = currentConcession.ConcessionDate;
-            mappedConcession.ConcessionRef = currentConcession.ConcessionRef;
-            mappedConcession.ConcessionTypeId = currentConcession.ConcessionTypeId;
-            mappedConcession.Id = currentConcession.Id;
-            mappedConcession.IsActive = currentConcession.IsActive;
             mappedConcession.IsCurrent = currentConcession.IsCurrent;
-            mappedConcession.RequestorId = currentConcession.RequestorId;
-            mappedConcession.DateActionedByBCM = currentConcession.DateActionedByBCM;
-            mappedConcession.DateActionedByHO = currentConcession.DateActionedByHO;
-            mappedConcession.DateActionedByPCM = currentConcession.DateActionedByPCM;
-            mappedConcession.DateApproved = currentConcession.DateApproved;
-            mappedConcession.DatesentForApproval = currentConcession.DatesentForApproval;
-            mappedConcession.ExpiryDate = currentConcession.ExpiryDate;
-            mappedConcession.HOUserId = currentConcession.HOUserId;
-            mappedConcession.PCMUserId = currentConcession.PCMUserId;
-            mappedConcession.RegionId = currentConcession.RegionId;
-
-            if (concession.BcmUserId.HasValue)
-            {
-                mappedConcession.BCMUserId = concession.BcmUserId;
-                mappedConcession.DateActionedByBCM = DateTime.Now;
-            }
-            else
-                mappedConcession.BCMUserId = currentConcession.BCMUserId;
-
-            if (concession.PcmUserId.HasValue)
-            {
-                mappedConcession.PCMUserId = concession.PcmUserId;
-                mappedConcession.DateActionedByPCM = DateTime.Now;
-            }
-            else
-                mappedConcession.PCMUserId = currentConcession.PCMUserId;
-
-            if (concession.HoUserId.HasValue)
-            {
-                mappedConcession.HOUserId = concession.HoUserId;
-                mappedConcession.DateActionedByHO = DateTime.Now;
-            }
-            else
-                mappedConcession.HOUserId = currentConcession.HOUserId;
-
-            if (concession.Status == "Approved")
-            {
-                if (!mappedConcession.DateApproved.HasValue)
-                    mappedConcession.DateApproved = DateTime.Now;
-
-                //TODO: What is the calculation for this?
-                if (!mappedConcession.ExpiryDate.HasValue)
-                    mappedConcession.ExpiryDate = DateTime.Now.AddMonths(12);
-            }
+            mappedConcession.IsActive = currentConcession.IsActive;
+            mappedConcession.Id = currentConcession.Id;
+            mappedConcession.ConcessionRef = currentConcession.ConcessionRef;
 
             _concessionRepository.Update(mappedConcession);
 
@@ -645,101 +555,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionConditionRepository.Delete(concessionCondtion);
 
             return concessionCondtion;
-        }
-
-        public IEnumerable<Condition> GetConditions(string periodType, string period)
-        {
-            var statusid = _lookupTableManager.GetStatusId("Approved");
-            var periodId = _lookupTableManager.GetPeriods().First(x => x.Description == period).Id;
-            var periodTypeId = _lookupTableManager.GetPeriodTypes().First(x => x.Description == periodType).Id;
-            return _mapper.Map<IEnumerable<Condition>>(_concessionConditionRepository.ReadByPeriodAndApprovalStatus(statusid,periodId,periodTypeId));
-        }
-
-        /// <summary>
-        /// Creates the concession comment
-        /// </summary>
-        /// <param name="concessionComment"></param>
-        /// <returns></returns>
-        public ConcessionComment CreateConcessionComment(ConcessionComment concessionComment)
-        {
-            var result = _concessionCommentRepository.Create(concessionComment);
-
-            return result;
-        }
-
-        /// <summary>
-        /// Gets the approved concessions for the user
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        public IEnumerable<ApprovedConcession> GetApprovedConcessionsForUser(int userId)
-        {
-            var approvedConcessions = new List<ApprovedConcession>();
-
-            var concessions = Map(_concessionRepository.ReadApprovedConcessions(userId));
-
-            foreach (var concession in concessions)
-            {
-                approvedConcessions.Add(new ApprovedConcession
-                {
-                    RiskGroupNumber = concession.RiskGroupNumber.GetValueOrDefault(0),
-                    RiskGroupName = concession.RiskGroupName,
-                    ConcessionId = concession.Id,
-                    ConcessionReferenceNumber = concession.ReferenceNumber,
-                    ConcessionType = concession.ConcessionType,
-                    ApprovedConcessionDetails = GetApprovedConcessionDetails(concession)
-                });
-            }
-
-            return approvedConcessions;
-        }
-
-        /// <summary>
-        /// Gets the approved concession details
-        /// </summary>
-        /// <param name="concession"></param>
-        /// <returns></returns>
-        public IEnumerable<ApprovedConcessionDetail> GetApprovedConcessionDetails(Concession concession)
-        {
-            switch (concession.ConcessionType)
-            {
-                case "Lending":
-                    return GetApprovedLendingConcessionDetails(concession);
-                default:
-                    throw new NotImplementedException(concession.ConcessionType);
-            }
-        }
-
-        /// <summary>
-        /// Gets the approved lending concession details
-        /// </summary>
-        /// <param name="concession"></param>
-        /// <returns></returns>
-        private IEnumerable<ApprovedConcessionDetail> GetApprovedLendingConcessionDetails(Concession concession)
-        {
-            var approvedConcessionDetails = new List<ApprovedConcessionDetail>();
-            var concessionLendings = _concessionLendingRepository.ReadByConcessionId(concession.Id);
-
-            foreach (var concessionLending in concessionLendings)
-            {
-                var legalEntity = _legalEntityRepository.ReadById(concessionLending.LegalEntityId);
-                var marketSegment = _marketSegmentRepository.ReadById(legalEntity.MarketSegmentId);
-                var mappedLendingConcessionDetail = _mapper.Map<LendingConcessionDetail>(concessionLending);
-
-                mappedLendingConcessionDetail.CustomerName = legalEntity.CustomerName;
-
-                approvedConcessionDetails.Add(new ApprovedConcessionDetail
-                {
-                    CustomerName = mappedLendingConcessionDetail.CustomerName,
-                    ConcessionType = "Lending",
-                    Status = concession.Status,
-                    DateOpened = concession.DateOpened,
-                    DateSentForApproval = concession.DateSentForApproval.GetValueOrDefault(DateTime.Now),
-                    Segment = marketSegment.Description
-                });
-            }
-
-            return approvedConcessionDetails;
         }
     }
 }

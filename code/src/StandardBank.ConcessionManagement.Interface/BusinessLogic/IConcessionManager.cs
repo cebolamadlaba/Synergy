@@ -123,28 +123,5 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="concessionCondition">The concession condition.</param>
         /// <returns></returns>
         Model.Repository.ConcessionCondition DeleteConcessionCondition(ConcessionCondition concessionCondition);
-        IEnumerable<Model.UserInterface.Condition> GetConditions(string periodType, string period);
-
-        /// <summary>
-        /// Creates the concession comment
-        /// </summary>
-        /// <param name="concessionComment"></param>
-        /// <returns></returns>
-        Model.Repository.ConcessionComment
-            CreateConcessionComment(Model.Repository.ConcessionComment concessionComment);
-
-        /// <summary>
-        /// Gets the approved concessions for the user
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        IEnumerable<ApprovedConcession> GetApprovedConcessionsForUser(int userId);
-
-        /// <summary>
-        /// Gets the approved concession details
-        /// </summary>
-        /// <param name="concession"></param>
-        /// <returns></returns>
-        IEnumerable<ApprovedConcessionDetail> GetApprovedConcessionDetails(Concession concession);
     }
 }

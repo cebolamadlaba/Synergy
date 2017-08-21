@@ -1,11 +1,11 @@
-﻿.lightText{
+.lightText{
     color: $grayTint;
 }
 
 .table-title{
-    font-weight: bold;
-    color: $navText;
-    float:left;
+        margin: 20px 0px;
+        font-weight: bold;
+        color: $navText;
 }
 
 .section{
@@ -62,4 +62,17 @@
         padding: 0 5px 0 5px;
         border: 1px solid $cashProductTableHead;
     }
+}
+
+.concessions-top-title{
+    h3, button{
+        display: inline;
+    }
+
+    button{
+        float: right;
+    }
+
+    padding-top: 20px;
+    margin-bottom: 20px;
 }

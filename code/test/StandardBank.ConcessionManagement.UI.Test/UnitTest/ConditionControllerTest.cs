@@ -22,7 +22,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         /// </summary>
         public ConditionControllerTest()
         {
-            _conditionController = new ConditionController(MockLookupTableManager.Object, MockConcessionManager.Object);
+            _conditionController = new ConditionController(MockLookupTableManager.Object);
         }
 
         /// <summary>

@@ -46,21 +46,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         }
 
         /// <summary>
-        /// Tests that GetStatusDescription executes positive
-        /// </summary>
-        [Fact]
-        public void GetStatusDescription_Executes_Positive()
-        {
-            var status = new Status { Description = "Status Test", Id = 10, IsActive = true };
-
-            MockStatusRepository.Setup(_ => _.ReadAll()).Returns(new[] { status });
-            var result = _lookupTableManager.GetStatusDescription(status.Id);
-
-            Assert.NotNull(result);
-            Assert.Equal(result, status.Description);
-        }
-
-        /// <summary>
         /// Tests that GetSubStatusId executes positive.
         /// </summary>
         [Fact]
@@ -73,21 +58,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             Assert.NotNull(result);
             Assert.Equal(result, subStatus.Id);
-        }
-
-        /// <summary>
-        /// Tests that GetSubStatusDescription executes positive
-        /// </summary>
-        [Fact]
-        public void GetSubStatusDescription_Executes_Positive()
-        {
-            var subStatus = new SubStatus { Description = "Sub Status Test", Id = 20, IsActive = true };
-
-            MockSubStatusRepository.Setup(_ => _.ReadAll()).Returns(new[] { subStatus });
-            var result = _lookupTableManager.GetSubStatusDescription(subStatus.Id);
-
-            Assert.NotNull(result);
-            Assert.Equal(result, subStatus.Description);
         }
 
         /// <summary>

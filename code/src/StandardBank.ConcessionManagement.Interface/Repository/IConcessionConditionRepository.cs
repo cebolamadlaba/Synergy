@@ -46,7 +46,5 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         void Delete(ConcessionCondition model);
-
-        IEnumerable<Condition> ReadByPeriodAndApprovalStatus(int concessionApprovalStatusId, int periodId, int periodType);
     }
 }

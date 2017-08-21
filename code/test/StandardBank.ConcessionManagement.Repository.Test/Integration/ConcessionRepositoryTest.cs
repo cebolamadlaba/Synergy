@@ -41,8 +41,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 IsCurrent = true,
                 IsActive = true,
                 MrsCrs = 1232,
-                RiskGroupId = DataHelper.GetRiskGroupId(),
-                RegionId = DataHelper.GetRegionId()
+                RiskGroupId = DataHelper.GetRiskGroupId()
             };
 
             var result = InstantiatedDependencies.ConcessionRepository.Create(model);
@@ -81,8 +80,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 IsCurrent = true,
                 IsActive = false,
                 MrsCrs = 1233,
-                RiskGroupId = DataHelper.GetRiskGroupId(),
-                RegionId = DataHelper.GetRegionId()
+                RiskGroupId = DataHelper.GetRiskGroupId()
             };
 
             var result = InstantiatedDependencies.ConcessionRepository.Create(model);
@@ -211,23 +209,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         }
 
         /// <summary>
-        /// Tests that ReadByCentreIdStatusIdSubStatusIdIsActive executes positive
-        /// </summary>
-        [Fact]
-        public void ReadByCentreIdStatusIdSubStatusIdIsActive_Executes_Positive()
-        {
-            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
-            var resultToTestWith = results.First(_ => _.IsActive && _.SubStatusId.HasValue);
-
-            var result =
-                InstantiatedDependencies.ConcessionRepository.ReadByCentreIdStatusIdSubStatusIdIsActive(
-                    resultToTestWith.CentreId, resultToTestWith.StatusId, resultToTestWith.SubStatusId.Value, true);
-
-            Assert.NotNull(result);
-            Assert.NotEmpty(result);
-        }
-
-        /// <summary>
         /// Tests that ReadByRiskGroupIdConcessionTypeIdIsActive executes positive
         /// </summary>
         [Fact]
@@ -306,7 +287,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.IsActive = !model.IsActive;
             model.MrsCrs = model.MrsCrs + 123;
             model.RiskGroupId = DataHelper.GetAlternateRiskGroupId(model.RiskGroupId);
-            model.RegionId = DataHelper.GetAlternateRegionId(model.RegionId);
 
             InstantiatedDependencies.ConcessionRepository.Update(model);
 
@@ -337,7 +317,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.IsActive, model.IsActive);
             Assert.Equal(updatedModel.MrsCrs, model.MrsCrs);
             Assert.Equal(updatedModel.RiskGroupId, model.RiskGroupId);
-            Assert.Equal(updatedModel.RegionId, model.RegionId);
         }
 
         /// <summary>
@@ -370,8 +349,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 IsCurrent = false,
                 IsActive = false,
                 MrsCrs = 6533,
-                RiskGroupId = DataHelper.GetRiskGroupId(),
-                RegionId = DataHelper.GetRegionId()
+                RiskGroupId = DataHelper.GetRiskGroupId()
             };
 
             var temporaryEntity = InstantiatedDependencies.ConcessionRepository.Create(model);

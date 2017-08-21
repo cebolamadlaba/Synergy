@@ -1,4 +1,4 @@
-﻿.lending-bottom-buttons{
+.lending-bottom-buttons{
     padding-bottom: 20px;
     position: relative;
     bottom: 0;
@@ -11,10 +11,15 @@
     }
 }
 
-.large-input{
-    height: 95px;
-}
+.concession-information-form{
+    label{
+        padding-top: 10px;
+    }
 
+    .large-input{
+        height: 88px;
+    }
+}
 
 label, th{
     color: $darkGrayText;

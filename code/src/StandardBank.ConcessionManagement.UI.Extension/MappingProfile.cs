@@ -87,7 +87,6 @@ namespace StandardBank.ConcessionManagement.UI.Extension
 
             //User 
             CreateMap<Model.Repository.User, Model.UserInterface.User>().ReverseMap();
-            CreateMap<Model.Repository.Condition,Model.UserInterface.Condition>().ReverseMap();
         }
     }
 }

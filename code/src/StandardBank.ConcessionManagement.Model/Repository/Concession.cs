@@ -170,7 +170,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// <value>
         /// The CentreId.
         /// </value>
-        public int CentreId { get; set; }
+        public int? CentreId { get; set; }
 
         /// <summary>
         /// Gets or sets the IsCurrent.
@@ -207,10 +207,5 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// Gets the primary key value
         /// </summary>
         public object PrimaryKeyValue => Id;
-
-        /// <summary>
-        /// Gets or sets the region id
-        /// </summary>
-        public int RegionId { get; set; }
     }
 }

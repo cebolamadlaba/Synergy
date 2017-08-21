@@ -1,0 +1,34 @@
+﻿
+<app-inbox-header></app-inbox-header>
+
+<div class="col-md-12 search-and-results-container">
+    <!-- Results table -->
+    <div class="table-container">
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-bordered table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Risk Group Number</th>
+                    <th>Risk Group Name</th>
+                    <th>Customer Name</th>
+                    <th>Type</th>
+                    <th>Date Opened</th>
+                    <th>Concession Id</th>
+                    <th>Segment</th>
+                    <th>Date Sent For Approval</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor='let concession of userConcessions.mismatchedConcessions; trackBy: index;'>
+                    <td>{{concession.riskGroupNumber}}</td>
+                    <td>{{concession.riskGroupName}}</td>
+                    <td class="customerName">{{concession.customerName}}</td>
+                    <td>{{concession.type}}</td>
+                    <td class="date">{{concession.dateOpened | date: 'yyyy/MM/dd'}}</td>
+                    <td>{{concession.referenceNumber}}</td>
+                    <td>{{concession.seqment}}</td>
+                    <td class="date">{{concession.dateSentForApproval| date: 'yyyy/MM/dd'}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

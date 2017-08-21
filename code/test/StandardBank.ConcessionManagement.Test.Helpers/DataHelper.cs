@@ -1264,8 +1264,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 CentreId = 6,
                 IsCurrent = false,
                 IsActive = false,
-                MrsCrs = 4354,
-                RegionId = GetRegionId()
+                MrsCrs = 4354
             };
 
             InstantiatedDependencies.ConcessionRepository.Create(model);
