@@ -21,9 +21,19 @@
         public string ConditionType { get; set; }
 
         /// <summary>
+        /// Gets or sets the condition type id
+        /// </summary>
+        public int? ConditionTypeId { get; set; }
+
+        /// <summary>
         /// Gets or sets the product type
         /// </summary>
         public string ProductType {get; set; }
+
+        /// <summary>
+        /// Gets or sets the condition product id
+        /// </summary>
+        public int? ConditionProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the interest rate
@@ -46,8 +56,18 @@
         public string PeriodType { get; set; }
 
         /// <summary>
+        /// Gets or sets the period type id
+        /// </summary>
+        public int PeriodTypeId { get; set; }
+
+        /// <summary>
         /// Gets or sets the period
         /// </summary>
         public string Period { get; set; }
+
+        /// <summary>
+        /// Gets or sets the period id
+        /// </summary>
+        public int? PeriodId { get; set; }
     }
 }

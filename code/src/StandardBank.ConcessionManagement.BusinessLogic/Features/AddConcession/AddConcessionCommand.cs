@@ -28,8 +28,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
         public User User { get; set; }
 
         /// <summary>
-        /// Gets or sets the audit record
+        /// Gets or sets the audit record.
         /// </summary>
+        /// <value>
+        /// The audit record.
+        /// </value>
         public AuditRecord AuditRecord { get; set; }
 
         /// <summary>

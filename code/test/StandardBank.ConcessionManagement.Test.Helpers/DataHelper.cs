@@ -1264,7 +1264,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 CentreId = 6,
                 IsCurrent = false,
                 IsActive = false,
-                MrsCrs = 4354
+                MrsCrs = 4354,
+                RegionId = GetRegionId()
             };
 
             InstantiatedDependencies.ConcessionRepository.Create(model);
@@ -1710,7 +1711,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 ReviewFee = 7441,
                 UFFFee = 1095,
                 ReviewFeeTypeId = GetReviewFeeTypeId(),
-                LegalEntityId = GetLegalEntityId()
+                LegalEntityId = GetLegalEntityId(),
+                LegalEntityAccountId = GetLegalEntityAccountId()
             };
 
             InstantiatedDependencies.ConcessionLendingRepository.Create(model);

@@ -30,7 +30,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             _concessionManager = new ConcessionManager(MockConcessionRepository.Object, MockLookupTableManager.Object,
                 MockLegalEntityRepository.Object, MockRiskGroupRepository.Object,
                 InstantiatedDependencies.CacheManager, MockConcessionAccountRepository.Object,
-                InstantiatedDependencies.Mapper, MockConcessionConditionRepository.Object, MockLegalEntityAccountRepository.Object);
+                InstantiatedDependencies.Mapper, MockConcessionConditionRepository.Object,
+                MockLegalEntityAccountRepository.Object, MockConcessionCommentRepository.Object);
         }
 
         /// <summary>
@@ -402,6 +403,35 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that CreateConcessionCondition executes positive
+        /// </summary>
+        [Fact]
+        public void CreateConcessionCondition_Executes_Positive()
+        {
+            MockConcessionConditionRepository.Setup(_ => _.Create(It.IsAny<ConcessionCondition>()))
+                .Returns(new ConcessionCondition());
+
+            var result = _concessionManager.CreateConcessionCondition(new Model.UserInterface.ConcessionCondition(),
+                new Model.UserInterface.Concession());
+
+            Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Tests that GetConcessionForConcessionReferenceId executes positive
+        /// </summary>
+        [Fact]
+        public void GetConcessionForConcessionReferenceId_Executes_Positive()
+        {
+            MockConcessionRepository.Setup(_ => _.ReadByConcessionRefIsActive(It.IsAny<string>(), It.IsAny<bool>()))
+                .Returns(new[] {new Concession {IsActive = true}});
+
+            var result = _concessionManager.GetConcessionForConcessionReferenceId("L001");
+
+            Assert.NotNull(result);
         }
     }
 }

@@ -4,6 +4,7 @@ import { HttpModule } from '@angular/http';
 import { InboxHeaderComponent } from "../inbox-header/inbox-header.component";
 import { UserConcessionsService, MockUserConcessionsService } from "../user-concessions/user-concessions.service";
 import { DataTablesModule } from 'angular-datatables';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('DeclinedInboxComponent', () => {
     let component: DeclinedInboxComponent;
@@ -11,7 +12,7 @@ describe('DeclinedInboxComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [HttpModule, DataTablesModule],
+            imports: [HttpModule, DataTablesModule, RouterTestingModule],
             declarations: [DeclinedInboxComponent, InboxHeaderComponent],
             providers: [{ provide: UserConcessionsService, useClass: MockUserConcessionsService }]
         }).compileComponents();

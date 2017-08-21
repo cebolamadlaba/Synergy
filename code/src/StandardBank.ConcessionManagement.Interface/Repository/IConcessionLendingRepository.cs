@@ -27,7 +27,7 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// </summary>
         /// <param name="concessionId"></param>
         /// <returns></returns>
-        ConcessionLending ReadByConcessionId(int concessionId);
+        IEnumerable<ConcessionLending> ReadByConcessionId(int concessionId);
 
         /// <summary>
         /// Reads all.

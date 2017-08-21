@@ -14,4 +14,8 @@ export class User {
     selectedRegion: Region;
     userCentres: Centre[];
     selectedCentre: Centre;
+    canRequest: boolean;
+    canBcmApprove: boolean;
+    canPcmApprove: boolean;
+    isHO: boolean;
 }

@@ -5,7 +5,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
     /// <summary>
     /// ConcessionCondition entity
     /// </summary>
-    public class ConcessionCondition
+    public class ConcessionCondition : IAuditable
     {
         /// <summary>
         /// Gets or sets the Id.
@@ -80,5 +80,9 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// Gets or sets the period id
         /// </summary>
         public int? PeriodId { get; set; }
+
+        public string TableName => "tblConcessionCondition";
+        public string PrimaryKeyColumnName => "pkConcessionConditionId";
+        public object PrimaryKeyValue => Id;
     }
 }

@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
+using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Inbox;
+using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
+using ConcessionCondition = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionCondition;
+using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 {
@@ -81,5 +85,52 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="concessionType"></param>
         /// <returns></returns>
         IEnumerable<Concession> GetConcessionsForRiskGroup(int riskGroupId, string concessionType);
+
+        /// <summary>
+        /// Creates a concession condition
+        /// </summary>
+        /// <param name="concessionCondition"></param>
+        /// <param name="concession"></param>
+        /// <returns></returns>
+        Model.Repository.ConcessionCondition CreateConcessionCondition(ConcessionCondition concessionCondition, Concession concession);
+
+        /// <summary>
+        /// Gets the concession for the concession reference id specified
+        /// </summary>
+        /// <param name="concessionReferenceId"></param>
+        /// <returns></returns>
+        Concession GetConcessionForConcessionReferenceId(string concessionReferenceId);
+
+        /// <summary>
+        /// Deactivates the concession
+        /// </summary>
+        /// <param name="concessionReferenceId"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        Model.Repository.Concession DeactivateConcession(string concessionReferenceId, User user);
+
+        /// <summary>
+        /// Updates the concession
+        /// </summary>
+        /// <param name="concession"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        Model.Repository.Concession UpdateConcession(Concession concession, User user);
+
+        /// <summary>
+        /// Deletes the concession condition.
+        /// </summary>
+        /// <param name="concessionCondition">The concession condition.</param>
+        /// <returns></returns>
+        Model.Repository.ConcessionCondition DeleteConcessionCondition(ConcessionCondition concessionCondition);
+        IEnumerable<Model.UserInterface.Condition> GetConditions(string periodType, string period);
+
+        /// <summary>
+        /// Creates the concession comment
+        /// </summary>
+        /// <param name="concessionComment"></param>
+        /// <returns></returns>
+        Model.Repository.ConcessionComment
+            CreateConcessionComment(Model.Repository.ConcessionComment concessionComment);
     }
 }

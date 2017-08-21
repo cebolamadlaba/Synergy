@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using StandardBank.ConcessionManagement.Model.UserInterface.Pricing;
 using StandardBank.ConcessionManagement.UI.Controllers;
@@ -48,6 +49,19 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
             Assert.Equal(riskGroup.Id, returnedLendingView.RiskGroup.Id);
             Assert.Equal(riskGroup.Name, returnedLendingView.RiskGroup.Name);
             Assert.Equal(riskGroup.Number, returnedLendingView.RiskGroup.Number);
+        }
+
+        /// <summary>
+        /// Tests that LendingConcessionData executes positive
+        /// </summary>
+        [Fact]
+        public void LendingConcessionData_Executes_Positive()
+        {
+            MockLendingManager.Setup(_ => _.GetLendingConcession(It.IsAny<string>(), It.IsAny<User>())).Returns(new LendingConcession());
+
+            var result = _lendingController.LendingConcessionData("L001");
+
+            Assert.NotNull(result);
         }
     }
 }

@@ -4,6 +4,8 @@ import { UserConcessionsService } from "../user-concessions/user-concessions.ser
 import { UserConcessions } from "../models/user-concessions";
 import { Subject } from 'rxjs/Rx'
 import 'rxjs/add/operator/map';
+import { Concession } from "../models/concession";
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-declined-inbox',
@@ -17,7 +19,7 @@ export class DeclinedInboxComponent implements OnInit {
     userConcessions: UserConcessions;
     errorMessage: String;
 
-    constructor( @Inject(UserConcessionsService) private userConcessionsService) { }
+    constructor( @Inject(UserConcessionsService) private userConcessionsService, private router: Router) { }
 
     ngOnInit() {
         this.dtOptions = {
@@ -36,5 +38,13 @@ export class DeclinedInboxComponent implements OnInit {
                 this.dtTrigger.next();
             },
             error => this.errorMessage = <any>error);
+    }
+
+    openConcessionView(concession: Concession) {
+        switch (concession.concessionType) {
+            case "Lending":
+                this.router.navigate(['/lending-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                break;
+        }
     }
 }

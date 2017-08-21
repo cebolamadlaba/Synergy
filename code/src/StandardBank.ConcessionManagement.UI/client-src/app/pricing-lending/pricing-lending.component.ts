@@ -7,6 +7,7 @@ import { RiskGroup } from "../models/risk-group";
 import { SourceSystemProduct } from "../models/source-system-product";
 import { LendingConcession } from "../models/lending-concession";
 import { Concession } from "../models/concession";
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-pricing-lending',
@@ -21,7 +22,7 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
     errorMessage: String;
     showHide: true;
 
-    constructor(private route: ActivatedRoute, @Inject(LendingViewService) private lendingViewService) {
+    constructor(private route: ActivatedRoute, private location: Location, @Inject(LendingViewService) private lendingViewService) {
         this.lendingView.riskGroup = new RiskGroup();
         this.lendingView
         this.lendingView.sourceSystemProducts = [new SourceSystemProduct()];
@@ -39,6 +40,10 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
                     error => this.errorMessage = <any>error);
             }
         });
+    }
+
+    goBack() {
+        this.location.back();
     }
 
     ngOnDestroy() {

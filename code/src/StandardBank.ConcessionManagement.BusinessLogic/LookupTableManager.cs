@@ -145,6 +145,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Gets the status description
+        /// </summary>
+        /// <param name="statusId"></param>
+        /// <returns></returns>
+        public string GetStatusDescription(int statusId)
+        {
+            var statuses = _statusRepository.ReadAll();
+
+            return statuses.First(_ => _.Id == statusId && _.IsActive).Description;
+        }
+
+        /// <summary>
         /// Gets the sub status identifier.
         /// </summary>
         /// <param name="subStatusName">Name of the sub status.</param>
@@ -154,6 +166,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var subStatuses = _subStatusRepository.ReadAll();
 
             return subStatuses.First(_ => _.Description == subStatusName && _.IsActive).Id;
+        }
+
+        /// <summary>
+        /// Gets the sub status description
+        /// </summary>
+        /// <param name="subStatusId"></param>
+        /// <returns></returns>
+        public string GetSubStatusDescription(int subStatusId)
+        {
+            var subStatuses = _subStatusRepository.ReadAll();
+
+            return subStatuses.First(_ => _.Id == subStatusId && _.IsActive).Description;
         }
 
         /// <summary>
@@ -290,7 +314,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         /// <param name="concessionTypeId"></param>
         /// <returns></returns>
-        private ConcessionType GetConcessionType(int concessionTypeId)
+        public ConcessionType GetConcessionType(int concessionTypeId)
         {
             return _mapper.Map<ConcessionType>(_concessionTypeRepository.ReadById(concessionTypeId));
         }

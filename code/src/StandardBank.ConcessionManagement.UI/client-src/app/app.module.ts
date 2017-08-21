@@ -37,6 +37,11 @@ import { ConditionTypeService } from "./condition-type/condition-type.service";
 import { ConcessionConditionsService } from "./concession-conditions/concession-conditions.service";
 import { ClientAccountService } from "./client-account/client-account.service";
 import { LendingNewService } from "./lending-new/lending-new.service";
+import { LendingEditConcessionComponent } from './lending-edit-concession/lending-edit-concession.component';
+import { LendingService } from "./lending/lending.service";
+import { LendingUpdateService } from "./lending-update/lending-update.service";
+import { MyConditionService } from './my-condition/my-condition.service';
+import { LendingViewConcessionComponent } from './lending-view-concession/lending-view-concession.component';
 
 @NgModule({
     declarations: [
@@ -57,7 +62,9 @@ import { LendingNewService } from "./lending-new/lending-new.service";
         LendingAddConcessionComponent,
         TransactionalAddConcessionComponent,
         MismatchedInboxComponent,
-        LendingConcessionFilterPipe
+        LendingConcessionFilterPipe,
+        LendingEditConcessionComponent,
+        LendingViewConcessionComponent
     ],
     imports: [
         BrowserModule,
@@ -80,7 +87,10 @@ import { LendingNewService } from "./lending-new/lending-new.service";
         ConditionTypeService,
         ConcessionConditionsService,
         ClientAccountService,
-        LendingNewService
+        LendingNewService,
+        LendingService,
+        LendingUpdateService,
+        MyConditionService
     ],
     bootstrap: [AppComponent]
 })

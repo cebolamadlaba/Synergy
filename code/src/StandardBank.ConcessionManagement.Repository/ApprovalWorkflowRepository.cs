@@ -27,16 +27,16 @@ namespace StandardBank.ConcessionManagement.Repository
                                     join [dbo].[rtblRole] r on r.pkRoleId = ur.fkRoleId
                                     join [dbo].tblCentreUser cu on cu.fkUserId = u.pkUserId
                                     join [dbo].tblCentre c on c.pkCentreId = cu.fkCentreId
-                                    where r.pkRoleId in (@roles) and c.pkCentreId = @centreid";
+                                    where r.pkRoleId in (@roles) and c.pkCentreId = @centerId";
 
             Func<IEnumerable<User>> function = () =>
             {
                 using (var db = _dbConnectionFactory.Connection())
                 {
-                    return db.Query<User>(sql, new { roles = roles.ToArray() , centerid = centerId  });
+                    return db.Query<User>(sql, new { roles = roles.ToArray(), centerId = centerId });
                 }
             };
-            return _cacheManager.ReturnFromCache(function, (int)TimeSpan.FromHours(24).TotalMinutes, $"approvers_{centerId}_{string.Join("_",roles)}");
+            return _cacheManager.ReturnFromCache(function, (int)TimeSpan.FromHours(24).TotalMinutes, $"approvers_{centerId}_{string.Join("_", roles)}");
         }
     }
 }

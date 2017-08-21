@@ -21,6 +21,9 @@ import { ClientAccount } from "../models/client-account";
 import { LendingConcession } from "../models/lending-concession";
 import { LendingNewService } from "../lending-new/lending-new.service";
 import { Concession } from "../models/concession";
+import { LendingConcessionDetail } from "../models/lending-concession-detail";
+import { ConcessionCondition } from "../models/concession-condition";
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-lending-add-concession',
@@ -31,10 +34,13 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     public lendingConcessionForm: FormGroup;
     private sub: any;
     errorMessage: String;
+    validationError: String[];
+    saveMessage: String;
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
     selectedConditionTypes: ConditionType[];
+    isLoading = false;
 
     observableReviewFeeTypes: Observable<ReviewFeeType[]>;
     reviewFeeTypes: ReviewFeeType[];
@@ -57,6 +63,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     constructor(
         private route: ActivatedRoute,
         private formBuilder: FormBuilder,
+        private location: Location,
         @Inject(RiskGroupService) private riskGroupService,
         @Inject(ReviewFeeTypeService) private reviewFeeTypeService,
         @Inject(ProductTypeService) private productTypeService,
@@ -174,17 +181,136 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     onSubmit() {
+        this.isLoading = true;
+
+        this.errorMessage = null;
+        this.validationError = null;
+
         var lendingConcession = new LendingConcession();
         lendingConcession.concession = new Concession();
-        lendingConcession.concession.motivation = this.lendingConcessionForm.controls['motivation'].value;
-        lendingConcession.concession.mrsCrs = this.lendingConcessionForm.controls['mrsCrs'].value;
-        lendingConcession.concession.smtDealNumber = this.lendingConcessionForm.controls['smtDealNumber'].value;
 
-        this.lendingNewService.postData(lendingConcession)
-            .subscribe(entity => {
+        if (this.lendingConcessionForm.controls['mrsCrs'].value)
+            lendingConcession.concession.mrsCrs = this.lendingConcessionForm.controls['mrsCrs'].value;
+        else
+            this.addValidationError("MRS/CRS not captured");
+
+        if (this.lendingConcessionForm.controls['smtDealNumber'].value)
+            lendingConcession.concession.smtDealNumber = this.lendingConcessionForm.controls['smtDealNumber'].value;
+        else
+            this.addValidationError("SMT Deal Number not captured");
+
+        if (this.lendingConcessionForm.controls['motivation'].value)
+            lendingConcession.concession.motivation = this.lendingConcessionForm.controls['motivation'].value;
+        else
+            this.addValidationError("Motivation not captured");
+
+        lendingConcession.concession.riskGroupId = this.riskGroup.id;
+        lendingConcession.concession.concessionType = "Lending";
+        lendingConcession.concession.type = "New";
+
+        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+
+        for (let concessionFormItem of concessions.controls) {
+            if (!lendingConcession.lendingConcessionDetails)
+                lendingConcession.lendingConcessionDetails = [];
+
+            let lendingConcessionDetail = new LendingConcessionDetail();
+
+            if (concessionFormItem.get('productType').value)
+                lendingConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;
+            else
+                this.addValidationError("Product type not selected");
+
+            if (concessionFormItem.get('accountNumber').value) {
+                lendingConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
+                lendingConcessionDetail.legalEntityAccountId = concessionFormItem.get('accountNumber').value.legalEntityAccountId;
+            } else {
+                this.addValidationError("Client account not selected");
+            }
+
+            if (concessionFormItem.get('limit').value)
+                lendingConcessionDetail.limit = concessionFormItem.get('limit').value;
+
+            if (concessionFormItem.get('term').value)
+                lendingConcessionDetail.term = concessionFormItem.get('term').value;
+
+            if (concessionFormItem.get('marginAgainstPrime').value)
+                lendingConcessionDetail.marginAgainstPrime = concessionFormItem.get('marginAgainstPrime').value;
+
+            if (concessionFormItem.get('initiationFee').value)
+                lendingConcessionDetail.initiationFee = concessionFormItem.get('initiationFee').value;
+
+            if (concessionFormItem.get('reviewFeeType').value)
+                lendingConcessionDetail.reviewFeeTypeId = concessionFormItem.get('reviewFeeType').value.id;
+
+            if (concessionFormItem.get('reviewFee').value)
+                lendingConcessionDetail.reviewFee = concessionFormItem.get('reviewFee').value;
+
+            if (concessionFormItem.get('uffFee').value)
+                lendingConcessionDetail.uffFee = concessionFormItem.get('uffFee').value;
+
+            lendingConcession.lendingConcessionDetails.push(lendingConcessionDetail);
+        }
+
+        const conditions = <FormArray>this.lendingConcessionForm.controls['conditionItemsRows'];
+
+        for (let conditionFormItem of conditions.controls) {
+            if (!lendingConcession.concessionConditions)
+                lendingConcession.concessionConditions = [];
+
+            let concessionCondition = new ConcessionCondition();
+
+            if (conditionFormItem.get('conditionType').value)
+                concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;
+            else
+                this.addValidationError("Condition type not selected");
+
+            if (conditionFormItem.get('conditionProduct').value)
+                concessionCondition.conditionProductId = conditionFormItem.get('conditionProduct').value.id;
+            else
+                this.addValidationError("Condition product not selected");
+
+            if (conditionFormItem.get('interestRate').value)
+                concessionCondition.interestRate = conditionFormItem.get('interestRate').value;
+
+            if (conditionFormItem.get('volume').value)
+                concessionCondition.conditionVolume = conditionFormItem.get('volume').value;
+
+            if (conditionFormItem.get('value').value)
+                concessionCondition.conditionValue = conditionFormItem.get('value').value;
+
+            if (conditionFormItem.get('periodType').value)
+                concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
+
+            if (conditionFormItem.get('period').value)
+                concessionCondition.periodId = conditionFormItem.get('period').value.id;
+
+            lendingConcession.concessionConditions.push(concessionCondition);
+        }
+
+        if (!this.validationError) {
+            this.lendingNewService.postData(lendingConcession).subscribe(entity => {
                 console.log("data saved");
-            },
-            error => this.errorMessage = <any>error);
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    addValidationError(validationDetail) {
+        if (!this.validationError)
+            this.validationError = [];
+
+        this.validationError.push(validationDetail);
+    }
+
+    goBack() {
+        this.location.back();
     }
 
     ngOnDestroy() {

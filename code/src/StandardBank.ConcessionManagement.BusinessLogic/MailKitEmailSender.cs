@@ -83,7 +83,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var message = new MimeMessage
             {
                 Subject = data.Subject,
-                Body = new TextPart("plain") { Text = data.Body }
+                Body = new TextPart("html") { Text = data.Body }
 
             };
             message.From.Add(new MailboxAddress(data.FromAddress.Name, data.FromAddress.EmailAddress));

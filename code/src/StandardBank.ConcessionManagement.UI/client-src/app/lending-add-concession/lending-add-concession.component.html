@@ -4,7 +4,7 @@
         <div class="lending-banner-title">
             <div class="col-md-1">
                 <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
-                <span class="back-button-text" [routerLink]="['/pricing-lending', riskGroup.number]">Back</span>
+                <span class="back-button-text" (click)="goBack()">Back</span>
             </div>
             <div class="col-md-10 banner-main-title">
                 <i class="fa fa-handshake-o" aria-hidden="true"></i> Lending
@@ -35,13 +35,34 @@
     </div>
 </div>
 
+<div class="row alert-danger" *ngIf="(errorMessage || validationError) && !isLoading">
+    <div class="col-md-12">
+        <h1>Errors</h1>
+        {{errorMessage}}
+        
+        <ul *ngIf="validationError">
+            <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
+        </ul>
+    </div>
+</div>
+
+<div class="row alert alert-success" *ngIf="saveMessage && !isLoading">
+    <div class="col-md-12">
+        <h1>Success</h1>
+        Record has been saved successfully!
+        {{saveMessage}}
+    </div>
+</div>
+
+<div class="row alert alert-info" *ngIf="isLoading">
+    <div class="col-md-12">
+        <h1>Loading...</h1>
+    </div>
+</div>
+
 <!-- Form entries -->
 
-
-<form class="col-md-12 concession-information-form" [formGroup]="lendingConcessionForm" (ngSubmit)="onSubmit()">
-
-
-
+<form class="col-md-12 concession-information-form" [formGroup]="lendingConcessionForm" *ngIf="!isLoading">
     <div class="col-md-4">
         <div class="row">
             <label>MRS/CRS</label>
@@ -92,9 +113,9 @@
                         <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
                 </td>
-                <td class="length-long"><input value="5,000,000.00" formControlName="limit" /></td>
-                <td class="length-short"><input value="60" formControlName="term" /></td>
-                <td class="length-short"><input value="1" formControlName="marginAgainstPrime" /></td>
+                <td class="length-long"><input formControlName="limit" /></td>
+                <td class="length-short"><input formControlName="term" /></td>
+                <td class="length-short"><input formControlName="marginAgainstPrime" /></td>
                 <td class="length-long"><input formControlName="initiationFee" /></td>
 
                 <td class="length-medium">
@@ -126,7 +147,7 @@
                             <div class="col-md-12 modal-body">
                                 <div class="row">
                                     <div class="col-md-12 modal-title">
-                                        <button class="btn btn-default" (click)="addNewConditionRow()">New Conditions</button>
+                                        <button type="button" class="btn btn-default" (click)="addNewConditionRow()">New Conditions</button>
                                     </div>
                                 </div>
                                 <table class="form-concessions-table" formArrayName="conditionItemsRows">
@@ -167,14 +188,14 @@
                                                     <option *ngFor="let periodOption of periods" [ngValue]="periodOption">{{periodOption.description}}</option>
                                                 </select>
                                             </td>
-                                            <td class="delete"><button (click)="deleteConditionRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                                            <td class="delete"><button type="button" (click)="deleteConditionRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="modal-footer">
                                 <div class="float-right">
-                                    <button class="btn btn-submit" (click)="manageConditionsModal.hide()">Done</button>
+                                    <button type="button" class="btn btn-default" (click)="manageConditionsModal.hide()">Done</button>
                                 </div>
                             </div>
                         </div>
@@ -222,10 +243,8 @@
 
     <div class="float-right">
         <button type="button" class="btn btn-cancel" [routerLink]="['/pricing-lending', riskGroup.number]">Cancel</button>
-        <button class="btn btn-submit" type="submit">Submit</button>
+        <button class="btn btn-submit" type="button" (click)="onSubmit()">Submit</button>
     </div>
 </form>
 
-
-
-<pre>{{lendingConcessionForm.value | json}}</pre>
+<!--<pre>{{lendingConcessionForm.value | json}}</pre>-->

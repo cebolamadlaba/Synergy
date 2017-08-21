@@ -5,7 +5,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
     /// <summary>
     /// ConcessionLending entity
     /// </summary>
-    public class ConcessionLending
+    public class ConcessionLending : IAuditable
     {
         /// <summary>
         /// Gets or sets the Id.
@@ -96,5 +96,14 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// Gets or sets the legal entity id
         /// </summary>
         public int LegalEntityId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the legal entity account id
+        /// </summary>
+        public int LegalEntityAccountId { get; set; }
+
+        public string TableName => "tblConcessionLending";
+        public string PrimaryKeyColumnName => "pkConcessionLendingId";
+        public object PrimaryKeyValue => Id;
     }
 }
