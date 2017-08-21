@@ -1,7 +1,7 @@
-﻿<div class="col-md-12 search-and-results-container">
+<div class="col-md-12 search-and-results-container">
     <!-- Search bar -->
     <div class="input-group add-on">
-        <input class="form-control" placeholder="Search Concession ID or Risk Group Number" [(ngModel)]="concessionIdOrRiskGroupNumber" type="text">
+        <input class="form-control" placeholder="Search Concession ID or Risk Group Number" [(ngModel)]="concessionIdOrRiskGroupNumber" type="text" [disabled]="concessionsToPrint.length > 0">
     </div>
 
     <div class="section table-hover-highlight" *ngFor="let approvedConcession of approvedConcessions | approvedConcessionFilter : concessionIdOrRiskGroupNumber; trackBy: index;">
@@ -9,7 +9,7 @@
             <div class="concessionID-section">
                 <div class="col-md-2 no-padding-left">
                     <div class="col-md-1 no-padding-left vertical-align-center">
-                        <input type="checkbox">
+                        <input type="checkbox" (change)="addToPrintConcessions($event, approvedConcession.concessionId)">
                     </div>
                     <div class="col-md-10 no-padding-left">
                         <div class="concession-name">{{approvedConcession.riskGroupName}}</div>
@@ -64,7 +64,7 @@
     <div class="concession-footer">
         <!--print button-->
         <button type="button" class="btn btn-print">
-            <i class="fa fa-print" aria-hidden="true"></i> Print 1 Files
+            <i class="fa fa-print" aria-hidden="true"></i> Print {{concessionsToPrint.length}} Files
         </button>
     </div>
 

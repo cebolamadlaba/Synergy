@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ApprovedConcession } from "../models/approved-concession";
 import { Observable } from "rxjs";
 import { UserConcessionsService } from "../user-concessions/user-concessions.service";
@@ -13,10 +13,12 @@ export class ApprovedConcessionsComponent implements OnInit {
     errorMessage: String;
     observableApprovedConcessions: Observable<ApprovedConcession[]>;
     approvedConcessions: ApprovedConcession[];
+    concessionsToPrint: number[];
 
     constructor( @Inject(UserConcessionsService) private userConcessionsService, private router: Router) { }
 
     ngOnInit() {
+        this.concessionsToPrint = [];
         this.observableApprovedConcessions = this.userConcessionsService.getApprovedConcessions();
         this.observableApprovedConcessions.subscribe(approvedConcession => this.approvedConcessions = approvedConcession, error => this.errorMessage = <any>error);
     }
@@ -29,4 +31,14 @@ export class ApprovedConcessionsComponent implements OnInit {
         }
     }
 
+    addToPrintConcessions(event, concessionId) {
+        if (event.target.checked) {
+            this.concessionsToPrint.push(concessionId);
+        } else {
+            var index = this.concessionsToPrint.indexOf(concessionId, 0);
+            if (index > -1) {
+                this.concessionsToPrint.splice(index, 1);
+            }
+        }
+    }
 }
