@@ -41,4 +41,9 @@ export class ApprovedConcessionsComponent implements OnInit {
             }
         }
     }
+
+    printLetters() {
+        console.log(this.concessionsToPrint);
+        this.userConcessionsService.printConcessionLetters(this.concessionsToPrint);
+    }
 }
