@@ -30,6 +30,13 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         IEnumerable<Concession> ReadAll();
 
         /// <summary>
+        /// Reads the approved concessions for the user
+        /// </summary>
+        /// <param name="requestorId"></param>
+        /// <returns></returns>
+        IEnumerable<Concession> ReadApprovedConcessions(int requestorId);
+
+        /// <summary>
         /// Reads all the records for the requestor id, status id, sub status id and is active supplied
         /// </summary>
         /// <param name="requestorId"></param>

@@ -106,6 +106,27 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Reads the approved concessions for the requestor Id
+        /// </summary>
+        /// <param name="requestorId"></param>
+        /// <returns></returns>
+        public IEnumerable<Concession> ReadApprovedConcessions(int requestorId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<Concession>(
+                    @"SELECT [pkConcessionId] [Id], [fkTypeId] [TypeId], [ConcessionRef], [fkConcessionTypeId] [ConcessionTypeId], [SMTDealNumber], [fkStatusId] [StatusId], [fkSubStatusId] [SubStatusId], [ConcessionDate], [DatesentForApproval], [Motivation], [DateApproved], [fkRequestorId] [RequestorId], [fkBCMUserId] [BCMUserId], [DateActionedByBCM], [fkPCMUserId] [PCMUserId], [DateActionedByPCM], [fkHOUserId] [HOUserId], [DateActionedByHO], [ExpiryDate], [CentreId], [IsCurrent], [IsActive], [MRS_CRS] [MrsCrs], [fkRiskGroupId] [RiskGroupId], [fkRegionId] [RegionId] 
+                    FROM [dbo].[tblConcession] 
+                    where [fkRequestorId] = @requestorId
+                    and [fkStatusId] in (2, 3)
+                    and IsActive = 1
+                    and IsCurrent = 1
+                    and (ExpiryDate is null or ExpiryDate > getdate())",
+                    new {requestorId});
+            }
+        }
+
+        /// <summary>
         /// Reads all the records for the requestor id, status id, sub status id and is active
         /// </summary>
         /// <param name="requestorId"></param>
