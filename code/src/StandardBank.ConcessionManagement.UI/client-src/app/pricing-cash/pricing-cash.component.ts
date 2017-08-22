@@ -1,7 +1,8 @@
-﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { CashConcession } from "../models/cash-concession";
 
 @Component({
   selector: 'app-pricing-cash',
@@ -11,6 +12,9 @@ import { Location } from '@angular/common';
 export class PricingCashComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
     private sub: any;
+    observableCashConcession: Observable<CashConcession>;
+    cashConcession: CashConcession = new CashConcession();
+    errorMessage: String;
 
     constructor(private route: ActivatedRoute, private location: Location) {
     }
@@ -20,9 +24,8 @@ export class PricingCashComponent implements OnInit, OnDestroy {
             this.riskGroupNumber = +params['riskGroupNumber'];
 
             if (this.riskGroupNumber) {
-                //this.observableLendingView = this.lendingViewService.getData(this.riskGroupNumber);
-                //this.observableLendingView.subscribe(lendingView => this.lendingView = lendingView,
-                //    error => this.errorMessage = <any>error);
+                //this.observableCashConcession = this.lendingViewService.getData(this.riskGroupNumber);
+                //this.observableCashConcession.subscribe(lendingView => this.lendingView = lendingView, error => this.errorMessage = <any>error);
             }
         });
     }

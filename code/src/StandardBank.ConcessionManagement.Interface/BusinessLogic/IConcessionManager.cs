@@ -132,5 +132,19 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <returns></returns>
         Model.Repository.ConcessionComment
             CreateConcessionComment(Model.Repository.ConcessionComment concessionComment);
+
+        /// <summary>
+        /// Gets the approved concessions for the user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        IEnumerable<ApprovedConcession> GetApprovedConcessionsForUser(int userId);
+
+        /// <summary>
+        /// Gets the approved concession details
+        /// </summary>
+        /// <param name="concession"></param>
+        /// <returns></returns>
+        IEnumerable<ApprovedConcessionDetail> GetApprovedConcessionDetails(Concession concession);
     }
 }
