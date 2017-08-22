@@ -44,6 +44,7 @@ import { MyConditionService } from './my-condition/my-condition.service';
 import { LendingViewConcessionComponent } from './lending-view-concession/lending-view-concession.component';
 import { ApprovedConcessionFilterPipe } from './approved-concession-filter/approved-concession-filter.pipe';
 import { CashConcessionService } from "./cash-concession/cash-concession.service";
+import { CashConcessionFilterPipe } from './cash-concession-filter/cash-concession-filter.pipe';
 
 @NgModule({
     declarations: [
@@ -67,7 +68,8 @@ import { CashConcessionService } from "./cash-concession/cash-concession.service
         LendingConcessionFilterPipe,
         LendingEditConcessionComponent,
         LendingViewConcessionComponent,
-        ApprovedConcessionFilterPipe
+        ApprovedConcessionFilterPipe,
+        CashConcessionFilterPipe
     ],
     imports: [
         BrowserModule,
