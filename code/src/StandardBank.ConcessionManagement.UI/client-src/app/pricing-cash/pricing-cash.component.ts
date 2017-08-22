@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -20,6 +20,7 @@ export class PricingCashComponent implements OnInit, OnDestroy {
     observableCashView: Observable<CashView>;
     cashView: CashView = new CashView();
     errorMessage: String;
+    showHide: true;
 
     constructor(
         private route: ActivatedRoute,
