@@ -81,6 +81,26 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         }
 
         /// <summary>
+        /// Gets the accrual types.
+        /// </summary>
+        /// <returns></returns>
+        [Route("AccrualTypes")]
+        public IActionResult AccrualTypes()
+        {
+            return Ok(_lookupTableManager.GetAccrualTypes());
+        }
+
+        /// <summary>
+        /// Gets the channel types.
+        /// </summary>
+        /// <returns></returns>
+        [Route("ChannelTypes")]
+        public IActionResult ChannelTypes()
+        {
+            return Ok(_lookupTableManager.GetChannelTypes());
+        }
+
+        /// <summary>
         /// Gets the client accounts for the risk group number specified
         /// </summary>
         /// <param name="riskGroupNumber"></param>

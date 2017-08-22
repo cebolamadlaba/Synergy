@@ -13,11 +13,17 @@ namespace StandardBank.ConcessionManagement.UI.Extension
         /// </summary>
         public MappingProfile()
         {
+            //AccrualType
+            CreateMap<Model.Repository.AccrualType, Model.UserInterface.AccrualType>().ReverseMap();
+
             //Centre
             CreateMap<Model.Repository.Centre, Model.UserInterface.Centre>()
                 .ForMember(target => target.Name, _ => _.MapFrom(source => source.CentreName));
             CreateMap<Model.UserInterface.Centre, Model.Repository.Centre>()
                 .ForMember(target => target.CentreName, _ => _.MapFrom(source => source.Name));
+
+            //ChannelType
+            CreateMap<Model.Repository.ChannelType, Model.UserInterface.ChannelType>().ReverseMap();
 
             //Concession
             CreateMap<Model.Repository.Concession, Model.UserInterface.Concession>()

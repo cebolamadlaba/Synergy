@@ -300,7 +300,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             SubStatusRepository, ReferenceTypeRepository, MarketSegmentRepository, ProvinceRepository,
             ConcessionTypeRepository, ProductRepository, ReviewFeeTypeRepository, PeriodRepository,
             PeriodTypeRepository, ConditionTypeRepository, Mapper, ConditionProductRepository,
-            ConditionTypeProductRepository);
+            ConditionTypeProductRepository, AccrualTypeRepository, ChannelTypeRepository);
 
         /// <summary>
         /// The concession manager
