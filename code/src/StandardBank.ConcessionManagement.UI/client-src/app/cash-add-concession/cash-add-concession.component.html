@@ -1,1 +1,86 @@
-﻿
+<!-- Banner expanded -->
+<div class="col-md-12 banner">
+    <div class="row">
+        <div class="lending-banner-title">
+            <div class="col-md-1">
+                <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+                <span class="back-button-text" (click)="goBack()">Back</span>
+            </div>
+            <div class="col-md-10 banner-main-title">
+                <i class="fa fa-handshake-o" aria-hidden="true"></i> Cash
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+        <div class="col-md-12 banner-container">
+            <div class="col-md-11">
+                <div>
+                    <div class="col-md-5">
+                        <div class="subHeading">{{riskGroup.name}}</div>
+                        <div class="date lightTitle hidden-element">{{riskGroup.number}}</div>
+                    </div>
+                    <div class="col-md-2  hidden-element">
+                        <div class="subHeading lightTitle"> Latest CRS / MRS</div>
+                        <div class="score"><b>0.00</b></div>
+                    </div>
+                </div>
+            </div>
+            <!--
+            <div class="col-md-1">
+                <div class="compress">
+                    <div onclick="hideElement('hidden-element')">
+                        <i class="fa fa-compress" aria-hidden="true" id="compress-icon"></i>
+                    </div>
+                </div>
+            </div>
+            -->
+        </div>
+    </div>
+</div>
+
+<div class="row alert-danger" *ngIf="(errorMessage || validationError) && !isLoading">
+    <div class="col-md-12">
+        <h1>Errors</h1>
+        {{errorMessage}}
+
+        <ul *ngIf="validationError">
+            <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
+        </ul>
+    </div>
+</div>
+
+<div class="row alert alert-success" *ngIf="saveMessage && !isLoading">
+    <div class="col-md-12">
+        <h1>Success</h1>
+        Record has been saved successfully!
+        {{saveMessage}}
+    </div>
+</div>
+
+<div class="row alert alert-info" *ngIf="isLoading">
+    <div class="col-md-12">
+        <h1>Loading...</h1>
+    </div>
+</div>
+
+<form class="col-md-12 product-form" [formGroup]="cashConcessionForm" *ngIf="!isLoading">
+    <div class="col-md-4">
+        <div class="row">
+            <label>SMT Deal Number</label>
+            <input class="form-control" formControlName="smtDealNumber" maxlength="16" />
+        </div>
+    </div>
+    <div class="col-md-7 col-md-offset-1">
+        <label>Motivation</label>
+        <textarea class="form-control large-input" maxlength="800" formControlName="motivation"></textarea>
+    </div>
+
+    <!-- Form buttons -->
+    <div class="footer-buttons">
+        <div class="float-right">
+            <button type="button" class="btn btn-cancel" [routerLink]="['/pricing-cash', riskGroup.number]">Cancel</button>
+            <button class="btn btn-primary" type="button" (click)="onSubmit()">Submit</button>
+        </div>
+    </div>
+</form>
+
+<pre>{{cashConcessionForm.value | json}}</pre>
