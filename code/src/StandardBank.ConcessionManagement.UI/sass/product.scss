@@ -1,0 +1,24 @@
+﻿.banner {
+    background: $bannerBackground;
+    margin-bottom: 15px;
+
+    .banner-container {
+        background: $bannerBackground;
+        color: white;
+        padding-top: 15px;
+        padding-bottom: 15px;
+
+        .subHeading {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .score {
+            font-size: 1.9em;
+        }
+    }
+}
+
+.product-form {
+    margin-bottom: 15px;
+}
