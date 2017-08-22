@@ -121,55 +121,6 @@
     }
 }
 
-#manageConditions{
-    .modal-dialog{
-        margin: 10%;
-        width: 80%;
-        background: $bodyBackground;
-    
-        .modal-header{
-            background: $standardBankBlue;
-            color: $white;
-
-            h4{
-                margin: 0;
-            }
-        }
-
-        .modal-title{
-            padding-bottom: 15px;
-        }
-
-        .modal-body{
-            .form-concessions-table-content tr{
-                td{
-                    padding-right: 10px;
-                    height: 25px;
-                }
-
-                .length-long{
-                    width: 20%;
-                }
-
-                .length-medium{
-                    width: 9.5%;
-                }
-
-                .delete{
-                    width: 2%;
-                }
-            }
-        }
-    }
-}
-
-.delete{
-    i{
-        cursor: pointer;
-        color: $darkGray;
-    }
-}
-
 table.dataTable.no-footer {
     border-bottom: none;
 }
