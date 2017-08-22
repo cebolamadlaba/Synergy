@@ -6,6 +6,8 @@ using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface;
+using AccrualType = StandardBank.ConcessionManagement.Model.UserInterface.AccrualType;
+using ChannelType = StandardBank.ConcessionManagement.Model.UserInterface.ChannelType;
 using ConcessionType = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionType;
 using ConditionProduct = StandardBank.ConcessionManagement.Model.UserInterface.ConditionProduct;
 using ConditionType = StandardBank.ConcessionManagement.Model.UserInterface.ConditionType;
@@ -92,6 +94,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IConditionTypeProductRepository _conditionTypeProductRepository;
 
         /// <summary>
+        /// The accrual type repository
+        /// </summary>
+        private readonly IAccrualTypeRepository _accrualTypeRepository;
+
+        /// <summary>
+        /// The channel type repository
+        /// </summary>
+        private readonly IChannelTypeRepository _channelTypeRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LookupTableManager"/> class.
         /// </summary>
         /// <param name="statusRepository">The status repository.</param>
@@ -104,17 +116,21 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="reviewFeeTypeRepository">The review fee type repository.</param>
         /// <param name="periodRepository">The period repository.</param>
         /// <param name="periodTypeRepository">The period type repository.</param>
-        /// <param name="conditionTypeRepository"></param>
-        /// <param name="mapper"></param>
-        /// <param name="conditionProductRepository"></param>
-        /// <param name="conditionTypeProductRepository"></param>
+        /// <param name="conditionTypeRepository">The condition type repository.</param>
+        /// <param name="mapper">The mapper.</param>
+        /// <param name="conditionProductRepository">The condition product repository.</param>
+        /// <param name="conditionTypeProductRepository">The condition type product repository.</param>
+        /// <param name="accrualTypeRepository">The accrual type repository.</param>
+        /// <param name="channelTypeRepository">The channel type repository.</param>
         public LookupTableManager(IStatusRepository statusRepository, ISubStatusRepository subStatusRepository,
             IReferenceTypeRepository referenceTypeRepository, IMarketSegmentRepository marketSegmentRepository,
             IProvinceRepository provinceRepository, IConcessionTypeRepository concessionTypeRepository,
             IProductRepository productRepository, IReviewFeeTypeRepository reviewFeeTypeRepository,
             IPeriodRepository periodRepository, IPeriodTypeRepository periodTypeRepository,
             IConditionTypeRepository conditionTypeRepository, IMapper mapper,
-            IConditionProductRepository conditionProductRepository, IConditionTypeProductRepository conditionTypeProductRepository)
+            IConditionProductRepository conditionProductRepository,
+            IConditionTypeProductRepository conditionTypeProductRepository,
+            IAccrualTypeRepository accrualTypeRepository, IChannelTypeRepository channelTypeRepository)
         {
             _statusRepository = statusRepository;
             _subStatusRepository = subStatusRepository;
@@ -130,6 +146,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _mapper = mapper;
             _conditionProductRepository = conditionProductRepository;
             _conditionTypeProductRepository = conditionTypeProductRepository;
+            _accrualTypeRepository = accrualTypeRepository;
+            _channelTypeRepository = channelTypeRepository;
         }
 
         /// <summary>
@@ -369,6 +387,26 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             return mappedConditionTypes;
+        }
+
+        /// <summary>
+        /// Gets the accrual types.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<AccrualType> GetAccrualTypes()
+        {
+            var accrualTypes = _accrualTypeRepository.ReadAll();
+            return _mapper.Map<IEnumerable<AccrualType>>(accrualTypes.Where(_ => _.IsActive));
+        }
+
+        /// <summary>
+        /// Gets the channel types.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<ChannelType> GetChannelTypes()
+        {
+            var channelTypes = _channelTypeRepository.ReadAll();
+            return _mapper.Map<IEnumerable<ChannelType>>(channelTypes.Where(_ => _.IsActive));
         }
 
         /// <summary>

@@ -136,5 +136,17 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// </summary>
         /// <returns></returns>
         IEnumerable<ConditionType> GetConditionTypes();
+
+        /// <summary>
+        /// Gets the accrual types.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<AccrualType> GetAccrualTypes();
+
+        /// <summary>
+        /// Gets the channel types.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<ChannelType> GetChannelTypes();
     }
 }

@@ -45,6 +45,8 @@ import { LendingViewConcessionComponent } from './lending-view-concession/lendin
 import { ApprovedConcessionFilterPipe } from './approved-concession-filter/approved-concession-filter.pipe';
 import { CashConcessionService } from "./cash-concession/cash-concession.service";
 import { CashConcessionFilterPipe } from './cash-concession-filter/cash-concession-filter.pipe';
+import { AccrualTypeService } from "./accrual-type/accrual-type.service";
+import { ChannelTypeService } from "./channel-type/channel-type.service";
 
 @NgModule({
     declarations: [
@@ -96,7 +98,9 @@ import { CashConcessionFilterPipe } from './cash-concession-filter/cash-concessi
         LendingService,
         LendingUpdateService,
         MyConditionService,
-        CashConcessionService
+        CashConcessionService,
+        AccrualTypeService,
+        ChannelTypeService
     ],
     bootstrap: [AppComponent]
 })

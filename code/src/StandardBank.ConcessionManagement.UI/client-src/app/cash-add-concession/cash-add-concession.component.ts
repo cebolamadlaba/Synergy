@@ -14,6 +14,10 @@ import { ConditionTypeService } from "../condition-type/condition-type.service";
 import { ConditionType } from "../models/condition-type";
 import { ClientAccountService } from "../client-account/client-account.service";
 import { ClientAccount } from "../models/client-account";
+import { AccrualTypeService } from "../accrual-type/accrual-type.service";
+import { AccrualType } from "../models/accrual-type";
+import { ChannelTypeService } from "../channel-type/channel-type.service";
+import { ChannelType } from "../models/channel-type";
 
 @Component({
     selector: 'app-cash-add-concession',
@@ -44,6 +48,12 @@ export class CashAddConcessionComponent implements OnInit {
     observableClientAccounts: Observable<ClientAccount[]>;
     clientAccounts: ClientAccount[];
 
+    observableAccrualTypes: Observable<AccrualType[]>;
+    accrualTypes: AccrualType[];
+
+    observableChannelTypes: Observable<ChannelType[]>;
+    channelTypes: ChannelType[];
+
     constructor(private route: ActivatedRoute,
         private formBuilder: FormBuilder,
         private location: Location,
@@ -51,7 +61,9 @@ export class CashAddConcessionComponent implements OnInit {
         @Inject(PeriodTypeService) private periodTypeService,
         @Inject(ConditionTypeService) private conditionTypeService,
         @Inject(ClientAccountService) private clientAccountService,
-        @Inject(RiskGroupService) private riskGroupService) {
+        @Inject(RiskGroupService) private riskGroupService,
+        @Inject(AccrualTypeService) private accrualTypeService,
+        @Inject(ChannelTypeService) private channelTypeService) {
         this.riskGroup = new RiskGroup();
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
@@ -80,6 +92,9 @@ export class CashAddConcessionComponent implements OnInit {
             motivation: new FormControl()
         });
 
+        this.observableChannelTypes = this.channelTypeService.getData();
+        this.observableChannelTypes.subscribe(channelTypes => this.channelTypes = channelTypes, error => this.errorMessage = <any>error);
+
         this.observablePeriods = this.periodService.getData();
         this.observablePeriods.subscribe(periods => this.periods = periods, error => this.errorMessage = <any>error);
 
@@ -88,6 +103,9 @@ export class CashAddConcessionComponent implements OnInit {
 
         this.observableConditionTypes = this.conditionTypeService.getData();
         this.observableConditionTypes.subscribe(conditionTypes => this.conditionTypes = conditionTypes, error => this.errorMessage = <any>error);
+
+        this.observableAccrualTypes = this.accrualTypeService.getData();
+        this.observableAccrualTypes.subscribe(accrualTypes => this.accrualTypes = accrualTypes, error => this.errorMessage = <any>error);
     }
 
     initConcessionItemRows() {

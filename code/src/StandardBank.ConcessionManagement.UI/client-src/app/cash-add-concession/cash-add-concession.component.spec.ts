@@ -10,6 +10,8 @@ import { PeriodService, MockPeriodService } from "../period/period.service";
 import { PeriodTypeService, MockPeriodTypeService } from "../period-type/period-type.service";
 import { ConditionTypeService, MockConditionTypeService } from "../condition-type/condition-type.service";
 import { ClientAccountService, MockClientAccountService } from "../client-account/client-account.service";
+import { AccrualTypeService, MockAccrualTypeService } from "../accrual-type/accrual-type.service";
+import { ChannelTypeService, MockChannelTypeService } from "../channel-type/channel-type.service";
 
 describe('CashAddConcessionComponent', () => {
     let component: CashAddConcessionComponent;
@@ -24,7 +26,9 @@ describe('CashAddConcessionComponent', () => {
                 { provide: PeriodService, useClass: MockPeriodService },
                 { provide: PeriodTypeService, useClass: MockPeriodTypeService },
                 { provide: ConditionTypeService, useClass: MockConditionTypeService },
-                { provide: ClientAccountService, useClass: MockClientAccountService }
+                { provide: ClientAccountService, useClass: MockClientAccountService },
+                { provide: AccrualTypeService, useClass: MockAccrualTypeService },
+                { provide: ChannelTypeService, useClass: MockChannelTypeService }
             ]
         })
             .compileComponents();
