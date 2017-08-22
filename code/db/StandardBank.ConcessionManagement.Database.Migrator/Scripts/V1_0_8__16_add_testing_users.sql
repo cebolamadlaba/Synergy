@@ -36,3 +36,22 @@ WHEN MATCHED THEN
 UPDATE SET [fkRoleId] = SOURCE.[RoleId], [IsActive] = SOURCE.[IsActive]
 WHEN NOT MATCHED THEN
 INSERT ([fkUserId], [fkRoleId], [IsActive]) VALUES (SOURCE.[UserId], SOURCE.[RoleId], SOURCE.[IsActive]);
+
+MERGE [dbo].[tblUserRegion] AS TARGET
+USING (SELECT [pkUserId], 1, 1, 1 FROM [dbo].[tblUser])
+AS SOURCE ([UserId], [RegionId], [IsActive], [IsSelected])
+ON TARGET.[fkUserId] = SOURCE.[UserId]
+WHEN MATCHED THEN
+UPDATE SET [fkRegionId] = SOURCE.[RegionId], [IsActive] = SOURCE.[IsActive], [IsSelected] = SOURCE.[IsSelected]
+WHEN NOT MATCHED THEN
+INSERT ([fkUserId], [fkRegionId], [IsActive], [IsSelected]) VALUES (SOURCE.[UserId], SOURCE.[RegionId], SOURCE.[IsActive], SOURCE.[IsSelected]);
+
+MERGE [dbo].[tblCentreUser] AS TARGET
+USING (SELECT 1, [pkUserId], 1 FROM [dbo].[tblUser])
+AS SOURCE ([CentreId], [UserId], [IsActive])
+ON TARGET.[fkUserId] = SOURCE.[UserId]
+WHEN MATCHED THEN
+UPDATE SET [fkCentreId] = SOURCE.[CentreId], [IsActive] = SOURCE.[IsActive]
+WHEN NOT MATCHED THEN
+INSERT ([fkCentreId], [fkUserId], [IsActive]) VALUES (SOURCE.[CentreId], SOURCE.[UserId], SOURCE.[IsActive]);
+
