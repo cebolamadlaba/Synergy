@@ -6,6 +6,14 @@
     public class CashConcessionDetail
     {
         /// <summary>
+        /// Gets or sets the identifier.
+        /// </summary>
+        /// <value>
+        /// The identifier.
+        /// </value>
+        public int Id { get; set; }
+
+        /// <summary>
         /// Gets or sets the name of the customer.
         /// </summary>
         /// <value>
@@ -27,7 +35,7 @@
         /// <value>
         /// The legal entity identifier.
         /// </value>
-        public int LegalEntityId { get; set; }
+        public int? LegalEntityId { get; set; }
 
         /// <summary>
         /// Gets or sets the legal entity account identifier.
@@ -35,7 +43,7 @@
         /// <value>
         /// The legal entity account identifier.
         /// </value>
-        public int LegalEntityAccountId { get; set; }
+        public int? LegalEntityAccountId { get; set; }
 
         /// <summary>
         /// Gets or sets the channel.
@@ -51,7 +59,7 @@
         /// <value>
         /// The cash table number.
         /// </value>
-        public int CashTableNumber { get; set; }
+        public int? CashTableNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the bp identifier.

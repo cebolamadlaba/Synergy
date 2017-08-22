@@ -1484,7 +1484,9 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 CashVolume = 9,
                 CashValue = 1813,
                 BaseRateId = GetBaseRateId(),
-                AdValorem = 8669
+                AdValorem = 8669,
+                LegalEntityId = GetLegalEntityId(),
+                LegalEntityAccountId = GetLegalEntityAccountId()
             };
 
             InstantiatedDependencies.ConcessionCashRepository.Create(model);

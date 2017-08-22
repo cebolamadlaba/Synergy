@@ -1,6 +1,4 @@
-﻿using System.Data;
-using System.Data.SqlClient;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.Extensions.Caching.Memory;
 using StandardBank.ConcessionManagement.BusinessLogic;
 using StandardBank.ConcessionManagement.Common;

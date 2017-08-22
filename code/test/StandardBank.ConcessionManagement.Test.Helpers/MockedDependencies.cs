@@ -299,5 +299,10 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static Mock<IApprovalRoutingManager> MockApprovalRoutingManager = new Mock<IApprovalRoutingManager>();
         public static Mock<IApprovalWorkflowRepository> MockApprovalWorkflowRepository = new Mock<IApprovalWorkflowRepository>();
         public static Mock<ILetterGeneratorManager> MockLetterGeneratorManager = new Mock<ILetterGeneratorManager>();
+
+        /// <summary>
+        /// The mock cash manager
+        /// </summary>
+        public static Mock<ICashManager> MockCashManager = new Mock<ICashManager>();
     }
 }

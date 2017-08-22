@@ -31,6 +31,16 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                 .ForMember(target => target.DatesentForApproval, _ => _.MapFrom(source => source.DateSentForApproval))
                 .ForMember(target => target.SMTDealNumber, _ => _.MapFrom(source => source.SmtDealNumber));
 
+            //ConcessionCash
+            CreateMap<Model.Repository.ConcessionCash, Model.UserInterface.Cash.CashConcessionDetail>()
+                .ForMember(target => target.CashTableNumber, _ => _.MapFrom(source => source.TableNumber))
+                .ForMember(target => target.Value, _ => _.MapFrom(source => source.CashValue))
+                .ForMember(target => target.Volume, _ => _.MapFrom(source => source.CashVolume));
+            CreateMap<Model.UserInterface.Cash.CashConcessionDetail, Model.Repository.ConcessionCash>()
+                .ForMember(target => target.TableNumber, _ => _.MapFrom(source => source.CashTableNumber))
+                .ForMember(target => target.CashValue, _ => _.MapFrom(source => source.Value))
+                .ForMember(target => target.CashVolume, _ => _.MapFrom(source => source.Volume));
+
             //ConcessionCondition
             CreateMap<Model.Repository.ConcessionCondition, Model.UserInterface.ConcessionCondition>()
                 .ForMember(target => target.ConditionVolume, _ => _.MapFrom(source => source.Volume))
