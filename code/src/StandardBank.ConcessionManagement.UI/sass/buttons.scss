@@ -13,23 +13,19 @@
 
 .btn-concession {
     float: right;
-    margin-top: 15px;
     width: 150px
 }
 
 .btn-delete {
     background: none;
     border: none;
-    font-size: 0.9em;
+    font-size: 1.6em;
     padding: 0;
 
     &:hover {
         color: $lightGray;
-        font-size: 1em;
     }
 }    
-
-
 
 //overriding default bootstrap buttons      
      .pagination{
@@ -71,21 +67,6 @@
         background: $standardBankBlue;
     }
 }
-.concessionBtn {
-    background: $standardBankBlue;
-    box-shadow: 1px 2px 1px $standardBankBlue;
-    float: right;
-
-    &:hover {
-        color: white;
-        background: $standardBankBlueHover;
-    }
-
-    &:focus {
-        color: $white;
-        background: $standardBankBlue;
-    }
-}
 
 .btn-default-search {
     background: $standardBankBlue;
@@ -101,33 +82,3 @@
         background: $standardBankBlue;
     }
 }
-
-.btn-default {
-    background: $standardBankBlue;
-    color: white;
-    box-shadow: 1px 2px 1px $standardBankBlue;
-    padding: 5px 0px;
-    min-width: 145px;
-    border: none;
-
-    &:hover {
-        background-color: $standardBankBlueHover;
-        color: white;
-    }
-
-    &:active {
-        background: $standardBankBlueHover;
-        color: white;
-    }
-
-    &:focus {
-        background: $standardBankBlueHover;
-        color: white;
-    }
-
-    &:active:hover {
-        background: $standardBankBlueHover;
-        color: white;
-    }
-}
-

@@ -23,11 +23,35 @@
     margin-bottom: 15px;
 }
 
+.form-feedback-container {
+    margin: -15px 0 15px 0;
+
+    .message-heading {
+        font-weight: bold;
+        font-size: 1.2em;
+        margin: 10px 0 5px 15px;
+
+        i {
+            margin-right: 10px;
+        }
+    }
+
+    .alert-danger {
+        border: 1px solid $validationRed;
+    }
+
+    .alert-success {
+        border: 1px solid $validationGreen;
+    }
+
+    .alert-info {
+        border: 1px solid $loadingBlue;
+    }
+}
+
 
     .modal-dialog {
-        margin: 10%;
-        width: 80%;
-        background: $bodyBackground;
+
 
         .modal-header {
             background: $standardBankBlue;

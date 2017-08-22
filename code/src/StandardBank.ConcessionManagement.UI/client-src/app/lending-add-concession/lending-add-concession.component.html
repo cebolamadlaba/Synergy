@@ -37,33 +37,39 @@
     </div>
 </div>
 
-<div class="row alert-danger" *ngIf="(errorMessage || validationError) && !isLoading">
-    <div class="col-md-12">
-        <h1>Errors</h1>
-        {{errorMessage}}
-        
-        <ul *ngIf="validationError">
-            <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
-        </ul>
+<!-- Error message -->
+<div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Unable to submit concession. Please see error(s) below.</p>
+            <p>{{errorMessage}}</p>
+
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
+            </ul>
+        </div>
     </div>
 </div>
 
-<div class="row alert alert-success" *ngIf="saveMessage && !isLoading">
-    <div class="col-md-12">
-        <h1>Success</h1>
-        Record has been saved successfully!
-        {{saveMessage}}
+<!-- Success message -->
+<div class="col-md-12" *ngIf="saveMessage && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-success">
+            <p class="message-heading"><i class="fa fa-check-circle" aria-hidden="true"></i>Concession submitted successfully with ID: {{saveMessage}}</p>  
+        </div>
     </div>
 </div>
 
-<div class="row alert alert-info" *ngIf="isLoading">
-    <div class="col-md-12">
-        <h1>Loading...</h1>
+<!-- Loading message -->
+<div class="col-md-12" *ngIf="isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-info">
+            <p class="message-heading"><i class="fa fa-spinner" aria-hidden="true"></i>Saving</p>
+        </div>
     </div>
 </div>
 
 <!-- Form entries -->
-
 <form class="col-md-12 product-form" [formGroup]="lendingConcessionForm" *ngIf="!isLoading">
     <div class="col-md-4">
         <div class="row">
@@ -84,7 +90,7 @@
     <div class="col-md-12" style="border-bottom: 1px solid gray; margin-bottom: 15px;">
         <div class="row">
             <h3 class="table-title">Concessions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()">New Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" style="margin-top: 15px;">New Concession</button>
         </div>
     </div>
 
@@ -128,7 +134,7 @@
                 </td>
                 <td class="length-medium"><input class="form-control" formControlName="reviewFee" /></td>
                 <td class="length-medium"><input class="form-control" formControlName="uffFee" /></td>
-                <td class="delete"><button *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                <td><button *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
         </tbody>
     </table>
@@ -137,7 +143,7 @@
     <div class="col-md-12">
         <div class="row">
             <h3 class="table-title">Conditions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()">Manage Conditions</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;">Manage Conditions</button>
 
             <div class="table-container">
                 <table class="table table-bordered table-hover header-fixed table-striped">
@@ -184,10 +190,10 @@
                 <div class="col-md-12 modal-body">
                     <div class="row">
                         <div class="col-md-12 modal-title">
-                            <button type="button" class="btn btn-default" (click)="addNewConditionRow()">New Conditions</button>
+                            <button type="button" class="btn btn-primary" (click)="addNewConditionRow()">New Conditions</button>
                         </div>
                     </div>
-                    <table class="form-concessions-table" formArrayName="conditionItemsRows">
+                    <table class="form-concessions-table" formArrayName="conditionItemsRows" style="width:100%">
                         <thead class="form-concessions-table-headings">
                             <tr *ngIf="lendingConcessionForm.controls.conditionItemsRows.controls.length > 0">
                                 <th>Condition Type</th>
@@ -201,6 +207,11 @@
                             </tr>
                         </thead>
                         <tbody class="form-concessions-table-content">
+                            <tr *ngIf="lendingConcessionForm.controls.conditionItemsRows.controls.length == 0">
+                                <td colspan="7" class="searchEmptyState">
+                                    No conditions has been added
+                                </td>
+                            </tr>
                             <tr *ngFor="let itemrow of lendingConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
                                 <td class="length-long">
                                     <select formControlName="conditionType" (change)="conditionTypeChanged(i)">
@@ -225,14 +236,14 @@
                                         <option *ngFor="let periodOption of periods" [ngValue]="periodOption">{{periodOption.description}}</option>
                                     </select>
                                 </td>
-                                <td class="delete"><button type="button" (click)="deleteConditionRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                                <td><button class="btn-delete" type="button" (click)="deleteConditionRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="modal-footer">
                     <div class="float-right">
-                        <button type="button" class="btn btn-default" (click)="manageConditionsModal.hide()">Done</button>
+                        <button type="button" class="btn btn-primary" (click)="manageConditionsModal.hide()">Done</button>
                     </div>
                 </div>
             </div>
