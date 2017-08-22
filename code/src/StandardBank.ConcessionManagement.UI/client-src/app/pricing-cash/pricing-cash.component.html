@@ -1,4 +1,4 @@
-﻿<!-- banner-->
+<!-- banner-->
 <div class="col-md-12 lending-view-banner">
     <div class="row">
         <div class="lending-banner-title">
@@ -17,8 +17,8 @@
 
                     <div class="col-md-12 summary-main">
                         <div class="col-md-3 summary-sub-title">
-                            <h5>EDCON</h5>
-                            <span class="lightText">1989</span>
+                            <h5>{{cashView.riskGroup.name}}</h5>
+                            <span class="lightText">{{cashView.riskGroup.number}}</span>
                         </div>
                         <div class="col-md-3 summary-items">
                             <h5>CASHCENTR</h5>
@@ -48,71 +48,78 @@
 </div>
 <!--Table information -->
 
-<div class="table-info">
-
-    <!-- products -->
+<div class="col-md-12">
     <div class="col-md-5">
-        <h3 class="table-title">Products</h3>
+        <h2 class="headings">Products</h2>
         <div class="section">
-            <div class="section-body">
+
+            <!-- Empty state for products if no data is found -->
+            <div *ngIf="!cashView.sourceSystemProducts">
+                <div class="section-body">
+                    <div class="searchEmptyState">
+                        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                        <p>No product data found</p>
+                    </div>
+                </div>
+            </div>
+            <!-- End of empty state -->
+            <!-- Products list -->
+            <div class="section-body" *ngFor="let sourceSystemProduct of cashView.sourceSystemProducts; trackBy: index;">
                 <div class="product-section">
-                    <p class="product-name"> Real People</p>
-
-                    <div class="product-account">Account No: 12345</div>
-                    <div class="product-code">Product: VAF</div>
-
+                    <div class="product-name"> {{sourceSystemProduct.customerName}}</div>
+                    <div>
+                        <div class="product-account">Account No: {{sourceSystemProduct.accountNumber}}</div>
+                        <div class="product-code">Product: {{sourceSystemProduct.productName}}</div>
+                    </div>
                 </div>
                 <div class="product-table-container">
                     <table class="table table-bordered table-hover header-fixed table-striped ">
                         <thead>
-                            <tr>
-                                <th>Cash Table No</th>
-                                <th>BP ID</th>
-                                <th>Volume</th>
-                                <th>Loaded Price</th>
-                            </tr>
+                        <tr>
+                            <th>Limit</th>
+                            <th>Average Balance</th>
+                            <th>Loaded MAP</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="rightAlign">45</td>
-                                <td class="rightAlign">343</td>
-                                <td class="rightAlign">150,000.000</td>
-                                <td>R7 + 0.45</td>
-                            </tr>
+                        <tr>
+                            <td class="rightAlign"> {{sourceSystemProduct.limit}}</td>
+                            <td class="rightAlign"> {{sourceSystemProduct.averageBalance}}</td>
+                            <td class="rightAlign"> {{sourceSystemProduct.loadedMap}}</td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+            <!-- End of products list -->
+
         </div>
     </div>
 
+    <!-- concessions -->
 
-</div>
-
-<!-- concessions -->
-
-<div class="col-md-7 concessions">
-    <div class="concessions-top">
-        <div class="concessions-top-title">
-            <h3 class="table-title">Concessions</h3>
-            <button type="button" class="btn btn-default" disabled>Add Concession</button>
-        </div>
-        <!-- Search bar -->
-        <div class="search-and-results-container">
-            <div class="input-group add-on">
-                <input class="form-control" placeholder="Search Concession ID or Risk Group Number" name="srch-term" id="srch-term" type="text">
+    <div class="col-md-7 concessions">
+        <div class="concessions-top">
+            <div class="concessions-top-title">
+                <h3 class="table-title">Concessions</h3>
+                <button type="button" class="btn btn-default">Add Concession</button>
+            </div>
+            <!-- Search bar -->
+            <div class="search-and-results-container">
+                <div class="input-group add-on">
+                    <input class="form-control" placeholder="Search Concession ID or Risk Group Number" name="srch-term" id="srch-term" type="text">
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="section">
-        <div class="section-header small-table-title">
-            <div class="concessionID-section"> 124</div>
-        </div>
-        <div class="section-body">
-            <div class="table-container">
-                <table class="table table-bordered table-hover header-fixed table-striped">
-                    <thead>
+        <div class="section">
+            <div class="section-header small-table-title">
+                <div class="concessionID-section"> 124</div>
+            </div>
+            <div class="section-body">
+                <div class="table-container">
+                    <table class="table table-bordered table-hover header-fixed table-striped">
+                        <thead>
                         <tr>
                             <th>Customer</th>
                             <th>Cash Table</th>
@@ -121,8 +128,8 @@
                             <th>Value</th>
                             <th>Price</th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         <tr>
                             <td>
                                 <div class="table-row-top">Tester Inc.</div>
@@ -152,22 +159,22 @@
                                 </div>
                             </td>
                         </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- avg balance -->
+        <!-- avg balance -->
 
-    <div class="section">
-        <div class="section-header">
-            <div class="concessionID-section"> ED0023</div>
-        </div>
-        <div class="section-body">
-            <div class="table-container">
-                <table class="table table-bordered table-hover header-fixed table-striped">
-                    <thead>
+        <div class="section">
+            <div class="section-header">
+                <div class="concessionID-section"> ED0023</div>
+            </div>
+            <div class="section-body">
+                <div class="table-container">
+                    <table class="table table-bordered table-hover header-fixed table-striped">
+                        <thead>
                         <tr>
                             <th>Customer</th>
                             <th>Limit</th>
@@ -175,8 +182,8 @@
                             <th>Term</th>
                             <th>MAP</th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         <tr>
                             <td>
                                 <div class="table-row-top">Tester Inc.</div>
@@ -205,8 +212,9 @@
                                 </div>
                             </td>
                         </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

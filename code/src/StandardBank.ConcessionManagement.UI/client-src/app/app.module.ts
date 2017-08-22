@@ -1,4 +1,4 @@
-﻿import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -43,6 +43,7 @@ import { LendingUpdateService } from "./lending-update/lending-update.service";
 import { MyConditionService } from './my-condition/my-condition.service';
 import { LendingViewConcessionComponent } from './lending-view-concession/lending-view-concession.component';
 import { ApprovedConcessionFilterPipe } from './approved-concession-filter/approved-concession-filter.pipe';
+import { CashConcessionService } from "./cash-concession/cash-concession.service";
 
 @NgModule({
     declarations: [
@@ -92,7 +93,8 @@ import { ApprovedConcessionFilterPipe } from './approved-concession-filter/appro
         LendingNewService,
         LendingService,
         LendingUpdateService,
-        MyConditionService
+        MyConditionService,
+        CashConcessionService
     ],
     bootstrap: [AppComponent]
 })

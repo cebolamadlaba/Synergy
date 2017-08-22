@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { LendingView } from "../models/lending-view";
@@ -24,7 +24,6 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
 
     constructor(private route: ActivatedRoute, private location: Location, @Inject(LendingViewService) private lendingViewService) {
         this.lendingView.riskGroup = new RiskGroup();
-        this.lendingView
         this.lendingView.sourceSystemProducts = [new SourceSystemProduct()];
         this.lendingView.lendingConcessions = [new LendingConcession()];
         this.lendingView.lendingConcessions[0].concession = new Concession();
