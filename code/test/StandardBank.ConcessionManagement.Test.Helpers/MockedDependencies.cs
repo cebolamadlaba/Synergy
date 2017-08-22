@@ -13,6 +13,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
     public static class MockedDependencies
     {
         /// <summary>
+        /// The mock AccrualType repository
+        /// </summary>
+        public static Mock<IAccrualTypeRepository> MockAccrualTypeRepository = new Mock<IAccrualTypeRepository>();
+
+        /// <summary>
         /// The mock authorizing user repository
         /// </summary>
         public static Mock<IAuthorizingUserRepository> MockAuthorizingUserRepository = new Mock<IAuthorizingUserRepository>();
@@ -299,5 +304,10 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static Mock<IApprovalRoutingManager> MockApprovalRoutingManager = new Mock<IApprovalRoutingManager>();
         public static Mock<IApprovalWorkflowRepository> MockApprovalWorkflowRepository = new Mock<IApprovalWorkflowRepository>();
         public static Mock<ILetterGeneratorManager> MockLetterGeneratorManager = new Mock<ILetterGeneratorManager>();
+
+        /// <summary>
+        /// The mock cash manager
+        /// </summary>
+        public static Mock<ICashManager> MockCashManager = new Mock<ICashManager>();
     }
 }

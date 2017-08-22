@@ -1,4 +1,4 @@
 ﻿        /// <summary>
         /// The [[ClassName]] repository
         /// </summary>
-        public static I[[ClassName]]Repository [[ClassName]]Repository = new [[ClassName]]Repository(ConfigurationData);
+        public static I[[ClassName]]Repository [[ClassName]]Repository = new [[ClassName]]Repository(DbConnection);

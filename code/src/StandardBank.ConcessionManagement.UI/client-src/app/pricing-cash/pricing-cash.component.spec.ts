@@ -4,6 +4,7 @@ import { PricingCashComponent } from './pricing-cash.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
 import { CashConcessionService, MockCashConcessionService } from "../cash-concession/cash-concession.service";
+import { CashConcessionFilterPipe } from "../cash-concession-filter/cash-concession-filter.pipe";
 
 describe('PricingCashComponent', () => {
     let component: PricingCashComponent;
@@ -12,7 +13,7 @@ describe('PricingCashComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [RouterTestingModule, FormsModule, HttpModule],
-            declarations: [PricingCashComponent],
+            declarations: [PricingCashComponent, CashConcessionFilterPipe],
             providers: [{ provide: CashConcessionService, useClass: MockCashConcessionService }]
         })
             .compileComponents();

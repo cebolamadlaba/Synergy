@@ -75,18 +75,18 @@
                 <div class="product-table-container">
                     <table class="table table-bordered table-hover header-fixed table-striped ">
                         <thead>
-                        <tr>
-                            <th>Limit</th>
-                            <th>Average Balance</th>
-                            <th>Loaded MAP</th>
-                        </tr>
+                            <tr>
+                                <th>Limit</th>
+                                <th>Average Balance</th>
+                                <th>Loaded MAP</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td class="rightAlign"> {{sourceSystemProduct.limit}}</td>
-                            <td class="rightAlign"> {{sourceSystemProduct.averageBalance}}</td>
-                            <td class="rightAlign"> {{sourceSystemProduct.loadedMap}}</td>
-                        </tr>
+                            <tr>
+                                <td class="rightAlign"> {{sourceSystemProduct.limit}}</td>
+                                <td class="rightAlign"> {{sourceSystemProduct.averageBalance}}</td>
+                                <td class="rightAlign"> {{sourceSystemProduct.loadedMap}}</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -98,124 +98,74 @@
 
     <!-- concessions -->
 
-    <div class="col-md-7 concessions">
-        <div class="concessions-top">
-            <div class="concessions-top-title">
-                <h3 class="table-title">Concessions</h3>
-                <button type="button" class="btn btn-default">Add Concession</button>
-            </div>
-            <!-- Search bar -->
-            <div class="search-and-results-container">
-                <div class="input-group add-on">
-                    <input class="form-control" placeholder="Search Concession ID or Risk Group Number" name="srch-term" id="srch-term" type="text">
-                </div>
-            </div>
+    <div class="col-md-7  search-and-results-container concessions">
+        <h2 class="headings">
+            Concessions
+            <button type="button" class="btn btn-primary concessionBtn" [routerLink]="['/cash-add-concession', cashView.riskGroup.number]">Add Concession</button>
+        </h2>
+
+        <!-- Search bar -->
+        <div class="input-group add-on">
+            <input class="form-control" placeholder="Concession ID" [(ngModel)]="filterConcessionId" type="text">
         </div>
 
-        <div class="section">
+        <div class="section" *ngFor="let cashConcession of cashView.cashConcessions | cashConcessionFilter : filterConcessionId; trackBy: index;">
             <div class="section-header small-table-title">
-                <div class="concessionID-section"> 124</div>
+                <div class="concessionID-section"> {{cashConcession.concession.referenceNumber}}</div>
             </div>
             <div class="section-body">
                 <div class="table-container">
                     <table class="table table-bordered table-hover header-fixed table-striped">
                         <thead>
-                        <tr>
-                            <th>Customer</th>
-                            <th>Cash Table</th>
-                            <th>BP ID</th>
-                            <th>Volume</th>
-                            <th>Value</th>
-                            <th>Price</th>
-                        </tr>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Cash Table</th>
+                                <th>BP ID</th>
+                                <th>Volume</th>
+                                <th>Value</th>
+                                <th>Price</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>
-                                <div class="table-row-top">Tester Inc.</div>
-                                <div class="table-row-bottom">
-                                    <div class="secondaryText">
-                                        Acc No:
-                                        <div class="normalText">12345</div>
+                            <tr *ngFor="let concession of cashConcession.cashConcessionDetails; trackBy: index;">
+                                <td>
+                                    <div class="table-row-top">{{concession.customerName}}</div>
+                                    <div class="table-row-bottom">
+                                        <div class="secondaryText">
+                                            Acc No:
+                                            <div class="normalText">{{concession.accountNumber}}</div>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                            <td class="rightAlign">45</td>
-                            <td class="rightAlign">343</td>
-                            <td>230</td>
-                            <td>150,000.00</td>
-                            <td>
-                                <div class="table-row-top">
-                                    <div class="secondaryText">
-                                        Loaded:
-                                        <div class="normalText">R7 + 0.45</div>
+                                </td>
+                                <td class="rightAlign">{{concession.cashTableNumber}}</td>
+                                <td class="rightAlign">//TODO{{concession.bpId}}</td>
+                                <td>{{concession.volume}}</td>
+                                <td>{{concession.value}}</td>
+                                <td>
+                                    <div class="table-row-top">
+                                        <div class="secondaryText">
+                                            Loaded:
+                                            <div class="normalText">//TODO R{{concession.loadedPrice | number : '1.2-2'}}</div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="table-row-bottom">
-                                    <div class="secondaryText">
-                                        Approved:
-                                        <div class="normalText">R7 + 0.45</div>
+                                    <div class="table-row-bottom">
+                                        <div class="secondaryText">
+                                            Approved:
+                                            <div class="normalText">//TODO R{{concession.approvedPrice | number : '1.2-2'}}</div>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- avg balance -->
-
-        <div class="section">
-            <div class="section-header">
-                <div class="concessionID-section"> ED0023</div>
-            </div>
-            <div class="section-body">
-                <div class="table-container">
-                    <table class="table table-bordered table-hover header-fixed table-striped">
-                        <thead>
-                        <tr>
-                            <th>Customer</th>
-                            <th>Limit</th>
-                            <th>Average Balance</th>
-                            <th>Term</th>
-                            <th>MAP</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>
-                                <div class="table-row-top">Tester Inc.</div>
-                                <div class="table-row-bottom">
-                                    <div class="secondaryText">
-                                        Acc No:
-                                        <div class="normalText">12345</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>5,000,000.00</td>
-                            <td>3,999,987.00</td>
-                            <td>60</td>
-                            <td>
-                                <div class="table-row-top">
-                                    <div class="secondaryText">
-                                        Loaded:
-                                        <div class="normalText">1</div>
-                                    </div>
-                                </div>
-                                <div class="table-row-bottom">
-                                    <div class="secondaryText">
-                                        Approved:
-                                        <div class="normalText">1</div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <!-- Empty state if no concessions found -->
+        <div class="searchEmptyState" *ngIf="(cashView.cashConcessions | cashConcessionFilter: filterConcessionId).length === 0">
+            <i class="fa fa-inbox" aria-hidden="true"></i>
+            <p>No concessions found matching your search</p>
         </div>
     </div>
 </div>

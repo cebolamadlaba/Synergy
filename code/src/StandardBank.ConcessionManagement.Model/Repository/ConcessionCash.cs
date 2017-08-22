@@ -1,11 +1,9 @@
-using System;
-
 namespace StandardBank.ConcessionManagement.Model.Repository
 {
     /// <summary>
     /// ConcessionCash entity
     /// </summary>
-    public class ConcessionCash
+    public class ConcessionCash : IAuditable
     {
         /// <summary>
         /// Gets or sets the Id.
@@ -70,5 +68,39 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The AdValorem.
         /// </value>
         public decimal? AdValorem { get; set; }
+
+        /// <summary>
+        /// Gets or sets the legal entity identifier.
+        /// </summary>
+        /// <value>
+        /// The legal entity identifier.
+        /// </value>
+        public int LegalEntityId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the legal entity account identifier.
+        /// </summary>
+        /// <value>
+        /// The legal entity account identifier.
+        /// </value>
+        public int LegalEntityAccountId { get; set; }
+
+        /// <summary>
+        /// Gets or the name of the table.
+        /// </summary>
+        /// <value>
+        /// The name of the table.
+        /// </value>
+        public string TableName => "tblConcessionCash";
+
+        /// <summary>
+        /// Gets the primary key column name
+        /// </summary>
+        public string PrimaryKeyColumnName => "pkConcessionCashId";
+
+        /// <summary>
+        /// Gets the primary key value
+        /// </summary>
+        public object PrimaryKeyValue => Id;
     }
 }

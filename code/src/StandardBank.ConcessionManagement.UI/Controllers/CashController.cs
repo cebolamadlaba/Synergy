@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using StandardBank.ConcessionManagement.Model.UserInterface;
+using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
-using StandardBank.ConcessionManagement.Model.UserInterface.Pricing;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 
 namespace StandardBank.ConcessionManagement.UI.Controllers
@@ -20,12 +19,26 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         private readonly ISiteHelper _siteHelper;
 
         /// <summary>
+        /// The pricing manager
+        /// </summary>
+        private readonly IPricingManager _pricingManager;
+
+        /// <summary>
+        /// The cash manager
+        /// </summary>
+        private readonly ICashManager _cashManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CashController"/> class.
         /// </summary>
         /// <param name="siteHelper">The site helper.</param>
-        public CashController(ISiteHelper siteHelper)
+        /// <param name="pricingManager">The pricing manager.</param>
+        /// <param name="cashManager">The cash manager.</param>
+        public CashController(ISiteHelper siteHelper, IPricingManager pricingManager, ICashManager cashManager)
         {
             _siteHelper = siteHelper;
+            _pricingManager = pricingManager;
+            _cashManager = cashManager;
         }
 
         /// <summary>
@@ -36,19 +49,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("CashView/{riskGroupNumber}")]
         public IActionResult CashView(int riskGroupNumber)
         {
+            //TODO: Eventually need to get source system product data from source systems (i.e. cash specific source system product data)
             var cashView = new CashView
             {
-                RiskGroup = new RiskGroup {Id = 1, Name = "Test Risk Group", Number = riskGroupNumber},
-                CashConcessions = new[]
-                {
-                    new CashConcession
-                    {
-                        Concession = new Concession(),
-                        ConcessionConditions = new[] {new ConcessionCondition()},
-                        CurrentUser = _siteHelper.LoggedInUser(this),
-                        CashConcessionDetails = new[] {new CashConcessionDetail()}
-                    }
-                }
+                RiskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber),
+                CashConcessions = _cashManager.GetCashConcessionsForRiskGroupNumber(riskGroupNumber)
             };
 
             return Ok(cashView);
