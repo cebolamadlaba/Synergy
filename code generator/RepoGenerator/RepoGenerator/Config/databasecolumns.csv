@@ -1,4 +1,7 @@
 ﻿TABLE_SCHEMA;TABLE_NAME;COLUMN_NAME;IS_NULLABLE;DATA_TYPE
+dbo;rtblAccrualType;pkAccrualTypeId;NO;int
+dbo;rtblAccrualType;Description;NO;varchar
+dbo;rtblAccrualType;IsActive;NO;bit
 dbo;rtblAdValorem;pkAdValoremId;NO;int
 dbo;rtblAdValorem;AdValorem;YES;decimal
 dbo;rtblAdValorem;IsActive;NO;bit

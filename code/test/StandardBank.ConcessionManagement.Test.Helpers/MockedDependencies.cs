@@ -13,6 +13,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
     public static class MockedDependencies
     {
         /// <summary>
+        /// The mock AccrualType repository
+        /// </summary>
+        public static Mock<IAccrualTypeRepository> MockAccrualTypeRepository = new Mock<IAccrualTypeRepository>();
+
+        /// <summary>
         /// The mock authorizing user repository
         /// </summary>
         public static Mock<IAuthorizingUserRepository> MockAuthorizingUserRepository = new Mock<IAuthorizingUserRepository>();

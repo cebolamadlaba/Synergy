@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
@@ -10,10 +10,10 @@ using StandardBank.ConcessionManagement.Model.Common;
 namespace StandardBank.ConcessionManagement.Repository
 {
     /// <summary>
-    /// [[ClassName]] repository
+    /// AccrualType repository
     /// </summary>
-    /// <seealso cref="StandardBank.ConcessionManagement.Interface.Repository.I[[ClassName]]Repository" />
-    public class [[ClassName]]Repository : I[[ClassName]]Repository
+    /// <seealso cref="StandardBank.ConcessionManagement.Interface.Repository.IAccrualTypeRepository" />
+    public class AccrualTypeRepository : IAccrualTypeRepository
     {
         /// <summary>
         /// The db connection factory
@@ -26,11 +26,11 @@ namespace StandardBank.ConcessionManagement.Repository
         private readonly ICacheManager _cacheManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="[[ClassName]]Repository"/> class.
+        /// Initializes a new instance of the <see cref="AccrualTypeRepository"/> class.
         /// </summary>
         /// <param name="dbConnectionFactory">The db connection factory.</param>
         /// <param name="cacheManager">The cache manager.</param>
-        public [[ClassName]]Repository(IDbConnectionFactory dbConnectionFactory, ICacheManager cacheManager)
+        public AccrualTypeRepository(IDbConnectionFactory dbConnectionFactory, ICacheManager cacheManager)
         {
             _dbConnectionFactory = dbConnectionFactory;
             _cacheManager = cacheManager;
@@ -41,19 +41,19 @@ namespace StandardBank.ConcessionManagement.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public [[ClassName]] Create([[ClassName]] model)
+        public AccrualType Create(AccrualType model)
         {
-            const string sql = @"INSERT [[TableSchemaAndName]] ([[InsertColumnList]]) 
-                                VALUES ([[InsertParameterList]]) 
+            const string sql = @"INSERT [dbo].[rtblAccrualType] ([Description], [IsActive]) 
+                                VALUES (@Description, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {[[DapperInsertParameters]]}).Single();
+                model.Id = db.Query<int>(sql, new {Description = model.Description, IsActive = model.IsActive}).Single();
             }
 
             //clear out the cache because the data has changed
-            _cacheManager.Remove(CacheKey.Repository.[[ClassName]]Repository.ReadAll);
+            _cacheManager.Remove(CacheKey.Repository.AccrualTypeRepository.ReadAll);
 
             return model;
         }
@@ -63,7 +63,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        public [[ClassName]] ReadById(int id)
+        public AccrualType ReadById(int id)
         {
             return ReadAll().FirstOrDefault(_ => _.Id == id);
         }
@@ -72,51 +72,51 @@ namespace StandardBank.ConcessionManagement.Repository
         /// Reads all.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<[[ClassName]]> ReadAll()
+        public IEnumerable<AccrualType> ReadAll()
         {
-            Func<IEnumerable<[[ClassName]]>> function = () =>
+            Func<IEnumerable<AccrualType>> function = () =>
             {
                 using (var db = _dbConnectionFactory.Connection())
-            	{
-                	return db.Query<[[ClassName]]>("SELECT [[SelectColumnsAndAliases]] FROM [[TableSchemaAndName]]");
+                {
+                	return db.Query<AccrualType>("SELECT [pkAccrualTypeId] [Id], [Description], [IsActive] FROM [dbo].[rtblAccrualType]");
             	}
             };
 
-            return _cacheManager.ReturnFromCache(function, 1440, CacheKey.Repository.[[ClassName]]Repository.ReadAll);
+            return _cacheManager.ReturnFromCache(function, 1440, CacheKey.Repository.AccrualTypeRepository.ReadAll);
         }
 
         /// <summary>
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        public void Update([[ClassName]] model)
+        public void Update(AccrualType model)
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [[TableSchemaAndName]]
-                            SET [[UpdateSetParameters]]
-                            WHERE [[PrimaryKeyColumnName]] = @Id",
-                    new {Id = model.Id, [[DapperInsertParameters]]});
+                db.Execute(@"UPDATE [dbo].[rtblAccrualType]
+                            SET [Description] = @Description, [IsActive] = @IsActive
+                            WHERE [pkAccrualTypeId] = @Id",
+                    new {Id = model.Id, Description = model.Description, IsActive = model.IsActive});
             }
 
             //clear out the cache because the data has changed
-            _cacheManager.Remove(CacheKey.Repository.[[ClassName]]Repository.ReadAll);
+            _cacheManager.Remove(CacheKey.Repository.AccrualTypeRepository.ReadAll);
         }
 
         /// <summary>
         /// Deletes the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        public void Delete([[ClassName]] model)
+        public void Delete(AccrualType model)
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [[TableSchemaAndName]] WHERE [[PrimaryKeyColumnName]] = @Id",
+                db.Execute("DELETE [dbo].[rtblAccrualType] WHERE [pkAccrualTypeId] = @Id",
                     new {model.Id});
             }
 
             //clear out the cache because the data has changed
-            _cacheManager.Remove(CacheKey.Repository.[[ClassName]]Repository.ReadAll);
+            _cacheManager.Remove(CacheKey.Repository.AccrualTypeRepository.ReadAll);
         }
     }
 }

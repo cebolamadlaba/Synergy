@@ -2538,5 +2538,56 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
 
             return InsertPeriodType();
         }
+
+        /// <summary>
+        /// Gets the AccrualType id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetAccrualTypeId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.AccrualTypeRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertAccrualType();
+        }
+
+        /// <summary>
+        /// Inserts a AccrualType and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertAccrualType()
+        {
+            var model = new AccrualType
+            {
+                Description = "47d720c8a6",
+                IsActive = false
+            };
+
+            InstantiatedDependencies.AccrualTypeRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate AccrualType id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateAccrualTypeId(int? model)
+        {
+            if (!model.HasValue)
+                return GetAccrualTypeId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.AccrualTypeRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertAccrualType();
+        }
     }
 }

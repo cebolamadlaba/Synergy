@@ -49,6 +49,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static ISiteHelper SiteHelper = new FakeSiteHelper();
 
         /// <summary>
+        /// The AccrualType repository
+        /// </summary>
+        public static IAccrualTypeRepository AccrualTypeRepository = new AccrualTypeRepository(DbConnection, CacheManager);
+
+        /// <summary>
         /// Authorizing user repository
         /// </summary>
         public static IAuthorizingUserRepository AuthorizingUserRepository = new AuthorizingUserRepository(DbConnection);
