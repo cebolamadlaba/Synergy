@@ -1,4 +1,4 @@
-﻿<div class="col-md-12 header">
+<div class="col-md-12 header">
     <div class="logo"></div>
 </div>
 <div class="col-md-12 nav-pills-container">
@@ -23,6 +23,6 @@
             <a routerLink="/lending-add-concession" style="display: none;">Pricing</a>
             <a routerLink="/transactional-add-concession" style="display: none;">Pricing</a>
         </li>
-        <li class="logout-li"><a href="#">{{user.firstName}} {{user.surname}}</a></li>
+        <li class="logout-li"><a href="#">{{user?.firstName}} {{user?.surname}}</a></li>
     </ul>
 </div> 

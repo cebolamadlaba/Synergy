@@ -92,86 +92,6 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 this.observableClientAccounts = this.lookupDataService.getClientAccounts(this.riskGroupNumber);
                 this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
             }
-
-            if (this.concessionReferenceId) {
-                this.observableLendingConcession = this.lendingService.getLendingConcessionData(this.concessionReferenceId);
-                this.observableLendingConcession.subscribe(lendingConcession => {
-                    this.lendingConcession = lendingConcession;
-
-                    if (lendingConcession.concession.status == "Pending" && lendingConcession.concession.subStatus == "BCM Pending") {
-                        this.canBcmApprove = lendingConcession.currentUser.canBcmApprove;
-                    }
-
-                    if (lendingConcession.concession.status == "Pending" && lendingConcession.concession.subStatus == "PCM Pending") {
-                        this.canPcmApprove = lendingConcession.currentUser.canPcmApprove;
-                    }
-
-                    this.lendingConcessionForm.controls['mrsCrs'].setValue(this.lendingConcession.concession.mrsCrs);
-                    this.lendingConcessionForm.controls['smtDealNumber'].setValue(this.lendingConcession.concession.smtDealNumber);
-                    this.lendingConcessionForm.controls['motivation'].setValue(this.lendingConcession.concession.motivation);
-
-                    let rowIndex = 0;
-
-                    for (let lendingConcessionDetail of this.lendingConcession.lendingConcessionDetails) {
-
-                        if (rowIndex != 0) {
-                            this.addNewConcessionRow();
-                        }
-
-                        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
-                        let currentConcession = concessions.controls[concessions.length - 1];
-
-                        let selectedProductType = this.productTypes.filter(_ => _.id === lendingConcessionDetail.productTypeId);
-                        currentConcession.get('productType').setValue(selectedProductType[0]);
-
-                        let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == lendingConcessionDetail.legalEntityAccountId);
-                        currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
-
-                        currentConcession.get('limit').setValue(lendingConcessionDetail.limit);
-                        currentConcession.get('term').setValue(lendingConcessionDetail.term);
-                        currentConcession.get('marginAgainstPrime').setValue(lendingConcessionDetail.marginAgainstPrime);
-                        currentConcession.get('initiationFee').setValue(lendingConcessionDetail.initiationFee);
-
-                        let selectedReviewFeeType = this.reviewFeeTypes.filter(_ => _.id == lendingConcessionDetail.reviewFeeTypeId);
-                        currentConcession.get('reviewFeeType').setValue(selectedReviewFeeType[0]);
-
-                        currentConcession.get('reviewFee').setValue(lendingConcessionDetail.reviewFee);
-                        currentConcession.get('uffFee').setValue(lendingConcessionDetail.uffFee);
-
-                        rowIndex++;
-                    }
-
-                    rowIndex = 0;
-
-                    for (let concessionCondition of this.lendingConcession.concessionConditions) {
-                        this.addNewConditionRow();
-
-                        const conditions = <FormArray>this.lendingConcessionForm.controls['conditionItemsRows'];
-                        let currentCondition = conditions.controls[conditions.length - 1];
-
-                        let selectedConditionType = this.conditionTypes.filter(_ => _.id == concessionCondition.conditionTypeId);
-                        currentCondition.get('conditionType').setValue(selectedConditionType[0]);
-
-                        this.selectedConditionTypes[rowIndex] = selectedConditionType[0];
-
-                        let selectedConditionProduct = selectedConditionType[0].conditionProducts.filter(_ => _.id == concessionCondition.conditionProductId);
-                        currentCondition.get('conditionProduct').setValue(selectedConditionProduct[0]);
-
-                        currentCondition.get('interestRate').setValue(concessionCondition.interestRate);
-                        currentCondition.get('volume').setValue(concessionCondition.conditionVolume);
-                        currentCondition.get('value').setValue(concessionCondition.conditionValue);
-
-                        let selectedPeriodType = this.periodTypes.filter(_ => _.id == concessionCondition.periodTypeId);
-                        currentCondition.get('periodType').setValue(selectedPeriodType[0]);
-
-                        let selectedPeriod = this.periods.filter(_ => _.id == concessionCondition.periodId);
-                        currentCondition.get('period').setValue(selectedPeriod[0]);
-
-                        rowIndex++;
-                    }
-
-                }, error => this.errorMessage = <any>error);
-            }
         });
 
         this.lendingConcessionForm = this.formBuilder.group({
@@ -203,6 +123,86 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 this.hasChanges = true;
             }
         });
+
+        if (this.concessionReferenceId) {
+            this.observableLendingConcession = this.lendingService.getLendingConcessionData(this.concessionReferenceId);
+            this.observableLendingConcession.subscribe(lendingConcession => {
+                this.lendingConcession = lendingConcession;
+
+                if (lendingConcession.concession.status == "Pending" && lendingConcession.concession.subStatus == "BCM Pending") {
+                    this.canBcmApprove = lendingConcession.currentUser.canBcmApprove;
+                }
+
+                if (lendingConcession.concession.status == "Pending" && lendingConcession.concession.subStatus == "PCM Pending") {
+                    this.canPcmApprove = lendingConcession.currentUser.canPcmApprove;
+                }
+
+                this.lendingConcessionForm.controls['mrsCrs'].setValue(this.lendingConcession.concession.mrsCrs);
+                this.lendingConcessionForm.controls['smtDealNumber'].setValue(this.lendingConcession.concession.smtDealNumber);
+                this.lendingConcessionForm.controls['motivation'].setValue(this.lendingConcession.concession.motivation);
+
+                let rowIndex = 0;
+
+                for (let lendingConcessionDetail of this.lendingConcession.lendingConcessionDetails) {
+
+                    if (rowIndex != 0) {
+                        this.addNewConcessionRow();
+                    }
+
+                    const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+                    let currentConcession = concessions.controls[concessions.length - 1];
+
+                    let selectedProductType = this.productTypes.filter(_ => _.id === lendingConcessionDetail.productTypeId);
+                    currentConcession.get('productType').setValue(selectedProductType[0]);
+
+                    let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == lendingConcessionDetail.legalEntityAccountId);
+                    currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
+
+                    currentConcession.get('limit').setValue(lendingConcessionDetail.limit);
+                    currentConcession.get('term').setValue(lendingConcessionDetail.term);
+                    currentConcession.get('marginAgainstPrime').setValue(lendingConcessionDetail.marginAgainstPrime);
+                    currentConcession.get('initiationFee').setValue(lendingConcessionDetail.initiationFee);
+
+                    let selectedReviewFeeType = this.reviewFeeTypes.filter(_ => _.id == lendingConcessionDetail.reviewFeeTypeId);
+                    currentConcession.get('reviewFeeType').setValue(selectedReviewFeeType[0]);
+
+                    currentConcession.get('reviewFee').setValue(lendingConcessionDetail.reviewFee);
+                    currentConcession.get('uffFee').setValue(lendingConcessionDetail.uffFee);
+
+                    rowIndex++;
+                }
+
+                rowIndex = 0;
+
+                for (let concessionCondition of this.lendingConcession.concessionConditions) {
+                    this.addNewConditionRow();
+
+                    const conditions = <FormArray>this.lendingConcessionForm.controls['conditionItemsRows'];
+                    let currentCondition = conditions.controls[conditions.length - 1];
+
+                    let selectedConditionType = this.conditionTypes.filter(_ => _.id == concessionCondition.conditionTypeId);
+                    currentCondition.get('conditionType').setValue(selectedConditionType[0]);
+
+                    this.selectedConditionTypes[rowIndex] = selectedConditionType[0];
+
+                    let selectedConditionProduct = selectedConditionType[0].conditionProducts.filter(_ => _.id == concessionCondition.conditionProductId);
+                    currentCondition.get('conditionProduct').setValue(selectedConditionProduct[0]);
+
+                    currentCondition.get('interestRate').setValue(concessionCondition.interestRate);
+                    currentCondition.get('volume').setValue(concessionCondition.conditionVolume);
+                    currentCondition.get('value').setValue(concessionCondition.conditionValue);
+
+                    let selectedPeriodType = this.periodTypes.filter(_ => _.id == concessionCondition.periodTypeId);
+                    currentCondition.get('periodType').setValue(selectedPeriodType[0]);
+
+                    let selectedPeriod = this.periods.filter(_ => _.id == concessionCondition.periodId);
+                    currentCondition.get('period').setValue(selectedPeriod[0]);
+
+                    rowIndex++;
+                }
+
+            }, error => this.errorMessage = <any>error);
+        }
     }
 
     initConcessionItemRows() {

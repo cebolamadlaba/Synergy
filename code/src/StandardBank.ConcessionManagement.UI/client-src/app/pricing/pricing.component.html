@@ -1,4 +1,4 @@
-﻿  <!-- banner-->
+  <!-- banner-->
 <div class="col-md-12 pricing-banner">
     <div class="col-md-1 pricing-user-image">
         <i class="fa fa-user-o" aria-hidden="true"></i>
@@ -10,7 +10,7 @@
                     <p class="lightTitle">Region</p>
                 </div>
                 <div class="col-sm-6">
-                    <p>{{user.selectedRegion.description}}</p>
+                    <p>{{user?.selectedRegion?.description}}</p>
                 </div>
             </div>
             <div class="row">
@@ -18,7 +18,7 @@
                     <p class="lightTitle">Business Unit</p>
                 </div>
                 <div class="col-sm-6">
-                    <p>{{user.selectedCentre.name}}</p>
+                    <p>{{user?.selectedCentre?.name}}</p>
                 </div>
             </div>
         </div>
@@ -30,7 +30,7 @@
                     <p class="lightTitle">Province</p>
                 </div>
                 <div class="col-sm-6">
-                    <p>{{user.selectedCentre.province}}</p>
+                    <p>{{user?.selectedCentre?.province}}</p>
                 </div>
             </div>
         </div>
@@ -80,8 +80,8 @@
                     <i class="fa fa-building-o" aria-hidden="true"></i>
                 </div>
                 <div class="pricing-group-info">
-                    <h3>{{riskGroup.name}}</h3>
-                    <span class="secondaryText">{{riskGroup.number}}</span>
+                    <h3>{{riskGroup?.name}}</h3>
+                    <span class="secondaryText">{{riskGroup?.number}}</span>
                 </div>
             </div>
 
@@ -166,32 +166,5 @@
         </div>
         
     </div>
-
-
-                <!--
-            <div class="col-md-12">
-                <div class="pricing-group-container">
-
-                    <div class="pricing-group-info">
-                        <h3>{{riskGroup.name}}</h3>
-                        <br/>
-                        <div class="secondaryText">{{riskGroup.number}}</div>
-                        <br/>
-                    </div>
-                    <div class="col-md-12 pricing-group-container-items">
-                        
-                        
-                     
-                     
-                        <div class="item">
-                            <div>Cashman</div>
-                            <div class="container-item-icon">
-                                <i class="fa fa-user" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            -->
    
 </ng-template>

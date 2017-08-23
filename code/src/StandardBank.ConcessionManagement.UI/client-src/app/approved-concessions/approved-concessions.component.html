@@ -55,7 +55,7 @@
     </div>
 
     <!-- Empty state if no concessions found -->
-    <div class="searchEmptyState" *ngIf="(approvedConcessions | approvedConcessionFilter: concessionIdOrRiskGroupNumber).length === 0">
+    <div class="searchEmptyState" *ngIf="(approvedConcessions | approvedConcessionFilter: concessionIdOrRiskGroupNumber)?.length === 0">
         <i class="fa fa-inbox" aria-hidden="true"></i>
         <p>No concessions found matching your search</p>
     </div>
