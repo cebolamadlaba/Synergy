@@ -7,6 +7,7 @@ import { Location } from '@angular/common';
     styleUrls: ['./pricing-transactional.component.css']
 })
 export class PricingTransactionalComponent implements OnInit {
+    showHide: true;
 
     constructor(private location: Location) { }
 

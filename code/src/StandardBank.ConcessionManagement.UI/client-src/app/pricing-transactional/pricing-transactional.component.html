@@ -1,61 +1,80 @@
-﻿<div class="col-md-12 lending-view-banner">
+﻿<div class="col-md-12 banner">
   <div class="row">
-    <div class="lending-banner-title">
-      <div class="col-md-1">
-        <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
-        <span class="back-button-text" (click)="goBack()">Back</span>
-      </div>
-      <div class="col-md-10 banner-main-title">
-        <i class="fa fa-exchange" aria-hidden="true"></i> Transactional
-      </div>
-      <div class="col-md-1"></div>
-    </div>
-    <div class="col-md-12 lending-banner">
-      <div class="col-md-11">
-        <div>
-          <div class="col-md-2">
-            <div class="subHeading">EDCON</div>
-            <div class="date lightTitle hidden-element">1989</div>
+      <!-- Header -->
+      <div class="lending-banner-title">
+          <div class="col-md-1">
+              <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+              <span class="back-button-text" (click)="goBack()">Back</span>
           </div>
-          <div class="col-md-9">
-            <div class="col-md-3 lending-items hidden-element">
-              <div>Account</div>
-              <div class="summary-items-sub">No. of Accounts: <span class="summary-item-value">0.00</span></div>
-              <div class="summary-items-sub">Avg Management Fee <span class="summary-item-value">0.00</span></div>
-              <div class="summary-items-sub">Avg Min Monthly Fee <span class="col-md-12 summary-item-value">0.00</span></div>
-            </div>
-            <div class="col-md-3 summary-items hidden-element">
-              <div>Cash</div>
-              <div class="summary-items-sub">Total Withdrawal Volumes <span class="summary-item-value">0.00</span></div>
-              <div class="summary-items-sub">Total Withdrawal Values <span class="summary-item-value">0.00</span></div>
-              <div class="summary-items-sub">Avg Withdrawal Price <span class="col-md-12 summary-item-value">0.00</span></div>
-            </div>
-            <div class="col-md-3 summary-items hidden-element">
-              <div>Total Cheque Volumes</div>
-              <div class="summary-items-sub">Issuing <span class="summary-item-value">0.00</span></div>
-              <div class="summary-items-sub">Deposit <span class="summary-item-value">0.00</span></div>
-              <div class="summary-items-sub">Encashment <span class="summary-item-value">0.00</span></div>
-            </div>
-            <div class="col-md-3 summary-items hidden-element">
-              <div>Average Cheque</div>
-              <div class="summary-items-sub">Issuing Value <span class="summary-item-value">0.00</span></div>
-              <div class="summary-items-sub">Issuing Price <span class="summary-item-value">0.00</span></div>
-              <div class="summary-items-sub">Deposit Value <span class="summary-item-value">0.00</span></div>
-              <div class="summary-items-sub">Deposit Price <span class="summary-item-value">0.00</span></div>
-              <div class="summary-items-sub">Encashment Price <span class="summary-item-value">0.00</span></div>
-            </div>
+          <div class="col-md-10 banner-main-title">
+              <i class="fa fa-exchange" aria-hidden="true"></i> Transactional
+          </div>
+          <div class="col-md-1"></div>
+      </div>
+
+      <!-- Dashboard Expanded -->
+      <div class="col-md-12 banner-container" *ngIf="showHide">
+          <div class="col-md-11 summary-main">
+              <div class="col-md-2 summary-sub-title">
+                  <div class="subHeading">Risk Group Name</div>
+                  <div class="date lightTitle hidden-element">Risk Group Number</div>
+              </div>
+
+              <div class="col-md-3 summary-items">
+                  <h5>Account</h5>
+                  <div class="summary-items-sub">No. of Accounts: <span class="summary-item-value">0.00</span></div>
+                  <div class="summary-items-sub">Avg Management Fee <span class="summary-item-value">0.00</span></div>
+                  <div class="summary-items-sub">Avg Min Monthly Fee <span class="col-md-12 summary-item-value">0.00</span></div>
+              </div>
+              <div class="col-md-3 summary-items">
+                  <h5>Cash</h5>
+                  <div class="summary-items-sub">Total Withdrawal Volumes <span class="summary-item-value">0.00</span></div>
+                  <div class="summary-items-sub">Total Withdrawal Values <span class="summary-item-value">0.00</span></div>
+                  <div class="summary-items-sub">Avg Withdrawal Price <span class="col-md-12 summary-item-value">0.00</span></div>
+              </div>
+              <div class="col-md-2 summary-items">
+                  <h5>Total Cheque Volumes</h5>
+                  <div class="summary-items-sub">Issuing <span class="summary-item-value">0.00</span></div>
+                  <div class="summary-items-sub">Deposit <span class="summary-item-value">0.00</span></div>
+                  <div class="summary-items-sub">Encashment <span class="summary-item-value">0.00</span></div>
+              </div>
+              <div class="col-md-2 summary-items">
+                  <h5>Average Cheque</h5>
+                  <div class="summary-items-sub">Issuing Value <span class="summary-item-value">0.00</span></div>
+                  <div class="summary-items-sub">Issuing Price <span class="summary-item-value">0.00</span></div>
+                  <div class="summary-items-sub">Deposit Value <span class="summary-item-value">0.00</span></div>
+                  <div class="summary-items-sub">Deposit Price <span class="summary-item-value">0.00</span></div>
+                  <div class="summary-items-sub">Encashment Price <span class="summary-item-value">0.00</span></div>
+              </div>
+          </div>
+          <div class="col-md-1">
+              <div class="compress">
+                  <div>
+                      <i class="fa fa-compress" (click)="showHide = !showHide" aria-hidden="true" id="compress-icon"></i>
+                  </div>
+              </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-1">
-        <div class="compress">
-          <div onclick="hideElement('hidden-element')">
-            <i class="fa fa-compress" aria-hidden="true" id="compress-icon"></i>
+      <!-- Dashboard Collapsed -->
+      <div class="col-md-12 banner-container" *ngIf="!showHide">
+          <div class="col-md-11">
+              <div>
+                  <div class="col-md-5">
+                      <div class="subHeading">Risk Group Name</div>
+                      <div class="date lightTitle hidden-element">Risk Group Number</div>
+                  </div>
+              </div>
           </div>
-        </div>
+          <div class="col-md-1">
+              <div class="compress">
+                  <div>
+                      <i class="fa fa-expand" (click)="showHide = !showHide" aria-hidden="true" id="compress-icon"></i>
+                  </div>
+              </div>
+          </div>
       </div>
+
     </div>
-  </div>
 </div>
 
 <!--Table information -->
@@ -67,7 +86,7 @@
   <div class="col-md-7">
     <h2 class="resultsHeading">
       Concessions
-      <button type="button" class="btn btn-primary concessionBtn" routerLink="/transactional-add-concession">Add Concession</button>
+      <button type="button" class="btn btn-primary btn-concession" routerLink="/transactional-add-concession">Add Concession</button>
     </h2>
 
   </div>

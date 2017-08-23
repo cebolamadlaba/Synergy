@@ -16,23 +16,21 @@
         <!-- Dashboard Expanded -->
         <div class="col-md-12 banner-container" *ngIf="showHide">
             <div class="col-md-11">
-                <div>
-                    <div class="col-md-5">
-                        <div class="subHeading">{{lendingView.riskGroup.name}}</div>
-                        <div class="date lightTitle hidden-element">{{lendingView.riskGroup.number}}</div>
-                    </div>
-                    <div class="col-md-2  hidden-element">
-                        <div class="subHeading lightTitle">Total Exposure</div>
-                        <div class="score"><b>{{lendingView.totalExposure | number : '1.2-2'}}</b></div>
-                    </div>
-                    <div class="col-md-2  hidden-element">
-                        <div class="subHeading lightTitle"> Weighted Average MAP</div>
-                        <div class="score"><b>{{lendingView.weightedAverageMap | number : '1.2-2'}}</b></div>
-                    </div>
-                    <div class="col-md-2  hidden-element">
-                        <div class="subHeading lightTitle"> Weighted CRS / MRS</div>
-                        <div class="score"><b>{{lendingView.weightedCrsMrs | number : '1.2-2'}}</b></div>
-                    </div>
+                <div class="col-md-5">
+                    <div class="subHeading">{{lendingView.riskGroup.name}}</div>
+                    <div class="date lightTitle hidden-element">{{lendingView.riskGroup.number}}</div>
+                </div>
+                <div class="col-md-2  hidden-element">
+                    <div class="subHeading lightTitle">Total Exposure</div>
+                    <div class="score"><b>{{lendingView.totalExposure | number : '1.2-2'}}</b></div>
+                </div>
+                <div class="col-md-2  hidden-element">
+                    <div class="subHeading lightTitle"> Weighted Average MAP</div>
+                    <div class="score"><b>{{lendingView.weightedAverageMap | number : '1.2-2'}}</b></div>
+                </div>
+                <div class="col-md-2  hidden-element">
+                    <div class="subHeading lightTitle"> Weighted CRS / MRS</div>
+                    <div class="score"><b>{{lendingView.weightedCrsMrs | number : '1.2-2'}}</b></div>
                 </div>
             </div>
             <div class="col-md-1">
