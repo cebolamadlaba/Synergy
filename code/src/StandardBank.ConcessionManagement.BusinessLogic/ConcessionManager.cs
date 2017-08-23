@@ -7,6 +7,7 @@ using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface;
+using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using StandardBank.ConcessionManagement.Model.UserInterface.Inbox;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 using ConcessionCondition = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionCondition;
@@ -72,27 +73,34 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IMarketSegmentRepository _marketSegmentRepository;
 
         /// <summary>
+        /// The concession cash repository
+        /// </summary>
+        private readonly IConcessionCashRepository _concessionCashRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionManager"/> class.
         /// </summary>
         /// <param name="concessionRepository">The concession repository.</param>
         /// <param name="lookupTableManager">The lookup table manager.</param>
         /// <param name="legalEntityRepository">The legal entity repository.</param>
         /// <param name="riskGroupRepository">The risk group repository.</param>
-        /// <param name="cacheManager"></param>
-        /// <param name="concessionAccountRepository"></param>
-        /// <param name="mapper"></param>
-        /// <param name="concessionConditionRepository"></param>
-        /// <param name="legalEntityAccountRepository"></param>
-        /// <param name="concessionCommentRepository"></param>
-        /// <param name="concessionLendingRepository"></param>
-        /// <param name="marketSegmentRepository"></param>
+        /// <param name="cacheManager">The cache manager.</param>
+        /// <param name="concessionAccountRepository">The concession account repository.</param>
+        /// <param name="mapper">The mapper.</param>
+        /// <param name="concessionConditionRepository">The concession condition repository.</param>
+        /// <param name="legalEntityAccountRepository">The legal entity account repository.</param>
+        /// <param name="concessionCommentRepository">The concession comment repository.</param>
+        /// <param name="concessionLendingRepository">The concession lending repository.</param>
+        /// <param name="marketSegmentRepository">The market segment repository.</param>
+        /// <param name="concessionCashRepository">The concession cash repository.</param>
         public ConcessionManager(IConcessionRepository concessionRepository, ILookupTableManager lookupTableManager,
             ILegalEntityRepository legalEntityRepository, IRiskGroupRepository riskGroupRepository,
             ICacheManager cacheManager, IConcessionAccountRepository concessionAccountRepository, IMapper mapper,
             IConcessionConditionRepository concessionConditionRepository,
             ILegalEntityAccountRepository legalEntityAccountRepository,
             IConcessionCommentRepository concessionCommentRepository,
-            IConcessionLendingRepository concessionLendingRepository, IMarketSegmentRepository marketSegmentRepository)
+            IConcessionLendingRepository concessionLendingRepository, IMarketSegmentRepository marketSegmentRepository,
+            IConcessionCashRepository concessionCashRepository)
         {
             _concessionRepository = concessionRepository;
             _lookupTableManager = lookupTableManager;
@@ -106,6 +114,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionCommentRepository = concessionCommentRepository;
             _concessionLendingRepository = concessionLendingRepository;
             _marketSegmentRepository = marketSegmentRepository;
+            _concessionCashRepository = concessionCashRepository;
         }
 
         /// <summary>
@@ -705,9 +714,43 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 case "Lending":
                     return GetApprovedLendingConcessionDetails(concession);
+                case "Cash":
+                    return GetApprovedCashConcessionDetails(concession);
                 default:
                     throw new NotImplementedException(concession.ConcessionType);
             }
+        }
+
+        /// <summary>
+        /// Gets the approved cash concession details.
+        /// </summary>
+        /// <param name="concession">The concession.</param>
+        /// <returns></returns>
+        private IEnumerable<ApprovedConcessionDetail> GetApprovedCashConcessionDetails(Concession concession)
+        {
+            var approvedConcessionDetails = new List<ApprovedConcessionDetail>();
+            var concessionCashEntities = _concessionCashRepository.ReadByConcessionId(concession.Id);
+
+            foreach (var concessionCash in concessionCashEntities)
+            {
+                var legalEntity = _legalEntityRepository.ReadById(concessionCash.LegalEntityId);
+                var marketSegment = _marketSegmentRepository.ReadById(legalEntity.MarketSegmentId);
+                var mappedCashConcessionDetail = _mapper.Map<CashConcessionDetail>(concessionCash);
+
+                mappedCashConcessionDetail.CustomerName = legalEntity.CustomerName;
+
+                approvedConcessionDetails.Add(new ApprovedConcessionDetail
+                {
+                    CustomerName = mappedCashConcessionDetail.CustomerName,
+                    ConcessionType = "Cash",
+                    Status = concession.Status,
+                    DateOpened = concession.DateOpened,
+                    DateSentForApproval = concession.DateSentForApproval.GetValueOrDefault(DateTime.Now),
+                    Segment = marketSegment.Description
+                });
+            }
+
+            return approvedConcessionDetails;
         }
 
         /// <summary>

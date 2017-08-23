@@ -110,11 +110,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public CashConcession GetCashConcession(string concessionReferenceId, User user)
         {
             var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
-            var concessionLendings = _concessionCashRepository.ReadByConcessionId(concession.Id);
+            var concessionCashEntities = _concessionCashRepository.ReadByConcessionId(concession.Id);
 
             var cashConcessionDetails = new List<CashConcessionDetail>();
 
-            AddMappedConcessionCashEntities(concessionLendings, cashConcessionDetails);
+            AddMappedConcessionCashEntities(concessionCashEntities, cashConcessionDetails);
 
             return new CashConcession
             {
@@ -123,6 +123,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 ConcessionConditions = _concessionManager.GetConcessionConditions(concession.Id),
                 CurrentUser = user
             };
+        }
+
+        /// <summary>
+        /// Deletes the concession cash.
+        /// </summary>
+        /// <param name="cashConcessionDetail">The cash concession detail.</param>
+        /// <returns></returns>
+        public ConcessionCash DeleteConcessionCash(CashConcessionDetail cashConcessionDetail)
+        {
+            var concessionCash = _concessionCashRepository.ReadById(cashConcessionDetail.Id);
+
+            _concessionCashRepository.Delete(concessionCash);
+
+            return concessionCash;
         }
 
         /// <summary>

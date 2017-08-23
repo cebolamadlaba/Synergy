@@ -32,7 +32,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 InstantiatedDependencies.CacheManager, MockConcessionAccountRepository.Object,
                 InstantiatedDependencies.Mapper, MockConcessionConditionRepository.Object,
                 MockLegalEntityAccountRepository.Object, MockConcessionCommentRepository.Object,
-                MockConcessionLendingRepository.Object, MockMarketSegmentRepository.Object);
+                MockConcessionLendingRepository.Object, MockMarketSegmentRepository.Object,
+                MockConcessionCashRepository.Object);
         }
 
         /// <summary>

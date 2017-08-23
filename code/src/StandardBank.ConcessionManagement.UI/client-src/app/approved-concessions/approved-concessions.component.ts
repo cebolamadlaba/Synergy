@@ -28,6 +28,9 @@ export class ApprovedConcessionsComponent implements OnInit {
             case "Lending":
                 this.router.navigate(['/lending-view-concession', approvedConcession.riskGroupNumber, approvedConcession.concessionReferenceNumber]);
                 break;
+            case "Cash":
+                this.router.navigate(['/cash-view-concession', approvedConcession.riskGroupNumber, approvedConcession.concessionReferenceNumber]);
+                break;
         }
     }
 

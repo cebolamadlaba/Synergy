@@ -261,6 +261,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         var cashConcession = new CashConcession();
         cashConcession.concession = new Concession();
         cashConcession.concession.riskGroupId = this.riskGroup.id;
+        cashConcession.concession.referenceNumber = this.concessionReferenceId;
 
         if (this.cashConcessionForm.controls['smtDealNumber'].value)
             cashConcession.concession.smtDealNumber = this.cashConcessionForm.controls['smtDealNumber'].value;
@@ -350,20 +351,28 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         return cashConcession;
     }
 
-    onSubmit() {
+    goBack() {
+        this.location.back();
+    }
+
+    ngOnDestroy() {
+        this.sub.unsubscribe();
+    }
+
+    bcmApproveConcession() {
         this.isLoading = true;
 
         this.errorMessage = null;
         this.validationError = null;
 
         var cashConcession = this.getCashConcession();
-
-        cashConcession.concession.concessionType = "Cash";
-        cashConcession.concession.type = "New";
+        cashConcession.concession.subStatus = "PCM Pending";
+        cashConcession.concession.bcmUserId = this.cashConcession.currentUser.id;
 
         if (!this.validationError) {
-            this.cashConcessionService.postNewCashData(cashConcession).subscribe(entity => {
+            this.cashConcessionService.postUpdateCashData(cashConcession).subscribe(entity => {
                 console.log("data saved");
+                this.canBcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
             }, error => {
@@ -375,12 +384,95 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
-    goBack() {
-        this.location.back();
+    bcmDeclineConcession() {
+        this.isLoading = true;
+
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var cashConcession = this.getCashConcession();
+        cashConcession.concession.status = "Declined";
+        cashConcession.concession.subStatus = "BCM Declined";
+        cashConcession.concession.bcmUserId = this.cashConcession.currentUser.id;
+
+        if (!this.validationError) {
+            this.cashConcessionService.postUpdateCashData(cashConcession).subscribe(entity => {
+                console.log("data saved");
+                this.canBcmApprove = false;
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
     }
 
-    ngOnDestroy() {
-        this.sub.unsubscribe();
+    pcmApproveConcession() {
+        this.isLoading = true;
+
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var cashConcession = this.getCashConcession();
+
+        cashConcession.concession.status = "Approved";
+
+        if (this.cashConcession.currentUser.isHO) {
+            cashConcession.concession.subStatus = "HO Approved";
+            cashConcession.concession.hoUserId = this.cashConcession.currentUser.id;
+        } else {
+            cashConcession.concession.subStatus = "PCM Approved";
+            cashConcession.concession.pcmUserId = this.cashConcession.currentUser.id;
+        }
+
+        if (!this.validationError) {
+            this.cashConcessionService.postUpdateCashData(cashConcession).subscribe(entity => {
+                console.log("data saved");
+                this.canPcmApprove = false;
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
     }
 
+    pcmDeclineConcession() {
+        this.isLoading = true;
+
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var cashConcession = this.getCashConcession();
+
+        cashConcession.concession.status = "Declined";
+
+        if (this.cashConcession.currentUser.isHO) {
+            cashConcession.concession.subStatus = "HO Declined";
+            cashConcession.concession.hoUserId = this.cashConcession.currentUser.id;
+        } else {
+            cashConcession.concession.subStatus = "PCM Declined";
+            cashConcession.concession.pcmUserId = this.cashConcession.currentUser.id;
+        }
+
+        if (!this.validationError) {
+            this.cashConcessionService.postUpdateCashData(cashConcession).subscribe(entity => {
+                console.log("data saved");
+                this.canPcmApprove = false;
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
 }

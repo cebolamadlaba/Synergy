@@ -33,5 +33,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="user">The user.</param>
         /// <returns></returns>
         CashConcession GetCashConcession(string concessionReferenceId, User user);
+
+        /// <summary>
+        /// Deletes the concession cash.
+        /// </summary>
+        /// <param name="cashConcessionDetail">The cash concession detail.</param>
+        /// <returns></returns>
+        ConcessionCash DeleteConcessionCash(CashConcessionDetail cashConcessionDetail);
     }
 }

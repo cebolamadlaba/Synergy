@@ -32,6 +32,13 @@ export class CashConcessionService {
         return this.http.post(url, cashConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    postUpdateCashData(cashConcession: CashConcession): Observable<CashConcession> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/Cash/UpdateCash";
+        return this.http.post(url, cashConcession, options).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
     private extractData(response: Response) {
         let body = response.json();
         return body;
@@ -63,6 +70,13 @@ export class MockCashConcessionService extends CashConcessionService {
     }
 
     postNewCashData(cashConcession: CashConcession): Observable<CashConcession> {
+        this.cashConcessionModel.concession = new Concession();
+        this.cashConcessionModel.concessionConditions = [new ConcessionCondition()];
+        this.cashConcessionModel.cashConcessionDetails = [new CashConcessionDetail()];
+        return Observable.of(this.cashConcessionModel);
+    }
+
+    postUpdateCashData(cashConcession: CashConcession): Observable<CashConcession> {
         this.cashConcessionModel.concession = new Concession();
         this.cashConcessionModel.concessionConditions = [new ConcessionCondition()];
         this.cashConcessionModel.cashConcessionDetails = [new CashConcessionDetail()];
