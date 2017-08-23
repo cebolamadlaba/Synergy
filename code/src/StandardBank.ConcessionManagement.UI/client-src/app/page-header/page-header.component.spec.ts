@@ -1,7 +1,7 @@
-﻿import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpModule } from '@angular/http';
 import { PageHeaderComponent } from './page-header.component';
-import { UserService, MockUserService } from "../user/user.service";
+import { UserService, MockUserService } from "../services/user.service";
 
 describe('PageHeaderComponent', () => {
     let component: PageHeaderComponent;

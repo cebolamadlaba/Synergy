@@ -54,6 +54,14 @@
         public string Channel { get; set; }
 
         /// <summary>
+        /// Gets or sets the channel type identifier.
+        /// </summary>
+        /// <value>
+        /// The channel type identifier.
+        /// </value>
+        public int? ChannelTypeId { get; set; }
+
+        /// <summary>
         /// Gets or sets the cash table number.
         /// </summary>
         /// <value>
@@ -100,5 +108,29 @@
         /// The approved price.
         /// </value>
         public decimal ApprovedPrice { get; set; }
+
+        /// <summary>
+        /// Gets or sets the base rate.
+        /// </summary>
+        /// <value>
+        /// The base rate.
+        /// </value>
+        public decimal BaseRate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ad valorem.
+        /// </summary>
+        /// <value>
+        /// The ad valorem.
+        /// </value>
+        public decimal AdValorem { get; set; }
+
+        /// <summary>
+        /// Gets or sets the accrual type identifier.
+        /// </summary>
+        /// <value>
+        /// The accrual type identifier.
+        /// </value>
+        public int? AccrualTypeId { get; set; }
     }
 }

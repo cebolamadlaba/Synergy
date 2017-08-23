@@ -1,6 +1,6 @@
-﻿import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Observable } from "rxjs";
-import { UserConcessionsService } from "../user-concessions/user-concessions.service";
+import { UserConcessionsService } from "../services/user-concessions.service";
 import { UserConcessions } from "../models/user-concessions";
 
 @Component({

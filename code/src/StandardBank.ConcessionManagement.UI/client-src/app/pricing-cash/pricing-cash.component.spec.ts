@@ -3,8 +3,8 @@ import { HttpModule } from '@angular/http';
 import { PricingCashComponent } from './pricing-cash.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
-import { CashConcessionService, MockCashConcessionService } from "../cash-concession/cash-concession.service";
-import { CashConcessionFilterPipe } from "../cash-concession-filter/cash-concession-filter.pipe";
+import { CashConcessionService, MockCashConcessionService } from "../services/cash-concession.service";
+import { CashConcessionFilterPipe } from "../filters/cash-concession-filter.pipe";
 
 describe('PricingCashComponent', () => {
     let component: PricingCashComponent;

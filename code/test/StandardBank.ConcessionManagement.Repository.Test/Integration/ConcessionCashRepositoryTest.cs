@@ -26,7 +26,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 BaseRateId = DataHelper.GetBaseRateId(),
                 AdValorem = 2263,
                 LegalEntityId = DataHelper.GetLegalEntityId(),
-                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
+                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
+                BaseRate = 1233,
+                AccrualTypeId = DataHelper.GetAccrualTypeId()
             };
 
             var result = InstantiatedDependencies.ConcessionCashRepository.Create(model);
@@ -96,6 +98,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.AdValorem = model.AdValorem + 100;
             model.LegalEntityId = DataHelper.GetAlternateLegalEntityId(model.LegalEntityId);
             model.LegalEntityAccountId = DataHelper.GetAlternateLegalEntityAccountId(model.LegalEntityAccountId);
+            model.BaseRate = model.BaseRate + 100;
+            model.AccrualTypeId = DataHelper.GetAlternateAccrualTypeId(model.AccrualTypeId);
 
             InstantiatedDependencies.ConcessionCashRepository.Update(model);
 
@@ -112,6 +116,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.AdValorem, model.AdValorem);
             Assert.Equal(updatedModel.LegalEntityId, model.LegalEntityId);
             Assert.Equal(updatedModel.LegalEntityAccountId, model.LegalEntityAccountId);
+            Assert.Equal(updatedModel.BaseRate, model.BaseRate);
+            Assert.Equal(updatedModel.AccrualTypeId, model.AccrualTypeId);
         }
 
         /// <summary>
@@ -130,7 +136,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 BaseRateId = DataHelper.GetBaseRateId(),
                 AdValorem = 2263,
                 LegalEntityId = DataHelper.GetLegalEntityId(),
-                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
+                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
+                BaseRate = 653,
+                AccrualTypeId = DataHelper.GetAccrualTypeId()
             };
 
             var temporaryEntity = InstantiatedDependencies.ConcessionCashRepository.Create(model);

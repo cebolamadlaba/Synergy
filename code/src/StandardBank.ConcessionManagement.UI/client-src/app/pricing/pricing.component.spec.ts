@@ -1,10 +1,10 @@
-﻿import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpModule } from '@angular/http';
 import { PricingComponent } from './pricing.component';
-import { UserService, MockUserService } from "../user/user.service";
+import { UserService, MockUserService } from "../services/user.service";
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { RiskGroupService, MockRiskGroupService } from "../risk-group/risk-group.service";
+import { LookupDataService, MockLookupDataService } from "../services/lookup-data.service";
 
 describe('PricingComponent', () => {
     let component: PricingComponent;
@@ -16,7 +16,7 @@ describe('PricingComponent', () => {
             declarations: [PricingComponent],
             providers: [
                 { provide: UserService, useClass: MockUserService },
-                { provide: RiskGroupService, useClass: MockRiskGroupService }
+                { provide: LookupDataService, useClass: MockLookupDataService }
             ]
         }).compileComponents();
     }));

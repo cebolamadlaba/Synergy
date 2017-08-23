@@ -5,13 +5,8 @@ import { CashAddConcessionComponent } from './cash-add-concession.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { RiskGroupService, MockRiskGroupService } from "../risk-group/risk-group.service";
-import { PeriodService, MockPeriodService } from "../period/period.service";
-import { PeriodTypeService, MockPeriodTypeService } from "../period-type/period-type.service";
-import { ConditionTypeService, MockConditionTypeService } from "../condition-type/condition-type.service";
-import { ClientAccountService, MockClientAccountService } from "../client-account/client-account.service";
-import { AccrualTypeService, MockAccrualTypeService } from "../accrual-type/accrual-type.service";
-import { ChannelTypeService, MockChannelTypeService } from "../channel-type/channel-type.service";
+import { LookupDataService, MockLookupDataService } from "../services/lookup-data.service";
+import { CashConcessionService, MockCashConcessionService } from "../services/cash-concession.service";
 
 describe('CashAddConcessionComponent', () => {
     let component: CashAddConcessionComponent;
@@ -22,13 +17,8 @@ describe('CashAddConcessionComponent', () => {
             imports: [HttpModule, ModalModule.forRoot(), RouterTestingModule, FormsModule, ReactiveFormsModule],
             declarations: [CashAddConcessionComponent],
             providers: [
-                { provide: RiskGroupService, useClass: MockRiskGroupService },
-                { provide: PeriodService, useClass: MockPeriodService },
-                { provide: PeriodTypeService, useClass: MockPeriodTypeService },
-                { provide: ConditionTypeService, useClass: MockConditionTypeService },
-                { provide: ClientAccountService, useClass: MockClientAccountService },
-                { provide: AccrualTypeService, useClass: MockAccrualTypeService },
-                { provide: ChannelTypeService, useClass: MockChannelTypeService }
+                { provide: LookupDataService, useClass: MockLookupDataService },
+                { provide: CashConcessionService, useClass: MockCashConcessionService }
             ]
         })
             .compileComponents();

@@ -1,10 +1,10 @@
-﻿import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Subject } from 'rxjs/Rx';
 import { Condition } from '../models/condition';
-import { MyConditionService } from '../my-condition/my-condition.service';
+import { MyConditionService } from '../services/my-condition.service';
 import { Observable } from "rxjs";
-import { PeriodService } from '../period/period.service';
 import { Period} from '../models/period';
+import { LookupDataService } from "../services/lookup-data.service";
 
 @Component({
   selector: 'app-conditions',
@@ -18,7 +18,9 @@ export class ConditionsComponent implements OnInit {
     periods: Period[];
     errorMessage: String;
     periodType: string = "Standard";
-    constructor( @Inject(MyConditionService) private conditionService , private periodService: PeriodService) { }
+    constructor(
+        @Inject(MyConditionService) private conditionService,
+        @Inject(LookupDataService) private lookupDataService) { }
 
   ngOnInit() {
       this.dtOptions = {
@@ -30,17 +32,14 @@ export class ConditionsComponent implements OnInit {
           }
       };
     
-      this.periodService.getData().subscribe(data => {
-          this.periods = data;
-
-      }, err => this.errorMessage = err);
-
+      this.lookupDataService.getPeriods().subscribe(data => { this.periods = data; }, err => this.errorMessage = err);
       this.GetConditions("3 Months", this.periodType);
     }
 
   PeriodFilter(value:string) {
       this.GetConditions(value, this.periodType);
   }
+
   GetConditions(period:string, periodType:string) {
       this.conditionService.getMyConditions(period, periodType).subscribe(conditions => {
           this.observableConditions = conditions;

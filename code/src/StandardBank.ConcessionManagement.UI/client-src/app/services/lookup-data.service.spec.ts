@@ -1,16 +1,16 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { HttpModule } from '@angular/http';
-import { AccrualTypeService } from './accrual-type.service';
+import { LookupDataService } from './lookup-data.service';
 
-describe('AccrualTypeService', () => {
+describe('LookupDataService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpModule],
-            providers: [AccrualTypeService]
+            providers: [LookupDataService]
         });
     });
 
-    it('should be created', inject([AccrualTypeService], (service: AccrualTypeService) => {
+    it('should be created', inject([LookupDataService], (service: LookupDataService) => {
         expect(service).toBeTruthy();
     }));
 });

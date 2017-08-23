@@ -1,8 +1,8 @@
-﻿import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DeclinedInboxComponent } from './declined-inbox.component';
 import { HttpModule } from '@angular/http';
 import { InboxHeaderComponent } from "../inbox-header/inbox-header.component";
-import { UserConcessionsService, MockUserConcessionsService } from "../user-concessions/user-concessions.service";
+import { UserConcessionsService, MockUserConcessionsService } from "../services/user-concessions.service";
 import { DataTablesModule } from 'angular-datatables';
 import { RouterTestingModule } from '@angular/router/testing';
 
