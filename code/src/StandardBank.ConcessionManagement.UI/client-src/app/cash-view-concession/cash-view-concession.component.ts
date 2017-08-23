@@ -116,8 +116,6 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             }
         });
 
-
-
         if (this.concessionReferenceId) {
             this.observableCashConcession = this.cashConcessionService.getCashConcessionData(this.concessionReferenceId);
             this.observableCashConcession.subscribe(cashConcession => {
@@ -144,6 +142,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
                     const concessions = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
                     let currentConcession = concessions.controls[concessions.length - 1];
+
+                    currentConcession.get('cashViewConcessionId').setValue(cashConcessionDetail.cashViewConcessionId);
 
                     let selectedChannelType = this.channelTypes.filter(_ => _.id == cashConcessionDetail.channelTypeId);
                     currentConcession.get('channelType').setValue(selectedChannelType[0]);
@@ -196,6 +196,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
     initConcessionItemRows() {
         return this.formBuilder.group({
+            cashViewConcessionId: [''],
             channelType: [''],
             accountNumber: [''],
             baseRate: [''],
@@ -282,6 +283,9 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                 cashConcession.cashConcessionDetails = [];
 
             let cashConcessionDetail = new CashConcessionDetail();
+
+            if (concessionFormItem.get('cashViewConcessionId').value)
+                cashConcessionDetail.cashViewConcessionId = concessionFormItem.get('cashViewConcessionId').value;
 
             if (concessionFormItem.get('channelType').value) {
                 cashConcessionDetail.channelTypeId = concessionFormItem.get('channelType').value.id;

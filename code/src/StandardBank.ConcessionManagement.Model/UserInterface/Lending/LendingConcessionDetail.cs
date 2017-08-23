@@ -12,6 +12,7 @@
         /// The identifier.
         /// </value>
         public int Id { get; set; }
+
         /// <summary>
         /// Gets or sets the type of the product.
         /// </summary>
