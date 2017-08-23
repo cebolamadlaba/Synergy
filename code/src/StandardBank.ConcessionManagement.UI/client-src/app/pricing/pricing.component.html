@@ -72,9 +72,10 @@
     </div>
     <div *ngIf="riskGroup != null">
     
-        <div class="pricing-group-container">
+        <div class="col-md-12">
 
-            <div class="col-md-3">
+            <!-- Risk group -->
+            <div class="pricing-group-container">
                 <div class="pricing-icon">
                     <i class="fa fa-building-o" aria-hidden="true"></i>
                 </div>
@@ -84,71 +85,86 @@
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="products-container">
-                    <p>Available Products</p>
-
-                    <!-- Lending -->
+            <!-- Products -->
+            <div class="col-md-8 col-md-offset-2" style="margin-top: 20px">
+                <!-- Lending -->
+                <div class="col-md-3">
                     <div class="product-item" [routerLink]="['/pricing-lending', riskGroup.number]">
+                        <div class="product-heading">Lending</div>
                         <div class="container-item-icon">
                             <i class="fa fa-handshake-o" aria-hidden="true"></i>
-                        </div>
-                        <div class="product-heading">Lending</div>
+                        </div>                      
                     </div>
-
-                    <!-- Cash -->
+                </div>                
+                <!-- Cash -->
+                <div class="col-md-3">
                     <div class="product-item" [routerLink]="['/pricing-cash', riskGroup.number]">
+                        <div class="product-heading">Cash</div>
                         <div class="container-item-icon">
                             <i class="fa fa-money" aria-hidden="true"></i>
-                        </div>
-                        <div class="product-heading">Cash</div>
+                        </div>                        
                     </div>
-                    <!-- Cash -->
+                </div>
+                <!-- Investments -->
+                <div class="col-md-3">
                     <div class="product-item">
+                        <div class="product-heading">Investments</div>
                         <div class="container-item-icon">
                             <i class="fa fa-bar-chart" aria-hidden="true"></i>
                         </div>
-                        <div class="product-heading">Investments</div>
                     </div>
-                    <!-- BOL -->
+                </div>
+                <!-- BOL -->
+                <div class="col-md-3">
                     <div class="product-item">
+                        <div class="product-heading">BOL</div>
                         <div class="container-item-icon">
                             <i class="fa fa-desktop" aria-hidden="true"></i>
                         </div>
-                        <div class="product-heading">BOL</div>
                     </div>
-                    <!-- MAS -->
+                </div>
+            </div>
+            <div class="col-md-8 col-md-offset-2" style="margin-top: 20px">
+                <!-- MAS -->
+                <div class="col-md-3">
                     <div class="product-item">
+                        <div class="product-heading">MAS</div>
                         <div class="container-item-icon">
                             <i class="fa fa-calculator" aria-hidden="true"></i>
                         </div>
-                        <div class="product-heading">MAS</div>
                     </div>
-                    <!-- Trade -->
+                </div>
+                <!-- Trade -->
+                <div class="col-md-3">
                     <div class="product-item">
+                        <div class="product-heading">Trade</div>
                         <div class="container-item-icon">
                             <i class="fa fa-line-chart" aria-hidden="true"></i>
                         </div>
-                        <div class="product-heading">Trade</div>
                     </div>
-                    <!-- Transactional -->
+                </div>
+                <!-- Transactional -->
+                <div class="col-md-3">
                     <div class="product-item">
+                        <div class="product-heading">Transactional</div>
                         <div class="container-item-icon">
                             <i class="fa fa-exchange" aria-hidden="true"></i>
                         </div>
-                        <div class="product-heading">Transactional</div>
                     </div>
-                    <!-- Cashman -->
+                </div>
+                <!-- Cashman -->
+                <div class="col-md-3">
                     <div class="product-item">
+                        <div class="product-heading">Cashman</div>
                         <div class="container-item-icon">
                             <i class="fa fa-user" aria-hidden="true"></i>
                         </div>
-                        <div class="product-heading">Cashman</div>
                     </div>
-
                 </div>
             </div>
+
         </div>
+        
     </div>
 
 
