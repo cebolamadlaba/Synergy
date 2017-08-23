@@ -1,4 +1,4 @@
-﻿<!-- banner-->
+<!-- banner-->
 <div class="col-md-12 banner">
     <div class="row">
         <div class="lending-banner-title">
@@ -135,7 +135,7 @@
                 <div class="concessionID-section"> {{cashConcession.concession.referenceNumber}}</div>
             </div>
             <div class="section-body">
-                <div class="table-container">
+                <div class="table-container" [routerLink]="['/cash-view-concession', cashView.riskGroup.number, cashConcession.concession.referenceNumber]">
                     <table class="table table-bordered table-hover header-fixed table-striped">
                         <thead>
                             <tr>

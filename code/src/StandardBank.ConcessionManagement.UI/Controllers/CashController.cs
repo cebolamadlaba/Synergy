@@ -4,10 +4,14 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddCashConcessionDetail;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionComment;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionCondition;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteCashConcessionDetail;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteConcessionCondition;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.UpdateConcession;
 
 namespace StandardBank.ConcessionManagement.UI.Controllers
 {
@@ -107,6 +111,44 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult CashConcessionData(string concessionReferenceId)
         {
             return Ok(_cashManager.GetCashConcession(concessionReferenceId, _siteHelper.LoggedInUser(this)));
+        }
+
+        /// <summary>
+        /// Updates the cash concession.
+        /// </summary>
+        /// <param name="cashConcession">The cash concession.</param>
+        /// <returns></returns>
+        [Route("UpdateCash")]
+        public async Task<IActionResult> UpdateCash([FromBody] CashConcession cashConcession)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            var databaseCashConcession =
+                _cashManager.GetCashConcession(cashConcession.Concession.ReferenceNumber, user);
+
+            //first delete all the conditions and the lending details
+            foreach (var condition in databaseCashConcession.ConcessionConditions)
+                await _mediator.Send(new DeleteConcessionConditionCommand(condition, user));
+
+            foreach (var cashConcessionDetail in databaseCashConcession.CashConcessionDetails)
+                await _mediator.Send(new DeleteCashConcessionDetailCommand(cashConcessionDetail, user));
+
+            //second update the concession
+            var concession = await _mediator.Send(new UpdateConcessionCommand(cashConcession.Concession, user));
+
+            //then add all the new conditions and cash details and comments
+            foreach (var cashConcessionDetail in cashConcession.CashConcessionDetails)
+                await _mediator.Send(new AddCashConcessionDetailCommand(cashConcessionDetail, user, concession));
+
+            if (cashConcession.ConcessionConditions != null && cashConcession.ConcessionConditions.Any())
+                foreach (var concessionCondition in cashConcession.ConcessionConditions)
+                    await _mediator.Send(new AddConcessionConditionCommand(concessionCondition, user, concession));
+
+            if (!string.IsNullOrWhiteSpace(cashConcession.Concession.Comments))
+                await _mediator.Send(new AddConcessionCommentCommand(concession.Id, concession.SubStatusId.Value,
+                    cashConcession.Concession.Comments, user));
+
+            return Ok(cashConcession);
         }
     }
 }
