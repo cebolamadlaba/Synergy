@@ -88,6 +88,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Creates the concession cash.
+        /// </summary>
+        /// <param name="cashConcessionDetail">The cash concession detail.</param>
+        /// <param name="concession">The concession.</param>
+        /// <returns></returns>
+        public ConcessionCash CreateConcessionCash(CashConcessionDetail cashConcessionDetail, Concession concession)
+        {
+            var concessionCash = _mapper.Map<ConcessionCash>(cashConcessionDetail);
+            concessionCash.ConcessionId = concession.Id;
+            return _concessionCashRepository.Create(concessionCash);
+        }
+
+        /// <summary>
         /// Adds the cash concession data.
         /// </summary>
         /// <param name="concession">The concession.</param>

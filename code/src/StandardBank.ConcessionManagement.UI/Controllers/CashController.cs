@@ -1,4 +1,10 @@
+using System.Linq;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.AddCashConcessionDetail;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionCondition;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
@@ -29,16 +35,24 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         private readonly ICashManager _cashManager;
 
         /// <summary>
+        /// The mediator
+        /// </summary>
+        private readonly IMediator _mediator;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CashController"/> class.
         /// </summary>
         /// <param name="siteHelper">The site helper.</param>
         /// <param name="pricingManager">The pricing manager.</param>
         /// <param name="cashManager">The cash manager.</param>
-        public CashController(ISiteHelper siteHelper, IPricingManager pricingManager, ICashManager cashManager)
+        /// <param name="mediator">The mediator.</param>
+        public CashController(ISiteHelper siteHelper, IPricingManager pricingManager, ICashManager cashManager,
+            IMediator mediator)
         {
             _siteHelper = siteHelper;
             _pricingManager = pricingManager;
             _cashManager = cashManager;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -57,6 +71,31 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             };
 
             return Ok(cashView);
+        }
+
+        /// <summary>
+        /// Creates a new cash concession.
+        /// </summary>
+        /// <param name="cashConcession">The cash concession.</param>
+        /// <returns></returns>
+        [Route("NewCash")]
+        public async Task<IActionResult> NewCash([FromBody] CashConcession cashConcession)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            cashConcession.Concession.ConcessionType = "Cash";
+            cashConcession.Concession.Type = "New";
+
+            var concession = await _mediator.Send(new AddConcessionCommand(cashConcession.Concession, user));
+
+            foreach (var cashConcessionDetail in cashConcession.CashConcessionDetails)
+                await _mediator.Send(new AddCashConcessionDetailCommand(cashConcessionDetail, user, concession));
+
+            if (cashConcession.ConcessionConditions != null && cashConcession.ConcessionConditions.Any())
+                foreach (var concessionCondition in cashConcession.ConcessionConditions)
+                    await _mediator.Send(new AddConcessionConditionCommand(concessionCondition, user, concession));
+
+            return Ok(cashConcession);
         }
     }
 }

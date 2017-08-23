@@ -34,8 +34,8 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ConcessionCash Create(ConcessionCash model)
         {
-            const string sql = @"INSERT [dbo].[tblConcessionCash] ([fkConcessionId], [fkChannelTypeId], [TableNumber], [CashVolume], [CashValue], [fkBaseRateId], [AdValorem], [fkLegalEntityId], [fkLegalEntityAccountId]) 
-                                VALUES (@fkConcessionId, @fkChannelTypeId, @TableNumber, @CashVolume, @CashValue, @fkBaseRateId, @AdValorem, @fkLegalEntityId, @fkLegalEntityAccountId) 
+            const string sql = @"INSERT [dbo].[tblConcessionCash] ([fkConcessionId], [fkChannelTypeId], [TableNumber], [CashVolume], [CashValue], [fkBaseRateId], [AdValorem], [fkLegalEntityId], [fkLegalEntityAccountId], [BaseRate], [fkAccrualTypeId]) 
+                                VALUES (@fkConcessionId, @fkChannelTypeId, @TableNumber, @CashVolume, @CashValue, @fkBaseRateId, @AdValorem, @fkLegalEntityId, @fkLegalEntityAccountId, @BaseRate, @fkAccrualTypeId) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
@@ -51,7 +51,9 @@ namespace StandardBank.ConcessionManagement.Repository
                         fkBaseRateId = model.BaseRateId,
                         AdValorem = model.AdValorem,
                         fkLegalEntityId = model.LegalEntityId,
-                        @fkLegalEntityAccountId = model.LegalEntityAccountId
+                        fkLegalEntityAccountId = model.LegalEntityAccountId,
+                        BaseRate = model.BaseRate,
+                        fkAccrualTypeId = model.AccrualTypeId
                     }).Single();
             }
 
@@ -68,7 +70,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionCash>(
-                    "SELECT [pkConcessionCashId] [Id], [fkConcessionId] [ConcessionId], [fkChannelTypeId] [ChannelTypeId], [TableNumber], [CashVolume], [CashValue], [fkBaseRateId] [BaseRateId], [AdValorem], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId] FROM [dbo].[tblConcessionCash] WHERE [pkConcessionCashId] = @Id",
+                    "SELECT [pkConcessionCashId] [Id], [fkConcessionId] [ConcessionId], [fkChannelTypeId] [ChannelTypeId], [TableNumber], [CashVolume], [CashValue], [fkBaseRateId] [BaseRateId], [AdValorem], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [BaseRate], [fkAccrualTypeId] [AccrualTypeId] FROM [dbo].[tblConcessionCash] WHERE [pkConcessionCashId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -83,7 +85,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionCash>(
-                    "SELECT [pkConcessionCashId] [Id], [fkConcessionId] [ConcessionId], [fkChannelTypeId] [ChannelTypeId], [TableNumber], [CashVolume], [CashValue], [fkBaseRateId] [BaseRateId], [AdValorem], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId] FROM [dbo].[tblConcessionCash] WHERE [fkConcessionId] = @concessionId",
+                    "SELECT [pkConcessionCashId] [Id], [fkConcessionId] [ConcessionId], [fkChannelTypeId] [ChannelTypeId], [TableNumber], [CashVolume], [CashValue], [fkBaseRateId] [BaseRateId], [AdValorem], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [BaseRate], [fkAccrualTypeId] [AccrualTypeId] FROM [dbo].[tblConcessionCash] WHERE [fkConcessionId] = @concessionId",
                     new {concessionId});
             }
         }
@@ -96,7 +98,7 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<ConcessionCash>("SELECT [pkConcessionCashId] [Id], [fkConcessionId] [ConcessionId], [fkChannelTypeId] [ChannelTypeId], [TableNumber], [CashVolume], [CashValue], [fkBaseRateId] [BaseRateId], [AdValorem], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId] FROM [dbo].[tblConcessionCash]");
+                return db.Query<ConcessionCash>("SELECT [pkConcessionCashId] [Id], [fkConcessionId] [ConcessionId], [fkChannelTypeId] [ChannelTypeId], [TableNumber], [CashVolume], [CashValue], [fkBaseRateId] [BaseRateId], [AdValorem], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [BaseRate], [fkAccrualTypeId] [AccrualTypeId] FROM [dbo].[tblConcessionCash]");
             }
         }
 
@@ -109,7 +111,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblConcessionCash]
-                            SET [fkConcessionId] = @fkConcessionId, [fkChannelTypeId] = @fkChannelTypeId, [TableNumber] = @TableNumber, [CashVolume] = @CashVolume, [CashValue] = @CashValue, [fkBaseRateId] = @fkBaseRateId, [AdValorem] = @AdValorem, [fkLegalEntityId] = @LegalEntityId, [fkLegalEntityAccountId]  = @LegalEntityAccountId
+                            SET [fkConcessionId] = @fkConcessionId, [fkChannelTypeId] = @fkChannelTypeId, [TableNumber] = @TableNumber, [CashVolume] = @CashVolume, [CashValue] = @CashValue, [fkBaseRateId] = @fkBaseRateId, [AdValorem] = @AdValorem, [fkLegalEntityId] = @LegalEntityId, [fkLegalEntityAccountId]  = @LegalEntityAccountId, [BaseRate] = @BaseRate, [fkAccrualTypeId] = @AccrualTypeId
                             WHERE [pkConcessionCashId] = @Id",
                     new
                     {
@@ -122,7 +124,9 @@ namespace StandardBank.ConcessionManagement.Repository
                         fkBaseRateId = model.BaseRateId,
                         AdValorem = model.AdValorem,
                         LegalEntityId = model.LegalEntityId,
-                        LegalEntityAccountId = model.LegalEntityAccountId
+                        LegalEntityAccountId = model.LegalEntityAccountId,
+                        BaseRate = model.BaseRate,
+                        AccrualTypeId = model.AccrualTypeId
                     });
             }
         }

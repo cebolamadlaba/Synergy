@@ -86,6 +86,22 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int LegalEntityAccountId { get; set; }
 
         /// <summary>
+        /// Gets or sets the base rate.
+        /// </summary>
+        /// <value>
+        /// The base rate.
+        /// </value>
+        public decimal? BaseRate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the accrual type identifier.
+        /// </summary>
+        /// <value>
+        /// The accrual type identifier.
+        /// </value>
+        public int AccrualTypeId { get; set; } 
+
+        /// <summary>
         /// Gets or the name of the table.
         /// </summary>
         /// <value>

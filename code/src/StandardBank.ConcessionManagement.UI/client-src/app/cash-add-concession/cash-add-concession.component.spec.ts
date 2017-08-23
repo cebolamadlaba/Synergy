@@ -6,6 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { LookupDataService, MockLookupDataService } from "../services/lookup-data.service";
+import { CashConcessionService, MockCashConcessionService } from "../services/cash-concession.service";
 
 describe('CashAddConcessionComponent', () => {
     let component: CashAddConcessionComponent;
@@ -16,7 +17,8 @@ describe('CashAddConcessionComponent', () => {
             imports: [HttpModule, ModalModule.forRoot(), RouterTestingModule, FormsModule, ReactiveFormsModule],
             declarations: [CashAddConcessionComponent],
             providers: [
-                { provide: LookupDataService, useClass: MockLookupDataService }
+                { provide: LookupDataService, useClass: MockLookupDataService },
+                { provide: CashConcessionService, useClass: MockCashConcessionService }
             ]
         })
             .compileComponents();

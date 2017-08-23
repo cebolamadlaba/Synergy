@@ -1486,7 +1486,9 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 BaseRateId = GetBaseRateId(),
                 AdValorem = 8669,
                 LegalEntityId = GetLegalEntityId(),
-                LegalEntityAccountId = GetLegalEntityAccountId()
+                LegalEntityAccountId = GetLegalEntityAccountId(),
+                BaseRate = 1263,
+                AccrualTypeId = GetAccrualTypeId()
             };
 
             InstantiatedDependencies.ConcessionCashRepository.Create(model);
