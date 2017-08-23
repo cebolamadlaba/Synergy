@@ -1,9 +1,9 @@
-﻿import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpModule } from '@angular/http';
 import { ApprovedConcessionsComponent } from './approved-concessions.component';
 import { FormsModule } from '@angular/forms';
-import { UserConcessionsService, MockUserConcessionsService } from "../user-concessions/user-concessions.service";
-import { ApprovedConcessionFilterPipe } from "../approved-concession-filter/approved-concession-filter.pipe";
+import { UserConcessionsService, MockUserConcessionsService } from "../services/user-concessions.service";
+import { ApprovedConcessionFilterPipe } from "../filters/approved-concession-filter.pipe";
 import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ApprovedConcessionsComponent', () => {

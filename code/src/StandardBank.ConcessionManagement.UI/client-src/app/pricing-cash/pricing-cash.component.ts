@@ -1,9 +1,9 @@
-﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { CashConcession } from "../models/cash-concession";
-import { CashConcessionService } from "../cash-concession/cash-concession.service";
+import { CashConcessionService } from "../services/cash-concession.service";
 import { CashView } from "../models/cash-view";
 import { RiskGroup } from "../models/risk-group";
 import { SourceSystemProduct } from "../models/source-system-product";

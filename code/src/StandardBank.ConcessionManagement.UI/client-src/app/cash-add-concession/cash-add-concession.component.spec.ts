@@ -5,13 +5,13 @@ import { CashAddConcessionComponent } from './cash-add-concession.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { RiskGroupService, MockRiskGroupService } from "../risk-group/risk-group.service";
-import { PeriodService, MockPeriodService } from "../period/period.service";
-import { PeriodTypeService, MockPeriodTypeService } from "../period-type/period-type.service";
-import { ConditionTypeService, MockConditionTypeService } from "../condition-type/condition-type.service";
-import { ClientAccountService, MockClientAccountService } from "../client-account/client-account.service";
-import { AccrualTypeService, MockAccrualTypeService } from "../accrual-type/accrual-type.service";
-import { ChannelTypeService, MockChannelTypeService } from "../channel-type/channel-type.service";
+import { RiskGroupService, MockRiskGroupService } from "../services/risk-group.service";
+import { PeriodService, MockPeriodService } from "../services/period.service";
+import { PeriodTypeService, MockPeriodTypeService } from "../services/period-type.service";
+import { ConditionTypeService, MockConditionTypeService } from "../services/condition-type.service";
+import { ClientAccountService, MockClientAccountService } from "../services/client-account.service";
+import { AccrualTypeService, MockAccrualTypeService } from "../services/accrual-type.service";
+import { ChannelTypeService, MockChannelTypeService } from "../services/channel-type.service";
 
 describe('CashAddConcessionComponent', () => {
     let component: CashAddConcessionComponent;

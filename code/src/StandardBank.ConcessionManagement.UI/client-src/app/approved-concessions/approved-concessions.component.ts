@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ApprovedConcession } from "../models/approved-concession";
 import { Observable } from "rxjs";
-import { UserConcessionsService } from "../user-concessions/user-concessions.service";
+import { UserConcessionsService } from "../services/user-concessions.service";
 import { Router, RouterModule } from '@angular/router';
 
 @Component({

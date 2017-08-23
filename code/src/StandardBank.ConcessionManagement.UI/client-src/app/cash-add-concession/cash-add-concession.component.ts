@@ -1,22 +1,22 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
-import { RiskGroupService } from "../risk-group/risk-group.service";
+import { RiskGroupService } from "../services/risk-group.service";
 import { RiskGroup } from "../models/risk-group";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Location } from '@angular/common';
-import { PeriodService } from "../period/period.service";
-import { PeriodTypeService } from "../period-type/period-type.service";
+import { PeriodService } from "../services/period.service";
+import { PeriodTypeService } from "../services/period-type.service";
 import { Period } from "../models/period";
 import { PeriodType } from "../models/period-type";
-import { ConditionTypeService } from "../condition-type/condition-type.service";
+import { ConditionTypeService } from "../services/condition-type.service";
 import { ConditionType } from "../models/condition-type";
-import { ClientAccountService } from "../client-account/client-account.service";
+import { ClientAccountService } from "../services/client-account.service";
 import { ClientAccount } from "../models/client-account";
-import { AccrualTypeService } from "../accrual-type/accrual-type.service";
+import { AccrualTypeService } from "../services/accrual-type.service";
 import { AccrualType } from "../models/accrual-type";
-import { ChannelTypeService } from "../channel-type/channel-type.service";
+import { ChannelTypeService } from "../services/channel-type.service";
 import { ChannelType } from "../models/channel-type";
 
 @Component({

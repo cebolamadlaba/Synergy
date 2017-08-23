@@ -1,9 +1,9 @@
-﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
-import { UserService } from "../user/user.service";
+import { UserService } from "../services/user.service";
 import { User } from "../models/user";
 import { ActivatedRoute } from '@angular/router';
-import { RiskGroupService } from "../risk-group/risk-group.service";
+import { RiskGroupService } from "../services/risk-group.service";
 import { RiskGroup } from "../models/risk-group";
 
 @Component({

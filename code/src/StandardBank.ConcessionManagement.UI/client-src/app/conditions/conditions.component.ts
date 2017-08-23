@@ -1,9 +1,9 @@
-﻿import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Subject } from 'rxjs/Rx';
 import { Condition } from '../models/condition';
-import { MyConditionService } from '../my-condition/my-condition.service';
+import { MyConditionService } from '../services/my-condition.service';
 import { Observable } from "rxjs";
-import { PeriodService } from '../period/period.service';
+import { PeriodService } from '../services/period.service';
 import { Period} from '../models/period';
 
 @Component({

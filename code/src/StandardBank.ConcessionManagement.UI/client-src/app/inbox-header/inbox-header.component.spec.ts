@@ -1,7 +1,7 @@
-﻿import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpModule } from '@angular/http';
 import { InboxHeaderComponent } from './inbox-header.component';
-import { UserConcessionsService, MockUserConcessionsService } from "../user-concessions/user-concessions.service";
+import { UserConcessionsService, MockUserConcessionsService } from "../services/user-concessions.service";
 
 describe('InboxHeaderComponent', () => {
     let component: InboxHeaderComponent;

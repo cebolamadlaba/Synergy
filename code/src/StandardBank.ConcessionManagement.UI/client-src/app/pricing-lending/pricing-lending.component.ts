@@ -2,7 +2,7 @@ import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { LendingView } from "../models/lending-view";
-import { LendingViewService } from "../lending-view/lending-view.service";
+import { LendingViewService } from "../services/lending-view.service";
 import { RiskGroup } from "../models/risk-group";
 import { SourceSystemProduct } from "../models/source-system-product";
 import { LendingConcession } from "../models/lending-concession";
