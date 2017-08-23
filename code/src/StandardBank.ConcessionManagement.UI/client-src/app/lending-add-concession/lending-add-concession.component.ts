@@ -1,29 +1,23 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
-import { RiskGroupService } from "../services/risk-group.service";
 import { RiskGroup } from "../models/risk-group";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ReviewFeeType } from "../models/review-fee-type";
 import { ProductType } from "../models/product-type";
-import { ReviewFeeTypeService } from "../services/review-fee-type.service";
-import { ProductTypeService } from "../services/product-type.service";
-import { PeriodService } from "../services/period.service";
-import { PeriodTypeService } from "../services/period-type.service";
 import { Period } from "../models/period";
 import { PeriodType } from "../models/period-type";
-import { ConditionTypeService } from "../services/condition-type.service";
 import { ConditionType } from "../models/condition-type";
 import { ConditionProduct } from "../models/condition-product";
-import { ClientAccountService } from "../services/client-account.service";
 import { ClientAccount } from "../models/client-account";
 import { LendingConcession } from "../models/lending-concession";
-import { LendingNewService } from "../services/lending-new.service";
 import { Concession } from "../models/concession";
 import { LendingConcessionDetail } from "../models/lending-concession-detail";
 import { ConcessionCondition } from "../models/concession-condition";
 import { Location } from '@angular/common';
+import { LookupDataService } from "../services/lookup-data.service";
+import { LendingService } from "../services/lending.service";
 
 @Component({
     selector: 'app-lending-add-concession',
@@ -64,14 +58,8 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private formBuilder: FormBuilder,
         private location: Location,
-        @Inject(RiskGroupService) private riskGroupService,
-        @Inject(ReviewFeeTypeService) private reviewFeeTypeService,
-        @Inject(ProductTypeService) private productTypeService,
-        @Inject(PeriodService) private periodService,
-        @Inject(PeriodTypeService) private periodTypeService,
-        @Inject(ConditionTypeService) private conditionTypeService,
-        @Inject(ClientAccountService) private clientAccountService,
-        @Inject(LendingNewService) private lendingNewService) {
+        @Inject(LookupDataService) private lookupDataService,
+        @Inject(LendingService) private lendingService) {
         this.riskGroup = new RiskGroup();
         this.reviewFeeTypes = [new ReviewFeeType()];
         this.productTypes = [new ProductType()];
@@ -87,10 +75,10 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             this.riskGroupNumber = +params['riskGroupNumber'];
 
             if (this.riskGroupNumber) {
-                this.observableRiskGroup = this.riskGroupService.getData(this.riskGroupNumber);
+                this.observableRiskGroup = this.lookupDataService.getRiskGroup(this.riskGroupNumber);
                 this.observableRiskGroup.subscribe(riskGroup => this.riskGroup = riskGroup, error => this.errorMessage = <any>error);
 
-                this.observableClientAccounts = this.clientAccountService.getData(this.riskGroupNumber);
+                this.observableClientAccounts = this.lookupDataService.getClientAccounts(this.riskGroupNumber);
                 this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
             }
         });
@@ -103,19 +91,19 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             motivation: new FormControl()
         });
 
-        this.observableReviewFeeTypes = this.reviewFeeTypeService.getData();
+        this.observableReviewFeeTypes = this.lookupDataService.getReviewFeeTypes();
         this.observableReviewFeeTypes.subscribe(reviewFeeTypes => this.reviewFeeTypes = reviewFeeTypes, error => this.errorMessage = <any>error);
 
-        this.observableProductTypes = this.productTypeService.getData("Lending");
+        this.observableProductTypes = this.lookupDataService.getProductTypes("Lending");
         this.observableProductTypes.subscribe(productTypes => this.productTypes = productTypes, error => this.errorMessage = <any>error);
 
-        this.observablePeriods = this.periodService.getData();
+        this.observablePeriods = this.lookupDataService.getPeriods();
         this.observablePeriods.subscribe(periods => this.periods = periods, error => this.errorMessage = <any>error);
 
-        this.observablePeriodTypes = this.periodTypeService.getData();
+        this.observablePeriodTypes = this.lookupDataService.getPeriodTypes();
         this.observablePeriodTypes.subscribe(periodTypes => this.periodTypes = periodTypes, error => this.errorMessage = <any>error);
 
-        this.observableConditionTypes = this.conditionTypeService.getData();
+        this.observableConditionTypes = this.lookupDataService.getConditionTypes();
         this.observableConditionTypes.subscribe(conditionTypes => this.conditionTypes = conditionTypes, error => this.errorMessage = <any>error);
     }
 
@@ -289,7 +277,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         }
 
         if (!this.validationError) {
-            this.lendingNewService.postData(lendingConcession).subscribe(entity => {
+            this.lendingService.postNewLendingData(lendingConcession).subscribe(entity => {
                 console.log("data saved");
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;

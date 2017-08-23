@@ -23,32 +23,19 @@ import { CashAddConcessionComponent } from './cash-add-concession/cash-add-conce
 import { LendingAddConcessionComponent } from './lending-add-concession/lending-add-concession.component';
 import { TransactionalAddConcessionComponent } from './transactional-add-concession/transactional-add-concession.component';
 import { MismatchedInboxComponent } from './mismatched-inbox/mismatched-inbox.component';
-import { LendingEditConcessionComponent } from './lending-edit-concession/lending-edit-concession.component';
 import { LendingViewConcessionComponent } from './lending-view-concession/lending-view-concession.component';
 
+import { LookupDataService } from "./services/lookup-data.service";
 import { UserConcessionsService } from "./services/user-concessions.service";
 import { UserService } from "./services/user.service";
-import { RiskGroupService } from "./services/risk-group.service";
-import { LendingViewService } from "./services/lending-view.service";
-import { ReviewFeeTypeService } from "./services/review-fee-type.service";
-import { ProductTypeService } from "./services/product-type.service";
-import { PeriodService } from "./services/period.service";
-import { PeriodTypeService } from "./services/period-type.service";
-import { ConditionTypeService } from "./services/condition-type.service";
 import { ConcessionConditionsService } from "./services/concession-conditions.service";
-import { ClientAccountService } from "./services/client-account.service";
-import { LendingNewService } from "./services/lending-new.service";
 import { LendingService } from "./services/lending.service";
-import { LendingUpdateService } from "./services/lending-update.service";
 import { MyConditionService } from './services/my-condition.service';
 import { CashConcessionService } from "./services/cash-concession.service";
-import { AccrualTypeService } from "./services/accrual-type.service";
-import { ChannelTypeService } from "./services/channel-type.service";
 
 import { LendingConcessionFilterPipe } from './filters/lending-concession-filter.pipe';
 import { CashConcessionFilterPipe } from './filters/cash-concession-filter.pipe';
 import { ApprovedConcessionFilterPipe } from './filters/approved-concession-filter.pipe';
-
 
 @NgModule({
     declarations: [
@@ -70,7 +57,6 @@ import { ApprovedConcessionFilterPipe } from './filters/approved-concession-filt
         TransactionalAddConcessionComponent,
         MismatchedInboxComponent,
         LendingConcessionFilterPipe,
-        LendingEditConcessionComponent,
         LendingViewConcessionComponent,
         ApprovedConcessionFilterPipe,
         CashConcessionFilterPipe
@@ -85,24 +71,13 @@ import { ApprovedConcessionFilterPipe } from './filters/approved-concession-filt
         ReactiveFormsModule
     ],
     providers: [
+        LookupDataService,
         UserConcessionsService,
         UserService,
-        RiskGroupService,
-        LendingViewService,
-        ReviewFeeTypeService,
-        ProductTypeService,
-        PeriodService,
-        PeriodTypeService,
-        ConditionTypeService,
         ConcessionConditionsService,
-        ClientAccountService,
-        LendingNewService,
         LendingService,
-        LendingUpdateService,
         MyConditionService,
-        CashConcessionService,
-        AccrualTypeService,
-        ChannelTypeService
+        CashConcessionService
     ],
     bootstrap: [AppComponent]
 })

@@ -2,12 +2,12 @@ import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { LendingView } from "../models/lending-view";
-import { LendingViewService } from "../services/lending-view.service";
 import { RiskGroup } from "../models/risk-group";
 import { SourceSystemProduct } from "../models/source-system-product";
 import { LendingConcession } from "../models/lending-concession";
 import { Concession } from "../models/concession";
 import { Location } from '@angular/common';
+import { LendingService } from "../services/lending.service";
 
 @Component({
     selector: 'app-pricing-lending',
@@ -22,7 +22,10 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
     errorMessage: String;
     showHide: true;
 
-    constructor(private route: ActivatedRoute, private location: Location, @Inject(LendingViewService) private lendingViewService) {
+    constructor(
+        private route: ActivatedRoute,
+        private location: Location,
+        @Inject(LendingService) private lendingService) {
         this.lendingView.riskGroup = new RiskGroup();
         this.lendingView.sourceSystemProducts = [new SourceSystemProduct()];
         this.lendingView.lendingConcessions = [new LendingConcession()];
@@ -34,7 +37,7 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
             this.riskGroupNumber = +params['riskGroupNumber'];
 
             if (this.riskGroupNumber) {
-                this.observableLendingView = this.lendingViewService.getData(this.riskGroupNumber);
+                this.observableLendingView = this.lendingService.getLendingViewData(this.riskGroupNumber);
                 this.observableLendingView.subscribe(lendingView => this.lendingView = lendingView,
                     error => this.errorMessage = <any>error);
             }

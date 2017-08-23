@@ -1,23 +1,17 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
-import { RiskGroupService } from "../services/risk-group.service";
 import { RiskGroup } from "../models/risk-group";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Location } from '@angular/common';
-import { PeriodService } from "../services/period.service";
-import { PeriodTypeService } from "../services/period-type.service";
 import { Period } from "../models/period";
 import { PeriodType } from "../models/period-type";
-import { ConditionTypeService } from "../services/condition-type.service";
 import { ConditionType } from "../models/condition-type";
-import { ClientAccountService } from "../services/client-account.service";
 import { ClientAccount } from "../models/client-account";
-import { AccrualTypeService } from "../services/accrual-type.service";
 import { AccrualType } from "../models/accrual-type";
-import { ChannelTypeService } from "../services/channel-type.service";
 import { ChannelType } from "../models/channel-type";
+import { LookupDataService } from "../services/lookup-data.service";
 
 @Component({
     selector: 'app-cash-add-concession',
@@ -57,13 +51,7 @@ export class CashAddConcessionComponent implements OnInit {
     constructor(private route: ActivatedRoute,
         private formBuilder: FormBuilder,
         private location: Location,
-        @Inject(PeriodService) private periodService,
-        @Inject(PeriodTypeService) private periodTypeService,
-        @Inject(ConditionTypeService) private conditionTypeService,
-        @Inject(ClientAccountService) private clientAccountService,
-        @Inject(RiskGroupService) private riskGroupService,
-        @Inject(AccrualTypeService) private accrualTypeService,
-        @Inject(ChannelTypeService) private channelTypeService) {
+        @Inject(LookupDataService) private lookupDataService) {
         this.riskGroup = new RiskGroup();
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
@@ -77,10 +65,10 @@ export class CashAddConcessionComponent implements OnInit {
             this.riskGroupNumber = +params['riskGroupNumber'];
 
             if (this.riskGroupNumber) {
-                this.observableRiskGroup = this.riskGroupService.getData(this.riskGroupNumber);
+                this.observableRiskGroup = this.lookupDataService.getRiskGroup(this.riskGroupNumber);
                 this.observableRiskGroup.subscribe(riskGroup => this.riskGroup = riskGroup, error => this.errorMessage = <any>error);
 
-                this.observableClientAccounts = this.clientAccountService.getData(this.riskGroupNumber);
+                this.observableClientAccounts = this.lookupDataService.getClientAccounts(this.riskGroupNumber);
                 this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
             }
         });
@@ -92,19 +80,19 @@ export class CashAddConcessionComponent implements OnInit {
             motivation: new FormControl()
         });
 
-        this.observableChannelTypes = this.channelTypeService.getData();
+        this.observableChannelTypes = this.lookupDataService.getChannelTypes();
         this.observableChannelTypes.subscribe(channelTypes => this.channelTypes = channelTypes, error => this.errorMessage = <any>error);
 
-        this.observablePeriods = this.periodService.getData();
+        this.observablePeriods = this.lookupDataService.getPeriods();
         this.observablePeriods.subscribe(periods => this.periods = periods, error => this.errorMessage = <any>error);
 
-        this.observablePeriodTypes = this.periodTypeService.getData();
+        this.observablePeriodTypes = this.lookupDataService.getPeriodTypes();
         this.observablePeriodTypes.subscribe(periodTypes => this.periodTypes = periodTypes, error => this.errorMessage = <any>error);
 
-        this.observableConditionTypes = this.conditionTypeService.getData();
+        this.observableConditionTypes = this.lookupDataService.getConditionTypes();
         this.observableConditionTypes.subscribe(conditionTypes => this.conditionTypes = conditionTypes, error => this.errorMessage = <any>error);
 
-        this.observableAccrualTypes = this.accrualTypeService.getData();
+        this.observableAccrualTypes = this.lookupDataService.getAccrualTypes();
         this.observableAccrualTypes.subscribe(accrualTypes => this.accrualTypes = accrualTypes, error => this.errorMessage = <any>error);
     }
 

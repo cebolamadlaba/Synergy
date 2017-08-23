@@ -1,11 +1,14 @@
-﻿import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Injectable } from '@angular/core';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import { LendingConcession } from "../models/lending-concession";
 import { Concession } from "../models/concession";
 import { ConcessionCondition } from "../models/concession-condition";
 import { LendingConcessionDetail } from "../models/lending-concession-detail";
+import { LendingView } from "../models/lending-view";
+import { RiskGroup } from "../models/risk-group";
+import { SourceSystemProduct } from "../models/source-system-product";
 
 @Injectable()
 export class LendingService {
@@ -13,9 +16,28 @@ export class LendingService {
     constructor(private http: Http) {
     }
 
-    getData(concessionReferenceId): Observable<LendingConcession> {
+    getLendingConcessionData(concessionReferenceId): Observable<LendingConcession> {
         const url = "/api/Lending/LendingConcessionData/" + concessionReferenceId;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    getLendingViewData(riskGroupNumber): Observable<LendingView> {
+        const url = "/api/Lending/LendingView/" + riskGroupNumber;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    postNewLendingData(lendingConcession: LendingConcession): Observable<LendingConcession> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/Lending/NewLending";
+        return this.http.post(url, lendingConcession, options).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    postUpdateLendingData(lendingConcession: LendingConcession): Observable<LendingConcession> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/Lending/UpdateLending";
+        return this.http.post(url, lendingConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
     private extractData(response: Response) {
@@ -33,8 +55,33 @@ export class LendingService {
 @Injectable()
 export class MockLendingService extends LendingService {
     model = new LendingConcession();
+    lendingViewModel = new LendingView();
 
-    getData(): Observable<LendingConcession> {
+    getLendingConcessionData(): Observable<LendingConcession> {
+        this.model.concession = new Concession();
+        this.model.concessionConditions = [new ConcessionCondition()];
+        this.model.lendingConcessionDetails = [new LendingConcessionDetail()];
+        return Observable.of(this.model);
+    }
+
+    getLendingViewData(riskGroupNumber): Observable<LendingView> {
+        this.lendingViewModel.riskGroup = new RiskGroup();
+        this.lendingViewModel.totalExposure = 1;
+        this.lendingViewModel.weightedAverageMap = 1;
+        this.lendingViewModel.weightedCrsMrs = 1;
+        this.lendingViewModel.sourceSystemProducts = [new SourceSystemProduct()];
+        this.lendingViewModel.lendingConcessions = [new LendingConcession()];
+        return Observable.of(this.lendingViewModel);
+    }
+
+    postNewLendingData(lendingConcession: LendingConcession): Observable<LendingConcession> {
+        this.model.concession = new Concession();
+        this.model.concessionConditions = [new ConcessionCondition()];
+        this.model.lendingConcessionDetails = [new LendingConcessionDetail()];
+        return Observable.of(this.model);
+    }
+
+    postUpdateLendingData(lendingConcession: LendingConcession): Observable<LendingConcession> {
         this.model.concession = new Concession();
         this.model.concessionConditions = [new ConcessionCondition()];
         this.model.lendingConcessionDetails = [new LendingConcessionDetail()];

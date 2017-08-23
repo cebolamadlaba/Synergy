@@ -3,7 +3,7 @@ import { DataTablesModule } from 'angular-datatables';
 import { ConditionsComponent } from './conditions.component';
 import { FormsModule } from '@angular/forms';
 import { MyConditionService, MockMyConditionService } from "../services/my-condition.service";
-import { PeriodService, MockPeriodService } from "../services/period.service";
+import { LookupDataService, MockLookupDataService } from "../services/lookup-data.service";
 import { HttpModule } from '@angular/http';
 
 describe('ConditionsComponent', () => {
@@ -16,7 +16,7 @@ describe('ConditionsComponent', () => {
             declarations: [ConditionsComponent],
             providers: [
                 { provide: MyConditionService, useClass: MockMyConditionService },
-                { provide: PeriodService, useClass: MockPeriodService }
+                { provide: LookupDataService, useClass: MockLookupDataService }
             ]
         })
             .compileComponents();
