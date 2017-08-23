@@ -6,6 +6,7 @@ using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
+using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -98,6 +99,30 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var concessionCash = _mapper.Map<ConcessionCash>(cashConcessionDetail);
             concessionCash.ConcessionId = concession.Id;
             return _concessionCashRepository.Create(concessionCash);
+        }
+
+        /// <summary>
+        /// Gets the cash concession.
+        /// </summary>
+        /// <param name="concessionReferenceId">The concession reference identifier.</param>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
+        public CashConcession GetCashConcession(string concessionReferenceId, User user)
+        {
+            var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
+            var concessionLendings = _concessionCashRepository.ReadByConcessionId(concession.Id);
+
+            var cashConcessionDetails = new List<CashConcessionDetail>();
+
+            AddMappedConcessionCashEntities(concessionLendings, cashConcessionDetails);
+
+            return new CashConcession
+            {
+                Concession = concession,
+                CashConcessionDetails = cashConcessionDetails,
+                ConcessionConditions = _concessionManager.GetConcessionConditions(concession.Id),
+                CurrentUser = user
+            };
         }
 
         /// <summary>

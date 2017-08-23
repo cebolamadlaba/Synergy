@@ -91,7 +91,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
                 this.observableClientAccounts = this.lookupDataService.getClientAccounts(this.riskGroupNumber);
                 this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
+            }
 
+            if (this.concessionReferenceId) {
                 this.observableLendingConcession = this.lendingService.getLendingConcessionData(this.concessionReferenceId);
                 this.observableLendingConcession.subscribe(lendingConcession => {
                     this.lendingConcession = lendingConcession;

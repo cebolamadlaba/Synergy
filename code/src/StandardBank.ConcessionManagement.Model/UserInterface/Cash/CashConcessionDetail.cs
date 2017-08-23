@@ -83,7 +83,7 @@
         /// <value>
         /// The volume.
         /// </value>
-        public decimal Volume { get; set; }
+        public decimal? Volume { get; set; }
 
         /// <summary>
         /// Gets or sets the value.
@@ -91,7 +91,7 @@
         /// <value>
         /// The value.
         /// </value>
-        public decimal Value { get; set; }
+        public decimal? Value { get; set; }
 
         /// <summary>
         /// Gets or sets the loaded price.

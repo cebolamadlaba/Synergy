@@ -97,5 +97,16 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             return Ok(cashConcession);
         }
+
+        /// <summary>
+        /// Gets the cash concession data for the concession reference id specified.
+        /// </summary>
+        /// <param name="concessionReferenceId">The concession reference identifier.</param>
+        /// <returns></returns>
+        [Route("CashConcessionData/{concessionReferenceId}")]
+        public IActionResult CashConcessionData(string concessionReferenceId)
+        {
+            return Ok(_cashManager.GetCashConcession(concessionReferenceId, _siteHelper.LoggedInUser(this)));
+        }
     }
 }

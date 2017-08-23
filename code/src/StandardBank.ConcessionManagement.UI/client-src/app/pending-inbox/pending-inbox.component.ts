@@ -48,13 +48,8 @@ export class PendingInboxComponent implements OnInit {
             case "Lending":
                 this.router.navigate(['/lending-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
                 break;
-        }
-    }
-
-    openConcessionEdit(concession: Concession) {
-        switch (concession.concessionType) {
-            case "Lending":
-                this.router.navigate(['/lending-edit-concession', concession.riskGroupNumber, concession.referenceNumber]);
+            case "Cash":
+                this.router.navigate(['/cash-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
                 break;
         }
     }

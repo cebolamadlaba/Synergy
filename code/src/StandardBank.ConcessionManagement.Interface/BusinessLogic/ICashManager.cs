@@ -2,6 +2,7 @@
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
+using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 {
@@ -24,5 +25,13 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="concession">The concession.</param>
         /// <returns></returns>
         ConcessionCash CreateConcessionCash(CashConcessionDetail cashConcessionDetail, Concession concession);
+
+        /// <summary>
+        /// Gets the cash concession.
+        /// </summary>
+        /// <param name="concessionReferenceId">The concession reference identifier.</param>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
+        CashConcession GetCashConcession(string concessionReferenceId, User user);
     }
 }

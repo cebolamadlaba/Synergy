@@ -19,11 +19,13 @@ import { CashConcessionDetail } from "../models/cash-concession-detail";
 import { ConcessionCondition } from "../models/concession-condition";
 
 @Component({
-    selector: 'app-cash-add-concession',
-    templateUrl: './cash-add-concession.component.html',
-    styleUrls: ['./cash-add-concession.component.css']
+  selector: 'app-cash-view-concession',
+  templateUrl: './cash-view-concession.component.html',
+  styleUrls: ['./cash-view-concession.component.css']
 })
-export class CashAddConcessionComponent implements OnInit, OnDestroy {
+export class CashViewConcessionComponent implements OnInit, OnDestroy {
+
+    concessionReferenceId: string;
     private sub: any;
     errorMessage: String;
     validationError: String[];
@@ -34,6 +36,9 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     public cashConcessionForm: FormGroup;
     selectedConditionTypes: ConditionType[];
     isLoading = false;
+    canBcmApprove = false;
+    canPcmApprove = false;
+    hasChanges = false;
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
@@ -53,6 +58,9 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     observableChannelTypes: Observable<ChannelType[]>;
     channelTypes: ChannelType[];
 
+    observableCashConcession: Observable<CashConcession>;
+    cashConcession: CashConcession;
+
     constructor(private route: ActivatedRoute,
         private formBuilder: FormBuilder,
         private location: Location,
@@ -69,6 +77,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
+            this.concessionReferenceId = params['concessionReferenceId'];
 
             if (this.riskGroupNumber) {
                 this.observableRiskGroup = this.lookupDataService.getRiskGroup(this.riskGroupNumber);
@@ -76,6 +85,81 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
                 this.observableClientAccounts = this.lookupDataService.getClientAccounts(this.riskGroupNumber);
                 this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
+            }
+
+            if (this.concessionReferenceId) {
+                this.observableCashConcession = this.cashConcessionService.getCashConcessionData(this.concessionReferenceId);
+                this.observableCashConcession.subscribe(cashConcession => {
+                    this.cashConcession = cashConcession;
+
+                    if (cashConcession.concession.status == "Pending" && cashConcession.concession.subStatus == "BCM Pending") {
+                        this.canBcmApprove = cashConcession.currentUser.canBcmApprove;
+                    }
+
+                    if (cashConcession.concession.status == "Pending" && cashConcession.concession.subStatus == "PCM Pending") {
+                        this.canPcmApprove = cashConcession.currentUser.canPcmApprove;
+                    }
+
+                    this.cashConcessionForm.controls['smtDealNumber'].setValue(this.cashConcession.concession.smtDealNumber);
+                    this.cashConcessionForm.controls['motivation'].setValue(this.cashConcession.concession.motivation);
+
+                    let rowIndex = 0;
+
+                    for (let cashConcessionDetail of this.cashConcession.cashConcessionDetails) {
+
+                        if (rowIndex != 0) {
+                            this.addNewConcessionRow();
+                        }
+
+                        const concessions = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
+                        let currentConcession = concessions.controls[concessions.length - 1];
+
+                        let selectedChannelType = this.channelTypes.filter(_ => _.id == cashConcessionDetail.channelTypeId);
+                        currentConcession.get('channelType').setValue(selectedChannelType[0]);
+
+                        let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == cashConcessionDetail.legalEntityAccountId);
+                        currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
+
+                        currentConcession.get('baseRate').setValue(cashConcessionDetail.baseRate);
+                        currentConcession.get('adValorem').setValue(cashConcessionDetail.adValorem);
+                        currentConcession.get('tableNumber').setValue(cashConcessionDetail.cashTableNumber);
+
+                        let selectedAccrualType = this.accrualTypes.filter(_ => _.id == cashConcessionDetail.accrualTypeId);
+                        currentConcession.get('accrualType').setValue(selectedAccrualType[0]);
+
+                        rowIndex++;
+                    }
+
+                    rowIndex = 0;
+
+                    for (let concessionCondition of this.cashConcession.concessionConditions) {
+                        this.addNewConditionRow();
+
+                        const conditions = <FormArray>this.cashConcessionForm.controls['conditionItemsRows'];
+                        let currentCondition = conditions.controls[conditions.length - 1];
+
+                        let selectedConditionType = this.conditionTypes.filter(_ => _.id == concessionCondition.conditionTypeId);
+                        currentCondition.get('conditionType').setValue(selectedConditionType[0]);
+
+                        this.selectedConditionTypes[rowIndex] = selectedConditionType[0];
+
+                        let selectedConditionProduct = selectedConditionType[0].conditionProducts.filter(_ => _.id == concessionCondition.conditionProductId);
+                        currentCondition.get('conditionProduct').setValue(selectedConditionProduct[0]);
+
+                        currentCondition.get('interestRate').setValue(concessionCondition.interestRate);
+                        currentCondition.get('volume').setValue(concessionCondition.conditionVolume);
+                        currentCondition.get('value').setValue(concessionCondition.conditionValue);
+
+                        let selectedPeriodType = this.periodTypes.filter(_ => _.id == concessionCondition.periodTypeId);
+                        currentCondition.get('periodType').setValue(selectedPeriodType[0]);
+
+                        let selectedPeriod = this.periods.filter(_ => _.id == concessionCondition.periodId);
+                        currentCondition.get('period').setValue(selectedPeriod[0]);
+
+                        rowIndex++;
+                    }
+
+                }, error => this.errorMessage = <any>error);
             }
         });
 
@@ -100,6 +184,12 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
         this.observableAccrualTypes = this.lookupDataService.getAccrualTypes();
         this.observableAccrualTypes.subscribe(accrualTypes => this.accrualTypes = accrualTypes, error => this.errorMessage = <any>error);
+
+        this.cashConcessionForm.valueChanges.subscribe((value: any) => {
+            if (this.cashConcessionForm.dirty) {
+                this.hasChanges = true;
+            }
+        });
     }
 
     initConcessionItemRows() {
@@ -267,7 +357,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         this.validationError = null;
 
         var cashConcession = this.getCashConcession();
-        
+
         cashConcession.concession.concessionType = "Cash";
         cashConcession.concession.type = "New";
 
@@ -292,4 +382,5 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.sub.unsubscribe();
     }
+
 }
