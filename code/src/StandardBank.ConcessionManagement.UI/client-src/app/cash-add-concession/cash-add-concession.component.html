@@ -1,4 +1,4 @@
-﻿<!-- Banner expanded -->
+<!-- Banner expanded -->
 <div class="col-md-12 banner">
     <div class="row">
         <div class="lending-banner-title">
@@ -85,7 +85,7 @@
     <div class="col-md-12" style="border-bottom: 1px solid gray; margin-bottom: 15px;">
         <div class="row">
             <h3 class="table-title">Concessions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" style="margin-top: 15px;">New Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" style="margin-top: 15px;" *ngIf="!saveMessage">New Concession</button>
         </div>
     </div>
 
@@ -124,7 +124,7 @@
                 </select>
             </td>
 
-            <td class="delete"><button *ngIf="cashConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+            <td class="delete"><button *ngIf="cashConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
         </tr>
         </tbody>
     </table>
@@ -133,7 +133,7 @@
     <div class="col-md-12">
         <div class="row">
             <h3 class="table-title">Conditions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;">Manage Conditions</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;" *ngIf="!saveMessage">Manage Conditions</button>
 
             <div class="table-container">
                 <table class="table table-bordered table-hover header-fixed table-striped">
@@ -244,7 +244,7 @@
     <div class="footer-buttons">
         <div class="float-right">
             <button type="button" class="btn btn-cancel" [routerLink]="['/pricing-cash', riskGroup.number]">Cancel</button>
-            <button class="btn btn-primary" type="button" (click)="onSubmit()">Submit</button>
+            <button class="btn btn-primary" type="button" (click)="onSubmit()" *ngIf="!saveMessage">Submit</button>
         </div>
     </div>
 </form>
