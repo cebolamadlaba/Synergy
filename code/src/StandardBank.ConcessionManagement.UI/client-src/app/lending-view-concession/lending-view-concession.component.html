@@ -199,7 +199,7 @@
                             <button type="button" class="btn btn-primary" (click)="addNewConditionRow()">New Conditions</button>
                         </div>
                     </div>
-                    <table class="form-concessions-table" formArrayName="conditionItemsRows">
+                    <table class="form-concessions-table" formArrayName="conditionItemsRows" style="width:100%;">
                         <thead class="form-concessions-table-headings">
                             <tr *ngIf="lendingConcessionForm.controls.conditionItemsRows.controls.length > 0">
                                 <th>Condition Type</th>
@@ -213,6 +213,11 @@
                             </tr>
                         </thead>
                         <tbody class="form-concessions-table-content">
+                            <tr *ngIf="lendingConcessionForm.controls.conditionItemsRows.controls.length == 0">
+                                <td colspan="7" class="searchEmptyState">
+                                    No conditions has been added
+                                </td>
+                            </tr>
                             <tr *ngFor="let itemrow of lendingConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
                                 <td class="length-long">
                                     <input formControlName="concessionConditionId" style="display: none;" />
@@ -257,8 +262,8 @@
             <button type="button" class="btn btn-cancel" (click)="goBack()">Cancel</button>
             <button type="button" class="btn btn-danger" (click)="bcmDeclineConcession()" *ngIf="canBcmApprove">Decline</button>
             <button type="button" class="btn btn-success" (click)="bcmApproveConcession()" *ngIf="canBcmApprove">Forward</button>
-            <button type="button" class="btn btn-danger" (click)="pcmDeclineConcession()" *ngIf="canPcmApprove">PCM / HO Decline</button>
-            <button type="button" class="btn btn-success" (click)="pcmApproveConcession()" *ngIf="canPcmApprove">PCM / HO Approve</button>            
+            <button type="button" class="btn btn-danger" (click)="pcmDeclineConcession()" *ngIf="canPcmApprove">Decline</button>
+            <button type="button" class="btn btn-success" (click)="pcmApproveConcession()" *ngIf="canPcmApprove">Approve</button>            
             <!--<button class="btn btn-submit" type="button" (click)="onSubmit()">Submit</button>-->
         </div>
     </div>
