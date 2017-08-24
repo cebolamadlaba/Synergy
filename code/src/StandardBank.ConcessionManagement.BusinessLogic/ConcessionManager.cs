@@ -649,7 +649,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public Model.Repository.ConcessionCondition DeleteConcessionCondition(ConcessionCondition concessionCondition)
         {
-            var concessionCondtion = _concessionConditionRepository.ReadById(concessionCondition.Id);
+            var concessionCondtion = _concessionConditionRepository.ReadById(concessionCondition.ConcessionConditionId);
 
             _concessionConditionRepository.Delete(concessionCondtion);
 
@@ -719,6 +719,24 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 default:
                     throw new NotImplementedException(concession.ConcessionType);
             }
+        }
+
+        /// <summary>
+        /// Updates the concession condition.
+        /// </summary>
+        /// <param name="concessionCondition">The concession condition.</param>
+        /// <param name="concession">The concession.</param>
+        /// <returns></returns>
+        public Model.Repository.ConcessionCondition UpdateConcessionCondition(ConcessionCondition concessionCondition, Concession concession)
+        {
+            var mappedConcessionCondition = _mapper.Map<Model.Repository.ConcessionCondition>(concessionCondition);
+
+            mappedConcessionCondition.ConcessionId = concession.Id;
+            mappedConcessionCondition.IsActive = true;
+
+            _concessionConditionRepository.Update(mappedConcessionCondition);
+
+            return mappedConcessionCondition;
         }
 
         /// <summary>

@@ -92,7 +92,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             concessionItemRows: this.formBuilder.array([this.initConcessionItemRows()]),
             conditionItemsRows: this.formBuilder.array([]),
             smtDealNumber: new FormControl(),
-            motivation: new FormControl()
+            motivation: new FormControl(),
+            comments: new FormControl()
         });
 
         this.observableChannelTypes = this.lookupDataService.getChannelTypes();
@@ -143,7 +144,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                     const concessions = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
                     let currentConcession = concessions.controls[concessions.length - 1];
 
-                    currentConcession.get('cashViewConcessionId').setValue(cashConcessionDetail.cashViewConcessionId);
+                    currentConcession.get('cashConcessionDetailId').setValue(cashConcessionDetail.cashConcessionDetailId);
 
                     let selectedChannelType = this.channelTypes.filter(_ => _.id == cashConcessionDetail.channelTypeId);
                     currentConcession.get('channelType').setValue(selectedChannelType[0]);
@@ -168,6 +169,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
                     const conditions = <FormArray>this.cashConcessionForm.controls['conditionItemsRows'];
                     let currentCondition = conditions.controls[conditions.length - 1];
+
+                    currentCondition.get('concessionConditionId').setValue(concessionCondition.concessionConditionId);
 
                     let selectedConditionType = this.conditionTypes.filter(_ => _.id == concessionCondition.conditionTypeId);
                     currentCondition.get('conditionType').setValue(selectedConditionType[0]);
@@ -196,7 +199,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
     initConcessionItemRows() {
         return this.formBuilder.group({
-            cashViewConcessionId: [''],
+            cashConcessionDetailId: [''],
             channelType: [''],
             accountNumber: [''],
             baseRate: [''],
@@ -210,6 +213,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         this.selectedConditionTypes.push(new ConditionType());
 
         return this.formBuilder.group({
+            concessionConditionId: [''],
             conditionType: [''],
             conditionProduct: [''],
             interestRate: [''],
@@ -276,6 +280,9 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         else
             this.addValidationError("Motivation not captured");
 
+        if (this.cashConcessionForm.controls['comments'].value)
+            cashConcession.concession.comments = this.cashConcessionForm.controls['comments'].value;
+
         const concessions = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
 
         for (let concessionFormItem of concessions.controls) {
@@ -284,8 +291,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
             let cashConcessionDetail = new CashConcessionDetail();
 
-            if (concessionFormItem.get('cashViewConcessionId').value)
-                cashConcessionDetail.cashViewConcessionId = concessionFormItem.get('cashViewConcessionId').value;
+            if (concessionFormItem.get('cashConcessionDetailId').value)
+                cashConcessionDetail.cashConcessionDetailId = concessionFormItem.get('cashConcessionDetailId').value;
 
             if (concessionFormItem.get('channelType').value) {
                 cashConcessionDetail.channelTypeId = concessionFormItem.get('channelType').value.id;
@@ -325,6 +332,9 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                 cashConcession.concessionConditions = [];
 
             let concessionCondition = new ConcessionCondition();
+
+            if (conditionFormItem.get('concessionConditionId').value)
+                concessionCondition.concessionConditionId = conditionFormItem.get('concessionConditionId').value;
 
             if (conditionFormItem.get('conditionType').value)
                 concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;

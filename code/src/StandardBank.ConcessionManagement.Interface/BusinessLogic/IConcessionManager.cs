@@ -146,5 +146,13 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="concession"></param>
         /// <returns></returns>
         IEnumerable<ApprovedConcessionDetail> GetApprovedConcessionDetails(Concession concession);
+
+        /// <summary>
+        /// Updates the concession condition.
+        /// </summary>
+        /// <param name="concessionCondition">The concession condition.</param>
+        /// <param name="concession">The concession.</param>
+        /// <returns></returns>
+        Model.Repository.ConcessionCondition UpdateConcessionCondition(ConcessionCondition concessionCondition, Concession concession);
     }
 }

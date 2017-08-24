@@ -40,5 +40,13 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="cashConcessionDetail">The cash concession detail.</param>
         /// <returns></returns>
         ConcessionCash DeleteConcessionCash(CashConcessionDetail cashConcessionDetail);
+
+        /// <summary>
+        /// Updates the concession cash.
+        /// </summary>
+        /// <param name="cashConcessionDetail">The cash concession detail.</param>
+        /// <param name="concession">The concession.</param>
+        /// <returns></returns>
+        ConcessionCash UpdateConcessionCash(CashConcessionDetail cashConcessionDetail, Concession concession);
     }
 }

@@ -6,9 +6,9 @@
     public class ConcessionCondition
     {
         /// <summary>
-        /// Gets or sets the id
+        /// Gets or sets the concession condition id
         /// </summary>
-        public int Id { get; set; }
+        public int ConcessionConditionId { get; set; }
 
         /// <summary>
         /// Gets or sets the concession id

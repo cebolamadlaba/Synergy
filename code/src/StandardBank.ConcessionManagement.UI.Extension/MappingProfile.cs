@@ -42,26 +42,30 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                 .ForMember(target => target.CashTableNumber, _ => _.MapFrom(source => source.TableNumber))
                 .ForMember(target => target.Value, _ => _.MapFrom(source => source.CashValue))
                 .ForMember(target => target.Volume, _ => _.MapFrom(source => source.CashVolume))
-                .ForMember(target => target.CashViewConcessionId, _ => _.MapFrom(source => source.Id));
+                .ForMember(target => target.CashConcessionDetailId, _ => _.MapFrom(source => source.Id));
             CreateMap<Model.UserInterface.Cash.CashConcessionDetail, Model.Repository.ConcessionCash>()
                 .ForMember(target => target.TableNumber, _ => _.MapFrom(source => source.CashTableNumber))
                 .ForMember(target => target.CashValue, _ => _.MapFrom(source => source.Value))
                 .ForMember(target => target.CashVolume, _ => _.MapFrom(source => source.Volume))
-                .ForMember(target => target.Id, _ => _.MapFrom(source => source.CashViewConcessionId));
+                .ForMember(target => target.Id, _ => _.MapFrom(source => source.CashConcessionDetailId));
 
             //ConcessionCondition
             CreateMap<Model.Repository.ConcessionCondition, Model.UserInterface.ConcessionCondition>()
                 .ForMember(target => target.ConditionVolume, _ => _.MapFrom(source => source.Volume))
-                .ForMember(target => target.ConditionValue, _ => _.MapFrom(source => source.Value));
+                .ForMember(target => target.ConditionValue, _ => _.MapFrom(source => source.Value))
+                .ForMember(target => target.ConcessionConditionId, _ => _.MapFrom(source => source.Id));
             CreateMap<Model.UserInterface.ConcessionCondition, Model.Repository.ConcessionCondition>()
                 .ForMember(target => target.Volume, _ => _.MapFrom(source => source.ConditionVolume))
-                .ForMember(target => target.Value, _ => _.MapFrom(source => source.ConditionValue));
+                .ForMember(target => target.Value, _ => _.MapFrom(source => source.ConditionValue))
+                .ForMember(target => target.Id, _ => _.MapFrom(source => source.ConcessionConditionId));
 
             //ConcessionLending
             CreateMap<Model.Repository.ConcessionLending, Model.UserInterface.Lending.LendingConcessionDetail>()
-                .ForMember(target => target.MarginAgainstPrime, _ => _.MapFrom(source => source.MarginToPrime));
+                .ForMember(target => target.MarginAgainstPrime, _ => _.MapFrom(source => source.MarginToPrime))
+                .ForMember(target => target.LendingConcessionDetailId, _ => _.MapFrom(source => source.Id));
             CreateMap<Model.UserInterface.Lending.LendingConcessionDetail, Model.Repository.ConcessionLending>()
-                .ForMember(target => target.MarginToPrime, _ => _.MapFrom(source => source.MarginAgainstPrime));
+                .ForMember(target => target.MarginToPrime, _ => _.MapFrom(source => source.MarginAgainstPrime))
+                .ForMember(target => target.Id, _ => _.MapFrom(source => source.LendingConcessionDetailId));
 
             //ConcessionType
             CreateMap<Model.Repository.ConcessionType, Model.UserInterface.ConcessionType>().ReverseMap();

@@ -132,11 +132,27 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public ConcessionCash DeleteConcessionCash(CashConcessionDetail cashConcessionDetail)
         {
-            var concessionCash = _concessionCashRepository.ReadById(cashConcessionDetail.CashViewConcessionId);
+            var concessionCash = _concessionCashRepository.ReadById(cashConcessionDetail.CashConcessionDetailId);
 
             _concessionCashRepository.Delete(concessionCash);
 
             return concessionCash;
+        }
+
+        /// <summary>
+        /// Updates the concession cash.
+        /// </summary>
+        /// <param name="cashConcessionDetail">The cash concession detail.</param>
+        /// <param name="concession">The concession.</param>
+        /// <returns></returns>
+        public ConcessionCash UpdateConcessionCash(CashConcessionDetail cashConcessionDetail, Concession concession)
+        {
+            var mappedConcessionCash = _mapper.Map<ConcessionCash>(cashConcessionDetail);
+            mappedConcessionCash.ConcessionId = concession.Id;
+
+            _concessionCashRepository.Update(mappedConcessionCash);
+
+            return mappedConcessionCash;
         }
 
         /// <summary>

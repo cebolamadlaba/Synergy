@@ -134,10 +134,26 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public ConcessionLending DeleteConcessionLending(LendingConcessionDetail lendingConcessionDetail)
         {
-            var concessionLending = _concessionLendingRepository.ReadById(lendingConcessionDetail.Id);
+            var concessionLending = _concessionLendingRepository.ReadById(lendingConcessionDetail.LendingConcessionDetailId);
 
             _concessionLendingRepository.Delete(concessionLending);
 
+            return concessionLending;
+        }
+
+        /// <summary>
+        /// Updates the concession lending.
+        /// </summary>
+        /// <param name="lendingConcessionDetail">The lending concession detail.</param>
+        /// <param name="concession">The concession.</param>
+        /// <returns></returns>
+        public ConcessionLending UpdateConcessionLending(LendingConcessionDetail lendingConcessionDetail, Concession concession)
+        {
+            var concessionLending = _mapper.Map<ConcessionLending>(lendingConcessionDetail);
+
+            concessionLending.ConcessionId = concession.Id;
+
+            _concessionLendingRepository.Update(concessionLending);
             return concessionLending;
         }
 

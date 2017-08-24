@@ -1,5 +1,5 @@
 export class CashConcessionDetail {
-    cashViewConcessionId: number;
+    cashConcessionDetailId: number;
     customerName: string;
     accountNumber: string;
     legalEntityId: number;

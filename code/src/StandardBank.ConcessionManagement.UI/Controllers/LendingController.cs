@@ -1,11 +1,11 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionComment;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionCondition;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.AddLendingConcessionDetail;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateConcessionCondition;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateLendingConcessionDetail;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteConcessionCondition;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteLendingConcessionDetail;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.UpdateConcession;
@@ -89,11 +89,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var concession = await _mediator.Send(new AddConcessionCommand(lendingConcession.Concession, user));
 
             foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
-                await _mediator.Send(new AddLendingConcessionDetailCommand(lendingConcessionDetail, user, concession));
+                await _mediator.Send(new AddOrUpdateLendingConcessionDetailCommand(lendingConcessionDetail, user, concession));
 
             if (lendingConcession.ConcessionConditions != null && lendingConcession.ConcessionConditions.Any())
                 foreach (var concessionCondition in lendingConcession.ConcessionConditions)
-                    await _mediator.Send(new AddConcessionConditionCommand(concessionCondition, user, concession));
+                    await _mediator.Send(new AddOrUpdateConcessionConditionCommand(concessionCondition, user, concession));
 
             return Ok(lendingConcession);
         }
@@ -112,23 +112,28 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var databaseLendingConcession =
                 _lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber, user);
 
-            //first delete all the conditions and the lending details
+            //if there are any conditions that have been removed, delete them
             foreach (var condition in databaseLendingConcession.ConcessionConditions)
-                await _mediator.Send(new DeleteConcessionConditionCommand(condition, user));
+                if (lendingConcession.ConcessionConditions.All(_ => _.ConcessionConditionId != condition.ConcessionConditionId))
+                    await _mediator.Send(new DeleteConcessionConditionCommand(condition, user));
 
+            //if there are any lending concession details that have been removed delete them
             foreach (var lendingConcessionDetail in databaseLendingConcession.LendingConcessionDetails)
-                await _mediator.Send(new DeleteLendingConcessionDetailCommand(lendingConcessionDetail, user));
+                if (lendingConcession.LendingConcessionDetails.All(_ => _.LendingConcessionDetailId !=
+                                                                        lendingConcessionDetail
+                                                                            .LendingConcessionDetailId))
+                    await _mediator.Send(new DeleteLendingConcessionDetailCommand(lendingConcessionDetail, user));
 
-            //second update the concession
+            //update the concession
             var concession = await _mediator.Send(new UpdateConcessionCommand(lendingConcession.Concession, user));
 
-            //then add all the new conditions and lending details and comments
+            //add all the new conditions and lending details and comments
             foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
-                await _mediator.Send(new AddLendingConcessionDetailCommand(lendingConcessionDetail, user, concession));
+                await _mediator.Send(new AddOrUpdateLendingConcessionDetailCommand(lendingConcessionDetail, user, concession));
 
             if (lendingConcession.ConcessionConditions != null && lendingConcession.ConcessionConditions.Any())
                 foreach (var concessionCondition in lendingConcession.ConcessionConditions)
-                    await _mediator.Send(new AddConcessionConditionCommand(concessionCondition, user, concession));
+                    await _mediator.Send(new AddOrUpdateConcessionConditionCommand(concessionCondition, user, concession));
 
             if (!string.IsNullOrWhiteSpace(lendingConcession.Concession.Comments))
                 await _mediator.Send(new AddConcessionCommentCommand(concession.Id, concession.SubStatusId.Value,

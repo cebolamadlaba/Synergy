@@ -2,25 +2,30 @@
 using StandardBank.ConcessionManagement.Interface.BusinessLogic.Features;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
-using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 
-namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddLendingConcessionDetail
+namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateConcessionCondition
 {
     /// <summary>
-    /// Add lending concession detail command
+    /// Add concession condition command
     /// </summary>
-    /// <seealso cref="MediatR.IRequest{LendingConcession}" />
+    /// <seealso cref="MediatR.IRequest{ConcessionCondition}" />
     /// <seealso cref="IAuditableCommand" />
-    public class AddLendingConcessionDetailCommand : IRequest<LendingConcessionDetail>, IAuditableCommand
+    public class AddOrUpdateConcessionConditionCommand : IRequest<ConcessionCondition>, IAuditableCommand
     {
         /// <summary>
-        /// Gets or sets the lending concession detail
+        /// Gets or sets the concession condition.
         /// </summary>
-        public LendingConcessionDetail LendingConcessionDetail { get; set; }
+        /// <value>
+        /// The concession condition.
+        /// </value>
+        public ConcessionCondition ConcessionCondition { get; set; }
 
         /// <summary>
-        /// Gets or sets the concession
+        /// Gets or sets the concession.
         /// </summary>
+        /// <value>
+        /// The concession.
+        /// </value>
         public Concession Concession { get; set; }
 
         /// <summary>
@@ -40,14 +45,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddLendingCon
         public AuditRecord AuditRecord { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AddLendingConcessionDetailCommand"/> class.
+        /// Initializes a new instance of the <see cref="AddOrUpdateConcessionConditionCommand"/> class.
         /// </summary>
-        /// <param name="lendingConcessionDetail">The lending concession detail.</param>
+        /// <param name="concessionCondition">The concession condition.</param>
         /// <param name="user">The user.</param>
         /// <param name="concession"></param>
-        public AddLendingConcessionDetailCommand(LendingConcessionDetail lendingConcessionDetail, User user, Concession concession)
+        public AddOrUpdateConcessionConditionCommand(ConcessionCondition concessionCondition, User user, Concession concession)
         {
-            LendingConcessionDetail = lendingConcessionDetail;
+            ConcessionCondition = concessionCondition;
             User = user;
             Concession = concession;
         }

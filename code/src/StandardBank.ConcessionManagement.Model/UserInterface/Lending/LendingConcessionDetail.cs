@@ -6,12 +6,12 @@
     public class LendingConcessionDetail
     {
         /// <summary>
-        /// Gets or sets the identifier.
+        /// Gets or sets the lending concession detail identifier.
         /// </summary>
         /// <value>
-        /// The identifier.
+        /// The lending concession detail identifier.
         /// </value>
-        public int Id { get; set; }
+        public int LendingConcessionDetailId { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the product.

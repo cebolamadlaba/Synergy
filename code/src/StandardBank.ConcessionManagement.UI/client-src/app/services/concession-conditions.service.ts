@@ -1,4 +1,4 @@
-﻿import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
@@ -32,7 +32,7 @@ export class MockConcessionConditionsService extends ConcessionConditionsService
     model = [new ConcessionCondition()];
 
     getData(concessionId): Observable<ConcessionCondition[]> {
-        this.model[0].id = 1;
+        this.model[0].concessionConditionId = 1;
         this.model[0].concessionId = 1;
         this.model[0].conditionType = "Test Condition Type";
         this.model[0].productType = "Test Product Type";

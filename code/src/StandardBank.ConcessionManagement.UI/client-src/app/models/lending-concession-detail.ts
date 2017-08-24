@@ -1,4 +1,5 @@
-﻿export class LendingConcessionDetail {
+export class LendingConcessionDetail {
+    lendingConcessionDetailId: number;
     productType: string;
     productTypeId: number;
     customerName: string;

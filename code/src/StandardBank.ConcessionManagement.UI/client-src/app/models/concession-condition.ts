@@ -1,5 +1,5 @@
-﻿export class ConcessionCondition {
-    id: number;
+export class ConcessionCondition {
+    concessionConditionId: number;
     concessionId: number;
     conditionType: string;
     conditionTypeId: number;

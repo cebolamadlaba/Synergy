@@ -6,12 +6,12 @@
     public class CashConcessionDetail
     {
         /// <summary>
-        /// Gets or sets the cash view concession identifier.
+        /// Gets or sets the cash concession detail identifier.
         /// </summary>
         /// <value>
-        /// The cash view concession identifier.
+        /// The cash concession detail identifier.
         /// </value>
-        public int CashViewConcessionId { get; set; }
+        public int CashConcessionDetailId { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the customer.

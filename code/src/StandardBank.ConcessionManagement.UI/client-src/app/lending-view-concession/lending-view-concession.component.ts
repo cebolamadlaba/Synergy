@@ -152,6 +152,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                     const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
                     let currentConcession = concessions.controls[concessions.length - 1];
 
+                    currentConcession.get('lendingConcessionDetailId').setValue(lendingConcessionDetail.lendingConcessionDetailId);
+
                     let selectedProductType = this.productTypes.filter(_ => _.id === lendingConcessionDetail.productTypeId);
                     currentConcession.get('productType').setValue(selectedProductType[0]);
 
@@ -180,6 +182,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                     const conditions = <FormArray>this.lendingConcessionForm.controls['conditionItemsRows'];
                     let currentCondition = conditions.controls[conditions.length - 1];
 
+                    currentCondition.get('concessionConditionId').setValue(concessionCondition.concessionConditionId);
+
                     let selectedConditionType = this.conditionTypes.filter(_ => _.id == concessionCondition.conditionTypeId);
                     currentCondition.get('conditionType').setValue(selectedConditionType[0]);
 
@@ -207,6 +211,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
     initConcessionItemRows() {
         return this.formBuilder.group({
+            lendingConcessionDetailId: [''],
             productType: [''],
             accountNumber: [''],
             limit: [''],
@@ -223,6 +228,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.selectedConditionTypes.push(new ConditionType());
 
         return this.formBuilder.group({
+            concessionConditionId: [''],
             conditionType: [''],
             conditionProduct: [''],
             interestRate: [''],
@@ -335,6 +341,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
             let lendingConcessionDetail = new LendingConcessionDetail();
 
+            if (concessionFormItem.get('lendingConcessionDetailId').value)
+                lendingConcessionDetail.lendingConcessionDetailId = concessionFormItem.get('lendingConcessionDetailId').value;
+
             if (concessionFormItem.get('productType').value)
                 lendingConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;
             else
@@ -378,6 +387,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 lendingConcession.concessionConditions = [];
 
             let concessionCondition = new ConcessionCondition();
+
+            if (conditionFormItem.get('concessionConditionId').value)
+                concessionCondition.concessionConditionId = conditionFormItem.get('concessionConditionId').value;
 
             if (conditionFormItem.get('conditionType').value)
                 concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;

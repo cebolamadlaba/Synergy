@@ -113,6 +113,8 @@
         <tbody class="form-concessions-table-content">
             <tr *ngFor="let itemrow of lendingConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
                 <td class="length-long">
+                    <input formControlName="lendingConcessionDetailId" style="display: none;" />
+
                     <select formControlName="productType" class="form-control">
                         <option *ngFor="let productTypeOption of productTypes" [ngValue]="productTypeOption">{{productTypeOption.description}}</option>
                     </select>
@@ -163,7 +165,7 @@
                             </td>
                         </tr>
                         <tr *ngFor="let itemrow of lendingConcessionForm.controls.conditionItemsRows.controls; let i=index">
-                            <td># {{i + 1}}</td>
+                            <td># {{i + 1}}<input formControlName="concessionConditionId" style="display: none;" /></td>
                             <td>{{itemrow.get('conditionType').value.description}}</td>
                             <td>{{itemrow.get('conditionProduct').value.description}}</td>
                             <td>{{itemrow.get('interestRate').value}}</td>

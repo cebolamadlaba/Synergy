@@ -2,21 +2,21 @@
 using StandardBank.ConcessionManagement.Interface.BusinessLogic.Features;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
-using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
+using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 
-namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddCashConcessionDetail
+namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateLendingConcessionDetail
 {
     /// <summary>
-    /// Add cash concession detail command
+    /// Add lending concession detail command
     /// </summary>
-    /// <seealso cref="MediatR.IRequest{CashConcessionDetail}" />
+    /// <seealso cref="MediatR.IRequest{LendingConcession}" />
     /// <seealso cref="IAuditableCommand" />
-    public class AddCashConcessionDetailCommand : IRequest<CashConcessionDetail>, IAuditableCommand
+    public class AddOrUpdateLendingConcessionDetailCommand : IRequest<LendingConcessionDetail>, IAuditableCommand
     {
         /// <summary>
-        /// Gets or sets the cash concession detail
+        /// Gets or sets the lending concession detail
         /// </summary>
-        public CashConcessionDetail CashConcessionDetail { get; set; }
+        public LendingConcessionDetail LendingConcessionDetail { get; set; }
 
         /// <summary>
         /// Gets or sets the concession
@@ -40,14 +40,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddCashConces
         public AuditRecord AuditRecord { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AddCashConcessionDetailCommand"/> class.
+        /// Initializes a new instance of the <see cref="AddOrUpdateLendingConcessionDetailCommand"/> class.
         /// </summary>
-        /// <param name="cashConcessionDetail">The cash concession detail.</param>
+        /// <param name="lendingConcessionDetail">The lending concession detail.</param>
         /// <param name="user">The user.</param>
         /// <param name="concession"></param>
-        public AddCashConcessionDetailCommand(CashConcessionDetail cashConcessionDetail, User user, Concession concession)
+        public AddOrUpdateLendingConcessionDetailCommand(LendingConcessionDetail lendingConcessionDetail, User user, Concession concession)
         {
-            CashConcessionDetail = cashConcessionDetail;
+            LendingConcessionDetail = lendingConcessionDetail;
             User = user;
             Concession = concession;
         }

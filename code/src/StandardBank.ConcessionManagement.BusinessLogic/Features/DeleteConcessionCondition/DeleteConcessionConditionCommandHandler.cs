@@ -38,7 +38,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteConcess
 
             message.AuditRecord = new AuditRecord(result, message.User, AuditType.Delete);
 
-            message.ConcessionCondition.Id = result.Id;
+            message.ConcessionCondition.ConcessionConditionId = result.Id;
             return message.ConcessionCondition;
         }
     }
