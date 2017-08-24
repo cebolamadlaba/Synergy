@@ -11,7 +11,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteConcess
     /// Delete concession condition command handler
     /// </summary>
     /// <seealso cref="MediatR.IAsyncRequestHandler{DeleteConcessionConditionCommand, ConcessionCondition}" />
-    public class DeleteConcessionConditionCommandHandler : IAsyncRequestHandler<DeleteConcessionConditionCommand, ConcessionCondition>
+    public class DeleteConcessionConditionHandler : IAsyncRequestHandler<DeleteConcessionCondition, ConcessionCondition>
     {
         /// <summary>
         /// The concession manager
@@ -19,10 +19,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteConcess
         private readonly IConcessionManager _concessionManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DeleteConcessionConditionCommandHandler"/> class.
+        /// Initializes a new instance of the <see cref="DeleteConcessionConditionHandler"/> class.
         /// </summary>
         /// <param name="concessionManager">The concession manager.</param>
-        public DeleteConcessionConditionCommandHandler(IConcessionManager concessionManager)
+        public DeleteConcessionConditionHandler(IConcessionManager concessionManager)
         {
             _concessionManager = concessionManager;
         }
@@ -32,7 +32,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteConcess
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public async Task<ConcessionCondition> Handle(DeleteConcessionConditionCommand message)
+        public async Task<ConcessionCondition> Handle(DeleteConcessionCondition message)
         {
             var result = _concessionManager.DeleteConcessionCondition(message.ConcessionCondition);
 

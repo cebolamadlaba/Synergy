@@ -4,24 +4,22 @@ using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 
-namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateCashConcessionDetail
+namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteCashConcessionDetail
 {
     /// <summary>
-    /// Add cash concession detail command
+    /// Delete cash concession detail command
     /// </summary>
     /// <seealso cref="MediatR.IRequest{CashConcessionDetail}" />
     /// <seealso cref="IAuditableCommand" />
-    public class AddOrUpdateCashConcessionDetailCommand : IRequest<CashConcessionDetail>, IAuditableCommand
+    public class DeleteCashConcessionDetail : IRequest<CashConcessionDetail>, IAuditableCommand
     {
         /// <summary>
-        /// Gets or sets the cash concession detail
+        /// Gets or sets the cash concession detail.
         /// </summary>
+        /// <value>
+        /// The cash concession detail.
+        /// </value>
         public CashConcessionDetail CashConcessionDetail { get; set; }
-
-        /// <summary>
-        /// Gets or sets the concession
-        /// </summary>
-        public Concession Concession { get; set; }
 
         /// <summary>
         /// Gets or sets the user.
@@ -40,16 +38,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateCa
         public AuditRecord AuditRecord { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AddOrUpdateCashConcessionDetailCommand"/> class.
+        /// Initializes a new instance of the <see cref="DeleteCashConcessionDetail"/> class.
         /// </summary>
         /// <param name="cashConcessionDetail">The cash concession detail.</param>
         /// <param name="user">The user.</param>
-        /// <param name="concession"></param>
-        public AddOrUpdateCashConcessionDetailCommand(CashConcessionDetail cashConcessionDetail, User user, Concession concession)
+        public DeleteCashConcessionDetail(CashConcessionDetail cashConcessionDetail, User user)
         {
             CashConcessionDetail = cashConcessionDetail;
             User = user;
-            Concession = concession;
         }
     }
 }

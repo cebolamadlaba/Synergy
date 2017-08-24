@@ -4,19 +4,24 @@ using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 
-namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteLendingConcessionDetail
+namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateLendingConcessionDetail
 {
     /// <summary>
-    /// Delete lending concession detail command
+    /// Add lending concession detail command
     /// </summary>
-    /// <seealso cref="MediatR.IRequest{LendingConcessionDetail}" />
+    /// <seealso cref="MediatR.IRequest{LendingConcession}" />
     /// <seealso cref="IAuditableCommand" />
-    public class DeleteLendingConcessionDetailCommand : IRequest<LendingConcessionDetail>, IAuditableCommand
+    public class AddOrUpdateLendingConcessionDetail : IRequest<LendingConcessionDetail>, IAuditableCommand
     {
         /// <summary>
         /// Gets or sets the lending concession detail
         /// </summary>
         public LendingConcessionDetail LendingConcessionDetail { get; set; }
+
+        /// <summary>
+        /// Gets or sets the concession
+        /// </summary>
+        public Concession Concession { get; set; }
 
         /// <summary>
         /// Gets or sets the user.
@@ -35,14 +40,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteLending
         public AuditRecord AuditRecord { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DeleteLendingConcessionDetailCommand"/> class.
+        /// Initializes a new instance of the <see cref="AddOrUpdateLendingConcessionDetail"/> class.
         /// </summary>
         /// <param name="lendingConcessionDetail">The lending concession detail.</param>
         /// <param name="user">The user.</param>
-        public DeleteLendingConcessionDetailCommand(LendingConcessionDetail lendingConcessionDetail, User user)
+        /// <param name="concession"></param>
+        public AddOrUpdateLendingConcessionDetail(LendingConcessionDetail lendingConcessionDetail, User user, Concession concession)
         {
             LendingConcessionDetail = lendingConcessionDetail;
             User = user;
+            Concession = concession;
         }
     }
 }

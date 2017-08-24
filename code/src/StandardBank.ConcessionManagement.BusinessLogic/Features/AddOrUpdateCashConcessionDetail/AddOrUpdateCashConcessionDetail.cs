@@ -2,30 +2,25 @@
 using StandardBank.ConcessionManagement.Interface.BusinessLogic.Features;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
+using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 
-namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateConcessionCondition
+namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateCashConcessionDetail
 {
     /// <summary>
-    /// Add concession condition command
+    /// Add cash concession detail command
     /// </summary>
-    /// <seealso cref="MediatR.IRequest{ConcessionCondition}" />
+    /// <seealso cref="MediatR.IRequest{CashConcessionDetail}" />
     /// <seealso cref="IAuditableCommand" />
-    public class AddOrUpdateConcessionConditionCommand : IRequest<ConcessionCondition>, IAuditableCommand
+    public class AddOrUpdateCashConcessionDetail : IRequest<CashConcessionDetail>, IAuditableCommand
     {
         /// <summary>
-        /// Gets or sets the concession condition.
+        /// Gets or sets the cash concession detail
         /// </summary>
-        /// <value>
-        /// The concession condition.
-        /// </value>
-        public ConcessionCondition ConcessionCondition { get; set; }
+        public CashConcessionDetail CashConcessionDetail { get; set; }
 
         /// <summary>
-        /// Gets or sets the concession.
+        /// Gets or sets the concession
         /// </summary>
-        /// <value>
-        /// The concession.
-        /// </value>
         public Concession Concession { get; set; }
 
         /// <summary>
@@ -45,14 +40,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateCo
         public AuditRecord AuditRecord { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AddOrUpdateConcessionConditionCommand"/> class.
+        /// Initializes a new instance of the <see cref="AddOrUpdateCashConcessionDetail"/> class.
         /// </summary>
-        /// <param name="concessionCondition">The concession condition.</param>
+        /// <param name="cashConcessionDetail">The cash concession detail.</param>
         /// <param name="user">The user.</param>
         /// <param name="concession"></param>
-        public AddOrUpdateConcessionConditionCommand(ConcessionCondition concessionCondition, User user, Concession concession)
+        public AddOrUpdateCashConcessionDetail(CashConcessionDetail cashConcessionDetail, User user, Concession concession)
         {
-            ConcessionCondition = concessionCondition;
+            CashConcessionDetail = cashConcessionDetail;
             User = user;
             Concession = concession;
         }

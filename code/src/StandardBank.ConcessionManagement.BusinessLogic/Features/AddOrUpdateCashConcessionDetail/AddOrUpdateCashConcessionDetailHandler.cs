@@ -11,7 +11,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateCa
     /// Add cash concession detail command handler
     /// </summary>
     /// <seealso cref="MediatR.IAsyncRequestHandler{AddCashConcessionDetailCommand, CashConcessionDetail}" />
-    public class AddOrUpdateCashConcessionDetailCommandHandler : IAsyncRequestHandler<AddOrUpdateCashConcessionDetailCommand, CashConcessionDetail>
+    public class AddOrUpdateCashConcessionDetailHandler : IAsyncRequestHandler<AddOrUpdateCashConcessionDetail, CashConcessionDetail>
     {
         /// <summary>
         /// The cash manager
@@ -19,10 +19,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateCa
         private readonly ICashManager _cashManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AddOrUpdateCashConcessionDetailCommandHandler"/> class.
+        /// Initializes a new instance of the <see cref="AddOrUpdateCashConcessionDetailHandler"/> class.
         /// </summary>
         /// <param name="cashManager">The cash manager.</param>
-        public AddOrUpdateCashConcessionDetailCommandHandler(ICashManager cashManager)
+        public AddOrUpdateCashConcessionDetailHandler(ICashManager cashManager)
         {
             _cashManager = cashManager;
         }
@@ -32,7 +32,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateCa
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public async Task<CashConcessionDetail> Handle(AddOrUpdateCashConcessionDetailCommand message)
+        public async Task<CashConcessionDetail> Handle(AddOrUpdateCashConcessionDetail message)
         {
             if (message.CashConcessionDetail.CashConcessionDetailId == 0)
             {

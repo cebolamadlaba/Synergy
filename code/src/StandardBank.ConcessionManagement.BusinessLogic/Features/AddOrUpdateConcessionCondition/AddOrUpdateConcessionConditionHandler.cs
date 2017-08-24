@@ -11,7 +11,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateCo
     /// Add concession condition command handler
     /// </summary>
     /// <seealso cref="MediatR.IAsyncRequestHandler{AddConcessionConditionCommand, ConcessionCondition}" />
-    public class AddOrUpdateConcessionConditionCommandHandler : IAsyncRequestHandler<AddOrUpdateConcessionConditionCommand, ConcessionCondition>
+    public class AddOrUpdateConcessionConditionHandler : IAsyncRequestHandler<AddOrUpdateConcessionCondition, ConcessionCondition>
     {
         /// <summary>
         /// The concession manager
@@ -19,10 +19,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateCo
         private readonly IConcessionManager _concessionManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AddOrUpdateConcessionConditionCommandHandler"/> class.
+        /// Initializes a new instance of the <see cref="AddOrUpdateConcessionConditionHandler"/> class.
         /// </summary>
         /// <param name="concessionManager">The concession manager.</param>
-        public AddOrUpdateConcessionConditionCommandHandler(IConcessionManager concessionManager)
+        public AddOrUpdateConcessionConditionHandler(IConcessionManager concessionManager)
         {
             _concessionManager = concessionManager;
         }
@@ -32,7 +32,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateCo
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public async Task<ConcessionCondition> Handle(AddOrUpdateConcessionConditionCommand message)
+        public async Task<ConcessionCondition> Handle(AddOrUpdateConcessionCondition message)
         {
             if (message.ConcessionCondition.ConcessionConditionId == 0)
             {

@@ -11,7 +11,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteCashCon
     /// Delete cash concession detail command handler
     /// </summary>
     /// <seealso cref="MediatR.IAsyncRequestHandler{DeleteCashConcessionDetailCommand, CashConcessionDetail}" />
-    public class DeleteCashConcessionDetailCommandHandler : IAsyncRequestHandler<DeleteCashConcessionDetailCommand, CashConcessionDetail>
+    public class DeleteCashConcessionDetailHandler : IAsyncRequestHandler<DeleteCashConcessionDetail, CashConcessionDetail>
     {
         /// <summary>
         /// The cash manager
@@ -19,10 +19,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteCashCon
         private readonly ICashManager _cashManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DeleteCashConcessionDetailCommandHandler"/> class.
+        /// Initializes a new instance of the <see cref="DeleteCashConcessionDetailHandler"/> class.
         /// </summary>
         /// <param name="cashManager">The cash manager.</param>
-        public DeleteCashConcessionDetailCommandHandler(ICashManager cashManager)
+        public DeleteCashConcessionDetailHandler(ICashManager cashManager)
         {
             _cashManager = cashManager;
         }
@@ -32,7 +32,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteCashCon
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public async Task<CashConcessionDetail> Handle(DeleteCashConcessionDetailCommand message)
+        public async Task<CashConcessionDetail> Handle(DeleteCashConcessionDetail message)
         {
             var result = _cashManager.DeleteConcessionCash(message.CashConcessionDetail);
 

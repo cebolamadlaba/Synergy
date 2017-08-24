@@ -11,7 +11,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
     /// </summary>
     /// <seealso cref="MediatR.IRequest{ConcessionComment}" />
     /// <seealso cref="IAuditableCommand" />
-    public class AddConcessionCommentCommand : IRequest<ConcessionComment>, IAuditableCommand
+    public class AddConcessionComment : IRequest<ConcessionComment>, IAuditableCommand
     {
         /// <summary>
         /// Gets or sets the concession comment.
@@ -38,13 +38,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
         public AuditRecord AuditRecord { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AddConcessionCommentCommand"/> class.
+        /// Initializes a new instance of the <see cref="AddConcessionComment"/> class.
         /// </summary>
         /// <param name="concessionId">The concession identifier.</param>
         /// <param name="concessionSubStatusId">The concession sub status identifier.</param>
         /// <param name="comment">The comment.</param>
         /// <param name="user">The user.</param>
-        public AddConcessionCommentCommand(int concessionId, int concessionSubStatusId, string comment, Model.UserInterface.User user)
+        public AddConcessionComment(int concessionId, int concessionSubStatusId, string comment, Model.UserInterface.User user)
         {
             ConcessionComment = new ConcessionComment
             {

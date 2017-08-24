@@ -10,7 +10,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
     /// Add concession comment command handler
     /// </summary>
     /// <seealso cref="IAsyncRequestHandler{AddConcessionCommentCommand, ConcessionComment}" />
-    public class AddConcessionCommentCommandHandler : IAsyncRequestHandler<AddConcessionCommentCommand, ConcessionComment>
+    public class AddConcessionCommentHandler : IAsyncRequestHandler<AddConcessionComment, ConcessionComment>
     {
         /// <summary>
         /// The concession manager
@@ -18,10 +18,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
         private readonly IConcessionManager _concessionManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AddConcessionCommentCommandHandler"/> class.
+        /// Initializes a new instance of the <see cref="AddConcessionCommentHandler"/> class.
         /// </summary>
         /// <param name="concessionManager">The concession manager.</param>
-        public AddConcessionCommentCommandHandler(IConcessionManager concessionManager)
+        public AddConcessionCommentHandler(IConcessionManager concessionManager)
         {
             _concessionManager = concessionManager;
         }
@@ -31,7 +31,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public async Task<ConcessionComment> Handle(AddConcessionCommentCommand message)
+        public async Task<ConcessionComment> Handle(AddConcessionComment message)
         {
             var result = _concessionManager.CreateConcessionComment(message.ConcessionComment);
 

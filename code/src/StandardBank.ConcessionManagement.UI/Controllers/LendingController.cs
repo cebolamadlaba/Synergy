@@ -86,14 +86,14 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             lendingConcession.Concession.ConcessionType = "Lending";
             lendingConcession.Concession.Type = "New";
 
-            var concession = await _mediator.Send(new AddConcessionCommand(lendingConcession.Concession, user));
+            var concession = await _mediator.Send(new AddConcession(lendingConcession.Concession, user));
 
             foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
-                await _mediator.Send(new AddOrUpdateLendingConcessionDetailCommand(lendingConcessionDetail, user, concession));
+                await _mediator.Send(new AddOrUpdateLendingConcessionDetail(lendingConcessionDetail, user, concession));
 
             if (lendingConcession.ConcessionConditions != null && lendingConcession.ConcessionConditions.Any())
                 foreach (var concessionCondition in lendingConcession.ConcessionConditions)
-                    await _mediator.Send(new AddOrUpdateConcessionConditionCommand(concessionCondition, user, concession));
+                    await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
 
             return Ok(lendingConcession);
         }
@@ -115,28 +115,28 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             //if there are any conditions that have been removed, delete them
             foreach (var condition in databaseLendingConcession.ConcessionConditions)
                 if (lendingConcession.ConcessionConditions.All(_ => _.ConcessionConditionId != condition.ConcessionConditionId))
-                    await _mediator.Send(new DeleteConcessionConditionCommand(condition, user));
+                    await _mediator.Send(new DeleteConcessionCondition(condition, user));
 
             //if there are any lending concession details that have been removed delete them
             foreach (var lendingConcessionDetail in databaseLendingConcession.LendingConcessionDetails)
                 if (lendingConcession.LendingConcessionDetails.All(_ => _.LendingConcessionDetailId !=
                                                                         lendingConcessionDetail
                                                                             .LendingConcessionDetailId))
-                    await _mediator.Send(new DeleteLendingConcessionDetailCommand(lendingConcessionDetail, user));
+                    await _mediator.Send(new DeleteLendingConcessionDetail(lendingConcessionDetail, user));
 
             //update the concession
-            var concession = await _mediator.Send(new UpdateConcessionCommand(lendingConcession.Concession, user));
+            var concession = await _mediator.Send(new UpdateConcession(lendingConcession.Concession, user));
 
             //add all the new conditions and lending details and comments
             foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
-                await _mediator.Send(new AddOrUpdateLendingConcessionDetailCommand(lendingConcessionDetail, user, concession));
+                await _mediator.Send(new AddOrUpdateLendingConcessionDetail(lendingConcessionDetail, user, concession));
 
             if (lendingConcession.ConcessionConditions != null && lendingConcession.ConcessionConditions.Any())
                 foreach (var concessionCondition in lendingConcession.ConcessionConditions)
-                    await _mediator.Send(new AddOrUpdateConcessionConditionCommand(concessionCondition, user, concession));
+                    await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
 
             if (!string.IsNullOrWhiteSpace(lendingConcession.Concession.Comments))
-                await _mediator.Send(new AddConcessionCommentCommand(concession.Id, concession.SubStatusId.Value,
+                await _mediator.Send(new AddConcessionComment(concession.Id, concession.SubStatusId.Value,
                     lendingConcession.Concession.Comments, user));
 
             return Ok(lendingConcession);

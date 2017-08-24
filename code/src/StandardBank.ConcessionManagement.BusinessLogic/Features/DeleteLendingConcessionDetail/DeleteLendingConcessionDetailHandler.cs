@@ -11,7 +11,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteLending
     /// Delete lending concession detail command handler
     /// </summary>
     /// <seealso cref="MediatR.IAsyncRequestHandler{DeleteLendingConcessionDetailCommand, LendingConcessionDetail}" />
-    public class DeleteLendingConcessionDetailCommandHandler : IAsyncRequestHandler<DeleteLendingConcessionDetailCommand, LendingConcessionDetail>
+    public class DeleteLendingConcessionDetailHandler : IAsyncRequestHandler<DeleteLendingConcessionDetail, LendingConcessionDetail>
     {
         /// <summary>
         /// The lending manager
@@ -19,10 +19,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteLending
         private readonly ILendingManager _lendingManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DeleteLendingConcessionDetailCommandHandler"/> class.
+        /// Initializes a new instance of the <see cref="DeleteLendingConcessionDetailHandler"/> class.
         /// </summary>
         /// <param name="lendingManager">The lending manager.</param>
-        public DeleteLendingConcessionDetailCommandHandler(ILendingManager lendingManager)
+        public DeleteLendingConcessionDetailHandler(ILendingManager lendingManager)
         {
             _lendingManager = lendingManager;
         }
@@ -32,7 +32,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteLending
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public async Task<LendingConcessionDetail> Handle(DeleteLendingConcessionDetailCommand message)
+        public async Task<LendingConcessionDetail> Handle(DeleteLendingConcessionDetail message)
         {
             var result = _lendingManager.DeleteConcessionLending(message.LendingConcessionDetail);
 

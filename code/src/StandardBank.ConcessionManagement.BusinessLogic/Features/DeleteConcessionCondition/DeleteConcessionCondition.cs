@@ -10,7 +10,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteConcess
     /// </summary>
     /// <seealso cref="MediatR.IRequest{ConcessionCondition}" />
     /// <seealso cref="IAuditableCommand" />
-    public class DeleteConcessionConditionCommand : IRequest<ConcessionCondition>, IAuditableCommand
+    public class DeleteConcessionCondition : IRequest<ConcessionCondition>, IAuditableCommand
     {
         /// <summary>
         /// Gets or sets the concession condition.
@@ -37,11 +37,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteConcess
         public AuditRecord AuditRecord { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DeleteConcessionConditionCommand"/> class.
+        /// Initializes a new instance of the <see cref="DeleteConcessionCondition"/> class.
         /// </summary>
         /// <param name="concessionCondition">The concession condition.</param>
         /// <param name="user">The user.</param>
-        public DeleteConcessionConditionCommand(ConcessionCondition concessionCondition, User user)
+        public DeleteConcessionCondition(ConcessionCondition concessionCondition, User user)
         {
             ConcessionCondition = concessionCondition;
             User = user;

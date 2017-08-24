@@ -11,7 +11,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateLe
     /// Add lending concession detail command handler
     /// </summary>
     /// <seealso cref="MediatR.IAsyncRequestHandler{AddLendingConcessionCommand, LendingConcessionDetail}" />
-    public class AddOrUpdateLendingConcessionDetailCommandHandler : IAsyncRequestHandler<AddOrUpdateLendingConcessionDetailCommand, LendingConcessionDetail>
+    public class AddOrUpdateLendingConcessionDetailHandler : IAsyncRequestHandler<AddOrUpdateLendingConcessionDetail, LendingConcessionDetail>
     {
         /// <summary>
         /// The lending manager
@@ -22,7 +22,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateLe
         /// Initializes the class
         /// </summary>
         /// <param name="lendingManager"></param>
-        public AddOrUpdateLendingConcessionDetailCommandHandler(ILendingManager lendingManager)
+        public AddOrUpdateLendingConcessionDetailHandler(ILendingManager lendingManager)
         {
             _lendingManager = lendingManager;
         }
@@ -32,7 +32,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateLe
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public async Task<LendingConcessionDetail> Handle(AddOrUpdateLendingConcessionDetailCommand message)
+        public async Task<LendingConcessionDetail> Handle(AddOrUpdateLendingConcessionDetail message)
         {
             if (message.LendingConcessionDetail.LendingConcessionDetailId == 0)
             {

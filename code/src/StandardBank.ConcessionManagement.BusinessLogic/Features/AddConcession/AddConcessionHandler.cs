@@ -1,20 +1,19 @@
 ﻿using System;
-using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
+using System.Threading.Tasks;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 
-namespace StandardBank.ConcessionManagement.BusinessLogic.Features.UpdateConcession
+namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
 {
     /// <summary>
-    /// Update concession command handler
+    /// Add concession command handler
     /// </summary>
-    /// <seealso cref="MediatR.IAsyncRequestHandler{UpdateConcessionCommand, Concession}" />
-    public class UpdateConcessionCommandHandler : IAsyncRequestHandler<UpdateConcessionCommand, Concession>
+    /// <seealso cref="MediatR.IRequestHandler{AddConcession, Concession}" />
+    public class AddConcessionHandler : IAsyncRequestHandler<AddConcession, Concession>
     {
         /// <summary>
         /// The concession manager
@@ -32,17 +31,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.UpdateConcess
         private readonly ILogger _logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UpdateConcessionCommandHandler"/> class.
+        /// Initializes a new instance of the <see cref="AddConcessionHandler"/> class.
         /// </summary>
         /// <param name="concessionManager">The concession manager.</param>
         /// <param name="mediator">The mediator.</param>
         /// <param name="loggerFactory">The logger factory.</param>
-        public UpdateConcessionCommandHandler(IConcessionManager concessionManager, IMediator mediator,
+        public AddConcessionHandler(IConcessionManager concessionManager, IMediator mediator,
             ILoggerFactory loggerFactory)
         {
             _concessionManager = concessionManager;
             _mediator = mediator;
-            _logger = loggerFactory.CreateLogger<AddConcessionCommandHandler>();
+            _logger = loggerFactory.CreateLogger<AddConcessionHandler>();
         }
 
         /// <summary>
@@ -50,18 +49,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.UpdateConcess
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public async Task<Concession> Handle(UpdateConcessionCommand message)
+        public async Task<Concession> Handle(AddConcession message)
         {
-            var result = _concessionManager.UpdateConcession(message.Concession, message.User);
+            var result = _concessionManager.CreateConcession(message.Concession, message.User);
 
-            message.AuditRecord = new AuditRecord(result, message.User, AuditType.Update);
+            message.AuditRecord = new AuditRecord(result, message.User, AuditType.Insert);
+
+            message.Concession.ReferenceNumber = result.ConcessionRef;
             message.Concession.Id = result.Id;
-            message.Concession.SubStatusId = result.SubStatusId;
-
             if (message.User.SelectedCentre?.Id > 0)
                 await TryAndSendEmail(message, result);
             else
-                _logger.LogWarning(new EventId(1, "ApprovalEmailNotSent"), "Consession # {0} has no selected center", result.Id);
+                _logger.LogWarning(new EventId(1,"ApprovalEmailNotSent"),"Consession # {0} has no selected center",result.Id);
 
             return message.Concession;
         }
@@ -72,11 +71,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.UpdateConcess
         /// <param name="message"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        private async Task TryAndSendEmail(UpdateConcessionCommand message, Model.Repository.Concession result)
+        private async Task TryAndSendEmail(AddConcession message, Model.Repository.Concession result)
         {
             try
             {
-                await _mediator.Publish(new ConcessionAddedEvent
+                await _mediator.Publish(new ConcessionAdded
                 {
                     CenterId = message.User.SelectedCentre.Id,
                     ConsessionId = result.ConcessionRef
@@ -86,6 +85,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.UpdateConcess
             {
                 _logger.LogError(ex.ToString());
             }
+            
         }
     }
 }

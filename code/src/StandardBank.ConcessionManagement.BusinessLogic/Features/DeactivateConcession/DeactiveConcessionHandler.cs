@@ -12,7 +12,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeactivateCon
     /// Deactivate concession command handler
     /// </summary>
     /// <seealso cref="MediatR.IAsyncRequestHandler{DeactiveConcessionCommand, Concession}" />
-    public class DeactiveConcessionCommandHandler : IAsyncRequestHandler<DeactiveConcessionCommand, Concession>
+    public class DeactiveConcessionHandler : IAsyncRequestHandler<DeactiveConcession, Concession>
     {
         /// <summary>
         /// The concession manager
@@ -20,10 +20,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeactivateCon
         private readonly IConcessionManager _concessionManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DeactiveConcessionCommandHandler"/> class.
+        /// Initializes a new instance of the <see cref="DeactiveConcessionHandler"/> class.
         /// </summary>
         /// <param name="concessionManager">The concession manager.</param>
-        public DeactiveConcessionCommandHandler(IConcessionManager concessionManager)
+        public DeactiveConcessionHandler(IConcessionManager concessionManager)
         {
             _concessionManager = concessionManager;
         }
@@ -33,7 +33,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeactivateCon
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public async Task<Concession> Handle(DeactiveConcessionCommand message)
+        public async Task<Concession> Handle(DeactiveConcession message)
         {
             if (string.IsNullOrWhiteSpace(message.Concession.ReferenceNumber))
                 throw new ArgumentNullException(nameof(message.Concession.ReferenceNumber));

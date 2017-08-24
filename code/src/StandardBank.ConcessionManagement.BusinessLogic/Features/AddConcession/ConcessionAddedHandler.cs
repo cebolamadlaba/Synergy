@@ -5,18 +5,18 @@ using System.Threading.Tasks;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
 {
-    public class ConcessionAddedEventHandler : IAsyncNotificationHandler<ConcessionAddedEvent>
+    public class ConcessionAddedHandler : IAsyncNotificationHandler<ConcessionAdded>
     {
         private IApprovalRoutingManager _approvalRoutingManager { get; }
         private IEmailManager _emailManager { get; }
 
-        public ConcessionAddedEventHandler(IApprovalRoutingManager approvalRoutingManager, IEmailManager emailManager)
+        public ConcessionAddedHandler(IApprovalRoutingManager approvalRoutingManager, IEmailManager emailManager)
         {
             _approvalRoutingManager = approvalRoutingManager;
             _emailManager = emailManager;
         }
 
-        public async Task Handle(ConcessionAddedEvent notification)
+        public async Task Handle(ConcessionAdded notification)
         {
             var approvers =
                 _approvalRoutingManager.GetApproversByRole(notification.CenterId,
