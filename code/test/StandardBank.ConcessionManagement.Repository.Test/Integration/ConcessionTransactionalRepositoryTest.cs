@@ -26,7 +26,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 TransactionVolume = 8,
                 TransactionValue = 1595,
                 BaseRateId = DataHelper.GetBaseRateId(),
-                AdValorem = 238
+                AdValorem = 238,
+                LegalEntityId = DataHelper.GetLegalEntityId(),
+                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
             };
 
             var result = InstantiatedDependencies.ConcessionTransactionalRepository.Create(model);
@@ -47,6 +49,23 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
 
             Assert.NotNull(result);
             Assert.Equal(result.Id, id);
+        }
+
+        /// <summary>
+        /// Reads by concession id executes positive
+        /// </summary>
+        [Fact]
+        public void ReadByConcessionId_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.ConcessionTransactionalRepository.ReadAll();
+            var concessionId = results.First().ConcessionId;
+            var result = InstantiatedDependencies.ConcessionTransactionalRepository.ReadByConcessionId(concessionId);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+
+            foreach (var record in result)
+                Assert.Equal(record.ConcessionId, concessionId);
         }
 
         /// <summary>
@@ -79,6 +98,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.TransactionValue = model.TransactionValue + 100;
             model.BaseRateId = DataHelper.GetAlternateBaseRateId(model.BaseRateId);
             model.AdValorem = model.AdValorem + 100;
+            model.LegalEntityId = DataHelper.GetAlternateLegalEntityId(model.LegalEntityId);
+            model.LegalEntityAccountId = DataHelper.GetAlternateLegalEntityAccountId(model.LegalEntityAccountId);
 
             InstantiatedDependencies.ConcessionTransactionalRepository.Update(model);
 
@@ -94,6 +115,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.TransactionValue, model.TransactionValue);
             Assert.Equal(updatedModel.BaseRateId, model.BaseRateId);
             Assert.Equal(updatedModel.AdValorem, model.AdValorem);
+            Assert.Equal(updatedModel.LegalEntityId, model.LegalEntityId);
+            Assert.Equal(updatedModel.LegalEntityAccountId, model.LegalEntityAccountId);
         }
 
         /// <summary>
@@ -111,7 +134,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 TransactionVolume = 8,
                 TransactionValue = 1595,
                 BaseRateId = DataHelper.GetBaseRateId(),
-                AdValorem = 238
+                AdValorem = 238,
+                LegalEntityId = DataHelper.GetLegalEntityId(),
+                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
             };
 
             var temporaryEntity = InstantiatedDependencies.ConcessionTransactionalRepository.Create(model);
