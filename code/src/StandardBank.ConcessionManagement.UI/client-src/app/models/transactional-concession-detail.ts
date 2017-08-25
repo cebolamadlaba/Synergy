@@ -1,6 +1,6 @@
 export class TransactionalConcessionDetail {
     transactionalConcessionDetailId: number;
-    transactionType: number;
+    transactionType: string;
     transactionTypeId: number;
     tariffTable: number;
     customerName: string;
