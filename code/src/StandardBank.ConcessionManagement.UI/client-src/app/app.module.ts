@@ -33,11 +33,10 @@ import { LendingService } from "./services/lending.service";
 import { MyConditionService } from './services/my-condition.service';
 import { CashConcessionService } from "./services/cash-concession.service";
 
-import { LendingConcessionFilterPipe } from './filters/lending-concession-filter.pipe';
-import { CashConcessionFilterPipe } from './filters/cash-concession-filter.pipe';
 import { ApprovedConcessionFilterPipe } from './filters/approved-concession-filter.pipe';
 import { CashViewConcessionComponent } from './cash-view-concession/cash-view-concession.component';
 import { TransactionalConcessionService } from "./services/transactional-concession.service";
+import { BaseConcessionFilterPipe } from './filters/base-concession-filter.pipe';
 
 @NgModule({
     declarations: [
@@ -58,11 +57,10 @@ import { TransactionalConcessionService } from "./services/transactional-concess
         LendingAddConcessionComponent,
         TransactionalAddConcessionComponent,
         MismatchedInboxComponent,
-        LendingConcessionFilterPipe,
         LendingViewConcessionComponent,
         ApprovedConcessionFilterPipe,
-        CashConcessionFilterPipe,
-        CashViewConcessionComponent
+        CashViewConcessionComponent,
+        BaseConcessionFilterPipe
     ],
     imports: [
         BrowserModule,

@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
@@ -58,6 +59,42 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             };
 
             return Ok(transactionalView);
+        }
+
+        /// <summary>
+        /// Gets the transactional concession data.
+        /// </summary>
+        /// <param name="concessionReferenceId">The concession reference identifier.</param>
+        /// <returns></returns>
+        [Route("TransactionalConcessionData/{concessionReferenceId}")]
+        public IActionResult TransactionalConcessionData(string concessionReferenceId)
+        {
+            //TODO:
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Creates a new transactional concession
+        /// </summary>
+        /// <param name="transactionalConcession">The transactional concession.</param>
+        /// <returns></returns>
+        [Route("NewTransactional")]
+        public IActionResult NewTransactional([FromBody]TransactionalConcession transactionalConcession)
+        {
+            //TODO:
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Updates the transactional concession.
+        /// </summary>
+        /// <param name="transactionalConcession">The transactional concession.</param>
+        /// <returns></returns>
+        [Route("UpdateTransactional")]
+        public IActionResult UpdateTransactional([FromBody] TransactionalConcession transactionalConcession)
+        {
+            //TODO:
+            throw new NotImplementedException();
         }
     }
 }

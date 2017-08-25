@@ -1,12 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { CashConcession } from "../models/cash-concession";
+import { BaseConcession } from "../models/base-concession";
 
 @Pipe({
-    name: 'cashConcessionFilter'
+    name: 'baseConcessionFilter'
 })
-export class CashConcessionFilterPipe implements PipeTransform {
+export class BaseConcessionFilterPipe implements PipeTransform {
 
-    transform(items: CashConcession[], filterConcessionId): any {
+    transform(items: BaseConcession[], filterConcessionId): any {
         return filterConcessionId
             ? items.filter(item => item.concession.referenceNumber.indexOf(filterConcessionId) !== -1)
             : items;

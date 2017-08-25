@@ -1,11 +1,6 @@
-import { Concession } from "./concession";
-import { ConcessionCondition } from "./concession-condition";
-import { User } from "./user";
 import { TransactionalConcessionDetail } from "./transactional-concession-detail";
+import { BaseConcession } from "./base-concession";
 
-export class TransactionalConcession {
-    concession: Concession;
+export class TransactionalConcession extends BaseConcession {
     transactionalConcessionDetails: TransactionalConcessionDetail[];
-    concessionConditions: ConcessionCondition[];
-    currentUser: User;
 }
