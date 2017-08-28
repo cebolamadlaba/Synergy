@@ -279,8 +279,6 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.validationError = null;
 
         var lendingConcession = this.getLendingConcession();
-        lendingConcession.concession.concessionType = "Lending";
-        lendingConcession.concession.type = "Existing";
 
         if (!this.validationError) {
             this.lendingService.postUpdateLendingData(lendingConcession).subscribe(entity => {
@@ -308,9 +306,10 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     getLendingConcession(): LendingConcession {
-        console.log("in the get lending concession method");
         var lendingConcession = new LendingConcession();
+
         lendingConcession.concession = new Concession();
+        lendingConcession.concession.concessionType = "Lending";
         lendingConcession.concession.referenceNumber = this.concessionReferenceId;
 
         if (this.lendingConcessionForm.controls['mrsCrs'].value)
