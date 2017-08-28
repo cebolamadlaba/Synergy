@@ -362,5 +362,56 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             Assert.NotNull(result);
             Assert.Equal(result, period.Description);
         }
+
+        /// <summary>
+        /// Tests that GetAccrualTypes executes positive.
+        /// </summary>
+        [Fact]
+        public void GetAccrualTypes_Executes_Positive()
+        {
+            var accrualType = new AccrualType { Id = 1, Description = "Unit Test Accrual Type", IsActive = true };
+
+            MockAccrualTypeRepository.Setup(_ => _.ReadAll()).Returns(new[] { accrualType });
+
+            var result = _lookupTableManager.GetAccrualTypes();
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that GetChannelTypes executes positive.
+        /// </summary>
+        [Fact]
+        public void GetChannelTypes_Executes_Positive()
+        {
+            var channelType = new ChannelType { Id = 1, Description = "Unit Test Channel Type", IsActive = true };
+
+            MockChannelTypeRepository.Setup(_ => _.ReadAll()).Returns(new[] { channelType });
+
+            var result = _lookupTableManager.GetChannelTypes();
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that GetTransactionTypeDescription executes positive.
+        /// </summary>
+        [Fact]
+        public void GetTransactionTypeDescription_Executes_Positive()
+        {
+            MockTransactionTypeRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new TransactionType
+            {
+                Id = 1,
+                IsActive = true,
+                Description = "Unit Test Transaction Type",
+                ConcessionTypeId = 1
+            });
+
+            var result = _lookupTableManager.GetTransactionTypeDescription(1);
+
+            Assert.NotNull(result);
+        }
     }
 }
