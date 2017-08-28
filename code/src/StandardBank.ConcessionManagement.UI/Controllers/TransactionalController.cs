@@ -69,8 +69,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("TransactionalConcessionData/{concessionReferenceId}")]
         public IActionResult TransactionalConcessionData(string concessionReferenceId)
         {
-            //TODO:
-            throw new NotImplementedException();
+            return Ok(_transactionalManager.GetTransactionalConcession(concessionReferenceId, _siteHelper.LoggedInUser(this)));
         }
 
         /// <summary>

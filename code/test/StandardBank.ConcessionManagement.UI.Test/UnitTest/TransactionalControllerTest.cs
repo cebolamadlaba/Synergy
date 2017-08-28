@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
+using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Pricing;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
 using StandardBank.ConcessionManagement.Test.Helpers;
@@ -29,7 +30,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         }
 
         /// <summary>
-        /// Te executes positive.
+        /// Tests that TransactionalView executes positive.
         /// </summary>
         [Fact]
         public void TransactionalView_Executes_Positive()
@@ -53,6 +54,22 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
             Assert.Equal(riskGroup.Id, returnedCashView.RiskGroup.Id);
             Assert.Equal(riskGroup.Name, returnedCashView.RiskGroup.Name);
             Assert.Equal(riskGroup.Number, returnedCashView.RiskGroup.Number);
+        }
+
+        /// <summary>
+        /// Tests that TransactionalConcessionData executes positive.
+        /// </summary>
+        [Fact]
+        public void TransactionalConcessionData_Executes_Positive()
+        {
+            MockTransactionalManager.Setup(_ => _.GetTransactionalConcession(It.IsAny<string>(), It.IsAny<User>()))
+                .Returns(new TransactionalConcession());
+
+            var result = _transactionalController.TransactionalConcessionData("T001");
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is TransactionalConcession);
         }
     }
 }

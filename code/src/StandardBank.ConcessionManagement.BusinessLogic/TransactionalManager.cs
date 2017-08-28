@@ -6,6 +6,7 @@ using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
+using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -93,6 +94,30 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             return transactionalConcessions;
+        }
+
+        /// <summary>
+        /// Gets the transactional concession.
+        /// </summary>
+        /// <param name="concessionReferenceId">The concession reference identifier.</param>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
+        public TransactionalConcession GetTransactionalConcession(string concessionReferenceId, User user)
+        {
+            var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
+            var concessionCashEntities = _concessionTransactionalRepository.ReadByConcessionId(concession.Id);
+
+            var transactionalConcessionDetails = new List<TransactionalConcessionDetail>();
+
+            AddMappedConcessionTransactionals(concessionCashEntities, transactionalConcessionDetails);
+
+            return new TransactionalConcession
+            {
+                Concession = concession,
+                TransactionalConcessionDetails = transactionalConcessionDetails,
+                ConcessionConditions = _concessionManager.GetConcessionConditions(concession.Id),
+                CurrentUser = user
+            };
         }
 
         /// <summary>

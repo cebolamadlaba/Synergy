@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
@@ -14,5 +15,13 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <returns></returns>
         IEnumerable<TransactionalConcession> GetTransactionalConcessionsForRiskGroupNumber(int riskGroupNumber);
+
+        /// <summary>
+        /// Gets the transactional concession.
+        /// </summary>
+        /// <param name="concessionReferenceId">The concession reference identifier.</param>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
+        TransactionalConcession GetTransactionalConcession(string concessionReferenceId, User user);
     }
 }
