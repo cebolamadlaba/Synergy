@@ -4,7 +4,6 @@ using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
-using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 
@@ -47,6 +46,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IMapper _mapper;
 
         /// <summary>
+        /// The lookup table manager
+        /// </summary>
+        private readonly ILookupTableManager _lookupTableManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TransactionalManager"/> class.
         /// </summary>
         /// <param name="pricingManager">The pricing manager.</param>
@@ -55,10 +59,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="legalEntityRepository">The legal entity repository.</param>
         /// <param name="legalEntityAccountRepository">The legal entity account repository.</param>
         /// <param name="mapper">The mapper.</param>
+        /// <param name="lookupTableManager">The lookup table manager.</param>
         public TransactionalManager(IPricingManager pricingManager, IConcessionManager concessionManager,
             IConcessionTransactionalRepository concessionTransactionalRepository,
             ILegalEntityRepository legalEntityRepository, ILegalEntityAccountRepository legalEntityAccountRepository,
-            IMapper mapper)
+            IMapper mapper, ILookupTableManager lookupTableManager)
         {
             _pricingManager = pricingManager;
             _concessionManager = concessionManager;
@@ -66,6 +71,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _legalEntityRepository = legalEntityRepository;
             _legalEntityAccountRepository = legalEntityAccountRepository;
             _mapper = mapper;
+            _lookupTableManager = lookupTableManager;
         }
 
         /// <summary>
@@ -140,7 +146,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 mappedTransactionalConcessionDetail.CustomerName = legalEntity.CustomerName;
 
-                //TODO: Get Transaction Type description
+                if (concessionTransactional.TransactionTypeId.HasValue)
+                    mappedTransactionalConcessionDetail.TransactionType =
+                        _lookupTableManager.GetTransactionTypeDescription(concessionTransactional.TransactionTypeId
+                            .Value);
 
                 var legalEntityAccount =
                     _legalEntityAccountRepository.ReadById(concessionTransactional.LegalEntityAccountId);

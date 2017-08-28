@@ -337,5 +337,12 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static ILendingManager LendingManager = new LendingManager(PricingManager, ConcessionManager,
             LegalEntityRepository, ConcessionLendingRepository, Mapper, LegalEntityAccountRepository);
+
+        /// <summary>
+        /// The transactional manager
+        /// </summary>
+        public static ITransactionalManager TransactionalManager =
+            new TransactionalManager(PricingManager, ConcessionManager, ConcessionTransactionalRepository,
+                LegalEntityRepository, LegalEntityAccountRepository, Mapper);
     }
 }

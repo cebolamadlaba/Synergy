@@ -104,6 +104,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IChannelTypeRepository _channelTypeRepository;
 
         /// <summary>
+        /// The transaction type repository
+        /// </summary>
+        private readonly ITransactionTypeRepository _transactionTypeRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LookupTableManager"/> class.
         /// </summary>
         /// <param name="statusRepository">The status repository.</param>
@@ -122,6 +127,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="conditionTypeProductRepository">The condition type product repository.</param>
         /// <param name="accrualTypeRepository">The accrual type repository.</param>
         /// <param name="channelTypeRepository">The channel type repository.</param>
+        /// <param name="transactionTypeRepository">The transaction type repository.</param>
         public LookupTableManager(IStatusRepository statusRepository, ISubStatusRepository subStatusRepository,
             IReferenceTypeRepository referenceTypeRepository, IMarketSegmentRepository marketSegmentRepository,
             IProvinceRepository provinceRepository, IConcessionTypeRepository concessionTypeRepository,
@@ -130,7 +136,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IConditionTypeRepository conditionTypeRepository, IMapper mapper,
             IConditionProductRepository conditionProductRepository,
             IConditionTypeProductRepository conditionTypeProductRepository,
-            IAccrualTypeRepository accrualTypeRepository, IChannelTypeRepository channelTypeRepository)
+            IAccrualTypeRepository accrualTypeRepository, IChannelTypeRepository channelTypeRepository,
+            ITransactionTypeRepository transactionTypeRepository)
         {
             _statusRepository = statusRepository;
             _subStatusRepository = subStatusRepository;
@@ -148,6 +155,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _conditionTypeProductRepository = conditionTypeProductRepository;
             _accrualTypeRepository = accrualTypeRepository;
             _channelTypeRepository = channelTypeRepository;
+            _transactionTypeRepository = transactionTypeRepository;
         }
 
         /// <summary>
@@ -407,6 +415,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var channelTypes = _channelTypeRepository.ReadAll();
             return _mapper.Map<IEnumerable<ChannelType>>(channelTypes.Where(_ => _.IsActive));
+        }
+
+        /// <summary>
+        /// Gets the transaction type description.
+        /// </summary>
+        /// <param name="transactionTypeId">The transaction type identifier.</param>
+        /// <returns></returns>
+        public string GetTransactionTypeDescription(int transactionTypeId)
+        {
+            var transactionType = _transactionTypeRepository.ReadById(transactionTypeId);
+
+            return transactionType.IsActive ? transactionType.Description : string.Empty;
         }
 
         /// <summary>
