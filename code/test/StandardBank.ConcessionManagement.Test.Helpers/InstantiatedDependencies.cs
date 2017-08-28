@@ -300,7 +300,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             SubStatusRepository, ReferenceTypeRepository, MarketSegmentRepository, ProvinceRepository,
             ConcessionTypeRepository, ProductRepository, ReviewFeeTypeRepository, PeriodRepository,
             PeriodTypeRepository, ConditionTypeRepository, Mapper, ConditionProductRepository,
-            ConditionTypeProductRepository, AccrualTypeRepository, ChannelTypeRepository);
+            ConditionTypeProductRepository, AccrualTypeRepository, ChannelTypeRepository, TransactionTypeRepository);
 
         /// <summary>
         /// The concession manager
@@ -343,6 +343,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static ITransactionalManager TransactionalManager =
             new TransactionalManager(PricingManager, ConcessionManager, ConcessionTransactionalRepository,
-                LegalEntityRepository, LegalEntityAccountRepository, Mapper);
+                LegalEntityRepository, LegalEntityAccountRepository, Mapper, LookupTableManager);
     }
 }
