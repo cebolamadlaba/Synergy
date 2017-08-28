@@ -65,8 +65,7 @@ import { BaseConcessionFilterPipe } from './filters/base-concession-filter.pipe'
         LendingViewConcessionComponent,
         ApprovedConcessionFilterPipe,
         CashViewConcessionComponent,
-        BaseConcessionFilterPipe
-        CashConcessionFilterPipe,
+        BaseConcessionFilterPipe,
         CashViewConcessionComponent,
         PricingInvestmentsComponent,
         PricingBolComponent,

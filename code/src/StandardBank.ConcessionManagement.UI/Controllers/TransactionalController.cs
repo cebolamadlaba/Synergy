@@ -55,7 +55,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var transactionalView = new TransactionalView
             {
                 RiskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber),
-                TransactionalConcessions = _transactionalManager.GetCashConcessionsForRiskGroupNumber(riskGroupNumber)
+                TransactionalConcessions = _transactionalManager.GetTransactionalConcessionsForRiskGroupNumber(riskGroupNumber)
             };
 
             return Ok(transactionalView);

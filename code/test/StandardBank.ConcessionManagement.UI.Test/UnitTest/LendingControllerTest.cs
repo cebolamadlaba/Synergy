@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using StandardBank.ConcessionManagement.Model.UserInterface;
@@ -62,6 +63,55 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
             var result = _lendingController.LendingConcessionData("L001");
 
             Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Tests that NewLending executes positive.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task NewLending_Executes_Positive()
+        {
+            MockSiteHelper.Setup(_ => _.LoggedInUser(It.IsAny<Controller>())).Returns(new Model.UserInterface.User());
+
+            var lendingConcession = new LendingConcession
+            {
+                Concession = new Concession(),
+                LendingConcessionDetails = new[] { new LendingConcessionDetail() },
+                ConcessionConditions = new[] { new ConcessionCondition() }
+            };
+
+            var result = await _lendingController.NewLending(lendingConcession);
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is LendingConcession);
+        }
+
+        /// <summary>
+        /// Tests that UpdateLending executes positive.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task UpdateLending_Executes_Positive()
+        {
+            MockSiteHelper.Setup(_ => _.LoggedInUser(It.IsAny<Controller>())).Returns(new Model.UserInterface.User());
+
+            var lendingConcession = new LendingConcession
+            {
+                Concession = new Concession(),
+                LendingConcessionDetails = new[] { new LendingConcessionDetail() },
+                ConcessionConditions = new[] { new ConcessionCondition() }
+            };
+
+            MockLendingManager.Setup(_ => _.GetLendingConcession(It.IsAny<string>(), It.IsAny<User>()))
+                .Returns(lendingConcession);
+
+            var result = await _lendingController.UpdateLending(lendingConcession);
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is LendingConcession);
         }
     }
 }

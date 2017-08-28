@@ -75,11 +75,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
-        /// Gets the cash concessions for risk group number.
+        /// Gets the transactional concessions for risk group number.
         /// </summary>
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <returns></returns>
-        public IEnumerable<TransactionalConcession> GetCashConcessionsForRiskGroupNumber(int riskGroupNumber)
+        public IEnumerable<TransactionalConcession> GetTransactionalConcessionsForRiskGroupNumber(int riskGroupNumber)
         {
             var transactionalConcessions = new List<TransactionalConcession>();
             var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
