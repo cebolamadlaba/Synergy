@@ -16,6 +16,7 @@ import { LendingAddConcessionComponent } from "./lending-add-concession/lending-
 import { MismatchedInboxComponent } from "./mismatched-inbox/mismatched-inbox.component";
 import { LendingViewConcessionComponent } from "./lending-view-concession/lending-view-concession.component";
 import { CashViewConcessionComponent } from "./cash-view-concession/cash-view-concession.component";
+import { ProvinceComponent } from './admin/province/province.component';
 
 const routes: Routes = [
     { path: '', redirectTo: '/pending-inbox', pathMatch: 'full' },
@@ -35,7 +36,8 @@ const routes: Routes = [
     { path: 'cash-add-concession/:riskGroupNumber', component: CashAddConcessionComponent },
     { path: 'cash-view-concession/:riskGroupNumber/:concessionReferenceId', component: CashViewConcessionComponent },
     { path: 'lending-add-concession/:riskGroupNumber', component: LendingAddConcessionComponent },
-    { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent }
+    { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
+    { path: 'province', component: ProvinceComponent },
 ];
 
 @NgModule({

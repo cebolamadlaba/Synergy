@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+﻿import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -24,6 +24,7 @@ import { LendingAddConcessionComponent } from './lending-add-concession/lending-
 import { TransactionalAddConcessionComponent } from './transactional-add-concession/transactional-add-concession.component';
 import { MismatchedInboxComponent } from './mismatched-inbox/mismatched-inbox.component';
 import { LendingViewConcessionComponent } from './lending-view-concession/lending-view-concession.component';
+import { ProvinceComponent } from './admin/province/province.component';
 
 import { LookupDataService } from "./services/lookup-data.service";
 import { UserConcessionsService } from "./services/user-concessions.service";
@@ -32,6 +33,7 @@ import { ConcessionConditionsService } from "./services/concession-conditions.se
 import { LendingService } from "./services/lending.service";
 import { MyConditionService } from './services/my-condition.service';
 import { CashConcessionService } from "./services/cash-concession.service";
+import { ProvinceService } from "./services/province.service";
 
 import { ApprovedConcessionFilterPipe } from './filters/approved-concession-filter.pipe';
 import { CashViewConcessionComponent } from './cash-view-concession/cash-view-concession.component';
@@ -60,7 +62,8 @@ import { BaseConcessionFilterPipe } from './filters/base-concession-filter.pipe'
         LendingViewConcessionComponent,
         ApprovedConcessionFilterPipe,
         CashViewConcessionComponent,
-        BaseConcessionFilterPipe
+        BaseConcessionFilterPipe,
+        ProvinceComponent
     ],
     imports: [
         BrowserModule,
@@ -79,7 +82,8 @@ import { BaseConcessionFilterPipe } from './filters/base-concession-filter.pipe'
         LendingService,
         MyConditionService,
         CashConcessionService,
-        TransactionalConcessionService
+        TransactionalConcessionService,
+        ProvinceService
     ],
     bootstrap: [AppComponent]
 })

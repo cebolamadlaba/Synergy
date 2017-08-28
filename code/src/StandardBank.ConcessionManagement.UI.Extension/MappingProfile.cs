@@ -96,7 +96,10 @@ namespace StandardBank.ConcessionManagement.UI.Extension
           
             //ProductType
             CreateMap<Model.Repository.Product, Model.UserInterface.ProductType>().ReverseMap();
-        
+
+            //Province
+            CreateMap<Model.Repository.Province, Model.UserInterface.Province>().ReverseMap();
+
             //Region
             CreateMap<Model.Repository.Region, Model.UserInterface.Region>().ReverseMap();
            
