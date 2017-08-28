@@ -41,7 +41,7 @@ const routes: Routes = [
     { path: 'pricing-trade', component: PricingTradeComponent },
     { path: 'pricing-mas', component: PricingMasComponent },
     { path: 'pricing-cashman', component: PricingCashmanComponent },
-    { path: 'transactional-add-concession', component: TransactionalAddConcessionComponent },
+    { path: 'transactional-add-concession/:riskGroupNumber', component: TransactionalAddConcessionComponent },
     { path: 'cash-add-concession/:riskGroupNumber', component: CashAddConcessionComponent },
     { path: 'cash-view-concession/:riskGroupNumber/:concessionReferenceId', component: CashViewConcessionComponent },
     { path: 'lending-add-concession/:riskGroupNumber', component: LendingAddConcessionComponent },

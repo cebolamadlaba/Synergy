@@ -1,4 +1,4 @@
-﻿<!-- Banner -->
+<!-- Banner -->
 <div class="col-md-12 banner">
     <div class="row">
         <!-- Header -->
@@ -70,7 +70,7 @@
 </div>
 
 <!-- Form entries -->
-<form class="col-md-12 concession-information-form">
+<form class="col-md-12 concession-information-form" [formGroup]="transactionalConcessionForm" *ngIf="!isLoading">
     <div class="col-md-4">
         <div class="row">
             <label>MRS/CRS</label>
