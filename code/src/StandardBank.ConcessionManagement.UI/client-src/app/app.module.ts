@@ -37,6 +37,11 @@ import { LendingConcessionFilterPipe } from './filters/lending-concession-filter
 import { CashConcessionFilterPipe } from './filters/cash-concession-filter.pipe';
 import { ApprovedConcessionFilterPipe } from './filters/approved-concession-filter.pipe';
 import { CashViewConcessionComponent } from './cash-view-concession/cash-view-concession.component';
+import { PricingInvestmentsComponent } from './pricing-investments/pricing-investments.component';
+import { PricingBolComponent } from './pricing-bol/pricing-bol.component';
+import { PricingTradeComponent } from './pricing-trade/pricing-trade.component';
+import { PricingMasComponent } from './pricing-mas/pricing-mas.component';
+import { PricingCashmanComponent } from './pricing-cashman/pricing-cashman.component';
 
 @NgModule({
     declarations: [
@@ -61,7 +66,12 @@ import { CashViewConcessionComponent } from './cash-view-concession/cash-view-co
         LendingViewConcessionComponent,
         ApprovedConcessionFilterPipe,
         CashConcessionFilterPipe,
-        CashViewConcessionComponent
+        CashViewConcessionComponent,
+        PricingInvestmentsComponent,
+        PricingBolComponent,
+        PricingTradeComponent,
+        PricingMasComponent,
+        PricingCashmanComponent
     ],
     imports: [
         BrowserModule,

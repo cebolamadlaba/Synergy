@@ -10,6 +10,11 @@ import { DeclinedInboxComponent } from "./declined-inbox/declined-inbox.componen
 import { PricingLendingComponent } from "./pricing-lending/pricing-lending.component";
 import { PricingCashComponent } from "./pricing-cash/pricing-cash.component";
 import { PricingTransactionalComponent } from "./pricing-transactional/pricing-transactional.component";
+import { PricingInvestmentsComponent } from "./pricing-investments/pricing-investments.component";
+import { PricingBolComponent } from "./pricing-bol/pricing-bol.component";
+import { PricingTradeComponent } from "./pricing-trade/pricing-trade.component";
+import { PricingMasComponent } from "./pricing-mas/pricing-mas.component";
+import { PricingCashmanComponent } from "./pricing-cashman/pricing-cashman.component";
 import { TransactionalAddConcessionComponent } from "./transactional-add-concession/transactional-add-concession.component";
 import { CashAddConcessionComponent } from "./cash-add-concession/cash-add-concession.component";
 import { LendingAddConcessionComponent } from "./lending-add-concession/lending-add-concession.component";
@@ -31,11 +36,17 @@ const routes: Routes = [
     { path: 'pricing-lending/:riskGroupNumber', component: PricingLendingComponent },
     { path: 'pricing-cash/:riskGroupNumber', component: PricingCashComponent },
     { path: 'pricing-transactional/:riskGroupNumber', component: PricingTransactionalComponent },
+    { path: 'pricing-investments', component: PricingInvestmentsComponent },
+    { path: 'pricing-bol', component: PricingBolComponent },
+    { path: 'pricing-trade', component: PricingTradeComponent },
+    { path: 'pricing-mas', component: PricingMasComponent },
+    { path: 'pricing-cashman', component: PricingCashmanComponent },
     { path: 'transactional-add-concession', component: TransactionalAddConcessionComponent },
     { path: 'cash-add-concession/:riskGroupNumber', component: CashAddConcessionComponent },
     { path: 'cash-view-concession/:riskGroupNumber/:concessionReferenceId', component: CashViewConcessionComponent },
     { path: 'lending-add-concession/:riskGroupNumber', component: LendingAddConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent }
+    
 ];
 
 @NgModule({
