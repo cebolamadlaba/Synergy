@@ -3,8 +3,8 @@ import { HttpModule } from '@angular/http';
 import { PricingLendingComponent } from './pricing-lending.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
-import { LendingConcessionFilterPipe } from "../filters/lending-concession-filter.pipe";
 import { LendingService, MockLendingService } from "../services/lending.service";
+import { BaseConcessionFilterPipe } from "../filters/base-concession-filter.pipe";
 
 describe('PricingLendingComponent', () => {
     let component: PricingLendingComponent;
@@ -13,7 +13,7 @@ describe('PricingLendingComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [RouterTestingModule, FormsModule, HttpModule],
-            declarations: [PricingLendingComponent, LendingConcessionFilterPipe],
+            declarations: [PricingLendingComponent, BaseConcessionFilterPipe],
             providers: [{ provide: LendingService, useClass: MockLendingService }]
         }).compileComponents();
     }));

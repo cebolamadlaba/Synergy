@@ -1,6 +1,10 @@
-﻿import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PricingTransactionalComponent } from './pricing-transactional.component';
+import { HttpModule } from '@angular/http';
+import { FormsModule } from '@angular/forms';
+import { BaseConcessionFilterPipe } from "../filters/base-concession-filter.pipe";
+import { TransactionalConcessionService, MockTransactionalConcessionService } from "../services/transactional-concession.service";
 
 describe('PricingTransactionalComponent', () => {
     let component: PricingTransactionalComponent;
@@ -8,8 +12,9 @@ describe('PricingTransactionalComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule],
-            declarations: [PricingTransactionalComponent]
+            imports: [RouterTestingModule, FormsModule, HttpModule],
+            declarations: [PricingTransactionalComponent, BaseConcessionFilterPipe],
+            providers: [{ provide: TransactionalConcessionService, useClass: MockTransactionalConcessionService }]
         })
             .compileComponents();
     }));

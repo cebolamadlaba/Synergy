@@ -21,7 +21,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// <value>
         /// The ConcessionId.
         /// </value>
-        public int? ConcessionId { get; set; }
+        public int ConcessionId { get; set; }
 
         /// <summary>
         /// Gets or sets the TransactionTypeId.
@@ -78,5 +78,21 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The AdValorem.
         /// </value>
         public decimal? AdValorem { get; set; }
+
+        /// <summary>
+        /// Gets or sets the legal entity identifier.
+        /// </summary>
+        /// <value>
+        /// The legal entity identifier.
+        /// </value>
+        public int LegalEntityId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the legal entity account identifier.
+        /// </summary>
+        /// <value>
+        /// The legal entity account identifier.
+        /// </value>
+        public int LegalEntityAccountId { get; set; }
     }
 }

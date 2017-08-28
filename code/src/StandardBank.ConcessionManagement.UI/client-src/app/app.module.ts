@@ -33,8 +33,6 @@ import { LendingService } from "./services/lending.service";
 import { MyConditionService } from './services/my-condition.service';
 import { CashConcessionService } from "./services/cash-concession.service";
 
-import { LendingConcessionFilterPipe } from './filters/lending-concession-filter.pipe';
-import { CashConcessionFilterPipe } from './filters/cash-concession-filter.pipe';
 import { ApprovedConcessionFilterPipe } from './filters/approved-concession-filter.pipe';
 import { CashViewConcessionComponent } from './cash-view-concession/cash-view-concession.component';
 import { PricingInvestmentsComponent } from './pricing-investments/pricing-investments.component';
@@ -42,6 +40,8 @@ import { PricingBolComponent } from './pricing-bol/pricing-bol.component';
 import { PricingTradeComponent } from './pricing-trade/pricing-trade.component';
 import { PricingMasComponent } from './pricing-mas/pricing-mas.component';
 import { PricingCashmanComponent } from './pricing-cashman/pricing-cashman.component';
+import { TransactionalConcessionService } from "./services/transactional-concession.service";
+import { BaseConcessionFilterPipe } from './filters/base-concession-filter.pipe';
 
 @NgModule({
     declarations: [
@@ -62,9 +62,10 @@ import { PricingCashmanComponent } from './pricing-cashman/pricing-cashman.compo
         LendingAddConcessionComponent,
         TransactionalAddConcessionComponent,
         MismatchedInboxComponent,
-        LendingConcessionFilterPipe,
         LendingViewConcessionComponent,
         ApprovedConcessionFilterPipe,
+        CashViewConcessionComponent,
+        BaseConcessionFilterPipe
         CashConcessionFilterPipe,
         CashViewConcessionComponent,
         PricingInvestmentsComponent,
@@ -89,7 +90,8 @@ import { PricingCashmanComponent } from './pricing-cashman/pricing-cashman.compo
         ConcessionConditionsService,
         LendingService,
         MyConditionService,
-        CashConcessionService
+        CashConcessionService,
+        TransactionalConcessionService
     ],
     bootstrap: [AppComponent]
 })

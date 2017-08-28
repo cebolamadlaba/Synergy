@@ -1,0 +1,148 @@
+﻿using System.Collections.Generic;
+using StandardBank.ConcessionManagement.Model.UserInterface.Integration;
+using StandardBank.ConcessionManagement.Model.UserInterface.Pricing;
+
+namespace StandardBank.ConcessionManagement.Model.UserInterface.Transactional
+{
+    /// <summary>
+    /// Transactional view entity
+    /// </summary>
+    public class TransactionalView
+    {
+        /// <summary>
+        /// Gets or sets the risk group.
+        /// </summary>
+        /// <value>
+        /// The risk group.
+        /// </value>
+        public RiskGroup RiskGroup { get; set; }
+
+        /// <summary>
+        /// Gets or sets the source system products.
+        /// </summary>
+        /// <value>
+        /// The source system products.
+        /// </value>
+        public IEnumerable<SourceSystemProduct> SourceSystemProducts { get; set; }
+
+        /// <summary>
+        /// Gets or sets the transactional concessions.
+        /// </summary>
+        /// <value>
+        /// The transactional concessions.
+        /// </value>
+        public IEnumerable<TransactionalConcession> TransactionalConcessions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the total number of accounts.
+        /// </summary>
+        /// <value>
+        /// The total number of accounts.
+        /// </value>
+        public int TotalNumberOfAccounts { get; set; }
+
+        /// <summary>
+        /// Gets or sets the average account management fee.
+        /// </summary>
+        /// <value>
+        /// The average account management fee.
+        /// </value>
+        public decimal AverageAccountManagementFee { get; set; }
+
+        /// <summary>
+        /// Gets or sets the average minimum monthly fee.
+        /// </summary>
+        /// <value>
+        /// The average minimum monthly fee.
+        /// </value>
+        public decimal AverageMinimumMonthlyFee { get; set; }
+
+        /// <summary>
+        /// Gets or sets the total cheque issuing volumes.
+        /// </summary>
+        /// <value>
+        /// The total cheque issuing volumes.
+        /// </value>
+        public decimal TotalChequeIssuingVolumes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the total cheque deposit volumes.
+        /// </summary>
+        /// <value>
+        /// The total cheque deposit volumes.
+        /// </value>
+        public decimal TotalChequeDepositVolumes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the total cheque encashment volumes.
+        /// </summary>
+        /// <value>
+        /// The total cheque encashment volumes.
+        /// </value>
+        public decimal TotalChequeEncashmentVolumes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the total cash withdrawal volumes.
+        /// </summary>
+        /// <value>
+        /// The total cash withdrawal volumes.
+        /// </value>
+        public decimal TotalCashWithdrawalVolumes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the total cash withdrawal values.
+        /// </summary>
+        /// <value>
+        /// The total cash withdrawal values.
+        /// </value>
+        public decimal TotalCashWithdrawalValues { get; set; }
+
+        /// <summary>
+        /// Gets or sets the average cheque issuing value.
+        /// </summary>
+        /// <value>
+        /// The average cheque issuing value.
+        /// </value>
+        public decimal AverageChequeIssuingValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets the average cheque issuing price.
+        /// </summary>
+        /// <value>
+        /// The average cheque issuing price.
+        /// </value>
+        public decimal AverageChequeIssuingPrice { get; set; }
+
+        /// <summary>
+        /// Gets or sets the average cheque deposit value.
+        /// </summary>
+        /// <value>
+        /// The average cheque deposit value.
+        /// </value>
+        public decimal AverageChequeDepositValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets the average cheque deposit price.
+        /// </summary>
+        /// <value>
+        /// The average cheque deposit price.
+        /// </value>
+        public decimal AverageChequeDepositPrice { get; set; }
+
+        /// <summary>
+        /// Gets or sets the average cheque encashment price.
+        /// </summary>
+        /// <value>
+        /// The average cheque encashment price.
+        /// </value>
+        public decimal AverageChequeEncashmentPrice { get; set; }
+
+        /// <summary>
+        /// Gets or sets the average cash withdrawal price.
+        /// </summary>
+        /// <value>
+        /// The average cash withdrawal price.
+        /// </value>
+        public decimal AverageCashWithdrawalPrice { get; set; }
+    }
+}

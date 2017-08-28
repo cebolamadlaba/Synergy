@@ -130,7 +130,7 @@
             <input class="form-control" placeholder="Concession ID" [(ngModel)]="filterConcessionId" type="text">
         </div>
 
-        <div class="section" *ngFor="let cashConcession of cashView.cashConcessions | cashConcessionFilter : filterConcessionId; trackBy: index;">
+        <div class="section" *ngFor="let cashConcession of cashView.cashConcessions | baseConcessionFilter : filterConcessionId; trackBy: index;">
             <div class="section-header small-table-title">
                 <div class="concessionID-section"> {{cashConcession.concession.referenceNumber}}</div>
             </div>
@@ -184,7 +184,7 @@
         </div>
 
         <!-- Empty state if no concessions found -->
-        <div class="searchEmptyState" *ngIf="(cashView.cashConcessions | cashConcessionFilter: filterConcessionId).length === 0">
+        <div class="searchEmptyState" *ngIf="(cashView.cashConcessions | baseConcessionFilter: filterConcessionId).length === 0">
             <i class="fa fa-inbox" aria-hidden="true"></i>
             <p>No concessions found matching your search</p>
         </div>

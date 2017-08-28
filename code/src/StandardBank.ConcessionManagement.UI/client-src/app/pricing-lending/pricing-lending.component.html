@@ -1,4 +1,4 @@
-﻿<!-- banner-->
+<!-- banner-->
 <div class="col-md-12 banner">
     <div class="row">
         <!-- Header -->
@@ -125,7 +125,7 @@
             <input class="form-control" placeholder="Concession ID" [(ngModel)]="filterConcessionId" type="text">
         </div>
 
-        <div class="section" *ngFor="let lendingConcession of lendingView.lendingConcessions | lendingConcessionFilter : filterConcessionId; trackBy: index;">
+        <div class="section" *ngFor="let lendingConcession of lendingView.lendingConcessions | baseConcessionFilter : filterConcessionId; trackBy: index;">
 
             <div class="section-header small-table-title">
                 <div class="concessionID-section"> {{lendingConcession.concession.referenceNumber}}</div>
@@ -163,7 +163,7 @@
         </div>
 
         <!-- Empty state if no concessions found -->
-        <div class="searchEmptyState" *ngIf="(lendingView.lendingConcessions | lendingConcessionFilter: filterConcessionId).length === 0">
+        <div class="searchEmptyState" *ngIf="(lendingView.lendingConcessions | baseConcessionFilter: filterConcessionId).length === 0">
             <i class="fa fa-inbox" aria-hidden="true"></i>
             <p>No concessions found matching your search</p>
         </div>

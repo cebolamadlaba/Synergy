@@ -28,7 +28,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 MockPeriodRepository.Object, MockPeriodTypeRepository.Object, MockConditionTypeRepository.Object,
                 InstantiatedDependencies.Mapper, MockConditionProductRepository.Object,
                 MockConditionTypeProductRepository.Object, MockAccrualTypeRepository.Object,
-                MockChannelTypeRepository.Object);
+                MockChannelTypeRepository.Object, MockTransactionTypeRepository.Object);
         }
 
         /// <summary>
