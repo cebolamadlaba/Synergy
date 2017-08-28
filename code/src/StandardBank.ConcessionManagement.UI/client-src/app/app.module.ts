@@ -37,6 +37,11 @@ import { ProvinceService } from "./services/province.service";
 
 import { ApprovedConcessionFilterPipe } from './filters/approved-concession-filter.pipe';
 import { CashViewConcessionComponent } from './cash-view-concession/cash-view-concession.component';
+import { PricingInvestmentsComponent } from './pricing-investments/pricing-investments.component';
+import { PricingBolComponent } from './pricing-bol/pricing-bol.component';
+import { PricingTradeComponent } from './pricing-trade/pricing-trade.component';
+import { PricingMasComponent } from './pricing-mas/pricing-mas.component';
+import { PricingCashmanComponent } from './pricing-cashman/pricing-cashman.component';
 import { TransactionalConcessionService } from "./services/transactional-concession.service";
 import { BaseConcessionFilterPipe } from './filters/base-concession-filter.pipe';
 
@@ -63,6 +68,12 @@ import { BaseConcessionFilterPipe } from './filters/base-concession-filter.pipe'
         ApprovedConcessionFilterPipe,
         CashViewConcessionComponent,
         BaseConcessionFilterPipe,
+        CashViewConcessionComponent,
+        PricingInvestmentsComponent,
+        PricingBolComponent,
+        PricingTradeComponent,
+        PricingMasComponent,
+        PricingCashmanComponent,
         ProvinceComponent
     ],
     imports: [

@@ -9,10 +9,10 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
     public interface ITransactionalManager
     {
         /// <summary>
-        /// Gets the cash concessions for risk group number.
+        /// Gets the transactional concessions for risk group number.
         /// </summary>
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <returns></returns>
-        IEnumerable<TransactionalConcession> GetCashConcessionsForRiskGroupNumber(int riskGroupNumber);
+        IEnumerable<TransactionalConcession> GetTransactionalConcessionsForRiskGroupNumber(int riskGroupNumber);
     }
 }

@@ -148,5 +148,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// </summary>
         /// <returns></returns>
         IEnumerable<ChannelType> GetChannelTypes();
+
+        /// <summary>
+        /// Gets the transaction type description.
+        /// </summary>
+        /// <param name="transactionTypeId">The transaction type identifier.</param>
+        /// <returns></returns>
+        string GetTransactionTypeDescription(int transactionTypeId);
     }
 }

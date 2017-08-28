@@ -104,7 +104,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="lendingConcession"></param>
         /// <returns></returns>
         [Route("UpdateLending")]
-        //[ValidateModel] //TODO: Had to remove this, it isn't working, I don't know why, don't have time to fix
+        [ValidateModel]
         public async Task<IActionResult> UpdateLending([FromBody] LendingConcession lendingConcession)
         {
             var user = _siteHelper.LoggedInUser(this);
