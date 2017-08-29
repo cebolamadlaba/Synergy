@@ -413,5 +413,33 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             Assert.NotNull(result);
         }
+
+        /// <summary>
+        /// Tests that GetTransactionTypesForConcessionType executes positive.
+        /// </summary>
+        [Fact]
+        public void GetTransactionTypesForConcessionType_Executes_Positive()
+        {
+            var concessionType = "Unit Test CT";
+
+            MockConcessionTypeRepository.Setup(_ => _.ReadAll()).Returns(new[]
+                {new ConcessionType {IsActive = true, Id = 1, Code = concessionType, Description = concessionType}});
+
+            MockTransactionTypeRepository
+                .Setup(_ => _.ReadByConcessionTypeIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(new[] {new TransactionType()});
+
+            var result = _lookupTableManager.GetTransactionTypesForConcessionType(concessionType);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+
+            foreach (var record in result)
+            {
+                Assert.NotNull(record);
+                Assert.NotNull(record.ConcessionType);
+                Assert.Equal(record.ConcessionType, concessionType);
+            }
+        }
     }
 }

@@ -12,6 +12,7 @@ import { PeriodType } from "../models/period-type";
 import { ConditionType } from "../models/condition-type";
 import { ConditionProduct } from "../models/condition-product";
 import { ClientAccount } from "../models/client-account";
+import { TransactionType } from "../models/transaction-type";
 
 
 @Component({
@@ -42,6 +43,9 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 
     observableClientAccounts: Observable<ClientAccount[]>;
     clientAccounts: ClientAccount[];
+
+    observableTransactionTypes: Observable<TransactionType[]>;
+    transactionTypes: TransactionType[];
 
     constructor(private route: ActivatedRoute,
         private formBuilder: FormBuilder,
@@ -85,6 +89,9 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 
         this.observableConditionTypes = this.lookupDataService.getConditionTypes();
         this.observableConditionTypes.subscribe(conditionTypes => this.conditionTypes = conditionTypes, error => this.errorMessage = <any>error);
+
+        this.observableTransactionTypes = this.lookupDataService.getTransactionTypes("Transactional");
+        this.observableTransactionTypes.subscribe(transactionTypes => this.transactionTypes = transactionTypes, error => this.errorMessage = <any>error);
     }
 
     initConcessionItemRows() {

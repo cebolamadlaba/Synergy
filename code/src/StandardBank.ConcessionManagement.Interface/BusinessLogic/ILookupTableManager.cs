@@ -155,5 +155,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="transactionTypeId">The transaction type identifier.</param>
         /// <returns></returns>
         string GetTransactionTypeDescription(int transactionTypeId);
+
+        /// <summary>
+        /// Gets the type of the transaction types for concession.
+        /// </summary>
+        /// <param name="concessionType">Type of the concession.</param>
+        /// <returns></returns>
+        IEnumerable<TransactionType> GetTransactionTypesForConcessionType(string concessionType);
     }
 }

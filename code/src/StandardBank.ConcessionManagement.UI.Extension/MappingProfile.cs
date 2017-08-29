@@ -119,6 +119,9 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                 .ForMember(target => target.RoleName, _ => _.MapFrom(source => source.Name))
                 .ForMember(target => target.RoleDescription, _ => _.MapFrom(source => source.Description));
 
+            //TransactionType
+            CreateMap<Model.Repository.TransactionType, Model.UserInterface.TransactionType>().ReverseMap();
+
             //User 
             CreateMap<Model.Repository.User, Model.UserInterface.User>().ReverseMap();
             CreateMap<Model.Repository.Condition,Model.UserInterface.Condition>().ReverseMap();

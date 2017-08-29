@@ -14,6 +14,7 @@ using ConditionType = StandardBank.ConcessionManagement.Model.UserInterface.Cond
 using Period = StandardBank.ConcessionManagement.Model.UserInterface.Period;
 using PeriodType = StandardBank.ConcessionManagement.Model.UserInterface.PeriodType;
 using ReviewFeeType = StandardBank.ConcessionManagement.Model.UserInterface.ReviewFeeType;
+using TransactionType = StandardBank.ConcessionManagement.Model.UserInterface.TransactionType;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -427,6 +428,27 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var transactionType = _transactionTypeRepository.ReadById(transactionTypeId);
 
             return transactionType.IsActive ? transactionType.Description : string.Empty;
+        }
+
+        /// <summary>
+        /// Gets the type of the transaction types for concession.
+        /// </summary>
+        /// <param name="concessionType">Type of the concession.</param>
+        /// <returns></returns>
+        public IEnumerable<TransactionType> GetTransactionTypesForConcessionType(string concessionType)
+        {
+            var transactionTypes = new List<TransactionType>();
+
+            var concessionTypeId = GetConcessionTypeId(concessionType);
+
+            foreach (var transactionType in _transactionTypeRepository.ReadByConcessionTypeIdIsActive(concessionTypeId, true))
+            {
+                var mappedTransactionType = _mapper.Map<TransactionType>(transactionType);
+                mappedTransactionType.ConcessionType = concessionType;
+                transactionTypes.Add(mappedTransactionType);
+            }
+
+            return transactionTypes;
         }
 
         /// <summary>

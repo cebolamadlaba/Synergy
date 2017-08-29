@@ -3,8 +3,6 @@ using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Model.Common;
@@ -72,6 +70,18 @@ namespace StandardBank.ConcessionManagement.Repository
         public TransactionType ReadById(int id)
         {
             return ReadAll().FirstOrDefault(_ => _.Id == id);
+        }
+
+        /// <summary>
+        /// Reads the by concession type identifier is active.
+        /// </summary>
+        /// <param name="concessionTypeId">The concession type identifier.</param>
+        /// <param name="isActive">if set to <c>true</c> [is active].</param>
+        /// <returns></returns>
+        public IEnumerable<TransactionType> ReadByConcessionTypeIdIsActive(int concessionTypeId, bool isActive)
+        {
+            return ReadAll().Where(_ => _.ConcessionTypeId.HasValue && _.ConcessionTypeId.Value == concessionTypeId &&
+                                        _.IsActive == isActive);
         }
 
         /// <summary>
