@@ -49,8 +49,7 @@ const routes: Routes = [
     { path: 'lending-add-concession/:riskGroupNumber', component: LendingAddConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
     { path: 'investments-add-concession', component: InvestmentsAddConcessionComponent },
-    { path: 'bol-add-concession', component: BolAddConcessionComponent }
-    
+    { path: 'bol-add-concession', component: BolAddConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent }
 ];
 
