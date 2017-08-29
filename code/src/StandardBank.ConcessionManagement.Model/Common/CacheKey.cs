@@ -127,6 +127,11 @@
             {
                 public const string ReadAll = "CacheKey.Repository.PeriodTypeRepository.ReadAll";
             }
+
+            public static class TableNumberRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.TableNumberRepository.ReadAll";
+            }
         }
     }
 }

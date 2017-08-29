@@ -165,5 +165,21 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
             Assert.NotNull(apiResult.Value);
             Assert.True(apiResult.Value is IEnumerable<TransactionType>);
         }
+
+        /// <summary>
+        /// Tests that TableNumbers executes positive.
+        /// </summary>
+        [Fact]
+        public void TableNumbers_Executes_Positive()
+        {
+            MockLookupTableManager.Setup(_ => _.GetTableNumbers())
+                .Returns(new[] { new TableNumber() });
+
+            var result = _concessionController.TableNumbers();
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is IEnumerable<TableNumber>);
+        }
     }
 }

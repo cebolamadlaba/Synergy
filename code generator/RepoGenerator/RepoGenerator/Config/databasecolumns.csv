@@ -225,3 +225,8 @@ dbo;tblUserRole;pkUserRoleId;NO;int
 dbo;tblUserRole;fkUserId;NO;int
 dbo;tblUserRole;fkRoleId;NO;int
 dbo;tblUserRole;IsActive;NO;bit
+dbo;rtblTableNumber;pkTableNumberId;NO;int
+dbo;rtblTableNumber;TariffTable;NO;int
+dbo;rtblTableNumber;AdValorem;YES;decimal
+dbo;rtblTableNumber;BaseRate;YES;decimal
+dbo;rtblTableNumber;IsActive;NO;bit

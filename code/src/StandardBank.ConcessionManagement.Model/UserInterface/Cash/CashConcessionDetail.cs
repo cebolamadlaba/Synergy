@@ -62,14 +62,6 @@
         public int? ChannelTypeId { get; set; }
 
         /// <summary>
-        /// Gets or sets the cash table number.
-        /// </summary>
-        /// <value>
-        /// The cash table number.
-        /// </value>
-        public int? CashTableNumber { get; set; }
-
-        /// <summary>
         /// Gets or sets the bp identifier.
         /// </summary>
         /// <value>
@@ -132,5 +124,13 @@
         /// The accrual type identifier.
         /// </value>
         public int? AccrualTypeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the table number identifier.
+        /// </summary>
+        /// <value>
+        /// The table number identifier.
+        /// </value>
+        public int? TableNumberId { get; set; }
     }
 }

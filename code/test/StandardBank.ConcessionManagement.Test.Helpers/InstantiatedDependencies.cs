@@ -294,13 +294,29 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static IPeriodTypeRepository PeriodTypeRepository = new PeriodTypeRepository(DbConnection, CacheManager);
 
         /// <summary>
+        /// The Region repository
+        /// </summary>
+        public static IRegionRepository RegionRepository = new RegionRepository(DbConnection, CacheManager);
+
+        /// <summary>
+        /// The UserRegion repository
+        /// </summary>
+        public static IUserRegionRepository UserRegionRepository = new UserRegionRepository(DbConnection);
+
+        /// <summary>
+        /// The TableNumber repository
+        /// </summary>
+        public static ITableNumberRepository TableNumberRepository = new TableNumberRepository(DbConnection, CacheManager);
+
+        /// <summary>
         /// The look up table manager
         /// </summary>
         public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,
             SubStatusRepository, ReferenceTypeRepository, MarketSegmentRepository, ProvinceRepository,
             ConcessionTypeRepository, ProductRepository, ReviewFeeTypeRepository, PeriodRepository,
             PeriodTypeRepository, ConditionTypeRepository, Mapper, ConditionProductRepository,
-            ConditionTypeProductRepository, AccrualTypeRepository, ChannelTypeRepository, TransactionTypeRepository);
+            ConditionTypeProductRepository, AccrualTypeRepository, ChannelTypeRepository, TransactionTypeRepository,
+            TableNumberRepository);
 
         /// <summary>
         /// The concession manager
@@ -310,16 +326,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 CacheManager, ConcessionAccountRepository, Mapper, ConcessionConditionRepository,
                 LegalEntityAccountRepository, ConcessionCommentRepository, ConcessionLendingRepository,
                 MarketSegmentRepository, ConcessionCashRepository);
-
-        /// <summary>
-        /// The Region repository
-        /// </summary>
-        public static IRegionRepository RegionRepository = new RegionRepository(DbConnection, CacheManager);
-
-        /// <summary>
-        /// The UserRegion repository
-        /// </summary>
-        public static IUserRegionRepository UserRegionRepository = new UserRegionRepository(DbConnection);
 
         /// <summary>
         /// The user manager
@@ -344,5 +350,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static ITransactionalManager TransactionalManager =
             new TransactionalManager(PricingManager, ConcessionManager, ConcessionTransactionalRepository,
                 LegalEntityRepository, LegalEntityAccountRepository, Mapper, LookupTableManager);
+
     }
 }

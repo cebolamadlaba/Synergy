@@ -162,5 +162,11 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="concessionType">Type of the concession.</param>
         /// <returns></returns>
         IEnumerable<TransactionType> GetTransactionTypesForConcessionType(string concessionType);
+
+        /// <summary>
+        /// Gets the table numbers.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<TableNumber> GetTableNumbers();
     }
 }

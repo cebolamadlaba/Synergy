@@ -143,5 +143,15 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             return Ok(_lookupTableManager.GetTransactionTypesForConcessionType(concessionType));
         }
+
+        /// <summary>
+        /// Gets the table numbers.
+        /// </summary>
+        /// <returns></returns>
+        [Route("TableNumbers")]
+        public IActionResult TableNumbers()
+        {
+            return Ok(_lookupTableManager.GetTableNumbers());
+        }
     }
 }

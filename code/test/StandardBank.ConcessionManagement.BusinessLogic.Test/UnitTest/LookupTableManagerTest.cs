@@ -28,7 +28,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 MockPeriodRepository.Object, MockPeriodTypeRepository.Object, MockConditionTypeRepository.Object,
                 InstantiatedDependencies.Mapper, MockConditionProductRepository.Object,
                 MockConditionTypeProductRepository.Object, MockAccrualTypeRepository.Object,
-                MockChannelTypeRepository.Object, MockTransactionTypeRepository.Object);
+                MockChannelTypeRepository.Object, MockTransactionTypeRepository.Object,
+                MockTableNumberRepository.Object);
         }
 
         /// <summary>
@@ -440,6 +441,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 Assert.NotNull(record.ConcessionType);
                 Assert.Equal(record.ConcessionType, concessionType);
             }
+        }
+
+        /// <summary>
+        /// Tests that GetTableNumbers executes positive.
+        /// </summary>
+        [Fact]
+        public void GetTableNumbers_Executes_Positive()
+        {
+            var tableNumber = new TableNumber { Id = 1, TariffTable = 1, AdValorem = 100.10m, BaseRate = 0.543m, IsActive = true };
+
+            MockTableNumberRepository.Setup(_ => _.ReadAll()).Returns(new[] { tableNumber });
+
+            var result = _lookupTableManager.GetTableNumbers();
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
         }
     }
 }
