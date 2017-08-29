@@ -44,6 +44,7 @@ import { TransactionalConcessionService } from "./services/transactional-concess
 import { BaseConcessionFilterPipe } from './filters/base-concession-filter.pipe';
 import { InvestmentsAddConcessionComponent } from './investments-add-concession/investments-add-concession.component';
 import { BolAddConcessionComponent } from './bol-add-concession/bol-add-concession.component';
+import { MasAddConcessionComponent } from './mas-add-concession/mas-add-concession.component';
 
 @NgModule({
     declarations: [
@@ -75,7 +76,8 @@ import { BolAddConcessionComponent } from './bol-add-concession/bol-add-concessi
         PricingMasComponent,
         PricingCashmanComponent,
         InvestmentsAddConcessionComponent,
-        BolAddConcessionComponent
+        BolAddConcessionComponent,
+        MasAddConcessionComponent
     ],
     imports: [
         BrowserModule,

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+﻿import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { PendingInboxComponent } from "./pending-inbox/pending-inbox.component";
 import { ApprovedConcessionsComponent } from "./approved-concessions/approved-concessions.component";
@@ -23,6 +23,7 @@ import { LendingViewConcessionComponent } from "./lending-view-concession/lendin
 import { CashViewConcessionComponent } from "./cash-view-concession/cash-view-concession.component";
 import { InvestmentsAddConcessionComponent } from "./investments-add-concession/investments-add-concession.component";
 import { BolAddConcessionComponent } from "./bol-add-concession/bol-add-concession.component";
+import { MasAddConcessionComponent } from "./mas-add-concession/mas-add-concession.component";
 
 const routes: Routes = [
     { path: '', redirectTo: '/pending-inbox', pathMatch: 'full' },
@@ -49,9 +50,11 @@ const routes: Routes = [
     { path: 'lending-add-concession/:riskGroupNumber', component: LendingAddConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
     { path: 'investments-add-concession', component: InvestmentsAddConcessionComponent },
-    { path: 'bol-add-concession', component: BolAddConcessionComponent }
-    
+    { path: 'bol-add-concession', component: BolAddConcessionComponent },
+    { path: 'mas-add-concession', component: MasAddConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent }
+
+    
 ];
 
 @NgModule({
