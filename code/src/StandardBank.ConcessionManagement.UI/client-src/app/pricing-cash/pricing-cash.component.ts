@@ -20,7 +20,8 @@ export class PricingCashComponent implements OnInit, OnDestroy {
     observableCashView: Observable<CashView>;
     cashView: CashView = new CashView();
     errorMessage: String;
-    showHide: true;
+    showHide = true;
+    pageLoaded = false;
 
     constructor(
         private route: ActivatedRoute,
@@ -38,7 +39,10 @@ export class PricingCashComponent implements OnInit, OnDestroy {
 
             if (this.riskGroupNumber) {
                 this.observableCashView = this.cashConcessionService.getCashViewData(this.riskGroupNumber);
-                this.observableCashView.subscribe(cashView => this.cashView = cashView, error => this.errorMessage = <any>error);
+                this.observableCashView.subscribe(cashView => {
+                    this.cashView = cashView;
+                    this.pageLoaded = true;
+                }, error => this.errorMessage = <any>error);
             }
         });
     }

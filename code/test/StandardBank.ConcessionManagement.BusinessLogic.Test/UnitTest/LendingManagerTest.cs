@@ -63,5 +63,56 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             Assert.NotNull(result);
         }
+
+        /// <summary>
+        /// Tests that GetLendingConcessionsForRiskGroupNumber executes positive.
+        /// </summary>
+        [Fact]
+        public void GetLendingConcessionsForRiskGroupNumber_Executes_Positive()
+        {
+            MockPricingManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
+                .Returns(new Model.UserInterface.Pricing.RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
+
+            MockConcessionManager.Setup(_ => _.GetConcessionsForRiskGroup(It.IsAny<int>(), It.IsAny<string>()))
+                .Returns(new[] { new Model.UserInterface.Concession() });
+
+            MockConcessionLendingRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
+                .Returns(new[] { new ConcessionLending() });
+
+            MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
+                .Returns(new LegalEntity { IsActive = true });
+
+            MockLegalEntityAccountRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
+                .Returns(new LegalEntityAccount { IsActive = true });
+
+            var result = _lendingManager.GetLendingConcessionsForRiskGroupNumber(1);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that DeleteConcessionLending executes positive.
+        /// </summary>
+        [Fact]
+        public void DeleteConcessionLending_Executes_Positive()
+        {
+            MockConcessionLendingRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new ConcessionLending());
+
+            var result = _lendingManager.DeleteConcessionLending(new LendingConcessionDetail());
+
+            Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Tests that UpdateConcessionLending executes positive.
+        /// </summary>
+        [Fact]
+        public void UpdateConcessionLending_Executes_Positive()
+        {
+            var result = _lendingManager.UpdateConcessionLending(new LendingConcessionDetail(), new Model.UserInterface.Concession());
+
+            Assert.NotNull(result);
+        }
     }
 }

@@ -15,12 +15,13 @@ import { TransactionalConcession } from "../models/transactional-concession";
     styleUrls: ['./pricing-transactional.component.css']
 })
 export class PricingTransactionalComponent implements OnInit, OnDestroy {
-    showHide: true;
+    showHide = true;
     riskGroupNumber: number;
     private sub: any;
     observableTransactionalView: Observable<TransactionalView>;
     transactionalView: TransactionalView = new TransactionalView();
     errorMessage: String;
+    pageLoaded = false;
     
     constructor(
         private route: ActivatedRoute,
@@ -38,7 +39,10 @@ export class PricingTransactionalComponent implements OnInit, OnDestroy {
 
             if (this.riskGroupNumber) {
                 this.observableTransactionalView = this.transactionalConcessionService.getTransactionalViewData(this.riskGroupNumber);
-                this.observableTransactionalView.subscribe(transactionalView => this.transactionalView = transactionalView, error => this.errorMessage = <any>error);
+                this.observableTransactionalView.subscribe(transactionalView => {
+                    this.transactionalView = transactionalView;
+                    this.pageLoaded = true;
+                }, error => this.errorMessage = <any>error);
             }
         });
     }

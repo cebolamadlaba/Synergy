@@ -76,6 +76,36 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         }
 
         /// <summary>
+        /// Tests that AccrualTypes executes positive.
+        /// </summary>
+        [Fact]
+        public void AccrualTypes_Executes_Positive()
+        {
+            MockLookupTableManager.Setup(_ => _.GetAccrualTypes()).Returns(new[] { new AccrualType() });
+
+            var result = _concessionController.AccrualTypes();
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is IEnumerable<AccrualType>);
+        }
+
+        /// <summary>
+        /// Tests that ChannelTypes executes positive.
+        /// </summary>
+        [Fact]
+        public void ChannelTypes_Executes_Positive()
+        {
+            MockLookupTableManager.Setup(_ => _.GetChannelTypes()).Returns(new[] { new ChannelType() });
+
+            var result = _concessionController.ChannelTypes();
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is IEnumerable<ChannelType>);
+        }
+
+        /// <summary>
         /// Tests that ClientAccounts executes positive
         /// </summary>
         [Fact]
@@ -88,6 +118,36 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
 
             Assert.NotNull(apiResult.Value);
             Assert.True(apiResult.Value is IEnumerable<ClientAccount>);
+        }
+
+        /// <summary>
+        /// Tests that UserApprovedConcessions executes positive.
+        /// </summary>
+        [Fact]
+        public void UserApprovedConcessions_Executes_Positive()
+        {
+            MockConcessionManager.Setup(_ => _.GetApprovedConcessionsForUser(It.IsAny<int>()))
+                .Returns(new[] {new ApprovedConcession()});
+
+            var result = _concessionController.UserApprovedConcessions();
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is IEnumerable<ApprovedConcession>);
+        }
+
+        /// <summary>
+        /// Tests that PrintConcessionLetters executes positive.
+        /// </summary>
+        [Fact]
+        public void PrintConcessionLetters_Executes_Positive()
+        {
+            MockLetterGeneratorManager.Setup(_ => _.GenerateLetters(It.IsAny<IEnumerable<int>>())).Returns(new byte[0]);
+
+            var result = _concessionController.UserApprovedConcessions();
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
         }
     }
 }

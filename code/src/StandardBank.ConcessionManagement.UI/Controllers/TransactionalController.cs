@@ -55,7 +55,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var transactionalView = new TransactionalView
             {
                 RiskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber),
-                TransactionalConcessions = _transactionalManager.GetCashConcessionsForRiskGroupNumber(riskGroupNumber)
+                TransactionalConcessions = _transactionalManager.GetTransactionalConcessionsForRiskGroupNumber(riskGroupNumber)
             };
 
             return Ok(transactionalView);
@@ -69,8 +69,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("TransactionalConcessionData/{concessionReferenceId}")]
         public IActionResult TransactionalConcessionData(string concessionReferenceId)
         {
-            //TODO:
-            throw new NotImplementedException();
+            return Ok(_transactionalManager.GetTransactionalConcession(concessionReferenceId, _siteHelper.LoggedInUser(this)));
         }
 
         /// <summary>

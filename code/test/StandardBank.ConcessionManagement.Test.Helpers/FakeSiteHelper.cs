@@ -25,7 +25,15 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 FirstName = "Unit",
                 EmailAddress = "unit.test@standardbank.co.za",
                 Surname = "Test",
-                UserRoles = new[] {new Role {Description = "Unit Test", Name = "Test", Id = 1}}
+                UserRoles = new[] {new Role {Description = "Unit Test", Name = "Test", Id = 1}},
+                SelectedCentre = new Centre(),
+                CanBcmApprove = true,
+                SelectedRegion = new Region(),
+                UserRegions = new[] {new Region()},
+                CanPcmApprove = true,
+                UserCentres = new[] {new Centre()},
+                CanRequest = true,
+                IsHO = true
             };
         }
 

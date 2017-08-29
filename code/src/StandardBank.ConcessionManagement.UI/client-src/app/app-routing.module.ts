@@ -1,4 +1,4 @@
-﻿import { NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { PendingInboxComponent } from "./pending-inbox/pending-inbox.component";
 import { ApprovedConcessionsComponent } from "./approved-concessions/approved-concessions.component";
@@ -43,7 +43,7 @@ const routes: Routes = [
     { path: 'pricing-trade', component: PricingTradeComponent },
     { path: 'pricing-mas', component: PricingMasComponent },
     { path: 'pricing-cashman', component: PricingCashmanComponent },
-    { path: 'transactional-add-concession', component: TransactionalAddConcessionComponent },
+    { path: 'transactional-add-concession/:riskGroupNumber', component: TransactionalAddConcessionComponent },
     { path: 'cash-add-concession/:riskGroupNumber', component: CashAddConcessionComponent },
     { path: 'cash-view-concession/:riskGroupNumber/:concessionReferenceId', component: CashViewConcessionComponent },
     { path: 'lending-add-concession/:riskGroupNumber', component: LendingAddConcessionComponent },
@@ -51,6 +51,7 @@ const routes: Routes = [
     { path: 'investments-add-concession', component: InvestmentsAddConcessionComponent },
     { path: 'bol-add-concession', component: BolAddConcessionComponent }
     
+    { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent }
 ];
 
 @NgModule({
