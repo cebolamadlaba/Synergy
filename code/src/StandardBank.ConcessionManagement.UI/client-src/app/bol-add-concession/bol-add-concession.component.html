@@ -125,13 +125,13 @@
             </thead>
             <tbody class="form-concessions-table-content">
                 <!-- Loop through concessions here -->
-                <tr>
+                <tr *ngFor="let itemrow of bolConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
                     <td class="length-long">
-                        <select class="form-control">
+                        <select formControlName="product" class="form-control">
                         </select>
                     </td>
-                    <td class="length-long"><input class="form-control" /></td>
-                    <td class="length-short"><input class="form-control" /></td>
+                    <td class="length-long"><input formControlName="userId" class="form-control" /></td>
+                    <td class="length-short"><input formControlName="unitRate" class="form-control" /></td>
                     <td><button *ngIf="bolConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
                 </tr>
             </tbody>
