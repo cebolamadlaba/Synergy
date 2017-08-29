@@ -1,4 +1,4 @@
-﻿<!-- Banner expanded -->
+<!-- Banner expanded -->
 <div class="col-md-12 banner">
     <div class="row">
         <div class="lending-banner-title">
@@ -83,7 +83,7 @@
 </div>
 
 <!-- Form entries -->
-<form class="col-md-12 product-form" [formGroup]="lendingConcessionForm" *ngIf="!isLoading">
+<form class="col-md-12 product-form" [formGroup]="bolConcessionForm" *ngIf="!isLoading">
     <div class="col-md-4">
         <div class="row">
             <label>MRS/CRS</label>
@@ -127,12 +127,12 @@
                 <!-- Loop through concessions here -->
                 <tr>
                     <td class="length-long">
-                        <select formControlName="product" class="form-control">
+                        <select class="form-control">
                         </select>
                     </td>
-                    <td class="length-long"><input formControlName="userId" class="form-control" /></td>
-                    <td class="length-short"><input formControlName="unitRate" class="form-control" /></td>
-                    <td><button *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                    <td class="length-long"><input class="form-control" /></td>
+                    <td class="length-short"><input class="form-control" /></td>
+                    <td><button *ngIf="bolConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
                 </tr>
             </tbody>
         </table>
@@ -157,7 +157,7 @@
                         </tr>
                     </thead>
                     <tbody class="secondary-text">
-                        <tr *ngIf="lendingConcessionForm.controls.conditionItemsRows.controls.length == 0">
+                        <tr *ngIf="bolConcessionForm.controls.conditionItemsRows.controls.length == 0">
                             <td colspan="7" class="searchEmptyState">
                                 No conditions has been added
                             </td>
@@ -193,7 +193,7 @@
                     </div>
                     <table class="form-concessions-table" formArrayName="conditionItemsRows" style="width:100%">
                         <thead class="form-concessions-table-headings">
-                            <tr *ngIf="lendingConcessionForm.controls.conditionItemsRows.controls.length > 0">
+                            <tr *ngIf="bolConcessionForm.controls.conditionItemsRows.controls.length > 0">
                                 <th>Condition Type</th>
                                 <th>Product Type</th>
                                 <th>Interest Rate</th>
@@ -205,12 +205,12 @@
                             </tr>
                         </thead>
                         <tbody class="form-concessions-table-content">
-                            <tr *ngIf="lendingConcessionForm.controls.conditionItemsRows.controls.length == 0">
+                            <tr *ngIf="bolConcessionForm.controls.conditionItemsRows.controls.length == 0">
                                 <td colspan="7" class="searchEmptyState">
                                     No conditions has been added
                                 </td>
                             </tr>
-                            <tr *ngFor="let itemrow of lendingConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
+                            <tr *ngFor="let itemrow of bolConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
                                 <td class="length-long">
                                     <select formControlName="conditionType" (change)="conditionTypeChanged(i)">
                                         <option *ngFor="let conditionTypeOption of conditionTypes" [ngValue]="conditionTypeOption">{{conditionTypeOption.description}}</option>
@@ -258,4 +258,4 @@
 
 </form>
 
-<!--<pre>{{lendingConcessionForm.value | json}}</pre>-->
+<!--<pre>{{bolConcessionForm.value | json}}</pre>-->
