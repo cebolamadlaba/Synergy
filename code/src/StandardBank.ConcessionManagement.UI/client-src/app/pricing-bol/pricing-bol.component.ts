@@ -1,15 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 
 @Component({
-  selector: 'app-pricing-bol',
-  templateUrl: './pricing-bol.component.html',
-  styleUrls: ['./pricing-bol.component.css']
+selector: 'app-pricing-bol',
+templateUrl: './pricing-bol.component.html',
+styleUrls: ['./pricing-bol.component.css']
 })
 export class PricingBolComponent implements OnInit {
 
-  constructor() { }
+    constructor(private location: Location) { }
 
-  ngOnInit() {
-  }
+ngOnInit() {
+}
+
+goBack() {
+    this.location.back();
+}
 
 }

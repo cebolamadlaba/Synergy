@@ -2,11 +2,11 @@
 import { Location } from '@angular/common';
 
 @Component({
-  selector: 'app-pricing-investments',
-  templateUrl: './pricing-investments.component.html',
-  styleUrls: ['./pricing-investments.component.css']
+  selector: 'app-bol-add-concession',
+  templateUrl: './bol-add-concession.component.html',
+  styleUrls: ['./bol-add-concession.component.css']
 })
-export class PricingInvestmentsComponent implements OnInit {
+export class BolAddConcessionComponent implements OnInit {
 
     constructor(private location: Location) { }
 

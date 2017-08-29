@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+﻿import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -42,6 +42,8 @@ import { PricingMasComponent } from './pricing-mas/pricing-mas.component';
 import { PricingCashmanComponent } from './pricing-cashman/pricing-cashman.component';
 import { TransactionalConcessionService } from "./services/transactional-concession.service";
 import { BaseConcessionFilterPipe } from './filters/base-concession-filter.pipe';
+import { InvestmentsAddConcessionComponent } from './investments-add-concession/investments-add-concession.component';
+import { BolAddConcessionComponent } from './bol-add-concession/bol-add-concession.component';
 
 @NgModule({
     declarations: [
@@ -65,14 +67,15 @@ import { BaseConcessionFilterPipe } from './filters/base-concession-filter.pipe'
         LendingViewConcessionComponent,
         ApprovedConcessionFilterPipe,
         CashViewConcessionComponent,
-        BaseConcessionFilterPipe
-        CashConcessionFilterPipe,
+        BaseConcessionFilterPipe,
         CashViewConcessionComponent,
         PricingInvestmentsComponent,
         PricingBolComponent,
         PricingTradeComponent,
         PricingMasComponent,
-        PricingCashmanComponent
+        PricingCashmanComponent,
+        InvestmentsAddConcessionComponent,
+        BolAddConcessionComponent
     ],
     imports: [
         BrowserModule,
