@@ -102,8 +102,8 @@
                 <th>Transaction Type</th>
                 <th>Account Number</th>
                 <th>Table Number</th>
-                <th>Flat Fee/Rate</th>
                 <th>Ad Valorem</th>
+                <th>Flat Fee/Rate</th>
             </tr>
         </thead>
         <tbody class="form-concessions-table-content">
@@ -121,13 +121,13 @@
                 </td>
 
                 <td class="length-long">
-                    <select formControlName="tableNumber" class="form-control">
-                        <option *ngFor="let tableNumberOption of tableNumbers" [ngValue]="tableNumberOption">{{tableNumberOption.description}}</option>
+                    <select formControlName="tableNumber" class="form-control" (change)="tableNumberChanged(i)">
+                        <option *ngFor="let tableNumberOption of tableNumbers" [ngValue]="tableNumberOption">{{tableNumberOption.displayText}}</option>
                     </select>
                 </td>
 
-                <td class="length-long"><input formControlName="flatFeeOrRate" class="form-control"></td>
                 <td class="length-medium"><input formControlName="adValorem" class="form-control"></td>
+                <td class="length-long"><input formControlName="flatFeeOrRate" class="form-control"></td>
 
                 <td><button *ngIf="transactionalConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>

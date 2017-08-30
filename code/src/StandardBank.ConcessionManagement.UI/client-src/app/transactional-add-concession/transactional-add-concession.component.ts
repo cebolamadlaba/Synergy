@@ -13,7 +13,7 @@ import { ConditionType } from "../models/condition-type";
 import { ConditionProduct } from "../models/condition-product";
 import { ClientAccount } from "../models/client-account";
 import { TransactionType } from "../models/transaction-type";
-
+import { TableNumber } from "../models/table-number";
 
 @Component({
     selector: 'app-transactional-add-concession',
@@ -46,6 +46,9 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 
     observableTransactionTypes: Observable<TransactionType[]>;
     transactionTypes: TransactionType[];
+
+    observableTableNumbers: Observable<TableNumber[]>;
+    tableNumbers: TableNumber[];
 
     constructor(private route: ActivatedRoute,
         private formBuilder: FormBuilder,
@@ -92,6 +95,9 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 
         this.observableTransactionTypes = this.lookupDataService.getTransactionTypes("Transactional");
         this.observableTransactionTypes.subscribe(transactionTypes => this.transactionTypes = transactionTypes, error => this.errorMessage = <any>error);
+
+        this.observableTableNumbers = this.lookupDataService.getTableNumbers();
+        this.observableTableNumbers.subscribe(tableNumbers => this.tableNumbers = tableNumbers, error => this.errorMessage = <any>error);
     }
 
     initConcessionItemRows() {
@@ -99,8 +105,8 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
             transactionType: [''],
             accountNumber: [''],
             tableNumber: [''],
-            flatFeeOrRate: [''],
-            adValorem: ['']
+            flatFeeOrRate: [{ value: '', disabled: true }],
+            adValorem: [{ value: '', disabled: true }]
         });
     }
 
@@ -149,6 +155,13 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
     conditionTypeChanged(rowIndex) {
         const control = <FormArray>this.transactionalConcessionForm.controls['conditionItemsRows'];
         this.selectedConditionTypes[rowIndex] = control.controls[rowIndex].get('conditionType').value;
+    }
+
+    tableNumberChanged(rowIndex) {
+        const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+
+        control.controls[rowIndex].get('flatFeeOrRate').setValue(control.controls[rowIndex].get('tableNumber').value.baseRate);
+        control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('tableNumber').value.adValorem);
     }
 
     goBack() {

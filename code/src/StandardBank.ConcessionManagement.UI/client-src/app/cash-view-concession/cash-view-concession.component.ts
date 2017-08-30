@@ -211,8 +211,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             cashConcessionDetailId: [''],
             channelType: [''],
             accountNumber: [''],
-            baseRate: [''],
-            adValorem: [''],
+            baseRate: [{ value: '', disabled: true }],
+            adValorem: [{ value: '', disabled: true }],
             tableNumber: [''],
             accrualType: ['']
         });

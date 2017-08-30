@@ -466,7 +466,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public IEnumerable<TableNumber> GetTableNumbers()
         {
             var tableNumbers = _tableNumberRepository.ReadAll();
-            return _mapper.Map<IEnumerable<TableNumber>>(tableNumbers.Where(_ => _.IsActive));
+            return _mapper.Map<IEnumerable<TableNumber>>(tableNumbers.Where(_ => _.IsActive).OrderBy(_ => _.TariffTable));
         }
 
         /// <summary>
