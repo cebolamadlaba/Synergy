@@ -121,6 +121,37 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Creates the concession transactional.
+        /// </summary>
+        /// <param name="transactionalConcessionDetail">The transactional concession detail.</param>
+        /// <param name="concession">The concession.</param>
+        /// <returns></returns>
+        public ConcessionTransactional CreateConcessionTransactional(TransactionalConcessionDetail transactionalConcessionDetail,
+            Concession concession)
+        {
+            var concessionTransactional = _mapper.Map<ConcessionTransactional>(transactionalConcessionDetail);
+            concessionTransactional.ConcessionId = concession.Id;
+            return _concessionTransactionalRepository.Create(concessionTransactional);
+        }
+
+        /// <summary>
+        /// Updates the concession transactional.
+        /// </summary>
+        /// <param name="transactionalConcessionDetail">The transactional concession detail.</param>
+        /// <param name="concession">The concession.</param>
+        /// <returns></returns>
+        public ConcessionTransactional UpdateConcessionTransactional(TransactionalConcessionDetail transactionalConcessionDetail,
+            Concession concession)
+        {
+            var mappedConcessionTransactional = _mapper.Map<ConcessionTransactional>(transactionalConcessionDetail);
+            mappedConcessionTransactional.ConcessionId = concession.Id;
+
+            _concessionTransactionalRepository.Update(mappedConcessionTransactional);
+
+            return mappedConcessionTransactional;
+        }
+
+        /// <summary>
         /// Adds the transactional concession data.
         /// </summary>
         /// <param name="concession">The concession.</param>

@@ -1,6 +1,7 @@
 ﻿using Moq;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
+using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
 using StandardBank.ConcessionManagement.Test.Helpers;
 using static StandardBank.ConcessionManagement.Test.Helpers.MockedDependencies;
 using Xunit;
@@ -73,6 +74,35 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 .Returns(new LegalEntityAccount { IsActive = true });
 
             var result = _transactionalManager.GetTransactionalConcession("T001", new Model.UserInterface.User());
+
+            Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Tests that CreateConcessionTransactional executes positive.
+        /// </summary>
+        [Fact]
+        public void CreateConcessionTransactional_Executes_Positive()
+        {
+            MockConcessionTransactionalRepository.Setup(_ => _.Create(It.IsAny<ConcessionTransactional>()))
+                .Returns(new ConcessionTransactional());
+
+            var result =
+                _transactionalManager.CreateConcessionTransactional(new TransactionalConcessionDetail(),
+                    new Model.UserInterface.Concession());
+
+            Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Tests that UpdateConcessionTransactional executes positive.
+        /// </summary>
+        [Fact]
+        public void UpdateConcessionTransactional_Executes_Positive()
+        {
+            var result =
+                _transactionalManager.UpdateConcessionTransactional(new TransactionalConcessionDetail(),
+                    new Model.UserInterface.Concession());
 
             Assert.NotNull(result);
         }

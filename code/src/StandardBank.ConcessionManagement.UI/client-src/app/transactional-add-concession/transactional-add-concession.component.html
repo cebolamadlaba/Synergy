@@ -250,10 +250,10 @@
     <div class="footer-buttons">
         <div class="float-right">
             <button type="button" class="btn btn-cancel" [routerLink]="['/pricing-transactional', riskGroup.number]">Cancel</button>
-            <button class="btn btn-primary" type="button" (click)="onSubmit()">Submit</button>
+            <button class="btn btn-primary" type="button" (click)="onSubmit()" *ngIf="!saveMessage">Submit</button>
         </div>
     </div>
 
 </form>
 
-<pre>{{transactionalConcessionForm.value | json}}</pre>
+<!--<pre>{{transactionalConcessionForm.value | json}}</pre>-->

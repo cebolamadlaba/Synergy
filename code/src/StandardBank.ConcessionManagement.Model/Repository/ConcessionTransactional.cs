@@ -1,11 +1,9 @@
-using System;
-
 namespace StandardBank.ConcessionManagement.Model.Repository
 {
     /// <summary>
     /// ConcessionTransactional entity
     /// </summary>
-    public class ConcessionTransactional
+    public class ConcessionTransactional : IAuditable
     {
         /// <summary>
         /// Gets or sets the Id.
@@ -102,5 +100,23 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The TableNumberId.
         /// </value>
         public int TableNumberId { get; set; }
+
+        /// <summary>
+        /// Gets or the name of the table.
+        /// </summary>
+        /// <value>
+        /// The name of the table.
+        /// </value>
+        public string TableName => "tblConcessionTransactional";
+
+        /// <summary>
+        /// Gets the primary key column name
+        /// </summary>
+        public string PrimaryKeyColumnName => "pkConcessionTransactionalId";
+
+        /// <summary>
+        /// Gets the primary key value
+        /// </summary>
+        public object PrimaryKeyValue => Id;
     }
 }

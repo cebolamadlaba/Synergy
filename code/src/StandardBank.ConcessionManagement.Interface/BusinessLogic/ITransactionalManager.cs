@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
-using StandardBank.ConcessionManagement.Model.UserInterface;
+using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
+using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
+using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 {
@@ -23,5 +25,23 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="user">The user.</param>
         /// <returns></returns>
         TransactionalConcession GetTransactionalConcession(string concessionReferenceId, User user);
+
+        /// <summary>
+        /// Creates the concession transactional.
+        /// </summary>
+        /// <param name="transactionalConcessionDetail">The transactional concession detail.</param>
+        /// <param name="concession">The concession.</param>
+        /// <returns></returns>
+        ConcessionTransactional CreateConcessionTransactional(
+            TransactionalConcessionDetail transactionalConcessionDetail, Concession concession);
+
+        /// <summary>
+        /// Updates the concession transactional.
+        /// </summary>
+        /// <param name="transactionalConcessionDetail">The transactional concession detail.</param>
+        /// <param name="concession">The concession.</param>
+        /// <returns></returns>
+        ConcessionTransactional UpdateConcessionTransactional(
+            TransactionalConcessionDetail transactionalConcessionDetail, Concession concession);
     }
 }
