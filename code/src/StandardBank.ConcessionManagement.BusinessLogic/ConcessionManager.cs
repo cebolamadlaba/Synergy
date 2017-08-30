@@ -14,6 +14,7 @@ using ConcessionCondition = StandardBank.ConcessionManagement.Model.UserInterfac
 using Condition = StandardBank.ConcessionManagement.Model.UserInterface.Condition;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
+using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -78,6 +79,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IConcessionCashRepository _concessionCashRepository;
 
         /// <summary>
+        /// The concession transactional repository
+        /// </summary>
+        private readonly IConcessionTransactionalRepository _concessionTransactionalRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionManager"/> class.
         /// </summary>
         /// <param name="concessionRepository">The concession repository.</param>
@@ -93,6 +99,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="concessionLendingRepository">The concession lending repository.</param>
         /// <param name="marketSegmentRepository">The market segment repository.</param>
         /// <param name="concessionCashRepository">The concession cash repository.</param>
+        /// <param name="concessionTransactionalRepository">The concession transactional repository.</param>
         public ConcessionManager(IConcessionRepository concessionRepository, ILookupTableManager lookupTableManager,
             ILegalEntityRepository legalEntityRepository, IRiskGroupRepository riskGroupRepository,
             ICacheManager cacheManager, IConcessionAccountRepository concessionAccountRepository, IMapper mapper,
@@ -100,7 +107,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             ILegalEntityAccountRepository legalEntityAccountRepository,
             IConcessionCommentRepository concessionCommentRepository,
             IConcessionLendingRepository concessionLendingRepository, IMarketSegmentRepository marketSegmentRepository,
-            IConcessionCashRepository concessionCashRepository)
+            IConcessionCashRepository concessionCashRepository,
+            IConcessionTransactionalRepository concessionTransactionalRepository)
         {
             _concessionRepository = concessionRepository;
             _lookupTableManager = lookupTableManager;
@@ -115,6 +123,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionLendingRepository = concessionLendingRepository;
             _marketSegmentRepository = marketSegmentRepository;
             _concessionCashRepository = concessionCashRepository;
+            _concessionTransactionalRepository = concessionTransactionalRepository;
         }
 
         /// <summary>
@@ -716,9 +725,40 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     return GetApprovedLendingConcessionDetails(concession);
                 case "Cash":
                     return GetApprovedCashConcessionDetails(concession);
+                case "Transactional":
+                    return GetApprovedTransactionalConcessionDetails(concession);
                 default:
                     throw new NotImplementedException(concession.ConcessionType);
             }
+        }
+
+        /// <summary>
+        /// Gets the approved transactional concession details.
+        /// </summary>
+        /// <param name="concession">The concession.</param>
+        /// <returns></returns>
+        private IEnumerable<ApprovedConcessionDetail> GetApprovedTransactionalConcessionDetails(Concession concession)
+        {
+            var approvedConcessionDetails = new List<ApprovedConcessionDetail>();
+            var concessionTransactionals = _concessionTransactionalRepository.ReadByConcessionId(concession.Id);
+
+            foreach (var concessionCash in concessionTransactionals)
+            {
+                var legalEntity = _legalEntityRepository.ReadById(concessionCash.LegalEntityId);
+                var marketSegment = _marketSegmentRepository.ReadById(legalEntity.MarketSegmentId);
+
+                approvedConcessionDetails.Add(new ApprovedConcessionDetail
+                {
+                    CustomerName = legalEntity.CustomerName,
+                    ConcessionType = "Transactional",
+                    Status = concession.Status,
+                    DateOpened = concession.DateOpened,
+                    DateSentForApproval = concession.DateSentForApproval.GetValueOrDefault(DateTime.Now),
+                    Segment = marketSegment.Description
+                });
+            }
+
+            return approvedConcessionDetails;
         }
 
         /// <summary>
@@ -753,13 +793,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 var legalEntity = _legalEntityRepository.ReadById(concessionCash.LegalEntityId);
                 var marketSegment = _marketSegmentRepository.ReadById(legalEntity.MarketSegmentId);
-                var mappedCashConcessionDetail = _mapper.Map<CashConcessionDetail>(concessionCash);
-
-                mappedCashConcessionDetail.CustomerName = legalEntity.CustomerName;
 
                 approvedConcessionDetails.Add(new ApprovedConcessionDetail
                 {
-                    CustomerName = mappedCashConcessionDetail.CustomerName,
+                    CustomerName = legalEntity.CustomerName,
                     ConcessionType = "Cash",
                     Status = concession.Status,
                     DateOpened = concession.DateOpened,
@@ -785,13 +822,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 var legalEntity = _legalEntityRepository.ReadById(concessionLending.LegalEntityId);
                 var marketSegment = _marketSegmentRepository.ReadById(legalEntity.MarketSegmentId);
-                var mappedLendingConcessionDetail = _mapper.Map<LendingConcessionDetail>(concessionLending);
-
-                mappedLendingConcessionDetail.CustomerName = legalEntity.CustomerName;
 
                 approvedConcessionDetails.Add(new ApprovedConcessionDetail
                 {
-                    CustomerName = mappedLendingConcessionDetail.CustomerName,
+                    CustomerName = legalEntity.CustomerName,
                     ConcessionType = "Lending",
                     Status = concession.Status,
                     DateOpened = concession.DateOpened,

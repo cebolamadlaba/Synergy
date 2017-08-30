@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using StandardBank.ConcessionManagement.Model.Repository;
 
@@ -21,6 +22,14 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
         TransactionType ReadById(int id);
+
+        /// <summary>
+        /// Reads the by concession type identifier is active.
+        /// </summary>
+        /// <param name="concessionTypeId">The concession type identifier.</param>
+        /// <param name="isActive">if set to <c>true</c> [is active].</param>
+        /// <returns></returns>
+        IEnumerable<TransactionType> ReadByConcessionTypeIdIsActive(int concessionTypeId, bool isActive);
 
         /// <summary>
         /// Reads all.

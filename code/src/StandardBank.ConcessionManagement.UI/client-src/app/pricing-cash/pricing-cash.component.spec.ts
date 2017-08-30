@@ -1,9 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpModule } from '@angular/http';
 import { PricingCashComponent } from './pricing-cash.component';
+import { CashConcessionService, MockCashConcessionService } from "../services/cash-concession.service";
+import { HttpModule } from '@angular/http';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
-import { CashConcessionService, MockCashConcessionService } from "../services/cash-concession.service";
 import { BaseConcessionFilterPipe } from "../filters/base-concession-filter.pipe";
 
 describe('PricingCashComponent', () => {

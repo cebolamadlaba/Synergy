@@ -20,7 +20,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 ConcessionId = DataHelper.GetConcessionId(),
                 ChannelTypeId = DataHelper.GetChannelTypeId(),
-                TableNumber = 8,
                 CashVolume = 5,
                 CashValue = 4110,
                 BaseRateId = DataHelper.GetBaseRateId(),
@@ -28,7 +27,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 LegalEntityId = DataHelper.GetLegalEntityId(),
                 LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
                 BaseRate = 1233,
-                AccrualTypeId = DataHelper.GetAccrualTypeId()
+                AccrualTypeId = DataHelper.GetAccrualTypeId(),
+                TableNumberId = DataHelper.GetTableNumberId()
             };
 
             var result = InstantiatedDependencies.ConcessionCashRepository.Create(model);
@@ -91,7 +91,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
 
             model.ConcessionId = DataHelper.GetAlternateConcessionId(model.ConcessionId);
             model.ChannelTypeId = DataHelper.GetAlternateChannelTypeId(model.ChannelTypeId);
-            model.TableNumber = model.TableNumber + 1;
             model.CashVolume = model.CashVolume + 1;
             model.CashValue = model.CashValue + 100;
             model.BaseRateId = DataHelper.GetAlternateBaseRateId(model.BaseRateId);
@@ -100,6 +99,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.LegalEntityAccountId = DataHelper.GetAlternateLegalEntityAccountId(model.LegalEntityAccountId);
             model.BaseRate = model.BaseRate + 100;
             model.AccrualTypeId = DataHelper.GetAlternateAccrualTypeId(model.AccrualTypeId);
+            model.TableNumberId = DataHelper.GetAlternateTableNumberId(model.TableNumberId);
 
             InstantiatedDependencies.ConcessionCashRepository.Update(model);
 
@@ -109,7 +109,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.Id, model.Id);
             Assert.Equal(updatedModel.ConcessionId, model.ConcessionId);
             Assert.Equal(updatedModel.ChannelTypeId, model.ChannelTypeId);
-            Assert.Equal(updatedModel.TableNumber, model.TableNumber);
             Assert.Equal(updatedModel.CashVolume, model.CashVolume);
             Assert.Equal(updatedModel.CashValue, model.CashValue);
             Assert.Equal(updatedModel.BaseRateId, model.BaseRateId);
@@ -118,6 +117,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.LegalEntityAccountId, model.LegalEntityAccountId);
             Assert.Equal(updatedModel.BaseRate, model.BaseRate);
             Assert.Equal(updatedModel.AccrualTypeId, model.AccrualTypeId);
+            Assert.Equal(updatedModel.TableNumberId, model.TableNumberId);
         }
 
         /// <summary>
@@ -130,7 +130,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 ConcessionId = DataHelper.GetConcessionId(),
                 ChannelTypeId = DataHelper.GetChannelTypeId(),
-                TableNumber = 8,
                 CashVolume = 5,
                 CashValue = 4110,
                 BaseRateId = DataHelper.GetBaseRateId(),
@@ -138,7 +137,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 LegalEntityId = DataHelper.GetLegalEntityId(),
                 LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
                 BaseRate = 653,
-                AccrualTypeId = DataHelper.GetAccrualTypeId()
+                AccrualTypeId = DataHelper.GetAccrualTypeId(),
+                TableNumberId = DataHelper.GetTableNumberId()
             };
 
             var temporaryEntity = InstantiatedDependencies.ConcessionCashRepository.Create(model);

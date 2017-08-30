@@ -1480,7 +1480,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             {
                 ConcessionId = GetConcessionId(),
                 ChannelTypeId = GetChannelTypeId(),
-                TableNumber = 4,
                 CashVolume = 9,
                 CashValue = 1813,
                 BaseRateId = GetBaseRateId(),
@@ -1488,7 +1487,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 LegalEntityId = GetLegalEntityId(),
                 LegalEntityAccountId = GetLegalEntityAccountId(),
                 BaseRate = 1263,
-                AccrualTypeId = GetAccrualTypeId()
+                AccrualTypeId = GetAccrualTypeId(),
+                TableNumberId = GetTableNumberId()
             };
 
             InstantiatedDependencies.ConcessionCashRepository.Create(model);
@@ -1937,13 +1937,14 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 ConcessionId = GetConcessionId(),
                 TransactionTypeId = GetTransactionTypeId(),
                 ChannelTypeId = GetChannelTypeId(),
-                TableNumber = 1,
-                TransactionVolume = 7,
-                TransactionValue = 3329,
+                TransactionVolume = 2,
+                TransactionValue = 4797,
                 BaseRateId = GetBaseRateId(),
-                AdValorem = 3754,
+                AdValorem = 5344,
                 LegalEntityId = GetLegalEntityId(),
-                LegalEntityAccountId = GetLegalEntityAccountId()
+                LegalEntityAccountId = GetLegalEntityAccountId(),
+                BaseRate = 8369,
+                TableNumberId = GetTableNumberId()
             };
 
             InstantiatedDependencies.ConcessionTransactionalRepository.Create(model);
@@ -2592,6 +2593,59 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 return models.First(_ => _.Id != model.Value).Id;
 
             return InsertAccrualType();
+        }
+
+        /// <summary>
+        /// Gets the TableNumber id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetTableNumberId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.TableNumberRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertTableNumber();
+        }
+
+        /// <summary>
+        /// Inserts a TableNumber and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertTableNumber()
+        {
+            var model = new TableNumber
+            {
+                TariffTable = 9,
+                AdValorem = 1321,
+                BaseRate = 6770,
+                IsActive = false
+            };
+
+            InstantiatedDependencies.TableNumberRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate TableNumber id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateTableNumberId(int? model)
+        {
+            if (!model.HasValue)
+                return GetTableNumberId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.TableNumberRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertTableNumber();
         }
     }
 }

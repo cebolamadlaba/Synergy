@@ -117,7 +117,7 @@
     <div class="col-md-7 search-and-results-container" id="lending-search-container">
         <h2 class="headings">
             Concessions
-            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/lending-add-concession', lendingView.riskGroup.number]">Add Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/lending-add-concession', lendingView.riskGroup.number]" *ngIf="pageLoaded">Add Concession</button>
         </h2>
 
         <!-- Search bar -->

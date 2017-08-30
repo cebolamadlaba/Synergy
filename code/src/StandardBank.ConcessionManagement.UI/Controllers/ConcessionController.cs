@@ -132,5 +132,26 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             return Ok(_letterGeneratorManager.GenerateLetters(concessionIds));
         }
+
+        /// <summary>
+        /// Gets the transaction types for the concession type specified.
+        /// </summary>
+        /// <param name="concessionType">Type of the concession.</param>
+        /// <returns></returns>
+        [Route("TransactionTypes/{concessionType}")]
+        public IActionResult TransactionTypes(string concessionType)
+        {
+            return Ok(_lookupTableManager.GetTransactionTypesForConcessionType(concessionType));
+        }
+
+        /// <summary>
+        /// Gets the table numbers.
+        /// </summary>
+        /// <returns></returns>
+        [Route("TableNumbers")]
+        public IActionResult TableNumbers()
+        {
+            return Ok(_lookupTableManager.GetTableNumbers());
+        }
     }
 }

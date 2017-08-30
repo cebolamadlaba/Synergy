@@ -89,8 +89,10 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
                 .Returns(new CashConcession());
 
             var result = _cashController.CashConcessionData("C001");
+            var apiResult = Assert.IsType<OkObjectResult>(result);
 
-            Assert.NotNull(result);
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is CashConcession);
         }
 
         /// <summary>

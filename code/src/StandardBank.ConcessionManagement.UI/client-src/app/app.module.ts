@@ -44,6 +44,10 @@ import { PricingMasComponent } from './pricing-mas/pricing-mas.component';
 import { PricingCashmanComponent } from './pricing-cashman/pricing-cashman.component';
 import { TransactionalConcessionService } from "./services/transactional-concession.service";
 import { BaseConcessionFilterPipe } from './filters/base-concession-filter.pipe';
+import { InvestmentsAddConcessionComponent } from './investments-add-concession/investments-add-concession.component';
+import { BolAddConcessionComponent } from './bol-add-concession/bol-add-concession.component';
+import { MasAddConcessionComponent } from './mas-add-concession/mas-add-concession.component';
+import { TransactionalViewConcessionComponent } from './transactional-view-concession/transactional-view-concession.component';
 
 @NgModule({
     declarations: [
@@ -74,6 +78,10 @@ import { BaseConcessionFilterPipe } from './filters/base-concession-filter.pipe'
         PricingTradeComponent,
         PricingMasComponent,
         PricingCashmanComponent,
+        InvestmentsAddConcessionComponent,
+        BolAddConcessionComponent,
+        MasAddConcessionComponent,
+        TransactionalViewConcessionComponent
         ProvinceComponent
     ],
     imports: [

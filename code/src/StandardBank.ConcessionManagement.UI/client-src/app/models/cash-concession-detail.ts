@@ -6,7 +6,6 @@ export class CashConcessionDetail {
     legalEntityAccountId: number;
     channel: string;
     channelTypeId: number;
-    cashTableNumber: number;
     bpId: number;
     volume: number;
     value: number;
@@ -15,4 +14,5 @@ export class CashConcessionDetail {
     baseRate: number;
     adValorem: number;
     accrualTypeId: number;
+    tableNumberId: number;
 }

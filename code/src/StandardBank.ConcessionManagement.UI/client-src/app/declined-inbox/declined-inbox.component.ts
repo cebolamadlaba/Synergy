@@ -48,6 +48,9 @@ export class DeclinedInboxComponent implements OnInit {
             case "Cash":
                 this.router.navigate(['/cash-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
                 break;
+            case "Transactional":
+                this.router.navigate(['/transactional-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                break;
         }
     }
 }

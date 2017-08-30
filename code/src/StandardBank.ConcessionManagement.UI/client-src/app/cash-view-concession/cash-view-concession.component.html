@@ -1,4 +1,4 @@
-﻿<!-- Banner expanded -->
+<!-- Banner expanded -->
 <div class="col-md-12 banner">
     <div class="row">
         <div class="lending-banner-title">
@@ -101,9 +101,9 @@
             <tr>
                 <th>Channel Type</th>
                 <th>Account No</th>
-                <th>Base Rate</th>
-                <th>Ad Valorem</th>
                 <th>Table Number</th>
+                <th>Ad Valorem</th>
+                <th>Base Rate</th>
                 <th>Accrual</th>
             </tr>
         </thead>
@@ -123,9 +123,14 @@
                     </select>
                 </td>
 
-                <td class="length-long"><input formControlName="baseRate" class="form-control" /></td>
+                <td class="length-long">
+                    <select formControlName="tableNumber" class="form-control" (change)="tableNumberChanged(i)">
+                        <option *ngFor="let tableNumberOption of tableNumbers" [ngValue]="tableNumberOption">{{tableNumberOption.displayText}}</option>
+                    </select>
+                </td>
+
                 <td class="length-short"><input formControlName="adValorem" class="form-control" /></td>
-                <td class="length-short"><input formControlName="tableNumber" class="form-control" /></td>
+                <td class="length-long"><input formControlName="baseRate" class="form-control" /></td>
 
                 <td class="length-medium">
                     <select formControlName="accrualType" class="form-control">
@@ -258,7 +263,6 @@
             <button type="button" class="btn btn-success" (click)="bcmApproveConcession()" *ngIf="canBcmApprove">Forward</button>         
             <button type="button" class="btn btn-danger" (click)="pcmDeclineConcession()" *ngIf="canPcmApprove">Decline</button>
             <button type="button" class="btn btn-success" (click)="pcmApproveConcession()" *ngIf="canPcmApprove">Approve</button>
-            
         </div>
     </div>
 </form>

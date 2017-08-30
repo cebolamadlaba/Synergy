@@ -30,14 +30,6 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int ChannelTypeId { get; set; }
 
         /// <summary>
-        /// Gets or sets the TableNumber.
-        /// </summary>
-        /// <value>
-        /// The TableNumber.
-        /// </value>
-        public int? TableNumber { get; set; }
-
-        /// <summary>
         /// Gets or sets the CashVolume.
         /// </summary>
         /// <value>
@@ -118,5 +110,13 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// Gets the primary key value
         /// </summary>
         public object PrimaryKeyValue => Id;
+
+        /// <summary>
+        /// Gets or sets the table number identifier.
+        /// </summary>
+        /// <value>
+        /// The table number identifier.
+        /// </value>
+        public int TableNumberId { get; set; }
     }
 }

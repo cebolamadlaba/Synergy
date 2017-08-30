@@ -17,6 +17,7 @@ import { Concession } from "../models/concession";
 import { CashConcessionService } from "../services/cash-concession.service";
 import { CashConcessionDetail } from "../models/cash-concession-detail";
 import { ConcessionCondition } from "../models/concession-condition";
+import { TableNumber } from "../models/table-number";
 
 @Component({
     selector: 'app-cash-add-concession',
@@ -52,6 +53,9 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
     observableChannelTypes: Observable<ChannelType[]>;
     channelTypes: ChannelType[];
+
+    observableTableNumbers: Observable<TableNumber[]>;
+    tableNumbers: TableNumber[];
 
     constructor(private route: ActivatedRoute,
         private formBuilder: FormBuilder,
@@ -100,15 +104,18 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
         this.observableAccrualTypes = this.lookupDataService.getAccrualTypes();
         this.observableAccrualTypes.subscribe(accrualTypes => this.accrualTypes = accrualTypes, error => this.errorMessage = <any>error);
+
+        this.observableTableNumbers = this.lookupDataService.getTableNumbers();
+        this.observableTableNumbers.subscribe(tableNumbers => this.tableNumbers = tableNumbers, error => this.errorMessage = <any>error);
     }
 
     initConcessionItemRows() {
         return this.formBuilder.group({
             channelType: [''],
             accountNumber: [''],
-            baseRate: [''],
-            adValorem: [''],
             tableNumber: [''],
+            baseRate: [{ value: '', disabled: true }],
+            adValorem: [{ value: '', disabled: true }],
             accrualType: ['']
         });
     }
@@ -160,6 +167,13 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         this.selectedConditionTypes[rowIndex] = control.controls[rowIndex].get('conditionType').value;
     }
 
+    tableNumberChanged(rowIndex) {
+        const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
+
+        control.controls[rowIndex].get('baseRate').setValue(control.controls[rowIndex].get('tableNumber').value.baseRate);
+        control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('tableNumber').value.adValorem);
+    }
+
     addValidationError(validationDetail) {
         if (!this.validationError)
             this.validationError = [];
@@ -203,14 +217,15 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
                 this.addValidationError("Client account not selected");
             }
 
-            if (concessionFormItem.get('baseRate').value)
-                cashConcessionDetail.baseRate = concessionFormItem.get('baseRate').value;
+            if (concessionFormItem.get('tableNumber').value) {
+                cashConcessionDetail.tableNumberId = concessionFormItem.get('tableNumber').value.id;
+                cashConcessionDetail.adValorem = concessionFormItem.get('tableNumber').value.adValorem;
 
-            if (concessionFormItem.get('adValorem').value)
-                cashConcessionDetail.adValorem = concessionFormItem.get('adValorem').value;
-
-            if (concessionFormItem.get('tableNumber').value)
-                cashConcessionDetail.cashTableNumber = concessionFormItem.get('tableNumber').value;
+                if (concessionFormItem.get('tableNumber').value.baseRate)
+                    cashConcessionDetail.baseRate = concessionFormItem.get('tableNumber').value.baseRate;
+            } else {
+                this.addValidationError("Table Number not selected");
+            }
 
             if (concessionFormItem.get('accrualType').value) {
                 cashConcessionDetail.accrualTypeId = concessionFormItem.get('accrualType').value.id;

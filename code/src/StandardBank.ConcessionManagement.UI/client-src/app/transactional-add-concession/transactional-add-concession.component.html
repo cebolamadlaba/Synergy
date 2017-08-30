@@ -1,4 +1,4 @@
-﻿<!-- Banner -->
+<!-- Banner -->
 <div class="col-md-12 banner">
     <div class="row">
         <!-- Header -->
@@ -16,12 +16,12 @@
         <div class="col-md-12 banner-container">
             <div class="col-md-11">            
                     <div class="col-md-5">
-                        <div class="subHeading">EDCON</div>
-                        <div class="date lightTitle hidden-element">1989</div>
+                        <div class="subHeading">{{riskGroup.name}}</div>
+                        <div class="date lightTitle hidden-element">{{riskGroup.number}}</div>
                     </div>
                     <div class="col-md-2 hidden-element">
                         <div class="subHeading lightTitle"> Latest CRS / MRS</div>
-                    <div class="score"><b>0.00</b></div>
+                    <div class="score"><b>//TODO</b></div>
                 </div>
             </div>
             <!--
@@ -70,7 +70,7 @@
 </div>
 
 <!-- Form entries -->
-<form class="col-md-12 concession-information-form">
+<form class="col-md-12 concession-information-form" [formGroup]="transactionalConcessionForm" *ngIf="!isLoading">
     <div class="col-md-4">
         <div class="row">
             <label>MRS/CRS</label>
@@ -92,141 +92,168 @@
     <div class="col-md-12" style="border-bottom: 1px solid gray; margin-bottom: 15px;">
         <div class="row">
             <h3 class="table-title">Concessions</h3>
-            <button type="button" class="btn btn-primary btn-concession" style="margin-top: 15px;">New Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" style="margin-top: 15px;" *ngIf="!saveMessage">New Concession</button>
         </div>
     </div>
     
-    <table class="form-concessions-table">
+    <table class="form-concessions-table" formArrayName="concessionItemRows">
         <thead class="form-concessions-table-headings">
             <tr>
                 <th>Transaction Type</th>
                 <th>Account Number</th>
-                <th>Flat Fee/Rate</th>
-                <th>Ad Valorem</th>
                 <th>Table Number</th>
-                <th>Approved Date</th>
-                <th>Expiry Date</th>
-                <th></th>
+                <th>Ad Valorem</th>
+                <th>Flat Fee/Rate</th>
             </tr>
         </thead>
         <tbody class="form-concessions-table-content">
-            <tr>
-                <td class="length-long"><input class="form-control" value="CEF"></td>
+            <tr *ngFor="let itemrow of transactionalConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
                 <td class="length-long">
-                    <select class="form-control">
-                        <option>1234</option>
+                    <select formControlName="transactionType" class="form-control">
+                        <option *ngFor="let transactionTypeOption of transactionTypes" [ngValue]="transactionTypeOption">{{transactionTypeOption.description}}</option>
                     </select>
                 </td>
-                <td class="length-long"><input class="form-control" value="50,000.00"></td>
-                <td class="length-medium"><input class="form-control" value="1"></td>
-                <td class="length-long"><input class="form-control"></td>
-                <td class="length-long"><input class="form-control" type="date"></td>
-                <td class="length-long"><input class="form-control" type="date"></td>
-                <td><button class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+
+                <td class="length-long">
+                    <select formControlName="accountNumber" class="form-control">
+                        <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
+                    </select>
+                </td>
+
+                <td class="length-long">
+                    <select formControlName="tableNumber" class="form-control" (change)="tableNumberChanged(i)">
+                        <option *ngFor="let tableNumberOption of tableNumbers" [ngValue]="tableNumberOption">{{tableNumberOption.displayText}}</option>
+                    </select>
+                </td>
+
+                <td class="length-medium"><input formControlName="adValorem" class="form-control"></td>
+                <td class="length-long"><input formControlName="flatFeeOrRate" class="form-control"></td>
+
+                <td><button *ngIf="transactionalConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
         </tbody>
     </table>
 
 
-    <div class="col-md-12 conditions">
+    <!-- Conditions table -->
+    <div class="col-md-12">
         <div class="row">
-       
             <h3 class="table-title">Conditions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;">Manage Conditions</button>
-                
+            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;" *ngIf="!saveMessage">Manage Conditions</button>
+
             <div class="table-container">
                 <table class="table table-bordered table-hover header-fixed table-striped">
                     <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Condition Type</th>
-                            <th>Value</th>
-                            <th>Volume</th>
-                            <th>Product</th>
-                            <th>MAP/Rate (If Applicable)</th>
-                        </tr>
+                    <tr>
+                        <th>ID</th>
+                        <th>Condition Type</th>
+                        <th>Product Type</th>
+                        <th>Interest Rate</th>
+                        <th>Volume</th>
+                        <th>Value</th>
+                        <th>Period</th>
+                    </tr>
                     </thead>
                     <tbody class="secondary-text">
-                        <tr>
-                            <td class="length-short">01</td>
-                            <td>MIN AVG Balance</td>
-                            <td>Cashman</td>
-                            <td>4.5</td>
-                            <td class="length-medium">1</td>
-                            <td class="length-short rightAlign">-4</td>
-                        </tr>
+                    <tr *ngIf="transactionalConcessionForm.controls.conditionItemsRows.controls.length == 0">
+                        <td colspan="7" class="searchEmptyState">
+                            No conditions has been added
+                        </td>
+                    </tr>
+                    <tr *ngFor="let itemrow of transactionalConcessionForm.controls.conditionItemsRows.controls; let i=index">
+                        <td># {{i + 1}}</td>
+                        <td>{{itemrow.get('conditionType').value.description}}</td>
+                        <td>{{itemrow.get('conditionProduct').value.description}}</td>
+                        <td>{{itemrow.get('interestRate').value}}</td>
+                        <td>{{itemrow.get('volume').value}}</td>
+                        <td>{{itemrow.get('value').value}}</td>
+                        <td>{{itemrow.get('periodType').value.description}} {{itemrow.get('period').value.description}}</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- Modal conditions -->
-            <div bsModal #manageConditionsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="manageConditionsModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="col-md-12 modal-header">
-                            <h4>Manage Conditions</h4>
+        </div>
+    </div>
+
+    <!-- Modal conditions -->
+    <div bsModal #manageConditionsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="manageConditionsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="col-md-12 modal-header">
+                    <h4>Manage Conditions</h4>
+                </div>
+                <div class="col-md-12 modal-body">
+                    <div class="row">
+                        <div class="col-md-12 modal-title">
+                            <button type="button" class="btn btn-primary" (click)="addNewConditionRow()">New Conditions</button>
                         </div>
-                        <div class="col-md-12 modal-body">
-                            <div class="row">
-                                <div class="col-md-12 modal-title">
-                                    <button class="btn btn-default">New Conditions</button>
-                                </div>
-                            </div>
-                            <table class="form-concessions-table">
-                                <thead class="form-concessions-table-headings">
-                                    <tr>
-                                        <th>Condition ID</th>
-                                        <th>Condition Type</th>
-                                        <th>Value</th>
-                                        <th>Volume</th>
-                                        <th>Product</th>
-                                        <th>MAP/RATE (If Applicable)</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody class="form-concessions-table-content">
-                                    <tr>
-                                        <td class="length-short"><input class="rightAlign" value="1"></td>
-                                        <td class="length-long"><input value="MIN AVG Balance"></td>
-                                        <td class="length-long"><input value="20 000 000.00"></td>
-                                        <td class="length-medium"><input value="1"></td>
-                                        <td class="length-long"><input value="Cashman"></td>
-                                        <td class="length-medium"><input class="" value="-4"></td>
-                                        <td class="delete"><i class="fa fa-trash-o" aria-hidden="true"></i></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="length-short"><input class="rightAlign" value=""></td>
-                                        <td class="length-long"><input value=""></td>
-                                        <td class="length-long"><input value=""></td>
-                                        <td class="length-medium"><input value=""></td>
-                                        <td class="length-long"><input value=""></td>
-                                        <td class="length-long"><input value=""></td>
-                                        <td class="delete"><i class="fa fa-trash-o" aria-hidden="true"></i></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="modal-footer">
-                            <form class="lending-bottom-buttons">
-                                <div class="float-right">
-                                    <button class="btn btn-submit" type="submit">Submit</button>
-                                    <button class="btn btn-cancel">Cancel</button>
-                                </div>
-                            </form>
-                        </div>
+                    </div>
+                    <table class="form-concessions-table" formArrayName="conditionItemsRows" style="width:100%">
+                        <thead class="form-concessions-table-headings">
+                        <tr *ngIf="transactionalConcessionForm.controls.conditionItemsRows.controls.length > 0">
+                            <th>Condition Type</th>
+                            <th>Product Type</th>
+                            <th>Interest Rate</th>
+                            <th>Volume</th>
+                            <th>Value</th>
+                            <th>Period Type</th>
+                            <th>Period</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody class="form-concessions-table-content">
+                        <tr *ngIf="transactionalConcessionForm.controls.conditionItemsRows.controls.length == 0">
+                            <td colspan="7" class="searchEmptyState">
+                                No conditions has been added
+                            </td>
+                        </tr>
+                        <tr *ngFor="let itemrow of transactionalConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
+                            <td class="length-long">
+                                <select formControlName="conditionType" (change)="conditionTypeChanged(i)">
+                                    <option *ngFor="let conditionTypeOption of conditionTypes" [ngValue]="conditionTypeOption">{{conditionTypeOption.description}}</option>
+                                </select>
+                            </td>
+                            <td class="length-long">
+                                <select formControlName="conditionProduct" *ngIf="selectedConditionTypes[i] != null">
+                                    <option *ngFor="let conditionProductOption of selectedConditionTypes[i].conditionProducts" [ngValue]="conditionProductOption">{{conditionProductOption.description}}</option>
+                                </select>
+                            </td>
+                            <td class="length-medium"><input formControlName="interestRate" /></td>
+                            <td class="length-long"><input formControlName="volume" /></td>
+                            <td class="length-medium"><input formControlName="value" /></td>
+                            <td class="length-medium">
+                                <select formControlName="periodType">
+                                    <option *ngFor="let periodTypeOption of periodTypes" [ngValue]="periodTypeOption">{{periodTypeOption.description}}</option>
+                                </select>
+                            </td>
+                            <td class="length-medium">
+                                <select formControlName="period">
+                                    <option *ngFor="let periodOption of periods" [ngValue]="periodOption">{{periodOption.description}}</option>
+                                </select>
+                            </td>
+                            <td><button class="btn-delete" type="button" (click)="deleteConditionRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <div class="float-right">
+                        <button type="button" class="btn btn-primary" (click)="manageConditionsModal.hide()">Done</button>
                     </div>
                 </div>
             </div>
-        
         </div>
     </div>
 
     <!-- Form buttons -->
     <div class="footer-buttons">
         <div class="float-right">
-            <button type="button" class="btn btn-cancel" (click)="goBack()">Cancel</button>
-            <button class="btn btn-primary" type="button" (click)="onSubmit()">Submit</button>
+            <button type="button" class="btn btn-cancel" [routerLink]="['/pricing-transactional', riskGroup.number]">Cancel</button>
+            <button class="btn btn-primary" type="button" (click)="onSubmit()" *ngIf="!saveMessage">Submit</button>
         </div>
     </div>
 
 </form>
+
+<!--<pre>{{transactionalConcessionForm.value | json}}</pre>-->

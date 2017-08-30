@@ -28,7 +28,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 MockPeriodRepository.Object, MockPeriodTypeRepository.Object, MockConditionTypeRepository.Object,
                 InstantiatedDependencies.Mapper, MockConditionProductRepository.Object,
                 MockConditionTypeProductRepository.Object, MockAccrualTypeRepository.Object,
-                MockChannelTypeRepository.Object, MockTransactionTypeRepository.Object);
+                MockChannelTypeRepository.Object, MockTransactionTypeRepository.Object,
+                MockTableNumberRepository.Object);
         }
 
         /// <summary>
@@ -412,6 +413,50 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             var result = _lookupTableManager.GetTransactionTypeDescription(1);
 
             Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Tests that GetTransactionTypesForConcessionType executes positive.
+        /// </summary>
+        [Fact]
+        public void GetTransactionTypesForConcessionType_Executes_Positive()
+        {
+            var concessionType = "Unit Test CT";
+
+            MockConcessionTypeRepository.Setup(_ => _.ReadAll()).Returns(new[]
+                {new ConcessionType {IsActive = true, Id = 1, Code = concessionType, Description = concessionType}});
+
+            MockTransactionTypeRepository
+                .Setup(_ => _.ReadByConcessionTypeIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(new[] {new TransactionType()});
+
+            var result = _lookupTableManager.GetTransactionTypesForConcessionType(concessionType);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+
+            foreach (var record in result)
+            {
+                Assert.NotNull(record);
+                Assert.NotNull(record.ConcessionType);
+                Assert.Equal(record.ConcessionType, concessionType);
+            }
+        }
+
+        /// <summary>
+        /// Tests that GetTableNumbers executes positive.
+        /// </summary>
+        [Fact]
+        public void GetTableNumbers_Executes_Positive()
+        {
+            var tableNumber = new TableNumber { Id = 1, TariffTable = 1, AdValorem = 100.10m, BaseRate = 0.543m, IsActive = true };
+
+            MockTableNumberRepository.Setup(_ => _.ReadAll()).Returns(new[] { tableNumber });
+
+            var result = _lookupTableManager.GetTableNumbers();
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
         }
     }
 }

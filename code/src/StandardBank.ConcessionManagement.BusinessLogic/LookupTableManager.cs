@@ -14,6 +14,8 @@ using ConditionType = StandardBank.ConcessionManagement.Model.UserInterface.Cond
 using Period = StandardBank.ConcessionManagement.Model.UserInterface.Period;
 using PeriodType = StandardBank.ConcessionManagement.Model.UserInterface.PeriodType;
 using ReviewFeeType = StandardBank.ConcessionManagement.Model.UserInterface.ReviewFeeType;
+using TableNumber = StandardBank.ConcessionManagement.Model.UserInterface.TableNumber;
+using TransactionType = StandardBank.ConcessionManagement.Model.UserInterface.TransactionType;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -109,6 +111,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ITransactionTypeRepository _transactionTypeRepository;
 
         /// <summary>
+        /// The table number repository
+        /// </summary>
+        private readonly ITableNumberRepository _tableNumberRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LookupTableManager"/> class.
         /// </summary>
         /// <param name="statusRepository">The status repository.</param>
@@ -128,6 +135,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="accrualTypeRepository">The accrual type repository.</param>
         /// <param name="channelTypeRepository">The channel type repository.</param>
         /// <param name="transactionTypeRepository">The transaction type repository.</param>
+        /// <param name="tableNumberRepository">The table number repository.</param>
         public LookupTableManager(IStatusRepository statusRepository, ISubStatusRepository subStatusRepository,
             IReferenceTypeRepository referenceTypeRepository, IMarketSegmentRepository marketSegmentRepository,
             IProvinceRepository provinceRepository, IConcessionTypeRepository concessionTypeRepository,
@@ -137,7 +145,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IConditionProductRepository conditionProductRepository,
             IConditionTypeProductRepository conditionTypeProductRepository,
             IAccrualTypeRepository accrualTypeRepository, IChannelTypeRepository channelTypeRepository,
-            ITransactionTypeRepository transactionTypeRepository)
+            ITransactionTypeRepository transactionTypeRepository, ITableNumberRepository tableNumberRepository)
         {
             _statusRepository = statusRepository;
             _subStatusRepository = subStatusRepository;
@@ -156,6 +164,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _accrualTypeRepository = accrualTypeRepository;
             _channelTypeRepository = channelTypeRepository;
             _transactionTypeRepository = transactionTypeRepository;
+            _tableNumberRepository = tableNumberRepository;
         }
 
         /// <summary>
@@ -427,6 +436,37 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var transactionType = _transactionTypeRepository.ReadById(transactionTypeId);
 
             return transactionType.IsActive ? transactionType.Description : string.Empty;
+        }
+
+        /// <summary>
+        /// Gets the type of the transaction types for concession.
+        /// </summary>
+        /// <param name="concessionType">Type of the concession.</param>
+        /// <returns></returns>
+        public IEnumerable<TransactionType> GetTransactionTypesForConcessionType(string concessionType)
+        {
+            var transactionTypes = new List<TransactionType>();
+
+            var concessionTypeId = GetConcessionTypeId(concessionType);
+
+            foreach (var transactionType in _transactionTypeRepository.ReadByConcessionTypeIdIsActive(concessionTypeId, true))
+            {
+                var mappedTransactionType = _mapper.Map<TransactionType>(transactionType);
+                mappedTransactionType.ConcessionType = concessionType;
+                transactionTypes.Add(mappedTransactionType);
+            }
+
+            return transactionTypes;
+        }
+
+        /// <summary>
+        /// Gets the table numbers.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<TableNumber> GetTableNumbers()
+        {
+            var tableNumbers = _tableNumberRepository.ReadAll();
+            return _mapper.Map<IEnumerable<TableNumber>>(tableNumbers.Where(_ => _.IsActive).OrderBy(_ => _.TariffTable));
         }
 
         /// <summary>

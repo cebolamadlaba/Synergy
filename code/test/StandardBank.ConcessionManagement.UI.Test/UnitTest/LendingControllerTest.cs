@@ -61,8 +61,10 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
             MockLendingManager.Setup(_ => _.GetLendingConcession(It.IsAny<string>(), It.IsAny<User>())).Returns(new LendingConcession());
 
             var result = _lendingController.LendingConcessionData("L001");
+            var apiResult = Assert.IsType<OkObjectResult>(result);
 
-            Assert.NotNull(result);
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is LendingConcession);
         }
 
         /// <summary>

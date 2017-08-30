@@ -12,6 +12,7 @@ using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.UpdateConcession;
+using StandardBank.ConcessionManagement.UI.Validation;
 
 namespace StandardBank.ConcessionManagement.UI.Controllers
 {
@@ -83,6 +84,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="cashConcession">The cash concession.</param>
         /// <returns></returns>
         [Route("NewCash")]
+        [ValidateModel]
         public async Task<IActionResult> NewCash([FromBody] CashConcession cashConcession)
         {
             var user = _siteHelper.LoggedInUser(this);
@@ -119,6 +121,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="cashConcession">The cash concession.</param>
         /// <returns></returns>
         [Route("UpdateCash")]
+        [ValidateModel]
         public async Task<IActionResult> UpdateCash([FromBody] CashConcession cashConcession)
         {
             var user = _siteHelper.LoggedInUser(this);

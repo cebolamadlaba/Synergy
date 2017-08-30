@@ -13,6 +13,8 @@ import { PeriodType } from "../models/period-type";
 import { ProductType } from "../models/product-type";
 import { ReviewFeeType } from "../models/review-fee-type";
 import { RiskGroup } from "../models/risk-group";
+import { TransactionType } from "../models/transaction-type";
+import { TableNumber } from "../models/table-number";
 
 @Injectable()
 export class LookupDataService {
@@ -65,6 +67,16 @@ export class LookupDataService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    getTransactionTypes(concessionType): Observable<TransactionType[]> {
+        const url = "/api/Concession/TransactionTypes/" + concessionType;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    getTableNumbers(): Observable<TableNumber[]> {
+        const url = "/api/Concession/TableNumbers";
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
     private extractData(response: Response) {
         let body = response.json();
         return body;
@@ -88,6 +100,8 @@ export class MockLookupDataService extends LookupDataService {
     productTypeModel = [new ProductType()];
     reviewFeeTypeModel = [new ReviewFeeType()];
     riskGroupModel = new RiskGroup();
+    transactionTypeModel = [new TransactionType()];
+    tableNumberModel = [new TableNumber()];
 
     getAccrualTypes(): Observable<AccrualType[]> {
         this.accrualTypeModel[0].id = 1;
@@ -149,5 +163,22 @@ export class MockLookupDataService extends LookupDataService {
         this.riskGroupModel.name = "Risk Group Test";
         this.riskGroupModel.number = 1;
         return Observable.of(this.riskGroupModel);
+    }
+
+    getTransactionTypes(concessionType): Observable<TransactionType[]> {
+        this.transactionTypeModel[0].id = 1;
+        this.transactionTypeModel[0].description = "Transaction Type Test";
+        this.transactionTypeModel[0].concessionType = "Transactional";
+        this.transactionTypeModel[0].concessionTypeId = 1;
+        return Observable.of(this.transactionTypeModel);
+    }
+
+    getTableNumbers(): Observable<TableNumber[]> {
+        this.tableNumberModel[0].id = 1;
+        this.tableNumberModel[0].adValorem = 2;
+        this.tableNumberModel[0].baseRate = 3;
+        this.tableNumberModel[0].tariffTable = 4;
+        this.tableNumberModel[0].displayText = "Test Display Text";
+        return Observable.of(this.tableNumberModel);
     }
 }

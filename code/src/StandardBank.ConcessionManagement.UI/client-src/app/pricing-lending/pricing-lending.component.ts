@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { LendingView } from "../models/lending-view";
@@ -20,7 +20,8 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
     observableLendingView: Observable<LendingView>;
     lendingView: LendingView = new LendingView();
     errorMessage: String;
-    showHide: true;
+    showHide = true;
+    pageLoaded = false;
 
     constructor(
         private route: ActivatedRoute,
@@ -38,8 +39,10 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
 
             if (this.riskGroupNumber) {
                 this.observableLendingView = this.lendingService.getLendingViewData(this.riskGroupNumber);
-                this.observableLendingView.subscribe(lendingView => this.lendingView = lendingView,
-                    error => this.errorMessage = <any>error);
+                this.observableLendingView.subscribe(lendingView => {
+                    this.lendingView = lendingView;
+                    this.pageLoaded = true;
+                }, error => this.errorMessage = <any>error);
             }
         });
     }

@@ -62,14 +62,6 @@
         public int? ChannelTypeId { get; set; }
 
         /// <summary>
-        /// Gets or sets the cash table number.
-        /// </summary>
-        /// <value>
-        /// The cash table number.
-        /// </value>
-        public int? CashTableNumber { get; set; }
-
-        /// <summary>
         /// Gets or sets the bp identifier.
         /// </summary>
         /// <value>
@@ -115,7 +107,7 @@
         /// <value>
         /// The base rate.
         /// </value>
-        public decimal BaseRate { get; set; }
+        public decimal? BaseRate { get; set; }
 
         /// <summary>
         /// Gets or sets the ad valorem.
@@ -123,7 +115,7 @@
         /// <value>
         /// The ad valorem.
         /// </value>
-        public decimal AdValorem { get; set; }
+        public decimal? AdValorem { get; set; }
 
         /// <summary>
         /// Gets or sets the accrual type identifier.
@@ -132,5 +124,13 @@
         /// The accrual type identifier.
         /// </value>
         public int? AccrualTypeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the table number identifier.
+        /// </summary>
+        /// <value>
+        /// The table number identifier.
+        /// </value>
+        public int? TableNumberId { get; set; }
     }
 }
