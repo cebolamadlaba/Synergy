@@ -275,6 +275,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
     getTransactionalConcession(): TransactionalConcession {
         var transactionalConcession = new TransactionalConcession();
         transactionalConcession.concession = new Concession();
+        transactionalConcession.concession.concessionType = "Transactional";
         transactionalConcession.concession.riskGroupId = this.riskGroup.id;
         transactionalConcession.concession.referenceNumber = this.concessionReferenceId;
 

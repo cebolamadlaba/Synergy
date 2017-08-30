@@ -283,6 +283,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
     getCashConcession(): CashConcession {
         var cashConcession = new CashConcession();
         cashConcession.concession = new Concession();
+        cashConcession.concession.concessionType = "Cash";
         cashConcession.concession.riskGroupId = this.riskGroup.id;
         cashConcession.concession.referenceNumber = this.concessionReferenceId;
 

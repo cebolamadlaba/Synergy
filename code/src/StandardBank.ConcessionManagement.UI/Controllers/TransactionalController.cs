@@ -12,6 +12,7 @@ using StandardBank.ConcessionManagement.BusinessLogic.Features.UpdateConcession;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
+using StandardBank.ConcessionManagement.UI.Validation;
 
 namespace StandardBank.ConcessionManagement.UI.Controllers
 {
@@ -94,6 +95,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="transactionalConcession">The transactional concession.</param>
         /// <returns></returns>
         [Route("NewTransactional")]
+        [ValidateModel]
         public async Task<IActionResult> NewTransactional([FromBody] TransactionalConcession transactionalConcession)
         {
             var user = _siteHelper.LoggedInUser(this);
@@ -121,6 +123,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="transactionalConcession">The transactional concession.</param>
         /// <returns></returns>
         [Route("UpdateTransactional")]
+        [ValidateModel]
         public async Task<IActionResult> UpdateTransactional([FromBody] TransactionalConcession transactionalConcession)
         {
             var user = _siteHelper.LoggedInUser(this);
