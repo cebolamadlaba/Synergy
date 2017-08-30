@@ -5,7 +5,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateConcessionCondition;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateLendingConcessionDetail;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateTransactionalConcessionDetail;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;

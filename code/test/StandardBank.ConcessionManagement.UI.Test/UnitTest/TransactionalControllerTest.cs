@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Pricing;
@@ -26,7 +27,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         public TransactionalControllerTest()
         {
             _transactionalController = new TransactionalController(new FakeSiteHelper(), MockPricingManager.Object,
-                MockTransactionalManager.Object);
+                MockTransactionalManager.Object, MockMediator.Object);
         }
 
         /// <summary>
@@ -66,6 +67,27 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
                 .Returns(new TransactionalConcession());
 
             var result = _transactionalController.TransactionalConcessionData("T001");
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is TransactionalConcession);
+        }
+
+        /// <summary>
+        /// Tests that NewTransactional executes positive.
+        /// </summary>
+        [Fact]
+        public async Task NewTransactional_Executes_Positive()
+        {
+            var transactionalConcession = new TransactionalConcession
+            {
+                Concession = new Concession(),
+                ConcessionConditions = new[] {new ConcessionCondition()},
+                TransactionalConcessionDetails = new[] {new TransactionalConcessionDetail()},
+                CurrentUser = new User()
+            };
+
+            var result = await _transactionalController.NewTransactional(transactionalConcession);
             var apiResult = Assert.IsType<OkObjectResult>(result);
 
             Assert.NotNull(apiResult.Value);
