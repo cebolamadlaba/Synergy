@@ -81,7 +81,7 @@ import { TransactionalViewConcessionComponent } from './transactional-view-conce
         InvestmentsAddConcessionComponent,
         BolAddConcessionComponent,
         MasAddConcessionComponent,
-        TransactionalViewConcessionComponent
+        TransactionalViewConcessionComponent,
         ProvinceComponent
     ],
     imports: [
