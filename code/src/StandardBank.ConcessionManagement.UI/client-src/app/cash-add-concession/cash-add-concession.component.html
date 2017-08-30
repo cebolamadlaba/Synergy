@@ -248,7 +248,7 @@
     <!-- Form buttons -->
     <div class="footer-buttons">
         <div class="float-right">
-            <button type="button" class="btn btn-cancel" [routerLink]="['/pricing-cash', riskGroup.number]">Cancel</button>
+            <button type="button" class="btn btn-cancel" (click)="goBack()">Cancel</button>
             <button class="btn btn-primary" type="button" (click)="onSubmit()" *ngIf="!saveMessage">Submit</button>
         </div>
     </div>

@@ -2,6 +2,7 @@ import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
 import { SourceSystemProduct } from "../models/source-system-product";
 import { Concession } from "../models/concession";
@@ -24,6 +25,7 @@ export class PricingTransactionalComponent implements OnInit, OnDestroy {
     pageLoaded = false;
     
     constructor(
+        private router: Router,
         private route: ActivatedRoute,
         private location: Location,
         @Inject(TransactionalConcessionService) private transactionalConcessionService) {
@@ -48,7 +50,8 @@ export class PricingTransactionalComponent implements OnInit, OnDestroy {
     }
 
     goBack() {
-        this.location.back();
+        //this.location.back();
+        this.router.navigate(['/pricing', this.riskGroupNumber]);
     }
 
     ngOnDestroy() {
