@@ -30,28 +30,28 @@
         public int? TransactionTypeId { get; set; }
 
         /// <summary>
-        /// Gets or sets the tariff table.
+        /// Gets or sets the volume.
         /// </summary>
         /// <value>
-        /// The tariff table.
+        /// The volume.
         /// </value>
-        public int TariffTable { get; set; }
+        public decimal? Volume { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the customer.
+        /// Gets or sets the value.
         /// </summary>
         /// <value>
-        /// The name of the customer.
+        /// The value.
         /// </value>
-        public string CustomerName { get; set; }
+        public decimal? Value { get; set; }
 
         /// <summary>
-        /// Gets or sets the account number.
+        /// Gets or sets the ad valorem.
         /// </summary>
         /// <value>
-        /// The account number.
+        /// The ad valorem.
         /// </value>
-        public string AccountNumber { get; set; }
+        public decimal? AdValorem { get; set; }
 
         /// <summary>
         /// Gets or sets the legal entity identifier.
@@ -70,20 +70,36 @@
         public int? LegalEntityAccountId { get; set; }
 
         /// <summary>
-        /// Gets or sets the volume.
+        /// Gets or sets the name of the customer.
         /// </summary>
         /// <value>
-        /// The volume.
+        /// The name of the customer.
         /// </value>
-        public decimal? Volume { get; set; }
+        public string CustomerName { get; set; }
 
         /// <summary>
-        /// Gets or sets the value.
+        /// Gets or sets the account number.
         /// </summary>
         /// <value>
-        /// The value.
+        /// The account number.
         /// </value>
-        public decimal? Value { get; set; }
+        public string AccountNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets the base rate.
+        /// </summary>
+        /// <value>
+        /// The base rate.
+        /// </value>
+        public decimal? BaseRate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the table number identifier.
+        /// </summary>
+        /// <value>
+        /// The table number identifier.
+        /// </value>
+        public int TableNumberId { get; set; }
 
         /// <summary>
         /// Gets or sets the loaded price.

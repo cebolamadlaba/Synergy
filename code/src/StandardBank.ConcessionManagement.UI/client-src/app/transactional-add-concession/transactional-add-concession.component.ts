@@ -14,6 +14,10 @@ import { ConditionProduct } from "../models/condition-product";
 import { ClientAccount } from "../models/client-account";
 import { TransactionType } from "../models/transaction-type";
 import { TableNumber } from "../models/table-number";
+import { TransactionalConcession } from "../models/transactional-concession";
+import { Concession } from "../models/concession";
+import { ConcessionCondition } from "../models/concession-condition";
+import { TransactionalConcessionDetail } from "../models/transactional-concession-detail";
 
 @Component({
     selector: 'app-transactional-add-concession',
@@ -162,6 +166,131 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 
         control.controls[rowIndex].get('flatFeeOrRate').setValue(control.controls[rowIndex].get('tableNumber').value.baseRate);
         control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('tableNumber').value.adValorem);
+    }
+
+    getTransactionalConcession(): TransactionalConcession {
+        var transactionalConcession = new TransactionalConcession();
+        transactionalConcession.concession = new Concession();
+        transactionalConcession.concession.riskGroupId = this.riskGroup.id;
+
+        if (this.transactionalConcessionForm.controls['mrsCrs'].value)
+            transactionalConcession.concession.mrsCrs = this.transactionalConcessionForm.controls['mrsCrs'].value;
+        else
+            this.addValidationError("MRS/CRS not captured");
+
+        if (this.transactionalConcessionForm.controls['smtDealNumber'].value)
+            transactionalConcession.concession.smtDealNumber = this.transactionalConcessionForm.controls['smtDealNumber'].value;
+        else
+            this.addValidationError("SMT Deal Number not captured");
+
+        if (this.transactionalConcessionForm.controls['motivation'].value)
+            transactionalConcession.concession.motivation = this.transactionalConcessionForm.controls['motivation'].value;
+        else
+            this.addValidationError("Motivation not captured");
+
+
+        const concessions = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+
+        for (let concessionFormItem of concessions.controls) {
+            if (!transactionalConcession.transactionalConcessionDetails)
+                transactionalConcession.transactionalConcessionDetails = [];
+
+            let transactionalConcessionDetail = new TransactionalConcessionDetail();
+
+            if (concessionFormItem.get('transactionType').value)
+                transactionalConcessionDetail.transactionTypeId = concessionFormItem.get('transactionType').value.id;
+            else
+                this.addValidationError("Transaction type not selected");
+
+            if (concessionFormItem.get('accountNumber').value) {
+                transactionalConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
+                transactionalConcessionDetail.legalEntityAccountId = concessionFormItem.get('accountNumber').value.legalEntityAccountId;
+            } else {
+                this.addValidationError("Client account not selected");
+            }
+
+            if (concessionFormItem.get('tableNumber').value) {
+                transactionalConcessionDetail.tableNumberId = concessionFormItem.get('tableNumber').value.id;
+                transactionalConcessionDetail.adValorem = concessionFormItem.get('tableNumber').value.adValorem;
+
+                if (concessionFormItem.get('tableNumber').value.baseRate)
+                    transactionalConcessionDetail.baseRate = concessionFormItem.get('tableNumber').value.baseRate;
+            } else {
+                this.addValidationError("Table Number not selected");
+            }
+
+            transactionalConcession.transactionalConcessionDetails.push(transactionalConcessionDetail);
+        }
+
+        const conditions = <FormArray>this.transactionalConcessionForm.controls['conditionItemsRows'];
+
+        for (let conditionFormItem of conditions.controls) {
+            if (!transactionalConcession.concessionConditions)
+                transactionalConcession.concessionConditions = [];
+
+            let concessionCondition = new ConcessionCondition();
+
+            if (conditionFormItem.get('conditionType').value)
+                concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;
+            else
+                this.addValidationError("Condition type not selected");
+
+            if (conditionFormItem.get('conditionProduct').value)
+                concessionCondition.conditionProductId = conditionFormItem.get('conditionProduct').value.id;
+            else
+                this.addValidationError("Condition product not selected");
+
+            if (conditionFormItem.get('interestRate').value)
+                concessionCondition.interestRate = conditionFormItem.get('interestRate').value;
+
+            if (conditionFormItem.get('volume').value)
+                concessionCondition.conditionVolume = conditionFormItem.get('volume').value;
+
+            if (conditionFormItem.get('value').value)
+                concessionCondition.conditionValue = conditionFormItem.get('value').value;
+
+            if (conditionFormItem.get('periodType').value)
+                concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
+
+            if (conditionFormItem.get('period').value)
+                concessionCondition.periodId = conditionFormItem.get('period').value.id;
+
+            transactionalConcession.concessionConditions.push(concessionCondition);
+        }
+
+        return transactionalConcession;
+    }
+
+    onSubmit() {
+        this.isLoading = true;
+
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var transactionalConcession = this.getTransactionalConcession();
+
+        transactionalConcession.concession.concessionType = "Transactional";
+        transactionalConcession.concession.type = "New";
+
+        if (!this.validationError) {
+            this.transactionalConcessionService.postNewTransactionalData(transactionalConcession).subscribe(entity => {
+                console.log("data saved");
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    addValidationError(validationDetail) {
+        if (!this.validationError)
+            this.validationError = [];
+
+        this.validationError.push(validationDetail);
     }
 
     goBack() {

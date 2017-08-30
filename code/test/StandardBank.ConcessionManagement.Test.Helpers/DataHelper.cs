@@ -1937,13 +1937,14 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 ConcessionId = GetConcessionId(),
                 TransactionTypeId = GetTransactionTypeId(),
                 ChannelTypeId = GetChannelTypeId(),
-                TableNumber = 1,
-                TransactionVolume = 7,
-                TransactionValue = 3329,
+                TransactionVolume = 2,
+                TransactionValue = 4797,
                 BaseRateId = GetBaseRateId(),
-                AdValorem = 3754,
+                AdValorem = 5344,
                 LegalEntityId = GetLegalEntityId(),
-                LegalEntityAccountId = GetLegalEntityAccountId()
+                LegalEntityAccountId = GetLegalEntityAccountId(),
+                BaseRate = 8369,
+                TableNumberId = GetTableNumberId()
             };
 
             InstantiatedDependencies.ConcessionTransactionalRepository.Create(model);

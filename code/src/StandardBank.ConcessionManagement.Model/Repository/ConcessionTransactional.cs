@@ -40,14 +40,6 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int? ChannelTypeId { get; set; }
 
         /// <summary>
-        /// Gets or sets the TableNumber.
-        /// </summary>
-        /// <value>
-        /// The TableNumber.
-        /// </value>
-        public int? TableNumber { get; set; }
-
-        /// <summary>
         /// Gets or sets the TransactionVolume.
         /// </summary>
         /// <value>
@@ -80,19 +72,35 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public decimal? AdValorem { get; set; }
 
         /// <summary>
-        /// Gets or sets the legal entity identifier.
+        /// Gets or sets the LegalEntityId.
         /// </summary>
         /// <value>
-        /// The legal entity identifier.
+        /// The LegalEntityId.
         /// </value>
         public int LegalEntityId { get; set; }
 
         /// <summary>
-        /// Gets or sets the legal entity account identifier.
+        /// Gets or sets the LegalEntityAccountId.
         /// </summary>
         /// <value>
-        /// The legal entity account identifier.
+        /// The LegalEntityAccountId.
         /// </value>
         public int LegalEntityAccountId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the BaseRate.
+        /// </summary>
+        /// <value>
+        /// The BaseRate.
+        /// </value>
+        public decimal? BaseRate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the TableNumberId.
+        /// </summary>
+        /// <value>
+        /// The TableNumberId.
+        /// </value>
+        public int TableNumberId { get; set; }
     }
 }

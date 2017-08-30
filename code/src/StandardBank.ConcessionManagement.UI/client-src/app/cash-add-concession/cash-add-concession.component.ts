@@ -217,9 +217,6 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
                 this.addValidationError("Client account not selected");
             }
 
-            if (concessionFormItem.get('adValorem').value)
-                cashConcessionDetail.adValorem = concessionFormItem.get('adValorem').value;
-
             if (concessionFormItem.get('tableNumber').value) {
                 cashConcessionDetail.tableNumberId = concessionFormItem.get('tableNumber').value.id;
                 cashConcessionDetail.adValorem = concessionFormItem.get('tableNumber').value.adValorem;

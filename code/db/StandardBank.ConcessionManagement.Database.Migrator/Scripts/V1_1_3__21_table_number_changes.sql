@@ -394,9 +394,9 @@ INSERT INTO [dbo].[rtblTableNumber] ([TariffTable], [AdValorem], [BaseRate]) VAL
 
 GO
 
-DROP STATISTICS [tblConcessionCash].[TableNumber]
+--DROP STATISTICS [tblConcessionCash].[TableNumber]
 
-GO
+--GO
 
 ALTER TABLE [dbo].[tblConcessionCash]
 DROP COLUMN [TableNumber]

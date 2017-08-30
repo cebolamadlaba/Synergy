@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Test.Helpers;
@@ -22,13 +21,14 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ConcessionId = DataHelper.GetConcessionId(),
                 TransactionTypeId = DataHelper.GetTransactionTypeId(),
                 ChannelTypeId = DataHelper.GetChannelTypeId(),
-                TableNumber = 2,
-                TransactionVolume = 8,
-                TransactionValue = 1595,
+                TransactionVolume = 9,
+                TransactionValue = 557,
                 BaseRateId = DataHelper.GetBaseRateId(),
-                AdValorem = 238,
+                AdValorem = 9485,
                 LegalEntityId = DataHelper.GetLegalEntityId(),
-                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
+                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
+                BaseRate = 70,
+                TableNumberId = DataHelper.GetTableNumberId()
             };
 
             var result = InstantiatedDependencies.ConcessionTransactionalRepository.Create(model);
@@ -93,13 +93,14 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.ConcessionId = DataHelper.GetAlternateConcessionId(model.ConcessionId);
             model.TransactionTypeId = DataHelper.GetAlternateTransactionTypeId(model.TransactionTypeId);
             model.ChannelTypeId = DataHelper.GetAlternateChannelTypeId(model.ChannelTypeId);
-            model.TableNumber = model.TableNumber + 1;
             model.TransactionVolume = model.TransactionVolume + 1;
             model.TransactionValue = model.TransactionValue + 100;
             model.BaseRateId = DataHelper.GetAlternateBaseRateId(model.BaseRateId);
             model.AdValorem = model.AdValorem + 100;
             model.LegalEntityId = DataHelper.GetAlternateLegalEntityId(model.LegalEntityId);
             model.LegalEntityAccountId = DataHelper.GetAlternateLegalEntityAccountId(model.LegalEntityAccountId);
+            model.BaseRate = model.BaseRate + 100;
+            model.TableNumberId = DataHelper.GetAlternateTableNumberId(model.TableNumberId);
 
             InstantiatedDependencies.ConcessionTransactionalRepository.Update(model);
 
@@ -110,13 +111,14 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.ConcessionId, model.ConcessionId);
             Assert.Equal(updatedModel.TransactionTypeId, model.TransactionTypeId);
             Assert.Equal(updatedModel.ChannelTypeId, model.ChannelTypeId);
-            Assert.Equal(updatedModel.TableNumber, model.TableNumber);
             Assert.Equal(updatedModel.TransactionVolume, model.TransactionVolume);
             Assert.Equal(updatedModel.TransactionValue, model.TransactionValue);
             Assert.Equal(updatedModel.BaseRateId, model.BaseRateId);
             Assert.Equal(updatedModel.AdValorem, model.AdValorem);
             Assert.Equal(updatedModel.LegalEntityId, model.LegalEntityId);
             Assert.Equal(updatedModel.LegalEntityAccountId, model.LegalEntityAccountId);
+            Assert.Equal(updatedModel.BaseRate, model.BaseRate);
+            Assert.Equal(updatedModel.TableNumberId, model.TableNumberId);
         }
 
         /// <summary>
@@ -130,13 +132,14 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ConcessionId = DataHelper.GetConcessionId(),
                 TransactionTypeId = DataHelper.GetTransactionTypeId(),
                 ChannelTypeId = DataHelper.GetChannelTypeId(),
-                TableNumber = 2,
-                TransactionVolume = 8,
-                TransactionValue = 1595,
+                TransactionVolume = 9,
+                TransactionValue = 557,
                 BaseRateId = DataHelper.GetBaseRateId(),
-                AdValorem = 238,
+                AdValorem = 9485,
                 LegalEntityId = DataHelper.GetLegalEntityId(),
-                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
+                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
+                BaseRate = 70,
+                TableNumberId = DataHelper.GetTableNumberId()
             };
 
             var temporaryEntity = InstantiatedDependencies.ConcessionTransactionalRepository.Create(model);
