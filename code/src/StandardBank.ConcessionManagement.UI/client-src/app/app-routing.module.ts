@@ -1,4 +1,4 @@
-﻿import { NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { PendingInboxComponent } from "./pending-inbox/pending-inbox.component";
 import { ApprovedConcessionsComponent } from "./approved-concessions/approved-concessions.component";
@@ -24,6 +24,7 @@ import { CashViewConcessionComponent } from "./cash-view-concession/cash-view-co
 import { InvestmentsAddConcessionComponent } from "./investments-add-concession/investments-add-concession.component";
 import { BolAddConcessionComponent } from "./bol-add-concession/bol-add-concession.component";
 import { MasAddConcessionComponent } from "./mas-add-concession/mas-add-concession.component";
+import { TransactionalViewConcessionComponent } from "./transactional-view-concession/transactional-view-concession.component";
 
 const routes: Routes = [
     { path: '', redirectTo: '/pending-inbox', pathMatch: 'full' },
@@ -45,6 +46,7 @@ const routes: Routes = [
     { path: 'pricing-mas', component: PricingMasComponent },
     { path: 'pricing-cashman', component: PricingCashmanComponent },
     { path: 'transactional-add-concession/:riskGroupNumber', component: TransactionalAddConcessionComponent },
+    { path: 'transactional-view-concession/:riskGroupNumber/:concessionReferenceId', component: TransactionalViewConcessionComponent },
     { path: 'cash-add-concession/:riskGroupNumber', component: CashAddConcessionComponent },
     { path: 'cash-view-concession/:riskGroupNumber/:concessionReferenceId', component: CashViewConcessionComponent },
     { path: 'lending-add-concession/:riskGroupNumber', component: LendingAddConcessionComponent },
@@ -53,8 +55,6 @@ const routes: Routes = [
     { path: 'bol-add-concession', component: BolAddConcessionComponent },
     { path: 'mas-add-concession', component: MasAddConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent }
-
-    
 ];
 
 @NgModule({

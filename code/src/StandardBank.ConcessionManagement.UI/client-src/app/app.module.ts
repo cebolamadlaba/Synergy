@@ -45,6 +45,7 @@ import { BaseConcessionFilterPipe } from './filters/base-concession-filter.pipe'
 import { InvestmentsAddConcessionComponent } from './investments-add-concession/investments-add-concession.component';
 import { BolAddConcessionComponent } from './bol-add-concession/bol-add-concession.component';
 import { MasAddConcessionComponent } from './mas-add-concession/mas-add-concession.component';
+import { TransactionalViewConcessionComponent } from './transactional-view-concession/transactional-view-concession.component';
 
 @NgModule({
     declarations: [
@@ -77,7 +78,8 @@ import { MasAddConcessionComponent } from './mas-add-concession/mas-add-concessi
         PricingCashmanComponent,
         InvestmentsAddConcessionComponent,
         BolAddConcessionComponent,
-        MasAddConcessionComponent
+        MasAddConcessionComponent,
+        TransactionalViewConcessionComponent
     ],
     imports: [
         BrowserModule,
