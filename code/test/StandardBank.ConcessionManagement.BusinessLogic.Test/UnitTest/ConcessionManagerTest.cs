@@ -34,7 +34,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 InstantiatedDependencies.Mapper, MockConcessionConditionRepository.Object,
                 MockLegalEntityAccountRepository.Object, MockConcessionCommentRepository.Object,
                 MockConcessionLendingRepository.Object, MockMarketSegmentRepository.Object,
-                MockConcessionCashRepository.Object);
+                MockConcessionCashRepository.Object, MockConcessionTransactionalRepository.Object);
         }
 
         /// <summary>
@@ -598,6 +598,28 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             var result =
                 _concessionManager.GetApprovedConcessionDetails(
                     new Model.UserInterface.Concession { ConcessionType = "Cash" });
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that GetApprovedConcessionDetails for transactional executes positive.
+        /// </summary>
+        [Fact]
+        public void GetApprovedConcessionDetails_Transactional_Executes_Positive()
+        {
+            MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
+                .Returns(new LegalEntity { IsActive = true });
+
+            MockConcessionTransactionalRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
+                .Returns(new[] { new ConcessionTransactional() });
+
+            MockMarketSegmentRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new MarketSegment());
+
+            var result =
+                _concessionManager.GetApprovedConcessionDetails(
+                    new Model.UserInterface.Concession { ConcessionType = "Transactional" });
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);

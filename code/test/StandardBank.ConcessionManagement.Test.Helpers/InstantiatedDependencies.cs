@@ -325,7 +325,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             new ConcessionManager(ConcessionRepository, LookupTableManager, LegalEntityRepository, RiskGroupRepository,
                 CacheManager, ConcessionAccountRepository, Mapper, ConcessionConditionRepository,
                 LegalEntityAccountRepository, ConcessionCommentRepository, ConcessionLendingRepository,
-                MarketSegmentRepository, ConcessionCashRepository);
+                MarketSegmentRepository, ConcessionCashRepository, ConcessionTransactionalRepository);
 
         /// <summary>
         /// The user manager

@@ -111,7 +111,10 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
         this.observableTransactionTypes.subscribe(transactionTypes => this.transactionTypes = transactionTypes, error => this.errorMessage = <any>error);
 
         this.observableTableNumbers = this.lookupDataService.getTableNumbers();
-        this.observableTableNumbers.subscribe(tableNumbers => this.tableNumbers = tableNumbers, error => this.errorMessage = <any>error);
+        this.observableTableNumbers.subscribe(tableNumbers => {
+            this.tableNumbers = tableNumbers;
+            this.populateForm();
+        }, error => this.errorMessage = <any>error);
 
         this.transactionalConcessionForm.valueChanges.subscribe((value: any) => {
             if (this.transactionalConcessionForm.dirty) {
@@ -119,7 +122,11 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
             }
         });
 
+    }
+
+    populateForm() {
         if (this.concessionReferenceId) {
+
             this.observableTransactionalConcession = this.transactionalConcessionService.getTransactionalConcessionData(this.concessionReferenceId);
             this.observableTransactionalConcession.subscribe(transactionalConcession => {
                 this.transactionalConcession = transactionalConcession;
@@ -269,6 +276,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
         var transactionalConcession = new TransactionalConcession();
         transactionalConcession.concession = new Concession();
         transactionalConcession.concession.riskGroupId = this.riskGroup.id;
+        transactionalConcession.concession.referenceNumber = this.concessionReferenceId;
 
         if (this.transactionalConcessionForm.controls['mrsCrs'].value)
             transactionalConcession.concession.mrsCrs = this.transactionalConcessionForm.controls['mrsCrs'].value;
@@ -295,6 +303,9 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
                 transactionalConcession.transactionalConcessionDetails = [];
 
             let transactionalConcessionDetail = new TransactionalConcessionDetail();
+
+            if (concessionFormItem.get('transactionalConcessionDetailId').value)
+                transactionalConcessionDetail.transactionalConcessionDetailId = concessionFormItem.get('transactionalConcessionDetailId').value;
 
             if (concessionFormItem.get('transactionType').value)
                 transactionalConcessionDetail.transactionTypeId = concessionFormItem.get('transactionType').value.id;
@@ -329,6 +340,9 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
             let concessionCondition = new ConcessionCondition();
 
+            if (conditionFormItem.get('concessionConditionId').value)
+                concessionCondition.concessionConditionId = conditionFormItem.get('concessionConditionId').value;
+
             if (conditionFormItem.get('conditionType').value)
                 concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;
             else
@@ -360,30 +374,6 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
         return transactionalConcession;
     }
 
-    onSubmit() {
-        this.isLoading = true;
-
-        this.errorMessage = null;
-        this.validationError = null;
-
-        var transactionalConcession = this.getTransactionalConcession();
-
-        transactionalConcession.concession.concessionType = "Transactional";
-
-        if (!this.validationError) {
-            this.transactionalConcessionService.postNewTransactionalData(transactionalConcession).subscribe(entity => {
-                console.log("data saved");
-                this.saveMessage = entity.concession.referenceNumber;
-                this.isLoading = false;
-            }, error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
-        } else {
-            this.isLoading = false;
-        }
-    }
-
     addValidationError(validationDetail) {
         if (!this.validationError)
             this.validationError = [];
@@ -399,4 +389,120 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
         this.sub.unsubscribe();
     }
 
+    bcmApproveConcession() {
+        this.isLoading = true;
+
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var transactionalConcession = this.getTransactionalConcession();
+        transactionalConcession.concession.subStatus = "PCM Pending";
+        transactionalConcession.concession.bcmUserId = this.transactionalConcession.currentUser.id;
+
+        if (!this.validationError) {
+            this.transactionalConcessionService.postUpdateTransactionalData(transactionalConcession).subscribe(entity => {
+                console.log("data saved");
+                this.canBcmApprove = false;
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    bcmDeclineConcession() {
+        this.isLoading = true;
+
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var transactionalConcession = this.getTransactionalConcession();
+        transactionalConcession.concession.status = "Declined";
+        transactionalConcession.concession.subStatus = "BCM Declined";
+        transactionalConcession.concession.bcmUserId = this.transactionalConcession.currentUser.id;
+
+        if (!this.validationError) {
+            this.transactionalConcessionService.postUpdateTransactionalData(transactionalConcession).subscribe(entity => {
+                console.log("data saved");
+                this.canBcmApprove = false;
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    pcmApproveConcession() {
+        this.isLoading = true;
+
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var transactionalConcession = this.getTransactionalConcession();
+
+        transactionalConcession.concession.status = "Approved";
+
+        if (this.transactionalConcession.currentUser.isHO) {
+            transactionalConcession.concession.subStatus = "HO Approved";
+            transactionalConcession.concession.hoUserId = this.transactionalConcession.currentUser.id;
+        } else {
+            transactionalConcession.concession.subStatus = "PCM Approved";
+            transactionalConcession.concession.pcmUserId = this.transactionalConcession.currentUser.id;
+        }
+
+        if (!this.validationError) {
+            this.transactionalConcessionService.postUpdateTransactionalData(transactionalConcession).subscribe(entity => {
+                console.log("data saved");
+                this.canPcmApprove = false;
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    pcmDeclineConcession() {
+        this.isLoading = true;
+
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var transactionalConcession = this.getTransactionalConcession();
+
+        transactionalConcession.concession.status = "Declined";
+
+        if (this.transactionalConcession.currentUser.isHO) {
+            transactionalConcession.concession.subStatus = "HO Declined";
+            transactionalConcession.concession.hoUserId = this.transactionalConcession.currentUser.id;
+        } else {
+            transactionalConcession.concession.subStatus = "PCM Declined";
+            transactionalConcession.concession.pcmUserId = this.transactionalConcession.currentUser.id;
+        }
+
+        if (!this.validationError) {
+            this.transactionalConcessionService.postUpdateTransactionalData(transactionalConcession).subscribe(entity => {
+                console.log("data saved");
+                this.canPcmApprove = false;
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
 }

@@ -93,5 +93,30 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
             Assert.NotNull(apiResult.Value);
             Assert.True(apiResult.Value is TransactionalConcession);
         }
+
+        /// <summary>
+        /// Tests that UpdateTransactional executes positive.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task UpdateTransactional_Executes_Positive()
+        {
+            var transactionalConcession = new TransactionalConcession
+            {
+                Concession = new Concession(),
+                ConcessionConditions = new[] { new ConcessionCondition() },
+                TransactionalConcessionDetails = new[] { new TransactionalConcessionDetail() },
+                CurrentUser = new User()
+            };
+
+            MockTransactionalManager.Setup(_ => _.GetTransactionalConcession(It.IsAny<string>(), It.IsAny<User>()))
+                .Returns(transactionalConcession);
+
+            var result = await _transactionalController.UpdateTransactional(transactionalConcession);
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is TransactionalConcession);
+        }
     }
 }
