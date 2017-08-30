@@ -325,8 +325,10 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
             if (concessionFormItem.get('tableNumber').value) {
                 cashConcessionDetail.tableNumberId = concessionFormItem.get('tableNumber').value.id;
-                cashConcessionDetail.baseRate = concessionFormItem.get('tableNumber').value.baseRate;
                 cashConcessionDetail.adValorem = concessionFormItem.get('tableNumber').value.adValorem;
+
+                if (concessionFormItem.get('tableNumber').value.baseRate)
+                    cashConcessionDetail.baseRate = concessionFormItem.get('tableNumber').value.baseRate;
             } else {
                 this.addValidationError("Table Number not selected");
             }

@@ -107,7 +107,7 @@
         /// <value>
         /// The base rate.
         /// </value>
-        public decimal BaseRate { get; set; }
+        public decimal? BaseRate { get; set; }
 
         /// <summary>
         /// Gets or sets the ad valorem.
@@ -115,7 +115,7 @@
         /// <value>
         /// The ad valorem.
         /// </value>
-        public decimal AdValorem { get; set; }
+        public decimal? AdValorem { get; set; }
 
         /// <summary>
         /// Gets or sets the accrual type identifier.
