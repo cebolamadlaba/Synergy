@@ -1,5 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+using StandardBank.ConcessionManagement.Model.UserInterface;
+using StandardBank.ConcessionManagement.UI.Validation;
+using System.Threading.Tasks;
 
 namespace StandardBank.ConcessionManagement.UI.Controllers
 {
@@ -16,12 +21,17 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         private readonly IProvinceManager _provinceManager;
 
         /// <summary>
+        /// The mediator
+        /// </summary>
+        private readonly IMediator _mediator;
+        /// <summary>
         /// Initializes the controller
         /// </summary>
         /// <param name="pricingManager"></param>
-        public ProvinceController(IProvinceManager provinceManager)
+        public ProvinceController(IProvinceManager provinceManager, IMediator mediator)
         {
             _provinceManager = provinceManager;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -32,6 +42,16 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult GetAllProvinces()
         {
             return Ok(_provinceManager.GetProvinces());
+        }
+
+
+        [Route("UpdateProvince")]
+        public async Task<IActionResult> UpdateProvince([FromBody] Province province)
+        {
+            var result =  _provinceManager.MaintainProvince(province);
+            
+
+            return Ok(result);
         }
     }
 }

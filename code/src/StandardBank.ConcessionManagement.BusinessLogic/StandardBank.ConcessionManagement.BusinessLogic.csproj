@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\AddOrUpdateProvince\**" />
+    <EmbeddedResource Remove="Features\AddOrUpdateProvince\**" />
+    <None Remove="Features\AddOrUpdateProvince\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.1.1" />
     <PackageReference Include="FluentEmail.Razor" Version="2.1.0" />
     <PackageReference Include="MailKit" Version="1.16.2" />

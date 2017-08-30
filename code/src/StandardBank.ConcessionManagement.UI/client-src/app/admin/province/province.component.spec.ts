@@ -1,14 +1,20 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+﻿import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ProvinceComponent } from './province.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpModule } from '@angular/http';
+import { ProvinceService, MockProvinceService } from "../../services/province.service";
 
 describe('ProvinceComponent', () => {
   let component: ProvinceComponent;
   let fixture: ComponentFixture<ProvinceComponent>;
 
   beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ProvinceComponent ]
+      TestBed.configureTestingModule({
+          imports: [HttpModule, FormsModule, ReactiveFormsModule, RouterTestingModule],
+          declarations: [ProvinceComponent],
+          providers: [{ provide: ProvinceService, useClass: MockProvinceService }]
     })
     .compileComponents();
   }));
