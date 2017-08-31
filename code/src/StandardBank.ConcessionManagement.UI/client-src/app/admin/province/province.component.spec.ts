@@ -1,9 +1,9 @@
 ﻿import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { ProvinceComponent } from './province.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpModule } from '@angular/http';
+import { ProvinceComponent } from './province.component';
 import { ProvinceService, MockProvinceService } from "../../services/province.service";
 
 describe('ProvinceComponent', () => {
