@@ -5,12 +5,14 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionComment;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionRelationship;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateConcessionCondition;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateLendingConcessionDetail;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteConcessionCondition;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteLendingConcessionDetail;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.UpdateConcession;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 using StandardBank.ConcessionManagement.UI.Validation;
@@ -180,7 +182,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 await _mediator.Send(new AddOrUpdateLendingConcessionDetail(lendingConcessionDetail, user, concession));
             }
 
-
             if (lendingConcession.ConcessionConditions != null && lendingConcession.ConcessionConditions.Any())
             {
                 foreach (var concessionCondition in lendingConcession.ConcessionConditions)
@@ -191,7 +192,16 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             }
 
             //link the new concession to the old concession
-            //var concessionRelationship = 
+            var concessionRelationship = new ConcessionRelationship
+            {
+                CreationDate = DateTime.Now,
+                UserId = user.Id,
+                RelationshipDescription = "Extension",
+                ParentConcessionId = lendingConcession.Concession.Id,
+                ChildConcessionId = concession.Id
+            };
+
+            await _mediator.Send(new AddConcessionRelationship(concessionRelationship, user));
 
             return Ok(concession);
         }

@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Inbox;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 using ConcessionCondition = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionCondition;
+using ConcessionRelationship = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionRelationship;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
@@ -154,5 +156,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="concession">The concession.</param>
         /// <returns></returns>
         Model.Repository.ConcessionCondition UpdateConcessionCondition(ConcessionCondition concessionCondition, Concession concession);
+
+        /// <summary>
+        /// Creates the concession relationship.
+        /// </summary>
+        /// <param name="concessionRelationship">The concession relationship.</param>
+        /// <returns></returns>
+        Model.Repository.ConcessionRelationship CreateConcessionRelationship(ConcessionRelationship concessionRelationship);
     }
 }

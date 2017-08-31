@@ -3,22 +3,22 @@ using StandardBank.ConcessionManagement.Interface.BusinessLogic.Features;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 
-namespace StandardBank.ConcessionManagement.BusinessLogic.Features.ExtendConcession
+namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionRelationship
 {
     /// <summary>
-    /// Extend concession command
+    /// Add concession relationship command
     /// </summary>
-    /// <seealso cref="MediatR.IRequest{StandardBank.ConcessionManagement.Model.UserInterface.Concession}" />
-    /// <seealso cref="StandardBank.ConcessionManagement.Interface.BusinessLogic.Features.IAuditableCommand" />
-    public class ExtendConcession : IRequest<Concession>, IAuditableCommand
+    /// <seealso cref="ConcessionRelationship}" />
+    /// <seealso cref="IAuditableCommand" />
+    public class AddConcessionRelationship : IRequest<ConcessionRelationship>, IAuditableCommand
     {
         /// <summary>
-        /// Gets or sets the concession.
+        /// Gets or sets the concession relationship.
         /// </summary>
         /// <value>
-        /// The concession.
+        /// The concession relationship.
         /// </value>
-        public Concession Concession { get; set; }
+        public ConcessionRelationship ConcessionRelationship { get; set; }
 
         /// <summary>
         /// Gets or sets the user.
@@ -37,13 +37,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.ExtendConcess
         public AuditRecord AuditRecord { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExtendConcession"/> class.
+        /// Initializes a new instance of the <see cref="AddConcessionRelationship"/> class.
         /// </summary>
-        /// <param name="concession">The concession.</param>
+        /// <param name="concessionRelationship">The concession relationship.</param>
         /// <param name="user">The user.</param>
-        public ExtendConcession(Concession concession, User user)
+        public AddConcessionRelationship(ConcessionRelationship concessionRelationship, User user)
         {
-            Concession = concession;
+            ConcessionRelationship = concessionRelationship;
             User = user;
         }
     }

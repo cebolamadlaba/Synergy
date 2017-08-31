@@ -29,7 +29,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 InstantiatedDependencies.Mapper, MockConditionProductRepository.Object,
                 MockConditionTypeProductRepository.Object, MockAccrualTypeRepository.Object,
                 MockChannelTypeRepository.Object, MockTransactionTypeRepository.Object,
-                MockTableNumberRepository.Object);
+                MockTableNumberRepository.Object, MockRelationshipRepository.Object);
         }
 
         /// <summary>
@@ -457,6 +457,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that GetRelationshipId executes positive.
+        /// </summary>
+        [Fact]
+        public void GetRelationshipId_Executes_Positive()
+        {
+            var relationship = new Relationship { Id = 1, Description = "Unit Test Relationship", IsActive = true };
+
+            MockRelationshipRepository.Setup(_ => _.ReadAll()).Returns(new[] {relationship});
+            
+            var result = _lookupTableManager.GetRelationshipId(relationship.Description);
+
+            Assert.NotNull(result);
+            Assert.Equal(result, relationship.Id);
         }
     }
 }

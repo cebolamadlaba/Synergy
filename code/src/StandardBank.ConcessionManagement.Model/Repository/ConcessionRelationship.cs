@@ -5,7 +5,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
     /// <summary>
     /// ConcessionRelationship entity
     /// </summary>
-    public class ConcessionRelationship
+    public class ConcessionRelationship : IAuditable
     {
         /// <summary>
         /// Gets or sets the Id.
@@ -54,5 +54,20 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The UserId.
         /// </value>
         public int UserId { get; set; }
+
+        /// <summary>
+        /// Gets the table name
+        /// </summary>
+        public string TableName => "tblConcessionRelationship";
+
+        /// <summary>
+        /// Gets the primary key column name
+        /// </summary>
+        public string PrimaryKeyColumnName => "pkConcessionRelationshipId";
+
+        /// <summary>
+        /// Gets the primary key value
+        /// </summary>
+        public object PrimaryKeyValue => Id;
     }
 }

@@ -326,7 +326,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             ConcessionTypeRepository, ProductRepository, ReviewFeeTypeRepository, PeriodRepository,
             PeriodTypeRepository, ConditionTypeRepository, Mapper, ConditionProductRepository,
             ConditionTypeProductRepository, AccrualTypeRepository, ChannelTypeRepository, TransactionTypeRepository,
-            TableNumberRepository);
+            TableNumberRepository, RelationshipRepository);
 
         /// <summary>
         /// The concession manager
@@ -335,7 +335,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             new ConcessionManager(ConcessionRepository, LookupTableManager, LegalEntityRepository, RiskGroupRepository,
                 CacheManager, ConcessionAccountRepository, Mapper, ConcessionConditionRepository,
                 LegalEntityAccountRepository, ConcessionCommentRepository, ConcessionLendingRepository,
-                MarketSegmentRepository, ConcessionCashRepository, ConcessionTransactionalRepository);
+                MarketSegmentRepository, ConcessionCashRepository, ConcessionTransactionalRepository,
+                ConcessionRelationshipRepository);
 
         /// <summary>
         /// The user manager
