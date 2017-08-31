@@ -309,6 +309,16 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static ITableNumberRepository TableNumberRepository = new TableNumberRepository(DbConnection, CacheManager);
 
         /// <summary>
+        /// The Relationship repository
+        /// </summary>
+        public static IRelationshipRepository RelationshipRepository = new RelationshipRepository(DbConnection, CacheManager);
+
+        /// <summary>
+        /// The ConcessionRelationship repository
+        /// </summary>
+        public static IConcessionRelationshipRepository ConcessionRelationshipRepository = new ConcessionRelationshipRepository(DbConnection);
+
+        /// <summary>
         /// The look up table manager
         /// </summary>
         public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,
