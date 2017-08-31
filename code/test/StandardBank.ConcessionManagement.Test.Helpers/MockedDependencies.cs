@@ -329,5 +329,10 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The mock ConcessionRelationship repository
         /// </summary>
         public static Mock<IConcessionRelationshipRepository> MockConcessionRelationshipRepository = new Mock<IConcessionRelationshipRepository>();
+
+        /// <summary>
+        /// The mock audit repository
+        /// </summary>
+        public static Mock<IAuditRepository> MockAuditRepository = new Mock<IAuditRepository>();
     }
 }
