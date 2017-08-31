@@ -168,5 +168,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// </summary>
         /// <returns></returns>
         IEnumerable<TableNumber> GetTableNumbers();
+
+        /// <summary>
+        /// Gets the relationship identifier.
+        /// </summary>
+        /// <param name="relationshipDescription">The relationship description.</param>
+        /// <returns></returns>
+        int GetRelationshipId(string relationshipDescription);
     }
 }

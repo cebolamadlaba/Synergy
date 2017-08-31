@@ -116,6 +116,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ITableNumberRepository _tableNumberRepository;
 
         /// <summary>
+        /// The relationship repository
+        /// </summary>
+        private readonly IRelationshipRepository _relationshipRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LookupTableManager"/> class.
         /// </summary>
         /// <param name="statusRepository">The status repository.</param>
@@ -136,6 +141,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="channelTypeRepository">The channel type repository.</param>
         /// <param name="transactionTypeRepository">The transaction type repository.</param>
         /// <param name="tableNumberRepository">The table number repository.</param>
+        /// <param name="relationshipRepository">The relationship repository.</param>
         public LookupTableManager(IStatusRepository statusRepository, ISubStatusRepository subStatusRepository,
             IReferenceTypeRepository referenceTypeRepository, IMarketSegmentRepository marketSegmentRepository,
             IProvinceRepository provinceRepository, IConcessionTypeRepository concessionTypeRepository,
@@ -145,7 +151,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IConditionProductRepository conditionProductRepository,
             IConditionTypeProductRepository conditionTypeProductRepository,
             IAccrualTypeRepository accrualTypeRepository, IChannelTypeRepository channelTypeRepository,
-            ITransactionTypeRepository transactionTypeRepository, ITableNumberRepository tableNumberRepository)
+            ITransactionTypeRepository transactionTypeRepository, ITableNumberRepository tableNumberRepository,
+            IRelationshipRepository relationshipRepository)
         {
             _statusRepository = statusRepository;
             _subStatusRepository = subStatusRepository;
@@ -165,6 +172,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _channelTypeRepository = channelTypeRepository;
             _transactionTypeRepository = transactionTypeRepository;
             _tableNumberRepository = tableNumberRepository;
+            _relationshipRepository = relationshipRepository;
         }
 
         /// <summary>
@@ -467,6 +475,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var tableNumbers = _tableNumberRepository.ReadAll();
             return _mapper.Map<IEnumerable<TableNumber>>(tableNumbers.Where(_ => _.IsActive).OrderBy(_ => _.TariffTable));
+        }
+
+        /// <summary>
+        /// Gets the relationship identifier.
+        /// </summary>
+        /// <param name="relationshipDescription">The relationship description.</param>
+        /// <returns></returns>
+        public int GetRelationshipId(string relationshipDescription)
+        {
+            var relationships = _relationshipRepository.ReadAll();
+
+            return relationships
+                .First(_ => _.Description.Equals(relationshipDescription, StringComparison.CurrentCultureIgnoreCase))
+                .Id;
         }
 
         /// <summary>

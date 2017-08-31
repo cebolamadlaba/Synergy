@@ -1,4 +1,4 @@
-﻿<!-- Banner expanded -->
+<!-- Banner expanded -->
 <div class="col-md-12 banner">
     <div class="row">
         <div class="lending-banner-title">
@@ -263,8 +263,10 @@
             <button type="button" class="btn btn-danger" (click)="bcmDeclineConcession()" *ngIf="canBcmApprove">Decline</button>
             <button type="button" class="btn btn-success" (click)="bcmApproveConcession()" *ngIf="canBcmApprove">Forward</button>
             <button type="button" class="btn btn-danger" (click)="pcmDeclineConcession()" *ngIf="canPcmApprove">Decline</button>
-            <button type="button" class="btn btn-success" (click)="pcmApproveConcession()" *ngIf="canPcmApprove">Approve</button>            
-            <!--<button class="btn btn-submit" type="button" (click)="onSubmit()">Submit</button>-->
+            <button type="button" class="btn btn-success" (click)="pcmApproveConcession()" *ngIf="canPcmApprove">Approve</button>
+            <button type="button" class="btn btn-success" (click)="extendConcession()" *ngIf="canExtend">Extend</button>
+            <button type="button" class="btn btn-success" (click)="renewConcession()" *ngIf="canRenew">Renew</button>
+            <button type="button" class="btn btn-success" (click)="recallConcession()" *ngIf="canRecall">Recall</button>
         </div>
     </div>
 </form>

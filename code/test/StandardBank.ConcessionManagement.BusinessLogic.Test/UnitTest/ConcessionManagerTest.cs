@@ -34,7 +34,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 InstantiatedDependencies.Mapper, MockConcessionConditionRepository.Object,
                 MockLegalEntityAccountRepository.Object, MockConcessionCommentRepository.Object,
                 MockConcessionLendingRepository.Object, MockMarketSegmentRepository.Object,
-                MockConcessionCashRepository.Object, MockConcessionTransactionalRepository.Object);
+                MockConcessionCashRepository.Object, MockConcessionTransactionalRepository.Object,
+                MockConcessionRelationshipRepository.Object);
         }
 
         /// <summary>
@@ -633,6 +634,23 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             var result = _concessionManager.UpdateConcessionCondition(new Model.UserInterface.ConcessionCondition(),
                 new Model.UserInterface.Concession());
+
+            Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Tests that CreateConcessionRelationship executes positive.
+        /// </summary>
+        [Fact]
+        public void CreateConcessionRelationship_Executes_Positive()
+        {
+            MockLookupTableManager.Setup(_ => _.GetRelationshipId(It.IsAny<string>())).Returns(1);
+
+            MockConcessionRelationshipRepository.Setup(_ => _.Create(It.IsAny<ConcessionRelationship>()))
+                .Returns(new ConcessionRelationship());
+
+            var result =
+                _concessionManager.CreateConcessionRelationship(new Model.UserInterface.ConcessionRelationship());
 
             Assert.NotNull(result);
         }

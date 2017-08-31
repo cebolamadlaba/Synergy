@@ -43,6 +43,9 @@ dbo;rtblProvince;IsActive;NO;bit
 dbo;rtblRegion;pkRegionId;NO;int
 dbo;rtblRegion;Description;NO;varchar
 dbo;rtblRegion;IsActive;NO;bit
+dbo;rtblRelationship;pkRelationshipId;NO;int
+dbo;rtblRelationship;Description;NO;varchar
+dbo;rtblRelationship;IsActive;NO;bit
 dbo;rtblReviewFeeType;pkReviewFeeTypeId;NO;int
 dbo;rtblReviewFeeType;Description;NO;varchar
 dbo;rtblReviewFeeType;IsActive;NO;bit
@@ -192,6 +195,12 @@ dbo;tblConcessionMas;fkTransactionTypeId;NO;int
 dbo;tblConcessionMas;MerchantNumber;NO;varchar
 dbo;tblConcessionMas;Turnover;YES;decimal
 dbo;tblConcessionMas;CommissionRate;YES;decimal
+dbo;tblConcessionRelationship;pkConcessionRelationshipId;NO;int
+dbo;tblConcessionRelationship;fkParentConcessionId;NO;int
+dbo;tblConcessionRelationship;fkChildConcessionId;NO;int
+dbo;tblConcessionRelationship;fkRelationshipId;NO;int
+dbo;tblConcessionRelationship;CreationDate;NO;datetime
+dbo;tblConcessionRelationship;fkUserId;NO;int
 dbo;tblConcessionRemovalRequest;pkConcessionRemovalRequestId;NO;int
 dbo;tblConcessionRemovalRequest;fkConcessionId;NO;int
 dbo;tblConcessionRemovalRequest;RequestorId;NO;int
@@ -211,7 +220,7 @@ dbo;tblConcessionTrade;TransactionValue;YES;decimal
 dbo;tblConcessionTrade;fkBaseRateId;YES;int
 dbo;tblConcessionTrade;AdValorem;YES;decimal
 dbo;tblConcessionTransactional;pkConcessionTransactionalId;NO;int
-dbo;tblConcessionTransactional;fkConcessionId;YES;int
+dbo;tblConcessionTransactional;fkConcessionId;NO;int
 dbo;tblConcessionTransactional;fkTransactionTypeId;YES;int
 dbo;tblConcessionTransactional;fkChannelTypeId;YES;int
 dbo;tblConcessionTransactional;TransactionVolume;YES;int

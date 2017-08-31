@@ -2647,5 +2647,113 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
 
             return InsertTableNumber();
         }
+
+        /// <summary>
+        /// Gets the Relationship id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetRelationshipId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.RelationshipRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertRelationship();
+        }
+
+        /// <summary>
+        /// Inserts a Relationship and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertRelationship()
+        {
+            var model = new Relationship
+            {
+                Description = "455fcbf184",
+                IsActive = false
+            };
+
+            InstantiatedDependencies.RelationshipRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate Relationship id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateRelationshipId(int? model)
+        {
+            if (!model.HasValue)
+                return GetRelationshipId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.RelationshipRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertRelationship();
+        }
+
+        /// <summary>
+        /// Gets the ConcessionRelationship id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetConcessionRelationshipId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.ConcessionRelationshipRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertConcessionRelationship();
+        }
+
+        /// <summary>
+        /// Inserts a ConcessionRelationship and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertConcessionRelationship()
+        {
+            var concessionId = GetConcessionId();
+
+            var model = new ConcessionRelationship
+            {
+                ParentConcessionId = concessionId,
+                ChildConcessionId = GetAlternateConcessionId(concessionId),
+                RelationshipId = GetRelationshipId(),
+                CreationDate = DateTime.Now,
+                UserId = GetUserId()
+            };
+
+            InstantiatedDependencies.ConcessionRelationshipRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate ConcessionRelationship id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateConcessionRelationshipId(int? model)
+        {
+            if (!model.HasValue)
+                return GetConcessionRelationshipId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.ConcessionRelationshipRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertConcessionRelationship();
+        }
+
     }
 }

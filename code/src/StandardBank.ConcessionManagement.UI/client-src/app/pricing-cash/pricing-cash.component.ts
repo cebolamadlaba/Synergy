@@ -8,6 +8,7 @@ import { CashView } from "../models/cash-view";
 import { RiskGroup } from "../models/risk-group";
 import { SourceSystemProduct } from "../models/source-system-product";
 import { Concession } from "../models/concession";
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-pricing-cash',
@@ -24,6 +25,7 @@ export class PricingCashComponent implements OnInit, OnDestroy {
     pageLoaded = false;
 
     constructor(
+        private router: Router,
         private route: ActivatedRoute,
         private location: Location,
         @Inject(CashConcessionService) private cashConcessionService) {
@@ -48,7 +50,8 @@ export class PricingCashComponent implements OnInit, OnDestroy {
     }
 
     goBack() {
-        this.location.back();
+        //this.location.back();
+        this.router.navigate(['/pricing', this.riskGroupNumber]);
     }
 
     ngOnDestroy() {

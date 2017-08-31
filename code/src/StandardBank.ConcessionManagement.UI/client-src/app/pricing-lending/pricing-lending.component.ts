@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { LendingView } from "../models/lending-view";
@@ -8,6 +8,7 @@ import { LendingConcession } from "../models/lending-concession";
 import { Concession } from "../models/concession";
 import { Location } from '@angular/common';
 import { LendingService } from "../services/lending.service";
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-pricing-lending',
@@ -24,6 +25,7 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
     pageLoaded = false;
 
     constructor(
+        private router: Router,
         private route: ActivatedRoute,
         private location: Location,
         @Inject(LendingService) private lendingService) {
@@ -48,7 +50,8 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
     }
 
     goBack() {
-        this.location.back();
+        //this.location.back();
+        this.router.navigate(['/pricing', this.riskGroupNumber]);
     }
 
     ngOnDestroy() {

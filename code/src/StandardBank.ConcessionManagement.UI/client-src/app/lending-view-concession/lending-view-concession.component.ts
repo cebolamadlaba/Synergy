@@ -38,6 +38,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     canBcmApprove = false;
     canPcmApprove = false;
     hasChanges = false;
+    canExtend = false;
+    canRenew = false;
+    canRecall = false;
 
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
@@ -135,6 +138,17 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
                 if (lendingConcession.concession.status == "Pending" && lendingConcession.concession.subStatus == "PCM Pending") {
                     this.canPcmApprove = lendingConcession.currentUser.canPcmApprove;
+                }
+
+                //if it's still pending and the user is a requestor then they can recall it
+                if (lendingConcession.concession.status == "Pending" && lendingConcession.concession.subStatus == "BCM Pending") {
+                    this.canRecall = lendingConcession.currentUser.canRequest;
+                }
+
+                //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
+                if (lendingConcession.concession.canExtend) {
+                    this.canExtend = lendingConcession.currentUser.canRequest;
+                    this.canRenew = lendingConcession.currentUser.canRequest;
                 }
 
                 this.lendingConcessionForm.controls['mrsCrs'].setValue(this.lendingConcession.concession.mrsCrs);

@@ -309,6 +309,16 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static ITableNumberRepository TableNumberRepository = new TableNumberRepository(DbConnection, CacheManager);
 
         /// <summary>
+        /// The Relationship repository
+        /// </summary>
+        public static IRelationshipRepository RelationshipRepository = new RelationshipRepository(DbConnection, CacheManager);
+
+        /// <summary>
+        /// The ConcessionRelationship repository
+        /// </summary>
+        public static IConcessionRelationshipRepository ConcessionRelationshipRepository = new ConcessionRelationshipRepository(DbConnection);
+
+        /// <summary>
         /// The look up table manager
         /// </summary>
         public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,
@@ -316,7 +326,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             ConcessionTypeRepository, ProductRepository, ReviewFeeTypeRepository, PeriodRepository,
             PeriodTypeRepository, ConditionTypeRepository, Mapper, ConditionProductRepository,
             ConditionTypeProductRepository, AccrualTypeRepository, ChannelTypeRepository, TransactionTypeRepository,
-            TableNumberRepository);
+            TableNumberRepository, RelationshipRepository);
 
         /// <summary>
         /// The concession manager
@@ -325,7 +335,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             new ConcessionManager(ConcessionRepository, LookupTableManager, LegalEntityRepository, RiskGroupRepository,
                 CacheManager, ConcessionAccountRepository, Mapper, ConcessionConditionRepository,
                 LegalEntityAccountRepository, ConcessionCommentRepository, ConcessionLendingRepository,
-                MarketSegmentRepository, ConcessionCashRepository, ConcessionTransactionalRepository);
+                MarketSegmentRepository, ConcessionCashRepository, ConcessionTransactionalRepository,
+                ConcessionRelationshipRepository);
 
         /// <summary>
         /// The user manager

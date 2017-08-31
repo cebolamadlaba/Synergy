@@ -15,6 +15,7 @@ using Condition = StandardBank.ConcessionManagement.Model.UserInterface.Conditio
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
+using ConcessionRelationship = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionRelationship;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -84,6 +85,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IConcessionTransactionalRepository _concessionTransactionalRepository;
 
         /// <summary>
+        /// The concession relationship repository
+        /// </summary>
+        private readonly IConcessionRelationshipRepository _concessionRelationshipRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionManager"/> class.
         /// </summary>
         /// <param name="concessionRepository">The concession repository.</param>
@@ -100,6 +106,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="marketSegmentRepository">The market segment repository.</param>
         /// <param name="concessionCashRepository">The concession cash repository.</param>
         /// <param name="concessionTransactionalRepository">The concession transactional repository.</param>
+        /// <param name="concessionRelationshipRepository">The concession relationship repository.</param>
         public ConcessionManager(IConcessionRepository concessionRepository, ILookupTableManager lookupTableManager,
             ILegalEntityRepository legalEntityRepository, IRiskGroupRepository riskGroupRepository,
             ICacheManager cacheManager, IConcessionAccountRepository concessionAccountRepository, IMapper mapper,
@@ -108,7 +115,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IConcessionCommentRepository concessionCommentRepository,
             IConcessionLendingRepository concessionLendingRepository, IMarketSegmentRepository marketSegmentRepository,
             IConcessionCashRepository concessionCashRepository,
-            IConcessionTransactionalRepository concessionTransactionalRepository)
+            IConcessionTransactionalRepository concessionTransactionalRepository,
+            IConcessionRelationshipRepository concessionRelationshipRepository)
         {
             _concessionRepository = concessionRepository;
             _lookupTableManager = lookupTableManager;
@@ -124,6 +132,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _marketSegmentRepository = marketSegmentRepository;
             _concessionCashRepository = concessionCashRepository;
             _concessionTransactionalRepository = concessionTransactionalRepository;
+            _concessionRelationshipRepository = concessionRelationshipRepository;
         }
 
         /// <summary>
@@ -464,6 +473,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 mappedConcession.Status = _lookupTableManager.GetStatusDescription(concession.StatusId);
 
+                //this concession can be extended if there is an expiry date which is within the next three months and the concession
+                //is currently in the approved state
+                mappedConcession.CanExtend = concession.ExpiryDate.HasValue &&
+                                             concession.ExpiryDate.Value <= DateTime.Now.AddMonths(3) &&
+                                             mappedConcession.Status == "Approved";
+
                 if (concession.SubStatusId.HasValue)
                     mappedConcession.SubStatus =
                         _lookupTableManager.GetSubStatusDescription(concession.SubStatusId.Value);
@@ -777,6 +792,21 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionConditionRepository.Update(mappedConcessionCondition);
 
             return mappedConcessionCondition;
+        }
+
+        /// <summary>
+        /// Creates the concession relationship.
+        /// </summary>
+        /// <param name="concessionRelationship">The concession relationship.</param>
+        /// <returns></returns>
+        public Model.Repository.ConcessionRelationship CreateConcessionRelationship(ConcessionRelationship concessionRelationship)
+        {
+            var mappedConcessionRelationship = _mapper.Map<Model.Repository.ConcessionRelationship>(concessionRelationship);
+
+            mappedConcessionRelationship.RelationshipId =
+                _lookupTableManager.GetRelationshipId(concessionRelationship.RelationshipDescription);
+
+            return _concessionRelationshipRepository.Create(mappedConcessionRelationship);
         }
 
         /// <summary>

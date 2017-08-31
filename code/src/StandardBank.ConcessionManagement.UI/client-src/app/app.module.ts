@@ -47,7 +47,12 @@ import { BaseConcessionFilterPipe } from './filters/base-concession-filter.pipe'
 import { InvestmentsAddConcessionComponent } from './investments-add-concession/investments-add-concession.component';
 import { BolAddConcessionComponent } from './bol-add-concession/bol-add-concession.component';
 import { MasAddConcessionComponent } from './mas-add-concession/mas-add-concession.component';
+<<<<<<< Updated upstream
 import { TransactionalViewConcessionComponent } from './transactional-view-concession/transactional-view-concession.component';
+=======
+import { TradeAddConcessionComponent } from './trade-add-concession/trade-add-concession.component';
+import { CashmanAddConcessionComponent } from './cashman-add-concession/cashman-add-concession.component';
+>>>>>>> Stashed changes
 
 @NgModule({
     declarations: [
@@ -81,8 +86,13 @@ import { TransactionalViewConcessionComponent } from './transactional-view-conce
         InvestmentsAddConcessionComponent,
         BolAddConcessionComponent,
         MasAddConcessionComponent,
+<<<<<<< Updated upstream
         TransactionalViewConcessionComponent,
         ProvinceComponent
+=======
+        TradeAddConcessionComponent,
+        CashmanAddConcessionComponent
+>>>>>>> Stashed changes
     ],
     imports: [
         BrowserModule,

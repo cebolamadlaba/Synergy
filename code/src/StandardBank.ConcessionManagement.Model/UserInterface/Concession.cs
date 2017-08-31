@@ -119,5 +119,13 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// Gets or sets the ho user id
         /// </summary>
         public int? HoUserId { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance can extend.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance can extend; otherwise, <c>false</c>.
+        /// </value>
+        public bool CanExtend { get; set; }
     }
 }

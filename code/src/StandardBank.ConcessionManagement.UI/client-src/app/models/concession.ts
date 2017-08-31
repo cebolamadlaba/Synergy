@@ -1,4 +1,4 @@
-﻿export class Concession {
+export class Concession {
     id: number;
     referenceNumber: string;
     riskGroupId: number;
@@ -19,4 +19,5 @@
     bcmUserId: number;
     pcmUserId: number;
     hoUserId: number;
+    canExtend: boolean;
 }
