@@ -40,14 +40,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<Province> GetProvinces()
         {
-            var provinces = new List<Province>();
-
-            foreach (Model.Repository.Province province in _provinceRepository.ReadAll())
-            {
-                Province mappedProvince = _mapper.Map<Province>(province);
-                provinces.Add(mappedProvince);
-            }
-            return provinces;
+            var provinces = _provinceRepository.ReadAll();
+            return _mapper.Map<IEnumerable<Province>>(provinces);
         }
 
         public Province MaintainProvince(Province province)

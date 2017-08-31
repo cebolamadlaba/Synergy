@@ -16,7 +16,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdatePr
         /// Gets or sets the concession
         /// </summary>
         public Province Province { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets the user.
+        /// </summary>
+        /// <value>
+        /// The user.
+        /// </value>
+        public User User { get; set; }
 
         /// <summary>
         /// Gets or sets the audit record.
@@ -32,9 +39,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdatePr
         /// <param name="cashConcessionDetail">The cash concession detail.</param>
         /// <param name="user">The user.</param>
         /// <param name="concession"></param>
-        public AddOrUpdateProvinceDetail(Province province)
+        public AddOrUpdateProvinceDetail(Province province, User user)
         {
             Province = province;
+            User = user;
         }
     }
 }
