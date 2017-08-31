@@ -6,6 +6,7 @@ using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concess
 using ConcessionCondition = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionCondition;
 using ConcessionRelationship = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionRelationship;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
+using System;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 {
@@ -163,5 +164,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="concessionRelationship">The concession relationship.</param>
         /// <returns></returns>
         Model.Repository.ConcessionRelationship CreateConcessionRelationship(ConcessionRelationship concessionRelationship);
+
+        string GetRagStatus(string period,DateTime dateApproved);
     }
 }

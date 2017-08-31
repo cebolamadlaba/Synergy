@@ -966,5 +966,97 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return approvedConcessionDetails;
         }
+
+        public string GetRagStatus(string period, DateTime dateApproved)
+        {
+            switch (period)
+            {
+                case "3 Months":
+                    return CalculateRagStatusThreeMonths(dateApproved);               
+                case "6 Months":
+                    return CalculateRagStatusSixMonths(dateApproved);
+                case "9 Months":
+                    return CalculateRagStatusNineMonths(dateApproved);
+                case "12 Months":
+                    return CalculateRagStatusTwelveMonths(dateApproved);
+                default:
+                    return "";
+                   
+            }
+        }
+        private string CalculateRagStatusThreeMonths(DateTime dateApproved)
+        {
+            var totalHours = GetWorkingDays(dateApproved, DateTime.Today) * 8;
+            if(totalHours <= 168)
+            {
+                return "Green";
+            }
+            if (totalHours > 168 && totalHours <=335)
+            {
+                return "Amber";
+            }
+            return "Red";
+
+        }
+        private string CalculateRagStatusSixMonths(DateTime dateApproved)
+        {
+            var totalHours = GetWorkingDays(dateApproved, DateTime.Today) * 8;
+            if (totalHours <= 336)
+            {
+                return "Green";
+            }
+            if (totalHours > 336 && totalHours <= 672)
+            {
+                return "Amber";
+            }
+            return "Red";
+
+        }
+        private string CalculateRagStatusNineMonths(DateTime dateApproved)
+        {
+            var totalHours = GetWorkingDays(dateApproved, DateTime.Today) * 8;
+            if (totalHours <= 504)
+            {
+                return "Green";
+            }
+            if (totalHours > 504 && totalHours <= 1007)
+            {
+                return "Amber";
+            }
+            return "Red";
+
+        }
+        private string CalculateRagStatusTwelveMonths(DateTime dateApproved)
+        {
+            var totalHours = GetWorkingDays(dateApproved, DateTime.Today) * 8;
+            if (totalHours <= 672)
+            {
+                return "Green";
+            }
+            if (totalHours > 672 && totalHours <= 1343)
+            {
+                return "Amber";
+            }
+            return "Red";
+
+        }
+        /// <summary>
+        /// Calculates working between the two dates by excluding weekends
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        public int GetWorkingDays(DateTime from, DateTime to)
+        {
+            var totalDays = 0;
+            for (var date = from.AddDays(1); date <= to; date = date.AddDays(1))
+            {
+                if (date.DayOfWeek != DayOfWeek.Saturday
+                    && date.DayOfWeek != DayOfWeek.Sunday)
+                    totalDays++;
+            }
+
+            return totalDays;
+        }
     }
 }
