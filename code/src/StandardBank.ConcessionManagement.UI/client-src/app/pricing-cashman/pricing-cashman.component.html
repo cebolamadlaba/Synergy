@@ -1,3 +1,193 @@
-<p>
-  pricing-cashman works!
-</p>
+﻿<!-- banner-->
+<div class="col-md-12 banner">
+    <div class="row">
+        <!-- Header -->
+        <div class="lending-banner-title">
+            <div class="col-md-1">
+                <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+                <span class="back-button-text" (click)="goBack()">Back</span>
+            </div>
+            <div class="col-md-10 banner-main-title">
+                <i class="fa fa-user" aria-hidden="true"></i> Cashman
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+
+        <!-- Dashboard Expanded -->
+        <div class="col-md-12 banner-container" *ngIf="showHide">
+            <div class="col-md-11">
+                <div class="col-md-5">
+                    <div class="subHeading">Risk Group Name //TODO</div>
+                    <div class="date lightTitle hidden-element">Risk Group Number //TODO</div>
+                </div>
+                <!--
+                <div class="col-md-6">
+                    <div class="col-md-6 hidden-element">
+                        <div class="subHeading lightTitle">Total Payments</div>
+                        <div class="score"><b>//TODO</b></div>
+                    </div>
+                    <div class="col-md-6 hidden-element">
+                        <div class="subHeading lightTitle">Total Value Added Tx</div>
+                        <div class="score"><b>//TODO</b></div>
+                    </div>                    
+                </div>
+                -->
+            </div>
+            <div class="col-md-1">
+                <div class="compress">
+                    <div>
+                        <i class="fa fa-compress" (click)="showHide = !showHide" aria-hidden="true" id="compress-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Dashboard Collapsed -->
+        <div class="col-md-12 banner-container" *ngIf="!showHide">
+            <div class="col-md-11">
+                <div>
+                    <div class="col-md-5">
+                        <div class="subHeading">Risk Group Name //TODO</div>
+                        <div class="date lightTitle hidden-element">Risk Group Number //TODO</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="compress">
+                    <div>
+                        <i class="fa fa-expand" (click)="showHide = !showHide" aria-hidden="true" id="compress-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- lending concessions and products-->
+<div class="col-md-12">
+    <div class="col-md-5">
+        <h2 class="headings">Products</h2>
+        <div class="section">
+
+            <!-- Empty state for products if no data is found -->
+            <!--<div *ngIf="!investmentsView.sourceSystemProducts">
+                <div class="section-body">
+                    <div class="searchEmptyState">
+                        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                        <p>No product data found</p>
+                    </div>
+                </div>
+            </div>-->
+            <!-- End of empty state -->
+            <!-- Products list -->
+            <div class="section-body">
+                <div class="product-section">
+                    <div class="product-name">Customer Name //TODO</div>
+                    <div>
+                        <div class="product-account">Account No: //TODO</div>
+                    </div>
+                </div>
+                <div class="product-table-container">
+                    <table class="table table-bordered table-hover header-fixed table-striped ">
+                        <thead>
+                            <tr>
+                                <th>Product Type</th>
+                                <th>Monthly Min</th>
+                                <th>Monthly Max</th>
+                                <th>Debit Rate</th>
+                                <th>Credit Rate</th>
+                                <th>Loaded Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Loop through available products here -->
+                            <tr>
+                                <td class="rightAlign">//TODO</td>
+                                <td class="rightAlign">//TODO</td>
+                                <td class="rightAlign">//TODO</td>
+                                <td class="rightAlign">//TODO</td>
+                                <td class="rightAlign">//TODO</td>
+                                <td class="rightAlign">//TODO</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- End of products list -->
+
+        </div>
+    </div>
+
+    <!-- Concessions list -->
+    <div class="col-md-7 search-and-results-container" id="lending-search-container">
+        <h2 class="headings">
+            Concessions
+            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/cashman-add-concession']">Add Concession</button>
+        </h2>
+
+        <!-- Search bar -->
+        <div class="input-group add-on">
+            <input class="form-control" placeholder="Concession ID" [(ngModel)]="filterConcessionId" type="text">
+        </div>
+
+        <!-- Concession list -->
+        <div class="section">
+
+            <div class="section-header small-table-title">
+                <div class="concessionID-section">//TODO</div>
+            </div>
+            <div class="section-body">
+                <div class="table-container">
+                    <table class="table table-bordered table-hover header-fixed table-striped">
+                        <thead>
+                            <tr>
+                                <th>Product Type</th>
+                                <th>Monthly Min</th>
+                                <th>Monthly Max</th>
+                                <th>Customer</th>
+                                <th>Debit Rate</th>
+                                <th>Credit Rate</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Loop through available concessions here -->
+                            <tr>
+                                <td class="rightAlign">//TODO</td>
+                                <td class="rightAlign">//TODO</td>
+                                <td class="rightAlign">//TODO</td>
+                                <td>
+                                    <p class="customerInfo">//TODO</p>
+                                    <p class="accInfo">Acc No : //TODO</p>
+                                </td>
+                                <td class="rightAlign">//TODO</td>
+                                <td class="rightAlign">//TODO</td>
+                                <td>
+                                    <div class="table-row-top">
+                                        <div class="secondaryText">
+                                            Loaded:
+                                            <div class="normalText">//TODO</div>
+                                        </div>
+                                    </div>
+                                    <div class="table-row-bottom">
+                                        <div class="secondaryText">
+                                            Approved:
+                                            <div class="normalText">//TODO</div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty state if no concessions found -->
+        <div class="searchEmptyState">
+            <i class="fa fa-inbox" aria-hidden="true"></i>
+            <p>No concessions found matching your search</p>
+        </div>
+
+    </div>
+</div>

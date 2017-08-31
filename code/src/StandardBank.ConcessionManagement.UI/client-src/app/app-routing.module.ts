@@ -24,8 +24,13 @@ import { CashViewConcessionComponent } from "./cash-view-concession/cash-view-co
 import { InvestmentsAddConcessionComponent } from "./investments-add-concession/investments-add-concession.component";
 import { BolAddConcessionComponent } from "./bol-add-concession/bol-add-concession.component";
 import { MasAddConcessionComponent } from "./mas-add-concession/mas-add-concession.component";
+<<<<<<< Updated upstream
 import { TransactionalViewConcessionComponent } from "./transactional-view-concession/transactional-view-concession.component";
 import { ProvinceComponent } from './admin/province/province.component';
+=======
+import { TradeAddConcessionComponent } from "./trade-add-concession/trade-add-concession.component";
+import { CashmanAddConcessionComponent } from "./cashman-add-concession/cashman-add-concession.component";
+>>>>>>> Stashed changes
 
 const routes: Routes = [
     { path: '', redirectTo: '/pending-inbox', pathMatch: 'full' },
@@ -55,8 +60,15 @@ const routes: Routes = [
     { path: 'investments-add-concession', component: InvestmentsAddConcessionComponent },
     { path: 'bol-add-concession', component: BolAddConcessionComponent },
     { path: 'mas-add-concession', component: MasAddConcessionComponent },
+<<<<<<< Updated upstream
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
     { path: 'province', component: ProvinceComponent },
+=======
+    { path: 'trade-add-concession', component: TradeAddConcessionComponent },
+    { path: 'cashman-add-concession', component: CashmanAddConcessionComponent },
+    { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent }
+
+>>>>>>> Stashed changes
 ];
 
 @NgModule({
