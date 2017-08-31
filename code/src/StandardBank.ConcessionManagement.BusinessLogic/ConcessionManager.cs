@@ -991,7 +991,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 return "Green";
             }
-            if (totalHours > 168 && totalHours <=335)
+            if (totalHours > 168 && totalHours < 335)
             {
                 return "Amber";
             }
@@ -1005,7 +1005,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 return "Green";
             }
-            if (totalHours > 336 && totalHours <= 672)
+            if (totalHours > 336 && totalHours < 672)
             {
                 return "Amber";
             }
