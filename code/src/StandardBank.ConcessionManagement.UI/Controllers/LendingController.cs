@@ -1,4 +1,5 @@
-﻿using System.Linq;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -142,7 +143,58 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(lendingConcession);
         }
 
-        //public async Task<IActionResult> ExtendConcession(int concessionId)
+        /// <summary>
+        /// Extends the concession.
+        /// </summary>
+        /// <param name="concessionReferenceId">The concession reference identifier.</param>
+        /// <returns></returns>
+        [Route("ExtendConcession/{concessionReferenceId}")]
+        public async Task<IActionResult> ExtendConcession(string concessionReferenceId)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            //get the lending concession details
+            var lendingConcession =
+                _lendingManager.GetLendingConcession(concessionReferenceId, user);
+
+            //add a new concession using the old concession's details
+            var newConcession = lendingConcession.Concession;
+            newConcession.Id = 0;
+            newConcession.Status = "Pending";
+            newConcession.BcmUserId = null;
+            newConcession.DateOpened = DateTime.Now;
+            newConcession.DateSentForApproval = DateTime.Now;
+            newConcession.HoUserId = null;
+            newConcession.PcmUserId = null;
+            newConcession.ReferenceNumber = string.Empty;
+            newConcession.SubStatus = "BCM Pending";
+            newConcession.SubStatusId = null;
+            newConcession.Type = "Existing";
+
+            var concession = await _mediator.Send(new AddConcession(newConcession, user));
+
+            //add all the new conditions and lending details
+            foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
+            {
+                lendingConcessionDetail.LendingConcessionDetailId = 0;
+                await _mediator.Send(new AddOrUpdateLendingConcessionDetail(lendingConcessionDetail, user, concession));
+            }
+
+
+            if (lendingConcession.ConcessionConditions != null && lendingConcession.ConcessionConditions.Any())
+            {
+                foreach (var concessionCondition in lendingConcession.ConcessionConditions)
+                {
+                    concessionCondition.ConcessionConditionId = 0;
+                    await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+                }
+            }
+
+            //link the new concession to the old concession
+            //var concessionRelationship = 
+
+            return Ok(concession);
+        }
 
         /// <summary>
         /// Gets the lending concession data for the concession reference id specified

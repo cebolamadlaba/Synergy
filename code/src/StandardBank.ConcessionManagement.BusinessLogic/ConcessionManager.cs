@@ -464,6 +464,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 mappedConcession.Status = _lookupTableManager.GetStatusDescription(concession.StatusId);
 
+                //this concession can be extended if there is an expiry date which is within the next three months and the concession
+                //is currently in the approved state
+                mappedConcession.CanExtend = concession.ExpiryDate.HasValue &&
+                                             concession.ExpiryDate.Value <= DateTime.Now.AddMonths(3) &&
+                                             mappedConcession.Status == "Approved";
+
                 if (concession.SubStatusId.HasValue)
                     mappedConcession.SubStatus =
                         _lookupTableManager.GetSubStatusDescription(concession.SubStatusId.Value);

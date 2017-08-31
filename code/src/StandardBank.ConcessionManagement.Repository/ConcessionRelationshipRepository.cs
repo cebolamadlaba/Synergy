@@ -34,13 +34,13 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ConcessionRelationship Create(ConcessionRelationship model)
         {
-            const string sql = @"INSERT [dbo].[tblConcessionRelationship] ([fkParentConcessionId], [fkChildConcessionId], [fkRelationshipId]) 
-                                VALUES (@ParentConcessionId, @ChildConcessionId, @RelationshipId) 
+            const string sql = @"INSERT [dbo].[tblConcessionRelationship] ([fkParentConcessionId], [fkChildConcessionId], [fkRelationshipId], [CreationDate], [fkUserId]) 
+                                VALUES (@ParentConcessionId, @ChildConcessionId, @RelationshipId, @CreationDate, @UserId) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {ParentConcessionId = model.ParentConcessionId, ChildConcessionId = model.ChildConcessionId, RelationshipId = model.RelationshipId}).Single();
+                model.Id = db.Query<int>(sql, new {ParentConcessionId = model.ParentConcessionId, ChildConcessionId = model.ChildConcessionId, RelationshipId = model.RelationshipId, CreationDate = model.CreationDate, UserId = model.UserId}).Single();
             }
 
             return model;
@@ -56,7 +56,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionRelationship>(
-                    "SELECT [pkConcessionRelationshipId] [Id], [fkParentConcessionId] [ParentConcessionId], [fkChildConcessionId] [ChildConcessionId], [fkRelationshipId] [RelationshipId] FROM [dbo].[tblConcessionRelationship] WHERE [pkConcessionRelationshipId] = @Id",
+                    "SELECT [pkConcessionRelationshipId] [Id], [fkParentConcessionId] [ParentConcessionId], [fkChildConcessionId] [ChildConcessionId], [fkRelationshipId] [RelationshipId], [CreationDate], [fkUserId] [UserId] FROM [dbo].[tblConcessionRelationship] WHERE [pkConcessionRelationshipId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -69,7 +69,7 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<ConcessionRelationship>("SELECT [pkConcessionRelationshipId] [Id], [fkParentConcessionId] [ParentConcessionId], [fkChildConcessionId] [ChildConcessionId], [fkRelationshipId] [RelationshipId] FROM [dbo].[tblConcessionRelationship]");
+                return db.Query<ConcessionRelationship>("SELECT [pkConcessionRelationshipId] [Id], [fkParentConcessionId] [ParentConcessionId], [fkChildConcessionId] [ChildConcessionId], [fkRelationshipId] [RelationshipId], [CreationDate], [fkUserId] [UserId] FROM [dbo].[tblConcessionRelationship]");
             }
         }
 
@@ -82,9 +82,9 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblConcessionRelationship]
-                            SET [fkParentConcessionId] = @ParentConcessionId, [fkChildConcessionId] = @ChildConcessionId, [fkRelationshipId] = @RelationshipId
+                            SET [fkParentConcessionId] = @ParentConcessionId, [fkChildConcessionId] = @ChildConcessionId, [fkRelationshipId] = @RelationshipId, [CreationDate] = @CreationDate, [fkUserId] = @UserId
                             WHERE [pkConcessionRelationshipId] = @Id",
-                    new {Id = model.Id, ParentConcessionId = model.ParentConcessionId, ChildConcessionId = model.ChildConcessionId, RelationshipId = model.RelationshipId});
+                    new {Id = model.Id, ParentConcessionId = model.ParentConcessionId, ChildConcessionId = model.ChildConcessionId, RelationshipId = model.RelationshipId, CreationDate = model.CreationDate, UserId = model.UserId});
             }
         }
 

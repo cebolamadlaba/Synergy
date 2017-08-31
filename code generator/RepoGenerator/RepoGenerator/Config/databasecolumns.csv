@@ -199,6 +199,8 @@ dbo;tblConcessionRelationship;pkConcessionRelationshipId;NO;int
 dbo;tblConcessionRelationship;fkParentConcessionId;NO;int
 dbo;tblConcessionRelationship;fkChildConcessionId;NO;int
 dbo;tblConcessionRelationship;fkRelationshipId;NO;int
+dbo;tblConcessionRelationship;CreationDate;NO;datetime
+dbo;tblConcessionRelationship;fkUserId;NO;int
 dbo;tblConcessionRemovalRequest;pkConcessionRemovalRequestId;NO;int
 dbo;tblConcessionRemovalRequest;fkConcessionId;NO;int
 dbo;tblConcessionRemovalRequest;RequestorId;NO;int

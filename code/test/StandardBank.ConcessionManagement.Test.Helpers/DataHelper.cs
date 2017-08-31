@@ -2726,7 +2726,9 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             {
                 ParentConcessionId = concessionId,
                 ChildConcessionId = GetAlternateConcessionId(concessionId),
-                RelationshipId = GetRelationshipId()
+                RelationshipId = GetRelationshipId(),
+                CreationDate = DateTime.Now,
+                UserId = GetUserId()
             };
 
             InstantiatedDependencies.ConcessionRelationshipRepository.Create(model);
@@ -2752,5 +2754,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
 
             return InsertConcessionRelationship();
         }
+
     }
 }

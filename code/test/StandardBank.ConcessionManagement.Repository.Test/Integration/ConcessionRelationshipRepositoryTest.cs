@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Test.Helpers;
@@ -22,7 +23,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 ParentConcessionId = concessionId,
                 ChildConcessionId = DataHelper.GetAlternateConcessionId(concessionId),
-                RelationshipId = DataHelper.GetRelationshipId()
+                RelationshipId = DataHelper.GetRelationshipId(),
+                CreationDate = DateTime.Now,
+                UserId = DataHelper.GetUserId()
             };
 
             var result = InstantiatedDependencies.ConcessionRelationshipRepository.Create(model);
@@ -70,6 +73,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.ParentConcessionId = DataHelper.GetAlternateConcessionId(model.ParentConcessionId);
             model.ChildConcessionId = DataHelper.GetAlternateConcessionId(model.ChildConcessionId);
             model.RelationshipId = DataHelper.GetAlternateRelationshipId(model.RelationshipId);
+            model.CreationDate = DataHelper.ChangeDate(model.CreationDate);
+            model.UserId = DataHelper.GetAlternateUserId(model.UserId);
 
             InstantiatedDependencies.ConcessionRelationshipRepository.Update(model);
 
@@ -80,6 +85,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.ParentConcessionId, model.ParentConcessionId);
             Assert.Equal(updatedModel.ChildConcessionId, model.ChildConcessionId);
             Assert.Equal(updatedModel.RelationshipId, model.RelationshipId);
+            Assert.Equal(updatedModel.CreationDate, model.CreationDate);
+            Assert.Equal(updatedModel.UserId, model.UserId);
         }
 
         /// <summary>
@@ -94,7 +101,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 ParentConcessionId = concessionId,
                 ChildConcessionId = DataHelper.GetAlternateConcessionId(concessionId),
-                RelationshipId = DataHelper.GetRelationshipId()
+                RelationshipId = DataHelper.GetRelationshipId(),
+                CreationDate = DateTime.Now,
+                UserId = DataHelper.GetUserId()
             };
 
             var temporaryEntity = InstantiatedDependencies.ConcessionRelationshipRepository.Create(model);
