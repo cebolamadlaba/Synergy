@@ -319,6 +319,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static IConcessionRelationshipRepository ConcessionRelationshipRepository = new ConcessionRelationshipRepository(DbConnection);
 
         /// <summary>
+        /// The audit repository
+        /// </summary>
+        public static IAuditRepository AuditRepository = new AuditRepository(DbConnection, new XmlMarshaller());
+
+        /// <summary>
         /// The look up table manager
         /// </summary>
         public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,
@@ -336,7 +341,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 CacheManager, ConcessionAccountRepository, Mapper, ConcessionConditionRepository,
                 LegalEntityAccountRepository, ConcessionCommentRepository, ConcessionLendingRepository,
                 MarketSegmentRepository, ConcessionCashRepository, ConcessionTransactionalRepository,
-                ConcessionRelationshipRepository);
+                ConcessionRelationshipRepository, AuditRepository);
 
         /// <summary>
         /// The user manager

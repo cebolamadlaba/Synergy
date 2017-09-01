@@ -153,11 +153,26 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("ExtendConcession/{concessionReferenceId}")]
         public async Task<IActionResult> ExtendConcession(string concessionReferenceId)
         {
+            var lendingConcession = await CreateChildConcession(concessionReferenceId, "Extension");
+
+            return Ok(lendingConcession);
+        }
+
+        /// <summary>
+        /// Creates the child concession.
+        /// </summary>
+        /// <param name="concessionReferenceId">The concession reference identifier.</param>
+        /// <param name="relationshipType">Type of the relationship.</param>
+        /// <returns></returns>
+        private async Task<LendingConcession> CreateChildConcession(string concessionReferenceId, string relationshipType)
+        {
             var user = _siteHelper.LoggedInUser(this);
 
             //get the lending concession details
             var lendingConcession =
                 _lendingManager.GetLendingConcession(concessionReferenceId, user);
+
+            var parentConcessionId = lendingConcession.Concession.Id;
 
             //add a new concession using the old concession's details
             var newConcession = lendingConcession.Concession;
@@ -174,6 +189,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             newConcession.Type = "Existing";
 
             var concession = await _mediator.Send(new AddConcession(newConcession, user));
+
+            lendingConcession.Concession = concession;
 
             //add all the new conditions and lending details
             foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
@@ -196,14 +213,13 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             {
                 CreationDate = DateTime.Now,
                 UserId = user.Id,
-                RelationshipDescription = "Extension",
-                ParentConcessionId = lendingConcession.Concession.Id,
+                RelationshipDescription = relationshipType,
+                ParentConcessionId = parentConcessionId,
                 ChildConcessionId = concession.Id
             };
 
             await _mediator.Send(new AddConcessionRelationship(concessionRelationship, user));
-
-            return Ok(concession);
+            return lendingConcession;
         }
 
         /// <summary>

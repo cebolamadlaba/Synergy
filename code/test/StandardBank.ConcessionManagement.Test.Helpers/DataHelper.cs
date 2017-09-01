@@ -1239,7 +1239,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// Inserts a Concession and returns the id
         /// </summary>
         /// <returns></returns>
-        private static int InsertConcession()
+        public static int InsertConcession()
         {
             var model = new Concession
             {
@@ -1265,7 +1265,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 IsCurrent = false,
                 IsActive = false,
                 MrsCrs = 4354,
-                RegionId = GetRegionId()
+                RegionId = GetRegionId(),
+                RiskGroupId = GetRiskGroupId()
             };
 
             InstantiatedDependencies.ConcessionRepository.Create(model);

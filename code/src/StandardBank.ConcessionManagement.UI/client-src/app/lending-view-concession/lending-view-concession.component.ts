@@ -521,7 +521,6 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
     pcmDeclineConcession() {
         this.isLoading = true;
-
         this.errorMessage = null;
         this.validationError = null;
 
@@ -550,6 +549,26 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         } else {
             this.isLoading = false;
         }
+    }
+
+    extendConcession() {
+        this.isLoading = true;
+        this.errorMessage = null;
+        this.validationError = null;
+
+        this.lendingService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
+            console.log("data saved");
+            this.canBcmApprove = false;
+            this.canBcmApprove = false;
+            this.canExtend = false;
+            this.canRenew = false;
+            this.canRecall = false;
+            this.saveMessage = entity.concession.referenceNumber;
+            this.isLoading = false;
+        }, error => {
+            this.errorMessage = <any>error;
+            this.isLoading = false;
+        });
     }
 
     ngOnDestroy() {
