@@ -4,6 +4,7 @@ import { Province } from "../../models/province";
 import { ProvinceService } from "../../services/province.service";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-province',
@@ -22,7 +23,8 @@ export class ProvinceComponent implements OnInit {
     provinces: Province[];
 
     constructor( @Inject(ProvinceService)
-        private provinceService,
+    private provinceService,
+        private location: Location,
         private formBuilder: FormBuilder) {
         this.provinces = [new Province()];
         this.myEditProvince = new Province();
@@ -63,5 +65,9 @@ export class ProvinceComponent implements OnInit {
     onCancel() {
         this.submitState = 'Create';
         this.myEditProvince = new Province();
+    }
+
+    goBack() {
+        this.location.back();
     }
 }

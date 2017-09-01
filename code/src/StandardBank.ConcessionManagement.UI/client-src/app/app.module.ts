@@ -50,6 +50,9 @@ import { MasAddConcessionComponent } from './mas-add-concession/mas-add-concessi
 import { TransactionalViewConcessionComponent } from './transactional-view-concession/transactional-view-concession.component';
 import { TradeAddConcessionComponent } from './trade-add-concession/trade-add-concession.component';
 import { CashmanAddConcessionComponent } from './cashman-add-concession/cashman-add-concession.component';
+import { AdminMenuComponent } from './admin/admin-menu/admin-menu.component';
+import { BusinessCentreComponent } from './admin/business-centre/business-centre.component';
+import { UsersComponent } from './admin/users/users.component';
 
 
 @NgModule({
@@ -87,7 +90,10 @@ import { CashmanAddConcessionComponent } from './cashman-add-concession/cashman-
         TransactionalViewConcessionComponent,
         ProvinceComponent,
         TradeAddConcessionComponent,
-        CashmanAddConcessionComponent
+        CashmanAddConcessionComponent,
+        AdminMenuComponent,
+        BusinessCentreComponent,
+        UsersComponent
     ],
     imports: [
         BrowserModule,

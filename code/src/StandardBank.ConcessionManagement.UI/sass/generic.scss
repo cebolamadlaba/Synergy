@@ -10,6 +10,15 @@
     }
 }
 
+.back-button-text {
+    font-size: 0.8em;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
 .search-and-results-container{
     padding-top:20px;
     .input-group{
