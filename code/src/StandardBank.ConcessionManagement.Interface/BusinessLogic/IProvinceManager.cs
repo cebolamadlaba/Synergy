@@ -13,12 +13,6 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// </summary>
         /// <returns></returns>
         IEnumerable<Province> GetProvinces();
-
-        /// <summary>
-        /// Manage update or create of province
-        /// </summary>
-        /// <param name=""></param>
-        /// <returns></returns>
-        Province MaintainProvince(Province province);
+        
     }
 }
