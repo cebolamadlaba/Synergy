@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-    <PostBuildEvent></PostBuildEvent>
+    <PostBuildEvent>ng build</PostBuildEvent>
     <TypeScriptToolsVersion>2.3</TypeScriptToolsVersion>
   </PropertyGroup>
 

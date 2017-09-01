@@ -1,4 +1,4 @@
-﻿  <!-- Total widgets -->
+  <!-- Total widgets -->
 <div class="col-md-12">
   <div class="totalsWidget outer ">
     <div class="activeWidget">
@@ -56,7 +56,7 @@
         </tr>
       </thead>
       <tbody>
-       <tr *ngFor='let condition of observableConditions; trackBy: index;'>
+       <tr *ngFor='let condition of observableConditions; trackBy: index;' class="status-{{condition.ragStatus}}">
            <td>{{condition.riskGroupName}}</td>
            <td>{{condition.riskGroupNumber}}</td>
            <td>{{condition.concessionId}}</td>

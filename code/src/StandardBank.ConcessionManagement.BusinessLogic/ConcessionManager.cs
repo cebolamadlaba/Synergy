@@ -785,7 +785,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var statusid = _lookupTableManager.GetStatusId("Approved");
             var periodId = _lookupTableManager.GetPeriods().First(x => x.Description == period).Id;
             var periodTypeId = _lookupTableManager.GetPeriodTypes().First(x => x.Description == periodType).Id;
-            return _mapper.Map<IEnumerable<Condition>>(_concessionConditionRepository.ReadByPeriodAndApprovalStatus(statusid,periodId,periodTypeId));
+            var results =  _mapper.Map<IEnumerable<Condition>>(_concessionConditionRepository.ReadByPeriodAndApprovalStatus(statusid,periodId,periodTypeId));
+            results.ToList().ForEach(x => x.RagStatus = GetRagStatus(x.PeriodName, x.ApprovedDate));
+            return results;
         }
 
         /// <summary>
@@ -989,13 +991,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var totalHours = GetWorkingDays(dateApproved, DateTime.Today) * 8;
             if(totalHours <= 168)
             {
-                return "Green";
+                return "green";
             }
             if (totalHours > 168 && totalHours < 335)
             {
-                return "Amber";
+                return "yellow";
             }
-            return "Red";
+            return "red";
 
         }
         private string CalculateRagStatusSixMonths(DateTime dateApproved)
@@ -1003,13 +1005,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var totalHours = GetWorkingDays(dateApproved, DateTime.Today) * 8;
             if (totalHours <= 336)
             {
-                return "Green";
+                return "green";
             }
             if (totalHours > 336 && totalHours < 672)
             {
-                return "Amber";
+                return "yellow";
             }
-            return "Red";
+            return "red";
 
         }
         private string CalculateRagStatusNineMonths(DateTime dateApproved)
@@ -1017,13 +1019,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var totalHours = GetWorkingDays(dateApproved, DateTime.Today) * 8;
             if (totalHours <= 504)
             {
-                return "Green";
+                return "green";
             }
             if (totalHours > 504 && totalHours <= 1007)
             {
-                return "Amber";
+                return "yellow";
             }
-            return "Red";
+            return "red";
 
         }
         private string CalculateRagStatusTwelveMonths(DateTime dateApproved)
@@ -1031,13 +1033,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var totalHours = GetWorkingDays(dateApproved, DateTime.Today) * 8;
             if (totalHours <= 672)
             {
-                return "Green";
+                return "green";
             }
             if (totalHours > 672 && totalHours <= 1343)
             {
-                return "Amber";
+                return "yellow";
             }
-            return "Red";
+            return "red";
 
         }
         /// <summary>
