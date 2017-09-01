@@ -90,6 +90,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IConcessionRelationshipRepository _concessionRelationshipRepository;
 
         /// <summary>
+        /// The audit repository
+        /// </summary>
+        private readonly IAuditRepository _auditRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionManager"/> class.
         /// </summary>
         /// <param name="concessionRepository">The concession repository.</param>
@@ -107,6 +112,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="concessionCashRepository">The concession cash repository.</param>
         /// <param name="concessionTransactionalRepository">The concession transactional repository.</param>
         /// <param name="concessionRelationshipRepository">The concession relationship repository.</param>
+        /// <param name="auditRepository">The audit repository.</param>
         public ConcessionManager(IConcessionRepository concessionRepository, ILookupTableManager lookupTableManager,
             ILegalEntityRepository legalEntityRepository, IRiskGroupRepository riskGroupRepository,
             ICacheManager cacheManager, IConcessionAccountRepository concessionAccountRepository, IMapper mapper,
@@ -116,7 +122,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IConcessionLendingRepository concessionLendingRepository, IMarketSegmentRepository marketSegmentRepository,
             IConcessionCashRepository concessionCashRepository,
             IConcessionTransactionalRepository concessionTransactionalRepository,
-            IConcessionRelationshipRepository concessionRelationshipRepository)
+            IConcessionRelationshipRepository concessionRelationshipRepository, IAuditRepository auditRepository)
         {
             _concessionRepository = concessionRepository;
             _lookupTableManager = lookupTableManager;
@@ -133,6 +139,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionCashRepository = concessionCashRepository;
             _concessionTransactionalRepository = concessionTransactionalRepository;
             _concessionRelationshipRepository = concessionRelationshipRepository;
+            _auditRepository = auditRepository;
         }
 
         /// <summary>
@@ -475,9 +482,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 //this concession can be extended if there is an expiry date which is within the next three months and the concession
                 //is currently in the approved state
-                mappedConcession.CanExtend = concession.ExpiryDate.HasValue &&
-                                             concession.ExpiryDate.Value <= DateTime.Now.AddMonths(3) &&
-                                             mappedConcession.Status == "Approved";
+                mappedConcession.CanExtend = CalculateIfCanExtend(concession, mappedConcession.Status);
 
                 if (concession.SubStatusId.HasValue)
                     mappedConcession.SubStatus =
@@ -487,6 +492,50 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             return concessions;
+        }
+
+        /// <summary>
+        /// Calculates if can extend.
+        /// </summary>
+        /// <param name="concession">The concession.</param>
+        /// <param name="currentStatus">The current status.</param>
+        /// <returns></returns>
+        private bool CalculateIfCanExtend(Model.Repository.Concession concession, string currentStatus)
+        {
+            //you can only extend a concession three times
+            var extensionRelationshipId = _lookupTableManager.GetRelationshipId("Extension");
+
+            var doesChildHaveThreeParentRelationships =
+                _concessionRelationshipRepository.DoesChildHaveThreeParentRelationships(concession.Id,
+                    extensionRelationshipId);
+
+            if (doesChildHaveThreeParentRelationships)
+                return false;
+
+            //you cannot extend a concession that's already got an extension or renewal pending
+            var childConcessionRelationships = _concessionRelationshipRepository.ReadByParentConcessionId(concession.Id);
+
+            if (childConcessionRelationships != null && childConcessionRelationships.Any())
+            {
+                //if the child concession is still active and hasn't been declined then we cannot extend this
+                foreach (var childConcessionRelationship in childConcessionRelationships)
+                {
+                    var childConcession = _concessionRepository.ReadById(childConcessionRelationship.ChildConcessionId);
+
+                    if (childConcession.IsActive)
+                    {
+                        var declinedStatus = _lookupTableManager.GetStatusId("Declined");
+                        var removedStatus = _lookupTableManager.GetStatusId("Removed");
+
+                        if (childConcession.StatusId != declinedStatus && childConcession.StatusId != removedStatus)
+                            return false;
+                    }
+                }
+            }
+
+            return concession.ExpiryDate.HasValue &&
+                   concession.ExpiryDate.Value <= DateTime.Now.AddMonths(3) &&
+                   currentStatus == "Approved";
         }
 
         public IEnumerable<Concession> GetActionedConcessionsForUser(User user)
@@ -656,14 +705,65 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 if (!mappedConcession.DateApproved.HasValue)
                     mappedConcession.DateApproved = DateTime.Now;
 
-                //TODO: What is the calculation for this?
                 if (!mappedConcession.ExpiryDate.HasValue)
-                    mappedConcession.ExpiryDate = DateTime.Now.AddMonths(12);
+                    mappedConcession.ExpiryDate = CalculateExpiryDate(currentConcession);
             }
 
             _concessionRepository.Update(mappedConcession);
 
+            if (concession.Status == "Approved")
+            {
+                //check if this is an extension or renewal for another concession, if it is then
+                //we need to deactivate the parent concession since this one is approved
+                DeactivateParentConcessions(currentConcession.Id, user);
+            }
+
             return mappedConcession;
+        }
+
+        /// <summary>
+        /// Calculates the expiry date.
+        /// </summary>
+        /// <param name="concession">The concession.</param>
+        /// <returns></returns>
+        private DateTime CalculateExpiryDate(Model.Repository.Concession concession)
+        {
+            //TODO: if this is an extension then the expiry date is three months from the current concenssions expiry date
+
+            //TODO: otherwise calculate this based on the product type
+
+
+            return DateTime.Now.AddMonths(12);
+        }
+
+        /// <summary>
+        /// Deactivates the parent concessions.
+        /// </summary>
+        /// <param name="concessionId">The concession identifier.</param>
+        /// <param name="user">The user.</param>
+        private void DeactivateParentConcessions(int concessionId, User user)
+        {
+            var concessionParentRelationships =
+                _concessionRelationshipRepository.ReadByChildConcessionId(concessionId);
+
+            var extensionRelationshipId = _lookupTableManager.GetRelationshipId("Extension");
+
+            foreach (var concessionParentRelationship in concessionParentRelationships.Where(
+                _ => _.RelationshipId == extensionRelationshipId))
+            {
+                var parentConcession =
+                    _concessionRepository.ReadById(concessionParentRelationship.ParentConcessionId);
+
+                if (parentConcession.IsActive || parentConcession.IsCurrent)
+                {
+                    parentConcession.IsActive = false;
+                    parentConcession.IsCurrent = false;
+
+                    _concessionRepository.Update(parentConcession);
+
+                    _auditRepository.Audit(parentConcession, AuditType.Update, user.ANumber);
+                }
+            }
         }
 
         /// <summary>

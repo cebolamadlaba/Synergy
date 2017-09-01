@@ -49,6 +49,38 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         }
 
         /// <summary>
+        /// Tests that ReadByChildConcessionId executes positive.
+        /// </summary>
+        [Fact]
+        public void ReadByChildConcessionId_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.ConcessionRelationshipRepository.ReadAll();
+            var childConcessionId = results.First().ChildConcessionId;
+            var result = InstantiatedDependencies.ConcessionRelationshipRepository.ReadByChildConcessionId(childConcessionId);
+
+            Assert.NotNull(result);
+
+            foreach (var record in result)
+                Assert.Equal(record.ChildConcessionId, childConcessionId);
+        }
+
+        /// <summary>
+        /// Tests that ReadByParentConcessionId executes positive.
+        /// </summary>
+        [Fact]
+        public void ReadByParentConcessionId_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.ConcessionRelationshipRepository.ReadAll();
+            var parentConcessionId = results.First().ParentConcessionId;
+            var result = InstantiatedDependencies.ConcessionRelationshipRepository.ReadByParentConcessionId(parentConcessionId);
+
+            Assert.NotNull(result);
+
+            foreach (var record in result)
+                Assert.Equal(record.ParentConcessionId, parentConcessionId);
+        }
+
+        /// <summary>
         /// Tests that ReadAll executes positive.
         /// </summary>
         [Fact]
@@ -58,6 +90,112 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that DoesChildHaveThreeParentRelationships returns true.
+        /// </summary>
+        [Fact]
+        public void DoesChildHaveThreeParentRelationships_Returns_True()
+        {
+            var firstConcessionId = DataHelper.InsertConcession();
+            var secondConcessionId = DataHelper.InsertConcession();
+            var thirdConcessionId = DataHelper.InsertConcession();
+            var fourthConcessionId = DataHelper.InsertConcession();
+
+            var relationshipId = DataHelper.GetRelationshipId();
+            var userId = DataHelper.GetUserId();
+
+            var firstModel = new ConcessionRelationship
+            {
+                ParentConcessionId = fourthConcessionId,
+                ChildConcessionId = thirdConcessionId,
+                RelationshipId = relationshipId,
+                CreationDate = DateTime.Now,
+                UserId = userId
+            };
+
+            var firstResult = InstantiatedDependencies.ConcessionRelationshipRepository.Create(firstModel);
+
+            Assert.NotNull(firstResult);
+
+            var secondModel = new ConcessionRelationship
+            {
+                ParentConcessionId = thirdConcessionId,
+                ChildConcessionId = secondConcessionId,
+                RelationshipId = relationshipId,
+                CreationDate = DateTime.Now,
+                UserId = userId
+            };
+
+            var secondResult = InstantiatedDependencies.ConcessionRelationshipRepository.Create(secondModel);
+
+            Assert.NotNull(secondResult);
+
+            var thirdModel = new ConcessionRelationship
+            {
+                ParentConcessionId = secondConcessionId,
+                ChildConcessionId = firstConcessionId,
+                RelationshipId = relationshipId,
+                CreationDate = DateTime.Now,
+                UserId = userId
+            };
+
+            var thirdResult = InstantiatedDependencies.ConcessionRelationshipRepository.Create(thirdModel);
+
+            Assert.NotNull(thirdResult);
+
+            var result =
+                InstantiatedDependencies.ConcessionRelationshipRepository.DoesChildHaveThreeParentRelationships(
+                    firstConcessionId, relationshipId);
+
+            Assert.True(result);
+        }
+
+        /// <summary>
+        /// Tests that DoesChildHaveThreeParentRelationships returns false.
+        /// </summary>
+        [Fact]
+        public void DoesChildHaveThreeParentRelationships_Returns_False()
+        {
+            var firstConcessionId = DataHelper.InsertConcession();
+            var secondConcessionId = DataHelper.InsertConcession();
+            var thirdConcessionId = DataHelper.InsertConcession();
+
+            var relationshipId = DataHelper.GetRelationshipId();
+            var userId = DataHelper.GetUserId();
+
+            var firstModel = new ConcessionRelationship
+            {
+                ParentConcessionId = thirdConcessionId,
+                ChildConcessionId = secondConcessionId,
+                RelationshipId = relationshipId,
+                CreationDate = DateTime.Now,
+                UserId = userId
+            };
+
+            var firstResult = InstantiatedDependencies.ConcessionRelationshipRepository.Create(firstModel);
+
+            Assert.NotNull(firstResult);
+
+            var secondModel = new ConcessionRelationship
+            {
+                ParentConcessionId = secondConcessionId,
+                ChildConcessionId = firstConcessionId,
+                RelationshipId = relationshipId,
+                CreationDate = DateTime.Now,
+                UserId = userId
+            };
+
+            var secondResult = InstantiatedDependencies.ConcessionRelationshipRepository.Create(secondModel);
+
+            Assert.NotNull(secondResult);
+
+            var result =
+                InstantiatedDependencies.ConcessionRelationshipRepository.DoesChildHaveThreeParentRelationships(
+                    firstConcessionId, relationshipId);
+
+            Assert.False(result);
         }
 
         /// <summary>

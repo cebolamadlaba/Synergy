@@ -1,6 +1,9 @@
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using StandardBank.ConcessionManagement.Model.UserInterface.Pricing;
@@ -110,6 +113,34 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
                 .Returns(lendingConcession);
 
             var result = await _lendingController.UpdateLending(lendingConcession);
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is LendingConcession);
+        }
+
+        /// <summary>
+        /// Tests that ExtendConcession executes positive.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task ExtendConcession_Executes_Positive()
+        {
+            MockSiteHelper.Setup(_ => _.LoggedInUser(It.IsAny<Controller>())).Returns(new Model.UserInterface.User());
+
+            var lendingConcession = new LendingConcession
+            {
+                Concession = new Concession(),
+                LendingConcessionDetails = new[] { new LendingConcessionDetail() },
+                ConcessionConditions = new[] { new ConcessionCondition() }
+            };
+
+            MockLendingManager.Setup(_ => _.GetLendingConcession(It.IsAny<string>(), It.IsAny<User>()))
+                .Returns(lendingConcession);
+
+            MockMediator.Setup(_ => _.Send(It.IsAny<AddConcession>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Concession());
+
+            var result = await _lendingController.ExtendConcession("L001");
             var apiResult = Assert.IsType<OkObjectResult>(result);
 
             Assert.NotNull(apiResult.Value);
