@@ -505,11 +505,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             //you can only extend a concession three times
             var extensionRelationshipId = _lookupTableManager.GetRelationshipId("Extension");
 
-            var doesChildHaveThreeParentRelationships =
-                _concessionRelationshipRepository.DoesChildHaveThreeParentRelationships(concession.Id,
+            var relationships =
+                _concessionRelationshipRepository.ReadByChildConcessionIdRelationshipIdRelationships(concession.Id,
                     extensionRelationshipId);
 
-            if (doesChildHaveThreeParentRelationships)
+            if (relationships != null && relationships.Count() >= 3)
                 return false;
 
             //you cannot extend a concession that's already got an extension or renewal pending

@@ -43,12 +43,13 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         IEnumerable<ConcessionRelationship> ReadAll();
 
         /// <summary>
-        /// Doeses the child have three parent relationships.
+        /// Reads the by child concession identifier relationship identifier relationships.
         /// </summary>
         /// <param name="childConcessionId">The child concession identifier.</param>
         /// <param name="relationshipId">The relationship identifier.</param>
         /// <returns></returns>
-        bool DoesChildHaveThreeParentRelationships(int childConcessionId, int relationshipId);
+        IEnumerable<ConcessionRelationship> ReadByChildConcessionIdRelationshipIdRelationships(int childConcessionId,
+            int relationshipId);
 
         /// <summary>
         /// Updates the specified model.

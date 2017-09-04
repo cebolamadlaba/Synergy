@@ -93,10 +93,10 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         }
 
         /// <summary>
-        /// Tests that DoesChildHaveThreeParentRelationships returns true.
+        /// Tests that ReadByChildConcessionIdRelationshipIdRelationships returns true.
         /// </summary>
         [Fact]
-        public void DoesChildHaveThreeParentRelationships_Returns_True()
+        public void ReadByChildConcessionIdRelationshipIdRelationships_Executes_Positive()
         {
             var firstConcessionId = DataHelper.InsertConcession();
             var secondConcessionId = DataHelper.InsertConcession();
@@ -146,56 +146,10 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.NotNull(thirdResult);
 
             var result =
-                InstantiatedDependencies.ConcessionRelationshipRepository.DoesChildHaveThreeParentRelationships(
+                InstantiatedDependencies.ConcessionRelationshipRepository.ReadByChildConcessionIdRelationshipIdRelationships(
                     firstConcessionId, relationshipId);
 
-            Assert.True(result);
-        }
-
-        /// <summary>
-        /// Tests that DoesChildHaveThreeParentRelationships returns false.
-        /// </summary>
-        [Fact]
-        public void DoesChildHaveThreeParentRelationships_Returns_False()
-        {
-            var firstConcessionId = DataHelper.InsertConcession();
-            var secondConcessionId = DataHelper.InsertConcession();
-            var thirdConcessionId = DataHelper.InsertConcession();
-
-            var relationshipId = DataHelper.GetRelationshipId();
-            var userId = DataHelper.GetUserId();
-
-            var firstModel = new ConcessionRelationship
-            {
-                ParentConcessionId = thirdConcessionId,
-                ChildConcessionId = secondConcessionId,
-                RelationshipId = relationshipId,
-                CreationDate = DateTime.Now,
-                UserId = userId
-            };
-
-            var firstResult = InstantiatedDependencies.ConcessionRelationshipRepository.Create(firstModel);
-
-            Assert.NotNull(firstResult);
-
-            var secondModel = new ConcessionRelationship
-            {
-                ParentConcessionId = secondConcessionId,
-                ChildConcessionId = firstConcessionId,
-                RelationshipId = relationshipId,
-                CreationDate = DateTime.Now,
-                UserId = userId
-            };
-
-            var secondResult = InstantiatedDependencies.ConcessionRelationshipRepository.Create(secondModel);
-
-            Assert.NotNull(secondResult);
-
-            var result =
-                InstantiatedDependencies.ConcessionRelationshipRepository.DoesChildHaveThreeParentRelationships(
-                    firstConcessionId, relationshipId);
-
-            Assert.False(result);
+            Assert.True(result.Count() == 3);
         }
 
         /// <summary>

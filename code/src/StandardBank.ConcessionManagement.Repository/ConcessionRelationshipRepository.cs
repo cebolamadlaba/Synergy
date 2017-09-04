@@ -118,6 +118,27 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Reads the by child concession identifier relationship identifier relationships.
+        /// </summary>
+        /// <param name="childConcessionId">The child concession identifier.</param>
+        /// <param name="relationshipId">The relationship identifier.</param>
+        /// <returns></returns>
+        public IEnumerable<ConcessionRelationship> ReadByChildConcessionIdRelationshipIdRelationships(int childConcessionId, int relationshipId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<ConcessionRelationship>(@"WITH children AS (
+                    SELECT [pkConcessionRelationshipId] [Id], [fkParentConcessionId] [ParentConcessionId], [fkChildConcessionId] [ChildConcessionId], [fkRelationshipId] [RelationshipId], [CreationDate], [fkUserId] [UserId] FROM [dbo].[tblConcessionRelationship]
+                    WHERE [fkChildConcessionId] = @childConcessionId
+                    UNION ALL
+                    SELECT t.[pkConcessionRelationshipId] [Id], t.[fkParentConcessionId] [ParentConcessionId], t.[fkChildConcessionId] [ChildConcessionId], t.[fkRelationshipId] [RelationshipId], t.[CreationDate], t.[fkUserId] [UserId] FROM [dbo].[tblConcessionRelationship] t
+                    INNER JOIN children c ON c.[ParentConcessionId] = t.[fkChildConcessionId])
+                    SELECT * FROM children
+                    WHERE [RelationshipId] = @relationshipId", new {childConcessionId, relationshipId});
+            }
+        }
+
+        /// <summary>
         /// Doeses the child have three parent relationships.
         /// </summary>
         /// <param name="childConcessionId">The child concession identifier.</param>
