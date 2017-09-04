@@ -324,6 +324,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static IAuditRepository AuditRepository = new AuditRepository(DbConnection, new XmlMarshaller());
 
         /// <summary>
+        /// The ProductLending repository
+        /// </summary>
+        public static IProductLendingRepository ProductLendingRepository = new ProductLendingRepository(DbConnection);
+
+        /// <summary>
         /// The look up table manager
         /// </summary>
         public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,

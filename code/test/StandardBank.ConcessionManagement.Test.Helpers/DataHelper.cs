@@ -1717,7 +1717,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 UFFFee = 1095,
                 ReviewFeeTypeId = GetReviewFeeTypeId(),
                 LegalEntityId = GetLegalEntityId(),
-                LegalEntityAccountId = GetLegalEntityAccountId()
+                LegalEntityAccountId = GetLegalEntityAccountId(),
+                AverageBalance = 234.23m
             };
 
             InstantiatedDependencies.ConcessionLendingRepository.Create(model);
@@ -2756,5 +2757,60 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             return InsertConcessionRelationship();
         }
 
+        /// <summary>
+        /// Gets the ProductLending id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetProductLendingId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.ProductLendingRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertProductLending();
+        }
+
+        /// <summary>
+        /// Inserts a ProductLending and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertProductLending()
+        {
+            var model = new ProductLending
+            {
+                RiskGroupId = GetRiskGroupId(),
+                LegalEntityId = GetLegalEntityId(),
+                LegalEntityAccountId = GetLegalEntityAccountId(),
+                ProductId = GetProductId(),
+                Limit = 7330,
+                AverageBalance = 1973,
+                LoadedMap = 7893
+            };
+
+            InstantiatedDependencies.ProductLendingRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate ProductLending id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateProductLendingId(int? model)
+        {
+            if (!model.HasValue)
+                return GetProductLendingId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.ProductLendingRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertProductLending();
+        }
     }
 }

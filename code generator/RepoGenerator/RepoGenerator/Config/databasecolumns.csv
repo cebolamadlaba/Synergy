@@ -267,3 +267,11 @@ dbo;tblUserRole;pkUserRoleId;NO;int
 dbo;tblUserRole;fkUserId;NO;int
 dbo;tblUserRole;fkRoleId;NO;int
 dbo;tblUserRole;IsActive;NO;bit
+dbo;tblProductLending;pkProductLendingId;NO;int
+dbo;tblProductLending;fkRiskGroupId;NO;int
+dbo;tblProductLending;fkLegalEntityId;NO;int
+dbo;tblProductLending;fkLegalEntityAccountId;NO;int
+dbo;tblProductLending;fkProductId;NO;int
+dbo;tblProductLending;Limit;NO;decimal
+dbo;tblProductLending;AverageBalance;NO;decimal
+dbo;tblProductLending;LoadedMap;NO;decimal
