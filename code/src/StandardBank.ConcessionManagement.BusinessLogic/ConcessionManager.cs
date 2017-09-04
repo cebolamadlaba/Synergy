@@ -632,6 +632,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var concessions = _concessionRepository.ReadByConcessionRefIsActive(concessionReferenceId, true);
 
+            if (concessions == null || !concessions.Any())
+                throw new Exception(
+                    $"No active concession found for concession reference id {concessionReferenceId}. The concession could have been recalled.");
+
             //if there is more than one record returned then there is something wrong,
             //there shouldn't be two active concessions with the same concession reference number
             return Map(concessions).Single();
@@ -946,6 +950,25 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 _lookupTableManager.GetRelationshipId(concessionRelationship.RelationshipDescription);
 
             return _concessionRelationshipRepository.Create(mappedConcessionRelationship);
+        }
+
+        /// <summary>
+        /// Activates the concession.
+        /// </summary>
+        /// <param name="concessionReferenceNumber">The concession reference number.</param>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
+        public Model.Repository.Concession ActivateConcession(string concessionReferenceNumber, User user)
+        {
+            var concessions = _concessionRepository.ReadByConcessionRefIsActive(concessionReferenceNumber, false);
+            var concession = concessions.OrderByDescending(_ => _.Id).First();
+
+            concession.IsActive = true;
+            concession.IsCurrent = true;
+
+            _concessionRepository.Update(concession);
+
+            return concession;
         }
 
         /// <summary>

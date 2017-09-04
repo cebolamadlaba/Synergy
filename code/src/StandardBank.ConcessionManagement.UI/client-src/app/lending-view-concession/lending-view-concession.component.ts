@@ -18,6 +18,7 @@ import { ConcessionCondition } from "../models/concession-condition";
 import { LendingService } from "../services/lending.service";
 import { Location } from '@angular/common';
 import { LookupDataService } from "../services/lookup-data.service";
+import { UserConcessionsService } from "../services/user-concessions.service";
 
 @Component({
   selector: 'app-lending-view-concession',
@@ -32,6 +33,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     errorMessage: String;
     validationError: String[];
     saveMessage: String;
+    warningMessage: String;
     riskGroupNumber: number;
     selectedConditionTypes: ConditionType[];
     isLoading = false;
@@ -43,6 +45,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     canRecall = false;
     isRenewing = false;
     motivationEnabled = false;
+    isRecalling = false;
 
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
@@ -74,7 +77,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         private formBuilder: FormBuilder,
         private location: Location,
         @Inject(LookupDataService) private lookupDataService,
-        @Inject(LendingService) private lendingService) {
+        @Inject(LendingService) private lendingService,
+        @Inject(UserConcessionsService) private userConcessionsService) {
         this.riskGroup = new RiskGroup();
         this.reviewFeeTypes = [new ReviewFeeType()];
         this.productTypes = [new ProductType()];
@@ -558,6 +562,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.canRenew = false;
         this.canRecall = false;
         this.isRenewing = true;
+        this.isRecalling = false;
 
         this.lendingConcessionForm.controls['motivation'].setValue('');
     }
@@ -578,6 +583,47 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             this.lendingService.postRenewLendingData(lendingConcession).subscribe(entity => {
                 console.log("data saved");
                 this.isRenewing = false;
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    recallConcession() {
+        this.isLoading = true;
+        this.errorMessage = null;
+
+        this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
+            this.warningMessage = "Concession recalled, please make the required changes and save the concession or it will be lost";
+            this.isRecalling = true;
+            this.isLoading = false;
+        }, error => {
+            this.errorMessage = <any>error;
+            this.isLoading = false;
+        });
+    }
+
+    saveRecallConcession() {
+        this.warningMessage = "";
+        this.isLoading = true;
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var lendingConcession = this.getLendingConcession(true);
+
+        lendingConcession.concession.status = "Pending";
+        lendingConcession.concession.subStatus = "BCM Pending";
+        lendingConcession.concession.referenceNumber = this.concessionReferenceId;
+
+        if (!this.validationError) {
+            this.lendingService.postRecallLendingData(lendingConcession).subscribe(entity => {
+                console.log("data saved");
+                this.isRecalling = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
             }, error => {

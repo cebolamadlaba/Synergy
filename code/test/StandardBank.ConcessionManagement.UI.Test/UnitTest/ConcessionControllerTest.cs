@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using StandardBank.ConcessionManagement.Model.UserInterface;
@@ -25,7 +26,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         public ConcessionControllerTest()
         {
             _concessionController = new ConcessionController(MockConcessionManager.Object,
-                MockLookupTableManager.Object, new FakeSiteHelper(), MockLetterGeneratorManager.Object);
+                MockLookupTableManager.Object, new FakeSiteHelper(), MockLetterGeneratorManager.Object, MockMediator.Object);
         }
 
         /// <summary>
@@ -180,6 +181,20 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
 
             Assert.NotNull(apiResult.Value);
             Assert.True(apiResult.Value is IEnumerable<TableNumber>);
+        }
+
+        /// <summary>
+        /// Tests that DeactivateConcession executes positive.
+        /// </summary>
+        [Fact]
+        public async Task DeactivateConcession_Executes_Positive()
+        {
+            var result = await _concessionController.DeactivateConcession("D001");
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is bool);
+            Assert.True((bool)apiResult.Value);
         }
     }
 }

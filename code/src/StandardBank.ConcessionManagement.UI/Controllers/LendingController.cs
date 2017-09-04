@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.ActivateConcession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionComment;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionRelationship;
@@ -112,6 +113,19 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
             
+            await UpdateLendingConcession(lendingConcession, user);
+
+            return Ok(lendingConcession);
+        }
+
+        /// <summary>
+        /// Updates the lending concession.
+        /// </summary>
+        /// <param name="lendingConcession">The lending concession.</param>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
+        private async Task UpdateLendingConcession(LendingConcession lendingConcession, User user)
+        {
             var databaseLendingConcession =
                 _lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber, user);
 
@@ -141,8 +155,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             if (!string.IsNullOrWhiteSpace(lendingConcession.Concession.Comments))
                 await _mediator.Send(new AddConcessionComment(concession.Id, concession.SubStatusId.Value,
                     lendingConcession.Concession.Comments, user));
-
-            return Ok(lendingConcession);
         }
 
         /// <summary>
@@ -273,6 +285,26 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             };
 
             await _mediator.Send(new AddConcessionRelationship(concessionRelationship, user));
+
+            return Ok(lendingConcession);
+        }
+
+        /// <summary>
+        /// Updates the recalled lending.
+        /// </summary>
+        /// <param name="lendingConcession">The lending concession.</param>
+        /// <returns></returns>
+        [Route("UpdateRecalledLending")]
+        [ValidateModel]
+        public async Task<IActionResult> UpdateRecalledLending([FromBody] LendingConcession lendingConcession)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            //activate the concession after the recall disabled it
+            await _mediator.Send(new ActivateConcession(lendingConcession.Concession.ReferenceNumber, user));
+
+            //update the concession accordingly
+            await UpdateLendingConcession(lendingConcession, user);
 
             return Ok(lendingConcession);
         }

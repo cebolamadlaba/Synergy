@@ -146,5 +146,59 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
             Assert.NotNull(apiResult.Value);
             Assert.True(apiResult.Value is LendingConcession);
         }
+
+        /// <summary>
+        /// Tests that RenewLending executes positive.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task RenewLending_Executes_Positive()
+        {
+            MockSiteHelper.Setup(_ => _.LoggedInUser(It.IsAny<Controller>())).Returns(new Model.UserInterface.User());
+
+            var lendingConcession = new LendingConcession
+            {
+                Concession = new Concession(),
+                LendingConcessionDetails = new[] { new LendingConcessionDetail() },
+                ConcessionConditions = new[] { new ConcessionCondition() }
+            };
+
+            MockLendingManager.Setup(_ => _.GetLendingConcession(It.IsAny<string>(), It.IsAny<User>()))
+                .Returns(lendingConcession);
+
+            MockMediator.Setup(_ => _.Send(It.IsAny<AddConcession>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Concession());
+
+            var result = await _lendingController.RenewLending(lendingConcession);
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is LendingConcession);
+        }
+
+        /// <summary>
+        /// Tests that UpdateRecalledLending executes positive.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task UpdateRecalledLending_Executes_Positive()
+        {
+            MockSiteHelper.Setup(_ => _.LoggedInUser(It.IsAny<Controller>())).Returns(new Model.UserInterface.User());
+
+            var lendingConcession = new LendingConcession
+            {
+                Concession = new Concession(),
+                LendingConcessionDetails = new[] { new LendingConcessionDetail() },
+                ConcessionConditions = new[] { new ConcessionCondition() }
+            };
+
+            MockLendingManager.Setup(_ => _.GetLendingConcession(It.IsAny<string>(), It.IsAny<User>()))
+                .Returns(lendingConcession);
+
+            var result = await _lendingController.UpdateRecalledLending(lendingConcession);
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is LendingConcession);
+        }
     }
 }

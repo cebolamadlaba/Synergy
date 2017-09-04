@@ -654,6 +654,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             Assert.NotNull(result);
         }
+
+        /// <summary>
+        /// Tests that ActivateConcession executes positive.
+        /// </summary>
+        [Fact]
+        public void ActivateConcession_Executes_Positive()
+        {
+            MockConcessionRepository.Setup(_ => _.ReadByConcessionRefIsActive(It.IsAny<string>(), It.IsAny<bool>()))
+                .Returns(new[] { new Concession() });
+
+            var result = _concessionManager.ActivateConcession("U100", new User());
+
+            Assert.NotNull(result);
+        }
     }
 }
 
