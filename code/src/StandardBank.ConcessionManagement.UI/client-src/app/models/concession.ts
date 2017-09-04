@@ -20,4 +20,5 @@ export class Concession {
     pcmUserId: number;
     hoUserId: number;
     canExtend: boolean;
+    canRenew: boolean;
 }

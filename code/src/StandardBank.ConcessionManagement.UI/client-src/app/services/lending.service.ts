@@ -47,6 +47,13 @@ export class LendingService {
         return this.http.post(url, concessionReferenceId, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    postRenewLendingData(lendingConcession: LendingConcession): Observable<LendingConcession> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/Lending/RenewLending";
+        return this.http.post(url, lendingConcession, options).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
     private extractData(response: Response) {
         let body = response.json();
         return body;
@@ -96,6 +103,13 @@ export class MockLendingService extends LendingService {
     }
 
     postExtendConcession(concessionReferenceId): Observable<LendingConcession> {
+        this.model.concession = new Concession();
+        this.model.concessionConditions = [new ConcessionCondition()];
+        this.model.lendingConcessionDetails = [new LendingConcessionDetail()];
+        return Observable.of(this.model);
+    }
+
+    postRenewLendingData(lendingConcession: LendingConcession): Observable<LendingConcession> {
         this.model.concession = new Concession();
         this.model.concessionConditions = [new ConcessionCondition()];
         this.model.lendingConcessionDetails = [new LendingConcessionDetail()];

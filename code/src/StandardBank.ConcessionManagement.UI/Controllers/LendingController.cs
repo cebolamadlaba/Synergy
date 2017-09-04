@@ -232,5 +232,49 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             return Ok(_lendingManager.GetLendingConcession(concessionReferenceId, _siteHelper.LoggedInUser(this)));
         }
+
+        /// <summary>
+        /// Renews the lending.
+        /// </summary>
+        /// <param name="lendingConcession">The lending concession.</param>
+        /// <returns></returns>
+        [Route("RenewLending")]
+        [ValidateModel]
+        public async Task<IActionResult> RenewLending([FromBody] LendingConcession lendingConcession)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            //get the parent lending concession details
+            var parentLendingConcession = _lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber, user);
+
+            var parentConcessionId = parentLendingConcession.Concession.Id;
+
+            lendingConcession.Concession.ReferenceNumber = string.Empty;
+            lendingConcession.Concession.ConcessionType = "Lending";
+            lendingConcession.Concession.Type = "New";
+
+            var concession = await _mediator.Send(new AddConcession(lendingConcession.Concession, user));
+
+            foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
+                await _mediator.Send(new AddOrUpdateLendingConcessionDetail(lendingConcessionDetail, user, concession));
+
+            if (lendingConcession.ConcessionConditions != null && lendingConcession.ConcessionConditions.Any())
+                foreach (var concessionCondition in lendingConcession.ConcessionConditions)
+                    await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+
+            //link the new concession to the old concession
+            var concessionRelationship = new ConcessionRelationship
+            {
+                CreationDate = DateTime.Now,
+                UserId = user.Id,
+                RelationshipDescription = "Renewal",
+                ParentConcessionId = parentConcessionId,
+                ChildConcessionId = concession.Id
+            };
+
+            await _mediator.Send(new AddConcessionRelationship(concessionRelationship, user));
+
+            return Ok(lendingConcession);
+        }
     }
 }

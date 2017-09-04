@@ -7,14 +7,11 @@ using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface;
-using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using StandardBank.ConcessionManagement.Model.UserInterface.Inbox;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 using ConcessionCondition = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionCondition;
 using Condition = StandardBank.ConcessionManagement.Model.UserInterface.Condition;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
-using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
-using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
 using ConcessionRelationship = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionRelationship;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
@@ -480,10 +477,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 mappedConcession.Status = _lookupTableManager.GetStatusDescription(concession.StatusId);
 
-                //this concession can be extended if there is an expiry date which is within the next three months and the concession
-                //is currently in the approved state
-                mappedConcession.CanExtend = CalculateIfCanExtend(concession, mappedConcession.Status);
-
+                if (!HasPendingExtensionOrRenewal(concession.Id))
+                {
+                    //this concession can be extended or renewed if there is an expiry date which is within the next three months and the concession
+                    //is currently in the approved state
+                    mappedConcession.CanExtend = CalculateIfCanExtend(concession, mappedConcession.Status);
+                    mappedConcession.CanRenew = CalculateIfCanRenew(concession, mappedConcession.Status);
+                }
+                else
+                {
+                    mappedConcession.CanExtend = false;
+                    mappedConcession.CanRenew = false;
+                }
+                
                 if (concession.SubStatusId.HasValue)
                     mappedConcession.SubStatus =
                         _lookupTableManager.GetSubStatusDescription(concession.SubStatusId.Value);
@@ -492,6 +498,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             return concessions;
+        }
+
+        /// <summary>
+        /// Calculates if can renew.
+        /// </summary>
+        /// <param name="concession">The concession.</param>
+        /// <param name="currentStatus">The current status.</param>
+        /// <returns></returns>
+        private bool CalculateIfCanRenew(Model.Repository.Concession concession, string currentStatus)
+        {
+            return concession.ExpiryDate.HasValue &&
+                   concession.ExpiryDate.Value <= DateTime.Now.AddMonths(3) &&
+                   currentStatus == "Approved";
         }
 
         /// <summary>
@@ -512,8 +531,21 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             if (relationships != null && relationships.Count() >= 3)
                 return false;
 
-            //you cannot extend a concession that's already got an extension or renewal pending
-            var childConcessionRelationships = _concessionRelationshipRepository.ReadByParentConcessionId(concession.Id);
+            return concession.ExpiryDate.HasValue &&
+                   concession.ExpiryDate.Value <= DateTime.Now.AddMonths(3) &&
+                   currentStatus == "Approved";
+        }
+
+        /// <summary>
+        /// Determines whether [has pending extension or renewal] [the specified concession identifier].
+        /// </summary>
+        /// <param name="concessionId">The concession identifier.</param>
+        /// <returns>
+        ///   <c>true</c> if [has pending extension or renewal] [the specified concession identifier]; otherwise, <c>false</c>.
+        /// </returns>
+        private bool HasPendingExtensionOrRenewal(int concessionId)
+        {
+            var childConcessionRelationships = _concessionRelationshipRepository.ReadByParentConcessionId(concessionId);
 
             if (childConcessionRelationships != null && childConcessionRelationships.Any())
             {
@@ -528,14 +560,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         var removedStatus = _lookupTableManager.GetStatusId("Removed");
 
                         if (childConcession.StatusId != declinedStatus && childConcession.StatusId != removedStatus)
-                            return false;
+                            return true;
                     }
                 }
             }
 
-            return concession.ExpiryDate.HasValue &&
-                   concession.ExpiryDate.Value <= DateTime.Now.AddMonths(3) &&
-                   currentStatus == "Approved";
+            return false;
         }
 
         public IEnumerable<Concession> GetActionedConcessionsForUser(User user)
@@ -728,7 +758,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         private DateTime CalculateExpiryDate(Model.Repository.Concession concession)
         {
-            //TODO: if this is an extension then the expiry date is three months from the current concenssions expiry date
+            //if this is an extension then the expiry date is three months from the current concenssions expiry date
+            var expiryRelationdshipId = _lookupTableManager.GetRelationshipId("Extension");
+
+            var relationships =
+                _concessionRelationshipRepository.ReadByChildConcessionIdRelationshipIdRelationships(concession.Id,
+                    expiryRelationdshipId);
+
+            if (relationships != null && relationships.Any())
+                return DateTime.Now.AddMonths(3);
 
             //TODO: otherwise calculate this based on the product type
 
@@ -747,9 +785,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 _concessionRelationshipRepository.ReadByChildConcessionId(concessionId);
 
             var extensionRelationshipId = _lookupTableManager.GetRelationshipId("Extension");
+            var renewalRelationshipId = _lookupTableManager.GetRelationshipId("Renewal");
 
             foreach (var concessionParentRelationship in concessionParentRelationships.Where(
-                _ => _.RelationshipId == extensionRelationshipId))
+                _ => _.RelationshipId == extensionRelationshipId || _.RelationshipId == renewalRelationshipId))
             {
                 var parentConcession =
                     _concessionRepository.ReadById(concessionParentRelationship.ParentConcessionId);

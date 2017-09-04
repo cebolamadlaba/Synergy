@@ -57,6 +57,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
 
             message.Concession.ReferenceNumber = result.ConcessionRef;
             message.Concession.Id = result.Id;
+
             if (message.User.SelectedCentre?.Id > 0)
                 await TryAndSendEmail(message, result);
             else
