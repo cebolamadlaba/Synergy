@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
-import { SourceSystemProduct } from "../models/source-system-product";
 import { Concession } from "../models/concession";
 import { TransactionalView } from "../models/transactional-view";
 import { TransactionalConcessionService } from "../services/transactional-concession.service";
@@ -30,7 +29,6 @@ export class PricingTransactionalComponent implements OnInit, OnDestroy {
         private location: Location,
         @Inject(TransactionalConcessionService) private transactionalConcessionService) {
         this.transactionalView.riskGroup = new RiskGroup();
-        this.transactionalView.sourceSystemProducts = [new SourceSystemProduct()];
         this.transactionalView.transactionalConcessions = [new TransactionalConcession()];
         this.transactionalView.transactionalConcessions[0].concession = new Concession();
     }

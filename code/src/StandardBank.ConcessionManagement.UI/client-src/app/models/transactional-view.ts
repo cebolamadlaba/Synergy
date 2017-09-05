@@ -1,10 +1,8 @@
 import { RiskGroup } from "./risk-group";
-import { SourceSystemProduct } from "./source-system-product";
 import { TransactionalConcession } from "./transactional-concession";
 
 export class TransactionalView {
     riskGroup: RiskGroup;
-    sourceSystemProducts: SourceSystemProduct[];
     transactionalConcessions: TransactionalConcession[];
     totalNumberOfAccounts: number;
     averageAccountManagementFee: number;

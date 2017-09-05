@@ -189,6 +189,7 @@ dbo;tblConcessionLending;UFFFee;YES;decimal
 dbo;tblConcessionLending;fkReviewFeeTypeId;YES;int
 dbo;tblConcessionLending;fkLegalEntityId;NO;int
 dbo;tblConcessionLending;fkLegalEntityAccountId;NO;int
+dbo;tblConcessionLending;AverageBalance;YES;decimal
 dbo;tblConcessionMas;pkConcessionMasId;NO;int
 dbo;tblConcessionMas;fkConcessionId;NO;int
 dbo;tblConcessionMas;fkTransactionTypeId;NO;int
@@ -235,6 +236,11 @@ dbo;tblConditionTypeProduct;pkConditionTypeProductId;NO;int
 dbo;tblConditionTypeProduct;fkConditionTypeId;NO;int
 dbo;tblConditionTypeProduct;fkConditionProductId;NO;int
 dbo;tblConditionTypeProduct;IsActive;NO;bit
+dbo;tblFinancialLending;pkFinancialLendingId;NO;int
+dbo;tblFinancialLending;fkRiskGroupId;NO;int
+dbo;tblFinancialLending;TotalExposure;NO;decimal
+dbo;tblFinancialLending;WeightedAverageMap;NO;decimal
+dbo;tblFinancialLending;WeightedCrsOrMrs;NO;decimal
 dbo;tblLegalEntity;pkLegalEntityId;NO;int
 dbo;tblLegalEntity;fkMarketSegmentId;NO;int
 dbo;tblLegalEntity;fkRiskGroupId;YES;int
@@ -245,6 +251,14 @@ dbo;tblLegalEntityAccount;pkLegalEntityAccountId;NO;int
 dbo;tblLegalEntityAccount;fkLegalEntityId;NO;int
 dbo;tblLegalEntityAccount;AccountNumber;YES;varchar
 dbo;tblLegalEntityAccount;IsActive;NO;bit
+dbo;tblProductLending;pkProductLendingId;NO;int
+dbo;tblProductLending;fkRiskGroupId;NO;int
+dbo;tblProductLending;fkLegalEntityId;NO;int
+dbo;tblProductLending;fkLegalEntityAccountId;NO;int
+dbo;tblProductLending;fkProductId;NO;int
+dbo;tblProductLending;Limit;NO;decimal
+dbo;tblProductLending;AverageBalance;NO;decimal
+dbo;tblProductLending;LoadedMap;NO;decimal
 dbo;tblRiskGroup;pkRiskGroupId;NO;int
 dbo;tblRiskGroup;RiskGroupNumber;NO;int
 dbo;tblRiskGroup;RiskGroupName;NO;varchar

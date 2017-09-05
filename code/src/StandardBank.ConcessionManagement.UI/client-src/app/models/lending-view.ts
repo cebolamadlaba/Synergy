@@ -1,12 +1,11 @@
-﻿import { RiskGroup } from "./risk-group";
-import { SourceSystemProduct } from "./source-system-product";
+import { RiskGroup } from "./risk-group";
 import { LendingConcession } from "./lending-concession";
+import { LendingProduct } from "./lending-product";
+import { LendingFinancial } from "./lending-financial";
 
 export class LendingView {
     riskGroup: RiskGroup;
-    totalExposure: number;
-    weightedAverageMap: number;
-    weightedCrsMrs: number;
-    sourceSystemProducts: SourceSystemProduct[];
+    lendingFinancial: LendingFinancial;
     lendingConcessions: LendingConcession[];
+    lendingProducts: LendingProduct[];
 }

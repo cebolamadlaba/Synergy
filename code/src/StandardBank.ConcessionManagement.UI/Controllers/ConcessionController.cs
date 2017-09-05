@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.DeactivateConcession;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 
@@ -33,19 +36,26 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         private readonly ILetterGeneratorManager _letterGeneratorManager;
 
         /// <summary>
+        /// The mediator
+        /// </summary>
+        private readonly IMediator _mediator;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionController"/> class.
         /// </summary>
         /// <param name="concessionManager">The concession manager.</param>
         /// <param name="lookupTableManager">The lookup table manager.</param>
         /// <param name="siteHelper">The site helper.</param>
         /// <param name="letterGeneratorManager">The letter generator manager.</param>
+        /// <param name="mediator">The mediator.</param>
         public ConcessionController(IConcessionManager concessionManager, ILookupTableManager lookupTableManager,
-            ISiteHelper siteHelper, ILetterGeneratorManager letterGeneratorManager)
+            ISiteHelper siteHelper, ILetterGeneratorManager letterGeneratorManager, IMediator mediator)
         {
             _concessionManager = concessionManager;
             _lookupTableManager = lookupTableManager;
             _siteHelper = siteHelper;
             _letterGeneratorManager = letterGeneratorManager;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -152,6 +162,21 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult TableNumbers()
         {
             return Ok(_lookupTableManager.GetTableNumbers());
+        }
+
+        /// <summary>
+        /// Deactivates the concession.
+        /// </summary>
+        /// <param name="concessionReferenceId">The concession reference identifier.</param>
+        /// <returns></returns>
+        [Route("DeactivateConcession/{concessionReferenceId}")]
+        public async Task<IActionResult> DeactivateConcession(string concessionReferenceId)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            await _mediator.Send(new DeactivateConcession(concessionReferenceId, user));
+
+            return Ok(true);
         }
     }
 }

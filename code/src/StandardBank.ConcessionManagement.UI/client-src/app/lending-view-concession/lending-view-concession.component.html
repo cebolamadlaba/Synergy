@@ -19,9 +19,17 @@
                     <div class="date lightTitle hidden-element">{{riskGroup.number}}</div>
                 </div>
                 <div class="col-md-2  hidden-element">
-                    <div class="subHeading lightTitle"> Latest CRS / MRS</div>
-                    <div class="score"><b>//TODO 0.00</b></div>
-                </div>                
+                    <div class="subHeading lightTitle">Total Exposure</div>
+                    <div class="score"><b>{{lendingFinancial.totalExposure | number : '1.2-2'}}</b></div>
+                </div>
+                <div class="col-md-2  hidden-element">
+                    <div class="subHeading lightTitle"> Weighted Average MAP</div>
+                    <div class="score"><b>{{lendingFinancial.weightedAverageMap | number : '1.2-2'}}</b></div>
+                </div>
+                <div class="col-md-2  hidden-element">
+                    <div class="subHeading lightTitle"> Weighted CRS / MRS</div>
+                    <div class="score"><b>{{lendingFinancial.weightedCrsOrMrs | number : '1.2-2'}}</b></div>
+                </div>        
             </div>
             <!--
             <div class="col-md-1">
@@ -59,6 +67,15 @@
     </div>
 </div>
 
+<!-- Warning message -->
+<div class="col-md-12" *ngIf="warningMessage && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-warning">
+            <p class="message-heading"><i class="fa fa-check-circle" aria-hidden="true"></i>{{warningMessage}}</p>
+        </div>
+    </div>
+</div>
+
 <!-- Loading message -->
 <div class="col-md-12" *ngIf="isLoading">
     <div class="form-feedback-container">
@@ -84,7 +101,7 @@
     <div class="col-md-7 col-md-offset-1">
         <div class="row">
             <label>Motivation</label>
-            <textarea class="form-control large-input" [attr.disabled]="!canBcmApprove" maxlength="800" formControlName="motivation"></textarea>
+            <textarea class="form-control large-input" [attr.disabled]="motivationEnabled ? null : ''" maxlength="800" formControlName="motivation"></textarea>
         </div>
         <div class="row" *ngIf="canBcmApprove || canPcmApprove">
        
@@ -98,7 +115,7 @@
     <div class="col-md-12" style="border-bottom: 1px solid gray; margin-bottom: 15px;">
         <div class="row">
             <h3 class="table-title">Concessions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" *ngIf="canBcmApprove || canPcmApprove" style="margin-top: 15px;">New Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" *ngIf="canBcmApprove || canPcmApprove || isRenewing || isRecalling" style="margin-top: 15px;">New Concession</button>
         </div>
     </div>
 
@@ -142,7 +159,7 @@
                 </td>
                 <td class="length-medium"><input formControlName="reviewFee" class="form-control"/></td>
                 <td class="length-medium"><input formControlName="uffFee" class="form-control"/></td>
-                <td *ngIf="canBcmApprove || canPcmApprove"><button type="button" *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                <td *ngIf="canBcmApprove || canPcmApprove || isRenewing || isRecalling"><button type="button" *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
         </tbody>
     </table>
@@ -150,7 +167,7 @@
     <div class="col-md-12">        
         <div class="row">
             <h3 class="table-title">Conditions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" (click)="addNewConditionRowIfNone()" *ngIf="canBcmApprove || canPcmApprove" style="margin-top: 15px;">Manage Conditions</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" (click)="addNewConditionRowIfNone()" *ngIf="canBcmApprove || canPcmApprove || isRenewing || isRecalling" style="margin-top: 15px;">Manage Conditions</button>
 
             <div class="table-container">
                 <table class="table table-bordered table-hover header-fixed table-striped">
@@ -194,7 +211,7 @@
                     <h4>Manage Conditions</h4>
                 </div>
                 <div class="col-md-12 modal-body">
-                    <div class="row" *ngIf="canBcmApprove || canPcmApprove">
+                    <div class="row" *ngIf="canBcmApprove || canPcmApprove || isRenewing || isRecalling">
                         <div class="col-md-12 modal-title">
                             <button type="button" class="btn btn-primary" (click)="addNewConditionRow()">New Conditions</button>
                         </div>
@@ -259,14 +276,17 @@
 
     <div class="footer-buttons">
         <div class="float-right">
-            <button type="button" class="btn btn-cancel" (click)="goBack()">Cancel</button>
+            <button type="button" class="btn btn-cancel" (click)="goBack()" *ngIf="!isRecalling">Cancel</button>
             <button type="button" class="btn btn-danger" (click)="bcmDeclineConcession()" *ngIf="canBcmApprove">Decline</button>
             <button type="button" class="btn btn-success" (click)="bcmApproveConcession()" *ngIf="canBcmApprove">Forward</button>
             <button type="button" class="btn btn-danger" (click)="pcmDeclineConcession()" *ngIf="canPcmApprove">Decline</button>
             <button type="button" class="btn btn-success" (click)="pcmApproveConcession()" *ngIf="canPcmApprove">Approve</button>
             <button type="button" class="btn btn-success" (click)="extendConcession()" *ngIf="canExtend">Extend</button>
             <button type="button" class="btn btn-success" (click)="renewConcession()" *ngIf="canRenew">Renew</button>
-            <button type="button" class="btn btn-success" (click)="recallConcession()" *ngIf="canRecall">Recall</button>
+            <button type="button" class="btn btn-primary" (click)="saveRenewConcession()" *ngIf="isRenewing">Save</button>
+            <button type="button" class="btn btn-success" (click)="recallConcession()" *ngIf="canRecall && !isRecalling">Recall</button>
+            <button type="button" class="btn btn-primary" (click)="saveRecallConcession()" *ngIf="isRecalling">Save</button>
+            
         </div>
     </div>
 </form>

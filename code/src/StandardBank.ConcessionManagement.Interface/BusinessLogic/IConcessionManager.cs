@@ -163,5 +163,13 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="concessionRelationship">The concession relationship.</param>
         /// <returns></returns>
         Model.Repository.ConcessionRelationship CreateConcessionRelationship(ConcessionRelationship concessionRelationship);
+
+        /// <summary>
+        /// Activates the concession.
+        /// </summary>
+        /// <param name="concessionReferenceNumber">The concession reference number.</param>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
+        Model.Repository.Concession ActivateConcession(string concessionReferenceNumber, User user);
     }
 }

@@ -3,22 +3,20 @@ using StandardBank.ConcessionManagement.Interface.BusinessLogic.Features;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 
-namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeactivateConcession
+namespace StandardBank.ConcessionManagement.BusinessLogic.Features.ActivateConcession
 {
     /// <summary>
-    /// Deactivate concession command
+    /// Activate concession
     /// </summary>
-    /// <seealso cref="MediatR.IRequest{Concession}" />
-    /// <seealso cref="IAuditableCommand" />
-    public class DeactiveConcession : IRequest<Concession>, IAuditableCommand
+    public class ActivateConcession : IRequest<string>, IAuditableCommand
     {
         /// <summary>
-        /// Gets or sets the concession.
+        /// Gets or sets the concession reference number.
         /// </summary>
         /// <value>
-        /// The concession.
+        /// The concession reference number.
         /// </value>
-        public Concession Concession { get; set; }
+        public string ConcessionReferenceNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the user.
@@ -37,13 +35,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeactivateCon
         public AuditRecord AuditRecord { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DeactiveConcession"/> class.
+        /// Initializes a new instance of the <see cref="ActivateConcession"/> class.
         /// </summary>
-        /// <param name="concession">The concession.</param>
+        /// <param name="concessionReferenceNumber">The concession reference number.</param>
         /// <param name="user">The user.</param>
-        public DeactiveConcession(Concession concession, User user)
+        public ActivateConcession(string concessionReferenceNumber, User user)
         {
-            Concession = concession;
+            ConcessionReferenceNumber = concessionReferenceNumber;
             User = user;
         }
     }
