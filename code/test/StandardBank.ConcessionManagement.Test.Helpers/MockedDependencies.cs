@@ -339,5 +339,10 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The mock ProductLending repository
         /// </summary>
         public static Mock<IProductLendingRepository> MockProductLendingRepository = new Mock<IProductLendingRepository>();
+
+        /// <summary>
+        /// The mock FinancialLending repository
+        /// </summary>
+        public static Mock<IFinancialLendingRepository> MockFinancialLendingRepository = new Mock<IFinancialLendingRepository>();
     }
 }

@@ -329,6 +329,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static IProductLendingRepository ProductLendingRepository = new ProductLendingRepository(DbConnection);
 
         /// <summary>
+        /// The FinancialLending repository
+        /// </summary>
+        public static IFinancialLendingRepository FinancialLendingRepository = new FinancialLendingRepository(DbConnection);
+
+        /// <summary>
         /// The look up table manager
         /// </summary>
         public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,
@@ -363,7 +368,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The lending manager
         /// </summary>
         public static ILendingManager LendingManager = new LendingManager(PricingManager, ConcessionManager,
-            LegalEntityRepository, ConcessionLendingRepository, Mapper, LegalEntityAccountRepository);
+            LegalEntityRepository, ConcessionLendingRepository, Mapper, LegalEntityAccountRepository,
+            ProductLendingRepository, FinancialLendingRepository, LookupTableManager);
 
         /// <summary>
         /// The transactional manager

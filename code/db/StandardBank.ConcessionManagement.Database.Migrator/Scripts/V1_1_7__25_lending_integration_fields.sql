@@ -48,3 +48,24 @@ ALTER TABLE [dbo].[tblProductLending] CHECK CONSTRAINT [FK_tblProductLending_tbl
 GO
 
 
+CREATE TABLE [dbo].[tblFinancialLending](
+	[pkFinancialLendingId] [int] IDENTITY(1,1) NOT NULL,
+	[fkRiskGroupId] [int] NOT NULL,
+	[TotalExposure] [decimal](18, 2) NOT NULL,
+	[WeightedAverageMap] [decimal](18, 2) NOT NULL,
+	[WeightedCrsOrMrs] [decimal](18, 2) NOT NULL,
+ CONSTRAINT [PK_tblFinancialLending] PRIMARY KEY CLUSTERED 
+(
+	[pkFinancialLendingId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblFinancialLending]  WITH CHECK ADD  CONSTRAINT [FK_tblFinancialLending_tblRiskGroup] FOREIGN KEY([fkRiskGroupId])
+REFERENCES [dbo].[tblRiskGroup] ([pkRiskGroupId])
+GO
+
+ALTER TABLE [dbo].[tblFinancialLending] CHECK CONSTRAINT [FK_tblFinancialLending_tblRiskGroup]
+GO
+
+

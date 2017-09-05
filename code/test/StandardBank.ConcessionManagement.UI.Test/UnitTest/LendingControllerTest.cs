@@ -39,7 +39,15 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         public void LendingView_Executes_Positive()
         {
             var riskGroup = new RiskGroup { Id = 1, Name = "Unit Test Risk Group", Number = 1 };
-            MockPricingManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>())).Returns(riskGroup);
+            MockLendingManager.Setup(_ => _.GetLendingViewData(It.IsAny<int>())).Returns(new LendingView
+            {
+                RiskGroup = riskGroup,
+                LendingConcessions = new[] {new LendingConcession()},
+                LendingProducts = new[] {new LendingProduct()},
+                TotalExposure = 100,
+                WeightedAverageMap = 200,
+                WeightedCrsMrs = 300
+            });
 
             var result = _lendingController.LendingView(1);
             var apiResult = Assert.IsType<OkObjectResult>(result);

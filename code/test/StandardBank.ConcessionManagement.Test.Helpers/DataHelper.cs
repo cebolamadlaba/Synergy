@@ -2812,5 +2812,58 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
 
             return InsertProductLending();
         }
+
+        /// <summary>
+        /// Gets the FinancialLending id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetFinancialLendingId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.FinancialLendingRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertFinancialLending();
+        }
+
+        /// <summary>
+        /// Inserts a FinancialLending and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertFinancialLending()
+        {
+            var model = new FinancialLending
+            {
+                RiskGroupId = GetRiskGroupId(),
+                TotalExposure = 6686,
+                WeightedAverageMap = 2282,
+                WeightedCrsOrMrs = 4607
+            };
+
+            InstantiatedDependencies.FinancialLendingRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate FinancialLending id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateFinancialLendingId(int? model)
+        {
+            if (!model.HasValue)
+                return GetFinancialLendingId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.FinancialLendingRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertFinancialLending();
+        }
     }
 }

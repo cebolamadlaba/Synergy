@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using StandardBank.ConcessionManagement.Model.UserInterface.Integration;
 using StandardBank.ConcessionManagement.Model.UserInterface.Pricing;
 
 namespace StandardBank.ConcessionManagement.Model.UserInterface.Lending
@@ -42,19 +41,19 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Lending
         public decimal WeightedCrsMrs { get; set; }
 
         /// <summary>
-        /// Gets or sets the source system products.
-        /// </summary>
-        /// <value>
-        /// The source system products.
-        /// </value>
-        public IEnumerable<SourceSystemProduct> SourceSystemProducts { get; set; }
-
-        /// <summary>
         /// Gets or sets the lending concessions.
         /// </summary>
         /// <value>
         /// The lending concessions.
         /// </value>
         public IEnumerable<LendingConcession> LendingConcessions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the lending products.
+        /// </summary>
+        /// <value>
+        /// The lending products.
+        /// </value>
+        public IEnumerable<LendingProduct> LendingProducts { get; set; }
     }
 }

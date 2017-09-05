@@ -6,7 +6,6 @@ import { CashConcession } from "../models/cash-concession";
 import { CashConcessionService } from "../services/cash-concession.service";
 import { CashView } from "../models/cash-view";
 import { RiskGroup } from "../models/risk-group";
-import { SourceSystemProduct } from "../models/source-system-product";
 import { Concession } from "../models/concession";
 import { Router, RouterModule } from '@angular/router';
 
@@ -30,7 +29,6 @@ export class PricingCashComponent implements OnInit, OnDestroy {
         private location: Location,
         @Inject(CashConcessionService) private cashConcessionService) {
         this.cashView.riskGroup = new RiskGroup();
-        this.cashView.sourceSystemProducts = [new SourceSystemProduct()];
         this.cashView.cashConcessions = [new CashConcession()];
         this.cashView.cashConcessions[0].concession = new Concession();
     }

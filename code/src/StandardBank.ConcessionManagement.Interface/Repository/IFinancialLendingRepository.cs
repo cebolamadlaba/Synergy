@@ -4,47 +4,47 @@ using StandardBank.ConcessionManagement.Model.Repository;
 namespace StandardBank.ConcessionManagement.Interface.Repository
 {
     /// <summary>
-    /// ProductLending repository interface
+    /// FinancialLending repository interface
     /// </summary>
-    public interface IProductLendingRepository
+    public interface IFinancialLendingRepository
     {
         /// <summary>
         /// Creates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        ProductLending Create(ProductLending model);
+        FinancialLending Create(FinancialLending model);
 
         /// <summary>
         /// Reads the by identifier.
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        ProductLending ReadById(int id);
+        FinancialLending ReadById(int id);
 
         /// <summary>
-        /// Reads the by risk group identifier.
+        /// Reads by the risk group id
         /// </summary>
-        /// <param name="riskGroupId">The risk group identifier.</param>
+        /// <param name="riskGroupId"></param>
         /// <returns></returns>
-        IEnumerable<ProductLending> ReadByRiskGroupId(int riskGroupId);
+        IEnumerable<FinancialLending> ReadByRiskGroupId(int riskGroupId);
 
         /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<ProductLending> ReadAll();
+        IEnumerable<FinancialLending> ReadAll();
 
         /// <summary>
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        void Update(ProductLending model);
+        void Update(FinancialLending model);
 
         /// <summary>
         /// Deletes the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        void Delete(ProductLending model);
+        void Delete(FinancialLending model);
     }
 }

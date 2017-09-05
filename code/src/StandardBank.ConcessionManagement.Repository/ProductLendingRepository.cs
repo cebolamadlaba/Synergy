@@ -34,13 +34,24 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ProductLending Create(ProductLending model)
         {
-            const string sql = @"INSERT [dbo].[tblProductLending] ([fkRiskGroupId], [fkLegalEntityId], [fkLegalEntityAccountId], [fkProductId], [Limit], [AverageBalance], [LoadedMap]) 
+            const string sql =
+                @"INSERT [dbo].[tblProductLending] ([fkRiskGroupId], [fkLegalEntityId], [fkLegalEntityAccountId], [fkProductId], [Limit], [AverageBalance], [LoadedMap]) 
                                 VALUES (@RiskGroupId, @LegalEntityId, @LegalEntityAccountId, @ProductId, @Limit, @AverageBalance, @LoadedMap) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {RiskGroupId = model.RiskGroupId, LegalEntityId = model.LegalEntityId, LegalEntityAccountId = model.LegalEntityAccountId, ProductId = model.ProductId, Limit = model.Limit, AverageBalance = model.AverageBalance, LoadedMap = model.LoadedMap}).Single();
+                model.Id = db.Query<int>(sql,
+                    new
+                    {
+                        RiskGroupId = model.RiskGroupId,
+                        LegalEntityId = model.LegalEntityId,
+                        LegalEntityAccountId = model.LegalEntityAccountId,
+                        ProductId = model.ProductId,
+                        Limit = model.Limit,
+                        AverageBalance = model.AverageBalance,
+                        LoadedMap = model.LoadedMap
+                    }).Single();
             }
 
             return model;
@@ -62,6 +73,23 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Reads the by risk group identifier.
+        /// </summary>
+        /// <param name="riskGroupId">The risk group identifier.</param>
+        /// <returns></returns>
+        public IEnumerable<ProductLending> ReadByRiskGroupId(int riskGroupId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<ProductLending>(
+                    @"SELECT [pkProductLendingId] [Id], [fkRiskGroupId] [RiskGroupId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [fkProductId] [ProductId], [Limit], [AverageBalance], [LoadedMap] 
+                    FROM [dbo].[tblProductLending] 
+                    WHERE [fkRiskGroupId] = @riskGroupId",
+                    new { riskGroupId });
+            }
+        }
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>
@@ -69,7 +97,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<ProductLending>("SELECT [pkProductLendingId] [Id], [fkRiskGroupId] [RiskGroupId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [fkProductId] [ProductId], [Limit], [AverageBalance], [LoadedMap] FROM [dbo].[tblProductLending]");
+                return db.Query<ProductLending>(
+                    "SELECT [pkProductLendingId] [Id], [fkRiskGroupId] [RiskGroupId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [fkProductId] [ProductId], [Limit], [AverageBalance], [LoadedMap] FROM [dbo].[tblProductLending]");
             }
         }
 
@@ -84,7 +113,17 @@ namespace StandardBank.ConcessionManagement.Repository
                 db.Execute(@"UPDATE [dbo].[tblProductLending]
                             SET [fkRiskGroupId] = @RiskGroupId, [fkLegalEntityId] = @LegalEntityId, [fkLegalEntityAccountId] = @LegalEntityAccountId, [fkProductId] = @ProductId, [Limit] = @Limit, [AverageBalance] = @AverageBalance, [LoadedMap] = @LoadedMap
                             WHERE [pkProductLendingId] = @Id",
-                    new {Id = model.Id, RiskGroupId = model.RiskGroupId, LegalEntityId = model.LegalEntityId, LegalEntityAccountId = model.LegalEntityAccountId, ProductId = model.ProductId, Limit = model.Limit, AverageBalance = model.AverageBalance, LoadedMap = model.LoadedMap});
+                    new
+                    {
+                        Id = model.Id,
+                        RiskGroupId = model.RiskGroupId,
+                        LegalEntityId = model.LegalEntityId,
+                        LegalEntityAccountId = model.LegalEntityAccountId,
+                        ProductId = model.ProductId,
+                        Limit = model.Limit,
+                        AverageBalance = model.AverageBalance,
+                        LoadedMap = model.LoadedMap
+                    });
             }
         }
 

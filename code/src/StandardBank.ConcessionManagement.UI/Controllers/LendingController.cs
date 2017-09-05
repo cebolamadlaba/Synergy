@@ -68,12 +68,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("LendingView/{riskGroupNumber}")]
         public IActionResult LendingView(int riskGroupNumber)
         {
-            //TODO: Eventually need to get source system product data from source systems 
-            return Ok(new LendingView
-            {
-                RiskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber),
-                LendingConcessions = _lendingManager.GetLendingConcessionsForRiskGroupNumber(riskGroupNumber)
-            });
+            return Ok(_lendingManager.GetLendingViewData(riskGroupNumber));
         }
 
         /// <summary>

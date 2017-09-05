@@ -8,7 +8,6 @@ import { ConcessionCondition } from "../models/concession-condition";
 import { LendingConcessionDetail } from "../models/lending-concession-detail";
 import { LendingView } from "../models/lending-view";
 import { RiskGroup } from "../models/risk-group";
-import { SourceSystemProduct } from "../models/source-system-product";
 
 @Injectable()
 export class LendingService {
@@ -90,7 +89,6 @@ export class MockLendingService extends LendingService {
         this.lendingViewModel.totalExposure = 1;
         this.lendingViewModel.weightedAverageMap = 1;
         this.lendingViewModel.weightedCrsMrs = 1;
-        this.lendingViewModel.sourceSystemProducts = [new SourceSystemProduct()];
         this.lendingViewModel.lendingConcessions = [new LendingConcession()];
         return Observable.of(this.lendingViewModel);
     }

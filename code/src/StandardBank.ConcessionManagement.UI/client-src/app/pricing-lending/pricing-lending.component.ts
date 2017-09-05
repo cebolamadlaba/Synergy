@@ -3,7 +3,6 @@ import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { LendingView } from "../models/lending-view";
 import { RiskGroup } from "../models/risk-group";
-import { SourceSystemProduct } from "../models/source-system-product";
 import { LendingConcession } from "../models/lending-concession";
 import { Concession } from "../models/concession";
 import { Location } from '@angular/common';
@@ -30,7 +29,6 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
         private location: Location,
         @Inject(LendingService) private lendingService) {
         this.lendingView.riskGroup = new RiskGroup();
-        this.lendingView.sourceSystemProducts = [new SourceSystemProduct()];
         this.lendingView.lendingConcessions = [new LendingConcession()];
         this.lendingView.lendingConcessions[0].concession = new Concession();
     }

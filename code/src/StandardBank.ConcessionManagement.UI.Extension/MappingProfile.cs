@@ -95,7 +95,13 @@ namespace StandardBank.ConcessionManagement.UI.Extension
           
             //PeriodType
             CreateMap<Model.Repository.PeriodType, Model.UserInterface.PeriodType>().ReverseMap();
-          
+
+            //ProductLending
+            CreateMap<Model.Repository.ProductLending, Model.UserInterface.Lending.LendingProduct>()
+                .ForMember(target => target.LendingProductId, _ => _.MapFrom(source => source.Id));
+            CreateMap<Model.UserInterface.Lending.LendingProduct, Model.Repository.ProductLending>()
+                .ForMember(target => target.Id, _ => _.MapFrom(source => source.LendingProductId));
+
             //ProductType
             CreateMap<Model.Repository.Product, Model.UserInterface.ProductType>().ReverseMap();
 

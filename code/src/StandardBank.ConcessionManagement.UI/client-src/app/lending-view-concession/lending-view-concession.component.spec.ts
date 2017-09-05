@@ -7,6 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { LendingService, MockLendingService } from "../services/lending.service";
 import { LookupDataService, MockLookupDataService } from "../services/lookup-data.service";
+import { UserConcessionsService, MockUserConcessionsService } from "../services/user-concessions.service";
 
 describe('LendingViewConcessionComponent', () => {
     let component: LendingViewConcessionComponent;
@@ -18,7 +19,8 @@ describe('LendingViewConcessionComponent', () => {
             declarations: [LendingViewConcessionComponent],
             providers: [
                 { provide: LookupDataService, useClass: MockLookupDataService },
-                { provide: LendingService, useClass: MockLendingService }
+                { provide: LendingService, useClass: MockLendingService },
+                { provide: UserConcessionsService, useClass: MockUserConcessionsService }
             ]
         })
             .compileComponents();
