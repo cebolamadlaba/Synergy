@@ -33,6 +33,8 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
+    observableLatestCrsOrMrs: Observable<number>;
+    latestCrsOrMrs: number;
     selectedConditionTypes: ConditionType[];
     isLoading = false;
 
@@ -80,6 +82,9 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
                 this.observableClientAccounts = this.lookupDataService.getClientAccounts(this.riskGroupNumber);
                 this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
+
+                this.observableLatestCrsOrMrs = this.lendingService.getlatestCrsOrMrs(this.riskGroupNumber);
+                this.observableLatestCrsOrMrs.subscribe(latestCrsOrMrs => this.latestCrsOrMrs = latestCrsOrMrs, error => this.errorMessage = <any>error);
             }
         });
 

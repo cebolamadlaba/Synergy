@@ -45,6 +45,11 @@ export class UserConcessionsService {
         //TODO: This is not working, because this is afterall JavaScript which is nothing but a string that a browser reads
         return this.http.post(url, concessionIds, options).map(this.extractBytes).catch(this.handleErrorObservable);
     }
+
+    deactivateConcession(concessionReferenceId: string): Observable<boolean> {
+        const url = "/api/Concession/DeactivateConcession/" + concessionReferenceId;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
 }
 
 @Injectable()
@@ -69,5 +74,9 @@ export class MockUserConcessionsService extends UserConcessionsService {
 
     printConcessionLetters(concessionIds: number[]): Observable<any> {
         return Observable.of(this.printData);
+    }
+
+    deactivateConcession(concessionReferenceId): Observable<boolean> {
+        return Observable.of(true);
     }
 }

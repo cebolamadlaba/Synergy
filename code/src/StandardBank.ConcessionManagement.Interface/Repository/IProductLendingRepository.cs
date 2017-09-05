@@ -4,47 +4,47 @@ using StandardBank.ConcessionManagement.Model.Repository;
 namespace StandardBank.ConcessionManagement.Interface.Repository
 {
     /// <summary>
-    /// ConcessionComment repository interface
+    /// ProductLending repository interface
     /// </summary>
-    public interface IConcessionCommentRepository
+    public interface IProductLendingRepository
     {
         /// <summary>
         /// Creates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        ConcessionComment Create(ConcessionComment model);
+        ProductLending Create(ProductLending model);
 
         /// <summary>
         /// Reads the by identifier.
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        ConcessionComment ReadById(int id);
+        ProductLending ReadById(int id);
 
         /// <summary>
-        /// Reads the by concession identifier.
+        /// Reads the by risk group identifier.
         /// </summary>
-        /// <param name="concessionId">The concession identifier.</param>
+        /// <param name="riskGroupId">The risk group identifier.</param>
         /// <returns></returns>
-        IEnumerable<ConcessionComment> ReadByConcessionId(int concessionId);
+        IEnumerable<ProductLending> ReadByRiskGroupId(int riskGroupId);
 
         /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<ConcessionComment> ReadAll();
+        IEnumerable<ProductLending> ReadAll();
 
         /// <summary>
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        void Update(ConcessionComment model);
+        void Update(ProductLending model);
 
         /// <summary>
         /// Deletes the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        void Delete(ConcessionComment model);
+        void Delete(ProductLending model);
     }
 }

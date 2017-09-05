@@ -34,13 +34,23 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ConcessionComment Create(ConcessionComment model)
         {
-            const string sql = @"INSERT [dbo].[tblConcessionComment] ([fkConcessionId], [fkUserId], [fkConcessionSubStatusId], [Comment], [SystemDate], [IsActive]) 
+            const string sql =
+                @"INSERT [dbo].[tblConcessionComment] ([fkConcessionId], [fkUserId], [fkConcessionSubStatusId], [Comment], [SystemDate], [IsActive]) 
                                 VALUES (@fkConcessionId, @fkUserId, @fkConcessionSubStatusId, @Comment, @SystemDate, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {fkConcessionId = model.ConcessionId, fkUserId = model.UserId, fkConcessionSubStatusId = model.ConcessionSubStatusId, Comment = model.Comment, SystemDate = model.SystemDate, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql,
+                    new
+                    {
+                        fkConcessionId = model.ConcessionId,
+                        fkUserId = model.UserId,
+                        fkConcessionSubStatusId = model.ConcessionSubStatusId,
+                        Comment = model.Comment,
+                        SystemDate = model.SystemDate,
+                        IsActive = model.IsActive
+                    }).Single();
             }
 
             return model;
@@ -62,6 +72,23 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Reads the by concession identifier.
+        /// </summary>
+        /// <param name="concessionId">The concession identifier.</param>
+        /// <returns></returns>
+        public IEnumerable<ConcessionComment> ReadByConcessionId(int concessionId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<ConcessionComment>(
+                    @"SELECT [pkConcessionCommentId] [Id], [fkConcessionId] [ConcessionId], [fkUserId] [UserId], [fkConcessionSubStatusId] [ConcessionSubStatusId], [Comment], [SystemDate], [IsActive] 
+                    FROM [dbo].[tblConcessionComment] 
+                    WHERE [fkConcessionId] = @concessionId",
+                    new {concessionId});
+            }
+        }
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>
@@ -69,7 +96,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<ConcessionComment>("SELECT [pkConcessionCommentId] [Id], [fkConcessionId] [ConcessionId], [fkUserId] [UserId], [fkConcessionSubStatusId] [ConcessionSubStatusId], [Comment], [SystemDate], [IsActive] FROM [dbo].[tblConcessionComment]");
+                return db.Query<ConcessionComment>(
+                    "SELECT [pkConcessionCommentId] [Id], [fkConcessionId] [ConcessionId], [fkUserId] [UserId], [fkConcessionSubStatusId] [ConcessionSubStatusId], [Comment], [SystemDate], [IsActive] FROM [dbo].[tblConcessionComment]");
             }
         }
 
@@ -84,7 +112,16 @@ namespace StandardBank.ConcessionManagement.Repository
                 db.Execute(@"UPDATE [dbo].[tblConcessionComment]
                             SET [fkConcessionId] = @fkConcessionId, [fkUserId] = @fkUserId, [fkConcessionSubStatusId] = @fkConcessionSubStatusId, [Comment] = @Comment, [SystemDate] = @SystemDate, [IsActive] = @IsActive
                             WHERE [pkConcessionCommentId] = @Id",
-                    new {Id = model.Id, fkConcessionId = model.ConcessionId, fkUserId = model.UserId, fkConcessionSubStatusId = model.ConcessionSubStatusId, Comment = model.Comment, SystemDate = model.SystemDate, IsActive = model.IsActive});
+                    new
+                    {
+                        Id = model.Id,
+                        fkConcessionId = model.ConcessionId,
+                        fkUserId = model.UserId,
+                        fkConcessionSubStatusId = model.ConcessionSubStatusId,
+                        Comment = model.Comment,
+                        SystemDate = model.SystemDate,
+                        IsActive = model.IsActive
+                    });
             }
         }
 

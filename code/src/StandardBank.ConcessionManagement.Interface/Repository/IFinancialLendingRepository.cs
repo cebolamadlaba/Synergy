@@ -4,47 +4,47 @@ using StandardBank.ConcessionManagement.Model.Repository;
 namespace StandardBank.ConcessionManagement.Interface.Repository
 {
     /// <summary>
-    /// ConcessionComment repository interface
+    /// FinancialLending repository interface
     /// </summary>
-    public interface IConcessionCommentRepository
+    public interface IFinancialLendingRepository
     {
         /// <summary>
         /// Creates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        ConcessionComment Create(ConcessionComment model);
+        FinancialLending Create(FinancialLending model);
 
         /// <summary>
         /// Reads the by identifier.
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        ConcessionComment ReadById(int id);
+        FinancialLending ReadById(int id);
 
         /// <summary>
-        /// Reads the by concession identifier.
+        /// Reads by the risk group id
         /// </summary>
-        /// <param name="concessionId">The concession identifier.</param>
+        /// <param name="riskGroupId"></param>
         /// <returns></returns>
-        IEnumerable<ConcessionComment> ReadByConcessionId(int concessionId);
+        IEnumerable<FinancialLending> ReadByRiskGroupId(int riskGroupId);
 
         /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<ConcessionComment> ReadAll();
+        IEnumerable<FinancialLending> ReadAll();
 
         /// <summary>
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        void Update(ConcessionComment model);
+        void Update(FinancialLending model);
 
         /// <summary>
         /// Deletes the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        void Delete(ConcessionComment model);
+        void Delete(FinancialLending model);
     }
 }

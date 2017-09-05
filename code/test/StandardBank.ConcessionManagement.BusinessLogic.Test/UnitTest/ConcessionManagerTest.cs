@@ -30,12 +30,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             _concessionManager = new ConcessionManager(MockConcessionRepository.Object, MockLookupTableManager.Object,
                 MockLegalEntityRepository.Object, MockRiskGroupRepository.Object,
-                InstantiatedDependencies.CacheManager, MockConcessionAccountRepository.Object,
+                MockConcessionAccountRepository.Object,
                 InstantiatedDependencies.Mapper, MockConcessionConditionRepository.Object,
                 MockLegalEntityAccountRepository.Object, MockConcessionCommentRepository.Object,
                 MockConcessionLendingRepository.Object, MockMarketSegmentRepository.Object,
                 MockConcessionCashRepository.Object, MockConcessionTransactionalRepository.Object,
-                MockConcessionRelationshipRepository.Object, MockAuditRepository.Object);
+                MockConcessionRelationshipRepository.Object, MockAuditRepository.Object, MockUserManager.Object);
         }
 
         /// <summary>
@@ -651,6 +651,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             var result =
                 _concessionManager.CreateConcessionRelationship(new Model.UserInterface.ConcessionRelationship());
+
+            Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Tests that ActivateConcession executes positive.
+        /// </summary>
+        [Fact]
+        public void ActivateConcession_Executes_Positive()
+        {
+            MockConcessionRepository.Setup(_ => _.ReadByConcessionRefIsActive(It.IsAny<string>(), It.IsAny<bool>()))
+                .Returns(new[] { new Concession() });
+
+            var result = _concessionManager.ActivateConcession("U100", new User());
 
             Assert.NotNull(result);
         }

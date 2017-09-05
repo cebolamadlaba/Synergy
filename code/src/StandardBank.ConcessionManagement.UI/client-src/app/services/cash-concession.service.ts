@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import { CashView } from "../models/cash-view";
 import { RiskGroup } from "../models/risk-group";
-import { SourceSystemProduct } from "../models/source-system-product";
 import { CashConcession } from "../models/cash-concession";
 import { Concession } from "../models/concession";
 import { ConcessionCondition } from "../models/concession-condition";
@@ -57,7 +56,6 @@ export class MockCashConcessionService extends CashConcessionService {
 
     getCashViewData(riskGroupNumber): Observable<CashView> {
         this.cashViewModel.riskGroup = new RiskGroup();
-        this.cashViewModel.sourceSystemProducts = [new SourceSystemProduct()];
         this.cashViewModel.cashConcessions = [new CashConcession()];
         return Observable.of(this.cashViewModel);
     }

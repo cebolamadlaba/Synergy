@@ -138,6 +138,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Gets the name of the user.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
+        public string GetUserName(int userId)
+        {
+            var user = _userRepository.ReadById(userId);
+            return $"{user.FirstName} {user.Surname}";
+        }
+
+        /// <summary>
         /// Gets the selected region
         /// </summary>
         /// <param name="userRegions"></param>

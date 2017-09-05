@@ -29,7 +29,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 UFFFee = 8999,
                 ReviewFeeTypeId = DataHelper.GetReviewFeeTypeId(),
                 LegalEntityId = DataHelper.GetLegalEntityId(),
-                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
+                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
+                AverageBalance = 345.32m
             };
 
             var result = InstantiatedDependencies.ConcessionLendingRepository.Create(model);
@@ -103,6 +104,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.ReviewFeeTypeId = DataHelper.GetAlternateReviewFeeTypeId(model.ReviewFeeTypeId);
             model.LegalEntityId = DataHelper.GetAlternateLegalEntityId(model.LegalEntityId);
             model.LegalEntityAccountId = DataHelper.GetAlternateLegalEntityAccountId(model.LegalEntityAccountId);
+            model.AverageBalance = model.AverageBalance + 123.32m;
 
             InstantiatedDependencies.ConcessionLendingRepository.Update(model);
 
@@ -122,6 +124,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.ReviewFeeTypeId, model.ReviewFeeTypeId);
             Assert.Equal(updatedModel.LegalEntityId, model.LegalEntityId);
             Assert.Equal(updatedModel.LegalEntityAccountId, model.LegalEntityAccountId);
+            Assert.Equal(updatedModel.AverageBalance, model.AverageBalance);
         }
 
         /// <summary>
@@ -143,7 +146,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 UFFFee = 8999,
                 ReviewFeeTypeId = DataHelper.GetReviewFeeTypeId(),
                 LegalEntityId = DataHelper.GetLegalEntityId(),
-                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
+                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
+                AverageBalance = 324.43m
             };
 
             var temporaryEntity = InstantiatedDependencies.ConcessionLendingRepository.Create(model);

@@ -4,7 +4,6 @@ using MediatR;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
-using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeactivateConcession
 {
@@ -12,7 +11,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeactivateCon
     /// Deactivate concession command handler
     /// </summary>
     /// <seealso cref="MediatR.IAsyncRequestHandler{DeactiveConcessionCommand, Concession}" />
-    public class DeactiveConcessionHandler : IAsyncRequestHandler<DeactiveConcession, Concession>
+    public class DeactivateConcessionHandler : IAsyncRequestHandler<DeactivateConcession, string>
     {
         /// <summary>
         /// The concession manager
@@ -20,10 +19,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeactivateCon
         private readonly IConcessionManager _concessionManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DeactiveConcessionHandler"/> class.
+        /// Initializes a new instance of the <see cref="DeactivateConcessionHandler"/> class.
         /// </summary>
         /// <param name="concessionManager">The concession manager.</param>
-        public DeactiveConcessionHandler(IConcessionManager concessionManager)
+        public DeactivateConcessionHandler(IConcessionManager concessionManager)
         {
             _concessionManager = concessionManager;
         }
@@ -33,16 +32,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.DeactivateCon
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public async Task<Concession> Handle(DeactiveConcession message)
+        public async Task<string> Handle(DeactivateConcession message)
         {
-            if (string.IsNullOrWhiteSpace(message.Concession.ReferenceNumber))
-                throw new ArgumentNullException(nameof(message.Concession.ReferenceNumber));
+            if (string.IsNullOrWhiteSpace(message.ConcessionReferenceNumber))
+                throw new ArgumentNullException(nameof(message.ConcessionReferenceNumber));
 
-            var result = _concessionManager.DeactivateConcession(message.Concession.ReferenceNumber, message.User);
+            var result = _concessionManager.DeactivateConcession(message.ConcessionReferenceNumber, message.User);
 
             message.AuditRecord = new AuditRecord(result, message.User, AuditType.Update);
 
-            return message.Concession;
+            return message.ConcessionReferenceNumber;
         }
     }
 }

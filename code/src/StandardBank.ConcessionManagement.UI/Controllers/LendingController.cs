@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.ActivateConcession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionComment;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionRelationship;
@@ -24,11 +25,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
     public class LendingController : Controller
     {
         /// <summary>
-        /// The pricing manager
-        /// </summary>
-        private readonly IPricingManager _pricingManager;
-
-        /// <summary>
         /// The lending manager
         /// </summary>
         private readonly ILendingManager _lendingManager;
@@ -46,14 +42,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <summary>
         /// Initializes the controller
         /// </summary>
-        /// <param name="pricingManager"></param>
         /// <param name="lendingManager"></param>
         /// <param name="siteHelper"></param>
         /// <param name="mediator"></param>
-        public LendingController(IPricingManager pricingManager, ILendingManager lendingManager, ISiteHelper siteHelper,
-            IMediator mediator)
+        public LendingController(ILendingManager lendingManager, ISiteHelper siteHelper, IMediator mediator)
         {
-            _pricingManager = pricingManager;
             _lendingManager = lendingManager;
             _siteHelper = siteHelper;
             _mediator = mediator;
@@ -67,12 +60,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("LendingView/{riskGroupNumber}")]
         public IActionResult LendingView(int riskGroupNumber)
         {
-            //TODO: Eventually need to get source system product data from source systems 
-            return Ok(new LendingView
-            {
-                RiskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber),
-                LendingConcessions = _lendingManager.GetLendingConcessionsForRiskGroupNumber(riskGroupNumber)
-            });
+            return Ok(_lendingManager.GetLendingViewData(riskGroupNumber));
         }
 
         /// <summary>
@@ -112,6 +100,19 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
             
+            await UpdateLendingConcession(lendingConcession, user);
+
+            return Ok(lendingConcession);
+        }
+
+        /// <summary>
+        /// Updates the lending concession.
+        /// </summary>
+        /// <param name="lendingConcession">The lending concession.</param>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
+        private async Task UpdateLendingConcession(LendingConcession lendingConcession, User user)
+        {
             var databaseLendingConcession =
                 _lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber, user);
 
@@ -141,8 +142,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             if (!string.IsNullOrWhiteSpace(lendingConcession.Concession.Comments))
                 await _mediator.Send(new AddConcessionComment(concession.Id, concession.SubStatusId.Value,
                     lendingConcession.Concession.Comments, user));
-
-            return Ok(lendingConcession);
         }
 
         /// <summary>
@@ -231,6 +230,92 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult LendingConcessionData(string concessionReferenceId)
         {
             return Ok(_lendingManager.GetLendingConcession(concessionReferenceId, _siteHelper.LoggedInUser(this)));
+        }
+
+        /// <summary>
+        /// Renews the lending.
+        /// </summary>
+        /// <param name="lendingConcession">The lending concession.</param>
+        /// <returns></returns>
+        [Route("RenewLending")]
+        [ValidateModel]
+        public async Task<IActionResult> RenewLending([FromBody] LendingConcession lendingConcession)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            //get the parent lending concession details
+            var parentLendingConcession = _lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber, user);
+
+            var parentConcessionId = parentLendingConcession.Concession.Id;
+
+            lendingConcession.Concession.ReferenceNumber = string.Empty;
+            lendingConcession.Concession.ConcessionType = "Lending";
+            lendingConcession.Concession.Type = "New";
+
+            var concession = await _mediator.Send(new AddConcession(lendingConcession.Concession, user));
+
+            foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
+                await _mediator.Send(new AddOrUpdateLendingConcessionDetail(lendingConcessionDetail, user, concession));
+
+            if (lendingConcession.ConcessionConditions != null && lendingConcession.ConcessionConditions.Any())
+                foreach (var concessionCondition in lendingConcession.ConcessionConditions)
+                    await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+
+            //link the new concession to the old concession
+            var concessionRelationship = new ConcessionRelationship
+            {
+                CreationDate = DateTime.Now,
+                UserId = user.Id,
+                RelationshipDescription = "Renewal",
+                ParentConcessionId = parentConcessionId,
+                ChildConcessionId = concession.Id
+            };
+
+            await _mediator.Send(new AddConcessionRelationship(concessionRelationship, user));
+
+            return Ok(lendingConcession);
+        }
+
+        /// <summary>
+        /// Updates the recalled lending.
+        /// </summary>
+        /// <param name="lendingConcession">The lending concession.</param>
+        /// <returns></returns>
+        [Route("UpdateRecalledLending")]
+        [ValidateModel]
+        public async Task<IActionResult> UpdateRecalledLending([FromBody] LendingConcession lendingConcession)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            //activate the concession after the recall disabled it
+            await _mediator.Send(new ActivateConcession(lendingConcession.Concession.ReferenceNumber, user));
+
+            //update the concession accordingly
+            await UpdateLendingConcession(lendingConcession, user);
+
+            return Ok(lendingConcession);
+        }
+
+        /// <summary>
+        /// Latests the CRS or MRS.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <returns></returns>
+        [Route("LatestCrsOrMrs/{riskGroupNumber}")]
+        public IActionResult LatestCrsOrMrs(int riskGroupNumber)
+        {
+            return Ok(_lendingManager.GetLatestCrsOrMrs(riskGroupNumber));
+        }
+
+        /// <summary>
+        /// Lendings the financial.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <returns></returns>
+        [Route("LendingFinancial/{riskGroupNumber}")]
+        public IActionResult LendingFinancial(int riskGroupNumber)
+        {
+            return Ok(_lendingManager.GetLendingFinancialForRiskGroupNumber(riskGroupNumber));
         }
     }
 }

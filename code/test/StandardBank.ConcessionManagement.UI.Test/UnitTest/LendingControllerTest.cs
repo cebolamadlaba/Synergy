@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -28,8 +29,8 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         /// </summary>
         public LendingControllerTest()
         {
-            _lendingController = new LendingController(MockPricingManager.Object, MockLendingManager.Object,
-                MockSiteHelper.Object, MockMediator.Object);
+            _lendingController = new LendingController(MockLendingManager.Object, MockSiteHelper.Object,
+                MockMediator.Object);
         }
 
         /// <summary>
@@ -39,7 +40,18 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         public void LendingView_Executes_Positive()
         {
             var riskGroup = new RiskGroup { Id = 1, Name = "Unit Test Risk Group", Number = 1 };
-            MockPricingManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>())).Returns(riskGroup);
+            MockLendingManager.Setup(_ => _.GetLendingViewData(It.IsAny<int>())).Returns(new LendingView
+            {
+                RiskGroup = riskGroup,
+                LendingConcessions = new[] {new LendingConcession()},
+                LendingProducts = new[] {new LendingProduct()},
+                LendingFinancial = new LendingFinancial
+                {
+                    TotalExposure = 100,
+                    WeightedAverageMap = 200,
+                    WeightedCrsOrMrs = 300
+                }
+            });
 
             var result = _lendingController.LendingView(1);
             var apiResult = Assert.IsType<OkObjectResult>(result);
@@ -145,6 +157,92 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
 
             Assert.NotNull(apiResult.Value);
             Assert.True(apiResult.Value is LendingConcession);
+        }
+
+        /// <summary>
+        /// Tests that RenewLending executes positive.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task RenewLending_Executes_Positive()
+        {
+            MockSiteHelper.Setup(_ => _.LoggedInUser(It.IsAny<Controller>())).Returns(new Model.UserInterface.User());
+
+            var lendingConcession = new LendingConcession
+            {
+                Concession = new Concession(),
+                LendingConcessionDetails = new[] { new LendingConcessionDetail() },
+                ConcessionConditions = new[] { new ConcessionCondition() }
+            };
+
+            MockLendingManager.Setup(_ => _.GetLendingConcession(It.IsAny<string>(), It.IsAny<User>()))
+                .Returns(lendingConcession);
+
+            MockMediator.Setup(_ => _.Send(It.IsAny<AddConcession>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Concession());
+
+            var result = await _lendingController.RenewLending(lendingConcession);
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is LendingConcession);
+        }
+
+        /// <summary>
+        /// Tests that UpdateRecalledLending executes positive.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task UpdateRecalledLending_Executes_Positive()
+        {
+            MockSiteHelper.Setup(_ => _.LoggedInUser(It.IsAny<Controller>())).Returns(new Model.UserInterface.User());
+
+            var lendingConcession = new LendingConcession
+            {
+                Concession = new Concession(),
+                LendingConcessionDetails = new[] { new LendingConcessionDetail() },
+                ConcessionConditions = new[] { new ConcessionCondition() }
+            };
+
+            MockLendingManager.Setup(_ => _.GetLendingConcession(It.IsAny<string>(), It.IsAny<User>()))
+                .Returns(lendingConcession);
+
+            var result = await _lendingController.UpdateRecalledLending(lendingConcession);
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is LendingConcession);
+        }
+
+        /// <summary>
+        /// Tests that LatestCrsOrMrs executes positive.
+        /// </summary>
+        [Fact]
+        public void LatestCrsOrMrs_Executes_Positive()
+        {
+            MockLendingManager.Setup(_ => _.GetLatestCrsOrMrs(It.IsAny<int>())).Returns(500);
+
+            var result = _lendingController.LatestCrsOrMrs(1);
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is decimal);
+            Assert.Equal(Convert.ToDecimal(apiResult.Value), 500);
+        }
+
+        /// <summary>
+        /// Tests that LendingFinancial executes positive.
+        /// </summary>
+        [Fact]
+        public void LendingFinancial_Executes_Positive()
+        {
+            MockLendingManager.Setup(_ => _.GetLendingFinancialForRiskGroupNumber(It.IsAny<int>()))
+                .Returns(new LendingFinancial());
+
+            var result = _lendingController.LendingFinancial(1);
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is LendingFinancial);
         }
     }
 }

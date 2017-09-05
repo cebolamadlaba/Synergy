@@ -48,6 +48,9 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                 .ForMember(target => target.CashVolume, _ => _.MapFrom(source => source.Volume))
                 .ForMember(target => target.Id, _ => _.MapFrom(source => source.CashConcessionDetailId));
 
+            //ConcessionComment
+            CreateMap<Model.Repository.ConcessionComment, Model.UserInterface.ConcessionComment>().ReverseMap();
+
             //ConcessionCondition
             CreateMap<Model.Repository.ConcessionCondition, Model.UserInterface.ConcessionCondition>()
                 .ForMember(target => target.ConditionVolume, _ => _.MapFrom(source => source.Volume))
@@ -90,13 +93,22 @@ namespace StandardBank.ConcessionManagement.UI.Extension
 
             //ConditionType
             CreateMap<Model.Repository.ConditionType, Model.UserInterface.ConditionType>().ReverseMap();
-          
+
+            //FinancialLending
+            CreateMap<Model.Repository.FinancialLending, Model.UserInterface.Lending.LendingFinancial>().ReverseMap();
+
             //Period
             CreateMap<Model.Repository.Period, Model.UserInterface.Period>().ReverseMap();
           
             //PeriodType
             CreateMap<Model.Repository.PeriodType, Model.UserInterface.PeriodType>().ReverseMap();
-          
+
+            //ProductLending
+            CreateMap<Model.Repository.ProductLending, Model.UserInterface.Lending.LendingProduct>()
+                .ForMember(target => target.LendingProductId, _ => _.MapFrom(source => source.Id));
+            CreateMap<Model.UserInterface.Lending.LendingProduct, Model.Repository.ProductLending>()
+                .ForMember(target => target.Id, _ => _.MapFrom(source => source.LendingProductId));
+
             //ProductType
             CreateMap<Model.Repository.Product, Model.UserInterface.ProductType>().ReverseMap();
 

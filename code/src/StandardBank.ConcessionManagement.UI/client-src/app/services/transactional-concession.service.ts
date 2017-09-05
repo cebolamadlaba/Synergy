@@ -3,7 +3,6 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import { RiskGroup } from "../models/risk-group";
-import { SourceSystemProduct } from "../models/source-system-product";
 import { Concession } from "../models/concession";
 import { ConcessionCondition } from "../models/concession-condition";
 import { TransactionalConcession } from "../models/transactional-concession";
@@ -58,7 +57,6 @@ export class MockTransactionalConcessionService extends TransactionalConcessionS
 
     getTransactionalViewData(riskGroupNumber): Observable<TransactionalView> {
         this.transactionalView.riskGroup = new RiskGroup();
-        this.transactionalView.sourceSystemProducts = [new SourceSystemProduct()];
         this.transactionalView.transactionalConcessions = [new TransactionalConcession()];
         return Observable.of(this.transactionalView);
     }

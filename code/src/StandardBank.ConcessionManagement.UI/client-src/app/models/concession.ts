@@ -1,3 +1,5 @@
+import { ConcessionComment } from "./concession-comment";
+
 export class Concession {
     id: number;
     referenceNumber: string;
@@ -20,4 +22,6 @@ export class Concession {
     pcmUserId: number;
     hoUserId: number;
     canExtend: boolean;
+    canRenew: boolean;
+    concessionComments: ConcessionComment[];
 }
