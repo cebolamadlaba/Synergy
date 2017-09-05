@@ -303,5 +303,16 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             return Ok(lendingConcession);
         }
+
+        /// <summary>
+        /// Latests the CRS or MRS.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <returns></returns>
+        [Route("LatestCrsOrMrs/{riskGroupNumber}")]
+        public IActionResult LatestCrsOrMrs(int riskGroupNumber)
+        {
+            return Ok(_lendingManager.GetLatestCrsOrMrs(riskGroupNumber));
+        }
     }
 }

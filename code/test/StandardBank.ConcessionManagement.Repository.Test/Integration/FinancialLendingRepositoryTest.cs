@@ -21,7 +21,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 RiskGroupId = DataHelper.GetRiskGroupId(),
                 TotalExposure = 4211,
                 WeightedAverageMap = 8186,
-                WeightedCrsOrMrs = 1680
+                WeightedCrsOrMrs = 1680,
+                LatestCrsOrMrs = 123.45m
             };
 
             var result = InstantiatedDependencies.FinancialLendingRepository.Create(model);
@@ -87,6 +88,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.TotalExposure = model.TotalExposure + 100;
             model.WeightedAverageMap = model.WeightedAverageMap + 100;
             model.WeightedCrsOrMrs = model.WeightedCrsOrMrs + 100;
+            model.LatestCrsOrMrs = model.LatestCrsOrMrs + 100;
 
             InstantiatedDependencies.FinancialLendingRepository.Update(model);
 
@@ -98,6 +100,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.TotalExposure, model.TotalExposure);
             Assert.Equal(updatedModel.WeightedAverageMap, model.WeightedAverageMap);
             Assert.Equal(updatedModel.WeightedCrsOrMrs, model.WeightedCrsOrMrs);
+            Assert.Equal(updatedModel.LatestCrsOrMrs, model.LatestCrsOrMrs);
         }
 
         /// <summary>
@@ -111,7 +114,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 RiskGroupId = DataHelper.GetRiskGroupId(),
                 TotalExposure = 4211,
                 WeightedAverageMap = 8186,
-                WeightedCrsOrMrs = 1680
+                WeightedCrsOrMrs = 1680,
+                LatestCrsOrMrs = 6523.35m
             };
 
             var temporaryEntity = InstantiatedDependencies.FinancialLendingRepository.Create(model);

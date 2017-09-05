@@ -69,3 +69,8 @@ ALTER TABLE [dbo].[tblFinancialLending] CHECK CONSTRAINT [FK_tblFinancialLending
 GO
 
 
+ALTER TABLE [dbo].[tblFinancialLending]
+ADD [LatestCrsOrMrs] decimal(18,2) NULL
+
+GO
+

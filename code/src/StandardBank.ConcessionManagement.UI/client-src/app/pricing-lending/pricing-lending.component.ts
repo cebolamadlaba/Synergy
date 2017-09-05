@@ -8,6 +8,7 @@ import { Concession } from "../models/concession";
 import { Location } from '@angular/common';
 import { LendingService } from "../services/lending.service";
 import { Router, RouterModule } from '@angular/router';
+import { LendingFinancial } from "../models/lending-financial";
 
 @Component({
     selector: 'app-pricing-lending',
@@ -29,6 +30,7 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
         private location: Location,
         @Inject(LendingService) private lendingService) {
         this.lendingView.riskGroup = new RiskGroup();
+        this.lendingView.lendingFinancial = new LendingFinancial();
         this.lendingView.lendingConcessions = [new LendingConcession()];
         this.lendingView.lendingConcessions[0].concession = new Concession();
     }

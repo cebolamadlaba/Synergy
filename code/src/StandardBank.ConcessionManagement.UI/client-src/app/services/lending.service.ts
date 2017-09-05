@@ -8,6 +8,7 @@ import { ConcessionCondition } from "../models/concession-condition";
 import { LendingConcessionDetail } from "../models/lending-concession-detail";
 import { LendingView } from "../models/lending-view";
 import { RiskGroup } from "../models/risk-group";
+import { LendingFinancial } from "../models/lending-financial";
 
 @Injectable()
 export class LendingService {
@@ -60,6 +61,11 @@ export class LendingService {
         return this.http.post(url, lendingConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    getlatestCrsOrMrs(riskGroupNumber): Observable<number> {
+        const url = "/api/Lending/LatestCrsOrMrs/" + riskGroupNumber;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
     private extractData(response: Response) {
         let body = response.json();
         return body;
@@ -86,9 +92,10 @@ export class MockLendingService extends LendingService {
 
     getLendingViewData(riskGroupNumber): Observable<LendingView> {
         this.lendingViewModel.riskGroup = new RiskGroup();
-        this.lendingViewModel.totalExposure = 1;
-        this.lendingViewModel.weightedAverageMap = 1;
-        this.lendingViewModel.weightedCrsMrs = 1;
+        this.lendingViewModel.lendingFinancial = new LendingFinancial();
+        this.lendingViewModel.lendingFinancial.totalExposure = 1;
+        this.lendingViewModel.lendingFinancial.weightedAverageMap = 1;
+        this.lendingViewModel.lendingFinancial.weightedCrsOrMrs = 1;
         this.lendingViewModel.lendingConcessions = [new LendingConcession()];
         return Observable.of(this.lendingViewModel);
     }
@@ -126,5 +133,9 @@ export class MockLendingService extends LendingService {
         this.model.concessionConditions = [new ConcessionCondition()];
         this.model.lendingConcessionDetails = [new LendingConcessionDetail()];
         return Observable.of(this.model);
+    }
+
+    getlatestCrsOrMrs(riskGroupNumber): Observable<number> {
+        return Observable.of(1);
     }
 }

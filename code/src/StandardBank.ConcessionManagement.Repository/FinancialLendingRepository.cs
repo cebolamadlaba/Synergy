@@ -34,13 +34,21 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public FinancialLending Create(FinancialLending model)
         {
-            const string sql = @"INSERT [dbo].[tblFinancialLending] ([fkRiskGroupId], [TotalExposure], [WeightedAverageMap], [WeightedCrsOrMrs]) 
-                                VALUES (@RiskGroupId, @TotalExposure, @WeightedAverageMap, @WeightedCrsOrMrs) 
+            const string sql = @"INSERT [dbo].[tblFinancialLending] ([fkRiskGroupId], [TotalExposure], [WeightedAverageMap], [WeightedCrsOrMrs], [LatestCrsOrMrs]) 
+                                VALUES (@RiskGroupId, @TotalExposure, @WeightedAverageMap, @WeightedCrsOrMrs, @LatestCrsOrMrs) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {RiskGroupId = model.RiskGroupId, TotalExposure = model.TotalExposure, WeightedAverageMap = model.WeightedAverageMap, WeightedCrsOrMrs = model.WeightedCrsOrMrs}).Single();
+                model.Id = db.Query<int>(sql,
+                    new
+                    {
+                        RiskGroupId = model.RiskGroupId,
+                        TotalExposure = model.TotalExposure,
+                        WeightedAverageMap = model.WeightedAverageMap,
+                        WeightedCrsOrMrs = model.WeightedCrsOrMrs,
+                        LatestCrsOrMrs = model.LatestCrsOrMrs
+                    }).Single();
             }
 
             return model;
@@ -56,7 +64,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<FinancialLending>(
-                    "SELECT [pkFinancialLendingId] [Id], [fkRiskGroupId] [RiskGroupId], [TotalExposure], [WeightedAverageMap], [WeightedCrsOrMrs] FROM [dbo].[tblFinancialLending] WHERE [pkFinancialLendingId] = @Id",
+                    "SELECT [pkFinancialLendingId] [Id], [fkRiskGroupId] [RiskGroupId], [TotalExposure], [WeightedAverageMap], [WeightedCrsOrMrs], [LatestCrsOrMrs] FROM [dbo].[tblFinancialLending] WHERE [pkFinancialLendingId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -71,7 +79,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<FinancialLending>(
-                    @"SELECT [pkFinancialLendingId] [Id], [fkRiskGroupId] [RiskGroupId], [TotalExposure], [WeightedAverageMap], [WeightedCrsOrMrs] 
+                    @"SELECT [pkFinancialLendingId] [Id], [fkRiskGroupId] [RiskGroupId], [TotalExposure], [WeightedAverageMap], [WeightedCrsOrMrs], [LatestCrsOrMrs] 
                     FROM [dbo].[tblFinancialLending] 
                     WHERE [fkRiskGroupId] = @riskGroupId",
                     new {riskGroupId});
@@ -86,7 +94,7 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<FinancialLending>("SELECT [pkFinancialLendingId] [Id], [fkRiskGroupId] [RiskGroupId], [TotalExposure], [WeightedAverageMap], [WeightedCrsOrMrs] FROM [dbo].[tblFinancialLending]");
+                return db.Query<FinancialLending>("SELECT [pkFinancialLendingId] [Id], [fkRiskGroupId] [RiskGroupId], [TotalExposure], [WeightedAverageMap], [WeightedCrsOrMrs], [LatestCrsOrMrs] FROM [dbo].[tblFinancialLending]");
             }
         }
 
@@ -99,9 +107,17 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblFinancialLending]
-                            SET [fkRiskGroupId] = @RiskGroupId, [TotalExposure] = @TotalExposure, [WeightedAverageMap] = @WeightedAverageMap, [WeightedCrsOrMrs] = @WeightedCrsOrMrs
+                            SET [fkRiskGroupId] = @RiskGroupId, [TotalExposure] = @TotalExposure, [WeightedAverageMap] = @WeightedAverageMap, [WeightedCrsOrMrs] = @WeightedCrsOrMrs, [LatestCrsOrMrs] = @LatestCrsOrMrs
                             WHERE [pkFinancialLendingId] = @Id",
-                    new {Id = model.Id, RiskGroupId = model.RiskGroupId, TotalExposure = model.TotalExposure, WeightedAverageMap = model.WeightedAverageMap, WeightedCrsOrMrs = model.WeightedCrsOrMrs});
+                    new
+                    {
+                        Id = model.Id,
+                        RiskGroupId = model.RiskGroupId,
+                        TotalExposure = model.TotalExposure,
+                        WeightedAverageMap = model.WeightedAverageMap,
+                        WeightedCrsOrMrs = model.WeightedCrsOrMrs,
+                        LatestCrsOrMrs = model.LatestCrsOrMrs
+                    });
             }
         }
 

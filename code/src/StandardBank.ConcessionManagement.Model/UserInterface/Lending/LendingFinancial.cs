@@ -1,49 +1,39 @@
-using System;
-
-namespace StandardBank.ConcessionManagement.Model.Repository
+﻿namespace StandardBank.ConcessionManagement.Model.UserInterface.Lending
 {
     /// <summary>
-    /// FinancialLending entity
+    /// Lending financial entity
     /// </summary>
-    public class FinancialLending
+    public class LendingFinancial
     {
         /// <summary>
-        /// Gets or sets the Id.
+        /// Gets or sets the identifier.
         /// </summary>
         /// <value>
-        /// The Id.
+        /// The identifier.
         /// </value>
         public int Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the RiskGroupId.
+        /// Gets or sets the total exposure.
         /// </summary>
         /// <value>
-        /// The RiskGroupId.
-        /// </value>
-        public int RiskGroupId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the TotalExposure.
-        /// </summary>
-        /// <value>
-        /// The TotalExposure.
+        /// The total exposure.
         /// </value>
         public decimal TotalExposure { get; set; }
 
         /// <summary>
-        /// Gets or sets the WeightedAverageMap.
+        /// Gets or sets the weighted average map.
         /// </summary>
         /// <value>
-        /// The WeightedAverageMap.
+        /// The weighted average map.
         /// </value>
         public decimal WeightedAverageMap { get; set; }
 
         /// <summary>
-        /// Gets or sets the WeightedCrsOrMrs.
+        /// Gets or sets the weighted CRS MRS.
         /// </summary>
         /// <value>
-        /// The WeightedCrsOrMrs.
+        /// The weighted CRS MRS.
         /// </value>
         public decimal WeightedCrsOrMrs { get; set; }
 

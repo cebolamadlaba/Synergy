@@ -103,7 +103,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             Assert.NotEmpty(result.LendingConcessions);
             Assert.NotNull(result.RiskGroup);
             Assert.NotEmpty(result.LendingProducts);
-            Assert.Equal(result.TotalExposure, 100);
+            Assert.NotNull(result.LendingFinancial);
+            Assert.Equal(result.LendingFinancial.TotalExposure, 100);
         }
 
         /// <summary>
@@ -128,6 +129,24 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             var result = _lendingManager.UpdateConcessionLending(new LendingConcessionDetail(), new Model.UserInterface.Concession());
 
             Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Tests that GetLatestCrsOrMrs executes positive.
+        /// </summary>
+        [Fact]
+        public void GetLatestCrsOrMrs_Executes_Positive()
+        {
+            MockPricingManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
+                .Returns(new Model.UserInterface.Pricing.RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
+
+            MockFinancialLendingRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
+                .Returns(new[] { new FinancialLending { LatestCrsOrMrs = 2000 } });
+
+            var result = _lendingManager.GetLatestCrsOrMrs(1);
+
+            Assert.NotNull(result);
+            Assert.Equal(result, 2000);
         }
     }
 }

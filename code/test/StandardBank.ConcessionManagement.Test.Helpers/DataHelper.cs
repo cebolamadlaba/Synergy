@@ -2839,7 +2839,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 RiskGroupId = GetRiskGroupId(),
                 TotalExposure = 6686,
                 WeightedAverageMap = 2282,
-                WeightedCrsOrMrs = 4607
+                WeightedCrsOrMrs = 4607,
+                LatestCrsOrMrs = 123.34m
             };
 
             InstantiatedDependencies.FinancialLendingRepository.Create(model);

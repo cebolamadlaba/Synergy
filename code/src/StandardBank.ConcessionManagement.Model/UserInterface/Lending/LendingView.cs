@@ -17,30 +17,6 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Lending
         public RiskGroup RiskGroup { get; set; }
 
         /// <summary>
-        /// Gets or sets the total exposure.
-        /// </summary>
-        /// <value>
-        /// The total exposure.
-        /// </value>
-        public decimal TotalExposure { get; set; }
-
-        /// <summary>
-        /// Gets or sets the weighted average map.
-        /// </summary>
-        /// <value>
-        /// The weighted average map.
-        /// </value>
-        public decimal WeightedAverageMap { get; set; }
-
-        /// <summary>
-        /// Gets or sets the weighted CRS MRS.
-        /// </summary>
-        /// <value>
-        /// The weighted CRS MRS.
-        /// </value>
-        public decimal WeightedCrsMrs { get; set; }
-
-        /// <summary>
         /// Gets or sets the lending concessions.
         /// </summary>
         /// <value>
@@ -55,5 +31,13 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Lending
         /// The lending products.
         /// </value>
         public IEnumerable<LendingProduct> LendingProducts { get; set; }
+
+        /// <summary>
+        /// Gets or sets the lending financial.
+        /// </summary>
+        /// <value>
+        /// The lending financial.
+        /// </value>
+        public LendingFinancial LendingFinancial { get; set; }
     }
 }

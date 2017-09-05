@@ -179,18 +179,33 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             var lendingProducts = GetLendingProducts(riskGroup.Id, riskGroup.Name);
-            var lendingFinancial = _financialLendingRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
-                                   new FinancialLending();
+            var lendingFinancial = _mapper.Map<LendingFinancial>(
+                _financialLendingRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
+                new FinancialLending());
 
             return new LendingView
             {
                 RiskGroup = riskGroup,
                 LendingConcessions = lendingConcessions,
                 LendingProducts = lendingProducts,
-                TotalExposure = lendingFinancial.TotalExposure,
-                WeightedAverageMap = lendingFinancial.WeightedAverageMap,
-                WeightedCrsMrs = lendingFinancial.WeightedCrsOrMrs
+                LendingFinancial = lendingFinancial
             };
+        }
+
+        /// <summary>
+        /// Gets the latest CRS or MRS.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <returns></returns>
+        public decimal GetLatestCrsOrMrs(int riskGroupNumber)
+        {
+            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+
+            var lendingFinancial = _mapper.Map<LendingFinancial>(
+                _financialLendingRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
+                new FinancialLending());
+
+            return lendingFinancial.LatestCrsOrMrs;
         }
 
         /// <summary>

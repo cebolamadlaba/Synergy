@@ -89,7 +89,10 @@ namespace StandardBank.ConcessionManagement.UI.Extension
 
             //ConditionType
             CreateMap<Model.Repository.ConditionType, Model.UserInterface.ConditionType>().ReverseMap();
-          
+
+            //FinancialLending
+            CreateMap<Model.Repository.FinancialLending, Model.UserInterface.Lending.LendingFinancial>().ReverseMap();
+
             //Period
             CreateMap<Model.Repository.Period, Model.UserInterface.Period>().ReverseMap();
           

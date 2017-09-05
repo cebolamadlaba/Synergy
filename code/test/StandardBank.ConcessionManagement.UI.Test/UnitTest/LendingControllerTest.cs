@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -44,9 +45,12 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
                 RiskGroup = riskGroup,
                 LendingConcessions = new[] {new LendingConcession()},
                 LendingProducts = new[] {new LendingProduct()},
-                TotalExposure = 100,
-                WeightedAverageMap = 200,
-                WeightedCrsMrs = 300
+                LendingFinancial = new LendingFinancial
+                {
+                    TotalExposure = 100,
+                    WeightedAverageMap = 200,
+                    WeightedCrsOrMrs = 300
+                }
             });
 
             var result = _lendingController.LendingView(1);
@@ -207,6 +211,22 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
 
             Assert.NotNull(apiResult.Value);
             Assert.True(apiResult.Value is LendingConcession);
+        }
+
+        /// <summary>
+        /// Tests that LatestCrsOrMrs executes positive.
+        /// </summary>
+        [Fact]
+        public void LatestCrsOrMrs_Executes_Positive()
+        {
+            MockLendingManager.Setup(_ => _.GetLatestCrsOrMrs(It.IsAny<int>())).Returns(500);
+
+            var result = _lendingController.LatestCrsOrMrs(1);
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is decimal);
+            Assert.Equal(Convert.ToDecimal(apiResult.Value), 500);
         }
     }
 }
