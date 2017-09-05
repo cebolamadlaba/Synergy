@@ -30,12 +30,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             _concessionManager = new ConcessionManager(MockConcessionRepository.Object, MockLookupTableManager.Object,
                 MockLegalEntityRepository.Object, MockRiskGroupRepository.Object,
-                InstantiatedDependencies.CacheManager, MockConcessionAccountRepository.Object,
+                MockConcessionAccountRepository.Object,
                 InstantiatedDependencies.Mapper, MockConcessionConditionRepository.Object,
                 MockLegalEntityAccountRepository.Object, MockConcessionCommentRepository.Object,
                 MockConcessionLendingRepository.Object, MockMarketSegmentRepository.Object,
                 MockConcessionCashRepository.Object, MockConcessionTransactionalRepository.Object,
-                MockConcessionRelationshipRepository.Object, MockAuditRepository.Object);
+                MockConcessionRelationshipRepository.Object, MockAuditRepository.Object, MockUserManager.Object);
         }
 
         /// <summary>
@@ -667,6 +667,23 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             var result = _concessionManager.ActivateConcession("U100", new User());
 
             Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Tests that GetConcessionComments executes positive.
+        /// </summary>
+        [Fact]
+        public void GetConcessionComments_Executes_Positive()
+        {
+            MockConcessionCommentRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
+                .Returns(new[] {new ConcessionComment()});
+
+            MockUserManager.Setup(_ => _.GetUserName(It.IsAny<int>())).Returns("Test User");
+
+            var result = _concessionManager.GetConcessionComments(1);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
         }
     }
 }

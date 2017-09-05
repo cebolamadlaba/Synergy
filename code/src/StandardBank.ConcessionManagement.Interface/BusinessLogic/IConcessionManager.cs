@@ -171,5 +171,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="user">The user.</param>
         /// <returns></returns>
         Model.Repository.Concession ActivateConcession(string concessionReferenceNumber, User user);
+
+        /// <summary>
+        /// Gets the concession comments.
+        /// </summary>
+        /// <param name="concessionId">The concession identifier.</param>
+        /// <returns></returns>
+        IEnumerable<Model.UserInterface.ConcessionComment> GetConcessionComments(int concessionId);
     }
 }

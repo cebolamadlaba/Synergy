@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
-using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Inbox;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
+using ConcessionComment = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionComment;
 using ConcessionCondition = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionCondition;
 using Condition = StandardBank.ConcessionManagement.Model.UserInterface.Condition;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
@@ -41,11 +41,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// The risk group repository
         /// </summary>
         private readonly IRiskGroupRepository _riskGroupRepository;
-
-        /// <summary>
-        /// The cache manager
-        /// </summary>
-        private readonly ICacheManager _cacheManager;
 
         /// <summary>
         /// The concession account repository
@@ -92,13 +87,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IAuditRepository _auditRepository;
 
         /// <summary>
+        /// The user manager
+        /// </summary>
+        private readonly IUserManager _userManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionManager"/> class.
         /// </summary>
         /// <param name="concessionRepository">The concession repository.</param>
         /// <param name="lookupTableManager">The lookup table manager.</param>
         /// <param name="legalEntityRepository">The legal entity repository.</param>
         /// <param name="riskGroupRepository">The risk group repository.</param>
-        /// <param name="cacheManager">The cache manager.</param>
         /// <param name="concessionAccountRepository">The concession account repository.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="concessionConditionRepository">The concession condition repository.</param>
@@ -110,22 +109,23 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="concessionTransactionalRepository">The concession transactional repository.</param>
         /// <param name="concessionRelationshipRepository">The concession relationship repository.</param>
         /// <param name="auditRepository">The audit repository.</param>
+        /// <param name="userManager">The user manager.</param>
         public ConcessionManager(IConcessionRepository concessionRepository, ILookupTableManager lookupTableManager,
             ILegalEntityRepository legalEntityRepository, IRiskGroupRepository riskGroupRepository,
-            ICacheManager cacheManager, IConcessionAccountRepository concessionAccountRepository, IMapper mapper,
+            IConcessionAccountRepository concessionAccountRepository, IMapper mapper,
             IConcessionConditionRepository concessionConditionRepository,
             ILegalEntityAccountRepository legalEntityAccountRepository,
             IConcessionCommentRepository concessionCommentRepository,
             IConcessionLendingRepository concessionLendingRepository, IMarketSegmentRepository marketSegmentRepository,
             IConcessionCashRepository concessionCashRepository,
             IConcessionTransactionalRepository concessionTransactionalRepository,
-            IConcessionRelationshipRepository concessionRelationshipRepository, IAuditRepository auditRepository)
+            IConcessionRelationshipRepository concessionRelationshipRepository, IAuditRepository auditRepository,
+            IUserManager userManager)
         {
             _concessionRepository = concessionRepository;
             _lookupTableManager = lookupTableManager;
             _legalEntityRepository = legalEntityRepository;
             _riskGroupRepository = riskGroupRepository;
-            _cacheManager = cacheManager;
             _concessionAccountRepository = concessionAccountRepository;
             _mapper = mapper;
             _concessionConditionRepository = concessionConditionRepository;
@@ -137,6 +137,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionTransactionalRepository = concessionTransactionalRepository;
             _concessionRelationshipRepository = concessionRelationshipRepository;
             _auditRepository = auditRepository;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -494,6 +495,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     mappedConcession.SubStatus =
                         _lookupTableManager.GetSubStatusDescription(concession.SubStatusId.Value);
 
+                mappedConcession.ConcessionComments = GetConcessionComments(concession.Id);
+
                 concessions.Add(mappedConcession);
             }
 
@@ -836,7 +839,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         /// <param name="concessionComment"></param>
         /// <returns></returns>
-        public ConcessionComment CreateConcessionComment(ConcessionComment concessionComment)
+        public Model.Repository.ConcessionComment CreateConcessionComment(Model.Repository.ConcessionComment concessionComment)
         {
             var result = _concessionCommentRepository.Create(concessionComment);
 
@@ -969,6 +972,27 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionRepository.Update(concession);
 
             return concession;
+        }
+
+        /// <summary>
+        /// Gets the concession comments.
+        /// </summary>
+        /// <param name="concessionId">The concession identifier.</param>
+        /// <returns></returns>
+        public IEnumerable<ConcessionComment> GetConcessionComments(int concessionId)
+        {
+            var concessionComments = _concessionCommentRepository.ReadByConcessionId(concessionId);
+
+            var mappedConcessionComments = _mapper.Map<IEnumerable<ConcessionComment>>(concessionComments);
+
+            foreach (var mappedConcessionComment in mappedConcessionComments)
+            {
+                mappedConcessionComment.UserDescription = _userManager.GetUserName(mappedConcessionComment.UserId);
+                mappedConcessionComment.ConcessionSubStatusDescription =
+                    _lookupTableManager.GetSubStatusDescription(mappedConcessionComment.ConcessionSubStatusId);
+            }
+
+            return mappedConcessionComments;
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace StandardBank.ConcessionManagement.Model.UserInterface
 {
@@ -135,5 +136,13 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         ///   <c>true</c> if this instance can renew; otherwise, <c>false</c>.
         /// </value>
         public bool CanRenew { get; set; }
+
+        /// <summary>
+        /// Gets or sets the concession comments.
+        /// </summary>
+        /// <value>
+        /// The concession comments.
+        /// </value>
+        public IEnumerable<ConcessionComment> ConcessionComments { get; set; }
     }
 }

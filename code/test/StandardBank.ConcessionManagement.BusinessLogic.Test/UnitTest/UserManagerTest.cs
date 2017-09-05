@@ -145,5 +145,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             Assert.True(true);
         }
+
+        /// <summary>
+        /// Tests that GetUserName executes positive.
+        /// </summary>
+        [Fact]
+        public void GetUserName_Executes_Positive()
+        {
+            MockUserRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
+                .Returns(new User {FirstName = "Part1", Surname = "Part2"});
+
+            var result = _userManager.GetUserName(1);
+
+            Assert.NotNull(result);
+            Assert.Equal(result, "Part1 Part2");
+        }
     }
 }

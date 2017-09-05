@@ -20,6 +20,7 @@ import { Location } from '@angular/common';
 import { LookupDataService } from "../services/lookup-data.service";
 import { UserConcessionsService } from "../services/user-concessions.service";
 import { LendingFinancial } from "../models/lending-financial";
+import { ConcessionComment } from "../models/concession-comment";
 
 @Component({
     selector: 'app-lending-view-concession',
@@ -92,6 +93,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.selectedConditionTypes = [new ConditionType()];
         this.clientAccounts = [new ClientAccount()];
         this.lendingFinancial = new LendingFinancial();
+        this.lendingConcession = new LendingConcession();
+        this.lendingConcession.concession = new Concession();
+        this.lendingConcession.concession.concessionComments = [new ConcessionComment()];
     }
 
     ngOnInit() {

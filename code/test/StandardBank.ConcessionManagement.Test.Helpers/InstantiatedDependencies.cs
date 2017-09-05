@@ -344,20 +344,20 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             TableNumberRepository, RelationshipRepository);
 
         /// <summary>
-        /// The concession manager
-        /// </summary>
-        public static IConcessionManager ConcessionManager =
-            new ConcessionManager(ConcessionRepository, LookupTableManager, LegalEntityRepository, RiskGroupRepository,
-                CacheManager, ConcessionAccountRepository, Mapper, ConcessionConditionRepository,
-                LegalEntityAccountRepository, ConcessionCommentRepository, ConcessionLendingRepository,
-                MarketSegmentRepository, ConcessionCashRepository, ConcessionTransactionalRepository,
-                ConcessionRelationshipRepository, AuditRepository);
-
-        /// <summary>
         /// The user manager
         /// </summary>
         public static IUserManager UserManager = new UserManager(CacheManager, LookupTableManager, UserRepository, UserRoleRepository,
             RoleRepository, UserRegionRepository, RegionRepository, CentreRepository, CentreUserRepository, Mapper);
+
+        /// <summary>
+        /// The concession manager
+        /// </summary>
+        public static IConcessionManager ConcessionManager =
+            new ConcessionManager(ConcessionRepository, LookupTableManager, LegalEntityRepository, RiskGroupRepository,
+                ConcessionAccountRepository, Mapper, ConcessionConditionRepository, LegalEntityAccountRepository,
+                ConcessionCommentRepository, ConcessionLendingRepository, MarketSegmentRepository,
+                ConcessionCashRepository, ConcessionTransactionalRepository, ConcessionRelationshipRepository,
+                AuditRepository, UserManager);
 
         /// <summary>
         /// The pricing manager

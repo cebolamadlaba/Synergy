@@ -13,7 +13,7 @@
         </div>
         <!-- Dashboard Expanded -->
         <div class="col-md-12 banner-container">
-            <div class="col-md-11">               
+            <div class="col-md-11">
                 <div class="col-md-5">
                     <div class="subHeading">{{riskGroup.name}}</div>
                     <div class="date lightTitle hidden-element">{{riskGroup.number}}</div>
@@ -29,7 +29,7 @@
                 <div class="col-md-2  hidden-element">
                     <div class="subHeading lightTitle"> Weighted CRS / MRS</div>
                     <div class="score"><b>{{lendingFinancial.weightedCrsOrMrs | number : '1.2-2'}}</b></div>
-                </div>        
+                </div>
             </div>
             <!--
             <div class="col-md-1">
@@ -91,7 +91,7 @@
     <div class="col-md-4">
         <div class="row">
             <label>MRS/CRS</label>
-            <input class="form-control" [attr.disabled]="!canBcmApprove" formControlName="mrsCrs" type="number" required/>
+            <input class="form-control" [attr.disabled]="!canBcmApprove" formControlName="mrsCrs" type="number" required />
         </div>
         <div class="row">
             <label>SMT Deal Number</label>
@@ -104,10 +104,10 @@
             <textarea class="form-control large-input" [attr.disabled]="motivationEnabled ? null : ''" maxlength="800" formControlName="motivation"></textarea>
         </div>
         <div class="row" *ngIf="canBcmApprove || canPcmApprove">
-       
+
             <label>Comments:</label>
             <textarea class="form-control large-input" formControlName="comments" placeholder="Comments"></textarea>
-          
+
         </div>
     </div>
 
@@ -148,23 +148,23 @@
                         <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
                 </td>
-                <td class="length-long"><input formControlName="limit" class="form-control"/></td>
-                <td class="length-short"><input formControlName="term" class="form-control"/></td>
-                <td class="length-short"><input formControlName="marginAgainstPrime" class="form-control"/></td>
-                <td class="length-long"><input formControlName="initiationFee" class="form-control"/></td>
+                <td class="length-long"><input formControlName="limit" class="form-control" /></td>
+                <td class="length-short"><input formControlName="term" class="form-control" /></td>
+                <td class="length-short"><input formControlName="marginAgainstPrime" class="form-control" /></td>
+                <td class="length-long"><input formControlName="initiationFee" class="form-control" /></td>
                 <td class="length-medium">
                     <select formControlName="reviewFeeType" class="form-control">
                         <option *ngFor="let reviewFeeTypeOption of reviewFeeTypes" [ngValue]="reviewFeeTypeOption">{{reviewFeeTypeOption.description}}</option>
                     </select>
                 </td>
-                <td class="length-medium"><input formControlName="reviewFee" class="form-control"/></td>
-                <td class="length-medium"><input formControlName="uffFee" class="form-control"/></td>
+                <td class="length-medium"><input formControlName="reviewFee" class="form-control" /></td>
+                <td class="length-medium"><input formControlName="uffFee" class="form-control" /></td>
                 <td *ngIf="canBcmApprove || canPcmApprove || isRenewing || isRecalling"><button type="button" *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
         </tbody>
     </table>
 
-    <div class="col-md-12">        
+    <div class="col-md-12">
         <div class="row">
             <h3 class="table-title">Conditions</h3>
             <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" (click)="addNewConditionRowIfNone()" *ngIf="canBcmApprove || canPcmApprove || isRenewing || isRecalling" style="margin-top: 15px;">Manage Conditions</button>
@@ -202,7 +202,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- modal content -->
     <div bsModal #manageConditionsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="manageConditionsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -274,6 +274,44 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-md-4">
+            <h3 class="table-title">Comments</h3>
+
+            <div class="table-container">
+                <table class="table table-bordered table-hover header-fixed table-striped">
+                    <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Sub-Status</th>
+                        <th>Comment</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngIf="lendingConcession.concession.concessionComments.length == 0">
+                        <td colspan="4" class="searchEmptyState">
+                            No comments added.
+                        </td>
+                    </tr>
+                    <tr *ngFor="let comment of lendingConcession.concession.concessionComments">
+                        <td>{{comment.userDescription}}</td>
+                        <td>{{comment.concessionSubStatusDescription}}</td>
+                        <td>{{comment.comment}}</td>
+                        <td>{{comment.systemDate}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <h3 class="table-title">Parent Concessions</h3>
+        </div>
+        <div class="col-md-4">
+            <h3 class="table-title">Child Concessions</h3>
+        </div>
+    </div>
+
     <div class="footer-buttons">
         <div class="float-right">
             <button type="button" class="btn btn-cancel" (click)="goBack()" *ngIf="!isRecalling">Cancel</button>
@@ -286,7 +324,6 @@
             <button type="button" class="btn btn-primary" (click)="saveRenewConcession()" *ngIf="isRenewing">Save</button>
             <button type="button" class="btn btn-success" (click)="recallConcession()" *ngIf="canRecall && !isRecalling">Recall</button>
             <button type="button" class="btn btn-primary" (click)="saveRecallConcession()" *ngIf="isRecalling">Save</button>
-            
         </div>
     </div>
 </form>
