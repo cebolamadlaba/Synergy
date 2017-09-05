@@ -66,6 +66,11 @@ export class LendingService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    getLendingFinancial(riskGroupNumber): Observable<LendingFinancial> {
+        const url = "/api/Lending/LendingFinancial/" + riskGroupNumber;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
     private extractData(response: Response) {
         let body = response.json();
         return body;
@@ -82,6 +87,7 @@ export class LendingService {
 export class MockLendingService extends LendingService {
     model = new LendingConcession();
     lendingViewModel = new LendingView();
+    lendingFinancialModel = new LendingFinancial();
 
     getLendingConcessionData(): Observable<LendingConcession> {
         this.model.concession = new Concession();
@@ -137,5 +143,12 @@ export class MockLendingService extends LendingService {
 
     getlatestCrsOrMrs(riskGroupNumber): Observable<number> {
         return Observable.of(1);
+    }
+
+    getLendingFinancial(riskGroupNumber): Observable<LendingFinancial> {
+        this.lendingFinancialModel.totalExposure = 1;
+        this.lendingFinancialModel.weightedAverageMap = 1;
+        this.lendingFinancialModel.weightedCrsOrMrs = 1;
+        return Observable.of(this.lendingFinancialModel);
     }
 }

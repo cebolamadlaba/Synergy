@@ -25,11 +25,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
     public class LendingController : Controller
     {
         /// <summary>
-        /// The pricing manager
-        /// </summary>
-        private readonly IPricingManager _pricingManager;
-
-        /// <summary>
         /// The lending manager
         /// </summary>
         private readonly ILendingManager _lendingManager;
@@ -47,14 +42,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <summary>
         /// Initializes the controller
         /// </summary>
-        /// <param name="pricingManager"></param>
         /// <param name="lendingManager"></param>
         /// <param name="siteHelper"></param>
         /// <param name="mediator"></param>
-        public LendingController(IPricingManager pricingManager, ILendingManager lendingManager, ISiteHelper siteHelper,
-            IMediator mediator)
+        public LendingController(ILendingManager lendingManager, ISiteHelper siteHelper, IMediator mediator)
         {
-            _pricingManager = pricingManager;
             _lendingManager = lendingManager;
             _siteHelper = siteHelper;
             _mediator = mediator;
@@ -313,6 +305,17 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult LatestCrsOrMrs(int riskGroupNumber)
         {
             return Ok(_lendingManager.GetLatestCrsOrMrs(riskGroupNumber));
+        }
+
+        /// <summary>
+        /// Lendings the financial.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <returns></returns>
+        [Route("LendingFinancial/{riskGroupNumber}")]
+        public IActionResult LendingFinancial(int riskGroupNumber)
+        {
+            return Ok(_lendingManager.GetLendingFinancialForRiskGroupNumber(riskGroupNumber));
         }
     }
 }

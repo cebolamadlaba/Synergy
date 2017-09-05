@@ -19,11 +19,12 @@ import { LendingService } from "../services/lending.service";
 import { Location } from '@angular/common';
 import { LookupDataService } from "../services/lookup-data.service";
 import { UserConcessionsService } from "../services/user-concessions.service";
+import { LendingFinancial } from "../models/lending-financial";
 
 @Component({
-  selector: 'app-lending-view-concession',
-  templateUrl: './lending-view-concession.component.html',
-  styleUrls: ['./lending-view-concession.component.css']
+    selector: 'app-lending-view-concession',
+    templateUrl: './lending-view-concession.component.html',
+    styleUrls: ['./lending-view-concession.component.css']
 })
 export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
@@ -71,6 +72,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     observableClientAccounts: Observable<ClientAccount[]>;
     clientAccounts: ClientAccount[];
 
+    observableLendingFinancial: Observable<LendingFinancial>;
+    lendingFinancial: LendingFinancial;
+
     constructor(
         private router: Router,
         private route: ActivatedRoute,
@@ -87,6 +91,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.conditionTypes = [new ConditionType()];
         this.selectedConditionTypes = [new ConditionType()];
         this.clientAccounts = [new ClientAccount()];
+        this.lendingFinancial = new LendingFinancial();
     }
 
     ngOnInit() {
@@ -100,6 +105,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
                 this.observableClientAccounts = this.lookupDataService.getClientAccounts(this.riskGroupNumber);
                 this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
+
+                this.observableLendingFinancial = this.lendingService.getLendingFinancial(this.riskGroupNumber);
+                this.observableLendingFinancial.subscribe(lendingFinancial => this.lendingFinancial = lendingFinancial, error => this.errorMessage = <any>error);
             }
         });
 

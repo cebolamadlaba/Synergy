@@ -29,8 +29,8 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         /// </summary>
         public LendingControllerTest()
         {
-            _lendingController = new LendingController(MockPricingManager.Object, MockLendingManager.Object,
-                MockSiteHelper.Object, MockMediator.Object);
+            _lendingController = new LendingController(MockLendingManager.Object, MockSiteHelper.Object,
+                MockMediator.Object);
         }
 
         /// <summary>
@@ -227,6 +227,22 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
             Assert.NotNull(apiResult.Value);
             Assert.True(apiResult.Value is decimal);
             Assert.Equal(Convert.ToDecimal(apiResult.Value), 500);
+        }
+
+        /// <summary>
+        /// Tests that LendingFinancial executes positive.
+        /// </summary>
+        [Fact]
+        public void LendingFinancial_Executes_Positive()
+        {
+            MockLendingManager.Setup(_ => _.GetLendingFinancialForRiskGroupNumber(It.IsAny<int>()))
+                .Returns(new LendingFinancial());
+
+            var result = _lendingController.LendingFinancial(1);
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is LendingFinancial);
         }
     }
 }

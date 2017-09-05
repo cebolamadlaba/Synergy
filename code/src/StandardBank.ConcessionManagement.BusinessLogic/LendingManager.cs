@@ -209,6 +209,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Gets the lending financial for risk group number.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <returns></returns>
+        public LendingFinancial GetLendingFinancialForRiskGroupNumber(int riskGroupNumber)
+        {
+            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+
+            return _mapper.Map<LendingFinancial>(
+                _financialLendingRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialLending());
+        }
+
+        /// <summary>
         /// Gets the lending products.
         /// </summary>
         /// <param name="riskGroupId">The risk group identifier.</param>
