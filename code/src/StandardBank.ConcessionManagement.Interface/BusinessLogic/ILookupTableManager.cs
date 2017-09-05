@@ -8,6 +8,9 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
     /// </summary>
     public interface ILookupTableManager
     {
+        IEnumerable<Role> GetRoles();
+        IEnumerable<Centre> GetCentres();
+        IEnumerable<Region> GetRegions();
         /// <summary>
         /// Gets the status identifier.
         /// </summary>

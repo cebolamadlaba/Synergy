@@ -1,4 +1,6 @@
 ﻿using StandardBank.ConcessionManagement.Model.UserInterface;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 {
@@ -20,5 +22,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="userId"></param>
         /// <param name="regionId"></param>
         void SetUserSelectedRegion(int userId, int regionId);
+        int CreateUser(UserModel userModel);
+        IEnumerable<UserModel> GetUsers();
     }
 }

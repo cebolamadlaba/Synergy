@@ -5,6 +5,7 @@
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <PostBuildEvent>ng build</PostBuildEvent>
     <TypeScriptToolsVersion>2.3</TypeScriptToolsVersion>
+    <PackageTargetFallback>portable-net45+win8</PackageTargetFallback>
   </PropertyGroup>
 
   <ItemGroup>
