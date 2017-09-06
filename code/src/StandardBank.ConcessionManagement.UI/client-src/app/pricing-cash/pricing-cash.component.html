@@ -21,21 +21,21 @@
                 </div>
                 <div class="col-md-3 summary-items">
                     <h5>CASHCENTR</h5>
-                    <div class="summary-items-sub">Turnover <span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Volume <span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Weighted Avg BRANCH Price <span class="col-md-12 summary-item-value">//TODO</span></div>
+                    <div class="summary-items-sub">Turnover <span class="summary-item-value">{{cashView?.cashFinancial?.totalCashCentrCashTurnover | number : '1.2-2'}}</span></div>
+                    <div class="summary-items-sub">Volume <span class="summary-item-value">{{cashView?.cashFinancial?.totalCashCentrCashVolume | number : '1.2-2'}}</span></div>
+                    <div class="summary-items-sub">Weighted Avg Price <span class="col-md-12 summary-item-value">{{cashView?.cashFinancial?.weightedAverageCCPrice | number : '1.2-2'}}</span></div>
                 </div>
                 <div class="col-md-3 summary-items">
                     <h5>BRANCH</h5>
-                    <div class="summary-items-sub">Turnover <span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Volume <span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Weighted Avg BRANCH Price <span class="col-md-12 summary-item-value">//TODO</span></div>
+                    <div class="summary-items-sub">Turnover <span class="summary-item-value">{{cashView?.cashFinancial?.totalBranchCashTurnover | number : '1.2-2'}}</span></div>
+                    <div class="summary-items-sub">Volume <span class="summary-item-value">{{cashView?.cashFinancial?.totalBranchCashVolume | number : '1.2-2'}}</span></div>
+                    <div class="summary-items-sub">Weighted Avg Price <span class="col-md-12 summary-item-value">{{cashView?.cashFinancial?.weightedAverageBranchPrice | number : '1.2-2'}}</span></div>
                 </div>
                 <div class="col-md-3 summary-items">
                     <h5>AUTOSAFE</h5>
-                    <div class="summary-items-sub">Turnover <span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Volume <span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Weighted Avg BRANCH Price <span class="col-md-12 summary-item-value">//TODO</span></div>
+                    <div class="summary-items-sub">Turnover <span class="summary-item-value">{{cashView?.cashFinancial?.totalAutosafeCashTurnover | number : '1.2-2'}}</span></div>
+                    <div class="summary-items-sub">Volume <span class="summary-item-value">{{cashView?.cashFinancial?.totalAutosafeCashVolume | number : '1.2-2'}}</span></div>
+                    <div class="summary-items-sub">Weighted Avg Price <span class="col-md-12 summary-item-value">{{cashView?.cashFinancial?.weightedAverageAFPrice | number : '1.2-2'}}</span></div>
                 </div>
                               
             </div>
@@ -75,7 +75,7 @@
         <div class="section">
 
             <!-- Empty state for products if no data is found -->
-            <div *ngIf="!cashView.sourceSystemProducts">
+            <div *ngIf="!cashView.cashProducts">
                 <div class="section-body">
                     <div class="searchEmptyState">
                         <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
@@ -85,28 +85,32 @@
             </div>
             <!-- End of empty state -->
             <!-- Products list -->
-            <div class="section-body" *ngFor="let sourceSystemProduct of cashView.sourceSystemProducts; trackBy: index;">
+            <div class="section-body" *ngFor="let cashProduct of cashView.cashProducts; trackBy: index;">
                 <div class="product-section">
-                    <div class="product-name"> {{sourceSystemProduct.customerName}}</div>
+                    <div class="product-name"> {{cashProduct.customerName}}</div>
                     <div>
-                        <div class="product-account">Account No: {{sourceSystemProduct.accountNumber}}</div>
-                        <div class="product-code">Product: {{sourceSystemProduct.productName}}</div>
+                        <div class="product-account">Account No: {{cashProduct.accountNumber}}</div>
+                        <div class="product-code">Channel: {{cashProduct.channel}}</div>
                     </div>
                 </div>
                 <div class="product-table-container">
                     <table class="table table-bordered table-hover header-fixed table-striped ">
                         <thead>
                             <tr>
-                                <th>Limit</th>
-                                <th>Average Balance</th>
-                                <th>Loaded MAP</th>
+                                <th>Table Number</th>
+                                <th>BP ID</th>
+                                <th>Volume</th>
+                                <th>Value</th>
+                                <th>Loaded Price</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="rightAlign"> {{sourceSystemProduct.limit}}</td>
-                                <td class="rightAlign"> {{sourceSystemProduct.averageBalance}}</td>
-                                <td class="rightAlign"> {{sourceSystemProduct.loadedMap}}</td>
+                                <td class="rightAlign"> {{cashProduct.tariffTable}}</td>
+                                <td class="rightAlign"> {{cashProduct.bpId}}</td>
+                                <td class="rightAlign"> {{cashProduct.volume}}</td>
+                                <td class="rightAlign"> {{cashProduct.value}}</td>
+                                <td class="rightAlign"> {{cashProduct.loadedPrice}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -141,7 +145,6 @@
                             <tr>
                                 <th>Customer</th>
                                 <th>Cash Table</th>
-                                <th>BP ID</th>
                                 <th>Volume</th>
                                 <th>Value</th>
                                 <th>Price</th>
@@ -159,7 +162,6 @@
                                     </div>
                                 </td>
                                 <td class="rightAlign">{{concession.tableNumberId}}</td>
-                                <td class="rightAlign">//TODO{{concession.bpId}}</td>
                                 <td>{{concession.volume}}</td>
                                 <td>{{concession.value}}</td>
                                 <td>

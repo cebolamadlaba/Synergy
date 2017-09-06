@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
@@ -6,6 +7,7 @@ using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
+using RiskGroup = StandardBank.ConcessionManagement.Model.UserInterface.Pricing.RiskGroup;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
@@ -47,6 +49,21 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ILegalEntityAccountRepository _legalEntityAccountRepository;
 
         /// <summary>
+        /// The financial cash repository
+        /// </summary>
+        private readonly IFinancialCashRepository _financialCashRepository;
+
+        /// <summary>
+        /// The product cash repository
+        /// </summary>
+        private readonly IProductCashRepository _productCashRepository;
+
+        /// <summary>
+        /// The lookup table manager
+        /// </summary>
+        private readonly ILookupTableManager _lookupTableManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CashManager"/> class.
         /// </summary>
         /// <param name="pricingManager">The pricing manager.</param>
@@ -55,9 +72,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="legalEntityRepository">The legal entity repository.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="legalEntityAccountRepository">The legal entity account repository.</param>
+        /// <param name="financialCashRepository">The financial cash repository.</param>
+        /// <param name="productCashRepository">The product cash repository.</param>
+        /// <param name="lookupTableManager">The lookup table manager.</param>
         public CashManager(IPricingManager pricingManager, IConcessionManager concessionManager,
             IConcessionCashRepository concessionCashRepository, ILegalEntityRepository legalEntityRepository,
-            IMapper mapper, ILegalEntityAccountRepository legalEntityAccountRepository)
+            IMapper mapper, ILegalEntityAccountRepository legalEntityAccountRepository,
+            IFinancialCashRepository financialCashRepository, IProductCashRepository productCashRepository,
+            ILookupTableManager lookupTableManager)
         {
             _pricingManager = pricingManager;
             _concessionManager = concessionManager;
@@ -65,6 +87,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _legalEntityRepository = legalEntityRepository;
             _mapper = mapper;
             _legalEntityAccountRepository = legalEntityAccountRepository;
+            _financialCashRepository = financialCashRepository;
+            _productCashRepository = productCashRepository;
+            _lookupTableManager = lookupTableManager;
         }
 
         /// <summary>
@@ -173,11 +198,74 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     AddCashConcessionData(concession, cashConcessions);
             }
 
+            var cashFinancial =
+                _mapper.Map<CashFinancial>(_financialCashRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
+                                           new FinancialCash());
+
+            var cashProducts = GetCashProducts(riskGroup);
+
             return new CashView
             {
                 RiskGroup = riskGroup,
-                CashConcessions = cashConcessions
+                CashConcessions = cashConcessions,
+                CashFinancial = cashFinancial,
+                CashProducts = cashProducts
             };
+        }
+
+        /// <summary>
+        /// Gets the cash products.
+        /// </summary>
+        /// <param name="riskGroup">The risk group.</param>
+        /// <returns></returns>
+        private IEnumerable<CashProduct> GetCashProducts(RiskGroup riskGroup)
+        {
+            var mappedCashProducts = new List<CashProduct>();
+            var cashProducts = _productCashRepository.ReadByRiskGroupId(riskGroup.Id);
+            var tableNumbers = _lookupTableManager.GetTableNumbers();
+
+            foreach (var cashProduct in cashProducts)
+            {
+                var legalEntity = _legalEntityRepository.ReadById(cashProduct.LegalEntityId);
+                var legalEntityAccount = _legalEntityAccountRepository.ReadById(cashProduct.LegalEntityAccountId);
+                var mappedCashProduct = _mapper.Map<CashProduct>(cashProduct);
+
+                mappedCashProduct.CustomerName = legalEntity.CustomerName;
+                mappedCashProduct.AccountNumber = legalEntityAccount.AccountNumber;
+                mappedCashProduct.TariffTable = tableNumbers.First(_ => _.Id == cashProduct.TableNumberId).TariffTable;
+
+                mappedCashProducts.Add(mappedCashProduct);
+            }
+
+            return mappedCashProducts;
+        }
+
+        /// <summary>
+        /// Gets the latest CRS or MRS.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <returns></returns>
+        public decimal GetLatestCrsOrMrs(int riskGroupNumber)
+        {
+            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+
+            var cashFinancial = _mapper.Map<CashFinancial>(
+                _financialCashRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialCash());
+
+            return cashFinancial.LatestCrsOrMrs;
+        }
+
+        /// <summary>
+        /// Gets the cash financial for risk group number.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <returns></returns>
+        public CashFinancial GetCashFinancialForRiskGroupNumber(int riskGroupNumber)
+        {
+            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+
+            return _mapper.Map<CashFinancial>(
+                _financialCashRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialCash());
         }
 
         /// <summary>

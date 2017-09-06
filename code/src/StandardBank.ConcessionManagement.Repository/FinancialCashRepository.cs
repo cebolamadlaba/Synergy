@@ -34,13 +34,28 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public FinancialCash Create(FinancialCash model)
         {
-            const string sql = @"INSERT [dbo].[tblFinancialCash] ([fkRiskGroupId], [WeightedAverageBranchPrice], [TotalCashCentrCashTurnover], [TotalCashCentrCashVolume], [TotalBranchCashTurnover], [TotalBranchCashVolume], [TotalAutosafeCashTurnover], [TotalAutosafeCashVolume], [WeightedAverageCCPrice], [WeightedAverageAFPrice], [LatestCrsOrMrs]) 
+            const string sql =
+                @"INSERT [dbo].[tblFinancialCash] ([fkRiskGroupId], [WeightedAverageBranchPrice], [TotalCashCentrCashTurnover], [TotalCashCentrCashVolume], [TotalBranchCashTurnover], [TotalBranchCashVolume], [TotalAutosafeCashTurnover], [TotalAutosafeCashVolume], [WeightedAverageCCPrice], [WeightedAverageAFPrice], [LatestCrsOrMrs]) 
                                 VALUES (@RiskGroupId, @WeightedAverageBranchPrice, @TotalCashCentrCashTurnover, @TotalCashCentrCashVolume, @TotalBranchCashTurnover, @TotalBranchCashVolume, @TotalAutosafeCashTurnover, @TotalAutosafeCashVolume, @WeightedAverageCCPrice, @WeightedAverageAFPrice, @LatestCrsOrMrs) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {RiskGroupId = model.RiskGroupId, WeightedAverageBranchPrice = model.WeightedAverageBranchPrice, TotalCashCentrCashTurnover = model.TotalCashCentrCashTurnover, TotalCashCentrCashVolume = model.TotalCashCentrCashVolume, TotalBranchCashTurnover = model.TotalBranchCashTurnover, TotalBranchCashVolume = model.TotalBranchCashVolume, TotalAutosafeCashTurnover = model.TotalAutosafeCashTurnover, TotalAutosafeCashVolume = model.TotalAutosafeCashVolume, WeightedAverageCCPrice = model.WeightedAverageCCPrice, WeightedAverageAFPrice = model.WeightedAverageAFPrice, LatestCrsOrMrs = model.LatestCrsOrMrs}).Single();
+                model.Id = db.Query<int>(sql,
+                    new
+                    {
+                        RiskGroupId = model.RiskGroupId,
+                        WeightedAverageBranchPrice = model.WeightedAverageBranchPrice,
+                        TotalCashCentrCashTurnover = model.TotalCashCentrCashTurnover,
+                        TotalCashCentrCashVolume = model.TotalCashCentrCashVolume,
+                        TotalBranchCashTurnover = model.TotalBranchCashTurnover,
+                        TotalBranchCashVolume = model.TotalBranchCashVolume,
+                        TotalAutosafeCashTurnover = model.TotalAutosafeCashTurnover,
+                        TotalAutosafeCashVolume = model.TotalAutosafeCashVolume,
+                        WeightedAverageCCPrice = model.WeightedAverageCCPrice,
+                        WeightedAverageAFPrice = model.WeightedAverageAFPrice,
+                        LatestCrsOrMrs = model.LatestCrsOrMrs
+                    }).Single();
             }
 
             return model;
@@ -62,6 +77,23 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Reads the by risk group identifier.
+        /// </summary>
+        /// <param name="riskGroupId">The risk group identifier.</param>
+        /// <returns></returns>
+        public IEnumerable<FinancialCash> ReadByRiskGroupId(int riskGroupId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<FinancialCash>(
+                    @"SELECT [pkFinancialCashId] [Id], [fkRiskGroupId] [RiskGroupId], [WeightedAverageBranchPrice], [TotalCashCentrCashTurnover], [TotalCashCentrCashVolume], [TotalBranchCashTurnover], [TotalBranchCashVolume], [TotalAutosafeCashTurnover], [TotalAutosafeCashVolume], [WeightedAverageCCPrice], [WeightedAverageAFPrice], [LatestCrsOrMrs] 
+                    FROM [dbo].[tblFinancialCash] 
+                    WHERE [fkRiskGroupId] = @riskGroupId",
+                    new {riskGroupId});
+            }
+        }
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>
@@ -69,7 +101,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<FinancialCash>("SELECT [pkFinancialCashId] [Id], [fkRiskGroupId] [RiskGroupId], [WeightedAverageBranchPrice], [TotalCashCentrCashTurnover], [TotalCashCentrCashVolume], [TotalBranchCashTurnover], [TotalBranchCashVolume], [TotalAutosafeCashTurnover], [TotalAutosafeCashVolume], [WeightedAverageCCPrice], [WeightedAverageAFPrice], [LatestCrsOrMrs] FROM [dbo].[tblFinancialCash]");
+                return db.Query<FinancialCash>(
+                    "SELECT [pkFinancialCashId] [Id], [fkRiskGroupId] [RiskGroupId], [WeightedAverageBranchPrice], [TotalCashCentrCashTurnover], [TotalCashCentrCashVolume], [TotalBranchCashTurnover], [TotalBranchCashVolume], [TotalAutosafeCashTurnover], [TotalAutosafeCashVolume], [WeightedAverageCCPrice], [WeightedAverageAFPrice], [LatestCrsOrMrs] FROM [dbo].[tblFinancialCash]");
             }
         }
 
@@ -84,7 +117,21 @@ namespace StandardBank.ConcessionManagement.Repository
                 db.Execute(@"UPDATE [dbo].[tblFinancialCash]
                             SET [fkRiskGroupId] = @RiskGroupId, [WeightedAverageBranchPrice] = @WeightedAverageBranchPrice, [TotalCashCentrCashTurnover] = @TotalCashCentrCashTurnover, [TotalCashCentrCashVolume] = @TotalCashCentrCashVolume, [TotalBranchCashTurnover] = @TotalBranchCashTurnover, [TotalBranchCashVolume] = @TotalBranchCashVolume, [TotalAutosafeCashTurnover] = @TotalAutosafeCashTurnover, [TotalAutosafeCashVolume] = @TotalAutosafeCashVolume, [WeightedAverageCCPrice] = @WeightedAverageCCPrice, [WeightedAverageAFPrice] = @WeightedAverageAFPrice, [LatestCrsOrMrs] = @LatestCrsOrMrs
                             WHERE [pkFinancialCashId] = @Id",
-                    new {Id = model.Id, RiskGroupId = model.RiskGroupId, WeightedAverageBranchPrice = model.WeightedAverageBranchPrice, TotalCashCentrCashTurnover = model.TotalCashCentrCashTurnover, TotalCashCentrCashVolume = model.TotalCashCentrCashVolume, TotalBranchCashTurnover = model.TotalBranchCashTurnover, TotalBranchCashVolume = model.TotalBranchCashVolume, TotalAutosafeCashTurnover = model.TotalAutosafeCashTurnover, TotalAutosafeCashVolume = model.TotalAutosafeCashVolume, WeightedAverageCCPrice = model.WeightedAverageCCPrice, WeightedAverageAFPrice = model.WeightedAverageAFPrice, LatestCrsOrMrs = model.LatestCrsOrMrs});
+                    new
+                    {
+                        Id = model.Id,
+                        RiskGroupId = model.RiskGroupId,
+                        WeightedAverageBranchPrice = model.WeightedAverageBranchPrice,
+                        TotalCashCentrCashTurnover = model.TotalCashCentrCashTurnover,
+                        TotalCashCentrCashVolume = model.TotalCashCentrCashVolume,
+                        TotalBranchCashTurnover = model.TotalBranchCashTurnover,
+                        TotalBranchCashVolume = model.TotalBranchCashVolume,
+                        TotalAutosafeCashTurnover = model.TotalAutosafeCashTurnover,
+                        TotalAutosafeCashVolume = model.TotalAutosafeCashVolume,
+                        WeightedAverageCCPrice = model.WeightedAverageCCPrice,
+                        WeightedAverageAFPrice = model.WeightedAverageAFPrice,
+                        LatestCrsOrMrs = model.LatestCrsOrMrs
+                    });
             }
         }
 

@@ -23,6 +23,13 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         ProductCash ReadById(int id);
 
         /// <summary>
+        /// Reads the by risk group identifier.
+        /// </summary>
+        /// <param name="riskGroupId">The risk group identifier.</param>
+        /// <returns></returns>
+        IEnumerable<ProductCash> ReadByRiskGroupId(int riskGroupId);
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>

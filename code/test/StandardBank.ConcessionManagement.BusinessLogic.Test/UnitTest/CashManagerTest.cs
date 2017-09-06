@@ -1,6 +1,7 @@
 ﻿using Moq;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
+using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using StandardBank.ConcessionManagement.Test.Helpers;
 using Xunit;
@@ -27,7 +28,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             _cashManager = new CashManager(MockPricingManager.Object, MockConcessionManager.Object,
                 MockConcessionCashRepository.Object, MockLegalEntityRepository.Object, InstantiatedDependencies.Mapper,
-                MockLegalEntityAccountRepository.Object);
+                MockLegalEntityAccountRepository.Object, MockFinancialCashRepository.Object,
+                MockProductCashRepository.Object, MockLookupTableManager.Object);
         }
 
         /// <summary>
@@ -123,11 +125,71 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         [Fact]
         public void GetCashViewData_Executes_Positive()
         {
+            MockPricingManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
+                .Returns(new RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
+
+            MockConcessionManager.Setup(_ => _.GetConcessionsForRiskGroup(It.IsAny<int>(), It.IsAny<string>()))
+                .Returns(new[] { new Concession() });
+
+            MockConcessionCashRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
+                .Returns(new[] { new ConcessionCash() });
+
+            MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
+                .Returns(new LegalEntity { IsActive = true });
+
+            MockLegalEntityAccountRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
+                .Returns(new LegalEntityAccount { IsActive = true });
+
+            MockFinancialCashRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
+                .Returns(new[] {new FinancialCash()});
+
+            MockProductCashRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
+                .Returns(new[] {new ProductCash { TableNumberId = 1}});
+
+            MockLookupTableManager.Setup(_ => _.GetTableNumbers())
+                .Returns(new[] {new Model.UserInterface.TableNumber {Id = 1}});
+
             var result = _cashManager.GetCashViewData(1);
 
             Assert.NotNull(result);
             Assert.NotNull(result.RiskGroup);
             Assert.NotNull(result.CashConcessions);
+        }
+
+        /// <summary>
+        /// Tests that GetCashFinancialForRiskGroupNumber executes positive.
+        /// </summary>
+        [Fact]
+        public void GetCashFinancialForRiskGroupNumber_Executes_Positive()
+        {
+            MockPricingManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
+                .Returns(new RiskGroup {Id = 1, Name = "Test Risk Group", Number = 1000});
+
+            MockFinancialCashRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
+                .Returns(new[] {new FinancialCash {LatestCrsOrMrs = 123321}});
+
+            var result = _cashManager.GetCashFinancialForRiskGroupNumber(1);
+
+            Assert.NotNull(result);
+            Assert.Equal(123321, result.LatestCrsOrMrs);
+        }
+
+        /// <summary>
+        /// Tests that GetLatestCrsOrMrs executes positive.
+        /// </summary>
+        [Fact]
+        public void GetLatestCrsOrMrs_Executes_Positive()
+        {
+            MockPricingManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
+                .Returns(new Model.UserInterface.Pricing.RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
+
+            MockFinancialCashRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
+                .Returns(new[] { new FinancialCash { LatestCrsOrMrs = 2000 } });
+
+            var result = _cashManager.GetLatestCrsOrMrs(1);
+
+            Assert.NotNull(result);
+            Assert.Equal(result, 2000);
         }
     }
 }

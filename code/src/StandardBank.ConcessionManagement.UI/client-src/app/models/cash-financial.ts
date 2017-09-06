@@ -1,6 +1,5 @@
 export class CashFinancial {
     id: number;
-    weightedAverageBranchPrice: number;
     totalCashCentrCashTurnover: number;
     totalCashCentrCashVolume: number;
     totalBranchCashTurnover: number;
@@ -9,5 +8,6 @@ export class CashFinancial {
     totalAutosafeCashVolume: number;
     weightedAverageCCPrice: number;
     weightedAverageAFPrice: number;
+    weightedAverageBranchPrice: number;
     latestCrsOrMrs: number;
 }

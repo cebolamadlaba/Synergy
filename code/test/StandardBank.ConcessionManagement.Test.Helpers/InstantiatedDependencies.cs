@@ -388,5 +388,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             new TransactionalManager(PricingManager, ConcessionManager, ConcessionTransactionalRepository,
                 LegalEntityRepository, LegalEntityAccountRepository, Mapper, LookupTableManager);
 
+        /// <summary>
+        /// The cash manager
+        /// </summary>
+        public static ICashManager CashManager = new CashManager(PricingManager, ConcessionManager,
+            ConcessionCashRepository, LegalEntityRepository, Mapper, LegalEntityAccountRepository,
+            FinancialCashRepository, ProductCashRepository, LookupTableManager);
     }
 }

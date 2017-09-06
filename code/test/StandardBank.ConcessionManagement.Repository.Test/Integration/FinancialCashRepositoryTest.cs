@@ -53,6 +53,23 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         }
 
         /// <summary>
+        /// Tests that ReadByRiskGroupId executes positive.
+        /// </summary>
+        [Fact]
+        public void ReadByRiskGroupId_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.FinancialCashRepository.ReadAll();
+            var riskGroupId = results.First().RiskGroupId;
+            var result = InstantiatedDependencies.FinancialCashRepository.ReadByRiskGroupId(riskGroupId);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+
+            foreach (var record in result)
+                Assert.Equal(record.RiskGroupId, riskGroupId);
+        }
+
+        /// <summary>
         /// Tests that ReadAll executes positive.
         /// </summary>
         [Fact]

@@ -34,13 +34,26 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ProductCash Create(ProductCash model)
         {
-            const string sql = @"INSERT [dbo].[tblProductCash] ([fkRiskGroupId], [fkLegalEntityId], [fkLegalEntityAccountId], [fkTableNumberId], [Channel], [BpId], [Volume], [Value], [LoadedPrice]) 
+            const string sql =
+                @"INSERT [dbo].[tblProductCash] ([fkRiskGroupId], [fkLegalEntityId], [fkLegalEntityAccountId], [fkTableNumberId], [Channel], [BpId], [Volume], [Value], [LoadedPrice]) 
                                 VALUES (@RiskGroupId, @LegalEntityId, @LegalEntityAccountId, @TableNumberId, @Channel, @BpId, @Volume, @Value, @LoadedPrice) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {RiskGroupId = model.RiskGroupId, LegalEntityId = model.LegalEntityId, LegalEntityAccountId = model.LegalEntityAccountId, TableNumberId = model.TableNumberId, Channel = model.Channel, BpId = model.BpId, Volume = model.Volume, Value = model.Value, LoadedPrice = model.LoadedPrice}).Single();
+                model.Id = db.Query<int>(sql,
+                    new
+                    {
+                        RiskGroupId = model.RiskGroupId,
+                        LegalEntityId = model.LegalEntityId,
+                        LegalEntityAccountId = model.LegalEntityAccountId,
+                        TableNumberId = model.TableNumberId,
+                        Channel = model.Channel,
+                        BpId = model.BpId,
+                        Volume = model.Volume,
+                        Value = model.Value,
+                        LoadedPrice = model.LoadedPrice
+                    }).Single();
             }
 
             return model;
@@ -62,6 +75,23 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Reads the by risk group identifier.
+        /// </summary>
+        /// <param name="riskGroupId">The risk group identifier.</param>
+        /// <returns></returns>
+        public IEnumerable<ProductCash> ReadByRiskGroupId(int riskGroupId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<ProductCash>(
+                    @"SELECT [pkProductCashId] [Id], [fkRiskGroupId] [RiskGroupId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [fkTableNumberId] [TableNumberId], [Channel], [BpId], [Volume], [Value], [LoadedPrice] 
+                    FROM [dbo].[tblProductCash] 
+                    WHERE [fkRiskGroupId] = @riskGroupId",
+                    new {riskGroupId});
+            }
+        }
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>
@@ -69,7 +99,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<ProductCash>("SELECT [pkProductCashId] [Id], [fkRiskGroupId] [RiskGroupId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [fkTableNumberId] [TableNumberId], [Channel], [BpId], [Volume], [Value], [LoadedPrice] FROM [dbo].[tblProductCash]");
+                return db.Query<ProductCash>(
+                    "SELECT [pkProductCashId] [Id], [fkRiskGroupId] [RiskGroupId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [fkTableNumberId] [TableNumberId], [Channel], [BpId], [Volume], [Value], [LoadedPrice] FROM [dbo].[tblProductCash]");
             }
         }
 
@@ -84,7 +115,19 @@ namespace StandardBank.ConcessionManagement.Repository
                 db.Execute(@"UPDATE [dbo].[tblProductCash]
                             SET [fkRiskGroupId] = @RiskGroupId, [fkLegalEntityId] = @LegalEntityId, [fkLegalEntityAccountId] = @LegalEntityAccountId, [fkTableNumberId] = @TableNumberId, [Channel] = @Channel, [BpId] = @BpId, [Volume] = @Volume, [Value] = @Value, [LoadedPrice] = @LoadedPrice
                             WHERE [pkProductCashId] = @Id",
-                    new {Id = model.Id, RiskGroupId = model.RiskGroupId, LegalEntityId = model.LegalEntityId, LegalEntityAccountId = model.LegalEntityAccountId, TableNumberId = model.TableNumberId, Channel = model.Channel, BpId = model.BpId, Volume = model.Volume, Value = model.Value, LoadedPrice = model.LoadedPrice});
+                    new
+                    {
+                        Id = model.Id,
+                        RiskGroupId = model.RiskGroupId,
+                        LegalEntityId = model.LegalEntityId,
+                        LegalEntityAccountId = model.LegalEntityAccountId,
+                        TableNumberId = model.TableNumberId,
+                        Channel = model.Channel,
+                        BpId = model.BpId,
+                        Volume = model.Volume,
+                        Value = model.Value,
+                        LoadedPrice = model.LoadedPrice
+                    });
             }
         }
 

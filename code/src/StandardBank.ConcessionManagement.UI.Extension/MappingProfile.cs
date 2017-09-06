@@ -93,6 +93,9 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             //ConditionType
             CreateMap<Model.Repository.ConditionType, Model.UserInterface.ConditionType>().ReverseMap();
 
+            //FinancialCash
+            CreateMap<Model.Repository.FinancialCash, Model.UserInterface.Cash.CashFinancial>().ReverseMap();
+
             //FinancialLending
             CreateMap<Model.Repository.FinancialLending, Model.UserInterface.Lending.LendingFinancial>().ReverseMap();
 
@@ -101,6 +104,12 @@ namespace StandardBank.ConcessionManagement.UI.Extension
           
             //PeriodType
             CreateMap<Model.Repository.PeriodType, Model.UserInterface.PeriodType>().ReverseMap();
+
+            //ProductCash
+            CreateMap<Model.Repository.ProductCash, Model.UserInterface.Cash.CashProduct>()
+                .ForMember(target => target.CashProductId, _ => _.MapFrom(source => source.Id));
+            CreateMap<Model.UserInterface.Cash.CashProduct, Model.Repository.ProductCash>()
+                .ForMember(target => target.Id, _ => _.MapFrom(source => source.CashProductId));
 
             //ProductLending
             CreateMap<Model.Repository.ProductLending, Model.UserInterface.Lending.LendingProduct>()
