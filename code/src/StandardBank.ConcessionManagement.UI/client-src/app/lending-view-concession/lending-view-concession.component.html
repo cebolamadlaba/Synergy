@@ -14,9 +14,13 @@
         <!-- Dashboard Expanded -->
         <div class="col-md-12 banner-container">
             <div class="col-md-11">
-                <div class="col-md-5">
+                <div class="col-md-2">
                     <div class="subHeading">{{riskGroup.name}}</div>
                     <div class="date lightTitle hidden-element">{{riskGroup.number}}</div>
+                </div>
+                <div class="col-md-4 hidden-element">
+                    <div class="subHeading lightTitle">Status:</div>
+                    <div class="score alert alert-danger"><b>{{lendingConcession.concession.status}} - {{lendingConcession.concession.subStatus}}</b></div>
                 </div>
                 <div class="col-md-2  hidden-element">
                     <div class="subHeading lightTitle">Total Exposure</div>
@@ -70,7 +74,7 @@
 <!-- Warning message -->
 <div class="col-md-12" *ngIf="warningMessage && !isLoading">
     <div class="form-feedback-container">
-        <div class="alert-warning">
+        <div class="alert alert-warning">
             <p class="message-heading"><i class="fa fa-check-circle" aria-hidden="true"></i>{{warningMessage}}</p>
         </div>
     </div>
@@ -289,7 +293,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr *ngIf="lendingConcession.concession.concessionComments.length == 0">
+                    <tr *ngIf="!lendingConcession.concession.concessionComments || lendingConcession.concession.concessionComments.length == 0">
                         <td colspan="4" class="searchEmptyState">
                             No comments added.
                         </td>
@@ -298,7 +302,7 @@
                         <td>{{comment.userDescription}}</td>
                         <td>{{comment.concessionSubStatusDescription}}</td>
                         <td>{{comment.comment}}</td>
-                        <td>{{comment.systemDate}}</td>
+                        <td>{{comment.systemDate | date: 'yyyy/MM/dd'}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -306,9 +310,57 @@
         </div>
         <div class="col-md-4">
             <h3 class="table-title">Parent Concessions</h3>
+
+            <div class="table-container">
+                <table class="table table-bordered table-hover header-fixed table-striped">
+                    <thead>
+                        <tr>
+                            <th>Creation Date</th>
+                            <th>User</th>
+                            <th>Relationship</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngIf="!lendingConcession.concession.parentConcessionRelationships || lendingConcession.concession.parentConcessionRelationships.length == 0">
+                            <td colspan="3" class="searchEmptyState">
+                                No parent concessions.
+                            </td>
+                        </tr>
+                        <tr *ngFor="let concessionRelationship of lendingConcession.concession.parentConcessionRelationships">
+                            <td>{{concessionRelationship.creationDate | date: 'yyyy/MM/dd'}}</td>
+                            <td>{{concessionRelationship.userDescription}}</td>
+                            <td>{{concessionRelationship.relationshipDescription}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="col-md-4">
             <h3 class="table-title">Child Concessions</h3>
+
+            <div class="table-container">
+                <table class="table table-bordered table-hover header-fixed table-striped">
+                    <thead>
+                    <tr>
+                        <th>Creation Date</th>
+                        <th>User</th>
+                        <th>Relationship</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngIf="!lendingConcession.concession.childConcessionRelationships || lendingConcession.concession.childConcessionRelationships.length == 0">
+                        <td colspan="3" class="searchEmptyState">
+                            No child concessions.
+                        </td>
+                    </tr>
+                    <tr *ngFor="let concessionRelationship of lendingConcession.concession.childConcessionRelationships">
+                        <td>{{concessionRelationship.creationDate | date: 'yyyy/MM/dd'}}</td>
+                        <td>{{concessionRelationship.userDescription}}</td>
+                        <td>{{concessionRelationship.relationshipDescription}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

@@ -492,6 +492,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Gets the relationship description.
+        /// </summary>
+        /// <param name="relationshipId">The relationship identifier.</param>
+        /// <returns></returns>
+        public string GetRelationshipDescription(int relationshipId)
+        {
+            var relationships = _relationshipRepository.ReadAll();
+
+            return relationships.First(_ => _.Id == relationshipId).Description;
+        }
+
+        /// <summary>
         /// Gets the condition products
         /// </summary>
         /// <param name="conditionTypeId"></param>

@@ -1,4 +1,5 @@
 import { ConcessionComment } from "./concession-comment";
+import { ConcessionRelationship } from "./concession-relationship";
 
 export class Concession {
     id: number;
@@ -24,4 +25,6 @@ export class Concession {
     canExtend: boolean;
     canRenew: boolean;
     concessionComments: ConcessionComment[];
+    parentConcessionRelationships: ConcessionRelationship[];
+    childConcessionRelationships: ConcessionRelationship[];
 }

@@ -497,10 +497,41 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 mappedConcession.ConcessionComments = GetConcessionComments(concession.Id);
 
+                mappedConcession.ChildConcessionRelationships =
+                    MapConcessionRelationships(
+                        _concessionRelationshipRepository.ReadByParentConcessionId(concession.Id));
+
+                mappedConcession.ParentConcessionRelationships =
+                    MapConcessionRelationships(_concessionRelationshipRepository
+                        .ReadByChildConcessionId(concession.Id));
+
                 concessions.Add(mappedConcession);
             }
 
             return concessions;
+        }
+
+        /// <summary>
+        /// Maps the concession relationships.
+        /// </summary>
+        /// <param name="concessionRelationships">The concession relationships.</param>
+        /// <returns></returns>
+        private IEnumerable<ConcessionRelationship> MapConcessionRelationships(
+            IEnumerable<Model.Repository.ConcessionRelationship> concessionRelationships)
+        {
+            var mappedConcessionRelationships =
+                _mapper.Map<IEnumerable<ConcessionRelationship>>(concessionRelationships);
+
+            foreach (var mappedConcessionRelationship in mappedConcessionRelationships)
+            {
+                mappedConcessionRelationship.UserDescription =
+                    _userManager.GetUserName(mappedConcessionRelationship.UserId);
+
+                mappedConcessionRelationship.RelationshipDescription =
+                    _lookupTableManager.GetRelationshipDescription(mappedConcessionRelationship.RelationshipId);
+            }
+
+            return mappedConcessionRelationships;
         }
 
         /// <summary>
