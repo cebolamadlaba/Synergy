@@ -156,6 +156,31 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Gets the cash view data.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <returns></returns>
+        public CashView GetCashViewData(int riskGroupNumber)
+        {
+            var cashConcessions = new List<CashConcession>();
+            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+
+            if (riskGroup != null)
+            {
+                var concessions = _concessionManager.GetConcessionsForRiskGroup(riskGroup.Id, "Cash");
+
+                foreach (var concession in concessions)
+                    AddCashConcessionData(concession, cashConcessions);
+            }
+
+            return new CashView
+            {
+                RiskGroup = riskGroup,
+                CashConcessions = cashConcessions
+            };
+        }
+
+        /// <summary>
         /// Adds the cash concession data.
         /// </summary>
         /// <param name="concession">The concession.</param>

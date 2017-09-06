@@ -332,6 +332,16 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The FinancialLending repository
         /// </summary>
         public static IFinancialLendingRepository FinancialLendingRepository = new FinancialLendingRepository(DbConnection);
+        
+        /// <summary>
+        /// The FinancialCash repository
+        /// </summary>
+        public static IFinancialCashRepository FinancialCashRepository = new FinancialCashRepository(DbConnection);
+
+        /// <summary>
+        /// The ProductCash repository
+        /// </summary>
+        public static IProductCashRepository ProductCashRepository = new ProductCashRepository(DbConnection);
 
         /// <summary>
         /// The look up table manager

@@ -26,8 +26,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         /// </summary>
         public CashControllerTest()
         {
-            _cashController = new CashController(new FakeSiteHelper(), MockPricingManager.Object,
-                MockCashManager.Object, MockMediator.Object);
+            _cashController = new CashController(new FakeSiteHelper(), MockCashManager.Object, MockMediator.Object);
         }
 
         /// <summary>
@@ -37,10 +36,9 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         public void CashView_Executes_Positive()
         {
             var riskGroup = new RiskGroup { Id = 1, Name = "Unit Test Risk Group", Number = 1 };
-            MockPricingManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>())).Returns(riskGroup);
 
-            MockCashManager.Setup(_ => _.GetCashConcessionsForRiskGroupNumber(It.IsAny<int>()))
-                .Returns(new[] {new CashConcession()});
+            MockCashManager.Setup(_ => _.GetCashViewData(It.IsAny<int>()))
+                .Returns(new CashView {RiskGroup = riskGroup});
 
             var result = _cashController.CashView(1);
             var apiResult = Assert.IsType<OkObjectResult>(result);

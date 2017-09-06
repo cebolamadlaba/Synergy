@@ -349,5 +349,15 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The mock user manager
         /// </summary>
         public static Mock<IUserManager> MockUserManager = new Mock<IUserManager>();
+
+        /// <summary>
+        /// The mock FinancialCash repository
+        /// </summary>
+        public static Mock<IFinancialCashRepository> MockFinancialCashRepository = new Mock<IFinancialCashRepository>();
+
+        /// <summary>
+        /// The mock ProductCash repository
+        /// </summary>
+        public static Mock<IProductCashRepository> MockProductCashRepository = new Mock<IProductCashRepository>();
     }
 }

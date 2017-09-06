@@ -18,6 +18,9 @@ import { CashConcessionService } from "../services/cash-concession.service";
 import { CashConcessionDetail } from "../models/cash-concession-detail";
 import { ConcessionCondition } from "../models/concession-condition";
 import { TableNumber } from "../models/table-number";
+import { UserConcessionsService } from "../services/user-concessions.service";
+import { ConcessionComment } from "../models/concession-comment";
+import { CashFinancial } from "../models/cash-financial";
 
 @Component({
   selector: 'app-cash-view-concession',
@@ -31,6 +34,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
     errorMessage: String;
     validationError: String[];
     saveMessage: String;
+    warningMessage: String;
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
@@ -40,6 +44,12 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
     canBcmApprove = false;
     canPcmApprove = false;
     hasChanges = false;
+    canExtend = false;
+    canRenew = false;
+    canRecall = false;
+    isRenewing = false;
+    motivationEnabled = false;
+    isRecalling = false;
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
@@ -65,17 +75,25 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
     observableTableNumbers: Observable<TableNumber[]>;
     tableNumbers: TableNumber[];
 
+    observableCashFinancial: Observable<CashFinancial>;
+    cashFinancial: CashFinancial;
+
     constructor(private route: ActivatedRoute,
         private formBuilder: FormBuilder,
         private location: Location,
         @Inject(LookupDataService) private lookupDataService,
-        @Inject(CashConcessionService) private cashConcessionService) {
+        @Inject(CashConcessionService) private cashConcessionService,
+        @Inject(UserConcessionsService) private userConcessionsService) {
         this.riskGroup = new RiskGroup();
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
         this.conditionTypes = [new ConditionType()];
         this.selectedConditionTypes = [new ConditionType()];
         this.clientAccounts = [new ClientAccount()];
+        this.cashFinancial = new CashFinancial();
+        this.cashConcession = new CashConcession();
+        this.cashConcession.concession = new Concession();
+        this.cashConcession.concession.concessionComments = [new ConcessionComment()];
     }
 
     ngOnInit() {
@@ -89,6 +107,9 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
                 this.observableClientAccounts = this.lookupDataService.getClientAccounts(this.riskGroupNumber);
                 this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
+
+                this.observableCashFinancial = this.cashConcessionService.getCashFinancial(this.riskGroupNumber);
+                this.observableCashFinancial.subscribe(cashFinancial => this.cashFinancial = cashFinancial, error => this.errorMessage = <any>error);
             }
         });
 
@@ -131,11 +152,21 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
                 if (cashConcession.concession.status == "Pending" && cashConcession.concession.subStatus == "BCM Pending") {
                     this.canBcmApprove = cashConcession.currentUser.canBcmApprove;
+                    this.motivationEnabled = cashConcession.currentUser.canBcmApprove;
                 }
 
                 if (cashConcession.concession.status == "Pending" && cashConcession.concession.subStatus == "PCM Pending") {
                     this.canPcmApprove = cashConcession.currentUser.canPcmApprove;
                 }
+
+                //if it's still pending and the user is a requestor then they can recall it
+                if (cashConcession.concession.status == "Pending" && cashConcession.concession.subStatus == "BCM Pending") {
+                    this.canRecall = cashConcession.currentUser.canRequest;
+                }
+
+                //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
+                this.canExtend = cashConcession.concession.canExtend && cashConcession.currentUser.canRequest;
+                this.canRenew = cashConcession.concession.canRenew && cashConcession.currentUser.canRequest;
 
                 this.cashConcessionForm.controls['smtDealNumber'].setValue(this.cashConcession.concession.smtDealNumber);
                 this.cashConcessionForm.controls['motivation'].setValue(this.cashConcession.concession.motivation);
@@ -280,7 +311,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         this.validationError.push(validationDetail);
     }
 
-    getCashConcession(): CashConcession {
+    getCashConcession(isNew: boolean): CashConcession {
         var cashConcession = new CashConcession();
         cashConcession.concession = new Concession();
         cashConcession.concession.concessionType = "Cash";
@@ -308,7 +339,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
             let cashConcessionDetail = new CashConcessionDetail();
 
-            if (concessionFormItem.get('cashConcessionDetailId').value)
+            if (!isNew && concessionFormItem.get('cashConcessionDetailId').value)
                 cashConcessionDetail.cashConcessionDetailId = concessionFormItem.get('cashConcessionDetailId').value;
 
             if (concessionFormItem.get('channelType').value) {
@@ -351,7 +382,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
             let concessionCondition = new ConcessionCondition();
 
-            if (conditionFormItem.get('concessionConditionId').value)
+            if (!isNew && conditionFormItem.get('concessionConditionId').value)
                 concessionCondition.concessionConditionId = conditionFormItem.get('concessionConditionId').value;
 
             if (conditionFormItem.get('conditionType').value)
@@ -399,7 +430,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         this.errorMessage = null;
         this.validationError = null;
 
-        var cashConcession = this.getCashConcession();
+        var cashConcession = this.getCashConcession(false);
         cashConcession.concession.subStatus = "PCM Pending";
         cashConcession.concession.bcmUserId = this.cashConcession.currentUser.id;
 
@@ -424,7 +455,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         this.errorMessage = null;
         this.validationError = null;
 
-        var cashConcession = this.getCashConcession();
+        var cashConcession = this.getCashConcession(false);
         cashConcession.concession.status = "Declined";
         cashConcession.concession.subStatus = "BCM Declined";
         cashConcession.concession.bcmUserId = this.cashConcession.currentUser.id;
@@ -450,7 +481,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         this.errorMessage = null;
         this.validationError = null;
 
-        var cashConcession = this.getCashConcession();
+        var cashConcession = this.getCashConcession(false);
 
         cashConcession.concession.status = "Approved";
 
@@ -483,7 +514,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         this.errorMessage = null;
         this.validationError = null;
 
-        var cashConcession = this.getCashConcession();
+        var cashConcession = this.getCashConcession(false);
 
         cashConcession.concession.status = "Declined";
 
@@ -499,6 +530,107 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             this.cashConcessionService.postUpdateCashData(cashConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canPcmApprove = false;
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    extendConcession() {
+        this.isLoading = true;
+        this.errorMessage = null;
+        this.validationError = null;
+
+        this.cashConcessionService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
+            console.log("data saved");
+            this.canBcmApprove = false;
+            this.canBcmApprove = false;
+            this.canExtend = false;
+            this.canRenew = false;
+            this.canRecall = false;
+            this.saveMessage = entity.concession.referenceNumber;
+            this.isLoading = false;
+        }, error => {
+            this.errorMessage = <any>error;
+            this.isLoading = false;
+        });
+    }
+
+    renewConcession() {
+        this.canBcmApprove = false;
+        this.motivationEnabled = true;
+        this.canBcmApprove = false;
+        this.canExtend = false;
+        this.canRenew = false;
+        this.canRecall = false;
+        this.isRenewing = true;
+        this.isRecalling = false;
+
+        this.cashConcessionForm.controls['motivation'].setValue('');
+    }
+
+    saveRenewConcession() {
+        this.isLoading = true;
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var lendingConcession = this.getCashConcession(true);
+
+        lendingConcession.concession.status = "Pending";
+        lendingConcession.concession.subStatus = "BCM Pending";
+        lendingConcession.concession.type = "Existing";
+        lendingConcession.concession.referenceNumber = this.concessionReferenceId;
+
+        if (!this.validationError) {
+            this.cashConcessionService.postRenewLendingData(lendingConcession).subscribe(entity => {
+                console.log("data saved");
+                this.isRenewing = false;
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    recallConcession() {
+        this.isLoading = true;
+        this.errorMessage = null;
+
+        this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
+            this.warningMessage = "Concession recalled, please make the required changes and save the concession or it will be lost";
+            this.isRecalling = true;
+            this.isLoading = false;
+        }, error => {
+            this.errorMessage = <any>error;
+            this.isLoading = false;
+        });
+    }
+
+    saveRecallConcession() {
+        this.warningMessage = "";
+        this.isLoading = true;
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var lendingConcession = this.getCashConcession(true);
+
+        lendingConcession.concession.status = "Pending";
+        lendingConcession.concession.subStatus = "BCM Pending";
+        lendingConcession.concession.referenceNumber = this.concessionReferenceId;
+
+        if (!this.validationError) {
+            this.cashConcessionService.postRecallLendingData(lendingConcession).subscribe(entity => {
+                console.log("data saved");
+                this.isRecalling = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
             }, error => {

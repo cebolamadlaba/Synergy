@@ -116,5 +116,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             Assert.NotNull(result);
         }
+
+        /// <summary>
+        /// Tests that GetCashViewData executes positive.
+        /// </summary>
+        [Fact]
+        public void GetCashViewData_Executes_Positive()
+        {
+            var result = _cashManager.GetCashViewData(1);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.RiskGroup);
+            Assert.NotNull(result.CashConcessions);
+        }
     }
 }

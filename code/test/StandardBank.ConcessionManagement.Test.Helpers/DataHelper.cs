@@ -2866,5 +2866,123 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
 
             return InsertFinancialLending();
         }
+
+        /// <summary>
+        /// Gets the FinancialCash id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetFinancialCashId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.FinancialCashRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertFinancialCash();
+        }
+
+        /// <summary>
+        /// Inserts a FinancialCash and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertFinancialCash()
+        {
+            var model = new FinancialCash
+            {
+                RiskGroupId = GetRiskGroupId(),
+                WeightedAverageBranchPrice = 3429,
+                TotalCashCentrCashTurnover = 8149,
+                TotalCashCentrCashVolume = 5721,
+                TotalBranchCashTurnover = 7316,
+                TotalBranchCashVolume = 2487,
+                TotalAutosafeCashTurnover = 8111,
+                TotalAutosafeCashVolume = 5266,
+                WeightedAverageCCPrice = 7745,
+                WeightedAverageAFPrice = 2965,
+                LatestCrsOrMrs = 2385
+            };
+
+            InstantiatedDependencies.FinancialCashRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate FinancialCash id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateFinancialCashId(int? model)
+        {
+            if (!model.HasValue)
+                return GetFinancialCashId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.FinancialCashRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertFinancialCash();
+        }
+
+        /// <summary>
+        /// Gets the ProductCash id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetProductCashId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.ProductCashRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertProductCash();
+        }
+
+        /// <summary>
+        /// Inserts a ProductCash and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertProductCash()
+        {
+            var model = new ProductCash
+            {
+                RiskGroupId = GetRiskGroupId(),
+                LegalEntityId = GetLegalEntityId(),
+                LegalEntityAccountId = GetLegalEntityAccountId(),
+                TableNumberId = GetTableNumberId(),
+                Channel = "9deb561718",
+                BpId = 1,
+                Volume = 3364,
+                Value = 3187,
+                LoadedPrice = 2405
+            };
+
+            InstantiatedDependencies.ProductCashRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate ProductCash id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateProductCashId(int? model)
+        {
+            if (!model.HasValue)
+                return GetProductCashId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.ProductCashRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertProductCash();
+        }
     }
 }

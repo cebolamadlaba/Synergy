@@ -48,5 +48,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="concession">The concession.</param>
         /// <returns></returns>
         ConcessionCash UpdateConcessionCash(CashConcessionDetail cashConcessionDetail, Concession concession);
+
+        /// <summary>
+        /// Gets the cash view data.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <returns></returns>
+        CashView GetCashViewData(int riskGroupNumber);
     }
 }

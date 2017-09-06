@@ -14,9 +14,13 @@
         <div class="col-md-12 banner-container">
             <div class="col-md-11">
                 <div>
-                    <div class="col-md-5">
+                    <div class="col-md-2">
                         <div class="subHeading">{{riskGroup.name}}</div>
                         <div class="date lightTitle hidden-element">{{riskGroup.number}}</div>
+                    </div>
+                    <div class="col-md-4 hidden-element">
+                        <div class="subHeading lightTitle">Status:</div>
+                        <div class="score alert alert-danger"><b>{{cashConcession.concession.status}} - {{cashConcession.concession.subStatus}}</b></div>
                     </div>
                     <div class="col-md-2  hidden-element">
                         <div class="subHeading lightTitle"> Latest CRS / MRS</div>
@@ -60,6 +64,15 @@
     </div>
 </div>
 
+<!-- Warning message -->
+<div class="col-md-12" *ngIf="warningMessage && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert alert-warning">
+            <p class="message-heading"><i class="fa fa-check-circle" aria-hidden="true"></i>{{warningMessage}}</p>
+        </div>
+    </div>
+</div>
+
 <!-- Loading message -->
 <div class="col-md-12" *ngIf="isLoading">
     <div class="form-feedback-container">
@@ -73,26 +86,26 @@
     <div class="col-md-4">
         <div class="row">
             <label>SMT Deal Number</label>
-            <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="!canBcmApprove"/>
+            <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="!canBcmApprove" />
         </div>
     </div>
     <div class="col-md-7 col-md-offset-1">
         <div class="row">
             <label>Motivation</label>
-            <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="!canBcmApprove"></textarea>
+            <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="motivationEnabled ? null : ''"></textarea>
         </div>
-        <div class="row" *ngIf="canBcmApprove || canPcmApprove">           
+        <div class="row" *ngIf="canBcmApprove || canPcmApprove">
             <label>Comments</label>
-            <textarea class="form-control large-input" formControlName="comments" placeholder="Comments"></textarea>           
+            <textarea class="form-control large-input" formControlName="comments" placeholder="Comments"></textarea>
         </div>
-        
+
     </div>
 
     <!-- Concession table -->
     <div class="col-md-12" style="border-bottom: 1px solid gray; margin-bottom: 15px;">
         <div class="row">
             <h3 class="table-title">Concessions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" *ngIf="canBcmApprove || canPcmApprove" style="margin-top: 15px;">New Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" *ngIf="canBcmApprove || canPcmApprove || isRenewing || isRecalling" style="margin-top: 15px;">New Concession</button>
         </div>
     </div>
 
@@ -138,7 +151,7 @@
                     </select>
                 </td>
 
-                <td *ngIf="canBcmApprove || canPcmApprove"><button *ngIf="cashConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                <td *ngIf="canBcmApprove || canPcmApprove || isRenewing || isRecalling"><button *ngIf="cashConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
         </tbody>
     </table>
@@ -147,7 +160,7 @@
     <div class="col-md-12">
         <div class="row">
             <h3 class="table-title">Conditions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" *ngIf="canBcmApprove || canPcmApprove" style="margin-top: 15px;">Manage Conditions</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" *ngIf="canBcmApprove || canPcmApprove || isRenewing || isRecalling" style="margin-top: 15px;">Manage Conditions</button>
 
             <div class="table-container">
                 <table class="table table-bordered table-hover header-fixed table-striped">
@@ -192,7 +205,7 @@
                     <h4>Manage Conditions</h4>
                 </div>
                 <div class="col-md-12 modal-body">
-                    <div class="row" *ngIf="canBcmApprove || canPcmApprove">
+                    <div class="row" *ngIf="canBcmApprove || canPcmApprove || isRenewing || isRecalling">
                         <div class="col-md-12 modal-title">
                             <button type="button" class="btn btn-primary" (click)="addNewConditionRow()">New Conditions</button>
                         </div>
@@ -255,14 +268,105 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-md-4">
+            <h3 class="table-title">Comments</h3>
+
+            <div class="table-container">
+                <table class="table table-bordered table-hover header-fixed table-striped">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Sub-Status</th>
+                            <th>Comment</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngIf="!cashConcession.concession.concessionComments || cashConcession.concession.concessionComments.length == 0">
+                            <td colspan="4" class="searchEmptyState">
+                                No comments added.
+                            </td>
+                        </tr>
+                        <tr *ngFor="let comment of cashConcession.concession.concessionComments">
+                            <td>{{comment.userDescription}}</td>
+                            <td>{{comment.concessionSubStatusDescription}}</td>
+                            <td>{{comment.comment}}</td>
+                            <td>{{comment.systemDate | date: 'yyyy/MM/dd'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <h3 class="table-title">Parent Concessions</h3>
+
+            <div class="table-container">
+                <table class="table table-bordered table-hover header-fixed table-striped">
+                    <thead>
+                        <tr>
+                            <th>Creation Date</th>
+                            <th>User</th>
+                            <th>Relationship</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngIf="!cashConcession.concession.parentConcessionRelationships || cashConcession.concession.parentConcessionRelationships.length == 0">
+                            <td colspan="3" class="searchEmptyState">
+                                No parent concessions.
+                            </td>
+                        </tr>
+                        <tr *ngFor="let concessionRelationship of cashConcession.concession.parentConcessionRelationships">
+                            <td>{{concessionRelationship.creationDate | date: 'yyyy/MM/dd'}}</td>
+                            <td>{{concessionRelationship.userDescription}}</td>
+                            <td>{{concessionRelationship.relationshipDescription}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <h3 class="table-title">Child Concessions</h3>
+
+            <div class="table-container">
+                <table class="table table-bordered table-hover header-fixed table-striped">
+                    <thead>
+                        <tr>
+                            <th>Creation Date</th>
+                            <th>User</th>
+                            <th>Relationship</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngIf="!cashConcession.concession.childConcessionRelationships || cashConcession.concession.childConcessionRelationships.length == 0">
+                            <td colspan="3" class="searchEmptyState">
+                                No child concessions.
+                            </td>
+                        </tr>
+                        <tr *ngFor="let concessionRelationship of cashConcession.concession.childConcessionRelationships">
+                            <td>{{concessionRelationship.creationDate | date: 'yyyy/MM/dd'}}</td>
+                            <td>{{concessionRelationship.userDescription}}</td>
+                            <td>{{concessionRelationship.relationshipDescription}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <!-- Form buttons -->
     <div class="footer-buttons">
         <div class="float-right">
-            <button type="button" class="btn btn-cancel" (click)="goBack()">Cancel</button>
+            <button type="button" class="btn btn-cancel" (click)="goBack()" *ngIf="!isRecalling">Cancel</button>
             <button type="button" class="btn btn-danger" (click)="bcmDeclineConcession()" *ngIf="canBcmApprove">Decline</button>
-            <button type="button" class="btn btn-success" (click)="bcmApproveConcession()" *ngIf="canBcmApprove">Forward</button>         
+            <button type="button" class="btn btn-success" (click)="bcmApproveConcession()" *ngIf="canBcmApprove">Forward</button>
             <button type="button" class="btn btn-danger" (click)="pcmDeclineConcession()" *ngIf="canPcmApprove">Decline</button>
             <button type="button" class="btn btn-success" (click)="pcmApproveConcession()" *ngIf="canPcmApprove">Approve</button>
+            <button type="button" class="btn btn-success" (click)="extendConcession()" *ngIf="canExtend">Extend</button>
+            <button type="button" class="btn btn-success" (click)="renewConcession()" *ngIf="canRenew">Renew</button>
+            <button type="button" class="btn btn-primary" (click)="saveRenewConcession()" *ngIf="isRenewing">Save</button>
+            <button type="button" class="btn btn-success" (click)="recallConcession()" *ngIf="canRecall && !isRecalling">Recall</button>
+            <button type="button" class="btn btn-primary" (click)="saveRecallConcession()" *ngIf="isRecalling">Save</button>
         </div>
     </div>
 </form>

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
@@ -30,11 +31,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         private readonly ISiteHelper _siteHelper;
 
         /// <summary>
-        /// The pricing manager
-        /// </summary>
-        private readonly IPricingManager _pricingManager;
-
-        /// <summary>
         /// The cash manager
         /// </summary>
         private readonly ICashManager _cashManager;
@@ -48,14 +44,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// Initializes a new instance of the <see cref="CashController"/> class.
         /// </summary>
         /// <param name="siteHelper">The site helper.</param>
-        /// <param name="pricingManager">The pricing manager.</param>
         /// <param name="cashManager">The cash manager.</param>
         /// <param name="mediator">The mediator.</param>
-        public CashController(ISiteHelper siteHelper, IPricingManager pricingManager, ICashManager cashManager,
-            IMediator mediator)
+        public CashController(ISiteHelper siteHelper, ICashManager cashManager, IMediator mediator)
         {
             _siteHelper = siteHelper;
-            _pricingManager = pricingManager;
             _cashManager = cashManager;
             _mediator = mediator;
         }
@@ -68,14 +61,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("CashView/{riskGroupNumber}")]
         public IActionResult CashView(int riskGroupNumber)
         {
-            //TODO: Eventually need to get source system product data from source systems (i.e. cash specific source system product data)
-            var cashView = new CashView
-            {
-                RiskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber),
-                CashConcessions = _cashManager.GetCashConcessionsForRiskGroupNumber(riskGroupNumber)
-            };
-
-            return Ok(cashView);
+            return Ok(_cashManager.GetCashViewData(riskGroupNumber));
         }
 
         /// <summary>
@@ -155,6 +141,63 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                     cashConcession.Concession.Comments, user));
 
             return Ok(cashConcession);
+        }
+
+        /// <summary>
+        /// Extends the concession.
+        /// </summary>
+        /// <param name="concessionReferenceId">The concession reference identifier.</param>
+        /// <returns></returns>
+        [Route("ExtendConcession/{concessionReferenceId}")]
+        public async Task<IActionResult> ExtendConcession(string concessionReferenceId)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Renews the cash.
+        /// </summary>
+        /// <param name="cashConcession">The cash concession.</param>
+        /// <returns></returns>
+        [Route("RenewCash")]
+        [ValidateModel]
+        public async Task<IActionResult> RenewCash([FromBody] CashConcession cashConcession)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Updates the recalled cash.
+        /// </summary>
+        /// <param name="cashConcession">The cash concession.</param>
+        /// <returns></returns>
+        [Route("UpdateRecalledCash")]
+        [ValidateModel]
+        public async Task<IActionResult> UpdateRecalledCash([FromBody] CashConcession cashConcession)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Latests the CRS or MRS.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <returns></returns>
+        [Route("LatestCrsOrMrs/{riskGroupNumber}")]
+        public IActionResult LatestCrsOrMrs(int riskGroupNumber)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Cashes the financial.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <returns></returns>
+        [Route("CashFinancial/{riskGroupNumber}")]
+        public IActionResult CashFinancial(int riskGroupNumber)
+        {
+            throw new NotImplementedException();
         }
     }
 }
