@@ -1,4 +1,4 @@
-﻿<!-- Banner expanded -->
+<!-- Banner expanded -->
 <div class="col-md-12 banner">
     <div class="row">
         <div class="lending-banner-title">
@@ -196,7 +196,7 @@
                             <td>{{itemrow.get('interestRate').value}}</td>
                             <td>{{itemrow.get('volume').value}}</td>
                             <td>{{itemrow.get('value').value}}</td>
-                            <td>{{itemrow.get('periodType').value.description}} {{itemrow.get('period').value.description}}</td>
+                            <td>{{itemrow.get('periodType').value?.description}} {{itemrow.get('period').value?.description}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -240,12 +240,12 @@
                                 <td class="length-long">
                                     <input formControlName="concessionConditionId" style="display: none;" />
                                     <select formControlName="conditionType" (change)="conditionTypeChanged(i)">
-                                        <option *ngFor="let conditionTypeOption of conditionTypes" [ngValue]="conditionTypeOption">{{conditionTypeOption.description}}</option>
+                                        <option *ngFor="let conditionTypeOption of conditionTypes" [ngValue]="conditionTypeOption">{{conditionTypeOption?.description}}</option>
                                     </select>
                                 </td>
                                 <td class="length-long">
                                     <select formControlName="conditionProduct" *ngIf="selectedConditionTypes[i] != null">
-                                        <option *ngFor="let conditionProductOption of selectedConditionTypes[i].conditionProducts" [ngValue]="conditionProductOption">{{conditionProductOption.description}}</option>
+                                        <option *ngFor="let conditionProductOption of selectedConditionTypes[i].conditionProducts" [ngValue]="conditionProductOption">{{conditionProductOption?.description}}</option>
                                     </select>
                                 </td>
                                 <td class="length-medium"><input formControlName="interestRate" /></td>
@@ -253,12 +253,12 @@
                                 <td class="length-medium"><input formControlName="value" /></td>
                                 <td class="length-medium">
                                     <select formControlName="periodType">
-                                        <option *ngFor="let periodTypeOption of periodTypes" [ngValue]="periodTypeOption">{{periodTypeOption.description}}</option>
+                                        <option *ngFor="let periodTypeOption of periodTypes" [ngValue]="periodTypeOption">{{periodTypeOption?.description}}</option>
                                     </select>
                                 </td>
                                 <td class="length-medium">
                                     <select formControlName="period">
-                                        <option *ngFor="let periodOption of periods" [ngValue]="periodOption">{{periodOption.description}}</option>
+                                        <option *ngFor="let periodOption of periods" [ngValue]="periodOption">{{periodOption?.description}}</option>
                                     </select>
                                 </td>
                                 <td><button type="button" (click)="deleteConditionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
@@ -305,60 +305,48 @@
                 </table>
             </div>
         </div>
-        <div class="col-md-4">
-            <h3 class="table-title">Parent Concessions</h3>
+        <div class="col-md-8">
+            <h3 class="table-title">Related Concessions</h3>
 
             <div class="table-container">
                 <table class="table table-bordered table-hover header-fixed table-striped">
                     <thead>
                         <tr>
-                            <th>Creation Date</th>
-                            <th>User</th>
+                            <th>Relationship Type</th>
+                            <th>Parent Concession</th>
                             <th>Relationship</th>
+                            <th>Child Concession</th>
+                            <th>Date</th>
+                            <th>User</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngIf="!lendingConcession.concession.parentConcessionRelationships || lendingConcession.concession.parentConcessionRelationships.length == 0">
-                            <td colspan="3" class="searchEmptyState">
-                                No parent concessions.
+                        <tr *ngIf="!lendingConcession.concession.concessionRelationshipDetails || lendingConcession.concession.concessionRelationshipDetails.length == 0">
+                            <td colspan="6" class="searchEmptyState">
+                                No related concessions.
                             </td>
                         </tr>
-                        <tr *ngFor="let concessionRelationship of lendingConcession.concession.parentConcessionRelationships">
-                            <td>{{concessionRelationship.creationDate | date: 'yyyy/MM/dd'}}</td>
-                            <td>{{concessionRelationship.userDescription}}</td>
-                            <td>{{concessionRelationship.relationshipDescription}}</td>
+                        <tr *ngFor="let concessionRelationship of lendingConcession.concession.concessionRelationshipDetails">
+                            <td>{{concessionRelationship.relationshipType}}</td>
+                            <td>
+                                <span *ngIf="concessionRelationship.parentConcessionReference == concessionReferenceId"><strong>**</strong></span>
+                                <span *ngIf="concessionRelationship.parentIsActive"><a href="#" target="_blank" [routerLink]="['/lending-view-concession', riskGroup.number, concessionRelationship.parentConcessionReference]">{{concessionRelationship.parentConcession}}</a></span>
+                                <span *ngIf="!concessionRelationship.parentIsActive">{{concessionRelationship.parentConcession}}</span>
+                            </td>
+                            <td>{{concessionRelationship.relationship}}</td>
+                            <td>
+                                <span *ngIf="concessionRelationship.childConcessionReference == concessionReferenceId"><strong>**</strong></span>
+                                <span *ngIf="concessionRelationship.childIsActive"><a href="#" target="_blank" [routerLink]="['/lending-view-concession', riskGroup.number, concessionRelationship.childConcessionReference]">{{concessionRelationship.childConcession}}</a></span>
+                                <span *ngIf="!concessionRelationship.childIsActive">{{concessionRelationship.childConcession}}</span>
+                            </td>
+                            <td>{{concessionRelationship.date | date: 'yyyy/MM/dd'}}</td>
+                            <td>{{concessionRelationship.user}}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        <div class="col-md-4">
-            <h3 class="table-title">Child Concessions</h3>
-
-            <div class="table-container">
-                <table class="table table-bordered table-hover header-fixed table-striped">
-                    <thead>
-                    <tr>
-                        <th>Creation Date</th>
-                        <th>User</th>
-                        <th>Relationship</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr *ngIf="!lendingConcession.concession.childConcessionRelationships || lendingConcession.concession.childConcessionRelationships.length == 0">
-                        <td colspan="3" class="searchEmptyState">
-                            No child concessions.
-                        </td>
-                    </tr>
-                    <tr *ngFor="let concessionRelationship of lendingConcession.concession.childConcessionRelationships">
-                        <td>{{concessionRelationship.creationDate | date: 'yyyy/MM/dd'}}</td>
-                        <td>{{concessionRelationship.userDescription}}</td>
-                        <td>{{concessionRelationship.relationshipDescription}}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        
     </div>
 
     <div class="footer-buttons">

@@ -547,23 +547,26 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     extendConcession() {
-        this.isLoading = true;
-        this.errorMessage = null;
-        this.validationError = null;
+        if (confirm("Are you sure you want to extend this concession?")) {
+            this.isLoading = true;
+            this.errorMessage = null;
+            this.validationError = null;
 
-        this.lendingService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
-            console.log("data saved");
-            this.canBcmApprove = false;
-            this.canBcmApprove = false;
-            this.canExtend = false;
-            this.canRenew = false;
-            this.canRecall = false;
-            this.saveMessage = entity.concession.referenceNumber;
-            this.isLoading = false;
-        }, error => {
-            this.errorMessage = <any>error;
-            this.isLoading = false;
-        });
+            this.lendingService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
+                console.log("data saved");
+                this.canBcmApprove = false;
+                this.canBcmApprove = false;
+                this.canExtend = false;
+                this.canRenew = false;
+                this.canRecall = false;
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+                this.lendingConcession = entity;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        }
     }
 
     renewConcession() {
@@ -596,6 +599,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 console.log("data saved");
                 this.isRenewing = false;
                 this.saveMessage = entity.concession.referenceNumber;
+                this.lendingConcession = entity;
                 this.isLoading = false;
             }, error => {
                 this.errorMessage = <any>error;
@@ -637,6 +641,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 console.log("data saved");
                 this.isRecalling = false;
                 this.saveMessage = entity.concession.referenceNumber;
+                this.lendingConcession = entity;
                 this.isLoading = false;
             }, error => {
                 this.errorMessage = <any>error;

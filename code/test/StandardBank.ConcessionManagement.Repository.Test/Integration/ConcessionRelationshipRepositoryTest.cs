@@ -65,6 +65,20 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         }
 
         /// <summary>
+        /// Tests that ReadDetailsByConcessionId executes positive.
+        /// </summary>
+        [Fact]
+        public void ReadDetailsByConcessionId_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.ConcessionRelationshipRepository.ReadAll();
+            var childConcessionId = results.Max(_ => _.ChildConcessionId);
+            var result = InstantiatedDependencies.ConcessionRelationshipRepository.ReadDetailsByConcessionId(childConcessionId);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
         /// Tests that ReadByParentConcessionId executes positive.
         /// </summary>
         [Fact]

@@ -497,41 +497,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 mappedConcession.ConcessionComments = GetConcessionComments(concession.Id);
 
-                mappedConcession.ChildConcessionRelationships =
-                    MapConcessionRelationships(
-                        _concessionRelationshipRepository.ReadByParentConcessionId(concession.Id));
-
-                mappedConcession.ParentConcessionRelationships =
-                    MapConcessionRelationships(_concessionRelationshipRepository
-                        .ReadByChildConcessionId(concession.Id));
+                mappedConcession.ConcessionRelationshipDetails =
+                    _mapper.Map<IEnumerable<Model.UserInterface.ConcessionRelationshipDetail>>(
+                        _concessionRelationshipRepository.ReadDetailsByConcessionId(concession.Id));
 
                 concessions.Add(mappedConcession);
             }
 
             return concessions;
-        }
-
-        /// <summary>
-        /// Maps the concession relationships.
-        /// </summary>
-        /// <param name="concessionRelationships">The concession relationships.</param>
-        /// <returns></returns>
-        private IEnumerable<ConcessionRelationship> MapConcessionRelationships(
-            IEnumerable<Model.Repository.ConcessionRelationship> concessionRelationships)
-        {
-            var mappedConcessionRelationships =
-                _mapper.Map<IEnumerable<ConcessionRelationship>>(concessionRelationships);
-
-            foreach (var mappedConcessionRelationship in mappedConcessionRelationships)
-            {
-                mappedConcessionRelationship.UserDescription =
-                    _userManager.GetUserName(mappedConcessionRelationship.UserId);
-
-                mappedConcessionRelationship.RelationshipDescription =
-                    _lookupTableManager.GetRelationshipDescription(mappedConcessionRelationship.RelationshipId);
-            }
-
-            return mappedConcessionRelationships;
         }
 
         /// <summary>
@@ -804,8 +777,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     expiryRelationdshipId);
 
             if (relationships != null && relationships.Any())
-                return DateTime.Now.AddMonths(3);
+            {
+                //find the concession we're extending and use it's expiry date to calculate the correct expiry date
+                //for this one
+                foreach (var relationship in relationships.OrderByDescending(_ => _.ParentConcessionId))
+                {
+                    var parentConcession = _concessionRepository.ReadById(relationship.ParentConcessionId);
 
+                    if (parentConcession.IsActive && parentConcession.IsCurrent)
+                        return parentConcession.ExpiryDate.GetValueOrDefault(DateTime.Now).AddMonths(3);
+                }
+
+                return DateTime.Now.AddMonths(3);
+            }
+                
             //TODO: otherwise calculate this based on the product type
 
 

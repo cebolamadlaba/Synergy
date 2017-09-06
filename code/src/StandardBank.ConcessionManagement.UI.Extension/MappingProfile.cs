@@ -71,6 +71,9 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             //ConcessionRelationship
             CreateMap<Model.Repository.ConcessionRelationship, Model.UserInterface.ConcessionRelationship>().ReverseMap();
 
+            //ConcessionRelationshipDetail
+            CreateMap<Model.Repository.ConcessionRelationshipDetail, Model.UserInterface.ConcessionRelationshipDetail>().ReverseMap();
+
             //ConcessionTransactional
             CreateMap<Model.Repository.ConcessionTransactional, Model.UserInterface.Transactional.TransactionalConcessionDetail>()
                 .ForMember(target => target.TransactionalConcessionDetailId, _ => _.MapFrom(source => source.Id))

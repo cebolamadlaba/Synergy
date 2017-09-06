@@ -102,7 +102,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             
             await UpdateLendingConcession(lendingConcession, user);
 
-            return Ok(lendingConcession);
+            return Ok(_lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber, user));
         }
 
         /// <summary>
@@ -218,7 +218,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             };
 
             await _mediator.Send(new AddConcessionRelationship(concessionRelationship, user));
-            return lendingConcession;
+
+            return _lendingManager.GetLendingConcession(concessionReferenceId, user);
         }
 
         /// <summary>
@@ -273,7 +274,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             await _mediator.Send(new AddConcessionRelationship(concessionRelationship, user));
 
-            return Ok(lendingConcession);
+            return Ok(_lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber, user));
         }
 
         /// <summary>
@@ -293,7 +294,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             //update the concession accordingly
             await UpdateLendingConcession(lendingConcession, user);
 
-            return Ok(lendingConcession);
+            return Ok(_lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber, user));
         }
 
         /// <summary>

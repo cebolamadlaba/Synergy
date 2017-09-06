@@ -66,7 +66,7 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 return db.Query<ConcessionRelationship>(
                     "SELECT [pkConcessionRelationshipId] [Id], [fkParentConcessionId] [ParentConcessionId], [fkChildConcessionId] [ChildConcessionId], [fkRelationshipId] [RelationshipId], [CreationDate], [fkUserId] [UserId] FROM [dbo].[tblConcessionRelationship] WHERE [pkConcessionRelationshipId] = @Id",
-                    new {id}).SingleOrDefault();
+                    new { id }).SingleOrDefault();
             }
         }
 
@@ -105,6 +105,107 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Reads the details by concession identifier.
+        /// </summary>
+        /// <param name="concessionId">The concession identifier.</param>
+        /// <returns></returns>
+        public IEnumerable<ConcessionRelationshipDetail> ReadDetailsByConcessionId(int concessionId)
+        {
+            var concessionRelationshipDetails = new List<ConcessionRelationshipDetail>();
+
+            concessionRelationshipDetails.AddRange(GetParentDetails(concessionId));
+            concessionRelationshipDetails.AddRange(GetChildrenDetails(concessionId));
+
+            return concessionRelationshipDetails.OrderBy(_ => _.ParentConcessionId);
+        }
+
+        /// <summary>
+        /// Gets the parent details.
+        /// </summary>
+        /// <param name="concessionId">The concession identifier.</param>
+        /// <returns></returns>
+        private IEnumerable<ConcessionRelationshipDetail> GetParentDetails(int concessionId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<ConcessionRelationshipDetail>(
+                    @"WITH children AS (
+                    SELECT [pkConcessionRelationshipId] [Id], [fkParentConcessionId] [ParentConcessionId], [fkChildConcessionId] [ChildConcessionId], [fkRelationshipId] [RelationshipId], [CreationDate], [fkUserId] [UserId] FROM [dbo].[tblConcessionRelationship]
+                    WHERE [fkChildConcessionId] = @concessionId
+                    UNION ALL
+                    SELECT t.[pkConcessionRelationshipId] [Id], t.[fkParentConcessionId] [ParentConcessionId], t.[fkChildConcessionId] [ChildConcessionId], t.[fkRelationshipId] [RelationshipId], t.[CreationDate], t.[fkUserId] [UserId] FROM [dbo].[tblConcessionRelationship] t
+                    INNER JOIN children c ON c.[ParentConcessionId] = t.[fkChildConcessionId])
+                    SELECT
+	                    'Parent' [RelationshipType],
+                        pc.[pkConcessionId] [ParentConcessionId],
+	                    pc.[ConcessionRef] [ParentConcessionReference],
+	                    pc.[ConcessionRef] + ' (' + spc.[Description] + ' - ' + sspc.[Description] + ')' [ParentConcession], 
+	                    pc.[IsActive] [ParentIsActive],
+	                    r.[Description] [Relationship],
+                        cc.[pkConcessionId] [ChildConcessionId],
+	                    cc.[ConcessionRef] [ChildConcessionReference],
+	                    cc.[ConcessionRef] + ' (' + scc.[Description] + ' - ' + sscc.[Description] + ')'  [ChildConcession],
+	                    cc.[IsActive] [ChildIsActive],
+	                    c.[CreationDate] [Date],
+	                    u.[FirstName] + ' ' + u.[Surname] [User]
+                    FROM children c
+                    JOIN [dbo].[rtblRelationship] r ON r.[pkRelationshipId] = c.[RelationshipId]
+                    JOIN [dbo].[tblConcession] pc ON pc.[pkConcessionId] = c.[ParentConcessionId]
+                    JOIN [dbo].[tblConcession] cc ON cc.[pkConcessionId] = c.[ChildConcessionId]
+                    JOIN [dbo].[rtblStatus] spc ON spc.[pkStatusId] = pc.[fkStatusId]
+                    JOIN [dbo].[rtblStatus] scc ON scc.[pkStatusId] = cc.[fkStatusId]
+                    JOIN [dbo].[rtblSubStatus] sspc ON sspc.[pkSubStatusId] = pc.[fkSubStatusId]
+                    JOIN [dbo].[rtblSubStatus] sscc ON sscc.[pkSubStatusId] = cc.[fkSubStatusId]
+                    JOIN [dbo].[tblUser] u ON u.[pkUserId] = c.[UserId]
+                    ORDER BY c.[ParentConcessionId]",
+                    new { concessionId });
+            }
+        }
+
+        /// <summary>
+        /// Gets the children details.
+        /// </summary>
+        /// <param name="concessionId">The concession identifier.</param>
+        /// <returns></returns>
+        private IEnumerable<ConcessionRelationshipDetail> GetChildrenDetails(int concessionId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<ConcessionRelationshipDetail>(
+                    @"WITH parents AS (
+                    SELECT [pkConcessionRelationshipId] [Id], [fkParentConcessionId] [ParentConcessionId], [fkChildConcessionId] [ChildConcessionId], [fkRelationshipId] [RelationshipId], [CreationDate], [fkUserId] [UserId] FROM [dbo].[tblConcessionRelationship]
+                    WHERE [fkParentConcessionId] = @concessionId
+                    UNION ALL
+                    SELECT t.[pkConcessionRelationshipId] [Id], t.[fkParentConcessionId] [ParentConcessionId], t.[fkChildConcessionId] [ChildConcessionId], t.[fkRelationshipId] [RelationshipId], t.[CreationDate], t.[fkUserId] [UserId] FROM [dbo].[tblConcessionRelationship] t
+                    INNER JOIN parents p ON p.[ChildConcessionId] = t.[fkParentConcessionId])
+                    SELECT
+	                    'Children' [RelationshipType],
+                        pc.[pkConcessionId] [ParentConcessionId],
+	                    pc.[ConcessionRef] [ParentConcessionReference],
+	                    pc.[ConcessionRef] + ' (' + spc.[Description] + ' - ' + sspc.[Description] + ')' [ParentConcession], 
+	                    pc.[IsActive] [ParentIsActive],
+	                    r.[Description] [Relationship],
+                        cc.[pkConcessionId] [ChildConcessionId],
+	                    cc.[ConcessionRef] [ChildConcessionReference],
+	                    cc.[ConcessionRef] + ' (' + scc.[Description] + ' - ' + sscc.[Description] + ')'  [ChildConcession],
+	                    cc.[IsActive] [ChildIsActive],
+	                    p.[CreationDate] [Date],
+	                    u.[FirstName] + ' ' + u.[Surname] [User]
+                    FROM parents p
+                    JOIN [dbo].[rtblRelationship] r ON r.[pkRelationshipId] = p.[RelationshipId]
+                    JOIN [dbo].[tblConcession] pc ON pc.[pkConcessionId] = p.[ParentConcessionId]
+                    JOIN [dbo].[tblConcession] cc ON cc.[pkConcessionId] = p.[ChildConcessionId]
+                    JOIN [dbo].[rtblStatus] spc ON spc.[pkStatusId] = pc.[fkStatusId]
+                    JOIN [dbo].[rtblStatus] scc ON scc.[pkStatusId] = cc.[fkStatusId]
+                    JOIN [dbo].[rtblSubStatus] sspc ON sspc.[pkSubStatusId] = pc.[fkSubStatusId]
+                    JOIN [dbo].[rtblSubStatus] sscc ON sscc.[pkSubStatusId] = cc.[fkSubStatusId]
+                    JOIN [dbo].[tblUser] u ON u.[pkUserId] = p.[UserId]
+                    ORDER BY p.[ParentConcessionId]",
+                    new {concessionId});
+            }
+        }
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>
@@ -134,7 +235,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     SELECT t.[pkConcessionRelationshipId] [Id], t.[fkParentConcessionId] [ParentConcessionId], t.[fkChildConcessionId] [ChildConcessionId], t.[fkRelationshipId] [RelationshipId], t.[CreationDate], t.[fkUserId] [UserId] FROM [dbo].[tblConcessionRelationship] t
                     INNER JOIN children c ON c.[ParentConcessionId] = t.[fkChildConcessionId])
                     SELECT * FROM children
-                    WHERE [RelationshipId] = @relationshipId", new {childConcessionId, relationshipId});
+                    WHERE [RelationshipId] = @relationshipId", new { childConcessionId, relationshipId });
             }
         }
 
@@ -156,7 +257,7 @@ namespace StandardBank.ConcessionManagement.Repository
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                var result = db.ExecuteScalar<int?>(sql, new {childConcessionId, relationshipId});
+                var result = db.ExecuteScalar<int?>(sql, new { childConcessionId, relationshipId });
 
                 return result.HasValue;
             }
@@ -194,7 +295,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[tblConcessionRelationship] WHERE [pkConcessionRelationshipId] = @Id",
-                    new {model.Id});
+                    new { model.Id });
             }
         }
     }
