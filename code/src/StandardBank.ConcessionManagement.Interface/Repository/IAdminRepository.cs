@@ -8,5 +8,8 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
     {
         int CreateUser(UserModel user);
         IEnumerable<UserModel> GetUsers();
+        int DeleteUser(string aNumber);
+        UserModel GetUser(int id);
+        void UpdateUser(UserModel user);
     }
 }

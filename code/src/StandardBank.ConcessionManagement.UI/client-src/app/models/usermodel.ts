@@ -6,4 +6,5 @@ export class Usermodel {
     regionId: number;
     centreId: number;
     roleId: number;
+    id: number;
 }

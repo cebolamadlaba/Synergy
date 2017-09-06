@@ -54,6 +54,7 @@ import { CashmanAddConcessionComponent } from './cashman-add-concession/cashman-
 import { AdminMenuComponent } from './admin/admin-menu/admin-menu.component';
 import { BusinessCentreComponent } from './admin/business-centre/business-centre.component';
 import { UsersComponent } from './admin/users/users.component';
+import { EditUserComponent } from './admin/users/edit-user/edit-user.component';
 
 
 @NgModule({
@@ -94,7 +95,8 @@ import { UsersComponent } from './admin/users/users.component';
         CashmanAddConcessionComponent,
         AdminMenuComponent,
         BusinessCentreComponent,
-        UsersComponent
+        UsersComponent,
+        EditUserComponent
     ],
     imports: [
         BrowserModule,

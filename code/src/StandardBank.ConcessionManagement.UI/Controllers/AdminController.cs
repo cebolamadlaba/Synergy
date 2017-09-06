@@ -39,11 +39,30 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var id = await mediator.Send(new CreateUser { User = model });
             return Ok(id);
         }
+        [HttpPost("users/{id}")]
+        public async Task<IActionResult> UpdateUser([FromBody]UserModel model, int id)
+        {
+            await mediator.Send(new UpdateUser { Model = model });
+            return Ok(true);
+        }
         [HttpGet("users")]
         public  IActionResult GetUsers()
         {
             var users =  userManager.GetUsers();
             return Ok(users);
         }
+        [HttpGet("users/{id}")]
+        public async Task<IActionResult> GetUser(int id)
+        {
+            var user = await mediator.Send(new GetUserById {  Id = id });
+            return Ok(user);
+        }
+        [HttpDelete("user/{aNumber}")]
+        public async Task<IActionResult> DeleteUser(string aNumber)
+        {
+            var id =await mediator.Send(new DeleteUser { aNumber = aNumber });
+            return Ok(id);
+        }
+
     }
 }

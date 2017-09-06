@@ -32,8 +32,15 @@ export class UsersComponent implements OnInit {
         this.user = {} as Usermodel;
   }
 
-  save() {
-     this.adminService.CreateUser(this.user)
-  }
+    save() {
+        this.adminService.CreateUser(this.user).subscribe(res => location.reload());
+    }
+    deleteUser(anumber) {
+        this.adminService.DeleteUser(anumber).subscribe(r => location.reload());
+    }
+    edit(i) {
+        this.user = this.users[i];
+        console.log(this.user);
+    }
 
 }

@@ -1,9 +1,10 @@
-﻿using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+﻿using MediatR;
+using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using System.Threading.Tasks;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administration
 {
-    class CreateUserHandler : MediatR.IRequestHandler<CreateUser, int>
+    public class CreateUserHandler : IAsyncRequestHandler<CreateUser, int>
     {
       
         private readonly IUserManager userManager;
@@ -12,9 +13,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
         {
             this.userManager = userManager;
         }
-        public int Handle(CreateUser message)
+        public Task<int> Handle(CreateUser message)
         {
-            return userManager.CreateUser(message.User);
+            var id = userManager.CreateUser(message.User);
+            return Task.FromResult(id);
         }
     }
 }

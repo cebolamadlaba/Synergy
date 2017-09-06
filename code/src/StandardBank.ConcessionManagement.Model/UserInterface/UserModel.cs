@@ -10,5 +10,6 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public int CentreId { get; set; }
         public int RegionId { get; set; }
         public int RoleId { get; set; }
+        public int Id { get; set; }
     }
 }
