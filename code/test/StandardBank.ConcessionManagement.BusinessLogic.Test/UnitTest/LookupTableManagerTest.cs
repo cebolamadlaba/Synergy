@@ -29,7 +29,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 InstantiatedDependencies.Mapper, MockConditionProductRepository.Object,
                 MockConditionTypeProductRepository.Object, MockAccrualTypeRepository.Object,
                 MockChannelTypeRepository.Object, MockTransactionTypeRepository.Object,
-                MockTableNumberRepository.Object, MockRelationshipRepository.Object);
+                MockTableNumberRepository.Object, MockRelationshipRepository.Object, MockRoleRepository.Object,MockCentreRepository.Object,MockRegionRepository.Object);
         }
 
         /// <summary>
