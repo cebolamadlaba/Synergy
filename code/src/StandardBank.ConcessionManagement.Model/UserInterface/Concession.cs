@@ -144,5 +144,13 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// The concession comments.
         /// </value>
         public IEnumerable<ConcessionComment> ConcessionComments { get; set; }
+
+        /// <summary>
+        /// Gets or sets the concession relationship details.
+        /// </summary>
+        /// <value>
+        /// The concession relationship details.
+        /// </value>
+        public IEnumerable<ConcessionRelationshipDetail> ConcessionRelationshipDetails { get; set; }
     }
 }

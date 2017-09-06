@@ -402,17 +402,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         [Fact]
         public void GetTransactionTypeDescription_Executes_Positive()
         {
-            MockTransactionTypeRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new TransactionType
+            var transactionType = new TransactionType
             {
                 Id = 1,
                 IsActive = true,
                 Description = "Unit Test Transaction Type",
                 ConcessionTypeId = 1
-            });
+            };
+
+            MockTransactionTypeRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(transactionType);
 
             var result = _lookupTableManager.GetTransactionTypeDescription(1);
 
             Assert.NotNull(result);
+            Assert.Equal(transactionType.Description, result);
         }
 
         /// <summary>
@@ -473,6 +476,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             Assert.NotNull(result);
             Assert.Equal(result, relationship.Id);
+        }
+
+        /// <summary>
+        /// Tests that GetRelationshipDescription executes positive.
+        /// </summary>
+        [Fact]
+        public void GetRelationshipDescription_Executes_Positive()
+        {
+            var relationship = new Relationship { Id = 1, Description = "Unit Test Relationship", IsActive = true };
+
+            MockRelationshipRepository.Setup(_ => _.ReadAll()).Returns(new[] { relationship });
+
+            var result = _lookupTableManager.GetRelationshipDescription(relationship.Id);
+
+            Assert.NotNull(result);
+            Assert.Equal(result, relationship.Description);
         }
     }
 }

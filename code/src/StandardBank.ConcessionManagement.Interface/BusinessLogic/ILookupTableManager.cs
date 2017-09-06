@@ -178,5 +178,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="relationshipDescription">The relationship description.</param>
         /// <returns></returns>
         int GetRelationshipId(string relationshipDescription);
+
+        /// <summary>
+        /// Gets the relationship description.
+        /// </summary>
+        /// <param name="relationshipId">The relationship identifier.</param>
+        /// <returns></returns>
+        string GetRelationshipDescription(int relationshipId);
     }
 }
