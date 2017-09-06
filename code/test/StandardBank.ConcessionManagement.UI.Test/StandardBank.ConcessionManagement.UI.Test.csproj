@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\StandardBank.ConcessionManagement.Model\StandardBank.ConcessionManagement.Model.csproj" />
     <ProjectReference Include="..\..\src\StandardBank.ConcessionManagement.UI\StandardBank.ConcessionManagement.UI.csproj" />
     <ProjectReference Include="..\StandardBank.ConcessionManagement.Test.Helpers\StandardBank.ConcessionManagement.Test.Helpers.csproj" />
   </ItemGroup>
