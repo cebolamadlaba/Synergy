@@ -3,6 +3,7 @@ import { Http, Response, RequestOptions} from '@angular/http';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs';
 import { Usermodel } from '../models/usermodel';
+import { User } from "../models/user";
 
 @Injectable()
 export class AdminService {
@@ -33,4 +34,34 @@ export class AdminService {
         return this.http.delete('api/admin/user/'+ anumber).map(r => r.json()).catch(this.handleErrorObservable);
     }
 
+}
+
+@Injectable()
+export class MockAdminService extends AdminService {
+    CreateUser(user: Usermodel) {
+        return Observable.of(1);
+    }
+
+    UpdateUser(user: Usermodel, id: number) {
+        return Observable.of(true);
+    }
+
+    GetUserLookupData() {
+        var user = new User();
+        return Observable.of(user);
+    }
+
+    GetUsers() {
+        var userModels = [new Usermodel()];
+        return Observable.of(userModels);
+    }
+
+    GetUser(id: number) {
+        var userModel = new Usermodel();
+        return Observable.of(userModel);
+    }
+
+    DeleteUser(anumber) {
+        return Observable.of(1);
+    }
 }

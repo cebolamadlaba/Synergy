@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AdminService } from '../../../services/admin.service';
 import { Region } from '../../../models/region';
@@ -19,7 +19,7 @@ export class EditUserComponent implements OnInit {
     id: number;
     success: boolean;
     error: boolean;
-    constructor(private adminService: AdminService, private route: ActivatedRoute) { }
+    constructor( @Inject(AdminService) private adminService, private route: ActivatedRoute) { }
 
     ngOnInit() {
         this.adminService.GetUserLookupData().subscribe(result => {
