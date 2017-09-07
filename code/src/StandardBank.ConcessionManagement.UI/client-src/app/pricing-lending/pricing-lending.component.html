@@ -1,4 +1,4 @@
-<!-- banner-->
+﻿<!-- banner-->
 <div class="col-md-12 banner">
     <div class="row">
         <!-- Header -->
@@ -70,7 +70,7 @@
         <div class="section">
 
             <!-- Empty state for products if no data is found -->
-            <div *ngIf="!lendingView.lendingProducts">
+            <div *ngIf="lendingView.lendingProducts.length === 0">
                 <div class="section-body">
                     <div class="searchEmptyState">
                         <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
