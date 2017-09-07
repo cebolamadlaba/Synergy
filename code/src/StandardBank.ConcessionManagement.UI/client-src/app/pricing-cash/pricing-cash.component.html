@@ -75,7 +75,7 @@
         <div class="section">
 
             <!-- Empty state for products if no data is found -->
-            <div *ngIf="!cashView.cashProducts">
+            <div *ngIf="!cashView?.cashProducts || cashView?.cashProducts?.length == 0">
                 <div class="section-body">
                     <div class="searchEmptyState">
                         <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
@@ -168,13 +168,13 @@
                                     <div class="table-row-top">
                                         <div class="secondaryText">
                                             Loaded:
-                                            <div class="normalText">//TODO R{{concession.loadedPrice | number : '1.2-2'}}</div>
+                                            <div class="normalText">R{{cashView?.cashFinancial?.loadedPrice | number : '1.2-2'}}</div>
                                         </div>
                                     </div>
                                     <div class="table-row-bottom">
                                         <div class="secondaryText">
                                             Approved:
-                                            <div class="normalText">//TODO R{{concession.approvedPrice | number : '1.2-2'}}</div>
+                                            <div class="normalText">R{{concession.approvedPrice | number : '1.2-2'}}</div>
                                         </div>
                                     </div>
                                 </td>

@@ -12,6 +12,7 @@ CREATE TABLE [dbo].[tblFinancialCash](
 	[WeightedAverageCCPrice] [decimal](18, 2) NOT NULL,
 	[WeightedAverageAFPrice] [decimal](18, 2) NOT NULL,
 	[LatestCrsOrMrs] [decimal](18, 2) NOT NULL,
+	[LoadedPrice] [decimal](18, 2) NOT NULL,
  CONSTRAINT [PK_tblFinancialCash] PRIMARY KEY CLUSTERED 
 (
 	[pkFinancialCashId] ASC

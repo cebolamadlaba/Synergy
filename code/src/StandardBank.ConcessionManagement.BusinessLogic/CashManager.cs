@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
@@ -324,6 +323,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 if (legalEntityAccount != null)
                     mappedConcessionCashEntity.AccountNumber = legalEntityAccount.AccountNumber;
+
+                mappedConcessionCashEntity.ApprovedPrice = concessionCashEntity.CashValue.GetValueOrDefault(0);
 
                 cashConcessionDetails.Add(mappedConcessionCashEntity);
             }

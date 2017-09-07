@@ -2900,7 +2900,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 TotalAutosafeCashVolume = 5266,
                 WeightedAverageCCPrice = 7745,
                 WeightedAverageAFPrice = 2965,
-                LatestCrsOrMrs = 2385
+                LatestCrsOrMrs = 2385,
+                LoadedPrice = 2434.43m
             };
 
             InstantiatedDependencies.FinancialCashRepository.Create(model);

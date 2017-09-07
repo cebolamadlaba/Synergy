@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Test.Helpers;
@@ -29,7 +28,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 TotalAutosafeCashVolume = 8788,
                 WeightedAverageCCPrice = 2238,
                 WeightedAverageAFPrice = 8684,
-                LatestCrsOrMrs = 5427
+                LatestCrsOrMrs = 5427,
+                LoadedPrice = 123.54m
             };
 
             var result = InstantiatedDependencies.FinancialCashRepository.Create(model);
@@ -102,6 +102,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.WeightedAverageCCPrice = model.WeightedAverageCCPrice + 100;
             model.WeightedAverageAFPrice = model.WeightedAverageAFPrice + 100;
             model.LatestCrsOrMrs = model.LatestCrsOrMrs + 100;
+            model.LoadedPrice = model.LoadedPrice + 100;
 
             InstantiatedDependencies.FinancialCashRepository.Update(model);
 
@@ -120,6 +121,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.WeightedAverageCCPrice, model.WeightedAverageCCPrice);
             Assert.Equal(updatedModel.WeightedAverageAFPrice, model.WeightedAverageAFPrice);
             Assert.Equal(updatedModel.LatestCrsOrMrs, model.LatestCrsOrMrs);
+            Assert.Equal(updatedModel.LoadedPrice, model.LoadedPrice);
         }
 
         /// <summary>
@@ -140,7 +142,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 TotalAutosafeCashVolume = 8788,
                 WeightedAverageCCPrice = 2238,
                 WeightedAverageAFPrice = 8684,
-                LatestCrsOrMrs = 5427
+                LatestCrsOrMrs = 5427,
+                LoadedPrice = 5432.67m
             };
 
             var temporaryEntity = InstantiatedDependencies.FinancialCashRepository.Create(model);

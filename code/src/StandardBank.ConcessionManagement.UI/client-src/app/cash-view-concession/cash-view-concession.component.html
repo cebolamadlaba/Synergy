@@ -97,7 +97,7 @@
     <div class="col-md-4">
         <div class="row">
             <label>SMT Deal Number</label>
-            <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="!canBcmApprove" />
+            <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="isRecalling ? null : ''" />
         </div>
     </div>
     <div class="col-md-7 col-md-offset-1">
