@@ -35,6 +35,8 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     public cashConcessionForm: FormGroup;
     selectedConditionTypes: ConditionType[];
     isLoading = false;
+    observableLatestCrsOrMrs: Observable<number>;
+    latestCrsOrMrs: number;
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
@@ -80,6 +82,9 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
                 this.observableClientAccounts = this.lookupDataService.getClientAccounts(this.riskGroupNumber);
                 this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
+
+                this.observableLatestCrsOrMrs = this.cashConcessionService.getlatestCrsOrMrs(this.riskGroupNumber);
+                this.observableLatestCrsOrMrs.subscribe(latestCrsOrMrs => this.latestCrsOrMrs = latestCrsOrMrs, error => this.errorMessage = <any>error);
             }
         });
 
