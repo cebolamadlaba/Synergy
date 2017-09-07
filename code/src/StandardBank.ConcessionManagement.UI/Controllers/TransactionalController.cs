@@ -160,7 +160,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
 
             if (!string.IsNullOrWhiteSpace(transactionalConcession.Concession.Comments))
-                await _mediator.Send(new AddConcessionComment(concession.Id, concession.SubStatusId.Value,
+                await _mediator.Send(new AddConcessionComment(concession.Id, databaseTransactionalConcession.Concession.SubStatusId.Value,
                     transactionalConcession.Concession.Comments, user));
 
             return Ok(transactionalConcession);

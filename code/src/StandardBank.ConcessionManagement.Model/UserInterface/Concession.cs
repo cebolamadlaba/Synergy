@@ -22,6 +22,14 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public string ReferenceNumber { get; set; }
 
         /// <summary>
+        /// Gets or sets the child reference number.
+        /// </summary>
+        /// <value>
+        /// The child reference number.
+        /// </value>
+        public string ChildReferenceNumber { get; set; }
+
+        /// <summary>
         /// Gets or sets the risk group id
         /// </summary>
         public int RiskGroupId { get; set; }
@@ -146,19 +154,11 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public IEnumerable<ConcessionComment> ConcessionComments { get; set; }
 
         /// <summary>
-        /// Gets or sets the parent concession relationships.
+        /// Gets or sets the concession relationship details.
         /// </summary>
         /// <value>
-        /// The parent concession relationships.
+        /// The concession relationship details.
         /// </value>
-        public IEnumerable<ConcessionRelationship> ParentConcessionRelationships { get; set; }
-
-        /// <summary>
-        /// Gets or sets the child concession relationships.
-        /// </summary>
-        /// <value>
-        /// The child concession relationships.
-        /// </value>
-        public IEnumerable<ConcessionRelationship> ChildConcessionRelationships { get; set; }
+        public IEnumerable<ConcessionRelationshipDetail> ConcessionRelationshipDetails { get; set; }
     }
 }

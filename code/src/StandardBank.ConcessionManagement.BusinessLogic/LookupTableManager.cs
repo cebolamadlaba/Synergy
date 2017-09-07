@@ -119,6 +119,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// The relationship repository
         /// </summary>
         private readonly IRelationshipRepository _relationshipRepository;
+        private readonly IRoleRepository roleRepository;
+        private readonly ICentreRepository centreRepository;
+        private readonly IRegionRepository regionRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LookupTableManager"/> class.
@@ -152,7 +155,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IConditionTypeProductRepository conditionTypeProductRepository,
             IAccrualTypeRepository accrualTypeRepository, IChannelTypeRepository channelTypeRepository,
             ITransactionTypeRepository transactionTypeRepository, ITableNumberRepository tableNumberRepository,
-            IRelationshipRepository relationshipRepository)
+            IRelationshipRepository relationshipRepository, IRoleRepository roleRepository,
+            ICentreRepository centreRepository, IRegionRepository regionRepository)
         {
             _statusRepository = statusRepository;
             _subStatusRepository = subStatusRepository;
@@ -173,8 +177,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _transactionTypeRepository = transactionTypeRepository;
             _tableNumberRepository = tableNumberRepository;
             _relationshipRepository = relationshipRepository;
+            this.roleRepository = roleRepository;
+            this.centreRepository = centreRepository;
+            this.regionRepository = regionRepository;
         }
 
+        public IEnumerable<Model.UserInterface.Role> GetRoles()=> _mapper.Map<IEnumerable<Model.UserInterface.Role>>(roleRepository.ReadAll());
+       
+        public IEnumerable<Model.UserInterface.Centre> GetCentres() => _mapper.Map<IEnumerable<Model.UserInterface.Centre>>(centreRepository.ReadAll());
+
+        public IEnumerable<Model.UserInterface.Region> GetRegions() => _mapper.Map<IEnumerable<Model.UserInterface.Region>>(regionRepository.ReadAll());
+        
         /// <summary>
         /// Gets the status identifier.
         /// </summary>

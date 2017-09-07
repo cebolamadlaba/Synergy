@@ -1,4 +1,4 @@
-﻿import { NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { PendingInboxComponent } from "./pending-inbox/pending-inbox.component";
 import { ApprovedConcessionsComponent } from "./approved-concessions/approved-concessions.component";
@@ -31,6 +31,8 @@ import { CashmanAddConcessionComponent } from "./cashman-add-concession/cashman-
 import { AdminMenuComponent } from "./admin/admin-menu/admin-menu.component";
 import { BusinessCentreComponent } from "./admin/business-centre/business-centre.component";
 import { UsersComponent } from "./admin/users/users.component";
+import { EditUserComponent } from './admin/users/edit-user/edit-user.component';
+import { ActionedInboxComponent } from "./actioned-inbox/actioned-inbox.component";
 
 const routes: Routes = [
     { path: '', redirectTo: '/pending-inbox', pathMatch: 'full' },
@@ -39,6 +41,7 @@ const routes: Routes = [
     { path: 'expired-inbox', component: ExpiredInboxComponent },
     { path: 'mismatched-inbox', component: MismatchedInboxComponent },
     { path: 'declined-inbox', component: DeclinedInboxComponent },
+    { path: 'actioned-inbox', component: ActionedInboxComponent },
     { path: 'approved-concessions', component: ApprovedConcessionsComponent },
     { path: 'conditions', component: ConditionsComponent },
     { path: 'pricing', component: PricingComponent },
@@ -67,7 +70,8 @@ const routes: Routes = [
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
     { path: 'admin-menu', component: AdminMenuComponent },
     { path: 'business-centre', component: BusinessCentreComponent },
-    { path: 'users', component: UsersComponent }
+    { path: 'users', component: UsersComponent },
+    { path: 'edit-user/:id', component:EditUserComponent}
 ];
 
 @NgModule({

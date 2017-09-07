@@ -47,6 +47,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     canRecall = false;
     isRenewing = false;
     motivationEnabled = false;
+    canEdit = false;
     isRecalling = false;
 
     observableRiskGroup: Observable<RiskGroup>;
@@ -152,11 +153,12 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
                 if (lendingConcession.concession.status == "Pending" && lendingConcession.concession.subStatus == "BCM Pending") {
                     this.canBcmApprove = lendingConcession.currentUser.canBcmApprove;
-                    this.motivationEnabled = lendingConcession.currentUser.canBcmApprove;
+                    this.canEdit = lendingConcession.currentUser.canBcmApprove;
                 }
 
                 if (lendingConcession.concession.status == "Pending" && lendingConcession.concession.subStatus == "PCM Pending") {
                     this.canPcmApprove = lendingConcession.currentUser.canPcmApprove;
+                    this.canEdit = lendingConcession.currentUser.canPcmApprove;
                 }
 
                 //if it's still pending and the user is a requestor then they can recall it
@@ -418,11 +420,17 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             if (conditionFormItem.get('value').value)
                 concessionCondition.conditionValue = conditionFormItem.get('value').value;
 
-            if (conditionFormItem.get('periodType').value)
+            if (conditionFormItem.get('periodType').value) {
                 concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
+            } else {
+                this.addValidationError("Period type not selected");
+            }
 
-            if (conditionFormItem.get('period').value)
+            if (conditionFormItem.get('period').value) {
                 concessionCondition.periodId = conditionFormItem.get('period').value.id;
+            } else {
+                this.addValidationError("Period not selected");
+            }
 
             lendingConcession.concessionConditions.push(concessionCondition);
         }
@@ -445,6 +453,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 console.log("data saved");
                 this.canBcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
+                this.lendingConcession = entity;
+                this.canEdit = false;
                 this.isLoading = false;
             }, error => {
                 this.errorMessage = <any>error;
@@ -471,6 +481,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 console.log("data saved");
                 this.canBcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
+                this.lendingConcession = entity;
+                this.canEdit = false;
                 this.isLoading = false;
             }, error => {
                 this.errorMessage = <any>error;
@@ -504,6 +516,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 console.log("data saved");
                 this.canPcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
+                this.lendingConcession = entity;
+                this.canEdit = false;
                 this.isLoading = false;
             }, error => {
                 this.errorMessage = <any>error;
@@ -536,6 +550,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 console.log("data saved");
                 this.canPcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
+                this.lendingConcession = entity;
+                this.canEdit = false;
                 this.isLoading = false;
             }, error => {
                 this.errorMessage = <any>error;
@@ -547,28 +563,32 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     extendConcession() {
-        this.isLoading = true;
-        this.errorMessage = null;
-        this.validationError = null;
+        if (confirm("Are you sure you want to extend this concession?")) {
+            this.isLoading = true;
+            this.errorMessage = null;
+            this.validationError = null;
 
-        this.lendingService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
-            console.log("data saved");
-            this.canBcmApprove = false;
-            this.canBcmApprove = false;
-            this.canExtend = false;
-            this.canRenew = false;
-            this.canRecall = false;
-            this.saveMessage = entity.concession.referenceNumber;
-            this.isLoading = false;
-        }, error => {
-            this.errorMessage = <any>error;
-            this.isLoading = false;
-        });
+            this.lendingService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
+                console.log("data saved");
+                this.canBcmApprove = false;
+                this.canBcmApprove = false;
+                this.canExtend = false;
+                this.canRenew = false;
+                this.canRecall = false;
+                this.saveMessage = entity.concession.childReferenceNumber;
+                this.isLoading = false;
+                this.lendingConcession = entity;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        }
     }
 
     renewConcession() {
         this.canBcmApprove = false;
         this.motivationEnabled = true;
+        this.canEdit = true;
         this.canBcmApprove = false;
         this.canExtend = false;
         this.canRenew = false;
@@ -595,7 +615,10 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             this.lendingService.postRenewLendingData(lendingConcession).subscribe(entity => {
                 console.log("data saved");
                 this.isRenewing = false;
-                this.saveMessage = entity.concession.referenceNumber;
+                this.saveMessage = entity.concession.childReferenceNumber;
+                this.lendingConcession = entity;
+                this.canEdit = false;
+                this.motivationEnabled = false;
                 this.isLoading = false;
             }, error => {
                 this.errorMessage = <any>error;
@@ -614,6 +637,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             this.warningMessage = "Concession recalled, please make the required changes and save the concession or it will be lost";
             this.isRecalling = true;
             this.isLoading = false;
+            this.canEdit = true;
+            this.motivationEnabled = true;
         }, error => {
             this.errorMessage = <any>error;
             this.isLoading = false;
@@ -637,7 +662,10 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 console.log("data saved");
                 this.isRecalling = false;
                 this.saveMessage = entity.concession.referenceNumber;
+                this.lendingConcession = entity;
                 this.isLoading = false;
+                this.canEdit = false;
+                this.motivationEnabled = false;
             }, error => {
                 this.errorMessage = <any>error;
                 this.isLoading = false;

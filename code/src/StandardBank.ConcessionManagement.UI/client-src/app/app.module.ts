@@ -1,4 +1,4 @@
-﻿import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -34,6 +34,7 @@ import { LendingService } from "./services/lending.service";
 import { MyConditionService } from './services/my-condition.service';
 import { CashConcessionService } from "./services/cash-concession.service";
 import { ProvinceService } from "./services/province.service";
+import { AdminService} from './services/admin.service';
 
 import { ApprovedConcessionFilterPipe } from './filters/approved-concession-filter.pipe';
 import { CashViewConcessionComponent } from './cash-view-concession/cash-view-concession.component';
@@ -53,6 +54,8 @@ import { CashmanAddConcessionComponent } from './cashman-add-concession/cashman-
 import { AdminMenuComponent } from './admin/admin-menu/admin-menu.component';
 import { BusinessCentreComponent } from './admin/business-centre/business-centre.component';
 import { UsersComponent } from './admin/users/users.component';
+import { EditUserComponent } from './admin/users/edit-user/edit-user.component';
+import { ActionedInboxComponent } from './actioned-inbox/actioned-inbox.component';
 
 
 @NgModule({
@@ -93,7 +96,9 @@ import { UsersComponent } from './admin/users/users.component';
         CashmanAddConcessionComponent,
         AdminMenuComponent,
         BusinessCentreComponent,
-        UsersComponent
+        UsersComponent,
+        EditUserComponent,
+        ActionedInboxComponent
     ],
     imports: [
         BrowserModule,
@@ -113,7 +118,8 @@ import { UsersComponent } from './admin/users/users.component';
         MyConditionService,
         CashConcessionService,
         TransactionalConcessionService,
-        ProvinceService
+        ProvinceService,
+        AdminService
     ],
     bootstrap: [AppComponent]
 })

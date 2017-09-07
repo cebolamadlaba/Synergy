@@ -7,6 +7,7 @@ using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Common;
 using StandardBank.ConcessionManagement.Model.UserInterface;
+using System.Threading.Tasks;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -65,6 +66,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// The mapper
         /// </summary>
         private readonly IMapper _mapper;
+        private readonly IAdminRepository adminRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserManager"/> class.
@@ -82,7 +84,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public UserManager(ICacheManager cacheManager, ILookupTableManager lookupTableManager,
             IUserRepository userRepository, IUserRoleRepository userRoleRepository, IRoleRepository roleRepository,
             IUserRegionRepository userRegionRepository, IRegionRepository regionRepository,
-            ICentreRepository centreRepository, ICentreUserRepository centreUserRepository, IMapper mapper)
+            ICentreRepository centreRepository, ICentreUserRepository centreUserRepository, IMapper mapper,
+            IAdminRepository adminRepository)
         {
             _cacheManager = cacheManager;
             _lookupTableManager = lookupTableManager;
@@ -94,6 +97,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _centreRepository = centreRepository;
             _centreUserRepository = centreUserRepository;
             _mapper = mapper;
+            this.adminRepository = adminRepository;
         }
 
         /// <summary>
@@ -264,5 +268,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return userRoles;
         }
 
+        public int CreateUser(UserModel userModel)
+        {
+            return adminRepository.CreateUser(_mapper.Map<Model.Repository.UserModel>(userModel));
+        }
+
+        public IEnumerable<UserModel> GetUsers()
+        {
+            return _mapper.Map<IEnumerable<UserModel>>(adminRepository.GetUsers());
+        }
     }
 }

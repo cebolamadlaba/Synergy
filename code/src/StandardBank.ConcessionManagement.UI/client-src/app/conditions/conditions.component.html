@@ -43,8 +43,7 @@
     <table  datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-bordered table-hover header-fixed table-striped">
       <thead>
         <tr>
-          <th>Risk Group Name</th>
-          <th>Risk Group Number</th>
+          <th>Risk Group</th>
           <th>Concession ID</th>
           <th>Condition Type</th>
           <th>Product Type</th>
@@ -56,9 +55,11 @@
         </tr>
       </thead>
       <tbody>
-       <tr *ngFor='let condition of observableConditions; trackBy: index;'>
-           <td>{{condition.riskGroupName}}</td>
-           <td>{{condition.riskGroupNumber}}</td>
+       <tr *ngFor='let condition of observableConditions; trackBy: index;' class="status-{{condition.ragStatus}}">
+           <td>
+               <p class="riskGroupName">{{condition.riskGroupName}}</p>
+               <p class="riskGroupNumber">{{condition.riskGroupNumber}}</p>
+           </td>
            <td>{{condition.concessionId}}</td>
            <td>{{condition.conditionType }}</td>
            <td>{{condition.productType}}</td>   

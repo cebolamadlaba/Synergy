@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
+using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.Integration
         [Fact]
         public async Task NewLending_Should_Fail_When_concession_is_invalid()
         {
-            var lend = JsonConvert.SerializeObject(new LendingConcession { Concession = new Model.UserInterface.Concession { Id = 1 } });
+            var lend = JsonConvert.SerializeObject(new LendingConcession { Concession = new Concession { Id = 1 } });
             var message = new StringContent(lend, Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("/api/Lending/NewLending", message);
 

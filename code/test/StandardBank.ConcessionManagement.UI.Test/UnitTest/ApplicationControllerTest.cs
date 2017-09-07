@@ -51,7 +51,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         [Fact]
         public void LoggedInUser_Executes_Positive()
         {
-            MockSiteHelper.Setup(_ => _.LoggedInUser(It.IsAny<Controller>())).Returns(new Model.UserInterface.User());
+            MockSiteHelper.Setup(_ => _.LoggedInUser(It.IsAny<Controller>())).Returns(new ConcessionManagement.Model.UserInterface.User());
 
             var result = _applicationController.LoggedInUser();
             var apiResult = Assert.IsType<OkObjectResult>(result);

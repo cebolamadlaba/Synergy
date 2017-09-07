@@ -102,7 +102,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             
             await UpdateLendingConcession(lendingConcession, user);
 
-            return Ok(lendingConcession);
+            return Ok(_lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber, user));
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
 
             if (!string.IsNullOrWhiteSpace(lendingConcession.Concession.Comments))
-                await _mediator.Send(new AddConcessionComment(concession.Id, concession.SubStatusId.Value,
+                await _mediator.Send(new AddConcessionComment(concession.Id, databaseLendingConcession.Concession.SubStatusId.Value,
                     lendingConcession.Concession.Comments, user));
         }
 
@@ -218,7 +218,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             };
 
             await _mediator.Send(new AddConcessionRelationship(concessionRelationship, user));
-            return lendingConcession;
+
+            var returnConcession = _lendingManager.GetLendingConcession(concessionReferenceId, user);
+            returnConcession.Concession.ChildReferenceNumber = concession.ReferenceNumber;
+
+            return returnConcession;
         }
 
         /// <summary>
@@ -273,7 +277,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             await _mediator.Send(new AddConcessionRelationship(concessionRelationship, user));
 
-            return Ok(lendingConcession);
+            var returnConcession =
+                _lendingManager.GetLendingConcession(parentLendingConcession.Concession.ReferenceNumber, user);
+
+            returnConcession.Concession.ChildReferenceNumber = concession.ReferenceNumber;
+
+            return Ok(returnConcession);
         }
 
         /// <summary>
@@ -293,7 +302,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             //update the concession accordingly
             await UpdateLendingConcession(lendingConcession, user);
 
-            return Ok(lendingConcession);
+            return Ok(_lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber, user));
         }
 
         /// <summary>

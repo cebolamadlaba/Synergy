@@ -314,32 +314,41 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var userConcessions = new UserConcessions();
 
             var pendingConcessions = GetPendingConcessionsForUser(user);
-            var dueForExpiryConcessions = GetDueForExpiryConcessionsForUser(user);
-            var expiredConcessions = GetExpiredConcessionsForUser(user);
-            var mismatchedConcessions = GetMismatchedConcessionsForUser(user);
-            var declinedConcessions = GetDeclinedConcessionsForUser(user);
-
-            var isRequestor = user.UserRoles.Any(_ => _.Name == "Requestor");
 
             userConcessions.PendingConcessions = pendingConcessions;
             userConcessions.PendingConcessionsCount = pendingConcessions.Count();
             userConcessions.ShowPendingConcessions = true;
 
-            userConcessions.DueForExpiryConcessions = dueForExpiryConcessions;
-            userConcessions.DueForExpiryConcessionsCount = dueForExpiryConcessions.Count();
-            userConcessions.ShowDueForExpiryConcessions = isRequestor;
+            if (user.CanRequest)
+            {
+                var dueForExpiryConcessions = GetDueForExpiryConcessionsForUser(user);
+                userConcessions.DueForExpiryConcessions = dueForExpiryConcessions;
+                userConcessions.DueForExpiryConcessionsCount = dueForExpiryConcessions.Count();
+                userConcessions.ShowDueForExpiryConcessions = true;
 
-            userConcessions.ExpiredConcessions = expiredConcessions;
-            userConcessions.ExpiredConcessionsCount = expiredConcessions.Count();
-            userConcessions.ShowExpiredConcessions = isRequestor;
+                var expiredConcessions = GetExpiredConcessionsForUser(user);
+                userConcessions.ExpiredConcessions = expiredConcessions;
+                userConcessions.ExpiredConcessionsCount = expiredConcessions.Count();
+                userConcessions.ShowExpiredConcessions = true;
 
-            userConcessions.MismatchedConcessions = mismatchedConcessions;
-            userConcessions.MismatchedConcessionsCount = mismatchedConcessions.Count();
-            userConcessions.ShowMismatchedConcessions = isRequestor;
+                var mismatchedConcessions = GetMismatchedConcessionsForUser(user);
+                userConcessions.MismatchedConcessions = mismatchedConcessions;
+                userConcessions.MismatchedConcessionsCount = mismatchedConcessions.Count();
+                userConcessions.ShowMismatchedConcessions = true;
 
-            userConcessions.DeclinedConcessions = declinedConcessions;
-            userConcessions.DeclinedConcessionsCount = declinedConcessions.Count();
-            userConcessions.ShowDeclinedConcessions = isRequestor;
+                var declinedConcessions = GetDeclinedConcessionsForUser(user);
+                userConcessions.DeclinedConcessions = declinedConcessions;
+                userConcessions.DeclinedConcessionsCount = declinedConcessions.Count();
+                userConcessions.ShowDeclinedConcessions = true;
+            }
+
+            if (user.CanBcmApprove || user.CanPcmApprove || user.IsHO)
+            {
+                var actionedConcessions = GetActionedConcessionsForUser(user);
+                userConcessions.ActionedConcessions = actionedConcessions;
+                userConcessions.ActionedConcessionsCount = actionedConcessions.Count();
+                userConcessions.ShowActionedConcessions = true;
+            }
 
             return userConcessions;
         }
@@ -497,41 +506,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 mappedConcession.ConcessionComments = GetConcessionComments(concession.Id);
 
-                mappedConcession.ChildConcessionRelationships =
-                    MapConcessionRelationships(
-                        _concessionRelationshipRepository.ReadByParentConcessionId(concession.Id));
-
-                mappedConcession.ParentConcessionRelationships =
-                    MapConcessionRelationships(_concessionRelationshipRepository
-                        .ReadByChildConcessionId(concession.Id));
+                mappedConcession.ConcessionRelationshipDetails =
+                    _mapper.Map<IEnumerable<Model.UserInterface.ConcessionRelationshipDetail>>(
+                        _concessionRelationshipRepository.ReadDetailsByConcessionId(concession.Id));
 
                 concessions.Add(mappedConcession);
             }
 
             return concessions;
-        }
-
-        /// <summary>
-        /// Maps the concession relationships.
-        /// </summary>
-        /// <param name="concessionRelationships">The concession relationships.</param>
-        /// <returns></returns>
-        private IEnumerable<ConcessionRelationship> MapConcessionRelationships(
-            IEnumerable<Model.Repository.ConcessionRelationship> concessionRelationships)
-        {
-            var mappedConcessionRelationships =
-                _mapper.Map<IEnumerable<ConcessionRelationship>>(concessionRelationships);
-
-            foreach (var mappedConcessionRelationship in mappedConcessionRelationships)
-            {
-                mappedConcessionRelationship.UserDescription =
-                    _userManager.GetUserName(mappedConcessionRelationship.UserId);
-
-                mappedConcessionRelationship.RelationshipDescription =
-                    _lookupTableManager.GetRelationshipDescription(mappedConcessionRelationship.RelationshipId);
-            }
-
-            return mappedConcessionRelationships;
         }
 
         /// <summary>
@@ -804,8 +786,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     expiryRelationdshipId);
 
             if (relationships != null && relationships.Any())
-                return DateTime.Now.AddMonths(3);
+            {
+                //find the concession we're extending and use it's expiry date to calculate the correct expiry date
+                //for this one
+                foreach (var relationship in relationships.OrderByDescending(_ => _.ParentConcessionId))
+                {
+                    var parentConcession = _concessionRepository.ReadById(relationship.ParentConcessionId);
 
+                    if (parentConcession.IsActive && parentConcession.IsCurrent)
+                        return parentConcession.ExpiryDate.GetValueOrDefault(DateTime.Now).AddMonths(3);
+                }
+
+                return DateTime.Now.AddMonths(3);
+            }
+                
             //TODO: otherwise calculate this based on the product type
 
 
@@ -862,7 +856,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var statusid = _lookupTableManager.GetStatusId("Approved");
             var periodId = _lookupTableManager.GetPeriods().First(x => x.Description == period).Id;
             var periodTypeId = _lookupTableManager.GetPeriodTypes().First(x => x.Description == periodType).Id;
-            return _mapper.Map<IEnumerable<Condition>>(_concessionConditionRepository.ReadByPeriodAndApprovalStatus(statusid,periodId,periodTypeId));
+            var results =  _mapper.Map<IEnumerable<Condition>>(_concessionConditionRepository.ReadByPeriodAndApprovalStatus(statusid,periodId,periodTypeId));
+            results.ToList().ForEach(x => x.RagStatus = GetRagStatus(x.PeriodName, x.ApprovedDate));
+            return results;
         }
 
         /// <summary>
@@ -1082,6 +1078,98 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             return approvedConcessionDetails;
+        }
+
+        public string GetRagStatus(string period, DateTime dateApproved)
+        {
+            switch (period)
+            {
+                case "3 Months":
+                    return CalculateRagStatusThreeMonths(dateApproved);               
+                case "6 Months":
+                    return CalculateRagStatusSixMonths(dateApproved);
+                case "9 Months":
+                    return CalculateRagStatusNineMonths(dateApproved);
+                case "12 Months":
+                    return CalculateRagStatusTwelveMonths(dateApproved);
+                default:
+                    return "";
+                   
+            }
+        }
+        private string CalculateRagStatusThreeMonths(DateTime dateApproved)
+        {
+            var totalHours = GetWorkingDays(dateApproved, DateTime.Today) * 8;
+            if(totalHours <= 168)
+            {
+                return "green";
+            }
+            if (totalHours > 168 && totalHours < 335)
+            {
+                return "yellow";
+            }
+            return "red";
+
+        }
+        private string CalculateRagStatusSixMonths(DateTime dateApproved)
+        {
+            var totalHours = GetWorkingDays(dateApproved, DateTime.Today) * 8;
+            if (totalHours <= 336)
+            {
+                return "green";
+            }
+            if (totalHours > 336 && totalHours < 672)
+            {
+                return "yellow";
+            }
+            return "red";
+
+        }
+        private string CalculateRagStatusNineMonths(DateTime dateApproved)
+        {
+            var totalHours = GetWorkingDays(dateApproved, DateTime.Today) * 8;
+            if (totalHours <= 504)
+            {
+                return "green";
+            }
+            if (totalHours > 504 && totalHours <= 1007)
+            {
+                return "yellow";
+            }
+            return "red";
+
+        }
+        private string CalculateRagStatusTwelveMonths(DateTime dateApproved)
+        {
+            var totalHours = GetWorkingDays(dateApproved, DateTime.Today) * 8;
+            if (totalHours <= 672)
+            {
+                return "green";
+            }
+            if (totalHours > 672 && totalHours <= 1343)
+            {
+                return "yellow";
+            }
+            return "red";
+
+        }
+        /// <summary>
+        /// Calculates working between the two dates by excluding weekends
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        public int GetWorkingDays(DateTime from, DateTime to)
+        {
+            var totalDays = 0;
+            for (var date = from.AddDays(1); date <= to; date = date.AddDays(1))
+            {
+                if (date.DayOfWeek != DayOfWeek.Saturday
+                    && date.DayOfWeek != DayOfWeek.Sunday)
+                    totalDays++;
+            }
+
+            return totalDays;
         }
     }
 }

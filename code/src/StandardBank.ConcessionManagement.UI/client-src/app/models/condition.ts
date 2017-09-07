@@ -1,4 +1,4 @@
-﻿export class Condition {
+export class Condition {
     riskGroupName: string;
     riskGroupNumber: number;
     concessionId: number;
@@ -8,5 +8,5 @@
     volume: number;
     value: number;
     expiryDate: Date;
-
+    ragStatus: string;
 }

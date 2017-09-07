@@ -89,7 +89,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         [Fact]
         public async Task NewLending_Executes_Positive()
         {
-            MockSiteHelper.Setup(_ => _.LoggedInUser(It.IsAny<Controller>())).Returns(new Model.UserInterface.User());
+            MockSiteHelper.Setup(_ => _.LoggedInUser(It.IsAny<Controller>())).Returns(new User());
 
             var lendingConcession = new LendingConcession
             {
@@ -112,7 +112,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         [Fact]
         public async Task UpdateLending_Executes_Positive()
         {
-            MockSiteHelper.Setup(_ => _.LoggedInUser(It.IsAny<Controller>())).Returns(new Model.UserInterface.User());
+            MockSiteHelper.Setup(_ => _.LoggedInUser(It.IsAny<Controller>())).Returns(new User());
 
             var lendingConcession = new LendingConcession
             {
@@ -138,7 +138,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         [Fact]
         public async Task ExtendConcession_Executes_Positive()
         {
-            MockSiteHelper.Setup(_ => _.LoggedInUser(It.IsAny<Controller>())).Returns(new Model.UserInterface.User());
+            MockSiteHelper.Setup(_ => _.LoggedInUser(It.IsAny<Controller>())).Returns(new User());
 
             var lendingConcession = new LendingConcession
             {
@@ -166,7 +166,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         [Fact]
         public async Task RenewLending_Executes_Positive()
         {
-            MockSiteHelper.Setup(_ => _.LoggedInUser(It.IsAny<Controller>())).Returns(new Model.UserInterface.User());
+            MockSiteHelper.Setup(_ => _.LoggedInUser(It.IsAny<Controller>())).Returns(new User());
 
             var lendingConcession = new LendingConcession
             {
@@ -194,7 +194,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         [Fact]
         public async Task UpdateRecalledLending_Executes_Positive()
         {
-            MockSiteHelper.Setup(_ => _.LoggedInUser(It.IsAny<Controller>())).Returns(new Model.UserInterface.User());
+            MockSiteHelper.Setup(_ => _.LoggedInUser(It.IsAny<Controller>())).Returns(new User());
 
             var lendingConcession = new LendingConcession
             {

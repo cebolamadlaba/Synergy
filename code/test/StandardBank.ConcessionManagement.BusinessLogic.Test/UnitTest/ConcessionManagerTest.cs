@@ -669,21 +669,89 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             Assert.NotNull(result);
         }
 
-        /// <summary>
-        /// Tests that GetConcessionComments executes positive.
-        /// </summary>
         [Fact]
-        public void GetConcessionComments_Executes_Positive()
+        public void GetRagStatus_3Months_Withing21DaysReturnsGreen()
         {
-            MockConcessionCommentRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
-                .Returns(new[] {new ConcessionComment()});
+            var status = _concessionManager.GetRagStatus("3 Months",AddWorkingDays(21));
+            Assert.True(status == "green");
+        }
+        [Fact]
+        public void GetRagStatus_3Months_Withing41DaysReturnsAmber()
+        {
+            var status = _concessionManager.GetRagStatus("3 Months", AddWorkingDays(41));
+            Assert.True(status == "yellow");
+        }
+        [Fact]
+        public void GetRagStatus_3Months_Withing42DaysReturnsRed()
+        {
+            var status = _concessionManager.GetRagStatus("3 Months", AddWorkingDays(42));
+            Assert.True(status == "red");
+        }
+        [Fact]
+        public void GetRagStatus_6Months_Withing42DaysReturnsGreen()
+        {
+            var status = _concessionManager.GetRagStatus("6 Months", AddWorkingDays(42));
+            Assert.True(status == "green");
+        }
+        [Fact]
+        public void GetRagStatus_6Months_Withing83DaysReturnsAmber()
+        {
+            var status = _concessionManager.GetRagStatus("6 Months", AddWorkingDays(83));
+            Assert.True(status == "yellow");
+        }
+        [Fact]
+        public void GetRagStatus_6Months_Withing84DaysReturnsRed()
+        {
+            var status = _concessionManager.GetRagStatus("6 Months", AddWorkingDays(84));
+            Assert.True(status == "red");
+        }
+        [Fact]
+        public void GetRagStatus_9Months_Withing63DaysReturnsGreen()
+        {
+            var status = _concessionManager.GetRagStatus("9 Months", AddWorkingDays(63));
+            Assert.True(status == "green");
+        }
+        [Fact]
+        public void GetRagStatus_9Months_Withing64DaysReturnsAmber()
+        {
+            var status = _concessionManager.GetRagStatus("9 Months", AddWorkingDays(64));
+            Assert.True(status == "yellow");
+        }
+        [Fact]
+        public void GetRagStatus_9Months_Withing126DaysReturnsRed()
+        {
+            var status = _concessionManager.GetRagStatus("9 Months", AddWorkingDays(126));
+            Assert.True(status == "red");
+        }
+        [Fact]
+        public void GetRagStatus_12Months_Withing84DaysReturnsGreen()
+        {
+            var status = _concessionManager.GetRagStatus("12 Months", AddWorkingDays(84));
+            Assert.True(status == "green");
+        }
+        [Fact]
+        public void GetRagStatus_12Months_Withing88DaysReturnsAmber()
+        {
+            var status = _concessionManager.GetRagStatus("12 Months", AddWorkingDays(88));
+            Assert.True(status == "yellow");
+        }
+        [Fact]
+        public void GetRagStatus_12Months_Withing168DaysReturnsRed()
+        {
+            var status = _concessionManager.GetRagStatus("12 Months", AddWorkingDays(168));
+            Assert.True(status == "red");
+        }
+        private DateTime AddWorkingDays(int days)
+        {
+            DateTime returnDate = DateTime.Today;
+            while (days > 0 )
+            {
+               returnDate =  returnDate.AddDays(-1);
+                if (returnDate.DayOfWeek != DayOfWeek.Saturday && returnDate.DayOfWeek != DayOfWeek.Sunday)
+                    days--;
+            }
 
-            MockUserManager.Setup(_ => _.GetUserName(It.IsAny<int>())).Returns("Test User");
-
-            var result = _concessionManager.GetConcessionComments(1);
-
-            Assert.NotNull(result);
-            Assert.NotEmpty(result);
+            return returnDate;
         }
     }
 }

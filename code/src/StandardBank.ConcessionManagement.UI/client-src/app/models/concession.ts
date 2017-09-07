@@ -1,9 +1,11 @@
 import { ConcessionComment } from "./concession-comment";
 import { ConcessionRelationship } from "./concession-relationship";
+import { ConcessionRelationshipDetail } from "./concession-relationship-detail";
 
 export class Concession {
     id: number;
     referenceNumber: string;
+    childReferenceNumber: string;
     riskGroupId: number;
     riskGroupNumber: number;
     riskGroupName: string;
@@ -25,6 +27,5 @@ export class Concession {
     canExtend: boolean;
     canRenew: boolean;
     concessionComments: ConcessionComment[];
-    parentConcessionRelationships: ConcessionRelationship[];
-    childConcessionRelationships: ConcessionRelationship[];
+    concessionRelationshipDetails: ConcessionRelationshipDetail[];
 }

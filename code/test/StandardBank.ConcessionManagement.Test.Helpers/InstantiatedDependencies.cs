@@ -33,10 +33,12 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static IConfigurationData ConfigurationData =
             new ConfigurationData(Configuration.ConnectionString, string.Empty, Configuration.DatabaseType);
 
+      
         /// <summary>
         /// The database connection
         /// </summary>
         private static readonly IDbConnectionFactory DbConnection = new DbConnectionFactory(ConfigurationData);
+        //public static readonly IAdminRepository AdminRepository = new AdminRepository(DbConnection);
 
         /// <summary>
         /// The cache manager
@@ -332,7 +334,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The FinancialLending repository
         /// </summary>
         public static IFinancialLendingRepository FinancialLendingRepository = new FinancialLendingRepository(DbConnection);
-        
+        public static IAdminRepository AdminRepository = new AdminRepository(DbConnection);
+
         /// <summary>
         /// The FinancialCash repository
         /// </summary>
@@ -351,13 +354,13 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             ConcessionTypeRepository, ProductRepository, ReviewFeeTypeRepository, PeriodRepository,
             PeriodTypeRepository, ConditionTypeRepository, Mapper, ConditionProductRepository,
             ConditionTypeProductRepository, AccrualTypeRepository, ChannelTypeRepository, TransactionTypeRepository,
-            TableNumberRepository, RelationshipRepository);
+            TableNumberRepository, RelationshipRepository, RoleRepository,CentreRepository,RegionRepository);
 
         /// <summary>
         /// The user manager
         /// </summary>
         public static IUserManager UserManager = new UserManager(CacheManager, LookupTableManager, UserRepository, UserRoleRepository,
-            RoleRepository, UserRegionRepository, RegionRepository, CentreRepository, CentreUserRepository, Mapper);
+            RoleRepository, UserRegionRepository, RegionRepository, CentreRepository, CentreUserRepository, Mapper, AdminRepository);
 
         /// <summary>
         /// The concession manager
