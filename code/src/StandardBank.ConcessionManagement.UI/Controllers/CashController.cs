@@ -176,6 +176,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             //add a new concession using the old concession's details
             var newConcession = cashConcession.Concession;
+            newConcession.ExpiryDate = null;
+            newConcession.DateApproved = null;
             newConcession.Id = 0;
             newConcession.Status = "Pending";
             newConcession.BcmUserId = null;
@@ -192,7 +194,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             cashConcession.Concession = concession;
 
-            //add all the new conditions and lending details
+            //add all the new conditions and cash details
             foreach (var cashConcessionDetail in cashConcession.CashConcessionDetails)
             {
                 cashConcessionDetail.CashConcessionDetailId = 0;
@@ -236,13 +238,13 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
 
-            //get the parent lending concession details
+            //get the parent cash concession details
             var parentCashConcession = _cashManager.GetCashConcession(cashConcession.Concession.ReferenceNumber, user);
 
             var parentConcessionId = parentCashConcession.Concession.Id;
 
             cashConcession.Concession.ReferenceNumber = string.Empty;
-            cashConcession.Concession.ConcessionType = "Lending";
+            cashConcession.Concession.ConcessionType = "Cash";
             cashConcession.Concession.Type = "New";
 
             var concession = await _mediator.Send(new AddConcession(cashConcession.Concession, user));

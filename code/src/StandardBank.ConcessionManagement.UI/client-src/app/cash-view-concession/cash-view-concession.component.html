@@ -118,6 +118,10 @@
             <h3 class="table-title">Concessions</h3>
             <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" *ngIf="canBcmApprove || canPcmApprove || isRenewing || isRecalling" style="margin-top: 15px;">New Concession</button>
         </div>
+        <div class="row">
+            <div class="col-md-2" *ngIf="cashConcession?.concession?.expiryDate"><strong>Expiry Date</strong> {{cashConcession?.concession?.expiryDate | date: 'yyyy/MM/dd' }}</div>
+            <div class="col-md-2" *ngIf="cashConcession?.concession?.dateApproved"><strong>Approval Date</strong> {{cashConcession?.concession?.dateApproved | date: 'yyyy/MM/dd' }}</div>
+        </div>
     </div>
 
     <table class="form-concessions-table" formArrayName="concessionItemRows">
@@ -153,8 +157,8 @@
                     </select>
                 </td>
 
-                <td class="length-short"><input formControlName="adValorem" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
-                <td class="length-long"><input formControlName="baseRate" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input formControlName="adValorem" class="form-control" /></td>
+                <td class="length-long"><input formControlName="baseRate" class="form-control" /></td>
 
                 <td class="length-medium">
                     <select formControlName="accrualType" class="form-control" [attr.disabled]="canEdit ? null : ''">
@@ -335,13 +339,13 @@
                             <td>{{concessionRelationship.relationshipType}}</td>
                             <td>
                                 <span *ngIf="concessionRelationship.parentConcessionReference == concessionReferenceId"><strong>**</strong></span>
-                                <span *ngIf="concessionRelationship.parentIsActive"><a href="#" target="_blank" [routerLink]="['/lending-view-concession', riskGroup.number, concessionRelationship.parentConcessionReference]">{{concessionRelationship.parentConcession}}</a></span>
+                                <span *ngIf="concessionRelationship.parentIsActive"><a href="#" target="_blank" [routerLink]="['/cash-view-concession', riskGroup.number, concessionRelationship.parentConcessionReference]">{{concessionRelationship.parentConcession}}</a></span>
                                 <span *ngIf="!concessionRelationship.parentIsActive">{{concessionRelationship.parentConcession}}</span>
                             </td>
                             <td>{{concessionRelationship.relationship}}</td>
                             <td>
                                 <span *ngIf="concessionRelationship.childConcessionReference == concessionReferenceId"><strong>**</strong></span>
-                                <span *ngIf="concessionRelationship.childIsActive"><a href="#" target="_blank" [routerLink]="['/lending-view-concession', riskGroup.number, concessionRelationship.childConcessionReference]">{{concessionRelationship.childConcession}}</a></span>
+                                <span *ngIf="concessionRelationship.childIsActive"><a href="#" target="_blank" [routerLink]="['/cash-view-concession', riskGroup.number, concessionRelationship.childConcessionReference]">{{concessionRelationship.childConcession}}</a></span>
                                 <span *ngIf="!concessionRelationship.childIsActive">{{concessionRelationship.childConcession}}</span>
                             </td>
                             <td>{{concessionRelationship.date | date: 'yyyy/MM/dd'}}</td>

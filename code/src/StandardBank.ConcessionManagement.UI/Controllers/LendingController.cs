@@ -175,6 +175,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             //add a new concession using the old concession's details
             var newConcession = lendingConcession.Concession;
+            newConcession.ExpiryDate = null;
+            newConcession.DateApproved = null;
             newConcession.Id = 0;
             newConcession.Status = "Pending";
             newConcession.BcmUserId = null;

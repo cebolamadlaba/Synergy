@@ -599,15 +599,15 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         this.errorMessage = null;
         this.validationError = null;
 
-        var lendingConcession = this.getCashConcession(true);
+        var cashConcession = this.getCashConcession(true);
 
-        lendingConcession.concession.status = "Pending";
-        lendingConcession.concession.subStatus = "BCM Pending";
-        lendingConcession.concession.type = "Existing";
-        lendingConcession.concession.referenceNumber = this.concessionReferenceId;
+        cashConcession.concession.status = "Pending";
+        cashConcession.concession.subStatus = "BCM Pending";
+        cashConcession.concession.type = "Existing";
+        cashConcession.concession.referenceNumber = this.concessionReferenceId;
 
         if (!this.validationError) {
-            this.cashConcessionService.postRenewLendingData(lendingConcession).subscribe(entity => {
+            this.cashConcessionService.postRenewCashData(cashConcession).subscribe(entity => {
                 console.log("data saved");
                 this.isRenewing = false;
                 this.saveMessage = entity.concession.childReferenceNumber;
@@ -646,14 +646,14 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         this.errorMessage = null;
         this.validationError = null;
 
-        var lendingConcession = this.getCashConcession(true);
+        var cashConcession = this.getCashConcession(true);
 
-        lendingConcession.concession.status = "Pending";
-        lendingConcession.concession.subStatus = "BCM Pending";
-        lendingConcession.concession.referenceNumber = this.concessionReferenceId;
+        cashConcession.concession.status = "Pending";
+        cashConcession.concession.subStatus = "BCM Pending";
+        cashConcession.concession.referenceNumber = this.concessionReferenceId;
 
         if (!this.validationError) {
-            this.cashConcessionService.postRecallLendingData(lendingConcession).subscribe(entity => {
+            this.cashConcessionService.postRecallCashData(cashConcession).subscribe(entity => {
                 console.log("data saved");
                 this.isRecalling = false;
                 this.saveMessage = entity.concession.referenceNumber;
