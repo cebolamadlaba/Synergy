@@ -73,12 +73,12 @@
     <div class="col-md-4">
         <div class="row">
             <label>SMT Deal Number</label>
-            <input class="form-control" formControlName="smtDealNumber" maxlength="16" />
+            <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="saveMessage ? '' : null" />
         </div>
     </div>
     <div class="col-md-7 col-md-offset-1">
         <label>Motivation</label>
-        <textarea class="form-control large-input" maxlength="800" formControlName="motivation"></textarea>
+        <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="saveMessage ? '' : null"></textarea>
     </div>
 
     <!-- Concession table -->
@@ -103,19 +103,19 @@
         <tbody class="form-concessions-table-content">
         <tr *ngFor="let itemrow of cashConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
             <td class="length-long">
-                <select formControlName="channelType" class="form-control">
+                <select formControlName="channelType" class="form-control" [attr.disabled]="saveMessage ? '' : null">
                     <option *ngFor="let channelTypeOption of channelTypes" [ngValue]="channelTypeOption">{{channelTypeOption.description}}</option>
                 </select>
             </td>
 
             <td class="length-long">
-                <select formControlName="accountNumber" class="form-control">
+                <select formControlName="accountNumber" class="form-control" [attr.disabled]="saveMessage ? '' : null">
                     <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                 </select>
             </td>
 
             <td class="length-long">
-                <select formControlName="tableNumber" class="form-control" (change)="tableNumberChanged(i)">
+                <select formControlName="tableNumber" class="form-control" (change)="tableNumberChanged(i)" [attr.disabled]="saveMessage ? '' : null">
                     <option *ngFor="let tableNumberOption of tableNumbers" [ngValue]="tableNumberOption">{{tableNumberOption.displayText}}</option>
                 </select>
             </td>
@@ -124,7 +124,7 @@
             <td class="length-long"><input class="form-control" formControlName="baseRate" /></td>
 
             <td class="length-medium">
-                <select formControlName="accrualType" class="form-control">
+                <select formControlName="accrualType" class="form-control" [attr.disabled]="saveMessage ? '' : null">
                     <option *ngFor="let accrualTypeOption of accrualTypes" [ngValue]="accrualTypeOption">{{accrualTypeOption.description}}</option>
                 </select>
             </td>
