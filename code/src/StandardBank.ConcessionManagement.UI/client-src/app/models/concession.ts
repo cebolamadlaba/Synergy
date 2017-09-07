@@ -5,6 +5,7 @@ import { ConcessionRelationshipDetail } from "./concession-relationship-detail";
 export class Concession {
     id: number;
     referenceNumber: string;
+    childReferenceNumber: string;
     riskGroupId: number;
     riskGroupNumber: number;
     riskGroupName: string;

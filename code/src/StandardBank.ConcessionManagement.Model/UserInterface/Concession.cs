@@ -22,6 +22,14 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public string ReferenceNumber { get; set; }
 
         /// <summary>
+        /// Gets or sets the child reference number.
+        /// </summary>
+        /// <value>
+        /// The child reference number.
+        /// </value>
+        public string ChildReferenceNumber { get; set; }
+
+        /// <summary>
         /// Gets or sets the risk group id
         /// </summary>
         public int RiskGroupId { get; set; }

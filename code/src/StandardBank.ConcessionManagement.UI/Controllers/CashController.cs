@@ -151,7 +151,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
 
             if (!string.IsNullOrWhiteSpace(cashConcession.Concession.Comments))
-                await _mediator.Send(new AddConcessionComment(concession.Id, concession.SubStatusId.Value,
+                await _mediator.Send(new AddConcessionComment(concession.Id, databaseCashConcession.Concession.SubStatusId.Value,
                     cashConcession.Concession.Comments, user));
 
             return Ok(cashConcession);

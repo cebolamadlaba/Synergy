@@ -140,7 +140,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
 
             if (!string.IsNullOrWhiteSpace(lendingConcession.Concession.Comments))
-                await _mediator.Send(new AddConcessionComment(concession.Id, concession.SubStatusId.Value,
+                await _mediator.Send(new AddConcessionComment(concession.Id, databaseLendingConcession.Concession.SubStatusId.Value,
                     lendingConcession.Concession.Comments, user));
         }
 
@@ -219,7 +219,10 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             await _mediator.Send(new AddConcessionRelationship(concessionRelationship, user));
 
-            return _lendingManager.GetLendingConcession(concessionReferenceId, user);
+            var returnConcession = _lendingManager.GetLendingConcession(concessionReferenceId, user);
+            returnConcession.Concession.ChildReferenceNumber = concession.ReferenceNumber;
+
+            return returnConcession;
         }
 
         /// <summary>
@@ -274,7 +277,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             await _mediator.Send(new AddConcessionRelationship(concessionRelationship, user));
 
-            return Ok(_lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber, user));
+            var returnConcession =
+                _lendingManager.GetLendingConcession(parentLendingConcession.Concession.ReferenceNumber, user);
+
+            returnConcession.Concession.ChildReferenceNumber = concession.ReferenceNumber;
+
+            return Ok(returnConcession);
         }
 
         /// <summary>
