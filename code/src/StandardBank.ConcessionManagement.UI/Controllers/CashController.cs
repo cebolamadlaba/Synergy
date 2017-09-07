@@ -117,7 +117,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             
             await UpdateCashConcession(cashConcession, user);
 
-            return Ok(cashConcession);
+            return Ok(_cashManager.GetCashConcession(cashConcession.Concession.ReferenceNumber, user));
         }
 
         /// <summary>
@@ -220,7 +220,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             await _mediator.Send(new AddConcessionRelationship(concessionRelationship, user));
 
-            return Ok(cashConcession);
+            var returnConcession = _cashManager.GetCashConcession(concessionReferenceId, user);
+            returnConcession.Concession.ChildReferenceNumber = concession.ReferenceNumber;
+            return Ok(returnConcession);
         }
 
         /// <summary>
@@ -264,7 +266,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             await _mediator.Send(new AddConcessionRelationship(concessionRelationship, user));
 
-            return Ok(cashConcession);
+            var returnConcession = _cashManager.GetCashConcession(parentCashConcession.Concession.ReferenceNumber, user);
+            returnConcession.Concession.ChildReferenceNumber = concession.ReferenceNumber;
+            return Ok(returnConcession);
         }
 
         /// <summary>
@@ -284,7 +288,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             //update the concession accordingly
             await UpdateCashConcession(cashConcession, user);
 
-            return Ok(cashConcession);
+            return Ok(_cashManager.GetCashConcession(cashConcession.Concession.ReferenceNumber, user));
         }
 
         /// <summary>

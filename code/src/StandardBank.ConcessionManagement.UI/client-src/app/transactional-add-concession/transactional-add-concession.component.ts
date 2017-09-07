@@ -249,11 +249,17 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
             if (conditionFormItem.get('value').value)
                 concessionCondition.conditionValue = conditionFormItem.get('value').value;
 
-            if (conditionFormItem.get('periodType').value)
+            if (conditionFormItem.get('periodType').value) {
                 concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
+            } else {
+                this.addValidationError("Period type not selected");
+            }
 
-            if (conditionFormItem.get('period').value)
+            if (conditionFormItem.get('period').value) {
                 concessionCondition.periodId = conditionFormItem.get('period').value.id;
+            } else {
+                this.addValidationError("Period not selected");
+            }
 
             transactionalConcession.concessionConditions.push(concessionCondition);
         }

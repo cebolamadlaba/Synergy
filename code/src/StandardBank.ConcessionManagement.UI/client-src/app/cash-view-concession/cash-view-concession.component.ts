@@ -23,9 +23,9 @@ import { ConcessionComment } from "../models/concession-comment";
 import { CashFinancial } from "../models/cash-financial";
 
 @Component({
-  selector: 'app-cash-view-concession',
-  templateUrl: './cash-view-concession.component.html',
-  styleUrls: ['./cash-view-concession.component.css']
+    selector: 'app-cash-view-concession',
+    templateUrl: './cash-view-concession.component.html',
+    styleUrls: ['./cash-view-concession.component.css']
 })
 export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
@@ -49,6 +49,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
     canRecall = false;
     isRenewing = false;
     motivationEnabled = false;
+    canEdit = false;
     isRecalling = false;
 
     observablePeriods: Observable<Period[]>;
@@ -152,11 +153,12 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
                 if (cashConcession.concession.status == "Pending" && cashConcession.concession.subStatus == "BCM Pending") {
                     this.canBcmApprove = cashConcession.currentUser.canBcmApprove;
-                    this.motivationEnabled = cashConcession.currentUser.canBcmApprove;
+                    this.canEdit = cashConcession.currentUser.canBcmApprove;
                 }
 
                 if (cashConcession.concession.status == "Pending" && cashConcession.concession.subStatus == "PCM Pending") {
                     this.canPcmApprove = cashConcession.currentUser.canPcmApprove;
+                    this.canEdit = cashConcession.currentUser.canPcmApprove;
                 }
 
                 //if it's still pending and the user is a requestor then they can recall it
@@ -404,11 +406,17 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             if (conditionFormItem.get('value').value)
                 concessionCondition.conditionValue = conditionFormItem.get('value').value;
 
-            if (conditionFormItem.get('periodType').value)
+            if (conditionFormItem.get('periodType').value) {
                 concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
+            } else {
+                this.addValidationError("Period type not selected");
+            }
 
-            if (conditionFormItem.get('period').value)
+            if (conditionFormItem.get('period').value) {
                 concessionCondition.periodId = conditionFormItem.get('period').value.id;
+            } else {
+                this.addValidationError("Period not selected");
+            }
 
             cashConcession.concessionConditions.push(concessionCondition);
         }
@@ -440,6 +448,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                 this.canBcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
+                this.cashConcession = entity;
+                this.canEdit = false;
             }, error => {
                 this.errorMessage = <any>error;
                 this.isLoading = false;
@@ -466,6 +476,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                 this.canBcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
+                this.cashConcession = entity;
+                this.canEdit = false;
             }, error => {
                 this.errorMessage = <any>error;
                 this.isLoading = false;
@@ -499,6 +511,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                 this.canPcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
+                this.cashConcession = entity;
+                this.canEdit = false;
             }, error => {
                 this.errorMessage = <any>error;
                 this.isLoading = false;
@@ -532,6 +546,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                 this.canPcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
+                this.cashConcession = entity;
+                this.canEdit = false;
             }, error => {
                 this.errorMessage = <any>error;
                 this.isLoading = false;
@@ -542,23 +558,26 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     extendConcession() {
-        this.isLoading = true;
-        this.errorMessage = null;
-        this.validationError = null;
+        if (confirm("Are you sure you want to extend this concession?")) {
+            this.isLoading = true;
+            this.errorMessage = null;
+            this.validationError = null;
 
-        this.cashConcessionService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
-            console.log("data saved");
-            this.canBcmApprove = false;
-            this.canBcmApprove = false;
-            this.canExtend = false;
-            this.canRenew = false;
-            this.canRecall = false;
-            this.saveMessage = entity.concession.referenceNumber;
-            this.isLoading = false;
-        }, error => {
-            this.errorMessage = <any>error;
-            this.isLoading = false;
-        });
+            this.cashConcessionService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
+                console.log("data saved");
+                this.canBcmApprove = false;
+                this.canBcmApprove = false;
+                this.canExtend = false;
+                this.canRenew = false;
+                this.canRecall = false;
+                this.saveMessage = entity.concession.childReferenceNumber;
+                this.isLoading = false;
+                this.cashConcession = entity;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        }
     }
 
     renewConcession() {
@@ -570,6 +589,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         this.canRecall = false;
         this.isRenewing = true;
         this.isRecalling = false;
+        this.canEdit = true;
 
         this.cashConcessionForm.controls['motivation'].setValue('');
     }
@@ -590,8 +610,11 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             this.cashConcessionService.postRenewLendingData(lendingConcession).subscribe(entity => {
                 console.log("data saved");
                 this.isRenewing = false;
-                this.saveMessage = entity.concession.referenceNumber;
+                this.saveMessage = entity.concession.childReferenceNumber;
+                this.cashConcession = entity;
                 this.isLoading = false;
+                this.canEdit = false;
+                this.motivationEnabled = false;
             }, error => {
                 this.errorMessage = <any>error;
                 this.isLoading = false;
@@ -609,6 +632,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             this.warningMessage = "Concession recalled, please make the required changes and save the concession or it will be lost";
             this.isRecalling = true;
             this.isLoading = false;
+            this.canEdit = true;
+            this.motivationEnabled = true;
         }, error => {
             this.errorMessage = <any>error;
             this.isLoading = false;
@@ -632,7 +657,10 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                 console.log("data saved");
                 this.isRecalling = false;
                 this.saveMessage = entity.concession.referenceNumber;
+                this.cashConcession = entity;
                 this.isLoading = false;
+                this.canEdit = false;
+                this.motivationEnabled = false;
             }, error => {
                 this.errorMessage = <any>error;
                 this.isLoading = false;
