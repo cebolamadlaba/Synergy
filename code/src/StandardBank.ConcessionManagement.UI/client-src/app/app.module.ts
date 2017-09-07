@@ -55,6 +55,7 @@ import { AdminMenuComponent } from './admin/admin-menu/admin-menu.component';
 import { BusinessCentreComponent } from './admin/business-centre/business-centre.component';
 import { UsersComponent } from './admin/users/users.component';
 import { EditUserComponent } from './admin/users/edit-user/edit-user.component';
+import { ActionedInboxComponent } from './actioned-inbox/actioned-inbox.component';
 
 
 @NgModule({
@@ -96,7 +97,8 @@ import { EditUserComponent } from './admin/users/edit-user/edit-user.component';
         AdminMenuComponent,
         BusinessCentreComponent,
         UsersComponent,
-        EditUserComponent
+        EditUserComponent,
+        ActionedInboxComponent
     ],
     imports: [
         BrowserModule,

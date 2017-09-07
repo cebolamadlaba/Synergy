@@ -179,7 +179,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     SELECT t.[pkConcessionRelationshipId] [Id], t.[fkParentConcessionId] [ParentConcessionId], t.[fkChildConcessionId] [ChildConcessionId], t.[fkRelationshipId] [RelationshipId], t.[CreationDate], t.[fkUserId] [UserId] FROM [dbo].[tblConcessionRelationship] t
                     INNER JOIN parents p ON p.[ChildConcessionId] = t.[fkParentConcessionId])
                     SELECT
-	                    'Children' [RelationshipType],
+	                    'Child' [RelationshipType],
                         pc.[pkConcessionId] [ParentConcessionId],
 	                    pc.[ConcessionRef] [ParentConcessionReference],
 	                    pc.[ConcessionRef] + ' (' + spc.[Description] + ' - ' + sspc.[Description] + ')' [ParentConcession], 
