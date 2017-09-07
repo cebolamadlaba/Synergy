@@ -28,4 +28,6 @@ export class Concession {
     canRenew: boolean;
     concessionComments: ConcessionComment[];
     concessionRelationshipDetails: ConcessionRelationshipDetail[];
+    expiryDate: Date;
+    dateApproved: Date;
 }
