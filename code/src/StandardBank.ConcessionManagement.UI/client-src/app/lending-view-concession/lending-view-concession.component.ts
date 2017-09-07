@@ -638,6 +638,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             this.isRecalling = true;
             this.isLoading = false;
             this.canEdit = true;
+            this.motivationEnabled = true;
         }, error => {
             this.errorMessage = <any>error;
             this.isLoading = false;
@@ -664,6 +665,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 this.lendingConcession = entity;
                 this.isLoading = false;
                 this.canEdit = false;
+                this.motivationEnabled = false;
             }, error => {
                 this.errorMessage = <any>error;
                 this.isLoading = false;
