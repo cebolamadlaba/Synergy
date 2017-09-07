@@ -30,4 +30,10 @@
             <div class="main"><p>{{userConcessions.declinedConcessionsCount}}</p></div>
         </div>
     </div>
+    <div class="totalsWidget outer" style="margin-left: 20px;" *ngIf="userConcessions?.showActionedConcessions">
+        <div routerLink="/actioned-inbox" routerLinkActive="activeWidget">
+            <div class="cornered"><p>Actioned</p></div>
+            <div class="main"><p>{{userConcessions.actionedConcessionsCount}}</p></div>
+        </div>
+    </div>
 </div>

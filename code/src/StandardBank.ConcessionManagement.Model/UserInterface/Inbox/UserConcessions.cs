@@ -81,5 +81,29 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Inbox
         /// Gets or sets whether or not to show the DeclinedConcessions view
         /// </summary>
         public bool ShowDeclinedConcessions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the actioned concessions count.
+        /// </summary>
+        /// <value>
+        /// The actioned concessions count.
+        /// </value>
+        public int ActionedConcessionsCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the actioned concessions.
+        /// </summary>
+        /// <value>
+        /// The actioned concessions.
+        /// </value>
+        public IEnumerable<Concession> ActionedConcessions { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [show actioned concessions].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [show actioned concessions]; otherwise, <c>false</c>.
+        /// </value>
+        public bool ShowActionedConcessions { get; set; }
     }
 }
