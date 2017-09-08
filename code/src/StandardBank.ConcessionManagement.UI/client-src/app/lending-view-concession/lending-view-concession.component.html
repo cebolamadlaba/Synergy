@@ -116,7 +116,7 @@
     <div class="col-md-12" style="border-bottom: 1px solid gray; margin-bottom: 15px;">
         <div class="row">
             <h3 class="table-title">Concessions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" *ngIf="canBcmApprove || canPcmApprove || isRenewing || isRecalling" style="margin-top: 15px;">New Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" *ngIf="isRenewing || isRecalling" style="margin-top: 15px;">New Concession</button>
         </div>
         <div class="row">
             <div class="col-md-2" *ngIf="lendingConcession?.concession?.expiryDate"><strong>Expiry Date</strong> {{lendingConcession?.concession?.expiryDate | date: 'yyyy/MM/dd' }}</div>
@@ -172,7 +172,7 @@
     <div class="col-md-12">
         <div class="row">
             <h3 class="table-title">Conditions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" (click)="addNewConditionRowIfNone()" *ngIf="canBcmApprove || canPcmApprove || isRenewing || isRecalling" style="margin-top: 15px;">Manage Conditions</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" (click)="addNewConditionRowIfNone()" *ngIf="isRenewing || isRecalling" style="margin-top: 15px;">Manage Conditions</button>
 
             <div class="table-container">
                 <table class="table table-bordered table-hover header-fixed table-striped">

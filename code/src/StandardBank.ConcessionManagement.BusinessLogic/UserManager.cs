@@ -270,6 +270,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         public int CreateUser(UserModel userModel)
         {
+            var aNumber = userModel.ANumber;
+
+            _cacheManager.Remove(CacheKey.UserInterface.SiteHelper.LoggedInUser,
+                new CacheKeyParameter(nameof(aNumber), aNumber));
+
             return adminRepository.CreateUser(_mapper.Map<Model.Repository.UserModel>(userModel));
         }
 
