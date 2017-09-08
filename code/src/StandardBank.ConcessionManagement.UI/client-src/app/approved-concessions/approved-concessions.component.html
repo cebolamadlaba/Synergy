@@ -1,4 +1,4 @@
-﻿<div class="col-md-12 search-and-results-container">
+<div class="col-md-12 search-and-results-container">
     <!-- Search bar -->
     <div class="input-group add-on">
         <input class="form-control" placeholder="Search Concession ID or Risk Group Number" [(ngModel)]="concessionIdOrRiskGroupNumber" type="text" [disabled]="concessionsToPrint.length > 0">
@@ -21,7 +21,9 @@
                 </div>
                 <div class="col-md-10 no-padding-left">
                     <div class="col-md-6 no-padding-left">
-                        Concession ID : {{approvedConcession.concessionReferenceNumber}}
+                        <strong>Concession ID :</strong> {{approvedConcession.concessionReferenceNumber}}
+                        <span *ngIf="approvedConcession.expiryDate"><strong>Expiry Date :</strong> {{approvedConcession.expiryDate | date: 'yyyy/MM/dd'}}</span>
+                        <span *ngIf="approvedConcession.approvedDate"><strong>Approved Date :</strong> {{approvedConcession.approvedDate | date: 'yyyy/MM/dd'}}</span> 
                     </div>
                 </div>
             </div>
