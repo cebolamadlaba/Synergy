@@ -1,11 +1,9 @@
-using System;
-
 namespace StandardBank.ConcessionManagement.Model.Repository
 {
     /// <summary>
     /// User entity
     /// </summary>
-    public class User
+    public class User : IAuditable
     {
         /// <summary>
         /// Gets or sets the Id.
@@ -54,5 +52,47 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The IsActive.
         /// </value>
         public bool IsActive { get; set; }
+
+        /// <summary>
+        /// Gets or sets the centre identifier.
+        /// </summary>
+        /// <value>
+        /// The centre identifier.
+        /// </value>
+        public int CentreId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the region identifier.
+        /// </summary>
+        /// <value>
+        /// The region identifier.
+        /// </value>
+        public int RegionId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the role identifier.
+        /// </summary>
+        /// <value>
+        /// The role identifier.
+        /// </value>
+        public int RoleId { get; set; }
+
+        /// <summary>
+        /// Gets or the name of the table.
+        /// </summary>
+        /// <value>
+        /// The name of the table.
+        /// </value>
+        public string TableName => "tblUser";
+
+        /// <summary>
+        /// Gets the primary key column name
+        /// </summary>
+        public string PrimaryKeyColumnName => "pkUserId";
+
+        /// <summary>
+        /// Gets the primary key value
+        /// </summary>
+        public object PrimaryKeyValue => Id;
     }
 }

@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Common;
+using StandardBank.ConcessionManagement.Model.Repository;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administration
 {
@@ -24,8 +26,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
             _cacheManager.Remove(CacheKey.UserInterface.SiteHelper.LoggedInUser,
                 new CacheKeyParameter(nameof(aNumber), aNumber));
 
-            var model = mapper.Map<Model.Repository.UserModel>(message.Model);
-           adminRepository.UpdateUser(model);
+            var model = mapper.Map<Model.Repository.User>(message.Model);
+
+            message.AuditRecord = new AuditRecord(model, message.CurrentUser, AuditType.Update);
+
+            adminRepository.UpdateUser(model);
         }
     }
 }

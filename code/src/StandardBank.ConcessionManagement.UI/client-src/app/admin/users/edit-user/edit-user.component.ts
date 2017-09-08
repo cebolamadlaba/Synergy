@@ -4,7 +4,7 @@ import { AdminService } from '../../../services/admin.service';
 import { Region } from '../../../models/region';
 import { Centre } from '../../../models/centre';
 import { Role } from '../../../models/role';
-import { Usermodel } from '../../../models/usermodel';
+import { User } from "../../../models/user";
 
 @Component({
   selector: 'app-edit-user',
@@ -15,7 +15,7 @@ export class EditUserComponent implements OnInit {
     Regions: Region[];
     Centres: Centre[];
     Roles: Role[];
-    user = {} as Usermodel;
+    user = {} as User;
     id: number;
     success: boolean;
     error: boolean;
@@ -31,7 +31,7 @@ export class EditUserComponent implements OnInit {
              this.id = +params['id'];
         });
         this.adminService.GetUser(this.id).subscribe(r => {
-            this.user = r as Usermodel;
+            this.user = r as User;
         });
        
     }
