@@ -11,16 +11,21 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class ApprovedConcessionsComponent implements OnInit {
     errorMessage: String;
+    validationError: String[];
+    saveMessage: String;
+    isLoading = false;
+
     observableApprovedConcessions: Observable<ApprovedConcession[]>;
     approvedConcessions: ApprovedConcession[];
-    concessionsToPrint: number[];
 
     constructor( @Inject(UserConcessionsService) private userConcessionsService, private router: Router) { }
 
     ngOnInit() {
-        this.concessionsToPrint = [];
         this.observableApprovedConcessions = this.userConcessionsService.getApprovedConcessions();
-        this.observableApprovedConcessions.subscribe(approvedConcession => this.approvedConcessions = approvedConcession, error => this.errorMessage = <any>error);
+        this.observableApprovedConcessions.subscribe(approvedConcession => {
+            this.approvedConcessions = approvedConcession;
+            this.isLoading = false;
+        }, error => this.errorMessage = <any>error);
     }
 
     openConcessionView(approvedConcession: ApprovedConcession) {
@@ -37,19 +42,7 @@ export class ApprovedConcessionsComponent implements OnInit {
         }
     }
 
-    addToPrintConcessions(event, concessionId) {
-        if (event.target.checked) {
-            this.concessionsToPrint.push(concessionId);
-        } else {
-            var index = this.concessionsToPrint.indexOf(concessionId, 0);
-            if (index > -1) {
-                this.concessionsToPrint.splice(index, 1);
-            }
-        }
-    }
-
-    printLetters() {
-        console.log(this.concessionsToPrint);
-        this.userConcessionsService.printConcessionLetters(this.concessionsToPrint);
+    printConcession(concessionReferenceNumber: string) {
+        window.open("/api/Concession/GenerateConcessionLetter/" + concessionReferenceNumber);
     }
 }

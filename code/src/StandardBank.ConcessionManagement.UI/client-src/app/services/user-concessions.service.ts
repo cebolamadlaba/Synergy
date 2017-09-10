@@ -36,16 +36,6 @@ export class UserConcessionsService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    printConcessionLetters(concessionIds: number[]): Observable<any> {
-        console.log(concessionIds);
-        let headers = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: headers });
-        const url = "/api/Concession/PrintConcessionLetters";
-
-        //TODO: This is not working, because this is afterall JavaScript which is nothing but a string that a browser reads
-        return this.http.post(url, concessionIds, options).map(this.extractBytes).catch(this.handleErrorObservable);
-    }
-
     deactivateConcession(concessionReferenceId: string): Observable<boolean> {
         const url = "/api/Concession/DeactivateConcession/" + concessionReferenceId;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
@@ -70,10 +60,6 @@ export class MockUserConcessionsService extends UserConcessionsService {
     getApprovedConcessions(): Observable<ApprovedConcession[]> {
         this.approvedConcessionModel[0].concessionId = 1;
         return Observable.of(this.approvedConcessionModel);
-    }
-
-    printConcessionLetters(concessionIds: number[]): Observable<any> {
-        return Observable.of(this.printData);
     }
 
     deactivateConcession(concessionReferenceId): Observable<boolean> {

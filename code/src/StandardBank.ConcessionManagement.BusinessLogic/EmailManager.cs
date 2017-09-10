@@ -12,13 +12,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
     public class EmailManager: IEmailManager
     {
       private string DefaultEmail { get; }
-        string TempaltePath { get; }
+        string EmailTemplatePath { get; }
         public EmailManager(IConfigurationData config)
         {
             Email.DefaultSender = new MailKitEmailSender(config);
             Email.DefaultRenderer = new RazorRenderer();
             DefaultEmail = config.DefaultEmail;
-            TempaltePath = config.TemplatePath;
+            EmailTemplatePath = config.EmailTemplatePath;
         }
       
        
@@ -48,7 +48,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 .From(DefaultEmail)
                 .To(recipient)
                 .Subject(subject)
-                .UsingTemplateFromFile(Path.Combine(TempaltePath,templateName+".cshtml"), model.ToExpando());
+                .UsingTemplateFromFile(Path.Combine(EmailTemplatePath,templateName+".cshtml"), model.ToExpando());
             var response = await email.SendAsync();
             return response.Successful;
         }
