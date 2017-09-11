@@ -98,5 +98,6 @@ namespace StandardBank.ConcessionManagement.Common
         /// The letter template path.
         /// </value>
         public string LetterTemplatePath { get; set; }
+        public string DateDatabaseConnection { get ; set ; }
     }
 }
