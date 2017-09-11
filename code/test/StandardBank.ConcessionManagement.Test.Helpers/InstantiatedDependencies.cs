@@ -334,7 +334,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The FinancialLending repository
         /// </summary>
         public static IFinancialLendingRepository FinancialLendingRepository = new FinancialLendingRepository(DbConnection);
-        public static IAdminRepository AdminRepository = new AdminRepository(DbConnection);
 
         /// <summary>
         /// The FinancialCash repository
@@ -360,7 +359,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The user manager
         /// </summary>
         public static IUserManager UserManager = new UserManager(CacheManager, LookupTableManager, UserRepository, UserRoleRepository,
-            RoleRepository, UserRegionRepository, RegionRepository, CentreRepository, CentreUserRepository, Mapper, AdminRepository);
+            RoleRepository, UserRegionRepository, RegionRepository, CentreRepository, CentreUserRepository, Mapper);
 
         /// <summary>
         /// The concession manager

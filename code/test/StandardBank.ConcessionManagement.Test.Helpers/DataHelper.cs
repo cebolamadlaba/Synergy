@@ -2052,7 +2052,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 RiskGroupId = GetRiskGroupId(),
                 CustomerName = "969efde63e",
                 CustomerNumber = "b925857761",
-                IsActive = false
+                IsActive = false,
+                City = "Pretoria",
+                ContactPerson = "George",
+                PostalAddress = "555 Republic Street",
+                PostalCode = "9999"
             };
 
             InstantiatedDependencies.LegalEntityRepository.Create(model);
@@ -2261,7 +2265,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 EmailAddress = "0a4a104423",
                 FirstName = "e11ee71428",
                 Surname = "f20ac7c952",
-                IsActive = false
+                IsActive = false,
+                ContactNumber = "011 555 1234"
             };
 
             InstantiatedDependencies.UserRepository.Create(model);

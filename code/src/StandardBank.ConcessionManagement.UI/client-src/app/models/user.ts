@@ -1,4 +1,4 @@
-﻿import { Role } from "./role";
+import { Role } from "./role";
 import { Centre } from "./centre";
 import { Region } from "./region";
 
@@ -8,6 +8,7 @@ export class User {
     emailAddress: string;
     firstName: string;
     surname: string;
+    fullName: string;
     isActive: boolean;
     userRoles: Role[];
     userRegions: Region[];
@@ -18,4 +19,5 @@ export class User {
     canBcmApprove: boolean;
     canPcmApprove: boolean;
     isHO: boolean;
+    contactNumber: string;
 }

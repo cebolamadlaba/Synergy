@@ -1,4 +1,4 @@
-﻿<!-- Success message -->
+<!-- Success message -->
 <div class="col-md-12" *ngIf="success" style="margin-top:15px;">
     <div class="form-feedback-container">
         <div class="alert-success">
@@ -58,6 +58,12 @@
             </div>
             <!-- Right side -->
             <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label col-md-3" for="email">Contact Number</label>
+                    <div class="col-sm-8">
+                        <input type="tel" class="form-control" name="8" [(ngModel)]="user.contactNumber">
+                    </div>
+                </div>
                 <div class="form-group">
                     <label class="control-label col-md-3" for="email">Role</label>
                     <div class="col-sm-8">

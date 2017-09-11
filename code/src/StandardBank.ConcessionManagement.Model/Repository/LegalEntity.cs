@@ -54,5 +54,37 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The IsActive.
         /// </value>
         public bool IsActive { get; set; }
+
+        /// <summary>
+        /// Gets or sets the contact person.
+        /// </summary>
+        /// <value>
+        /// The contact person.
+        /// </value>
+        public string ContactPerson { get; set; }
+
+        /// <summary>
+        /// Gets or sets the postal address.
+        /// </summary>
+        /// <value>
+        /// The postal address.
+        /// </value>
+        public string PostalAddress { get; set; }
+
+        /// <summary>
+        /// Gets or sets the city.
+        /// </summary>
+        /// <value>
+        /// The city.
+        /// </value>
+        public string City { get; set; }
+
+        /// <summary>
+        /// Gets or sets the postal code.
+        /// </summary>
+        /// <value>
+        /// The postal code.
+        /// </value>
+        public string PostalCode { get; set; }
     }
 }

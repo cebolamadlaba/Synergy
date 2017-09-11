@@ -12,21 +12,21 @@
 <p style="text-align:right; width: 100%;">@Model.CurrentDate</p>
 <!--client address-->
 <div style="padding-bottom:10px;" >
-    <p style="margin:0;">--Addressee--</p>
+    <p style="margin:0;">@Model.ClientContactPerson</p>
     <p style="margin:0;">@Model.ClientName</p>
-    <p style="margin:0;">--Postal Address--</p>
-    <p style="margin:0;">--City--</p>
-    <p style="margin:0;">--Postal Code--</p>
+    <p style="margin:0;">@Model.ClientPostalAddress</p>
+    <p style="margin:0;">@Model.ClientCity</p>
+    <p style="margin:0;">@Model.ClientPostalCode</p>
 </div>
 <!--client information -->
 <div style="padding-bottom:10px">
     <p style="font-size:1.1em;font-family: Arial;"><span style="font-weight:bold;">Client Number:</span> @Model.ClientNumber </p>
-    <p>Dear --Addressee--,</p>
+    <p>Dear @Model.ClientContactPerson,</p>
 </div>
 <!--letter body-->
 <div>
     <h style="font-weight: bold;">
-        Offer of a Concession on pricing (“Fees/Interest Rates/Offer”) by the Standard Bank of South Africa Limited (“we/us/our”) to --Client Name--
+        Offer of a Concession on pricing (“Fees/Interest Rates/Offer”) by the Standard Bank of South Africa Limited (“we/us/our”) to @Model.ClientName
     </h>
     <p>
         I am pleased to inform you that as a valued client you have been granted a concession on pricing for the services listed below.
@@ -48,22 +48,22 @@
 <!--contact information -->
 <div style="padding-top:5px; display: inline;">
     <div style="float:left">
-        <p style="margin:0; color: #17365d; font-weight:bold;">--AE Name--</p>
+        <p style="margin:0; color: #17365d; font-weight:bold;">@Model.RequestorName</p>
         <p style="margin:0;">Relationship Manager</p>
-        <p style="margin:0;">Telephone: --AE Contact Number--</p>
-        <p style="margin:0;">Email: --AE Email--</p>
+        <p style="margin:0;">Telephone: @Model.RequestorContactNumber</p>
+        <p style="margin:0;">Email: @Model.RequestorEmailAddress</p>
     </div>
     <div style="float:right">
-        <p style="margin:0; color: #17365d; font-weight:bold;">--BCM Name--</p>
+        <p style="margin:0; color: #17365d; font-weight:bold;">@Model.BCMName</p>
         <p style="margin:0;">Business Suite Head</p>
-        <p style="margin:0;">Telephone: --BCM Contact Number--</p>
-        <p style="margin:0;">Email: --BCM Email--</p>
+        <p style="margin:0;">Telephone: @Model.BCMContactNumber</p>
+        <p style="margin:0;">Email: @Model.BCMEmailAddress</p>
     </div>
 </div>
 <div style="clear:both"></div>
 
 <!--risk group number-->
-<p style="margin-top:50px;page-break-before: always;">Risk Group Number : 1222333 </p>
+<p style="margin-top:50px;page-break-before: always;">Risk Group Number : @Model.RiskGroupNumber </p>
 <!--LENDING (Specific to Overdraft)-->
 <p style="font-weight: bold;">LENDING (Specific to Overdraft)</p>
 <table border="1" width="100%">

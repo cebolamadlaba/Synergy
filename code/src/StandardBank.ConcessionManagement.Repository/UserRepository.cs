@@ -34,8 +34,9 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public User Create(User model)
         {
-            const string sql = @"INSERT [dbo].[tblUser] ([ANumber], [EmailAddress], [FirstName], [Surname], [IsActive]) 
-                                VALUES (@ANumber, @EmailAddress, @FirstName, @Surname, @IsActive) 
+            const string sql =
+                @"INSERT [dbo].[tblUser] ([ANumber], [EmailAddress], [FirstName], [Surname], [IsActive], [ContactNumber]) 
+                                VALUES (@ANumber, @EmailAddress, @FirstName, @Surname, @IsActive, @ContactNumber) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
@@ -47,7 +48,8 @@ namespace StandardBank.ConcessionManagement.Repository
                         EmailAddress = model.EmailAddress,
                         FirstName = model.FirstName,
                         Surname = model.Surname,
-                        IsActive = model.IsActive
+                        IsActive = model.IsActive,
+                        ContactNumber = model.ContactNumber
                     }).Single();
             }
 
@@ -64,7 +66,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<User>(
-                    "SELECT [pkUserId] [Id], [ANumber], [EmailAddress], [FirstName], [Surname], [IsActive] FROM [dbo].[tblUser] WHERE [pkUserId] = @Id",
+                    "SELECT [pkUserId] [Id], [ANumber], [EmailAddress], [FirstName], [Surname], [IsActive], [ContactNumber] FROM [dbo].[tblUser] WHERE [pkUserId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -79,10 +81,10 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<User>(
-                    @"SELECT [pkUserId] [Id], [ANumber], [EmailAddress], [FirstName], [Surname], [IsActive] 
+                    @"SELECT [pkUserId] [Id], [ANumber], [EmailAddress], [FirstName], [Surname], [IsActive], [ContactNumber] 
                     FROM [dbo].[tblUser] 
                     WHERE [ANumber] = @aNumber",
-                    new { aNumber }).SingleOrDefault();
+                    new {aNumber}).SingleOrDefault();
             }
         }
 
@@ -95,7 +97,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<User>(
-                    "SELECT [pkUserId] [Id], [ANumber], [EmailAddress], [FirstName], [Surname], [IsActive] FROM [dbo].[tblUser]");
+                    "SELECT [pkUserId] [Id], [ANumber], [EmailAddress], [FirstName], [Surname], [IsActive], [ContactNumber] FROM [dbo].[tblUser]");
             }
         }
 
@@ -108,7 +110,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblUser]
-                            SET [ANumber] = @ANumber, [EmailAddress] = @EmailAddress, [FirstName] = @FirstName, [Surname] = @Surname, [IsActive] = @IsActive
+                            SET [ANumber] = @ANumber, [EmailAddress] = @EmailAddress, [FirstName] = @FirstName, [Surname] = @Surname, [IsActive] = @IsActive, [ContactNumber] = @ContactNumber
                             WHERE [pkUserId] = @Id",
                     new
                     {
@@ -117,7 +119,8 @@ namespace StandardBank.ConcessionManagement.Repository
                         EmailAddress = model.EmailAddress,
                         FirstName = model.FirstName,
                         Surname = model.Surname,
-                        IsActive = model.IsActive
+                        IsActive = model.IsActive,
+                        ContactNumber = model.ContactNumber
                     });
             }
         }
@@ -132,6 +135,59 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 db.Execute("DELETE [dbo].[tblUser] WHERE [pkUserId] = @Id",
                     new {model.Id});
+            }
+        }
+
+        /// <summary>
+        /// Creates the user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
+        public int CreateUser(User user)
+        {
+            using (var connection = _dbConnectionFactory.Connection())
+            {
+                var tx = connection.BeginTransaction();
+                var id = connection.ExecuteScalar<int>("CreateUser",
+                    new
+                    {
+                        user.ANumber,
+                        user.EmailAddress,
+                        user.FirstName,
+                        LastName = user.Surname,
+                        user.RoleId,
+                        user.RegionId,
+                        user.CentreId,
+                        user.ContactNumber
+                    }, transaction: tx, commandType: System.Data.CommandType.StoredProcedure);
+                tx.Commit();
+                return id;
+            }
+        }
+
+        /// <summary>
+        /// Updates the user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        public void UpdateUser(User user)
+        {
+            using (var conn = _dbConnectionFactory.Connection())
+            {
+                var tx = conn.BeginTransaction();
+                var id = conn.ExecuteScalar<int>("UpdateUser",
+                    new
+                    {
+                        user.ANumber,
+                        user.EmailAddress,
+                        user.FirstName,
+                        LastName = user.Surname,
+                        user.RoleId,
+                        user.RegionId,
+                        user.CentreId,
+                        user.Id,
+                        user.ContactNumber
+                    }, transaction: tx, commandType: System.Data.CommandType.StoredProcedure);
+                tx.Commit();
             }
         }
     }

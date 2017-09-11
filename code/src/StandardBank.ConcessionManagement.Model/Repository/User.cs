@@ -94,5 +94,13 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// Gets the primary key value
         /// </summary>
         public object PrimaryKeyValue => Id;
+
+        /// <summary>
+        /// Gets or sets the contact number.
+        /// </summary>
+        /// <value>
+        /// The contact number.
+        /// </value>
+        public string ContactNumber { get; set; }
     }
 }

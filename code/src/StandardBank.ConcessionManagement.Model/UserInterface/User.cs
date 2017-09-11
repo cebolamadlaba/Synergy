@@ -48,6 +48,14 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public string Surname { get; set; }
 
         /// <summary>
+        /// Gets the full name.
+        /// </summary>
+        /// <value>
+        /// The full name.
+        /// </value>
+        public string FullName => $"{FirstName} {Surname}";
+
+        /// <summary>
         /// Gets or sets the IsActive.
         /// </summary>
         /// <value>
@@ -126,5 +134,13 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// Gets or sets whether or not the user is a HO
         /// </summary>
         public bool IsHO { get; set; }
+
+        /// <summary>
+        /// Gets or sets the contact number.
+        /// </summary>
+        /// <value>
+        /// The contact number.
+        /// </value>
+        public string ContactNumber { get; set; }
     }
 }

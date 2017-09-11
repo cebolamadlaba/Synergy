@@ -65,7 +65,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// The mapper
         /// </summary>
         private readonly IMapper _mapper;
-        private readonly IAdminRepository adminRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserManager"/> class.
@@ -83,8 +82,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public UserManager(ICacheManager cacheManager, ILookupTableManager lookupTableManager,
             IUserRepository userRepository, IUserRoleRepository userRoleRepository, IRoleRepository roleRepository,
             IUserRegionRepository userRegionRepository, IRegionRepository regionRepository,
-            ICentreRepository centreRepository, ICentreUserRepository centreUserRepository, IMapper mapper,
-            IAdminRepository adminRepository)
+            ICentreRepository centreRepository, ICentreUserRepository centreUserRepository, IMapper mapper)
         {
             _cacheManager = cacheManager;
             _lookupTableManager = lookupTableManager;
@@ -96,7 +94,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _centreRepository = centreRepository;
             _centreUserRepository = centreUserRepository;
             _mapper = mapper;
-            this.adminRepository = adminRepository;
         }
 
         /// <summary>
@@ -111,29 +108,60 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 var user = _userRepository.ReadByANumber(aNumber);
 
                 if (user != null)
-                {
-                    var mappedUser = _mapper.Map<User>(user);
-
-                    mappedUser.UserRoles = GetUserRoles(user.Id);
-                    mappedUser.UserRegions = GetUserRegions(user.Id);
-                    mappedUser.SelectedRegion = GetSelectedRegion(mappedUser.UserRegions, user);
-                    mappedUser.UserCentres = GetUserCentres(user.Id);
-                    mappedUser.SelectedCentre = mappedUser.UserCentres.FirstOrDefault();
-                    mappedUser.CanRequest = mappedUser.UserRoles.Any(_ => _.Name == "Requestor");
-                    mappedUser.CanBcmApprove =
-                        mappedUser.UserRoles.Any(_ => _.Name.Trim() == "Suite Head" || _.Name == "BCM");
-                    mappedUser.CanPcmApprove =
-                        mappedUser.UserRoles.Any(_ => _.Name == "PCM" || _.Name == "Head Office");
-                    mappedUser.IsHO = mappedUser.UserRoles.Any(_ => _.Name == "Head Office");
-
-                    return mappedUser;
-                }
+                    return Map(user);
 
                 return null;
             };
 
             return _cacheManager.ReturnFromCache(function, 1440, CacheKey.UserInterface.SiteHelper.LoggedInUser,
                 new CacheKeyParameter(nameof(aNumber), aNumber));
+        }
+
+        /// <summary>
+        /// Maps the specified user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
+        private User Map(Model.Repository.User user)
+        {
+            var mappedUser = _mapper.Map<User>(user);
+
+            mappedUser.UserRoles = GetUserRoles(user.Id);
+            mappedUser.RoleId = mappedUser.UserRoles.First().Id;
+
+            mappedUser.UserRegions = GetUserRegions(user.Id);
+            mappedUser.SelectedRegion = GetSelectedRegion(mappedUser.UserRegions, user);
+            mappedUser.RegionId = mappedUser.SelectedRegion.Id;
+
+            mappedUser.UserCentres = GetUserCentres(user.Id);
+            mappedUser.SelectedCentre = mappedUser.UserCentres.FirstOrDefault();
+            mappedUser.CentreId = mappedUser.SelectedCentre.Id;
+
+            mappedUser.CanRequest = mappedUser.UserRoles.Any(_ => _.Name == "Requestor");
+            mappedUser.CanBcmApprove =
+                mappedUser.UserRoles.Any(_ => _.Name.Trim() == "Suite Head" || _.Name == "BCM");
+            mappedUser.CanPcmApprove =
+                mappedUser.UserRoles.Any(_ => _.Name == "PCM" || _.Name == "Head Office");
+            mappedUser.IsHO = mappedUser.UserRoles.Any(_ => _.Name == "Head Office");
+
+            return mappedUser;
+        }
+
+        /// <summary>
+        /// Gets the user.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
+        public User GetUser(int? userId)
+        {
+            if (userId.HasValue)
+            {
+                var user = _userRepository.ReadById(userId.Value);
+
+                return Map(user);
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -267,6 +295,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return userRoles;
         }
 
+        /// <summary>
+        /// Creates the user.
+        /// </summary>
+        /// <param name="userModel">The user model.</param>
+        /// <returns></returns>
         public int CreateUser(User userModel)
         {
             var aNumber = userModel.ANumber;
@@ -274,12 +307,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _cacheManager.Remove(CacheKey.UserInterface.SiteHelper.LoggedInUser,
                 new CacheKeyParameter(nameof(aNumber), aNumber));
 
-            return adminRepository.CreateUser(_mapper.Map<Model.Repository.User>(userModel));
+            return _userRepository.CreateUser(_mapper.Map<Model.Repository.User>(userModel));
         }
 
+        /// <summary>
+        /// Gets the users.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<User> GetUsers()
         {
-            return _mapper.Map<IEnumerable<User>>(adminRepository.GetUsers());
+            return _mapper.Map<IEnumerable<User>>(_userRepository.ReadAll());
         }
     }
 }

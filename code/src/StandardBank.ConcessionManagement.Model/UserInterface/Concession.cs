@@ -63,11 +63,6 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// Gets or sets the mrs crs
         /// </summary>
         public decimal MrsCrs { get; set; }
-
-        /// <summary>
-        /// Gets or sets the customer name
-        /// </summary>
-        public string CustomerName { get; set; }
         
         /// <summary>
         /// Gets or sets the type
@@ -113,6 +108,14 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// Gets or sets the comments
         /// </summary>
         public string Comments { get; set; }
+
+        /// <summary>
+        /// Gets or sets the requestor identifier.
+        /// </summary>
+        /// <value>
+        /// The requestor identifier.
+        /// </value>
+        public int? RequestorId { get; set; }
 
         /// <summary>
         /// Gets or sets the bcm user id
