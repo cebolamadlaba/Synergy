@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { AdminService } from '../../services/admin.service';
 import { Region } from '../../models/region';
@@ -41,6 +41,10 @@ export class UsersComponent implements OnInit {
     edit(i) {
         this.user = this.users[i];
         console.log(this.user);
+    }
+
+    goBack() {
+        this.location.back();
     }
 
 }

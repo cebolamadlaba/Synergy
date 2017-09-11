@@ -1,4 +1,4 @@
-<div class="col-md-1" style="margin-top: 15px;">
+﻿<div class="col-md-2" style="margin-top: 15px;">
     <i class="fa fa-chevron-circle-left" aria-hidden="true" style="font-size: 1.1em;"></i>
     <span class="back-button-text" style="font-size: 1.1em;" (click)="goBack()">Administration</span>
 </div>
@@ -42,8 +42,7 @@
             </div>
             <form  #f="ngForm">
     <div class="modal-body">
-
-
+        
         <div class="form-horizontal">
             <div class="row">
                 <!-- Left side -->
@@ -113,8 +112,9 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" (click)="save()" class="btn btn-cancel">Submit</button>
-        <button type="button" class="btn btn-primary" (click)="addUserModal.hide()">Cancel</button>
+        
+        <button type="button" class="btn btn-cancel" (click)="addUserModal.hide()">Cancel</button>
+        <button type="button" (click)="save()" class="btn btn-primary">Submit</button>        
     </div>
             </form>
 </div>
