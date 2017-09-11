@@ -79,7 +79,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 ClientName = "Test Client 101",
                 ClientNumber = "555222999",
-                CurrentDate = DateTime.Now.ToString("yyyy-MM-dd")
+                CurrentDate = DateTime.Now.ToString("yyyy-MM-dd"),
+                TemplatePath = _templatePath
             });
 
             return _pdfUtility.GeneratePdfFromHtml(html);
