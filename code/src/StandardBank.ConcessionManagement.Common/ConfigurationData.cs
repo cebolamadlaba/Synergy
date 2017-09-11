@@ -83,5 +83,6 @@ namespace StandardBank.ConcessionManagement.Common
         public int SmtpPort  { get; set; }
 
         public string TemplatePath  { get; set; }
+        public string DateDatabaseConnection { get ; set ; }
     }
 }
