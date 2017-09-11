@@ -58,41 +58,45 @@
 }
 
 
-    .modal-dialog {
+.modal-dialog {
 
 
-        .modal-header {
-            background: $standardBankBlue;
-            color: $white;
+    .modal-header {
+        background: $standardBankBlue;
+        color: $white;
 
-            h4 {
-                margin: 0;
+        h4 {
+            margin: 0;
+        }
+    }
+
+    .modal-title {
+        padding-bottom: 15px;
+    }
+
+    .modal-body {
+        .form-concessions-table-content tr {
+            td {
+                padding-right: 10px;
+                height: 25px;
             }
-        }
 
-        .modal-title {
-            padding-bottom: 15px;
-        }
+            .length-long {
+                width: 17%;
+            }
 
-        .modal-body {
-            .form-concessions-table-content tr {
-                td {
-                    padding-right: 10px;
-                    height: 25px;
-                }
+            .length-medium {
+                width: 12%;
+            }
 
-                .length-long {
-                    width: 20%;
-                }
+            .length-short {
+                width: 10%;
+            }
 
-                .length-medium {
-                    width: 9.5%;
-                }
-
-                .delete {
-                    width: 2%;
-                }
+            .delete {
+                width: 2%;
             }
         }
     }
+}
 

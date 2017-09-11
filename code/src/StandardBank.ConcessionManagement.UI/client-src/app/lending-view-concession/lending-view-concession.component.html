@@ -1,4 +1,4 @@
-<!-- Banner expanded -->
+﻿<!-- Banner expanded -->
 <div class="col-md-12 banner">
     <div class="row">
         <div class="lending-banner-title">
@@ -153,10 +153,10 @@
                         <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
                 </td>
-                <td class="length-long"><input formControlName="limit" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
-                <td class="length-short"><input formControlName="term" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
-                <td class="length-short"><input formControlName="marginAgainstPrime" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
-                <td class="length-long"><input formControlName="initiationFee" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="text" formControlName="limit" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="text" formControlName="term" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="text" formControlName="marginAgainstPrime" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="text" formControlName="initiationFee" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
                 <td class="length-medium">
                     <select formControlName="reviewFeeType" class="form-control" [attr.disabled]="canEdit ? null : ''">
                         <option *ngFor="let reviewFeeTypeOption of reviewFeeTypes" [ngValue]="reviewFeeTypeOption">{{reviewFeeTypeOption.description}}</option>
@@ -252,8 +252,8 @@
                                         <option *ngFor="let conditionProductOption of selectedConditionTypes[i].conditionProducts" [ngValue]="conditionProductOption">{{conditionProductOption?.description}}</option>
                                     </select>
                                 </td>
-                                <td class="length-medium"><input formControlName="interestRate" /></td>
-                                <td class="length-long"><input formControlName="volume" /></td>
+                                <td class="length-long"><input formControlName="interestRate" /></td>
+                                <td class="length-short"><input formControlName="volume" /></td>
                                 <td class="length-medium"><input formControlName="value" /></td>
                                 <td class="length-medium">
                                     <select formControlName="periodType">
@@ -355,7 +355,7 @@
 
     <div class="footer-buttons">
         <div class="float-right">
-            <button type="button" class="btn btn-cancel" (click)="goBack()" *ngIf="!isRecalling">Cancel</button>
+            <button type="button" class="btn btn-cancel" (click)="goBack()" *ngIf="!isRecalling">Close</button>
             <button type="button" class="btn btn-danger" (click)="bcmDeclineConcession()" *ngIf="canBcmApprove">Decline</button>
             <button type="button" class="btn btn-success" (click)="bcmApproveConcession()" *ngIf="canBcmApprove">Forward</button>
             <button type="button" class="btn btn-danger" (click)="pcmDeclineConcession()" *ngIf="canPcmApprove">Decline</button>

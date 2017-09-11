@@ -1,8 +1,24 @@
-﻿<div *ngIf="success" class="alert alert-success">
-   User updated successfully.
+﻿<!-- Success message -->
+<div class="col-md-12" *ngIf="success" style="margin-top:15px;">
+    <div class="form-feedback-container">
+        <div class="alert-success">
+            <p class="message-heading"><i class="fa fa-check-circle" aria-hidden="true"></i>User updated successfully</p>
+        </div>
+    </div>
 </div>
-<div *ngIf="error" class="alert alert-danger">
-   Something went wrong, please try again later
+
+<!-- Error message -->
+<div class="col-md-12" *ngIf="error" style="margin-top:15px;">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>User update failed</p>
+            <p>{{errorMessage}}</p>
+
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
+            </ul>
+        </div>
+    </div>
 </div>
 
 <div class="col-md-2" style="margin-top: 15px;">
@@ -79,7 +95,7 @@
         </div>
         <div class="footer-buttons">
             <div class="float-right">
-                <button type="button" (click)="goBack()" class="btn btn-cancel">Cancel</button>
+                <button type="button" (click)="goBack()" class="btn btn-cancel">Close</button>
                 <button type="button" (click)="save()" class="btn btn-primary">Submit</button>
             </div>
         </div>
