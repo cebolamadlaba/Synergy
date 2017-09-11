@@ -176,12 +176,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("GenerateConcessionLetter/{concessionReferenceId}")]
         public FileResult GenerateConcessionLetter(string concessionReferenceId)
         {
-            HttpContext.Response.ContentType = "application/html";
+            HttpContext.Response.ContentType = "application/pdf";
 
             var result = new FileContentResult(_letterGeneratorManager.GenerateLetters(concessionReferenceId),
-                "application/html")
+                "application/pdf")
             {
-                FileDownloadName = $"{concessionReferenceId}.html"
+                FileDownloadName = $"{concessionReferenceId}.pdf"
             };
 
             return result;

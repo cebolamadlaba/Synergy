@@ -39,5 +39,13 @@ namespace StandardBank.ConcessionManagement.Interface.Common
         /// The letter template path.
         /// </value>
         string LetterTemplatePath { get; set; }
+
+        /// <summary>
+        /// Gets or sets the WK HTML to PDF executable.
+        /// </summary>
+        /// <value>
+        /// The w KHTML to PDF executable.
+        /// </value>
+        string WKhtmlToPDFExecutable { get; set; }
     }
 }

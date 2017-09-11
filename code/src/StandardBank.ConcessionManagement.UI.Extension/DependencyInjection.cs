@@ -29,6 +29,7 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             services.AddScoped<IMarshaller, XmlMarshaller>();
             services.AddTransient<IDbConnectionFactory, DbConnectionFactory>();
             services.AddScoped<IFileUtiltity, SystemFileUtility>();
+            services.AddScoped<IPdfUtility, WkWrapPdfUtility>();
 
             container.Configure(config =>
             {

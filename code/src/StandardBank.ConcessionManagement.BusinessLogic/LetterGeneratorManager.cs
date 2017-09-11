@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using FluentEmail.Razor;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Common;
@@ -28,17 +27,24 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IConcessionManager _concessionManager;
 
         /// <summary>
+        /// The PDF utility
+        /// </summary>
+        private readonly IPdfUtility _pdfUtility;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LetterGeneratorManager"/> class.
         /// </summary>
         /// <param name="configurationData">The configuration data.</param>
         /// <param name="fileUtiltity">The file utiltity.</param>
         /// <param name="concessionManager">The concession manager.</param>
+        /// <param name="pdfUtility">The PDF utility.</param>
         public LetterGeneratorManager(IConfigurationData configurationData, IFileUtiltity fileUtiltity,
-            IConcessionManager concessionManager)
+            IConcessionManager concessionManager, IPdfUtility pdfUtility)
         {
             _templatePath = configurationData.LetterTemplatePath;
             _fileUtiltity = fileUtiltity;
             _concessionManager = concessionManager;
+            _pdfUtility = pdfUtility;
         }
 
         /// <summary>
@@ -76,7 +82,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 CurrentDate = DateTime.Now.ToString("yyyy-MM-dd")
             });
 
-            return Encoding.ASCII.GetBytes(html);
+            return _pdfUtility.GeneratePdfFromHtml(html);
         }
     }
 }
