@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 
 namespace StandardBank.ConcessionManagement.UI.Controllers
 {
@@ -17,12 +18,14 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         private readonly ILookupTableManager lookupTableManager;
         private readonly IMediator mediator;
         private readonly IUserManager userManager;
+        private readonly ISiteHelper _siteHelper;
 
-        public AdminController(ILookupTableManager lookupTableManager, IMediator mediator , IUserManager userManager)
+        public AdminController(ILookupTableManager lookupTableManager, IMediator mediator , IUserManager userManager, ISiteHelper siteHelper)
         {
             this.lookupTableManager = lookupTableManager;
             this.mediator = mediator;
             this.userManager = userManager;
+            _siteHelper = siteHelper;
         }
         [Route("user/lookup")]
         public IActionResult GetUserAdminLookupData()
@@ -34,15 +37,16 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(model);
         }
         [HttpPost("users")]
-        public async Task<IActionResult> CreateUser([FromBody]UserModel model)
+        public async Task<IActionResult> CreateUser([FromBody]User model)
         {
-            var id = await mediator.Send(new CreateUser { User = model });
+            var id = await mediator.Send(new CreateUser {User = model, CurrentUser = _siteHelper.LoggedInUser(this)});
+
             return Ok(id);
         }
         [HttpPost("users/{id}")]
-        public async Task<IActionResult> UpdateUser([FromBody]UserModel model, int id)
+        public async Task<IActionResult> UpdateUser([FromBody]User model, int id)
         {
-            await mediator.Send(new UpdateUser { Model = model });
+            await mediator.Send(new UpdateUser { Model = model, CurrentUser = _siteHelper.LoggedInUser(this) });
             return Ok(true);
         }
         [HttpGet("users")]
@@ -60,7 +64,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [HttpDelete("user/{aNumber}")]
         public async Task<IActionResult> DeleteUser(string aNumber)
         {
-            var id =await mediator.Send(new DeleteUser { aNumber = aNumber });
+            var id = await mediator.Send(new DeleteUser
+            {
+                aNumber = aNumber,
+                CurrentUser = _siteHelper.LoggedInUser(this)
+            });
+
             return Ok(id);
         }
 

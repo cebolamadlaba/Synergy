@@ -29,7 +29,15 @@ namespace StandardBank.ConcessionManagement.Interface.Common
         string SmtpServerUserName  { get; set; }
         string SmtpServerPassword  { get; set; }
         string DefaultEmail  { get; set; }
-        string TemplatePath  { get; set; }
         string DateDatabaseConnection { get; set; }
+        string EmailTemplatePath  { get; set; }
+
+        /// <summary>
+        /// Gets or sets the letter template path.
+        /// </summary>
+        /// <value>
+        /// The letter template path.
+        /// </value>
+        string LetterTemplatePath { get; set; }
     }
 }

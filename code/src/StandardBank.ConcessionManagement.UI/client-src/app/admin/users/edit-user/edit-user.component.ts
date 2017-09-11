@@ -1,10 +1,11 @@
-import { Component, OnInit, Inject } from '@angular/core';
+﻿import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AdminService } from '../../../services/admin.service';
 import { Region } from '../../../models/region';
 import { Centre } from '../../../models/centre';
 import { Role } from '../../../models/role';
-import { Usermodel } from '../../../models/usermodel';
+import { User } from "../../../models/user";
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-edit-user',
@@ -15,11 +16,16 @@ export class EditUserComponent implements OnInit {
     Regions: Region[];
     Centres: Centre[];
     Roles: Role[];
-    user = {} as Usermodel;
+    user = {} as User;
     id: number;
     success: boolean;
     error: boolean;
-    constructor( @Inject(AdminService) private adminService, private route: ActivatedRoute) { }
+
+    constructor( @Inject(AdminService)
+        private adminService,
+        private route: ActivatedRoute,
+        private location: Location,
+    ) { }
 
     ngOnInit() {
         this.adminService.GetUserLookupData().subscribe(result => {
@@ -31,7 +37,7 @@ export class EditUserComponent implements OnInit {
              this.id = +params['id'];
         });
         this.adminService.GetUser(this.id).subscribe(r => {
-            this.user = r as Usermodel;
+            this.user = r as User;
         });
        
     }
@@ -43,6 +49,10 @@ export class EditUserComponent implements OnInit {
             this.error = true;
             console.log(err);
         });
+    }
+
+    goBack() {
+        this.location.back();
     }
 
 }

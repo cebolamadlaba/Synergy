@@ -2,7 +2,7 @@ using FluentValidation;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 namespace StandardBank.ConcessionManagement.UI.Validation
 {
-    public class UserModelValidator : AbstractValidator<UserModel>
+    public class UserModelValidator : AbstractValidator<User>
     {
         public UserModelValidator()
         {

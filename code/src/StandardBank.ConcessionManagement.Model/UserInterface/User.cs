@@ -84,6 +84,30 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public Centre SelectedCentre { get; set; }
 
         /// <summary>
+        /// Gets or sets the centre identifier.
+        /// </summary>
+        /// <value>
+        /// The centre identifier.
+        /// </value>
+        public int CentreId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the region identifier.
+        /// </summary>
+        /// <value>
+        /// The region identifier.
+        /// </value>
+        public int RegionId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the role identifier.
+        /// </summary>
+        /// <value>
+        /// The role identifier.
+        /// </value>
+        public int RoleId { get; set; }
+
+        /// <summary>
         /// Gets or sets whether or not the user can request
         /// </summary>
         public bool CanRequest { get; set; }

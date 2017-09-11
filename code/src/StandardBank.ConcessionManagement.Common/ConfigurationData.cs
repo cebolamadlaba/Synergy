@@ -14,11 +14,18 @@ namespace StandardBank.ConcessionManagement.Common
         /// Initializes a new instance of the <see cref="ConfigurationData"/> class.
         /// </summary>
         /// <param name="connectionString">The connection string.</param>
-        /// <param name="overrideLoggedInUser"></param>
-        /// <param name="databaseType"></param>
+        /// <param name="overrideLoggedInUser">The override logged in user.</param>
+        /// <param name="databaseType">Type of the database.</param>
+        /// <param name="smtpServer">The SMTP server.</param>
+        /// <param name="smtpUserName">Name of the SMTP user.</param>
+        /// <param name="smtpPassword">The SMTP password.</param>
+        /// <param name="defaultEmail">The default email.</param>
+        /// <param name="smtpPort">The SMTP port.</param>
+        /// <param name="emailTemplatePath">The email template path.</param>
+        /// <param name="letterTemplatePath">The letter template path.</param>
         public ConfigurationData(string connectionString, string overrideLoggedInUser, string databaseType,
             string smtpServer, string smtpUserName, string smtpPassword, string defaultEmail, int smtpPort,
-            string templatePath)
+            string emailTemplatePath, string letterTemplatePath)
         {
             ConnectionString = connectionString;
             OverrideLoggedInUser = overrideLoggedInUser;
@@ -28,8 +35,8 @@ namespace StandardBank.ConcessionManagement.Common
             SmtpServerUserName = smtpUserName;
             DefaultEmail = defaultEmail;
             SmtpPort = smtpPort;
-            TemplatePath = templatePath;
-
+            EmailTemplatePath = emailTemplatePath;
+            LetterTemplatePath = letterTemplatePath;
         }
 
         public ConfigurationData(string connectionString, string overrideLoggedInUser, string databaseType)
@@ -82,7 +89,15 @@ namespace StandardBank.ConcessionManagement.Common
 
         public int SmtpPort  { get; set; }
 
-        public string TemplatePath  { get; set; }
+        public string EmailTemplatePath  { get; set; }
+
+        /// <summary>
+        /// Gets or sets the letter template path.
+        /// </summary>
+        /// <value>
+        /// The letter template path.
+        /// </value>
+        public string LetterTemplatePath { get; set; }
         public string DateDatabaseConnection { get ; set ; }
     }
 }

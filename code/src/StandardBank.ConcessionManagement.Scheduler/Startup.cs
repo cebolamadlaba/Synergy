@@ -40,7 +40,7 @@ namespace StandardBank.ConcessionManagement.Scheduler
         }
         private IConfigurationData GenerateConfigurationData()
         {
-            var config = new ConfigurationData { TemplatePath = Path.Combine(environment.ContentRootPath, "EmailTemplates") };
+            var config = new ConfigurationData { EmailTemplatePath = Path.Combine(environment.ContentRootPath, "EmailTemplates") };
             Configuration.Bind(config);
             return config;
         }

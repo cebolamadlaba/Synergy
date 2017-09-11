@@ -7,7 +7,7 @@ using System.Text;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administration
 {
-    public class GetUserByIdHandler : MediatR.IRequestHandler<GetUserById, UserModel>
+    public class GetUserByIdHandler : MediatR.IRequestHandler<GetUserById, User>
     {
         private readonly IAdminRepository adminRepository;
         private readonly IMapper mapper;
@@ -17,10 +17,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
             this.adminRepository = adminRepository;
             this.mapper = mapper;
         }
-        public UserModel Handle(GetUserById message)
+        public User Handle(GetUserById message)
         {
             var result = adminRepository.GetUser(message.Id);
-            return mapper.Map<UserModel>(result);
+            return mapper.Map<User>(result);
         }
     }
 }

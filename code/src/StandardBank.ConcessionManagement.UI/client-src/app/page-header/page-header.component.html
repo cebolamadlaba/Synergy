@@ -1,4 +1,4 @@
-<div class="col-md-12 header">
+﻿<div class="col-md-12 header">
     <div class="logo"></div>
 </div>
 <div class="col-md-12 nav-pills-container">
@@ -23,12 +23,13 @@
             <a routerLink="/lending-add-concession" style="display: none;">Pricing</a>
             <a routerLink="/transactional-add-concession" style="display: none;">Pricing</a>
         </li>
-        <li routerLinkActive="selected-nav-item" *ngIf="user?.canRequest">
+        <li routerLinkActive="selected-nav-item">
             <a routerLink="/admin-menu">Administration</a>
             <!-- The following are here so that the router link active class is enabled for any of the inbox routes-->
             <a routerLink="/province" style="display: none;">Administration</a>
             <a routerLink="/users" style="display: none;">Administration</a>
             <a routerLink="/business-centre" style="display: none;">Administration</a>
+            <a routerLink="/edit-user" style="display: none;">Administration</a>
         </li>
         <li class="logout-li"><a href="#">{{user?.firstName}} {{user?.surname}}</a></li>
     </ul>

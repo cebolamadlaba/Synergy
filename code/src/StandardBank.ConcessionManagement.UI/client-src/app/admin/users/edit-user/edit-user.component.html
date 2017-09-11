@@ -1,78 +1,88 @@
-<div *ngIf="success" class="alert alert-success">
+﻿<div *ngIf="success" class="alert alert-success">
    User updated successfully.
 </div>
 <div *ngIf="error" class="alert alert-danger">
    Something went wrong, please try again later
 </div>
 
+<div class="col-md-2" style="margin-top: 15px;">
+    <i class="fa fa-chevron-circle-left" aria-hidden="true" style="font-size: 1.1em;"></i>
+    <span class="back-button-text" style="font-size: 1.1em;" (click)="goBack()">Users</span>
+</div>
 
-<div class="form-horizontal">
-    <div class="row">
-        <!-- Left side -->
-        <div class="col-md-6">
-            <div class="form-group">
-                <label class="control-label col-sm-4" for="email">A Number</label>
-                <div class="col-sm-8">
-                    <input type="text" required class="form-control" name="7" [(ngModel)]="user.aNumber">
+<div class="col-md-12" style="margin-top: 20px;">
+    <div class="form-horizontal">
+        <div class="row">
+            <!-- Left side -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="email">A Number</label>
+                    <div class="col-sm-8">
+                        <input type="text" required class="form-control" name="7" [(ngModel)]="user.aNumber">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="email">Name</label>
+                    <div class="col-sm-8">
+                        <input type="text" required class="form-control" name="6" [(ngModel)]="user.firstName">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="email">Surname</label>
+                    <div class="col-sm-8">
+                        <input type="text" required class="form-control" name="5" [(ngModel)]="user.surname">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="email">Email</label>
+                    <div class="col-sm-8">
+                        <input type="email" required class="form-control" name="4" [(ngModel)]="user.emailAddress">
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="control-label col-sm-4" for="email">Name</label>
-                <div class="col-sm-8">
-                    <input type="text" required class="form-control" name="6" [(ngModel)]="user.firstName">
+            <!-- Right side -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label col-md-3" for="email">Role</label>
+                    <div class="col-sm-8">
+                        <select [(ngModel)]="user.roleId" name="3" class="form-control">
+                            <option *ngFor="let p of Roles"
+                                    [ngValue]="p.id">
+                                {{p.name}}
+                            </option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-sm-4" for="email">Surname</label>
-                <div class="col-sm-8">
-                    <input type="text" required class="form-control" name="5" [(ngModel)]="user.surname">
+                <div class="form-group">
+                    <label class="control-label col-md-3" for="email">Business Centre</label>
+                    <div class="col-sm-8">
+                        <select [(ngModel)]="user.centreId" name="2" class="form-control">
+                            <option *ngFor="let p of Centres"
+                                    [ngValue]="p.id">
+                                {{p.name}}
+                            </option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-sm-4" for="email">Email</label>
-                <div class="col-sm-8">
-                    <input type="email" required class="form-control" name="4" [(ngModel)]="user.emailAddress">
+                <div class="form-group">
+                    <label class="control-label col-md-3" for="email">Region</label>
+                    <div class="col-sm-8">
+                        <select [(ngModel)]="user.regionId" name="1" class="form-control">
+                            <option *ngFor="let p of Regions"
+                                    [ngValue]="p.id">
+                                {{p.description}}
+                            </option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
-        <!-- Right side -->
-        <div class="col-md-6">
-            <div class="form-group">
-                <label class="control-label col-sm-4" for="email">Role</label>
-                <div class="col-sm-8">
-                    <select [(ngModel)]="user.roleId" name="3" class="form-control">
-                        <option *ngFor="let p of Roles"
-                                [ngValue]="p.id">
-                            {{p.name}}
-                        </option>
-                    </select>
-                </div>
+        <div class="footer-buttons">
+            <div class="float-right">
+                <button type="button" (click)="goBack()" class="btn btn-cancel">Cancel</button>
+                <button type="button" (click)="save()" class="btn btn-primary">Submit</button>
             </div>
-            <div class="form-group">
-                <label class="control-label col-sm-4" for="email">Business Centre</label>
-                <div class="col-sm-8">
-                    <select [(ngModel)]="user.centreId" name="2" class="form-control">
-                        <option *ngFor="let p of Centres"
-                                [ngValue]="p.id">
-                            {{p.name}}
-                        </option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-sm-4" for="email">Region</label>
-                <div class="col-sm-8">
-                    <select [(ngModel)]="user.regionId" name="1" class="form-control">
-                        <option *ngFor="let p of Regions"
-                                [ngValue]="p.id">
-                            {{p.description}}
-                        </option>
-                    </select>
-                </div>
-            </div>
-           
-                <button type="button" (click)="save()" class="btn btn-cancel">Submit</button>
-      
         </div>
     </div>
 </div>
+

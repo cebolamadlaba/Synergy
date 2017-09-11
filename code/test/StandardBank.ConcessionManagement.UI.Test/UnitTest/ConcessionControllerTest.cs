@@ -138,20 +138,6 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         }
 
         /// <summary>
-        /// Tests that PrintConcessionLetters executes positive.
-        /// </summary>
-        [Fact]
-        public void PrintConcessionLetters_Executes_Positive()
-        {
-            MockLetterGeneratorManager.Setup(_ => _.GenerateLetters(It.IsAny<IEnumerable<int>>())).Returns(new byte[0]);
-
-            var result = _concessionController.UserApprovedConcessions();
-            var apiResult = Assert.IsType<OkObjectResult>(result);
-
-            Assert.NotNull(apiResult.Value);
-        }
-
-        /// <summary>
         /// Tests that TransactionTypes executes positive.
         /// </summary>
         [Fact]

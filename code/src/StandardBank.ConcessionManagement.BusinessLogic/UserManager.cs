@@ -7,7 +7,6 @@ using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Common;
 using StandardBank.ConcessionManagement.Model.UserInterface;
-using System.Threading.Tasks;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -268,14 +267,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return userRoles;
         }
 
-        public int CreateUser(UserModel userModel)
+        public int CreateUser(User userModel)
         {
-            return adminRepository.CreateUser(_mapper.Map<Model.Repository.UserModel>(userModel));
+            var aNumber = userModel.ANumber;
+
+            _cacheManager.Remove(CacheKey.UserInterface.SiteHelper.LoggedInUser,
+                new CacheKeyParameter(nameof(aNumber), aNumber));
+
+            return adminRepository.CreateUser(_mapper.Map<Model.Repository.User>(userModel));
         }
 
-        public IEnumerable<UserModel> GetUsers()
+        public IEnumerable<User> GetUsers()
         {
-            return _mapper.Map<IEnumerable<UserModel>>(adminRepository.GetUsers());
+            return _mapper.Map<IEnumerable<User>>(adminRepository.GetUsers());
         }
     }
 }

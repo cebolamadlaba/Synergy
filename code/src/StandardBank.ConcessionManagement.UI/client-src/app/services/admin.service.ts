@@ -2,17 +2,16 @@ import { Injectable } from '@angular/core';
 import { Http, Response, RequestOptions} from '@angular/http';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs';
-import { Usermodel } from '../models/usermodel';
 import { User } from "../models/user";
 
 @Injectable()
 export class AdminService {
 
     constructor(private http: Http) { }
-    CreateUser(user: Usermodel) {
+    CreateUser(user: User) {
         return this.http.post('api/admin/users', user).map(result => result.json()).catch(this.handleErrorObservable);
     }
-    UpdateUser(user: Usermodel, id:number) {
+    UpdateUser(user: User, id:number) {
         return this.http.post('api/admin/users/'+id, user).map(result => result.json()).catch(this.handleErrorObservable);
     }
     private handleErrorObservable(error: Response | any) {
@@ -38,11 +37,11 @@ export class AdminService {
 
 @Injectable()
 export class MockAdminService extends AdminService {
-    CreateUser(user: Usermodel) {
+    CreateUser(user: User) {
         return Observable.of(1);
     }
 
-    UpdateUser(user: Usermodel, id: number) {
+    UpdateUser(user: User, id: number) {
         return Observable.of(true);
     }
 
@@ -52,12 +51,12 @@ export class MockAdminService extends AdminService {
     }
 
     GetUsers() {
-        var userModels = [new Usermodel()];
+        var userModels = [new User()];
         return Observable.of(userModels);
     }
 
     GetUser(id: number) {
-        var userModel = new Usermodel();
+        var userModel = new User();
         return Observable.of(userModel);
     }
 

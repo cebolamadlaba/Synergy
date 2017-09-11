@@ -133,17 +133,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         }
 
         /// <summary>
-        /// Prints the concession letters.
-        /// </summary>
-        /// <param name="concessionIds">The concession ids.</param>
-        /// <returns></returns>
-        [Route("PrintConcessionLetters")]
-        public IActionResult PrintConcessionLetters([FromBody]IEnumerable<int> concessionIds)
-        {
-            return Ok(_letterGeneratorManager.GenerateLetters(concessionIds));
-        }
-
-        /// <summary>
         /// Gets the transaction types for the concession type specified.
         /// </summary>
         /// <param name="concessionType">Type of the concession.</param>
@@ -177,6 +166,25 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             await _mediator.Send(new DeactivateConcession(concessionReferenceId, user));
 
             return Ok(true);
+        }
+
+        /// <summary>
+        /// Generates the concession letter.
+        /// </summary>
+        /// <param name="concessionReferenceId">The concession reference identifier.</param>
+        /// <returns></returns>
+        [Route("GenerateConcessionLetter/{concessionReferenceId}")]
+        public FileResult GenerateConcessionLetter(string concessionReferenceId)
+        {
+            HttpContext.Response.ContentType = "application/html";
+
+            var result = new FileContentResult(_letterGeneratorManager.GenerateLetters(concessionReferenceId),
+                "application/html")
+            {
+                FileDownloadName = $"{concessionReferenceId}.html"
+            };
+
+            return result;
         }
     }
 }

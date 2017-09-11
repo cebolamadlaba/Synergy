@@ -29,7 +29,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="userId"></param>
         /// <param name="regionId"></param>
         void SetUserSelectedRegion(int userId, int regionId);
-        int CreateUser(UserModel userModel);
-        IEnumerable<UserModel> GetUsers();
+        int CreateUser(User userModel);
+        IEnumerable<User> GetUsers();
     }
 }

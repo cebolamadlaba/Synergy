@@ -893,6 +893,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     ConcessionId = concession.Id,
                     ConcessionReferenceNumber = concession.ReferenceNumber,
                     ConcessionType = concession.ConcessionType,
+                    ExpiryDate = concession.ExpiryDate,
+                    ApprovedDate = concession.DateApproved,
                     ApprovedConcessionDetails = GetApprovedConcessionDetails(concession)
                 });
             }

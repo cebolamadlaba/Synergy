@@ -1,80 +1,80 @@
-﻿  <!-- Total widgets -->
-<div class="col-md-12">
-  <div class="totalsWidget outer ">
-    <div class="activeWidget">
-      <div class="cornered">
-        <p>Standard</p>
-      </div>
-      <div class="main">
-        <p>27</p>
-      </div>
+  <!-- Total widgets -->
+<!--<div class="col-md-12">
+    <div class="totalsWidget outer ">
+        <div class="activeWidget">
+            <div class="cornered">
+                <p>Standard</p>
+            </div>
+            <div class="main">
+                <p>27</p>
+            </div>
+        </div>
     </div>
-  </div>
-  <div class="totalsWidget outer" style="margin-left: 20px;">
-    <div class="cornered">
-      <p>Ongoing</p>
+    <div class="totalsWidget outer" style="margin-left: 20px;">
+        <div class="cornered">
+            <p>Ongoing</p>
+        </div>
+        <div class="main">
+            <p>13</p>
+        </div>
     </div>
-    <div class="main">
-      <p>13</p>
-    </div>
-  </div>
 
-</div>
+</div>-->
 <div class="col-md-12 search-and-results-container">
-  <!-- Search bar -->
-  <!--<div class="input-group add-on">
-    <input class="form-control" placeholder="Search Concession ID or Risk Group Number" name="srch-term" id="srch-term" type="text">
-  </div>-->
-  <!-- filter-->
-  <div class="form-group  filter-group">
-    <div id="filter"><label for="sort" class="col-sm-1 control-label"> Filter</label></div>
-    <div class="col-sm-2">
-      <select (change)="PeriodFilter($event.target.value)" class="form-control">
-          <option *ngFor="let p of periods"
-                  [ngValue]="p.id">
-              {{p.description}}
-          </option>  
-      </select>
+    <!-- Search bar -->
+    <!--<div class="input-group add-on">
+      <input class="form-control" placeholder="Search Concession ID or Risk Group Number" name="srch-term" id="srch-term" type="text">
+    </div>-->
+    <!-- filter-->
+    <div class="form-group  filter-group">
+        <div id="filter"><label for="sort" class="col-sm-1 control-label"> Filter</label></div>
+        <div class="col-sm-2">
+            <select (change)="PeriodFilter($event.target.value)" class="form-control">
+                <option *ngFor="let p of periods"
+                        [ngValue]="p.id">
+                    {{p.description}}
+                </option>
+            </select>
+        </div>
     </div>
-  </div>
 
-  <!-- Results table -->
-  <div class="table-container">
-    <table  datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-bordered table-hover header-fixed table-striped">
-      <thead>
-        <tr>
-          <th>Risk Group</th>
-          <th>Concession ID</th>
-          <th>Condition Type</th>
-          <th>Product Type</th>
-          <th>Expiry Date</th>
-          <th>Interest</th>
-          <th>Volume</th>
-          <th>Value</th>
-          <th>Condition Met</th>
-        </tr>
-      </thead>
-      <tbody>
-       <tr *ngFor='let condition of observableConditions; trackBy: index;' class="status-{{condition.ragStatus}}">
-           <td>
-               <p class="riskGroupName">{{condition.riskGroupName}}</p>
-               <p class="riskGroupNumber">{{condition.riskGroupNumber}}</p>
-           </td>
-           <td>{{condition.concessionId}}</td>
-           <td>{{condition.conditionType }}</td>
-           <td>{{condition.productType}}</td>   
-           <td class="date">{{condition.expiryDate | date: 'yyyy/MM/dd'}}</td>
-           <td>{{condition.interestRate}}</td>
-           <td>{{condition.volume}}</td>
-           <td>{{condition.value}}</td>
-           <td>
-               <button type="button" class="btn btn-no">No</button>
-               <button type="button" class="btn btn-yes">Yes</button>
-           </td>
-       </tr>
-      </tbody>
-    </table>
-  </div>
+    <!-- Results table -->
+    <div class="table-container">
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-bordered table-hover header-fixed table-striped">
+            <thead>
+                <tr>
+                    <th>Risk Group</th>
+                    <th>Concession ID</th>
+                    <th>Condition Type</th>
+                    <th>Product Type</th>
+                    <th>Expiry Date</th>
+                    <th>Interest</th>
+                    <th>Volume</th>
+                    <th>Value</th>
+                    <th>Condition Met</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor='let condition of observableConditions; trackBy: index;' class="status-{{condition.ragStatus}}">
+                    <td>
+                        <p class="riskGroupName">{{condition.riskGroupName}}</p>
+                        <p class="riskGroupNumber">{{condition.riskGroupNumber}}</p>
+                    </td>
+                    <td>{{condition.concessionId}}</td>
+                    <td>{{condition.conditionType }}</td>
+                    <td>{{condition.productType}}</td>
+                    <td class="date">{{condition.expiryDate | date: 'yyyy/MM/dd'}}</td>
+                    <td>{{condition.interestRate}}</td>
+                    <td>{{condition.volume}}</td>
+                    <td>{{condition.value}}</td>
+                    <td>
+                        <button type="button" class="btn btn-no">No</button>
+                        <button type="button" class="btn btn-yes">Yes</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
- 
+
 </div>

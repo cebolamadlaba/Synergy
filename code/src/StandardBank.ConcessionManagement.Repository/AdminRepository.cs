@@ -16,7 +16,7 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             this.dbConnectionFactory = dbConnectionFactory;
         }
-        public int CreateUser(UserModel user)
+        public int CreateUser(User user)
         {
             using (var connection = dbConnectionFactory.Connection())
             {
@@ -35,7 +35,7 @@ namespace StandardBank.ConcessionManagement.Repository
             }
         }
 
-        public UserModel GetUser(int id)
+        public User GetUser(int id)
         {
             var query = @"
                  select pkUserId 'Id',ANumber,FirstName, Surname, fkRegionId 'RegionId', fkCentreId 'CentreId', r.fkRoleId 'RoleId',EmailAddress  from tblUser u
@@ -45,20 +45,20 @@ namespace StandardBank.ConcessionManagement.Repository
                 where u.IsActive = 1 and pkUserId= @id";
             using (var conn = dbConnectionFactory.Connection())
             {
-                return conn.QueryFirst<UserModel>(query, new { id});
+                return conn.QueryFirst<User>(query, new { id});
             }
         }
 
-        public IEnumerable<UserModel> GetUsers()
+        public IEnumerable<User> GetUsers()
         {
             var query = @"select pkUserId 'Id',ANumber,FirstName, Surname ,EmailAddress from tblUser where IsActive = 1";
             using (var conn = dbConnectionFactory.Connection())
             {
-                return conn.Query<UserModel>(query);
+                return conn.Query<User>(query);
             }
         }
 
-        public void UpdateUser(UserModel user)
+        public void UpdateUser(User user)
         {
             using (var conn = dbConnectionFactory.Connection())
             {
