@@ -1,5 +1,4 @@
-﻿
-.pricing-banner {
+﻿.pricing-banner {
     background-color: $tableHeaderColour !important;
     padding: 10px 0;
 
@@ -16,65 +15,18 @@
 
 .pricing-form {
     color: white !important;
-
-    .row {
-        margin: 0px;
-    }
 }
 
 .pricing-group-container {
-
-    .products-container {
-        margin: 10px 0 0 0;
-
-        p {
-            border-bottom: 1px solid gray;
-        }
-
-        .product-item {
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: 0px 2px 4px $lightGray;
-            overflow: hidden;
-            padding: 5px;
-            margin-bottom: 5px;
-
-            &:hover {
-                background-color: $tableRowHover;
-                cursor: pointer
-            }
-
-            .container-item-icon {
-                background-color: $bannerBackground;
-                border: 2px solid $lightGray;
-                width: 35px;
-                height: 35px;
-                border-radius: 25px;
-                border: 1px solid $white;
-                padding-top: 12.5px;
-                float: left;
-                margin-right: 15px;
-
-                i {
-                    display: block;
-                    text-align: center;
-                    font-size: 0.9em;
-                    color: white;
-                }
-            }
-
-            .product-heading {
-                padding-top: 10px;
-            }
-        }
-    }
+    text-align: center;
+    margin-top:  30px;
 
     .pricing-group-info {
 
         h3 {
-            margin: 20px 0 0 0;
             font-weight: bold;
             font-size: 1.3em;
+            margin: 5px 0 0 0;
         }
 
         .secondaryText {
@@ -91,13 +43,49 @@
         background-color: $standardBankBlue;
         padding: 10px;
         text-align: center;
-        float: left;
-        margin: 10px 15px 0 0;
+        margin: -20px auto 0 auto;
 
         i {
             color: white;
             font-size: 1.5em;
             margin-top: 5px;
         }
+    }
+}
+
+.product-item {
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0px 2px 4px $lightGray;
+    padding: 5px;
+    margin-bottom: 5px;
+    overflow: hidden;
+
+    &:hover {
+        background-color: $tableRowHover;
+        cursor: pointer
+    }
+
+    .container-item-icon {
+        background-color: $bannerBackground;
+        border: 2px solid $lightGray;
+        width: 45px;
+        height: 45px;
+        border-radius: 25px;
+        border: 1px solid $white;
+        padding-top: 14px;
+        float: right;
+        margin-right: 15px;
+
+        i {
+            display: block;
+            text-align: center;
+            font-size: 1.3em;
+            color: white;
+        }
+    }
+
+    .product-heading {
+        padding: 10px 0 0 10px;
     }
 }

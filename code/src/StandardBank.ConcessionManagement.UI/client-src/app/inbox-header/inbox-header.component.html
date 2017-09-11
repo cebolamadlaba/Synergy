@@ -1,33 +1,39 @@
-﻿  <!-- Total widgets -->
+  <!-- Total widgets -->
 <div class="col-md-12">
-    <div class="totalsWidget outer" *ngIf="userConcessions.showPendingConcessions">
+    <div class="totalsWidget outer" *ngIf="userConcessions?.showPendingConcessions">
         <div routerLink="/pending-inbox" routerLinkActive="activeWidget">
             <div class="cornered"><p>Pending</p></div>
             <div class="main"><p>{{userConcessions.pendingConcessionsCount}}</p></div>
         </div>
     </div>
-    <div class="totalsWidget outer" style="margin-left: 20px;" *ngIf="userConcessions.showDueForExpiryConcessions">
+    <div class="totalsWidget outer" style="margin-left: 20px;" *ngIf="userConcessions?.showDueForExpiryConcessions">
         <div routerLink="/due-expiry-inbox" routerLinkActive="activeWidget">
             <div class="cornered"><p>Due For Expiry</p></div>
             <div class="main"><p>{{userConcessions.dueForExpiryConcessionsCount}}</p></div>
         </div>
     </div>
-    <div class="totalsWidget outer" style="margin-left: 20px;" *ngIf="userConcessions.showExpiredConcessions">
+    <div class="totalsWidget outer" style="margin-left: 20px;" *ngIf="userConcessions?.showExpiredConcessions">
         <div routerLink="/expired-inbox" routerLinkActive="activeWidget">
             <div class="cornered"><p>Expired</p></div>
             <div class="main"><p>{{userConcessions.expiredConcessionsCount}}</p></div>
         </div>
     </div>
-    <div class="totalsWidget outer" style="margin-left: 20px;" *ngIf="userConcessions.showMismatchedConcessions">
+    <div class="totalsWidget outer" style="margin-left: 20px;" *ngIf="userConcessions?.showMismatchedConcessions">
         <div routerLink="/mismatched-inbox" routerLinkActive="activeWidget">
             <div class="cornered"><p>Mismatched</p></div>
             <div class="main"><p>{{userConcessions.mismatchedConcessionsCount}}</p></div>
         </div>
     </div>
-    <div class="totalsWidget outer" style="margin-left: 20px;" *ngIf="userConcessions.showDeclinedConcessions">
+    <div class="totalsWidget outer" style="margin-left: 20px;" *ngIf="userConcessions?.showDeclinedConcessions">
         <div routerLink="/declined-inbox" routerLinkActive="activeWidget">
             <div class="cornered"><p>Declined</p></div>
             <div class="main"><p>{{userConcessions.declinedConcessionsCount}}</p></div>
+        </div>
+    </div>
+    <div class="totalsWidget outer" style="margin-left: 20px;" *ngIf="userConcessions?.showActionedConcessions">
+        <div routerLink="/actioned-inbox" routerLinkActive="activeWidget">
+            <div class="cornered"><p>Actioned</p></div>
+            <div class="main"><p>{{userConcessions.actionedConcessionsCount}}</p></div>
         </div>
     </div>
 </div>

@@ -65,6 +65,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// The mapper
         /// </summary>
         private readonly IMapper _mapper;
+        private readonly IAdminRepository adminRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserManager"/> class.
@@ -82,7 +83,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public UserManager(ICacheManager cacheManager, ILookupTableManager lookupTableManager,
             IUserRepository userRepository, IUserRoleRepository userRoleRepository, IRoleRepository roleRepository,
             IUserRegionRepository userRegionRepository, IRegionRepository regionRepository,
-            ICentreRepository centreRepository, ICentreUserRepository centreUserRepository, IMapper mapper)
+            ICentreRepository centreRepository, ICentreUserRepository centreUserRepository, IMapper mapper,
+            IAdminRepository adminRepository)
         {
             _cacheManager = cacheManager;
             _lookupTableManager = lookupTableManager;
@@ -94,6 +96,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _centreRepository = centreRepository;
             _centreUserRepository = centreUserRepository;
             _mapper = mapper;
+            this.adminRepository = adminRepository;
         }
 
         /// <summary>
@@ -131,6 +134,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return _cacheManager.ReturnFromCache(function, 1440, CacheKey.UserInterface.SiteHelper.LoggedInUser,
                 new CacheKeyParameter(nameof(aNumber), aNumber));
+        }
+
+        /// <summary>
+        /// Gets the name of the user.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
+        public string GetUserName(int userId)
+        {
+            var user = _userRepository.ReadById(userId);
+            return $"{user.FirstName} {user.Surname}";
         }
 
         /// <summary>
@@ -253,5 +267,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return userRoles;
         }
 
+        public int CreateUser(User userModel)
+        {
+            var aNumber = userModel.ANumber;
+
+            _cacheManager.Remove(CacheKey.UserInterface.SiteHelper.LoggedInUser,
+                new CacheKeyParameter(nameof(aNumber), aNumber));
+
+            return adminRepository.CreateUser(_mapper.Map<Model.Repository.User>(userModel));
+        }
+
+        public IEnumerable<User> GetUsers()
+        {
+            return _mapper.Map<IEnumerable<User>>(adminRepository.GetUsers());
+        }
     }
 }

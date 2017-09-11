@@ -1,202 +1,259 @@
-﻿    <!-- summary bar -->
-<div class="col-md-12 lending-view-banner">
-  <div class="row">
-    <div class="lending-banner-title">
-      <div class="col-md-1">
-        <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
-        <span class="back-button-text" (click)="goBack()">Back</span>
-      </div>
-      <div class="col-md-10 banner-main-title">
-        <i class="fa fa-exchange" aria-hidden="true"></i> Transactional
-      </div>
-      <div class="col-md-1"></div>
-    </div>
-    <div class="col-md-12 lending-banner">
-      <div class="col-md-11">
-        <div>
-          <div class="col-md-5">
-            <div class="subHeading">EDCON</div>
-            <div class="date lightTitle hidden-element">1989</div>
-          </div>
-          <div class="col-md-2  hidden-element">
-            <div class="subHeading lightTitle"> Latest CRS / MRS</div>
-            <div class="score"><b>0.00</b></div>
-          </div>
+<!-- Banner -->
+<div class="col-md-12 banner">
+    <div class="row">
+        <!-- Header -->
+        <div class="lending-banner-title">
+            <div class="col-md-1">
+                <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+                <span class="back-button-text" (click)="goBack()">Back</span>
+            </div>
+            <div class="col-md-10 banner-main-title">
+                <i class="fa fa-exchange" aria-hidden="true"></i> Transactional
+            </div>
+            <div class="col-md-1"></div>
         </div>
-      </div>
-      <div class="col-md-1">
-        <div class="compress">
-          <div onclick="hideElement('hidden-element')">
-            <i class="fa fa-compress" aria-hidden="true" id="compress-icon"></i>
-          </div>
+        <!-- Dashboard Expanded -->
+        <div class="col-md-12 banner-container">
+            <div class="col-md-11">            
+                    <div class="col-md-5">
+                        <div class="subHeading">{{riskGroup.name}}</div>
+                        <div class="date lightTitle hidden-element">{{riskGroup.number}}</div>
+                    </div>
+                    <div class="col-md-2 hidden-element">
+                        <div class="subHeading lightTitle"> Latest CRS / MRS</div>
+                    <div class="score"><b>//TODO</b></div>
+                </div>
+            </div>
+            <!--
+            <div class="col-md-1">
+                <div class="compress">
+                    <div onclick="hideElement('hidden-element')">
+                        <i class="fa fa-compress" aria-hidden="true" id="compress-icon"></i>
+                    </div>
+                </div>
+            </div>
+            -->
         </div>
-      </div>
     </div>
-  </div>
+</div>
+
+<!-- Error message -->
+<div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Unable to submit concession. Please see error(s) below.</p>
+            <p>{{errorMessage}}</p>
+
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Success message -->
+<div class="col-md-12" *ngIf="saveMessage && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-success">
+            <p class="message-heading"><i class="fa fa-check-circle" aria-hidden="true"></i>Concession submitted successfully with ID: {{saveMessage}}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Loading message -->
+<div class="col-md-12" *ngIf="isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-info">
+            <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Saving</p>
+        </div>
+    </div>
 </div>
 
 <!-- Form entries -->
-
-<form class="col-md-12 concession-information-form">
-  <div class="col-md-4">
-    <div class="row">
-      <label>MRS/CRS</label>
-      <input class="col-md-12">
-    </div>
-    <div class="row">
-      <label>SMT Deal Number</label>
-      <input class="col-md-12">
-    </div>
-  </div>
-  <div class="col-md-1"></div>
-  <div class="col-md-7">
-    <div class="row">
-      <label>Motivation</label>
-      <input class="col-md-12 large-input">
-    </div>
-  </div>
-</form>
-
-<form class="col-md-12">
-  <div class="concessions-top">
-    <div class="concessions-top-title">
-      <h3 class="table-title">Concessions</h3>
-      <button type="button" class="btn btn-default">New Concession</button>
-    </div>
-  </div>
-
-  <table class="form-concessions-table">
-    <thead class="form-concessions-table-headings">
-      <tr>
-        <th>Transaction Type</th>
-        <th>Account Number</th>
-        <th>Flat Fee/Rate</th>
-        <th>Ad Valorem</th>
-        <th>Table Number</th>
-        <th>Approved Date</th>
-        <th>Expiry Date</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody class="form-concessions-table-content">
-      <tr>
-        <td class="length-long"><input value="CEF"></td>
-        <td class="length-long">
-          <select>
-            <option>1234</option>
-          </select>
-        </td>
-        <td class="length-long"><input value="50,000.00"></td>
-        <td class="length-medium"><input value="1"></td>
-        <td class="length-long"><input></td>
-        <td class="length-long"><input type="date"></td>
-        <td class="length-long"><input type="date"></td>
-        <td class="delete"><i class="fa fa-trash-o" aria-hidden="true"></i></td>
-      </tr>
-    </tbody>
-  </table>
-</form>
-
-<div class="col-md-12 conditions">
-  <div class="concessions-top">
-    <div class="concessions-top-title">
-      <h3 class="table-title">Conditions</h3>
-      <button type="button" class="btn btn-default" (click)="manageConditionsModal.show()">Manage Conditions</button>
-      <!-- modal content -->
-
-      <div bsModal #manageConditionsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="manageConditionsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="col-md-12 modal-header">
-              <h4>Manage Conditions</h4>
-            </div>
-            <div class="col-md-12 modal-body">
-              <div class="row">
-                <div class="col-md-12 modal-title">
-                  <button class="btn btn-default">New Conditions</button>
-                </div>
-              </div>
-              <table class="form-concessions-table">
-                <thead class="form-concessions-table-headings">
-                  <tr>
-                    <th>Condition ID</th>
-                    <th>Condition Type</th>
-                    <th>Value</th>
-                    <th>Volume</th>
-                    <th>Product</th>
-                    <th>MAP/RATE (If Applicable)</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody class="form-concessions-table-content">
-                  <tr>
-                    <td class="length-short"><input class="rightAlign" value="1"></td>
-                    <td class="length-long"><input value="MIN AVG Balance"></td>
-                    <td class="length-long"><input value="20 000 000.00"></td>
-                    <td class="length-medium"><input value="1"></td>
-                    <td class="length-long"><input value="Cashman"></td>
-                    <td class="length-medium"><input class="" value="-4"></td>
-                    <td class="delete"><i class="fa fa-trash-o" aria-hidden="true"></i></td>
-                  </tr>
-                  <tr>
-                    <td class="length-short"><input class="rightAlign" value=""></td>
-                    <td class="length-long"><input value=""></td>
-                    <td class="length-long"><input value=""></td>
-                    <td class="length-medium"><input value=""></td>
-                    <td class="length-long"><input value=""></td>
-                    <td class="length-long"><input value=""></td>
-                    <td class="delete"><i class="fa fa-trash-o" aria-hidden="true"></i></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="modal-footer">
-              <form class="lending-bottom-buttons">
-                <div class="float-right">
-                  <button class="btn btn-submit" type="submit">Submit</button>
-                  <button class="btn btn-cancel">Cancel</button>
-                </div>
-              </form>
-            </div>
-          </div>
+<form class="col-md-12 concession-information-form" [formGroup]="transactionalConcessionForm" *ngIf="!isLoading">
+    <div class="col-md-4">
+        <div class="row">
+            <label>MRS/CRS</label>
+            <input class="form-control" formControlName="mrsCrs" type="number">
         </div>
-      </div>
+        <div class="row">
+            <label>SMT Deal Number</label>
+            <input class="form-control" formControlName="smtDealNumber" maxlength="16">
+        </div>
     </div>
-  </div>
-
-  <div class="section">
-    <div class="section-body">
-      <div class="table-container">
-        <table class="table table-bordered table-hover header-fixed table-striped">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Condition Type</th>
-              <th>Value</th>
-              <th>Volume</th>
-              <th>Product</th>
-              <th>MAP/Rate (If Applicable)</th>
-            </tr>
-          </thead>
-          <tbody class="secondary-text">
-            <tr>
-              <td class="length-short">01</td>
-              <td>MIN AVG Balance</td>
-              <td>Cashman</td>
-              <td>4.5</td>
-              <td class="length-medium">1</td>
-              <td class="length-short rightAlign">-4</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <div class="col-md-7 col-md-offset-1">
+        <div class="row">
+            <label>Motivation</label>
+            <textarea class="form-control large-input" maxlength="800" formControlName="motivation"></textarea>
+        </div>
     </div>
-  </div>
-</div>
 
-<form class="col-md-12 lending-bottom-buttons">
-  <div class="float-right">
-    <button type="button" class="btn btn-cancel" routerLink="/pricing-transactional">Cancel</button>
-    <button class="btn btn-submit" type="submit">Submit</button>
-  </div>
+    <!-- Concession table -->
+    <div class="col-md-12" style="border-bottom: 1px solid gray; margin-bottom: 15px;">
+        <div class="row">
+            <h3 class="table-title">Concessions</h3>
+            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" style="margin-top: 15px;" *ngIf="!saveMessage">New Concession</button>
+        </div>
+    </div>
+    
+    <table class="form-concessions-table" formArrayName="concessionItemRows">
+        <thead class="form-concessions-table-headings">
+            <tr>
+                <th>Transaction Type</th>
+                <th>Account Number</th>
+                <th>Table Number</th>
+                <th>Ad Valorem</th>
+                <th>Flat Fee/Rate</th>
+            </tr>
+        </thead>
+        <tbody class="form-concessions-table-content">
+            <tr *ngFor="let itemrow of transactionalConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
+                <td class="length-long">
+                    <select formControlName="transactionType" class="form-control">
+                        <option *ngFor="let transactionTypeOption of transactionTypes" [ngValue]="transactionTypeOption">{{transactionTypeOption.description}}</option>
+                    </select>
+                </td>
+
+                <td class="length-long">
+                    <select formControlName="accountNumber" class="form-control">
+                        <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
+                    </select>
+                </td>
+
+                <td class="length-long">
+                    <select formControlName="tableNumber" class="form-control" (change)="tableNumberChanged(i)">
+                        <option *ngFor="let tableNumberOption of tableNumbers" [ngValue]="tableNumberOption">{{tableNumberOption.displayText}}</option>
+                    </select>
+                </td>
+
+                <td class="length-medium"><input formControlName="adValorem" class="form-control"></td>
+                <td class="length-long"><input formControlName="flatFeeOrRate" class="form-control"></td>
+
+                <td><button *ngIf="transactionalConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <!-- Conditions table -->
+    <div class="col-md-12">
+        <div class="row">
+            <h3 class="table-title">Conditions</h3>
+            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;" *ngIf="!saveMessage">Manage Conditions</button>
+
+            <div class="table-container">
+                <table class="table table-bordered table-hover header-fixed table-striped">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Condition Type</th>
+                        <th>Product Type</th>
+                        <th>Interest Rate</th>
+                        <th>Volume</th>
+                        <th>Value</th>
+                        <th>Period</th>
+                    </tr>
+                    </thead>
+                    <tbody class="secondary-text">
+                    <tr *ngIf="transactionalConcessionForm.controls.conditionItemsRows.controls.length == 0">
+                        <td colspan="7" class="searchEmptyState">
+                            No conditions has been added
+                        </td>
+                    </tr>
+                    <tr *ngFor="let itemrow of transactionalConcessionForm.controls.conditionItemsRows.controls; let i=index">
+                        <td># {{i + 1}}</td>
+                        <td>{{itemrow.get('conditionType').value.description}}</td>
+                        <td>{{itemrow.get('conditionProduct').value.description}}</td>
+                        <td>{{itemrow.get('interestRate').value}}</td>
+                        <td>{{itemrow.get('volume').value}}</td>
+                        <td>{{itemrow.get('value').value}}</td>
+                        <td>{{itemrow.get('periodType').value.description}} {{itemrow.get('period').value.description}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal conditions -->
+    <div bsModal #manageConditionsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="manageConditionsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="col-md-12 modal-header">
+                    <h4>Manage Conditions</h4>
+                </div>
+                <div class="col-md-12 modal-body">
+                    <div class="row">
+                        <div class="col-md-12 modal-title">
+                            <button type="button" class="btn btn-primary" (click)="addNewConditionRow()">New Conditions</button>
+                        </div>
+                    </div>
+                    <table class="form-concessions-table" formArrayName="conditionItemsRows" style="width:100%">
+                        <thead class="form-concessions-table-headings">
+                        <tr *ngIf="transactionalConcessionForm.controls.conditionItemsRows.controls.length > 0">
+                            <th>Condition Type</th>
+                            <th>Product Type</th>
+                            <th>Interest Rate</th>
+                            <th>Volume</th>
+                            <th>Value</th>
+                            <th>Period Type</th>
+                            <th>Period</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody class="form-concessions-table-content">
+                        <tr *ngIf="transactionalConcessionForm.controls.conditionItemsRows.controls.length == 0">
+                            <td colspan="7" class="searchEmptyState">
+                                No conditions has been added
+                            </td>
+                        </tr>
+                        <tr *ngFor="let itemrow of transactionalConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
+                            <td class="length-long">
+                                <select formControlName="conditionType" (change)="conditionTypeChanged(i)">
+                                    <option *ngFor="let conditionTypeOption of conditionTypes" [ngValue]="conditionTypeOption">{{conditionTypeOption.description}}</option>
+                                </select>
+                            </td>
+                            <td class="length-long">
+                                <select formControlName="conditionProduct" *ngIf="selectedConditionTypes[i] != null">
+                                    <option *ngFor="let conditionProductOption of selectedConditionTypes[i].conditionProducts" [ngValue]="conditionProductOption">{{conditionProductOption.description}}</option>
+                                </select>
+                            </td>
+                            <td class="length-medium"><input formControlName="interestRate" /></td>
+                            <td class="length-long"><input formControlName="volume" /></td>
+                            <td class="length-medium"><input formControlName="value" /></td>
+                            <td class="length-medium">
+                                <select formControlName="periodType">
+                                    <option *ngFor="let periodTypeOption of periodTypes" [ngValue]="periodTypeOption">{{periodTypeOption.description}}</option>
+                                </select>
+                            </td>
+                            <td class="length-medium">
+                                <select formControlName="period">
+                                    <option *ngFor="let periodOption of periods" [ngValue]="periodOption">{{periodOption.description}}</option>
+                                </select>
+                            </td>
+                            <td><button class="btn-delete" type="button" (click)="deleteConditionRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <div class="float-right">
+                        <button type="button" class="btn btn-primary" (click)="manageConditionsModal.hide()">Done</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form buttons -->
+    <div class="footer-buttons">
+        <div class="float-right">
+            <button type="button" class="btn btn-cancel" (click)="goBack()">Cancel</button>
+            <button class="btn btn-primary" type="button" (click)="onSubmit()" *ngIf="!saveMessage">Submit</button>
+        </div>
+    </div>
+
 </form>
+
+<!--<pre>{{transactionalConcessionForm.value | json}}</pre>-->

@@ -8,34 +8,9 @@
 
         .banner-main-title{
             text-justify: center;
-        }
-
-        .back-button-text{
-            font-size: 0.8em;
-            cursor: pointer;
-            &:hover{
-                text-decoration: underline;
-            }
-        }
+        }        
     }
 
-.lending-view-banner{
-    background: $bannerBackground;
-    .lending-banner{
-        background: $bannerBackground;
-        color:white;
-        padding-top:15px;
-        padding-bottom: 15px;
-
-        .subHeading{
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-        .score{
-            font-size:1.9em;
-        }   
-    }
-}
 
 .headings {
     color:$secondaryText;  

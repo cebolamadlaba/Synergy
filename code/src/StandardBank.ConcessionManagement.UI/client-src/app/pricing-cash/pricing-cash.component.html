@@ -1,5 +1,5 @@
-﻿<!-- banner-->
-<div class="col-md-12 lending-view-banner">
+<!-- banner-->
+<div class="col-md-12 banner">
     <div class="row">
         <div class="lending-banner-title">
             <div class="col-md-1">
@@ -11,203 +11,184 @@
             </div>
             <div class="col-md-1"></div>
         </div>
-        <div class="col-md-12 lending-banner">
+
+        <!-- Dashboard Expanded -->
+        <div class="col-md-12 banner-container" *ngIf="showHide">
+            <div class="col-md-11 summary-main">               
+                <div class="col-md-3 summary-sub-title">
+                    <div class="subHeading">{{cashView.riskGroup.name}}</div>
+                    <div class="date lightTitle hidden-element">{{cashView.riskGroup.number}}</div>                    
+                </div>
+                <div class="col-md-3 summary-items">
+                    <h5>CASHCENTR</h5>
+                    <div class="summary-items-sub">Turnover <span class="summary-item-value">{{cashView?.cashFinancial?.totalCashCentrCashTurnover | number : '1.2-2'}}</span></div>
+                    <div class="summary-items-sub">Volume <span class="summary-item-value">{{cashView?.cashFinancial?.totalCashCentrCashVolume | number : '1.2-2'}}</span></div>
+                    <div class="summary-items-sub">Weighted Avg Price <span class="col-md-12 summary-item-value">{{cashView?.cashFinancial?.weightedAverageCCPrice | number : '1.2-2'}}</span></div>
+                </div>
+                <div class="col-md-3 summary-items">
+                    <h5>BRANCH</h5>
+                    <div class="summary-items-sub">Turnover <span class="summary-item-value">{{cashView?.cashFinancial?.totalBranchCashTurnover | number : '1.2-2'}}</span></div>
+                    <div class="summary-items-sub">Volume <span class="summary-item-value">{{cashView?.cashFinancial?.totalBranchCashVolume | number : '1.2-2'}}</span></div>
+                    <div class="summary-items-sub">Weighted Avg Price <span class="col-md-12 summary-item-value">{{cashView?.cashFinancial?.weightedAverageBranchPrice | number : '1.2-2'}}</span></div>
+                </div>
+                <div class="col-md-3 summary-items">
+                    <h5>AUTOSAFE</h5>
+                    <div class="summary-items-sub">Turnover <span class="summary-item-value">{{cashView?.cashFinancial?.totalAutosafeCashTurnover | number : '1.2-2'}}</span></div>
+                    <div class="summary-items-sub">Volume <span class="summary-item-value">{{cashView?.cashFinancial?.totalAutosafeCashVolume | number : '1.2-2'}}</span></div>
+                    <div class="summary-items-sub">Weighted Avg Price <span class="col-md-12 summary-item-value">{{cashView?.cashFinancial?.weightedAverageAFPrice | number : '1.2-2'}}</span></div>
+                </div>
+                              
+            </div>
+            <div class="col-md-1">
+                <div class="compress">
+                    <div>
+                        <i class="fa fa-compress" (click)="showHide = !showHide" aria-hidden="true" id="compress-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Dashboard Collapsed -->
+        <div class="col-md-12 banner-container" *ngIf="!showHide">
             <div class="col-md-11">
                 <div>
-
-                    <div class="col-md-12 summary-main">
-                        <div class="col-md-3 summary-sub-title">
-                            <h5>EDCON</h5>
-                            <span class="lightText">1989</span>
-                        </div>
-                        <div class="col-md-3 summary-items">
-                            <h5>CASHCENTR</h5>
-                            <span class="col-md-12 summary-items-sub">Turnover <span class="summary-item-value">//TODO</span></span>
-                            <span class="col-md-12 summary-items-sub">Volume <span class="summary-item-value">//TODO</span></span>
-                            <span class="col-md-12 summary-items-sub">Weighted Avg BRANCH Price <span class="col-md-12 summary-item-value">//TODO</span></span>
-                        </div>
-                        <div class="col-md-3 summary-items">
-                            <h5>BRANCH</h5>
-                            <span class="col-md-12 summary-items-sub">Turnover <span class="summary-item-value">//TODO</span></span>
-                            <span class="col-md-12 summary-items-sub">Volume <span class="summary-item-value">//TODO</span></span>
-                            <span class="col-md-12 summary-items-sub">Weighted Avg BRANCH Price <span class="col-md-12 summary-item-value">//TODO</span></span>
-                        </div>
-                        <div class="col-md-3 summary-items">
-                            <h5>AUTOSAFE <i class="fa fa-compress compress" aria-hidden="true"></i></h5>
-                            <span class="col-md-12 summary-items-sub">Turnover <span class="summary-item-value">//TODO</span></span>
-                            <span class="col-md-12 summary-items-sub">Volume <span class="summary-item-value">//TODO</span></span>
-                            <span class="col-md-12 summary-items-sub">Weighted Avg BRANCH Price <span class="col-md-12 summary-item-value">//TODO</span></span>
-                        </div>
+                    <div class="col-md-5">
+                        <div class="subHeading">{{cashView.riskGroup.name}}</div>
+                        <div class="date lightTitle hidden-element">{{cashView.riskGroup.number}}</div>
                     </div>
-
                 </div>
-
+            </div>
+            <div class="col-md-1">
+                <div class="compress">
+                    <div>
+                        <i class="fa fa-expand" (click)="showHide = !showHide" aria-hidden="true" id="compress-icon"></i>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 <!--Table information -->
 
-<div class="table-info">
-
-    <!-- products -->
+<div class="col-md-12">
     <div class="col-md-5">
-        <h3 class="table-title">Products</h3>
+        <h2 class="headings">Products</h2>
         <div class="section">
-            <div class="section-body">
+
+            <!-- Empty state for products if no data is found -->
+            <div *ngIf="!cashView?.cashProducts || cashView?.cashProducts?.length == 0">
+                <div class="section-body">
+                    <div class="searchEmptyState">
+                        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                        <p>No product data found</p>
+                    </div>
+                </div>
+            </div>
+            <!-- End of empty state -->
+            <!-- Products list -->
+            <div class="section-body" *ngFor="let cashProduct of cashView.cashProducts; trackBy: index;">
                 <div class="product-section">
-                    <p class="product-name"> Real People</p>
-
-                    <div class="product-account">Account No: 12345</div>
-                    <div class="product-code">Product: VAF</div>
-
+                    <div class="product-name"> {{cashProduct.customerName}}</div>
+                    <div>
+                        <div class="product-account">Account No: {{cashProduct.accountNumber}}</div>
+                        <div class="product-code">Channel: {{cashProduct.channel}}</div>
+                    </div>
                 </div>
                 <div class="product-table-container">
                     <table class="table table-bordered table-hover header-fixed table-striped ">
                         <thead>
                             <tr>
-                                <th>Cash Table No</th>
+                                <th>Table Number</th>
                                 <th>BP ID</th>
                                 <th>Volume</th>
+                                <th>Value</th>
                                 <th>Loaded Price</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="rightAlign">45</td>
-                                <td class="rightAlign">343</td>
-                                <td class="rightAlign">150,000.000</td>
-                                <td>R7 + 0.45</td>
+                                <td class="rightAlign"> {{cashProduct.tariffTable}}</td>
+                                <td class="rightAlign"> {{cashProduct.bpId}}</td>
+                                <td class="rightAlign"> {{cashProduct.volume}}</td>
+                                <td class="rightAlign"> {{cashProduct.value}}</td>
+                                <td class="rightAlign"> {{cashProduct.loadedPrice}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- End of products list -->
+
+        </div>
+    </div>
+
+    <!-- concessions -->
+
+    <div class="col-md-7  search-and-results-container concessions">
+        <h2 class="headings">
+            Concessions
+            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/cash-add-concession', cashView.riskGroup.number]" *ngIf="pageLoaded">Add Concession</button>
+        </h2>
+
+        <!-- Search bar -->
+        <div class="input-group add-on">
+            <input class="form-control" placeholder="Concession ID" [(ngModel)]="filterConcessionId" type="text">
+        </div>
+
+        <div class="section" *ngFor="let cashConcession of cashView.cashConcessions | baseConcessionFilter : filterConcessionId; trackBy: index;">
+            <div class="section-header small-table-title">
+                <div class="concessionID-section"> {{cashConcession.concession.referenceNumber}}</div>
+            </div>
+            <div class="section-body">
+                <div class="table-container" [routerLink]="['/cash-view-concession', cashView.riskGroup.number, cashConcession.concession.referenceNumber]">
+                    <table class="table table-bordered table-hover header-fixed table-striped">
+                        <thead>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Cash Table</th>
+                                <th>Volume</th>
+                                <th>Value</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let concession of cashConcession.cashConcessionDetails; trackBy: index;">
+                                <td>
+                                    <div class="table-row-top">{{concession.customerName}}</div>
+                                    <div class="table-row-bottom">
+                                        <div class="secondaryText">
+                                            Acc No:
+                                            <div class="normalText">{{concession.accountNumber}}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="rightAlign">{{concession.tableNumberId}}</td>
+                                <td>{{concession.volume}}</td>
+                                <td>{{concession.value}}</td>
+                                <td>
+                                    <div class="table-row-top">
+                                        <div class="secondaryText">
+                                            Loaded:
+                                            <div class="normalText">R{{cashView?.cashFinancial?.loadedPrice | number : '1.2-2'}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="table-row-bottom">
+                                        <div class="secondaryText">
+                                            Approved:
+                                            <div class="normalText">R{{concession.approvedPrice | number : '1.2-2'}}</div>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-    </div>
 
-
-</div>
-
-<!-- concessions -->
-
-<div class="col-md-7 concessions">
-    <div class="concessions-top">
-        <div class="concessions-top-title">
-            <h3 class="table-title">Concessions</h3>
-            <button type="button" class="btn btn-default" disabled>Add Concession</button>
-        </div>
-        <!-- Search bar -->
-        <div class="search-and-results-container">
-            <div class="input-group add-on">
-                <input class="form-control" placeholder="Search Concession ID or Risk Group Number" name="srch-term" id="srch-term" type="text">
-            </div>
-        </div>
-    </div>
-
-    <div class="section">
-        <div class="section-header small-table-title">
-            <div class="concessionID-section"> 124</div>
-        </div>
-        <div class="section-body">
-            <div class="table-container">
-                <table class="table table-bordered table-hover header-fixed table-striped">
-                    <thead>
-                        <tr>
-                            <th>Customer</th>
-                            <th>Cash Table</th>
-                            <th>BP ID</th>
-                            <th>Volume</th>
-                            <th>Value</th>
-                            <th>Price</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div class="table-row-top">Tester Inc.</div>
-                                <div class="table-row-bottom">
-                                    <div class="secondaryText">
-                                        Acc No:
-                                        <div class="normalText">12345</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="rightAlign">45</td>
-                            <td class="rightAlign">343</td>
-                            <td>230</td>
-                            <td>150,000.00</td>
-                            <td>
-                                <div class="table-row-top">
-                                    <div class="secondaryText">
-                                        Loaded:
-                                        <div class="normalText">R7 + 0.45</div>
-                                    </div>
-                                </div>
-                                <div class="table-row-bottom">
-                                    <div class="secondaryText">
-                                        Approved:
-                                        <div class="normalText">R7 + 0.45</div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- avg balance -->
-
-    <div class="section">
-        <div class="section-header">
-            <div class="concessionID-section"> ED0023</div>
-        </div>
-        <div class="section-body">
-            <div class="table-container">
-                <table class="table table-bordered table-hover header-fixed table-striped">
-                    <thead>
-                        <tr>
-                            <th>Customer</th>
-                            <th>Limit</th>
-                            <th>Average Balance</th>
-                            <th>Term</th>
-                            <th>MAP</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div class="table-row-top">Tester Inc.</div>
-                                <div class="table-row-bottom">
-                                    <div class="secondaryText">
-                                        Acc No:
-                                        <div class="normalText">12345</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>5,000,000.00</td>
-                            <td>3,999,987.00</td>
-                            <td>60</td>
-                            <td>
-                                <div class="table-row-top">
-                                    <div class="secondaryText">
-                                        Loaded:
-                                        <div class="normalText">1</div>
-                                    </div>
-                                </div>
-                                <div class="table-row-bottom">
-                                    <div class="secondaryText">
-                                        Approved:
-                                        <div class="normalText">1</div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+        <!-- Empty state if no concessions found -->
+        <div class="searchEmptyState" *ngIf="(cashView.cashConcessions | baseConcessionFilter: filterConcessionId).length === 0">
+            <i class="fa fa-inbox" aria-hidden="true"></i>
+            <p>No concessions found matching your search</p>
         </div>
     </div>
 </div>

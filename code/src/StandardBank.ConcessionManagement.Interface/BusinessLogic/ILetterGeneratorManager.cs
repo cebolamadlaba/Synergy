@@ -1,11 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
+﻿namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 {
+    /// <summary>
+    /// Letter generator manager
+    /// </summary>
     public interface ILetterGeneratorManager
     {
-        byte[] GenerateLetters(IEnumerable<int> concessionIds);
+        /// <summary>
+        /// Generates the letters.
+        /// </summary>
+        /// <param name="concessionReferenceId">The concession reference identifier.</param>
+        /// <returns></returns>
+        byte[] GenerateLetters(string concessionReferenceId);
     }
 }

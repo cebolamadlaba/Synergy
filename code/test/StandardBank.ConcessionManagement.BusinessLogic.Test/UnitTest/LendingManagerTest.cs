@@ -26,7 +26,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             _lendingManager = new LendingManager(MockPricingManager.Object, MockConcessionManager.Object,
                 MockLegalEntityRepository.Object, MockConcessionLendingRepository.Object,
-                InstantiatedDependencies.Mapper, MockLegalEntityAccountRepository.Object);
+                InstantiatedDependencies.Mapper, MockLegalEntityAccountRepository.Object,
+                MockProductLendingRepository.Object, MockFinancialLendingRepository.Object,
+                MockLookupTableManager.Object);
         }
 
         /// <summary>
@@ -63,6 +65,106 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             var result = _lendingManager.GetLendingConcession("L001", new Model.UserInterface.User());
 
             Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Tests that GetLendingViewData executes positive.
+        /// </summary>
+        [Fact]
+        public void GetLendingViewData_Executes_Positive()
+        {
+            MockPricingManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
+                .Returns(new Model.UserInterface.Pricing.RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
+
+            MockConcessionManager.Setup(_ => _.GetConcessionsForRiskGroup(It.IsAny<int>(), It.IsAny<string>()))
+                .Returns(new[] { new Model.UserInterface.Concession() });
+
+            MockConcessionLendingRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
+                .Returns(new[] { new ConcessionLending() });
+
+            MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
+                .Returns(new LegalEntity { IsActive = true });
+
+            MockLegalEntityAccountRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
+                .Returns(new LegalEntityAccount { IsActive = true });
+
+            MockProductLendingRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
+                .Returns(new[] {new ProductLending()});
+
+            MockLookupTableManager.Setup(_ => _.GetProductTypesForConcessionType(It.IsAny<string>()))
+                .Returns(new[] {new ProductType()});
+
+            MockFinancialLendingRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
+                .Returns(new[] {new FinancialLending {TotalExposure = 100}});
+
+            var result = _lendingManager.GetLendingViewData(1);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result.LendingConcessions);
+            Assert.NotNull(result.RiskGroup);
+            Assert.NotEmpty(result.LendingProducts);
+            Assert.NotNull(result.LendingFinancial);
+            Assert.Equal(result.LendingFinancial.TotalExposure, 100);
+        }
+
+        /// <summary>
+        /// Tests that DeleteConcessionLending executes positive.
+        /// </summary>
+        [Fact]
+        public void DeleteConcessionLending_Executes_Positive()
+        {
+            MockConcessionLendingRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new ConcessionLending());
+
+            var result = _lendingManager.DeleteConcessionLending(new LendingConcessionDetail());
+
+            Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Tests that UpdateConcessionLending executes positive.
+        /// </summary>
+        [Fact]
+        public void UpdateConcessionLending_Executes_Positive()
+        {
+            var result = _lendingManager.UpdateConcessionLending(new LendingConcessionDetail(), new Model.UserInterface.Concession());
+
+            Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Tests that GetLatestCrsOrMrs executes positive.
+        /// </summary>
+        [Fact]
+        public void GetLatestCrsOrMrs_Executes_Positive()
+        {
+            MockPricingManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
+                .Returns(new Model.UserInterface.Pricing.RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
+
+            MockFinancialLendingRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
+                .Returns(new[] { new FinancialLending { LatestCrsOrMrs = 2000 } });
+
+            var result = _lendingManager.GetLatestCrsOrMrs(1);
+
+            Assert.NotNull(result);
+            Assert.Equal(result, 2000);
+        }
+
+        /// <summary>
+        /// Tests that GetLendingFinancialForRiskGroupNumber executes positive.
+        /// </summary>
+        [Fact]
+        public void GetLendingFinancialForRiskGroupNumber_Executes_Positive()
+        {
+            MockPricingManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
+                .Returns(new Model.UserInterface.Pricing.RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
+
+            MockFinancialLendingRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
+                .Returns(new[] { new FinancialLending { LatestCrsOrMrs = 2000 } });
+
+            var result = _lendingManager.GetLendingFinancialForRiskGroupNumber(1);
+
+            Assert.NotNull(result);
+            Assert.Equal(result.LatestCrsOrMrs, 2000);
         }
     }
 }

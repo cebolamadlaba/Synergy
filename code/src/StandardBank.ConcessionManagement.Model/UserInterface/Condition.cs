@@ -15,5 +15,8 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public string ConditionType { get; set; }
         public string ProductType { get; set; }
         public DateTime ExpiryDate { get; set; }
+        public DateTime ApprovedDate { get; set; }
+        public string PeriodName { get; set; }
+        public string RagStatus { get; set; }
     }
 }

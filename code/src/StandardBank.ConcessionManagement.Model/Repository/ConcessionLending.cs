@@ -1,5 +1,3 @@
-using System;
-
 namespace StandardBank.ConcessionManagement.Model.Repository
 {
     /// <summary>
@@ -105,5 +103,13 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public string TableName => "tblConcessionLending";
         public string PrimaryKeyColumnName => "pkConcessionLendingId";
         public object PrimaryKeyValue => Id;
+
+        /// <summary>
+        /// Gets or sets the average balance.
+        /// </summary>
+        /// <value>
+        /// The average balance.
+        /// </value>
+        public decimal AverageBalance { get; set; }
     }
 }

@@ -14,6 +14,8 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int RiskGroupNumber { get; set; }
         public string ConditionType { get; set; }
         public string ProductType { get; set; }
+        public DateTime ApprovedDate { get; set; }
+        public string PeriodName { get; set; }
         public DateTime ExpiryDate { get; set; }
     }
 }

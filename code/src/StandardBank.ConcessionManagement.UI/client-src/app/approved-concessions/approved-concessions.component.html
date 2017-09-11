@@ -1,27 +1,58 @@
-<div class="col-md-12 search-and-results-container">
+<!-- Error message -->
+<div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Unable to generate concession letter. Please see error(s) below.</p>
+            <p>{{errorMessage}}</p>
+
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Success message -->
+<div class="col-md-12" *ngIf="saveMessage && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-success">
+            <p class="message-heading"><i class="fa fa-check-circle" aria-hidden="true"></i>Concession letter successfully generated: {{saveMessage}}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Loading message -->
+<div class="col-md-12" *ngIf="isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-info">
+            <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Generating</p>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12 search-and-results-container" *ngIf="!isLoading">
     <!-- Search bar -->
     <div class="input-group add-on">
-        <input class="form-control" placeholder="Search Concession ID or Risk Group Number" [(ngModel)]="concessionIdOrRiskGroupNumber" type="text" [disabled]="concessionsToPrint.length > 0">
+        <input class="form-control" placeholder="Search Concession ID or Risk Group Number" [(ngModel)]="concessionIdOrRiskGroupNumber" type="text">
     </div>
 
     <div class="section table-hover-highlight" *ngFor="let approvedConcession of approvedConcessions | approvedConcessionFilter : concessionIdOrRiskGroupNumber; trackBy: index;">
         <div class="col-md-12 section-header">
             <div class="concessionID-section">
-                <div class="col-md-2 no-padding-left">
-                    <div class="col-md-1 no-padding-left vertical-align-center">
-                        <input type="checkbox" (change)="addToPrintConcessions($event, approvedConcession.concessionId)">
-                    </div>
-                    <div class="col-md-10 no-padding-left">
+                <div class="col-md-2">
+                    <div class="col-md-10">
                         <div class="concession-name">{{approvedConcession.riskGroupName}}</div>
                         <div>{{approvedConcession.riskGroupNumber}}</div>
                     </div>
                 </div>
                 <div class="col-md-10">
-                    <div class="single-print"><i class="fa fa-print" aria-hidden="true"></i></div>
+                    <div class="single-print" (click)="printConcession(approvedConcession.concessionReferenceNumber)"><i class="fa fa-print" aria-hidden="true"></i></div>
                 </div>
                 <div class="col-md-10 no-padding-left">
                     <div class="col-md-6 no-padding-left">
-                        Concession ID : {{approvedConcession.concessionReferenceNumber}}
+                        <strong>Concession ID :</strong> {{approvedConcession.concessionReferenceNumber}}
+                        <span *ngIf="approvedConcession.expiryDate"><strong>Expiry Date :</strong> {{approvedConcession.expiryDate | date: 'yyyy/MM/dd'}}</span>
+                        <span *ngIf="approvedConcession.approvedDate"><strong>Approved Date :</strong> {{approvedConcession.approvedDate | date: 'yyyy/MM/dd'}}</span> 
                     </div>
                 </div>
             </div>
@@ -31,7 +62,7 @@
                 <table class="table table-bordered table-hover header-fixed table-striped">
                     <thead>
                         <tr>
-                            <th>Customer</th>
+                            <th>Customer Name</th>
                             <th>Segment</th>
                             <th>Type</th>
                             <th>Status</th>
@@ -55,17 +86,10 @@
     </div>
 
     <!-- Empty state if no concessions found -->
-    <div class="searchEmptyState" *ngIf="(approvedConcessions | approvedConcessionFilter: concessionIdOrRiskGroupNumber).length === 0">
+    <div class="searchEmptyState" *ngIf="(approvedConcessions | approvedConcessionFilter: concessionIdOrRiskGroupNumber)?.length === 0">
         <i class="fa fa-inbox" aria-hidden="true"></i>
         <p>No concessions found matching your search</p>
     </div>
 
-    <!-- footer-->
-    <div class="concession-footer">
-        <!--print button-->
-        <button type="button" class="btn btn-print" (click)="printLetters()">
-            <i class="fa fa-print" aria-hidden="true"></i> Print {{concessionsToPrint.length}} Files
-        </button>
-    </div>
 
 </div>

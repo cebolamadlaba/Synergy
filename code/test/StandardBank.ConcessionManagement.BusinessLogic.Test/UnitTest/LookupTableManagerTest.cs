@@ -27,7 +27,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 MockConcessionTypeRepository.Object, MockProductRepository.Object, MockReviewFeeTypeRepository.Object,
                 MockPeriodRepository.Object, MockPeriodTypeRepository.Object, MockConditionTypeRepository.Object,
                 InstantiatedDependencies.Mapper, MockConditionProductRepository.Object,
-                MockConditionTypeProductRepository.Object);
+                MockConditionTypeProductRepository.Object, MockAccrualTypeRepository.Object,
+                MockChannelTypeRepository.Object, MockTransactionTypeRepository.Object,
+                MockTableNumberRepository.Object, MockRelationshipRepository.Object, MockRoleRepository.Object,MockCentreRepository.Object,MockRegionRepository.Object);
         }
 
         /// <summary>
@@ -360,6 +362,136 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             Assert.NotNull(result);
             Assert.Equal(result, period.Description);
+        }
+
+        /// <summary>
+        /// Tests that GetAccrualTypes executes positive.
+        /// </summary>
+        [Fact]
+        public void GetAccrualTypes_Executes_Positive()
+        {
+            var accrualType = new AccrualType { Id = 1, Description = "Unit Test Accrual Type", IsActive = true };
+
+            MockAccrualTypeRepository.Setup(_ => _.ReadAll()).Returns(new[] { accrualType });
+
+            var result = _lookupTableManager.GetAccrualTypes();
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that GetChannelTypes executes positive.
+        /// </summary>
+        [Fact]
+        public void GetChannelTypes_Executes_Positive()
+        {
+            var channelType = new ChannelType { Id = 1, Description = "Unit Test Channel Type", IsActive = true };
+
+            MockChannelTypeRepository.Setup(_ => _.ReadAll()).Returns(new[] { channelType });
+
+            var result = _lookupTableManager.GetChannelTypes();
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that GetTransactionTypeDescription executes positive.
+        /// </summary>
+        [Fact]
+        public void GetTransactionTypeDescription_Executes_Positive()
+        {
+            var transactionType = new TransactionType
+            {
+                Id = 1,
+                IsActive = true,
+                Description = "Unit Test Transaction Type",
+                ConcessionTypeId = 1
+            };
+
+            MockTransactionTypeRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(transactionType);
+
+            var result = _lookupTableManager.GetTransactionTypeDescription(1);
+
+            Assert.NotNull(result);
+            Assert.Equal(transactionType.Description, result);
+        }
+
+        /// <summary>
+        /// Tests that GetTransactionTypesForConcessionType executes positive.
+        /// </summary>
+        [Fact]
+        public void GetTransactionTypesForConcessionType_Executes_Positive()
+        {
+            var concessionType = "Unit Test CT";
+
+            MockConcessionTypeRepository.Setup(_ => _.ReadAll()).Returns(new[]
+                {new ConcessionType {IsActive = true, Id = 1, Code = concessionType, Description = concessionType}});
+
+            MockTransactionTypeRepository
+                .Setup(_ => _.ReadByConcessionTypeIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(new[] {new TransactionType()});
+
+            var result = _lookupTableManager.GetTransactionTypesForConcessionType(concessionType);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+
+            foreach (var record in result)
+            {
+                Assert.NotNull(record);
+                Assert.NotNull(record.ConcessionType);
+                Assert.Equal(record.ConcessionType, concessionType);
+            }
+        }
+
+        /// <summary>
+        /// Tests that GetTableNumbers executes positive.
+        /// </summary>
+        [Fact]
+        public void GetTableNumbers_Executes_Positive()
+        {
+            var tableNumber = new TableNumber { Id = 1, TariffTable = 1, AdValorem = 100.10m, BaseRate = 0.543m, IsActive = true };
+
+            MockTableNumberRepository.Setup(_ => _.ReadAll()).Returns(new[] { tableNumber });
+
+            var result = _lookupTableManager.GetTableNumbers();
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that GetRelationshipId executes positive.
+        /// </summary>
+        [Fact]
+        public void GetRelationshipId_Executes_Positive()
+        {
+            var relationship = new Relationship { Id = 1, Description = "Unit Test Relationship", IsActive = true };
+
+            MockRelationshipRepository.Setup(_ => _.ReadAll()).Returns(new[] {relationship});
+            
+            var result = _lookupTableManager.GetRelationshipId(relationship.Description);
+
+            Assert.NotNull(result);
+            Assert.Equal(result, relationship.Id);
+        }
+
+        /// <summary>
+        /// Tests that GetRelationshipDescription executes positive.
+        /// </summary>
+        [Fact]
+        public void GetRelationshipDescription_Executes_Positive()
+        {
+            var relationship = new Relationship { Id = 1, Description = "Unit Test Relationship", IsActive = true };
+
+            MockRelationshipRepository.Setup(_ => _.ReadAll()).Returns(new[] { relationship });
+
+            var result = _lookupTableManager.GetRelationshipDescription(relationship.Id);
+
+            Assert.NotNull(result);
+            Assert.Equal(result, relationship.Description);
         }
     }
 }

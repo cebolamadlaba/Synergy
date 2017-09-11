@@ -7,7 +7,7 @@
         <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-bordered table-hover table-striped">
             <thead>
                 <tr>
-                    <th>Group Number</th>
+                    <th>Risk Group</th>
                     <th>Type</th>
                     <th>Opened</th>
                     <th>Concession Id</th>
@@ -16,16 +16,16 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor='let concession of userConcessions.mismatchedConcessions; trackBy: index;' (click)="openConcessionView(concession)">
+                <tr *ngFor='let concession of userConcessions?.mismatchedConcessions; trackBy: index;' (click)="openConcessionView(concession)">
                     <td>
-                        <p class="riskGroupName">{{concession.riskGroupName}}</p>
-                        <p class="riskGroupNumber">{{concession.riskGroupNumber}}</p>
+                        <p class="riskGroupName">{{concession?.riskGroupName}}</p>
+                        <p class="riskGroupNumber">{{concession?.riskGroupNumber}}</p>
                     </td>
-                    <td>{{concession.concessionType}}</td>
-                    <td class="date">{{concession.dateOpened | date: 'yyyy/MM/dd'}}</td>
-                    <td>{{concession.referenceNumber}}</td>
-                    <td>{{concession.seqment}}</td>
-                    <td class="date">{{concession.dateSentForApproval| date: 'yyyy/MM/dd'}}</td>
+                    <td>{{concession?.concessionType}}</td>
+                    <td class="date">{{concession?.dateOpened | date: 'yyyy/MM/dd'}}</td>
+                    <td>{{concession?.referenceNumber}}</td>
+                    <td>{{concession?.seqment}}</td>
+                    <td class="date">{{concession?.dateSentForApproval| date: 'yyyy/MM/dd'}}</td>
                 </tr>
             </tbody>
         </table>

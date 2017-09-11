@@ -1,6 +1,4 @@
-﻿using System.Data;
-using System.Data.SqlClient;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.Extensions.Caching.Memory;
 using StandardBank.ConcessionManagement.BusinessLogic;
 using StandardBank.ConcessionManagement.Common;
@@ -35,10 +33,12 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static IConfigurationData ConfigurationData =
             new ConfigurationData(Configuration.ConnectionString, string.Empty, Configuration.DatabaseType);
 
+      
         /// <summary>
         /// The database connection
         /// </summary>
         private static readonly IDbConnectionFactory DbConnection = new DbConnectionFactory(ConfigurationData);
+        //public static readonly IAdminRepository AdminRepository = new AdminRepository(DbConnection);
 
         /// <summary>
         /// The cache manager
@@ -49,6 +49,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The site helper
         /// </summary>
         public static ISiteHelper SiteHelper = new FakeSiteHelper();
+
+        /// <summary>
+        /// The AccrualType repository
+        /// </summary>
+        public static IAccrualTypeRepository AccrualTypeRepository = new AccrualTypeRepository(DbConnection, CacheManager);
 
         /// <summary>
         /// Authorizing user repository
@@ -291,23 +296,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static IPeriodTypeRepository PeriodTypeRepository = new PeriodTypeRepository(DbConnection, CacheManager);
 
         /// <summary>
-        /// The look up table manager
-        /// </summary>
-        public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,
-            SubStatusRepository, ReferenceTypeRepository, MarketSegmentRepository, ProvinceRepository,
-            ConcessionTypeRepository, ProductRepository, ReviewFeeTypeRepository, PeriodRepository,
-            PeriodTypeRepository, ConditionTypeRepository, Mapper, ConditionProductRepository,
-            ConditionTypeProductRepository);
-
-        /// <summary>
-        /// The concession manager
-        /// </summary>
-        public static IConcessionManager ConcessionManager =
-            new ConcessionManager(ConcessionRepository, LookupTableManager, LegalEntityRepository, RiskGroupRepository,
-                CacheManager, ConcessionAccountRepository, Mapper, ConcessionConditionRepository,
-                LegalEntityAccountRepository, ConcessionCommentRepository, ConcessionLendingRepository, MarketSegmentRepository);
-
-        /// <summary>
         /// The Region repository
         /// </summary>
         public static IRegionRepository RegionRepository = new RegionRepository(DbConnection, CacheManager);
@@ -318,10 +306,71 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static IUserRegionRepository UserRegionRepository = new UserRegionRepository(DbConnection);
 
         /// <summary>
+        /// The TableNumber repository
+        /// </summary>
+        public static ITableNumberRepository TableNumberRepository = new TableNumberRepository(DbConnection, CacheManager);
+
+        /// <summary>
+        /// The Relationship repository
+        /// </summary>
+        public static IRelationshipRepository RelationshipRepository = new RelationshipRepository(DbConnection, CacheManager);
+
+        /// <summary>
+        /// The ConcessionRelationship repository
+        /// </summary>
+        public static IConcessionRelationshipRepository ConcessionRelationshipRepository = new ConcessionRelationshipRepository(DbConnection);
+
+        /// <summary>
+        /// The audit repository
+        /// </summary>
+        public static IAuditRepository AuditRepository = new AuditRepository(DbConnection, new XmlMarshaller());
+
+        /// <summary>
+        /// The ProductLending repository
+        /// </summary>
+        public static IProductLendingRepository ProductLendingRepository = new ProductLendingRepository(DbConnection);
+
+        /// <summary>
+        /// The FinancialLending repository
+        /// </summary>
+        public static IFinancialLendingRepository FinancialLendingRepository = new FinancialLendingRepository(DbConnection);
+        public static IAdminRepository AdminRepository = new AdminRepository(DbConnection);
+
+        /// <summary>
+        /// The FinancialCash repository
+        /// </summary>
+        public static IFinancialCashRepository FinancialCashRepository = new FinancialCashRepository(DbConnection);
+
+        /// <summary>
+        /// The ProductCash repository
+        /// </summary>
+        public static IProductCashRepository ProductCashRepository = new ProductCashRepository(DbConnection);
+
+        /// <summary>
+        /// The look up table manager
+        /// </summary>
+        public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,
+            SubStatusRepository, ReferenceTypeRepository, MarketSegmentRepository, ProvinceRepository,
+            ConcessionTypeRepository, ProductRepository, ReviewFeeTypeRepository, PeriodRepository,
+            PeriodTypeRepository, ConditionTypeRepository, Mapper, ConditionProductRepository,
+            ConditionTypeProductRepository, AccrualTypeRepository, ChannelTypeRepository, TransactionTypeRepository,
+            TableNumberRepository, RelationshipRepository, RoleRepository,CentreRepository,RegionRepository);
+
+        /// <summary>
         /// The user manager
         /// </summary>
         public static IUserManager UserManager = new UserManager(CacheManager, LookupTableManager, UserRepository, UserRoleRepository,
-            RoleRepository, UserRegionRepository, RegionRepository, CentreRepository, CentreUserRepository, Mapper);
+            RoleRepository, UserRegionRepository, RegionRepository, CentreRepository, CentreUserRepository, Mapper, AdminRepository);
+
+        /// <summary>
+        /// The concession manager
+        /// </summary>
+        public static IConcessionManager ConcessionManager =
+            new ConcessionManager(ConcessionRepository, LookupTableManager, LegalEntityRepository, RiskGroupRepository,
+                ConcessionAccountRepository, Mapper, ConcessionConditionRepository, LegalEntityAccountRepository,
+                ConcessionCommentRepository, ConcessionLendingRepository, MarketSegmentRepository,
+                ConcessionCashRepository, ConcessionTransactionalRepository, ConcessionRelationshipRepository,
+                AuditRepository, UserManager);
 
         /// <summary>
         /// The pricing manager
@@ -332,6 +381,21 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The lending manager
         /// </summary>
         public static ILendingManager LendingManager = new LendingManager(PricingManager, ConcessionManager,
-            LegalEntityRepository, ConcessionLendingRepository, Mapper, LegalEntityAccountRepository);
+            LegalEntityRepository, ConcessionLendingRepository, Mapper, LegalEntityAccountRepository,
+            ProductLendingRepository, FinancialLendingRepository, LookupTableManager);
+
+        /// <summary>
+        /// The transactional manager
+        /// </summary>
+        public static ITransactionalManager TransactionalManager =
+            new TransactionalManager(PricingManager, ConcessionManager, ConcessionTransactionalRepository,
+                LegalEntityRepository, LegalEntityAccountRepository, Mapper, LookupTableManager);
+
+        /// <summary>
+        /// The cash manager
+        /// </summary>
+        public static ICashManager CashManager = new CashManager(PricingManager, ConcessionManager,
+            ConcessionCashRepository, LegalEntityRepository, Mapper, LegalEntityAccountRepository,
+            FinancialCashRepository, ProductCashRepository, LookupTableManager);
     }
 }

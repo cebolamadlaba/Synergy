@@ -6,6 +6,14 @@
     public class CashConcessionDetail
     {
         /// <summary>
+        /// Gets or sets the cash concession detail identifier.
+        /// </summary>
+        /// <value>
+        /// The cash concession detail identifier.
+        /// </value>
+        public int CashConcessionDetailId { get; set; }
+
+        /// <summary>
         /// Gets or sets the name of the customer.
         /// </summary>
         /// <value>
@@ -27,7 +35,7 @@
         /// <value>
         /// The legal entity identifier.
         /// </value>
-        public int LegalEntityId { get; set; }
+        public int? LegalEntityId { get; set; }
 
         /// <summary>
         /// Gets or sets the legal entity account identifier.
@@ -35,7 +43,7 @@
         /// <value>
         /// The legal entity account identifier.
         /// </value>
-        public int LegalEntityAccountId { get; set; }
+        public int? LegalEntityAccountId { get; set; }
 
         /// <summary>
         /// Gets or sets the channel.
@@ -46,12 +54,12 @@
         public string Channel { get; set; }
 
         /// <summary>
-        /// Gets or sets the cash table number.
+        /// Gets or sets the channel type identifier.
         /// </summary>
         /// <value>
-        /// The cash table number.
+        /// The channel type identifier.
         /// </value>
-        public int CashTableNumber { get; set; }
+        public int? ChannelTypeId { get; set; }
 
         /// <summary>
         /// Gets or sets the bp identifier.
@@ -67,7 +75,7 @@
         /// <value>
         /// The volume.
         /// </value>
-        public decimal Volume { get; set; }
+        public decimal? Volume { get; set; }
 
         /// <summary>
         /// Gets or sets the value.
@@ -75,7 +83,7 @@
         /// <value>
         /// The value.
         /// </value>
-        public decimal Value { get; set; }
+        public decimal? Value { get; set; }
 
         /// <summary>
         /// Gets or sets the loaded price.
@@ -92,5 +100,37 @@
         /// The approved price.
         /// </value>
         public decimal ApprovedPrice { get; set; }
+
+        /// <summary>
+        /// Gets or sets the base rate.
+        /// </summary>
+        /// <value>
+        /// The base rate.
+        /// </value>
+        public decimal? BaseRate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ad valorem.
+        /// </summary>
+        /// <value>
+        /// The ad valorem.
+        /// </value>
+        public decimal? AdValorem { get; set; }
+
+        /// <summary>
+        /// Gets or sets the accrual type identifier.
+        /// </summary>
+        /// <value>
+        /// The accrual type identifier.
+        /// </value>
+        public int? AccrualTypeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the table number identifier.
+        /// </summary>
+        /// <value>
+        /// The table number identifier.
+        /// </value>
+        public int? TableNumberId { get; set; }
     }
 }

@@ -1,4 +1,32 @@
-﻿
+﻿.footer-buttons {
+    padding-top: 10px;
+    clear: both;
+
+    .float-right {
+        float: right;
+
+        button {
+            margin-left: 10px;
+        }
+    }
+}
+
+.btn-concession {
+    float: right;
+    width: 150px
+}
+
+.btn-delete {
+    background: none;
+    border: none;
+    font-size: 1.6em;
+    padding: 0;
+
+    &:hover {
+        color: $lightGray;
+    }
+}    
+
 //overriding default bootstrap buttons      
      .pagination{
        float: right;
@@ -39,21 +67,6 @@
         background: $standardBankBlue;
     }
 }
-.concessionBtn {
-    background: $standardBankBlue;
-    box-shadow: 1px 2px 1px $standardBankBlue;
-    float: right;
-
-    &:hover {
-        color: white;
-        background: $standardBankBlueHover;
-    }
-
-    &:focus {
-        color: $white;
-        background: $standardBankBlue;
-    }
-}
 
 .btn-default-search {
     background: $standardBankBlue;
@@ -69,67 +82,3 @@
         background: $standardBankBlue;
     }
 }
-
-.btn-submit {
-    background: $standardBankBlue;
-    color: white;
-    box-shadow: 1px 2px 1px $standardBankBlue;
-    padding: 5px 30px;
-    min-width: 75px;
-
-    &:hover {
-        background: $standardBankBlueHover;
-        color: white;
-    }
-
-    &:focus {
-        color: white;
-        background: $standardBankBlue;
-    }
-}
-
-     .btn-cancel{
-       min-width: 75px;
-       padding: 5px 30px;
-       background: $bodyBackground;
-       box-shadow: 0px 2px 5px ;
-
-       &:hover{
-            background: $grayTint;
-       }
-     }
-
-.btn-default {
-    background: $standardBankBlue;
-    color: white;
-    box-shadow: 1px 2px 1px $standardBankBlue;
-    padding: 5px 0px;
-    min-width: 145px;
-    border: none;
-
-    &:hover {
-        background-color: $standardBankBlueHover;
-        color: white;
-    }
-
-    &:active {
-        background: $standardBankBlueHover;
-        color: white;
-    }
-
-    &:focus {
-        background: $standardBankBlueHover;
-        color: white;
-    }
-
-    &:active:hover {
-        background: $standardBankBlueHover;
-        color: white;
-    }
-}
-
-.btn-concession {
-    float: right;
-    margin-top: 15px;
-}
-     

@@ -152,13 +152,14 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 var query = @"
-                    SELECT rg.RiskGroupName, rg.RiskGroupNumber,c.pkConcessionId 'ConcessionId',ct.Description 'ConditionType',cp.Description 'ProductType',cc.InterestRate,c.ExpiryDate,cc.Volume,cc.Value
+                    SELECT rg.RiskGroupName, rg.RiskGroupNumber,c.pkConcessionId 'ConcessionId',ct.Description 'ConditionType',cp.Description 'ProductType',cc.InterestRate,c.ExpiryDate,cc.Volume,cc.Value , c.[DateApproved] 'ApprovedDate',p.[Description] 'PeriodName'
                       FROM [dbo].[tblConcessionCondition] cc
                       join dbo.rtblConditionType ct on cc.fkConditionTypeId = ct.pkConditionTypeId
                       join dbo.rtblConditionProduct cp on cp.pkConditionProductId = cc.fkConditionProductId
                       join tblConcession c on c.pkConcessionId = cc.fkConcessionId
                       join tblRiskGroup rg on rg.pkRiskGroupId = c.fkRiskGroupId
-                       where c.fkStatusId = @statusId and cc.fkPeriodId = @periodId and cc.fkPeriodTypeId = @periodType
+                      join [rtblPeriod] p on p.[pkPeriodId] =  cc.fkPeriodId
+                       where c.fkStatusId = @statusId and cc.fkPeriodId = @periodId and cc.fkPeriodTypeId = @periodType and c.[DateApproved] is not null
                         ";
                 return db.Query<Condition>(query,new { statusId = concessionApprovalStatusId , periodId,periodType });
             }

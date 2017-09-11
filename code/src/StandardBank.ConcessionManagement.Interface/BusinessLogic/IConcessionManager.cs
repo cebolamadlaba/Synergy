@@ -4,7 +4,9 @@ using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Inbox;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 using ConcessionCondition = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionCondition;
+using ConcessionRelationship = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionRelationship;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
+using System;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 {
@@ -123,6 +125,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="concessionCondition">The concession condition.</param>
         /// <returns></returns>
         Model.Repository.ConcessionCondition DeleteConcessionCondition(ConcessionCondition concessionCondition);
+
         IEnumerable<Model.UserInterface.Condition> GetConditions(string periodType, string period);
 
         /// <summary>
@@ -146,5 +149,37 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="concession"></param>
         /// <returns></returns>
         IEnumerable<ApprovedConcessionDetail> GetApprovedConcessionDetails(Concession concession);
+
+        /// <summary>
+        /// Updates the concession condition.
+        /// </summary>
+        /// <param name="concessionCondition">The concession condition.</param>
+        /// <param name="concession">The concession.</param>
+        /// <returns></returns>
+        Model.Repository.ConcessionCondition UpdateConcessionCondition(ConcessionCondition concessionCondition, Concession concession);
+
+        /// <summary>
+        /// Creates the concession relationship.
+        /// </summary>
+        /// <param name="concessionRelationship">The concession relationship.</param>
+        /// <returns></returns>
+        Model.Repository.ConcessionRelationship CreateConcessionRelationship(ConcessionRelationship concessionRelationship);
+
+        /// <summary>
+        /// Activates the concession.
+        /// </summary>
+        /// <param name="concessionReferenceNumber">The concession reference number.</param>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
+        Model.Repository.Concession ActivateConcession(string concessionReferenceNumber, User user);
+
+        /// <summary>
+        /// Gets the concession comments.
+        /// </summary>
+        /// <param name="concessionId">The concession identifier.</param>
+        /// <returns></returns>
+        IEnumerable<Model.UserInterface.ConcessionComment> GetConcessionComments(int concessionId);
+
+        string GetRagStatus(string period,DateTime dateApproved);
     }
 }

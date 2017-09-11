@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.DeactivateConcession;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 
@@ -33,19 +36,26 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         private readonly ILetterGeneratorManager _letterGeneratorManager;
 
         /// <summary>
+        /// The mediator
+        /// </summary>
+        private readonly IMediator _mediator;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionController"/> class.
         /// </summary>
         /// <param name="concessionManager">The concession manager.</param>
         /// <param name="lookupTableManager">The lookup table manager.</param>
         /// <param name="siteHelper">The site helper.</param>
         /// <param name="letterGeneratorManager">The letter generator manager.</param>
+        /// <param name="mediator">The mediator.</param>
         public ConcessionController(IConcessionManager concessionManager, ILookupTableManager lookupTableManager,
-            ISiteHelper siteHelper, ILetterGeneratorManager letterGeneratorManager)
+            ISiteHelper siteHelper, ILetterGeneratorManager letterGeneratorManager, IMediator mediator)
         {
             _concessionManager = concessionManager;
             _lookupTableManager = lookupTableManager;
             _siteHelper = siteHelper;
             _letterGeneratorManager = letterGeneratorManager;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -81,6 +91,26 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         }
 
         /// <summary>
+        /// Gets the accrual types.
+        /// </summary>
+        /// <returns></returns>
+        [Route("AccrualTypes")]
+        public IActionResult AccrualTypes()
+        {
+            return Ok(_lookupTableManager.GetAccrualTypes());
+        }
+
+        /// <summary>
+        /// Gets the channel types.
+        /// </summary>
+        /// <returns></returns>
+        [Route("ChannelTypes")]
+        public IActionResult ChannelTypes()
+        {
+            return Ok(_lookupTableManager.GetChannelTypes());
+        }
+
+        /// <summary>
         /// Gets the client accounts for the risk group number specified
         /// </summary>
         /// <param name="riskGroupNumber"></param>
@@ -103,14 +133,58 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         }
 
         /// <summary>
-        /// Prints the concession letters.
+        /// Gets the transaction types for the concession type specified.
         /// </summary>
-        /// <param name="concessionIds">The concession ids.</param>
+        /// <param name="concessionType">Type of the concession.</param>
         /// <returns></returns>
-        [Route("PrintConcessionLetters")]
-        public IActionResult PrintConcessionLetters([FromBody]IEnumerable<int> concessionIds)
+        [Route("TransactionTypes/{concessionType}")]
+        public IActionResult TransactionTypes(string concessionType)
         {
-            return Ok(_letterGeneratorManager.GenerateLetters(concessionIds));
+            return Ok(_lookupTableManager.GetTransactionTypesForConcessionType(concessionType));
+        }
+
+        /// <summary>
+        /// Gets the table numbers.
+        /// </summary>
+        /// <returns></returns>
+        [Route("TableNumbers")]
+        public IActionResult TableNumbers()
+        {
+            return Ok(_lookupTableManager.GetTableNumbers());
+        }
+
+        /// <summary>
+        /// Deactivates the concession.
+        /// </summary>
+        /// <param name="concessionReferenceId">The concession reference identifier.</param>
+        /// <returns></returns>
+        [Route("DeactivateConcession/{concessionReferenceId}")]
+        public async Task<IActionResult> DeactivateConcession(string concessionReferenceId)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            await _mediator.Send(new DeactivateConcession(concessionReferenceId, user));
+
+            return Ok(true);
+        }
+
+        /// <summary>
+        /// Generates the concession letter.
+        /// </summary>
+        /// <param name="concessionReferenceId">The concession reference identifier.</param>
+        /// <returns></returns>
+        [Route("GenerateConcessionLetter/{concessionReferenceId}")]
+        public FileResult GenerateConcessionLetter(string concessionReferenceId)
+        {
+            HttpContext.Response.ContentType = "application/html";
+
+            var result = new FileContentResult(_letterGeneratorManager.GenerateLetters(concessionReferenceId),
+                "application/html")
+            {
+                FileDownloadName = $"{concessionReferenceId}.html"
+            };
+
+            return result;
         }
     }
 }

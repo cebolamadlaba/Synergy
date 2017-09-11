@@ -1,13 +1,14 @@
-﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { LendingView } from "../models/lending-view";
-import { LendingViewService } from "../lending-view/lending-view.service";
 import { RiskGroup } from "../models/risk-group";
-import { SourceSystemProduct } from "../models/source-system-product";
 import { LendingConcession } from "../models/lending-concession";
 import { Concession } from "../models/concession";
 import { Location } from '@angular/common';
+import { LendingService } from "../services/lending.service";
+import { Router, RouterModule } from '@angular/router';
+import { LendingFinancial } from "../models/lending-financial";
 
 @Component({
     selector: 'app-pricing-lending',
@@ -20,12 +21,16 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
     observableLendingView: Observable<LendingView>;
     lendingView: LendingView = new LendingView();
     errorMessage: String;
-    showHide: true;
+    showHide = true;
+    pageLoaded = false;
 
-    constructor(private route: ActivatedRoute, private location: Location, @Inject(LendingViewService) private lendingViewService) {
+    constructor(
+        private router: Router,
+        private route: ActivatedRoute,
+        private location: Location,
+        @Inject(LendingService) private lendingService) {
         this.lendingView.riskGroup = new RiskGroup();
-        this.lendingView
-        this.lendingView.sourceSystemProducts = [new SourceSystemProduct()];
+        this.lendingView.lendingFinancial = new LendingFinancial();
         this.lendingView.lendingConcessions = [new LendingConcession()];
         this.lendingView.lendingConcessions[0].concession = new Concession();
     }
@@ -35,15 +40,18 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
             this.riskGroupNumber = +params['riskGroupNumber'];
 
             if (this.riskGroupNumber) {
-                this.observableLendingView = this.lendingViewService.getData(this.riskGroupNumber);
-                this.observableLendingView.subscribe(lendingView => this.lendingView = lendingView,
-                    error => this.errorMessage = <any>error);
+                this.observableLendingView = this.lendingService.getLendingViewData(this.riskGroupNumber);
+                this.observableLendingView.subscribe(lendingView => {
+                    this.lendingView = lendingView;
+                    this.pageLoaded = true;
+                }, error => this.errorMessage = <any>error);
             }
         });
     }
 
     goBack() {
-        this.location.back();
+        //this.location.back();
+        this.router.navigate(['/pricing', this.riskGroupNumber]);
     }
 
     ngOnDestroy() {

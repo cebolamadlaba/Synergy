@@ -1,4 +1,4 @@
-﻿import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -23,26 +23,40 @@ import { CashAddConcessionComponent } from './cash-add-concession/cash-add-conce
 import { LendingAddConcessionComponent } from './lending-add-concession/lending-add-concession.component';
 import { TransactionalAddConcessionComponent } from './transactional-add-concession/transactional-add-concession.component';
 import { MismatchedInboxComponent } from './mismatched-inbox/mismatched-inbox.component';
-
-import { UserConcessionsService } from "./user-concessions/user-concessions.service";
-import { UserService } from "./user/user.service";
-import { RiskGroupService } from "./risk-group/risk-group.service";
-import { LendingViewService } from "./lending-view/lending-view.service";
-import { LendingConcessionFilterPipe } from './lending-concession-filter/lending-concession-filter.pipe';
-import { ReviewFeeTypeService } from "./review-fee-type/review-fee-type.service";
-import { ProductTypeService } from "./product-type/product-type.service";
-import { PeriodService } from "./period/period.service";
-import { PeriodTypeService } from "./period-type/period-type.service";
-import { ConditionTypeService } from "./condition-type/condition-type.service";
-import { ConcessionConditionsService } from "./concession-conditions/concession-conditions.service";
-import { ClientAccountService } from "./client-account/client-account.service";
-import { LendingNewService } from "./lending-new/lending-new.service";
-import { LendingEditConcessionComponent } from './lending-edit-concession/lending-edit-concession.component';
-import { LendingService } from "./lending/lending.service";
-import { LendingUpdateService } from "./lending-update/lending-update.service";
-import { MyConditionService } from './my-condition/my-condition.service';
 import { LendingViewConcessionComponent } from './lending-view-concession/lending-view-concession.component';
-import { ApprovedConcessionFilterPipe } from './approved-concession-filter/approved-concession-filter.pipe';
+import { ProvinceComponent } from './admin/province/province.component';
+
+import { LookupDataService } from "./services/lookup-data.service";
+import { UserConcessionsService } from "./services/user-concessions.service";
+import { UserService } from "./services/user.service";
+import { ConcessionConditionsService } from "./services/concession-conditions.service";
+import { LendingService } from "./services/lending.service";
+import { MyConditionService } from './services/my-condition.service';
+import { CashConcessionService } from "./services/cash-concession.service";
+import { ProvinceService } from "./services/province.service";
+import { AdminService} from './services/admin.service';
+
+import { ApprovedConcessionFilterPipe } from './filters/approved-concession-filter.pipe';
+import { CashViewConcessionComponent } from './cash-view-concession/cash-view-concession.component';
+import { PricingInvestmentsComponent } from './pricing-investments/pricing-investments.component';
+import { PricingBolComponent } from './pricing-bol/pricing-bol.component';
+import { PricingTradeComponent } from './pricing-trade/pricing-trade.component';
+import { PricingMasComponent } from './pricing-mas/pricing-mas.component';
+import { PricingCashmanComponent } from './pricing-cashman/pricing-cashman.component';
+import { TransactionalConcessionService } from "./services/transactional-concession.service";
+import { BaseConcessionFilterPipe } from './filters/base-concession-filter.pipe';
+import { InvestmentsAddConcessionComponent } from './investments-add-concession/investments-add-concession.component';
+import { BolAddConcessionComponent } from './bol-add-concession/bol-add-concession.component';
+import { MasAddConcessionComponent } from './mas-add-concession/mas-add-concession.component';
+import { TransactionalViewConcessionComponent } from './transactional-view-concession/transactional-view-concession.component';
+import { TradeAddConcessionComponent } from './trade-add-concession/trade-add-concession.component';
+import { CashmanAddConcessionComponent } from './cashman-add-concession/cashman-add-concession.component';
+import { AdminMenuComponent } from './admin/admin-menu/admin-menu.component';
+import { BusinessCentreComponent } from './admin/business-centre/business-centre.component';
+import { UsersComponent } from './admin/users/users.component';
+import { EditUserComponent } from './admin/users/edit-user/edit-user.component';
+import { ActionedInboxComponent } from './actioned-inbox/actioned-inbox.component';
+
 
 @NgModule({
     declarations: [
@@ -63,10 +77,28 @@ import { ApprovedConcessionFilterPipe } from './approved-concession-filter/appro
         LendingAddConcessionComponent,
         TransactionalAddConcessionComponent,
         MismatchedInboxComponent,
-        LendingConcessionFilterPipe,
-        LendingEditConcessionComponent,
         LendingViewConcessionComponent,
-        ApprovedConcessionFilterPipe
+        ApprovedConcessionFilterPipe,
+        CashViewConcessionComponent,
+        BaseConcessionFilterPipe,
+        CashViewConcessionComponent,
+        PricingInvestmentsComponent,
+        PricingBolComponent,
+        PricingTradeComponent,
+        PricingMasComponent,
+        PricingCashmanComponent,
+        InvestmentsAddConcessionComponent,
+        BolAddConcessionComponent,
+        MasAddConcessionComponent,
+        TransactionalViewConcessionComponent,
+        ProvinceComponent,
+        TradeAddConcessionComponent,
+        CashmanAddConcessionComponent,
+        AdminMenuComponent,
+        BusinessCentreComponent,
+        UsersComponent,
+        EditUserComponent,
+        ActionedInboxComponent
     ],
     imports: [
         BrowserModule,
@@ -78,21 +110,16 @@ import { ApprovedConcessionFilterPipe } from './approved-concession-filter/appro
         ReactiveFormsModule
     ],
     providers: [
+        LookupDataService,
         UserConcessionsService,
         UserService,
-        RiskGroupService,
-        LendingViewService,
-        ReviewFeeTypeService,
-        ProductTypeService,
-        PeriodService,
-        PeriodTypeService,
-        ConditionTypeService,
         ConcessionConditionsService,
-        ClientAccountService,
-        LendingNewService,
         LendingService,
-        LendingUpdateService,
-        MyConditionService
+        MyConditionService,
+        CashConcessionService,
+        TransactionalConcessionService,
+        ProvinceService,
+        AdminService
     ],
     bootstrap: [AppComponent]
 })

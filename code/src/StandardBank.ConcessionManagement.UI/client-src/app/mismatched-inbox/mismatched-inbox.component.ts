@@ -1,6 +1,6 @@
-﻿import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Observable } from "rxjs";
-import { UserConcessionsService } from "../user-concessions/user-concessions.service";
+import { UserConcessionsService } from "../services/user-concessions.service";
 import { UserConcessions } from "../models/user-concessions";
 import { Subject } from 'rxjs/Rx'
 import 'rxjs/add/operator/map';
@@ -44,6 +44,12 @@ export class MismatchedInboxComponent implements OnInit {
         switch (concession.concessionType) {
             case "Lending":
                 this.router.navigate(['/lending-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                break;
+            case "Cash":
+                this.router.navigate(['/cash-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                break;
+            case "Transactional":
+                this.router.navigate(['/transactional-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
                 break;
         }
     }

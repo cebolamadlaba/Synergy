@@ -1,5 +1,5 @@
 ﻿<!-- banner-->
-<div class="col-md-12 lending-view-banner">
+<div class="col-md-12 banner">
     <div class="row">
         <!-- Header -->
         <div class="lending-banner-title">
@@ -14,25 +14,23 @@
         </div>
 
         <!-- Dashboard Expanded -->
-        <div class="col-md-12 lending-banner" *ngIf="showHide">
+        <div class="col-md-12 banner-container" *ngIf="showHide">
             <div class="col-md-11">
-                <div>
-                    <div class="col-md-5">
-                        <div class="subHeading">{{lendingView.riskGroup.name}}</div>
-                        <div class="date lightTitle hidden-element">{{lendingView.riskGroup.number}}</div>
-                    </div>
-                    <div class="col-md-2  hidden-element">
-                        <div class="subHeading lightTitle">Total Exposure</div>
-                        <div class="score"><b>{{lendingView.totalExposure | number : '1.2-2'}}</b></div>
-                    </div>
-                    <div class="col-md-2  hidden-element">
-                        <div class="subHeading lightTitle"> Weighted Average MAP</div>
-                        <div class="score"><b>{{lendingView.weightedAverageMap | number : '1.2-2'}}</b></div>
-                    </div>
-                    <div class="col-md-2  hidden-element">
-                        <div class="subHeading lightTitle"> Weighted CRS / MRS</div>
-                        <div class="score"><b>{{lendingView.weightedCrsMrs | number : '1.2-2'}}</b></div>
-                    </div>
+                <div class="col-md-5">
+                    <div class="subHeading">{{lendingView.riskGroup.name}}</div>
+                    <div class="date lightTitle hidden-element">{{lendingView.riskGroup.number}}</div>
+                </div>
+                <div class="col-md-2  hidden-element">
+                    <div class="subHeading lightTitle">Total Exposure</div>
+                    <div class="score"><b>{{lendingView.lendingFinancial.totalExposure | number : '1.2-2'}}</b></div>
+                </div>
+                <div class="col-md-2  hidden-element">
+                    <div class="subHeading lightTitle"> Weighted Average MAP</div>
+                    <div class="score"><b>{{lendingView.lendingFinancial.weightedAverageMap | number : '1.2-2'}}</b></div>
+                </div>
+                <div class="col-md-2  hidden-element">
+                    <div class="subHeading lightTitle"> Weighted CRS / MRS</div>
+                    <div class="score"><b>{{lendingView.lendingFinancial.weightedCrsOrMrs | number : '1.2-2'}}</b></div>
                 </div>
             </div>
             <div class="col-md-1">
@@ -44,7 +42,7 @@
             </div>
         </div>
         <!-- Dashboard Collapsed -->
-        <div class="col-md-12 lending-banner" *ngIf="!showHide">
+        <div class="col-md-12 banner-container" *ngIf="!showHide">
             <div class="col-md-11">
                 <div>
                     <div class="col-md-5">
@@ -72,7 +70,7 @@
         <div class="section">
 
             <!-- Empty state for products if no data is found -->
-            <div *ngIf="!lendingView.sourceSystemProducts">
+            <div *ngIf="lendingView?.lendingProducts?.length == 0">
                 <div class="section-body">
                     <div class="searchEmptyState">
                         <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
@@ -83,12 +81,12 @@
             <!-- End of empty state -->
 
             <!-- Products list -->
-            <div class="section-body" *ngFor="let sourceSystemProduct of lendingView.sourceSystemProducts; trackBy: index;">
+            <div class="section-body" *ngFor="let lendingProduct of lendingView.lendingProducts; trackBy: index;">
                 <div class="product-section">
-                    <div class="product-name"> {{sourceSystemProduct.customerName}}</div>
+                    <div class="product-name"> {{lendingProduct.customerName}}</div>
                     <div>
-                        <div class="product-account">Account No: {{sourceSystemProduct.accountNumber}}</div>
-                        <div class="product-code">Product: {{sourceSystemProduct.productName}}</div>
+                        <div class="product-account">Account No: {{lendingProduct.accountNumber}}</div>
+                        <div class="product-code">Product: {{lendingProduct.product}}</div>
                     </div>
                 </div>
                 <div class="product-table-container">
@@ -102,9 +100,9 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="rightAlign"> {{sourceSystemProduct.limit}}</td>
-                                <td class="rightAlign"> {{sourceSystemProduct.averageBalance}}</td>
-                                <td class="rightAlign"> {{sourceSystemProduct.loadedMap}}</td>
+                                <td class="rightAlign"> {{lendingProduct.limit}}</td>
+                                <td class="rightAlign"> {{lendingProduct.averageBalance}}</td>
+                                <td class="rightAlign"> {{lendingProduct.loadedMap}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -119,17 +117,15 @@
     <div class="col-md-7 search-and-results-container" id="lending-search-container">
         <h2 class="headings">
             Concessions
-            <button type="button" class="btn btn-primary concessionBtn" [routerLink]="['/lending-add-concession', lendingView.riskGroup.number]">Add Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/lending-add-concession', lendingView.riskGroup.number]" *ngIf="pageLoaded">Add Concession</button>
         </h2>
-        
+
         <!-- Search bar -->
         <div class="input-group add-on">
             <input class="form-control" placeholder="Concession ID" [(ngModel)]="filterConcessionId" type="text">
         </div>
 
-        <div class="section" *ngFor="let lendingConcession of lendingView.lendingConcessions | lendingConcessionFilter : filterConcessionId; trackBy: index;">
-            
-            
+        <div class="section" *ngFor="let lendingConcession of lendingView.lendingConcessions | baseConcessionFilter : filterConcessionId; trackBy: index;">
 
             <div class="section-header small-table-title">
                 <div class="concessionID-section"> {{lendingConcession.concession.referenceNumber}}</div>
@@ -153,7 +149,7 @@
                                     <p class="accInfo">Acc No : {{concession.accountNumber}}</p>
                                 </td>
                                 <td class="rightAlign">{{concession.limit}}</td>
-                                <td class="rightAlign">//TODO {{concession.averageBalance}}</td>
+                                <td class="rightAlign">{{concession.averageBalance}}</td>
                                 <td class="rightAlign">{{concession.term}}</td>
                                 <td>
                                     <p class="mapInfo">Loaded:{{concession.loadedMap | number : '1.2-2'}}</p>
@@ -167,7 +163,7 @@
         </div>
 
         <!-- Empty state if no concessions found -->
-        <div class="searchEmptyState" *ngIf="(lendingView.lendingConcessions | lendingConcessionFilter: filterConcessionId).length === 0">
+        <div class="searchEmptyState" *ngIf="(lendingView.lendingConcessions | baseConcessionFilter: filterConcessionId).length === 0">
             <i class="fa fa-inbox" aria-hidden="true"></i>
             <p>No concessions found matching your search</p>
         </div>

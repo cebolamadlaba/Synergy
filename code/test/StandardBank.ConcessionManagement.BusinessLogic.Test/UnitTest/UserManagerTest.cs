@@ -26,7 +26,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             _userManager = new UserManager(InstantiatedDependencies.CacheManager, MockLookupTableManager.Object,
                 MockUserRepository.Object, MockUserRoleRepository.Object, MockRoleRepository.Object,
                 MockUserRegionRepository.Object, MockRegionRepository.Object, MockCentreRepository.Object,
-                MockCentreUserRepository.Object, InstantiatedDependencies.Mapper);
+                MockCentreUserRepository.Object, InstantiatedDependencies.Mapper,InstantiatedDependencies.AdminRepository);
         }
 
         /// <summary>
@@ -144,6 +144,21 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             _userManager.SetUserSelectedRegion(1, 1);
 
             Assert.True(true);
+        }
+
+        /// <summary>
+        /// Tests that GetUserName executes positive.
+        /// </summary>
+        [Fact]
+        public void GetUserName_Executes_Positive()
+        {
+            MockUserRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
+                .Returns(new User {FirstName = "Part1", Surname = "Part2"});
+
+            var result = _userManager.GetUserName(1);
+
+            Assert.NotNull(result);
+            Assert.Equal(result, "Part1 Part2");
         }
     }
 }

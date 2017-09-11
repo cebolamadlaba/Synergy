@@ -1,10 +1,10 @@
-﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
-import { UserService } from "../user/user.service";
+import { UserService } from "../services/user.service";
 import { User } from "../models/user";
 import { ActivatedRoute } from '@angular/router';
-import { RiskGroupService } from "../risk-group/risk-group.service";
 import { RiskGroup } from "../models/risk-group";
+import { LookupDataService } from "../services/lookup-data.service";
 
 @Component({
     selector: 'app-pricing',
@@ -23,7 +23,7 @@ export class PricingComponent implements OnInit, OnDestroy {
 
     constructor(private route: ActivatedRoute,
         @Inject(UserService) private userService,
-        @Inject(RiskGroupService) private riskGroupService) {
+        @Inject(LookupDataService) private lookupDataService) {
     }
 
     ngOnInit() {
@@ -42,7 +42,7 @@ export class PricingComponent implements OnInit, OnDestroy {
     searchRiskGroupNumber(riskGroupNumber: number) {
         this.foundRiskGroup = false;
         this.riskGroupNumber = riskGroupNumber;
-        this.observableRiskGroup = this.riskGroupService.getData(riskGroupNumber);
+        this.observableRiskGroup = this.lookupDataService.getRiskGroup(riskGroupNumber);
         this.observableRiskGroup.subscribe(riskGroup => {
                 this.riskGroup = riskGroup;
                 this.foundRiskGroup = true;

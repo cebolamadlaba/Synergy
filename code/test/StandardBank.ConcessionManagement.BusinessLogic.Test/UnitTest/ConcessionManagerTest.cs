@@ -9,6 +9,7 @@ using Role = StandardBank.ConcessionManagement.Model.UserInterface.Role;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 using static StandardBank.ConcessionManagement.Test.Helpers.MockedDependencies;
 using System.Collections.Generic;
+using ConcessionCondition = StandardBank.ConcessionManagement.Model.Repository.ConcessionCondition;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 {
@@ -29,10 +30,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             _concessionManager = new ConcessionManager(MockConcessionRepository.Object, MockLookupTableManager.Object,
                 MockLegalEntityRepository.Object, MockRiskGroupRepository.Object,
-                InstantiatedDependencies.CacheManager, MockConcessionAccountRepository.Object,
+                MockConcessionAccountRepository.Object,
                 InstantiatedDependencies.Mapper, MockConcessionConditionRepository.Object,
                 MockLegalEntityAccountRepository.Object, MockConcessionCommentRepository.Object,
-                MockConcessionLendingRepository.Object, MockMarketSegmentRepository.Object);
+                MockConcessionLendingRepository.Object, MockMarketSegmentRepository.Object,
+                MockConcessionCashRepository.Object, MockConcessionTransactionalRepository.Object,
+                MockConcessionRelationshipRepository.Object, MockAuditRepository.Object, MockUserManager.Object);
         }
 
         /// <summary>
@@ -434,5 +437,322 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             Assert.NotNull(result);
         }
+
+        /// <summary>
+        /// Tests that CreateConcession executes positive.
+        /// </summary>
+        [Fact]
+        public void CreateConcession_Executes_Positive()
+        {
+            MockLookupTableManager.Setup(_ => _.GetReferenceTypeId(It.IsAny<string>())).Returns(1);
+            MockLookupTableManager.Setup(_ => _.GetConcessionTypeId(It.IsAny<string>())).Returns(2);
+            MockLookupTableManager.Setup(_ => _.GetStatusId(It.IsAny<string>())).Returns(3);
+            MockLookupTableManager.Setup(_ => _.GetSubStatusId(It.IsAny<string>())).Returns(4);
+
+            MockConcessionRepository.Setup(_ => _.Create(It.IsAny<Concession>())).Returns(new Concession() {Id = 100});
+
+            var result =
+                _concessionManager.CreateConcession(new Model.UserInterface.Concession {ConcessionType = "UnitTest"},
+                    (new FakeSiteHelper()).LoggedInUser(null));
+
+            Assert.NotNull(result);
+            Assert.True(!string.IsNullOrWhiteSpace(result.ConcessionRef));
+            Assert.Equal(result.ConcessionRef, "U000000000100");
+        }
+
+        /// <summary>
+        /// Tests that DeactivateConcession executes positive.
+        /// </summary>
+        [Fact]
+        public void DeactivateConcession_Executes_Positive()
+        {
+            MockConcessionRepository.Setup(_ => _.ReadByConcessionRefIsActive(It.IsAny<string>(), It.IsAny<bool>()))
+                .Returns(new[] {new Concession()});
+
+            var result = _concessionManager.DeactivateConcession("U100", new User());
+
+            Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Tests that UpdateConcession executes positive.
+        /// </summary>
+        [Fact]
+        public void UpdateConcession_Executes_Positive()
+        {
+            MockConcessionRepository.Setup(_ => _.ReadByConcessionRefIsActive(It.IsAny<string>(), It.IsAny<bool>()))
+                .Returns(new[] { new Concession() });
+
+            MockLookupTableManager.Setup(_ => _.GetReferenceTypeId(It.IsAny<string>())).Returns(1);
+            MockLookupTableManager.Setup(_ => _.GetConcessionTypeId(It.IsAny<string>())).Returns(2);
+            MockLookupTableManager.Setup(_ => _.GetStatusId(It.IsAny<string>())).Returns(3);
+            MockLookupTableManager.Setup(_ => _.GetSubStatusId(It.IsAny<string>())).Returns(4);
+
+            var result = _concessionManager.UpdateConcession(new Model.UserInterface.Concession(), new User());
+
+            Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Tests that DeleteConcessionCondition executes positive.
+        /// </summary>
+        [Fact]
+        public void DeleteConcessionCondition_Executes_Positive()
+        {
+            MockConcessionConditionRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
+                .Returns(new ConcessionCondition());
+
+            var result = _concessionManager.DeleteConcessionCondition(new Model.UserInterface.ConcessionCondition());
+
+            Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Tests that CreateConcessionComment executes positive.
+        /// </summary>
+        [Fact]
+        public void CreateConcessionComment_Executes_Positive()
+        {
+            MockConcessionCommentRepository.Setup(_ => _.Create(It.IsAny<ConcessionComment>()))
+                .Returns(new ConcessionComment());
+
+            var result = _concessionManager.CreateConcessionComment(new ConcessionComment());
+
+            Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Tests that GetApprovedConcessionsForUser executes positive.
+        /// </summary>
+        [Fact]
+        public void GetApprovedConcessionsForUser_Executes_Positive()
+        {
+            MockConcessionRepository.Setup(_ => _.ReadApprovedConcessions(It.IsAny<int>()))
+                .Returns(new[] {new Concession()});
+
+            MockLookupTableManager.Setup(_ => _.GetStatusId(It.IsAny<string>())).Returns(1);
+
+            MockLegalEntityRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(new LegalEntity { IsActive = true });
+
+            MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
+                .Returns(new LegalEntity { IsActive = true });
+
+            MockRiskGroupRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(new RiskGroup { IsActive = true });
+
+            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
+                .Returns(new RiskGroup { IsActive = true });
+
+            MockLookupTableManager.Setup(_ => _.GetMarketSegmentName(It.IsAny<int>())).Returns("Market Segment Name");
+            MockLookupTableManager.Setup(_ => _.GetReferenceTypeName(It.IsAny<int>())).Returns("Lending");
+            MockLookupTableManager.Setup(_ => _.GetConcessionType(It.IsAny<int>()))
+                .Returns(new Model.UserInterface.ConcessionType {Description = "Lending", Code = "Lending"});
+
+            MockMarketSegmentRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new MarketSegment());
+
+            MockConcessionLendingRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
+                .Returns(new[] {new ConcessionLending()});
+
+            var result = _concessionManager.GetApprovedConcessionsForUser(1);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that GetApprovedConcessionDetails for lending executes positive.
+        /// </summary>
+        [Fact]
+        public void GetApprovedConcessionDetails_Lending_Executes_Positive()
+        {
+            MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
+                .Returns(new LegalEntity { IsActive = true });
+
+            MockConcessionLendingRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
+                .Returns(new[] { new ConcessionLending() });
+
+            MockMarketSegmentRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new MarketSegment());
+
+            var result =
+                _concessionManager.GetApprovedConcessionDetails(
+                    new Model.UserInterface.Concession {ConcessionType = "Lending"});
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that GetApprovedConcessionDetails for cash executes positive.
+        /// </summary>
+        [Fact]
+        public void GetApprovedConcessionDetails_Cash_Executes_Positive()
+        {
+            MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
+                .Returns(new LegalEntity { IsActive = true });
+
+            MockConcessionCashRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
+                .Returns(new[] { new ConcessionCash() });
+
+            MockMarketSegmentRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new MarketSegment());
+
+            var result =
+                _concessionManager.GetApprovedConcessionDetails(
+                    new Model.UserInterface.Concession { ConcessionType = "Cash" });
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that GetApprovedConcessionDetails for transactional executes positive.
+        /// </summary>
+        [Fact]
+        public void GetApprovedConcessionDetails_Transactional_Executes_Positive()
+        {
+            MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
+                .Returns(new LegalEntity { IsActive = true });
+
+            MockConcessionTransactionalRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
+                .Returns(new[] { new ConcessionTransactional() });
+
+            MockMarketSegmentRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new MarketSegment());
+
+            var result =
+                _concessionManager.GetApprovedConcessionDetails(
+                    new Model.UserInterface.Concession { ConcessionType = "Transactional" });
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that UpdateConcessionCondition executes positive.
+        /// </summary>
+        [Fact]
+        public void UpdateConcessionCondition_Executes_Positive()
+        {
+            var result = _concessionManager.UpdateConcessionCondition(new Model.UserInterface.ConcessionCondition(),
+                new Model.UserInterface.Concession());
+
+            Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Tests that CreateConcessionRelationship executes positive.
+        /// </summary>
+        [Fact]
+        public void CreateConcessionRelationship_Executes_Positive()
+        {
+            MockLookupTableManager.Setup(_ => _.GetRelationshipId(It.IsAny<string>())).Returns(1);
+
+            MockConcessionRelationshipRepository.Setup(_ => _.Create(It.IsAny<ConcessionRelationship>()))
+                .Returns(new ConcessionRelationship());
+
+            var result =
+                _concessionManager.CreateConcessionRelationship(new Model.UserInterface.ConcessionRelationship());
+
+            Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Tests that ActivateConcession executes positive.
+        /// </summary>
+        [Fact]
+        public void ActivateConcession_Executes_Positive()
+        {
+            MockConcessionRepository.Setup(_ => _.ReadByConcessionRefIsActive(It.IsAny<string>(), It.IsAny<bool>()))
+                .Returns(new[] { new Concession() });
+
+            var result = _concessionManager.ActivateConcession("U100", new User());
+
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void GetRagStatus_3Months_Withing21DaysReturnsGreen()
+        {
+            var status = _concessionManager.GetRagStatus("3 Months",AddWorkingDays(21));
+            Assert.True(status == "green");
+        }
+        [Fact]
+        public void GetRagStatus_3Months_Withing41DaysReturnsAmber()
+        {
+            var status = _concessionManager.GetRagStatus("3 Months", AddWorkingDays(41));
+            Assert.True(status == "yellow");
+        }
+        [Fact]
+        public void GetRagStatus_3Months_Withing42DaysReturnsRed()
+        {
+            var status = _concessionManager.GetRagStatus("3 Months", AddWorkingDays(42));
+            Assert.True(status == "red");
+        }
+        [Fact]
+        public void GetRagStatus_6Months_Withing42DaysReturnsGreen()
+        {
+            var status = _concessionManager.GetRagStatus("6 Months", AddWorkingDays(42));
+            Assert.True(status == "green");
+        }
+        [Fact]
+        public void GetRagStatus_6Months_Withing83DaysReturnsAmber()
+        {
+            var status = _concessionManager.GetRagStatus("6 Months", AddWorkingDays(83));
+            Assert.True(status == "yellow");
+        }
+        [Fact]
+        public void GetRagStatus_6Months_Withing84DaysReturnsRed()
+        {
+            var status = _concessionManager.GetRagStatus("6 Months", AddWorkingDays(84));
+            Assert.True(status == "red");
+        }
+        [Fact]
+        public void GetRagStatus_9Months_Withing63DaysReturnsGreen()
+        {
+            var status = _concessionManager.GetRagStatus("9 Months", AddWorkingDays(63));
+            Assert.True(status == "green");
+        }
+        [Fact]
+        public void GetRagStatus_9Months_Withing64DaysReturnsAmber()
+        {
+            var status = _concessionManager.GetRagStatus("9 Months", AddWorkingDays(64));
+            Assert.True(status == "yellow");
+        }
+        [Fact]
+        public void GetRagStatus_9Months_Withing126DaysReturnsRed()
+        {
+            var status = _concessionManager.GetRagStatus("9 Months", AddWorkingDays(126));
+            Assert.True(status == "red");
+        }
+        [Fact]
+        public void GetRagStatus_12Months_Withing84DaysReturnsGreen()
+        {
+            var status = _concessionManager.GetRagStatus("12 Months", AddWorkingDays(84));
+            Assert.True(status == "green");
+        }
+        [Fact]
+        public void GetRagStatus_12Months_Withing88DaysReturnsAmber()
+        {
+            var status = _concessionManager.GetRagStatus("12 Months", AddWorkingDays(88));
+            Assert.True(status == "yellow");
+        }
+        [Fact]
+        public void GetRagStatus_12Months_Withing168DaysReturnsRed()
+        {
+            var status = _concessionManager.GetRagStatus("12 Months", AddWorkingDays(168));
+            Assert.True(status == "red");
+        }
+        private DateTime AddWorkingDays(int days)
+        {
+            DateTime returnDate = DateTime.Today;
+            while (days > 0 )
+            {
+               returnDate =  returnDate.AddDays(-1);
+                if (returnDate.DayOfWeek != DayOfWeek.Saturday && returnDate.DayOfWeek != DayOfWeek.Sunday)
+                    days--;
+            }
+
+            return returnDate;
+        }
     }
 }
+

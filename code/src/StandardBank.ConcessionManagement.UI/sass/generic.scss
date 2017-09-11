@@ -10,6 +10,15 @@
     }
 }
 
+.back-button-text {
+    font-size: 0.8em;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
 .search-and-results-container{
     padding-top:20px;
     .input-group{
@@ -165,4 +174,14 @@ input{
 
 .concessions-header {
     border-bottom: 1px solid gray;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.form-horizontal .control-label {
+    text-align: left;
 }

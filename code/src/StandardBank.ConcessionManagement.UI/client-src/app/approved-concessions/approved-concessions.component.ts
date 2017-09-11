@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ApprovedConcession } from "../models/approved-concession";
 import { Observable } from "rxjs";
-import { UserConcessionsService } from "../user-concessions/user-concessions.service";
+import { UserConcessionsService } from "../services/user-concessions.service";
 import { Router, RouterModule } from '@angular/router';
 
 @Component({
@@ -11,16 +11,21 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class ApprovedConcessionsComponent implements OnInit {
     errorMessage: String;
+    validationError: String[];
+    saveMessage: String;
+    isLoading = false;
+
     observableApprovedConcessions: Observable<ApprovedConcession[]>;
     approvedConcessions: ApprovedConcession[];
-    concessionsToPrint: number[];
 
     constructor( @Inject(UserConcessionsService) private userConcessionsService, private router: Router) { }
 
     ngOnInit() {
-        this.concessionsToPrint = [];
         this.observableApprovedConcessions = this.userConcessionsService.getApprovedConcessions();
-        this.observableApprovedConcessions.subscribe(approvedConcession => this.approvedConcessions = approvedConcession, error => this.errorMessage = <any>error);
+        this.observableApprovedConcessions.subscribe(approvedConcession => {
+            this.approvedConcessions = approvedConcession;
+            this.isLoading = false;
+        }, error => this.errorMessage = <any>error);
     }
 
     openConcessionView(approvedConcession: ApprovedConcession) {
@@ -28,22 +33,16 @@ export class ApprovedConcessionsComponent implements OnInit {
             case "Lending":
                 this.router.navigate(['/lending-view-concession', approvedConcession.riskGroupNumber, approvedConcession.concessionReferenceNumber]);
                 break;
+            case "Cash":
+                this.router.navigate(['/cash-view-concession', approvedConcession.riskGroupNumber, approvedConcession.concessionReferenceNumber]);
+                break;
+            case "Transactional":
+                this.router.navigate(['/transactional-view-concession', approvedConcession.riskGroupNumber, approvedConcession.concessionReferenceNumber]);
+                break;
         }
     }
 
-    addToPrintConcessions(event, concessionId) {
-        if (event.target.checked) {
-            this.concessionsToPrint.push(concessionId);
-        } else {
-            var index = this.concessionsToPrint.indexOf(concessionId, 0);
-            if (index > -1) {
-                this.concessionsToPrint.splice(index, 1);
-            }
-        }
-    }
-
-    printLetters() {
-        console.log(this.concessionsToPrint);
-        this.userConcessionsService.printConcessionLetters(this.concessionsToPrint);
+    printConcession(concessionReferenceNumber: string) {
+        window.open("/api/Concession/GenerateConcessionLetter/" + concessionReferenceNumber);
     }
 }

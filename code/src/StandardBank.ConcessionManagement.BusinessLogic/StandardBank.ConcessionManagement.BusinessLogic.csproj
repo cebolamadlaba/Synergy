@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="AddOrUpdateProvinceDetail.cs" />
+    <Compile Remove="AddOrUpdateProvinceDetailHandler.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.1.1" />
     <PackageReference Include="FluentEmail.Razor" Version="2.1.0" />
     <PackageReference Include="MailKit" Version="1.16.2" />

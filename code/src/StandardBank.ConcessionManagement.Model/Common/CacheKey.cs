@@ -23,6 +23,11 @@
 
         public static class Repository
         {
+            public static class AccrualTypeRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.AccrualTypeRepository.ReadAll";
+            }
+
             public static class AdValoremRepository
             {
                 public const string ReadAll = "CacheKey.Repository.AdValoremRepository.ReadAll";
@@ -121,6 +126,16 @@
             public static class PeriodTypeRepository
             {
                 public const string ReadAll = "CacheKey.Repository.PeriodTypeRepository.ReadAll";
+            }
+
+            public static class TableNumberRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.TableNumberRepository.ReadAll";
+            }
+
+            public static class RelationshipRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.RelationshipRepository.ReadAll";
             }
         }
     }

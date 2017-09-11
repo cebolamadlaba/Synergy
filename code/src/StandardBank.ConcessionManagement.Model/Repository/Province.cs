@@ -5,7 +5,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
     /// <summary>
     /// Province entity
     /// </summary>
-    public class Province
+    public class Province: IAuditable
     {
         /// <summary>
         /// Gets or sets the Id.
@@ -30,5 +30,11 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The IsActive.
         /// </value>
         public bool IsActive { get; set; }
+
+        public string TableName => "rtblProvince";
+
+        public string PrimaryKeyColumnName => "pkProvinceId";
+
+        public object PrimaryKeyValue => Id;
     }
 }

@@ -1239,7 +1239,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// Inserts a Concession and returns the id
         /// </summary>
         /// <returns></returns>
-        private static int InsertConcession()
+        public static int InsertConcession()
         {
             var model = new Concession
             {
@@ -1265,7 +1265,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 IsCurrent = false,
                 IsActive = false,
                 MrsCrs = 4354,
-                RegionId = GetRegionId()
+                RegionId = GetRegionId(),
+                RiskGroupId = GetRiskGroupId()
             };
 
             InstantiatedDependencies.ConcessionRepository.Create(model);
@@ -1480,11 +1481,15 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             {
                 ConcessionId = GetConcessionId(),
                 ChannelTypeId = GetChannelTypeId(),
-                TableNumber = 4,
                 CashVolume = 9,
                 CashValue = 1813,
                 BaseRateId = GetBaseRateId(),
-                AdValorem = 8669
+                AdValorem = 8669,
+                LegalEntityId = GetLegalEntityId(),
+                LegalEntityAccountId = GetLegalEntityAccountId(),
+                BaseRate = 1263,
+                AccrualTypeId = GetAccrualTypeId(),
+                TableNumberId = GetTableNumberId()
             };
 
             InstantiatedDependencies.ConcessionCashRepository.Create(model);
@@ -1712,7 +1717,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 UFFFee = 1095,
                 ReviewFeeTypeId = GetReviewFeeTypeId(),
                 LegalEntityId = GetLegalEntityId(),
-                LegalEntityAccountId = GetLegalEntityAccountId()
+                LegalEntityAccountId = GetLegalEntityAccountId(),
+                AverageBalance = 234.23m
             };
 
             InstantiatedDependencies.ConcessionLendingRepository.Create(model);
@@ -1933,11 +1939,14 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 ConcessionId = GetConcessionId(),
                 TransactionTypeId = GetTransactionTypeId(),
                 ChannelTypeId = GetChannelTypeId(),
-                TableNumber = 1,
-                TransactionVolume = 7,
-                TransactionValue = 3329,
+                TransactionVolume = 2,
+                TransactionValue = 4797,
                 BaseRateId = GetBaseRateId(),
-                AdValorem = 3754
+                AdValorem = 5344,
+                LegalEntityId = GetLegalEntityId(),
+                LegalEntityAccountId = GetLegalEntityAccountId(),
+                BaseRate = 8369,
+                TableNumberId = GetTableNumberId()
             };
 
             InstantiatedDependencies.ConcessionTransactionalRepository.Create(model);
@@ -2535,6 +2544,446 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 return models.First(_ => _.Id != model.Value).Id;
 
             return InsertPeriodType();
+        }
+
+        /// <summary>
+        /// Gets the AccrualType id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetAccrualTypeId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.AccrualTypeRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertAccrualType();
+        }
+
+        /// <summary>
+        /// Inserts a AccrualType and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertAccrualType()
+        {
+            var model = new AccrualType
+            {
+                Description = "47d720c8a6",
+                IsActive = false
+            };
+
+            InstantiatedDependencies.AccrualTypeRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate AccrualType id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateAccrualTypeId(int? model)
+        {
+            if (!model.HasValue)
+                return GetAccrualTypeId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.AccrualTypeRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertAccrualType();
+        }
+
+        /// <summary>
+        /// Gets the TableNumber id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetTableNumberId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.TableNumberRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertTableNumber();
+        }
+
+        /// <summary>
+        /// Inserts a TableNumber and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertTableNumber()
+        {
+            var model = new TableNumber
+            {
+                TariffTable = 9,
+                AdValorem = 1321,
+                BaseRate = 6770,
+                IsActive = false
+            };
+
+            InstantiatedDependencies.TableNumberRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate TableNumber id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateTableNumberId(int? model)
+        {
+            if (!model.HasValue)
+                return GetTableNumberId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.TableNumberRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertTableNumber();
+        }
+
+        /// <summary>
+        /// Gets the Relationship id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetRelationshipId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.RelationshipRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertRelationship();
+        }
+
+        /// <summary>
+        /// Inserts a Relationship and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertRelationship()
+        {
+            var model = new Relationship
+            {
+                Description = "455fcbf184",
+                IsActive = false
+            };
+
+            InstantiatedDependencies.RelationshipRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate Relationship id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateRelationshipId(int? model)
+        {
+            if (!model.HasValue)
+                return GetRelationshipId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.RelationshipRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertRelationship();
+        }
+
+        /// <summary>
+        /// Gets the ConcessionRelationship id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetConcessionRelationshipId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.ConcessionRelationshipRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertConcessionRelationship();
+        }
+
+        /// <summary>
+        /// Inserts a ConcessionRelationship and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertConcessionRelationship()
+        {
+            var concessionId = GetConcessionId();
+
+            var model = new ConcessionRelationship
+            {
+                ParentConcessionId = concessionId,
+                ChildConcessionId = GetAlternateConcessionId(concessionId),
+                RelationshipId = GetRelationshipId(),
+                CreationDate = DateTime.Now,
+                UserId = GetUserId()
+            };
+
+            InstantiatedDependencies.ConcessionRelationshipRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate ConcessionRelationship id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateConcessionRelationshipId(int? model)
+        {
+            if (!model.HasValue)
+                return GetConcessionRelationshipId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.ConcessionRelationshipRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertConcessionRelationship();
+        }
+
+        /// <summary>
+        /// Gets the ProductLending id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetProductLendingId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.ProductLendingRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertProductLending();
+        }
+
+        /// <summary>
+        /// Inserts a ProductLending and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertProductLending()
+        {
+            var model = new ProductLending
+            {
+                RiskGroupId = GetRiskGroupId(),
+                LegalEntityId = GetLegalEntityId(),
+                LegalEntityAccountId = GetLegalEntityAccountId(),
+                ProductId = GetProductId(),
+                Limit = 7330,
+                AverageBalance = 1973,
+                LoadedMap = 7893
+            };
+
+            InstantiatedDependencies.ProductLendingRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate ProductLending id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateProductLendingId(int? model)
+        {
+            if (!model.HasValue)
+                return GetProductLendingId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.ProductLendingRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertProductLending();
+        }
+
+        /// <summary>
+        /// Gets the FinancialLending id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetFinancialLendingId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.FinancialLendingRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertFinancialLending();
+        }
+
+        /// <summary>
+        /// Inserts a FinancialLending and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertFinancialLending()
+        {
+            var model = new FinancialLending
+            {
+                RiskGroupId = GetRiskGroupId(),
+                TotalExposure = 6686,
+                WeightedAverageMap = 2282,
+                WeightedCrsOrMrs = 4607,
+                LatestCrsOrMrs = 123.34m
+            };
+
+            InstantiatedDependencies.FinancialLendingRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate FinancialLending id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateFinancialLendingId(int? model)
+        {
+            if (!model.HasValue)
+                return GetFinancialLendingId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.FinancialLendingRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertFinancialLending();
+        }
+
+        /// <summary>
+        /// Gets the FinancialCash id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetFinancialCashId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.FinancialCashRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertFinancialCash();
+        }
+
+        /// <summary>
+        /// Inserts a FinancialCash and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertFinancialCash()
+        {
+            var model = new FinancialCash
+            {
+                RiskGroupId = GetRiskGroupId(),
+                WeightedAverageBranchPrice = 3429,
+                TotalCashCentrCashTurnover = 8149,
+                TotalCashCentrCashVolume = 5721,
+                TotalBranchCashTurnover = 7316,
+                TotalBranchCashVolume = 2487,
+                TotalAutosafeCashTurnover = 8111,
+                TotalAutosafeCashVolume = 5266,
+                WeightedAverageCCPrice = 7745,
+                WeightedAverageAFPrice = 2965,
+                LatestCrsOrMrs = 2385,
+                LoadedPrice = 2434.43m
+            };
+
+            InstantiatedDependencies.FinancialCashRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate FinancialCash id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateFinancialCashId(int? model)
+        {
+            if (!model.HasValue)
+                return GetFinancialCashId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.FinancialCashRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertFinancialCash();
+        }
+
+        /// <summary>
+        /// Gets the ProductCash id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetProductCashId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.ProductCashRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertProductCash();
+        }
+
+        /// <summary>
+        /// Inserts a ProductCash and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertProductCash()
+        {
+            var model = new ProductCash
+            {
+                RiskGroupId = GetRiskGroupId(),
+                LegalEntityId = GetLegalEntityId(),
+                LegalEntityAccountId = GetLegalEntityAccountId(),
+                TableNumberId = GetTableNumberId(),
+                Channel = "9deb561718",
+                BpId = 1,
+                Volume = 3364,
+                Value = 3187,
+                LoadedPrice = 2405
+            };
+
+            InstantiatedDependencies.ProductCashRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate ProductCash id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateProductCashId(int? model)
+        {
+            if (!model.HasValue)
+                return GetProductCashId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.ProductCashRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertProductCash();
         }
     }
 }

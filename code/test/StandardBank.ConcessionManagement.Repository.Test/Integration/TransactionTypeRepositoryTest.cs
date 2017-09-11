@@ -22,7 +22,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 Id = DataHelper.GetNewTransactionTypeIdForInsert(),
                 ConcessionTypeId = DataHelper.GetConcessionTypeId(),
                 Description = "aed25144ff",
-                IsActive = false
+                IsActive = true
             };
 
             var result = InstantiatedDependencies.TransactionTypeRepository.Create(model);
@@ -43,6 +43,22 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
 
             Assert.NotNull(result);
             Assert.Equal(result.Id, id);
+        }
+
+        /// <summary>
+        /// Tests that ReadByConcessionTypeIdIsActive executes positive.
+        /// </summary>
+        [Fact]
+        public void ReadByConcessionTypeIdIsActive_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.TransactionTypeRepository.ReadAll();
+            var concessionTypeId = results.First(_ => _.IsActive && _.ConcessionTypeId.HasValue).ConcessionTypeId.Value;
+            var result = InstantiatedDependencies.TransactionTypeRepository.ReadByConcessionTypeIdIsActive(concessionTypeId, true);
+
+            Assert.NotNull(result);
+
+            foreach (var record in result)
+                Assert.Equal(record.ConcessionTypeId, concessionTypeId);
         }
 
         /// <summary>

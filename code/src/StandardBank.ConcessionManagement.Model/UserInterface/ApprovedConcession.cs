@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace StandardBank.ConcessionManagement.Model.UserInterface
 {
@@ -54,5 +55,21 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// The approved concession details.
         /// </value>
         public IEnumerable<ApprovedConcessionDetail> ApprovedConcessionDetails { get; set; }
+
+        /// <summary>
+        /// Gets or sets the expiry date.
+        /// </summary>
+        /// <value>
+        /// The expiry date.
+        /// </value>
+        public DateTime? ExpiryDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the approved date.
+        /// </summary>
+        /// <value>
+        /// The approved date.
+        /// </value>
+        public DateTime? ApprovedDate { get; set; }
     }
 }

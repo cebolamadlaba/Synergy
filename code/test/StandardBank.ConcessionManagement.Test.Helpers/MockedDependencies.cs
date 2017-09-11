@@ -13,6 +13,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
     public static class MockedDependencies
     {
         /// <summary>
+        /// The mock AccrualType repository
+        /// </summary>
+        public static Mock<IAccrualTypeRepository> MockAccrualTypeRepository = new Mock<IAccrualTypeRepository>();
+
+        /// <summary>
         /// The mock authorizing user repository
         /// </summary>
         public static Mock<IAuthorizingUserRepository> MockAuthorizingUserRepository = new Mock<IAuthorizingUserRepository>();
@@ -299,5 +304,60 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static Mock<IApprovalRoutingManager> MockApprovalRoutingManager = new Mock<IApprovalRoutingManager>();
         public static Mock<IApprovalWorkflowRepository> MockApprovalWorkflowRepository = new Mock<IApprovalWorkflowRepository>();
         public static Mock<ILetterGeneratorManager> MockLetterGeneratorManager = new Mock<ILetterGeneratorManager>();
+
+        /// <summary>
+        /// The mock cash manager
+        /// </summary>
+        public static Mock<ICashManager> MockCashManager = new Mock<ICashManager>();
+
+        /// <summary>
+        /// The mock transactional manager
+        /// </summary>
+        public static Mock<ITransactionalManager> MockTransactionalManager = new Mock<ITransactionalManager>();
+
+        /// <summary>
+        /// The mock TableNumber repository
+        /// </summary>
+        public static Mock<ITableNumberRepository> MockTableNumberRepository = new Mock<ITableNumberRepository>();
+
+        /// <summary>
+        /// The mock Relationship repository
+        /// </summary>
+        public static Mock<IRelationshipRepository> MockRelationshipRepository = new Mock<IRelationshipRepository>();
+
+        /// <summary>
+        /// The mock ConcessionRelationship repository
+        /// </summary>
+        public static Mock<IConcessionRelationshipRepository> MockConcessionRelationshipRepository = new Mock<IConcessionRelationshipRepository>();
+
+        /// <summary>
+        /// The mock audit repository
+        /// </summary>
+        public static Mock<IAuditRepository> MockAuditRepository = new Mock<IAuditRepository>();
+
+        /// <summary>
+        /// The mock ProductLending repository
+        /// </summary>
+        public static Mock<IProductLendingRepository> MockProductLendingRepository = new Mock<IProductLendingRepository>();
+
+        /// <summary>
+        /// The mock FinancialLending repository
+        /// </summary>
+        public static Mock<IFinancialLendingRepository> MockFinancialLendingRepository = new Mock<IFinancialLendingRepository>();
+
+        /// <summary>
+        /// The mock user manager
+        /// </summary>
+        public static Mock<IUserManager> MockUserManager = new Mock<IUserManager>();
+
+        /// <summary>
+        /// The mock FinancialCash repository
+        /// </summary>
+        public static Mock<IFinancialCashRepository> MockFinancialCashRepository = new Mock<IFinancialCashRepository>();
+
+        /// <summary>
+        /// The mock ProductCash repository
+        /// </summary>
+        public static Mock<IProductCashRepository> MockProductCashRepository = new Mock<IProductCashRepository>();
     }
 }

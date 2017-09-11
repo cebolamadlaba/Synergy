@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -82,7 +82,12 @@ namespace StandardBank.ConcessionManagement.UI
         /// <returns></returns>
         private ConfigurationData GenerateConfigurationData(IHostingEnvironment env)
         {
-            var config = new ConfigurationData {TemplatePath = Path.Combine(env.ContentRootPath, "EmailTemplates")};
+            var config = new ConfigurationData
+            {
+                EmailTemplatePath = Path.Combine(env.ContentRootPath, "EmailTemplates"),
+                LetterTemplatePath = Path.Combine(env.ContentRootPath, "LetterTemplates")
+            };
+
             Configuration.Bind(config);
             return config;
         }

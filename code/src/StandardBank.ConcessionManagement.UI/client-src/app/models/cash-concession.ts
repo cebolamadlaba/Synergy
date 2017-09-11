@@ -1,11 +1,6 @@
-import { Concession } from "./concession";
 import { CashConcessionDetail } from "./cash-concession-detail";
-import { ConcessionCondition } from "./concession-condition";
-import { User } from "./user";
+import { BaseConcession } from "./base-concession";
 
-export class CashConcession {
-    concession: Concession;
+export class CashConcession extends BaseConcession {
     cashConcessionDetails: CashConcessionDetail[];
-    concessionConditions: ConcessionCondition[];
-    currentUser: User;
 }
