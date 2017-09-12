@@ -29,7 +29,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 InstantiatedDependencies.Mapper, MockConditionProductRepository.Object,
                 MockConditionTypeProductRepository.Object, MockAccrualTypeRepository.Object,
                 MockChannelTypeRepository.Object, MockTransactionTypeRepository.Object,
-                MockTableNumberRepository.Object, MockRelationshipRepository.Object, MockRoleRepository.Object,MockCentreRepository.Object,MockRegionRepository.Object);
+                MockTableNumberRepository.Object, MockRelationshipRepository.Object, MockRoleRepository.Object,
+                MockCentreRepository.Object, MockRegionRepository.Object);
         }
 
         /// <summary>
@@ -503,7 +504,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             var conditionProduct =
                 new ConditionProduct {Description = "Test Condition Product", Id = 1, IsActive = true};
 
-            MockConditionProductRepository.Setup(_ => _.ReadAll()).Returns(new[] {conditionProduct});
+            MockConditionProductRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(conditionProduct);
 
             var result = _lookupTableManager.GetConditionProductName(1);
 

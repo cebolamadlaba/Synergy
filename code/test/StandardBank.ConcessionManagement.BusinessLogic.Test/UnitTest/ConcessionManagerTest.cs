@@ -255,9 +255,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockLookupTableManager.Setup(_ => _.GetConditionTypeName(It.IsAny<int>()))
                 .Returns(conditionTypeName);
 
-            var productTypeName = "Test Product Type Name";
+            var conditionProductName = "Test Product Type Name";
 
-            MockLookupTableManager.Setup(_ => _.GetProductTypeName(It.IsAny<int>())).Returns(productTypeName);
+            MockLookupTableManager.Setup(_ => _.GetConditionProductName(It.IsAny<int>())).Returns(conditionProductName);
 
             var periodTypeName = "Test Period Type Name";
 
@@ -275,7 +275,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             foreach (var record in result)
             {
                 Assert.Equal(record.ConditionType, conditionTypeName);
-                Assert.Equal(record.ProductType, productTypeName);
+                Assert.Equal(record.ProductType, conditionProductName);
                 Assert.Equal(record.PeriodType, periodTypeName);
                 Assert.Equal(record.Period, periodName);
             }
