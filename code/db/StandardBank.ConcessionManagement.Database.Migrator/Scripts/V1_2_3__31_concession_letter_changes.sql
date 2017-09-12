@@ -11,7 +11,7 @@ ALTER PROCEDURE CreateUser
 	@RoleId int,
 	@RegionId int,
 	@CentreId int,
-	@ContactNumber varchar(50) null
+	@ContactNumber varchar(50)
 AS
 BEGIN
 	Declare @userId  int
