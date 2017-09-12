@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using FluentEmail.Razor;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator;
 using StandardBank.ConcessionManagement.Model.UserInterface;
+using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
@@ -54,6 +54,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ILegalEntityRepository _legalEntityRepository;
 
         /// <summary>
+        /// The cash manager
+        /// </summary>
+        private readonly ICashManager _cashManager;
+
+        /// <summary>
+        /// The razor renderer
+        /// </summary>
+        private readonly IRazorRenderer _razorRenderer;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LetterGeneratorManager"/> class.
         /// </summary>
         /// <param name="configurationData">The configuration data.</param>
@@ -63,9 +73,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="userManager">The user manager.</param>
         /// <param name="lendingManager">The lending manager.</param>
         /// <param name="legalEntityRepository">The legal entity repository.</param>
+        /// <param name="cashManager">The cash manager.</param>
+        /// <param name="razorRenderer">The razor renderer.</param>
         public LetterGeneratorManager(IConfigurationData configurationData, IFileUtiltity fileUtiltity,
             IConcessionManager concessionManager, IPdfUtility pdfUtility, IUserManager userManager,
-            ILendingManager lendingManager, ILegalEntityRepository legalEntityRepository)
+            ILendingManager lendingManager, ILegalEntityRepository legalEntityRepository, ICashManager cashManager,
+            IRazorRenderer razorRenderer)
         {
             _templatePath = configurationData.LetterTemplatePath;
             _fileUtiltity = fileUtiltity;
@@ -74,6 +87,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _userManager = userManager;
             _lendingManager = lendingManager;
             _legalEntityRepository = legalEntityRepository;
+            _cashManager = cashManager;
+            _razorRenderer = razorRenderer;
         }
 
         /// <summary>
@@ -84,7 +99,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public byte[] GenerateLetters(string concessionReferenceId)
         {
             var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
-
             var requestor = _userManager.GetUser(concession.RequestorId);
             var bcm = _userManager.GetUser(concession.BcmUserId);
 
@@ -96,9 +110,78 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 case "Lending":
                     concessionLetters.AddRange(GetLendingConcessionLetterData(concession, requestor, bcm));
                     break;
+                case "Cash":
+                    concessionLetters.AddRange(GetCashConcessionLetterData(concession, requestor, bcm));
+                    break;
+                default:
+                    throw new NotImplementedException(concession.ConcessionType);
             }
 
             return GenerateConcessionLetterPdf(concessionLetters);
+        }
+
+        /// <summary>
+        /// Gets the cash concession letter data.
+        /// </summary>
+        /// <param name="concession">The concession.</param>
+        /// <param name="requestor">The requestor.</param>
+        /// <param name="bcm">The BCM.</param>
+        /// <returns></returns>
+        private IEnumerable<ConcessionLetter> GetCashConcessionLetterData(Concession concession, User requestor, User bcm)
+        {
+            var concessionLetters = new List<ConcessionLetter>();
+            var pageBreakBefore = false;
+            var cashConcession = _cashManager.GetCashConcession(concession.ReferenceNumber, requestor);
+            var cashConcessionDetails = cashConcession.CashConcessionDetails.OrderBy(_ => _.AccountNumber);
+
+            foreach (var cashConcessionDetail in cashConcessionDetails)
+            {
+                var concessionLetter =
+                    concessionLetters.FirstOrDefault(_ => _.CashConcessionLetters != null &&
+                                                          _.CashConcessionLetters.Any(
+                                                              x => x.AccountNumber == cashConcessionDetail
+                                                                       .AccountNumber));
+
+                if (concessionLetter == null)
+                {
+                    concessionLetter = PopulateBaseConcessionLetter(concession, requestor, bcm,
+                        cashConcessionDetail.LegalEntityId.Value);
+
+                    concessionLetter.CashConcessionLetters = new List<CashConcessionLetter>();
+                    concessionLetter.ConditionConcessionLetters = GetConcessionConditionLetters(concession);
+                    concessionLetter.PageBreakBefore = pageBreakBefore;
+
+                    pageBreakBefore = true;
+
+                    concessionLetters.Add(concessionLetter);
+                }
+
+                var cashConcessionLetters = new List<CashConcessionLetter>();
+                cashConcessionLetters.AddRange(concessionLetter.CashConcessionLetters);
+                cashConcessionLetters.Add(PopulateCashConcessionLetter(concession, cashConcessionDetail));
+                concessionLetter.CashConcessionLetters = cashConcessionLetters;
+            }
+
+            return concessionLetters;
+        }
+
+        /// <summary>
+        /// Populates the cash concession letter.
+        /// </summary>
+        /// <param name="concession">The concession.</param>
+        /// <param name="cashConcessionDetail">The cash concession detail.</param>
+        /// <returns></returns>
+        private CashConcessionLetter PopulateCashConcessionLetter(Concession concession, CashConcessionDetail cashConcessionDetail)
+        {
+            return new CashConcessionLetter
+            {
+                AccountNumber = cashConcessionDetail.AccountNumber,
+                ChannelType = cashConcessionDetail.Channel,
+                BaseRateAdValorem =
+                    $"{cashConcessionDetail.BaseRate.GetValueOrDefault(0):C} + {cashConcessionDetail.AdValorem.GetValueOrDefault(0)}%",
+                ConcessionEndDate = concession.DateApproved.Value.ToString("dd/MM/yyyy"),
+                ConcessionStartDate = concession.ExpiryDate.Value.ToString("dd/MM/yyyy")
+            };
         }
 
         /// <summary>
@@ -123,7 +206,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                                                           _.LendingConcessionLetters.Any(
                                                               x => x.AccountNumber == lendingConcessionDetail
                                                                        .AccountNumber));
-
 
                 if (concessionLetter == null)
                 {
@@ -277,8 +359,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         private byte[] GenerateConcessionLetterPdf(IEnumerable<ConcessionLetter> concessionLetters)
         {
-            var razorRenderer = new RazorRenderer();
-
             var templateHeaderPath = System.IO.Path.Combine(_templatePath, "TemplateHeader.html");
             var templateFooterPath = System.IO.Path.Combine(_templatePath, "TemplateFooter.html");
             var concessionLetterPath = System.IO.Path.Combine(_templatePath, "ConcessionLetter.cshtml");
@@ -292,7 +372,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             //loop through the concession letters and add each one, run the razor rendered to populate the template
             //with the relevant details
             foreach (var concessionLetter in concessionLetters)
-                html.Append(razorRenderer.Parse(concessionLetterHtml, concessionLetter));
+                html.Append(_razorRenderer.Parse(concessionLetterHtml, concessionLetter));
 
             //add the footer
             html.Append(_fileUtiltity.ReadFileText(templateFooterPath));

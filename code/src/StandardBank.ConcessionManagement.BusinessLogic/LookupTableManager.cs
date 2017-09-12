@@ -529,6 +529,30 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Gets the name of the review fee type.
+        /// </summary>
+        /// <param name="reviewFeeTypeId">The review fee type identifier.</param>
+        /// <returns></returns>
+        public string GetReviewFeeTypeName(int reviewFeeTypeId)
+        {
+            var reviewFeeType = _reviewFeeTypeRepository.ReadById(reviewFeeTypeId);
+
+            return reviewFeeType.Description;
+        }
+
+        /// <summary>
+        /// Gets the name of the channel type.
+        /// </summary>
+        /// <param name="channelTypeId">The channel type identifier.</param>
+        /// <returns></returns>
+        public string GetChannelTypeName(int channelTypeId)
+        {
+            var channelType = _channelTypeRepository.ReadById(channelTypeId);
+
+            return channelType.Description;
+        }
+
+        /// <summary>
         /// Gets the condition products
         /// </summary>
         /// <param name="conditionTypeId"></param>

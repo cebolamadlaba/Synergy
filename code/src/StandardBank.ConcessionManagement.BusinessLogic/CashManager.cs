@@ -326,6 +326,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 mappedConcessionCashEntity.ApprovedPrice = concessionCashEntity.CashValue.GetValueOrDefault(0);
 
+                if (mappedConcessionCashEntity.ChannelTypeId.HasValue)
+                    mappedConcessionCashEntity.Channel =
+                        _lookupTableManager.GetChannelTypeName(mappedConcessionCashEntity.ChannelTypeId.Value);
+
                 cashConcessionDetails.Add(mappedConcessionCashEntity);
             }
         }

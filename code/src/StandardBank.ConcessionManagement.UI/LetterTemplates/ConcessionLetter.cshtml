@@ -135,25 +135,32 @@ else
     </table>
 }
 
-    @*<!--Cash Acquiring-->
-        <p style="font-weight: bold;">CASH ACQUIRING</p>
-        <table border="1" width="100%">
-            <tr style="background: #dbe5f1;">
-                <td style="padding: 5px;">Account Number</td>
-                <td style="padding: 5px;">Channel/ Fee Type</td>
-                <td style="padding: 5px;">Fee / Rate (Incl. VAT)</td>
-                <td style="padding: 5px;">Concession Start Date</td>
-                <td style="padding: 5px;">Concession End Date</td>
-            </tr>
+@if (Model.HasCashConcessionLetters)
+{
+    <!--Cash Acquiring-->
+    <p style="font-weight: bold;">CASH ACQUIRING</p>
+    <table border="1" width="100%">
+        <tr style="background: #dbe5f1;">
+            <td style="padding: 5px;">Account Number</td>
+            <td style="padding: 5px;">Channel / Fee Type</td>
+            <td style="padding: 5px;">Fee / Rate<br />(Incl. VAT)</td>
+            <td style="padding: 5px;">Concession Start Date</td>
+            <td style="padding: 5px;">Concession End Date</td>
+        </tr>
+        @foreach (var cashConcessionLetter in Model.CashConcessionLetters)
+        {
             <tr>
-                <td>--Account number--</td>
-                <td>--Channel type--</td>
-                <td>--Base rate + Ad valorem</td>
-                <td>--Start date--</td>
-                <td>--End date--</td>
+                <td>@cashConcessionLetter.AccountNumber</td>
+                <td>@cashConcessionLetter.ChannelType</td>
+                <td>@cashConcessionLetter.BaseRateAdValorem</td>
+                <td>@cashConcessionLetter.ConcessionStartDate</td>
+                <td>@cashConcessionLetter.ConcessionEndDate</td>
             </tr>
-        </table>
+        }
+    </table>
+}
 
+    @*
         <!--Investments-->
         <p style="font-weight: bold;">INVESTMENTS</p>
         <table border="1" width="100%">

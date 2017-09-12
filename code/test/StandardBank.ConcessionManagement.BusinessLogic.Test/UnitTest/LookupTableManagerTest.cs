@@ -511,5 +511,39 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             Assert.NotNull(result);
             Assert.Equal(result, conditionProduct.Description);
         }
+
+        /// <summary>
+        /// Tests that GetReviewFeeTypeName executes positive.
+        /// </summary>
+        [Fact]
+        public void GetReviewFeeTypeName_Executes_Positive()
+        {
+            var reviewFeeType =
+                new ReviewFeeType { Description = "Test Review Fee Type", Id = 1, IsActive = true };
+
+            MockReviewFeeTypeRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(reviewFeeType);
+
+            var result = _lookupTableManager.GetReviewFeeTypeName(1);
+
+            Assert.NotNull(result);
+            Assert.Equal(result, reviewFeeType.Description);
+        }
+
+        /// <summary>
+        /// Tests that GetChannelTypeName executes positive.
+        /// </summary>
+        [Fact]
+        public void GetChannelTypeName_Executes_Positive()
+        {
+            var channelType =
+                new ChannelType { Description = "Test Review Fee Type", Id = 1, IsActive = true };
+
+            MockChannelTypeRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(channelType);
+
+            var result = _lookupTableManager.GetChannelTypeName(1);
+
+            Assert.NotNull(result);
+            Assert.Equal(result, channelType.Description);
+        }
     }
 }

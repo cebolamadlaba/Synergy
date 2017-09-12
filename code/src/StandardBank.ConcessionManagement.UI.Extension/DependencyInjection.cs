@@ -30,6 +30,7 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             services.AddTransient<IDbConnectionFactory, DbConnectionFactory>();
             services.AddScoped<IFileUtiltity, SystemFileUtility>();
             services.AddScoped<IPdfUtility, WkWrapPdfUtility>();
+            services.AddScoped<IRazorRenderer, FluentRazorRenderer>();
 
             container.Configure(config =>
             {

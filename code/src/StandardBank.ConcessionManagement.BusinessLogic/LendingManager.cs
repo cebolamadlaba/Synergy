@@ -314,7 +314,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 if (mappedLendingConcessionDetail.ProductTypeId.HasValue)
                     mappedLendingConcessionDetail.ProductType =
                         _lookupTableManager.GetProductTypeName(mappedLendingConcessionDetail.ProductTypeId.Value);
-                
+
+                if (mappedLendingConcessionDetail.ReviewFeeTypeId.HasValue)
+                    mappedLendingConcessionDetail.ReviewFeeType =
+                        _lookupTableManager.GetReviewFeeTypeName(mappedLendingConcessionDetail.ReviewFeeTypeId.Value);
+
                 lendingConcessionDetails.Add(mappedLendingConcessionDetail);
             }
         }

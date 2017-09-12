@@ -192,5 +192,19 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="conditionProductId">The condition product identifier.</param>
         /// <returns></returns>
         string GetConditionProductName(int conditionProductId);
+
+        /// <summary>
+        /// Gets the name of the review fee type.
+        /// </summary>
+        /// <param name="reviewFeeTypeId">The review fee type identifier.</param>
+        /// <returns></returns>
+        string GetReviewFeeTypeName(int reviewFeeTypeId);
+
+        /// <summary>
+        /// Gets the name of the channel type.
+        /// </summary>
+        /// <param name="channelTypeId">The channel type identifier.</param>
+        /// <returns></returns>
+        string GetChannelTypeName(int channelTypeId);
     }
 }

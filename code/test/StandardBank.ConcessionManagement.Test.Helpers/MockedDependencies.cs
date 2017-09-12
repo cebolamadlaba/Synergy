@@ -359,5 +359,20 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The mock ProductCash repository
         /// </summary>
         public static Mock<IProductCashRepository> MockProductCashRepository = new Mock<IProductCashRepository>();
+
+        /// <summary>
+        /// The mock file utiltity
+        /// </summary>
+        public static Mock<IFileUtiltity> MockFileUtiltity = new Mock<IFileUtiltity>();
+
+        /// <summary>
+        /// The mock PDF utility
+        /// </summary>
+        public static Mock<IPdfUtility> MockPdfUtility = new Mock<IPdfUtility>();
+
+        /// <summary>
+        /// The mock razor renderer
+        /// </summary>
+        public static Mock<IRazorRenderer> MockRazorRenderer = new Mock<IRazorRenderer>();
     }
 }

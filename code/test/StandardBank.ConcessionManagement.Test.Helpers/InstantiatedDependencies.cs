@@ -5,6 +5,7 @@ using StandardBank.ConcessionManagement.Common;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Model.Common;
 using StandardBank.ConcessionManagement.Repository;
 using StandardBank.ConcessionManagement.UI.Extension;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
@@ -31,14 +32,18 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The configuration data
         /// </summary>
         public static IConfigurationData ConfigurationData =
-            new ConfigurationData(Configuration.ConnectionString, string.Empty, Configuration.DatabaseType);
+            new ConfigurationData
+            {
+                ConnectionString = Configuration.ConnectionString,
+                DatabaseType =
+                    Configuration.DatabaseType == "SqlServer" ? DatabaseType.SqlServer : DatabaseType.SqlLite,
+                LetterTemplatePath = @"C:\Temp"
+            };
 
-      
         /// <summary>
         /// The database connection
         /// </summary>
         private static readonly IDbConnectionFactory DbConnection = new DbConnectionFactory(ConfigurationData);
-        //public static readonly IAdminRepository AdminRepository = new AdminRepository(DbConnection);
 
         /// <summary>
         /// The cache manager
