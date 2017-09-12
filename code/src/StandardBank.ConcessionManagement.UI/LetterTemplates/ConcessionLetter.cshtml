@@ -65,58 +65,48 @@ else
 <!--risk group number-->
 <p style="margin-top:50px;page-break-before: always;">Risk Group Number : @Model.RiskGroupNumber </p>
 
-@*<!--LENDING (Specific to Overdraft)-->
+@if (Model.HasLendingOverDraftConcessionLetters)
+{
+    <!--LENDING (Specific to Overdraft)-->
     <p style="font-weight: bold;">LENDING (Specific to Overdraft)</p>
     <table border="1" width="100%">
         <tr style="background: #dbe5f1;">
-            <td style="padding: 5px;">Product Type</td>
-            <td style="padding: 5px;">Account Number</td>
-            <td style="padding: 5px;">Channel/ Fee Type</td>
-            <td style="padding: 5px;">Fee / Margin Above Prime (Incl. VAT)</td>
-            <td style="padding: 5px;">Concession Start Date</td>
-            <td style="padding: 5px;">Concession End Date</td>
+            <td style="padding: 5px; width: 15%;">Product Type</td>
+            <td style="padding: 5px; width: 15%;">Account Number</td>
+            <td style="padding: 5px; width: 21%;">Channel / Fee Type</td>
+            <td style="padding: 5px; width: 21%;">Fee / Margin Above Prime<br />(Incl. VAT)</td>
+            <td style="padding: 5px; width: 14%;">Concession Start Date</td>
+            <td style="padding: 5px; width: 14%;">Concession End Date</td>
         </tr>
-        <tr>
-            <td>--Lending Product Type--</td>
-            <td>--Account Number--</td>
-            <td>
-                <p style="margin:0;">--Margin above prime--</p>
-                <p style="margin:0;">--Initiation fee--</p>
-                <p style="margin:0;">--Review fee--</p>
-                <p style="margin:0;">--Review extension fee--</p>
-                <p style="margin:0;">--Average OD utilisation--</p>
-                <p style="margin:0;">--Unutilised facility fee--</p>
-            </td>
-            <td>
-                <p style="margin:0;">--Margin above prime--</p>
-                <p style="margin:0;">--Initiation fee--</p>
-                <p style="margin:0;">--Review fee--</p>
-                <p style="margin:0;">--Review extension fee--</p>
-                <p style="margin:0;">--Average OD utilisation--</p>
-                <p style="margin:0;">--Unutilised facility fee--</p>
-            </td>
-            <td>--Start date--</td>
-            <td>--End date--</td>
-        </tr>
+        @foreach (var lendingOverDraftConcessionLetter in Model.LendingOverDraftConcessionLetters)
+        {
+            <tr>
+                <td rowspan="5">@lendingOverDraftConcessionLetter.ProductType</td>
+                <td rowspan="5">@lendingOverDraftConcessionLetter.AccountNumber</td>
+                <td>Margin Above Prime</td>
+                <td>@lendingOverDraftConcessionLetter.MarginToPrime</td>
+                <td rowspan="5">@lendingOverDraftConcessionLetter.ConcessionStartDate</td>
+                <td rowspan="5">@lendingOverDraftConcessionLetter.ConcessionEndDate</td>
+            </tr>
+            <tr>
+                <td>Initiation Fee</td>
+                <td>@lendingOverDraftConcessionLetter.InitiationFee</td>
+            </tr>
+            <tr>
+                <td>Review Fee Type</td>
+                <td>@lendingOverDraftConcessionLetter.ReviewFeeType</td>
+            </tr>
+            <tr>
+                <td>Review Fee</td>
+                <td>@lendingOverDraftConcessionLetter.ReviewFee</td>
+            </tr>
+            <tr>
+                <td>Rate</td>
+                <td>@lendingOverDraftConcessionLetter.ApprovedMarginToPrime</td>
+            </tr>
+        }
     </table>
-    <!-- Conditions of grant -->
-    <table border="1" width="100%" style="margin-top: 15px;">
-        <tr style="background: #dbe5f1;">
-            <td colspan="4" style="padding: 5px; font-weight: bold;">Conditions of Grant</td>
-        </tr>
-        <tr style="background: #dbe5f1;">
-            <td style="padding: 5px;">Condition Measure</td>
-            <td style="padding: 5px;">Condition Product</td>
-            <td style="padding: 5px;">Value</td>
-            <td style="padding: 5px;">Deadline</td>
-        </tr>
-        <tr>
-            <td>--Condition measure--</td>
-            <td>--Condition product--</td>
-            <td>--Value--</td>
-            <td>--Deadline--</td>
-        </tr>
-    </table>*@
+}
 
 <!--LENDING-->
 @if (Model.HasLendingConcessionLetters)
@@ -124,19 +114,19 @@ else
     <p style="font-weight: bold;">LENDING</p>
     <table border="1" width="100%">
         <tr style="background: #dbe5f1;">
-            <td style="padding: 5px;">Product Type</td>
-            <td style="padding: 5px;">Account Number</td>
-            <td style="padding: 5px;">Channel/ Fee Type</td>
-            <td style="padding: 5px;">Fee / Margin Above Prime (Incl. VAT)</td>
-            <td style="padding: 5px;">Concession Start Date</td>
-            <td style="padding: 5px;">Concession End Date</td>
+            <td style="padding: 5px; width: 15%;">Product Type</td>
+            <td style="padding: 5px; width: 15%;">Account Number</td>
+            <td style="padding: 5px; width: 21%;">Channel / Fee Type</td>
+            <td style="padding: 5px; width: 21%;">Fee / Margin Above Prime<br />(Incl. VAT)</td>
+            <td style="padding: 5px; width: 14%;">Concession Start Date</td>
+            <td style="padding: 5px; width: 14%;">Concession End Date</td>
         </tr>
         @foreach (var lendingConcessionLetter in Model.LendingConcessionLetters)
         {
             <tr>
                 <td>@lendingConcessionLetter.ProductType</td>
                 <td>@lendingConcessionLetter.AccountNumber</td>
-                <td>@lendingConcessionLetter.ChannelOrFeeType</td>
+                <td>Margin Above Prime</td>
                 <td>@lendingConcessionLetter.FeeOrMarginAbovePrime</td>
                 <td>@lendingConcessionLetter.ConcessionStartDate</td>
                 <td>@lendingConcessionLetter.ConcessionEndDate</td>
@@ -268,30 +258,30 @@ else
             </tr>
         </table>*@
 
-@if (Model.HasConditionConcessionLetters)
-{
+    @if (Model.HasConditionConcessionLetters)
+    {
     <!-- Conditions of grant -->
-    <table border="1" width="100%" style="margin-top: 15px;">
-        <tr style="background: #dbe5f1;">
-            <td colspan="4" style="padding: 5px; font-weight: bold;">Conditions of Grant</td>
-        </tr>
-        <tr style="background: #dbe5f1;">
-            <td style="padding: 5px;">Condition Measure</td>
-            <td style="padding: 5px;">Condition Product</td>
-            <td style="padding: 5px;">Value</td>
-            <td style="padding: 5px;">Deadline</td>
-        </tr>
-        @foreach (var condition in Model.ConditionConcessionLetters)
-        {
-            <tr>
-                <td>@condition.ConditionMeasure</td>
-                <td>@condition.ConditionProduct</td>
-                <td>@condition.Value</td>
-                <td>@condition.Deadline</td>
+        <table border="1" width="100%" style="margin-top: 15px;">
+            <tr style="background: #dbe5f1;">
+                <td colspan="4" style="padding: 5px; font-weight: bold;">Conditions of Grant</td>
             </tr>
-        }
-    </table>
-}
+            <tr style="background: #dbe5f1;">
+                <td style="padding: 5px;">Condition Measure</td>
+                <td style="padding: 5px;">Condition Product</td>
+                <td style="padding: 5px;">Value</td>
+                <td style="padding: 5px;">Deadline</td>
+            </tr>
+            @foreach (var condition in Model.ConditionConcessionLetters)
+            {
+                <tr>
+                    <td>@condition.ConditionMeasure</td>
+                    <td>@condition.ConditionProduct</td>
+                    <td>@condition.Value</td>
+                    <td>@condition.Deadline</td>
+                </tr>
+            }
+        </table>
+    }
 
     <p style="margin:0; color: #17365d; font-weight:bold; margin-top: 50px; page-break-before: always;">Terms and Conditions</p>
     <ol>

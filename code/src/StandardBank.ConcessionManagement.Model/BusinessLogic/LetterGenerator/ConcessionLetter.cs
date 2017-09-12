@@ -169,5 +169,22 @@ namespace StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator
         /// The lending concession letters.
         /// </value>
         public IEnumerable<LendingConcessionLetter> LendingConcessionLetters { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance has lending over draft concession letters.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance has lending over draft concession letters; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasLendingOverDraftConcessionLetters => LendingOverDraftConcessionLetters != null &&
+                                                            LendingOverDraftConcessionLetters.Any();
+
+        /// <summary>
+        /// Gets or sets the lending over draft concession letters.
+        /// </summary>
+        /// <value>
+        /// The lending over draft concession letters.
+        /// </value>
+        public IEnumerable<LendingOverDraftConcessionLetter> LendingOverDraftConcessionLetters { get; set; }
     }
 }

@@ -124,12 +124,23 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                                                               x => x.AccountNumber == lendingConcessionDetail
                                                                        .AccountNumber));
 
+
+                if (concessionLetter == null)
+                {
+                    concessionLetter =
+                        concessionLetters.FirstOrDefault(
+                            _ => _ != null &&
+                                 _.LendingOverDraftConcessionLetters.Any(
+                                     x => x.AccountNumber == lendingConcessionDetail.AccountNumber));
+                }
+
                 if (concessionLetter == null)
                 {
                     concessionLetter = PopulateBaseConcessionLetter(concession, requestor, bcm,
                         lendingConcessionDetail.LegalEntityId.Value);
 
                     concessionLetter.LendingConcessionLetters = new List<LendingConcessionLetter>();
+                    concessionLetter.LendingOverDraftConcessionLetters = new List<LendingOverDraftConcessionLetter>();
                     concessionLetter.ConditionConcessionLetters = GetConcessionConditionLetters(concession);
                     concessionLetter.PageBreakBefore = pageBreakBefore;
 
@@ -138,16 +149,47 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     concessionLetters.Add(concessionLetter);
                 }
 
-                var lendingConcessionLetters = new List<LendingConcessionLetter>();
-
-                lendingConcessionLetters.AddRange(concessionLetter.LendingConcessionLetters);
-
-                lendingConcessionLetters.Add(PopulateLendingConcessionLetter(concession, lendingConcessionDetail));
-
-                concessionLetter.LendingConcessionLetters = lendingConcessionLetters;
+                if (lendingConcessionDetail.ProductType == "Overdraft")
+                {
+                    var lendingOverDraftConcessionLetters = new List<LendingOverDraftConcessionLetter>();
+                    lendingOverDraftConcessionLetters.AddRange(concessionLetter.LendingOverDraftConcessionLetters);
+                    lendingOverDraftConcessionLetters.Add(
+                        PopulateLendingOverDraftConcessionLetter(concession, lendingConcessionDetail));
+                    concessionLetter.LendingOverDraftConcessionLetters = lendingOverDraftConcessionLetters;
+                }
+                else
+                {
+                    var lendingConcessionLetters = new List<LendingConcessionLetter>();
+                    lendingConcessionLetters.AddRange(concessionLetter.LendingConcessionLetters);
+                    lendingConcessionLetters.Add(PopulateLendingConcessionLetter(concession, lendingConcessionDetail));
+                    concessionLetter.LendingConcessionLetters = lendingConcessionLetters;
+                }
             }
 
             return concessionLetters;
+        }
+
+        /// <summary>
+        /// Populates the lending over draft concession letter.
+        /// </summary>
+        /// <param name="concession">The concession.</param>
+        /// <param name="lendingConcessionDetail">The lending concession detail.</param>
+        /// <returns></returns>
+        private LendingOverDraftConcessionLetter PopulateLendingOverDraftConcessionLetter(Concession concession,
+            LendingConcessionDetail lendingConcessionDetail)
+        {
+            return new LendingOverDraftConcessionLetter
+            {
+                AccountNumber = lendingConcessionDetail.AccountNumber,
+                ApprovedMarginToPrime = lendingConcessionDetail.ApprovedMap.ToString("C"),
+                ProductType = lendingConcessionDetail.ProductType,
+                ReviewFeeType = lendingConcessionDetail.ReviewFeeType,
+                MarginToPrime = lendingConcessionDetail.MarginAgainstPrime.ToString("C"),
+                InitiationFee = lendingConcessionDetail.InitiationFee.ToString("C"),
+                ReviewFee = lendingConcessionDetail.ReviewFee.ToString("C"),
+                ConcessionEndDate = concession.DateApproved.Value.ToString("dd/MM/yyyy"),
+                ConcessionStartDate = concession.ExpiryDate.Value.ToString("dd/MM/yyyy")
+            };
         }
 
         /// <summary>
@@ -189,8 +231,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 ProductType = lendingConcessionDetail.ProductType,
                 ChannelOrFeeType = lendingConcessionDetail.InitiationFee.ToString("C"),
                 FeeOrMarginAbovePrime = lendingConcessionDetail.MarginAgainstPrime.ToString("C"),
-                ConcessionEndDate = concession.DateApproved.Value.ToString("yyyy-MM-dd"),
-                ConcessionStartDate = concession.ExpiryDate.Value.ToString("yyyy-MM-dd")
+                ConcessionEndDate = concession.DateApproved.Value.ToString("dd/MM/yyyy"),
+                ConcessionStartDate = concession.ExpiryDate.Value.ToString("dd/MM/yyyy")
             };
         }
 
@@ -208,7 +250,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var concessionLetter = new ConcessionLetter
             {
-                CurrentDate = DateTime.Now.ToString("yyyy-MM-dd"),
+                CurrentDate = DateTime.Now.ToString("dd/MM/yyyy"),
                 TemplatePath = _templatePath,
                 RiskGroupNumber = Convert.ToString(concession.RiskGroupNumber),
                 BCMEmailAddress = bcm?.EmailAddress,
