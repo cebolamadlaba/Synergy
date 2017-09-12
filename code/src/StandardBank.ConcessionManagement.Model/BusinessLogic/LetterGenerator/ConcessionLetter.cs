@@ -9,6 +9,14 @@ namespace StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator
     public class ConcessionLetter
     {
         /// <summary>
+        /// Gets or sets a value indicating whether [page break before].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [page break before]; otherwise, <c>false</c>.
+        /// </value>
+        public bool PageBreakBefore { get; set; }
+
+        /// <summary>
         /// Gets or sets the client contact person.
         /// </summary>
         /// <value>

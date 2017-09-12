@@ -517,6 +517,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Gets the name of the condition product.
+        /// </summary>
+        /// <param name="conditionProductId">The condition product identifier.</param>
+        /// <returns></returns>
+        public string GetConditionProductName(int conditionProductId)
+        {
+            var conditionProduct = _conditionProductRepository.ReadById(conditionProductId);
+
+            return conditionProduct.Description;
+        }
+
+        /// <summary>
         /// Gets the condition products
         /// </summary>
         /// <param name="conditionTypeId"></param>

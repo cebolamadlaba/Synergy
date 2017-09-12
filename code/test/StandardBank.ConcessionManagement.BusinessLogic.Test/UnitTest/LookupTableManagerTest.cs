@@ -493,5 +493,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             Assert.NotNull(result);
             Assert.Equal(result, relationship.Description);
         }
+
+        /// <summary>
+        /// Tests that GetConditionProductName executes positive.
+        /// </summary>
+        [Fact]
+        public void GetConditionProductName_Executes_Positive()
+        {
+            var conditionProduct =
+                new ConditionProduct {Description = "Test Condition Product", Id = 1, IsActive = true};
+
+            MockConditionProductRepository.Setup(_ => _.ReadAll()).Returns(new[] {conditionProduct});
+
+            var result = _lookupTableManager.GetConditionProductName(1);
+
+            Assert.NotNull(result);
+            Assert.Equal(result, conditionProduct.Description);
+        }
     }
 }

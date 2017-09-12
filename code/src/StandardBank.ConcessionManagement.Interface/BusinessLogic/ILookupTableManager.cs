@@ -185,5 +185,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="relationshipId">The relationship identifier.</param>
         /// <returns></returns>
         string GetRelationshipDescription(int relationshipId);
+
+        /// <summary>
+        /// Gets the name of the condition product.
+        /// </summary>
+        /// <param name="conditionProductId">The condition product identifier.</param>
+        /// <returns></returns>
+        string GetConditionProductName(int conditionProductId);
     }
 }

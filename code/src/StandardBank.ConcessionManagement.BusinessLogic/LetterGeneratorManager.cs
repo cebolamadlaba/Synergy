@@ -112,7 +112,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             User bcm)
         {
             var concessionLetters = new List<ConcessionLetter>();
-
+            var pageBreakBefore = false;
             var lendingConcession = _lendingManager.GetLendingConcession(concession.ReferenceNumber, requestor);
             var lendingConcessionDetails = lendingConcession.LendingConcessionDetails.OrderBy(_ => _.AccountNumber);
 
@@ -131,6 +131,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                     concessionLetter.LendingConcessionLetters = new List<LendingConcessionLetter>();
                     concessionLetter.ConditionConcessionLetters = GetConcessionConditionLetters(concession);
+                    concessionLetter.PageBreakBefore = pageBreakBefore;
+
+                    pageBreakBefore = true;
 
                     concessionLetters.Add(concessionLetter);
                 }

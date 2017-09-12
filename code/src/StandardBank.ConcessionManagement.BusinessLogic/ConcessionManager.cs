@@ -371,7 +371,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     _lookupTableManager.GetConditionTypeName(concessionCondition.ConditionTypeId);
 
                 mappedConcessionCondition.ProductType =
-                    _lookupTableManager.GetProductTypeName(concessionCondition.ConditionProductId);
+                    _lookupTableManager.GetConditionProductName(concessionCondition.ConditionProductId);
 
                 if (concessionCondition.PeriodTypeId.HasValue)
                     mappedConcessionCondition.PeriodType =

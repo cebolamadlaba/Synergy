@@ -1,5 +1,12 @@
+@if (Model.PageBreakBefore)
+{
+    <p style="page-break-before: always;"><img src="@Model.TemplatePath/images/sblogo.jpg" /></p>
+}
+else
+{
+    <p><img src="@Model.TemplatePath/images/sblogo.jpg" /></p>
+}
 
-<p><img src="@Model.TemplatePath/images/sblogo.jpg" /></p>
 <h2 style="text-align: right; color: #17365d;">Personal & Business Banking</h2>
 <!-- today date-->
 <p style="text-align:right; width: 100%;">@Model.CurrentDate</p>
