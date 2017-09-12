@@ -1,4 +1,7 @@
-﻿namespace StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator
 {
     /// <summary>
     /// Concession letter
@@ -124,5 +127,39 @@
         /// The risk group number.
         /// </value>
         public string RiskGroupNumber { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance has condition concession letters.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance has condition concession letters; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasConditionConcessionLetters => ConditionConcessionLetters != null &&
+                                                     ConditionConcessionLetters.Any();
+
+        /// <summary>
+        /// Gets or sets the condition concession letters.
+        /// </summary>
+        /// <value>
+        /// The condition concession letters.
+        /// </value>
+        public IEnumerable<ConditionConcessionLetter> ConditionConcessionLetters { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance has lending concession letters.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance has lending concession letters; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasLendingConcessionLetters => LendingConcessionLetters != null &&
+                                                   LendingConcessionLetters.Any();
+
+        /// <summary>
+        /// Gets or sets the lending concession letters.
+        /// </summary>
+        /// <value>
+        /// The lending concession letters.
+        /// </value>
+        public IEnumerable<LendingConcessionLetter> LendingConcessionLetters { get; set; }
     }
 }

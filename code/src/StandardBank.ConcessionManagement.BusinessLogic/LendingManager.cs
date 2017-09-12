@@ -311,6 +311,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 mappedLendingConcessionDetail.LoadedMap = concessionLending?.MarginToPrime ?? 0;
                 mappedLendingConcessionDetail.ApprovedMap = concessionLending?.ApprovedMarginToPrime ?? 0;
 
+                if (mappedLendingConcessionDetail.ProductTypeId.HasValue)
+                    mappedLendingConcessionDetail.ProductType =
+                        _lookupTableManager.GetProductTypeName(mappedLendingConcessionDetail.ProductTypeId.Value);
+                
                 lendingConcessionDetails.Add(mappedLendingConcessionDetail);
             }
         }
