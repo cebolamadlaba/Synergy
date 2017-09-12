@@ -76,5 +76,13 @@
         /// The concession end date.
         /// </value>
         public string ConcessionEndDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the uff fee.
+        /// </summary>
+        /// <value>
+        /// The uff fee.
+        /// </value>
+        public string UFFFee { get; set; }
     }
 }

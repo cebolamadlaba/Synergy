@@ -270,7 +270,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 InitiationFee = lendingConcessionDetail.InitiationFee.ToString("C"),
                 ReviewFee = lendingConcessionDetail.ReviewFee.ToString("C"),
                 ConcessionEndDate = concession.DateApproved.Value.ToString("dd/MM/yyyy"),
-                ConcessionStartDate = concession.ExpiryDate.Value.ToString("dd/MM/yyyy")
+                ConcessionStartDate = concession.ExpiryDate.Value.ToString("dd/MM/yyyy"),
+                UFFFee = lendingConcessionDetail.UffFee.ToString("C")
             };
         }
 

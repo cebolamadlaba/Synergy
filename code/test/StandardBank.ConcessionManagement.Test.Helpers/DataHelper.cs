@@ -837,6 +837,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
 
             if (transactionTypes != null && transactionTypes.Any())
                 transactionTypeId = transactionTypes.Max(_ => _.Id) + 1;
+
             return transactionTypeId;
         }
 
