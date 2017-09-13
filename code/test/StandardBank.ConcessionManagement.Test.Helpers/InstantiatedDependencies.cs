@@ -351,6 +351,16 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static IProductCashRepository ProductCashRepository = new ProductCashRepository(DbConnection);
 
         /// <summary>
+        /// The FinancialTransactional repository
+        /// </summary>
+        public static IFinancialTransactionalRepository FinancialTransactionalRepository = new FinancialTransactionalRepository(DbConnection);
+
+        /// <summary>
+        /// The ProductTransactional repository
+        /// </summary>
+        public static IProductTransactionalRepository ProductTransactionalRepository = new ProductTransactionalRepository(DbConnection);
+
+        /// <summary>
         /// The look up table manager
         /// </summary>
         public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,

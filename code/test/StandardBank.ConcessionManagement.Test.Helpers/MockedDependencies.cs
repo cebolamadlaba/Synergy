@@ -374,5 +374,15 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The mock razor renderer
         /// </summary>
         public static Mock<IRazorRenderer> MockRazorRenderer = new Mock<IRazorRenderer>();
+
+        /// <summary>
+        /// The mock FinancialTransactional repository
+        /// </summary>
+        public static Mock<IFinancialTransactionalRepository> MockFinancialTransactionalRepository = new Mock<IFinancialTransactionalRepository>();
+
+        /// <summary>
+        /// The mock ProductTransactional repository
+        /// </summary>
+        public static Mock<IProductTransactionalRepository> MockProductTransactionalRepository = new Mock<IProductTransactionalRepository>();
     }
 }

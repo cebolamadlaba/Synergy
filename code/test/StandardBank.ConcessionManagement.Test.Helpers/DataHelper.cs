@@ -2991,5 +2991,127 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
 
             return InsertProductCash();
         }
+
+        /// <summary>
+        /// Gets the FinancialTransactional id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetFinancialTransactionalId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.FinancialTransactionalRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertFinancialTransactional();
+        }
+
+        /// <summary>
+        /// Inserts a FinancialTransactional and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertFinancialTransactional()
+        {
+            var model = new FinancialTransactional
+            {
+                RiskGroupId = GetRiskGroupId(),
+                TotalNumberOfAccounts = 6331,
+                AverageAccountManagementFee = 769,
+                AvergageMinimumMonthlyFee = 4508,
+                TotalChequeIssuingVolumes = 9016,
+                TotalChequeDepositVolumes = 8481,
+                TotalChequeEncashmentVolumes = 2864,
+                TotalChequeEncashmentValues = 5629,
+                TotalCashWithdrawalVolumes = 2723,
+                TotalCashWithdrawalValues = 9746,
+                AvergageChequeIssuingValue = 6026,
+                AverageChequeIssuingPrice = 5665,
+                AverageChequeDepositValue = 4032,
+                AverageChequeDepositPrice = 9247,
+                AverageChequeEncashmentPrice = 2680,
+                AverageCashWithdrawalPrice = 5134
+            };
+
+            InstantiatedDependencies.FinancialTransactionalRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate FinancialTransactional id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateFinancialTransactionalId(int? model)
+        {
+            if (!model.HasValue)
+                return GetFinancialTransactionalId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.FinancialTransactionalRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertFinancialTransactional();
+        }
+
+        /// <summary>
+        /// Gets the ProductTransactional id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetProductTransactionalId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.ProductTransactionalRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertProductTransactional();
+        }
+
+        /// <summary>
+        /// Inserts a ProductTransactional and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertProductTransactional()
+        {
+            var model = new ProductTransactional
+            {
+                RiskGroupId = GetRiskGroupId(),
+                LegalEntityId = GetLegalEntityId(),
+                LegalEntityAccountId = GetLegalEntityAccountId(),
+                TableNumberId = GetTableNumberId(),
+                TransactionTypeId = GetTransactionTypeId(),
+                Volume = 845,
+                Value = 711,
+                LoadedPrice = "b8dcd15e0b"
+            };
+
+            InstantiatedDependencies.ProductTransactionalRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate ProductTransactional id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateProductTransactionalId(int? model)
+        {
+            if (!model.HasValue)
+                return GetProductTransactionalId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.ProductTransactionalRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertProductTransactional();
+        }
     }
 }

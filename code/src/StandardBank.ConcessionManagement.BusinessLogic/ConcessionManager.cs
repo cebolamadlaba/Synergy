@@ -526,7 +526,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             return concession.ExpiryDate.HasValue &&
                    concession.ExpiryDate.Value <= DateTime.Now.AddMonths(3) &&
-                   currentStatus == "Approved";
+                   (currentStatus == "Approved" || currentStatus == "Approved With Changes");
         }
 
         /// <summary>
@@ -549,7 +549,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return concession.ExpiryDate.HasValue &&
                    concession.ExpiryDate.Value <= DateTime.Now.AddMonths(3) &&
-                   currentStatus == "Approved";
+                   (currentStatus == "Approved" || currentStatus == "Approved With Changes");
         }
 
         /// <summary>
@@ -750,7 +750,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             else
                 mappedConcession.HOUserId = currentConcession.HOUserId;
 
-            if (concession.Status == "Approved")
+            if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
             {
                 if (!mappedConcession.DateApproved.HasValue)
                     mappedConcession.DateApproved = DateTime.Now;
@@ -761,7 +761,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             _concessionRepository.Update(mappedConcession);
 
-            if (concession.Status == "Approved")
+            if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
             {
                 //check if this is an extension or renewal for another concession, if it is then
                 //we need to deactivate the parent concession since this one is approved
@@ -853,11 +853,25 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         public IEnumerable<Condition> GetConditions(string periodType, string period)
         {
-            var statusid = _lookupTableManager.GetStatusId("Approved");
+            var approvedStatusId = _lookupTableManager.GetStatusId("Approved");
+            var approvedWithChangesStatusId = _lookupTableManager.GetStatusId("Approved With Changes");
+
             var periodId = _lookupTableManager.GetPeriods().First(x => x.Description == period).Id;
             var periodTypeId = _lookupTableManager.GetPeriodTypes().First(x => x.Description == periodType).Id;
-            var results =  _mapper.Map<IEnumerable<Condition>>(_concessionConditionRepository.ReadByPeriodAndApprovalStatus(statusid,periodId,periodTypeId));
+
+            var conditions = new List<Model.Repository.Condition>();
+
+            conditions.AddRange(
+                _concessionConditionRepository.ReadByPeriodAndApprovalStatus(approvedStatusId, periodId, periodTypeId));
+
+            conditions.AddRange(
+                _concessionConditionRepository.ReadByPeriodAndApprovalStatus(approvedWithChangesStatusId, periodId,
+                    periodTypeId));
+
+            var results =  _mapper.Map<IEnumerable<Condition>>(conditions);
+
             results.ToList().ForEach(x => x.RagStatus = GetRagStatus(x.PeriodName, x.ApprovedDate));
+
             return results;
         }
 
