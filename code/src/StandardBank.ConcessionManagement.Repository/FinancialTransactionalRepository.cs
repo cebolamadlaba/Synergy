@@ -35,8 +35,8 @@ namespace StandardBank.ConcessionManagement.Repository
         public FinancialTransactional Create(FinancialTransactional model)
         {
             const string sql =
-                @"INSERT [dbo].[tblFinancialTransactional] ([fkRiskGroupId], [TotalNumberOfAccounts], [AverageAccountManagementFee], [AverageMinimumMonthlyFee], [TotalChequeIssuingVolumes], [TotalChequeDepositVolumes], [TotalChequeEncashmentVolumes], [TotalChequeEncashmentValues], [TotalCashWithdrawalVolumes], [TotalCashWithdrawalValues], [AverageChequeIssuingValue], [AverageChequeIssuingPrice], [AverageChequeDepositValue], [AverageChequeDepositPrice], [AverageChequeEncashmentPrice], [AverageCashWithdrawalPrice]) 
-                                VALUES (@RiskGroupId, @TotalNumberOfAccounts, @AverageAccountManagementFee, @AverageMinimumMonthlyFee, @TotalChequeIssuingVolumes, @TotalChequeDepositVolumes, @TotalChequeEncashmentVolumes, @TotalChequeEncashmentValues, @TotalCashWithdrawalVolumes, @TotalCashWithdrawalValues, @AverageChequeIssuingValue, @AverageChequeIssuingPrice, @AverageChequeDepositValue, @AverageChequeDepositPrice, @AverageChequeEncashmentPrice, @AverageCashWithdrawalPrice) 
+                @"INSERT [dbo].[tblFinancialTransactional] ([fkRiskGroupId], [TotalNumberOfAccounts], [AverageAccountManagementFee], [AverageMinimumMonthlyFee], [TotalChequeIssuingVolumes], [TotalChequeDepositVolumes], [TotalChequeEncashmentVolumes], [TotalChequeEncashmentValues], [TotalCashWithdrawalVolumes], [TotalCashWithdrawalValues], [AverageChequeIssuingValue], [AverageChequeIssuingPrice], [AverageChequeDepositValue], [AverageChequeDepositPrice], [AverageChequeEncashmentPrice], [AverageCashWithdrawalPrice], [LatestCrsOrMrs]) 
+                                VALUES (@RiskGroupId, @TotalNumberOfAccounts, @AverageAccountManagementFee, @AverageMinimumMonthlyFee, @TotalChequeIssuingVolumes, @TotalChequeDepositVolumes, @TotalChequeEncashmentVolumes, @TotalChequeEncashmentValues, @TotalCashWithdrawalVolumes, @TotalCashWithdrawalValues, @AverageChequeIssuingValue, @AverageChequeIssuingPrice, @AverageChequeDepositValue, @AverageChequeDepositPrice, @AverageChequeEncashmentPrice, @AverageCashWithdrawalPrice, @LatestCrsOrMrs) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
@@ -59,7 +59,8 @@ namespace StandardBank.ConcessionManagement.Repository
                         AverageChequeDepositValue = model.AverageChequeDepositValue,
                         AverageChequeDepositPrice = model.AverageChequeDepositPrice,
                         AverageChequeEncashmentPrice = model.AverageChequeEncashmentPrice,
-                        AverageCashWithdrawalPrice = model.AverageCashWithdrawalPrice
+                        AverageCashWithdrawalPrice = model.AverageCashWithdrawalPrice,
+                        LatestCrsOrMrs = model.LatestCrsOrMrs
                     }).Single();
             }
 
@@ -76,7 +77,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<FinancialTransactional>(
-                    "SELECT [pkFinancialTransactionalId] [Id], [fkRiskGroupId] [RiskGroupId], [TotalNumberOfAccounts], [AverageAccountManagementFee], [AverageMinimumMonthlyFee], [TotalChequeIssuingVolumes], [TotalChequeDepositVolumes], [TotalChequeEncashmentVolumes], [TotalChequeEncashmentValues], [TotalCashWithdrawalVolumes], [TotalCashWithdrawalValues], [AverageChequeIssuingValue], [AverageChequeIssuingPrice], [AverageChequeDepositValue], [AverageChequeDepositPrice], [AverageChequeEncashmentPrice], [AverageCashWithdrawalPrice] FROM [dbo].[tblFinancialTransactional] WHERE [pkFinancialTransactionalId] = @Id",
+                    "SELECT [pkFinancialTransactionalId] [Id], [fkRiskGroupId] [RiskGroupId], [TotalNumberOfAccounts], [AverageAccountManagementFee], [AverageMinimumMonthlyFee], [TotalChequeIssuingVolumes], [TotalChequeDepositVolumes], [TotalChequeEncashmentVolumes], [TotalChequeEncashmentValues], [TotalCashWithdrawalVolumes], [TotalCashWithdrawalValues], [AverageChequeIssuingValue], [AverageChequeIssuingPrice], [AverageChequeDepositValue], [AverageChequeDepositPrice], [AverageChequeEncashmentPrice], [AverageCashWithdrawalPrice], [LatestCrsOrMrs] FROM [dbo].[tblFinancialTransactional] WHERE [pkFinancialTransactionalId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -91,7 +92,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<FinancialTransactional>(
-                    @"SELECT [pkFinancialTransactionalId] [Id], [fkRiskGroupId] [RiskGroupId], [TotalNumberOfAccounts], [AverageAccountManagementFee], [AverageMinimumMonthlyFee], [TotalChequeIssuingVolumes], [TotalChequeDepositVolumes], [TotalChequeEncashmentVolumes], [TotalChequeEncashmentValues], [TotalCashWithdrawalVolumes], [TotalCashWithdrawalValues], [AverageChequeIssuingValue], [AverageChequeIssuingPrice], [AverageChequeDepositValue], [AverageChequeDepositPrice], [AverageChequeEncashmentPrice], [AverageCashWithdrawalPrice] 
+                    @"SELECT [pkFinancialTransactionalId] [Id], [fkRiskGroupId] [RiskGroupId], [TotalNumberOfAccounts], [AverageAccountManagementFee], [AverageMinimumMonthlyFee], [TotalChequeIssuingVolumes], [TotalChequeDepositVolumes], [TotalChequeEncashmentVolumes], [TotalChequeEncashmentValues], [TotalCashWithdrawalVolumes], [TotalCashWithdrawalValues], [AverageChequeIssuingValue], [AverageChequeIssuingPrice], [AverageChequeDepositValue], [AverageChequeDepositPrice], [AverageChequeEncashmentPrice], [AverageCashWithdrawalPrice], [LatestCrsOrMrs] 
                     FROM [dbo].[tblFinancialTransactional] 
                     WHERE [fkRiskGroupId] = @riskGroupId",
                     new { riskGroupId });
@@ -107,7 +108,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<FinancialTransactional>(
-                    "SELECT [pkFinancialTransactionalId] [Id], [fkRiskGroupId] [RiskGroupId], [TotalNumberOfAccounts], [AverageAccountManagementFee], [AverageMinimumMonthlyFee], [TotalChequeIssuingVolumes], [TotalChequeDepositVolumes], [TotalChequeEncashmentVolumes], [TotalChequeEncashmentValues], [TotalCashWithdrawalVolumes], [TotalCashWithdrawalValues], [AverageChequeIssuingValue], [AverageChequeIssuingPrice], [AverageChequeDepositValue], [AverageChequeDepositPrice], [AverageChequeEncashmentPrice], [AverageCashWithdrawalPrice] FROM [dbo].[tblFinancialTransactional]");
+                    "SELECT [pkFinancialTransactionalId] [Id], [fkRiskGroupId] [RiskGroupId], [TotalNumberOfAccounts], [AverageAccountManagementFee], [AverageMinimumMonthlyFee], [TotalChequeIssuingVolumes], [TotalChequeDepositVolumes], [TotalChequeEncashmentVolumes], [TotalChequeEncashmentValues], [TotalCashWithdrawalVolumes], [TotalCashWithdrawalValues], [AverageChequeIssuingValue], [AverageChequeIssuingPrice], [AverageChequeDepositValue], [AverageChequeDepositPrice], [AverageChequeEncashmentPrice], [AverageCashWithdrawalPrice], [LatestCrsOrMrs] FROM [dbo].[tblFinancialTransactional]");
             }
         }
 
@@ -120,7 +121,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblFinancialTransactional]
-                            SET [fkRiskGroupId] = @RiskGroupId, [TotalNumberOfAccounts] = @TotalNumberOfAccounts, [AverageAccountManagementFee] = @AverageAccountManagementFee, [AverageMinimumMonthlyFee] = @AverageMinimumMonthlyFee, [TotalChequeIssuingVolumes] = @TotalChequeIssuingVolumes, [TotalChequeDepositVolumes] = @TotalChequeDepositVolumes, [TotalChequeEncashmentVolumes] = @TotalChequeEncashmentVolumes, [TotalChequeEncashmentValues] = @TotalChequeEncashmentValues, [TotalCashWithdrawalVolumes] = @TotalCashWithdrawalVolumes, [TotalCashWithdrawalValues] = @TotalCashWithdrawalValues, [AverageChequeIssuingValue] = @AverageChequeIssuingValue, [AverageChequeIssuingPrice] = @AverageChequeIssuingPrice, [AverageChequeDepositValue] = @AverageChequeDepositValue, [AverageChequeDepositPrice] = @AverageChequeDepositPrice, [AverageChequeEncashmentPrice] = @AverageChequeEncashmentPrice, [AverageCashWithdrawalPrice] = @AverageCashWithdrawalPrice
+                            SET [fkRiskGroupId] = @RiskGroupId, [TotalNumberOfAccounts] = @TotalNumberOfAccounts, [AverageAccountManagementFee] = @AverageAccountManagementFee, [AverageMinimumMonthlyFee] = @AverageMinimumMonthlyFee, [TotalChequeIssuingVolumes] = @TotalChequeIssuingVolumes, [TotalChequeDepositVolumes] = @TotalChequeDepositVolumes, [TotalChequeEncashmentVolumes] = @TotalChequeEncashmentVolumes, [TotalChequeEncashmentValues] = @TotalChequeEncashmentValues, [TotalCashWithdrawalVolumes] = @TotalCashWithdrawalVolumes, [TotalCashWithdrawalValues] = @TotalCashWithdrawalValues, [AverageChequeIssuingValue] = @AverageChequeIssuingValue, [AverageChequeIssuingPrice] = @AverageChequeIssuingPrice, [AverageChequeDepositValue] = @AverageChequeDepositValue, [AverageChequeDepositPrice] = @AverageChequeDepositPrice, [AverageChequeEncashmentPrice] = @AverageChequeEncashmentPrice, [AverageCashWithdrawalPrice] = @AverageCashWithdrawalPrice, [LatestCrsOrMrs] = @LatestCrsOrMrs
                             WHERE [pkFinancialTransactionalId] = @Id",
                     new
                     {
@@ -140,7 +141,8 @@ namespace StandardBank.ConcessionManagement.Repository
                         AverageChequeDepositValue = model.AverageChequeDepositValue,
                         AverageChequeDepositPrice = model.AverageChequeDepositPrice,
                         AverageChequeEncashmentPrice = model.AverageChequeEncashmentPrice,
-                        AverageCashWithdrawalPrice = model.AverageCashWithdrawalPrice
+                        AverageCashWithdrawalPrice = model.AverageCashWithdrawalPrice,
+                        LatestCrsOrMrs = model.LatestCrsOrMrs
                     });
             }
         }

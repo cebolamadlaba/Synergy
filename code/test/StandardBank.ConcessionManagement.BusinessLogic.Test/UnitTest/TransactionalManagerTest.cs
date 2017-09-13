@@ -150,5 +150,41 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             Assert.NotNull(result.TransactionalProducts);
             Assert.NotEmpty(result.TransactionalProducts);
         }
+
+        /// <summary>
+        /// Tests that GetLatestCrsOrMrs executes positive.
+        /// </summary>
+        [Fact]
+        public void GetLatestCrsOrMrs_Executes_Positive()
+        {
+            MockPricingManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
+                .Returns(new Model.UserInterface.Pricing.RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
+
+            MockFinancialTransactionalRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
+                .Returns(new[] { new FinancialTransactional { LatestCrsOrMrs = 2000 } });
+
+            var result = _transactionalManager.GetLatestCrsOrMrs(1);
+
+            Assert.NotNull(result);
+            Assert.Equal(result, 2000);
+        }
+
+        /// <summary>
+        /// Tests that GetTransactionalFinancialForRiskGroupNumber executes positive.
+        /// </summary>
+        [Fact]
+        public void GetTransactionalFinancialForRiskGroupNumber_Executes_Positive()
+        {
+            MockPricingManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
+                .Returns(new Model.UserInterface.Pricing.RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
+
+            MockFinancialTransactionalRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
+                .Returns(new[] { new FinancialTransactional { LatestCrsOrMrs = 2000 } });
+
+            var result = _transactionalManager.GetTransactionalFinancialForRiskGroupNumber(1);
+
+            Assert.NotNull(result);
+            Assert.Equal(result.LatestCrsOrMrs, 2000);
+        }
     }
 }

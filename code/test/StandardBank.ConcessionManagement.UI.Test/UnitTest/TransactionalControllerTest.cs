@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using StandardBank.ConcessionManagement.Model.UserInterface;
@@ -26,7 +27,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         /// </summary>
         public TransactionalControllerTest()
         {
-            _transactionalController = new TransactionalController(new FakeSiteHelper(), MockPricingManager.Object,
+            _transactionalController = new TransactionalController(new FakeSiteHelper(),
                 MockTransactionalManager.Object, MockMediator.Object);
         }
 
@@ -121,6 +122,38 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
 
             Assert.NotNull(apiResult.Value);
             Assert.True(apiResult.Value is TransactionalConcession);
+        }
+
+        /// <summary>
+        /// Tests that LatestCrsOrMrs executes positive.
+        /// </summary>
+        [Fact]
+        public void LatestCrsOrMrs_Executes_Positive()
+        {
+            MockTransactionalManager.Setup(_ => _.GetLatestCrsOrMrs(It.IsAny<int>())).Returns(500);
+
+            var result = _transactionalController.LatestCrsOrMrs(1);
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is decimal);
+            Assert.Equal(Convert.ToDecimal(apiResult.Value), 500);
+        }
+
+        /// <summary>
+        /// Tests that TransactionalFinancial executes positive.
+        /// </summary>
+        [Fact]
+        public void TransactionalFinancial_Executes_Positive()
+        {
+            MockTransactionalManager.Setup(_ => _.GetTransactionalFinancialForRiskGroupNumber(It.IsAny<int>()))
+                .Returns(new TransactionalFinancial());
+
+            var result = _transactionalController.TransactionalFinancial(1);
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is TransactionalFinancial);
         }
     }
 }

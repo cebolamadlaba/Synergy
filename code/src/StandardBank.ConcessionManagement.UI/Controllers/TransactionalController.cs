@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
@@ -30,11 +31,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         private readonly ISiteHelper _siteHelper;
 
         /// <summary>
-        /// The pricing manager
-        /// </summary>
-        private readonly IPricingManager _pricingManager;
-
-        /// <summary>
         /// The transactional manager
         /// </summary>
         private readonly ITransactionalManager _transactionalManager;
@@ -48,14 +44,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// Initializes a new instance of the <see cref="TransactionalController"/> class.
         /// </summary>
         /// <param name="siteHelper">The site helper.</param>
-        /// <param name="pricingManager">The pricing manager.</param>
         /// <param name="transactionalManager">The transactional manager.</param>
         /// <param name="mediator">The mediator.</param>
-        public TransactionalController(ISiteHelper siteHelper, IPricingManager pricingManager,
-            ITransactionalManager transactionalManager, IMediator mediator)
+        public TransactionalController(ISiteHelper siteHelper, ITransactionalManager transactionalManager,
+            IMediator mediator)
         {
             _siteHelper = siteHelper;
-            _pricingManager = pricingManager;
             _transactionalManager = transactionalManager;
             _mediator = mediator;
         }
@@ -157,6 +151,65 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                     transactionalConcession.Concession.Comments, user));
 
             return Ok(transactionalConcession);
+        }
+
+        /// <summary>
+        /// Extends the concession.
+        /// </summary>
+        /// <param name="concessionReferenceId">The concession reference identifier.</param>
+        /// <returns></returns>
+        [Route("ExtendConcession/{concessionReferenceId}")]
+        public async Task<IActionResult> ExtendConcession(string concessionReferenceId)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Renews the transactional.
+        /// </summary>
+        /// <param name="transactionalConcession">The transactional concession.</param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        [Route("RenewTransactional")]
+        [ValidateModel]
+        public async Task<IActionResult> RenewTransactional([FromBody] TransactionalConcession transactionalConcession)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Updates the recalled transactional.
+        /// </summary>
+        /// <param name="transactionalConcession">The transactional concession.</param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        [Route("UpdateRecalledTransactional")]
+        [ValidateModel]
+        public async Task<IActionResult> UpdateRecalledTransactional([FromBody] TransactionalConcession transactionalConcession)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Latests the CRS or MRS.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <returns></returns>
+        [Route("LatestCrsOrMrs/{riskGroupNumber}")]
+        public IActionResult LatestCrsOrMrs(int riskGroupNumber)
+        {
+            return Ok(_transactionalManager.GetLatestCrsOrMrs(riskGroupNumber));
+        }
+
+        /// <summary>
+        /// Transactionals the financial.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <returns></returns>
+        [Route("TransactionalFinancial/{riskGroupNumber}")]
+        public IActionResult TransactionalFinancial(int riskGroupNumber)
+        {
+            return Ok(_transactionalManager.GetTransactionalFinancialForRiskGroupNumber(riskGroupNumber));
         }
     }
 }

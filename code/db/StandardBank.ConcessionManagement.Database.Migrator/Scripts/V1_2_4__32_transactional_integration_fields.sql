@@ -69,6 +69,7 @@ CREATE TABLE [dbo].[tblFinancialTransactional](
 	[AverageChequeDepositPrice] [decimal](18, 2) NOT NULL,
 	[AverageChequeEncashmentPrice] [decimal](18, 2) NOT NULL,
 	[AverageCashWithdrawalPrice] [decimal](18, 2) NOT NULL,
+	[LatestCrsOrMrs] [decimal](18, 2) NOT NULL,
  CONSTRAINT [PK_tblFinancialTransactional] PRIMARY KEY CLUSTERED 
 (
 	[pkFinancialTransactionalId] ASC
@@ -82,7 +83,6 @@ GO
 
 ALTER TABLE [dbo].[tblFinancialTransactional] CHECK CONSTRAINT [FK_tblFinancialTransactional_tblRiskGroup]
 GO
-
 
 
 

@@ -8,6 +8,7 @@ import { ConcessionCondition } from "../models/concession-condition";
 import { TransactionalConcession } from "../models/transactional-concession";
 import { TransactionalView } from "../models/transactional-view";
 import { TransactionalConcessionDetail } from "../models/transactional-concession-detail";
+import { TransactionalFinancial } from "../models/transactional-financial";
 
 @Injectable()
 export class TransactionalConcessionService {
@@ -38,6 +39,37 @@ export class TransactionalConcessionService {
         return this.http.post(url, transactionalConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    postExtendConcession(concessionReferenceId): Observable<TransactionalConcession> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/Transactional/ExtendConcession/" + concessionReferenceId;
+        return this.http.post(url, concessionReferenceId, options).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    postRenewTransactionalData(transactionalConcession: TransactionalConcession): Observable<TransactionalConcession> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/Transactional/RenewTransactional";
+        return this.http.post(url, transactionalConcession, options).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    postRecallTransactionalData(transactionalConcession: TransactionalConcession): Observable<TransactionalConcession> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/Transactional/UpdateRecalledTransactional";
+        return this.http.post(url, transactionalConcession, options).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    getlatestCrsOrMrs(riskGroupNumber): Observable<number> {
+        const url = "/api/Transactional/LatestCrsOrMrs/" + riskGroupNumber;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    getTransactionalFinancial(riskGroupNumber): Observable<TransactionalFinancial> {
+        const url = "/api/Transactional/TransactionalFinancial/" + riskGroupNumber;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
     private extractData(response: Response) {
         let body = response.json();
         return body;
@@ -54,6 +86,7 @@ export class TransactionalConcessionService {
 export class MockTransactionalConcessionService extends TransactionalConcessionService {
     transactionalView = new TransactionalView();
     transactionalConcession = new TransactionalConcession();
+    transactionalFinancialModel = new TransactionalFinancial();
 
     getTransactionalViewData(riskGroupNumber): Observable<TransactionalView> {
         this.transactionalView.riskGroup = new RiskGroup();
@@ -80,5 +113,34 @@ export class MockTransactionalConcessionService extends TransactionalConcessionS
         this.transactionalConcession.concessionConditions = [new ConcessionCondition()];
         this.transactionalConcession.transactionalConcessionDetails = [new TransactionalConcessionDetail()];
         return Observable.of(this.transactionalConcession);
+    }
+
+    postExtendConcession(concessionReferenceId): Observable<TransactionalConcession> {
+        this.transactionalConcession.concession = new Concession();
+        this.transactionalConcession.concessionConditions = [new ConcessionCondition()];
+        this.transactionalConcession.transactionalConcessionDetails = [new TransactionalConcessionDetail()];
+        return Observable.of(this.transactionalConcession);
+    }
+
+    postRenewTransactionalData(transactionalConcession: TransactionalConcession): Observable<TransactionalConcession> {
+        this.transactionalConcession.concession = new Concession();
+        this.transactionalConcession.concessionConditions = [new ConcessionCondition()];
+        this.transactionalConcession.transactionalConcessionDetails = [new TransactionalConcessionDetail()];
+        return Observable.of(this.transactionalConcession);
+    }
+
+    postRecallTransactionalData(transactionalConcession: TransactionalConcession): Observable<TransactionalConcession> {
+        this.transactionalConcession.concession = new Concession();
+        this.transactionalConcession.concessionConditions = [new ConcessionCondition()];
+        this.transactionalConcession.transactionalConcessionDetails = [new TransactionalConcessionDetail()];
+        return Observable.of(this.transactionalConcession);
+    }
+
+    getlatestCrsOrMrs(riskGroupNumber): Observable<number> {
+        return Observable.of(100);
+    }
+
+    getTransactionalFinancial(riskGroupNumber): Observable<TransactionalFinancial> {
+        return Observable.of(this.transactionalFinancialModel);
     }
 }

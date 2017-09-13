@@ -132,5 +132,13 @@
         /// The average cash withdrawal price.
         /// </value>
         public decimal AverageCashWithdrawalPrice { get; set; }
+
+        /// <summary>
+        /// Gets or sets the latest CRS or MRS.
+        /// </summary>
+        /// <value>
+        /// The latest CRS or MRS.
+        /// </value>
+        public decimal LatestCrsOrMrs { get; set; }
     }
 }

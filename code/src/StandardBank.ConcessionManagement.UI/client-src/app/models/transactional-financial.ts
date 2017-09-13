@@ -19,4 +19,6 @@ export class TransactionalFinancial {
     averageChequeDepositValue: number;
     averageChequeDepositPrice: number;
     averageChequeEncashmentPrice: number;
+
+    latestCrsOrMrs: number;
 }

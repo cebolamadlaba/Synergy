@@ -202,6 +202,36 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Gets the latest CRS or MRS.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <returns></returns>
+        public decimal GetLatestCrsOrMrs(int riskGroupNumber)
+        {
+            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+
+            var transactionFinancial =
+                _financialTransactionalRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
+                new FinancialTransactional();
+
+            return transactionFinancial.LatestCrsOrMrs;
+        }
+
+        /// <summary>
+        /// Gets the transactional financial for risk group number.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <returns></returns>
+        public TransactionalFinancial GetTransactionalFinancialForRiskGroupNumber(int riskGroupNumber)
+        {
+            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+
+            return _mapper.Map<TransactionalFinancial>(
+                _financialTransactionalRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
+                new FinancialTransactional());
+        }
+
+        /// <summary>
         /// Gets the transactional products.
         /// </summary>
         /// <param name="riskGroup">The risk group.</param>

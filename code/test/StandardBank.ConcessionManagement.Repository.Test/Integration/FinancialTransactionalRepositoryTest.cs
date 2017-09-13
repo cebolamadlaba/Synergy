@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Test.Helpers;
@@ -34,7 +33,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 AverageChequeDepositValue = 8129,
                 AverageChequeDepositPrice = 1770,
                 AverageChequeEncashmentPrice = 7428,
-                AverageCashWithdrawalPrice = 5713
+                AverageCashWithdrawalPrice = 5713,
+                LatestCrsOrMrs = 1232
             };
 
             var result = InstantiatedDependencies.FinancialTransactionalRepository.Create(model);
@@ -112,6 +112,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.AverageChequeDepositPrice = model.AverageChequeDepositPrice + 100;
             model.AverageChequeEncashmentPrice = model.AverageChequeEncashmentPrice + 100;
             model.AverageCashWithdrawalPrice = model.AverageCashWithdrawalPrice + 100;
+            model.LatestCrsOrMrs = model.LatestCrsOrMrs + 100;
 
             InstantiatedDependencies.FinancialTransactionalRepository.Update(model);
 
@@ -135,6 +136,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.AverageChequeDepositPrice, model.AverageChequeDepositPrice);
             Assert.Equal(updatedModel.AverageChequeEncashmentPrice, model.AverageChequeEncashmentPrice);
             Assert.Equal(updatedModel.AverageCashWithdrawalPrice, model.AverageCashWithdrawalPrice);
+            Assert.Equal(updatedModel.LatestCrsOrMrs, model.LatestCrsOrMrs);
         }
 
         /// <summary>
@@ -160,7 +162,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 AverageChequeDepositValue = 8129,
                 AverageChequeDepositPrice = 1770,
                 AverageChequeEncashmentPrice = 7428,
-                AverageCashWithdrawalPrice = 5713
+                AverageCashWithdrawalPrice = 5713,
+                LatestCrsOrMrs = 234324
             };
 
             var temporaryEntity = InstantiatedDependencies.FinancialTransactionalRepository.Create(model);
