@@ -1,145 +1,135 @@
-using System;
-
-namespace StandardBank.ConcessionManagement.Model.Repository
+﻿namespace StandardBank.ConcessionManagement.Model.UserInterface.Transactional
 {
     /// <summary>
-    /// FinancialTransactional entity
+    /// Transactional financial entity
     /// </summary>
-    public class FinancialTransactional
+    public class TransactionalFinancial
     {
         /// <summary>
-        /// Gets or sets the Id.
+        /// Gets or sets the identifier.
         /// </summary>
         /// <value>
-        /// The Id.
+        /// The identifier.
         /// </value>
         public int Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the RiskGroupId.
+        /// Gets or sets the total number of accounts.
         /// </summary>
         /// <value>
-        /// The RiskGroupId.
-        /// </value>
-        public int RiskGroupId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the TotalNumberOfAccounts.
-        /// </summary>
-        /// <value>
-        /// The TotalNumberOfAccounts.
+        /// The total number of accounts.
         /// </value>
         public decimal TotalNumberOfAccounts { get; set; }
 
         /// <summary>
-        /// Gets or sets the AverageAccountManagementFee.
+        /// Gets or sets the average account management fee.
         /// </summary>
         /// <value>
-        /// The AverageAccountManagementFee.
+        /// The average account management fee.
         /// </value>
         public decimal AverageAccountManagementFee { get; set; }
 
         /// <summary>
-        /// Gets or sets the AverageMinimumMonthlyFee.
+        /// Gets or sets the average minimum monthly fee.
         /// </summary>
         /// <value>
-        /// The AverageMinimumMonthlyFee.
+        /// The average minimum monthly fee.
         /// </value>
         public decimal AverageMinimumMonthlyFee { get; set; }
 
         /// <summary>
-        /// Gets or sets the TotalChequeIssuingVolumes.
+        /// Gets or sets the total cheque issuing volumes.
         /// </summary>
         /// <value>
-        /// The TotalChequeIssuingVolumes.
+        /// The total cheque issuing volumes.
         /// </value>
         public decimal TotalChequeIssuingVolumes { get; set; }
 
         /// <summary>
-        /// Gets or sets the TotalChequeDepositVolumes.
+        /// Gets or sets the total cheque deposit volumes.
         /// </summary>
         /// <value>
-        /// The TotalChequeDepositVolumes.
+        /// The total cheque deposit volumes.
         /// </value>
         public decimal TotalChequeDepositVolumes { get; set; }
 
         /// <summary>
-        /// Gets or sets the TotalChequeEncashmentVolumes.
+        /// Gets or sets the total cheque encashment volumes.
         /// </summary>
         /// <value>
-        /// The TotalChequeEncashmentVolumes.
+        /// The total cheque encashment volumes.
         /// </value>
         public decimal TotalChequeEncashmentVolumes { get; set; }
 
         /// <summary>
-        /// Gets or sets the TotalChequeEncashmentValues.
+        /// Gets or sets the total cheque encashment values.
         /// </summary>
         /// <value>
-        /// The TotalChequeEncashmentValues.
+        /// The total cheque encashment values.
         /// </value>
         public decimal TotalChequeEncashmentValues { get; set; }
 
         /// <summary>
-        /// Gets or sets the TotalCashWithdrawalVolumes.
+        /// Gets or sets the total cash withdrawal volumes.
         /// </summary>
         /// <value>
-        /// The TotalCashWithdrawalVolumes.
+        /// The total cash withdrawal volumes.
         /// </value>
         public decimal TotalCashWithdrawalVolumes { get; set; }
 
         /// <summary>
-        /// Gets or sets the TotalCashWithdrawalValues.
+        /// Gets or sets the total cash withdrawal values.
         /// </summary>
         /// <value>
-        /// The TotalCashWithdrawalValues.
+        /// The total cash withdrawal values.
         /// </value>
         public decimal TotalCashWithdrawalValues { get; set; }
 
         /// <summary>
-        /// Gets or sets the AverageChequeIssuingValue.
+        /// Gets or sets the average cheque issuing value.
         /// </summary>
         /// <value>
-        /// The AverageChequeIssuingValue.
+        /// The average cheque issuing value.
         /// </value>
         public decimal AverageChequeIssuingValue { get; set; }
 
         /// <summary>
-        /// Gets or sets the AverageChequeIssuingPrice.
+        /// Gets or sets the average cheque issuing price.
         /// </summary>
         /// <value>
-        /// The AverageChequeIssuingPrice.
+        /// The average cheque issuing price.
         /// </value>
         public decimal AverageChequeIssuingPrice { get; set; }
 
         /// <summary>
-        /// Gets or sets the AverageChequeDepositValue.
+        /// Gets or sets the average cheque deposit value.
         /// </summary>
         /// <value>
-        /// The AverageChequeDepositValue.
+        /// The average cheque deposit value.
         /// </value>
         public decimal AverageChequeDepositValue { get; set; }
 
         /// <summary>
-        /// Gets or sets the AverageChequeDepositPrice.
+        /// Gets or sets the average cheque deposit price.
         /// </summary>
         /// <value>
-        /// The AverageChequeDepositPrice.
+        /// The average cheque deposit price.
         /// </value>
         public decimal AverageChequeDepositPrice { get; set; }
 
         /// <summary>
-        /// Gets or sets the AverageChequeEncashmentPrice.
+        /// Gets or sets the average cheque encashment price.
         /// </summary>
         /// <value>
-        /// The AverageChequeEncashmentPrice.
+        /// The average cheque encashment price.
         /// </value>
         public decimal AverageChequeEncashmentPrice { get; set; }
 
         /// <summary>
-        /// Gets or sets the AverageCashWithdrawalPrice.
+        /// Gets or sets the average cash withdrawal price.
         /// </summary>
         /// <value>
-        /// The AverageCashWithdrawalPrice.
+        /// The average cash withdrawal price.
         /// </value>
         public decimal AverageCashWithdrawalPrice { get; set; }
     }

@@ -6,6 +6,7 @@ using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
+using RiskGroup = StandardBank.ConcessionManagement.Model.UserInterface.Pricing.RiskGroup;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
@@ -52,6 +53,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ILookupTableManager _lookupTableManager;
 
         /// <summary>
+        /// The financial transactional repository
+        /// </summary>
+        private readonly IFinancialTransactionalRepository _financialTransactionalRepository;
+
+        /// <summary>
+        /// The product transactional repository
+        /// </summary>
+        private readonly IProductTransactionalRepository _productTransactionalRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TransactionalManager"/> class.
         /// </summary>
         /// <param name="pricingManager">The pricing manager.</param>
@@ -61,10 +72,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="legalEntityAccountRepository">The legal entity account repository.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="lookupTableManager">The lookup table manager.</param>
+        /// <param name="financialTransactionalRepository">The financial transactional repository.</param>
+        /// <param name="productTransactionalRepository">The product transactional repository.</param>
         public TransactionalManager(IPricingManager pricingManager, IConcessionManager concessionManager,
             IConcessionTransactionalRepository concessionTransactionalRepository,
             ILegalEntityRepository legalEntityRepository, ILegalEntityAccountRepository legalEntityAccountRepository,
-            IMapper mapper, ILookupTableManager lookupTableManager)
+            IMapper mapper, ILookupTableManager lookupTableManager,
+            IFinancialTransactionalRepository financialTransactionalRepository,
+            IProductTransactionalRepository productTransactionalRepository)
         {
             _pricingManager = pricingManager;
             _concessionManager = concessionManager;
@@ -73,6 +88,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _legalEntityAccountRepository = legalEntityAccountRepository;
             _mapper = mapper;
             _lookupTableManager = lookupTableManager;
+            _financialTransactionalRepository = financialTransactionalRepository;
+            _productTransactionalRepository = productTransactionalRepository;
         }
 
         /// <summary>
@@ -149,6 +166,69 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionTransactionalRepository.Update(mappedConcessionTransactional);
 
             return mappedConcessionTransactional;
+        }
+
+        /// <summary>
+        /// Gets the transactional view data.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <returns></returns>
+        public TransactionalView GetTransactionalViewData(int riskGroupNumber)
+        {
+            var transactionalConcessions = new List<TransactionalConcession>();
+            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+
+            if (riskGroup != null)
+            {
+                var concessions = _concessionManager.GetConcessionsForRiskGroup(riskGroup.Id, "Transactional");
+
+                foreach (var concession in concessions)
+                    AddTransactionalConcessionData(concession, transactionalConcessions);
+            }
+
+            var transactionalFinancial =
+                _mapper.Map<TransactionalFinancial>(_financialTransactionalRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
+                                           new FinancialTransactional());
+
+            var transactionalProducts = GetTransactionalProducts(riskGroup);
+
+            return new TransactionalView
+            {
+                RiskGroup = riskGroup,
+                TransactionalConcessions = transactionalConcessions,
+                TransactionalFinancial = transactionalFinancial,
+                TransactionalProducts = transactionalProducts
+            };
+        }
+
+        /// <summary>
+        /// Gets the transactional products.
+        /// </summary>
+        /// <param name="riskGroup">The risk group.</param>
+        /// <returns></returns>
+        private IEnumerable<TransactionalProduct> GetTransactionalProducts(RiskGroup riskGroup)
+        {
+            var mappedTransactionalProducts = new List<TransactionalProduct>();
+            var transactionalProducts = _productTransactionalRepository.ReadByRiskGroupId(riskGroup.Id);
+            var tableNumbers = _lookupTableManager.GetTableNumbers();
+
+            foreach (var transactionalProduct in transactionalProducts)
+            {
+                var legalEntity = _legalEntityRepository.ReadById(transactionalProduct.LegalEntityId);
+                var legalEntityAccount = _legalEntityAccountRepository.ReadById(transactionalProduct.LegalEntityAccountId);
+                var mappedTransactionalProduct = _mapper.Map<TransactionalProduct>(transactionalProduct);
+
+                mappedTransactionalProduct.CustomerName = legalEntity.CustomerName;
+                mappedTransactionalProduct.AccountNumber = legalEntityAccount.AccountNumber;
+                mappedTransactionalProduct.TariffTable = tableNumbers.First(_ => _.Id == transactionalProduct.TableNumberId).TariffTable;
+
+                mappedTransactionalProduct.TransactionType =
+                    _lookupTableManager.GetTransactionTypeDescription(transactionalProduct.TransactionTypeId);
+
+                mappedTransactionalProducts.Add(mappedTransactionalProduct);
+            }
+
+            return mappedTransactionalProducts;
         }
 
         /// <summary>

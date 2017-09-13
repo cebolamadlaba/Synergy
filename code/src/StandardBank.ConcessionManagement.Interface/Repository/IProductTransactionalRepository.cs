@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using StandardBank.ConcessionManagement.Model.Repository;
 
@@ -21,6 +22,13 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
         ProductTransactional ReadById(int id);
+
+        /// <summary>
+        /// Reads by the risk group id
+        /// </summary>
+        /// <param name="riskGroupId"></param>
+        /// <returns></returns>
+        IEnumerable<ProductTransactional> ReadByRiskGroupId(int riskGroupId);
 
         /// <summary>
         /// Reads all.

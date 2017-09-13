@@ -37,10 +37,14 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         public void TransactionalView_Executes_Positive()
         {
             var riskGroup = new RiskGroup {Id = 1, Name = "Unit Test Risk Group", Number = 1};
-            MockPricingManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>())).Returns(riskGroup);
-
-            MockTransactionalManager.Setup(_ => _.GetTransactionalConcessionsForRiskGroupNumber(It.IsAny<int>()))
-                .Returns(new[] {new TransactionalConcession()});
+            MockTransactionalManager.Setup(_ => _.GetTransactionalViewData(It.IsAny<int>())).Returns(
+                new TransactionalView
+                {
+                    RiskGroup = riskGroup,
+                    TransactionalFinancial = new TransactionalFinancial(),
+                    TransactionalConcessions = new[] {new TransactionalConcession()},
+                    TransactionalProducts = new[] {new TransactionalProduct()}
+                });
 
             var result = _transactionalController.TransactionalView(1);
             var apiResult = Assert.IsType<OkObjectResult>(result);

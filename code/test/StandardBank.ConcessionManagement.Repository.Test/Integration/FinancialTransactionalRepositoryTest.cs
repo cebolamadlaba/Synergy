@@ -22,14 +22,14 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 RiskGroupId = DataHelper.GetRiskGroupId(),
                 TotalNumberOfAccounts = 6797,
                 AverageAccountManagementFee = 1226,
-                AvergageMinimumMonthlyFee = 2378,
+                AverageMinimumMonthlyFee = 2378,
                 TotalChequeIssuingVolumes = 3243,
                 TotalChequeDepositVolumes = 4441,
                 TotalChequeEncashmentVolumes = 4095,
                 TotalChequeEncashmentValues = 478,
                 TotalCashWithdrawalVolumes = 5462,
                 TotalCashWithdrawalValues = 2749,
-                AvergageChequeIssuingValue = 6623,
+                AverageChequeIssuingValue = 6623,
                 AverageChequeIssuingPrice = 5114,
                 AverageChequeDepositValue = 8129,
                 AverageChequeDepositPrice = 1770,
@@ -58,6 +58,23 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         }
 
         /// <summary>
+        /// Tests that ReadByRiskGroupId executes positive
+        /// </summary>
+        [Fact]
+        public void ReadByRiskGroupId_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.FinancialTransactionalRepository.ReadAll();
+            var riskGroupId = results.First().RiskGroupId;
+            var result = InstantiatedDependencies.FinancialTransactionalRepository.ReadByRiskGroupId(riskGroupId);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+
+            foreach (var record in result)
+                Assert.Equal(record.RiskGroupId, riskGroupId);
+        }
+
+        /// <summary>
         /// Tests that ReadAll executes positive.
         /// </summary>
         [Fact]
@@ -82,14 +99,14 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.RiskGroupId = DataHelper.GetAlternateRiskGroupId(model.RiskGroupId);
             model.TotalNumberOfAccounts = model.TotalNumberOfAccounts + 100;
             model.AverageAccountManagementFee = model.AverageAccountManagementFee + 100;
-            model.AvergageMinimumMonthlyFee = model.AvergageMinimumMonthlyFee + 100;
+            model.AverageMinimumMonthlyFee = model.AverageMinimumMonthlyFee + 100;
             model.TotalChequeIssuingVolumes = model.TotalChequeIssuingVolumes + 100;
             model.TotalChequeDepositVolumes = model.TotalChequeDepositVolumes + 100;
             model.TotalChequeEncashmentVolumes = model.TotalChequeEncashmentVolumes + 100;
             model.TotalChequeEncashmentValues = model.TotalChequeEncashmentValues + 100;
             model.TotalCashWithdrawalVolumes = model.TotalCashWithdrawalVolumes + 100;
             model.TotalCashWithdrawalValues = model.TotalCashWithdrawalValues + 100;
-            model.AvergageChequeIssuingValue = model.AvergageChequeIssuingValue + 100;
+            model.AverageChequeIssuingValue = model.AverageChequeIssuingValue + 100;
             model.AverageChequeIssuingPrice = model.AverageChequeIssuingPrice + 100;
             model.AverageChequeDepositValue = model.AverageChequeDepositValue + 100;
             model.AverageChequeDepositPrice = model.AverageChequeDepositPrice + 100;
@@ -105,14 +122,14 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.RiskGroupId, model.RiskGroupId);
             Assert.Equal(updatedModel.TotalNumberOfAccounts, model.TotalNumberOfAccounts);
             Assert.Equal(updatedModel.AverageAccountManagementFee, model.AverageAccountManagementFee);
-            Assert.Equal(updatedModel.AvergageMinimumMonthlyFee, model.AvergageMinimumMonthlyFee);
+            Assert.Equal(updatedModel.AverageMinimumMonthlyFee, model.AverageMinimumMonthlyFee);
             Assert.Equal(updatedModel.TotalChequeIssuingVolumes, model.TotalChequeIssuingVolumes);
             Assert.Equal(updatedModel.TotalChequeDepositVolumes, model.TotalChequeDepositVolumes);
             Assert.Equal(updatedModel.TotalChequeEncashmentVolumes, model.TotalChequeEncashmentVolumes);
             Assert.Equal(updatedModel.TotalChequeEncashmentValues, model.TotalChequeEncashmentValues);
             Assert.Equal(updatedModel.TotalCashWithdrawalVolumes, model.TotalCashWithdrawalVolumes);
             Assert.Equal(updatedModel.TotalCashWithdrawalValues, model.TotalCashWithdrawalValues);
-            Assert.Equal(updatedModel.AvergageChequeIssuingValue, model.AvergageChequeIssuingValue);
+            Assert.Equal(updatedModel.AverageChequeIssuingValue, model.AverageChequeIssuingValue);
             Assert.Equal(updatedModel.AverageChequeIssuingPrice, model.AverageChequeIssuingPrice);
             Assert.Equal(updatedModel.AverageChequeDepositValue, model.AverageChequeDepositValue);
             Assert.Equal(updatedModel.AverageChequeDepositPrice, model.AverageChequeDepositPrice);
@@ -131,14 +148,14 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 RiskGroupId = DataHelper.GetRiskGroupId(),
                 TotalNumberOfAccounts = 6797,
                 AverageAccountManagementFee = 1226,
-                AvergageMinimumMonthlyFee = 2378,
+                AverageMinimumMonthlyFee = 2378,
                 TotalChequeIssuingVolumes = 3243,
                 TotalChequeDepositVolumes = 4441,
                 TotalChequeEncashmentVolumes = 4095,
                 TotalChequeEncashmentValues = 478,
                 TotalCashWithdrawalVolumes = 5462,
                 TotalCashWithdrawalValues = 2749,
-                AvergageChequeIssuingValue = 6623,
+                AverageChequeIssuingValue = 6623,
                 AverageChequeIssuingPrice = 5114,
                 AverageChequeDepositValue = 8129,
                 AverageChequeDepositPrice = 1770,

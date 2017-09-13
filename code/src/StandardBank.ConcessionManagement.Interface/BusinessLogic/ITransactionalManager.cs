@@ -43,5 +43,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <returns></returns>
         ConcessionTransactional UpdateConcessionTransactional(
             TransactionalConcessionDetail transactionalConcessionDetail, Concession concession);
+
+        /// <summary>
+        /// Gets the transactional view data.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <returns></returns>
+        TransactionalView GetTransactionalViewData(int riskGroupNumber);
     }
 }

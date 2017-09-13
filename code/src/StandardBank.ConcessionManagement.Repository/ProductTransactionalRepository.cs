@@ -34,13 +34,25 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ProductTransactional Create(ProductTransactional model)
         {
-            const string sql = @"INSERT [dbo].[tblProductTransactional] ([fkRiskGroupId], [fkLegalEntityId], [fkLegalEntityAccountId], [fkTableNumberId], [fkTransactionTypeId], [Volume], [Value], [LoadedPrice]) 
+            const string sql =
+                @"INSERT [dbo].[tblProductTransactional] ([fkRiskGroupId], [fkLegalEntityId], [fkLegalEntityAccountId], [fkTableNumberId], [fkTransactionTypeId], [Volume], [Value], [LoadedPrice]) 
                                 VALUES (@RiskGroupId, @LegalEntityId, @LegalEntityAccountId, @TableNumberId, @TransactionTypeId, @Volume, @Value, @LoadedPrice) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {RiskGroupId = model.RiskGroupId, LegalEntityId = model.LegalEntityId, LegalEntityAccountId = model.LegalEntityAccountId, TableNumberId = model.TableNumberId, TransactionTypeId = model.TransactionTypeId, Volume = model.Volume, Value = model.Value, LoadedPrice = model.LoadedPrice}).Single();
+                model.Id = db.Query<int>(sql,
+                    new
+                    {
+                        RiskGroupId = model.RiskGroupId,
+                        LegalEntityId = model.LegalEntityId,
+                        LegalEntityAccountId = model.LegalEntityAccountId,
+                        TableNumberId = model.TableNumberId,
+                        TransactionTypeId = model.TransactionTypeId,
+                        Volume = model.Volume,
+                        Value = model.Value,
+                        LoadedPrice = model.LoadedPrice
+                    }).Single();
             }
 
             return model;
@@ -62,6 +74,23 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="riskGroupId"></param>
+        /// <returns></returns>
+        public IEnumerable<ProductTransactional> ReadByRiskGroupId(int riskGroupId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<ProductTransactional>(
+                    @"SELECT [pkProductTransactionalId] [Id], [fkRiskGroupId] [RiskGroupId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [fkTableNumberId] [TableNumberId], [fkTransactionTypeId] [TransactionTypeId], [Volume], [Value], [LoadedPrice] 
+                    FROM [dbo].[tblProductTransactional] 
+                    WHERE [fkRiskGroupId] = @riskGroupId",
+                    new {riskGroupId});
+            }
+        }
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>
@@ -69,7 +98,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<ProductTransactional>("SELECT [pkProductTransactionalId] [Id], [fkRiskGroupId] [RiskGroupId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [fkTableNumberId] [TableNumberId], [fkTransactionTypeId] [TransactionTypeId], [Volume], [Value], [LoadedPrice] FROM [dbo].[tblProductTransactional]");
+                return db.Query<ProductTransactional>(
+                    "SELECT [pkProductTransactionalId] [Id], [fkRiskGroupId] [RiskGroupId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [fkTableNumberId] [TableNumberId], [fkTransactionTypeId] [TransactionTypeId], [Volume], [Value], [LoadedPrice] FROM [dbo].[tblProductTransactional]");
             }
         }
 
@@ -84,7 +114,18 @@ namespace StandardBank.ConcessionManagement.Repository
                 db.Execute(@"UPDATE [dbo].[tblProductTransactional]
                             SET [fkRiskGroupId] = @RiskGroupId, [fkLegalEntityId] = @LegalEntityId, [fkLegalEntityAccountId] = @LegalEntityAccountId, [fkTableNumberId] = @TableNumberId, [fkTransactionTypeId] = @TransactionTypeId, [Volume] = @Volume, [Value] = @Value, [LoadedPrice] = @LoadedPrice
                             WHERE [pkProductTransactionalId] = @Id",
-                    new {Id = model.Id, RiskGroupId = model.RiskGroupId, LegalEntityId = model.LegalEntityId, LegalEntityAccountId = model.LegalEntityAccountId, TableNumberId = model.TableNumberId, TransactionTypeId = model.TransactionTypeId, Volume = model.Volume, Value = model.Value, LoadedPrice = model.LoadedPrice});
+                    new
+                    {
+                        Id = model.Id,
+                        RiskGroupId = model.RiskGroupId,
+                        LegalEntityId = model.LegalEntityId,
+                        LegalEntityAccountId = model.LegalEntityAccountId,
+                        TableNumberId = model.TableNumberId,
+                        TransactionTypeId = model.TransactionTypeId,
+                        Volume = model.Volume,
+                        Value = model.Value,
+                        LoadedPrice = model.LoadedPrice
+                    });
             }
         }
 

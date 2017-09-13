@@ -23,6 +23,13 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         FinancialTransactional ReadById(int id);
 
         /// <summary>
+        /// Reads by the risk group id
+        /// </summary>
+        /// <param name="riskGroupId"></param>
+        /// <returns></returns>
+        IEnumerable<FinancialTransactional> ReadByRiskGroupId(int riskGroupId);
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>

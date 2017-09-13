@@ -68,14 +68,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("TransactionalView/{riskGroupNumber}")]
         public IActionResult TransactionalView(int riskGroupNumber)
         {
-            //TODO: Eventually need to get source system product data from source systems (i.e. cash specific source system product data)
-            var transactionalView = new TransactionalView
-            {
-                RiskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber),
-                TransactionalConcessions = _transactionalManager.GetTransactionalConcessionsForRiskGroupNumber(riskGroupNumber)
-            };
-
-            return Ok(transactionalView);
+            return Ok(_transactionalManager.GetTransactionalViewData(riskGroupNumber));
         }
 
         /// <summary>
