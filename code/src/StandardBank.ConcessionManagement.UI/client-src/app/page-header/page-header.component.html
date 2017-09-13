@@ -1,4 +1,4 @@
-﻿<div class="col-md-12 header">
+<div class="col-md-12 header">
     <div class="logo"></div>
 </div>
 <div class="col-md-12 nav-pills-container">
@@ -13,7 +13,7 @@
         </li>
         <li routerLinkActive="selected-nav-item" *ngIf="user?.canRequest"><a routerLink="/approved-concessions">Approved Concessions</a></li>
         <li routerLinkActive="selected-nav-item" *ngIf="user?.canRequest"><a routerLink="/conditions">Conditions</a></li>
-        <li routerLinkActive="selected-nav-item" *ngIf="user?.canRequest">
+        <li routerLinkActive="selected-nav-item">
             <a routerLink="/pricing">Pricing</a>
             <!-- The following are here so that the router link active class is enabled for any of the pricing routes-->
             <a routerLink="/pricing-cash" style="display: none;">Pricing</a>

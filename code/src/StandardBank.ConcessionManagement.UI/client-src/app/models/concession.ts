@@ -31,4 +31,5 @@ export class Concession {
     concessionRelationshipDetails: ConcessionRelationshipDetail[];
     expiryDate: Date;
     dateApproved: Date;
+    requestor: string;
 }
