@@ -64,5 +64,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <returns></returns>
         TransactionalFinancial GetTransactionalFinancialForRiskGroupNumber(int riskGroupNumber);
+
+        /// <summary>
+        /// Deletes the concession transactional.
+        /// </summary>
+        /// <param name="transactionalConcessionDetail">The transactional concession detail.</param>
+        /// <returns></returns>
+        ConcessionTransactional DeleteConcessionTransactional(TransactionalConcessionDetail transactionalConcessionDetail);
     }
 }

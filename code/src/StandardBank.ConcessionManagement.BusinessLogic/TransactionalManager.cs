@@ -232,6 +232,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Deletes the concession transactional.
+        /// </summary>
+        /// <param name="transactionalConcessionDetail">The transactional concession detail.</param>
+        /// <returns></returns>
+        public ConcessionTransactional DeleteConcessionTransactional(TransactionalConcessionDetail transactionalConcessionDetail)
+        {
+            var concessionTransactional =
+                _concessionTransactionalRepository.ReadById(transactionalConcessionDetail
+                    .TransactionalConcessionDetailId);
+
+            _concessionTransactionalRepository.Delete(concessionTransactional);
+
+            return concessionTransactional;
+        }
+
+        /// <summary>
         /// Gets the transactional products.
         /// </summary>
         /// <param name="riskGroup">The risk group.</param>

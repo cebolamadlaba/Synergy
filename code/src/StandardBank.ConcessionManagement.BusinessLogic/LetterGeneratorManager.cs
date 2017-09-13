@@ -113,11 +113,27 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 case "Cash":
                     concessionLetters.AddRange(GetCashConcessionLetterData(concession, requestor, bcm));
                     break;
+                case "Transactional":
+                    concessionLetters.AddRange(GetTransactionalConcessionLetterData(concession, requestor, bcm));
+                    break;
                 default:
                     throw new NotImplementedException(concession.ConcessionType);
             }
 
             return GenerateConcessionLetterPdf(concessionLetters);
+        }
+
+        /// <summary>
+        /// Gets the transactional concession letter data.
+        /// </summary>
+        /// <param name="concession">The concession.</param>
+        /// <param name="requestor">The requestor.</param>
+        /// <param name="bcm">The BCM.</param>
+        /// <returns></returns>
+        private IEnumerable<ConcessionLetter> GetTransactionalConcessionLetterData(Concession concession, User requestor, User bcm)
+        {
+            //TODO:
+            throw new NotImplementedException();
         }
 
         /// <summary>

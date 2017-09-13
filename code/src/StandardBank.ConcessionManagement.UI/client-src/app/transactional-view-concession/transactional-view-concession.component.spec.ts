@@ -7,6 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { LookupDataService, MockLookupDataService } from "../services/lookup-data.service";
 import { TransactionalConcessionService, MockTransactionalConcessionService } from "../services/transactional-concession.service";
+import { UserConcessionsService, MockUserConcessionsService } from "../services/user-concessions.service";
 
 describe('TransactionalViewConcessionComponent', () => {
     let component: TransactionalViewConcessionComponent;
@@ -18,7 +19,8 @@ describe('TransactionalViewConcessionComponent', () => {
             declarations: [TransactionalViewConcessionComponent],
             providers: [
                 { provide: LookupDataService, useClass: MockLookupDataService },
-                { provide: TransactionalConcessionService, useClass: MockTransactionalConcessionService }
+                { provide: TransactionalConcessionService, useClass: MockTransactionalConcessionService },
+                { provide: UserConcessionsService, useClass: MockUserConcessionsService }
             ]
         })
             .compileComponents();

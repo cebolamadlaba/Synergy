@@ -187,5 +187,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             Assert.NotNull(result);
             Assert.Equal(result.LatestCrsOrMrs, 2000);
         }
+
+        /// <summary>
+        /// Tests that DeleteConcessionTransactional executes positive.
+        /// </summary>
+        [Fact]
+        public void DeleteConcessionTransactional_Executes_Positive()
+        {
+            MockConcessionTransactionalRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
+                .Returns(new ConcessionTransactional());
+
+            var result = _transactionalManager.DeleteConcessionTransactional(new TransactionalConcessionDetail());
+
+            Assert.NotNull(result);
+        }
     }
 }
+
