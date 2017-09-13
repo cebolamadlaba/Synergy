@@ -43,13 +43,22 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public TableNumber Create(TableNumber model)
         {
-            const string sql = @"INSERT [dbo].[rtblTableNumber] ([TariffTable], [AdValorem], [BaseRate], [IsActive]) 
-                                VALUES (@TariffTable, @AdValorem, @BaseRate, @IsActive) 
+            const string sql =
+                @"INSERT [dbo].[rtblTableNumber] ([TariffTable], [AdValorem], [BaseRate], [IsActive], [fkConcessionTypeId]) 
+                                VALUES (@TariffTable, @AdValorem, @BaseRate, @IsActive, @fkConcessionTypeId) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {TariffTable = model.TariffTable, AdValorem = model.AdValorem, BaseRate = model.BaseRate, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql,
+                    new
+                    {
+                        TariffTable = model.TariffTable,
+                        AdValorem = model.AdValorem,
+                        BaseRate = model.BaseRate,
+                        IsActive = model.IsActive,
+                        fkConcessionTypeId = model.ConcessionTypeId
+                    }).Single();
             }
 
             //clear out the cache because the data has changed
@@ -77,9 +86,10 @@ namespace StandardBank.ConcessionManagement.Repository
             Func<IEnumerable<TableNumber>> function = () =>
             {
                 using (var db = _dbConnectionFactory.Connection())
-            	{
-                	return db.Query<TableNumber>("SELECT [pkTableNumberId] [Id], [TariffTable], [AdValorem], [BaseRate], [IsActive] FROM [dbo].[rtblTableNumber]");
-            	}
+                {
+                    return db.Query<TableNumber>(
+                        "SELECT [pkTableNumberId] [Id], [TariffTable], [AdValorem], [BaseRate], [IsActive], [fkConcessionTypeId] [ConcessionTypeId] FROM [dbo].[rtblTableNumber]");
+                }
             };
 
             return _cacheManager.ReturnFromCache(function, 1440, CacheKey.Repository.TableNumberRepository.ReadAll);
@@ -94,9 +104,17 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[rtblTableNumber]
-                            SET [TariffTable] = @TariffTable, [AdValorem] = @AdValorem, [BaseRate] = @BaseRate, [IsActive] = @IsActive
+                            SET [TariffTable] = @TariffTable, [AdValorem] = @AdValorem, [BaseRate] = @BaseRate, [IsActive] = @IsActive, [fkConcessionTypeId] = @fkConcessionTypeId
                             WHERE [pkTableNumberId] = @Id",
-                    new {Id = model.Id, TariffTable = model.TariffTable, AdValorem = model.AdValorem, BaseRate = model.BaseRate, IsActive = model.IsActive});
+                    new
+                    {
+                        Id = model.Id,
+                        TariffTable = model.TariffTable,
+                        AdValorem = model.AdValorem,
+                        BaseRate = model.BaseRate,
+                        IsActive = model.IsActive,
+                        fkConcessionTypeId = model.ConcessionTypeId
+                    });
             }
 
             //clear out the cache because the data has changed

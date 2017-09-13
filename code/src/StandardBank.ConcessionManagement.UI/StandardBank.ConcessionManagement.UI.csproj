@@ -72,8 +72,4 @@
     <None Include="EmailTemplates\Declined.cshtml" />
     <None Include="EmailTemplates\NewConcession.cshtml" />
   </ItemGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="ng build" />
-  </Target>
 </Project>

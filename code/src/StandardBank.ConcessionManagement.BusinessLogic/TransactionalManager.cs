@@ -240,7 +240,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var mappedTransactionalProducts = new List<TransactionalProduct>();
             var transactionalProducts = _productTransactionalRepository.ReadByRiskGroupId(riskGroup.Id);
-            var tableNumbers = _lookupTableManager.GetTableNumbers();
+            var tableNumbers = _lookupTableManager.GetTableNumbers("Transactional");
 
             foreach (var transactionalProduct in transactionalProducts)
             {

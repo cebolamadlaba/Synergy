@@ -2629,7 +2629,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 TariffTable = 9,
                 AdValorem = 1321,
                 BaseRate = 6770,
-                IsActive = false
+                IsActive = false,
+                ConcessionTypeId = GetConcessionTypeId()
             };
 
             InstantiatedDependencies.TableNumberRepository.Create(model);

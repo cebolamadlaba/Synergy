@@ -483,11 +483,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <summary>
         /// Gets the table numbers.
         /// </summary>
+        /// <param name="concessionType">Type of the concession.</param>
         /// <returns></returns>
-        public IEnumerable<TableNumber> GetTableNumbers()
+        public IEnumerable<TableNumber> GetTableNumbers(string concessionType)
         {
+            var concessionTypeId = GetConcessionTypeId(concessionType);
             var tableNumbers = _tableNumberRepository.ReadAll();
-            return _mapper.Map<IEnumerable<TableNumber>>(tableNumbers.Where(_ => _.IsActive).OrderBy(_ => _.TariffTable));
+
+            return _mapper.Map<IEnumerable<TableNumber>>(tableNumbers
+                .Where(_ => _.IsActive && _.ConcessionTypeId == concessionTypeId).OrderBy(_ => _.TariffTable));
         }
 
         /// <summary>

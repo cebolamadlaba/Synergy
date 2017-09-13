@@ -457,7 +457,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             MockTableNumberRepository.Setup(_ => _.ReadAll()).Returns(new[] { tableNumber });
 
-            var result = _lookupTableManager.GetTableNumbers();
+            var concessionType =
+                new ConcessionType { Code = "CODE", Description = "Description", Id = 1, IsActive = true };
+
+            MockConcessionTypeRepository.Setup(_ => _.ReadAll()).Returns(new[] { concessionType });
+
+            var result = _lookupTableManager.GetTableNumbers("CODE");
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);

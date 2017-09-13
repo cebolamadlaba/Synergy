@@ -135,7 +135,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockProductTransactionalRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
                 .Returns(new[] {new ProductTransactional { TableNumberId = 1}});
 
-            MockLookupTableManager.Setup(_ => _.GetTableNumbers()).Returns(new[] {new Model.UserInterface.TableNumber { Id = 1 }});
+            MockLookupTableManager.Setup(_ => _.GetTableNumbers(It.IsAny<string>()))
+                .Returns(new[] {new Model.UserInterface.TableNumber {Id = 1}});
 
             MockLookupTableManager.Setup(_ => _.GetTransactionTypeDescription(It.IsAny<int>()))
                 .Returns("Test Transaction Description");

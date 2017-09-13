@@ -169,8 +169,9 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <summary>
         /// Gets the table numbers.
         /// </summary>
+        /// <param name="concessionType">Type of the concession.</param>
         /// <returns></returns>
-        IEnumerable<TableNumber> GetTableNumbers();
+        IEnumerable<TableNumber> GetTableNumbers(string concessionType);
 
         /// <summary>
         /// Gets the relationship identifier.

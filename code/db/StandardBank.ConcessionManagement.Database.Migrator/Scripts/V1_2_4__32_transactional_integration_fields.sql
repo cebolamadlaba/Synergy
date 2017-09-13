@@ -85,5 +85,25 @@ ALTER TABLE [dbo].[tblFinancialTransactional] CHECK CONSTRAINT [FK_tblFinancialT
 GO
 
 
+ALTER TABLE [dbo].[rtblTableNumber]
+ADD [fkConcessionTypeId] int NULL
+
+GO
+
+UPDATE [dbo].[rtblTableNumber]
+SET [fkConcessionTypeId] = (SELECT [pkConcessionTypeId] FROM [dbo].[rtblConcessionType] WHERE Code = 'Cash')
+
+GO
+
+ALTER TABLE [dbo].[rtblTableNumber]
+ALTER COLUMN [fkConcessionTypeId] int NOT NULL
+
+GO
 
 
+ALTER TABLE [dbo].[rtblTableNumber]  WITH CHECK ADD  CONSTRAINT [FK_rtblTableNumber_rtblConcessionType] FOREIGN KEY([fkConcessionTypeId])
+REFERENCES [dbo].[rtblConcessionType] ([pkConcessionTypeId])
+GO
+
+ALTER TABLE [dbo].[rtblTableNumber] CHECK CONSTRAINT [FK_rtblTableNumber_rtblConcessionType]
+GO

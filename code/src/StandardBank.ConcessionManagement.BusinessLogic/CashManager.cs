@@ -221,7 +221,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var mappedCashProducts = new List<CashProduct>();
             var cashProducts = _productCashRepository.ReadByRiskGroupId(riskGroup.Id);
-            var tableNumbers = _lookupTableManager.GetTableNumbers();
+            var tableNumbers = _lookupTableManager.GetTableNumbers("Cash");
 
             foreach (var cashProduct in cashProducts)
             {
