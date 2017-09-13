@@ -72,8 +72,8 @@ export class LookupDataService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    getTableNumbers(): Observable<TableNumber[]> {
-        const url = "/api/Concession/TableNumbers";
+    getTableNumbers(concessionType): Observable<TableNumber[]> {
+        const url = "/api/Concession/TableNumbers/" + concessionType;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
@@ -173,7 +173,7 @@ export class MockLookupDataService extends LookupDataService {
         return Observable.of(this.transactionTypeModel);
     }
 
-    getTableNumbers(): Observable<TableNumber[]> {
+    getTableNumbers(concessionType): Observable<TableNumber[]> {
         this.tableNumberModel[0].id = 1;
         this.tableNumberModel[0].adValorem = 2;
         this.tableNumberModel[0].baseRate = 3;

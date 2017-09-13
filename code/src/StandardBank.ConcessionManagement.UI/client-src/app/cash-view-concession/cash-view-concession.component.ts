@@ -137,7 +137,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         this.observableAccrualTypes = this.lookupDataService.getAccrualTypes();
         this.observableAccrualTypes.subscribe(accrualTypes => this.accrualTypes = accrualTypes, error => this.errorMessage = <any>error);
 
-        this.observableTableNumbers = this.lookupDataService.getTableNumbers();
+        this.observableTableNumbers = this.lookupDataService.getTableNumbers("Cash");
         this.observableTableNumbers.subscribe(tableNumbers => this.tableNumbers = tableNumbers, error => this.errorMessage = <any>error);
 
         this.cashConcessionForm.valueChanges.subscribe((value: any) => {

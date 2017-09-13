@@ -105,7 +105,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
         this.observableTransactionTypes = this.lookupDataService.getTransactionTypes("Transactional");
         this.observableTransactionTypes.subscribe(transactionTypes => this.transactionTypes = transactionTypes, error => this.errorMessage = <any>error);
 
-        this.observableTableNumbers = this.lookupDataService.getTableNumbers();
+        this.observableTableNumbers = this.lookupDataService.getTableNumbers("Transactional");
         this.observableTableNumbers.subscribe(tableNumbers => this.tableNumbers = tableNumbers, error => this.errorMessage = <any>error);
     }
 
