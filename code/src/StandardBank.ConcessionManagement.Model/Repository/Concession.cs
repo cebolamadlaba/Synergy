@@ -212,5 +212,6 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// Gets or sets the region id
         /// </summary>
         public int RegionId { get; set; }
+        public string Requestor { get; set; }
     }
 }
