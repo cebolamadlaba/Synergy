@@ -120,7 +120,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             await UpdateTransactionalConcession(transactionalConcession, user);
 
-            return Ok(transactionalConcession);
+            return Ok(_transactionalManager.GetTransactionalConcession(transactionalConcession.Concession.ReferenceNumber, user));
         }
 
         /// <summary>

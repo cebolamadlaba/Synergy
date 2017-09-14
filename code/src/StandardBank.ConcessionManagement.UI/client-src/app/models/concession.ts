@@ -32,4 +32,5 @@ export class Concession {
     expiryDate: Date;
     dateApproved: Date;
     requestor: string;
+    statusDescription: string;
 }

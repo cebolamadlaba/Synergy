@@ -202,5 +202,22 @@ namespace StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator
         /// The cash concession letters.
         /// </value>
         public IEnumerable<CashConcessionLetter> CashConcessionLetters { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance has transactional concession letters.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance has transactional concession letters; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasTransactionalConcessionLetters => TransactionalConcessionLetters != null &&
+                                                         TransactionalConcessionLetters.Any();
+
+        /// <summary>
+        /// Gets or sets the transactional concession letters.
+        /// </summary>
+        /// <value>
+        /// The transactional concession letters.
+        /// </value>
+        public IEnumerable<TransactionalConcessionLetter> TransactionalConcessionLetters { get; set; }
     }
 }
