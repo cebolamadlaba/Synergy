@@ -1113,6 +1113,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                    
             }
         }
+
+        /// <summary>
+        /// Gets the condition counts.
+        /// </summary>
+        /// <returns></returns>
+        public ConditionCounts GetConditionCounts()
+        {
+            var conditionCounts = _concessionConditionRepository.ReadConditionCounts();
+
+            return new ConditionCounts
+            {
+                OngoingCount = conditionCounts?.FirstOrDefault(_ => _.PeriodType == "Ongoing")?.RecordCount ?? 0,
+                StandardCount = conditionCounts?.FirstOrDefault(_ => _.PeriodType == "Standard")?.RecordCount ?? 0
+            };
+        }
+
         private string CalculateRagStatusThreeMonths(DateTime dateApproved)
         {
             var totalHours = GetWorkingDays(dateApproved, DateTime.Today) * 8;

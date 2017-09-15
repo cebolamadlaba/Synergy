@@ -164,5 +164,26 @@ namespace StandardBank.ConcessionManagement.Repository
                 return db.Query<Condition>(query,new { statusId = concessionApprovalStatusId , periodId,periodType });
             }
         }
+
+        /// <summary>
+        /// Reads the condition counts.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<ConditionCount> ReadConditionCounts()
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                var query =
+                    @"SELECT CASE WHEN cc.[fkPeriodTypeId] = 1 THEN 'Standard' ELSE 'Ongoing' END [PeriodType], COUNT(*) [RecordCount] FROM [dbo].[tblConcessionCondition] cc
+                    JOIN [dbo].[tblConcession] c on c.[pkConcessionId] = cc.[fkConcessionId]
+                    WHERE c.[fkStatusId] IN (2, 3)
+                    AND c.[IsActive] = 1
+                    AND cc.[ConditionMet] IS NULL
+                    AND cc.[fkPeriodTypeId] IS NOT NULL
+                    GROUP BY cc.[fkPeriodTypeId]";
+
+                return db.Query<ConditionCount>(query);
+            }
+        }
     }
 }
