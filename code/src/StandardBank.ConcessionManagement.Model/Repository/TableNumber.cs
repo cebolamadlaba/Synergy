@@ -46,5 +46,13 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The IsActive.
         /// </value>
         public bool IsActive { get; set; }
+
+        /// <summary>
+        /// Gets or sets the concession type identifier.
+        /// </summary>
+        /// <value>
+        /// The concession type identifier.
+        /// </value>
+        public int ConcessionTypeId { get; set; }
     }
 }

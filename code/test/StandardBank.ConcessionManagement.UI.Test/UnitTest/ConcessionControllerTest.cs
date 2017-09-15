@@ -159,10 +159,10 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         [Fact]
         public void TableNumbers_Executes_Positive()
         {
-            MockLookupTableManager.Setup(_ => _.GetTableNumbers())
+            MockLookupTableManager.Setup(_ => _.GetTableNumbers(It.IsAny<string>()))
                 .Returns(new[] { new TableNumber() });
 
-            var result = _concessionController.TableNumbers();
+            var result = _concessionController.TableNumbers("Test");
             var apiResult = Assert.IsType<OkObjectResult>(result);
 
             Assert.NotNull(apiResult.Value);

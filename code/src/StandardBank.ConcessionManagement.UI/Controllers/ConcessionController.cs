@@ -144,13 +144,14 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         }
 
         /// <summary>
-        /// Gets the table numbers.
+        /// Tables the numbers.
         /// </summary>
+        /// <param name="concessionType">Type of the concession.</param>
         /// <returns></returns>
-        [Route("TableNumbers")]
-        public IActionResult TableNumbers()
+        [Route("TableNumbers/{concessionType}")]
+        public IActionResult TableNumbers(string concessionType)
         {
-            return Ok(_lookupTableManager.GetTableNumbers());
+            return Ok(_lookupTableManager.GetTableNumbers(concessionType));
         }
 
         /// <summary>

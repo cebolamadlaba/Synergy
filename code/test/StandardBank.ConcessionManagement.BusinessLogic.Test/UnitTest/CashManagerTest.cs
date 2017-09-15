@@ -146,7 +146,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockProductCashRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
                 .Returns(new[] {new ProductCash { TableNumberId = 1}});
 
-            MockLookupTableManager.Setup(_ => _.GetTableNumbers())
+            MockLookupTableManager.Setup(_ => _.GetTableNumbers(It.IsAny<string>()))
                 .Returns(new[] {new Model.UserInterface.TableNumber {Id = 1}});
 
             var result = _cashManager.GetCashViewData(1);

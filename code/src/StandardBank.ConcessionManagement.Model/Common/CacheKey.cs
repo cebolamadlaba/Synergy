@@ -137,6 +137,16 @@
             {
                 public const string ReadAll = "CacheKey.Repository.RelationshipRepository.ReadAll";
             }
+
+            public static class TransactionalTableNumberRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.TransactionalTableNumberRepository.ReadAll";
+            }
+
+            public static class RiskGroupRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.RiskGroupRepository.ReadAll";
+            }
         }
     }
 }

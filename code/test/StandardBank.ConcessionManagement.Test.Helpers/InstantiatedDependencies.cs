@@ -273,7 +273,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The RiskGroup repository
         /// </summary>
-        public static IRiskGroupRepository RiskGroupRepository = new RiskGroupRepository(DbConnection);
+        public static IRiskGroupRepository RiskGroupRepository = new RiskGroupRepository(DbConnection, CacheManager);
 
         /// <summary>
         /// The ScenarioManagerToolDeal repository
@@ -351,6 +351,16 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static IProductCashRepository ProductCashRepository = new ProductCashRepository(DbConnection);
 
         /// <summary>
+        /// The FinancialTransactional repository
+        /// </summary>
+        public static IFinancialTransactionalRepository FinancialTransactionalRepository = new FinancialTransactionalRepository(DbConnection);
+
+        /// <summary>
+        /// The ProductTransactional repository
+        /// </summary>
+        public static IProductTransactionalRepository ProductTransactionalRepository = new ProductTransactionalRepository(DbConnection);
+
+        /// <summary>
         /// The look up table manager
         /// </summary>
         public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,
@@ -393,7 +403,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static ITransactionalManager TransactionalManager =
             new TransactionalManager(PricingManager, ConcessionManager, ConcessionTransactionalRepository,
-                LegalEntityRepository, LegalEntityAccountRepository, Mapper, LookupTableManager);
+                LegalEntityRepository, LegalEntityAccountRepository, Mapper, LookupTableManager,
+                FinancialTransactionalRepository, ProductTransactionalRepository);
 
         /// <summary>
         /// The cash manager

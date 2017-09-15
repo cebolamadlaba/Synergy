@@ -102,6 +102,9 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             //FinancialLending
             CreateMap<Model.Repository.FinancialLending, Model.UserInterface.Lending.LendingFinancial>().ReverseMap();
 
+            //FinancialTransactional
+            CreateMap<Model.Repository.FinancialTransactional, Model.UserInterface.Transactional.TransactionalFinancial>().ReverseMap();
+
             //Period
             CreateMap<Model.Repository.Period, Model.UserInterface.Period>().ReverseMap();
           
@@ -119,6 +122,12 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                 .ForMember(target => target.LendingProductId, _ => _.MapFrom(source => source.Id));
             CreateMap<Model.UserInterface.Lending.LendingProduct, Model.Repository.ProductLending>()
                 .ForMember(target => target.Id, _ => _.MapFrom(source => source.LendingProductId));
+
+            //ProductTransactional
+            CreateMap<Model.Repository.ProductTransactional, Model.UserInterface.Transactional.TransactionalProduct>()
+                .ForMember(target => target.TransactionalProductId, _ => _.MapFrom(source => source.Id));
+            CreateMap<Model.UserInterface.Transactional.TransactionalProduct, Model.Repository.ProductTransactional>()
+                .ForMember(target => target.Id, _ => _.MapFrom(source => source.TransactionalProductId));
 
             //ProductType
             CreateMap<Model.Repository.Product, Model.UserInterface.ProductType>().ReverseMap();

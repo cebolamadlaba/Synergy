@@ -160,6 +160,31 @@ else
     </table>
 }
 
+@if (Model.HasTransactionalConcessionLetters)
+{
+    <!--Transactional-->
+    <p style="font-weight: bold;">TRANSACTIONAL</p>
+    <table border="1" width="100%">
+        <tr style="background: #dbe5f1;">
+            <td style="padding: 5px;">Account Number</td>
+            <td style="padding: 5px;">Channel / Fee Type</td>
+            <td style="padding: 5px;">Fee / Rate<br />(Incl. VAT)</td>
+            <td style="padding: 5px;">Concession Start Date</td>
+            <td style="padding: 5px;">Concession End Date</td>
+        </tr>
+        @foreach (var transactionalConcessionLetter in Model.TransactionalConcessionLetters)
+        {
+            <tr>
+                <td>@transactionalConcessionLetter.AccountNumber</td>
+                <td>@transactionalConcessionLetter.ChannelOrFeeType</td>
+                <td>@transactionalConcessionLetter.FeeOrRate</td>
+                <td>@transactionalConcessionLetter.ConcessionStartDate</td>
+                <td>@transactionalConcessionLetter.ConcessionEndDate</td>
+            </tr>
+        }
+    </table>
+}
+
     @*
         <!--Investments-->
         <p style="font-weight: bold;">INVESTMENTS</p>
@@ -215,32 +240,6 @@ else
                 <td>--Merchant Number--</td>
                 <td>--Channel / Fee type--</td>
                 <td>--Commission rate</td>
-                <td>--Start date--</td>
-                <td>--End date--</td>
-            </tr>
-        </table>
-
-        <!--Transactional-->
-        <p style="font-weight: bold;">TRANSACTIONAL</p>
-        <table border="1" width="100%">
-            <tr style="background: #dbe5f1;">
-                <td style="padding: 5px;">Account Number</td>
-                <td style="padding: 5px;">Channel/ Fee Type</td>
-                <td style="padding: 5px;">Fee / Rate (Incl. VAT)</td>
-                <td style="padding: 5px;">Concession Start Date</td>
-                <td style="padding: 5px;">Concession End Date</td>
-            </tr>
-            <tr>
-                <td>--Account Number--</td>
-                <td>--Cheque encashment fee--</td>
-                <td>--Base Rate + Ad Valorem--</td>
-                <td>--Start date--</td>
-                <td>--End date--</td>
-            </tr>
-            <tr>
-                <td>--Account Number--</td>
-                <td>--Other transaction type--</td>
-                <td>--Fee / Rate--</td>
                 <td>--Start date--</td>
                 <td>--End date--</td>
             </tr>

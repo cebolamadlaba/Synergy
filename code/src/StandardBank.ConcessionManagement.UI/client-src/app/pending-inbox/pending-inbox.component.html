@@ -1,4 +1,4 @@
-﻿
+
 <app-inbox-header></app-inbox-header>
 
 <div class="col-md-12 search-and-results-container">
@@ -11,7 +11,7 @@
                     <th>Type</th>
                     <th>Opened</th>
                     <th>Concession Id</th>
-                    <th>Segment</th>
+                    <th>Status</th>
                     <th>Sent For Approval</th>
                 </tr>
             </thead>
@@ -24,7 +24,7 @@
                     <td>{{concession?.concessionType}}</td>
                     <td class="date">{{concession?.dateOpened | date: 'yyyy/MM/dd'}}</td>
                     <td>{{concession?.referenceNumber}}</td>
-                    <td>{{concession?.seqment}}</td>
+                    <td>{{concession?.statusDescription}}</td>
                     <td class="date">{{concession?.dateSentForApproval | date: 'yyyy/MM/dd'}}</td>
                 </tr>
             </tbody>

@@ -21,7 +21,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 TariffTable = 8,
                 AdValorem = 7914,
                 BaseRate = 1397,
-                IsActive = true
+                IsActive = true,
+                ConcessionTypeId = DataHelper.GetConcessionTypeId()
             };
 
             var result = InstantiatedDependencies.TableNumberRepository.Create(model);
@@ -70,6 +71,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.AdValorem = model.AdValorem + 100;
             model.BaseRate = model.BaseRate + 100;
             model.IsActive = !model.IsActive;
+            model.ConcessionTypeId = DataHelper.GetAlternateConcessionTypeId(model.ConcessionTypeId);
 
             InstantiatedDependencies.TableNumberRepository.Update(model);
 
@@ -81,6 +83,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.AdValorem, model.AdValorem);
             Assert.Equal(updatedModel.BaseRate, model.BaseRate);
             Assert.Equal(updatedModel.IsActive, model.IsActive);
+            Assert.Equal(updatedModel.ConcessionTypeId, model.ConcessionTypeId);
         }
 
         /// <summary>
@@ -94,7 +97,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 TariffTable = 8,
                 AdValorem = 7914,
                 BaseRate = 1397,
-                IsActive = false
+                IsActive = false,
+                ConcessionTypeId = DataHelper.GetConcessionTypeId()
             };
 
             var temporaryEntity = InstantiatedDependencies.TableNumberRepository.Create(model);

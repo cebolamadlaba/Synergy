@@ -9,6 +9,7 @@ using StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
+using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -64,6 +65,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IRazorRenderer _razorRenderer;
 
         /// <summary>
+        /// The transactional manager
+        /// </summary>
+        private readonly ITransactionalManager _transactionalManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LetterGeneratorManager"/> class.
         /// </summary>
         /// <param name="configurationData">The configuration data.</param>
@@ -75,10 +81,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="legalEntityRepository">The legal entity repository.</param>
         /// <param name="cashManager">The cash manager.</param>
         /// <param name="razorRenderer">The razor renderer.</param>
+        /// <param name="transactionalManager">The transactional manager.</param>
         public LetterGeneratorManager(IConfigurationData configurationData, IFileUtiltity fileUtiltity,
             IConcessionManager concessionManager, IPdfUtility pdfUtility, IUserManager userManager,
             ILendingManager lendingManager, ILegalEntityRepository legalEntityRepository, ICashManager cashManager,
-            IRazorRenderer razorRenderer)
+            IRazorRenderer razorRenderer, ITransactionalManager transactionalManager)
         {
             _templatePath = configurationData.LetterTemplatePath;
             _fileUtiltity = fileUtiltity;
@@ -89,6 +96,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _legalEntityRepository = legalEntityRepository;
             _cashManager = cashManager;
             _razorRenderer = razorRenderer;
+            _transactionalManager = transactionalManager;
         }
 
         /// <summary>
@@ -113,11 +121,80 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 case "Cash":
                     concessionLetters.AddRange(GetCashConcessionLetterData(concession, requestor, bcm));
                     break;
+                case "Transactional":
+                    concessionLetters.AddRange(GetTransactionalConcessionLetterData(concession, requestor, bcm));
+                    break;
                 default:
                     throw new NotImplementedException(concession.ConcessionType);
             }
 
             return GenerateConcessionLetterPdf(concessionLetters);
+        }
+
+        /// <summary>
+        /// Gets the transactional concession letter data.
+        /// </summary>
+        /// <param name="concession">The concession.</param>
+        /// <param name="requestor">The requestor.</param>
+        /// <param name="bcm">The BCM.</param>
+        /// <returns></returns>
+        private IEnumerable<ConcessionLetter> GetTransactionalConcessionLetterData(Concession concession, User requestor, User bcm)
+        {
+            var concessionLetters = new List<ConcessionLetter>();
+            var pageBreakBefore = false;
+            var transactionalConcession = _transactionalManager.GetTransactionalConcession(concession.ReferenceNumber, requestor);
+            var transactionalConcessionDetails = transactionalConcession.TransactionalConcessionDetails.OrderBy(_ => _.AccountNumber);
+
+            foreach (var transactionalConcessionDetail in transactionalConcessionDetails)
+            {
+                var concessionLetter =
+                    concessionLetters.FirstOrDefault(_ => _.TransactionalConcessionLetters != null &&
+                                                          _.TransactionalConcessionLetters.Any(
+                                                              x => x.AccountNumber == transactionalConcessionDetail
+                                                                       .AccountNumber));
+
+                if (concessionLetter == null)
+                {
+                    concessionLetter = PopulateBaseConcessionLetter(concession, requestor, bcm,
+                        transactionalConcessionDetail.LegalEntityId.Value);
+
+                    concessionLetter.TransactionalConcessionLetters = new List<TransactionalConcessionLetter>();
+                    concessionLetter.ConditionConcessionLetters = GetConcessionConditionLetters(concession);
+                    concessionLetter.PageBreakBefore = pageBreakBefore;
+
+                    pageBreakBefore = true;
+
+                    concessionLetters.Add(concessionLetter);
+                }
+
+                var transactionalConcessionLetters = new List<TransactionalConcessionLetter>();
+                transactionalConcessionLetters.AddRange(concessionLetter.TransactionalConcessionLetters);
+                transactionalConcessionLetters.Add(PopulateTransactionalConcessionLetter(concession, transactionalConcessionDetail));
+                concessionLetter.TransactionalConcessionLetters = transactionalConcessionLetters;
+            }
+
+            return concessionLetters;
+        }
+
+        /// <summary>
+        /// Populates the transactional concession letter.
+        /// </summary>
+        /// <param name="concession">The concession.</param>
+        /// <param name="transactionalConcessionDetail">The transactional concession detail.</param>
+        /// <returns></returns>
+        private TransactionalConcessionLetter PopulateTransactionalConcessionLetter(Concession concession,
+            TransactionalConcessionDetail transactionalConcessionDetail)
+        {
+            return new TransactionalConcessionLetter
+            {
+                AccountNumber = transactionalConcessionDetail.AccountNumber,
+                ChannelOrFeeType = transactionalConcessionDetail.TransactionType,
+                FeeOrRate = transactionalConcessionDetail.TransactionType == "Cheque Encashment"
+                    ? $"{transactionalConcessionDetail.BaseRate.GetValueOrDefault(0):C} + {transactionalConcessionDetail.AdValorem.GetValueOrDefault(0)} %"
+                    : transactionalConcessionDetail.BaseRate.GetValueOrDefault(0).ToString("C"),
+                ConcessionEndDate = concession.DateApproved.Value.ToString("dd/MM/yyyy"),
+                ConcessionStartDate = concession.ExpiryDate.Value.ToString("dd/MM/yyyy")
+            };
         }
 
         /// <summary>
@@ -179,8 +256,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 ChannelType = cashConcessionDetail.Channel,
                 BaseRateAdValorem =
                     $"{cashConcessionDetail.BaseRate.GetValueOrDefault(0):C} + {cashConcessionDetail.AdValorem.GetValueOrDefault(0)}%",
-                ConcessionEndDate = concession.DateApproved.Value.ToString("dd/MM/yyyy"),
-                ConcessionStartDate = concession.ExpiryDate.Value.ToString("dd/MM/yyyy")
+                ConcessionEndDate = concession.ExpiryDate.Value.ToString("dd/MM/yyyy"),
+                ConcessionStartDate = concession.DateApproved.Value.ToString("dd/MM/yyyy")
             };
         }
 
@@ -269,8 +346,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 MarginToPrime = lendingConcessionDetail.MarginAgainstPrime.ToString("C"),
                 InitiationFee = lendingConcessionDetail.InitiationFee.ToString("C"),
                 ReviewFee = lendingConcessionDetail.ReviewFee.ToString("C"),
-                ConcessionEndDate = concession.DateApproved.Value.ToString("dd/MM/yyyy"),
-                ConcessionStartDate = concession.ExpiryDate.Value.ToString("dd/MM/yyyy"),
+                ConcessionEndDate = concession.ExpiryDate.Value.ToString("dd/MM/yyyy"),
+                ConcessionStartDate = concession.DateApproved.Value.ToString("dd/MM/yyyy"),
                 UFFFee = lendingConcessionDetail.UffFee.ToString("C")
             };
         }
@@ -314,8 +391,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 ProductType = lendingConcessionDetail.ProductType,
                 ChannelOrFeeType = lendingConcessionDetail.InitiationFee.ToString("C"),
                 FeeOrMarginAbovePrime = lendingConcessionDetail.MarginAgainstPrime.ToString("C"),
-                ConcessionEndDate = concession.DateApproved.Value.ToString("dd/MM/yyyy"),
-                ConcessionStartDate = concession.ExpiryDate.Value.ToString("dd/MM/yyyy")
+                ConcessionEndDate = concession.ExpiryDate.Value.ToString("dd/MM/yyyy"),
+                ConcessionStartDate = concession.DateApproved.Value.ToString("dd/MM/yyyy")
             };
         }
 

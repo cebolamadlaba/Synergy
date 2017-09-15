@@ -180,5 +180,13 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// </value>
         public DateTime? DateApproved { get; set; }
         public string Requestor { get; set; }
+
+        /// <summary>
+        /// Gets the status description.
+        /// </summary>
+        /// <value>
+        /// The status description.
+        /// </value>
+        public string StatusDescription => $"{Status} - {SubStatus}";
     }
 }

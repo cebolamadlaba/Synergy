@@ -43,5 +43,33 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <returns></returns>
         ConcessionTransactional UpdateConcessionTransactional(
             TransactionalConcessionDetail transactionalConcessionDetail, Concession concession);
+
+        /// <summary>
+        /// Gets the transactional view data.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <returns></returns>
+        TransactionalView GetTransactionalViewData(int riskGroupNumber);
+
+        /// <summary>
+        /// Gets the latest CRS or MRS.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <returns></returns>
+        decimal GetLatestCrsOrMrs(int riskGroupNumber);
+
+        /// <summary>
+        /// Gets the transactional financial for risk group number.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <returns></returns>
+        TransactionalFinancial GetTransactionalFinancialForRiskGroupNumber(int riskGroupNumber);
+
+        /// <summary>
+        /// Deletes the concession transactional.
+        /// </summary>
+        /// <param name="transactionalConcessionDetail">The transactional concession detail.</param>
+        /// <returns></returns>
+        ConcessionTransactional DeleteConcessionTransactional(TransactionalConcessionDetail transactionalConcessionDetail);
     }
 }
