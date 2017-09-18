@@ -17,6 +17,13 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         User GetUser(string aNumber);
 
         /// <summary>
+        /// Gets the user.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
+        User GetUser(int? userId);
+
+        /// <summary>
         /// Gets the name of the user.
         /// </summary>
         /// <param name="userId">The user identifier.</param>

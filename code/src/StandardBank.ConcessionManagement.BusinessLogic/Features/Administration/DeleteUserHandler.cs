@@ -1,8 +1,4 @@
 ﻿using StandardBank.ConcessionManagement.Interface.Repository;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
@@ -12,13 +8,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
 {
     public class DeleteUserHandler : MediatR.IRequestHandler<DeleteUser, int>
     {
-        private readonly IAdminRepository repository;
+        private readonly IUserRepository _userRepository;
         private readonly IUserManager _userManager;
         private readonly IMapper _mapper;
 
-        public DeleteUserHandler(IAdminRepository repository, IUserManager userManager, IMapper mapper)
+        public DeleteUserHandler(IUserRepository userRepository, IUserManager userManager, IMapper mapper)
         {
-            this.repository = repository;
+            _userRepository = userRepository;
             _userManager = userManager;
             _mapper = mapper;
         }
@@ -27,10 +23,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
             var user = _userManager.GetUser(message.aNumber);
 
             var mappedUser = _mapper.Map<Model.Repository.User>(user);
+            mappedUser.IsActive = false;
 
-            message.AuditRecord = new AuditRecord(mappedUser, message.CurrentUser, AuditType.Delete);
+            message.AuditRecord = new AuditRecord(mappedUser, message.CurrentUser, AuditType.Update);
 
-            return repository.DeleteUser(message.aNumber);
+            _userRepository.Update(mappedUser);
+
+            return 1;
         }
     }
 }

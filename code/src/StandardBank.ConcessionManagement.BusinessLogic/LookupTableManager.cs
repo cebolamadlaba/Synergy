@@ -483,11 +483,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <summary>
         /// Gets the table numbers.
         /// </summary>
+        /// <param name="concessionType">Type of the concession.</param>
         /// <returns></returns>
-        public IEnumerable<TableNumber> GetTableNumbers()
+        public IEnumerable<TableNumber> GetTableNumbers(string concessionType)
         {
+            var concessionTypeId = GetConcessionTypeId(concessionType);
             var tableNumbers = _tableNumberRepository.ReadAll();
-            return _mapper.Map<IEnumerable<TableNumber>>(tableNumbers.Where(_ => _.IsActive).OrderBy(_ => _.TariffTable));
+
+            return _mapper.Map<IEnumerable<TableNumber>>(tableNumbers
+                .Where(_ => _.IsActive && _.ConcessionTypeId == concessionTypeId).OrderBy(_ => _.TariffTable));
         }
 
         /// <summary>
@@ -514,6 +518,42 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var relationships = _relationshipRepository.ReadAll();
 
             return relationships.First(_ => _.Id == relationshipId).Description;
+        }
+
+        /// <summary>
+        /// Gets the name of the condition product.
+        /// </summary>
+        /// <param name="conditionProductId">The condition product identifier.</param>
+        /// <returns></returns>
+        public string GetConditionProductName(int conditionProductId)
+        {
+            var conditionProduct = _conditionProductRepository.ReadById(conditionProductId);
+
+            return conditionProduct.Description;
+        }
+
+        /// <summary>
+        /// Gets the name of the review fee type.
+        /// </summary>
+        /// <param name="reviewFeeTypeId">The review fee type identifier.</param>
+        /// <returns></returns>
+        public string GetReviewFeeTypeName(int reviewFeeTypeId)
+        {
+            var reviewFeeType = _reviewFeeTypeRepository.ReadById(reviewFeeTypeId);
+
+            return reviewFeeType.Description;
+        }
+
+        /// <summary>
+        /// Gets the name of the channel type.
+        /// </summary>
+        /// <param name="channelTypeId">The channel type identifier.</param>
+        /// <returns></returns>
+        public string GetChannelTypeName(int channelTypeId)
+        {
+            var channelType = _channelTypeRepository.ReadById(channelTypeId);
+
+            return channelType.Description;
         }
 
         /// <summary>

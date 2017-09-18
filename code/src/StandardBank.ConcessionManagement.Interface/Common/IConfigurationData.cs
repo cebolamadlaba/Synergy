@@ -29,6 +29,7 @@ namespace StandardBank.ConcessionManagement.Interface.Common
         string SmtpServerUserName  { get; set; }
         string SmtpServerPassword  { get; set; }
         string DefaultEmail  { get; set; }
+        string DateDatabaseConnection { get; set; }
         string EmailTemplatePath  { get; set; }
 
         /// <summary>
@@ -38,5 +39,13 @@ namespace StandardBank.ConcessionManagement.Interface.Common
         /// The letter template path.
         /// </value>
         string LetterTemplatePath { get; set; }
+
+        /// <summary>
+        /// Gets or sets the WK HTML to PDF executable.
+        /// </summary>
+        /// <value>
+        /// The w KHTML to PDF executable.
+        /// </value>
+        string WKhtmlToPDFExecutable { get; set; }
     }
 }

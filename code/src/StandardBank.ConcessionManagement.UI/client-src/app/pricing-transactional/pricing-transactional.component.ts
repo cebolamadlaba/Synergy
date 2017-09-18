@@ -8,6 +8,7 @@ import { Concession } from "../models/concession";
 import { TransactionalView } from "../models/transactional-view";
 import { TransactionalConcessionService } from "../services/transactional-concession.service";
 import { TransactionalConcession } from "../models/transactional-concession";
+import { UserService } from "../services/user.service";
 
 @Component({
     selector: 'app-pricing-transactional',
@@ -22,12 +23,14 @@ export class PricingTransactionalComponent implements OnInit, OnDestroy {
     transactionalView: TransactionalView = new TransactionalView();
     errorMessage: String;
     pageLoaded = false;
+    canRequest = false;
     
     constructor(
         private router: Router,
         private route: ActivatedRoute,
         private location: Location,
-        @Inject(TransactionalConcessionService) private transactionalConcessionService) {
+        @Inject(TransactionalConcessionService) private transactionalConcessionService,
+        private userService: UserService) {
         this.transactionalView.riskGroup = new RiskGroup();
         this.transactionalView.transactionalConcessions = [new TransactionalConcession()];
         this.transactionalView.transactionalConcessions[0].concession = new Concession();
@@ -44,6 +47,10 @@ export class PricingTransactionalComponent implements OnInit, OnDestroy {
                     this.pageLoaded = true;
                 }, error => this.errorMessage = <any>error);
             }
+        });
+        this.userService.getData().subscribe(user => {
+            this.canRequest = user.canRequest;
+           
         });
     }
 

@@ -21,6 +21,7 @@ export class Concession {
     status: string;
     subStatus: string;
     comments: string;
+    requestorId: number;
     bcmUserId: number;
     pcmUserId: number;
     hoUserId: number;
@@ -30,4 +31,6 @@ export class Concession {
     concessionRelationshipDetails: ConcessionRelationshipDetail[];
     expiryDate: Date;
     dateApproved: Date;
+    requestor: string;
+    statusDescription: string;
 }

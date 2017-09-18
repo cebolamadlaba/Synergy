@@ -23,7 +23,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="LetterTemplates\images\sblogo.jpg" />
+    <None Remove="LetterTemplates\TemplateFooter.html" />
+    <None Remove="LetterTemplates\TemplateHeader.html" />
     <None Remove="StandardBank.ConcessionManagement.UI.csproj.DotSettings" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="LetterTemplates\images\sblogo.jpg" />
+    <Content Include="LetterTemplates\TemplateFooter.html" />
+    <Content Include="LetterTemplates\TemplateHeader.html" />
   </ItemGroup>
 
   <ItemGroup>

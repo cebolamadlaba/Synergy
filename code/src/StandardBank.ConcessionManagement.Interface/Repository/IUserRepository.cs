@@ -46,5 +46,18 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         void Delete(User model);
+
+        /// <summary>
+        /// Creates the user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
+        int CreateUser(User user);
+
+        /// <summary>
+        /// Updates the user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        void UpdateUser(User user);
     }
 }

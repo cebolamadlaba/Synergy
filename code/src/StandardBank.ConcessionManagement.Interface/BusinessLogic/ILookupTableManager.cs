@@ -169,8 +169,9 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <summary>
         /// Gets the table numbers.
         /// </summary>
+        /// <param name="concessionType">Type of the concession.</param>
         /// <returns></returns>
-        IEnumerable<TableNumber> GetTableNumbers();
+        IEnumerable<TableNumber> GetTableNumbers(string concessionType);
 
         /// <summary>
         /// Gets the relationship identifier.
@@ -185,5 +186,26 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="relationshipId">The relationship identifier.</param>
         /// <returns></returns>
         string GetRelationshipDescription(int relationshipId);
+
+        /// <summary>
+        /// Gets the name of the condition product.
+        /// </summary>
+        /// <param name="conditionProductId">The condition product identifier.</param>
+        /// <returns></returns>
+        string GetConditionProductName(int conditionProductId);
+
+        /// <summary>
+        /// Gets the name of the review fee type.
+        /// </summary>
+        /// <param name="reviewFeeTypeId">The review fee type identifier.</param>
+        /// <returns></returns>
+        string GetReviewFeeTypeName(int reviewFeeTypeId);
+
+        /// <summary>
+        /// Gets the name of the channel type.
+        /// </summary>
+        /// <param name="channelTypeId">The channel type identifier.</param>
+        /// <returns></returns>
+        string GetChannelTypeName(int channelTypeId);
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Test.Helpers;
@@ -23,7 +22,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 EmailAddress = "416dcb07b0",
                 FirstName = "0ac3ff0687",
                 Surname = "42f59d39d7",
-                IsActive = false
+                IsActive = false,
+                ContactNumber = "011 555 1234"
             };
 
             var result = InstantiatedDependencies.UserRepository.Create(model);
@@ -87,6 +87,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.FirstName = "3de2516a4c";
             model.Surname = "01e39c70bf";
             model.IsActive = !model.IsActive;
+            model.ContactNumber = "012123123";
 
             InstantiatedDependencies.UserRepository.Update(model);
 
@@ -99,6 +100,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.FirstName, model.FirstName);
             Assert.Equal(updatedModel.Surname, model.Surname);
             Assert.Equal(updatedModel.IsActive, model.IsActive);
+            Assert.Equal(updatedModel.ContactNumber, model.ContactNumber);
         }
 
         /// <summary>
@@ -113,7 +115,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 EmailAddress = "416dcb07b0",
                 FirstName = "0ac3ff0687",
                 Surname = "42f59d39d7",
-                IsActive = false
+                IsActive = false,
+                ContactNumber = "011 555 1234"
             };
 
             var temporaryEntity = InstantiatedDependencies.UserRepository.Create(model);

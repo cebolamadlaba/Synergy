@@ -221,7 +221,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var mappedCashProducts = new List<CashProduct>();
             var cashProducts = _productCashRepository.ReadByRiskGroupId(riskGroup.Id);
-            var tableNumbers = _lookupTableManager.GetTableNumbers();
+            var tableNumbers = _lookupTableManager.GetTableNumbers("Cash");
 
             foreach (var cashProduct in cashProducts)
             {
@@ -325,6 +325,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     mappedConcessionCashEntity.AccountNumber = legalEntityAccount.AccountNumber;
 
                 mappedConcessionCashEntity.ApprovedPrice = concessionCashEntity.CashValue.GetValueOrDefault(0);
+
+                if (mappedConcessionCashEntity.ChannelTypeId.HasValue)
+                    mappedConcessionCashEntity.Channel =
+                        _lookupTableManager.GetChannelTypeName(mappedConcessionCashEntity.ChannelTypeId.Value);
 
                 cashConcessionDetails.Add(mappedConcessionCashEntity);
             }

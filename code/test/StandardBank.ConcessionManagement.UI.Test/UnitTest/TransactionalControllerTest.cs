@@ -1,7 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
 using StandardBank.ConcessionManagement.Model.UserInterface;
+using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using StandardBank.ConcessionManagement.Model.UserInterface.Pricing;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
 using StandardBank.ConcessionManagement.Test.Helpers;
@@ -26,7 +30,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         /// </summary>
         public TransactionalControllerTest()
         {
-            _transactionalController = new TransactionalController(new FakeSiteHelper(), MockPricingManager.Object,
+            _transactionalController = new TransactionalController(new FakeSiteHelper(),
                 MockTransactionalManager.Object, MockMediator.Object);
         }
 
@@ -37,10 +41,14 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         public void TransactionalView_Executes_Positive()
         {
             var riskGroup = new RiskGroup {Id = 1, Name = "Unit Test Risk Group", Number = 1};
-            MockPricingManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>())).Returns(riskGroup);
-
-            MockTransactionalManager.Setup(_ => _.GetTransactionalConcessionsForRiskGroupNumber(It.IsAny<int>()))
-                .Returns(new[] {new TransactionalConcession()});
+            MockTransactionalManager.Setup(_ => _.GetTransactionalViewData(It.IsAny<int>())).Returns(
+                new TransactionalView
+                {
+                    RiskGroup = riskGroup,
+                    TransactionalFinancial = new TransactionalFinancial(),
+                    TransactionalConcessions = new[] {new TransactionalConcession()},
+                    TransactionalProducts = new[] {new TransactionalProduct()}
+                });
 
             var result = _transactionalController.TransactionalView(1);
             var apiResult = Assert.IsType<OkObjectResult>(result);
@@ -113,6 +121,118 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
                 .Returns(transactionalConcession);
 
             var result = await _transactionalController.UpdateTransactional(transactionalConcession);
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is TransactionalConcession);
+        }
+
+        /// <summary>
+        /// Tests that LatestCrsOrMrs executes positive.
+        /// </summary>
+        [Fact]
+        public void LatestCrsOrMrs_Executes_Positive()
+        {
+            MockTransactionalManager.Setup(_ => _.GetLatestCrsOrMrs(It.IsAny<int>())).Returns(500);
+
+            var result = _transactionalController.LatestCrsOrMrs(1);
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is decimal);
+            Assert.Equal(Convert.ToDecimal(apiResult.Value), 500);
+        }
+
+        /// <summary>
+        /// Tests that TransactionalFinancial executes positive.
+        /// </summary>
+        [Fact]
+        public void TransactionalFinancial_Executes_Positive()
+        {
+            MockTransactionalManager.Setup(_ => _.GetTransactionalFinancialForRiskGroupNumber(It.IsAny<int>()))
+                .Returns(new TransactionalFinancial());
+
+            var result = _transactionalController.TransactionalFinancial(1);
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is TransactionalFinancial);
+        }
+
+        /// <summary>
+        /// Tests that ExtendConcession executes positive.
+        /// </summary>
+        [Fact]
+        public async Task ExtendConcession_Executes_Positive()
+        {
+            var transactionalConcession = new TransactionalConcession
+            {
+                Concession = new Concession(),
+                ConcessionConditions = new[] { new ConcessionCondition() },
+                TransactionalConcessionDetails = new[] { new TransactionalConcessionDetail() },
+                CurrentUser = new User()
+            };
+
+            MockTransactionalManager.Setup(_ => _.GetTransactionalConcession(It.IsAny<string>(), It.IsAny<User>()))
+                .Returns(transactionalConcession);
+
+            MockMediator.Setup(_ => _.Send(It.IsAny<AddConcession>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Concession());
+
+            var result = await _transactionalController.ExtendConcession("T001");
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is TransactionalConcession);
+        }
+
+        /// <summary>
+        /// Tests that RenewTransactional executes positive.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task RenewTransactional_Executes_Positive()
+        {
+            var transactionalConcession = new TransactionalConcession
+            {
+                Concession = new Concession(),
+                ConcessionConditions = new[] { new ConcessionCondition() },
+                TransactionalConcessionDetails = new[] { new TransactionalConcessionDetail() },
+                CurrentUser = new User()
+            };
+
+            MockTransactionalManager.Setup(_ => _.GetTransactionalConcession(It.IsAny<string>(), It.IsAny<User>()))
+                .Returns(transactionalConcession);
+
+            MockMediator.Setup(_ => _.Send(It.IsAny<AddConcession>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Concession());
+
+            var result = await _transactionalController.RenewTransactional(transactionalConcession);
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is TransactionalConcession);
+        }
+
+        /// <summary>
+        /// Tests that UpdateRecalledTransactional executes positive.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task UpdateRecalledTransactional_Executes_Positive()
+        {
+            var transactionalConcession = new TransactionalConcession
+            {
+                Concession = new Concession(),
+                ConcessionConditions = new[] { new ConcessionCondition() },
+                TransactionalConcessionDetails = new[] { new TransactionalConcessionDetail() },
+                CurrentUser = new User()
+            };
+
+            MockTransactionalManager.Setup(_ => _.GetTransactionalConcession(It.IsAny<string>(), It.IsAny<User>()))
+                .Returns(transactionalConcession);
+
+            MockMediator.Setup(_ => _.Send(It.IsAny<AddConcession>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Concession());
+
+            var result = await _transactionalController.UpdateRecalledTransactional(transactionalConcession);
             var apiResult = Assert.IsType<OkObjectResult>(result);
 
             Assert.NotNull(apiResult.Value);

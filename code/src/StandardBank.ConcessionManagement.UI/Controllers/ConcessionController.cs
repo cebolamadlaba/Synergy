@@ -144,13 +144,14 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         }
 
         /// <summary>
-        /// Gets the table numbers.
+        /// Tables the numbers.
         /// </summary>
+        /// <param name="concessionType">Type of the concession.</param>
         /// <returns></returns>
-        [Route("TableNumbers")]
-        public IActionResult TableNumbers()
+        [Route("TableNumbers/{concessionType}")]
+        public IActionResult TableNumbers(string concessionType)
         {
-            return Ok(_lookupTableManager.GetTableNumbers());
+            return Ok(_lookupTableManager.GetTableNumbers(concessionType));
         }
 
         /// <summary>
@@ -176,12 +177,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("GenerateConcessionLetter/{concessionReferenceId}")]
         public FileResult GenerateConcessionLetter(string concessionReferenceId)
         {
-            HttpContext.Response.ContentType = "application/html";
+            HttpContext.Response.ContentType = "application/pdf";
 
             var result = new FileContentResult(_letterGeneratorManager.GenerateLetters(concessionReferenceId),
-                "application/html")
+                "application/pdf")
             {
-                FileDownloadName = $"{concessionReferenceId}.html"
+                FileDownloadName = $"{concessionReferenceId}.pdf"
             };
 
             return result;

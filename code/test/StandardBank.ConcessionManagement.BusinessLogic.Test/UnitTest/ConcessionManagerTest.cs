@@ -9,7 +9,10 @@ using Role = StandardBank.ConcessionManagement.Model.UserInterface.Role;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 using static StandardBank.ConcessionManagement.Test.Helpers.MockedDependencies;
 using System.Collections.Generic;
+using StandardBank.ConcessionManagement.Model.UserInterface;
+using ConcessionComment = StandardBank.ConcessionManagement.Model.Repository.ConcessionComment;
 using ConcessionCondition = StandardBank.ConcessionManagement.Model.Repository.ConcessionCondition;
+using ConcessionRelationship = StandardBank.ConcessionManagement.Model.Repository.ConcessionRelationship;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 {
@@ -116,6 +119,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockLookupTableManager.Setup(_ => _.GetMarketSegmentName(It.IsAny<int>())).Returns("Market Segment Name");
             MockLookupTableManager.Setup(_ => _.GetReferenceTypeName(It.IsAny<int>())).Returns("Type Name");
 
+            MockUserManager.Setup(_ => _.GetUser(It.IsAny<int>())).Returns(new User
+            {
+                FirstName = "Test",
+                Surname = "User",
+                ANumber = "A123",
+                SelectedCentre = new Model.UserInterface.Centre { Name = "Test Centre" },
+                SelectedRegion = new Model.UserInterface.Region { Description = "Test Region" }
+            });
+
             var result = _concessionManager.GetExpiredConcessionsForUser(new User
             {
                 Id = 1,
@@ -177,6 +189,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             MockLookupTableManager.Setup(_ => _.GetMarketSegmentName(It.IsAny<int>())).Returns("Market Segment Name");
             MockLookupTableManager.Setup(_ => _.GetReferenceTypeName(It.IsAny<int>())).Returns("Type Name");
+
+            MockUserManager.Setup(_ => _.GetUser(It.IsAny<int>())).Returns(new User
+            {
+                FirstName = "Test",
+                Surname = "User",
+                ANumber = "A123",
+                SelectedCentre = new Model.UserInterface.Centre { Name = "Test Centre" },
+                SelectedRegion = new Model.UserInterface.Region { Description = "Test Region" }
+            });
 
             var result = _concessionManager.GetDeclinedConcessionsForUser(new User
             {
@@ -255,9 +276,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockLookupTableManager.Setup(_ => _.GetConditionTypeName(It.IsAny<int>()))
                 .Returns(conditionTypeName);
 
-            var productTypeName = "Test Product Type Name";
+            var conditionProductName = "Test Product Type Name";
 
-            MockLookupTableManager.Setup(_ => _.GetProductTypeName(It.IsAny<int>())).Returns(productTypeName);
+            MockLookupTableManager.Setup(_ => _.GetConditionProductName(It.IsAny<int>())).Returns(conditionProductName);
 
             var periodTypeName = "Test Period Type Name";
 
@@ -275,7 +296,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             foreach (var record in result)
             {
                 Assert.Equal(record.ConditionType, conditionTypeName);
-                Assert.Equal(record.ProductType, productTypeName);
+                Assert.Equal(record.ProductType, conditionProductName);
                 Assert.Equal(record.PeriodType, periodTypeName);
                 Assert.Equal(record.Period, periodName);
             }
@@ -387,6 +408,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 RiskGroupName = "Test Risk Group"
             });
 
+            MockUserManager.Setup(_ => _.GetUser(It.IsAny<int>())).Returns(new User
+            {
+                FirstName = "Test",
+                Surname = "User",
+                ANumber = "A123",
+                SelectedCentre = new Model.UserInterface.Centre { Name = "Test Centre" },
+                SelectedRegion = new Model.UserInterface.Region { Description = "Test Region" }
+            });
+
             var result = _concessionManager.GetActionedConcessionsForUser(new User { UserRoles = new List<Role> { new Role { Name = "Head Office" } } });
 
 
@@ -400,8 +430,32 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         [Fact]
         public void GetConcessionsForRiskGroup_Executes_Positive()
         {
-            MockConcessionRepository.Setup(_ => _.ReadByRiskGroupIdConcessionTypeIdIsActive(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new[] {new Concession()});
+            MockLookupTableManager.Setup(_ => _.GetConcessionTypeId(It.IsAny<string>())).Returns(1);
+
+            MockConcessionRepository
+                .Setup(_ => _.ReadByRiskGroupIdConcessionTypeIdIsActive(It.IsAny<int>(), It.IsAny<int>(),
+                    It.IsAny<bool>()))
+                .Returns(new[] {new Concession {RequestorId = 1}});
+
+            MockConcessionAccountRepository.Setup(_ => _.ReadByConcessionIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(new ConcessionAccount());
+
+            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup
+            {
+                Id = 1,
+                IsActive = true,
+                RiskGroupNumber = 10,
+                RiskGroupName = "Test Risk Group"
+            });
+
+            MockUserManager.Setup(_ => _.GetUser(It.IsAny<int>())).Returns(new User
+            {
+                FirstName = "Test",
+                Surname = "User",
+                ANumber = "A123",
+                SelectedCentre = new Model.UserInterface.Centre {Name = "Test Centre"},
+                SelectedRegion = new Model.UserInterface.Region {Description = "Test Region"}
+            });
 
             var result = _concessionManager.GetConcessionsForRiskGroup(1, "Test");
 
@@ -432,6 +486,23 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             MockConcessionRepository.Setup(_ => _.ReadByConcessionRefIsActive(It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns(new[] {new Concession {IsActive = true}});
+
+            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup
+            {
+                Id = 1,
+                IsActive = true,
+                RiskGroupNumber = 10,
+                RiskGroupName = "Test Risk Group"
+            });
+
+            MockUserManager.Setup(_ => _.GetUser(It.IsAny<int>())).Returns(new User
+            {
+                FirstName = "Test",
+                Surname = "User",
+                ANumber = "A123",
+                SelectedCentre = new Model.UserInterface.Centre { Name = "Test Centre" },
+                SelectedRegion = new Model.UserInterface.Region { Description = "Test Region" }
+            });
 
             var result = _concessionManager.GetConcessionForConcessionReferenceId("L001");
 

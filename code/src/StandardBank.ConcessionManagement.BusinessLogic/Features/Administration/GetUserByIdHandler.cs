@@ -1,26 +1,23 @@
 ﻿using AutoMapper;
-using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administration
 {
     public class GetUserByIdHandler : MediatR.IRequestHandler<GetUserById, User>
     {
-        private readonly IAdminRepository adminRepository;
-        private readonly IMapper mapper;
+        private readonly IUserManager _userManager;
+        private readonly IMapper _mapper;
 
-        public GetUserByIdHandler(IAdminRepository adminRepository,IMapper mapper)
+        public GetUserByIdHandler(IUserManager userManager, IMapper mapper)
         {
-            this.adminRepository = adminRepository;
-            this.mapper = mapper;
+            _userManager = userManager;
+            _mapper = mapper;
         }
+
         public User Handle(GetUserById message)
         {
-            var result = adminRepository.GetUser(message.Id);
-            return mapper.Map<User>(result);
+            return _userManager.GetUser(message.Id);
         }
     }
 }

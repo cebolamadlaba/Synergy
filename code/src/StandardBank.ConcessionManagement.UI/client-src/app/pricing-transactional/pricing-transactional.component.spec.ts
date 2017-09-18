@@ -5,6 +5,7 @@ import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 import { BaseConcessionFilterPipe } from "../filters/base-concession-filter.pipe";
 import { TransactionalConcessionService, MockTransactionalConcessionService } from "../services/transactional-concession.service";
+import {UserService,MockUserService } from '../services/user.service';
 
 describe('PricingTransactionalComponent', () => {
     let component: PricingTransactionalComponent;
@@ -14,7 +15,7 @@ describe('PricingTransactionalComponent', () => {
         TestBed.configureTestingModule({
             imports: [RouterTestingModule, FormsModule, HttpModule],
             declarations: [PricingTransactionalComponent, BaseConcessionFilterPipe],
-            providers: [{ provide: TransactionalConcessionService, useClass: MockTransactionalConcessionService }]
+            providers: [{ provide: TransactionalConcessionService, useClass: MockTransactionalConcessionService }, { provide: UserService,useClass: MockUserService}]
         })
             .compileComponents();
     }));

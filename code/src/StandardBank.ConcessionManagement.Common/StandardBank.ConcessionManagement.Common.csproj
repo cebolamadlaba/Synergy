@@ -5,12 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="itext7" Version="7.0.4-netstandard" />
+    <PackageReference Include="FluentEmail.Razor" Version="2.1.0" />
     <PackageReference Include="Microsoft.Data.SQLite" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="1.1.2" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.3.1" />
     <PackageReference Include="System.Runtime.Serialization.Xml" Version="4.3.0" />
+    <PackageReference Include="WkWrap.Core" Version="1.0.2" />
   </ItemGroup>
 
   <ItemGroup>

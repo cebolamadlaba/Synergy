@@ -18,6 +18,9 @@ import { TransactionalConcession } from "../models/transactional-concession";
 import { Concession } from "../models/concession";
 import { ConcessionCondition } from "../models/concession-condition";
 import { TransactionalConcessionDetail } from "../models/transactional-concession-detail";
+import { UserConcessionsService } from "../services/user-concessions.service";
+import { ConcessionComment } from "../models/concession-comment";
+import { TransactionalFinancial } from "../models/transactional-financial";
 
 @Component({
   selector: 'app-transactional-view-concession',
@@ -32,6 +35,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
     errorMessage: String;
     validationError: String[];
     saveMessage: String;
+    warningMessage: String;
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
@@ -40,6 +44,13 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
     canBcmApprove = false;
     canPcmApprove = false;
     hasChanges = false;
+    canExtend = false;
+    canRenew = false;
+    canRecall = false;
+    isRenewing = false;
+    motivationEnabled = false;
+    canEdit = false;
+    isRecalling = false;
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
@@ -62,17 +73,25 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
     observableTransactionalConcession: Observable<TransactionalConcession>;
     transactionalConcession: TransactionalConcession;
 
+    observableTransactionalFinancial: Observable<TransactionalFinancial>;
+    transactionalFinancial: TransactionalFinancial;
+
     constructor(private route: ActivatedRoute,
         private formBuilder: FormBuilder,
         private location: Location,
         @Inject(LookupDataService) private lookupDataService,
-        @Inject(TransactionalConcessionService) private transactionalConcessionService) {
+        @Inject(TransactionalConcessionService) private transactionalConcessionService,
+        @Inject(UserConcessionsService) private userConcessionsService) {
         this.riskGroup = new RiskGroup();
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
         this.conditionTypes = [new ConditionType()];
         this.selectedConditionTypes = [new ConditionType()];
         this.clientAccounts = [new ClientAccount()];
+        this.transactionalFinancial = new TransactionalFinancial();
+        this.transactionalConcession = new TransactionalConcession();
+        this.transactionalConcession.concession = new Concession();
+        this.transactionalConcession.concession.concessionComments = [new ConcessionComment()];
     }
 
     ngOnInit() {
@@ -86,6 +105,10 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
                 this.observableClientAccounts = this.lookupDataService.getClientAccounts(this.riskGroupNumber);
                 this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
+
+                this.observableTransactionalFinancial = this.transactionalConcessionService.getTransactionalFinancial(this.riskGroupNumber);
+                this.observableTransactionalFinancial.subscribe(transactionalFinancial => this.transactionalFinancial = transactionalFinancial,
+                    error => this.errorMessage = <any>error);
             }
         });
 
@@ -110,7 +133,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
         this.observableTransactionTypes = this.lookupDataService.getTransactionTypes("Transactional");
         this.observableTransactionTypes.subscribe(transactionTypes => this.transactionTypes = transactionTypes, error => this.errorMessage = <any>error);
 
-        this.observableTableNumbers = this.lookupDataService.getTableNumbers();
+        this.observableTableNumbers = this.lookupDataService.getTableNumbers("Transactional");
         this.observableTableNumbers.subscribe(tableNumbers => {
             this.tableNumbers = tableNumbers;
             this.populateForm();
@@ -133,11 +156,22 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
                 if (transactionalConcession.concession.status == "Pending" && transactionalConcession.concession.subStatus == "BCM Pending") {
                     this.canBcmApprove = transactionalConcession.currentUser.canBcmApprove;
+                    this.canEdit = transactionalConcession.currentUser.canBcmApprove;
                 }
 
                 if (transactionalConcession.concession.status == "Pending" && transactionalConcession.concession.subStatus == "PCM Pending") {
                     this.canPcmApprove = transactionalConcession.currentUser.canPcmApprove;
+                    this.canEdit = transactionalConcession.currentUser.canPcmApprove;
                 }
+
+                //if it's still pending and the user is a requestor then they can recall it
+                if (transactionalConcession.concession.status == "Pending" && transactionalConcession.concession.subStatus == "BCM Pending") {
+                    this.canRecall = transactionalConcession.currentUser.canRequest;
+                }
+
+                //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
+                this.canExtend = transactionalConcession.concession.canExtend && transactionalConcession.currentUser.canRequest;
+                this.canRenew = transactionalConcession.concession.canRenew && transactionalConcession.currentUser.canRequest;
 
                 this.transactionalConcessionForm.controls['mrsCrs'].setValue(this.transactionalConcession.concession.mrsCrs);
                 this.transactionalConcessionForm.controls['smtDealNumber'].setValue(this.transactionalConcession.concession.smtDealNumber);
@@ -272,7 +306,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
         control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('tableNumber').value.adValorem);
     }
 
-    getTransactionalConcession(): TransactionalConcession {
+    getTransactionalConcession(isNew: boolean): TransactionalConcession {
         var transactionalConcession = new TransactionalConcession();
         transactionalConcession.concession = new Concession();
         transactionalConcession.concession.concessionType = "Transactional";
@@ -305,7 +339,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
             let transactionalConcessionDetail = new TransactionalConcessionDetail();
 
-            if (concessionFormItem.get('transactionalConcessionDetailId').value)
+            if (!isNew && concessionFormItem.get('transactionalConcessionDetailId').value)
                 transactionalConcessionDetail.transactionalConcessionDetailId = concessionFormItem.get('transactionalConcessionDetailId').value;
 
             if (concessionFormItem.get('transactionType').value)
@@ -341,7 +375,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
             let concessionCondition = new ConcessionCondition();
 
-            if (conditionFormItem.get('concessionConditionId').value)
+            if (!isNew && conditionFormItem.get('concessionConditionId').value)
                 concessionCondition.concessionConditionId = conditionFormItem.get('concessionConditionId').value;
 
             if (conditionFormItem.get('conditionType').value)
@@ -402,7 +436,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
         this.errorMessage = null;
         this.validationError = null;
 
-        var transactionalConcession = this.getTransactionalConcession();
+        var transactionalConcession = this.getTransactionalConcession(false);
         transactionalConcession.concession.subStatus = "PCM Pending";
         transactionalConcession.concession.bcmUserId = this.transactionalConcession.currentUser.id;
 
@@ -412,6 +446,8 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
                 this.canBcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
+                this.transactionalConcession = entity;
+                this.canEdit = false;
             }, error => {
                 this.errorMessage = <any>error;
                 this.isLoading = false;
@@ -427,7 +463,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
         this.errorMessage = null;
         this.validationError = null;
 
-        var transactionalConcession = this.getTransactionalConcession();
+        var transactionalConcession = this.getTransactionalConcession(false);
         transactionalConcession.concession.status = "Declined";
         transactionalConcession.concession.subStatus = "BCM Declined";
         transactionalConcession.concession.bcmUserId = this.transactionalConcession.currentUser.id;
@@ -438,6 +474,8 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
                 this.canBcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
+                this.transactionalConcession = entity;
+                this.canEdit = false;
             }, error => {
                 this.errorMessage = <any>error;
                 this.isLoading = false;
@@ -453,7 +491,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
         this.errorMessage = null;
         this.validationError = null;
 
-        var transactionalConcession = this.getTransactionalConcession();
+        var transactionalConcession = this.getTransactionalConcession(false);
 
         transactionalConcession.concession.status = "Approved";
 
@@ -471,6 +509,8 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
                 this.canPcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
+                this.transactionalConcession = entity;
+                this.canEdit = false;
             }, error => {
                 this.errorMessage = <any>error;
                 this.isLoading = false;
@@ -486,7 +526,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
         this.errorMessage = null;
         this.validationError = null;
 
-        var transactionalConcession = this.getTransactionalConcession();
+        var transactionalConcession = this.getTransactionalConcession(false);
 
         transactionalConcession.concession.status = "Declined";
 
@@ -504,6 +544,121 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
                 this.canPcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
+                this.transactionalConcession = entity;
+                this.canEdit = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    extendConcession() {
+        if (confirm("Are you sure you want to extend this concession?")) {
+            this.isLoading = true;
+            this.errorMessage = null;
+            this.validationError = null;
+
+            this.transactionalConcessionService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
+                console.log("data saved");
+                this.canBcmApprove = false;
+                this.canBcmApprove = false;
+                this.canExtend = false;
+                this.canRenew = false;
+                this.canRecall = false;
+                this.saveMessage = entity.concession.childReferenceNumber;
+                this.isLoading = false;
+                this.transactionalConcession = entity;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        }
+    }
+
+    renewConcession() {
+        this.canBcmApprove = false;
+        this.motivationEnabled = true;
+        this.canBcmApprove = false;
+        this.canExtend = false;
+        this.canRenew = false;
+        this.canRecall = false;
+        this.isRenewing = true;
+        this.isRecalling = false;
+        this.canEdit = true;
+
+        this.transactionalConcessionForm.controls['motivation'].setValue('');
+    }
+
+    saveRenewConcession() {
+        this.isLoading = true;
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var transactionalConcession = this.getTransactionalConcession(true);
+
+        transactionalConcession.concession.status = "Pending";
+        transactionalConcession.concession.subStatus = "BCM Pending";
+        transactionalConcession.concession.type = "Existing";
+        transactionalConcession.concession.referenceNumber = this.concessionReferenceId;
+
+        if (!this.validationError) {
+            this.transactionalConcessionService.postRenewTransactionalData(transactionalConcession).subscribe(entity => {
+                console.log("data saved");
+                this.isRenewing = false;
+                this.saveMessage = entity.concession.childReferenceNumber;
+                this.transactionalConcession = entity;
+                this.isLoading = false;
+                this.canEdit = false;
+                this.motivationEnabled = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    recallConcession() {
+        this.isLoading = true;
+        this.errorMessage = null;
+
+        this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
+            this.warningMessage = "Concession recalled, please make the required changes and save the concession or it will be lost";
+            this.isRecalling = true;
+            this.isLoading = false;
+            this.canEdit = true;
+            this.motivationEnabled = true;
+        }, error => {
+            this.errorMessage = <any>error;
+            this.isLoading = false;
+        });
+    }
+
+    saveRecallConcession() {
+        this.warningMessage = "";
+        this.isLoading = true;
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var transactionalConcession = this.getTransactionalConcession(true);
+
+        transactionalConcession.concession.status = "Pending";
+        transactionalConcession.concession.subStatus = "BCM Pending";
+        transactionalConcession.concession.referenceNumber = this.concessionReferenceId;
+
+        if (!this.validationError) {
+            this.transactionalConcessionService.postRecallTransactionalData(transactionalConcession).subscribe(entity => {
+                console.log("data saved");
+                this.isRecalling = false;
+                this.saveMessage = entity.concession.referenceNumber;
+                this.transactionalConcession = entity;
+                this.isLoading = false;
+                this.canEdit = false;
+                this.motivationEnabled = false;
             }, error => {
                 this.errorMessage = <any>error;
                 this.isLoading = false;

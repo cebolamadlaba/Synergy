@@ -181,5 +181,11 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         IEnumerable<Model.UserInterface.ConcessionComment> GetConcessionComments(int concessionId);
 
         string GetRagStatus(string period,DateTime dateApproved);
+
+        /// <summary>
+        /// Gets the condition counts.
+        /// </summary>
+        /// <returns></returns>
+        ConditionCounts GetConditionCounts();
     }
 }

@@ -22,29 +22,30 @@
 
                 <div class="col-md-3 summary-items">
                     <h5>Account</h5>
-                    <div class="summary-items-sub">No. of Accounts: <span class="summary-item-value">{{transactionalView.totalNumberOfAccounts}}</span></div>
-                    <div class="summary-items-sub">Avg Management Fee <span class="summary-item-value">{{transactionalView.averageAccountManagementFee}}</span></div>
-                    <div class="summary-items-sub">Avg Min Monthly Fee <span class="col-md-12 summary-item-value">{{transactionalView.averageMinimumMonthlyFee}}</span></div>
+                    <div class="summary-items-sub">No. of Accounts: <span class="summary-item-value">{{transactionalView?.transactionalFinancial?.totalNumberOfAccounts}}</span></div>
+                    <div class="summary-items-sub">Avg Management Fee <span class="summary-item-value">{{transactionalView?.transactionalFinancial?.averageAccountManagementFee | number : '1.2-2'}}</span></div>
+                    <div class="summary-items-sub">Avg Min Monthly Fee <span class="col-md-12 summary-item-value">{{transactionalView?.transactionalFinancial?.averageMinimumMonthlyFee | number : '1.2-2'}}</span></div>
                 </div>
                 <div class="col-md-3 summary-items">
                     <h5>Cash</h5>
-                    <div class="summary-items-sub">Total Withdrawal Volumes <span class="summary-item-value">{{transactionalView.totalCashWithdrawalVolumes}}</span></div>
-                    <div class="summary-items-sub">Total Withdrawal Values <span class="summary-item-value">{{transactionalView.totalCashWithdrawalValues}}</span></div>
-                    <div class="summary-items-sub">Avg Withdrawal Price <span class="col-md-12 summary-item-value">{{transactionalView.averageCashWithdrawalPrice}}</span></div>
+                    <div class="summary-items-sub">Total Withdrawal Volumes <span class="summary-item-value">{{transactionalView?.transactionalFinancial?.totalCashWithdrawalVolumes | number : '1.2-2'}}</span></div>
+                    <div class="summary-items-sub">Total Withdrawal Values <span class="summary-item-value">{{transactionalView?.transactionalFinancial?.totalCashWithdrawalValues | number : '1.2-2'}}</span></div>
+                    <div class="summary-items-sub">Avg Withdrawal Price <span class="col-md-12 summary-item-value">{{transactionalView?.transactionalFinancial?.averageCashWithdrawalPrice | number : '1.2-2'}}</span></div>
                 </div>
                 <div class="col-md-2 summary-items">
-                    <h5>Total Cheque Volumes</h5>
-                    <div class="summary-items-sub">Issuing <span class="summary-item-value">{{transactionalView.totalChequeIssuingVolumes}}</span></div>
-                    <div class="summary-items-sub">Deposit <span class="summary-item-value">{{transactionalView.totalChequeDepositVolumes}}</span></div>
-                    <div class="summary-items-sub">Encashment <span class="summary-item-value">{{transactionalView.totalChequeEncashmentVolumes}}</span></div>
+                    <h5>Total Cheque</h5>
+                    <div class="summary-items-sub">Issuing Volumes<span class="summary-item-value">{{transactionalView?.transactionalFinancial?.totalChequeIssuingVolumes | number : '1.2-2'}}</span></div>
+                    <div class="summary-items-sub">Deposit Volumes<span class="summary-item-value">{{transactionalView?.transactionalFinancial?.totalChequeDepositVolumes | number : '1.2-2'}}</span></div>
+                    <div class="summary-items-sub">Encashment Volumes<span class="summary-item-value">{{transactionalView?.transactionalFinancial?.totalChequeEncashmentVolumes | number : '1.2-2'}}</span></div>
+                    <div class="summary-items-sub">Encashment Value <span class="summary-item-value">{{transactionalView?.transactionalFinancial?.totalChequeEncashmentValues | number : '1.2-2'}}</span></div>
                 </div>
                 <div class="col-md-2 summary-items">
                     <h5>Average Cheque</h5>
-                    <div class="summary-items-sub">Issuing Value <span class="summary-item-value">{{transactionalView.averageChequeIssuingValue}}</span></div>
-                    <div class="summary-items-sub">Issuing Price <span class="summary-item-value">{{transactionalView.averageChequeIssuingPrice}}</span></div>
-                    <div class="summary-items-sub">Deposit Value <span class="summary-item-value">{{transactionalView.averageChequeDepositValue}}</span></div>
-                    <div class="summary-items-sub">Deposit Price <span class="summary-item-value">{{transactionalView.averageChequeDepositPrice}}</span></div>
-                    <div class="summary-items-sub">Encashment Price <span class="summary-item-value">{{transactionalView.averageChequeEncashmentPrice}}</span></div>
+                    <div class="summary-items-sub">Issuing Value <span class="summary-item-value">{{transactionalView?.transactionalFinancial?.averageChequeIssuingValue | number : '1.2-2'}}</span></div>
+                    <div class="summary-items-sub">Issuing Price <span class="summary-item-value">{{transactionalView?.transactionalFinancial?.averageChequeIssuingPrice | number : '1.2-2'}}</span></div>
+                    <div class="summary-items-sub">Deposit Value <span class="summary-item-value">{{transactionalView?.transactionalFinancial?.averageChequeDepositValue | number : '1.2-2'}}</span></div>
+                    <div class="summary-items-sub">Deposit Price <span class="summary-item-value">{{transactionalView?.transactionalFinancial?.averageChequeDepositPrice | number : '1.2-2'}}</span></div>
+                    <div class="summary-items-sub">Encashment Price <span class="summary-item-value">{{transactionalView?.transactionalFinancial?.averageChequeEncashmentPrice | number : '1.2-2'}}</span></div>
                 </div>
             </div>
             <div class="col-md-1">
@@ -85,7 +86,7 @@
         <div class="section">
 
             <!-- Empty state for products if no data is found -->
-            <div *ngIf="!transactionalView.sourceSystemProducts">
+            <div *ngIf="!transactionalView?.transactionalProducts || transactionalView?.transactionalProducts?.length == 0">
                 <div class="section-body">
                     <div class="searchEmptyState">
                         <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
@@ -95,29 +96,31 @@
             </div>
             <!-- End of empty state -->
             <!-- Products list -->
-            <div class="section-body" *ngFor="let sourceSystemProduct of transactionalView.sourceSystemProducts; trackBy: index;">
+            <div class="section-body" *ngFor="let transactionalProduct of transactionalView.transactionalProducts; trackBy: index;">
                 <div class="product-section">
-                    <div class="product-name"> {{sourceSystemProduct.customerName}}</div>
+                    <div class="product-name"> {{transactionalProduct.customerName}}</div>
                     <div>
-                        <div class="product-account">Account No: {{sourceSystemProduct.accountNumber}}</div>
-                        <div class="product-code">Product: {{sourceSystemProduct.productName}}</div>
+                        <div class="product-account">Account No: {{transactionalProduct.accountNumber}}</div>
+                        <div class="product-code">Transaction Type: {{transactionalProduct.transactionType}}</div>
                     </div>
                 </div>
                 <div class="product-table-container">
                     <table class="table table-bordered table-hover header-fixed table-striped ">
                         <thead>
-                            <tr>
-                                <th>Limit</th>
-                                <th>Average Balance</th>
-                                <th>Loaded MAP</th>
-                            </tr>
+                        <tr>
+                            <th>Tariff Table</th>
+                            <th>Volume</th>
+                            <th>Value</th>
+                            <th>Loaded Price</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="rightAlign"> {{sourceSystemProduct.limit}}</td>
-                                <td class="rightAlign"> {{sourceSystemProduct.averageBalance}}</td>
-                                <td class="rightAlign"> {{sourceSystemProduct.loadedMap}}</td>
-                            </tr>
+                        <tr>
+                            <td class="rightAlign"> {{transactionalProduct.tariffTable}}</td>
+                            <td class="rightAlign"> {{transactionalProduct.volume}}</td>
+                            <td class="rightAlign"> {{transactionalProduct.value}}</td>
+                            <td class="rightAlign"> {{transactionalProduct.loadedPrice}}</td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -132,7 +135,7 @@
     <div class="col-md-7  search-and-results-container concessions">
         <h2 class="headings">
             Concessions
-            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/transactional-add-concession', transactionalView.riskGroup.number]" *ngIf="pageLoaded">Add Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/transactional-add-concession', transactionalView.riskGroup.number]" *ngIf="pageLoaded && canRequest">Add Concession</button>
         </h2>
 
         <!-- Search bar -->

@@ -9,13 +9,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
 {
     public class UpdateUserHandler : MediatR.IRequestHandler<UpdateUser>
     {
-        private readonly IAdminRepository adminRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper mapper;
         private readonly ICacheManager _cacheManager;
 
-        public UpdateUserHandler(IAdminRepository adminRepository, IMapper mapper, ICacheManager cacheManager)
+        public UpdateUserHandler(IUserRepository userRepository, IMapper mapper, ICacheManager cacheManager)
         {
-            this.adminRepository = adminRepository;
+            _userRepository = userRepository;
             this.mapper = mapper;
             _cacheManager = cacheManager;
         }
@@ -30,7 +30,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
 
             message.AuditRecord = new AuditRecord(model, message.CurrentUser, AuditType.Update);
 
-            adminRepository.UpdateUser(model);
+            _userRepository.UpdateUser(model);
         }
     }
 }

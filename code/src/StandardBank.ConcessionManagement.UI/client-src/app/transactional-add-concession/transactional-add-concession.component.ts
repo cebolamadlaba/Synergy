@@ -35,6 +35,8 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
     selectedConditionTypes: ConditionType[];
     isLoading = false;
+    observableLatestCrsOrMrs: Observable<number>;
+    latestCrsOrMrs: number;
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
@@ -77,6 +79,9 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 
                 this.observableClientAccounts = this.lookupDataService.getClientAccounts(this.riskGroupNumber);
                 this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
+
+                this.observableLatestCrsOrMrs = this.transactionalConcessionService.getlatestCrsOrMrs(this.riskGroupNumber);
+                this.observableLatestCrsOrMrs.subscribe(latestCrsOrMrs => this.latestCrsOrMrs = latestCrsOrMrs, error => this.errorMessage = <any>error);
             }
         });
 
@@ -100,7 +105,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
         this.observableTransactionTypes = this.lookupDataService.getTransactionTypes("Transactional");
         this.observableTransactionTypes.subscribe(transactionTypes => this.transactionTypes = transactionTypes, error => this.errorMessage = <any>error);
 
-        this.observableTableNumbers = this.lookupDataService.getTableNumbers();
+        this.observableTableNumbers = this.lookupDataService.getTableNumbers("Transactional");
         this.observableTableNumbers.subscribe(tableNumbers => this.tableNumbers = tableNumbers, error => this.errorMessage = <any>error);
     }
 

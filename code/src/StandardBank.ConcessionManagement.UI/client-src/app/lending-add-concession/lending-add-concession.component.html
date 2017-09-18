@@ -1,4 +1,4 @@
-<!-- Banner expanded -->
+﻿<!-- Banner expanded -->
 <div class="col-md-12 banner">
     <div class="row">
         <div class="lending-banner-title">
@@ -222,8 +222,8 @@
                                         <option *ngFor="let conditionProductOption of selectedConditionTypes[i].conditionProducts" [ngValue]="conditionProductOption">{{conditionProductOption.description}}</option>
                                     </select>
                                 </td>
-                                <td class="length-medium"><input formControlName="interestRate" /></td>
-                                <td class="length-long"><input formControlName="volume" /></td>
+                                <td class="length-long"><input formControlName="interestRate" /></td>
+                                <td class="length-short"><input formControlName="volume" /></td>
                                 <td class="length-medium"><input formControlName="value" /></td>
                                 <td class="length-medium">
                                     <select formControlName="periodType">
@@ -252,7 +252,7 @@
     <!-- Form buttons -->
     <div class="footer-buttons">
         <div class="float-right">
-            <button type="button" class="btn btn-cancel" [routerLink]="['/pricing-lending', riskGroup.number]">Cancel</button>
+            <button type="button" class="btn btn-cancel" [routerLink]="['/pricing-lending', riskGroup.number]">Close</button>
             <button class="btn btn-primary" type="button" (click)="onSubmit()" *ngIf="!saveMessage">Submit</button>
         </div>
     </div>

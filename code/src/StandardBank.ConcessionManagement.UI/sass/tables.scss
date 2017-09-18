@@ -80,6 +80,7 @@
 //Lending concessions
 .form-concessions-table{
     margin-bottom: 25px;
+    width: 100%;
     .form-concessions-table-content{
         tr input, tr select{
             width: 100%;
@@ -99,11 +100,11 @@
             }
 
             .length-medium{
-                width: 8%;
+                width: 10%;
             }
 
             .length-short{
-                width: 7%;
+                width: 8%;
             }
 
             .delete{

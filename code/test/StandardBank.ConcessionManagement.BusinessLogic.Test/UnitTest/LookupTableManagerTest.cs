@@ -29,7 +29,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 InstantiatedDependencies.Mapper, MockConditionProductRepository.Object,
                 MockConditionTypeProductRepository.Object, MockAccrualTypeRepository.Object,
                 MockChannelTypeRepository.Object, MockTransactionTypeRepository.Object,
-                MockTableNumberRepository.Object, MockRelationshipRepository.Object, MockRoleRepository.Object,MockCentreRepository.Object,MockRegionRepository.Object);
+                MockTableNumberRepository.Object, MockRelationshipRepository.Object, MockRoleRepository.Object,
+                MockCentreRepository.Object, MockRegionRepository.Object);
         }
 
         /// <summary>
@@ -452,11 +453,24 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         [Fact]
         public void GetTableNumbers_Executes_Positive()
         {
-            var tableNumber = new TableNumber { Id = 1, TariffTable = 1, AdValorem = 100.10m, BaseRate = 0.543m, IsActive = true };
+            var tableNumber = new TableNumber
+            {
+                Id = 1,
+                TariffTable = 1,
+                AdValorem = 100.10m,
+                BaseRate = 0.543m,
+                IsActive = true,
+                ConcessionTypeId = 1
+            };
 
             MockTableNumberRepository.Setup(_ => _.ReadAll()).Returns(new[] { tableNumber });
 
-            var result = _lookupTableManager.GetTableNumbers();
+            var concessionType =
+                new ConcessionType { Code = "CODE", Description = "Description", Id = 1, IsActive = true };
+
+            MockConcessionTypeRepository.Setup(_ => _.ReadAll()).Returns(new[] { concessionType });
+
+            var result = _lookupTableManager.GetTableNumbers("CODE");
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
@@ -492,6 +506,57 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             Assert.NotNull(result);
             Assert.Equal(result, relationship.Description);
+        }
+
+        /// <summary>
+        /// Tests that GetConditionProductName executes positive.
+        /// </summary>
+        [Fact]
+        public void GetConditionProductName_Executes_Positive()
+        {
+            var conditionProduct =
+                new ConditionProduct {Description = "Test Condition Product", Id = 1, IsActive = true};
+
+            MockConditionProductRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(conditionProduct);
+
+            var result = _lookupTableManager.GetConditionProductName(1);
+
+            Assert.NotNull(result);
+            Assert.Equal(result, conditionProduct.Description);
+        }
+
+        /// <summary>
+        /// Tests that GetReviewFeeTypeName executes positive.
+        /// </summary>
+        [Fact]
+        public void GetReviewFeeTypeName_Executes_Positive()
+        {
+            var reviewFeeType =
+                new ReviewFeeType { Description = "Test Review Fee Type", Id = 1, IsActive = true };
+
+            MockReviewFeeTypeRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(reviewFeeType);
+
+            var result = _lookupTableManager.GetReviewFeeTypeName(1);
+
+            Assert.NotNull(result);
+            Assert.Equal(result, reviewFeeType.Description);
+        }
+
+        /// <summary>
+        /// Tests that GetChannelTypeName executes positive.
+        /// </summary>
+        [Fact]
+        public void GetChannelTypeName_Executes_Positive()
+        {
+            var channelType =
+                new ChannelType { Description = "Test Review Fee Type", Id = 1, IsActive = true };
+
+            MockChannelTypeRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(channelType);
+
+            var result = _lookupTableManager.GetChannelTypeName(1);
+
+            Assert.NotNull(result);
+            Assert.Equal(result, channelType.Description);
         }
     }
 }

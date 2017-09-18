@@ -23,7 +23,11 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 RiskGroupId = DataHelper.GetRiskGroupId(),
                 CustomerName = "311273f3c2",
                 CustomerNumber = "c46e397eeb",
-                IsActive = true
+                IsActive = true,
+                City = "Joburg",
+                ContactPerson = "Bob",
+                PostalAddress = "123 Somewhere Street",
+                PostalCode = "2001"
             };
 
             var result = InstantiatedDependencies.LegalEntityRepository.Create(model);
@@ -135,6 +139,10 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.CustomerName = "e300b22636";
             model.CustomerNumber = "6d77d219be";
             model.IsActive = !model.IsActive;
+            model.City = "Cape Town";
+            model.ContactPerson = "John";
+            model.PostalAddress = "999 Here Street";
+            model.PostalCode = "5000";
 
             InstantiatedDependencies.LegalEntityRepository.Update(model);
 
@@ -147,6 +155,10 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.CustomerName, model.CustomerName);
             Assert.Equal(updatedModel.CustomerNumber, model.CustomerNumber);
             Assert.Equal(updatedModel.IsActive, model.IsActive);
+            Assert.Equal(updatedModel.City, model.City);
+            Assert.Equal(updatedModel.ContactPerson, model.ContactPerson);
+            Assert.Equal(updatedModel.PostalAddress, model.PostalAddress);
+            Assert.Equal(updatedModel.PostalCode, model.PostalCode);
         }
 
         /// <summary>
@@ -161,7 +173,11 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 RiskGroupId = DataHelper.GetRiskGroupId(),
                 CustomerName = "311273f3c2",
                 CustomerNumber = "c46e397eeb",
-                IsActive = false
+                IsActive = false,
+                City = "Joburg",
+                ContactPerson = "Bob",
+                PostalAddress = "123 Somewhere Street",
+                PostalCode = "2001"
             };
 
             var temporaryEntity = InstantiatedDependencies.LegalEntityRepository.Create(model);

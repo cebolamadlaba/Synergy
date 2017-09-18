@@ -9,7 +9,7 @@ import { Location } from '@angular/common';
 import { LendingService } from "../services/lending.service";
 import { Router, RouterModule } from '@angular/router';
 import { LendingFinancial } from "../models/lending-financial";
-
+import { UserService} from "../services/user.service";
 @Component({
     selector: 'app-pricing-lending',
     templateUrl: './pricing-lending.component.html',
@@ -23,12 +23,14 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
     errorMessage: String;
     showHide = true;
     pageLoaded = false;
+    canRequest = false;
 
     constructor(
         private router: Router,
         private route: ActivatedRoute,
         private location: Location,
-        @Inject(LendingService) private lendingService) {
+        @Inject(LendingService) private lendingService,
+        private userService: UserService) {
         this.lendingView.riskGroup = new RiskGroup();
         this.lendingView.lendingFinancial = new LendingFinancial();
         this.lendingView.lendingConcessions = [new LendingConcession()];
@@ -46,6 +48,10 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
                     this.pageLoaded = true;
                 }, error => this.errorMessage = <any>error);
             }
+            this.userService.getData().subscribe(user => {
+                this.canRequest = user.canRequest;
+                console.log(this.canRequest);
+            });
         });
     }
 

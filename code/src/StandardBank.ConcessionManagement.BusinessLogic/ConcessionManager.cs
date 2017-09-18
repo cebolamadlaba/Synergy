@@ -371,7 +371,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     _lookupTableManager.GetConditionTypeName(concessionCondition.ConditionTypeId);
 
                 mappedConcessionCondition.ProductType =
-                    _lookupTableManager.GetProductTypeName(concessionCondition.ConditionProductId);
+                    _lookupTableManager.GetConditionProductName(concessionCondition.ConditionProductId);
 
                 if (concessionCondition.PeriodTypeId.HasValue)
                     mappedConcessionCondition.PeriodType =
@@ -510,6 +510,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     _mapper.Map<IEnumerable<Model.UserInterface.ConcessionRelationshipDetail>>(
                         _concessionRelationshipRepository.ReadDetailsByConcessionId(concession.Id));
 
+                var user = _userManager.GetUser(concession.RequestorId);
+
+                mappedConcession.Requestor = new RequestorModel
+                {
+                    FullName = user.FullName,
+                    ANumber = user.ANumber,
+                    BusinessCentre = user.SelectedCentre.Name,
+                    Region = user.SelectedRegion.Description
+                };
+
                 concessions.Add(mappedConcession);
             }
 
@@ -526,7 +536,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             return concession.ExpiryDate.HasValue &&
                    concession.ExpiryDate.Value <= DateTime.Now.AddMonths(3) &&
-                   currentStatus == "Approved";
+                   (currentStatus == "Approved" || currentStatus == "Approved With Changes");
         }
 
         /// <summary>
@@ -549,7 +559,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return concession.ExpiryDate.HasValue &&
                    concession.ExpiryDate.Value <= DateTime.Now.AddMonths(3) &&
-                   currentStatus == "Approved";
+                   (currentStatus == "Approved" || currentStatus == "Approved With Changes");
         }
 
         /// <summary>
@@ -620,7 +630,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public IEnumerable<Concession> GetConcessionsForRiskGroup(int riskGroupId, string concessionType)
         {
             var concessionTypeId = _lookupTableManager.GetConcessionTypeId(concessionType);
-            return Map(_concessionRepository.ReadByRiskGroupIdConcessionTypeIdIsActive(riskGroupId, concessionTypeId, true));
+            var concessions =
+                Map(_concessionRepository
+                    .ReadByRiskGroupIdConcessionTypeIdIsActive(riskGroupId, concessionTypeId, true)).ToArray();
+            
+            return concessions;
         }
 
         /// <summary>
@@ -654,7 +668,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             //if there is more than one record returned then there is something wrong,
             //there shouldn't be two active concessions with the same concession reference number
-            return Map(concessions).Single();
+            var concession = Map(concessions).Single();
+
+            return concession;
         }
 
         /// <summary>
@@ -750,7 +766,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             else
                 mappedConcession.HOUserId = currentConcession.HOUserId;
 
-            if (concession.Status == "Approved")
+            if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
             {
                 if (!mappedConcession.DateApproved.HasValue)
                     mappedConcession.DateApproved = DateTime.Now;
@@ -761,7 +777,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             _concessionRepository.Update(mappedConcession);
 
-            if (concession.Status == "Approved")
+            if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
             {
                 //check if this is an extension or renewal for another concession, if it is then
                 //we need to deactivate the parent concession since this one is approved
@@ -853,11 +869,25 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         public IEnumerable<Condition> GetConditions(string periodType, string period)
         {
-            var statusid = _lookupTableManager.GetStatusId("Approved");
+            var approvedStatusId = _lookupTableManager.GetStatusId("Approved");
+            var approvedWithChangesStatusId = _lookupTableManager.GetStatusId("Approved With Changes");
+
             var periodId = _lookupTableManager.GetPeriods().First(x => x.Description == period).Id;
             var periodTypeId = _lookupTableManager.GetPeriodTypes().First(x => x.Description == periodType).Id;
-            var results =  _mapper.Map<IEnumerable<Condition>>(_concessionConditionRepository.ReadByPeriodAndApprovalStatus(statusid,periodId,periodTypeId));
+
+            var conditions = new List<Model.Repository.Condition>();
+
+            conditions.AddRange(
+                _concessionConditionRepository.ReadByPeriodAndApprovalStatus(approvedStatusId, periodId, periodTypeId));
+
+            conditions.AddRange(
+                _concessionConditionRepository.ReadByPeriodAndApprovalStatus(approvedWithChangesStatusId, periodId,
+                    periodTypeId));
+
+            var results =  _mapper.Map<IEnumerable<Condition>>(conditions);
+
             results.ToList().ForEach(x => x.RagStatus = GetRagStatus(x.PeriodName, x.ApprovedDate));
+
             return results;
         }
 
@@ -1099,6 +1129,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                    
             }
         }
+
+        /// <summary>
+        /// Gets the condition counts.
+        /// </summary>
+        /// <returns></returns>
+        public ConditionCounts GetConditionCounts()
+        {
+            var conditionCounts = _concessionConditionRepository.ReadConditionCounts();
+
+            return new ConditionCounts
+            {
+                OngoingCount = conditionCounts?.FirstOrDefault(_ => _.PeriodType == "Ongoing")?.RecordCount ?? 0,
+                StandardCount = conditionCounts?.FirstOrDefault(_ => _.PeriodType == "Standard")?.RecordCount ?? 0
+            };
+        }
+
         private string CalculateRagStatusThreeMonths(DateTime dateApproved)
         {
             var totalHours = GetWorkingDays(dateApproved, DateTime.Today) * 8;

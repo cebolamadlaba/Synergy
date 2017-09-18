@@ -1,4 +1,4 @@
-<!-- Banner expanded -->
+﻿<!-- Banner expanded -->
 <div class="col-md-12 banner">
     <div class="row">
         <div class="lending-banner-title">
@@ -17,7 +17,9 @@
             <div class="col-md-11">
                 <div class="col-md-2">
                     <div class="subHeading">{{riskGroup.name}}</div>
-                    <div class="date lightTitle hidden-element">{{riskGroup.number}}</div>                    
+                    <div class="date lightTitle hidden-element">{{riskGroup.number}}</div>  
+                    <div class="requestor"><i class="fa fa-user-circle-o" aria-hidden="true"></i><button data-toggle="modal" data-target="#myModal">{{lendingConcession?.concession?.requestor?.fullName}}</button></div>
+                    <!-- Trigger the modal with a button -->                    
                 </div>              
                 <div class="col-md-2  hidden-element">
                     <div class="subHeading lightTitle">Total Exposure</div>
@@ -42,6 +44,29 @@
             </div>
             -->
         </div>
+    </div>
+</div>
+
+
+
+<!-- Requestor information modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="requestor-modal">
+                    <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                    <p class="name">{{lendingConcession?.concession?.requestor?.fullName}}</p>
+                    <p class="anumber">{{lendingConcession?.concession?.requestor?.aNumber}}</p>
+                    <p>{{lendingConcession?.concession?.requestor?.businessCentre}}</p>
+                    <p>{{lendingConcession?.concession?.requestor?.region}}</p>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>                
+            </div>           
+        </div>
+
     </div>
 </div>
 
@@ -104,6 +129,7 @@
             <label>Motivation</label>
             <textarea class="form-control large-input" [attr.disabled]="motivationEnabled ? null : ''" maxlength="800" formControlName="motivation"></textarea>
         </div>
+       
         <div class="row" *ngIf="canBcmApprove || canPcmApprove">
 
             <label>Comments:</label>
@@ -153,10 +179,10 @@
                         <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
                 </td>
-                <td class="length-long"><input formControlName="limit" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
-                <td class="length-short"><input formControlName="term" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
-                <td class="length-short"><input formControlName="marginAgainstPrime" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
-                <td class="length-long"><input formControlName="initiationFee" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="text" formControlName="limit" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="text" formControlName="term" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="text" formControlName="marginAgainstPrime" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="text" formControlName="initiationFee" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
                 <td class="length-medium">
                     <select formControlName="reviewFeeType" class="form-control" [attr.disabled]="canEdit ? null : ''">
                         <option *ngFor="let reviewFeeTypeOption of reviewFeeTypes" [ngValue]="reviewFeeTypeOption">{{reviewFeeTypeOption.description}}</option>
@@ -252,8 +278,8 @@
                                         <option *ngFor="let conditionProductOption of selectedConditionTypes[i].conditionProducts" [ngValue]="conditionProductOption">{{conditionProductOption?.description}}</option>
                                     </select>
                                 </td>
-                                <td class="length-medium"><input formControlName="interestRate" /></td>
-                                <td class="length-long"><input formControlName="volume" /></td>
+                                <td class="length-long"><input formControlName="interestRate" /></td>
+                                <td class="length-short"><input formControlName="volume" /></td>
                                 <td class="length-medium"><input formControlName="value" /></td>
                                 <td class="length-medium">
                                     <select formControlName="periodType">
@@ -355,7 +381,7 @@
 
     <div class="footer-buttons">
         <div class="float-right">
-            <button type="button" class="btn btn-cancel" (click)="goBack()" *ngIf="!isRecalling">Cancel</button>
+            <button type="button" class="btn btn-cancel" (click)="goBack()" *ngIf="!isRecalling">Close</button>
             <button type="button" class="btn btn-danger" (click)="bcmDeclineConcession()" *ngIf="canBcmApprove">Decline</button>
             <button type="button" class="btn btn-success" (click)="bcmApproveConcession()" *ngIf="canBcmApprove">Forward</button>
             <button type="button" class="btn btn-danger" (click)="pcmDeclineConcession()" *ngIf="canPcmApprove">Decline</button>
