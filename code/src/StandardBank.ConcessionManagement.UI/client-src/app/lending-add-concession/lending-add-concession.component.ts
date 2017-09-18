@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
@@ -189,8 +189,8 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
         if (this.lendingConcessionForm.controls['smtDealNumber'].value)
             lendingConcession.concession.smtDealNumber = this.lendingConcessionForm.controls['smtDealNumber'].value;
-        else
-            this.addValidationError("SMT Deal Number not captured");
+        //else
+        //    this.addValidationError("SMT Deal Number not captured");
 
         if (this.lendingConcessionForm.controls['motivation'].value)
             lendingConcession.concession.motivation = this.lendingConcessionForm.controls['motivation'].value;
