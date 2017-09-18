@@ -767,7 +767,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedConcession.DateActionedByPCM = currentConcession.DateActionedByPCM;
             mappedConcession.DateApproved = currentConcession.DateApproved;
             mappedConcession.DatesentForApproval = currentConcession.DatesentForApproval;
-            mappedConcession.ExpiryDate = currentConcession.ExpiryDate;
             mappedConcession.HOUserId = currentConcession.HOUserId;
             mappedConcession.PCMUserId = currentConcession.PCMUserId;
             mappedConcession.RegionId = currentConcession.RegionId;

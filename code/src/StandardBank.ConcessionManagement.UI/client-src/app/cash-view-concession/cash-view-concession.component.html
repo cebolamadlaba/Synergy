@@ -100,8 +100,12 @@
             <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="isRecalling ? null : ''" />
         </div>
         <div class="row">
+            <label>Expiry Date</label>
+            <input class="form-control" formControlName="expiryDate" type="date" [attr.disabled]="canEdit ? null : ''">
+        </div>
+        <div class="row">
             <label>Requested By</label>
-            <p>{{cashConcession?.concession?.requestor}}</p>
+            <p>{{cashConcession?.concession?.requestor?.fullName}}</p>
         </div>
     </div>
     <div class="col-md-7 col-md-offset-1">
@@ -123,7 +127,6 @@
             <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" *ngIf="canPcmApprove || isRenewing || isRecalling" style="margin-top: 15px;">New Concession</button>
         </div>
         <div class="row">
-            <div class="col-md-2" *ngIf="cashConcession?.concession?.expiryDate"><strong>Expiry Date</strong> {{cashConcession?.concession?.expiryDate | date: 'yyyy/MM/dd' }}</div>
             <div class="col-md-2" *ngIf="cashConcession?.concession?.dateApproved"><strong>Approval Date</strong> {{cashConcession?.concession?.dateApproved | date: 'yyyy/MM/dd' }}</div>
         </div>
     </div>

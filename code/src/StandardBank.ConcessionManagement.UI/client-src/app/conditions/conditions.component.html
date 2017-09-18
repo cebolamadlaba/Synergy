@@ -6,7 +6,7 @@
                 <p>Standard</p>
             </div>
             <div class="main">
-                <p>{{conditionCounts.standardCount}}</p>
+                <p>{{conditionCounts?.standardCount}}</p>
             </div>
         </div>
     </div>
@@ -16,7 +16,7 @@
                 <p>Ongoing</p>
             </div>
             <div class="main">
-                <p>{{conditionCounts.ongoingCount}}</p>
+                <p>{{conditionCounts?.ongoingCount}}</p>
             </div>
         </div>
     </div>
@@ -26,7 +26,7 @@
 <div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
     <div class="form-feedback-container">
         <div class="alert-danger">
-            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Unable to submit concession. Please see error(s) below.</p>
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Unable to submit condition. Please see error(s) below.</p>
             <p>{{errorMessage}}</p>
 
             <ul *ngIf="validationError">
@@ -40,7 +40,7 @@
 <div class="col-md-12" *ngIf="saveMessage && !isLoading">
     <div class="form-feedback-container">
         <div class="alert-success">
-            <p class="message-heading"><i class="fa fa-check-circle" aria-hidden="true"></i>Concession submitted successfully with ID: {{saveMessage}}</p>
+            <p class="message-heading"><i class="fa fa-check-circle" aria-hidden="true"></i>Condition submitted successfully with ID: {{saveMessage}}</p>
         </div>
     </div>
 </div>
@@ -86,7 +86,7 @@
     <!-- Empty state if no concessions found -->
     <div class="searchEmptyState" *ngIf="(observableConditions | conditionsFilter: concessionIdOrRiskGroupNumber)?.length === 0">
         <i class="fa fa-inbox" aria-hidden="true"></i>
-        <p>No concessions found matching your search</p>
+        <p>No conditions found matching your search</p>
     </div>
 
     <!-- Results table -->

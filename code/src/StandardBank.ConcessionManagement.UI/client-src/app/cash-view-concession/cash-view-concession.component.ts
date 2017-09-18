@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { Location } from '@angular/common';
+import { Location, DatePipe } from '@angular/common';
 import { Period } from "../models/period";
 import { PeriodType } from "../models/period-type";
 import { ConditionType } from "../models/condition-type";
@@ -25,7 +25,8 @@ import { CashFinancial } from "../models/cash-financial";
 @Component({
     selector: 'app-cash-view-concession',
     templateUrl: './cash-view-concession.component.html',
-    styleUrls: ['./cash-view-concession.component.css']
+    styleUrls: ['./cash-view-concession.component.css'],
+    providers: [DatePipe]
 })
 export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
@@ -82,6 +83,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
     constructor(private route: ActivatedRoute,
         private formBuilder: FormBuilder,
         private location: Location,
+        private datepipe: DatePipe,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(CashConcessionService) private cashConcessionService,
         @Inject(UserConcessionsService) private userConcessionsService) {
@@ -119,7 +121,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             conditionItemsRows: this.formBuilder.array([]),
             smtDealNumber: new FormControl(),
             motivation: new FormControl(),
-            comments: new FormControl()
+            comments: new FormControl(),
+            expiryDate: new FormControl()
         });
 
         this.observableChannelTypes = this.lookupDataService.getChannelTypes();
@@ -171,6 +174,11 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
                 this.cashConcessionForm.controls['smtDealNumber'].setValue(this.cashConcession.concession.smtDealNumber);
                 this.cashConcessionForm.controls['motivation'].setValue(this.cashConcession.concession.motivation);
+
+                if (this.cashConcession.concession.expiryDate) {
+                    var formattedExpiryDate = this.datepipe.transform(this.cashConcession.concession.expiryDate, 'yyyy-MM-dd');
+                    this.cashConcessionForm.controls['expiryDate'].setValue(formattedExpiryDate);
+                }
 
                 let rowIndex = 0;
 
@@ -331,6 +339,9 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
         if (this.cashConcessionForm.controls['comments'].value)
             cashConcession.concession.comments = this.cashConcessionForm.controls['comments'].value;
+
+        if (this.cashConcessionForm.controls['expiryDate'].value)
+            cashConcession.concession.expiryDate = new Date(this.cashConcessionForm.controls['expiryDate'].value);
 
         const concessions = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
 
