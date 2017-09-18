@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 
