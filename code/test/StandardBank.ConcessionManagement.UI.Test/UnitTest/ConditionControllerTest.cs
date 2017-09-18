@@ -69,5 +69,20 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
             Assert.NotNull(apiResult.Value);
             Assert.True(apiResult.Value is IEnumerable<PeriodType>);
         }
+
+        /// <summary>
+        /// Tests that ConditionCounts executes positive.
+        /// </summary>
+        [Fact]
+        public void ConditionCounts_Executes_Positive()
+        {
+            MockConcessionManager.Setup(_ => _.GetConditionCounts()).Returns(new ConditionCounts());
+
+            var result = _conditionController.ConditionCounts();
+            var apiResult = Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(apiResult.Value);
+            Assert.True(apiResult.Value is ConditionCounts);
+        }
     }
 }

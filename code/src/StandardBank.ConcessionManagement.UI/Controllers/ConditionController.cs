@@ -52,10 +52,21 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             return Ok(_lookupTableManager.GetPeriodTypes());
         }
+
         [Route("MyConditions/{period}/{periodType}")]
         public IActionResult MyConditions([FromRoute]string period = "3 Months" ,[FromRoute] string periodType = "Standard")
         {
             return Ok(_concessionManager.GetConditions(periodType,period));
+        }
+
+        /// <summary>
+        /// Gets the condition counts.
+        /// </summary>
+        /// <returns></returns>
+        [Route("ConditionCounts")]
+        public IActionResult ConditionCounts()
+        {
+            return Ok(_concessionManager.GetConditionCounts());
         }
     }
 }

@@ -1,35 +1,75 @@
   <!-- Total widgets -->
-<!--<div class="col-md-12">
-    <div class="totalsWidget outer ">
-        <div class="activeWidget">
+<div class="col-md-12" *ngIf="!isLoading">
+    <div class="totalsWidget outer" (click)="showStandard()">
+        <div class="activeWidget" [className]="standardClass">
             <div class="cornered">
                 <p>Standard</p>
             </div>
             <div class="main">
-                <p>27</p>
+                <p>{{conditionCounts.standardCount}}</p>
             </div>
         </div>
     </div>
-    <div class="totalsWidget outer" style="margin-left: 20px;">
-        <div class="cornered">
-            <p>Ongoing</p>
-        </div>
-        <div class="main">
-            <p>13</p>
+    <div class="totalsWidget outer" style="margin-left: 20px;" (click)="showOngoing()">
+        <div id="ongoingWidget" [className]="ongoingClass">
+            <div class="cornered">
+                <p>Ongoing</p>
+            </div>
+            <div class="main">
+                <p>{{conditionCounts.ongoingCount}}</p>
+            </div>
         </div>
     </div>
+</div>
 
-</div>-->
-<div class="col-md-12 search-and-results-container">
-    <!-- Search bar -->
-    <!--<div class="input-group add-on">
-      <input class="form-control" placeholder="Search Concession ID or Risk Group Number" name="srch-term" id="srch-term" type="text">
-    </div>-->
+<!-- Error message -->
+<div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Unable to submit concession. Please see error(s) below.</p>
+            <p>{{errorMessage}}</p>
+
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Success message -->
+<div class="col-md-12" *ngIf="saveMessage && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-success">
+            <p class="message-heading"><i class="fa fa-check-circle" aria-hidden="true"></i>Concession submitted successfully with ID: {{saveMessage}}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Warning message -->
+<div class="col-md-12" *ngIf="warningMessage && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-warning">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{warningMessage}}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Loading message -->
+<div class="col-md-12" *ngIf="isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-info">
+            <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Loading</p>
+        </div>
+    </div>
+</div>
+
+
+<div class="col-md-12 search-and-results-container" *ngIf="!isLoading">
     <!-- filter-->
     <div class="form-group  filter-group">
         <div id="filter"><label for="sort" class="col-sm-1 control-label"> Filter</label></div>
         <div class="col-sm-2">
-            <select (change)="PeriodFilter($event.target.value)" class="form-control">
+            <select (change)="periodFilter($event.target.value)" class="form-control">
                 <option *ngFor="let p of periods"
                         [ngValue]="p.id">
                     {{p.description}}
@@ -40,7 +80,7 @@
 
     <!-- Results table -->
     <div class="table-container">
-        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-bordered table-hover header-fixed table-striped">
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-bordered table-hover header-fixed">
             <thead>
                 <tr>
                     <th>Risk Group</th>
@@ -75,6 +115,5 @@
             </tbody>
         </table>
     </div>
-
 
 </div>

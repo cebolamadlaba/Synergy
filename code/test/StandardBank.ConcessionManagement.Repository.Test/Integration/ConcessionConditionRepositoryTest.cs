@@ -146,5 +146,16 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
 
             Assert.Null(result);
         }
+
+        /// <summary>
+        /// Tests that ReadConditionCounts executes positive.
+        /// </summary>
+        [Fact]
+        public void ReadConditionCounts_Executes_Positive()
+        {
+            var result = InstantiatedDependencies.ConcessionConditionRepository.ReadConditionCounts();
+
+            Assert.NotNull(result);
+        }
     }
 }
