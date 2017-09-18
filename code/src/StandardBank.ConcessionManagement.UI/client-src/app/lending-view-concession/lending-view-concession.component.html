@@ -18,7 +18,7 @@
                 <div class="col-md-2">
                     <div class="subHeading">{{riskGroup.name}}</div>
                     <div class="date lightTitle hidden-element">{{riskGroup.number}}</div>  
-                    <div class="requestor"><i class="fa fa-user-circle-o" aria-hidden="true"></i><button data-toggle="modal" data-target="#myModal">{{lendingConcession?.concession?.requestor.fullName}}</button></div>
+                    <div class="requestor"><i class="fa fa-user-circle-o" aria-hidden="true"></i><button data-toggle="modal" data-target="#myModal">{{lendingConcession?.concession?.requestor?.fullName}}</button></div>
                     <!-- Trigger the modal with a button -->                    
                 </div>              
                 <div class="col-md-2  hidden-element">
@@ -56,9 +56,9 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-body">
-                <p>{{lendingConcession?.concession?.requestor.aNumber}}</p>
-                <p>{{lendingConcession?.concession?.requestor.businessCentre}}</p>
-                <p>{{lendingConcession?.concession?.requestor.region}}</p>                
+                <p>{{lendingConcession?.concession?.requestor?.aNumber}}</p>
+                <p>{{lendingConcession?.concession?.requestor?.businessCentre}}</p>
+                <p>{{lendingConcession?.concession?.requestor?.region}}</p>                
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>           
         </div>
