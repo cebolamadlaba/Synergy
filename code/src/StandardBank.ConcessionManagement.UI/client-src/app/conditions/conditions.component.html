@@ -78,9 +78,20 @@
         </div>
     </div>
 
+    <!-- Search bar -->
+    <div class="input-group add-on">
+        <input class="form-control" placeholder="Search Concession ID or Risk Group Number" [(ngModel)]="concessionIdOrRiskGroupNumber" type="text">
+    </div>
+
+    <!-- Empty state if no concessions found -->
+    <div class="searchEmptyState" *ngIf="(observableConditions | conditionsFilter: concessionIdOrRiskGroupNumber)?.length === 0">
+        <i class="fa fa-inbox" aria-hidden="true"></i>
+        <p>No concessions found matching your search</p>
+    </div>
+
     <!-- Results table -->
-    <div class="table-container">
-        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-bordered table-hover header-fixed">
+    <div class="table-container" *ngIf="(observableConditions | conditionsFilter: concessionIdOrRiskGroupNumber)?.length > 0">
+        <table class="table table-bordered table-hover header-fixed">
             <thead>
                 <tr>
                     <th>Risk Group</th>
@@ -95,12 +106,12 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor='let condition of observableConditions; trackBy: index;' class="status-{{condition.ragStatus}}">
+                <tr *ngFor='let condition of observableConditions | conditionsFilter: concessionIdOrRiskGroupNumber; trackBy: index;' class="status-{{condition.ragStatus}}">
                     <td>
                         <p class="riskGroupName">{{condition.riskGroupName}}</p>
                         <p class="riskGroupNumber">{{condition.riskGroupNumber}}</p>
                     </td>
-                    <td>{{condition.concessionId}}</td>
+                    <td>{{condition.concessionReferenceNumber}}</td>
                     <td>{{condition.conditionType }}</td>
                     <td>{{condition.productType}}</td>
                     <td class="date">{{condition.expiryDate | date: 'yyyy/MM/dd'}}</td>

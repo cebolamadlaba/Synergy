@@ -1,12 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace StandardBank.ConcessionManagement.Model.UserInterface
 {
     public class Condition
     {
         public int ConcessionId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the concession reference number.
+        /// </summary>
+        /// <value>
+        /// The concession reference number.
+        /// </value>
+        public string ConcessionReferenceNumber { get; set; }
+
         public decimal? InterestRate { get; set; }
         public int? Volume { get; set; }
         public decimal? Value { get; set; }

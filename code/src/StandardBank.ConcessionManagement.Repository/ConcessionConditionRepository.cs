@@ -152,7 +152,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 var query = @"
-                    SELECT rg.RiskGroupName, rg.RiskGroupNumber,c.pkConcessionId 'ConcessionId',ct.Description 'ConditionType',cp.Description 'ProductType',cc.InterestRate,c.ExpiryDate,cc.Volume,cc.Value , c.[DateApproved] 'ApprovedDate',p.[Description] 'PeriodName'
+                    SELECT rg.RiskGroupName, rg.RiskGroupNumber,c.pkConcessionId 'ConcessionId', c.[ConcessionRef] 'ConcessionReferenceNumber', ct.Description 'ConditionType',cp.Description 'ProductType',cc.InterestRate,c.ExpiryDate,cc.Volume,cc.Value , c.[DateApproved] 'ApprovedDate',p.[Description] 'PeriodName'
                       FROM [dbo].[tblConcessionCondition] cc
                       join dbo.rtblConditionType ct on cc.fkConditionTypeId = ct.pkConditionTypeId
                       join dbo.rtblConditionProduct cp on cp.pkConditionProductId = cc.fkConditionProductId

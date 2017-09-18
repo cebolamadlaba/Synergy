@@ -56,7 +56,7 @@ import { BusinessCentreComponent } from './admin/business-centre/business-centre
 import { UsersComponent } from './admin/users/users.component';
 import { EditUserComponent } from './admin/users/edit-user/edit-user.component';
 import { ActionedInboxComponent } from './actioned-inbox/actioned-inbox.component';
-
+import { ConditionsFilterPipe } from './filters/conditions-filter.pipe';
 
 @NgModule({
     declarations: [
@@ -98,7 +98,8 @@ import { ActionedInboxComponent } from './actioned-inbox/actioned-inbox.componen
         BusinessCentreComponent,
         UsersComponent,
         EditUserComponent,
-        ActionedInboxComponent
+        ActionedInboxComponent,
+        ConditionsFilterPipe
     ],
     imports: [
         BrowserModule,
