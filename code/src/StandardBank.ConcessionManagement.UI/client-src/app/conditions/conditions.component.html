@@ -119,8 +119,8 @@
                     <td>{{condition.volume}}</td>
                     <td>{{condition.value}}</td>
                     <td>
-                        <button type="button" class="btn btn-no">No</button>
-                        <button type="button" class="btn btn-yes">Yes</button>
+                        <button type="button" class="btn btn-no" (click)="conditionNotMet()">No</button>
+                        <button type="button" class="btn btn-yes" (click)="conditionMet()">Yes</button>
                     </td>
                 </tr>
             </tbody>

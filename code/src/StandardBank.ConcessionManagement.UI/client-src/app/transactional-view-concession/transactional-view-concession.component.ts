@@ -156,7 +156,6 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
                 if (transactionalConcession.concession.status == "Pending" && transactionalConcession.concession.subStatus == "BCM Pending") {
                     this.canBcmApprove = transactionalConcession.currentUser.canBcmApprove;
-                    this.canEdit = transactionalConcession.currentUser.canBcmApprove;
                 }
 
                 if (transactionalConcession.concession.status == "Pending" && transactionalConcession.concession.subStatus == "PCM Pending") {

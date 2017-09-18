@@ -74,4 +74,12 @@ export class ConditionsComponent implements OnInit {
 
         this.getConditions();
     }
+
+    conditionNotMet() {
+
+    }
+
+    conditionMet() {
+
+    }
 }

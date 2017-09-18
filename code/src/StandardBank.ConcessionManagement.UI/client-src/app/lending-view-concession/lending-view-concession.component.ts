@@ -153,7 +153,6 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
                 if (lendingConcession.concession.status == "Pending" && lendingConcession.concession.subStatus == "BCM Pending") {
                     this.canBcmApprove = lendingConcession.currentUser.canBcmApprove;
-                    this.canEdit = lendingConcession.currentUser.canBcmApprove;
                 }
 
                 if (lendingConcession.concession.status == "Pending" && lendingConcession.concession.subStatus == "PCM Pending") {
