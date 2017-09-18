@@ -51,15 +51,19 @@
 
 <!-- Requestor information modal -->
 <div id="myModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-sm">
 
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-body">
-                <p>{{lendingConcession?.concession?.requestor?.aNumber}}</p>
-                <p>{{lendingConcession?.concession?.requestor?.businessCentre}}</p>
-                <p>{{lendingConcession?.concession?.requestor?.region}}</p>                
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <div class="requestor-modal">
+                    <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                    <p class="name">{{lendingConcession?.concession?.requestor?.fullName}}</p>
+                    <p class="anumber">{{lendingConcession?.concession?.requestor?.aNumber}}</p>
+                    <p>{{lendingConcession?.concession?.requestor?.businessCentre}}</p>
+                    <p>{{lendingConcession?.concession?.requestor?.region}}</p>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>                
             </div>           
         </div>
 
