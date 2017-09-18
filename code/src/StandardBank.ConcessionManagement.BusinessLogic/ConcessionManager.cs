@@ -620,7 +620,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public IEnumerable<Concession> GetConcessionsForRiskGroup(int riskGroupId, string concessionType)
         {
             var concessionTypeId = _lookupTableManager.GetConcessionTypeId(concessionType);
-            return Map(_concessionRepository.ReadByRiskGroupIdConcessionTypeIdIsActive(riskGroupId, concessionTypeId, true));
+            var concessions = Map(_concessionRepository.ReadByRiskGroupIdConcessionTypeIdIsActive(riskGroupId, concessionTypeId, true)).ToArray();
+            for(var i =0; i< concessions.Length;i++)
+            {
+                var user = _userManager.GetUser(concessions[i].RequestorId);
+                concessions[i].Requestor = new RequestorModel { FullName = user.FullName, ANumber = user.ANumber, BusinessCentre = user.SelectedCentre.Name, Region = user.SelectedRegion.Description };
+            }
+            return concessions;
         }
 
         /// <summary>
@@ -654,7 +660,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             //if there is more than one record returned then there is something wrong,
             //there shouldn't be two active concessions with the same concession reference number
-            return Map(concessions).Single();
+            var concession =  Map(concessions).Single();
+            var user =  _userManager.GetUser(concession.RequestorId);
+            concession.Requestor = new RequestorModel { FullName = user.FullName , ANumber = user.ANumber , BusinessCentre = user.SelectedCentre.Name , Region = user.SelectedRegion.Description };
+            return concession;
         }
 
         /// <summary>

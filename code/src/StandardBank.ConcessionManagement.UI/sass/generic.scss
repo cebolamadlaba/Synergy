@@ -185,3 +185,21 @@ input[type=number]::-webkit-outer-spin-button {
 .form-horizontal .control-label {
     text-align: left;
 }
+
+.requestor {
+    font-size: 0.9em;
+
+    button {
+        background: none;
+        border: none;
+
+        &:hover {
+            color: #c7dde7;
+        }
+    }
+
+    i {
+        color: white;
+        opacity: 0.8;
+    }
+}

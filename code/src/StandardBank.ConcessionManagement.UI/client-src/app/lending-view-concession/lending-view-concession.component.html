@@ -1,4 +1,4 @@
-<!-- Banner expanded -->
+﻿<!-- Banner expanded -->
 <div class="col-md-12 banner">
     <div class="row">
         <div class="lending-banner-title">
@@ -17,7 +17,9 @@
             <div class="col-md-11">
                 <div class="col-md-2">
                     <div class="subHeading">{{riskGroup.name}}</div>
-                    <div class="date lightTitle hidden-element">{{riskGroup.number}}</div>                    
+                    <div class="date lightTitle hidden-element">{{riskGroup.number}}</div>  
+                    <div class="requestor"><i class="fa fa-user-circle-o" aria-hidden="true"></i><button data-toggle="modal" data-target="#myModal">{{lendingConcession?.concession?.requestor.fullName}}</button></div>
+                    <!-- Trigger the modal with a button -->                    
                 </div>              
                 <div class="col-md-2  hidden-element">
                     <div class="subHeading lightTitle">Total Exposure</div>
@@ -42,6 +44,25 @@
             </div>
             -->
         </div>
+    </div>
+</div>
+
+
+
+<!-- Requestor information modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>{{lendingConcession?.concession?.requestor.aNumber}}</p>
+                <p>{{lendingConcession?.concession?.requestor.businessCentre}}</p>
+                <p>{{lendingConcession?.concession?.requestor.region}}</p>                
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>           
+        </div>
+
     </div>
 </div>
 
@@ -97,10 +118,6 @@
         <div class="row">
             <label>SMT Deal Number</label>
             <input class="form-control" [attr.disabled]="isRecalling ? null : ''" formControlName="smtDealNumber" maxlength="16" required />
-        </div>
-        <div class="row">
-            <label>Requested By</label>
-            <p>{{lendingConcession?.concession?.requestor}}</p>
         </div>
     </div>
     <div class="col-md-7 col-md-offset-1">

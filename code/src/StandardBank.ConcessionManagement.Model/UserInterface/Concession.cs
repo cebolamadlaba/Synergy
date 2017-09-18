@@ -179,7 +179,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// The DateApproved.
         /// </value>
         public DateTime? DateApproved { get; set; }
-        public string Requestor { get; set; }
+        public RequestorModel Requestor { get; set; }
 
         /// <summary>
         /// Gets the status description.
