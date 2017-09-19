@@ -1,4 +1,4 @@
-﻿import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -99,9 +99,9 @@ import { NumbersonlyDirective } from './directives/numbersonly.directive';
         BusinessCentreComponent,
         UsersComponent,
         EditUserComponent,
-        ConditionsFilterPipe
+        NumbersonlyDirective,
         ActionedInboxComponent,
-        NumbersonlyDirective
+        ConditionsFilterPipe
     ],
     imports: [
         BrowserModule,
