@@ -125,27 +125,30 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             comments: new FormControl()
         });
 
-        this.observableReviewFeeTypes = this.lookupDataService.getReviewFeeTypes();
-        this.observableReviewFeeTypes.subscribe(reviewFeeTypes => this.reviewFeeTypes = reviewFeeTypes, error => this.errorMessage = <any>error);
+        Observable.forkJoin([
+            this.lookupDataService.getReviewFeeTypes(),
+            this.lookupDataService.getProductTypes("Lending"),
+            this.lookupDataService.getPeriods(),
+            this.lookupDataService.getPeriodTypes(),
+            this.lookupDataService.getConditionTypes()
+        ]).subscribe(results => {
+            this.reviewFeeTypes = <any>results[0];
+            this.productTypes = <any>results[1];
+            this.periods = <any>results[2];
+            this.periodTypes = <any>results[3];
+            this.conditionTypes = <any>results[4];
 
-        this.observableProductTypes = this.lookupDataService.getProductTypes("Lending");
-        this.observableProductTypes.subscribe(productTypes => this.productTypes = productTypes, error => this.errorMessage = <any>error);
-
-        this.observablePeriods = this.lookupDataService.getPeriods();
-        this.observablePeriods.subscribe(periods => this.periods = periods, error => this.errorMessage = <any>error);
-
-        this.observablePeriodTypes = this.lookupDataService.getPeriodTypes();
-        this.observablePeriodTypes.subscribe(periodTypes => this.periodTypes = periodTypes, error => this.errorMessage = <any>error);
-
-        this.observableConditionTypes = this.lookupDataService.getConditionTypes();
-        this.observableConditionTypes.subscribe(conditionTypes => this.conditionTypes = conditionTypes, error => this.errorMessage = <any>error);
+            this.populateForm();
+            }, error => this.errorMessage = <any>error);
 
         this.lendingConcessionForm.valueChanges.subscribe((value: any) => {
             if (this.lendingConcessionForm.dirty) {
                 this.hasChanges = true;
             }
         });
+    }
 
+    populateForm() {
         if (this.concessionReferenceId) {
             this.observableLendingConcession = this.lendingService.getLendingConcessionData(this.concessionReferenceId);
             this.observableLendingConcession.subscribe(lendingConcession => {

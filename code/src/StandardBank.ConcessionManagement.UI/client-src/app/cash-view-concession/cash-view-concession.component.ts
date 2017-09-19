@@ -125,30 +125,32 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             expiryDate: new FormControl()
         });
 
-        this.observableChannelTypes = this.lookupDataService.getChannelTypes();
-        this.observableChannelTypes.subscribe(channelTypes => this.channelTypes = channelTypes, error => this.errorMessage = <any>error);
+        Observable.forkJoin([
+            this.lookupDataService.getChannelTypes(),
+            this.lookupDataService.getPeriods(),
+            this.lookupDataService.getPeriodTypes(),
+            this.lookupDataService.getConditionTypes(),
+            this.lookupDataService.getAccrualTypes(),
+            this.lookupDataService.getTableNumbers("Cash")
+        ]).subscribe(results => {
+            this.channelTypes = <any>results[0];
+            this.periods = <any>results[1];
+            this.periodTypes = <any>results[2];
+            this.conditionTypes = <any>results[3];
+            this.accrualTypes = <any>results[4];
+            this.tableNumbers = <any>results[5];
 
-        this.observablePeriods = this.lookupDataService.getPeriods();
-        this.observablePeriods.subscribe(periods => this.periods = periods, error => this.errorMessage = <any>error);
-
-        this.observablePeriodTypes = this.lookupDataService.getPeriodTypes();
-        this.observablePeriodTypes.subscribe(periodTypes => this.periodTypes = periodTypes, error => this.errorMessage = <any>error);
-
-        this.observableConditionTypes = this.lookupDataService.getConditionTypes();
-        this.observableConditionTypes.subscribe(conditionTypes => this.conditionTypes = conditionTypes, error => this.errorMessage = <any>error);
-
-        this.observableAccrualTypes = this.lookupDataService.getAccrualTypes();
-        this.observableAccrualTypes.subscribe(accrualTypes => this.accrualTypes = accrualTypes, error => this.errorMessage = <any>error);
-
-        this.observableTableNumbers = this.lookupDataService.getTableNumbers("Cash");
-        this.observableTableNumbers.subscribe(tableNumbers => this.tableNumbers = tableNumbers, error => this.errorMessage = <any>error);
+            this.populateForm();
+        }, error => this.errorMessage = <any>error);
 
         this.cashConcessionForm.valueChanges.subscribe((value: any) => {
             if (this.cashConcessionForm.dirty) {
                 this.hasChanges = true;
             }
         });
+    }
 
+    populateForm() {
         if (this.concessionReferenceId) {
             this.observableCashConcession = this.cashConcessionService.getCashConcessionData(this.concessionReferenceId);
             this.observableCashConcession.subscribe(cashConcession => {

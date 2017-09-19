@@ -124,30 +124,27 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
             expiryDate: new FormControl()
         });
 
-        this.observablePeriods = this.lookupDataService.getPeriods();
-        this.observablePeriods.subscribe(periods => this.periods = periods, error => this.errorMessage = <any>error);
+        Observable.forkJoin([
+            this.lookupDataService.getPeriods(),
+            this.lookupDataService.getPeriodTypes(),
+            this.lookupDataService.getConditionTypes(),
+            this.lookupDataService.getTransactionTypes("Transactional"),
+            this.lookupDataService.getTableNumbers("Transactional")
+        ]).subscribe(results => {
+            this.periods = <any>results[0];
+            this.periodTypes = <any>results[1];
+            this.conditionTypes = <any>results[2];
+            this.transactionTypes = <any>results[3];
+            this.tableNumbers = <any>results[4];
 
-        this.observablePeriodTypes = this.lookupDataService.getPeriodTypes();
-        this.observablePeriodTypes.subscribe(periodTypes => this.periodTypes = periodTypes, error => this.errorMessage = <any>error);
-
-        this.observableConditionTypes = this.lookupDataService.getConditionTypes();
-        this.observableConditionTypes.subscribe(conditionTypes => this.conditionTypes = conditionTypes, error => this.errorMessage = <any>error);
-
-        this.observableTransactionTypes = this.lookupDataService.getTransactionTypes("Transactional");
-        this.observableTransactionTypes.subscribe(transactionTypes => this.transactionTypes = transactionTypes, error => this.errorMessage = <any>error);
-
-        this.observableTableNumbers = this.lookupDataService.getTableNumbers("Transactional");
-        this.observableTableNumbers.subscribe(tableNumbers => {
-            this.tableNumbers = tableNumbers;
             this.populateForm();
-        }, error => this.errorMessage = <any>error);
+            }, error => this.errorMessage = <any>error);
 
         this.transactionalConcessionForm.valueChanges.subscribe((value: any) => {
             if (this.transactionalConcessionForm.dirty) {
                 this.hasChanges = true;
             }
         });
-
     }
 
     populateForm() {
