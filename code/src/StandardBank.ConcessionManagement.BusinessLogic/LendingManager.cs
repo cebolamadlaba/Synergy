@@ -155,6 +155,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             concessionLending.ConcessionId = concession.Id;
 
+            if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
+            {
+                var databaseLendingConcession =
+                    _concessionLendingRepository.ReadById(concessionLending.Id);
+
+                //the margin to prime is what is in the database at the moment
+                concessionLending.MarginToPrime = databaseLendingConcession.MarginToPrime;
+
+                //the approved margin to prime is what has been captured when approved
+                concessionLending.ApprovedMarginToPrime = concessionLending.MarginToPrime;
+            }
+
             _concessionLendingRepository.Update(concessionLending);
             return concessionLending;
         }
@@ -307,9 +319,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 if (legalEntityAccount != null)
                     mappedLendingConcessionDetail.AccountNumber = legalEntityAccount.AccountNumber;
-
-                mappedLendingConcessionDetail.LoadedMap = concessionLending?.MarginToPrime ?? 0;
-                mappedLendingConcessionDetail.ApprovedMap = concessionLending?.ApprovedMarginToPrime ?? 0;
 
                 if (mappedLendingConcessionDetail.ProductTypeId.HasValue)
                     mappedLendingConcessionDetail.ProductType =

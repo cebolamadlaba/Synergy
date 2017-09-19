@@ -15,4 +15,8 @@ export class CashConcessionDetail {
     adValorem: number;
     accrualTypeId: number;
     tableNumberId: number;
+    approvedTableNumberId: number;
+    loadedTableNumberId: number;
+    approvedTableNumber: string;
+    loadedTableNumber: string;
 }

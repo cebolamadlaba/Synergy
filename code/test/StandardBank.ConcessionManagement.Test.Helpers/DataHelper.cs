@@ -1478,6 +1478,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <returns></returns>
         private static int InsertConcessionCash()
         {
+            var tableNumberId = GetTableNumberId();
+
             var model = new ConcessionCash
             {
                 ConcessionId = GetConcessionId(),
@@ -1490,7 +1492,9 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 LegalEntityAccountId = GetLegalEntityAccountId(),
                 BaseRate = 1263,
                 AccrualTypeId = GetAccrualTypeId(),
-                TableNumberId = GetTableNumberId()
+                TableNumberId = tableNumberId,
+                ApprovedTableNumberId = tableNumberId,
+                LoadedTableNumberId = tableNumberId
             };
 
             InstantiatedDependencies.ConcessionCashRepository.Create(model);
@@ -1719,7 +1723,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 ReviewFeeTypeId = GetReviewFeeTypeId(),
                 LegalEntityId = GetLegalEntityId(),
                 LegalEntityAccountId = GetLegalEntityAccountId(),
-                AverageBalance = 234.23m
+                AverageBalance = 234.23m,
+                LoadedMarginToPrime = 2134
             };
 
             InstantiatedDependencies.ConcessionLendingRepository.Create(model);
@@ -1935,6 +1940,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <returns></returns>
         private static int InsertConcessionTransactional()
         {
+            var tableNumberId = GetTableNumberId();
+
             var model = new ConcessionTransactional
             {
                 ConcessionId = GetConcessionId(),
@@ -1947,7 +1954,9 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 LegalEntityId = GetLegalEntityId(),
                 LegalEntityAccountId = GetLegalEntityAccountId(),
                 BaseRate = 8369,
-                TableNumberId = GetTableNumberId()
+                TableNumberId = tableNumberId,
+                ApprovedTableNumberId = tableNumberId,
+                LoadedTableNumberId = tableNumberId
             };
 
             InstantiatedDependencies.ConcessionTransactionalRepository.Create(model);

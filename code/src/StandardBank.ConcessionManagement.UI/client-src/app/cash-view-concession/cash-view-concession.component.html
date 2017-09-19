@@ -1,4 +1,4 @@
-﻿<!-- Banner expanded -->
+<!-- Banner expanded -->
 <div class="col-md-12 banner">
     <div class="row">
         <div class="lending-banner-title">
@@ -155,6 +155,7 @@
                 <th>Table Number</th>
                 <th>Ad Valorem</th>
                 <th>Base Rate</th>
+                <th>Approved Table Number</th>
                 <th>Accrual</th>
             </tr>
         </thead>
@@ -182,6 +183,7 @@
 
                 <td class="length-short"><input formControlName="adValorem" class="form-control" /></td>
                 <td class="length-long"><input formControlName="baseRate" class="form-control" /></td>
+                <td class="length-long"><input formControlName="approvedTableNumber" class="form-control" /></td>
 
                 <td class="length-medium">
                     <select formControlName="accrualType" class="form-control" [attr.disabled]="canEdit ? null : ''">

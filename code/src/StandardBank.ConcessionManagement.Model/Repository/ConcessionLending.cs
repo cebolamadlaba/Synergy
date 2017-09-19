@@ -111,5 +111,13 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The average balance.
         /// </value>
         public decimal AverageBalance { get; set; }
+
+        /// <summary>
+        /// Gets or sets the loaded margin to prime.
+        /// </summary>
+        /// <value>
+        /// The loaded margin to prime.
+        /// </value>
+        public decimal? LoadedMarginToPrime { get; set; }
     }
 }

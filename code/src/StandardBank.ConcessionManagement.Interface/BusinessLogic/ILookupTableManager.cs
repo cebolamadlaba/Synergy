@@ -207,5 +207,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="channelTypeId">The channel type identifier.</param>
         /// <returns></returns>
         string GetChannelTypeName(int channelTypeId);
+
+        /// <summary>
+        /// Gets the table number description.
+        /// </summary>
+        /// <param name="tableNumberId">The table number identifier.</param>
+        /// <returns></returns>
+        string GetTableNumberDescription(int tableNumberId);
     }
 }

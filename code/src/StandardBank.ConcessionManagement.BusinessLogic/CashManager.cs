@@ -174,6 +174,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var mappedConcessionCash = _mapper.Map<ConcessionCash>(cashConcessionDetail);
             mappedConcessionCash.ConcessionId = concession.Id;
 
+            if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
+            {
+                var databaseCashConcession =
+                    _concessionCashRepository.ReadById(mappedConcessionCash.Id);
+
+                //the approved table number is the table number that was captured when approving
+                mappedConcessionCash.ApprovedTableNumberId = mappedConcessionCash.TableNumberId;
+
+                //the table number is what is currently in the database
+                mappedConcessionCash.TableNumberId = databaseCashConcession.TableNumberId;
+            }
+
             _concessionCashRepository.Update(mappedConcessionCash);
 
             return mappedConcessionCash;
@@ -329,6 +341,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 if (mappedConcessionCashEntity.ChannelTypeId.HasValue)
                     mappedConcessionCashEntity.Channel =
                         _lookupTableManager.GetChannelTypeName(mappedConcessionCashEntity.ChannelTypeId.Value);
+
+                if (mappedConcessionCashEntity.ApprovedTableNumberId.HasValue)
+                {
+                    mappedConcessionCashEntity.ApprovedTableNumber =
+                        _lookupTableManager.GetTableNumberDescription(mappedConcessionCashEntity.ApprovedTableNumberId
+                            .Value);
+                }
+
+                if (mappedConcessionCashEntity.LoadedTableNumberId.HasValue)
+                {
+                    mappedConcessionCashEntity.LoadedTableNumber =
+                        _lookupTableManager.GetTableNumberDescription(mappedConcessionCashEntity.LoadedTableNumberId
+                            .Value);
+                }
 
                 cashConcessionDetails.Add(mappedConcessionCashEntity);
             }

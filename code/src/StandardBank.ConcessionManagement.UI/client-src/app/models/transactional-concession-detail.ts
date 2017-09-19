@@ -13,4 +13,6 @@ export class TransactionalConcessionDetail {
     tableNumberId: number;
     loadedPrice: number;
     approvedPrice: number;
+    approvedTableNumberId: number;
+    loadedTableNumberId: number;
 }

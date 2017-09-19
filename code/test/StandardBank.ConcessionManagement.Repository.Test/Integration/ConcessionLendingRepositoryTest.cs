@@ -30,7 +30,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ReviewFeeTypeId = DataHelper.GetReviewFeeTypeId(),
                 LegalEntityId = DataHelper.GetLegalEntityId(),
                 LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
-                AverageBalance = 345.32m
+                AverageBalance = 345.32m,
+                LoadedMarginToPrime = 213.23m
             };
 
             var result = InstantiatedDependencies.ConcessionLendingRepository.Create(model);
@@ -105,6 +106,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.LegalEntityId = DataHelper.GetAlternateLegalEntityId(model.LegalEntityId);
             model.LegalEntityAccountId = DataHelper.GetAlternateLegalEntityAccountId(model.LegalEntityAccountId);
             model.AverageBalance = model.AverageBalance + 123.32m;
+            model.LoadedMarginToPrime = model.LoadedMarginToPrime + 123.32m;
 
             InstantiatedDependencies.ConcessionLendingRepository.Update(model);
 
@@ -125,6 +127,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.LegalEntityId, model.LegalEntityId);
             Assert.Equal(updatedModel.LegalEntityAccountId, model.LegalEntityAccountId);
             Assert.Equal(updatedModel.AverageBalance, model.AverageBalance);
+            Assert.Equal(updatedModel.LoadedMarginToPrime, model.LoadedMarginToPrime);
         }
 
         /// <summary>
@@ -147,7 +150,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ReviewFeeTypeId = DataHelper.GetReviewFeeTypeId(),
                 LegalEntityId = DataHelper.GetLegalEntityId(),
                 LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
-                AverageBalance = 324.43m
+                AverageBalance = 324.43m,
+                LoadedMarginToPrime = 2343.23m
             };
 
             var temporaryEntity = InstantiatedDependencies.ConcessionLendingRepository.Create(model);

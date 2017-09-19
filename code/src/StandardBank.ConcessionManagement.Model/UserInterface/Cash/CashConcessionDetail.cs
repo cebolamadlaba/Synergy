@@ -132,5 +132,37 @@
         /// The table number identifier.
         /// </value>
         public int? TableNumberId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the approved table number identifier.
+        /// </summary>
+        /// <value>
+        /// The approved table number identifier.
+        /// </value>
+        public int? ApprovedTableNumberId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the loaded table number identifier.
+        /// </summary>
+        /// <value>
+        /// The loaded table number identifier.
+        /// </value>
+        public int? LoadedTableNumberId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the approved table number.
+        /// </summary>
+        /// <value>
+        /// The approved table number.
+        /// </value>
+        public string ApprovedTableNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets the loaded table number.
+        /// </summary>
+        /// <value>
+        /// The loaded table number.
+        /// </value>
+        public string LoadedTableNumber { get; set; }
     }
 }

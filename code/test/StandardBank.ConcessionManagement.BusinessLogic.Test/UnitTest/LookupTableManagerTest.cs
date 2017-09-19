@@ -558,5 +558,32 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             Assert.NotNull(result);
             Assert.Equal(result, channelType.Description);
         }
+
+        /// <summary>
+        /// Tests that GetTableNumberDescription executes positive.
+        /// </summary>
+        [Fact]
+        public void GetTableNumberDescription_Executes_Positive()
+        {
+            MockTableNumberRepository.Setup(_ => _.ReadAll()).Returns(new[]
+            {
+                new TableNumber
+                {
+                    AdValorem = 1,
+                    BaseRate = 2,
+                    ConcessionTypeId = 1,
+                    TariffTable = 3,
+                    Id = 1,
+                    IsActive = true
+                }
+            });
+
+            var result = _lookupTableManager.GetTableNumberDescription(1);
+
+            Assert.NotNull(result);
+            Assert.True(result.Contains("1"));
+            Assert.True(result.Contains("2"));
+            Assert.True(result.Contains("3"));
+        }
     }
 }

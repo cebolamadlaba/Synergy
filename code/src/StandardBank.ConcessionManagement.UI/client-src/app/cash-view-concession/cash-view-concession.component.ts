@@ -201,6 +201,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
                     currentConcession.get('baseRate').setValue(cashConcessionDetail.baseRate);
                     currentConcession.get('adValorem').setValue(cashConcessionDetail.adValorem);
+                    currentConcession.get('approvedTableNumber').setValue(cashConcessionDetail.approvedTableNumber);
 
                     let selectedTableNumber = this.tableNumbers.filter(_ => _.id == cashConcessionDetail.tableNumberId);
                     currentConcession.get('tableNumber').setValue(selectedTableNumber[0]);
@@ -254,6 +255,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             baseRate: [{ value: '', disabled: true }],
             adValorem: [{ value: '', disabled: true }],
             tableNumber: [''],
+            approvedTableNumber: [{ value: '', disabled: true }],
             accrualType: ['']
         });
     }

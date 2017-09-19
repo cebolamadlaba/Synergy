@@ -163,6 +163,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var mappedConcessionTransactional = _mapper.Map<ConcessionTransactional>(transactionalConcessionDetail);
             mappedConcessionTransactional.ConcessionId = concession.Id;
 
+            if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
+            {
+                var databaseTransactionalConcession =
+                    _concessionTransactionalRepository.ReadById(mappedConcessionTransactional.Id);
+
+                //the approved table number is the table number that was captured when approving
+                mappedConcessionTransactional.ApprovedTableNumberId = mappedConcessionTransactional.TableNumberId;
+
+                //the table number is what is currently in the database
+                mappedConcessionTransactional.TableNumberId = databaseTransactionalConcession.TableNumberId;
+            }
+
             _concessionTransactionalRepository.Update(mappedConcessionTransactional);
 
             return mappedConcessionTransactional;

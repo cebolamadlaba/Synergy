@@ -118,5 +118,21 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// Gets the primary key value
         /// </summary>
         public object PrimaryKeyValue => Id;
+
+        /// <summary>
+        /// Gets or sets the approved table number identifier.
+        /// </summary>
+        /// <value>
+        /// The approved table number identifier.
+        /// </value>
+        public int? ApprovedTableNumberId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the loaded table number identifier.
+        /// </summary>
+        /// <value>
+        /// The loaded table number identifier.
+        /// </value>
+        public int? LoadedTableNumberId { get; set; }
     }
 }

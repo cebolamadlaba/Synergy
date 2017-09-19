@@ -557,6 +557,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Gets the table number description.
+        /// </summary>
+        /// <param name="tableNumberId">The table number identifier.</param>
+        /// <returns></returns>
+        public string GetTableNumberDescription(int tableNumberId)
+        {
+            var tableNumbers = _tableNumberRepository.ReadAll();
+
+            var tableNumber = _mapper.Map<TableNumber>(tableNumbers.First(_ => _.Id == tableNumberId));
+
+            return tableNumber.DisplayText;
+        }
+
+        /// <summary>
         /// Gets the condition products
         /// </summary>
         /// <param name="conditionTypeId"></param>
