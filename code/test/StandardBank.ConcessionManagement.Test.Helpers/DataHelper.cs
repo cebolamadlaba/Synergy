@@ -3123,5 +3123,161 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
 
             return InsertProductTransactional();
         }
+
+        /// <summary>
+        /// Gets the LoadedPriceCash id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetLoadedPriceCashId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.LoadedPriceCashRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertLoadedPriceCash();
+        }
+
+        /// <summary>
+        /// Inserts a LoadedPriceCash and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertLoadedPriceCash()
+        {
+            var model = new LoadedPriceCash
+            {
+                ChannelTypeId = GetChannelTypeId(),
+                LegalEntityAccountId = GetLegalEntityAccountId(),
+                TableNumberId = GetTableNumberId()
+            };
+
+            InstantiatedDependencies.LoadedPriceCashRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate LoadedPriceCash id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateLoadedPriceCashId(int? model)
+        {
+            if (!model.HasValue)
+                return GetLoadedPriceCashId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.LoadedPriceCashRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertLoadedPriceCash();
+        }
+
+        /// <summary>
+        /// Gets the LoadedPriceLending id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetLoadedPriceLendingId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.LoadedPriceLendingRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertLoadedPriceLending();
+        }
+
+        /// <summary>
+        /// Inserts a LoadedPriceLending and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertLoadedPriceLending()
+        {
+            var model = new LoadedPriceLending
+            {
+                ProductTypeId = GetProductId(),
+                LegalEntityAccountId = GetLegalEntityAccountId(),
+                MarginToPrime = 2382
+            };
+
+            InstantiatedDependencies.LoadedPriceLendingRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate LoadedPriceLending id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateLoadedPriceLendingId(int? model)
+        {
+            if (!model.HasValue)
+                return GetLoadedPriceLendingId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.LoadedPriceLendingRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertLoadedPriceLending();
+        }
+
+        /// <summary>
+        /// Gets the LoadedPriceTransactional id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetLoadedPriceTransactionalId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.LoadedPriceTransactionalRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertLoadedPriceTransactional();
+        }
+
+        /// <summary>
+        /// Inserts a LoadedPriceTransactional and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertLoadedPriceTransactional()
+        {
+            var model = new LoadedPriceTransactional
+            {
+                TransactionTypeId = GetTransactionTypeId(),
+                LegalEntityAccountId = GetLegalEntityAccountId(),
+                TableNumberId = GetTableNumberId()
+            };
+
+            InstantiatedDependencies.LoadedPriceTransactionalRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate LoadedPriceTransactional id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateLoadedPriceTransactionalId(int? model)
+        {
+            if (!model.HasValue)
+                return GetLoadedPriceTransactionalId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.LoadedPriceTransactionalRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertLoadedPriceTransactional();
+        }
     }
 }

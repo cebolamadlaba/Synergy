@@ -29,7 +29,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             _cashManager = new CashManager(MockPricingManager.Object, MockConcessionManager.Object,
                 MockConcessionCashRepository.Object, MockLegalEntityRepository.Object, InstantiatedDependencies.Mapper,
                 MockLegalEntityAccountRepository.Object, MockFinancialCashRepository.Object,
-                MockProductCashRepository.Object, MockLookupTableManager.Object);
+                MockProductCashRepository.Object, MockLookupTableManager.Object, MockLoadedPriceCashRepository.Object);
         }
 
         /// <summary>

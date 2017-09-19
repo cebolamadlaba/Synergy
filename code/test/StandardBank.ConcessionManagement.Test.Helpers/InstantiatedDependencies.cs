@@ -361,6 +361,21 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static IProductTransactionalRepository ProductTransactionalRepository = new ProductTransactionalRepository(DbConnection);
 
         /// <summary>
+        /// The LoadedPriceCash repository
+        /// </summary>
+        public static ILoadedPriceCashRepository LoadedPriceCashRepository = new LoadedPriceCashRepository(DbConnection);
+
+        /// <summary>
+        /// The LoadedPriceLending repository
+        /// </summary>
+        public static ILoadedPriceLendingRepository LoadedPriceLendingRepository = new LoadedPriceLendingRepository(DbConnection);
+
+        /// <summary>
+        /// The LoadedPriceTransactional repository
+        /// </summary>
+        public static ILoadedPriceTransactionalRepository LoadedPriceTransactionalRepository = new LoadedPriceTransactionalRepository(DbConnection);
+
+        /// <summary>
         /// The look up table manager
         /// </summary>
         public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,
@@ -402,7 +417,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static ILendingManager LendingManager = new LendingManager(PricingManager, ConcessionManager,
             LegalEntityRepository, ConcessionLendingRepository, Mapper, LegalEntityAccountRepository,
-            ProductLendingRepository, FinancialLendingRepository, LookupTableManager);
+            ProductLendingRepository, FinancialLendingRepository, LookupTableManager, LoadedPriceLendingRepository);
 
         /// <summary>
         /// The transactional manager
@@ -410,13 +425,13 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static ITransactionalManager TransactionalManager =
             new TransactionalManager(PricingManager, ConcessionManager, ConcessionTransactionalRepository,
                 LegalEntityRepository, LegalEntityAccountRepository, Mapper, LookupTableManager,
-                FinancialTransactionalRepository, ProductTransactionalRepository);
+                FinancialTransactionalRepository, ProductTransactionalRepository, LoadedPriceTransactionalRepository);
 
         /// <summary>
         /// The cash manager
         /// </summary>
         public static ICashManager CashManager = new CashManager(PricingManager, ConcessionManager,
             ConcessionCashRepository, LegalEntityRepository, Mapper, LegalEntityAccountRepository,
-            FinancialCashRepository, ProductCashRepository, LookupTableManager);
+            FinancialCashRepository, ProductCashRepository, LookupTableManager, LoadedPriceCashRepository);
     }
 }

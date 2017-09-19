@@ -419,5 +419,20 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The mock rule manager
         /// </summary>
         public static Mock<IRuleManager> MockRuleManager = new Mock<IRuleManager>();
+
+        /// <summary>
+        /// The mock LoadedPriceCash repository
+        /// </summary>
+        public static Mock<ILoadedPriceCashRepository> MockLoadedPriceCashRepository = new Mock<ILoadedPriceCashRepository>();
+
+        /// <summary>
+        /// The mock LoadedPriceLending repository
+        /// </summary>
+        public static Mock<ILoadedPriceLendingRepository> MockLoadedPriceLendingRepository = new Mock<ILoadedPriceLendingRepository>();
+
+        /// <summary>
+        /// The mock LoadedPriceTransactional repository
+        /// </summary>
+        public static Mock<ILoadedPriceTransactionalRepository> MockLoadedPriceTransactionalRepository = new Mock<ILoadedPriceTransactionalRepository>();
     }
 }

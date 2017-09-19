@@ -63,6 +63,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ILookupTableManager _lookupTableManager;
 
         /// <summary>
+        /// The loaded price cash repository
+        /// </summary>
+        private readonly ILoadedPriceCashRepository _loadedPriceCashRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CashManager"/> class.
         /// </summary>
         /// <param name="pricingManager">The pricing manager.</param>
@@ -74,11 +79,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="financialCashRepository">The financial cash repository.</param>
         /// <param name="productCashRepository">The product cash repository.</param>
         /// <param name="lookupTableManager">The lookup table manager.</param>
+        /// <param name="loadedPriceCashRepository">The loaded price cash repository.</param>
         public CashManager(IPricingManager pricingManager, IConcessionManager concessionManager,
             IConcessionCashRepository concessionCashRepository, ILegalEntityRepository legalEntityRepository,
             IMapper mapper, ILegalEntityAccountRepository legalEntityAccountRepository,
             IFinancialCashRepository financialCashRepository, IProductCashRepository productCashRepository,
-            ILookupTableManager lookupTableManager)
+            ILookupTableManager lookupTableManager, ILoadedPriceCashRepository loadedPriceCashRepository)
         {
             _pricingManager = pricingManager;
             _concessionManager = concessionManager;
@@ -89,6 +95,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _financialCashRepository = financialCashRepository;
             _productCashRepository = productCashRepository;
             _lookupTableManager = lookupTableManager;
+            _loadedPriceCashRepository = loadedPriceCashRepository;
         }
 
         /// <summary>
@@ -184,6 +191,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 //the table number is what is currently in the database
                 mappedConcessionCash.TableNumberId = databaseCashConcession.TableNumberId;
+
+                var loadedPriceCash =
+                    _loadedPriceCashRepository.ReadByChannelTypeIdLegalEntityAccountId(
+                        mappedConcessionCash.ChannelTypeId, mappedConcessionCash.LegalEntityAccountId);
+
+                if (loadedPriceCash != null)
+                    mappedConcessionCash.LoadedTableNumberId = loadedPriceCash.TableNumberId;
             }
 
             _concessionCashRepository.Update(mappedConcessionCash);

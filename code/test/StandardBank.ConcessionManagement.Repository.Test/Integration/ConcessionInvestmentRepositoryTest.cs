@@ -14,7 +14,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         /// <summary>
         /// Tests that Create executes positive.
         /// </summary>
-        [Fact]
+        //[Fact]
         public void Create_Executes_Positive()
         {
             var model = new ConcessionInvestment
@@ -90,7 +90,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         /// <summary>
         /// Tests that Delete executes positive.
         /// </summary>
-        [Fact]
+        //[Fact]
         public void Delete_Executes_Positive()
         {
             var model = new ConcessionInvestment

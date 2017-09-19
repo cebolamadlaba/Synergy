@@ -62,6 +62,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ILookupTableManager _lookupTableManager;
 
         /// <summary>
+        /// The loaded price lending repository
+        /// </summary>
+        private readonly ILoadedPriceLendingRepository _loadedPriceLendingRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LendingManager"/> class.
         /// </summary>
         /// <param name="pricingManager">The pricing manager.</param>
@@ -73,11 +78,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="productLendingRepository">The product lending repository.</param>
         /// <param name="financialLendingRepository">The financial lending repository.</param>
         /// <param name="lookupTableManager">The lookup table manager.</param>
+        /// <param name="loadedPriceLendingRepository">The loaded price lending repository.</param>
         public LendingManager(IPricingManager pricingManager, IConcessionManager concessionManager,
             ILegalEntityRepository legalEntityRepository, IConcessionLendingRepository concessionLendingRepository,
             IMapper mapper, ILegalEntityAccountRepository legalEntityAccountRepository,
             IProductLendingRepository productLendingRepository, IFinancialLendingRepository financialLendingRepository,
-            ILookupTableManager lookupTableManager)
+            ILookupTableManager lookupTableManager, ILoadedPriceLendingRepository loadedPriceLendingRepository)
         {
             _pricingManager = pricingManager;
             _concessionManager = concessionManager;
@@ -88,6 +94,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _productLendingRepository = productLendingRepository;
             _financialLendingRepository = financialLendingRepository;
             _lookupTableManager = lookupTableManager;
+            _loadedPriceLendingRepository = loadedPriceLendingRepository;
         }
 
         /// <summary>
@@ -165,6 +172,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 //the margin to prime is what is in the database at the moment
                 concessionLending.MarginToPrime = databaseLendingConcession.MarginToPrime;
+
+                var loadedPriceLending =
+                    _loadedPriceLendingRepository.ReadByProductTypeIdLegalEntityAccountId(
+                        concessionLending.ProductTypeId, concessionLending.LegalEntityAccountId);
+
+                if (loadedPriceLending != null)
+                    concessionLending.LoadedMarginToPrime = loadedPriceLending.MarginToPrime;
             }
 
             _concessionLendingRepository.Update(concessionLending);

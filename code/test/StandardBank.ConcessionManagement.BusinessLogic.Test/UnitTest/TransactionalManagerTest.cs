@@ -26,7 +26,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             _transactionalManager = new TransactionalManager(MockPricingManager.Object, MockConcessionManager.Object,
                 MockConcessionTransactionalRepository.Object, MockLegalEntityRepository.Object,
                 MockLegalEntityAccountRepository.Object, InstantiatedDependencies.Mapper, MockLookupTableManager.Object,
-                MockFinancialTransactionalRepository.Object, MockProductTransactionalRepository.Object);
+                MockFinancialTransactionalRepository.Object, MockProductTransactionalRepository.Object,
+                MockLoadedPriceTransactionalRepository.Object);
         }
 
         /// <summary>

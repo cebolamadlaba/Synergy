@@ -63,6 +63,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IProductTransactionalRepository _productTransactionalRepository;
 
         /// <summary>
+        /// The loaded price transactional repository
+        /// </summary>
+        private readonly ILoadedPriceTransactionalRepository _loadedPriceTransactionalRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TransactionalManager"/> class.
         /// </summary>
         /// <param name="pricingManager">The pricing manager.</param>
@@ -74,12 +79,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="lookupTableManager">The lookup table manager.</param>
         /// <param name="financialTransactionalRepository">The financial transactional repository.</param>
         /// <param name="productTransactionalRepository">The product transactional repository.</param>
+        /// <param name="loadedPriceTransactionalRepository">The loaded price transactional repository.</param>
         public TransactionalManager(IPricingManager pricingManager, IConcessionManager concessionManager,
             IConcessionTransactionalRepository concessionTransactionalRepository,
             ILegalEntityRepository legalEntityRepository, ILegalEntityAccountRepository legalEntityAccountRepository,
             IMapper mapper, ILookupTableManager lookupTableManager,
             IFinancialTransactionalRepository financialTransactionalRepository,
-            IProductTransactionalRepository productTransactionalRepository)
+            IProductTransactionalRepository productTransactionalRepository,
+            ILoadedPriceTransactionalRepository loadedPriceTransactionalRepository)
         {
             _pricingManager = pricingManager;
             _concessionManager = concessionManager;
@@ -90,6 +97,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _lookupTableManager = lookupTableManager;
             _financialTransactionalRepository = financialTransactionalRepository;
             _productTransactionalRepository = productTransactionalRepository;
+            _loadedPriceTransactionalRepository = loadedPriceTransactionalRepository;
         }
 
         /// <summary>
@@ -173,6 +181,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 //the table number is what is currently in the database
                 mappedConcessionTransactional.TableNumberId = databaseTransactionalConcession.TableNumberId;
+
+                if (mappedConcessionTransactional.TransactionTypeId.HasValue)
+                {
+                    var loadedPriceTransactional =
+                        _loadedPriceTransactionalRepository.ReadByTransactionTypeIdLegalEntityAccountId(
+                            mappedConcessionTransactional.TransactionTypeId.Value,
+                            mappedConcessionTransactional.LegalEntityAccountId);
+
+                    if (loadedPriceTransactional != null)
+                        mappedConcessionTransactional.LoadedTableNumberId = loadedPriceTransactional.TableNumberId;
+                }
             }
 
             _concessionTransactionalRepository.Update(mappedConcessionTransactional);
