@@ -160,11 +160,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 var databaseLendingConcession =
                     _concessionLendingRepository.ReadById(concessionLending.Id);
 
-                //the margin to prime is what is in the database at the moment
-                concessionLending.MarginToPrime = databaseLendingConcession.MarginToPrime;
-
                 //the approved margin to prime is what has been captured when approved
                 concessionLending.ApprovedMarginToPrime = concessionLending.MarginToPrime;
+
+                //the margin to prime is what is in the database at the moment
+                concessionLending.MarginToPrime = databaseLendingConcession.MarginToPrime;
             }
 
             _concessionLendingRepository.Update(concessionLending);

@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
@@ -195,6 +195,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                     currentConcession.get('limit').setValue(lendingConcessionDetail.limit);
                     currentConcession.get('term').setValue(lendingConcessionDetail.term);
                     currentConcession.get('marginAgainstPrime').setValue(lendingConcessionDetail.marginAgainstPrime);
+                    currentConcession.get('approvedMarginAgainstPrime').setValue(lendingConcessionDetail.approvedMap);
                     currentConcession.get('initiationFee').setValue(lendingConcessionDetail.initiationFee);
 
                     let selectedReviewFeeType = this.reviewFeeTypes.filter(_ => _.id == lendingConcessionDetail.reviewFeeTypeId);
@@ -249,6 +250,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             limit: [''],
             term: [''],
             marginAgainstPrime: [''],
+            approvedMarginAgainstPrime: [{ value: '', disabled: true }],
             initiationFee: [''],
             reviewFeeType: [''],
             reviewFee: [''],

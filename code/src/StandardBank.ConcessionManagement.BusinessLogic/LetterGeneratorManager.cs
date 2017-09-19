@@ -340,7 +340,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return new LendingOverDraftConcessionLetter
             {
                 AccountNumber = lendingConcessionDetail.AccountNumber,
-                ApprovedMarginToPrime = lendingConcessionDetail.ApprovedMap.ToString("C"),
+                ApprovedMarginToPrime = lendingConcessionDetail.ApprovedMap.GetValueOrDefault(0).ToString("C"),
                 ProductType = lendingConcessionDetail.ProductType,
                 ReviewFeeType = lendingConcessionDetail.ReviewFeeType,
                 MarginToPrime = lendingConcessionDetail.MarginAgainstPrime.ToString("C"),

@@ -1,4 +1,4 @@
-﻿<!-- Banner expanded -->
+<!-- Banner expanded -->
 <div class="col-md-12 banner">
     <div class="row">
         <div class="lending-banner-title">
@@ -156,6 +156,7 @@
                 <th>Limit</th>
                 <th>Term</th>
                 <th>MAP</th>
+                <th>Approved MAP</th>
                 <th>Initiation Fee</th>
                 <th>Review Fee</th>
                 <th></th>
@@ -184,6 +185,7 @@
                 <td class="length-short"><input type="text" numbersOnly="true" formControlName="term" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
                 <!-- MAP -->
                 <td class="length-short"><input type="text" numbersOnly="true" formControlName="marginAgainstPrime" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="approvedMarginAgainstPrime" class="form-control" /></td>
                 <!-- Initiation fee -->
                 <td class="length-short"><input type="text" numbersOnly="true" formControlName="initiationFee" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
                 <td class="length-medium">

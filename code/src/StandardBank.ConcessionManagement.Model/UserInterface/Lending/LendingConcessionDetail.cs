@@ -82,7 +82,7 @@
         /// <value>
         /// The loaded map.
         /// </value>
-        public decimal LoadedMap { get; set; }
+        public decimal? LoadedMap { get; set; }
 
         /// <summary>
         /// Gets or sets the approved map.
@@ -90,7 +90,7 @@
         /// <value>
         /// The approved map.
         /// </value>
-        public decimal ApprovedMap { get; set; }
+        public decimal? ApprovedMap { get; set; }
 
         /// <summary>
         /// Gets or sets the margin against prime
