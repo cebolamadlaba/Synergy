@@ -116,8 +116,12 @@
             <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="isRecalling ? null : ''">
         </div>
         <div class="row">
+            <label>Expiry Date</label>
+            <input class="form-control" formControlName="expiryDate" type="date" [attr.disabled]="canEdit ? null : ''">
+        </div>
+        <div class="row">
             <label>Requested By</label>
-            <p>{{transactionalConcession?.concession?.requestor}}</p>
+            <p>{{transactionalConcession?.concession?.requestor?.fullName}}</p>
         </div>
     </div>
     <div class="col-md-7 col-md-offset-1">
@@ -135,10 +139,9 @@
     <div class="col-md-12" style="border-bottom: 1px solid gray; margin-bottom: 15px;">
         <div class="row">
             <h3 class="table-title">Concessions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" style="margin-top: 15px;" *ngIf="canBcmApprove || canPcmApprove || isRenewing || isRecalling">New Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" style="margin-top: 15px;" *ngIf="canPcmApprove || isRenewing || isRecalling">New Concession</button>
         </div>
         <div class="row">
-            <div class="col-md-2" *ngIf="transactionalConcession?.concession?.expiryDate"><strong>Expiry Date</strong> {{transactionalConcession?.concession?.expiryDate | date: 'yyyy/MM/dd' }}</div>
             <div class="col-md-2" *ngIf="transactionalConcession?.concession?.dateApproved"><strong>Approval Date</strong> {{transactionalConcession?.concession?.dateApproved | date: 'yyyy/MM/dd' }}</div>
         </div>
     </div>
@@ -187,7 +190,7 @@
     <div class="col-md-12">
         <div class="row">
             <h3 class="table-title">Conditions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;" *ngIf="canBcmApprove || canPcmApprove || isRenewing || isRecalling">Manage Conditions</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;" *ngIf="canPcmApprove || isRenewing || isRecalling">Manage Conditions</button>
 
             <div class="table-container">
                 <table class="table table-bordered table-hover header-fixed table-striped">
@@ -234,7 +237,7 @@
                 <div class="col-md-12 modal-body">
                     <div class="row">
                         <div class="col-md-12 modal-title">
-                            <button type="button" class="btn btn-primary" (click)="addNewConditionRow()" *ngIf="canBcmApprove || canPcmApprove || isRenewing || isRecalling">New Conditions</button>
+                            <button type="button" class="btn btn-primary" (click)="addNewConditionRow()" *ngIf="canPcmApprove || isRenewing || isRecalling">New Conditions</button>
                         </div>
                     </div>
                     <table class="form-concessions-table" formArrayName="conditionItemsRows" style="width:100%">

@@ -13,8 +13,6 @@ import { ConditionCounts } from "../models/condition-counts";
     styleUrls: ['./conditions.component.css']
 })
 export class ConditionsComponent implements OnInit {
-    dtOptions: DataTables.Settings = {};
-    dtTrigger: Subject<Condition> = new Subject();
     observableConditions: Condition[];
     periods: Period[];
 
@@ -38,15 +36,6 @@ export class ConditionsComponent implements OnInit {
         @Inject(LookupDataService) private lookupDataService) { }
 
     ngOnInit() {
-        this.dtOptions = {
-            pagingType: 'full_numbers',
-            language: {
-                emptyTable: "No records found!",
-                search: "",
-                searchPlaceholder: "Search"
-            }
-        };
-
         this.lookupDataService.getPeriods().subscribe(data => { this.periods = data; }, err => this.errorMessage = err);
 
         this.loadAll();
@@ -56,23 +45,17 @@ export class ConditionsComponent implements OnInit {
         this.observableConditionCounts = this.conditionService.getConditionCounts();
         this.observableConditionCounts.subscribe(conditionCounts => this.conditionCounts = conditionCounts, error => this.errorMessage = <any>error);
 
-        this.getConditions(true);
+        this.getConditions();
     }
 
     periodFilter(value: string) {
         this.period = value;
-        this.getConditions(false);
+        this.getConditions();
     }
 
-    getConditions(firstLoad: boolean) {
-        if (!firstLoad) {
-            this.dtTrigger.unsubscribe();
-            this.dtTrigger = new Subject();
-        }
-
+    getConditions() {
         this.conditionService.getMyConditions(this.period, this.periodType).subscribe(conditions => {
             this.observableConditions = conditions;
-            this.dtTrigger.next();
         }, error => this.errorMessage = <any>error);
     }
 
@@ -81,7 +64,7 @@ export class ConditionsComponent implements OnInit {
         this.ongoingClass = "";
         this.periodType = "Standard";
 
-        this.getConditions(false);
+        this.getConditions();
     }
 
     showOngoing() {
@@ -89,6 +72,14 @@ export class ConditionsComponent implements OnInit {
         this.ongoingClass = "activeWidget";
         this.periodType = "Ongoing";
 
-        this.getConditions(false);
+        this.getConditions();
+    }
+
+    conditionNotMet() {
+
+    }
+
+    conditionMet() {
+
     }
 }

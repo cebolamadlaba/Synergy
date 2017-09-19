@@ -414,5 +414,10 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static Mock<IProductTransactionalRepository> MockProductTransactionalRepository =
             new Mock<IProductTransactionalRepository>();
+
+        /// <summary>
+        /// The mock rule manager
+        /// </summary>
+        public static Mock<IRuleManager> MockRuleManager = new Mock<IRuleManager>();
     }
 }

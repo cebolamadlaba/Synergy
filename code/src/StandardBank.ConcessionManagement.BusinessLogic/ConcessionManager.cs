@@ -92,6 +92,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IUserManager _userManager;
 
         /// <summary>
+        /// The rule manager
+        /// </summary>
+        private readonly IRuleManager _ruleManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionManager"/> class.
         /// </summary>
         /// <param name="concessionRepository">The concession repository.</param>
@@ -110,6 +115,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="concessionRelationshipRepository">The concession relationship repository.</param>
         /// <param name="auditRepository">The audit repository.</param>
         /// <param name="userManager">The user manager.</param>
+        /// <param name="ruleManager">The rule manager.</param>
         public ConcessionManager(IConcessionRepository concessionRepository, ILookupTableManager lookupTableManager,
             ILegalEntityRepository legalEntityRepository, IRiskGroupRepository riskGroupRepository,
             IConcessionAccountRepository concessionAccountRepository, IMapper mapper,
@@ -120,7 +126,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IConcessionCashRepository concessionCashRepository,
             IConcessionTransactionalRepository concessionTransactionalRepository,
             IConcessionRelationshipRepository concessionRelationshipRepository, IAuditRepository auditRepository,
-            IUserManager userManager)
+            IUserManager userManager, IRuleManager ruleManager)
         {
             _concessionRepository = concessionRepository;
             _lookupTableManager = lookupTableManager;
@@ -138,6 +144,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionRelationshipRepository = concessionRelationshipRepository;
             _auditRepository = auditRepository;
             _userManager = userManager;
+            _ruleManager = ruleManager;
         }
 
         /// <summary>
@@ -510,6 +517,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     _mapper.Map<IEnumerable<Model.UserInterface.ConcessionRelationshipDetail>>(
                         _concessionRelationshipRepository.ReadDetailsByConcessionId(concession.Id));
 
+                var user = _userManager.GetUser(concession.RequestorId);
+
+                mappedConcession.Requestor = new RequestorModel
+                {
+                    FullName = user.FullName,
+                    ANumber = user.ANumber,
+                    BusinessCentre = user.SelectedCentre.Name,
+                    Region = user.SelectedRegion.Description
+                };
+
                 concessions.Add(mappedConcession);
             }
 
@@ -620,12 +637,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public IEnumerable<Concession> GetConcessionsForRiskGroup(int riskGroupId, string concessionType)
         {
             var concessionTypeId = _lookupTableManager.GetConcessionTypeId(concessionType);
-            var concessions = Map(_concessionRepository.ReadByRiskGroupIdConcessionTypeIdIsActive(riskGroupId, concessionTypeId, true)).ToArray();
-            for(var i =0; i< concessions.Length;i++)
-            {
-                var user = _userManager.GetUser(concessions[i].RequestorId);
-                concessions[i].Requestor = new RequestorModel { FullName = user.FullName, ANumber = user.ANumber, BusinessCentre = user.SelectedCentre.Name, Region = user.SelectedRegion.Description };
-            }
+            var concessions =
+                Map(_concessionRepository
+                    .ReadByRiskGroupIdConcessionTypeIdIsActive(riskGroupId, concessionTypeId, true)).ToArray();
+            
             return concessions;
         }
 
@@ -660,9 +675,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             //if there is more than one record returned then there is something wrong,
             //there shouldn't be two active concessions with the same concession reference number
-            var concession =  Map(concessions).Single();
-            var user =  _userManager.GetUser(concession.RequestorId);
-            concession.Requestor = new RequestorModel { FullName = user.FullName , ANumber = user.ANumber , BusinessCentre = user.SelectedCentre.Name , Region = user.SelectedRegion.Description };
+            var concession = Map(concessions).Single();
+
             return concession;
         }
 
@@ -695,6 +709,29 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="user"></param>
         /// <returns></returns>
         public Model.Repository.Concession UpdateConcession(Concession concession, User user)
+        {
+            //manually set the values on the concession from the database
+            //that the user interface version will not have
+            var mappedConcession = GetMappedConcessionForUpdate(concession);
+
+            _concessionRepository.Update(mappedConcession);
+
+            if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
+            {
+                //check if this is an extension or renewal for another concession, if it is then
+                //we need to deactivate the parent concession since this one is approved
+                DeactivateParentConcessions(mappedConcession.Id, user);
+            }
+
+            return mappedConcession;
+        }
+
+        /// <summary>
+        /// Gets the mapped concession for update.
+        /// </summary>
+        /// <param name="concession">The concession.</param>
+        /// <returns></returns>
+        private Model.Repository.Concession GetMappedConcessionForUpdate(Concession concession)
         {
             var concessions = _concessionRepository.ReadByConcessionRefIsActive(concession.ReferenceNumber, true);
 
@@ -730,7 +767,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedConcession.DateActionedByPCM = currentConcession.DateActionedByPCM;
             mappedConcession.DateApproved = currentConcession.DateApproved;
             mappedConcession.DatesentForApproval = currentConcession.DatesentForApproval;
-            mappedConcession.ExpiryDate = currentConcession.ExpiryDate;
             mappedConcession.HOUserId = currentConcession.HOUserId;
             mappedConcession.PCMUserId = currentConcession.PCMUserId;
             mappedConcession.RegionId = currentConcession.RegionId;
@@ -765,54 +801,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     mappedConcession.DateApproved = DateTime.Now;
 
                 if (!mappedConcession.ExpiryDate.HasValue)
-                    mappedConcession.ExpiryDate = CalculateExpiryDate(currentConcession);
-            }
-
-            _concessionRepository.Update(mappedConcession);
-
-            if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
-            {
-                //check if this is an extension or renewal for another concession, if it is then
-                //we need to deactivate the parent concession since this one is approved
-                DeactivateParentConcessions(currentConcession.Id, user);
+                    mappedConcession.ExpiryDate = _ruleManager.CalculateExpiryDate(currentConcession.Id, concession.ConcessionType);
             }
 
             return mappedConcession;
-        }
-
-        /// <summary>
-        /// Calculates the expiry date.
-        /// </summary>
-        /// <param name="concession">The concession.</param>
-        /// <returns></returns>
-        private DateTime CalculateExpiryDate(Model.Repository.Concession concession)
-        {
-            //if this is an extension then the expiry date is three months from the current concenssions expiry date
-            var expiryRelationdshipId = _lookupTableManager.GetRelationshipId("Extension");
-
-            var relationships =
-                _concessionRelationshipRepository.ReadByChildConcessionIdRelationshipIdRelationships(concession.Id,
-                    expiryRelationdshipId);
-
-            if (relationships != null && relationships.Any())
-            {
-                //find the concession we're extending and use it's expiry date to calculate the correct expiry date
-                //for this one
-                foreach (var relationship in relationships.OrderByDescending(_ => _.ParentConcessionId))
-                {
-                    var parentConcession = _concessionRepository.ReadById(relationship.ParentConcessionId);
-
-                    if (parentConcession.IsActive && parentConcession.IsCurrent)
-                        return parentConcession.ExpiryDate.GetValueOrDefault(DateTime.Now).AddMonths(3);
-                }
-
-                return DateTime.Now.AddMonths(3);
-            }
-                
-            //TODO: otherwise calculate this based on the product type
-
-
-            return DateTime.Now.AddMonths(12);
         }
 
         /// <summary>

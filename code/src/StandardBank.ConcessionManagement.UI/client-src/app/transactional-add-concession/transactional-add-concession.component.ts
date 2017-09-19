@@ -90,7 +90,8 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
             conditionItemsRows: this.formBuilder.array([]),
             mrsCrs: new FormControl(),
             smtDealNumber: new FormControl(),
-            motivation: new FormControl()
+            motivation: new FormControl(),
+            expiryDate: new FormControl()
         });
 
         this.observablePeriods = this.lookupDataService.getPeriods();
@@ -193,6 +194,8 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
         else
             this.addValidationError("Motivation not captured");
 
+        if (this.transactionalConcessionForm.controls['expiryDate'].value)
+            transactionalConcession.concession.expiryDate = new Date(this.transactionalConcessionForm.controls['expiryDate'].value);
 
         const concessions = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
 

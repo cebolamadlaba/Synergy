@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Text;
 using Moq;
+using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+using StandardBank.ConcessionManagement.Interface.Common;
+using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
@@ -8,7 +11,6 @@ using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
 using StandardBank.ConcessionManagement.Test.Helpers;
 using Xunit;
-using static StandardBank.ConcessionManagement.Test.Helpers.MockedDependencies;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 using ConcessionCondition = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionCondition;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
@@ -23,9 +25,24 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         /// <summary>
         /// Tests that GenerateLetters for lending executes positive.
         /// </summary>
-        //[Fact] //These tests randomly fail for no apparent reason *sad panda*
+        [Fact]
         public void GenerateLetters_Lending_Executes_Positive()
         {
+            var fileUtiltity = new Mock<IFileUtiltity>();
+            var concessionManager = new Mock<IConcessionManager>();
+            var pdfUtility = new Mock<IPdfUtility>();
+            var userManager = new Mock<IUserManager>();
+            var lendingManager = new Mock<ILendingManager>();
+            var legalEntityRepository = new Mock<ILegalEntityRepository>();
+            var cashManager = new Mock<ICashManager>();
+            var razorRenderer = new Mock<IRazorRenderer>();
+            var transactionalManager = new Mock<ITransactionalManager>();
+
+            var letterGeneratorManager = new LetterGeneratorManager(InstantiatedDependencies.ConfigurationData,
+                fileUtiltity.Object, concessionManager.Object, pdfUtility.Object, userManager.Object,
+                lendingManager.Object, legalEntityRepository.Object, cashManager.Object,
+                razorRenderer.Object, transactionalManager.Object);
+
             var concession = new Concession
             {
                 ConcessionType = "Lending",
@@ -34,12 +51,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 ExpiryDate = DateTime.Now.AddDays(100)
             };
 
-            MockConcessionManager.Setup(_ => _.GetConcessionForConcessionReferenceId(It.IsAny<string>()))
+            concessionManager.Setup(_ => _.GetConcessionForConcessionReferenceId(It.IsAny<string>()))
                 .Returns(concession);
 
-            MockUserManager.Setup(_ => _.GetUser(It.IsAny<int?>())).Returns(new User());
+            userManager.Setup(_ => _.GetUser(It.IsAny<int?>())).Returns(new User());
 
-            MockLendingManager.Setup(_ => _.GetLendingConcession(It.IsAny<string>(), It.IsAny<User>()))
+            lendingManager.Setup(_ => _.GetLendingConcession(It.IsAny<string>(), It.IsAny<User>()))
                 .Returns(new LendingConcession
                 {
                     Concession = concession,
@@ -66,27 +83,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                     CurrentUser = new User()
                 });
 
-            MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new LegalEntity());
+            legalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new LegalEntity());
 
-            MockConcessionManager.Setup(_ => _.GetConcessionConditions(It.IsAny<int>()))
+            concessionManager.Setup(_ => _.GetConcessionConditions(It.IsAny<int>()))
                 .Returns(new[]
                 {
                     new ConcessionCondition {ConditionValue = 123213.12m, Period = "Period", PeriodType = "PeriodType"}
                 });
 
-            MockFileUtiltity.Setup(_ => _.ReadFileText(It.IsAny<string>(), It.IsAny<bool>()))
+            fileUtiltity.Setup(_ => _.ReadFileText(It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns("<html><body><h1>Test</h1><p>@Model.RiskGroupNumber</p></body></html>");
 
-            MockPdfUtility.Setup(_ => _.GeneratePdfFromHtml(It.IsAny<string>()))
+            pdfUtility.Setup(_ => _.GeneratePdfFromHtml(It.IsAny<string>()))
                 .Returns(Encoding.ASCII.GetBytes("Test"));
 
-            MockRazorRenderer.Setup(_ => _.Parse(It.IsAny<string>(), It.IsAny<ConcessionLetter>(), It.IsAny<bool>()))
+            razorRenderer.Setup(_ => _.Parse(It.IsAny<string>(), It.IsAny<ConcessionLetter>(), It.IsAny<bool>()))
                 .Returns($"<html><body><h1>Test</h1><p>{concession.RiskGroupNumber}</p></body></html>");
-
-            var letterGeneratorManager = new LetterGeneratorManager(InstantiatedDependencies.ConfigurationData,
-                MockFileUtiltity.Object, MockConcessionManager.Object, MockPdfUtility.Object, MockUserManager.Object,
-                MockLendingManager.Object, MockLegalEntityRepository.Object, MockCashManager.Object,
-                MockRazorRenderer.Object, MockTransactionalManager.Object);
 
             var result = letterGeneratorManager.GenerateLetters("L0001");
 
@@ -96,9 +108,24 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         /// <summary>
         /// Tests that GenerateLetters for cash executes positive.
         /// </summary>
-        //[Fact] //These tests randomly fail for no apparent reason *sad panda*
+        [Fact]
         public void GenerateLetters_Cash_Executes_Positive()
         {
+            var fileUtiltity = new Mock<IFileUtiltity>();
+            var concessionManager = new Mock<IConcessionManager>();
+            var pdfUtility = new Mock<IPdfUtility>();
+            var userManager = new Mock<IUserManager>();
+            var lendingManager = new Mock<ILendingManager>();
+            var legalEntityRepository = new Mock<ILegalEntityRepository>();
+            var cashManager = new Mock<ICashManager>();
+            var razorRenderer = new Mock<IRazorRenderer>();
+            var transactionalManager = new Mock<ITransactionalManager>();
+
+            var letterGeneratorManager = new LetterGeneratorManager(InstantiatedDependencies.ConfigurationData,
+                fileUtiltity.Object, concessionManager.Object, pdfUtility.Object, userManager.Object,
+                lendingManager.Object, legalEntityRepository.Object, cashManager.Object,
+                razorRenderer.Object, transactionalManager.Object);
+
             var concession = new Concession
             {
                 ConcessionType = "Cash",
@@ -107,12 +134,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 ExpiryDate = DateTime.Now.AddDays(100)
             };
 
-            MockConcessionManager.Setup(_ => _.GetConcessionForConcessionReferenceId(It.IsAny<string>()))
+            concessionManager.Setup(_ => _.GetConcessionForConcessionReferenceId(It.IsAny<string>()))
                 .Returns(concession);
 
-            MockUserManager.Setup(_ => _.GetUser(It.IsAny<int?>())).Returns(new User());
+            userManager.Setup(_ => _.GetUser(It.IsAny<int?>())).Returns(new User());
 
-            MockCashManager.Setup(_ => _.GetCashConcession(It.IsAny<string>(), It.IsAny<User>())).Returns(
+            cashManager.Setup(_ => _.GetCashConcession(It.IsAny<string>(), It.IsAny<User>())).Returns(
                 new CashConcession
                 {
                     Concession = concession,
@@ -129,27 +156,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                     CurrentUser = new User()
                 });
 
-            MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new LegalEntity());
+            legalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new LegalEntity());
 
-            MockConcessionManager.Setup(_ => _.GetConcessionConditions(It.IsAny<int>()))
+            concessionManager.Setup(_ => _.GetConcessionConditions(It.IsAny<int>()))
                 .Returns(new[]
                 {
                     new ConcessionCondition {ConditionValue = 123213.12m, Period = "Period", PeriodType = "PeriodType"}
                 });
 
-            MockFileUtiltity.Setup(_ => _.ReadFileText(It.IsAny<string>(), It.IsAny<bool>()))
+            fileUtiltity.Setup(_ => _.ReadFileText(It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns("<html><body><h1>Test</h1><p>@Model.RiskGroupNumber</p></body></html>");
 
-            MockPdfUtility.Setup(_ => _.GeneratePdfFromHtml(It.IsAny<string>()))
+            pdfUtility.Setup(_ => _.GeneratePdfFromHtml(It.IsAny<string>()))
                 .Returns(Encoding.ASCII.GetBytes("Test"));
 
-            MockRazorRenderer.Setup(_ => _.Parse(It.IsAny<string>(), It.IsAny<ConcessionLetter>(), It.IsAny<bool>()))
+            razorRenderer.Setup(_ => _.Parse(It.IsAny<string>(), It.IsAny<ConcessionLetter>(), It.IsAny<bool>()))
                 .Returns($"<html><body><h1>Test</h1><p>{concession.RiskGroupNumber}</p></body></html>");
-
-            var letterGeneratorManager = new LetterGeneratorManager(InstantiatedDependencies.ConfigurationData,
-                MockFileUtiltity.Object, MockConcessionManager.Object, MockPdfUtility.Object, MockUserManager.Object,
-                MockLendingManager.Object, MockLegalEntityRepository.Object, MockCashManager.Object,
-                MockRazorRenderer.Object, MockTransactionalManager.Object);
 
             var result = letterGeneratorManager.GenerateLetters("C0001");
 
@@ -159,9 +181,24 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         /// <summary>
         /// Tests that GenerateLetters for transactional executes positive.
         /// </summary>
-        //[Fact] //These tests randomly fail for no apparent reason *sad panda*
+        [Fact]
         public void GenerateLetters_Transactional_Executes_Positive()
         {
+            var fileUtiltity = new Mock<IFileUtiltity>();
+            var concessionManager = new Mock<IConcessionManager>();
+            var pdfUtility = new Mock<IPdfUtility>();
+            var userManager = new Mock<IUserManager>();
+            var lendingManager = new Mock<ILendingManager>();
+            var legalEntityRepository = new Mock<ILegalEntityRepository>();
+            var cashManager = new Mock<ICashManager>();
+            var razorRenderer = new Mock<IRazorRenderer>();
+            var transactionalManager = new Mock<ITransactionalManager>();
+
+            var letterGeneratorManager = new LetterGeneratorManager(InstantiatedDependencies.ConfigurationData,
+                fileUtiltity.Object, concessionManager.Object, pdfUtility.Object, userManager.Object,
+                lendingManager.Object, legalEntityRepository.Object, cashManager.Object,
+                razorRenderer.Object, transactionalManager.Object);
+
             var concession = new Concession
             {
                 ConcessionType = "Transactional",
@@ -170,12 +207,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 ExpiryDate = DateTime.Now.AddDays(100)
             };
 
-            MockConcessionManager.Setup(_ => _.GetConcessionForConcessionReferenceId(It.IsAny<string>()))
+            concessionManager.Setup(_ => _.GetConcessionForConcessionReferenceId(It.IsAny<string>()))
                 .Returns(concession);
 
-            MockUserManager.Setup(_ => _.GetUser(It.IsAny<int?>())).Returns(new User());
+            userManager.Setup(_ => _.GetUser(It.IsAny<int?>())).Returns(new User());
 
-            MockTransactionalManager.Setup(_ => _.GetTransactionalConcession(It.IsAny<string>(), It.IsAny<User>())).Returns(
+            transactionalManager.Setup(_ => _.GetTransactionalConcession(It.IsAny<string>(), It.IsAny<User>())).Returns(
                 new TransactionalConcession
                 {
                     Concession = concession,
@@ -192,27 +229,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                     CurrentUser = new User()
                 });
 
-            MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new LegalEntity());
+            legalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new LegalEntity());
 
-            MockConcessionManager.Setup(_ => _.GetConcessionConditions(It.IsAny<int>()))
+            concessionManager.Setup(_ => _.GetConcessionConditions(It.IsAny<int>()))
                 .Returns(new[]
                 {
                     new ConcessionCondition {ConditionValue = 123213.12m, Period = "Period", PeriodType = "PeriodType"}
                 });
 
-            MockFileUtiltity.Setup(_ => _.ReadFileText(It.IsAny<string>(), It.IsAny<bool>()))
+            fileUtiltity.Setup(_ => _.ReadFileText(It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns("<html><body><h1>Test</h1><p>@Model.RiskGroupNumber</p></body></html>");
 
-            MockPdfUtility.Setup(_ => _.GeneratePdfFromHtml(It.IsAny<string>()))
+            pdfUtility.Setup(_ => _.GeneratePdfFromHtml(It.IsAny<string>()))
                 .Returns(Encoding.ASCII.GetBytes("Test"));
 
-            MockRazorRenderer.Setup(_ => _.Parse(It.IsAny<string>(), It.IsAny<ConcessionLetter>(), It.IsAny<bool>()))
+            razorRenderer.Setup(_ => _.Parse(It.IsAny<string>(), It.IsAny<ConcessionLetter>(), It.IsAny<bool>()))
                 .Returns($"<html><body><h1>Test</h1><p>{concession.RiskGroupNumber}</p></body></html>");
-
-            var letterGeneratorManager = new LetterGeneratorManager(InstantiatedDependencies.ConfigurationData,
-                MockFileUtiltity.Object, MockConcessionManager.Object, MockPdfUtility.Object, MockUserManager.Object,
-                MockLendingManager.Object, MockLegalEntityRepository.Object, MockCashManager.Object,
-                MockRazorRenderer.Object, MockTransactionalManager.Object);
 
             var result = letterGeneratorManager.GenerateLetters("T0001");
 

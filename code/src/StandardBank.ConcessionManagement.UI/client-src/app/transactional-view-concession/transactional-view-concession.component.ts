@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { Location } from '@angular/common';
+import { Location, DatePipe } from '@angular/common';
 import { LookupDataService } from "../services/lookup-data.service";
 import { TransactionalConcessionService } from "../services/transactional-concession.service";
 import { Period } from "../models/period";
@@ -25,7 +25,8 @@ import { TransactionalFinancial } from "../models/transactional-financial";
 @Component({
   selector: 'app-transactional-view-concession',
   templateUrl: './transactional-view-concession.component.html',
-  styleUrls: ['./transactional-view-concession.component.css']
+  styleUrls: ['./transactional-view-concession.component.css'],
+  providers: [DatePipe]
 })
 export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
@@ -79,6 +80,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
     constructor(private route: ActivatedRoute,
         private formBuilder: FormBuilder,
         private location: Location,
+        private datepipe: DatePipe,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(TransactionalConcessionService) private transactionalConcessionService,
         @Inject(UserConcessionsService) private userConcessionsService) {
@@ -118,7 +120,8 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
             mrsCrs: new FormControl(),
             smtDealNumber: new FormControl(),
             motivation: new FormControl(),
-            comments: new FormControl()
+            comments: new FormControl(),
+            expiryDate: new FormControl()
         });
 
         this.observablePeriods = this.lookupDataService.getPeriods();
@@ -156,7 +159,6 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
                 if (transactionalConcession.concession.status == "Pending" && transactionalConcession.concession.subStatus == "BCM Pending") {
                     this.canBcmApprove = transactionalConcession.currentUser.canBcmApprove;
-                    this.canEdit = transactionalConcession.currentUser.canBcmApprove;
                 }
 
                 if (transactionalConcession.concession.status == "Pending" && transactionalConcession.concession.subStatus == "PCM Pending") {
@@ -176,6 +178,11 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
                 this.transactionalConcessionForm.controls['mrsCrs'].setValue(this.transactionalConcession.concession.mrsCrs);
                 this.transactionalConcessionForm.controls['smtDealNumber'].setValue(this.transactionalConcession.concession.smtDealNumber);
                 this.transactionalConcessionForm.controls['motivation'].setValue(this.transactionalConcession.concession.motivation);
+
+                if (this.transactionalConcession.concession.expiryDate) {
+                    var formattedExpiryDate = this.datepipe.transform(this.transactionalConcession.concession.expiryDate, 'yyyy-MM-dd');
+                    this.transactionalConcessionForm.controls['expiryDate'].setValue(formattedExpiryDate);
+                }
 
                 let rowIndex = 0;
 
@@ -330,6 +337,9 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
         if (this.transactionalConcessionForm.controls['comments'].value)
             transactionalConcession.concession.comments = this.transactionalConcessionForm.controls['comments'].value;
+
+        if (this.transactionalConcessionForm.controls['expiryDate'].value)
+            transactionalConcession.concession.expiryDate = new Date(this.transactionalConcessionForm.controls['expiryDate'].value);
 
         const concessions = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
 

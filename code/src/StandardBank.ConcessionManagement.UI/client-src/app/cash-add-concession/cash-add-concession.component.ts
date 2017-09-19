@@ -92,7 +92,8 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             concessionItemRows: this.formBuilder.array([this.initConcessionItemRows()]),
             conditionItemsRows: this.formBuilder.array([]),
             smtDealNumber: new FormControl(),
-            motivation: new FormControl()
+            motivation: new FormControl(),
+            expiryDate: new FormControl()
         });
 
         this.observableChannelTypes = this.lookupDataService.getChannelTypes();
@@ -200,6 +201,9 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             cashConcession.concession.motivation = this.cashConcessionForm.controls['motivation'].value;
         else
             this.addValidationError("Motivation not captured");
+
+        if (this.cashConcessionForm.controls['expiryDate'].value)
+            cashConcession.concession.expiryDate = new Date(this.cashConcessionForm.controls['expiryDate'].value);
 
         const concessions = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
 
