@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+﻿import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -56,6 +56,7 @@ import { BusinessCentreComponent } from './admin/business-centre/business-centre
 import { UsersComponent } from './admin/users/users.component';
 import { EditUserComponent } from './admin/users/edit-user/edit-user.component';
 import { ActionedInboxComponent } from './actioned-inbox/actioned-inbox.component';
+import { NumbersonlyDirective } from './directives/numbersonly.directive';
 
 
 @NgModule({
@@ -98,7 +99,8 @@ import { ActionedInboxComponent } from './actioned-inbox/actioned-inbox.componen
         BusinessCentreComponent,
         UsersComponent,
         EditUserComponent,
-        ActionedInboxComponent
+        ActionedInboxComponent,
+        NumbersonlyDirective
     ],
     imports: [
         BrowserModule,

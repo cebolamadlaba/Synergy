@@ -123,13 +123,13 @@
                     </select>
                 </td>
                 <!-- Limit -->
-                <td class="length-long"><input type="text" formControlName="limit" class="form-control" [attr.disabled]="saveMessage ? '' : null"/></td>
+                <td class="length-long"><input type="text" numbersOnly="true" formControlName="limit" class="form-control" [attr.disabled]="saveMessage ? '' : null"/></td>
                 <!-- Term -->
-                <td class="length-short"><input formControlName="term" class="form-control" [attr.disabled]="saveMessage ? '' : null"/></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="term" class="form-control" [attr.disabled]="saveMessage ? '' : null"/></td>
                 <!-- MAP -->
-                <td class="length-short"><input formControlName="marginAgainstPrime" class="form-control" [attr.disabled]="saveMessage ? '' : null"/></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="marginAgainstPrime" class="form-control" [attr.disabled]="saveMessage ? '' : null"/></td>
                 <!-- Initiation fee -->
-                <td class="length-long"><input formControlName="initiationFee" class="form-control" [attr.disabled]="saveMessage ? '' : null"/></td>
+                <td class="length-long"><input type="text" numbersOnly="true" formControlName="initiationFee" class="form-control" [attr.disabled]="saveMessage ? '' : null"/></td>
                 <!-- Review fee type -->
                 <td class="length-medium">
                     <select formControlName="reviewFeeType" class="form-control" [attr.disabled]="saveMessage ? '' : null">
@@ -137,9 +137,9 @@
                     </select>
                 </td>
                 <!-- Review fee -->
-                <td class="length-medium"><input class="form-control" formControlName="reviewFee" [attr.disabled]="saveMessage ? '' : null" /></td>
+                <td class="length-medium"><input type="text" numbersOnly="true" class="form-control" formControlName="reviewFee" [attr.disabled]="saveMessage ? '' : null" /></td>
                 <!-- UFF fee -->
-                <td class="length-medium"><input class="form-control" formControlName="uffFee" [attr.disabled]="saveMessage ? '' : null" /></td>
+                <td class="length-medium"><input type="text" numbersOnly="true" class="form-control" formControlName="uffFee" [attr.disabled]="saveMessage ? '' : null" /></td>
                 <td><button *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
         </tbody>
@@ -220,18 +220,20 @@
                             </tr>
                             <tr *ngFor="let itemrow of lendingConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
                                 <td class="length-long">
+                                    <!-- Condition type -->
                                     <select formControlName="conditionType" (change)="conditionTypeChanged(i)">
                                         <option *ngFor="let conditionTypeOption of conditionTypes" [ngValue]="conditionTypeOption">{{conditionTypeOption.description}}</option>
                                     </select>
                                 </td>
                                 <td class="length-long">
+                                    <!-- Product type -->
                                     <select formControlName="conditionProduct" *ngIf="selectedConditionTypes[i] != null">
                                         <option *ngFor="let conditionProductOption of selectedConditionTypes[i].conditionProducts" [ngValue]="conditionProductOption">{{conditionProductOption.description}}</option>
                                     </select>
                                 </td>
-                                <td class="length-long"><input formControlName="interestRate" /></td>
-                                <td class="length-short"><input formControlName="volume" /></td>
-                                <td class="length-medium"><input formControlName="value" /></td>
+                                <td class="length-long"><input type="text" numbersOnly="true" formControlName="interestRate" /></td>
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="volume" /></td>
+                                <td class="length-medium"><input type="text" numbersOnly="true" formControlName="value" /></td>
                                 <td class="length-medium">
                                     <select formControlName="periodType">
                                         <option *ngFor="let periodTypeOption of periodTypes" [ngValue]="periodTypeOption">{{periodTypeOption.description}}</option>
