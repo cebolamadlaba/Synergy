@@ -73,11 +73,11 @@
     <div class="col-md-4">
         <div class="row">
             <label>MRS/CRS</label>
-            <input class="form-control" formControlName="mrsCrs" type="number" [attr.disabled]="saveMessage ? '' : null" />
+            <input type="text" numbersOnly="true" class="form-control" formControlName="mrsCrs" [attr.disabled]="saveMessage ? '' : null" />
         </div>
         <div class="row">
             <label>SMT Deal Number</label>
-            <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="saveMessage ? '' : null" />
+            <input type="text" numbersOnly="true" class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="saveMessage ? '' : null" />
         </div>
     </div>
     <div class="col-md-7 col-md-offset-1">

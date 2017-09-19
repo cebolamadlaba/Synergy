@@ -1,4 +1,4 @@
-<!-- Banner -->
+﻿<!-- Banner -->
 <div class="col-md-12 banner">
     <div class="row">
         <!-- Header -->
@@ -19,6 +19,7 @@
                 <div class="col-md-2">
                     <div class="subHeading">{{riskGroup.name}}</div>
                     <div class="date lightTitle hidden-element">{{riskGroup.number}}</div>
+                    <div class="requestor"><i class="fa fa-user-circle-o" aria-hidden="true"></i><button (click)="viewRequesterModal.show()">{{transactionalConcession?.concession?.requestor?.fullName}}</button></div>
                 </div>
 
                 <div class="col-md-3 summary-items">
@@ -59,6 +60,22 @@
                 </div>
             </div>
             -->
+        </div>
+    </div>
+</div>
+
+<!-- Requester modal content -->
+<div bsModal #viewRequesterModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="viewRequesterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="requestor-modal">
+                <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                <p class="name">{{transactionalConcession?.concession?.requestor?.fullName}}</p>
+                <p class="anumber">{{transactionalConcession?.concession?.requestor?.aNumber}}</p>
+                <p>{{transactionalConcession?.concession?.requestor?.businessCentre}}</p>
+                <p>{{transactionalConcession?.concession?.requestor?.region}}</p>
+                <button type="button" class="btn btn-primary" (click)="viewRequesterModal.hide()">Close</button>
+            </div>
         </div>
     </div>
 </div>
@@ -109,20 +126,16 @@
     <div class="col-md-4">
         <div class="row">
             <label>MRS/CRS</label>
-            <input class="form-control" formControlName="mrsCrs" type="number" [attr.disabled]="isRecalling ? null : ''">
+            <input type="text" numbersOnly="true" class="form-control" formControlName="mrsCrs" [attr.disabled]="isRecalling ? null : ''">
         </div>
         <div class="row">
             <label>SMT Deal Number</label>
-            <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="isRecalling ? null : ''">
+            <input type="text" numbersOnly="true" class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="isRecalling ? null : ''">
         </div>
         <div class="row">
             <label>Expiry Date</label>
             <input class="form-control" formControlName="expiryDate" type="date" [attr.disabled]="canEdit ? null : ''">
-        </div>
-        <div class="row">
-            <label>Requested By</label>
-            <p>{{transactionalConcession?.concession?.requestor?.fullName}}</p>
-        </div>
+        </div>      
     </div>
     <div class="col-md-7 col-md-offset-1">
         <div class="row">
@@ -262,24 +275,31 @@
                             <tr *ngFor="let itemrow of transactionalConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
                                 <td class="length-long">
                                     <input formControlName="concessionConditionId" style="display: none;" />
+                                    <!-- Condition type -->
                                     <select formControlName="conditionType" (change)="conditionTypeChanged(i)">
                                         <option *ngFor="let conditionTypeOption of conditionTypes" [ngValue]="conditionTypeOption">{{conditionTypeOption?.description}}</option>
                                     </select>
                                 </td>
                                 <td class="length-long">
+                                    <!-- Product type -->
                                     <select formControlName="conditionProduct" *ngIf="selectedConditionTypes[i] != null">
                                         <option *ngFor="let conditionProductOption of selectedConditionTypes[i].conditionProducts" [ngValue]="conditionProductOption">{{conditionProductOption?.description}}</option>
                                     </select>
                                 </td>
-                                <td class="length-medium"><input formControlName="interestRate" /></td>
-                                <td class="length-long"><input formControlName="volume" /></td>
-                                <td class="length-medium"><input formControlName="value" /></td>
+                                <!-- Interest rate -->
+                                <td class="length-medium"><input type="text" numbersOnly="true" formControlName="interestRate" /></td>
+                                <!-- Volume -->
+                                <td class="length-long"><input type="text" numbersOnly="true" formControlName="volume" /></td>
+                                <!-- Value -->
+                                <td class="length-medium"><input type="text" numbersOnly="true" formControlName="value" /></td>
                                 <td class="length-medium">
+                                    <!-- Period type -->
                                     <select formControlName="periodType">
                                         <option *ngFor="let periodTypeOption of periodTypes" [ngValue]="periodTypeOption">{{periodTypeOption?.description}}</option>
                                     </select>
                                 </td>
                                 <td class="length-medium">
+                                    <!-- Period -->
                                     <select formControlName="period">
                                         <option *ngFor="let periodOption of periods" [ngValue]="periodOption">{{periodOption?.description}}</option>
                                     </select>

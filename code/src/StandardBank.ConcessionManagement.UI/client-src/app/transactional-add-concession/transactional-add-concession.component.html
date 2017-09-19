@@ -1,4 +1,4 @@
-<!-- Banner -->
+﻿<!-- Banner -->
 <div class="col-md-12 banner">
     <div class="row">
         <!-- Header -->
@@ -74,11 +74,11 @@
     <div class="col-md-4">
         <div class="row">
             <label>MRS/CRS</label>
-            <input class="form-control" formControlName="mrsCrs" type="number" [attr.disabled]="saveMessage ? '' : null">
+            <input type="text" numbersOnly="true" class="form-control" formControlName="mrsCrs" [attr.disabled]="saveMessage ? '' : null">
         </div>
         <div class="row">
             <label>SMT Deal Number</label>
-            <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="saveMessage ? '' : null">
+            <input type="text" numbersOnly="true" class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="saveMessage ? '' : null">
         </div>
         <div class="row">
             <label>Expiry Date</label>
@@ -214,24 +214,31 @@
                             </tr>
                             <tr *ngFor="let itemrow of transactionalConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
                                 <td class="length-long">
+                                    <!-- Condition type -->
                                     <select formControlName="conditionType" (change)="conditionTypeChanged(i)">
                                         <option *ngFor="let conditionTypeOption of conditionTypes" [ngValue]="conditionTypeOption">{{conditionTypeOption.description}}</option>
                                     </select>
                                 </td>
                                 <td class="length-long">
+                                    <!-- Product type -->
                                     <select formControlName="conditionProduct" *ngIf="selectedConditionTypes[i] != null">
                                         <option *ngFor="let conditionProductOption of selectedConditionTypes[i].conditionProducts" [ngValue]="conditionProductOption">{{conditionProductOption.description}}</option>
                                     </select>
                                 </td>
-                                <td class="length-medium"><input formControlName="interestRate" /></td>
-                                <td class="length-long"><input formControlName="volume" /></td>
-                                <td class="length-medium"><input formControlName="value" /></td>
+                                <!-- Interest rate -->
+                                <td class="length-medium"><input type="text" numbersOnly="true" formControlName="interestRate" /></td>
+                                <!-- Volume -->
+                                <td class="length-long"><input type="text" numbersOnly="true" formControlName="volume" /></td>
+                                <!-- Value -->
+                                <td class="length-medium"><input type="text" numbersOnly="true" formControlName="value" /></td>
                                 <td class="length-medium">
+                                    <!-- Period type -->
                                     <select formControlName="periodType">
                                         <option *ngFor="let periodTypeOption of periodTypes" [ngValue]="periodTypeOption">{{periodTypeOption.description}}</option>
                                     </select>
                                 </td>
                                 <td class="length-medium">
+                                    <!-- Period -->
                                     <select formControlName="period">
                                         <option *ngFor="let periodOption of periods" [ngValue]="periodOption">{{periodOption.description}}</option>
                                     </select>

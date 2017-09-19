@@ -1,4 +1,4 @@
-<!-- Banner expanded -->
+﻿<!-- Banner expanded -->
 <div class="col-md-12 banner">
     <div class="row">
         <div class="lending-banner-title">
@@ -18,8 +18,7 @@
                 <div class="col-md-2">
                     <div class="subHeading">{{riskGroup.name}}</div>
                     <div class="date lightTitle hidden-element">{{riskGroup.number}}</div>  
-                    <div class="requestor"><i class="fa fa-user-circle-o" aria-hidden="true"></i><button data-toggle="modal" data-target="#myModal">{{lendingConcession?.concession?.requestor?.fullName}}</button></div>
-                    <!-- Trigger the modal with a button -->                    
+                    <div class="requestor"><i class="fa fa-user-circle-o" aria-hidden="true"></i><button (click)="viewRequesterModal.show()">{{lendingConcession?.concession?.requestor?.fullName}}</button></div>               
                 </div>              
                 <div class="col-md-2  hidden-element">
                     <div class="subHeading lightTitle">Total Exposure</div>
@@ -49,26 +48,22 @@
 
 
 
-<!-- Requestor information modal -->
-<div id="myModal" class="modal fade" role="dialog">
+<!-- Requester modal content -->
+<div bsModal #viewRequesterModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="viewRequesterModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm">
-
-        <!-- Modal content-->
         <div class="modal-content">
-            <div class="modal-body">
-                <div class="requestor-modal">
-                    <i class="fa fa-user-circle-o" aria-hidden="true"></i>
-                    <p class="name">{{lendingConcession?.concession?.requestor?.fullName}}</p>
-                    <p class="anumber">{{lendingConcession?.concession?.requestor?.aNumber}}</p>
-                    <p>{{lendingConcession?.concession?.requestor?.businessCentre}}</p>
-                    <p>{{lendingConcession?.concession?.requestor?.region}}</p>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                </div>                
-            </div>           
+            <div class="requestor-modal">
+                <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                <p class="name">{{lendingConcession?.concession?.requestor?.fullName}}</p>
+                <p class="anumber">{{lendingConcession?.concession?.requestor?.aNumber}}</p>
+                <p>{{lendingConcession?.concession?.requestor?.businessCentre}}</p>
+                <p>{{lendingConcession?.concession?.requestor?.region}}</p>
+                <button type="button" class="btn btn-primary" (click)="viewRequesterModal.hide()">Close</button>
+            </div>   
         </div>
-
     </div>
 </div>
+
 
 <!-- Error message -->
 <div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
@@ -118,12 +113,12 @@
         <div class="row">
             <!-- MRS/CRS -->
             <label>MRS/CRS</label>
-            <input class="form-control" [attr.disabled]="isRecalling ? null : ''" formControlName="mrsCrs" type="number" required />
+            <input type="text" numbersOnly="true" class="form-control" [attr.disabled]="isRecalling ? null : ''" formControlName="mrsCrs" required />
         </div>
         <div class="row">
             <!-- SMT deal number -->
             <label>SMT Deal Number</label>
-            <input class="form-control" [attr.disabled]="isRecalling ? null : ''" formControlName="smtDealNumber" maxlength="16" required />
+            <input type="text" numbersOnly="true" class="form-control" [attr.disabled]="isRecalling ? null : ''" formControlName="smtDealNumber" maxlength="16" required />
         </div>
     </div>
     <div class="col-md-7 col-md-offset-1">

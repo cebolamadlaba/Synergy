@@ -18,6 +18,7 @@
                     <div class="col-md-2">
                         <div class="subHeading">{{riskGroup.name}}</div>
                         <div class="date lightTitle hidden-element">{{riskGroup.number}}</div>
+                        <div class="requestor"><i class="fa fa-user-circle-o" aria-hidden="true"></i><button (click)="viewRequesterModal.show()">{{cashConcession?.concession?.requestor?.fullName}}</button></div>
                     </div>
                     <div class="col-md-3 summary-items">
                         <h5>CASHCENTR</h5>
@@ -48,6 +49,22 @@
                 </div>
             </div>
             -->
+        </div>
+    </div>
+</div>
+
+<!-- Requester modal content -->
+<div bsModal #viewRequesterModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="viewRequesterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="requestor-modal">
+                <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                <p class="name">{{cashConcession?.concession?.requestor?.fullName}}</p>
+                <p class="anumber">{{cashConcession?.concession?.requestor?.aNumber}}</p>
+                <p>{{cashConcession?.concession?.requestor?.businessCentre}}</p>
+                <p>{{cashConcession?.concession?.requestor?.region}}</p>
+                <button type="button" class="btn btn-primary" (click)="viewRequesterModal.hide()">Close</button>
+            </div>
         </div>
     </div>
 </div>
@@ -103,11 +120,7 @@
         <div class="row">
             <label>Expiry Date</label>
             <input class="form-control" formControlName="expiryDate" type="date" [attr.disabled]="canEdit ? null : ''">
-        </div>
-        <div class="row">
-            <label>Requested By</label>
-            <p>{{cashConcession?.concession?.requestor?.fullName}}</p>
-        </div>
+        </div>       
     </div>
     <div class="col-md-7 col-md-offset-1">
         <div class="row">
