@@ -1,4 +1,4 @@
-﻿<!-- Banner -->
+<!-- Banner -->
 <div class="col-md-12 banner">
     <div class="row">
         <!-- Header -->
@@ -167,6 +167,7 @@
                 <th>Table Number</th>
                 <th>Ad Valorem</th>
                 <th>Flat Fee/Rate</th>
+                <th>Approved Table Number</th>
             </tr>
         </thead>
         <tbody class="form-concessions-table-content">
@@ -193,6 +194,8 @@
 
                 <td class="length-medium"><input formControlName="adValorem" class="form-control"></td>
                 <td class="length-long"><input formControlName="flatFeeOrRate" class="form-control"></td>
+
+                <td class="length-long"><input formControlName="approvedTableNumber" class="form-control"></td>
 
                 <td *ngIf="canBcmApprove || canPcmApprove || isRenewing || isRecalling"><button *ngIf="transactionalConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>

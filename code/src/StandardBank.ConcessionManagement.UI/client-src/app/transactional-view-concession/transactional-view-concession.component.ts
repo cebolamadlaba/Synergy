@@ -208,7 +208,8 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
                     currentConcession.get('adValorem').setValue(transactionalConcessionDetail.adValorem);
                     currentConcession.get('flatFeeOrRate').setValue(transactionalConcessionDetail.baseRate);
-
+                    currentConcession.get('approvedTableNumber').setValue(transactionalConcessionDetail.approvedTableNumber);
+                    
                     rowIndex++;
                 }
 
@@ -254,7 +255,8 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
             accountNumber: [''],
             tableNumber: [''],
             flatFeeOrRate: [{ value: '', disabled: true }],
-            adValorem: [{ value: '', disabled: true }]
+            adValorem: [{ value: '', disabled: true }],
+            approvedTableNumber: [{ value: '', disabled: true }]
         });
     }
 

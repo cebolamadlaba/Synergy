@@ -351,6 +351,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 if (legalEntityAccount != null)
                     mappedTransactionalConcessionDetail.AccountNumber = legalEntityAccount.AccountNumber;
 
+                if (mappedTransactionalConcessionDetail.ApprovedTableNumberId.HasValue)
+                    mappedTransactionalConcessionDetail.ApprovedTableNumber =
+                        _lookupTableManager.GetTableNumberDescription(mappedTransactionalConcessionDetail
+                            .ApprovedTableNumberId.Value);
+
+                if (mappedTransactionalConcessionDetail.LoadedTableNumberId.HasValue)
+                    mappedTransactionalConcessionDetail.LoadedTableNumber =
+                        _lookupTableManager.GetTableNumberDescription(mappedTransactionalConcessionDetail
+                            .LoadedTableNumberId.Value);
+
                 transactionalConcessionDetails.Add(mappedTransactionalConcessionDetail);
             }
         }
