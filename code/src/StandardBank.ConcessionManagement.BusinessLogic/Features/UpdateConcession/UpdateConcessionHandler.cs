@@ -42,7 +42,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.UpdateConcess
         {
             _concessionManager = concessionManager;
             _mediator = mediator;
-            _logger = loggerFactory.CreateLogger<AddConcessionHandler>();
+            _logger = loggerFactory.CreateLogger<UpdateConcessionHandler>();
         }
 
         /// <summary>

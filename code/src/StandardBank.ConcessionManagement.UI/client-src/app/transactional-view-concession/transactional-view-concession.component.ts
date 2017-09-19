@@ -52,6 +52,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
     motivationEnabled = false;
     canEdit = false;
     isRecalling = false;
+    capturedComments: string;
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
@@ -142,7 +143,13 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
         this.transactionalConcessionForm.valueChanges.subscribe((value: any) => {
             if (this.transactionalConcessionForm.dirty) {
-                this.hasChanges = true;
+                //if the captured comments is still the same as the comments that means
+                //the user has changed something else on the form
+                if (this.capturedComments == value.comments) {
+                    this.hasChanges = true;
+                }
+
+                this.capturedComments = value.comments;
             }
         });
     }
@@ -502,7 +509,11 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
         var transactionalConcession = this.getTransactionalConcession(false);
 
-        transactionalConcession.concession.status = "Approved";
+        if (this.hasChanges) {
+            transactionalConcession.concession.status = "Approved With Changes";
+        } else {
+            transactionalConcession.concession.status = "Approved";
+        }
 
         if (this.transactionalConcession.currentUser.isHO) {
             transactionalConcession.concession.subStatus = "HO Approved";
