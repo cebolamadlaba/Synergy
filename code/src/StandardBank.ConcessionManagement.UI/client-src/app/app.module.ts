@@ -56,8 +56,8 @@ import { BusinessCentreComponent } from './admin/business-centre/business-centre
 import { UsersComponent } from './admin/users/users.component';
 import { EditUserComponent } from './admin/users/edit-user/edit-user.component';
 import { ActionedInboxComponent } from './actioned-inbox/actioned-inbox.component';
-import { NumbersonlyDirective } from './directives/numbersonly.directive';
 import { ConditionsFilterPipe } from './filters/conditions-filter.pipe';
+import { NumbersonlyDirective } from './directives/numbersonly.directive';
 
 @NgModule({
     declarations: [
@@ -99,9 +99,9 @@ import { ConditionsFilterPipe } from './filters/conditions-filter.pipe';
         BusinessCentreComponent,
         UsersComponent,
         EditUserComponent,
-        NumbersonlyDirective
-        ActionedInboxComponent,
         ConditionsFilterPipe
+        ActionedInboxComponent,
+        NumbersonlyDirective
     ],
     imports: [
         BrowserModule,
