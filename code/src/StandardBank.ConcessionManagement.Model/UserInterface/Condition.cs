@@ -21,9 +21,17 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public int RiskGroupNumber { get; set; }
         public string ConditionType { get; set; }
         public string ProductType { get; set; }
-        public DateTime ExpiryDate { get; set; }
+        public DateTime? ExpiryDate { get; set; }
         public DateTime ApprovedDate { get; set; }
         public string PeriodName { get; set; }
         public string RagStatus { get; set; }
+
+        /// <summary>
+        /// Gets or sets the expected turnover value.
+        /// </summary>
+        /// <value>
+        /// The expected turnover value.
+        /// </value>
+        public decimal? ExpectedTurnoverValue { get; set; }
     }
 }

@@ -10,4 +10,5 @@ export class Condition {
     value: number;
     expiryDate: Date;
     ragStatus: string;
+    expectedTurnoverValue: number;
 }

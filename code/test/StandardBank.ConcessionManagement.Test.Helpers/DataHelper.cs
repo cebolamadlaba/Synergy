@@ -1607,7 +1607,9 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 Value = 2525,
                 IsActive = false,
                 PeriodTypeId =  GetPeriodTypeId(),
-                PeriodId = GetPeriodId()
+                PeriodId = GetPeriodId(),
+                ExpectedTurnoverValue = 100,
+                ExpiryDate = DateTime.Now.AddDays(100)
             };
 
             InstantiatedDependencies.ConcessionConditionRepository.Create(model);

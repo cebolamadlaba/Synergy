@@ -1,4 +1,6 @@
-﻿namespace StandardBank.ConcessionManagement.Model.UserInterface
+﻿using System;
+
+namespace StandardBank.ConcessionManagement.Model.UserInterface
 {
     /// <summary>
     /// Concession condition
@@ -69,5 +71,21 @@
         /// Gets or sets the period id
         /// </summary>
         public int? PeriodId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the expected turnover value.
+        /// </summary>
+        /// <value>
+        /// The expected turnover value.
+        /// </value>
+        public decimal? ExpectedTurnoverValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets the expiry date.
+        /// </summary>
+        /// <value>
+        /// The expiry date.
+        /// </value>
+        public DateTime? ExpiryDate { get; set; }
     }
 }

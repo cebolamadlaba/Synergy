@@ -84,5 +84,21 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public string TableName => "tblConcessionCondition";
         public string PrimaryKeyColumnName => "pkConcessionConditionId";
         public object PrimaryKeyValue => Id;
+
+        /// <summary>
+        /// Gets or sets the expected turnover value.
+        /// </summary>
+        /// <value>
+        /// The expected turnover value.
+        /// </value>
+        public decimal? ExpectedTurnoverValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets the expiry date.
+        /// </summary>
+        /// <value>
+        /// The expiry date.
+        /// </value>
+        public DateTime? ExpiryDate { get; set; }
     }
 }

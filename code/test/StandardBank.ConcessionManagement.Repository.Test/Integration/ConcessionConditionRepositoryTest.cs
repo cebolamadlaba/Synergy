@@ -27,7 +27,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 Value = 3092,
                 IsActive = false,
                 PeriodTypeId = DataHelper.GetPeriodTypeId(),
-                PeriodId =  DataHelper.GetPeriodId()
+                PeriodId =  DataHelper.GetPeriodId(),
+                ExpectedTurnoverValue = 100,
+                ExpiryDate = DateTime.Now.AddDays(100)
             };
 
             var result = InstantiatedDependencies.ConcessionConditionRepository.Create(model);
@@ -98,6 +100,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.IsActive = !model.IsActive;
             model.PeriodTypeId = DataHelper.GetAlternatePeriodTypeId(model.PeriodTypeId);
             model.PeriodId = DataHelper.GetAlternatePeriodId(model.PeriodId);
+            model.ExpectedTurnoverValue = model.ExpectedTurnoverValue.GetValueOrDefault(0) + 100;
+            model.ExpiryDate = model.ExpiryDate.GetValueOrDefault(DateTime.Now).AddDays(1);
 
             InstantiatedDependencies.ConcessionConditionRepository.Update(model);
 
@@ -114,6 +118,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.IsActive, model.IsActive);
             Assert.Equal(updatedModel.PeriodTypeId, model.PeriodTypeId);
             Assert.Equal(updatedModel.PeriodId, model.PeriodId);
+            Assert.Equal(updatedModel.ExpectedTurnoverValue, model.ExpectedTurnoverValue);
+            Assert.Equal(updatedModel.ExpiryDate.Value.Date, model.ExpiryDate.Value.Date);
         }
 
         /// <summary>
@@ -132,7 +138,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 Value = 3092,
                 IsActive = false,
                 PeriodTypeId = DataHelper.GetPeriodTypeId(),
-                PeriodId = DataHelper.GetPeriodId()
+                PeriodId = DataHelper.GetPeriodId(),
+                ExpectedTurnoverValue = 100,
+                ExpiryDate = DateTime.Now.AddDays(100)
             };
 
             var temporaryEntity = InstantiatedDependencies.ConcessionConditionRepository.Create(model);

@@ -23,6 +23,14 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public string ProductType { get; set; }
         public DateTime ApprovedDate { get; set; }
         public string PeriodName { get; set; }
-        public DateTime ExpiryDate { get; set; }
+        public DateTime? ExpiryDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the expected turnover value.
+        /// </summary>
+        /// <value>
+        /// The expected turnover value.
+        /// </value>
+        public decimal? ExpectedTurnoverValue { get; set; }
     }
 }

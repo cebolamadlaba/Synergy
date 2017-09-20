@@ -12,4 +12,6 @@ export class ConcessionCondition {
     periodTypeId: number;
     period: string;
     periodId: number;
+    expectedTurnoverValue: number;
+    expiryDate: Date;
 }

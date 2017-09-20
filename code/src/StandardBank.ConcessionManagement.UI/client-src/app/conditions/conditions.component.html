@@ -102,6 +102,7 @@
                     <th>Interest</th>
                     <th>Volume</th>
                     <th>Value</th>
+                    <th>Expected Turnover Value</th>
                     <th>Condition Met</th>
                 </tr>
             </thead>
@@ -118,6 +119,7 @@
                     <td>{{condition.interestRate}}</td>
                     <td>{{condition.volume}}</td>
                     <td>{{condition.value}}</td>
+                    <td>{{condition.expectedTurnoverValue}}</td>
                     <td>
                         <button type="button" class="btn btn-no" (click)="conditionNotMet()">No</button>
                         <button type="button" class="btn btn-yes" (click)="conditionMet()">Yes</button>

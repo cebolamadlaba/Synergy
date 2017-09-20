@@ -419,8 +419,21 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             foreach (var conditionType in conditionTypes.Where(_ => _.IsActive))
             {
                 var mappedConditionType = _mapper.Map<ConditionType>(conditionType);
+
+                mappedConditionType.EnableInterestRate =
+                    mappedConditionType.Description == "Mininum Average Credit Balance";
+
+                mappedConditionType.EnableConditionValue =
+                    mappedConditionType.Description != "Full Transactional Banking";
+
+                mappedConditionType.EnableConditionVolume = mappedConditionType.Description == "Mininum Turnover";
+
+                mappedConditionType.EnableExpectedTurnoverValue =
+                    mappedConditionType.Description == "Full Transactional Banking";
+
                 mappedConditionType.ConditionProducts =
                     GetConditionProducts(conditionType.Id, conditionProducts, conditionTypeProducts);
+
                 mappedConditionTypes.Add(mappedConditionType);
             }
 
