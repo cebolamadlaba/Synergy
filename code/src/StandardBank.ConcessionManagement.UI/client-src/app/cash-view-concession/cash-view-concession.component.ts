@@ -53,6 +53,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
     canEdit = false;
     isRecalling = false;
     capturedComments: string;
+    canApproveChanges: boolean;
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
@@ -175,6 +176,11 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                 //if it's still pending and the user is a requestor then they can recall it
                 if (cashConcession.concession.status == "Pending" && cashConcession.concession.subStatus == "BCM Pending") {
                     this.canRecall = cashConcession.currentUser.canRequest;
+                }
+
+                if (cashConcession.concession.status == "Pending" &&
+                    (cashConcession.concession.subStatus == "PCM Approved With Changes" || cashConcession.concession.subStatus == "HO Approved With Changes")) {
+                    this.canApproveChanges = cashConcession.currentUser.canRequest;
                 }
 
                 //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
@@ -517,17 +523,25 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         var cashConcession = this.getCashConcession(false);
 
         if (this.hasChanges) {
-            cashConcession.concession.status = "Approved With Changes";
+            cashConcession.concession.status = "Pending";
+
+            if (this.cashConcession.currentUser.isHO) {
+                cashConcession.concession.subStatus = "HO Approved With Changes";
+                cashConcession.concession.hoUserId = this.cashConcession.currentUser.id;
+            } else {
+                cashConcession.concession.subStatus = "PCM Approved With Changes";
+                cashConcession.concession.pcmUserId = this.cashConcession.currentUser.id;
+            }
         } else {
             cashConcession.concession.status = "Approved";
-        }
 
-        if (this.cashConcession.currentUser.isHO) {
-            cashConcession.concession.subStatus = "HO Approved";
-            cashConcession.concession.hoUserId = this.cashConcession.currentUser.id;
-        } else {
-            cashConcession.concession.subStatus = "PCM Approved";
-            cashConcession.concession.pcmUserId = this.cashConcession.currentUser.id;
+            if (this.cashConcession.currentUser.isHO) {
+                cashConcession.concession.subStatus = "HO Approved";
+                cashConcession.concession.hoUserId = this.cashConcession.currentUser.id;
+            } else {
+                cashConcession.concession.subStatus = "PCM Approved";
+                cashConcession.concession.pcmUserId = this.cashConcession.currentUser.id;
+            }
         }
 
         if (!this.validationError) {
@@ -686,6 +700,62 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                 this.isLoading = false;
                 this.canEdit = false;
                 this.motivationEnabled = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    requestorApproveConcession() {
+        this.isLoading = true;
+
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var cashConcession = this.getCashConcession(false);
+        cashConcession.concession.status = "Approved With Changes";
+        cashConcession.concession.subStatus = "Requestor Accepted Changes";
+        cashConcession.concession.requestorId = this.cashConcession.currentUser.id;
+
+        if (!this.validationError) {
+            this.cashConcessionService.postUpdateCashData(cashConcession).subscribe(entity => {
+                console.log("data saved");
+                this.canApproveChanges = false;
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+                this.cashConcession = entity;
+                this.canEdit = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    requestorDeclineConcession() {
+        this.isLoading = true;
+
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var cashConcession = this.getCashConcession(false);
+        cashConcession.concession.status = "Declined";
+        cashConcession.concession.subStatus = "Requestor Declined Changes";
+        cashConcession.concession.requestorId = this.cashConcession.currentUser.id;
+
+        if (!this.validationError) {
+            this.cashConcessionService.postUpdateCashData(cashConcession).subscribe(entity => {
+                console.log("data saved");
+                this.canApproveChanges = false;
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+                this.cashConcession = entity;
+                this.canEdit = false;
             }, error => {
                 this.errorMessage = <any>error;
                 this.isLoading = false;

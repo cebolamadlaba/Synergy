@@ -53,6 +53,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
     canEdit = false;
     isRecalling = false;
     capturedComments: string;
+    canApproveChanges: boolean;
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
@@ -173,6 +174,11 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
                 //if it's still pending and the user is a requestor then they can recall it
                 if (transactionalConcession.concession.status == "Pending" && transactionalConcession.concession.subStatus == "BCM Pending") {
                     this.canRecall = transactionalConcession.currentUser.canRequest;
+                }
+
+                if (transactionalConcession.concession.status == "Pending" &&
+                    (transactionalConcession.concession.subStatus == "PCM Approved With Changes" || transactionalConcession.concession.subStatus == "HO Approved With Changes")) {
+                    this.canApproveChanges = transactionalConcession.currentUser.canRequest;
                 }
 
                 //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
@@ -510,17 +516,25 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
         var transactionalConcession = this.getTransactionalConcession(false);
 
         if (this.hasChanges) {
-            transactionalConcession.concession.status = "Approved With Changes";
+            transactionalConcession.concession.status = "Pending";
+
+            if (this.transactionalConcession.currentUser.isHO) {
+                transactionalConcession.concession.subStatus = "HO Approved With Changes";
+                transactionalConcession.concession.hoUserId = this.transactionalConcession.currentUser.id;
+            } else {
+                transactionalConcession.concession.subStatus = "PCM Approved With Changes";
+                transactionalConcession.concession.pcmUserId = this.transactionalConcession.currentUser.id;
+            }
         } else {
             transactionalConcession.concession.status = "Approved";
-        }
 
-        if (this.transactionalConcession.currentUser.isHO) {
-            transactionalConcession.concession.subStatus = "HO Approved";
-            transactionalConcession.concession.hoUserId = this.transactionalConcession.currentUser.id;
-        } else {
-            transactionalConcession.concession.subStatus = "PCM Approved";
-            transactionalConcession.concession.pcmUserId = this.transactionalConcession.currentUser.id;
+            if (this.transactionalConcession.currentUser.isHO) {
+                transactionalConcession.concession.subStatus = "HO Approved";
+                transactionalConcession.concession.hoUserId = this.transactionalConcession.currentUser.id;
+            } else {
+                transactionalConcession.concession.subStatus = "PCM Approved";
+                transactionalConcession.concession.pcmUserId = this.transactionalConcession.currentUser.id;
+            }
         }
 
         if (!this.validationError) {
@@ -679,6 +693,62 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
                 this.isLoading = false;
                 this.canEdit = false;
                 this.motivationEnabled = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    requestorApproveConcession() {
+        this.isLoading = true;
+
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var transactionalConcession = this.getTransactionalConcession(false);
+        transactionalConcession.concession.status = "Approved With Changes";
+        transactionalConcession.concession.subStatus = "Requestor Accepted Changes";
+        transactionalConcession.concession.requestorId = this.transactionalConcession.currentUser.id;
+
+        if (!this.validationError) {
+            this.transactionalConcessionService.postUpdateTransactionalData(transactionalConcession).subscribe(entity => {
+                console.log("data saved");
+                this.canApproveChanges = false;
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+                this.transactionalConcession = entity;
+                this.canEdit = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    requestorDeclineConcession() {
+        this.isLoading = true;
+
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var transactionalConcession = this.getTransactionalConcession(false);
+        transactionalConcession.concession.status = "Declined";
+        transactionalConcession.concession.subStatus = "Requestor Declined Changes";
+        transactionalConcession.concession.requestorId = this.transactionalConcession.currentUser.id;
+
+        if (!this.validationError) {
+            this.transactionalConcessionService.postUpdateTransactionalData(transactionalConcession).subscribe(entity => {
+                console.log("data saved");
+                this.canApproveChanges = false;
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+                this.transactionalConcession = entity;
+                this.canEdit = false;
             }, error => {
                 this.errorMessage = <any>error;
                 this.isLoading = false;

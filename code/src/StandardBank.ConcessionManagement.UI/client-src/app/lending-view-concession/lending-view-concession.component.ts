@@ -50,6 +50,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     canEdit = false;
     isRecalling = false;
     capturedComments: string;
+    canApproveChanges: boolean;
 
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
@@ -173,6 +174,11 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 //if it's still pending and the user is a requestor then they can recall it
                 if (lendingConcession.concession.status == "Pending" && lendingConcession.concession.subStatus == "BCM Pending") {
                     this.canRecall = lendingConcession.currentUser.canRequest;
+                }
+
+                if (lendingConcession.concession.status == "Pending" &&
+                    (lendingConcession.concession.subStatus == "PCM Approved With Changes" || lendingConcession.concession.subStatus == "HO Approved With Changes")) {
+                    this.canApproveChanges = lendingConcession.currentUser.canRequest;
                 }
 
                 //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
@@ -513,17 +519,25 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         var lendingConcession = this.getLendingConcession(false);
 
         if (this.hasChanges) {
-            lendingConcession.concession.status = "Approved With Changes";
+            lendingConcession.concession.status = "Pending";
+
+            if (this.lendingConcession.currentUser.isHO) {
+                lendingConcession.concession.subStatus = "HO Approved With Changes";
+                lendingConcession.concession.hoUserId = this.lendingConcession.currentUser.id;
+            } else {
+                lendingConcession.concession.subStatus = "PCM Approved With Changes";
+                lendingConcession.concession.pcmUserId = this.lendingConcession.currentUser.id;
+            }
         } else {
             lendingConcession.concession.status = "Approved";
-        }
 
-        if (this.lendingConcession.currentUser.isHO) {
-            lendingConcession.concession.subStatus = "HO Approved";
-            lendingConcession.concession.hoUserId = this.lendingConcession.currentUser.id;
-        } else {
-            lendingConcession.concession.subStatus = "PCM Approved";
-            lendingConcession.concession.pcmUserId = this.lendingConcession.currentUser.id;
+            if (this.lendingConcession.currentUser.isHO) {
+                lendingConcession.concession.subStatus = "HO Approved";
+                lendingConcession.concession.hoUserId = this.lendingConcession.currentUser.id;
+            } else {
+                lendingConcession.concession.subStatus = "PCM Approved";
+                lendingConcession.concession.pcmUserId = this.lendingConcession.currentUser.id;
+            }
         }
 
         if (!this.validationError) {
@@ -694,4 +708,59 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.sub.unsubscribe();
     }
 
+    requestorApproveConcession() {
+        this.isLoading = true;
+
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var lendingConcession = this.getLendingConcession(false);
+        lendingConcession.concession.status = "Approved With Changes";
+        lendingConcession.concession.subStatus = "Requestor Accepted Changes";
+        lendingConcession.concession.requestorId = this.lendingConcession.currentUser.id;
+
+        if (!this.validationError) {
+            this.lendingService.postUpdateLendingData(lendingConcession).subscribe(entity => {
+                console.log("data saved");
+                this.canApproveChanges = false;
+                this.saveMessage = entity.concession.referenceNumber;
+                this.lendingConcession = entity;
+                this.canEdit = false;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    requestorDeclineConcession() {
+        this.isLoading = true;
+
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var lendingConcession = this.getLendingConcession(false);
+        lendingConcession.concession.status = "Declined";
+        lendingConcession.concession.subStatus = "Requestor Declined Changes";
+        lendingConcession.concession.requestorId = this.lendingConcession.currentUser.id;
+
+        if (!this.validationError) {
+            this.lendingService.postUpdateLendingData(lendingConcession).subscribe(entity => {
+                console.log("data saved");
+                this.canApproveChanges = false;
+                this.saveMessage = entity.concession.referenceNumber;
+                this.lendingConcession = entity;
+                this.canEdit = false;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
 }

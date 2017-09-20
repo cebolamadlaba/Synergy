@@ -102,6 +102,9 @@ GO
 ALTER TABLE [dbo].[tblLoadedPriceTransactional] CHECK CONSTRAINT [FK_tblLoadedPriceTransactional_tblLegalEntityAccount]
 GO
 
+INSERT INTO [dbo].[rtblTableNumber] ([TariffTable], [AdValorem], [BaseRate], [IsActive], [fkConcessionTypeId]) VALUES (999, 9.99, 0.99, 1, 5)
+
+GO
 
 INSERT INTO [dbo].[tblLoadedPriceTransactional] ([fkTransactionTypeId], [fkLegalEntityAccountId], [fkTableNumberId])
 SELECT tt.[pkTransactionTypeId], lea.[pkLegalEntityAccountId], (SELECT TOP 1 [pkTableNumberId] FROM [dbo].[rtblTableNumber] WHERE [fkConcessionTypeId] = 5) FROM [dbo].[rtblTransactionType] tt, [dbo].[tblLegalEntityAccount] lea

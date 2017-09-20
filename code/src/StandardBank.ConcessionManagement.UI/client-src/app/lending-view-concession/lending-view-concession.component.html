@@ -128,7 +128,7 @@
             <textarea class="form-control large-input" [attr.disabled]="motivationEnabled ? null : ''" maxlength="800" formControlName="motivation"></textarea>
         </div>
        
-        <div class="row" *ngIf="canBcmApprove || canPcmApprove">
+        <div class="row" *ngIf="canBcmApprove || canPcmApprove || canApproveChanges">
             <!-- Comments -->
             <label>Comments:</label>
             <textarea class="form-control large-input" formControlName="comments" placeholder="Comments"></textarea>
@@ -406,6 +406,8 @@
             <button type="button" class="btn btn-primary" (click)="saveRenewConcession()" *ngIf="isRenewing">Save</button>
             <button type="button" class="btn btn-success" (click)="recallConcession()" *ngIf="canRecall && !isRecalling">Recall</button>
             <button type="button" class="btn btn-primary" (click)="saveRecallConcession()" *ngIf="isRecalling">Save</button>
+            <button type="button" class="btn btn-danger" (click)="requestorDeclineConcession()" *ngIf="canApproveChanges">Decline</button>
+            <button type="button" class="btn btn-success" (click)="requestorApproveConcession()" *ngIf="canApproveChanges">Approve</button>
         </div>
     </div>
 </form>
