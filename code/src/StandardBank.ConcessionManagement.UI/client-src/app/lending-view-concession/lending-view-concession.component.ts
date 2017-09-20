@@ -251,6 +251,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                     currentCondition.get('interestRate').setValue(concessionCondition.interestRate);
                     currentCondition.get('volume').setValue(concessionCondition.conditionVolume);
                     currentCondition.get('value').setValue(concessionCondition.conditionValue);
+                    currentCondition.get('expectedTurnoverValue').setValue(concessionCondition.expectedTurnoverValue);
 
                     let selectedPeriodType = this.periodTypes.filter(_ => _.id == concessionCondition.periodTypeId);
                     currentCondition.get('periodType').setValue(selectedPeriodType[0]);
@@ -291,6 +292,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             interestRate: [''],
             volume: [''],
             value: [''],
+            expectedTurnoverValue: [''],
             periodType: [''],
             period: ['']
         });
@@ -327,6 +329,13 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     conditionTypeChanged(rowIndex) {
         const control = <FormArray>this.lendingConcessionForm.controls['conditionItemsRows'];
         this.selectedConditionTypes[rowIndex] = control.controls[rowIndex].get('conditionType').value;
+
+        let currentCondition = control.controls[control.length - 1];
+
+        currentCondition.get('interestRate').setValue(null);
+        currentCondition.get('volume').setValue(null);
+        currentCondition.get('value').setValue(null);
+        currentCondition.get('expectedTurnoverValue').setValue(null);
     }
 
     addValidationError(validationDetail) {
@@ -443,6 +452,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
             if (conditionFormItem.get('value').value)
                 concessionCondition.conditionValue = conditionFormItem.get('value').value;
+
+            if (conditionFormItem.get('expectedTurnoverValue').value)
+                concessionCondition.expectedTurnoverValue = conditionFormItem.get('expectedTurnoverValue').value;
 
             if (conditionFormItem.get('periodType').value) {
                 concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;

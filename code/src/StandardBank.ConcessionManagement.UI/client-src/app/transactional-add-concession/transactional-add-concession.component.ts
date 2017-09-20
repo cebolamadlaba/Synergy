@@ -129,6 +129,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
             interestRate: [''],
             volume: [''],
             value: [''],
+            expectedTurnoverValue: [''],
             periodType: [''],
             period: ['']
         });
@@ -165,6 +166,13 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
     conditionTypeChanged(rowIndex) {
         const control = <FormArray>this.transactionalConcessionForm.controls['conditionItemsRows'];
         this.selectedConditionTypes[rowIndex] = control.controls[rowIndex].get('conditionType').value;
+
+        let currentCondition = control.controls[control.length - 1];
+
+        currentCondition.get('interestRate').setValue(null);
+        currentCondition.get('volume').setValue(null);
+        currentCondition.get('value').setValue(null);
+        currentCondition.get('expectedTurnoverValue').setValue(null);
     }
 
     tableNumberChanged(rowIndex) {
@@ -256,6 +264,9 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 
             if (conditionFormItem.get('value').value)
                 concessionCondition.conditionValue = conditionFormItem.get('value').value;
+
+            if (conditionFormItem.get('expectedTurnoverValue').value)
+                concessionCondition.expectedTurnoverValue = conditionFormItem.get('expectedTurnoverValue').value;
 
             if (conditionFormItem.get('periodType').value) {
                 concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;

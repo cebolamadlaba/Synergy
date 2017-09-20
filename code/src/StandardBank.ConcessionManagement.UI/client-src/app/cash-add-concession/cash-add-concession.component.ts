@@ -172,6 +172,13 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     conditionTypeChanged(rowIndex) {
         const control = <FormArray>this.cashConcessionForm.controls['conditionItemsRows'];
         this.selectedConditionTypes[rowIndex] = control.controls[rowIndex].get('conditionType').value;
+
+        let currentCondition = control.controls[control.length - 1];
+
+        currentCondition.get('interestRate').setValue(null);
+        currentCondition.get('volume').setValue(null);
+        currentCondition.get('value').setValue(null);
+        currentCondition.get('expectedTurnoverValue').setValue(null);
     }
 
     tableNumberChanged(rowIndex) {
