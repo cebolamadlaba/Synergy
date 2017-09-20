@@ -494,17 +494,21 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 mappedConcession.Status = _lookupTableManager.GetStatusDescription(concession.StatusId);
 
-                if (!HasPendingExtensionOrRenewal(concession.Id))
+                if (!HasPendingChild(concession.Id))
                 {
                     //this concession can be extended or renewed if there is an expiry date which is within the next three months and the concession
                     //is currently in the approved state
                     mappedConcession.CanExtend = CalculateIfCanExtend(concession, mappedConcession.Status);
                     mappedConcession.CanRenew = CalculateIfCanRenew(concession, mappedConcession.Status);
+                    mappedConcession.CanResubmit = CalculateIfCanResubmit(concession, mappedConcession.Status);
+                    mappedConcession.CanUpdate = CalculateIfCanUpdate(concession, mappedConcession.Status);
                 }
                 else
                 {
                     mappedConcession.CanExtend = false;
                     mappedConcession.CanRenew = false;
+                    mappedConcession.CanResubmit = false;
+                    mappedConcession.CanUpdate = false;
                 }
                 
                 if (concession.SubStatusId.HasValue)
@@ -531,6 +535,28 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             return concessions;
+        }
+
+        /// <summary>
+        /// Calculates if can update.
+        /// </summary>
+        /// <param name="concession">The concession.</param>
+        /// <param name="currentStatus">The current status.</param>
+        /// <returns></returns>
+        private bool CalculateIfCanUpdate(Model.Repository.Concession concession, string currentStatus)
+        {
+            return currentStatus == "Approved" || currentStatus == "Approved With Changes";
+        }
+
+        /// <summary>
+        /// Calculates if can resubmit.
+        /// </summary>
+        /// <param name="concession">The concession.</param>
+        /// <param name="currentStatus">The current status.</param>
+        /// <returns></returns>
+        private bool CalculateIfCanResubmit(Model.Repository.Concession concession, string currentStatus)
+        {
+            return currentStatus == "Declined";
         }
 
         /// <summary>
@@ -570,13 +596,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
-        /// Determines whether [has pending extension or renewal] [the specified concession identifier].
+        /// Determines whether [has pending child] [the specified concession identifier].
         /// </summary>
         /// <param name="concessionId">The concession identifier.</param>
         /// <returns>
-        ///   <c>true</c> if [has pending extension or renewal] [the specified concession identifier]; otherwise, <c>false</c>.
+        ///   <c>true</c> if [has pending child] [the specified concession identifier]; otherwise, <c>false</c>.
         /// </returns>
-        private bool HasPendingExtensionOrRenewal(int concessionId)
+        private bool HasPendingChild(int concessionId)
         {
             var childConcessionRelationships = _concessionRelationshipRepository.ReadByParentConcessionId(concessionId);
 
@@ -817,11 +843,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var concessionParentRelationships =
                 _concessionRelationshipRepository.ReadByChildConcessionId(concessionId);
 
-            var extensionRelationshipId = _lookupTableManager.GetRelationshipId("Extension");
-            var renewalRelationshipId = _lookupTableManager.GetRelationshipId("Renewal");
-
-            foreach (var concessionParentRelationship in concessionParentRelationships.Where(
-                _ => _.RelationshipId == extensionRelationshipId || _.RelationshipId == renewalRelationshipId))
+            foreach (var concessionParentRelationship in concessionParentRelationships)
             {
                 var parentConcession =
                     _concessionRepository.ReadById(concessionParentRelationship.ParentConcessionId);

@@ -33,4 +33,6 @@ export class Concession {
     dateApproved: Date;
     requestor: string;
     statusDescription: string;
+    canResubmit: boolean;
+    canUpdate: boolean;
 }

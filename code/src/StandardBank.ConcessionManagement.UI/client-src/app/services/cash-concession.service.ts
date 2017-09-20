@@ -46,10 +46,10 @@ export class CashConcessionService {
         return this.http.post(url, concessionReferenceId, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    postRenewCashData(cashConcession: CashConcession): Observable<CashConcession> {
+    postChildConcession(cashConcession: CashConcession, relationshipType: string): Observable<CashConcession> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        const url = "/api/Cash/RenewCash";
+        const url = "/api/Cash/" + relationshipType + "Cash";
         return this.http.post(url, cashConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 

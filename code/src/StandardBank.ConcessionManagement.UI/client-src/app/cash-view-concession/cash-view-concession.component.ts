@@ -48,12 +48,15 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
     canExtend = false;
     canRenew = false;
     canRecall = false;
-    isRenewing = false;
+    isEditing = false;
     motivationEnabled = false;
     canEdit = false;
     isRecalling = false;
     capturedComments: string;
-    canApproveChanges: boolean;
+    canApproveChanges = false;
+    canResubmit = false;
+    canUpdate = false;
+    editType: string;
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
@@ -186,6 +189,10 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                 //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
                 this.canExtend = cashConcession.concession.canExtend && cashConcession.currentUser.canRequest;
                 this.canRenew = cashConcession.concession.canRenew && cashConcession.currentUser.canRequest;
+
+                //set the resubmit and update permissions
+                this.canResubmit = cashConcession.concession.canResubmit && cashConcession.currentUser.canRequest;
+                this.canUpdate = cashConcession.concession.canUpdate && cashConcession.currentUser.canRequest;
 
                 this.cashConcessionForm.controls['smtDealNumber'].setValue(this.cashConcession.concession.smtDealNumber);
                 this.cashConcessionForm.controls['motivation'].setValue(this.cashConcession.concession.motivation);
@@ -619,21 +626,24 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
-    renewConcession() {
+    editConcession(editType: string) {
         this.canBcmApprove = false;
         this.motivationEnabled = true;
         this.canBcmApprove = false;
         this.canExtend = false;
         this.canRenew = false;
         this.canRecall = false;
-        this.isRenewing = true;
+        this.isEditing = true;
         this.isRecalling = false;
         this.canEdit = true;
+        this.editType = editType;
+        this.canResubmit = false;
+        this.canUpdate = false;
 
         this.cashConcessionForm.controls['motivation'].setValue('');
     }
 
-    saveRenewConcession() {
+    saveConcession() {
         this.isLoading = true;
         this.errorMessage = null;
         this.validationError = null;
@@ -646,9 +656,9 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         cashConcession.concession.referenceNumber = this.concessionReferenceId;
 
         if (!this.validationError) {
-            this.cashConcessionService.postRenewCashData(cashConcession).subscribe(entity => {
+            this.cashConcessionService.postChildConcession(cashConcession, this.editType).subscribe(entity => {
                 console.log("data saved");
-                this.isRenewing = false;
+                this.isEditing = false;
                 this.saveMessage = entity.concession.childReferenceNumber;
                 this.cashConcession = entity;
                 this.isLoading = false;

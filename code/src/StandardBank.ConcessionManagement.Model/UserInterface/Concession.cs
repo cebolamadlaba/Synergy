@@ -188,5 +188,21 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// The status description.
         /// </value>
         public string StatusDescription => $"{Status} - {SubStatus}";
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance can resubmit.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance can resubmit; otherwise, <c>false</c>.
+        /// </value>
+        public bool CanResubmit { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance can update.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance can update; otherwise, <c>false</c>.
+        /// </value>
+        public bool CanUpdate { get; set; }
     }
 }
