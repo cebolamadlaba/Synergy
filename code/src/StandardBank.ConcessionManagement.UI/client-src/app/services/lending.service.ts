@@ -47,10 +47,10 @@ export class LendingService {
         return this.http.post(url, concessionReferenceId, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    postRenewLendingData(lendingConcession: LendingConcession): Observable<LendingConcession> {
+    postChildConcession(lendingConcession: LendingConcession, relationshipType: string): Observable<LendingConcession> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        const url = "/api/Lending/RenewLending";
+        const url = "/api/Lending/" + relationshipType + "Lending";
         return this.http.post(url, lendingConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
@@ -127,7 +127,7 @@ export class MockLendingService extends LendingService {
         return Observable.of(this.model);
     }
 
-    postRenewLendingData(lendingConcession: LendingConcession): Observable<LendingConcession> {
+    postChildConcession(lendingConcession: LendingConcession, relationshipType: string): Observable<LendingConcession> {
         this.model.concession = new Concession();
         this.model.concessionConditions = [new ConcessionCondition()];
         this.model.lendingConcessionDetails = [new LendingConcessionDetail()];

@@ -121,7 +121,7 @@ export class MockCashConcessionService extends CashConcessionService {
         return Observable.of(this.cashConcessionModel);
     }
 
-    postRenewCashData(cashConcession: CashConcession): Observable<CashConcession> {
+    postChildConcession(cashConcession: CashConcession, relationshipType: string): Observable<CashConcession> {
         this.cashConcessionModel.concession = new Concession();
         this.cashConcessionModel.concessionConditions = [new ConcessionCondition()];
         this.cashConcessionModel.cashConcessionDetails = [new CashConcessionDetail()];

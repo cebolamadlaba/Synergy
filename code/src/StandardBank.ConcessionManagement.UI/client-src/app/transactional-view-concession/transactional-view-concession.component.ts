@@ -48,12 +48,15 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
     canExtend = false;
     canRenew = false;
     canRecall = false;
-    isRenewing = false;
+    isEditing = false;
     motivationEnabled = false;
     canEdit = false;
     isRecalling = false;
     capturedComments: string;
     canApproveChanges: boolean;
+    canResubmit = false;
+    canUpdate = false;
+    editType: string;
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
@@ -184,6 +187,10 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
                 //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
                 this.canExtend = transactionalConcession.concession.canExtend && transactionalConcession.currentUser.canRequest;
                 this.canRenew = transactionalConcession.concession.canRenew && transactionalConcession.currentUser.canRequest;
+
+                //set the resubmit and update permissions
+                this.canResubmit = transactionalConcession.concession.canResubmit && transactionalConcession.currentUser.canRequest;
+                this.canUpdate = transactionalConcession.concession.canUpdate && transactionalConcession.currentUser.canRequest;
 
                 this.transactionalConcessionForm.controls['mrsCrs'].setValue(this.transactionalConcession.concession.mrsCrs);
                 this.transactionalConcessionForm.controls['smtDealNumber'].setValue(this.transactionalConcession.concession.smtDealNumber);
@@ -612,21 +619,24 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
-    renewConcession() {
+    editConcession(editType: string) {
         this.canBcmApprove = false;
         this.motivationEnabled = true;
         this.canBcmApprove = false;
         this.canExtend = false;
         this.canRenew = false;
         this.canRecall = false;
-        this.isRenewing = true;
+        this.isEditing = true;
         this.isRecalling = false;
         this.canEdit = true;
+        this.editType = editType;
+        this.canResubmit = false;
+        this.canUpdate = false;
 
         this.transactionalConcessionForm.controls['motivation'].setValue('');
     }
 
-    saveRenewConcession() {
+    saveConcession() {
         this.isLoading = true;
         this.errorMessage = null;
         this.validationError = null;
@@ -639,9 +649,9 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
         transactionalConcession.concession.referenceNumber = this.concessionReferenceId;
 
         if (!this.validationError) {
-            this.transactionalConcessionService.postRenewTransactionalData(transactionalConcession).subscribe(entity => {
+            this.transactionalConcessionService.postChildConcession(transactionalConcession, this.editType).subscribe(entity => {
                 console.log("data saved");
-                this.isRenewing = false;
+                this.isEditing = false;
                 this.saveMessage = entity.concession.childReferenceNumber;
                 this.transactionalConcession = entity;
                 this.isLoading = false;

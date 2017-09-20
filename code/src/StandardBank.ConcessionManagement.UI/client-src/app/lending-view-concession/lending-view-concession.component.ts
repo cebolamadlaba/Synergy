@@ -45,12 +45,15 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     canExtend = false;
     canRenew = false;
     canRecall = false;
-    isRenewing = false;
+    isEditing = false;
     motivationEnabled = false;
     canEdit = false;
     isRecalling = false;
     capturedComments: string;
     canApproveChanges: boolean;
+    canResubmit = false;
+    canUpdate = false;
+    editType: string;
 
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
@@ -184,6 +187,10 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
                 this.canExtend = lendingConcession.concession.canExtend && lendingConcession.currentUser.canRequest;
                 this.canRenew = lendingConcession.concession.canRenew && lendingConcession.currentUser.canRequest;
+
+                //set the resubmit and update permissions
+                this.canResubmit = lendingConcession.concession.canResubmit && lendingConcession.currentUser.canRequest;
+                this.canUpdate = lendingConcession.concession.canUpdate && lendingConcession.currentUser.canRequest;
 
                 this.lendingConcessionForm.controls['mrsCrs'].setValue(this.lendingConcession.concession.mrsCrs);
                 this.lendingConcessionForm.controls['smtDealNumber'].setValue(this.lendingConcession.concession.smtDealNumber);
@@ -614,7 +621,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
-    renewConcession() {
+    editConcession(editType: string) {
         this.canBcmApprove = false;
         this.motivationEnabled = true;
         this.canEdit = true;
@@ -622,13 +629,16 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.canExtend = false;
         this.canRenew = false;
         this.canRecall = false;
-        this.isRenewing = true;
+        this.isEditing = true;
         this.isRecalling = false;
+        this.editType = editType;
+        this.canResubmit = false;
+        this.canUpdate = false;
 
         this.lendingConcessionForm.controls['motivation'].setValue('');
     }
 
-    saveRenewConcession() {
+    saveConcession() {
         this.isLoading = true;
         this.errorMessage = null;
         this.validationError = null;
@@ -641,9 +651,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         lendingConcession.concession.referenceNumber = this.concessionReferenceId;
 
         if (!this.validationError) {
-            this.lendingService.postRenewLendingData(lendingConcession).subscribe(entity => {
+            this.lendingService.postChildConcession(lendingConcession, this.editType).subscribe(entity => {
                 console.log("data saved");
-                this.isRenewing = false;
+                this.isEditing = false;
                 this.saveMessage = entity.concession.childReferenceNumber;
                 this.lendingConcession = entity;
                 this.canEdit = false;
