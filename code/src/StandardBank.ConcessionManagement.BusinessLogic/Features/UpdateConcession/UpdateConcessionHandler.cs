@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
@@ -27,6 +28,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.UpdateConcess
         private readonly IMediator _mediator;
 
         /// <summary>
+        /// The mapper
+        /// </summary>
+        private readonly IMapper _mapper;
+
+        /// <summary>
+        /// The lookup table manager
+        /// </summary>
+        private readonly ILookupTableManager _lookupTableManager;
+
+        /// <summary>
         /// The logger
         /// </summary>
         private readonly ILogger _logger;
@@ -37,11 +48,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.UpdateConcess
         /// <param name="concessionManager">The concession manager.</param>
         /// <param name="mediator">The mediator.</param>
         /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="mapper">The mapper.</param>
+        /// <param name="lookupTableManager">The lookup table manager.</param>
         public UpdateConcessionHandler(IConcessionManager concessionManager, IMediator mediator,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory, IMapper mapper, ILookupTableManager lookupTableManager)
         {
             _concessionManager = concessionManager;
             _mediator = mediator;
+            _mapper = mapper;
+            _lookupTableManager = lookupTableManager;
             _logger = loggerFactory.CreateLogger<UpdateConcessionHandler>();
         }
 
@@ -55,8 +70,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.UpdateConcess
             var result = _concessionManager.UpdateConcession(message.Concession, message.User);
 
             message.AuditRecord = new AuditRecord(result, message.User, AuditType.Update);
-            message.Concession.Id = result.Id;
-            message.Concession.SubStatusId = result.SubStatusId;
+            message.Concession = _mapper.Map<Concession>(result);
+
+            message.Concession.Status = _lookupTableManager.GetStatusDescription(result.StatusId);
+
+            if (result.SubStatusId.HasValue)
+                message.Concession.SubStatus = _lookupTableManager.GetSubStatusDescription(result.SubStatusId.Value);
 
             if (message.User.SelectedCentre?.Id > 0)
                 await TryAndSendEmail(message, result);

@@ -362,15 +362,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var conditions = new List<ConditionConcessionLetter>();
 
             var concessionConditions = _concessionManager.GetConcessionConditions(concession.Id);
-
+            
             foreach (var concessionCondition in concessionConditions)
             {
                 conditions.Add(new ConditionConcessionLetter
                 {
-                    Value = concessionCondition.ConditionValue.ToString("C"),
+                    Value = concessionCondition.ExpectedTurnoverValue.HasValue
+                        ? concessionCondition.ExpectedTurnoverValue.Value.ToString("C")
+                        : concessionCondition.ConditionValue.ToString("C"),
                     ConditionProduct = concessionCondition.ProductType,
                     ConditionMeasure = concessionCondition.ConditionType,
-                    Deadline = $"{concessionCondition.Period} - {concessionCondition.PeriodType}"
+                    Deadline = concessionCondition.ExpiryDate.HasValue
+                        ? concessionCondition.ExpiryDate.Value.ToString("dd/MM/yyyy")
+                        : $"{concessionCondition.Period} - {concessionCondition.PeriodType}"
                 });
             }
 
