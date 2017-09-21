@@ -38,7 +38,7 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                 config.Scan(_ =>
                 {
                     _.AssemblyContainingType(typeof(ConcessionManager));
-                    _.AssemblyContainingType(typeof(AuthorizingUserRepository));
+                    _.AssemblyContainingType(typeof(AccrualTypeRepository));
                     _.WithDefaultConventions();
                 });
 

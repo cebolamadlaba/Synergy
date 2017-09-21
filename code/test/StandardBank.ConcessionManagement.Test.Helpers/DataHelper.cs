@@ -1262,7 +1262,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 HOUserId = GetUserId(),
                 DateActionedByHO = DateTime.Now,
                 ExpiryDate = DateTime.Now,
-                CentreId = 6,
+                CentreId = GetCentreId(),
                 IsCurrent = false,
                 IsActive = false,
                 MrsCrs = 4354,

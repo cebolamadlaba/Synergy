@@ -18,17 +18,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static Mock<IAccrualTypeRepository> MockAccrualTypeRepository = new Mock<IAccrualTypeRepository>();
 
         /// <summary>
-        /// The mock authorizing user repository
-        /// </summary>
-        public static Mock<IAuthorizingUserRepository> MockAuthorizingUserRepository =
-            new Mock<IAuthorizingUserRepository>();
-
-        /// <summary>
-        /// The mock SMTRawData repository
-        /// </summary>
-        public static Mock<ISMTRawDataRepository> MockSMTRawDataRepository = new Mock<ISMTRawDataRepository>();
-
-        /// <summary>
         /// The mock ExceptionLog repository
         /// </summary>
         public static Mock<IExceptionLogRepository> MockExceptionLogRepository = new Mock<IExceptionLogRepository>();

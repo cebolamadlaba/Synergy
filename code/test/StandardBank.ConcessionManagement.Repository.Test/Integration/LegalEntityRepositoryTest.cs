@@ -70,6 +70,21 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void ReadByIdIsActive_InActiveRecord_Executes_Positive()
         {
+            var model = new LegalEntity
+            {
+                MarketSegmentId = DataHelper.GetMarketSegmentId(),
+                RiskGroupId = DataHelper.GetRiskGroupId(),
+                CustomerName = "311273f3c2",
+                CustomerNumber = "c46e397eeb",
+                IsActive = false,
+                City = "Joburg",
+                ContactPerson = "Bob",
+                PostalAddress = "123 Somewhere Street",
+                PostalCode = "2001"
+            };
+
+            InstantiatedDependencies.LegalEntityRepository.Create(model);
+
             var results = InstantiatedDependencies.LegalEntityRepository.ReadAll();
             var id = results.First(_ => !_.IsActive).Id;
             var result = InstantiatedDependencies.LegalEntityRepository.ReadByIdIsActive(id, false);

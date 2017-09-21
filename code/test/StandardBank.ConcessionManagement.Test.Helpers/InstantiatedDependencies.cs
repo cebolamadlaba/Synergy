@@ -61,16 +61,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static IAccrualTypeRepository AccrualTypeRepository = new AccrualTypeRepository(DbConnection, CacheManager);
 
         /// <summary>
-        /// Authorizing user repository
-        /// </summary>
-        public static IAuthorizingUserRepository AuthorizingUserRepository = new AuthorizingUserRepository(DbConnection);
-
-        /// <summary>
-        /// The SMTRawData repository
-        /// </summary>
-        public static ISMTRawDataRepository SMTRawDataRepository = new SMTRawDataRepository(DbConnection);
-
-        /// <summary>
         /// The ExceptionLog repository
         /// </summary>
         public static IExceptionLogRepository ExceptionLogRepository = new ExceptionLogRepository(DbConnection);

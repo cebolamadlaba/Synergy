@@ -92,6 +92,15 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void ReadByIdIsActive_InActiveRecord_Executes_Positive()
         {
+            var model = new RiskGroup
+            {
+                RiskGroupNumber = 9,
+                RiskGroupName = "3b84541fd8",
+                IsActive = false
+            };
+
+            InstantiatedDependencies.RiskGroupRepository.Create(model);
+
             var results = InstantiatedDependencies.RiskGroupRepository.ReadAll();
             var id = results.First(_ => !_.IsActive).Id;
             var result = InstantiatedDependencies.RiskGroupRepository.ReadByIdIsActive(id, false);
