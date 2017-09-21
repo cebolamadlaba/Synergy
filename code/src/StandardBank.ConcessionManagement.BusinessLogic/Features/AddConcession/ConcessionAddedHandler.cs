@@ -19,13 +19,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession
         public async Task Handle(ConcessionAdded notification)
         {
             var approvers =
-                _approvalRoutingManager.GetApproversByRole(notification.CenterId,
-                    Model.Constants.ApprovalStep.BCMApproval);
+                _approvalRoutingManager.GetApproversByRole(notification.CenterId, notification.ApprovalStep);
+
             foreach (var approver in approvers)
             {
                 await _emailManager.SendTemplatedEmail(approver.EmailAddress, "Pricing Tool: New Concession", null,
                     Constants.EmailTemplates.NewConcession,
-                    new {Name = approver.FirstName, ConcessionId = notification.ConsessionId});
+                    new { Name = approver.FirstName, ConcessionId = notification.ConsessionId });
             }
 
         }

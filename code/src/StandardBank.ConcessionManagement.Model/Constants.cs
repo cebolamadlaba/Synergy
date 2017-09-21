@@ -25,7 +25,8 @@ namespace StandardBank.ConcessionManagement.Model
         public  enum ApprovalStep
         {
              BCMApproval,
-             PCMApproval
+             PCMApproval,
+             RequestorApproval
         }
       
       

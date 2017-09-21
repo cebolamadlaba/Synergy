@@ -26,13 +26,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             switch (approvalStep)
             {
-                case ApprovalStep.BCMApproval:
-                    var roles = _roleRepository.ReadAll().Where(x => x.RoleName == Constants.Roles.BCM || x.RoleName == Constants.Roles.SuiteHead).Select(x => x.Id);
+                case ApprovalStep.RequestorApproval:
+                    var roles = _roleRepository.ReadAll().Where(x => x.RoleName.Trim() == Constants.Roles.Requestor).Select(x => x.Id);
                     var users = _approvalWorkflowRepository.GetApproversByRoles(centerId, roles);
+                    return _mapper.Map<IEnumerable<User>>(users);
+
+                case ApprovalStep.BCMApproval:
+                    roles = _roleRepository.ReadAll().Where(x => x.RoleName.Trim() == Constants.Roles.BCM || x.RoleName.Trim() == Constants.Roles.SuiteHead).Select(x => x.Id);
+                    users = _approvalWorkflowRepository.GetApproversByRoles(centerId, roles);
                     return _mapper.Map<IEnumerable<User>>(users);
                     
                 case ApprovalStep.PCMApproval:
-                     roles = _roleRepository.ReadAll().Where(x => x.RoleName == Constants.Roles.PCM || x.RoleName == Constants.Roles.HeadOffice).Select(x => x.Id);
+                     roles = _roleRepository.ReadAll().Where(x => x.RoleName.Trim() == Constants.Roles.PCM || x.RoleName.Trim() == Constants.Roles.HeadOffice).Select(x => x.Id);
                      users = _approvalWorkflowRepository.GetApproversByRoles(centerId, roles);
                     return _mapper.Map<IEnumerable<User>>(users);
 

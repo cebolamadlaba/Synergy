@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+using StandardBank.ConcessionManagement.Model;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
@@ -78,27 +79,54 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.UpdateConcess
                 message.Concession.SubStatus = _lookupTableManager.GetSubStatusDescription(result.SubStatusId.Value);
 
             if (message.User.SelectedCentre?.Id > 0)
-                await TryAndSendEmail(message, result);
+            {
+                if (message.Concession.Status == "Pending" && !string.IsNullOrWhiteSpace(message.Concession.SubStatus))
+                {
+                    switch (message.Concession.SubStatus)
+                    {
+                        case "BCM Pending":
+                            await TryAndSendEmail(message, result, Constants.ApprovalStep.BCMApproval);
+                            break;
+                        case "HO Pending":
+                        case "PCM Pending":
+                            await TryAndSendEmail(message, result, Constants.ApprovalStep.PCMApproval);
+                            break;
+                        case "PCM Approved With Changes":
+                        case "HO Approved With Changes":
+                            await TryAndSendEmail(message, result, Constants.ApprovalStep.RequestorApproval);
+                            break;
+                        default:
+                            _logger.LogWarning(new EventId(1, "ApprovalEmailNotSent"), "Consession # {0} is not in any relevant sub status",
+                                result.Id);
+                            break;
+                    }
+                }
+            }
             else
-                _logger.LogWarning(new EventId(1, "ApprovalEmailNotSent"), "Consession # {0} has no selected center", result.Id);
+            {
+                _logger.LogWarning(new EventId(1, "ApprovalEmailNotSent"), "Consession # {0} has no selected center",
+                    result.Id);
+            }
 
             return message.Concession;
         }
 
         /// <summary>
-        /// Tries and sends the email, if it fails will just log the exception for now
+        /// Tries the and send email.
         /// </summary>
-        /// <param name="message"></param>
-        /// <param name="result"></param>
+        /// <param name="message">The message.</param>
+        /// <param name="result">The result.</param>
+        /// <param name="approvalStep">The approval step.</param>
         /// <returns></returns>
-        private async Task TryAndSendEmail(UpdateConcession message, Model.Repository.Concession result)
+        private async Task TryAndSendEmail(UpdateConcession message, Model.Repository.Concession result, Constants.ApprovalStep approvalStep)
         {
             try
             {
                 await _mediator.Publish(new ConcessionAdded
                 {
                     CenterId = message.User.SelectedCentre.Id,
-                    ConsessionId = result.ConcessionRef
+                    ConsessionId = result.ConcessionRef,
+                    ApprovalStep = approvalStep
                 });
             }
             catch (Exception ex)

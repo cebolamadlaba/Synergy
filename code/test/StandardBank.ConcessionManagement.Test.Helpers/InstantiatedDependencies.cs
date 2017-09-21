@@ -376,6 +376,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static ILoadedPriceTransactionalRepository LoadedPriceTransactionalRepository = new LoadedPriceTransactionalRepository(DbConnection);
 
         /// <summary>
+        /// The approval workflow repository
+        /// </summary>
+        public static IApprovalWorkflowRepository ApprovalWorkflowRepository = new ApprovalWorkflowRepository(DbConnection, CacheManager);
+
+        /// <summary>
         /// The look up table manager
         /// </summary>
         public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,

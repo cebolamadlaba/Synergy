@@ -27,7 +27,7 @@ namespace StandardBank.ConcessionManagement.Repository
                                     join [dbo].[rtblRole] r on r.pkRoleId = ur.fkRoleId
                                     join [dbo].tblCentreUser cu on cu.fkUserId = u.pkUserId
                                     join [dbo].tblCentre c on c.pkCentreId = cu.fkCentreId
-                                    where r.pkRoleId in (@roles) and c.pkCentreId = @centerId";
+                                    where r.pkRoleId in @roles and c.pkCentreId = @centerId";
 
             Func<IEnumerable<User>> function = () =>
             {
