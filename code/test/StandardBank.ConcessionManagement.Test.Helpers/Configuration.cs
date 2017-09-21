@@ -11,7 +11,7 @@
         /// 
         /// **NB: DO NOT EVER POINT THIS CONNECTION STRING TO A DEV / TEST / PROD DATABASE. The tests insert and delete data at random **
         /// 
-        public static string ConnectionString = "Server=.;Database=ConcessionPricingTool;Integrated Security=true;MultipleActiveResultSets=true";
+        public static string ConnectionString = "Server=.;Database=ConcessionPricingTool_V2;Integrated Security=true;MultipleActiveResultSets=true";
 
         /// <summary>
         /// The database type
