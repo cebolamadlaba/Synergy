@@ -23,7 +23,7 @@ export class ConditionsComponent implements OnInit {
     validationError: String[];
     saveMessage: String;
     warningMessage: String;
-    isLoading = false;
+    isLoading = true;
 
     periodType: string = "Standard";
     period: string = "3 Months"
@@ -56,6 +56,7 @@ export class ConditionsComponent implements OnInit {
     getConditions() {
         this.conditionService.getMyConditions(this.period, this.periodType).subscribe(conditions => {
             this.observableConditions = conditions;
+            this.isLoading = false;
         }, error => this.errorMessage = <any>error);
     }
 

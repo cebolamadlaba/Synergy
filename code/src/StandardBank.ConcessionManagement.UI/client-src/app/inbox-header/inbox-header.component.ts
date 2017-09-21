@@ -12,12 +12,16 @@ export class InboxHeaderComponent implements OnInit {
     observableUserConcessions: Observable<UserConcessions>;
     userConcessions: UserConcessions;
     errorMessage: String;
+    isLoading = true;
 
     constructor( @Inject(UserConcessionsService) private userConcessionsService) { }
 
     ngOnInit() {
         this.observableUserConcessions = this.userConcessionsService.getData();
-        this.observableUserConcessions.subscribe(userConcessions => this.userConcessions = userConcessions,
+        this.observableUserConcessions.subscribe(userConcessions => {
+            this.userConcessions = userConcessions;
+            this.isLoading = false;
+        },
             error => this.errorMessage = <any>error);
     }
 }

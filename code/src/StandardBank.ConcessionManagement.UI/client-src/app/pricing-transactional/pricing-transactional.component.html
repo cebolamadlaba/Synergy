@@ -1,4 +1,13 @@
-<div class="col-md-12 banner">
+<!-- Loading message -->
+<div class="col-md-12" *ngIf="isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-info">
+            <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Loading...</p>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12 banner" *ngIf="!isLoading">
     <div class="row">
         <!-- Header -->
         <div class="lending-banner-title">
@@ -80,7 +89,7 @@
 
 <!--Table information -->
 
-<div class="col-md-12">
+<div class="col-md-12" *ngIf="!isLoading">
     <div class="col-md-5">
         <h2 class="headings">Products</h2>
         <div class="section">

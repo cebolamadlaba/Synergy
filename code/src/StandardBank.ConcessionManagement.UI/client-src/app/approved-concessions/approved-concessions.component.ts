@@ -13,7 +13,7 @@ export class ApprovedConcessionsComponent implements OnInit {
     errorMessage: String;
     validationError: String[];
     saveMessage: String;
-    isLoading = false;
+    isLoading = true;
 
     observableApprovedConcessions: Observable<ApprovedConcession[]>;
     approvedConcessions: ApprovedConcession[];
