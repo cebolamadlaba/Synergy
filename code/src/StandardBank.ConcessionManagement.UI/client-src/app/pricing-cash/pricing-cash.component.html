@@ -151,43 +151,45 @@
                 <div class="table-container" [routerLink]="['/cash-view-concession', cashView.riskGroup.number, cashConcession.concession.referenceNumber]">
                     <table class="table table-bordered table-hover header-fixed table-striped">
                         <thead>
-                            <tr>
-                                <th>Customer</th>
-                                <th>Cash Table</th>
-                                <th>Volume</th>
-                                <th>Value</th>
-                                <th>Price</th>
-                            </tr>
+                        <tr>
+                            <th>Channel</th>
+                            <th>Customer</th>
+                            <th>Cash Table</th>
+                            <th>Volume</th>
+                            <th>Value</th>
+                            <th>Price</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let concession of cashConcession.cashConcessionDetails; trackBy: index;">
-                                <td>
-                                    <div class="table-row-top">{{concession.customerName}}</div>
-                                    <div class="table-row-bottom">
-                                        <div class="secondaryText">
-                                            Acc No:
-                                            <div class="normalText">{{concession.accountNumber}}</div>
-                                        </div>
+                        <tr *ngFor="let concession of cashConcession.cashConcessionDetails; trackBy: index;">
+                            <td>{{concession.channel}}</td>
+                            <td>
+                                <div class="table-row-top">{{concession.customerName}}</div>
+                                <div class="table-row-bottom">
+                                    <div class="secondaryText">
+                                        Acc No:
+                                        <div class="normalText">{{concession.accountNumber}}</div>
                                     </div>
-                                </td>
-                                <td class="rightAlign">{{concession.tableNumberId}}</td>
-                                <td>{{concession.volume}}</td>
-                                <td>{{concession.value}}</td>
-                                <td>
-                                    <div class="table-row-top">
-                                        <div class="secondaryText">
-                                            Loaded:
-                                            <div class="normalText">{{concession.loadedTableNumber}}</div>
-                                        </div>
+                                </div>
+                            </td>
+                            <td class="rightAlign">{{concession.tableNumberId}}</td>
+                            <td>{{concession.volume}}</td>
+                            <td>{{concession.value}}</td>
+                            <td>
+                                <div class="table-row-top">
+                                    <div class="secondaryText">
+                                        Loaded:
+                                        <div class="normalText">{{concession.loadedTableNumber}}</div>
                                     </div>
-                                    <div class="table-row-bottom">
-                                        <div class="secondaryText">
-                                            Approved:
-                                            <div class="normalText">{{concession.approvedTableNumber}}</div>
-                                        </div>
+                                </div>
+                                <div class="table-row-bottom">
+                                    <div class="secondaryText">
+                                        Approved:
+                                        <div class="normalText">{{concession.approvedTableNumber}}</div>
                                     </div>
-                                </td>
-                            </tr>
+                                </div>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>

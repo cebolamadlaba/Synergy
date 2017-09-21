@@ -166,19 +166,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 {
                     case "Requestor":
                         concessions.AddRange(Map(
-                            _concessionRepository.ReadByRequestorIdStatusIdIsActive(user.Id, pendingStatusId, true)));
+                            _concessionRepository.ReadByRequestorIdStatusIdIsActive(user.Id, pendingStatusId, true), false));
                         break;
                     case "Suite Head":
                     case "BCM":
                         concessions.AddRange(Map(
                             _concessionRepository.ReadByCentreIdStatusIdSubStatusIdIsActive(user.SelectedCentre.Id,
-                                pendingStatusId, bcmpendingStatusId, true)));
+                                pendingStatusId, bcmpendingStatusId, true), false));
                         break;
                     case "PCM":
                     case "Head Office":
                         concessions.AddRange(Map(
                             _concessionRepository.ReadByCentreIdStatusIdSubStatusIdIsActive(user.SelectedCentre.Id,
-                                pendingStatusId, pcmpendingStatusId, true)));
+                                pendingStatusId, pcmpendingStatusId, true), false));
                         break;
                 }
             }
@@ -203,7 +203,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     case "Requestor":
                         concessions.AddRange(Map(_concessionRepository
                             .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive(user.Id, DateTime.Now,
-                                DateTime.Now.AddMonths(3), true)));
+                                DateTime.Now.AddMonths(3), true), false));
                         break;
                     case "Suite Head":
                     case "BCM":
@@ -234,7 +234,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     case "Requestor":
                         concessions.AddRange(Map(_concessionRepository
                             .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive(user.Id, DateTime.MinValue,
-                                DateTime.Now, true)));
+                                DateTime.Now, true), false));
                         break;
                     case "Suite Head":
                     case "BCM":
@@ -266,7 +266,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     case "Requestor":
                         concessions.AddRange(Map(
                             _concessionRepository.ReadByRequestorIdStatusIdIsActive(user.Id,
-                                approvedWithChangesStatusId, true)));
+                                approvedWithChangesStatusId, true), false));
                         break;
                     case "Suite Head":
                     case "BCM":
@@ -297,7 +297,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 {
                     case "Requestor":
                         concessions.AddRange(Map(
-                            _concessionRepository.ReadByRequestorIdStatusIdIsActive(user.Id, declinedStatusId, true)));
+                            _concessionRepository.ReadByRequestorIdStatusIdIsActive(user.Id, declinedStatusId, true), false));
                         break;
                     case "Suite Head":
                     case "BCM":
@@ -472,15 +472,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// Maps the specified repository concessions.
         /// </summary>
         /// <param name="repositoryConcessions">The repository concessions.</param>
+        /// <param name="mapAll">if set to <c>true</c> [map all].</param>
         /// <returns></returns>
-        private IEnumerable<Concession> Map(IEnumerable<Model.Repository.Concession> repositoryConcessions)
+        private IEnumerable<Concession> Map(IEnumerable<Model.Repository.Concession> repositoryConcessions, bool mapAll)
         {
             var concessions = new List<Concession>();
 
             foreach (var concession in repositoryConcessions)
             {
-                var concessionAccount = _concessionAccountRepository.ReadByConcessionIdIsActive(concession.Id, true);
-
                 var mappedConcession = _mapper.Map<Concession>(concession);
                 var riskGroup = _riskGroupRepository.ReadById(concession.RiskGroupId);
 
@@ -490,46 +489,48 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 mappedConcession.Type = _lookupTableManager.GetReferenceTypeName(concession.TypeId);
                 mappedConcession.ConcessionType = _lookupTableManager.GetConcessionType(concession.ConcessionTypeId)
                     ?.Code;
-                mappedConcession.AccountNumber = concessionAccount?.AccountNumber;
 
                 mappedConcession.Status = _lookupTableManager.GetStatusDescription(concession.StatusId);
 
-                if (!HasPendingChild(concession.Id))
-                {
-                    //this concession can be extended or renewed if there is an expiry date which is within the next three months and the concession
-                    //is currently in the approved state
-                    mappedConcession.CanExtend = CalculateIfCanExtend(concession, mappedConcession.Status);
-                    mappedConcession.CanRenew = CalculateIfCanRenew(concession, mappedConcession.Status);
-                    mappedConcession.CanResubmit = CalculateIfCanResubmit(concession, mappedConcession.Status);
-                    mappedConcession.CanUpdate = CalculateIfCanUpdate(concession, mappedConcession.Status);
-                }
-                else
-                {
-                    mappedConcession.CanExtend = false;
-                    mappedConcession.CanRenew = false;
-                    mappedConcession.CanResubmit = false;
-                    mappedConcession.CanUpdate = false;
-                }
-                
                 if (concession.SubStatusId.HasValue)
                     mappedConcession.SubStatus =
                         _lookupTableManager.GetSubStatusDescription(concession.SubStatusId.Value);
 
-                mappedConcession.ConcessionComments = GetConcessionComments(concession.Id);
-
-                mappedConcession.ConcessionRelationshipDetails =
-                    _mapper.Map<IEnumerable<Model.UserInterface.ConcessionRelationshipDetail>>(
-                        _concessionRelationshipRepository.ReadDetailsByConcessionId(concession.Id));
-
-                var user = _userManager.GetUser(concession.RequestorId);
-
-                mappedConcession.Requestor = new RequestorModel
+                if (mapAll)
                 {
-                    FullName = user.FullName,
-                    ANumber = user.ANumber,
-                    BusinessCentre = user.SelectedCentre.Name,
-                    Region = user.SelectedRegion.Description
-                };
+                    if (!HasPendingChild(concession.Id))
+                    {
+                        //this concession can be extended or renewed if there is an expiry date which is within the next three months and the concession
+                        //is currently in the approved state
+                        mappedConcession.CanExtend = CalculateIfCanExtend(concession, mappedConcession.Status);
+                        mappedConcession.CanRenew = CalculateIfCanRenew(concession, mappedConcession.Status);
+                        mappedConcession.CanResubmit = CalculateIfCanResubmit(concession, mappedConcession.Status);
+                        mappedConcession.CanUpdate = CalculateIfCanUpdate(concession, mappedConcession.Status);
+                    }
+                    else
+                    {
+                        mappedConcession.CanExtend = false;
+                        mappedConcession.CanRenew = false;
+                        mappedConcession.CanResubmit = false;
+                        mappedConcession.CanUpdate = false;
+                    }
+
+                    mappedConcession.ConcessionComments = GetConcessionComments(concession.Id);
+
+                    mappedConcession.ConcessionRelationshipDetails =
+                        _mapper.Map<IEnumerable<Model.UserInterface.ConcessionRelationshipDetail>>(
+                            _concessionRelationshipRepository.ReadDetailsByConcessionId(concession.Id));
+
+                    var user = _userManager.GetUser(concession.RequestorId);
+
+                    mappedConcession.Requestor = new RequestorModel
+                    {
+                        FullName = user.FullName,
+                        ANumber = user.ANumber,
+                        BusinessCentre = user.SelectedCentre.Name,
+                        Region = user.SelectedRegion.Description
+                    };
+                }
 
                 concessions.Add(mappedConcession);
             }
@@ -640,13 +641,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                    
                     case "Suite Head":
                     case "BCM":
-                        concessions.AddRange(Map(_concessionRepository.GetActionedByBCMUser(user.Id)));
+                        concessions.AddRange(Map(_concessionRepository.GetActionedByBCMUser(user.Id), false));
                         break;
                     case "PCM":
-                        concessions.AddRange(Map(_concessionRepository.GetActionedByPCMUser(user.Id)));
+                        concessions.AddRange(Map(_concessionRepository.GetActionedByPCMUser(user.Id), false));
                         break;
                     case "Head Office":
-                        concessions.AddRange(Map(_concessionRepository.GetActionedByHOUser(user.Id)));
+                        concessions.AddRange(Map(_concessionRepository.GetActionedByHOUser(user.Id), false));
                         break;
                 }
             }
@@ -665,7 +666,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var concessionTypeId = _lookupTableManager.GetConcessionTypeId(concessionType);
             var concessions =
                 Map(_concessionRepository
-                    .ReadByRiskGroupIdConcessionTypeIdIsActive(riskGroupId, concessionTypeId, true)).ToArray();
+                    .ReadByRiskGroupIdConcessionTypeIdIsActive(riskGroupId, concessionTypeId, true), true).ToArray();
             
             return concessions;
         }
@@ -701,7 +702,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             //if there is more than one record returned then there is something wrong,
             //there shouldn't be two active concessions with the same concession reference number
-            var concession = Map(concessions).Single();
+            var concession = Map(concessions, true).Single();
 
             return concession;
         }
@@ -919,7 +920,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var approvedConcessions = new List<ApprovedConcession>();
 
-            var concessions = Map(_concessionRepository.ReadApprovedConcessions(userId));
+            var concessions = Map(_concessionRepository.ReadApprovedConcessions(userId), false);
 
             foreach (var concession in concessions)
             {
