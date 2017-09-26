@@ -102,7 +102,28 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.NotNull(result);
             Assert.Equal(result.Id, id);
         }
-        
+
+        /// <summary>
+        /// Tests that ReadByConcessionRefIsActive executes positive.
+        /// </summary>
+        [Fact]
+        public void ReadByConcessionRefIsActive_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
+            var concessionRef = results.First().ConcessionRef;
+            var isActive = results.First().IsActive;
+            var result = InstantiatedDependencies.ConcessionRepository.ReadByConcessionRefIsActive(concessionRef, isActive);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+
+            foreach (var record in result)
+            {
+                Assert.Equal(record.ConcessionRef, concessionRef);
+                Assert.Equal(record.IsActive, isActive);
+            }
+        }
+
         /// <summary>
         /// Tests that ReadAll executes positive.
         /// </summary>

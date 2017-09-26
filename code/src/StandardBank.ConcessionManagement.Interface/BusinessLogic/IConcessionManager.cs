@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Inbox;
@@ -185,5 +186,13 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="concessionReferenceId">The concession reference identifier.</param>
         /// <returns></returns>
         Model.UserInterface.Concession GetConcessionForConcessionReferenceId(string concessionReferenceId);
+
+        /// <summary>
+        /// Gets the rag status.
+        /// </summary>
+        /// <param name="period">The period.</param>
+        /// <param name="dateApproved">The date approved.</param>
+        /// <returns></returns>
+        string GetRagStatus(string period, DateTime dateApproved);
     }
 }

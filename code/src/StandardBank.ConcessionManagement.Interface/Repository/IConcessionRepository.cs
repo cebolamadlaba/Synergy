@@ -23,6 +23,14 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         Concession ReadById(int id);
 
         /// <summary>
+        /// Reads the by concession reference is active.
+        /// </summary>
+        /// <param name="concessionReferenceNumber">The concession reference number.</param>
+        /// <param name="isActive">if set to <c>true</c> [is active].</param>
+        /// <returns></returns>
+        IEnumerable<Concession> ReadByConcessionRefIsActive(string concessionReferenceNumber, bool isActive);
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>
