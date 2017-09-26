@@ -44,8 +44,8 @@ namespace StandardBank.ConcessionManagement.Repository
         public TableNumber Create(TableNumber model)
         {
             const string sql =
-                @"INSERT [dbo].[rtblTableNumber] ([TariffTable], [AdValorem], [BaseRate], [IsActive], [fkConcessionTypeId]) 
-                                VALUES (@TariffTable, @AdValorem, @BaseRate, @IsActive, @fkConcessionTypeId) 
+                @"INSERT [dbo].[rtblTableNumber] ([fkConcessionTypeId], [TariffTable], [AdValorem], [BaseRate], [IsActive]) 
+                                VALUES (@ConcessionTypeId, @TariffTable, @AdValorem, @BaseRate, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
@@ -53,11 +53,11 @@ namespace StandardBank.ConcessionManagement.Repository
                 model.Id = db.Query<int>(sql,
                     new
                     {
+                        ConcessionTypeId = model.ConcessionTypeId,
                         TariffTable = model.TariffTable,
                         AdValorem = model.AdValorem,
                         BaseRate = model.BaseRate,
-                        IsActive = model.IsActive,
-                        fkConcessionTypeId = model.ConcessionTypeId
+                        IsActive = model.IsActive
                     }).Single();
             }
 
@@ -88,7 +88,7 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<TableNumber>(
-                        "SELECT [pkTableNumberId] [Id], [TariffTable], [AdValorem], [BaseRate], [IsActive], [fkConcessionTypeId] [ConcessionTypeId] FROM [dbo].[rtblTableNumber]");
+                        "SELECT [pkTableNumberId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [TariffTable], [AdValorem], [BaseRate], [IsActive] FROM [dbo].[rtblTableNumber]");
                 }
             };
 
@@ -104,16 +104,16 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[rtblTableNumber]
-                            SET [TariffTable] = @TariffTable, [AdValorem] = @AdValorem, [BaseRate] = @BaseRate, [IsActive] = @IsActive, [fkConcessionTypeId] = @fkConcessionTypeId
+                            SET [fkConcessionTypeId] = @ConcessionTypeId, [TariffTable] = @TariffTable, [AdValorem] = @AdValorem, [BaseRate] = @BaseRate, [IsActive] = @IsActive
                             WHERE [pkTableNumberId] = @Id",
                     new
                     {
                         Id = model.Id,
+                        ConcessionTypeId = model.ConcessionTypeId,
                         TariffTable = model.TariffTable,
                         AdValorem = model.AdValorem,
                         BaseRate = model.BaseRate,
-                        IsActive = model.IsActive,
-                        fkConcessionTypeId = model.ConcessionTypeId
+                        IsActive = model.IsActive
                     });
             }
 

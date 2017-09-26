@@ -4,7 +4,6 @@ using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
-using System;
 
 namespace StandardBank.ConcessionManagement.Repository
 {
@@ -36,8 +35,8 @@ namespace StandardBank.ConcessionManagement.Repository
         public ConcessionCondition Create(ConcessionCondition model)
         {
             const string sql =
-                @"INSERT [dbo].[tblConcessionCondition] ([fkConcessionId], [fkConditionTypeId], [fkConditionProductId], [InterestRate], [Volume], [Value], [IsActive], [fkPeriodTypeId], [fkPeriodId], [ExpectedTurnoverValue], [ExpiryDate]) 
-                                VALUES (@fkConcessionId, @fkConditionTypeId, @fkConditionProductId, @InterestRate, @Volume, @Value, @IsActive, @PeriodTypeId, @PeriodId, @ExpectedTurnoverValue, @ExpiryDate) 
+                @"INSERT [dbo].[tblConcessionCondition] ([fkConcessionId], [fkConditionTypeId], [fkConditionProductId], [fkPeriodTypeId], [fkPeriodId], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [ExpiryDate], [IsActive]) 
+                                VALUES (@ConcessionId, @ConditionTypeId, @ConditionProductId, @PeriodTypeId, @PeriodId, @InterestRate, @Volume, @Value, @ConditionMet, @ExpectedTurnoverValue, @ExpiryDate, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
@@ -45,17 +44,18 @@ namespace StandardBank.ConcessionManagement.Repository
                 model.Id = db.Query<int>(sql,
                     new
                     {
-                        fkConcessionId = model.ConcessionId,
-                        fkConditionTypeId = model.ConditionTypeId,
-                        fkConditionProductId = model.ConditionProductId,
+                        ConcessionId = model.ConcessionId,
+                        ConditionTypeId = model.ConditionTypeId,
+                        ConditionProductId = model.ConditionProductId,
+                        PeriodTypeId = model.PeriodTypeId,
+                        PeriodId = model.PeriodId,
                         InterestRate = model.InterestRate,
                         Volume = model.Volume,
                         Value = model.Value,
-                        IsActive = model.IsActive,
-                        PeriodTypeId = model.PeriodTypeId,
-                        PeriodId = model.PeriodId,
+                        ConditionMet = model.ConditionMet,
                         ExpectedTurnoverValue = model.ExpectedTurnoverValue,
-                        ExpiryDate = model.ExpiryDate
+                        ExpiryDate = model.ExpiryDate,
+                        IsActive = model.IsActive
                     }).Single();
             }
 
@@ -72,10 +72,8 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionCondition>(
-                    @"SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [InterestRate], [Volume], [Value], [IsActive], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId], [ExpectedTurnoverValue], [ExpiryDate] 
-                    FROM [dbo].[tblConcessionCondition] 
-                    WHERE [pkConcessionConditionId] = @Id",
-                    new { id }).SingleOrDefault();
+                    "SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [ExpiryDate], [IsActive] FROM [dbo].[tblConcessionCondition] WHERE [pkConcessionConditionId] = @Id",
+                    new {id}).SingleOrDefault();
             }
         }
 
@@ -89,7 +87,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionCondition>(
-                    @"SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [InterestRate], [Volume], [Value], [IsActive], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId], [ExpectedTurnoverValue], [ExpiryDate] 
+                    @"SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [ExpiryDate], [IsActive] 
                     FROM [dbo].[tblConcessionCondition] 
                     WHERE [fkConcessionId] = @concessionId",
                     new { concessionId });
@@ -97,60 +95,12 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
-        /// Reads all.
+        /// Reads the by period and approval status.
         /// </summary>
+        /// <param name="concessionApprovalStatusId">The concession approval status identifier.</param>
+        /// <param name="periodId">The period identifier.</param>
+        /// <param name="periodType">Type of the period.</param>
         /// <returns></returns>
-        public IEnumerable<ConcessionCondition> ReadAll()
-        {
-            using (var db = _dbConnectionFactory.Connection())
-            {
-                return db.Query<ConcessionCondition>(
-                    "SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [InterestRate], [Volume], [Value], [IsActive], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId], [ExpectedTurnoverValue], [ExpiryDate] FROM [dbo].[tblConcessionCondition]");
-            }
-        }
-
-        /// <summary>
-        /// Updates the specified model.
-        /// </summary>
-        /// <param name="model">The model.</param>
-        public void Update(ConcessionCondition model)
-        {
-            using (var db = _dbConnectionFactory.Connection())
-            {
-                db.Execute(@"UPDATE [dbo].[tblConcessionCondition]
-                            SET [fkConcessionId] = @fkConcessionId, [fkConditionTypeId] = @fkConditionTypeId, [fkConditionProductId] = @fkConditionProductId, [InterestRate] = @InterestRate, [Volume] = @Volume, [Value] = @Value, [IsActive] = @IsActive, [fkPeriodTypeId] = @PeriodTypeId, [fkPeriodId]  = @PeriodId, [ExpectedTurnoverValue] = @ExpectedTurnoverValue, [ExpiryDate] = @ExpiryDate
-                            WHERE [pkConcessionConditionId] = @Id",
-                    new
-                    {
-                        Id = model.Id,
-                        fkConcessionId = model.ConcessionId,
-                        fkConditionTypeId = model.ConditionTypeId,
-                        fkConditionProductId = model.ConditionProductId,
-                        InterestRate = model.InterestRate,
-                        Volume = model.Volume,
-                        Value = model.Value,
-                        IsActive = model.IsActive,
-                        PeriodTypeId = model.PeriodTypeId,
-                        PeriodId = model.PeriodId,
-                        ExpectedTurnoverValue = model.ExpectedTurnoverValue,
-                        ExpiryDate = model.ExpiryDate
-                    });
-            }
-        }
-
-        /// <summary>
-        /// Deletes the specified model.
-        /// </summary>
-        /// <param name="model">The model.</param>
-        public void Delete(ConcessionCondition model)
-        {
-            using (var db = _dbConnectionFactory.Connection())
-            {
-                db.Execute("DELETE [dbo].[tblConcessionCondition] WHERE [pkConcessionConditionId] = @Id",
-                    new { model.Id });
-            }
-        }
-
         public IEnumerable<Condition> ReadByPeriodAndApprovalStatus(int concessionApprovalStatusId, int periodId, int periodType)
         {
             using (var db = _dbConnectionFactory.Connection())
@@ -189,6 +139,62 @@ namespace StandardBank.ConcessionManagement.Repository
                     GROUP BY cc.[fkPeriodTypeId]";
 
                 return db.Query<ConditionCount>(query);
+            }
+        }
+
+        /// <summary>
+        /// Reads all.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<ConcessionCondition> ReadAll()
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<ConcessionCondition>(
+                    "SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [ExpiryDate], [IsActive] FROM [dbo].[tblConcessionCondition]");
+            }
+        }
+
+        /// <summary>
+        /// Updates the specified model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        public void Update(ConcessionCondition model)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                db.Execute(@"UPDATE [dbo].[tblConcessionCondition]
+                            SET [fkConcessionId] = @ConcessionId, [fkConditionTypeId] = @ConditionTypeId, [fkConditionProductId] = @ConditionProductId, [fkPeriodTypeId] = @PeriodTypeId, [fkPeriodId] = @PeriodId, [InterestRate] = @InterestRate, [Volume] = @Volume, [Value] = @Value, [ConditionMet] = @ConditionMet, [ExpectedTurnoverValue] = @ExpectedTurnoverValue, [ExpiryDate] = @ExpiryDate, [IsActive] = @IsActive
+                            WHERE [pkConcessionConditionId] = @Id",
+                    new
+                    {
+                        Id = model.Id,
+                        ConcessionId = model.ConcessionId,
+                        ConditionTypeId = model.ConditionTypeId,
+                        ConditionProductId = model.ConditionProductId,
+                        PeriodTypeId = model.PeriodTypeId,
+                        PeriodId = model.PeriodId,
+                        InterestRate = model.InterestRate,
+                        Volume = model.Volume,
+                        Value = model.Value,
+                        ConditionMet = model.ConditionMet,
+                        ExpectedTurnoverValue = model.ExpectedTurnoverValue,
+                        ExpiryDate = model.ExpiryDate,
+                        IsActive = model.IsActive
+                    });
+            }
+        }
+
+        /// <summary>
+        /// Deletes the specified model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        public void Delete(ConcessionCondition model)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                db.Execute("DELETE [dbo].[tblConcessionCondition] WHERE [pkConcessionConditionId] = @Id",
+                    new {model.Id});
             }
         }
     }

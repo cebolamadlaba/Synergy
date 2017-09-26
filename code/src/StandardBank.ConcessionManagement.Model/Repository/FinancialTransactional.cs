@@ -1,5 +1,3 @@
-using System;
-
 namespace StandardBank.ConcessionManagement.Model.Repository
 {
     /// <summary>
@@ -144,10 +142,10 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public decimal AverageCashWithdrawalPrice { get; set; }
 
         /// <summary>
-        /// Gets or sets the latest CRS or MRS.
+        /// Gets or sets the LatestCrsOrMrs.
         /// </summary>
         /// <value>
-        /// The latest CRS or MRS.
+        /// The LatestCrsOrMrs.
         /// </value>
         public decimal LatestCrsOrMrs { get; set; }
     }

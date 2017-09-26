@@ -2,8 +2,6 @@ using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
 
@@ -37,12 +35,18 @@ namespace StandardBank.ConcessionManagement.Repository
         public ConcessionAccount Create(ConcessionAccount model)
         {
             const string sql = @"INSERT [dbo].[tblConcessionAccount] ([fkConcessionId], [AccountNumber], [IsActive]) 
-                                VALUES (@fkConcessionId, @AccountNumber, @IsActive) 
+                                VALUES (@ConcessionId, @AccountNumber, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {fkConcessionId = model.ConcessionId, AccountNumber = model.AccountNumber, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql,
+                    new
+                    {
+                        ConcessionId = model.ConcessionId,
+                        AccountNumber = model.AccountNumber,
+                        IsActive = model.IsActive
+                    }).Single();
             }
 
             return model;
@@ -78,10 +82,10 @@ namespace StandardBank.ConcessionManagement.Repository
                     FROM [dbo].[tblConcessionAccount] 
                     WHERE [fkConcessionId] = @concessionId
                     AND [IsActive] = @isActive",
-                    new { concessionId, isActive }).FirstOrDefault();
+                    new {concessionId, isActive}).FirstOrDefault();
             }
         }
-        
+
         /// <summary>
         /// Reads all.
         /// </summary>
@@ -90,7 +94,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<ConcessionAccount>("SELECT [pkConcessionAccountId] [Id], [fkConcessionId] [ConcessionId], [AccountNumber], [IsActive] FROM [dbo].[tblConcessionAccount]");
+                return db.Query<ConcessionAccount>(
+                    "SELECT [pkConcessionAccountId] [Id], [fkConcessionId] [ConcessionId], [AccountNumber], [IsActive] FROM [dbo].[tblConcessionAccount]");
             }
         }
 
@@ -103,9 +108,15 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblConcessionAccount]
-                            SET [fkConcessionId] = @fkConcessionId, [AccountNumber] = @AccountNumber, [IsActive] = @IsActive
+                            SET [fkConcessionId] = @ConcessionId, [AccountNumber] = @AccountNumber, [IsActive] = @IsActive
                             WHERE [pkConcessionAccountId] = @Id",
-                    new {Id = model.Id, fkConcessionId = model.ConcessionId, AccountNumber = model.AccountNumber, IsActive = model.IsActive});
+                    new
+                    {
+                        Id = model.Id,
+                        ConcessionId = model.ConcessionId,
+                        AccountNumber = model.AccountNumber,
+                        IsActive = model.IsActive
+                    });
             }
         }
 

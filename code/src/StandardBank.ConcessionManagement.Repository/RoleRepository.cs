@@ -3,8 +3,6 @@ using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Model.Common;
@@ -51,7 +49,14 @@ namespace StandardBank.ConcessionManagement.Repository
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {RoleName = model.RoleName, RoleDescription = model.RoleDescription, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql,
+                        new
+ {
+                            RoleName = model.RoleName,
+                            RoleDescription = model.RoleDescription,
+                            IsActive = model.IsActive
+                        })
+                    .Single();
             }
 
             //clear out the cache because the data has changed
@@ -79,9 +84,10 @@ namespace StandardBank.ConcessionManagement.Repository
             Func<IEnumerable<Role>> function = () =>
             {
                 using (var db = _dbConnectionFactory.Connection())
-            	{
-                	return db.Query<Role>("SELECT [pkRoleId] [Id], [RoleName], [RoleDescription], [IsActive] FROM [dbo].[rtblRole]");
-            	}
+                {
+                    return db.Query<Role>(
+                        "SELECT [pkRoleId] [Id], [RoleName], [RoleDescription], [IsActive] FROM [dbo].[rtblRole]");
+                }
             };
 
             return _cacheManager.ReturnFromCache(function, 1440, CacheKey.Repository.RoleRepository.ReadAll);
@@ -98,7 +104,13 @@ namespace StandardBank.ConcessionManagement.Repository
                 db.Execute(@"UPDATE [dbo].[rtblRole]
                             SET [RoleName] = @RoleName, [RoleDescription] = @RoleDescription, [IsActive] = @IsActive
                             WHERE [pkRoleId] = @Id",
-                    new {Id = model.Id, RoleName = model.RoleName, RoleDescription = model.RoleDescription, IsActive = model.IsActive});
+                    new
+                    {
+                        Id = model.Id,
+                        RoleName = model.RoleName,
+                        RoleDescription = model.RoleDescription,
+                        IsActive = model.IsActive
+                    });
             }
 
             //clear out the cache because the data has changed

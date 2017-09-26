@@ -36,7 +36,7 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             const string sql =
                 @"INSERT [dbo].[tblConcessionComment] ([fkConcessionId], [fkUserId], [fkConcessionSubStatusId], [Comment], [SystemDate], [IsActive]) 
-                                VALUES (@fkConcessionId, @fkUserId, @fkConcessionSubStatusId, @Comment, @SystemDate, @IsActive) 
+                                VALUES (@ConcessionId, @UserId, @ConcessionSubStatusId, @Comment, @SystemDate, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
@@ -44,9 +44,9 @@ namespace StandardBank.ConcessionManagement.Repository
                 model.Id = db.Query<int>(sql,
                     new
                     {
-                        fkConcessionId = model.ConcessionId,
-                        fkUserId = model.UserId,
-                        fkConcessionSubStatusId = model.ConcessionSubStatusId,
+                        ConcessionId = model.ConcessionId,
+                        UserId = model.UserId,
+                        ConcessionSubStatusId = model.ConcessionSubStatusId,
                         Comment = model.Comment,
                         SystemDate = model.SystemDate,
                         IsActive = model.IsActive
@@ -84,7 +84,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     @"SELECT [pkConcessionCommentId] [Id], [fkConcessionId] [ConcessionId], [fkUserId] [UserId], [fkConcessionSubStatusId] [ConcessionSubStatusId], [Comment], [SystemDate], [IsActive] 
                     FROM [dbo].[tblConcessionComment] 
                     WHERE [fkConcessionId] = @concessionId",
-                    new {concessionId});
+                    new { concessionId });
             }
         }
 
@@ -110,14 +110,14 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblConcessionComment]
-                            SET [fkConcessionId] = @fkConcessionId, [fkUserId] = @fkUserId, [fkConcessionSubStatusId] = @fkConcessionSubStatusId, [Comment] = @Comment, [SystemDate] = @SystemDate, [IsActive] = @IsActive
+                            SET [fkConcessionId] = @ConcessionId, [fkUserId] = @UserId, [fkConcessionSubStatusId] = @ConcessionSubStatusId, [Comment] = @Comment, [SystemDate] = @SystemDate, [IsActive] = @IsActive
                             WHERE [pkConcessionCommentId] = @Id",
                     new
                     {
                         Id = model.Id,
-                        fkConcessionId = model.ConcessionId,
-                        fkUserId = model.UserId,
-                        fkConcessionSubStatusId = model.ConcessionSubStatusId,
+                        ConcessionId = model.ConcessionId,
+                        UserId = model.UserId,
+                        ConcessionSubStatusId = model.ConcessionSubStatusId,
                         Comment = model.Comment,
                         SystemDate = model.SystemDate,
                         IsActive = model.IsActive

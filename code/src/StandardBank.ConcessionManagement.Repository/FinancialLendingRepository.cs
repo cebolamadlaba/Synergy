@@ -34,7 +34,8 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public FinancialLending Create(FinancialLending model)
         {
-            const string sql = @"INSERT [dbo].[tblFinancialLending] ([fkRiskGroupId], [TotalExposure], [WeightedAverageMap], [WeightedCrsOrMrs], [LatestCrsOrMrs]) 
+            const string sql =
+                @"INSERT [dbo].[tblFinancialLending] ([fkRiskGroupId], [TotalExposure], [WeightedAverageMap], [WeightedCrsOrMrs], [LatestCrsOrMrs]) 
                                 VALUES (@RiskGroupId, @TotalExposure, @WeightedAverageMap, @WeightedCrsOrMrs, @LatestCrsOrMrs) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
@@ -70,7 +71,7 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
-        /// Reads by the risk group id specified
+        /// Reads by the risk group id
         /// </summary>
         /// <param name="riskGroupId"></param>
         /// <returns></returns>
@@ -94,7 +95,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<FinancialLending>("SELECT [pkFinancialLendingId] [Id], [fkRiskGroupId] [RiskGroupId], [TotalExposure], [WeightedAverageMap], [WeightedCrsOrMrs], [LatestCrsOrMrs] FROM [dbo].[tblFinancialLending]");
+                return db.Query<FinancialLending>(
+                    "SELECT [pkFinancialLendingId] [Id], [fkRiskGroupId] [RiskGroupId], [TotalExposure], [WeightedAverageMap], [WeightedCrsOrMrs], [LatestCrsOrMrs] FROM [dbo].[tblFinancialLending]");
             }
         }
 

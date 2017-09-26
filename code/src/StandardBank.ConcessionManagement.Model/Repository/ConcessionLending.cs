@@ -3,7 +3,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
     /// <summary>
     /// ConcessionLending entity
     /// </summary>
-    public class ConcessionLending : IAuditable
+    public class ConcessionLending : ConcessionDetail, IAuditable
     {
         /// <summary>
         /// Gets or sets the Id.
@@ -14,20 +14,20 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the ConcessionId.
-        /// </summary>
-        /// <value>
-        /// The ConcessionId.
-        /// </value>
-        public int ConcessionId { get; set; }
-
-        /// <summary>
         /// Gets or sets the ProductTypeId.
         /// </summary>
         /// <value>
         /// The ProductTypeId.
         /// </value>
         public int ProductTypeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ReviewFeeTypeId.
+        /// </summary>
+        /// <value>
+        /// The ReviewFeeTypeId.
+        /// </value>
+        public int? ReviewFeeTypeId { get; set; }
 
         /// <summary>
         /// Gets or sets the Limit.
@@ -54,9 +54,20 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public decimal? MarginToPrime { get; set; }
 
         /// <summary>
-        /// Gets or sets the approved margin to prime
+        /// Gets or sets the ApprovedMarginToPrime.
         /// </summary>
+        /// <value>
+        /// The ApprovedMarginToPrime.
+        /// </value>
         public decimal? ApprovedMarginToPrime { get; set; }
+
+        /// <summary>
+        /// Gets or sets the LoadedMarginToPrime.
+        /// </summary>
+        /// <value>
+        /// The LoadedMarginToPrime.
+        /// </value>
+        public decimal? LoadedMarginToPrime { get; set; }
 
         /// <summary>
         /// Gets or sets the InitiationFee.
@@ -83,41 +94,35 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public decimal? UFFFee { get; set; }
 
         /// <summary>
-        /// Gets or sets the ReviewFeeTypeId.
+        /// Gets or sets the AverageBalance.
         /// </summary>
         /// <value>
-        /// The ReviewFeeTypeId.
+        /// The AverageBalance.
         /// </value>
-        public int? ReviewFeeTypeId { get; set; }
+        public decimal? AverageBalance { get; set; }
 
         /// <summary>
-        /// Gets or sets the legal entity id
+        /// Gets or the name of the table.
         /// </summary>
-        public int LegalEntityId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the legal entity account id
-        /// </summary>
-        public int LegalEntityAccountId { get; set; }
-
+        /// <value>
+        /// The name of the table.
+        /// </value>
         public string TableName => "tblConcessionLending";
+
+        /// <summary>
+        /// Gets the name of the primary key column.
+        /// </summary>
+        /// <value>
+        /// The name of the primary key column.
+        /// </value>
         public string PrimaryKeyColumnName => "pkConcessionLendingId";
+
+        /// <summary>
+        /// Gets the primary key value.
+        /// </summary>
+        /// <value>
+        /// The primary key value.
+        /// </value>
         public object PrimaryKeyValue => Id;
-
-        /// <summary>
-        /// Gets or sets the average balance.
-        /// </summary>
-        /// <value>
-        /// The average balance.
-        /// </value>
-        public decimal AverageBalance { get; set; }
-
-        /// <summary>
-        /// Gets or sets the loaded margin to prime.
-        /// </summary>
-        /// <value>
-        /// The loaded margin to prime.
-        /// </value>
-        public decimal? LoadedMarginToPrime { get; set; }
     }
 }

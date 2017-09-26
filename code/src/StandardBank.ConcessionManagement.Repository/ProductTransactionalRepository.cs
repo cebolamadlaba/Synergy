@@ -74,7 +74,7 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
-        /// 
+        /// Reads by the risk group id
         /// </summary>
         /// <param name="riskGroupId"></param>
         /// <returns></returns>
@@ -86,7 +86,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     @"SELECT [pkProductTransactionalId] [Id], [fkRiskGroupId] [RiskGroupId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [fkTableNumberId] [TableNumberId], [fkTransactionTypeId] [TransactionTypeId], [Volume], [Value], [LoadedPrice] 
                     FROM [dbo].[tblProductTransactional] 
                     WHERE [fkRiskGroupId] = @riskGroupId",
-                    new {riskGroupId});
+                    new { riskGroupId });
             }
         }
 

@@ -14,13 +14,19 @@
         string TableName { get; }
 
         /// <summary>
-        /// Gets the primary key column name
+        /// Gets the name of the primary key column.
         /// </summary>
+        /// <value>
+        /// The name of the primary key column.
+        /// </value>
         string PrimaryKeyColumnName { get; }
 
         /// <summary>
-        /// Gets the primary key value
+        /// Gets the primary key value.
         /// </summary>
+        /// <value>
+        /// The primary key value.
+        /// </value>
         object PrimaryKeyValue { get; }
     }
 }

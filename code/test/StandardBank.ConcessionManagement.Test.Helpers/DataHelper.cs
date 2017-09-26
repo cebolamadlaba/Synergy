@@ -1261,11 +1261,10 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 DateActionedByPCM = DateTime.Now,
                 HOUserId = GetUserId(),
                 DateActionedByHO = DateTime.Now,
-                ExpiryDate = DateTime.Now,
                 CentreId = GetCentreId(),
                 IsCurrent = false,
                 IsActive = false,
-                MrsCrs = 4354,
+                MRS_CRS = 4354,
                 RegionId = GetRegionId(),
                 RiskGroupId = GetRiskGroupId()
             };
@@ -1484,12 +1483,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             {
                 ConcessionId = GetConcessionId(),
                 ChannelTypeId = GetChannelTypeId(),
-                CashVolume = 9,
-                CashValue = 1813,
-                BaseRateId = GetBaseRateId(),
                 AdValorem = 8669,
-                LegalEntityId = GetLegalEntityId(),
-                LegalEntityAccountId = GetLegalEntityAccountId(),
                 BaseRate = 1263,
                 AccrualTypeId = GetAccrualTypeId(),
                 TableNumberId = tableNumberId,
@@ -1723,8 +1717,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 ReviewFee = 7441,
                 UFFFee = 1095,
                 ReviewFeeTypeId = GetReviewFeeTypeId(),
-                LegalEntityId = GetLegalEntityId(),
-                LegalEntityAccountId = GetLegalEntityAccountId(),
                 AverageBalance = 234.23m,
                 LoadedMarginToPrime = 2134
             };
@@ -1805,63 +1797,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 return models.First(_ => _.Id != model.Value).Id;
 
             return InsertConcessionMas();
-        }
-
-        /// <summary>
-        /// Gets the ConcessionRemovalRequest id
-        /// </summary>
-        /// <returns></returns>
-        public static int GetConcessionRemovalRequestId()
-        {
-            //read all and return the first one
-            var models = InstantiatedDependencies.ConcessionRemovalRequestRepository.ReadAll();
-
-            if (models != null && models.Any())
-                return models.First().Id;
-
-            return InsertConcessionRemovalRequest();
-        }
-
-        /// <summary>
-        /// Inserts a ConcessionRemovalRequest and returns the id
-        /// </summary>
-        /// <returns></returns>
-        private static int InsertConcessionRemovalRequest()
-        {
-            var model = new ConcessionRemovalRequest
-            {
-                ConcessionId = GetConcessionId(),
-                RequestorId = 5,
-                BCMUserId = GetUserId(),
-                PCMUserId = GetUserId(),
-                HOUserId = GetUserId(),
-                SubStatusId = GetSubStatusId(),
-                SystemDate = DateTime.Now,
-                DateApproved = DateTime.Now
-            };
-
-            InstantiatedDependencies.ConcessionRemovalRequestRepository.Create(model);
-
-            return model.Id;
-        }
-
-        /// <summary>
-        /// Gets the alternate ConcessionRemovalRequest id
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        public static int GetAlternateConcessionRemovalRequestId(int? model)
-        {
-            if (!model.HasValue)
-                return GetConcessionRemovalRequestId();
-
-            //read all and return the first one
-            var models = InstantiatedDependencies.ConcessionRemovalRequestRepository.ReadAll();
-
-            if (models != null && models.Any(_ => _.Id != model.Value))
-                return models.First(_ => _.Id != model.Value).Id;
-
-            return InsertConcessionRemovalRequest();
         }
 
         /// <summary>
@@ -1948,13 +1883,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             {
                 ConcessionId = GetConcessionId(),
                 TransactionTypeId = GetTransactionTypeId(),
-                ChannelTypeId = GetChannelTypeId(),
-                TransactionVolume = 2,
-                TransactionValue = 4797,
-                BaseRateId = GetBaseRateId(),
                 AdValorem = 5344,
-                LegalEntityId = GetLegalEntityId(),
-                LegalEntityAccountId = GetLegalEntityAccountId(),
                 BaseRate = 8369,
                 TableNumberId = tableNumberId,
                 ApprovedTableNumberId = tableNumberId,
@@ -2918,8 +2847,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 TotalAutosafeCashVolume = 5266,
                 WeightedAverageCCPrice = 7745,
                 WeightedAverageAFPrice = 2965,
-                LatestCrsOrMrs = 2385,
-                LoadedPrice = 2434.43m
+                LatestCrsOrMrs = 2385
             };
 
             InstantiatedDependencies.FinancialCashRepository.Create(model);
@@ -3280,6 +3208,168 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 return models.First(_ => _.Id != model.Value).Id;
 
             return InsertLoadedPriceTransactional();
+        }
+
+        /// <summary>
+        /// Gets the ConcessionDetail id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetConcessionDetailId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.ConcessionDetailRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().ConcessionDetailId;
+
+            return InsertConcessionDetail();
+        }
+
+        /// <summary>
+        /// Inserts a ConcessionDetail and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertConcessionDetail()
+        {
+            var model = new ConcessionDetail
+            {
+                ConcessionId = GetConcessionId(),
+                LegalEntityId = GetLegalEntityId(),
+                LegalEntityAccountId = GetLegalEntityAccountId(),
+                ExpiryDate = DateTime.Now
+            };
+
+            InstantiatedDependencies.ConcessionDetailRepository.Create(model);
+
+            return model.ConcessionDetailId;
+        }
+
+        /// <summary>
+        /// Gets the alternate ConcessionDetail id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateConcessionDetailId(int? model)
+        {
+            if (!model.HasValue)
+                return GetConcessionDetailId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.ConcessionDetailRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.ConcessionDetailId != model.Value))
+                return models.First(_ => _.ConcessionDetailId != model.Value).ConcessionDetailId;
+
+            return InsertConcessionDetail();
+        }
+
+        /// <summary>
+        /// Gets the FinancialInvestment id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetFinancialInvestmentId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.FinancialInvestmentRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertFinancialInvestment();
+        }
+
+        /// <summary>
+        /// Inserts a FinancialInvestment and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertFinancialInvestment()
+        {
+            var model = new FinancialInvestment
+            {
+                RiskGroupId = GetRiskGroupId(),
+                TotalLiabilityBalances = 7011,
+                WeightedAverageMTP = 5813,
+                WeightedAverageNetMargin = 584,
+                LatestCrsOrMrs = 2400
+            };
+
+            InstantiatedDependencies.FinancialInvestmentRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate FinancialInvestment id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateFinancialInvestmentId(int? model)
+        {
+            if (!model.HasValue)
+                return GetFinancialInvestmentId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.FinancialInvestmentRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertFinancialInvestment();
+        }
+
+        /// <summary>
+        /// Gets the ProductInvestment id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetProductInvestmentId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.ProductInvestmentRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertProductInvestment();
+        }
+
+        /// <summary>
+        /// Inserts a ProductInvestment and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertProductInvestment()
+        {
+            var model = new ProductInvestment
+            {
+                RiskGroupId = GetRiskGroupId(),
+                LegalEntityId = GetLegalEntityId(),
+                LegalEntityAccountId = GetLegalEntityAccountId(),
+                ProductId = GetProductId(),
+                AverageBalance = 4451,
+                LoadedCustomerRate = 7405
+            };
+
+            InstantiatedDependencies.ProductInvestmentRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate ProductInvestment id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateProductInvestmentId(int? model)
+        {
+            if (!model.HasValue)
+                return GetProductInvestmentId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.ProductInvestmentRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertProductInvestment();
         }
     }
 }

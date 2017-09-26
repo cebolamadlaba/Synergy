@@ -2,8 +2,6 @@ using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
 
@@ -71,7 +69,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<ScenarioManagerToolDeal>("SELECT [pkScenarioManagerToolDealId] [Id], [DealNumber], [IsActive] FROM [dbo].[tblScenarioManagerToolDeal]");
+                return db.Query<ScenarioManagerToolDeal>(
+                    "SELECT [pkScenarioManagerToolDealId] [Id], [DealNumber], [IsActive] FROM [dbo].[tblScenarioManagerToolDeal]");
             }
         }
 

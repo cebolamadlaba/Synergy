@@ -231,11 +231,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static IConcessionMasRepository ConcessionMasRepository = new ConcessionMasRepository(DbConnection);
 
         /// <summary>
-        /// The ConcessionRemovalRequest repository
-        /// </summary>
-        public static IConcessionRemovalRequestRepository ConcessionRemovalRequestRepository = new ConcessionRemovalRequestRepository(DbConnection);
-
-        /// <summary>
         /// The ConcessionTrade repository
         /// </summary>
         public static IConcessionTradeRepository ConcessionTradeRepository = new ConcessionTradeRepository(DbConnection);
@@ -369,6 +364,21 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The approval workflow repository
         /// </summary>
         public static IApprovalWorkflowRepository ApprovalWorkflowRepository = new ApprovalWorkflowRepository(DbConnection, CacheManager);
+
+        /// <summary>
+        /// The ConcessionDetail repository
+        /// </summary>
+        public static IConcessionDetailRepository ConcessionDetailRepository = new ConcessionDetailRepository(DbConnection);
+
+        /// <summary>
+        /// The FinancialInvestment repository
+        /// </summary>
+        public static IFinancialInvestmentRepository FinancialInvestmentRepository = new FinancialInvestmentRepository(DbConnection);
+
+        /// <summary>
+        /// The ProductInvestment repository
+        /// </summary>
+        public static IProductInvestmentRepository ProductInvestmentRepository = new ProductInvestmentRepository(DbConnection);
 
         /// <summary>
         /// The look up table manager

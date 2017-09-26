@@ -3,8 +3,6 @@ using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Model.Common;
@@ -51,7 +49,8 @@ namespace StandardBank.ConcessionManagement.Repository
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {Description = model.Description, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql, new {Description = model.Description, IsActive = model.IsActive})
+                    .Single();
             }
 
             //clear out the cache because the data has changed
@@ -79,9 +78,10 @@ namespace StandardBank.ConcessionManagement.Repository
             Func<IEnumerable<Region>> function = () =>
             {
                 using (var db = _dbConnectionFactory.Connection())
-            	{
-                	return db.Query<Region>("SELECT [pkRegionId] [Id], [Description], [IsActive] FROM [dbo].[rtblRegion]");
-            	}
+                {
+                    return db.Query<Region>(
+                        "SELECT [pkRegionId] [Id], [Description], [IsActive] FROM [dbo].[rtblRegion]");
+                }
             };
 
             return _cacheManager.ReturnFromCache(function, 1440, CacheKey.Repository.RegionRepository.ReadAll);

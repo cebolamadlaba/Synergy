@@ -35,12 +35,12 @@ namespace StandardBank.ConcessionManagement.Repository
         public LegalEntityAccount Create(LegalEntityAccount model)
         {
             const string sql = @"INSERT [dbo].[tblLegalEntityAccount] ([fkLegalEntityId], [AccountNumber], [IsActive]) 
-                                VALUES (@fkLegalEntityId, @AccountNumber, @IsActive) 
+                                VALUES (@LegalEntityId, @AccountNumber, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {fkLegalEntityId = model.LegalEntityId, AccountNumber = model.AccountNumber, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql, new {LegalEntityId = model.LegalEntityId, AccountNumber = model.AccountNumber, IsActive = model.IsActive}).Single();
             }
 
             return model;
@@ -62,7 +62,7 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
-        /// Reads by the legal entity id and the is active flag
+        /// Reads by the legal entity id specified
         /// </summary>
         /// <param name="legalEntityId"></param>
         /// <param name="isActive"></param>
@@ -74,9 +74,9 @@ namespace StandardBank.ConcessionManagement.Repository
                 return db.Query<LegalEntityAccount>(
                     @"SELECT [pkLegalEntityAccountId] [Id], [fkLegalEntityId] [LegalEntityId], [AccountNumber], [IsActive] 
                     FROM [dbo].[tblLegalEntityAccount] 
-                    WHERE [fkLegalEntityId] = @fkLegalEntityId
-                    and [IsActive] = @isActive",
-                    new {fkLegalEntityId = legalEntityId, isActive = isActive});
+                    WHERE [fkLegalEntityId] = @legalEntityId
+                    AND [IsActive] = @isActive",
+                    new { legalEntityId, isActive });
             }
         }
 
@@ -101,9 +101,9 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblLegalEntityAccount]
-                            SET [fkLegalEntityId] = @fkLegalEntityId, [AccountNumber] = @AccountNumber, [IsActive] = @IsActive
+                            SET [fkLegalEntityId] = @LegalEntityId, [AccountNumber] = @AccountNumber, [IsActive] = @IsActive
                             WHERE [pkLegalEntityAccountId] = @Id",
-                    new {Id = model.Id, fkLegalEntityId = model.LegalEntityId, AccountNumber = model.AccountNumber, IsActive = model.IsActive});
+                    new {Id = model.Id, LegalEntityId = model.LegalEntityId, AccountNumber = model.AccountNumber, IsActive = model.IsActive});
             }
         }
 

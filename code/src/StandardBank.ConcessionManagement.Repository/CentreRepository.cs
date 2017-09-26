@@ -2,8 +2,6 @@ using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
 
@@ -37,12 +35,12 @@ namespace StandardBank.ConcessionManagement.Repository
         public Centre Create(Centre model)
         {
             const string sql = @"INSERT [dbo].[tblCentre] ([fkProvinceId], [CentreName], [IsActive]) 
-                                VALUES (@fkProvinceId, @CentreName, @IsActive) 
+                                VALUES (@ProvinceId, @CentreName, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {fkProvinceId = model.ProvinceId, CentreName = model.CentreName, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql, new {ProvinceId = model.ProvinceId, CentreName = model.CentreName, IsActive = model.IsActive}).Single();
             }
 
             return model;
@@ -84,9 +82,9 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblCentre]
-                            SET [fkProvinceId] = @fkProvinceId, [CentreName] = @CentreName, [IsActive] = @IsActive
+                            SET [fkProvinceId] = @ProvinceId, [CentreName] = @CentreName, [IsActive] = @IsActive
                             WHERE [pkCentreId] = @Id",
-                    new {Id = model.Id, fkProvinceId = model.ProvinceId, CentreName = model.CentreName, IsActive = model.IsActive});
+                    new {Id = model.Id, ProvinceId = model.ProvinceId, CentreName = model.CentreName, IsActive = model.IsActive});
             }
         }
 

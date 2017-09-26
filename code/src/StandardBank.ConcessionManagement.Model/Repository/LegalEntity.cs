@@ -1,5 +1,3 @@
-using System;
-
 namespace StandardBank.ConcessionManagement.Model.Repository
 {
     /// <summary>
@@ -56,34 +54,34 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public bool IsActive { get; set; }
 
         /// <summary>
-        /// Gets or sets the contact person.
+        /// Gets or sets the ContactPerson.
         /// </summary>
         /// <value>
-        /// The contact person.
+        /// The ContactPerson.
         /// </value>
         public string ContactPerson { get; set; }
 
         /// <summary>
-        /// Gets or sets the postal address.
+        /// Gets or sets the PostalAddress.
         /// </summary>
         /// <value>
-        /// The postal address.
+        /// The PostalAddress.
         /// </value>
         public string PostalAddress { get; set; }
 
         /// <summary>
-        /// Gets or sets the city.
+        /// Gets or sets the City.
         /// </summary>
         /// <value>
-        /// The city.
+        /// The City.
         /// </value>
         public string City { get; set; }
 
         /// <summary>
-        /// Gets or sets the postal code.
+        /// Gets or sets the PostalCode.
         /// </summary>
         /// <value>
-        /// The postal code.
+        /// The PostalCode.
         /// </value>
         public string PostalCode { get; set; }
     }

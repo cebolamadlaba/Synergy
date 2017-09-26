@@ -44,12 +44,12 @@ namespace StandardBank.ConcessionManagement.Repository
         public AdValorem Create(AdValorem model)
         {
             const string sql = @"INSERT [dbo].[rtblAdValorem] ([AdValorem], [IsActive]) 
-                                VALUES (@AdValorem, @IsActive) 
+                                VALUES (@Amount, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {AdValorem = model.Amount, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql, new {Amount = model.Amount, IsActive = model.IsActive}).Single();
             }
 
             //clear out the cache because the data has changed
@@ -94,9 +94,9 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[rtblAdValorem]
-                            SET [AdValorem] = @AdValorem, [IsActive] = @IsActive
+                            SET [AdValorem] = @Amount, [IsActive] = @IsActive
                             WHERE [pkAdValoremId] = @Id",
-                    new {Id = model.Id, AdValorem = model.Amount, IsActive = model.IsActive});
+                    new {Id = model.Id, Amount = model.Amount, IsActive = model.IsActive});
             }
 
             //clear out the cache because the data has changed

@@ -22,9 +22,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 ConcessionId = DataHelper.GetConcessionId(),
                 ChannelTypeId = DataHelper.GetChannelTypeId(),
-                CashVolume = 5,
-                CashValue = 4110,
-                BaseRateId = DataHelper.GetBaseRateId(),
                 AdValorem = 2263,
                 LegalEntityId = DataHelper.GetLegalEntityId(),
                 LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
@@ -95,9 +92,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
 
             model.ConcessionId = DataHelper.GetAlternateConcessionId(model.ConcessionId);
             model.ChannelTypeId = DataHelper.GetAlternateChannelTypeId(model.ChannelTypeId);
-            model.CashVolume = model.CashVolume + 1;
-            model.CashValue = model.CashValue + 100;
-            model.BaseRateId = DataHelper.GetAlternateBaseRateId(model.BaseRateId);
             model.AdValorem = model.AdValorem + 100;
             model.LegalEntityId = DataHelper.GetAlternateLegalEntityId(model.LegalEntityId);
             model.LegalEntityAccountId = DataHelper.GetAlternateLegalEntityAccountId(model.LegalEntityAccountId);
@@ -115,9 +109,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.Id, model.Id);
             Assert.Equal(updatedModel.ConcessionId, model.ConcessionId);
             Assert.Equal(updatedModel.ChannelTypeId, model.ChannelTypeId);
-            Assert.Equal(updatedModel.CashVolume, model.CashVolume);
-            Assert.Equal(updatedModel.CashValue, model.CashValue);
-            Assert.Equal(updatedModel.BaseRateId, model.BaseRateId);
             Assert.Equal(updatedModel.AdValorem, model.AdValorem);
             Assert.Equal(updatedModel.LegalEntityId, model.LegalEntityId);
             Assert.Equal(updatedModel.LegalEntityAccountId, model.LegalEntityAccountId);
@@ -140,9 +131,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 ConcessionId = DataHelper.GetConcessionId(),
                 ChannelTypeId = DataHelper.GetChannelTypeId(),
-                CashVolume = 5,
-                CashValue = 4110,
-                BaseRateId = DataHelper.GetBaseRateId(),
                 AdValorem = 2263,
                 LegalEntityId = DataHelper.GetLegalEntityId(),
                 LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),

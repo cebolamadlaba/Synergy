@@ -202,12 +202,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static Mock<IConcessionMasRepository> MockConcessionMasRepository = new Mock<IConcessionMasRepository>();
 
         /// <summary>
-        /// The mock ConcessionRemovalRequest repository
-        /// </summary>
-        public static Mock<IConcessionRemovalRequestRepository> MockConcessionRemovalRequestRepository =
-            new Mock<IConcessionRemovalRequestRepository>();
-
-        /// <summary>
         /// The mock ConcessionTrade repository
         /// </summary>
         public static Mock<IConcessionTradeRepository> MockConcessionTradeRepository =
@@ -423,5 +417,20 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The mock LoadedPriceTransactional repository
         /// </summary>
         public static Mock<ILoadedPriceTransactionalRepository> MockLoadedPriceTransactionalRepository = new Mock<ILoadedPriceTransactionalRepository>();
+
+        /// <summary>
+        /// The mock ConcessionDetail repository
+        /// </summary>
+        public static Mock<IConcessionDetailRepository> MockConcessionDetailRepository = new Mock<IConcessionDetailRepository>();
+
+        /// <summary>
+        /// The mock FinancialInvestment repository
+        /// </summary>
+        public static Mock<IFinancialInvestmentRepository> MockFinancialInvestmentRepository = new Mock<IFinancialInvestmentRepository>();
+
+        /// <summary>
+        /// The mock ProductInvestment repository
+        /// </summary>
+        public static Mock<IProductInvestmentRepository> MockProductInvestmentRepository = new Mock<IProductInvestmentRepository>();
     }
 }

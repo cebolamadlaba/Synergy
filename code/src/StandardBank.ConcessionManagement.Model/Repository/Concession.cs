@@ -24,33 +24,12 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int TypeId { get; set; }
 
         /// <summary>
-        /// Gets or sets the risk group id
-        /// </summary>
-        public int RiskGroupId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the ConcessionRef.
-        /// </summary>
-        /// <value>
-        /// The ConcessionRef.
-        /// </value>
-        public string ConcessionRef { get; set; }
-
-        /// <summary>
         /// Gets or sets the ConcessionTypeId.
         /// </summary>
         /// <value>
         /// The ConcessionTypeId.
         /// </value>
         public int ConcessionTypeId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the SMTDealNumber.
-        /// </summary>
-        /// <value>
-        /// The SMTDealNumber.
-        /// </value>
-        public string SMTDealNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the StatusId.
@@ -67,6 +46,78 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The SubStatusId.
         /// </value>
         public int? SubStatusId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the RequestorId.
+        /// </summary>
+        /// <value>
+        /// The RequestorId.
+        /// </value>
+        public int RequestorId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the BCMUserId.
+        /// </summary>
+        /// <value>
+        /// The BCMUserId.
+        /// </value>
+        public int? BCMUserId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the PCMUserId.
+        /// </summary>
+        /// <value>
+        /// The PCMUserId.
+        /// </value>
+        public int? PCMUserId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the HOUserId.
+        /// </summary>
+        /// <value>
+        /// The HOUserId.
+        /// </value>
+        public int? HOUserId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the RiskGroupId.
+        /// </summary>
+        /// <value>
+        /// The RiskGroupId.
+        /// </value>
+        public int RiskGroupId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the RegionId.
+        /// </summary>
+        /// <value>
+        /// The RegionId.
+        /// </value>
+        public int RegionId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the CentreId.
+        /// </summary>
+        /// <value>
+        /// The CentreId.
+        /// </value>
+        public int CentreId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ConcessionRef.
+        /// </summary>
+        /// <value>
+        /// The ConcessionRef.
+        /// </value>
+        public string ConcessionRef { get; set; }
+
+        /// <summary>
+        /// Gets or sets the SMTDealNumber.
+        /// </summary>
+        /// <value>
+        /// The SMTDealNumber.
+        /// </value>
+        public string SMTDealNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the ConcessionDate.
@@ -101,36 +152,12 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public DateTime? DateApproved { get; set; }
 
         /// <summary>
-        /// Gets or sets the RequestorId.
-        /// </summary>
-        /// <value>
-        /// The RequestorId.
-        /// </value>
-        public int RequestorId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the BCMUserId.
-        /// </summary>
-        /// <value>
-        /// The BCMUserId.
-        /// </value>
-        public int? BCMUserId { get; set; }
-
-        /// <summary>
         /// Gets or sets the DateActionedByBCM.
         /// </summary>
         /// <value>
         /// The DateActionedByBCM.
         /// </value>
         public DateTime? DateActionedByBCM { get; set; }
-
-        /// <summary>
-        /// Gets or sets the PCMUserId.
-        /// </summary>
-        /// <value>
-        /// The PCMUserId.
-        /// </value>
-        public int? PCMUserId { get; set; }
 
         /// <summary>
         /// Gets or sets the DateActionedByPCM.
@@ -141,14 +168,6 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public DateTime? DateActionedByPCM { get; set; }
 
         /// <summary>
-        /// Gets or sets the HOUserId.
-        /// </summary>
-        /// <value>
-        /// The HOUserId.
-        /// </value>
-        public int? HOUserId { get; set; }
-
-        /// <summary>
         /// Gets or sets the DateActionedByHO.
         /// </summary>
         /// <value>
@@ -157,20 +176,12 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public DateTime? DateActionedByHO { get; set; }
 
         /// <summary>
-        /// Gets or sets the ExpiryDate.
+        /// Gets or sets the MRS_CRS.
         /// </summary>
         /// <value>
-        /// The ExpiryDate.
+        /// The MRS_CRS.
         /// </value>
-        public DateTime? ExpiryDate { get; set; }
-
-        /// <summary>
-        /// Gets or sets the CentreId.
-        /// </summary>
-        /// <value>
-        /// The CentreId.
-        /// </value>
-        public int CentreId { get; set; }
+        public decimal? MRS_CRS { get; set; }
 
         /// <summary>
         /// Gets or sets the IsCurrent.
@@ -189,29 +200,27 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public bool IsActive { get; set; }
 
         /// <summary>
-        /// Gets or sets the mrs or crs
+        /// Gets or the name of the table.
         /// </summary>
-        public decimal? MrsCrs { get; set; }
-
-        /// <summary>
-        /// Gets the table name
-        /// </summary>
+        /// <value>
+        /// The name of the table.
+        /// </value>
         public string TableName => "tblConcession";
 
         /// <summary>
-        /// Gets the primary key column name
+        /// Gets the name of the primary key column.
         /// </summary>
+        /// <value>
+        /// The name of the primary key column.
+        /// </value>
         public string PrimaryKeyColumnName => "pkConcessionId";
 
         /// <summary>
-        /// Gets the primary key value
+        /// Gets the primary key value.
         /// </summary>
+        /// <value>
+        /// The primary key value.
+        /// </value>
         public object PrimaryKeyValue => Id;
-
-        /// <summary>
-        /// Gets or sets the region id
-        /// </summary>
-        public int RegionId { get; set; }
-        public string Requestor { get; set; }
     }
 }

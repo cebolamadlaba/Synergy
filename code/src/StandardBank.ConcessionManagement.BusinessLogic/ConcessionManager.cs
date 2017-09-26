@@ -568,9 +568,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         private bool CalculateIfCanRenew(Model.Repository.Concession concession, string currentStatus)
         {
-            return concession.ExpiryDate.HasValue &&
-                   concession.ExpiryDate.Value <= DateTime.Now.AddMonths(3) &&
-                   (currentStatus == "Approved" || currentStatus == "Approved With Changes");
+            //TODO: Fix this
+            return (currentStatus == "Approved" || currentStatus == "Approved With Changes");
+
+            //return concession.ExpiryDate.HasValue &&
+            //       concession.ExpiryDate.Value <= DateTime.Now.AddMonths(3) &&
+            //       (currentStatus == "Approved" || currentStatus == "Approved With Changes");
         }
 
         /// <summary>
@@ -591,9 +594,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             if (relationships != null && relationships.Count() >= 3)
                 return false;
 
-            return concession.ExpiryDate.HasValue &&
-                   concession.ExpiryDate.Value <= DateTime.Now.AddMonths(3) &&
-                   (currentStatus == "Approved" || currentStatus == "Approved With Changes");
+            //TODO: Fix this
+            return (currentStatus == "Approved" || currentStatus == "Approved With Changes");
+
+            //return concession.ExpiryDate.HasValue &&
+            //       concession.ExpiryDate.Value <= DateTime.Now.AddMonths(3) &&
+            //       (currentStatus == "Approved" || currentStatus == "Approved With Changes");
         }
 
         /// <summary>
@@ -827,8 +833,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 if (!mappedConcession.DateApproved.HasValue)
                     mappedConcession.DateApproved = DateTime.Now;
 
-                if (!mappedConcession.ExpiryDate.HasValue)
-                    mappedConcession.ExpiryDate = _ruleManager.CalculateExpiryDate(currentConcession.Id, concession.ConcessionType);
+                //TODO: Fix this
+                //if (!mappedConcession.ExpiryDate.HasValue)
+                //    mappedConcession.ExpiryDate = _ruleManager.CalculateExpiryDate(currentConcession.Id, concession.ConcessionType);
             }
 
             return mappedConcession;

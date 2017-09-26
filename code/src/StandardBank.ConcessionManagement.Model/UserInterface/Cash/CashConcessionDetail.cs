@@ -86,22 +86,6 @@
         public decimal? Value { get; set; }
 
         /// <summary>
-        /// Gets or sets the loaded price.
-        /// </summary>
-        /// <value>
-        /// The loaded price.
-        /// </value>
-        public decimal LoadedPrice { get; set; }
-
-        /// <summary>
-        /// Gets or sets the approved price.
-        /// </summary>
-        /// <value>
-        /// The approved price.
-        /// </value>
-        public decimal ApprovedPrice { get; set; }
-
-        /// <summary>
         /// Gets or sets the base rate.
         /// </summary>
         /// <value>

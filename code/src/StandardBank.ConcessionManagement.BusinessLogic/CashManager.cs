@@ -350,8 +350,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 if (legalEntityAccount != null)
                     mappedConcessionCashEntity.AccountNumber = legalEntityAccount.AccountNumber;
 
-                mappedConcessionCashEntity.ApprovedPrice = concessionCashEntity.CashValue.GetValueOrDefault(0);
-
                 if (mappedConcessionCashEntity.ChannelTypeId.HasValue)
                     mappedConcessionCashEntity.Channel =
                         _lookupTableManager.GetChannelTypeName(mappedConcessionCashEntity.ChannelTypeId.Value);

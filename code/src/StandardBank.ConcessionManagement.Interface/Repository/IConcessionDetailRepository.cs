@@ -4,40 +4,40 @@ using StandardBank.ConcessionManagement.Model.Repository;
 namespace StandardBank.ConcessionManagement.Interface.Repository
 {
     /// <summary>
-    /// ConcessionRemovalRequest repository interface
+    /// ConcessionDetail repository interface
     /// </summary>
-    public interface IConcessionRemovalRequestRepository
+    public interface IConcessionDetailRepository
     {
         /// <summary>
         /// Creates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        ConcessionRemovalRequest Create(ConcessionRemovalRequest model);
+        ConcessionDetail Create(ConcessionDetail model);
 
         /// <summary>
         /// Reads the by identifier.
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        ConcessionRemovalRequest ReadById(int id);
+        ConcessionDetail ReadById(int id);
 
         /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<ConcessionRemovalRequest> ReadAll();
+        IEnumerable<ConcessionDetail> ReadAll();
 
         /// <summary>
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        void Update(ConcessionRemovalRequest model);
+        void Update(ConcessionDetail model);
 
         /// <summary>
         /// Deletes the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        void Delete(ConcessionRemovalRequest model);
+        void Delete(ConcessionDetail model);
     }
 }

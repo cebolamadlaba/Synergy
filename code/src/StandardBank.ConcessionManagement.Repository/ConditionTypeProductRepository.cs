@@ -2,8 +2,6 @@ using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
 
@@ -36,13 +34,20 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ConditionTypeProduct Create(ConditionTypeProduct model)
         {
-            const string sql = @"INSERT [dbo].[tblConditionTypeProduct] ([fkConditionTypeId], [fkConditionProductId], [IsActive]) 
-                                VALUES (@fkConditionTypeId, @fkConditionProductId, @IsActive) 
+            const string sql =
+                @"INSERT [dbo].[tblConditionTypeProduct] ([fkConditionTypeId], [fkConditionProductId], [IsActive]) 
+                                VALUES (@ConditionTypeId, @ConditionProductId, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {fkConditionTypeId = model.ConditionTypeId, fkConditionProductId = model.ConditionProductId, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql,
+                    new
+                    {
+                        ConditionTypeId = model.ConditionTypeId,
+                        ConditionProductId = model.ConditionProductId,
+                        IsActive = model.IsActive
+                    }).Single();
             }
 
             return model;
@@ -71,7 +76,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<ConditionTypeProduct>("SELECT [pkConditionTypeProductId] [Id], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [IsActive] FROM [dbo].[tblConditionTypeProduct]");
+                return db.Query<ConditionTypeProduct>(
+                    "SELECT [pkConditionTypeProductId] [Id], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [IsActive] FROM [dbo].[tblConditionTypeProduct]");
             }
         }
 
@@ -84,9 +90,15 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblConditionTypeProduct]
-                            SET [fkConditionTypeId] = @fkConditionTypeId, [fkConditionProductId] = @fkConditionProductId, [IsActive] = @IsActive
+                            SET [fkConditionTypeId] = @ConditionTypeId, [fkConditionProductId] = @ConditionProductId, [IsActive] = @IsActive
                             WHERE [pkConditionTypeProductId] = @Id",
-                    new {Id = model.Id, fkConditionTypeId = model.ConditionTypeId, fkConditionProductId = model.ConditionProductId, IsActive = model.IsActive});
+                    new
+                    {
+                        Id = model.Id,
+                        ConditionTypeId = model.ConditionTypeId,
+                        ConditionProductId = model.ConditionProductId,
+                        IsActive = model.IsActive
+                    });
             }
         }
 

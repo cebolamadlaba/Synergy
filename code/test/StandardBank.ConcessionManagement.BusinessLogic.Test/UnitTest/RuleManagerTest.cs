@@ -106,7 +106,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 .Returns(new[] {new ConcessionRelationship {ParentConcessionId = 1}});
 
             concessionRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
-                .Returns(new Concession {IsActive = true, IsCurrent = true, ExpiryDate = expiryDate});
+                .Returns(new Concession {IsActive = true, IsCurrent = true });
 
             var result = ruleManager.CalculateExpiryDate(1, "Lending");
 

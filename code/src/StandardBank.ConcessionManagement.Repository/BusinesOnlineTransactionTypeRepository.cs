@@ -2,8 +2,6 @@ using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
 
@@ -37,12 +35,12 @@ namespace StandardBank.ConcessionManagement.Repository
         public BusinesOnlineTransactionType Create(BusinesOnlineTransactionType model)
         {
             const string sql = @"INSERT [dbo].[tblBusinesOnlineTransactionType] ([fkTransactionGroupId], [Description], [IsActive]) 
-                                VALUES (@fkTransactionGroupId, @Description, @IsActive) 
+                                VALUES (@TransactionGroupId, @Description, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {fkTransactionGroupId = model.TransactionGroupId, Description = model.Description, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql, new {TransactionGroupId = model.TransactionGroupId, Description = model.Description, IsActive = model.IsActive}).Single();
             }
 
             return model;
@@ -84,9 +82,9 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblBusinesOnlineTransactionType]
-                            SET [fkTransactionGroupId] = @fkTransactionGroupId, [Description] = @Description, [IsActive] = @IsActive
+                            SET [fkTransactionGroupId] = @TransactionGroupId, [Description] = @Description, [IsActive] = @IsActive
                             WHERE [pkBusinesOnlineTransactionTypeId] = @Id",
-                    new {Id = model.Id, fkTransactionGroupId = model.TransactionGroupId, Description = model.Description, IsActive = model.IsActive});
+                    new {Id = model.Id, TransactionGroupId = model.TransactionGroupId, Description = model.Description, IsActive = model.IsActive});
             }
         }
 

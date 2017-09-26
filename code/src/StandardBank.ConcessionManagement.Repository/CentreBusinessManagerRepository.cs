@@ -2,8 +2,6 @@ using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
 
@@ -37,12 +35,12 @@ namespace StandardBank.ConcessionManagement.Repository
         public CentreBusinessManager Create(CentreBusinessManager model)
         {
             const string sql = @"INSERT [dbo].[tblCentreBusinessManager] ([fkCentreId], [fkUserId], [IsActive]) 
-                                VALUES (@fkCentreId, @fkUserId, @IsActive) 
+                                VALUES (@CentreId, @UserId, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {fkCentreId = model.CentreId, fkUserId = model.UserId, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql, new {CentreId = model.CentreId, UserId = model.UserId, IsActive = model.IsActive}).Single();
             }
 
             return model;
@@ -84,9 +82,9 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblCentreBusinessManager]
-                            SET [fkCentreId] = @fkCentreId, [fkUserId] = @fkUserId, [IsActive] = @IsActive
+                            SET [fkCentreId] = @CentreId, [fkUserId] = @UserId, [IsActive] = @IsActive
                             WHERE [pkCentreBusinessManagerId] = @Id",
-                    new {Id = model.Id, fkCentreId = model.CentreId, fkUserId = model.UserId, IsActive = model.IsActive});
+                    new {Id = model.Id, CentreId = model.CentreId, UserId = model.UserId, IsActive = model.IsActive});
             }
         }
 

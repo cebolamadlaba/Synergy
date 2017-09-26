@@ -1,9 +1,11 @@
+using System;
+
 namespace StandardBank.ConcessionManagement.Model.Repository
 {
     /// <summary>
-    /// FinancialLending entity
+    /// FinancialInvestment entity
     /// </summary>
-    public class FinancialLending
+    public class FinancialInvestment
     {
         /// <summary>
         /// Gets or sets the Id.
@@ -22,28 +24,28 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int RiskGroupId { get; set; }
 
         /// <summary>
-        /// Gets or sets the TotalExposure.
+        /// Gets or sets the TotalLiabilityBalances.
         /// </summary>
         /// <value>
-        /// The TotalExposure.
+        /// The TotalLiabilityBalances.
         /// </value>
-        public decimal TotalExposure { get; set; }
+        public decimal TotalLiabilityBalances { get; set; }
 
         /// <summary>
-        /// Gets or sets the WeightedAverageMap.
+        /// Gets or sets the WeightedAverageMTP.
         /// </summary>
         /// <value>
-        /// The WeightedAverageMap.
+        /// The WeightedAverageMTP.
         /// </value>
-        public decimal WeightedAverageMap { get; set; }
+        public decimal WeightedAverageMTP { get; set; }
 
         /// <summary>
-        /// Gets or sets the WeightedCrsOrMrs.
+        /// Gets or sets the WeightedAverageNetMargin.
         /// </summary>
         /// <value>
-        /// The WeightedCrsOrMrs.
+        /// The WeightedAverageNetMargin.
         /// </value>
-        public decimal WeightedCrsOrMrs { get; set; }
+        public decimal WeightedAverageNetMargin { get; set; }
 
         /// <summary>
         /// Gets or sets the LatestCrsOrMrs.
@@ -51,6 +53,6 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// <value>
         /// The LatestCrsOrMrs.
         /// </value>
-        public decimal? LatestCrsOrMrs { get; set; }
+        public decimal LatestCrsOrMrs { get; set; }
     }
 }

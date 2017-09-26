@@ -2,8 +2,6 @@ using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
 
@@ -37,12 +35,13 @@ namespace StandardBank.ConcessionManagement.Repository
         public UserRole Create(UserRole model)
         {
             const string sql = @"INSERT [dbo].[tblUserRole] ([fkUserId], [fkRoleId], [IsActive]) 
-                                VALUES (@fkUserId, @fkRoleId, @IsActive) 
+                                VALUES (@UserId, @RoleId, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {fkUserId = model.UserId, fkRoleId = model.RoleId, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql,
+                    new {UserId = model.UserId, RoleId = model.RoleId, IsActive = model.IsActive}).Single();
             }
 
             return model;
@@ -88,7 +87,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<UserRole>("SELECT [pkUserRoleId] [Id], [fkUserId] [UserId], [fkRoleId] [RoleId], [IsActive] FROM [dbo].[tblUserRole]");
+                return db.Query<UserRole>(
+                    "SELECT [pkUserRoleId] [Id], [fkUserId] [UserId], [fkRoleId] [RoleId], [IsActive] FROM [dbo].[tblUserRole]");
             }
         }
 
@@ -101,9 +101,9 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblUserRole]
-                            SET [fkUserId] = @fkUserId, [fkRoleId] = @fkRoleId, [IsActive] = @IsActive
+                            SET [fkUserId] = @UserId, [fkRoleId] = @RoleId, [IsActive] = @IsActive
                             WHERE [pkUserRoleId] = @Id",
-                    new {Id = model.Id, fkUserId = model.UserId, fkRoleId = model.RoleId, IsActive = model.IsActive});
+                    new {Id = model.Id, UserId = model.UserId, RoleId = model.RoleId, IsActive = model.IsActive});
             }
         }
 

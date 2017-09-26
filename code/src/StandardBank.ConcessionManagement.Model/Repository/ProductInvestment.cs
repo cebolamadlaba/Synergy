@@ -1,9 +1,11 @@
+using System;
+
 namespace StandardBank.ConcessionManagement.Model.Repository
 {
     /// <summary>
-    /// FinancialLending entity
+    /// ProductInvestment entity
     /// </summary>
-    public class FinancialLending
+    public class ProductInvestment
     {
         /// <summary>
         /// Gets or sets the Id.
@@ -22,35 +24,43 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int RiskGroupId { get; set; }
 
         /// <summary>
-        /// Gets or sets the TotalExposure.
+        /// Gets or sets the LegalEntityId.
         /// </summary>
         /// <value>
-        /// The TotalExposure.
+        /// The LegalEntityId.
         /// </value>
-        public decimal TotalExposure { get; set; }
+        public int LegalEntityId { get; set; }
 
         /// <summary>
-        /// Gets or sets the WeightedAverageMap.
+        /// Gets or sets the LegalEntityAccountId.
         /// </summary>
         /// <value>
-        /// The WeightedAverageMap.
+        /// The LegalEntityAccountId.
         /// </value>
-        public decimal WeightedAverageMap { get; set; }
+        public int LegalEntityAccountId { get; set; }
 
         /// <summary>
-        /// Gets or sets the WeightedCrsOrMrs.
+        /// Gets or sets the ProductId.
         /// </summary>
         /// <value>
-        /// The WeightedCrsOrMrs.
+        /// The ProductId.
         /// </value>
-        public decimal WeightedCrsOrMrs { get; set; }
+        public int ProductId { get; set; }
 
         /// <summary>
-        /// Gets or sets the LatestCrsOrMrs.
+        /// Gets or sets the AverageBalance.
         /// </summary>
         /// <value>
-        /// The LatestCrsOrMrs.
+        /// The AverageBalance.
         /// </value>
-        public decimal? LatestCrsOrMrs { get; set; }
+        public decimal AverageBalance { get; set; }
+
+        /// <summary>
+        /// Gets or sets the LoadedCustomerRate.
+        /// </summary>
+        /// <value>
+        /// The LoadedCustomerRate.
+        /// </value>
+        public decimal LoadedCustomerRate { get; set; }
     }
 }

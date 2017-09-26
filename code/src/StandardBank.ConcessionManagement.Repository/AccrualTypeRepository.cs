@@ -77,7 +77,7 @@ namespace StandardBank.ConcessionManagement.Repository
             Func<IEnumerable<AccrualType>> function = () =>
             {
                 using (var db = _dbConnectionFactory.Connection())
-                {
+            	{
                 	return db.Query<AccrualType>("SELECT [pkAccrualTypeId] [Id], [Description], [IsActive] FROM [dbo].[rtblAccrualType]");
             	}
             };

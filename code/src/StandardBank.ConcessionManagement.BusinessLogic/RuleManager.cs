@@ -65,15 +65,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (relationships != null && relationships.Any())
             {
-                //find the concession we're extending and use it's expiry date to calculate the correct expiry date
-                //for this one
-                foreach (var relationship in relationships.OrderByDescending(_ => _.ParentConcessionId))
-                {
-                    var parentConcession = _concessionRepository.ReadById(relationship.ParentConcessionId);
+                //TODO: Fix this
+                ////find the concession we're extending and use it's expiry date to calculate the correct expiry date
+                ////for this one
+                //foreach (var relationship in relationships.OrderByDescending(_ => _.ParentConcessionId))
+                //{
+                //    var parentConcession = _concessionRepository.ReadById(relationship.ParentConcessionId);
 
-                    if (parentConcession.IsActive && parentConcession.IsCurrent)
-                        return parentConcession.ExpiryDate.GetValueOrDefault(DateTime.Now).AddMonths(3);
-                }
+                //    if (parentConcession.IsActive && parentConcession.IsCurrent)
+                //        return parentConcession.ExpiryDate.GetValueOrDefault(DateTime.Now).AddMonths(3);
+                //}
 
                 return DateTime.Now.AddMonths(3);
             }

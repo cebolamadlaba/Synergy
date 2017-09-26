@@ -21,7 +21,15 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// <value>
         /// The ConcessionId.
         /// </value>
-        public int? ConcessionId { get; set; }
+        public int ConcessionId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ConcessionDetailId.
+        /// </summary>
+        /// <value>
+        /// The ConcessionDetailId.
+        /// </value>
+        public int ConcessionDetailId { get; set; }
 
         /// <summary>
         /// Gets or sets the TransactionGroupId.
