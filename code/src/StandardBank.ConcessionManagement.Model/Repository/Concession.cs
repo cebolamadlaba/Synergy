@@ -45,7 +45,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// <value>
         /// The SubStatusId.
         /// </value>
-        public int? SubStatusId { get; set; }
+        public int SubStatusId { get; set; }
 
         /// <summary>
         /// Gets or sets the RequestorId.

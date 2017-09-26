@@ -3,15 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.ActivateConcession;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionComment;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionRelationship;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateConcessionCondition;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateLendingConcessionDetail;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteConcessionCondition;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteLendingConcessionDetail;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.UpdateConcession;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCondition;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.LendingConcession;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
@@ -140,7 +134,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
 
             if (!string.IsNullOrWhiteSpace(lendingConcession.Concession.Comments))
-                await _mediator.Send(new AddConcessionComment(concession.Id, databaseLendingConcession.Concession.SubStatusId.Value,
+                await _mediator.Send(new AddConcessionComment(concession.Id, databaseLendingConcession.Concession.SubStatusId,
                     lendingConcession.Concession.Comments, user));
         }
 
@@ -186,7 +180,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             newConcession.PcmUserId = null;
             newConcession.ReferenceNumber = string.Empty;
             newConcession.SubStatus = "BCM Pending";
-            newConcession.SubStatusId = null;
             newConcession.Type = "Existing";
 
             var concession = await _mediator.Send(new AddConcession(newConcession, user));

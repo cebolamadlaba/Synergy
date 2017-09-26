@@ -1,11 +1,10 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateProvinceDetail;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
-using StandardBank.ConcessionManagement.UI.Validation;
 using System.Threading.Tasks;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.Administration;
 
 namespace StandardBank.ConcessionManagement.UI.Controllers
 {
@@ -26,13 +25,18 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// </summary>
         private readonly IMediator _mediator;
 
-
-        private readonly ISiteHelper _siteHelper;
         /// <summary>
-        /// Initializes the controller
+        /// The site helper
         /// </summary>
-        /// <param name="pricingManager"></param>
-        public ProvinceController(IProvinceManager provinceManager, IMediator mediator,ISiteHelper siteHelper)
+        private readonly ISiteHelper _siteHelper;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProvinceController"/> class.
+        /// </summary>
+        /// <param name="provinceManager">The province manager.</param>
+        /// <param name="mediator">The mediator.</param>
+        /// <param name="siteHelper">The site helper.</param>
+        public ProvinceController(IProvinceManager provinceManager, IMediator mediator, ISiteHelper siteHelper)
         {
             _provinceManager = provinceManager;
             _mediator = mediator;
@@ -49,7 +53,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(_provinceManager.GetProvinces());
         }
 
-
+        /// <summary>
+        /// Updates the province.
+        /// </summary>
+        /// <param name="province">The province.</param>
+        /// <returns></returns>
         [Route("UpdateProvince")]
         public async Task<IActionResult> UpdateProvince([FromBody] Province province)
         {

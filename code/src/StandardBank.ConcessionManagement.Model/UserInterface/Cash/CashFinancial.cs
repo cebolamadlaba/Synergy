@@ -92,13 +92,5 @@
         /// The latest CRS or MRS.
         /// </value>
         public decimal LatestCrsOrMrs { get; set; }
-
-        /// <summary>
-        /// Gets or sets the loaded price.
-        /// </summary>
-        /// <value>
-        /// The loaded price.
-        /// </value>
-        public decimal LoadedPrice { get; set; }
     }
 }

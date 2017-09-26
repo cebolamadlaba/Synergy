@@ -2,11 +2,12 @@
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Inbox;
-using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
+using Concession = StandardBank.ConcessionManagement.Model.Repository.Concession;
+using ConcessionComment = StandardBank.ConcessionManagement.Model.Repository.ConcessionComment;
 using ConcessionCondition = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionCondition;
 using ConcessionRelationship = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionRelationship;
+using Condition = StandardBank.ConcessionManagement.Model.UserInterface.Condition;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
-using System;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 {
@@ -20,35 +21,42 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// </summary>
         /// <param name="user">The user.</param>
         /// <returns></returns>
-        IEnumerable<Concession> GetPendingConcessionsForUser(User user);
+        IEnumerable<InboxConcession> GetPendingConcessionsForUser(User user);
 
         /// <summary>
         /// Get the due for expiry concessions for the user
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        IEnumerable<Concession> GetDueForExpiryConcessionsForUser(User user);
+        IEnumerable<InboxConcession> GetDueForExpiryConcessionsForUser(User user);
 
         /// <summary>
         /// Gets the expired concessions for the user
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        IEnumerable<Concession> GetExpiredConcessionsForUser(User user);
+        IEnumerable<InboxConcession> GetExpiredConcessionsForUser(User user);
 
         /// <summary>
         /// Gets the mismatched concessions for the user
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        IEnumerable<Concession> GetMismatchedConcessionsForUser(User user);
+        IEnumerable<InboxConcession> GetMismatchedConcessionsForUser(User user);
 
         /// <summary>
         /// Gets the declined concessions for the user
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        IEnumerable<Concession> GetDeclinedConcessionsForUser(User user);
+        IEnumerable<InboxConcession> GetDeclinedConcessionsForUser(User user);
+
+        /// <summary>
+        /// Gets the actioned concessions for user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
+        IEnumerable<InboxConcession> GetActionedConcessionsForUser(User user);
 
         /// <summary>
         /// Gets the user concessions
@@ -58,66 +66,47 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         UserConcessions GetUserConcessions(User user);
 
         /// <summary>
-        /// Gets the concession conditions
+        /// Gets the concession conditions.
         /// </summary>
-        /// <param name="concessionId"></param>
+        /// <param name="concessionId">The concession identifier.</param>
         /// <returns></returns>
         IEnumerable<ConcessionCondition> GetConcessionConditions(int concessionId);
 
         /// <summary>
-        /// Creates a concession and returns the repository entity
+        /// Gets the client accounts.
         /// </summary>
-        /// <param name="concession"></param>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        Model.Repository.Concession CreateConcession(Concession concession, User user);
-
-        /// <summary>
-        /// Gets the client accounts for the risk group number specified
-        /// </summary>
-        /// <param name="riskGroupNumber"></param>
+        /// <param name="riskGroupNumber">The risk group number.</param>
         /// <returns></returns>
         IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber);
-        IEnumerable<Concession> GetActionedConcessionsForUser(User user);
 
         /// <summary>
-        /// Gets the concessions for the risk group id and the concession type
+        /// Gets the approved concessions for user.
         /// </summary>
-        /// <param name="riskGroupId"></param>
-        /// <param name="concessionType"></param>
+        /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        IEnumerable<Concession> GetConcessionsForRiskGroup(int riskGroupId, string concessionType);
+        IEnumerable<ApprovedConcession> GetApprovedConcessionsForUser(int userId);
 
         /// <summary>
-        /// Creates a concession condition
+        /// Gets the conditions.
         /// </summary>
-        /// <param name="concessionCondition"></param>
-        /// <param name="concession"></param>
+        /// <param name="periodType">Type of the period.</param>
+        /// <param name="period">The period.</param>
         /// <returns></returns>
-        Model.Repository.ConcessionCondition CreateConcessionCondition(ConcessionCondition concessionCondition, Concession concession);
+        IEnumerable<Condition> GetConditions(string periodType, string period);
 
         /// <summary>
-        /// Gets the concession for the concession reference id specified
+        /// Gets the condition counts.
         /// </summary>
-        /// <param name="concessionReferenceId"></param>
         /// <returns></returns>
-        Concession GetConcessionForConcessionReferenceId(string concessionReferenceId);
+        ConditionCounts GetConditionCounts();
 
         /// <summary>
-        /// Deactivates the concession
+        /// Updates the concession.
         /// </summary>
-        /// <param name="concessionReferenceId"></param>
-        /// <param name="user"></param>
+        /// <param name="concession">The concession.</param>
+        /// <param name="user">The user.</param>
         /// <returns></returns>
-        Model.Repository.Concession DeactivateConcession(string concessionReferenceId, User user);
-
-        /// <summary>
-        /// Updates the concession
-        /// </summary>
-        /// <param name="concession"></param>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        Model.Repository.Concession UpdateConcession(Concession concession, User user);
+        Concession UpdateConcession(Model.UserInterface.Concession concession, User user);
 
         /// <summary>
         /// Deletes the concession condition.
@@ -126,37 +115,28 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <returns></returns>
         Model.Repository.ConcessionCondition DeleteConcessionCondition(ConcessionCondition concessionCondition);
 
-        IEnumerable<Model.UserInterface.Condition> GetConditions(string periodType, string period);
-
         /// <summary>
-        /// Creates the concession comment
+        /// Activates the concession.
         /// </summary>
-        /// <param name="concessionComment"></param>
+        /// <param name="concessionReferenceNumber">The concession reference number.</param>
+        /// <param name="user">The user.</param>
         /// <returns></returns>
-        Model.Repository.ConcessionComment
-            CreateConcessionComment(Model.Repository.ConcessionComment concessionComment);
+        Concession ActivateConcession(string concessionReferenceNumber, User user);
 
         /// <summary>
-        /// Gets the approved concessions for the user
+        /// Creates the concession comment.
         /// </summary>
-        /// <param name="userId"></param>
+        /// <param name="concessionComment">The concession comment.</param>
         /// <returns></returns>
-        IEnumerable<ApprovedConcession> GetApprovedConcessionsForUser(int userId);
+        ConcessionComment CreateConcessionComment(ConcessionComment concessionComment);
 
         /// <summary>
-        /// Gets the approved concession details
+        /// Creates the concession.
         /// </summary>
-        /// <param name="concession"></param>
-        /// <returns></returns>
-        IEnumerable<ApprovedConcessionDetail> GetApprovedConcessionDetails(Concession concession);
-
-        /// <summary>
-        /// Updates the concession condition.
-        /// </summary>
-        /// <param name="concessionCondition">The concession condition.</param>
         /// <param name="concession">The concession.</param>
+        /// <param name="user">The user.</param>
         /// <returns></returns>
-        Model.Repository.ConcessionCondition UpdateConcessionCondition(ConcessionCondition concessionCondition, Concession concession);
+        Concession CreateConcession(Model.UserInterface.Concession concession, User user);
 
         /// <summary>
         /// Creates the concession relationship.
@@ -166,26 +146,44 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         Model.Repository.ConcessionRelationship CreateConcessionRelationship(ConcessionRelationship concessionRelationship);
 
         /// <summary>
-        /// Activates the concession.
+        /// Deactivates the concession.
         /// </summary>
         /// <param name="concessionReferenceNumber">The concession reference number.</param>
         /// <param name="user">The user.</param>
         /// <returns></returns>
-        Model.Repository.Concession ActivateConcession(string concessionReferenceNumber, User user);
+        Concession DeactivateConcession(string concessionReferenceNumber, User user);
 
         /// <summary>
-        /// Gets the concession comments.
+        /// Creates the concession condition.
         /// </summary>
-        /// <param name="concessionId">The concession identifier.</param>
+        /// <param name="concessionCondition">The concession condition.</param>
+        /// <param name="concession">The concession.</param>
         /// <returns></returns>
-        IEnumerable<Model.UserInterface.ConcessionComment> GetConcessionComments(int concessionId);
-
-        string GetRagStatus(string period,DateTime dateApproved);
+        Model.Repository.ConcessionCondition CreateConcessionCondition(ConcessionCondition concessionCondition,
+            Model.UserInterface.Concession concession);
 
         /// <summary>
-        /// Gets the condition counts.
+        /// Updates the concession condition.
         /// </summary>
+        /// <param name="concessionCondition">The concession condition.</param>
+        /// <param name="concession">The concession.</param>
         /// <returns></returns>
-        ConditionCounts GetConditionCounts();
+        Model.Repository.ConcessionCondition UpdateConcessionCondition(ConcessionCondition concessionCondition,
+            Model.UserInterface.Concession concession);
+
+        /// <summary>
+        /// Gets the concessions for risk group.
+        /// </summary>
+        /// <param name="riskGroupId">The risk group identifier.</param>
+        /// <param name="concessionType">Type of the concession.</param>
+        /// <returns></returns>
+        IEnumerable<Model.UserInterface.Concession> GetConcessionsForRiskGroup(int riskGroupId, string concessionType);
+
+        /// <summary>
+        /// Gets the concession for concession reference identifier.
+        /// </summary>
+        /// <param name="concessionReferenceId">The concession reference identifier.</param>
+        /// <returns></returns>
+        Model.UserInterface.Concession GetConcessionForConcessionReferenceId(string concessionReferenceId);
     }
 }

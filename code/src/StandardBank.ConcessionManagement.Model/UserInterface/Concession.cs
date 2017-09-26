@@ -102,7 +102,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// <summary>
         /// Gets or sets the sub status id
         /// </summary>
-        public int? SubStatusId { get; set; }
+        public int SubStatusId { get; set; }
 
         /// <summary>
         /// Gets or sets the comments

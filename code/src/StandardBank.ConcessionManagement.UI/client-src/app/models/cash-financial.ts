@@ -10,5 +10,4 @@ export class CashFinancial {
     weightedAverageAFPrice: number;
     weightedAverageBranchPrice: number;
     latestCrsOrMrs: number;
-    loadedPrice: number;
 }

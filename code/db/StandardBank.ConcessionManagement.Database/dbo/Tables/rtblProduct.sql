@@ -3,6 +3,9 @@
     [fkConcessionTypeId] INT           NOT NULL,
     [Description]        VARCHAR (100) NOT NULL,
     [IsActive]           BIT           NOT NULL,
-    CONSTRAINT [PK_rtblProductType] PRIMARY KEY CLUSTERED ([pkProductId] ASC)
+    CONSTRAINT [PK_rtblProductType] PRIMARY KEY CLUSTERED ([pkProductId] ASC),
+    CONSTRAINT [FK_rtblProduct_rtblConcessionType] FOREIGN KEY ([fkConcessionTypeId]) REFERENCES [dbo].[rtblConcessionType] ([pkConcessionTypeId])
 );
+
+
 

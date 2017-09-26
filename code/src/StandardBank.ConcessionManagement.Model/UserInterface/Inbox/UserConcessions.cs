@@ -15,7 +15,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Inbox
         /// <summary>
         /// Gets or sets the pending concessions
         /// </summary>
-        public IEnumerable<Concession> PendingConcessions { get; set; }
+        public IEnumerable<InboxConcession> PendingConcessions { get; set; }
 
         /// <summary>
         /// Gets or sets whether or not to show the pending concessions view
@@ -30,7 +30,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Inbox
         /// <summary>
         /// Gets or sets the pending concessions
         /// </summary>
-        public IEnumerable<Concession> DueForExpiryConcessions { get; set; }
+        public IEnumerable<InboxConcession> DueForExpiryConcessions { get; set; }
 
         /// <summary>
         /// Gets or sets whether or not to show the DueForExpiryConcessions view
@@ -45,7 +45,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Inbox
         /// <summary>
         /// Gets or sets the expired concessions
         /// </summary>
-        public IEnumerable<Concession> ExpiredConcessions { get; set; }
+        public IEnumerable<InboxConcession> ExpiredConcessions { get; set; }
 
         /// <summary>
         /// Gets or sets whether or not to show the ExpiredConcessions view
@@ -60,7 +60,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Inbox
         /// <summary>
         /// Gets or sets the mismatched concessions
         /// </summary>
-        public IEnumerable<Concession> MismatchedConcessions { get; set; }
+        public IEnumerable<InboxConcession> MismatchedConcessions { get; set; }
 
         /// <summary>
         /// Gets or sets whether or not to show the MismatchedConcessions view
@@ -75,7 +75,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Inbox
         /// <summary>
         /// Gets or sets the declinced concessions
         /// </summary>
-        public IEnumerable<Concession> DeclinedConcessions { get; set; }
+        public IEnumerable<InboxConcession> DeclinedConcessions { get; set; }
 
         /// <summary>
         /// Gets or sets whether or not to show the DeclinedConcessions view
@@ -96,7 +96,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Inbox
         /// <value>
         /// The actioned concessions.
         /// </value>
-        public IEnumerable<Concession> ActionedConcessions { get; set; }
+        public IEnumerable<InboxConcession> ActionedConcessions { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether [show actioned concessions].

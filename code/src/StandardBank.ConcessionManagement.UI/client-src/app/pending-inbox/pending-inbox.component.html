@@ -8,9 +8,11 @@
             <thead>
                 <tr>
                     <th>Risk Group</th>
+                    <th>Customer</th>
                     <th>Type</th>
                     <th>Opened</th>
                     <th>Concession Id</th>
+                    <th>Segment</th>
                     <th>Status</th>
                     <th>Sent For Approval</th>
                 </tr>
@@ -21,9 +23,11 @@
                         <p class="riskGroupName">{{concession?.riskGroupName}}</p>
                         <p class="riskGroupNumber">{{concession?.riskGroupNumber}}</p>
                     </td>
+                    <td>{{concession?.customerName}}</td>
                     <td>{{concession?.concessionType}}</td>
                     <td class="date">{{concession?.dateOpened | date: 'yyyy/MM/dd'}}</td>
                     <td>{{concession?.referenceNumber}}</td>
+                    <td>{{concession?.segment}}</td>
                     <td>{{concession?.statusDescription}}</td>
                     <td class="date">{{concession?.dateSentForApproval | date: 'yyyy/MM/dd'}}</td>
                 </tr>
