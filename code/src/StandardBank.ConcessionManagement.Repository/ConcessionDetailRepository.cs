@@ -95,7 +95,7 @@ namespace StandardBank.ConcessionManagement.Repository
                             WHERE [pkConcessionDetailId] = @ConcessionDetailId",
                     new
                     {
-                        Id = model.ConcessionDetailId,
+                        ConcessionDetailId = model.ConcessionDetailId,
                         ConcessionId = model.ConcessionId,
                         LegalEntityId = model.LegalEntityId,
                         LegalEntityAccountId = model.LegalEntityAccountId,

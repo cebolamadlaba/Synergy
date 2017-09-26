@@ -20,6 +20,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = new ConcessionBol
             {
                 ConcessionId = DataHelper.GetConcessionId(),
+                ConcessionDetailId = DataHelper.GetConcessionDetailId(),
                 TransactionGroupId = DataHelper.GetTransactionGroupId(),
                 BusinesOnlineTransactionTypeId = DataHelper.GetBusinesOnlineTransactionTypeId(),
                 BolUseId = DataHelper.GetBolUserId(),
@@ -71,6 +72,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = InstantiatedDependencies.ConcessionBolRepository.ReadById(id);
 
             model.ConcessionId = DataHelper.GetAlternateConcessionId(model.ConcessionId);
+            model.ConcessionDetailId = DataHelper.GetAlternateConcessionDetailId(model.ConcessionDetailId);
             model.TransactionGroupId = DataHelper.GetAlternateTransactionGroupId(model.TransactionGroupId);
             model.BusinesOnlineTransactionTypeId = DataHelper.GetAlternateBusinesOnlineTransactionTypeId(model.BusinesOnlineTransactionTypeId);
             model.BolUseId = DataHelper.GetAlternateBolUserId(model.BolUseId);
@@ -85,6 +87,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.NotNull(updatedModel);
             Assert.Equal(updatedModel.Id, model.Id);
             Assert.Equal(updatedModel.ConcessionId, model.ConcessionId);
+            Assert.Equal(updatedModel.ConcessionDetailId, model.ConcessionDetailId);
             Assert.Equal(updatedModel.TransactionGroupId, model.TransactionGroupId);
             Assert.Equal(updatedModel.BusinesOnlineTransactionTypeId, model.BusinesOnlineTransactionTypeId);
             Assert.Equal(updatedModel.BolUseId, model.BolUseId);
@@ -102,6 +105,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = new ConcessionBol
             {
                 ConcessionId = DataHelper.GetConcessionId(),
+                ConcessionDetailId = DataHelper.GetConcessionDetailId(),
                 TransactionGroupId = DataHelper.GetTransactionGroupId(),
                 BusinesOnlineTransactionTypeId = DataHelper.GetBusinesOnlineTransactionTypeId(),
                 BolUseId = DataHelper.GetBolUserId(),

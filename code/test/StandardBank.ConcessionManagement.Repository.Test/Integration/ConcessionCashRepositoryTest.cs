@@ -21,10 +21,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = new ConcessionCash
             {
                 ConcessionId = DataHelper.GetConcessionId(),
+                ConcessionDetailId = DataHelper.GetConcessionDetailId(),
                 ChannelTypeId = DataHelper.GetChannelTypeId(),
                 AdValorem = 2263,
-                LegalEntityId = DataHelper.GetLegalEntityId(),
-                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
                 BaseRate = 1233,
                 AccrualTypeId = DataHelper.GetAccrualTypeId(),
                 TableNumberId = tableNumberId,
@@ -91,10 +90,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = InstantiatedDependencies.ConcessionCashRepository.ReadById(id);
 
             model.ConcessionId = DataHelper.GetAlternateConcessionId(model.ConcessionId);
+            model.ConcessionDetailId = DataHelper.GetAlternateConcessionDetailId(model.ConcessionDetailId);
             model.ChannelTypeId = DataHelper.GetAlternateChannelTypeId(model.ChannelTypeId);
             model.AdValorem = model.AdValorem + 100;
-            model.LegalEntityId = DataHelper.GetAlternateLegalEntityId(model.LegalEntityId);
-            model.LegalEntityAccountId = DataHelper.GetAlternateLegalEntityAccountId(model.LegalEntityAccountId);
             model.BaseRate = model.BaseRate + 100;
             model.AccrualTypeId = DataHelper.GetAlternateAccrualTypeId(model.AccrualTypeId);
             model.TableNumberId = DataHelper.GetAlternateTableNumberId(model.TableNumberId);
@@ -108,10 +106,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.NotNull(updatedModel);
             Assert.Equal(updatedModel.Id, model.Id);
             Assert.Equal(updatedModel.ConcessionId, model.ConcessionId);
+            Assert.Equal(updatedModel.ConcessionDetailId, model.ConcessionDetailId);
             Assert.Equal(updatedModel.ChannelTypeId, model.ChannelTypeId);
             Assert.Equal(updatedModel.AdValorem, model.AdValorem);
-            Assert.Equal(updatedModel.LegalEntityId, model.LegalEntityId);
-            Assert.Equal(updatedModel.LegalEntityAccountId, model.LegalEntityAccountId);
             Assert.Equal(updatedModel.BaseRate, model.BaseRate);
             Assert.Equal(updatedModel.AccrualTypeId, model.AccrualTypeId);
             Assert.Equal(updatedModel.TableNumberId, model.TableNumberId);
@@ -130,10 +127,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = new ConcessionCash
             {
                 ConcessionId = DataHelper.GetConcessionId(),
+                ConcessionDetailId = DataHelper.GetConcessionDetailId(),
                 ChannelTypeId = DataHelper.GetChannelTypeId(),
                 AdValorem = 2263,
-                LegalEntityId = DataHelper.GetLegalEntityId(),
-                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
                 BaseRate = 653,
                 AccrualTypeId = DataHelper.GetAccrualTypeId(),
                 TableNumberId = tableNumberId,

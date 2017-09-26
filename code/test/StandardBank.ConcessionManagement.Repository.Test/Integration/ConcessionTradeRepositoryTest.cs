@@ -20,6 +20,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = new ConcessionTrade
             {
                 ConcessionId = DataHelper.GetConcessionId(),
+                ConcessionDetailId = DataHelper.GetConcessionDetailId(),
                 TransactionTypeId = DataHelper.GetTransactionTypeId(),
                 ChannelTypeId = DataHelper.GetChannelTypeId(),
                 TableNumber = 6,
@@ -72,6 +73,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = InstantiatedDependencies.ConcessionTradeRepository.ReadById(id);
 
             model.ConcessionId = DataHelper.GetAlternateConcessionId(model.ConcessionId);
+            model.ConcessionDetailId = DataHelper.GetAlternateConcessionDetailId(model.ConcessionDetailId);
             model.TransactionTypeId = DataHelper.GetAlternateTransactionTypeId(model.TransactionTypeId);
             model.ChannelTypeId = DataHelper.GetAlternateChannelTypeId(model.ChannelTypeId);
             model.TableNumber = model.TableNumber + 1;
@@ -87,6 +89,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.NotNull(updatedModel);
             Assert.Equal(updatedModel.Id, model.Id);
             Assert.Equal(updatedModel.ConcessionId, model.ConcessionId);
+            Assert.Equal(updatedModel.ConcessionDetailId, model.ConcessionDetailId);
             Assert.Equal(updatedModel.TransactionTypeId, model.TransactionTypeId);
             Assert.Equal(updatedModel.ChannelTypeId, model.ChannelTypeId);
             Assert.Equal(updatedModel.TableNumber, model.TableNumber);
@@ -105,6 +108,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = new ConcessionTrade
             {
                 ConcessionId = DataHelper.GetConcessionId(),
+                ConcessionDetailId = DataHelper.GetConcessionDetailId(),
                 TransactionTypeId = DataHelper.GetTransactionTypeId(),
                 ChannelTypeId = DataHelper.GetChannelTypeId(),
                 TableNumber = 6,

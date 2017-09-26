@@ -811,11 +811,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <returns></returns>
         private static int InsertTransactionType()
         {
-            var transactionTypeId = GetNewTransactionTypeIdForInsert();
-
             var model = new TransactionType
             {
-                Id = transactionTypeId,
                 ConcessionTypeId = GetConcessionTypeId(),
                 Description = "14c6862dfb",
                 IsActive = false
@@ -824,21 +821,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             InstantiatedDependencies.TransactionTypeRepository.Create(model);
 
             return model.Id;
-        }
-
-        /// <summary>
-        /// Gets a new transaction type id that can be used for insert
-        /// </summary>
-        /// <returns></returns>
-        public static int GetNewTransactionTypeIdForInsert()
-        {
-            var transactionTypeId = 1;
-            var transactionTypes = InstantiatedDependencies.TransactionTypeRepository.ReadAll();
-
-            if (transactionTypes != null && transactionTypes.Any())
-                transactionTypeId = transactionTypes.Max(_ => _.Id) + 1;
-
-            return transactionTypeId;
         }
 
         /// <summary>

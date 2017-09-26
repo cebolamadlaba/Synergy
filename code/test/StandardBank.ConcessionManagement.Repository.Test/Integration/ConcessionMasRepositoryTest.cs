@@ -20,6 +20,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = new ConcessionMas
             {
                 ConcessionId = DataHelper.GetConcessionId(),
+                ConcessionDetailId = DataHelper.GetConcessionDetailId(),
                 TransactionTypeId = DataHelper.GetTransactionTypeId(),
                 MerchantNumber = "96bc9a6a9f",
                 Turnover = 7518,
@@ -69,6 +70,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = InstantiatedDependencies.ConcessionMasRepository.ReadById(id);
 
             model.ConcessionId = DataHelper.GetAlternateConcessionId(model.ConcessionId);
+            model.ConcessionDetailId = DataHelper.GetAlternateConcessionDetailId(model.ConcessionDetailId);
             model.TransactionTypeId = DataHelper.GetAlternateTransactionTypeId(model.TransactionTypeId);
             model.MerchantNumber = "e048e1db42";
             model.Turnover = model.Turnover + 100;
@@ -81,6 +83,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.NotNull(updatedModel);
             Assert.Equal(updatedModel.Id, model.Id);
             Assert.Equal(updatedModel.ConcessionId, model.ConcessionId);
+            Assert.Equal(updatedModel.ConcessionDetailId, model.ConcessionDetailId);
             Assert.Equal(updatedModel.TransactionTypeId, model.TransactionTypeId);
             Assert.Equal(updatedModel.MerchantNumber, model.MerchantNumber);
             Assert.Equal(updatedModel.Turnover, model.Turnover);
@@ -96,6 +99,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = new ConcessionMas
             {
                 ConcessionId = DataHelper.GetConcessionId(),
+                ConcessionDetailId = DataHelper.GetConcessionDetailId(),
                 TransactionTypeId = DataHelper.GetTransactionTypeId(),
                 MerchantNumber = "96bc9a6a9f",
                 Turnover = 7518,

@@ -19,6 +19,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = new ConcessionLending
             {
                 ConcessionId = DataHelper.GetConcessionId(),
+                ConcessionDetailId = DataHelper.GetConcessionDetailId(),
                 ProductTypeId = DataHelper.GetProductId(),
                 Limit = 1681,
                 Term = 9,
@@ -28,8 +29,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ReviewFee = 939,
                 UFFFee = 8999,
                 ReviewFeeTypeId = DataHelper.GetReviewFeeTypeId(),
-                LegalEntityId = DataHelper.GetLegalEntityId(),
-                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
                 AverageBalance = 345.32m,
                 LoadedMarginToPrime = 213.23m
             };
@@ -94,6 +93,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = InstantiatedDependencies.ConcessionLendingRepository.ReadById(id);
 
             model.ConcessionId = DataHelper.GetAlternateConcessionId(model.ConcessionId);
+            model.ConcessionDetailId = DataHelper.GetAlternateConcessionDetailId(model.ConcessionDetailId);
             model.ProductTypeId = DataHelper.GetAlternateProductId(model.ProductTypeId);
             model.Limit = model.Limit + 100;
             model.Term = model.Term + 1;
@@ -103,8 +103,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.ReviewFee = model.ReviewFee + 100;
             model.UFFFee = model.UFFFee + 100;
             model.ReviewFeeTypeId = DataHelper.GetAlternateReviewFeeTypeId(model.ReviewFeeTypeId);
-            model.LegalEntityId = DataHelper.GetAlternateLegalEntityId(model.LegalEntityId);
-            model.LegalEntityAccountId = DataHelper.GetAlternateLegalEntityAccountId(model.LegalEntityAccountId);
             model.AverageBalance = model.AverageBalance + 123.32m;
             model.LoadedMarginToPrime = model.LoadedMarginToPrime + 123.32m;
 
@@ -115,6 +113,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.NotNull(updatedModel);
             Assert.Equal(updatedModel.Id, model.Id);
             Assert.Equal(updatedModel.ConcessionId, model.ConcessionId);
+            Assert.Equal(updatedModel.ConcessionDetailId, model.ConcessionDetailId);
             Assert.Equal(updatedModel.ProductTypeId, model.ProductTypeId);
             Assert.Equal(updatedModel.Limit, model.Limit);
             Assert.Equal(updatedModel.Term, model.Term);
@@ -124,8 +123,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.ReviewFee, model.ReviewFee);
             Assert.Equal(updatedModel.UFFFee, model.UFFFee);
             Assert.Equal(updatedModel.ReviewFeeTypeId, model.ReviewFeeTypeId);
-            Assert.Equal(updatedModel.LegalEntityId, model.LegalEntityId);
-            Assert.Equal(updatedModel.LegalEntityAccountId, model.LegalEntityAccountId);
             Assert.Equal(updatedModel.AverageBalance, model.AverageBalance);
             Assert.Equal(updatedModel.LoadedMarginToPrime, model.LoadedMarginToPrime);
         }
@@ -139,6 +136,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = new ConcessionLending
             {
                 ConcessionId = DataHelper.GetConcessionId(),
+                ConcessionDetailId = DataHelper.GetConcessionDetailId(),
                 ProductTypeId = DataHelper.GetProductId(),
                 Limit = 1681,
                 Term = 9,
@@ -148,8 +146,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ReviewFee = 939,
                 UFFFee = 8999,
                 ReviewFeeTypeId = DataHelper.GetReviewFeeTypeId(),
-                LegalEntityId = DataHelper.GetLegalEntityId(),
-                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
                 AverageBalance = 324.43m,
                 LoadedMarginToPrime = 2343.23m
             };

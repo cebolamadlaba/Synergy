@@ -21,6 +21,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = new ConcessionTransactional
             {
                 ConcessionId = DataHelper.GetConcessionId(),
+                ConcessionDetailId = DataHelper.GetConcessionDetailId(),
                 TransactionTypeId = DataHelper.GetTransactionTypeId(),
                 AdValorem = 9485,
                 BaseRate = 70,
@@ -89,6 +90,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = InstantiatedDependencies.ConcessionTransactionalRepository.ReadById(id);
 
             model.ConcessionId = DataHelper.GetAlternateConcessionId(model.ConcessionId);
+            model.ConcessionDetailId = DataHelper.GetAlternateConcessionDetailId(model.ConcessionDetailId);
             model.TransactionTypeId = DataHelper.GetAlternateTransactionTypeId(model.TransactionTypeId);
             model.AdValorem = model.AdValorem + 100;
             model.BaseRate = model.BaseRate + 100;
@@ -103,6 +105,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.NotNull(updatedModel);
             Assert.Equal(updatedModel.Id, model.Id);
             Assert.Equal(updatedModel.ConcessionId, model.ConcessionId);
+            Assert.Equal(updatedModel.ConcessionDetailId, model.ConcessionDetailId);
             Assert.Equal(updatedModel.TransactionTypeId, model.TransactionTypeId);
             Assert.Equal(updatedModel.AdValorem, model.AdValorem);
             Assert.Equal(updatedModel.BaseRate, model.BaseRate);
@@ -122,6 +125,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = new ConcessionTransactional
             {
                 ConcessionId = DataHelper.GetConcessionId(),
+                ConcessionDetailId = DataHelper.GetConcessionDetailId(),
                 TransactionTypeId = DataHelper.GetTransactionTypeId(),
                 AdValorem = 9485,
                 BaseRate = 70,
