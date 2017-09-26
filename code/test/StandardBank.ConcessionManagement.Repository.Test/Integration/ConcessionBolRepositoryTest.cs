@@ -26,7 +26,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 BolUseId = DataHelper.GetBolUserId(),
                 TransactionVolume = 4,
                 TransactionValue = 9692,
-                Fee = 6453
+                Fee = 6453,
+                LegalEntityId = DataHelper.GetLegalEntityId(),
+                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
             };
 
             var result = InstantiatedDependencies.ConcessionBolRepository.Create(model);
@@ -79,6 +81,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.TransactionVolume = model.TransactionVolume + 1;
             model.TransactionValue = model.TransactionValue + 100;
             model.Fee = model.Fee + 100;
+            model.LegalEntityId = DataHelper.GetAlternateLegalEntityId(model.LegalEntityId);
+            model.LegalEntityAccountId = DataHelper.GetAlternateLegalEntityAccountId(model.LegalEntityAccountId);
 
             InstantiatedDependencies.ConcessionBolRepository.Update(model);
 
@@ -94,6 +98,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.TransactionVolume, model.TransactionVolume);
             Assert.Equal(updatedModel.TransactionValue, model.TransactionValue);
             Assert.Equal(updatedModel.Fee, model.Fee);
+            Assert.Equal(updatedModel.LegalEntityId, model.LegalEntityId);
+            Assert.Equal(updatedModel.LegalEntityAccountId, model.LegalEntityAccountId);
         }
 
         /// <summary>
@@ -111,7 +117,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 BolUseId = DataHelper.GetBolUserId(),
                 TransactionVolume = 4,
                 TransactionValue = 9692,
-                Fee = 6453
+                Fee = 6453,
+                LegalEntityId = DataHelper.GetLegalEntityId(),
+                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
             };
 
             var temporaryEntity = InstantiatedDependencies.ConcessionBolRepository.Create(model);

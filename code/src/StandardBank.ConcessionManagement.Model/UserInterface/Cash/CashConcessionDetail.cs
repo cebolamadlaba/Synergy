@@ -1,4 +1,6 @@
-﻿namespace StandardBank.ConcessionManagement.Model.UserInterface.Cash
+﻿using System;
+
+namespace StandardBank.ConcessionManagement.Model.UserInterface.Cash
 {
     /// <summary>
     /// Cash concession detail entity
@@ -44,6 +46,14 @@
         /// The legal entity account identifier.
         /// </value>
         public int? LegalEntityAccountId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the expiry date.
+        /// </summary>
+        /// <value>
+        /// The expiry date.
+        /// </value>
+        public DateTime? ExpiryDate { get; set; }
 
         /// <summary>
         /// Gets or sets the channel.

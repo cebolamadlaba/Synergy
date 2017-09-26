@@ -1,4 +1,6 @@
-﻿namespace StandardBank.ConcessionManagement.Model.UserInterface.Lending
+﻿using System;
+
+namespace StandardBank.ConcessionManagement.Model.UserInterface.Lending
 {
     /// <summary>
     /// Lending concession detail
@@ -51,6 +53,14 @@
         /// Gets or sets the legal entity account id
         /// </summary>
         public int? LegalEntityAccountId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the expiry date.
+        /// </summary>
+        /// <value>
+        /// The expiry date.
+        /// </value>
+        public DateTime? ExpiryDate { get; set; }
 
         /// <summary>
         /// Gets or sets the limit.

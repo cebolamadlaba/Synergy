@@ -27,7 +27,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 BaseRate = 70,
                 TableNumberId = tableNumberId,
                 ApprovedTableNumberId = tableNumberId,
-                LoadedTableNumberId = tableNumberId
+                LoadedTableNumberId = tableNumberId,
+                LegalEntityId = DataHelper.GetLegalEntityId(),
+                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
             };
 
             var result = InstantiatedDependencies.ConcessionTransactionalRepository.Create(model);
@@ -97,6 +99,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.TableNumberId = DataHelper.GetAlternateTableNumberId(model.TableNumberId);
             model.ApprovedTableNumberId = DataHelper.GetAlternateTableNumberId(model.ApprovedTableNumberId);
             model.LoadedTableNumberId = DataHelper.GetAlternateTableNumberId(model.LoadedTableNumberId);
+            model.LegalEntityId = DataHelper.GetAlternateLegalEntityId(model.LegalEntityId);
+            model.LegalEntityAccountId = DataHelper.GetAlternateLegalEntityAccountId(model.LegalEntityAccountId);
 
             InstantiatedDependencies.ConcessionTransactionalRepository.Update(model);
 
@@ -112,6 +116,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.TableNumberId, model.TableNumberId);
             Assert.Equal(updatedModel.ApprovedTableNumberId, model.ApprovedTableNumberId);
             Assert.Equal(updatedModel.LoadedTableNumberId, model.LoadedTableNumberId);
+            Assert.Equal(updatedModel.LegalEntityId, model.LegalEntityId);
+            Assert.Equal(updatedModel.LegalEntityAccountId, model.LegalEntityAccountId);
         }
 
         /// <summary>
@@ -131,7 +137,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 BaseRate = 70,
                 TableNumberId = tableNumberId,
                 ApprovedTableNumberId = tableNumberId,
-                LoadedTableNumberId = tableNumberId
+                LoadedTableNumberId = tableNumberId,
+                LegalEntityId = DataHelper.GetLegalEntityId(),
+                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
             };
 
             var temporaryEntity = InstantiatedDependencies.ConcessionTransactionalRepository.Create(model);

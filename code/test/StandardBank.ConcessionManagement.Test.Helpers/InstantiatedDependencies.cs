@@ -56,9 +56,16 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static ISiteHelper SiteHelper = new FakeSiteHelper();
 
         /// <summary>
+        /// The ConcessionDetail repository
+        /// </summary>
+        public static IConcessionDetailRepository ConcessionDetailRepository =
+            new ConcessionDetailRepository(DbConnection);
+
+        /// <summary>
         /// The AccrualType repository
         /// </summary>
-        public static IAccrualTypeRepository AccrualTypeRepository = new AccrualTypeRepository(DbConnection, CacheManager);
+        public static IAccrualTypeRepository AccrualTypeRepository =
+            new AccrualTypeRepository(DbConnection, CacheManager);
 
         /// <summary>
         /// The ExceptionLog repository
@@ -73,7 +80,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The ApprovalType repository
         /// </summary>
-        public static IApprovalTypeRepository ApprovalTypeRepository = new ApprovalTypeRepository(DbConnection, CacheManager);
+        public static IApprovalTypeRepository ApprovalTypeRepository =
+            new ApprovalTypeRepository(DbConnection, CacheManager);
 
         /// <summary>
         /// The BaseRate repository
@@ -83,27 +91,32 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The ChannelType repository
         /// </summary>
-        public static IChannelTypeRepository ChannelTypeRepository = new ChannelTypeRepository(DbConnection, CacheManager);
+        public static IChannelTypeRepository ChannelTypeRepository =
+            new ChannelTypeRepository(DbConnection, CacheManager);
 
         /// <summary>
         /// The ConcessionType repository
         /// </summary>
-        public static IConcessionTypeRepository ConcessionTypeRepository = new ConcessionTypeRepository(DbConnection, CacheManager);
+        public static IConcessionTypeRepository ConcessionTypeRepository =
+            new ConcessionTypeRepository(DbConnection, CacheManager);
 
         /// <summary>
         /// The ConditionProduct repository
         /// </summary>
-        public static IConditionProductRepository ConditionProductRepository = new ConditionProductRepository(DbConnection, CacheManager);
+        public static IConditionProductRepository ConditionProductRepository =
+            new ConditionProductRepository(DbConnection, CacheManager);
 
         /// <summary>
         /// The ConditionType repository
         /// </summary>
-        public static IConditionTypeRepository ConditionTypeRepository = new ConditionTypeRepository(DbConnection, CacheManager);
+        public static IConditionTypeRepository ConditionTypeRepository =
+            new ConditionTypeRepository(DbConnection, CacheManager);
 
         /// <summary>
         /// The MarketSegment repository
         /// </summary>
-        public static IMarketSegmentRepository MarketSegmentRepository = new MarketSegmentRepository(DbConnection, CacheManager);
+        public static IMarketSegmentRepository MarketSegmentRepository =
+            new MarketSegmentRepository(DbConnection, CacheManager);
 
         /// <summary>
         /// The Product repository
@@ -118,7 +131,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The ReviewFeeType repository
         /// </summary>
-        public static IReviewFeeTypeRepository ReviewFeeTypeRepository = new ReviewFeeTypeRepository(DbConnection, CacheManager);
+        public static IReviewFeeTypeRepository ReviewFeeTypeRepository =
+            new ReviewFeeTypeRepository(DbConnection, CacheManager);
 
         /// <summary>
         /// The Role repository
@@ -138,17 +152,20 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The TransactionGroup repository
         /// </summary>
-        public static ITransactionGroupRepository TransactionGroupRepository = new TransactionGroupRepository(DbConnection, CacheManager);
+        public static ITransactionGroupRepository TransactionGroupRepository =
+            new TransactionGroupRepository(DbConnection, CacheManager);
 
         /// <summary>
         /// The TransactionType repository
         /// </summary>
-        public static ITransactionTypeRepository TransactionTypeRepository = new TransactionTypeRepository(DbConnection, CacheManager);
+        public static ITransactionTypeRepository TransactionTypeRepository =
+            new TransactionTypeRepository(DbConnection, CacheManager);
 
         /// <summary>
         /// The ReferenceTypeRepository repository
         /// </summary>
-        public static IReferenceTypeRepository ReferenceTypeRepository = new ReferenceTypeRepository(DbConnection, CacheManager);
+        public static IReferenceTypeRepository ReferenceTypeRepository =
+            new ReferenceTypeRepository(DbConnection, CacheManager);
 
         /// <summary>
         /// The BolUser repository
@@ -158,7 +175,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The BusinesOnlineTransactionType repository
         /// </summary>
-        public static IBusinesOnlineTransactionTypeRepository BusinesOnlineTransactionTypeRepository = new BusinesOnlineTransactionTypeRepository(DbConnection);
+        public static IBusinesOnlineTransactionTypeRepository BusinesOnlineTransactionTypeRepository =
+            new BusinesOnlineTransactionTypeRepository(DbConnection);
 
         /// <summary>
         /// The Centre repository
@@ -168,7 +186,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The CentreBusinessManager repository
         /// </summary>
-        public static ICentreBusinessManagerRepository CentreBusinessManagerRepository = new CentreBusinessManagerRepository(DbConnection);
+        public static ICentreBusinessManagerRepository CentreBusinessManagerRepository =
+            new CentreBusinessManagerRepository(DbConnection);
 
         /// <summary>
         /// The CentreUser repository
@@ -178,7 +197,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The ChannelTypeBaseRate repository
         /// </summary>
-        public static IChannelTypeBaseRateRepository ChannelTypeBaseRateRepository = new ChannelTypeBaseRateRepository(DbConnection);
+        public static IChannelTypeBaseRateRepository ChannelTypeBaseRateRepository =
+            new ChannelTypeBaseRateRepository(DbConnection);
 
         /// <summary>
         /// The Concession repository
@@ -188,62 +208,74 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The ConcessionAccount repository
         /// </summary>
-        public static IConcessionAccountRepository ConcessionAccountRepository = new ConcessionAccountRepository(DbConnection);
+        public static IConcessionAccountRepository ConcessionAccountRepository =
+            new ConcessionAccountRepository(DbConnection);
 
         /// <summary>
         /// The ConcessionApproval repository
         /// </summary>
-        public static IConcessionApprovalRepository ConcessionApprovalRepository = new ConcessionApprovalRepository(DbConnection);
+        public static IConcessionApprovalRepository ConcessionApprovalRepository =
+            new ConcessionApprovalRepository(DbConnection);
 
         /// <summary>
         /// The ConcessionBol repository
         /// </summary>
-        public static IConcessionBolRepository ConcessionBolRepository = new ConcessionBolRepository(DbConnection);
+        public static IConcessionBolRepository ConcessionBolRepository =
+            new ConcessionBolRepository(DbConnection, ConcessionDetailRepository);
 
         /// <summary>
         /// The ConcessionCash repository
         /// </summary>
-        public static IConcessionCashRepository ConcessionCashRepository = new ConcessionCashRepository(DbConnection);
+        public static IConcessionCashRepository ConcessionCashRepository =
+            new ConcessionCashRepository(DbConnection, ConcessionDetailRepository);
 
         /// <summary>
         /// The ConcessionComment repository
         /// </summary>
-        public static IConcessionCommentRepository ConcessionCommentRepository = new ConcessionCommentRepository(DbConnection);
+        public static IConcessionCommentRepository ConcessionCommentRepository =
+            new ConcessionCommentRepository(DbConnection);
 
         /// <summary>
         /// The ConcessionCondition repository
         /// </summary>
-        public static IConcessionConditionRepository ConcessionConditionRepository = new ConcessionConditionRepository(DbConnection);
+        public static IConcessionConditionRepository ConcessionConditionRepository =
+            new ConcessionConditionRepository(DbConnection);
 
         /// <summary>
         /// The ConcessionInvestment repository
         /// </summary>
-        public static IConcessionInvestmentRepository ConcessionInvestmentRepository = new ConcessionInvestmentRepository(DbConnection);
+        public static IConcessionInvestmentRepository ConcessionInvestmentRepository =
+            new ConcessionInvestmentRepository(DbConnection, ConcessionDetailRepository);
 
         /// <summary>
         /// The ConcessionLending repository
         /// </summary>
-        public static IConcessionLendingRepository ConcessionLendingRepository = new ConcessionLendingRepository(DbConnection);
+        public static IConcessionLendingRepository ConcessionLendingRepository =
+            new ConcessionLendingRepository(DbConnection, ConcessionDetailRepository);
 
         /// <summary>
         /// The ConcessionMas repository
         /// </summary>
-        public static IConcessionMasRepository ConcessionMasRepository = new ConcessionMasRepository(DbConnection);
+        public static IConcessionMasRepository ConcessionMasRepository =
+            new ConcessionMasRepository(DbConnection, ConcessionDetailRepository);
 
         /// <summary>
         /// The ConcessionTrade repository
         /// </summary>
-        public static IConcessionTradeRepository ConcessionTradeRepository = new ConcessionTradeRepository(DbConnection);
+        public static IConcessionTradeRepository ConcessionTradeRepository =
+            new ConcessionTradeRepository(DbConnection, ConcessionDetailRepository);
 
         /// <summary>
         /// The ConcessionTransactional repository
         /// </summary>
-        public static IConcessionTransactionalRepository ConcessionTransactionalRepository = new ConcessionTransactionalRepository(DbConnection);
+        public static IConcessionTransactionalRepository ConcessionTransactionalRepository =
+            new ConcessionTransactionalRepository(DbConnection, ConcessionDetailRepository);
 
         /// <summary>
         /// The ConditionTypeProduct repository
         /// </summary>
-        public static IConditionTypeProductRepository ConditionTypeProductRepository = new ConditionTypeProductRepository(DbConnection);
+        public static IConditionTypeProductRepository ConditionTypeProductRepository =
+            new ConditionTypeProductRepository(DbConnection);
 
         /// <summary>
         /// The LegalEntity repository
@@ -253,7 +285,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The LegalEntityAccount repository
         /// </summary>
-        public static ILegalEntityAccountRepository LegalEntityAccountRepository = new LegalEntityAccountRepository(DbConnection);
+        public static ILegalEntityAccountRepository LegalEntityAccountRepository =
+            new LegalEntityAccountRepository(DbConnection);
 
         /// <summary>
         /// The RiskGroup repository
@@ -263,7 +296,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The ScenarioManagerToolDeal repository
         /// </summary>
-        public static IScenarioManagerToolDealRepository ScenarioManagerToolDealRepository = new ScenarioManagerToolDealRepository(DbConnection);
+        public static IScenarioManagerToolDealRepository ScenarioManagerToolDealRepository =
+            new ScenarioManagerToolDealRepository(DbConnection);
 
         /// <summary>
         /// The User repository
@@ -298,17 +332,20 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The TableNumber repository
         /// </summary>
-        public static ITableNumberRepository TableNumberRepository = new TableNumberRepository(DbConnection, CacheManager);
+        public static ITableNumberRepository TableNumberRepository =
+            new TableNumberRepository(DbConnection, CacheManager);
 
         /// <summary>
         /// The Relationship repository
         /// </summary>
-        public static IRelationshipRepository RelationshipRepository = new RelationshipRepository(DbConnection, CacheManager);
+        public static IRelationshipRepository RelationshipRepository =
+            new RelationshipRepository(DbConnection, CacheManager);
 
         /// <summary>
         /// The ConcessionRelationship repository
         /// </summary>
-        public static IConcessionRelationshipRepository ConcessionRelationshipRepository = new ConcessionRelationshipRepository(DbConnection);
+        public static IConcessionRelationshipRepository ConcessionRelationshipRepository =
+            new ConcessionRelationshipRepository(DbConnection);
 
         /// <summary>
         /// The audit repository
@@ -323,7 +360,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The FinancialLending repository
         /// </summary>
-        public static IFinancialLendingRepository FinancialLendingRepository = new FinancialLendingRepository(DbConnection);
+        public static IFinancialLendingRepository FinancialLendingRepository =
+            new FinancialLendingRepository(DbConnection);
 
         /// <summary>
         /// The FinancialCash repository
@@ -338,47 +376,50 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The FinancialTransactional repository
         /// </summary>
-        public static IFinancialTransactionalRepository FinancialTransactionalRepository = new FinancialTransactionalRepository(DbConnection);
+        public static IFinancialTransactionalRepository FinancialTransactionalRepository =
+            new FinancialTransactionalRepository(DbConnection);
 
         /// <summary>
         /// The ProductTransactional repository
         /// </summary>
-        public static IProductTransactionalRepository ProductTransactionalRepository = new ProductTransactionalRepository(DbConnection);
+        public static IProductTransactionalRepository ProductTransactionalRepository =
+            new ProductTransactionalRepository(DbConnection);
 
         /// <summary>
         /// The LoadedPriceCash repository
         /// </summary>
-        public static ILoadedPriceCashRepository LoadedPriceCashRepository = new LoadedPriceCashRepository(DbConnection);
+        public static ILoadedPriceCashRepository LoadedPriceCashRepository =
+            new LoadedPriceCashRepository(DbConnection);
 
         /// <summary>
         /// The LoadedPriceLending repository
         /// </summary>
-        public static ILoadedPriceLendingRepository LoadedPriceLendingRepository = new LoadedPriceLendingRepository(DbConnection);
+        public static ILoadedPriceLendingRepository LoadedPriceLendingRepository =
+            new LoadedPriceLendingRepository(DbConnection);
 
         /// <summary>
         /// The LoadedPriceTransactional repository
         /// </summary>
-        public static ILoadedPriceTransactionalRepository LoadedPriceTransactionalRepository = new LoadedPriceTransactionalRepository(DbConnection);
+        public static ILoadedPriceTransactionalRepository LoadedPriceTransactionalRepository =
+            new LoadedPriceTransactionalRepository(DbConnection);
 
         /// <summary>
         /// The approval workflow repository
         /// </summary>
-        public static IApprovalWorkflowRepository ApprovalWorkflowRepository = new ApprovalWorkflowRepository(DbConnection, CacheManager);
-
-        /// <summary>
-        /// The ConcessionDetail repository
-        /// </summary>
-        public static IConcessionDetailRepository ConcessionDetailRepository = new ConcessionDetailRepository(DbConnection);
+        public static IApprovalWorkflowRepository ApprovalWorkflowRepository =
+            new ApprovalWorkflowRepository(DbConnection, CacheManager);
 
         /// <summary>
         /// The FinancialInvestment repository
         /// </summary>
-        public static IFinancialInvestmentRepository FinancialInvestmentRepository = new FinancialInvestmentRepository(DbConnection);
+        public static IFinancialInvestmentRepository FinancialInvestmentRepository =
+            new FinancialInvestmentRepository(DbConnection);
 
         /// <summary>
         /// The ProductInvestment repository
         /// </summary>
-        public static IProductInvestmentRepository ProductInvestmentRepository = new ProductInvestmentRepository(DbConnection);
+        public static IProductInvestmentRepository ProductInvestmentRepository =
+            new ProductInvestmentRepository(DbConnection);
 
         /// <summary>
         /// The look up table manager
@@ -388,7 +429,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             ConcessionTypeRepository, ProductRepository, ReviewFeeTypeRepository, PeriodRepository,
             PeriodTypeRepository, ConditionTypeRepository, Mapper, ConditionProductRepository,
             ConditionTypeProductRepository, AccrualTypeRepository, ChannelTypeRepository, TransactionTypeRepository,
-            TableNumberRepository, RelationshipRepository, RoleRepository,CentreRepository,RegionRepository);
+            TableNumberRepository, RelationshipRepository, RoleRepository, CentreRepository, RegionRepository);
 
         /// <summary>
         /// The rule manager
@@ -399,7 +440,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The user manager
         /// </summary>
-        public static IUserManager UserManager = new UserManager(CacheManager, LookupTableManager, UserRepository, UserRoleRepository,
+        public static IUserManager UserManager = new UserManager(CacheManager, LookupTableManager, UserRepository,
+            UserRoleRepository,
             RoleRepository, UserRegionRepository, RegionRepository, CentreRepository, CentreUserRepository, Mapper);
 
         /// <summary>

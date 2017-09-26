@@ -1,4 +1,6 @@
-﻿namespace StandardBank.ConcessionManagement.Model.UserInterface.Transactional
+﻿using System;
+
+namespace StandardBank.ConcessionManagement.Model.UserInterface.Transactional
 {
     /// <summary>
     /// Transactional concession detail
@@ -68,6 +70,14 @@
         /// The legal entity account identifier.
         /// </value>
         public int? LegalEntityAccountId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the expiry date.
+        /// </summary>
+        /// <value>
+        /// The expiry date.
+        /// </value>
+        public DateTime? ExpiryDate { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the customer.

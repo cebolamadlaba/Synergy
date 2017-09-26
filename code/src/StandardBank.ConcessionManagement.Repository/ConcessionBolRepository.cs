@@ -19,12 +19,20 @@ namespace StandardBank.ConcessionManagement.Repository
         private readonly IDbConnectionFactory _dbConnectionFactory;
 
         /// <summary>
+        /// The concession detail repository
+        /// </summary>
+        private readonly IConcessionDetailRepository _concessionDetailRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionBolRepository"/> class.
         /// </summary>
-        /// <param name="dbConnectionFactory">The db connection factory.</param>
-        public ConcessionBolRepository(IDbConnectionFactory dbConnectionFactory)
+        /// <param name="dbConnectionFactory">The database connection factory.</param>
+        /// <param name="concessionDetailRepository">The concession detail repository.</param>
+        public ConcessionBolRepository(IDbConnectionFactory dbConnectionFactory,
+            IConcessionDetailRepository concessionDetailRepository)
         {
             _dbConnectionFactory = dbConnectionFactory;
+            _concessionDetailRepository = concessionDetailRepository;
         }
 
         /// <summary>
@@ -34,13 +42,28 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ConcessionBol Create(ConcessionBol model)
         {
-            const string sql = @"INSERT [dbo].[tblConcessionBol] ([fkConcessionId], [fkConcessionDetailId], [fkTransactionGroupId], [fkBusinesOnlineTransactionTypeId], [BolUseId], [TransactionVolume], [TransactionValue], [Fee]) 
-                                VALUES (@ConcessionId, @ConcessionDetailId, @TransactionGroupId, @BusinesOnlineTransactionTypeId, @BolUseId, @TransactionVolume, @TransactionValue, @Fee) 
-                                SELECT CAST(SCOPE_IDENTITY() as int)";
+            var concessionDetail = _concessionDetailRepository.Create(model);
+            model.ConcessionDetailId = concessionDetail.ConcessionDetailId;
+
+            const string sql =
+                @"INSERT [dbo].[tblConcessionBol] ([fkConcessionId], [fkConcessionDetailId], [fkTransactionGroupId], [fkBusinesOnlineTransactionTypeId], [BolUseId], [TransactionVolume], [TransactionValue], [Fee]) 
+                VALUES (@ConcessionId, @ConcessionDetailId, @TransactionGroupId, @BusinesOnlineTransactionTypeId, @BolUseId, @TransactionVolume, @TransactionValue, @Fee) 
+                SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {ConcessionId = model.ConcessionId, ConcessionDetailId = model.ConcessionDetailId, TransactionGroupId = model.TransactionGroupId, BusinesOnlineTransactionTypeId = model.BusinesOnlineTransactionTypeId, BolUseId = model.BolUseId, TransactionVolume = model.TransactionVolume, TransactionValue = model.TransactionValue, Fee = model.Fee}).Single();
+                model.Id = db.Query<int>(sql,
+                    new
+                    {
+                        ConcessionId = model.ConcessionId,
+                        ConcessionDetailId = model.ConcessionDetailId,
+                        TransactionGroupId = model.TransactionGroupId,
+                        BusinesOnlineTransactionTypeId = model.BusinesOnlineTransactionTypeId,
+                        BolUseId = model.BolUseId,
+                        TransactionVolume = model.TransactionVolume,
+                        TransactionValue = model.TransactionValue,
+                        Fee = model.Fee
+                    }).Single();
             }
 
             return model;
@@ -56,7 +79,10 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionBol>(
-                    "SELECT [pkConcessionBolId] [Id], [fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkTransactionGroupId] [TransactionGroupId], [fkBusinesOnlineTransactionTypeId] [BusinesOnlineTransactionTypeId], [BolUseId], [TransactionVolume], [TransactionValue], [Fee] FROM [dbo].[tblConcessionBol] WHERE [pkConcessionBolId] = @Id",
+                    @"SELECT [pkConcessionBolId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkTransactionGroupId] [TransactionGroupId], [fkBusinesOnlineTransactionTypeId] [BusinesOnlineTransactionTypeId], [BolUseId], [TransactionVolume], [TransactionValue], [Fee], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
+                    FROM [dbo].[tblConcessionBol] t
+                    JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
+                    WHERE [pkConcessionBolId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -69,7 +95,10 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<ConcessionBol>("SELECT [pkConcessionBolId] [Id], [fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkTransactionGroupId] [TransactionGroupId], [fkBusinesOnlineTransactionTypeId] [BusinesOnlineTransactionTypeId], [BolUseId], [TransactionVolume], [TransactionValue], [Fee] FROM [dbo].[tblConcessionBol]");
+                return db.Query<ConcessionBol>(
+                    @"SELECT [pkConcessionBolId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkTransactionGroupId] [TransactionGroupId], [fkBusinesOnlineTransactionTypeId] [BusinesOnlineTransactionTypeId], [BolUseId], [TransactionVolume], [TransactionValue], [Fee], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
+                    FROM [dbo].[tblConcessionBol] t
+                    JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]");
             }
         }
 
@@ -84,8 +113,21 @@ namespace StandardBank.ConcessionManagement.Repository
                 db.Execute(@"UPDATE [dbo].[tblConcessionBol]
                             SET [fkConcessionId] = @ConcessionId, [fkConcessionDetailId] = @ConcessionDetailId, [fkTransactionGroupId] = @TransactionGroupId, [fkBusinesOnlineTransactionTypeId] = @BusinesOnlineTransactionTypeId, [BolUseId] = @BolUseId, [TransactionVolume] = @TransactionVolume, [TransactionValue] = @TransactionValue, [Fee] = @Fee
                             WHERE [pkConcessionBolId] = @Id",
-                    new {Id = model.Id, ConcessionId = model.ConcessionId, ConcessionDetailId = model.ConcessionDetailId, TransactionGroupId = model.TransactionGroupId, BusinesOnlineTransactionTypeId = model.BusinesOnlineTransactionTypeId, BolUseId = model.BolUseId, TransactionVolume = model.TransactionVolume, TransactionValue = model.TransactionValue, Fee = model.Fee});
+                    new
+                    {
+                        Id = model.Id,
+                        ConcessionId = model.ConcessionId,
+                        ConcessionDetailId = model.ConcessionDetailId,
+                        TransactionGroupId = model.TransactionGroupId,
+                        BusinesOnlineTransactionTypeId = model.BusinesOnlineTransactionTypeId,
+                        BolUseId = model.BolUseId,
+                        TransactionVolume = model.TransactionVolume,
+                        TransactionValue = model.TransactionValue,
+                        Fee = model.Fee
+                    });
             }
+
+            _concessionDetailRepository.Update(model);
         }
 
         /// <summary>
@@ -99,6 +141,8 @@ namespace StandardBank.ConcessionManagement.Repository
                 db.Execute("DELETE [dbo].[tblConcessionBol] WHERE [pkConcessionBolId] = @Id",
                     new {model.Id});
             }
+
+            _concessionDetailRepository.Delete(model);
         }
     }
 }

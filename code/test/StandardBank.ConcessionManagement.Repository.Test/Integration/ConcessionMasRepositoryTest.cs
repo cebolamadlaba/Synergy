@@ -24,7 +24,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 TransactionTypeId = DataHelper.GetTransactionTypeId(),
                 MerchantNumber = "96bc9a6a9f",
                 Turnover = 7518,
-                CommissionRate = 8728
+                CommissionRate = 8728,
+                LegalEntityId = DataHelper.GetLegalEntityId(),
+                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
             };
 
             var result = InstantiatedDependencies.ConcessionMasRepository.Create(model);
@@ -75,6 +77,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.MerchantNumber = "e048e1db42";
             model.Turnover = model.Turnover + 100;
             model.CommissionRate = model.CommissionRate + 100;
+            model.LegalEntityId = DataHelper.GetAlternateLegalEntityId(model.LegalEntityId);
+            model.LegalEntityAccountId = DataHelper.GetAlternateLegalEntityAccountId(model.LegalEntityAccountId);
 
             InstantiatedDependencies.ConcessionMasRepository.Update(model);
 
@@ -88,6 +92,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.MerchantNumber, model.MerchantNumber);
             Assert.Equal(updatedModel.Turnover, model.Turnover);
             Assert.Equal(updatedModel.CommissionRate, model.CommissionRate);
+            Assert.Equal(updatedModel.LegalEntityId, model.LegalEntityId);
+            Assert.Equal(updatedModel.LegalEntityAccountId, model.LegalEntityAccountId);
         }
 
         /// <summary>
@@ -103,7 +109,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 TransactionTypeId = DataHelper.GetTransactionTypeId(),
                 MerchantNumber = "96bc9a6a9f",
                 Turnover = 7518,
-                CommissionRate = 8728
+                CommissionRate = 8728,
+                LegalEntityId = DataHelper.GetLegalEntityId(),
+                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
             };
 
             var temporaryEntity = InstantiatedDependencies.ConcessionMasRepository.Create(model);
