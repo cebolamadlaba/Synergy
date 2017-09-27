@@ -3,10 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using StandardBank.ConcessionManagement.Model.Repository;
-using static StandardBank.ConcessionManagement.Model.Constants;
+using static StandardBank.ConcessionManagement.Model.BusinessLogic.Constants;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model;
 using AutoMapper;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {

@@ -14,4 +14,9 @@ export class ConcessionCondition {
     periodId: number;
     expectedTurnoverValue: number;
     expiryDate: Date;
+    riskGroupName: string;
+    riskGroupNumber: number;
+    concessionReferenceNumber: string;
+    ragStatus: string;
+    approvedDate: Date;
 }

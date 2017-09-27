@@ -125,8 +125,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
             mrsCrs: new FormControl(),
             smtDealNumber: new FormControl(),
             motivation: new FormControl(),
-            comments: new FormControl(),
-            expiryDate: new FormControl()
+            comments: new FormControl()
         });
 
         Observable.forkJoin([
@@ -195,11 +194,6 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
                 this.transactionalConcessionForm.controls['mrsCrs'].setValue(this.transactionalConcession.concession.mrsCrs);
                 this.transactionalConcessionForm.controls['smtDealNumber'].setValue(this.transactionalConcession.concession.smtDealNumber);
                 this.transactionalConcessionForm.controls['motivation'].setValue(this.transactionalConcession.concession.motivation);
-
-                if (this.transactionalConcession.concession.expiryDate) {
-                    var formattedExpiryDate = this.datepipe.transform(this.transactionalConcession.concession.expiryDate, 'yyyy-MM-dd');
-                    this.transactionalConcessionForm.controls['expiryDate'].setValue(formattedExpiryDate);
-                }
 
                 let rowIndex = 0;
 
@@ -365,9 +359,6 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
         if (this.transactionalConcessionForm.controls['comments'].value)
             transactionalConcession.concession.comments = this.transactionalConcessionForm.controls['comments'].value;
-
-        if (this.transactionalConcessionForm.controls['expiryDate'].value)
-            transactionalConcession.concession.expiryDate = new Date(this.transactionalConcessionForm.controls['expiryDate'].value);
 
         const concessions = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
 

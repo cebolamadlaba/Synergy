@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace StandardBank.ConcessionManagement.Model.UserInterface.Cash
+﻿namespace StandardBank.ConcessionManagement.Model.UserInterface.Cash
 {
     /// <summary>
     /// Cash concession detail entity

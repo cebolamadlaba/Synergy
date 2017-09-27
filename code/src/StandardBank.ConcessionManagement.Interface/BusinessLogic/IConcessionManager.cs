@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Inbox;
 using Concession = StandardBank.ConcessionManagement.Model.Repository.Concession;
 using ConcessionComment = StandardBank.ConcessionManagement.Model.Repository.ConcessionComment;
 using ConcessionCondition = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionCondition;
 using ConcessionRelationship = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionRelationship;
-using Condition = StandardBank.ConcessionManagement.Model.UserInterface.Condition;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
@@ -93,7 +91,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="periodType">Type of the period.</param>
         /// <param name="period">The period.</param>
         /// <returns></returns>
-        IEnumerable<Condition> GetConditions(string periodType, string period);
+        IEnumerable<ConcessionCondition> GetConditions(string periodType, string period);
 
         /// <summary>
         /// Gets the condition counts.

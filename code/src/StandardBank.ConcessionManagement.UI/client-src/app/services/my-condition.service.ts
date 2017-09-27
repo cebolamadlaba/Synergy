@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
-import { Condition } from "../models/condition";
 import { ConditionCounts } from "../models/condition-counts";
+import { ConcessionCondition } from "../models/concession-condition";
 
 @Injectable()
 export class MyConditionService {
@@ -11,7 +11,7 @@ export class MyConditionService {
     constructor(private http: Http) {
     }
 
-    getMyConditions(period:string,periodType:string): Observable<Condition[]> {
+    getMyConditions(period: string, periodType: string): Observable<ConcessionCondition[]> {
         const url = "/api/Condition/MyConditions/"+period+"/"+periodType;
         return this.http.get(url).map(x => x.json()).catch(this.handleErrorObservable);
     }
@@ -29,10 +29,10 @@ export class MyConditionService {
 
 @Injectable()
 export class MockMyConditionService {
-    model = [new Condition()];
+    model = [new ConcessionCondition()];
     modelConditionCounts = new ConditionCounts();
 
-    getMyConditions(period, periodType): Observable<Condition[]> {
+    getMyConditions(period, periodType): Observable<ConcessionCondition[]> {
         this.model[0].concessionId = 1;
         return Observable.of(this.model);
     }

@@ -1,11 +1,11 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Subject } from 'rxjs/Rx';
-import { Condition } from '../models/condition';
 import { MyConditionService } from '../services/my-condition.service';
 import { Observable } from "rxjs";
 import { Period } from '../models/period';
 import { LookupDataService } from "../services/lookup-data.service";
 import { ConditionCounts } from "../models/condition-counts";
+import { ConcessionCondition } from "../models/concession-condition";
 
 @Component({
     selector: 'app-conditions',
@@ -13,7 +13,7 @@ import { ConditionCounts } from "../models/condition-counts";
     styleUrls: ['./conditions.component.css']
 })
 export class ConditionsComponent implements OnInit {
-    observableConditions: Condition[];
+    observableConditions: ConcessionCondition[];
     periods: Period[];
 
     observableConditionCounts: Observable<ConditionCounts>;

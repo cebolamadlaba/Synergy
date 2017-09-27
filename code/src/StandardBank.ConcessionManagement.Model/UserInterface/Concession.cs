@@ -170,7 +170,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// <value>
         /// The requestor.
         /// </value>
-        public RequestorModel Requestor { get; set; }
+        public User Requestor { get; set; }
 
         /// <summary>
         /// Gets the status description.

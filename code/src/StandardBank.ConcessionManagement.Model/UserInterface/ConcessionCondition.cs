@@ -87,5 +87,45 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// The expiry date.
         /// </value>
         public DateTime? ExpiryDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the risk group.
+        /// </summary>
+        /// <value>
+        /// The name of the risk group.
+        /// </value>
+        public string RiskGroupName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the risk group number.
+        /// </summary>
+        /// <value>
+        /// The risk group number.
+        /// </value>
+        public int RiskGroupNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets the concession reference number.
+        /// </summary>
+        /// <value>
+        /// The concession reference number.
+        /// </value>
+        public string ConcessionReferenceNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets the rag status.
+        /// </summary>
+        /// <value>
+        /// The rag status.
+        /// </value>
+        public string RagStatus { get; set; }
+
+        /// <summary>
+        /// Gets or sets the approved date.
+        /// </summary>
+        /// <value>
+        /// The approved date.
+        /// </value>
+        public DateTime? ApprovedDate { get; set; }
     }
 }

@@ -126,8 +126,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             conditionItemsRows: this.formBuilder.array([]),
             smtDealNumber: new FormControl(),
             motivation: new FormControl(),
-            comments: new FormControl(),
-            expiryDate: new FormControl()
+            comments: new FormControl()
         });
 
         Observable.forkJoin([
@@ -196,11 +195,6 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
                 this.cashConcessionForm.controls['smtDealNumber'].setValue(this.cashConcession.concession.smtDealNumber);
                 this.cashConcessionForm.controls['motivation'].setValue(this.cashConcession.concession.motivation);
-
-                if (this.cashConcession.concession.expiryDate) {
-                    var formattedExpiryDate = this.datepipe.transform(this.cashConcession.concession.expiryDate, 'yyyy-MM-dd');
-                    this.cashConcessionForm.controls['expiryDate'].setValue(formattedExpiryDate);
-                }
 
                 let rowIndex = 0;
 
@@ -372,9 +366,6 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
         if (this.cashConcessionForm.controls['comments'].value)
             cashConcession.concession.comments = this.cashConcessionForm.controls['comments'].value;
-
-        if (this.cashConcessionForm.controls['expiryDate'].value)
-            cashConcession.concession.expiryDate = new Date(this.cashConcessionForm.controls['expiryDate'].value);
 
         const concessions = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
 

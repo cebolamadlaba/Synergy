@@ -142,10 +142,6 @@
             <h3 class="table-title">Concessions</h3>
             <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" *ngIf="canPcmApprove || isEditing || isRecalling" style="margin-top: 15px;">New Concession</button>
         </div>
-        <div class="row">
-            <div class="col-md-2" *ngIf="lendingConcession?.concession?.expiryDate"><strong>Expiry Date</strong> {{lendingConcession?.concession?.expiryDate | date: 'yyyy/MM/dd' }}</div>
-            <div class="col-md-2" *ngIf="lendingConcession?.concession?.dateApproved"><strong>Approval Date</strong> {{lendingConcession?.concession?.dateApproved | date: 'yyyy/MM/dd' }}</div>
-        </div>
     </div>
 
     <table class="form-concessions-table" formArrayName="concessionItemRows">

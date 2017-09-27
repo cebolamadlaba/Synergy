@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using StandardBank.ConcessionManagement.Model;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
 {

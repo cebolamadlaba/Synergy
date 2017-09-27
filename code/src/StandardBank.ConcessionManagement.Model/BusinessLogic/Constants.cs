@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace StandardBank.ConcessionManagement.Model
+﻿namespace StandardBank.ConcessionManagement.Model.BusinessLogic
 {
     public class Constants
     {

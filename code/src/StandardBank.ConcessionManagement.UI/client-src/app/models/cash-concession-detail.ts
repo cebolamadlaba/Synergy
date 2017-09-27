@@ -1,9 +1,7 @@
-export class CashConcessionDetail {
+import { BaseConcessionDetail } from "./base-concession-detail";
+
+export class CashConcessionDetail extends BaseConcessionDetail {
     cashConcessionDetailId: number;
-    customerName: string;
-    accountNumber: string;
-    legalEntityId: number;
-    legalEntityAccountId: number;
     channel: string;
     channelTypeId: number;
     bpId: number;

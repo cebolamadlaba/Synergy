@@ -90,7 +90,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     @"SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [ExpiryDate], [IsActive] 
                     FROM [dbo].[tblConcessionCondition] 
                     WHERE [fkConcessionId] = @concessionId",
-                    new { concessionId });
+                    new {concessionId});
             }
         }
 
@@ -101,7 +101,8 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="periodId">The period identifier.</param>
         /// <param name="periodType">Type of the period.</param>
         /// <returns></returns>
-        public IEnumerable<Condition> ReadByPeriodAndApprovalStatus(int concessionApprovalStatusId, int periodId, int periodType)
+        public IEnumerable<ConcessionCondition> ReadByPeriodAndApprovalStatus(int concessionApprovalStatusId,
+            int periodId, int periodType)
         {
             using (var db = _dbConnectionFactory.Connection())
             {
@@ -117,7 +118,8 @@ namespace StandardBank.ConcessionManagement.Repository
                     join tblRiskGroup rg on rg.pkRiskGroupId = c.fkRiskGroupId
                     join [rtblPeriod] p on p.[pkPeriodId] =  cc.fkPeriodId
                     where c.fkStatusId = @statusId and cc.fkPeriodId = @periodId and cc.fkPeriodTypeId = @periodType and c.[DateApproved] is not null";
-                return db.Query<Condition>(query, new { statusId = concessionApprovalStatusId, periodId, periodType });
+                return db.Query<ConcessionCondition>(query,
+                    new {statusId = concessionApprovalStatusId, periodId, periodType});
             }
         }
 

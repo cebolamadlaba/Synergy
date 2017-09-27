@@ -2,6 +2,7 @@
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model;
 using System.Threading.Tasks;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
 {

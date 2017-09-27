@@ -11,7 +11,6 @@ using Concession = StandardBank.ConcessionManagement.Model.Repository.Concession
 using ConcessionComment = StandardBank.ConcessionManagement.Model.Repository.ConcessionComment;
 using ConcessionCondition = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionCondition;
 using ConcessionRelationship = StandardBank.ConcessionManagement.Model.Repository.ConcessionRelationship;
-using Condition = StandardBank.ConcessionManagement.Model.UserInterface.Condition;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
@@ -422,7 +421,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="periodType">Type of the period.</param>
         /// <param name="period">The period.</param>
         /// <returns></returns>
-        public IEnumerable<Condition> GetConditions(string periodType, string period)
+        public IEnumerable<ConcessionCondition> GetConditions(string periodType, string period)
         {
             var approvedStatusId = _lookupTableManager.GetStatusId("Approved");
             var approvedWithChangesStatusId = _lookupTableManager.GetStatusId("Approved With Changes");
@@ -430,7 +429,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var periodId = _lookupTableManager.GetPeriods().First(x => x.Description == period).Id;
             var periodTypeId = _lookupTableManager.GetPeriodTypes().First(x => x.Description == periodType).Id;
 
-            var conditions = new List<Model.Repository.Condition>();
+            var conditions = new List<Model.Repository.ConcessionCondition>();
 
             conditions.AddRange(
                 _concessionConditionRepository.ReadByPeriodAndApprovalStatus(approvedStatusId, periodId, periodTypeId));
@@ -439,9 +438,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 _concessionConditionRepository.ReadByPeriodAndApprovalStatus(approvedWithChangesStatusId, periodId,
                     periodTypeId));
 
-            var results = _mapper.Map<IEnumerable<Condition>>(conditions);
+            var results = _mapper.Map<IEnumerable<ConcessionCondition>>(conditions);
 
-            results.ToList().ForEach(x => x.RagStatus = GetRagStatus(x.PeriodName, x.ApprovedDate));
+            results.ToList().ForEach(x => x.RagStatus = GetRagStatus(x.Period, x.ApprovedDate.Value));
 
             return results;
         }
@@ -749,15 +748,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         _mapper.Map<IEnumerable<Model.UserInterface.ConcessionRelationshipDetail>>(
                             _concessionRelationshipRepository.ReadDetailsByConcessionId(concession.Id));
 
-                    var user = _userManager.GetUser(concession.RequestorId);
-
-                    mappedConcession.Requestor = new RequestorModel
-                    {
-                        FullName = user.FullName,
-                        ANumber = user.ANumber,
-                        BusinessCentre = user.SelectedCentre.Name,
-                        Region = user.SelectedRegion.Description
-                    };
+                    mappedConcession.Requestor = _userManager.GetUser(concession.RequestorId);
                 }
 
                 concessions.Add(mappedConcession);
