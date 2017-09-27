@@ -61,8 +61,8 @@
                 <i class="fa fa-user-circle-o" aria-hidden="true"></i>
                 <p class="name">{{cashConcession?.concession?.requestor?.fullName}}</p>
                 <p class="anumber">{{cashConcession?.concession?.requestor?.aNumber}}</p>
-                <p>{{cashConcession?.concession?.requestor?.businessCentre}}</p>
-                <p>{{cashConcession?.concession?.requestor?.region}}</p>
+                <p>{{cashConcession?.concession?.requestor?.selectedCentre?.name}}</p>
+                <p>{{cashConcession?.concession?.requestor?.selectedRegion?.description}}</p>
                 <button type="button" class="btn btn-primary" (click)="viewRequesterModal.hide()">Close</button>
             </div>
         </div>

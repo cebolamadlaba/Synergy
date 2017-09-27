@@ -16,7 +16,6 @@
     [ConcessionDate]      DATETIME        NOT NULL,
     [DatesentForApproval] DATETIME        NULL,
     [Motivation]          VARCHAR (1000)  NOT NULL,
-    [DateApproved]        DATETIME        NULL,
     [DateActionedByBCM]   DATETIME        NULL,
     [DateActionedByPCM]   DATETIME        NULL,
     [DateActionedByHO]    DATETIME        NULL,
@@ -36,6 +35,8 @@
     CONSTRAINT [FK_tblConcession_tblUserHO] FOREIGN KEY ([fkHOUserId]) REFERENCES [dbo].[tblUser] ([pkUserId]),
     CONSTRAINT [FK_tblConcession_tblUserPCM] FOREIGN KEY ([fkPCMUserId]) REFERENCES [dbo].[tblUser] ([pkUserId])
 );
+
+
 
 
 

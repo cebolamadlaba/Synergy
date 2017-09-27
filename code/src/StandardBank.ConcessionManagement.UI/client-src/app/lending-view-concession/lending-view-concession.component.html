@@ -56,8 +56,8 @@
                 <i class="fa fa-user-circle-o" aria-hidden="true"></i>
                 <p class="name">{{lendingConcession?.concession?.requestor?.fullName}}</p>
                 <p class="anumber">{{lendingConcession?.concession?.requestor?.aNumber}}</p>
-                <p>{{lendingConcession?.concession?.requestor?.businessCentre}}</p>
-                <p>{{lendingConcession?.concession?.requestor?.region}}</p>
+                <p>{{lendingConcession?.concession?.requestor?.selectedCentre?.name}}</p>
+                <p>{{lendingConcession?.concession?.requestor?.selectedRegion?.description}}</p>
                 <button type="button" class="btn btn-primary" (click)="viewRequesterModal.hide()">Close</button>
             </div>   
         </div>

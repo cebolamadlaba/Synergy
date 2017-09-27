@@ -72,8 +72,8 @@
                 <i class="fa fa-user-circle-o" aria-hidden="true"></i>
                 <p class="name">{{transactionalConcession?.concession?.requestor?.fullName}}</p>
                 <p class="anumber">{{transactionalConcession?.concession?.requestor?.aNumber}}</p>
-                <p>{{transactionalConcession?.concession?.requestor?.businessCentre}}</p>
-                <p>{{transactionalConcession?.concession?.requestor?.region}}</p>
+                <p>{{transactionalConcession?.concession?.requestor?.selectedCentre?.name}}</p>
+                <p>{{transactionalConcession?.concession?.requestor?.selectedRegion?.description}}</p>
                 <button type="button" class="btn btn-primary" (click)="viewRequesterModal.hide()">Close</button>
             </div>
         </div>
