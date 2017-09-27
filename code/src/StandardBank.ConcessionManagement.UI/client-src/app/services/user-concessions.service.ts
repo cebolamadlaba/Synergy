@@ -3,7 +3,7 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import { UserConcessions } from "../models/user-concessions";
-import { ApprovedConcession } from "../models/approved-concession";
+import { InboxConcession } from "../models/inbox-concession";
 
 @Injectable()
 export class UserConcessionsService {
@@ -31,7 +31,7 @@ export class UserConcessionsService {
         return Observable.throw(error.message || error);
     }
 
-    getApprovedConcessions(): Observable<ApprovedConcession[]> {
+    getApprovedConcessions(): Observable<InboxConcession[]> {
         const url = "/api/Concession/UserApprovedConcessions";
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
@@ -45,7 +45,7 @@ export class UserConcessionsService {
 @Injectable()
 export class MockUserConcessionsService extends UserConcessionsService {
     model = new UserConcessions();
-    approvedConcessionModel = [new ApprovedConcession()];
+    approvedConcessionModel = [new InboxConcession()];
     printData: any;
 
     getData(): Observable<UserConcessions> {
@@ -57,7 +57,7 @@ export class MockUserConcessionsService extends UserConcessionsService {
         return Observable.of(this.model);
     }
 
-    getApprovedConcessions(): Observable<ApprovedConcession[]> {
+    getApprovedConcessions(): Observable<InboxConcession[]> {
         this.approvedConcessionModel[0].concessionId = 1;
         return Observable.of(this.approvedConcessionModel);
     }

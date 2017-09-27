@@ -1,8 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { ApprovedConcession } from "../models/approved-concession";
 import { Observable } from "rxjs";
 import { UserConcessionsService } from "../services/user-concessions.service";
 import { Router, RouterModule } from '@angular/router';
+import { InboxConcession } from "../models/inbox-concession";
 
 @Component({
     selector: 'app-approved-concessions',
@@ -15,8 +15,8 @@ export class ApprovedConcessionsComponent implements OnInit {
     saveMessage: String;
     isLoading = true;
 
-    observableApprovedConcessions: Observable<ApprovedConcession[]>;
-    approvedConcessions: ApprovedConcession[];
+    observableApprovedConcessions: Observable<InboxConcession[]>;
+    approvedConcessions: InboxConcession[];
 
     constructor( @Inject(UserConcessionsService) private userConcessionsService, private router: Router) { }
 
@@ -28,16 +28,16 @@ export class ApprovedConcessionsComponent implements OnInit {
         }, error => this.errorMessage = <any>error);
     }
 
-    openConcessionView(approvedConcession: ApprovedConcession) {
+    openConcessionView(approvedConcession: InboxConcession) {
         switch (approvedConcession.concessionType) {
             case "Lending":
-                this.router.navigate(['/lending-view-concession', approvedConcession.riskGroupNumber, approvedConcession.concessionReferenceNumber]);
+                this.router.navigate(['/lending-view-concession', approvedConcession.riskGroupNumber, approvedConcession.referenceNumber]);
                 break;
             case "Cash":
-                this.router.navigate(['/cash-view-concession', approvedConcession.riskGroupNumber, approvedConcession.concessionReferenceNumber]);
+                this.router.navigate(['/cash-view-concession', approvedConcession.riskGroupNumber, approvedConcession.referenceNumber]);
                 break;
             case "Transactional":
-                this.router.navigate(['/transactional-view-concession', approvedConcession.riskGroupNumber, approvedConcession.concessionReferenceNumber]);
+                this.router.navigate(['/transactional-view-concession', approvedConcession.riskGroupNumber, approvedConcession.referenceNumber]);
                 break;
         }
     }

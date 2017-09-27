@@ -8,6 +8,14 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Inbox
     public class InboxConcession
     {
         /// <summary>
+        /// Gets or sets the concession identifier.
+        /// </summary>
+        /// <value>
+        /// The concession identifier.
+        /// </value>
+        public int ConcessionId { get; set; }
+
+        /// <summary>
         /// Gets or sets the risk group number.
         /// </summary>
         /// <value>

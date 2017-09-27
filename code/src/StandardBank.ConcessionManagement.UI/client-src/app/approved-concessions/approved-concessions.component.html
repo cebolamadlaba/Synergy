@@ -71,13 +71,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let approvedConcessionDetail of approvedConcession.approvedConcessionDetails" (click)="openConcessionView(approvedConcession)">
-                            <td> {{approvedConcessionDetail.customerName}} </td>
-                            <td> {{approvedConcessionDetail.segment}} </td>
-                            <td> {{approvedConcessionDetail.concessionType}} </td>
-                            <td> {{approvedConcessionDetail.status}} </td>
-                            <td> {{approvedConcessionDetail.dateOpened | date: 'yyyy/MM/dd'}} </td>
-                            <td> {{approvedConcessionDetail.dateSentForApproval | date: 'yyyy/MM/dd'}} </td>
+                        <tr (click)="openConcessionView(approvedConcession)">
+                            <td> {{approvedConcession.customerName}} </td>
+                            <td> {{approvedConcession.segment}} </td>
+                            <td> {{approvedConcession.concessionType}} </td>
+                            <td> {{approvedConcession.status}} </td>
+                            <td> {{approvedConcession.dateOpened | date: 'yyyy/MM/dd'}} </td>
+                            <td> {{approvedConcession.dateSentForApproval | date: 'yyyy/MM/dd'}} </td>
                         </tr>
                     </tbody>
                 </table>
