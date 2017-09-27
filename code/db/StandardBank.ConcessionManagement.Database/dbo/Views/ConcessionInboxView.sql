@@ -3,7 +3,7 @@ AS
 SELECT        c.pkConcessionId AS ConcessionId, rg.pkRiskGroupId AS RiskGroupId, rg.RiskGroupNumber, rg.RiskGroupName, le.pkLegalEntityId AS LegalEntityId, le.CustomerName, ct.pkConcessionTypeId AS ConcessionTypeId, 
                          ct.Description AS ConcessionType, c.ConcessionDate, s.pkStatusId AS StatusId, s.Description AS Status, ss.pkSubStatusId AS SubStatusId, ss.Description AS SubStatus, c.ConcessionRef, 
                          ms.pkMarketSegmentId AS MarketSegmentId, ms.Description AS Segment, c.DatesentForApproval, cd.pkConcessionDetailId AS ConcessionDetailId, cd.ExpiryDate, c.fkRequestorId AS RequestorId, c.fkBCMUserId AS BCMUserId, 
-                         c.fkPCMUserId AS PCMUserId, c.fkHOUserId AS HOUserId, cd.IsMismatched
+                         c.fkPCMUserId AS PCMUserId, c.fkHOUserId AS HOUserId, ce.pkCentreId AS CentreId, ce.CentreName, p.pkProvinceId AS ProvinceId, p.Description AS Province, cd.IsMismatched, c.IsActive, c.IsCurrent
 FROM            dbo.tblConcession AS c INNER JOIN
                          dbo.tblRiskGroup AS rg ON rg.pkRiskGroupId = c.fkRiskGroupId INNER JOIN
                          dbo.rtblConcessionType AS ct ON ct.pkConcessionTypeId = c.fkConcessionTypeId INNER JOIN
@@ -11,8 +11,9 @@ FROM            dbo.tblConcession AS c INNER JOIN
                          dbo.tblLegalEntity AS le ON le.pkLegalEntityId = cd.fkLegalEntityId INNER JOIN
                          dbo.rtblStatus AS s ON s.pkStatusId = c.fkStatusId INNER JOIN
                          dbo.rtblSubStatus AS ss ON ss.pkSubStatusId = c.fkSubStatusId INNER JOIN
-                         dbo.rtblMarketSegment AS ms ON ms.pkMarketSegmentId = le.fkMarketSegmentId
-WHERE        (c.IsActive = 1)
+                         dbo.rtblMarketSegment AS ms ON ms.pkMarketSegmentId = le.fkMarketSegmentId INNER JOIN
+                         dbo.tblCentre AS ce ON ce.pkCentreId = c.fkCentreId INNER JOIN
+                         dbo.rtblProvince AS p ON p.pkProvinceId = ce.fkProvinceId
 GO
 EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 2, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'ConcessionInboxView';
 
@@ -25,6 +26,26 @@ EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane2', @value = N'
                Left = 685
                Bottom = 251
                Right = 881
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+         Begin Table = "ce"
+            Begin Extent = 
+               Top = 252
+               Left = 269
+               Bottom = 382
+               Right = 439
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+         Begin Table = "p"
+            Begin Extent = 
+               Top = 252
+               Left = 477
+               Bottom = 365
+               Right = 647
             End
             DisplayFlags = 280
             TopColumn = 0
@@ -56,6 +77,8 @@ EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane2', @value = N'
    End
 End
 ', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'ConcessionInboxView';
+
+
 
 
 GO

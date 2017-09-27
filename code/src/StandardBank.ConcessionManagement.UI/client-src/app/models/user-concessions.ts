@@ -1,4 +1,4 @@
-import { Concession } from "./concession";
+import { InboxConcession } from "./inbox-concession";
 
 export class UserConcessions {
     pendingConcessionsCount: number;
@@ -8,12 +8,12 @@ export class UserConcessions {
     declinedConcessionsCount: number;
     actionedConcessionsCount: number;
 
-    pendingConcessions: Concession[];
-    dueForExpiryConcessions: Concession[];
-    expiredConcessions: Concession[];
-    mismatchedConcessions: Concession[];
-    declinedConcessions: Concession[];
-    actionedConcessions: Concession[];
+    pendingConcessions: InboxConcession[];
+    dueForExpiryConcessions: InboxConcession[];
+    expiredConcessions: InboxConcession[];
+    mismatchedConcessions: InboxConcession[];
+    declinedConcessions: InboxConcession[];
+    actionedConcessions: InboxConcession[];
 
     showPendingConcessions: boolean;
     showDueForExpiryConcessions: boolean;
