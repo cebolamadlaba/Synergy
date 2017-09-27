@@ -27,9 +27,10 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 Value = 3092,
                 IsActive = false,
                 PeriodTypeId = DataHelper.GetPeriodTypeId(),
-                PeriodId =  DataHelper.GetPeriodId(),
+                PeriodId = DataHelper.GetPeriodId(),
                 ExpectedTurnoverValue = 100,
-                ExpiryDate = DateTime.Now.AddDays(100)
+                ExpiryDate = DateTime.Now.AddDays(100),
+                DateApproved = DateTime.Now.AddDays(-100)
             };
 
             var result = InstantiatedDependencies.ConcessionConditionRepository.Create(model);
@@ -101,7 +102,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.PeriodTypeId = DataHelper.GetAlternatePeriodTypeId(model.PeriodTypeId);
             model.PeriodId = DataHelper.GetAlternatePeriodId(model.PeriodId);
             model.ExpectedTurnoverValue = model.ExpectedTurnoverValue.GetValueOrDefault(0) + 100;
-            model.ExpiryDate = model.ExpiryDate.GetValueOrDefault(DateTime.Now).AddDays(1);
+            model.ExpiryDate = DataHelper.ChangeDate(model.ExpiryDate);
+            model.DateApproved = DataHelper.ChangeDate(model.DateApproved);
 
             InstantiatedDependencies.ConcessionConditionRepository.Update(model);
 
@@ -120,6 +122,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.PeriodId, model.PeriodId);
             Assert.Equal(updatedModel.ExpectedTurnoverValue, model.ExpectedTurnoverValue);
             Assert.Equal(updatedModel.ExpiryDate.Value.Date, model.ExpiryDate.Value.Date);
+            Assert.Equal(updatedModel.DateApproved.Value.Date, model.DateApproved.Value.Date);
         }
 
         /// <summary>
@@ -140,7 +143,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 PeriodTypeId = DataHelper.GetPeriodTypeId(),
                 PeriodId = DataHelper.GetPeriodId(),
                 ExpectedTurnoverValue = 100,
-                ExpiryDate = DateTime.Now.AddDays(100)
+                ExpiryDate = DateTime.Now.AddDays(100),
+                DateApproved = DateTime.Now.AddDays(-100)
             };
 
             var temporaryEntity = InstantiatedDependencies.ConcessionConditionRepository.Create(model);
@@ -164,6 +168,26 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var result = InstantiatedDependencies.ConcessionConditionRepository.ReadConditionCounts();
 
             Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Tests that ReadByPeriodAndApprovalStatus executes positive.
+        /// </summary>
+        [Fact]
+        public void ReadByPeriodAndApprovalStatus_Executes_Positive()
+        {
+            var results = InstantiatedDependencies.ConcessionConditionRepository.ReadAll();
+            var concessionCondition =
+                results.First(_ => _.DateApproved.HasValue && _.PeriodId.HasValue && _.PeriodTypeId.HasValue);
+            var concessionId = concessionCondition.ConcessionId;
+
+            var concession = InstantiatedDependencies.ConcessionRepository.ReadById(concessionId);
+
+            var result = InstantiatedDependencies.ConcessionConditionRepository.ReadByPeriodAndApprovalStatus(
+                concession.StatusId, concessionCondition.PeriodId.Value, concessionCondition.PeriodTypeId.Value);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
         }
     }
 }

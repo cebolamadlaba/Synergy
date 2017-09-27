@@ -35,9 +35,9 @@ namespace StandardBank.ConcessionManagement.Repository
         public ConcessionCondition Create(ConcessionCondition model)
         {
             const string sql =
-                @"INSERT [dbo].[tblConcessionCondition] ([fkConcessionId], [fkConditionTypeId], [fkConditionProductId], [fkPeriodTypeId], [fkPeriodId], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [ExpiryDate], [IsActive]) 
-                                VALUES (@ConcessionId, @ConditionTypeId, @ConditionProductId, @PeriodTypeId, @PeriodId, @InterestRate, @Volume, @Value, @ConditionMet, @ExpectedTurnoverValue, @ExpiryDate, @IsActive) 
-                                SELECT CAST(SCOPE_IDENTITY() as int)";
+                @"INSERT [dbo].[tblConcessionCondition] ([fkConcessionId], [fkConditionTypeId], [fkConditionProductId], [fkPeriodTypeId], [fkPeriodId], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [ExpiryDate], [DateApproved], [IsActive]) 
+                VALUES (@ConcessionId, @ConditionTypeId, @ConditionProductId, @PeriodTypeId, @PeriodId, @InterestRate, @Volume, @Value, @ConditionMet, @ExpectedTurnoverValue, @ExpiryDate, @DateApproved, @IsActive) 
+                SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
@@ -55,6 +55,7 @@ namespace StandardBank.ConcessionManagement.Repository
                         ConditionMet = model.ConditionMet,
                         ExpectedTurnoverValue = model.ExpectedTurnoverValue,
                         ExpiryDate = model.ExpiryDate,
+                        DateApproved = model.DateApproved,
                         IsActive = model.IsActive
                     }).Single();
             }
@@ -72,7 +73,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionCondition>(
-                    "SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [ExpiryDate], [IsActive] FROM [dbo].[tblConcessionCondition] WHERE [pkConcessionConditionId] = @Id",
+                    "SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [ExpiryDate], [DateApproved], [IsActive] FROM [dbo].[tblConcessionCondition] WHERE [pkConcessionConditionId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -87,7 +88,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionCondition>(
-                    @"SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [ExpiryDate], [IsActive] 
+                    @"SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [ExpiryDate], [DateApproved], [IsActive] 
                     FROM [dbo].[tblConcessionCondition] 
                     WHERE [fkConcessionId] = @concessionId",
                     new {concessionId});
@@ -110,14 +111,14 @@ namespace StandardBank.ConcessionManagement.Repository
                     SELECT 
                         rg.RiskGroupName, rg.RiskGroupNumber, c.pkConcessionId 'ConcessionId', c.[ConcessionRef] 'ConcessionReferenceNumber', 
                         ct.Description 'ConditionType', cp.Description 'ProductType', cc.InterestRate, cc.Volume, cc.Value, 
-                        c.[DateApproved] 'ApprovedDate', p.[Description] 'PeriodName', cc.[ExpectedTurnoverValue], cc.[ExpiryDate]
+                        cc.[DateApproved] 'ApprovedDate', p.[Description] 'Period', cc.[ExpectedTurnoverValue], cc.[ExpiryDate]
                     FROM [dbo].[tblConcessionCondition] cc
                     join dbo.rtblConditionType ct on cc.fkConditionTypeId = ct.pkConditionTypeId
                     join dbo.rtblConditionProduct cp on cp.pkConditionProductId = cc.fkConditionProductId
                     join tblConcession c on c.pkConcessionId = cc.fkConcessionId
                     join tblRiskGroup rg on rg.pkRiskGroupId = c.fkRiskGroupId
                     join [rtblPeriod] p on p.[pkPeriodId] =  cc.fkPeriodId
-                    where c.fkStatusId = @statusId and cc.fkPeriodId = @periodId and cc.fkPeriodTypeId = @periodType and c.[DateApproved] is not null";
+                    where c.fkStatusId = @statusId and cc.fkPeriodId = @periodId and cc.fkPeriodTypeId = @periodType and cc.[DateApproved] is not null";
                 return db.Query<ConcessionCondition>(query,
                     new {statusId = concessionApprovalStatusId, periodId, periodType});
             }
@@ -153,7 +154,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionCondition>(
-                    "SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [ExpiryDate], [IsActive] FROM [dbo].[tblConcessionCondition]");
+                    "SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [ExpiryDate], [DateApproved], [IsActive] FROM [dbo].[tblConcessionCondition]");
             }
         }
 
@@ -166,7 +167,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblConcessionCondition]
-                            SET [fkConcessionId] = @ConcessionId, [fkConditionTypeId] = @ConditionTypeId, [fkConditionProductId] = @ConditionProductId, [fkPeriodTypeId] = @PeriodTypeId, [fkPeriodId] = @PeriodId, [InterestRate] = @InterestRate, [Volume] = @Volume, [Value] = @Value, [ConditionMet] = @ConditionMet, [ExpectedTurnoverValue] = @ExpectedTurnoverValue, [ExpiryDate] = @ExpiryDate, [IsActive] = @IsActive
+                            SET [fkConcessionId] = @ConcessionId, [fkConditionTypeId] = @ConditionTypeId, [fkConditionProductId] = @ConditionProductId, [fkPeriodTypeId] = @PeriodTypeId, [fkPeriodId] = @PeriodId, [InterestRate] = @InterestRate, [Volume] = @Volume, [Value] = @Value, [ConditionMet] = @ConditionMet, [ExpectedTurnoverValue] = @ExpectedTurnoverValue, [ExpiryDate] = @ExpiryDate, [DateApproved] = @DateApproved, [IsActive] = @IsActive
                             WHERE [pkConcessionConditionId] = @Id",
                     new
                     {
@@ -182,6 +183,7 @@ namespace StandardBank.ConcessionManagement.Repository
                         ConditionMet = model.ConditionMet,
                         ExpectedTurnoverValue = model.ExpectedTurnoverValue,
                         ExpiryDate = model.ExpiryDate,
+                        DateApproved = model.DateApproved,
                         IsActive = model.IsActive
                     });
             }

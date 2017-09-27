@@ -54,12 +54,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCon
             }
             else
             {
-                if (!message.ConcessionCondition.ExpiryDate.HasValue && message.ConcessionCondition.PeriodId.HasValue &&
-                    (message.Concession.Status == "Approved" || message.Concession.Status == "Approved With Changes"))
+                if (message.Concession.Status == "Approved" || message.Concession.Status == "Approved With Changes")
                 {
-                    var period = _lookupTableManager.GetPeriodName(message.ConcessionCondition.PeriodId.Value);
-                    var months = Convert.ToInt32(period.Split(' ')[0]);
-                    message.ConcessionCondition.ExpiryDate = DateTime.Now.AddMonths(months);
+                    if (!message.ConcessionCondition.ExpiryDate.HasValue &&
+                        message.ConcessionCondition.PeriodId.HasValue)
+                    {
+                        var period = _lookupTableManager.GetPeriodName(message.ConcessionCondition.PeriodId.Value);
+                        var months = Convert.ToInt32(period.Split(' ')[0]);
+                        message.ConcessionCondition.ExpiryDate = DateTime.Now.AddMonths(months);
+                    }
+
+                    if (!message.ConcessionCondition.ApprovedDate.HasValue)
+                        message.ConcessionCondition.ApprovedDate = DateTime.Now;
                 }
 
                 var result =

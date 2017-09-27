@@ -10,6 +10,7 @@
     [Value]                   DECIMAL (18, 2) NULL,
     [ConditionMet]            BIT             NULL,
     [ExpectedTurnoverValue]   DECIMAL (18, 2) NULL,
+    [DateApproved]            DATETIME        NULL,
     [ExpiryDate]              DATETIME        NULL,
     [IsActive]                BIT             NOT NULL,
     CONSTRAINT [PK_tblConcessionCondition] PRIMARY KEY CLUSTERED ([pkConcessionConditionId] ASC),
@@ -19,6 +20,8 @@
     CONSTRAINT [FK_tblConcessionCondition_rtblPeriodType] FOREIGN KEY ([fkPeriodTypeId]) REFERENCES [dbo].[rtblPeriodType] ([pkPeriodTypeId]),
     CONSTRAINT [FK_tblConcessionCondition_tblConcession] FOREIGN KEY ([fkConcessionId]) REFERENCES [dbo].[tblConcession] ([pkConcessionId])
 );
+
+
 
 
 
