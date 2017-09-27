@@ -135,9 +135,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive_Normal_StartDate_Executes_Positive()
         {
-            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
-            var requestorId = results.Last().RequestorId;
-            var isActive = results.Last().IsActive;
+            var requestorId = DataHelper.GetUserId();
+            var isActive = true;
             var startExpiryDate = new DateTime(2001, 1, 1);
             var endExpiryDate = DateTime.Now.AddYears(10);
 
@@ -165,9 +164,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void ReadByRequestorIdIsMismatchedIsActive_Executes_Positive()
         {
-            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
-            var requestorId = results.Last().RequestorId;
-            var isActive = results.Last().IsActive;
+            var requestorId = DataHelper.GetUserId();
+            var isActive = true;
             var isMismatched = false;
 
             var result =

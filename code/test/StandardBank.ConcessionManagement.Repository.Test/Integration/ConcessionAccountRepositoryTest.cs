@@ -51,8 +51,10 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         {
             var results = InstantiatedDependencies.ConcessionAccountRepository.ReadAll();
             var concessionId = results.First().ConcessionId;
+            var concession = InstantiatedDependencies.ConcessionRepository.ReadById(concessionId);
+
             var result =
-                InstantiatedDependencies.ConcessionAccountRepository.ReadByConcessionIdIsActive(concessionId, true);
+                InstantiatedDependencies.ConcessionAccountRepository.ReadByConcessionIdIsActive(concessionId, concession.IsActive);
 
             Assert.NotNull(result);
             Assert.Equal(result.ConcessionId, concessionId);

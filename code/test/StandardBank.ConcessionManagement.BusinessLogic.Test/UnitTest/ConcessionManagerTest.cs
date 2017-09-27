@@ -345,6 +345,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 SelectedRegion = new Model.UserInterface.Region { Description = "Test Region" }
             });
 
+            MockConcessionRepository
+                .Setup(_ => _.ReadByRiskGroupIdConcessionTypeIdIsActive(It.IsAny<int>(), It.IsAny<int>(),
+                    It.IsAny<bool>())).Returns(new[] {new Concession()});
+
             var result = _concessionManager.GetConcessionsForRiskGroup(1, "Test");
 
             Assert.NotNull(result);

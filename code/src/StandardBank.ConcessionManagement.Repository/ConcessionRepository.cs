@@ -122,7 +122,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     @"SELECT [pkConcessionId] [Id], [fkTypeId] [TypeId], [fkConcessionTypeId] [ConcessionTypeId], [fkStatusId] [StatusId], [fkSubStatusId] [SubStatusId], [fkRequestorId] [RequestorId], [fkBCMUserId] [BCMUserId], [fkPCMUserId] [PCMUserId], [fkHOUserId] [HOUserId], [fkRiskGroupId] [RiskGroupId], [fkRegionId] [RegionId], [fkCentreId] [CentreId], [ConcessionRef], [SMTDealNumber], [ConcessionDate], [DatesentForApproval], [Motivation], [DateApproved], [DateActionedByBCM], [DateActionedByPCM], [DateActionedByHO], [MRS_CRS], [IsCurrent], [IsActive] 
                     FROM [dbo].[tblConcession] 
                     WHERE [fkRiskGroupId] = @riskGroupId
-                    AND [ConcessionTypeId] = @concessionTypeId
+                    AND [fkConcessionTypeId] = @concessionTypeId
                     AND [IsActive] = @isActive",
                     new { riskGroupId, concessionTypeId, isActive });
             }
