@@ -85,7 +85,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// </summary>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        IEnumerable<ApprovedConcession> GetApprovedConcessionsForUser(int userId);
+        IEnumerable<InboxConcession> GetApprovedConcessionsForUser(int userId);
 
         /// <summary>
         /// Gets the conditions.

@@ -422,6 +422,12 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             new ProductInvestmentRepository(DbConnection);
 
         /// <summary>
+        /// The concession inbox view repository
+        /// </summary>
+        public static IConcessionInboxViewRepository ConcessionInboxViewRepository =
+            new ConcessionInboxViewRepository(DbConnection);
+
+        /// <summary>
         /// The look up table manager
         /// </summary>
         public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,
@@ -452,7 +458,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 Mapper, ConcessionConditionRepository, LegalEntityAccountRepository, ConcessionCommentRepository,
                 ConcessionLendingRepository, MarketSegmentRepository, ConcessionCashRepository,
                 ConcessionTransactionalRepository, ConcessionRelationshipRepository, AuditRepository, UserManager,
-                RuleManager);
+                RuleManager, ConcessionInboxViewRepository);
 
         /// <summary>
         /// The pricing manager

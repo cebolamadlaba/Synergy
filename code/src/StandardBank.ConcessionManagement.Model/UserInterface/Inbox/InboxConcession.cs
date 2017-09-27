@@ -72,12 +72,28 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Inbox
         public DateTime DateSentForApproval { get; set; }
 
         /// <summary>
-        /// Gets or sets the status description.
+        /// Gets or sets the status.
+        /// </summary>
+        /// <value>
+        /// The status.
+        /// </value>
+        public string Status { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sub status.
+        /// </summary>
+        /// <value>
+        /// The sub status.
+        /// </value>
+        public string SubStatus { get; set; }
+
+        /// <summary>
+        /// Gets the status description.
         /// </summary>
         /// <value>
         /// The status description.
         /// </value>
-        public string StatusDescription { get; set; }
+        public string StatusDescription => $"{Status} - {SubStatus}";
 
         /// <summary>
         /// Gets or sets the expiry date.

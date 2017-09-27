@@ -103,6 +103,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IRuleManager _ruleManager;
 
         /// <summary>
+        /// The concession inbox view repository
+        /// </summary>
+        private readonly IConcessionInboxViewRepository _concessionInboxViewRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionManager"/> class.
         /// </summary>
         /// <param name="concessionRepository">The concession repository.</param>
@@ -121,6 +126,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="auditRepository">The audit repository.</param>
         /// <param name="userManager">The user manager.</param>
         /// <param name="ruleManager">The rule manager.</param>
+        /// <param name="concessionInboxViewRepository">The concession inbox view repository.</param>
         public ConcessionManager(IConcessionRepository concessionRepository, ILookupTableManager lookupTableManager,
             ILegalEntityRepository legalEntityRepository, IRiskGroupRepository riskGroupRepository, IMapper mapper,
             IConcessionConditionRepository concessionConditionRepository,
@@ -130,7 +136,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IConcessionCashRepository concessionCashRepository,
             IConcessionTransactionalRepository concessionTransactionalRepository,
             IConcessionRelationshipRepository concessionRelationshipRepository, IAuditRepository auditRepository,
-            IUserManager userManager, IRuleManager ruleManager)
+            IUserManager userManager, IRuleManager ruleManager, IConcessionInboxViewRepository concessionInboxViewRepository)
         {
             _concessionRepository = concessionRepository;
             _lookupTableManager = lookupTableManager;
@@ -148,41 +154,182 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _auditRepository = auditRepository;
             _userManager = userManager;
             _ruleManager = ruleManager;
+            _concessionInboxViewRepository = concessionInboxViewRepository;
         }
 
+        /// <summary>
+        /// Gets the pending concessions for user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
         public IEnumerable<InboxConcession> GetPendingConcessionsForUser(User user)
         {
-            throw new System.NotImplementedException();
+            var inboxConcessions = new List<InboxConcession>();
+            var pendingStatusId = _lookupTableManager.GetStatusId("Pending");
+            var bcmPendingStatusId = _lookupTableManager.GetSubStatusId("BCM Pending");
+            var pcmPendingStatusId = _lookupTableManager.GetSubStatusId("PCM Pending");
+
+            //loop through the user roles and get the concessions for the particular user
+            foreach (var userRole in user.UserRoles)
+            {
+                switch (userRole.Name.Trim())
+                {
+                    case "Requestor":
+                        inboxConcessions.AddRange(
+                            _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
+                                .ReadByRequestorIdStatusIdsIsActive(user.Id, new[] {pendingStatusId}, true)));
+                        break;
+                    case "Suite Head":
+                    case "BCM":
+                        inboxConcessions.AddRange(
+                            _mapper.Map<IEnumerable<InboxConcession>>(
+                                _concessionInboxViewRepository.ReadByCentreIdStatusIdSubStatusIdIsActive(
+                                    user.SelectedCentre.Id, pendingStatusId, bcmPendingStatusId, true)));
+                        break;
+                    case "PCM":
+                    case "Head Office":
+                        inboxConcessions.AddRange(
+                            _mapper.Map<IEnumerable<InboxConcession>>(
+                                _concessionInboxViewRepository.ReadByCentreIdStatusIdSubStatusIdIsActive(
+                                    user.SelectedCentre.Id, pendingStatusId, pcmPendingStatusId, true)));
+                        break;
+                }
+            }
+
+            return inboxConcessions;
         }
 
+        /// <summary>
+        /// Get the due for expiry concessions for the user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public IEnumerable<InboxConcession> GetDueForExpiryConcessionsForUser(User user)
         {
-            throw new System.NotImplementedException();
+            return _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
+                .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive(user.Id, DateTime.Now,
+                    DateTime.Now.AddMonths(3), true));
         }
 
+        /// <summary>
+        /// Gets the expired concessions for the user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public IEnumerable<InboxConcession> GetExpiredConcessionsForUser(User user)
         {
-            throw new System.NotImplementedException();
+            return _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
+                .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive(user.Id, DateTime.MinValue, DateTime.Now,
+                    true));
         }
 
+        /// <summary>
+        /// Gets the mismatched concessions for the user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public IEnumerable<InboxConcession> GetMismatchedConcessionsForUser(User user)
         {
-            throw new System.NotImplementedException();
+            return _mapper.Map<IEnumerable<InboxConcession>>(
+                _concessionInboxViewRepository.ReadByRequestorIdIsMismatchedIsActive(user.Id, true, true));
         }
 
+        /// <summary>
+        /// Gets the declined concessions for the user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public IEnumerable<InboxConcession> GetDeclinedConcessionsForUser(User user)
         {
-            throw new System.NotImplementedException();
+            var declinedStatusId = _lookupTableManager.GetStatusId("Declined");
+
+            return _mapper.Map<IEnumerable<InboxConcession>>(
+                _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsActive(user.Id, new[] {declinedStatusId}, true));
         }
 
+        /// <summary>
+        /// Gets the actioned concessions for user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
         public IEnumerable<InboxConcession> GetActionedConcessionsForUser(User user)
         {
-            throw new System.NotImplementedException();
+            var inboxConcessions = new List<InboxConcession>();
+
+            //loop through the user roles and get the concessions for the particular user
+            foreach (var userRole in user.UserRoles)
+            {
+                switch (userRole.Name.Trim())
+                {
+                    case "Suite Head":
+                    case "BCM":
+                        inboxConcessions.AddRange(
+                            _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
+                                .ReadByBcmUserIdIsActive(user.Id, true)));
+                        break;
+                    case "PCM":
+                        inboxConcessions.AddRange(
+                            _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
+                                .ReadByPcmUserIdIsActive(user.Id, true)));
+                        break;
+                    case "Head Office":
+                        inboxConcessions.AddRange(
+                            _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
+                                .ReadByHoUserIdIsActive(user.Id, true)));
+                        break;
+                }
+            }
+
+            return inboxConcessions;
         }
 
+        /// <summary>
+        /// Gets the user concessions
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public UserConcessions GetUserConcessions(User user)
         {
-            throw new System.NotImplementedException();
+            var userConcessions = new UserConcessions();
+
+            var pendingConcessions = GetPendingConcessionsForUser(user);
+
+            userConcessions.PendingConcessions = pendingConcessions;
+            userConcessions.PendingConcessionsCount = pendingConcessions?.Count() ?? 0;
+            userConcessions.ShowPendingConcessions = true;
+
+            if (user.CanRequest)
+            {
+                var dueForExpiryConcessions = GetDueForExpiryConcessionsForUser(user);
+                userConcessions.DueForExpiryConcessions = dueForExpiryConcessions;
+                userConcessions.DueForExpiryConcessionsCount = dueForExpiryConcessions?.Count() ?? 0;
+                userConcessions.ShowDueForExpiryConcessions = true;
+
+                var expiredConcessions = GetExpiredConcessionsForUser(user);
+                userConcessions.ExpiredConcessions = expiredConcessions;
+                userConcessions.ExpiredConcessionsCount = expiredConcessions?.Count() ?? 0;
+                userConcessions.ShowExpiredConcessions = true;
+
+                var mismatchedConcessions = GetMismatchedConcessionsForUser(user);
+                userConcessions.MismatchedConcessions = mismatchedConcessions;
+                userConcessions.MismatchedConcessionsCount = mismatchedConcessions?.Count() ?? 0;
+                userConcessions.ShowMismatchedConcessions = true;
+
+                var declinedConcessions = GetDeclinedConcessionsForUser(user);
+                userConcessions.DeclinedConcessions = declinedConcessions;
+                userConcessions.DeclinedConcessionsCount = declinedConcessions?.Count() ?? 0;
+                userConcessions.ShowDeclinedConcessions = true;
+            }
+
+            if (user.CanBcmApprove || user.CanPcmApprove || user.IsHO)
+            {
+                var actionedConcessions = GetActionedConcessionsForUser(user);
+                userConcessions.ActionedConcessions = actionedConcessions;
+                userConcessions.ActionedConcessionsCount = actionedConcessions?.Count() ?? 0;
+                userConcessions.ShowActionedConcessions = true;
+            }
+
+            return userConcessions;
         }
 
         /// <summary>
@@ -253,10 +400,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return clientAccounts;
         }
 
-        public IEnumerable<ApprovedConcession> GetApprovedConcessionsForUser(int userId)
+        /// <summary>
+        /// Gets the approved concessions for user.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
+        public IEnumerable<InboxConcession> GetApprovedConcessionsForUser(int userId)
         {
-            //TODO: Fix this
-            throw new System.NotImplementedException();
+            var approvedStatusId = _lookupTableManager.GetStatusId("Approved");
+            var approvedWithChangesStatusId = _lookupTableManager.GetStatusId("Approved With Changes");
+
+            return _mapper.Map<IEnumerable<InboxConcession>>(
+                _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsActive(userId,
+                    new[] {approvedStatusId, approvedWithChangesStatusId}, true));
         }
 
         /// <summary>

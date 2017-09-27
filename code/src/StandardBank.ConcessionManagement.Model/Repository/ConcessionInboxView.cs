@@ -192,11 +192,59 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int? HOUserId { get; set; }
 
         /// <summary>
+        /// Gets or sets the centre identifier.
+        /// </summary>
+        /// <value>
+        /// The centre identifier.
+        /// </value>
+        public int CentreId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the centre.
+        /// </summary>
+        /// <value>
+        /// The name of the centre.
+        /// </value>
+        public string CentreName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the province identifier.
+        /// </summary>
+        /// <value>
+        /// The province identifier.
+        /// </value>
+        public int ProvinceId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the province.
+        /// </summary>
+        /// <value>
+        /// The province.
+        /// </value>
+        public string Province { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether this instance is mismatched.
         /// </summary>
         /// <value>
         ///   <c>true</c> if this instance is mismatched; otherwise, <c>false</c>.
         /// </value>
         public bool IsMismatched { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is active.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is active; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsActive { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is current.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is current; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsCurrent { get; set; }
     }
 }

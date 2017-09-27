@@ -432,5 +432,10 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The mock ProductInvestment repository
         /// </summary>
         public static Mock<IProductInvestmentRepository> MockProductInvestmentRepository = new Mock<IProductInvestmentRepository>();
+
+        /// <summary>
+        /// The mock concession inbox view repository
+        /// </summary>
+        public static Mock<IConcessionInboxViewRepository> MockConcessionInboxViewRepository = new Mock<IConcessionInboxViewRepository>();
     }
 }

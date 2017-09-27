@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using StandardBank.ConcessionManagement.Model.UserInterface;
+using StandardBank.ConcessionManagement.Model.UserInterface.Inbox;
 using StandardBank.ConcessionManagement.Test.Helpers;
 using StandardBank.ConcessionManagement.UI.Controllers;
 using Xunit;
@@ -128,13 +129,13 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         public void UserApprovedConcessions_Executes_Positive()
         {
             MockConcessionManager.Setup(_ => _.GetApprovedConcessionsForUser(It.IsAny<int>()))
-                .Returns(new[] {new ApprovedConcession()});
+                .Returns(new[] {new InboxConcession()});
 
             var result = _concessionController.UserApprovedConcessions();
             var apiResult = Assert.IsType<OkObjectResult>(result);
 
             Assert.NotNull(apiResult.Value);
-            Assert.True(apiResult.Value is IEnumerable<ApprovedConcession>);
+            Assert.True(apiResult.Value is IEnumerable<InboxConcession>);
         }
 
         /// <summary>
