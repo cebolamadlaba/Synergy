@@ -108,6 +108,27 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Reads the by risk group identifier concession type identifier is active.
+        /// </summary>
+        /// <param name="riskGroupId">The risk group identifier.</param>
+        /// <param name="concessionTypeId">The concession type identifier.</param>
+        /// <param name="isActive">if set to <c>true</c> [is active].</param>
+        /// <returns></returns>
+        public IEnumerable<Concession> ReadByRiskGroupIdConcessionTypeIdIsActive(int riskGroupId, int concessionTypeId, bool isActive)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<Concession>(
+                    @"SELECT [pkConcessionId] [Id], [fkTypeId] [TypeId], [fkConcessionTypeId] [ConcessionTypeId], [fkStatusId] [StatusId], [fkSubStatusId] [SubStatusId], [fkRequestorId] [RequestorId], [fkBCMUserId] [BCMUserId], [fkPCMUserId] [PCMUserId], [fkHOUserId] [HOUserId], [fkRiskGroupId] [RiskGroupId], [fkRegionId] [RegionId], [fkCentreId] [CentreId], [ConcessionRef], [SMTDealNumber], [ConcessionDate], [DatesentForApproval], [Motivation], [DateApproved], [DateActionedByBCM], [DateActionedByPCM], [DateActionedByHO], [MRS_CRS], [IsCurrent], [IsActive] 
+                    FROM [dbo].[tblConcession] 
+                    WHERE [fkRiskGroupId] = @riskGroupId
+                    AND [ConcessionTypeId] = @concessionTypeId
+                    AND [IsActive] = @isActive",
+                    new { riskGroupId, concessionTypeId, isActive });
+            }
+        }
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>

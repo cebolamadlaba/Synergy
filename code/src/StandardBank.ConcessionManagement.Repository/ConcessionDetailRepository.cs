@@ -70,6 +70,23 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Reads the by concession identifier.
+        /// </summary>
+        /// <param name="concessionId">The concession identifier.</param>
+        /// <returns></returns>
+        public IEnumerable<ConcessionDetail> ReadByConcessionId(int concessionId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<ConcessionDetail>(
+                    @"SELECT [pkConcessionDetailId] [ConcessionDetailId], [fkConcessionId] [ConcessionId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [ExpiryDate] 
+                    FROM [dbo].[tblConcessionDetail] 
+                    WHERE [fkConcessionId] = @concessionId",
+                    new { concessionId });
+            }
+        }
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>

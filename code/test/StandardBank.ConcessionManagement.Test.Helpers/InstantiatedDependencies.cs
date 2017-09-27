@@ -438,12 +438,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             TableNumberRepository, RelationshipRepository, RoleRepository, CentreRepository, RegionRepository);
 
         /// <summary>
-        /// The rule manager
-        /// </summary>
-        public static IRuleManager RuleManager = new RuleManager(LookupTableManager, ConcessionRelationshipRepository,
-            ConcessionRepository, ConcessionLendingRepository);
-
-        /// <summary>
         /// The user manager
         /// </summary>
         public static IUserManager UserManager = new UserManager(CacheManager, LookupTableManager, UserRepository,
@@ -458,7 +452,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 Mapper, ConcessionConditionRepository, LegalEntityAccountRepository, ConcessionCommentRepository,
                 ConcessionLendingRepository, MarketSegmentRepository, ConcessionCashRepository,
                 ConcessionTransactionalRepository, ConcessionRelationshipRepository, AuditRepository, UserManager,
-                RuleManager, ConcessionInboxViewRepository);
+                ConcessionInboxViewRepository, ConcessionDetailRepository);
 
         /// <summary>
         /// The pricing manager

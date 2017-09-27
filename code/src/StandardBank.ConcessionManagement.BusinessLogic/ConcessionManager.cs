@@ -98,14 +98,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IUserManager _userManager;
 
         /// <summary>
-        /// The rule manager
-        /// </summary>
-        private readonly IRuleManager _ruleManager;
-
-        /// <summary>
         /// The concession inbox view repository
         /// </summary>
         private readonly IConcessionInboxViewRepository _concessionInboxViewRepository;
+
+        /// <summary>
+        /// The concession detail repository
+        /// </summary>
+        private readonly IConcessionDetailRepository _concessionDetailRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionManager"/> class.
@@ -125,8 +125,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="concessionRelationshipRepository">The concession relationship repository.</param>
         /// <param name="auditRepository">The audit repository.</param>
         /// <param name="userManager">The user manager.</param>
-        /// <param name="ruleManager">The rule manager.</param>
         /// <param name="concessionInboxViewRepository">The concession inbox view repository.</param>
+        /// <param name="concessionDetailRepository">The concession detail repository.</param>
         public ConcessionManager(IConcessionRepository concessionRepository, ILookupTableManager lookupTableManager,
             ILegalEntityRepository legalEntityRepository, IRiskGroupRepository riskGroupRepository, IMapper mapper,
             IConcessionConditionRepository concessionConditionRepository,
@@ -136,7 +136,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IConcessionCashRepository concessionCashRepository,
             IConcessionTransactionalRepository concessionTransactionalRepository,
             IConcessionRelationshipRepository concessionRelationshipRepository, IAuditRepository auditRepository,
-            IUserManager userManager, IRuleManager ruleManager, IConcessionInboxViewRepository concessionInboxViewRepository)
+            IUserManager userManager, IConcessionInboxViewRepository concessionInboxViewRepository,
+            IConcessionDetailRepository concessionDetailRepository)
         {
             _concessionRepository = concessionRepository;
             _lookupTableManager = lookupTableManager;
@@ -153,8 +154,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionRelationshipRepository = concessionRelationshipRepository;
             _auditRepository = auditRepository;
             _userManager = userManager;
-            _ruleManager = ruleManager;
             _concessionInboxViewRepository = concessionInboxViewRepository;
+            _concessionDetailRepository = concessionDetailRepository;
         }
 
         /// <summary>
@@ -550,8 +551,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedConcession.RegionId = user.SelectedRegion.Id;
             mappedConcession.IsCurrent = true;
             mappedConcession.IsActive = true;
-
-            //TODO: Check if this should be set on create? Because on create the item is sent for approval?
             mappedConcession.DatesentForApproval = DateTime.Now;
 
             var result = _concessionRepository.Create(mappedConcession);
@@ -641,11 +640,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return mappedConcessionCondition;
         }
 
+        /// <summary>
+        /// Gets the concessions for risk group.
+        /// </summary>
+        /// <param name="riskGroupId">The risk group identifier.</param>
+        /// <param name="concessionType">Type of the concession.</param>
+        /// <returns></returns>
         public IEnumerable<Model.UserInterface.Concession> GetConcessionsForRiskGroup(int riskGroupId,
             string concessionType)
         {
-            //TODO: Fix this
-            throw new System.NotImplementedException();
+            var concessionTypeId = _lookupTableManager.GetConcessionTypeId(concessionType);
+
+            return Map(_concessionRepository.ReadByRiskGroupIdConcessionTypeIdIsActive(riskGroupId, concessionTypeId,
+                true), false);
         }
 
         /// <summary>
@@ -664,7 +671,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             //if there is more than one record returned then there is something wrong,
             //there shouldn't be two active concessions with the same concession reference number
-            var concession = Map(concessions).Single();
+            var concession = Map(concessions, true).Single();
 
             return concession;
         }
@@ -696,8 +703,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// Maps the specified repository concessions.
         /// </summary>
         /// <param name="repositoryConcessions">The repository concessions.</param>
+        /// <param name="mapAll">if set to <c>true</c> [map all].</param>
         /// <returns></returns>
-        private IEnumerable<Model.UserInterface.Concession> Map(IEnumerable<Concession> repositoryConcessions)
+        private IEnumerable<Model.UserInterface.Concession> Map(IEnumerable<Concession> repositoryConcessions, bool mapAll)
         {
             var concessions = new List<Model.UserInterface.Concession>();
 
@@ -716,38 +724,41 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 mappedConcession.Status = _lookupTableManager.GetStatusDescription(concession.StatusId);
                 mappedConcession.SubStatus = _lookupTableManager.GetSubStatusDescription(concession.SubStatusId);
 
-                if (!HasPendingChild(concession.Id))
+                if (mapAll)
                 {
-                    //this concession can be extended or renewed if there is an expiry date which is within the next three months and the concession
-                    //is currently in the approved state
-                    mappedConcession.CanExtend = CalculateIfCanExtend(concession, mappedConcession.Status);
-                    mappedConcession.CanRenew = CalculateIfCanRenew(concession, mappedConcession.Status);
-                    mappedConcession.CanResubmit = CalculateIfCanResubmit(concession, mappedConcession.Status);
-                    mappedConcession.CanUpdate = CalculateIfCanUpdate(concession, mappedConcession.Status);
+                    if (!HasPendingChild(concession.Id))
+                    {
+                        //this concession can be extended or renewed if there is an expiry date which is within the next three months and the concession
+                        //is currently in the approved state
+                        mappedConcession.CanExtend = CalculateIfCanExtend(concession, mappedConcession.Status);
+                        mappedConcession.CanRenew = CalculateIfCanRenew(concession, mappedConcession.Status);
+                        mappedConcession.CanResubmit = CalculateIfCanResubmit(concession, mappedConcession.Status);
+                        mappedConcession.CanUpdate = CalculateIfCanUpdate(concession, mappedConcession.Status);
+                    }
+                    else
+                    {
+                        mappedConcession.CanExtend = false;
+                        mappedConcession.CanRenew = false;
+                        mappedConcession.CanResubmit = false;
+                        mappedConcession.CanUpdate = false;
+                    }
+
+                    mappedConcession.ConcessionComments = GetConcessionComments(concession.Id);
+
+                    mappedConcession.ConcessionRelationshipDetails =
+                        _mapper.Map<IEnumerable<Model.UserInterface.ConcessionRelationshipDetail>>(
+                            _concessionRelationshipRepository.ReadDetailsByConcessionId(concession.Id));
+
+                    var user = _userManager.GetUser(concession.RequestorId);
+
+                    mappedConcession.Requestor = new RequestorModel
+                    {
+                        FullName = user.FullName,
+                        ANumber = user.ANumber,
+                        BusinessCentre = user.SelectedCentre.Name,
+                        Region = user.SelectedRegion.Description
+                    };
                 }
-                else
-                {
-                    mappedConcession.CanExtend = false;
-                    mappedConcession.CanRenew = false;
-                    mappedConcession.CanResubmit = false;
-                    mappedConcession.CanUpdate = false;
-                }
-
-                mappedConcession.ConcessionComments = GetConcessionComments(concession.Id);
-
-                mappedConcession.ConcessionRelationshipDetails =
-                    _mapper.Map<IEnumerable<Model.UserInterface.ConcessionRelationshipDetail>>(
-                        _concessionRelationshipRepository.ReadDetailsByConcessionId(concession.Id));
-
-                var user = _userManager.GetUser(concession.RequestorId);
-
-                mappedConcession.Requestor = new RequestorModel
-                {
-                    FullName = user.FullName,
-                    ANumber = user.ANumber,
-                    BusinessCentre = user.SelectedCentre.Name,
-                    Region = user.SelectedRegion.Description
-                };
 
                 concessions.Add(mappedConcession);
             }
@@ -785,11 +796,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         private bool CalculateIfCanRenew(Model.Repository.Concession concession, string currentStatus)
         {
-            //TODO: Fix this
-            return (currentStatus == "Approved" || currentStatus == "Approved With Changes");
-            //return concession.ExpiryDate.HasValue &&
-            //       concession.ExpiryDate.Value <= DateTime.Now.AddMonths(3) &&
-            //       (currentStatus == "Approved" || currentStatus == "Approved With Changes");
+            if (currentStatus == "Approved" || currentStatus == "Approved With Changes")
+            {
+                var concessionDetails = _concessionDetailRepository.ReadByConcessionId(concession.Id);
+
+                foreach (var concessionDetail in concessionDetails)
+                {
+                    if (concessionDetail.ExpiryDate.HasValue &&
+                        concessionDetail.ExpiryDate.Value <= DateTime.Now.AddMonths(3))
+                        return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -809,12 +828,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (relationships != null && relationships.Count() >= 3)
                 return false;
-            
-            //TODO: Fix this
-            return (currentStatus == "Approved" || currentStatus == "Approved With Changes");
-            //return concession.ExpiryDate.HasValue &&
-            //       concession.ExpiryDate.Value <= DateTime.Now.AddMonths(3) &&
-            //       (currentStatus == "Approved" || currentStatus == "Approved With Changes");
+
+            //the calculation is the same as can renew here on out, so return whatever that function would return
+            return CalculateIfCanRenew(concession, currentStatus);
         }
 
         /// <summary>
@@ -1035,12 +1051,38 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 if (!mappedConcession.DateApproved.HasValue)
                     mappedConcession.DateApproved = DateTime.Now;
 
-                //TODO: Fix this
-                //if (!mappedConcession.ExpiryDate.HasValue)
-                //    mappedConcession.ExpiryDate = _ruleManager.CalculateExpiryDate(currentConcession.Id, concession.ConcessionType);
+                if (concession.ConcessionType == "Lending")
+                    CalculateLendingExpiryDates(currentConcession.Id);
             }
 
             return mappedConcession;
+        }
+
+        /// <summary>
+        /// Calculates the lending expiry dates.
+        /// </summary>
+        /// <param name="concessionId">The concession identifier.</param>
+        private void CalculateLendingExpiryDates(int concessionId)
+        {
+            var lendingConcessions = _concessionLendingRepository.ReadByConcessionId(concessionId);
+
+            foreach (var lendingConcession in lendingConcessions)
+            {
+                if (!lendingConcession.ExpiryDate.HasValue)
+                {
+                    var terms = 12;
+                    var productName = _lookupTableManager.GetProductTypeName(lendingConcession.ProductTypeId);
+
+                    if (productName != "Overdraft" && lendingConcession.Term.HasValue)
+                        terms = lendingConcession.Term.Value;
+
+                    lendingConcession.ExpiryDate = DateTime.Now.AddMonths(terms);
+
+                    _concessionLendingRepository.Update(lendingConcession);
+
+                    _auditRepository.Audit(lendingConcession, AuditType.Update, "SYSTEM");
+                }
+            }
         }
 
         /// <summary>

@@ -23,6 +23,13 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         ConcessionDetail ReadById(int id);
 
         /// <summary>
+        /// Reads the by concession identifier.
+        /// </summary>
+        /// <param name="concessionId">The concession identifier.</param>
+        /// <returns></returns>
+        IEnumerable<ConcessionDetail> ReadByConcessionId(int concessionId);
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>

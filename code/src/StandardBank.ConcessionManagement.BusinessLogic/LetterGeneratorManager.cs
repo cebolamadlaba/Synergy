@@ -112,7 +112,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var concessionLetters = new List<ConcessionLetter>();
 
-            //TODO: Get concession details based on concession type
             switch (concession.ConcessionType)
             {
                 case "Lending":
