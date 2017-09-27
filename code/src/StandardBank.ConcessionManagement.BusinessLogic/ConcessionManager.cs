@@ -1016,7 +1016,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedConcession.DateActionedByBCM = currentConcession.DateActionedByBCM;
             mappedConcession.DateActionedByHO = currentConcession.DateActionedByHO;
             mappedConcession.DateActionedByPCM = currentConcession.DateActionedByPCM;
-            mappedConcession.DateApproved = currentConcession.DateApproved;
             mappedConcession.DatesentForApproval = currentConcession.DatesentForApproval;
             mappedConcession.HOUserId = currentConcession.HOUserId;
             mappedConcession.PCMUserId = currentConcession.PCMUserId;
@@ -1046,43 +1045,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             else
                 mappedConcession.HOUserId = currentConcession.HOUserId;
 
-            if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
-            {
-                if (!mappedConcession.DateApproved.HasValue)
-                    mappedConcession.DateApproved = DateTime.Now;
-
-                if (concession.ConcessionType == "Lending")
-                    CalculateLendingExpiryDates(currentConcession.Id);
-            }
-
             return mappedConcession;
-        }
-
-        /// <summary>
-        /// Calculates the lending expiry dates.
-        /// </summary>
-        /// <param name="concessionId">The concession identifier.</param>
-        private void CalculateLendingExpiryDates(int concessionId)
-        {
-            var lendingConcessions = _concessionLendingRepository.ReadByConcessionId(concessionId);
-
-            foreach (var lendingConcession in lendingConcessions)
-            {
-                if (!lendingConcession.ExpiryDate.HasValue)
-                {
-                    var terms = 12;
-                    var productName = _lookupTableManager.GetProductTypeName(lendingConcession.ProductTypeId);
-
-                    if (productName != "Overdraft" && lendingConcession.Term.HasValue)
-                        terms = lendingConcession.Term.Value;
-
-                    lendingConcession.ExpiryDate = DateTime.Now.AddMonths(terms);
-
-                    _concessionLendingRepository.Update(lendingConcession);
-
-                    _auditRepository.Audit(lendingConcession, AuditType.Update, "SYSTEM");
-                }
-            }
         }
 
         /// <summary>

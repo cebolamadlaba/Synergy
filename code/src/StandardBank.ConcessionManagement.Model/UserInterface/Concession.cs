@@ -165,22 +165,6 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public IEnumerable<ConcessionRelationshipDetail> ConcessionRelationshipDetails { get; set; }
 
         /// <summary>
-        /// Gets or sets the ExpiryDate.
-        /// </summary>
-        /// <value>
-        /// The ExpiryDate.
-        /// </value>
-        public DateTime? ExpiryDate { get; set; }
-
-        /// <summary>
-        /// Gets or sets the DateApproved.
-        /// </summary>
-        /// <value>
-        /// The DateApproved.
-        /// </value>
-        public DateTime? DateApproved { get; set; }
-
-        /// <summary>
         /// Gets or sets the requestor.
         /// </summary>
         /// <value>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
@@ -197,7 +198,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         mappedConcessionCash.ChannelTypeId, mappedConcessionCash.LegalEntityAccountId);
 
                 if (loadedPriceCash != null)
+                {
                     mappedConcessionCash.LoadedTableNumberId = loadedPriceCash.TableNumberId;
+
+                    if (loadedPriceCash.TableNumberId != mappedConcessionCash.ApprovedTableNumberId)
+                        mappedConcessionCash.IsMismatched = true;
+                }
+
+                if (!mappedConcessionCash.DateApproved.HasValue)
+                    mappedConcessionCash.DateApproved = DateTime.Now;
             }
 
             _concessionCashRepository.Update(mappedConcessionCash);

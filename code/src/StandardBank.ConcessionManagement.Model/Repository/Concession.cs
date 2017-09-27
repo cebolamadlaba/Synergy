@@ -144,14 +144,6 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public string Motivation { get; set; }
 
         /// <summary>
-        /// Gets or sets the DateApproved.
-        /// </summary>
-        /// <value>
-        /// The DateApproved.
-        /// </value>
-        public DateTime? DateApproved { get; set; }
-
-        /// <summary>
         /// Gets or sets the DateActionedByBCM.
         /// </summary>
         /// <value>

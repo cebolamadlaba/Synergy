@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
@@ -178,10 +179,29 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         concessionLending.ProductTypeId, concessionLending.LegalEntityAccountId);
 
                 if (loadedPriceLending != null)
+                {
                     concessionLending.LoadedMarginToPrime = loadedPriceLending.MarginToPrime;
+
+                    if (loadedPriceLending.MarginToPrime != concessionLending.ApprovedMarginToPrime)
+                        concessionLending.IsMismatched = true;
+                }
+
+                if (!concessionLending.ExpiryDate.HasValue)
+                {
+                    var productType = _lookupTableManager.GetProductTypeName(concessionLending.ProductTypeId);
+
+                    if (productType == "Overdraft")
+                        concessionLending.ExpiryDate = DateTime.Now.AddMonths(12);
+                    else if (productType != "Overdraft" && concessionLending.Term.HasValue)
+                        concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
+                }
+
+                if (!concessionLending.DateApproved.HasValue)
+                    concessionLending.DateApproved = DateTime.Now;
             }
 
             _concessionLendingRepository.Update(concessionLending);
+
             return concessionLending;
         }
 

@@ -179,8 +179,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             //add a new concession using the old concession's details
             var newConcession = transactionalConcession.Concession;
-            newConcession.ExpiryDate = null;
-            newConcession.DateApproved = null;
             newConcession.Id = 0;
             newConcession.Status = "Pending";
             newConcession.BcmUserId = null;
@@ -199,6 +197,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             //add all the new conditions and transactional details
             foreach (var transactionalConcessionDetail in transactionalConcession.TransactionalConcessionDetails)
             {
+                transactionalConcessionDetail.DateApproved = null;
                 transactionalConcessionDetail.TransactionalConcessionDetailId = 0;
                 await _mediator.Send(new AddOrUpdateTransactionalConcessionDetail(transactionalConcessionDetail, user, concession));
             }

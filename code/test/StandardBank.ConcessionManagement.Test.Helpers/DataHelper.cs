@@ -1235,7 +1235,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 ConcessionDate = DateTime.Now,
                 DatesentForApproval = DateTime.Now,
                 Motivation = "9007645562",
-                DateApproved = DateTime.Now,
                 RequestorId = GetUserId(),
                 BCMUserId = GetUserId(),
                 DateActionedByBCM = DateTime.Now,
@@ -3218,7 +3217,9 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 ConcessionId = GetConcessionId(),
                 LegalEntityId = GetLegalEntityId(),
                 LegalEntityAccountId = GetLegalEntityAccountId(),
-                ExpiryDate = DateTime.Now
+                ExpiryDate = DateTime.Now,
+                DateApproved = DateTime.Now,
+                IsMismatched = false
             };
 
             InstantiatedDependencies.ConcessionDetailRepository.Create(model);

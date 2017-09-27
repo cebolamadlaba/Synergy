@@ -22,7 +22,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ConcessionId = DataHelper.GetConcessionId(),
                 LegalEntityId = DataHelper.GetLegalEntityId(),
                 LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
-                ExpiryDate = DateTime.Now
+                ExpiryDate = DateTime.Now,
+                DateApproved = DateTime.Now,
+                IsMismatched = false
             };
 
             var result = InstantiatedDependencies.ConcessionDetailRepository.Create(model);
@@ -88,6 +90,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.LegalEntityId = DataHelper.GetAlternateLegalEntityId(model.LegalEntityId);
             model.LegalEntityAccountId = DataHelper.GetAlternateLegalEntityAccountId(model.LegalEntityAccountId);
             model.ExpiryDate = DataHelper.ChangeDate(model.ExpiryDate);
+            model.DateApproved = DataHelper.ChangeDate(model.DateApproved);
+            model.IsMismatched = !model.IsMismatched;
 
             InstantiatedDependencies.ConcessionDetailRepository.Update(model);
 
@@ -98,7 +102,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.ConcessionId, model.ConcessionId);
             Assert.Equal(updatedModel.LegalEntityId, model.LegalEntityId);
             Assert.Equal(updatedModel.LegalEntityAccountId, model.LegalEntityAccountId);
-            Assert.Equal(updatedModel.ExpiryDate, model.ExpiryDate);
+            Assert.Equal(updatedModel.ExpiryDate.Value.Date, model.ExpiryDate.Value.Date);
+            Assert.Equal(updatedModel.DateApproved.Value.Date, model.DateApproved.Value.Date);
+            Assert.Equal(updatedModel.IsMismatched, model.IsMismatched);
         }
 
         /// <summary>
@@ -112,7 +118,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ConcessionId = DataHelper.GetConcessionId(),
                 LegalEntityId = DataHelper.GetLegalEntityId(),
                 LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
-                ExpiryDate = DateTime.Now
+                ExpiryDate = DateTime.Now,
+                DateApproved = DateTime.Now,
+                IsMismatched = false
             };
 
             var temporaryEntity = InstantiatedDependencies.ConcessionDetailRepository.Create(model);

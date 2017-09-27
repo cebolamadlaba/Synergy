@@ -1,11 +1,11 @@
-using System;
+﻿using System;
 
-namespace StandardBank.ConcessionManagement.Model.Repository
+namespace StandardBank.ConcessionManagement.Model.UserInterface
 {
     /// <summary>
-    /// ConcessionDetail entity
+    /// Base concession detail
     /// </summary>
-    public class ConcessionDetail
+    public abstract class BaseConcessionDetail
     {
         /// <summary>
         /// Gets or sets the ConcessionDetailId.
@@ -24,26 +24,42 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int ConcessionId { get; set; }
 
         /// <summary>
-        /// Gets or sets the LegalEntityId.
+        /// Gets or sets the legal entity identifier.
         /// </summary>
         /// <value>
-        /// The LegalEntityId.
+        /// The legal entity identifier.
         /// </value>
-        public int LegalEntityId { get; set; }
+        public int? LegalEntityId { get; set; }
 
         /// <summary>
-        /// Gets or sets the LegalEntityAccountId.
+        /// Gets or sets the legal entity account identifier.
         /// </summary>
         /// <value>
-        /// The LegalEntityAccountId.
+        /// The legal entity account identifier.
         /// </value>
-        public int LegalEntityAccountId { get; set; }
+        public int? LegalEntityAccountId { get; set; }
 
         /// <summary>
-        /// Gets or sets the ExpiryDate.
+        /// Gets or sets the name of the customer.
         /// </summary>
         /// <value>
-        /// The ExpiryDate.
+        /// The name of the customer.
+        /// </value>
+        public string CustomerName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the account number.
+        /// </summary>
+        /// <value>
+        /// The account number.
+        /// </value>
+        public string AccountNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets the expiry date.
+        /// </summary>
+        /// <value>
+        /// The expiry date.
         /// </value>
         public DateTime? ExpiryDate { get; set; }
 

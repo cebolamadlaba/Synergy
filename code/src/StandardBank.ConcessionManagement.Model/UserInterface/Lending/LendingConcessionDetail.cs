@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace StandardBank.ConcessionManagement.Model.UserInterface.Lending
+﻿namespace StandardBank.ConcessionManagement.Model.UserInterface.Lending
 {
     /// <summary>
     /// Lending concession detail
     /// </summary>
-    public class LendingConcessionDetail
+    public class LendingConcessionDetail : BaseConcessionDetail
     {
         /// <summary>
         /// Gets or sets the lending concession detail identifier.
@@ -24,43 +22,12 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Lending
         public string ProductType { get; set; }
 
         /// <summary>
-        /// Gets or sets the product type id
+        /// Gets or sets the product type identifier.
         /// </summary>
+        /// <value>
+        /// The product type identifier.
+        /// </value>
         public int? ProductTypeId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the customer.
-        /// </summary>
-        /// <value>
-        /// The name of the customer.
-        /// </value>
-        public string CustomerName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the account number.
-        /// </summary>
-        /// <value>
-        /// The account number.
-        /// </value>
-        public string AccountNumber { get; set; }
-
-        /// <summary>
-        /// Gets or sets the legal entity id
-        /// </summary>
-        public int? LegalEntityId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the legal entity account id
-        /// </summary>
-        public int? LegalEntityAccountId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the expiry date.
-        /// </summary>
-        /// <value>
-        /// The expiry date.
-        /// </value>
-        public DateTime? ExpiryDate { get; set; }
 
         /// <summary>
         /// Gets or sets the limit.

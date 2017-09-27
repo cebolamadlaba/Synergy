@@ -46,9 +46,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             var concession = new Concession
             {
                 ConcessionType = "Lending",
-                RiskGroupNumber = 123456,
-                DateApproved = DateTime.Now.AddDays(-100),
-                ExpiryDate = DateTime.Now.AddDays(100)
+                RiskGroupNumber = 123456
             };
 
             concessionManager.Setup(_ => _.GetConcessionForConcessionReferenceId(It.IsAny<string>()))
@@ -69,14 +67,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                             MarginAgainstPrime = 12343.23m,
                             InitiationFee = 3244.23m,
                             ReviewFee = 234234.23m,
-                            LegalEntityId = 1
+                            LegalEntityId = 1,
+                            DateApproved = DateTime.Now.AddDays(-100),
+                            ExpiryDate = DateTime.Now.AddDays(100)
                         },
                         new LendingConcessionDetail
                         {
                             ProductType = "MTL (Medium Term Loan)",
                             InitiationFee = 23423.34m,
                             MarginAgainstPrime = 2233.23m,
-                            LegalEntityId = 1
+                            LegalEntityId = 1,
+                            DateApproved = DateTime.Now.AddDays(-100),
+                            ExpiryDate = DateTime.Now.AddDays(100)
                         }
                     },
                     ConcessionConditions = new[] {new ConcessionCondition()},
@@ -129,9 +131,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             var concession = new Concession
             {
                 ConcessionType = "Cash",
-                RiskGroupNumber = 123456,
-                DateApproved = DateTime.Now.AddDays(-100),
-                ExpiryDate = DateTime.Now.AddDays(100)
+                RiskGroupNumber = 123456
             };
 
             concessionManager.Setup(_ => _.GetConcessionForConcessionReferenceId(It.IsAny<string>()))
@@ -149,7 +149,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                         {
                             BaseRate = 123.23m,
                             AdValorem = 1.05m,
-                            LegalEntityId = 1
+                            LegalEntityId = 1,
+                            DateApproved = DateTime.Now.AddDays(-100),
+                            ExpiryDate = DateTime.Now.AddDays(100)
                         }
                     },
                     ConcessionConditions = new[] { new ConcessionCondition() },
@@ -202,9 +204,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             var concession = new Concession
             {
                 ConcessionType = "Transactional",
-                RiskGroupNumber = 123456,
-                DateApproved = DateTime.Now.AddDays(-100),
-                ExpiryDate = DateTime.Now.AddDays(100)
+                RiskGroupNumber = 123456
             };
 
             concessionManager.Setup(_ => _.GetConcessionForConcessionReferenceId(It.IsAny<string>()))
@@ -222,7 +222,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                         {
                             BaseRate = 123.23m,
                             AdValorem = 1.05m,
-                            LegalEntityId = 1
+                            LegalEntityId = 1,
+                            DateApproved = DateTime.Now.AddDays(-100),
+                            ExpiryDate = DateTime.Now.AddDays(100)
                         }
                     },
                     ConcessionConditions = new[] { new ConcessionCondition() },

@@ -5,7 +5,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Cash
     /// <summary>
     /// Cash concession detail entity
     /// </summary>
-    public class CashConcessionDetail
+    public class CashConcessionDetail : BaseConcessionDetail
     {
         /// <summary>
         /// Gets or sets the cash concession detail identifier.
@@ -14,46 +14,6 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Cash
         /// The cash concession detail identifier.
         /// </value>
         public int CashConcessionDetailId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the customer.
-        /// </summary>
-        /// <value>
-        /// The name of the customer.
-        /// </value>
-        public string CustomerName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the account number.
-        /// </summary>
-        /// <value>
-        /// The account number.
-        /// </value>
-        public string AccountNumber { get; set; }
-
-        /// <summary>
-        /// Gets or sets the legal entity identifier.
-        /// </summary>
-        /// <value>
-        /// The legal entity identifier.
-        /// </value>
-        public int? LegalEntityId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the legal entity account identifier.
-        /// </summary>
-        /// <value>
-        /// The legal entity account identifier.
-        /// </value>
-        public int? LegalEntityAccountId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the expiry date.
-        /// </summary>
-        /// <value>
-        /// The expiry date.
-        /// </value>
-        public DateTime? ExpiryDate { get; set; }
 
         /// <summary>
         /// Gets or sets the channel.

@@ -49,8 +49,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void ReadByConcessionIdIsActive_ActiveRecord_Executes_Positive()
         {
-            var results = InstantiatedDependencies.ConcessionAccountRepository.ReadAll();
-            var concessionId = results.First().ConcessionId;
+            var concessionId = DataHelper.GetConcessionId();
             var concession = InstantiatedDependencies.ConcessionRepository.ReadById(concessionId);
 
             var result =
