@@ -62,26 +62,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IConcessionCommentRepository _concessionCommentRepository;
 
         /// <summary>
-        /// The concession lending repository
-        /// </summary>
-        private readonly IConcessionLendingRepository _concessionLendingRepository;
-
-        /// <summary>
-        /// The market segment repository
-        /// </summary>
-        private readonly IMarketSegmentRepository _marketSegmentRepository;
-
-        /// <summary>
-        /// The concession cash repository
-        /// </summary>
-        private readonly IConcessionCashRepository _concessionCashRepository;
-
-        /// <summary>
-        /// The concession transactional repository
-        /// </summary>
-        private readonly IConcessionTransactionalRepository _concessionTransactionalRepository;
-
-        /// <summary>
         /// The concession relationship repository
         /// </summary>
         private readonly IConcessionRelationshipRepository _concessionRelationshipRepository;
@@ -107,6 +87,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IConcessionDetailRepository _concessionDetailRepository;
 
         /// <summary>
+        /// The concession condition view repository
+        /// </summary>
+        private readonly IConcessionConditionViewRepository _concessionConditionViewRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionManager"/> class.
         /// </summary>
         /// <param name="concessionRepository">The concession repository.</param>
@@ -117,26 +102,21 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="concessionConditionRepository">The concession condition repository.</param>
         /// <param name="legalEntityAccountRepository">The legal entity account repository.</param>
         /// <param name="concessionCommentRepository">The concession comment repository.</param>
-        /// <param name="concessionLendingRepository">The concession lending repository.</param>
-        /// <param name="marketSegmentRepository">The market segment repository.</param>
-        /// <param name="concessionCashRepository">The concession cash repository.</param>
-        /// <param name="concessionTransactionalRepository">The concession transactional repository.</param>
         /// <param name="concessionRelationshipRepository">The concession relationship repository.</param>
         /// <param name="auditRepository">The audit repository.</param>
         /// <param name="userManager">The user manager.</param>
         /// <param name="concessionInboxViewRepository">The concession inbox view repository.</param>
         /// <param name="concessionDetailRepository">The concession detail repository.</param>
+        /// <param name="concessionConditionViewRepository">The concession condition view repository.</param>
         public ConcessionManager(IConcessionRepository concessionRepository, ILookupTableManager lookupTableManager,
             ILegalEntityRepository legalEntityRepository, IRiskGroupRepository riskGroupRepository, IMapper mapper,
             IConcessionConditionRepository concessionConditionRepository,
             ILegalEntityAccountRepository legalEntityAccountRepository,
             IConcessionCommentRepository concessionCommentRepository,
-            IConcessionLendingRepository concessionLendingRepository, IMarketSegmentRepository marketSegmentRepository,
-            IConcessionCashRepository concessionCashRepository,
-            IConcessionTransactionalRepository concessionTransactionalRepository,
             IConcessionRelationshipRepository concessionRelationshipRepository, IAuditRepository auditRepository,
             IUserManager userManager, IConcessionInboxViewRepository concessionInboxViewRepository,
-            IConcessionDetailRepository concessionDetailRepository)
+            IConcessionDetailRepository concessionDetailRepository,
+            IConcessionConditionViewRepository concessionConditionViewRepository)
         {
             _concessionRepository = concessionRepository;
             _lookupTableManager = lookupTableManager;
@@ -146,15 +126,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionConditionRepository = concessionConditionRepository;
             _legalEntityAccountRepository = legalEntityAccountRepository;
             _concessionCommentRepository = concessionCommentRepository;
-            _concessionLendingRepository = concessionLendingRepository;
-            _marketSegmentRepository = marketSegmentRepository;
-            _concessionCashRepository = concessionCashRepository;
-            _concessionTransactionalRepository = concessionTransactionalRepository;
             _concessionRelationshipRepository = concessionRelationshipRepository;
             _auditRepository = auditRepository;
             _userManager = userManager;
             _concessionInboxViewRepository = concessionInboxViewRepository;
             _concessionDetailRepository = concessionDetailRepository;
+            _concessionConditionViewRepository = concessionConditionViewRepository;
         }
 
         /// <summary>
@@ -464,24 +441,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<ConcessionCondition> GetConditions(string periodType, string period)
         {
-            var approvedStatusId = _lookupTableManager.GetStatusId("Approved");
-            var approvedWithChangesStatusId = _lookupTableManager.GetStatusId("Approved With Changes");
-
             var periodId = _lookupTableManager.GetPeriods().First(x => x.Description == period).Id;
             var periodTypeId = _lookupTableManager.GetPeriodTypes().First(x => x.Description == periodType).Id;
 
-            var conditions = new List<Model.Repository.ConcessionCondition>();
-
-            conditions.AddRange(
-                _concessionConditionRepository.ReadByPeriodAndApprovalStatus(approvedStatusId, periodId, periodTypeId));
-
-            conditions.AddRange(
-                _concessionConditionRepository.ReadByPeriodAndApprovalStatus(approvedWithChangesStatusId, periodId,
-                    periodTypeId));
+            var conditions = _concessionConditionViewRepository.ReadByPeriodIdPeriodTypeId(periodId, periodTypeId);
 
             var results = _mapper.Map<IEnumerable<ConcessionCondition>>(conditions);
 
-            results.ToList().ForEach(x => x.RagStatus = GetRagStatus(x.Period, x.ApprovedDate.Value));
+            results.ToList().ForEach(x =>
+            {
+                x.RagStatus = GetRagStatus(x.Period, x.ApprovedDate.Value);
+            });
 
             return results;
         }
@@ -492,7 +462,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public ConditionCounts GetConditionCounts()
         {
-            var conditionCounts = _concessionConditionRepository.ReadConditionCounts();
+            var conditionCounts = _concessionConditionViewRepository.ReadConcessionCounts();
 
             return new ConditionCounts
             {

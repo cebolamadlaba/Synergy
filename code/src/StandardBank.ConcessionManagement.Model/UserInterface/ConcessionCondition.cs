@@ -40,17 +40,17 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// <summary>
         /// Gets or sets the interest rate
         /// </summary>
-        public decimal InterestRate { get; set; }
+        public decimal? InterestRate { get; set; }
 
         /// <summary>
         /// Gets or sets the condition volume
         /// </summary>
-        public int ConditionVolume { get; set; }
+        public int? ConditionVolume { get; set; }
 
         /// <summary>
         /// Gets or sets the condition value
         /// </summary>
-        public decimal ConditionValue { get; set; }
+        public decimal? ConditionValue { get; set; }
 
         /// <summary>
         /// Gets or sets the period type
@@ -127,5 +127,13 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// The approved date.
         /// </value>
         public DateTime? ApprovedDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type of the concession.
+        /// </summary>
+        /// <value>
+        /// The type of the concession.
+        /// </value>
+        public string ConcessionType { get; set; }
     }
 }

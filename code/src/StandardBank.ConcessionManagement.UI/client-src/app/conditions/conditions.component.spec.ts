@@ -6,6 +6,7 @@ import { MyConditionService, MockMyConditionService } from "../services/my-condi
 import { LookupDataService, MockLookupDataService } from "../services/lookup-data.service";
 import { HttpModule } from '@angular/http';
 import { ConditionsFilterPipe } from "../filters/conditions-filter.pipe";
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ConditionsComponent', () => {
     let component: ConditionsComponent;
@@ -13,7 +14,7 @@ describe('ConditionsComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [DataTablesModule, FormsModule, HttpModule],
+            imports: [DataTablesModule, FormsModule, HttpModule, RouterTestingModule],
             declarations: [ConditionsComponent, ConditionsFilterPipe],
             providers: [
                 { provide: MyConditionService, useClass: MockMyConditionService },

@@ -61,6 +61,20 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                 .ForMember(target => target.Id, _ => _.MapFrom(source => source.ConcessionConditionId))
                 .ForMember(target => target.DateApproved, _ => _.MapFrom(source => source.ApprovedDate));
 
+            //ConcessionConditionView
+            CreateMap<Model.Repository.ConcessionConditionView, Model.UserInterface.ConcessionCondition>()
+                .ForMember(target => target.ConditionVolume, _ => _.MapFrom(source => source.Volume))
+                .ForMember(target => target.ConditionValue, _ => _.MapFrom(source => source.Value))
+                .ForMember(target => target.ApprovedDate, _ => _.MapFrom(source => source.DateApproved))
+                .ForMember(target => target.ConcessionReferenceNumber, _ => _.MapFrom(source => source.ReferenceNumber))
+                .ForMember(target => target.ProductType, _ => _.MapFrom(source => source.ConditionProduct));
+            CreateMap<Model.UserInterface.ConcessionCondition, Model.Repository.ConcessionConditionView>()
+                .ForMember(target => target.Volume, _ => _.MapFrom(source => source.ConditionVolume))
+                .ForMember(target => target.Value, _ => _.MapFrom(source => source.ConditionValue))
+                .ForMember(target => target.DateApproved, _ => _.MapFrom(source => source.ApprovedDate))
+                .ForMember(target => target.ReferenceNumber, _ => _.MapFrom(source => source.ConcessionReferenceNumber))
+                .ForMember(target => target.ConditionProduct, _ => _.MapFrom(source => source.ProductType));
+
             //ConcessionInboxView
             CreateMap<Model.Repository.ConcessionInboxView, Model.UserInterface.Inbox.InboxConcession>()
                 .ForMember(target => target.DateOpened, _ => _.MapFrom(source => source.ConcessionDate))

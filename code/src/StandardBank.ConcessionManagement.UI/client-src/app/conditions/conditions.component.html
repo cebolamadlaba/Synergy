@@ -108,18 +108,18 @@
             </thead>
             <tbody>
                 <tr *ngFor='let condition of observableConditions | conditionsFilter: concessionIdOrRiskGroupNumber; trackBy: index;' class="status-{{condition.ragStatus}}">
-                    <td>
+                    <td (click)="openConcessionView(condition)">
                         <p class="riskGroupName">{{condition.riskGroupName}}</p>
                         <p class="riskGroupNumber">{{condition.riskGroupNumber}}</p>
                     </td>
-                    <td>{{condition.concessionReferenceNumber}}</td>
-                    <td>{{condition.conditionType }}</td>
-                    <td>{{condition.productType}}</td>
-                    <td class="date">{{condition.expiryDate | date: 'yyyy/MM/dd'}}</td>
-                    <td>{{condition.interestRate}}</td>
-                    <td>{{condition.conditionVolume}}</td>
-                    <td>{{condition.conditionValue}}</td>
-                    <td>{{condition.expectedTurnoverValue}}</td>
+                    <td (click)="openConcessionView(condition)">{{condition.concessionReferenceNumber}}</td>
+                    <td (click)="openConcessionView(condition)">{{condition.conditionType }}</td>
+                    <td (click)="openConcessionView(condition)">{{condition.productType}}</td>
+                    <td class="date" (click)="openConcessionView(condition)">{{condition.expiryDate | date: 'yyyy/MM/dd'}}</td>
+                    <td (click)="openConcessionView(condition)">{{condition.interestRate}}</td>
+                    <td (click)="openConcessionView(condition)">{{condition.conditionVolume}}</td>
+                    <td (click)="openConcessionView(condition)">{{condition.conditionValue}}</td>
+                    <td (click)="openConcessionView(condition)">{{condition.expectedTurnoverValue}}</td>
                     <td>
                         <button type="button" class="btn btn-no" (click)="conditionNotMet()">No</button>
                         <button type="button" class="btn btn-yes" (click)="conditionMet()">Yes</button>

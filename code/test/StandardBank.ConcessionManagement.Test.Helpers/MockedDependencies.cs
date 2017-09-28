@@ -401,36 +401,49 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The mock LoadedPriceCash repository
         /// </summary>
-        public static Mock<ILoadedPriceCashRepository> MockLoadedPriceCashRepository = new Mock<ILoadedPriceCashRepository>();
+        public static Mock<ILoadedPriceCashRepository> MockLoadedPriceCashRepository =
+            new Mock<ILoadedPriceCashRepository>();
 
         /// <summary>
         /// The mock LoadedPriceLending repository
         /// </summary>
-        public static Mock<ILoadedPriceLendingRepository> MockLoadedPriceLendingRepository = new Mock<ILoadedPriceLendingRepository>();
+        public static Mock<ILoadedPriceLendingRepository> MockLoadedPriceLendingRepository =
+            new Mock<ILoadedPriceLendingRepository>();
 
         /// <summary>
         /// The mock LoadedPriceTransactional repository
         /// </summary>
-        public static Mock<ILoadedPriceTransactionalRepository> MockLoadedPriceTransactionalRepository = new Mock<ILoadedPriceTransactionalRepository>();
+        public static Mock<ILoadedPriceTransactionalRepository> MockLoadedPriceTransactionalRepository =
+            new Mock<ILoadedPriceTransactionalRepository>();
 
         /// <summary>
         /// The mock ConcessionDetail repository
         /// </summary>
-        public static Mock<IConcessionDetailRepository> MockConcessionDetailRepository = new Mock<IConcessionDetailRepository>();
+        public static Mock<IConcessionDetailRepository> MockConcessionDetailRepository =
+            new Mock<IConcessionDetailRepository>();
 
         /// <summary>
         /// The mock FinancialInvestment repository
         /// </summary>
-        public static Mock<IFinancialInvestmentRepository> MockFinancialInvestmentRepository = new Mock<IFinancialInvestmentRepository>();
+        public static Mock<IFinancialInvestmentRepository> MockFinancialInvestmentRepository =
+            new Mock<IFinancialInvestmentRepository>();
 
         /// <summary>
         /// The mock ProductInvestment repository
         /// </summary>
-        public static Mock<IProductInvestmentRepository> MockProductInvestmentRepository = new Mock<IProductInvestmentRepository>();
+        public static Mock<IProductInvestmentRepository> MockProductInvestmentRepository =
+            new Mock<IProductInvestmentRepository>();
 
         /// <summary>
         /// The mock concession inbox view repository
         /// </summary>
-        public static Mock<IConcessionInboxViewRepository> MockConcessionInboxViewRepository = new Mock<IConcessionInboxViewRepository>();
+        public static Mock<IConcessionInboxViewRepository> MockConcessionInboxViewRepository =
+            new Mock<IConcessionInboxViewRepository>();
+
+        /// <summary>
+        /// The mock concession condition view repository
+        /// </summary>
+        public static Mock<IConcessionConditionViewRepository> MockConcessionConditionViewRepository =
+            new Mock<IConcessionConditionViewRepository>();
     }
 }

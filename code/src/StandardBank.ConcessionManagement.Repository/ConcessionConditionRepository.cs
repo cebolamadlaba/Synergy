@@ -96,56 +96,6 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
-        /// Reads the by period and approval status.
-        /// </summary>
-        /// <param name="concessionApprovalStatusId">The concession approval status identifier.</param>
-        /// <param name="periodId">The period identifier.</param>
-        /// <param name="periodType">Type of the period.</param>
-        /// <returns></returns>
-        public IEnumerable<ConcessionCondition> ReadByPeriodAndApprovalStatus(int concessionApprovalStatusId,
-            int periodId, int periodType)
-        {
-            using (var db = _dbConnectionFactory.Connection())
-            {
-                var query = @"
-                    SELECT 
-                        rg.RiskGroupName, rg.RiskGroupNumber, c.pkConcessionId 'ConcessionId', c.[ConcessionRef] 'ConcessionReferenceNumber', 
-                        ct.Description 'ConditionType', cp.Description 'ProductType', cc.InterestRate, cc.Volume, cc.Value, 
-                        cc.[DateApproved], p.[Description] 'Period', cc.[ExpectedTurnoverValue], cc.[ExpiryDate]
-                    FROM [dbo].[tblConcessionCondition] cc
-                    join dbo.rtblConditionType ct on cc.fkConditionTypeId = ct.pkConditionTypeId
-                    join dbo.rtblConditionProduct cp on cp.pkConditionProductId = cc.fkConditionProductId
-                    join tblConcession c on c.pkConcessionId = cc.fkConcessionId
-                    join tblRiskGroup rg on rg.pkRiskGroupId = c.fkRiskGroupId
-                    join [rtblPeriod] p on p.[pkPeriodId] =  cc.fkPeriodId
-                    where c.fkStatusId = @statusId and cc.fkPeriodId = @periodId and cc.fkPeriodTypeId = @periodType and cc.[DateApproved] is not null";
-                return db.Query<ConcessionCondition>(query,
-                    new {statusId = concessionApprovalStatusId, periodId, periodType});
-            }
-        }
-
-        /// <summary>
-        /// Reads the condition counts.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<ConditionCount> ReadConditionCounts()
-        {
-            using (var db = _dbConnectionFactory.Connection())
-            {
-                var query =
-                    @"SELECT CASE WHEN cc.[fkPeriodTypeId] = 1 THEN 'Standard' ELSE 'Ongoing' END [PeriodType], COUNT(*) [RecordCount] FROM [dbo].[tblConcessionCondition] cc
-                    JOIN [dbo].[tblConcession] c on c.[pkConcessionId] = cc.[fkConcessionId]
-                    WHERE c.[fkStatusId] IN (2, 3)
-                    AND c.[IsActive] = 1
-                    AND cc.[ConditionMet] IS NULL
-                    AND cc.[fkPeriodTypeId] IS NOT NULL
-                    GROUP BY cc.[fkPeriodTypeId]";
-
-                return db.Query<ConditionCount>(query);
-            }
-        }
-
-        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>

@@ -428,6 +428,12 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             new ConcessionInboxViewRepository(DbConnection);
 
         /// <summary>
+        /// The concession condition view repository
+        /// </summary>
+        public static IConcessionConditionViewRepository ConcessionConditionViewRepository =
+            new ConcessionConditionViewRepository(DbConnection);
+
+        /// <summary>
         /// The look up table manager
         /// </summary>
         public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,
@@ -441,8 +447,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The user manager
         /// </summary>
         public static IUserManager UserManager = new UserManager(CacheManager, LookupTableManager, UserRepository,
-            UserRoleRepository,
-            RoleRepository, UserRegionRepository, RegionRepository, CentreRepository, CentreUserRepository, Mapper);
+            UserRoleRepository, RoleRepository, UserRegionRepository, RegionRepository, CentreRepository,
+            CentreUserRepository, Mapper);
 
         /// <summary>
         /// The concession manager
@@ -450,9 +456,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static IConcessionManager ConcessionManager =
             new ConcessionManager(ConcessionRepository, LookupTableManager, LegalEntityRepository, RiskGroupRepository,
                 Mapper, ConcessionConditionRepository, LegalEntityAccountRepository, ConcessionCommentRepository,
-                ConcessionLendingRepository, MarketSegmentRepository, ConcessionCashRepository,
-                ConcessionTransactionalRepository, ConcessionRelationshipRepository, AuditRepository, UserManager,
-                ConcessionInboxViewRepository, ConcessionDetailRepository);
+                ConcessionRelationshipRepository, AuditRepository, UserManager, ConcessionInboxViewRepository,
+                ConcessionDetailRepository, ConcessionConditionViewRepository);
 
         /// <summary>
         /// The pricing manager

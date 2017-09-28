@@ -158,36 +158,5 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
 
             Assert.Null(result);
         }
-
-        /// <summary>
-        /// Tests that ReadConditionCounts executes positive.
-        /// </summary>
-        [Fact]
-        public void ReadConditionCounts_Executes_Positive()
-        {
-            var result = InstantiatedDependencies.ConcessionConditionRepository.ReadConditionCounts();
-
-            Assert.NotNull(result);
-        }
-
-        /// <summary>
-        /// Tests that ReadByPeriodAndApprovalStatus executes positive.
-        /// </summary>
-        [Fact]
-        public void ReadByPeriodAndApprovalStatus_Executes_Positive()
-        {
-            var results = InstantiatedDependencies.ConcessionConditionRepository.ReadAll();
-            var concessionCondition =
-                results.First(_ => _.DateApproved.HasValue && _.PeriodId.HasValue && _.PeriodTypeId.HasValue);
-            var concessionId = concessionCondition.ConcessionId;
-
-            var concession = InstantiatedDependencies.ConcessionRepository.ReadById(concessionId);
-
-            var result = InstantiatedDependencies.ConcessionConditionRepository.ReadByPeriodAndApprovalStatus(
-                concession.StatusId, concessionCondition.PeriodId.Value, concessionCondition.PeriodTypeId.Value);
-
-            Assert.NotNull(result);
-            Assert.NotEmpty(result);
-        }
     }
 }

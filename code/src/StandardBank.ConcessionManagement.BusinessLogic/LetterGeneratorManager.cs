@@ -368,7 +368,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 {
                     Value = concessionCondition.ExpectedTurnoverValue.HasValue
                         ? concessionCondition.ExpectedTurnoverValue.Value.ToString("C")
-                        : concessionCondition.ConditionValue.ToString("C"),
+                        : concessionCondition.ConditionValue.GetValueOrDefault(0).ToString("C"),
                     ConditionProduct = concessionCondition.ProductType,
                     ConditionMeasure = concessionCondition.ConditionType,
                     Deadline = concessionCondition.ExpiryDate.HasValue

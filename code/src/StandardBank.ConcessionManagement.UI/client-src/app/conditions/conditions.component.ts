@@ -6,6 +6,7 @@ import { Period } from '../models/period';
 import { LookupDataService } from "../services/lookup-data.service";
 import { ConditionCounts } from "../models/condition-counts";
 import { ConcessionCondition } from "../models/concession-condition";
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-conditions',
@@ -33,7 +34,8 @@ export class ConditionsComponent implements OnInit {
 
     constructor(
         @Inject(MyConditionService) private conditionService,
-        @Inject(LookupDataService) private lookupDataService) { }
+        @Inject(LookupDataService) private lookupDataService,
+        private router: Router) { }
 
     ngOnInit() {
         this.lookupDataService.getPeriods().subscribe(data => { this.periods = data; }, err => this.errorMessage = err);
@@ -77,10 +79,28 @@ export class ConditionsComponent implements OnInit {
     }
 
     conditionNotMet() {
+        if (confirm("Are you sure this condition has not been met?")) {
 
+        }
     }
 
     conditionMet() {
+        if (confirm("Are you sure this condition has been met?")) {
 
+        }
+    }
+
+    openConcessionView(concessionCondition: ConcessionCondition) {
+        switch (concessionCondition.concessionType) {
+            case "Lending":
+                this.router.navigate(['/lending-view-concession', concessionCondition.riskGroupNumber, concessionCondition.concessionReferenceNumber]);
+                break;
+            case "Cash":
+                this.router.navigate(['/cash-view-concession', concessionCondition.riskGroupNumber, concessionCondition.concessionReferenceNumber]);
+                break;
+            case "Transactional":
+                this.router.navigate(['/transactional-view-concession', concessionCondition.riskGroupNumber, concessionCondition.concessionReferenceNumber]);
+                break;
+        }
     }
 }

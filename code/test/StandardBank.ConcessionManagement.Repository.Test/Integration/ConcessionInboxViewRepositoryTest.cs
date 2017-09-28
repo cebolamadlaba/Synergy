@@ -104,9 +104,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive_Min_StartDate_Executes_Positive()
         {
-            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
-            var requestorId = results.Last().RequestorId;
-            var isActive = results.Last().IsActive;
+            var requestorId = DataHelper.GetUserId();
+            var isActive = true;
             var startExpiryDate = new DateTime();
             var endExpiryDate = DateTime.Now.AddYears(10);
 
@@ -188,9 +187,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void ReadByBcmUserIdIsActive_Executes_Positive()
         {
-            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
-            var bcmUserId = results.First(_ => _.BCMUserId.HasValue).BCMUserId.Value;
-            var isActive = results.First(_ => _.BCMUserId.HasValue).IsActive;
+            var bcmUserId = DataHelper.GetUserId();
+            var isActive = true;
 
             var result = InstantiatedDependencies.ConcessionInboxViewRepository.ReadByBcmUserIdIsActive(bcmUserId, isActive);
 
