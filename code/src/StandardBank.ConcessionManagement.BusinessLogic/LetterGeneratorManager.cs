@@ -149,8 +149,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 var concessionLetter =
                     concessionLetters.FirstOrDefault(_ => _.TransactionalConcessionLetters != null &&
                                                           _.TransactionalConcessionLetters.Any(
-                                                              x => x.AccountNumber == transactionalConcessionDetail
-                                                                       .AccountNumber));
+                                                              x => x.LegalEntityId == transactionalConcessionDetail
+                                                                       .LegalEntityId));
 
                 if (concessionLetter == null)
                 {
@@ -191,7 +191,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     ? $"{transactionalConcessionDetail.BaseRate.GetValueOrDefault(0):C} + {transactionalConcessionDetail.AdValorem.GetValueOrDefault(0)} %"
                     : transactionalConcessionDetail.BaseRate.GetValueOrDefault(0).ToString("C"),
                 ConcessionEndDate = transactionalConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
-                ConcessionStartDate = transactionalConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
+                ConcessionStartDate = transactionalConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy"),
+                LegalEntityId = transactionalConcessionDetail.LegalEntityId
             };
         }
 
@@ -214,8 +215,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 var concessionLetter =
                     concessionLetters.FirstOrDefault(_ => _.CashConcessionLetters != null &&
                                                           _.CashConcessionLetters.Any(
-                                                              x => x.AccountNumber == cashConcessionDetail
-                                                                       .AccountNumber));
+                                                              x => x.LegalEntityId == cashConcessionDetail
+                                                                       .LegalEntityId));
 
                 if (concessionLetter == null)
                 {
@@ -255,7 +256,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 BaseRateAdValorem =
                     $"{cashConcessionDetail.BaseRate.GetValueOrDefault(0):C} + {cashConcessionDetail.AdValorem.GetValueOrDefault(0)}%",
                 ConcessionEndDate = cashConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy"),
-                ConcessionStartDate = cashConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy")
+                ConcessionStartDate = cashConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
+                LegalEntityId = cashConcessionDetail.LegalEntityId
             };
         }
 
@@ -279,8 +281,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 var concessionLetter =
                     concessionLetters.FirstOrDefault(_ => _.LendingConcessionLetters != null &&
                                                           _.LendingConcessionLetters.Any(
-                                                              x => x.AccountNumber == lendingConcessionDetail
-                                                                       .AccountNumber));
+                                                              x => x.LegalEntityId == lendingConcessionDetail
+                                                                       .LegalEntityId));
 
                 if (concessionLetter == null)
                 {
@@ -288,7 +290,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         concessionLetters.FirstOrDefault(
                             _ => _ != null &&
                                  _.LendingOverDraftConcessionLetters.Any(
-                                     x => x.AccountNumber == lendingConcessionDetail.AccountNumber));
+                                     x => x.LegalEntityId == lendingConcessionDetail.LegalEntityId));
                 }
 
                 if (concessionLetter == null)
@@ -344,7 +346,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 ReviewFee = lendingConcessionDetail.ReviewFee.ToString("C"),
                 ConcessionEndDate = lendingConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy"),
                 ConcessionStartDate = lendingConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
-                UFFFee = lendingConcessionDetail.UffFee.ToString("C")
+                UFFFee = lendingConcessionDetail.UffFee.ToString("C"),
+                LegalEntityId = lendingConcessionDetail.LegalEntityId
             };
         }
 
@@ -391,7 +394,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 ChannelOrFeeType = lendingConcessionDetail.InitiationFee.ToString("C"),
                 FeeOrMarginAbovePrime = lendingConcessionDetail.MarginAgainstPrime.ToString("C"),
                 ConcessionEndDate = lendingConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy"),
-                ConcessionStartDate = lendingConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy")
+                ConcessionStartDate = lendingConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
+                LegalEntityId = lendingConcessionDetail.LegalEntityId
             };
         }
 

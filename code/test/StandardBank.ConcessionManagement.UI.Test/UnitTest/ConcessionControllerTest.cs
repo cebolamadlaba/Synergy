@@ -129,13 +129,13 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         public void UserApprovedConcessions_Executes_Positive()
         {
             MockConcessionManager.Setup(_ => _.GetApprovedConcessionsForUser(It.IsAny<int>()))
-                .Returns(new[] {new InboxConcession()});
+                .Returns(new[] {new ApprovedConcession()});
 
             var result = _concessionController.UserApprovedConcessions();
             var apiResult = Assert.IsType<OkObjectResult>(result);
 
             Assert.NotNull(apiResult.Value);
-            Assert.True(apiResult.Value is IEnumerable<InboxConcession>);
+            Assert.True(apiResult.Value is IEnumerable<ApprovedConcession>);
         }
 
         /// <summary>

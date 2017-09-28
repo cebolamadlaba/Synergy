@@ -405,14 +405,55 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        public IEnumerable<InboxConcession> GetApprovedConcessionsForUser(int userId)
+        public IEnumerable<ApprovedConcession> GetApprovedConcessionsForUser(int userId)
         {
             var approvedStatusId = _lookupTableManager.GetStatusId("Approved");
             var approvedWithChangesStatusId = _lookupTableManager.GetStatusId("Approved With Changes");
 
-            return _mapper.Map<IEnumerable<InboxConcession>>(
+            var concessions =
                 _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsActive(userId,
-                    new[] {approvedStatusId, approvedWithChangesStatusId}, true));
+                    new[] {approvedStatusId, approvedWithChangesStatusId}, true);
+
+            var approvedConcessions = new List<ApprovedConcession>();
+
+            foreach (var concession in concessions.OrderBy(_ => _.ConcessionRef))
+            {
+                var approvedConcession =
+                    approvedConcessions.FirstOrDefault(_ => _.ReferenceNumber == concession.ConcessionRef);
+
+                if (approvedConcession == null)
+                {
+                    approvedConcession = new ApprovedConcession
+                    {
+                        ReferenceNumber = concession.ConcessionRef,
+                        RiskGroupNumber = concession.RiskGroupNumber,
+                        RiskGroupName = concession.RiskGroupName,
+                        ConcessionId = concession.ConcessionId,
+                        ApprovedConcessionDetails = new List<ApprovedConcessionDetail>()
+                    };
+
+                    approvedConcessions.Add(approvedConcession);
+                }
+
+                var approvedConcessionDetails = new List<ApprovedConcessionDetail>();
+                approvedConcessionDetails.AddRange(approvedConcession.ApprovedConcessionDetails);
+
+                approvedConcessionDetails.Add(new ApprovedConcessionDetail
+                {
+                    Status = concession.Status,
+                    ConcessionType = concession.ConcessionType,
+                    ExpiryDate = concession.ExpiryDate,
+                    CustomerName = concession.CustomerName,
+                    DateApproved = concession.DateApproved,
+                    DateOpened = concession.ConcessionDate,
+                    DateSentForApproval = concession.DatesentForApproval,
+                    Segment = concession.Segment
+                });
+
+                approvedConcession.ApprovedConcessionDetails = approvedConcessionDetails;
+            }
+
+            return approvedConcessions;
         }
 
         /// <summary>

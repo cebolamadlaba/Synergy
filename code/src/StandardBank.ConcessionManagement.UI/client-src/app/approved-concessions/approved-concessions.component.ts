@@ -2,7 +2,8 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { Observable } from "rxjs";
 import { UserConcessionsService } from "../services/user-concessions.service";
 import { Router, RouterModule } from '@angular/router';
-import { InboxConcession } from "../models/inbox-concession";
+import { ApprovedConcession } from "../models/approved-concession";
+import { ApprovedConcessionDetail } from "../models/approved-concession-detail";
 
 @Component({
     selector: 'app-approved-concessions',
@@ -15,8 +16,8 @@ export class ApprovedConcessionsComponent implements OnInit {
     saveMessage: String;
     isLoading = true;
 
-    observableApprovedConcessions: Observable<InboxConcession[]>;
-    approvedConcessions: InboxConcession[];
+    observableApprovedConcessions: Observable<ApprovedConcession[]>;
+    approvedConcessions: ApprovedConcession[];
 
     constructor( @Inject(UserConcessionsService) private userConcessionsService, private router: Router) { }
 
@@ -28,8 +29,8 @@ export class ApprovedConcessionsComponent implements OnInit {
         }, error => this.errorMessage = <any>error);
     }
 
-    openConcessionView(approvedConcession: InboxConcession) {
-        switch (approvedConcession.concessionType) {
+    openConcessionView(approvedConcession: ApprovedConcession, concessionType: string) {
+        switch (concessionType) {
             case "Lending":
                 this.router.navigate(['/lending-view-concession', approvedConcession.riskGroupNumber, approvedConcession.referenceNumber]);
                 break;

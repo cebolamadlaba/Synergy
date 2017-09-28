@@ -17,10 +17,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void ReadByRequestorIdStatusIdsIsActive_One_StatusId_Executes_Positive()
         {
-            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
-            var requestorId = results.First().RequestorId;
-            var statusId = results.First().StatusId;
-            var isActive = results.First().IsActive;
+            var requestorId = DataHelper.GetUserId();
+            var statusId = DataHelper.GetStatusId();
+            var isActive = true;
 
             var result =
                 InstantiatedDependencies.ConcessionInboxViewRepository.ReadByRequestorIdStatusIdsIsActive(requestorId,

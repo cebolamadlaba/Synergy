@@ -3,7 +3,7 @@
     /// <summary>
     /// Transactional concession letter
     /// </summary>
-    public class TransactionalConcessionLetter
+    public class TransactionalConcessionLetter : BaseConcessionLetter
     {
         /// <summary>
         /// Gets or sets the account number.
