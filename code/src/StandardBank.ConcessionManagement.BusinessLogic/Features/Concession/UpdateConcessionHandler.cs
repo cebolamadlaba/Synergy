@@ -38,24 +38,24 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         /// <summary>
         /// The logger
         /// </summary>
-        private readonly ILogger _logger;
+        private readonly ILogger<UpdateConcessionHandler> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UpdateConcessionHandler"/> class.
         /// </summary>
         /// <param name="concessionManager">The concession manager.</param>
         /// <param name="mediator">The mediator.</param>
-        /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="logger">The logger.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="lookupTableManager">The lookup table manager.</param>
         public UpdateConcessionHandler(IConcessionManager concessionManager, IMediator mediator,
-            ILoggerFactory loggerFactory, IMapper mapper, ILookupTableManager lookupTableManager)
+            ILogger<UpdateConcessionHandler> logger, IMapper mapper, ILookupTableManager lookupTableManager)
         {
             _concessionManager = concessionManager;
             _mediator = mediator;
             _mapper = mapper;
             _lookupTableManager = lookupTableManager;
-            _logger = loggerFactory.CreateLogger<UpdateConcessionHandler>();
+            _logger = logger;
         }
 
         /// <summary>

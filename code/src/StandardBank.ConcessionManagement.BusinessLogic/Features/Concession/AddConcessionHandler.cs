@@ -27,20 +27,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         /// <summary>
         /// The logger
         /// </summary>
-        private readonly ILogger _logger;
+        private readonly ILogger<AddConcessionHandler> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AddConcessionHandler"/> class.
         /// </summary>
         /// <param name="concessionManager">The concession manager.</param>
         /// <param name="mediator">The mediator.</param>
-        /// <param name="loggerFactory">The logger factory.</param>
-        public AddConcessionHandler(IConcessionManager concessionManager, IMediator mediator,
-            ILoggerFactory loggerFactory)
+        /// <param name="logger">The logger.</param>
+        public AddConcessionHandler(IConcessionManager concessionManager, IMediator mediator, ILogger<AddConcessionHandler> logger)
         {
             _concessionManager = concessionManager;
             _mediator = mediator;
-            _logger = loggerFactory.CreateLogger<AddConcessionHandler>();
+            _logger = logger;
         }
 
         /// <summary>

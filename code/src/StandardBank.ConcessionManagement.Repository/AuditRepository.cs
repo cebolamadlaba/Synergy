@@ -46,13 +46,15 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
+                var serializedEntity = _marshaller.SerializeObject(entity);
+
                 await db.ExecuteAsync(
                     $"INSERT INTO [Audit].[{entity.TableName}] ([{entity.PrimaryKeyColumnName}], [fkAuditTypeId], [Entity], [Username]) VALUES (@pk, @fkAuditTypeId, @Entity, @Username)",
                     new
                     {
                         pk = entity.PrimaryKeyValue,
                         fkAuditTypeId = (int) auditType,
-                        Entity = _marshaller.SerializeObject(entity),
+                        Entity = serializedEntity,
                         Username = username
                     });
             }

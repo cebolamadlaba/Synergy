@@ -11,7 +11,7 @@
     [fkRiskGroupId]       INT             NOT NULL,
     [fkRegionId]          INT             NOT NULL,
     [fkCentreId]          INT             NOT NULL,
-    [ConcessionRef]       VARCHAR (30)    NOT NULL,
+    [ConcessionRef]       VARCHAR (30)    NULL,
     [SMTDealNumber]       VARCHAR (20)    NOT NULL,
     [ConcessionDate]      DATETIME        NOT NULL,
     [DatesentForApproval] DATETIME        NULL,
@@ -35,6 +35,8 @@
     CONSTRAINT [FK_tblConcession_tblUserHO] FOREIGN KEY ([fkHOUserId]) REFERENCES [dbo].[tblUser] ([pkUserId]),
     CONSTRAINT [FK_tblConcession_tblUserPCM] FOREIGN KEY ([fkPCMUserId]) REFERENCES [dbo].[tblUser] ([pkUserId])
 );
+
+
 
 
 

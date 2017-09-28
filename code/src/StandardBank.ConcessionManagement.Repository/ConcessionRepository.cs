@@ -36,8 +36,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             const string sql =
                 @"INSERT [dbo].[tblConcession] ([fkTypeId], [fkConcessionTypeId], [fkStatusId], [fkSubStatusId], [fkRequestorId], [fkBCMUserId], [fkPCMUserId], [fkHOUserId], [fkRiskGroupId], [fkRegionId], [fkCentreId], [ConcessionRef], [SMTDealNumber], [ConcessionDate], [DatesentForApproval], [Motivation], [DateActionedByBCM], [DateActionedByPCM], [DateActionedByHO], [MRS_CRS], [IsCurrent], [IsActive]) 
-                                VALUES (@TypeId, @ConcessionTypeId, @StatusId, @SubStatusId, @RequestorId, @BCMUserId, @PCMUserId, @HOUserId, @RiskGroupId, @RegionId, @CentreId, @ConcessionRef, @SMTDealNumber, @ConcessionDate, @DatesentForApproval, @Motivation, @DateActionedByBCM, @DateActionedByPCM, @DateActionedByHO, @MRS_CRS, @IsCurrent, @IsActive) 
-                                SELECT CAST(SCOPE_IDENTITY() as int)";
+                VALUES (@TypeId, @ConcessionTypeId, @StatusId, @SubStatusId, @RequestorId, @BCMUserId, @PCMUserId, @HOUserId, @RiskGroupId, @RegionId, @CentreId, @ConcessionRef, @SMTDealNumber, @ConcessionDate, @DatesentForApproval, @Motivation, @DateActionedByBCM, @DateActionedByPCM, @DateActionedByHO, @MRS_CRS, @IsCurrent, @IsActive) 
+                SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
