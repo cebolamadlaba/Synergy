@@ -46,13 +46,11 @@
                     </div>
                 </div>
                 <div class="col-md-10">
-                    <div class="single-print" (click)="printConcession(approvedConcession.concessionReferenceNumber)"><i class="fa fa-print" aria-hidden="true"></i></div>
+                    <div class="single-print" (click)="printConcession(approvedConcession.referenceNumber)"><i class="fa fa-print" aria-hidden="true"></i></div>
                 </div>
                 <div class="col-md-10 no-padding-left">
                     <div class="col-md-6 no-padding-left">
-                        <strong>Concession ID :</strong> {{approvedConcession.concessionReferenceNumber}}
-                        <span *ngIf="approvedConcession.expiryDate"><strong>Expiry Date :</strong> {{approvedConcession.expiryDate | date: 'yyyy/MM/dd'}}</span>
-                        <span *ngIf="approvedConcession.approvedDate"><strong>Approved Date :</strong> {{approvedConcession.approvedDate | date: 'yyyy/MM/dd'}}</span> 
+                        <strong>Concession ID :</strong> {{approvedConcession.referenceNumber}}
                     </div>
                 </div>
             </div>
@@ -68,6 +66,8 @@
                             <th>Status</th>
                             <th>Date Opened</th>
                             <th>Date Sent For Approval</th>
+                            <th>Expiry Date</th>
+                            <th>Date Approved</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -78,6 +78,8 @@
                             <td> {{approvedConcession.status}} </td>
                             <td> {{approvedConcession.dateOpened | date: 'yyyy/MM/dd'}} </td>
                             <td> {{approvedConcession.dateSentForApproval | date: 'yyyy/MM/dd'}} </td>
+                            <td> {{approvedConcession.expiryDate | date: 'yyyy/MM/dd'}} </td>
+                            <td> {{approvedConcession.dateApproved | date: 'yyyy/MM/dd'}} </td>
                         </tr>
                     </tbody>
                 </table>

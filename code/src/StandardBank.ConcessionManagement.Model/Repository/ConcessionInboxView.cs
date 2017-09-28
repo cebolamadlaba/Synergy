@@ -160,6 +160,14 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public DateTime? ExpiryDate { get; set; }
 
         /// <summary>
+        /// Gets or sets the date approved.
+        /// </summary>
+        /// <value>
+        /// The date approved.
+        /// </value>
+        public DateTime? DateApproved { get; set; }
+
+        /// <summary>
         /// Gets or sets the requestor identifier.
         /// </summary>
         /// <value>

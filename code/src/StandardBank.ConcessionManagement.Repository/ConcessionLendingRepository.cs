@@ -84,7 +84,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionLending>(
-                    @"SELECT [pkConcessionLendingId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkProductTypeId] [ProductTypeId], [fkReviewFeeTypeId] [ReviewFeeTypeId], [Limit], [Term], [MarginToPrime], [ApprovedMarginToPrime], [LoadedMarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [AverageBalance], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
+                    @"SELECT [pkConcessionLendingId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkProductTypeId] [ProductTypeId], [fkReviewFeeTypeId] [ReviewFeeTypeId], [Limit], [Term], [MarginToPrime], [ApprovedMarginToPrime], [LoadedMarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [AverageBalance], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate], d.[DateApproved] 
                     FROM [dbo].[tblConcessionLending] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
                     WHERE [pkConcessionLendingId] = @Id",
@@ -102,7 +102,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionLending>(
-                    @"SELECT [pkConcessionLendingId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkProductTypeId] [ProductTypeId], [fkReviewFeeTypeId] [ReviewFeeTypeId], [Limit], [Term], [MarginToPrime], [ApprovedMarginToPrime], [LoadedMarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [AverageBalance], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
+                    @"SELECT [pkConcessionLendingId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkProductTypeId] [ProductTypeId], [fkReviewFeeTypeId] [ReviewFeeTypeId], [Limit], [Term], [MarginToPrime], [ApprovedMarginToPrime], [LoadedMarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [AverageBalance], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate], d.[DateApproved] 
                     FROM [dbo].[tblConcessionLending] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
                     WHERE t.[fkConcessionId] = @concessionId",
@@ -119,7 +119,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionLending>(
-                    @"SELECT [pkConcessionLendingId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkProductTypeId] [ProductTypeId], [fkReviewFeeTypeId] [ReviewFeeTypeId], [Limit], [Term], [MarginToPrime], [ApprovedMarginToPrime], [LoadedMarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [AverageBalance], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
+                    @"SELECT [pkConcessionLendingId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkProductTypeId] [ProductTypeId], [fkReviewFeeTypeId] [ReviewFeeTypeId], [Limit], [Term], [MarginToPrime], [ApprovedMarginToPrime], [LoadedMarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [AverageBalance], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate], d.[DateApproved] 
                     FROM [dbo].[tblConcessionLending] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]");
             }

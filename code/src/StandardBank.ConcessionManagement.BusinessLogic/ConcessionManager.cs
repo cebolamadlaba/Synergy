@@ -729,10 +729,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     {
                         //this concession can be extended or renewed if there is an expiry date which is within the next three months and the concession
                         //is currently in the approved state
-                        mappedConcession.CanExtend = CalculateIfCanExtend(concession, mappedConcession.Status);
                         mappedConcession.CanRenew = CalculateIfCanRenew(concession, mappedConcession.Status);
+                        mappedConcession.CanExtend = CalculateIfCanExtend(concession, mappedConcession.Status, mappedConcession.CanRenew);
                         mappedConcession.CanResubmit = CalculateIfCanResubmit(concession, mappedConcession.Status);
-                        mappedConcession.CanUpdate = CalculateIfCanUpdate(concession, mappedConcession.Status);
+                        mappedConcession.CanUpdate = CalculateIfCanUpdate(concession, mappedConcession.Status, mappedConcession.CanRenew);
                     }
                     else
                     {
@@ -762,9 +762,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         /// <param name="concession">The concession.</param>
         /// <param name="currentStatus">The current status.</param>
+        /// <param name="canRenew">if set to <c>true</c> [can renew].</param>
         /// <returns></returns>
-        private bool CalculateIfCanUpdate(Model.Repository.Concession concession, string currentStatus)
+        private bool CalculateIfCanUpdate(Model.Repository.Concession concession, string currentStatus, bool canRenew)
         {
+            if (canRenew)
+                return false;
+
             return currentStatus == "Approved" || currentStatus == "Approved With Changes";
         }
 
@@ -807,8 +811,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         /// <param name="concession">The concession.</param>
         /// <param name="currentStatus">The current status.</param>
+        /// <param name="canRenew">if set to <c>true</c> [can renew].</param>
         /// <returns></returns>
-        private bool CalculateIfCanExtend(Model.Repository.Concession concession, string currentStatus)
+        private bool CalculateIfCanExtend(Model.Repository.Concession concession, string currentStatus, bool canRenew)
         {
             //you can only extend a concession three times
             var extensionRelationshipId = _lookupTableManager.GetRelationshipId("Extension");
@@ -821,7 +826,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 return false;
 
             //the calculation is the same as can renew here on out, so return whatever that function would return
-            return CalculateIfCanRenew(concession, currentStatus);
+            return canRenew;
         }
 
         /// <summary>

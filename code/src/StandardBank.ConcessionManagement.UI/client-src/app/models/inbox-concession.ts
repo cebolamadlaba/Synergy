@@ -10,4 +10,5 @@ export class InboxConcession {
     segment: string;
     dateSentForApproval: Date;
     expiryDate: Date;
+    dateApproved: Date;
 }

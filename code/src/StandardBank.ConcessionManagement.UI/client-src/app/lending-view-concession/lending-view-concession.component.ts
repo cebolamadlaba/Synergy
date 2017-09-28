@@ -16,7 +16,7 @@ import { Concession } from "../models/concession";
 import { LendingConcessionDetail } from "../models/lending-concession-detail";
 import { ConcessionCondition } from "../models/concession-condition";
 import { LendingService } from "../services/lending.service";
-import { Location } from '@angular/common';
+import { Location, DatePipe } from '@angular/common';
 import { LookupDataService } from "../services/lookup-data.service";
 import { UserConcessionsService } from "../services/user-concessions.service";
 import { LendingFinancial } from "../models/lending-financial";
@@ -25,7 +25,8 @@ import { ConcessionComment } from "../models/concession-comment";
 @Component({
     selector: 'app-lending-view-concession',
     templateUrl: './lending-view-concession.component.html',
-    styleUrls: ['./lending-view-concession.component.css']
+    styleUrls: ['./lending-view-concession.component.css'],
+    providers: [DatePipe]
 })
 export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
@@ -87,6 +88,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private formBuilder: FormBuilder,
         private location: Location,
+        private datepipe: DatePipe,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(LendingService) private lendingService,
         @Inject(UserConcessionsService) private userConcessionsService) {
@@ -208,6 +210,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                     let currentConcession = concessions.controls[concessions.length - 1];
 
                     currentConcession.get('lendingConcessionDetailId').setValue(lendingConcessionDetail.lendingConcessionDetailId);
+                    currentConcession.get('concessionDetailId').setValue(lendingConcessionDetail.concessionDetailId);
 
                     let selectedProductType = this.productTypes.filter(_ => _.id === lendingConcessionDetail.productTypeId);
                     currentConcession.get('productType').setValue(selectedProductType[0]);
@@ -226,6 +229,16 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
                     currentConcession.get('reviewFee').setValue(lendingConcessionDetail.reviewFee);
                     currentConcession.get('uffFee').setValue(lendingConcessionDetail.uffFee);
+
+                    if (lendingConcessionDetail.expiryDate) {
+                        var formattedExpiryDate = this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd');
+                        currentConcession.get('expiryDate').setValue(formattedExpiryDate);
+                    }
+
+                    if (lendingConcessionDetail.dateApproved) {
+                        var formattedDateApproved = this.datepipe.transform(lendingConcessionDetail.dateApproved, 'yyyy-MM-dd');
+                        currentConcession.get('dateApproved').setValue(formattedDateApproved);
+                    }
 
                     rowIndex++;
                 }
@@ -269,6 +282,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     initConcessionItemRows() {
         return this.formBuilder.group({
             lendingConcessionDetailId: [''],
+            concessionDetailId: [''],
             productType: [''],
             accountNumber: [''],
             limit: [''],
@@ -278,7 +292,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             initiationFee: [''],
             reviewFeeType: [''],
             reviewFee: [''],
-            uffFee: ['']
+            uffFee: [''],
+            expiryDate: [{ value: '', disabled: true }],
+            dateApproved: [{ value: '', disabled: true }]
         });
     }
 
@@ -386,6 +402,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
             if (!isNew && concessionFormItem.get('lendingConcessionDetailId').value)
                 lendingConcessionDetail.lendingConcessionDetailId = concessionFormItem.get('lendingConcessionDetailId').value;
+
+            if (!isNew && concessionFormItem.get('concessionDetailId').value)
+                lendingConcessionDetail.concessionDetailId = concessionFormItem.get('concessionDetailId').value;
 
             if (concessionFormItem.get('productType').value)
                 lendingConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;

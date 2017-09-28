@@ -157,6 +157,8 @@
                 <th>Review Fee</th>
                 <th></th>
                 <th>UFF Fee</th>
+                <th>Expiry Date</th>
+                <th>Date Approved</th>
                 <th></th>
             </tr>
         </thead>
@@ -164,6 +166,7 @@
             <tr *ngFor="let itemrow of lendingConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
                 <td class="length-long">
                     <input formControlName="lendingConcessionDetailId" style="display: none;" />
+                    <input formControlName="concessionDetailId" style="display: none;" />
                     <!-- Product type -->
                     <select formControlName="productType" class="form-control" [attr.disabled]="canEdit ? null : ''">
                         <option *ngFor="let productTypeOption of productTypes" [ngValue]="productTypeOption">{{productTypeOption.description}}</option>
@@ -194,6 +197,10 @@
                 <td class="length-medium"><input type="text" numbersOnly="true" formControlName="reviewFee" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
                 <!-- uffFee -->
                 <td class="length-medium"><input type="text" numbersOnly="true" formControlName="uffFee" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
+
+                <td class="length-short"><input type="date" numbersOnly="true" formControlName="expiryDate" class="form-control" /></td>
+                <td class="length-short"><input type="date" numbersOnly="true" formControlName="dateApproved" class="form-control" /></td>
+
                 <td *ngIf="canBcmApprove || canPcmApprove || isEditing || isRecalling"><button type="button" *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
         </tbody>

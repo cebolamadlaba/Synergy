@@ -111,7 +111,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     SELECT 
                         rg.RiskGroupName, rg.RiskGroupNumber, c.pkConcessionId 'ConcessionId', c.[ConcessionRef] 'ConcessionReferenceNumber', 
                         ct.Description 'ConditionType', cp.Description 'ProductType', cc.InterestRate, cc.Volume, cc.Value, 
-                        cc.[DateApproved] 'ApprovedDate', p.[Description] 'Period', cc.[ExpectedTurnoverValue], cc.[ExpiryDate]
+                        cc.[DateApproved], p.[Description] 'Period', cc.[ExpectedTurnoverValue], cc.[ExpiryDate]
                     FROM [dbo].[tblConcessionCondition] cc
                     join dbo.rtblConditionType ct on cc.fkConditionTypeId = ct.pkConditionTypeId
                     join dbo.rtblConditionProduct cp on cp.pkConditionProductId = cc.fkConditionProductId

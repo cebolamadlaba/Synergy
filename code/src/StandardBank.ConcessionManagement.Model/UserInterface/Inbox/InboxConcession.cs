@@ -110,5 +110,13 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Inbox
         /// The expiry date.
         /// </value>
         public DateTime? ExpiryDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date approved.
+        /// </summary>
+        /// <value>
+        /// The date approved.
+        /// </value>
+        public DateTime DateApproved { get; set; }
     }
 }
