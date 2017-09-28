@@ -42,19 +42,12 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void ReadByRequestorIdStatusIdsIsActive_Multiple_StatusIds_Executes_Positive()
         {
-            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
-            var requestorId = results.Last().RequestorId;
-            var statusId = results.Last().StatusId;
+            var requestorId = DataHelper.GetUserId();
+            var statusId = DataHelper.GetStatusId();
+            var secondStatusId = DataHelper.GetAlternateStatusId(statusId);
             var isActive = true;
 
-            var statuses = new List<int> {statusId};
-
-            var secondStatusId = results
-                .FirstOrDefault(_ => _.StatusId != statusId && _.IsActive == isActive && _.RequestorId == requestorId)
-                ?.StatusId;
-
-            if (secondStatusId.HasValue)
-                statuses.Add(secondStatusId.Value);
+            var statuses = new List<int> {statusId, secondStatusId};
 
             var result =
                 InstantiatedDependencies.ConcessionInboxViewRepository.ReadByRequestorIdStatusIdsIsActive(requestorId, statuses, isActive);
@@ -76,11 +69,10 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void ReadByCentreIdStatusIdSubStatusIdIsActive_Executes_Positive()
         {
-            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
-            var centreId = results.First().CentreId;
-            var statusId = results.First().StatusId;
-            var subStatusId = results.First().SubStatusId;
-            var isActive = results.First().IsActive;
+            var centreId = DataHelper.GetCentreId();
+            var statusId = DataHelper.GetStatusId();
+            var subStatusId = DataHelper.GetSubStatusId();
+            var isActive = true;
 
             var result =
                 InstantiatedDependencies.ConcessionInboxViewRepository.ReadByCentreIdStatusIdSubStatusIdIsActive(
@@ -208,9 +200,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void ReadByPcmUserIdIsActive_Executes_Positive()
         {
-            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
-            var pcmUserId = results.First(_ => _.PCMUserId.HasValue).PCMUserId.Value;
-            var isActive = results.First(_ => _.PCMUserId.HasValue).IsActive;
+            var pcmUserId = DataHelper.GetUserId();
+            var isActive = true;
 
             var result =
                 InstantiatedDependencies.ConcessionInboxViewRepository.ReadByPcmUserIdIsActive(pcmUserId, isActive);
@@ -231,9 +222,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void ReadByHoUserIdIsActive_Executes_Positive()
         {
-            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
-            var hoUserId = results.First(_ => _.HOUserId.HasValue).HOUserId.Value;
-            var isActive = results.First(_ => _.HOUserId.HasValue).IsActive;
+            var hoUserId = DataHelper.GetUserId();
+            var isActive = true;
 
             var result = InstantiatedDependencies.ConcessionInboxViewRepository.ReadByHoUserIdIsActive(hoUserId, isActive);
 

@@ -189,6 +189,10 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             foreach (var cashConcessionDetail in cashConcession.CashConcessionDetails)
             {
                 cashConcessionDetail.DateApproved = null;
+
+                if (cashConcessionDetail.ExpiryDate.HasValue)
+                    cashConcessionDetail.ExpiryDate = cashConcessionDetail.ExpiryDate.Value.AddMonths(3);
+
                 cashConcessionDetail.CashConcessionDetailId = 0;
                 await _mediator.Send(new AddOrUpdateCashConcessionDetail(cashConcessionDetail, user, concession));
             }

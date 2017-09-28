@@ -100,6 +100,8 @@
             <th>Ad Valorem</th>
             <th>Base Rate</th>
             <th>Accrual</th>
+            <th>Expiry Date</th>
+            <th></th>
         </tr>
         </thead>
         <tbody class="form-concessions-table-content">
@@ -130,6 +132,8 @@
                     <option *ngFor="let accrualTypeOption of accrualTypes" [ngValue]="accrualTypeOption">{{accrualTypeOption.description}}</option>
                 </select>
             </td>
+
+            <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" /></td>
 
             <td class="delete"><button *ngIf="cashConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
         </tr>

@@ -121,7 +121,8 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             tableNumber: [''],
             baseRate: [{ value: '', disabled: true }],
             adValorem: [{ value: '', disabled: true }],
-            accrualType: ['']
+            accrualType: [''],
+            expiryDate: ['']
         });
     }
 
@@ -245,6 +246,9 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             } else {
                 this.addValidationError("Accrual type not selected");
             }
+
+            if (concessionFormItem.get('expiryDate').value)
+                cashConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
             cashConcession.cashConcessionDetails.push(cashConcessionDetail);
         }

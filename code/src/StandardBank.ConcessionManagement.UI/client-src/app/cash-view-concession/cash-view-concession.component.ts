@@ -208,6 +208,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                     let currentConcession = concessions.controls[concessions.length - 1];
 
                     currentConcession.get('cashConcessionDetailId').setValue(cashConcessionDetail.cashConcessionDetailId);
+                    currentConcession.get('concessionDetailId').setValue(cashConcessionDetail.concessionDetailId);
 
                     let selectedChannelType = this.channelTypes.filter(_ => _.id == cashConcessionDetail.channelTypeId);
                     currentConcession.get('channelType').setValue(selectedChannelType[0]);
@@ -224,6 +225,16 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
                     let selectedAccrualType = this.accrualTypes.filter(_ => _.id == cashConcessionDetail.accrualTypeId);
                     currentConcession.get('accrualType').setValue(selectedAccrualType[0]);
+
+                    if (cashConcessionDetail.expiryDate) {
+                        var formattedExpiryDate = this.datepipe.transform(cashConcessionDetail.expiryDate, 'yyyy-MM-dd');
+                        currentConcession.get('expiryDate').setValue(formattedExpiryDate);
+                    }
+
+                    if (cashConcessionDetail.dateApproved) {
+                        var formattedDateApproved = this.datepipe.transform(cashConcessionDetail.dateApproved, 'yyyy-MM-dd');
+                        currentConcession.get('dateApproved').setValue(formattedDateApproved);
+                    }
 
                     rowIndex++;
                 }
@@ -267,13 +278,16 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
     initConcessionItemRows() {
         return this.formBuilder.group({
             cashConcessionDetailId: [''],
+            concessionDetailId: [''],
             channelType: [''],
             accountNumber: [''],
             baseRate: [{ value: '', disabled: true }],
             adValorem: [{ value: '', disabled: true }],
             tableNumber: [''],
             approvedTableNumber: [{ value: '', disabled: true }],
-            accrualType: ['']
+            accrualType: [''],
+            expiryDate: [''],
+            dateApproved: [{ value: '', disabled: true }]
         });
     }
 
@@ -378,6 +392,9 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             if (!isNew && concessionFormItem.get('cashConcessionDetailId').value)
                 cashConcessionDetail.cashConcessionDetailId = concessionFormItem.get('cashConcessionDetailId').value;
 
+            if (!isNew && concessionFormItem.get('concessionDetailId').value)
+                cashConcessionDetail.concessionDetailId = concessionFormItem.get('concessionDetailId').value;
+
             if (concessionFormItem.get('channelType').value) {
                 cashConcessionDetail.channelTypeId = concessionFormItem.get('channelType').value.id;
             } else {
@@ -406,6 +423,9 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             } else {
                 this.addValidationError("Accrual type not selected");
             }
+
+            if (concessionFormItem.get('expiryDate').value)
+                cashConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
             cashConcession.cashConcessionDetails.push(cashConcessionDetail);
         }

@@ -198,6 +198,7 @@
     <Build Include="dbo\Stored Procedures\UpdateUser.sql" />
     <Build Include="dbo\Stored Procedures\CreateUser.sql" />
     <Build Include="Security\Audit.sql" />
+    <Build Include="dbo\Views\ConcessionConditionView.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Change Scripts\09_create_rtblPeriod.sql" />

@@ -198,8 +198,8 @@
                 <!-- uffFee -->
                 <td class="length-medium"><input type="text" numbersOnly="true" formControlName="uffFee" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
 
-                <td class="length-short"><input type="date" numbersOnly="true" formControlName="expiryDate" class="form-control" /></td>
-                <td class="length-short"><input type="date" numbersOnly="true" formControlName="dateApproved" class="form-control" /></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" /></td>
+                <td class="length-short"><input type="date" formControlName="dateApproved" class="form-control" /></td>
 
                 <td *ngIf="canBcmApprove || canPcmApprove || isEditing || isRecalling"><button type="button" *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
