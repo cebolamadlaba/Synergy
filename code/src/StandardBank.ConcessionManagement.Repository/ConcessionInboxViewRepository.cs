@@ -33,7 +33,8 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="statusIds">The status ids.</param>
         /// <param name="isActive">if set to <c>true</c> [is active].</param>
         /// <returns></returns>
-        public IEnumerable<ConcessionInboxView> ReadByRequestorIdStatusIdsIsActive(int requestorId, IEnumerable<int> statusIds, bool isActive)
+        public IEnumerable<ConcessionInboxView> ReadByRequestorIdStatusIdsIsActive(int requestorId,
+            IEnumerable<int> statusIds, bool isActive)
         {
             using (var db = _dbConnectionFactory.Connection())
             {
@@ -43,7 +44,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     WHERE [RequestorId] = @requestorId
                     AND [StatusId] in @statusIds
                     AND [IsActive] = @isActive",
-                    new { requestorId, statusIds, isActive });
+                    new {requestorId, statusIds, isActive});
             }
         }
 
@@ -55,7 +56,8 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="subStatusId">The sub status identifier.</param>
         /// <param name="isActive">if set to <c>true</c> [is active].</param>
         /// <returns></returns>
-        public IEnumerable<ConcessionInboxView> ReadByCentreIdStatusIdSubStatusIdIsActive(int centreId, int statusId, int subStatusId, bool isActive)
+        public IEnumerable<ConcessionInboxView> ReadByCentreIdStatusIdSubStatusIdIsActive(int centreId, int statusId,
+            int subStatusId, bool isActive)
         {
             using (var db = _dbConnectionFactory.Connection())
             {
@@ -66,20 +68,22 @@ namespace StandardBank.ConcessionManagement.Repository
                     AND [StatusId] = @statusId
                     AND [SubStatusId] = @subStatusId
                     AND [IsActive] = @isActive",
-                    new { centreId, statusId, subStatusId, isActive });
+                    new {centreId, statusId, subStatusId, isActive});
             }
         }
 
         /// <summary>
-        /// Reads the by requestor identifier between start expiry date end expiry date is active.
+        /// Reads the by requestor identifier between start expiry date end expiry date status ids is active.
         /// </summary>
         /// <param name="requestorId">The requestor identifier.</param>
         /// <param name="startExpiryDate">The start expiry date.</param>
         /// <param name="endExpiryDate">The end expiry date.</param>
+        /// <param name="statusIds">The status ids.</param>
         /// <param name="isActive">if set to <c>true</c> [is active].</param>
         /// <returns></returns>
-        public IEnumerable<ConcessionInboxView> ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive(int requestorId, DateTime startExpiryDate,
-            DateTime endExpiryDate, bool isActive)
+        public IEnumerable<ConcessionInboxView> ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(
+            int requestorId,
+            DateTime startExpiryDate, DateTime endExpiryDate, IEnumerable<int> statusIds, bool isActive)
         {
             if (startExpiryDate == DateTime.MinValue)
                 startExpiryDate = new DateTime(1900, 1, 1);
@@ -91,19 +95,22 @@ namespace StandardBank.ConcessionManagement.Repository
                     FROM [dbo].[ConcessionInboxView]
                     WHERE [RequestorId] = @requestorId
                     AND ([ExpiryDate] BETWEEN @startExpiryDate AND @endExpiryDate)
+                    AND [StatusId] in @statusIds
                     AND [IsActive] = @isActive",
-                    new { requestorId, startExpiryDate, endExpiryDate, isActive });
+                    new {requestorId, startExpiryDate, endExpiryDate, statusIds, isActive});
             }
         }
 
         /// <summary>
-        /// Reads the by requestor identifier is mismatched is active.
+        /// Reads the by requestor identifier status ids is mismatched is active.
         /// </summary>
         /// <param name="requestorId">The requestor identifier.</param>
+        /// <param name="statusIds">The status ids.</param>
         /// <param name="isMismatched">if set to <c>true</c> [is mismatched].</param>
         /// <param name="isActive">if set to <c>true</c> [is active].</param>
         /// <returns></returns>
-        public IEnumerable<ConcessionInboxView> ReadByRequestorIdIsMismatchedIsActive(int requestorId, bool isMismatched, bool isActive)
+        public IEnumerable<ConcessionInboxView> ReadByRequestorIdStatusIdsIsMismatchedIsActive(int requestorId,
+            IEnumerable<int> statusIds, bool isMismatched, bool isActive)
         {
             using (var db = _dbConnectionFactory.Connection())
             {
@@ -111,9 +118,10 @@ namespace StandardBank.ConcessionManagement.Repository
                     @"SELECT [ConcessionId], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [LegalEntityId], [CustomerName], [ConcessionTypeId], [ConcessionType], [ConcessionDate], [StatusId], [Status], [SubStatusId], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment], [DatesentForApproval], [ConcessionDetailId], [ExpiryDate], [DateApproved], [RequestorId], [BCMUserId], [PCMUserId], [HOUserId], [CentreId], [CentreName], [ProvinceId], [Province], [IsMismatched], [IsActive], [IsCurrent]
                     FROM [dbo].[ConcessionInboxView]
                     WHERE [RequestorId] = @requestorId
+                    AND [StatusId] in @statusIds
                     AND [IsMismatched] = @isMismatched
                     AND [IsActive] = @isActive",
-                    new { requestorId, isMismatched, isActive });
+                    new {requestorId, statusIds, isMismatched, isActive});
             }
         }
 
@@ -132,7 +140,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     FROM [dbo].[ConcessionInboxView]
                     WHERE [BCMUserId] = @bcmUserId
                     AND [IsActive] = @isActive",
-                    new { bcmUserId, isActive });
+                    new {bcmUserId, isActive});
             }
         }
 
@@ -151,7 +159,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     FROM [dbo].[ConcessionInboxView]
                     WHERE [PCMUserId] = @pcmUserId
                     AND [IsActive] = @isActive",
-                    new { pcmUserId, isActive });
+                    new {pcmUserId, isActive});
             }
         }
 
@@ -170,7 +178,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     FROM [dbo].[ConcessionInboxView]
                     WHERE [HOUserId] = @hoUserId
                     AND [IsActive] = @isActive",
-                    new { hoUserId, isActive });
+                    new {hoUserId, isActive});
             }
         }
     }

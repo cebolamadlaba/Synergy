@@ -91,20 +91,23 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         }
 
         /// <summary>
-        /// Tests that ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive with a min start date executes positive.
+        /// Tests that ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive with a min start date executes positive.
         /// </summary>
         [Fact]
-        public void ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive_Min_StartDate_Executes_Positive()
+        public void ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive_Min_StartDate_Executes_Positive()
         {
             var requestorId = DataHelper.GetUserId();
             var isActive = true;
             var startExpiryDate = new DateTime();
             var endExpiryDate = DateTime.Now.AddYears(10);
+            var statusId = DataHelper.GetStatusId();
+            var secondStatusId = DataHelper.GetAlternateStatusId(statusId);
+            var statuses = new List<int> { statusId, secondStatusId };
 
             var result =
                 InstantiatedDependencies.ConcessionInboxViewRepository
-                    .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive(requestorId, startExpiryDate,
-                        endExpiryDate, isActive);
+                    .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(requestorId, startExpiryDate,
+                        endExpiryDate, statuses, isActive);
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
@@ -120,20 +123,23 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         }
 
         /// <summary>
-        /// Tests that ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive with a normal start date executes positive.
+        /// Tests that ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive with a normal start date executes positive.
         /// </summary>
         [Fact]
-        public void ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive_Normal_StartDate_Executes_Positive()
+        public void ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive_Normal_StartDate_Executes_Positive()
         {
             var requestorId = DataHelper.GetUserId();
             var isActive = true;
             var startExpiryDate = new DateTime(2001, 1, 1);
             var endExpiryDate = DateTime.Now.AddYears(10);
+            var statusId = DataHelper.GetStatusId();
+            var secondStatusId = DataHelper.GetAlternateStatusId(statusId);
+            var statuses = new List<int> { statusId, secondStatusId };
 
             var result =
                 InstantiatedDependencies.ConcessionInboxViewRepository
-                    .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive(requestorId, startExpiryDate,
-                        endExpiryDate, isActive);
+                    .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(requestorId, startExpiryDate,
+                        endExpiryDate, statuses, isActive);
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
@@ -149,18 +155,21 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         }
 
         /// <summary>
-        /// Tests that ReadByRequestorIdIsMismatchedIsActive executes positive.
+        /// Tests that ReadByRequestorIdStatusIdsIsMismatchedIsActive executes positive.
         /// </summary>
         [Fact]
-        public void ReadByRequestorIdIsMismatchedIsActive_Executes_Positive()
+        public void ReadByRequestorIdStatusIdsIsMismatchedIsActive_Executes_Positive()
         {
             var requestorId = DataHelper.GetUserId();
             var isActive = true;
             var isMismatched = false;
+            var statusId = DataHelper.GetStatusId();
+            var secondStatusId = DataHelper.GetAlternateStatusId(statusId);
+            var statuses = new List<int> { statusId, secondStatusId };
 
             var result =
-                InstantiatedDependencies.ConcessionInboxViewRepository.ReadByRequestorIdIsMismatchedIsActive(
-                    requestorId, isMismatched, isActive);
+                InstantiatedDependencies.ConcessionInboxViewRepository.ReadByRequestorIdStatusIdsIsMismatchedIsActive(
+                    requestorId, statuses, isMismatched, isActive);
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);

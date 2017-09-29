@@ -74,9 +74,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         public void GetDueForExpiryConcessionsForUser_Requestor_Executes_Positive()
         {
             MockConcessionInboxViewRepository
-                .Setup(_ => _.ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive(It.IsAny<int>(),
-                    It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<bool>()))
-                .Returns(new[] {new ConcessionInboxView()});
+                .Setup(_ => _.ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(It.IsAny<int>(),
+                    It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<IEnumerable<int>>(), It.IsAny<bool>()))
+                .Returns(new[] { new ConcessionInboxView() });
 
             var result = _concessionManager.GetDueForExpiryConcessionsForUser(new User
             {
@@ -95,8 +95,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         public void GetExpiredConcessionsForUser_Requestor_Executes_Positive()
         {
             MockConcessionInboxViewRepository
-                .Setup(_ => _.ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive(It.IsAny<int>(),
-                    It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<bool>()))
+                .Setup(_ => _.ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(It.IsAny<int>(),
+                    It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<IEnumerable<int>>(), It.IsAny<bool>()))
                 .Returns(new[] { new ConcessionInboxView() });
 
             var result = _concessionManager.GetExpiredConcessionsForUser(new User
@@ -116,8 +116,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         public void GetMismatchedConcessionsForUser_Requestor_Executes_Positive()
         {
             MockConcessionInboxViewRepository
-                .Setup(
-                    _ => _.ReadByRequestorIdIsMismatchedIsActive(It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                .Setup(_ => _.ReadByRequestorIdStatusIdsIsMismatchedIsActive(It.IsAny<int>(),
+                    It.IsAny<IEnumerable<int>>(), It.IsAny<bool>(), It.IsAny<bool>()))
                 .Returns(new[] {new ConcessionInboxView()});
 
             var result = _concessionManager.GetMismatchedConcessionsForUser(new User

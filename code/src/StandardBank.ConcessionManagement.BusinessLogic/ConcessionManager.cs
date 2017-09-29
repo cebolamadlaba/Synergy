@@ -183,9 +183,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<InboxConcession> GetDueForExpiryConcessionsForUser(User user)
         {
+            var approvedStatusId = _lookupTableManager.GetStatusId("Approved");
+            var approvedWithChangesStatusId = _lookupTableManager.GetStatusId("Approved With Changes");
+
             return _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
-                .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive(user.Id, DateTime.Now,
-                    DateTime.Now.AddMonths(3), true));
+                .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(user.Id, DateTime.Now,
+                    DateTime.Now.AddMonths(3), new[] {approvedStatusId, approvedWithChangesStatusId}, true));
         }
 
         /// <summary>
@@ -195,9 +198,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<InboxConcession> GetExpiredConcessionsForUser(User user)
         {
+            var approvedStatusId = _lookupTableManager.GetStatusId("Approved");
+            var approvedWithChangesStatusId = _lookupTableManager.GetStatusId("Approved With Changes");
+
             return _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
-                .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive(user.Id, DateTime.MinValue, DateTime.Now,
-                    true));
+                .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(user.Id, DateTime.MinValue,
+                    DateTime.Now, new[] {approvedStatusId, approvedWithChangesStatusId}, true));
         }
 
         /// <summary>
@@ -207,8 +213,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<InboxConcession> GetMismatchedConcessionsForUser(User user)
         {
+            var approvedStatusId = _lookupTableManager.GetStatusId("Approved");
+            var approvedWithChangesStatusId = _lookupTableManager.GetStatusId("Approved With Changes");
+
             return _mapper.Map<IEnumerable<InboxConcession>>(
-                _concessionInboxViewRepository.ReadByRequestorIdIsMismatchedIsActive(user.Id, true, true));
+                _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsMismatchedIsActive(user.Id,
+                    new[] {approvedStatusId, approvedWithChangesStatusId}, true, true));
         }
 
         /// <summary>
