@@ -137,7 +137,7 @@
         <div class="section" *ngFor="let lendingConcession of lendingView.lendingConcessions | baseConcessionFilter : filterConcessionId; trackBy: index;">
 
             <div class="section-header small-table-title">
-                <div class="concessionID-section"> {{lendingConcession.concession.referenceNumber}}</div>
+                <div class="concessionID-section"> {{lendingConcession.concession.referenceNumber}} - {{lendingConcession.concession.statusDescription}}</div>
             </div>
             <div class="section-body">
                 <div class="table-container" [routerLink]="['/lending-view-concession', lendingView.riskGroup.number, lendingConcession.concession.referenceNumber]">

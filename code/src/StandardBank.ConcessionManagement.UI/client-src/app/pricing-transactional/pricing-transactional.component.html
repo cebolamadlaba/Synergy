@@ -154,7 +154,7 @@
 
         <div class="section" *ngFor="let transactionalConcession of transactionalView.transactionalConcessions | baseConcessionFilter : filterConcessionId; trackBy: index;">
             <div class="section-header small-table-title">
-                <div class="concessionID-section"> {{transactionalConcession.concession.referenceNumber}}</div>
+                <div class="concessionID-section"> {{transactionalConcession.concession.referenceNumber}} - {{transactionalConcession.concession.statusDescription}}</div>
             </div>
             <div class="section-body">
                 <div class="table-container" [routerLink]="['/transactional-view-concession', transactionalView.riskGroup.number, transactionalConcession.concession.referenceNumber]">

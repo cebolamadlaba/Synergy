@@ -145,7 +145,7 @@
 
         <div class="section" *ngFor="let cashConcession of cashView.cashConcessions | baseConcessionFilter : filterConcessionId; trackBy: index;">
             <div class="section-header small-table-title">
-                <div class="concessionID-section"> {{cashConcession.concession.referenceNumber}}</div>
+                <div class="concessionID-section"> {{cashConcession.concession.referenceNumber}} - {{cashConcession.concession.statusDescription}}</div>
             </div>
             <div class="section-body">
                 <div class="table-container" [routerLink]="['/cash-view-concession', cashView.riskGroup.number, cashConcession.concession.referenceNumber]">

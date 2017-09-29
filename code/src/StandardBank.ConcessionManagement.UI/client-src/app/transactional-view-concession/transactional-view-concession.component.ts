@@ -207,6 +207,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
                     let currentConcession = concessions.controls[concessions.length - 1];
 
                     currentConcession.get('transactionalConcessionDetailId').setValue(transactionalConcessionDetail.transactionalConcessionDetailId);
+                    currentConcession.get('concessionDetailId').setValue(transactionalConcessionDetail.concessionDetailId);
 
                     let selectedTransactionType = this.transactionTypes.filter(_ => _.id === transactionalConcessionDetail.transactionTypeId);
                     currentConcession.get('transactionType').setValue(selectedTransactionType[0]);
@@ -220,7 +221,17 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
                     currentConcession.get('adValorem').setValue(transactionalConcessionDetail.adValorem);
                     currentConcession.get('flatFeeOrRate').setValue(transactionalConcessionDetail.baseRate);
                     currentConcession.get('approvedTableNumber').setValue(transactionalConcessionDetail.approvedTableNumber);
-                    
+
+                    if (transactionalConcessionDetail.expiryDate) {
+                        var formattedExpiryDate = this.datepipe.transform(transactionalConcessionDetail.expiryDate, 'yyyy-MM-dd');
+                        currentConcession.get('expiryDate').setValue(formattedExpiryDate);
+                    }
+
+                    if (transactionalConcessionDetail.dateApproved) {
+                        var formattedDateApproved = this.datepipe.transform(transactionalConcessionDetail.dateApproved, 'yyyy-MM-dd');
+                        currentConcession.get('dateApproved').setValue(formattedDateApproved);
+                    }
+
                     rowIndex++;
                 }
 
@@ -263,12 +274,15 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
     initConcessionItemRows() {
         return this.formBuilder.group({
             transactionalConcessionDetailId: [''],
+            concessionDetailId: [''],
             transactionType: [''],
             accountNumber: [''],
             tableNumber: [''],
             flatFeeOrRate: [{ value: '', disabled: true }],
             adValorem: [{ value: '', disabled: true }],
-            approvedTableNumber: [{ value: '', disabled: true }]
+            approvedTableNumber: [{ value: '', disabled: true }],
+            expiryDate: [''],
+            dateApproved: [{ value: '', disabled: true }]
         });
     }
 
@@ -371,6 +385,9 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
             if (!isNew && concessionFormItem.get('transactionalConcessionDetailId').value)
                 transactionalConcessionDetail.transactionalConcessionDetailId = concessionFormItem.get('transactionalConcessionDetailId').value;
 
+            if (!isNew && concessionFormItem.get('concessionDetailId').value)
+                transactionalConcessionDetail.concessionDetailId = concessionFormItem.get('concessionDetailId').value;
+
             if (concessionFormItem.get('transactionType').value)
                 transactionalConcessionDetail.transactionTypeId = concessionFormItem.get('transactionType').value.id;
             else
@@ -392,6 +409,9 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
             } else {
                 this.addValidationError("Table Number not selected");
             }
+
+            if (concessionFormItem.get('expiryDate').value)
+                transactionalConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
             transactionalConcession.transactionalConcessionDetails.push(transactionalConcessionDetail);
         }

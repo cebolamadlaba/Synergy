@@ -161,12 +161,15 @@
                 <th>Ad Valorem</th>
                 <th>Flat Fee/Rate</th>
                 <th>Approved Table Number</th>
+                <th>Expiry Date</th>
+                <th>Date Approved</th>
             </tr>
         </thead>
         <tbody class="form-concessions-table-content">
             <tr *ngFor="let itemrow of transactionalConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
                 <td class="length-long">
                     <input formControlName="transactionalConcessionDetailId" style="display: none;" />
+                    <input formControlName="concessionDetailId" style="display: none;" />
 
                     <select formControlName="transactionType" class="form-control" [attr.disabled]="canEdit ? null : ''">
                         <option *ngFor="let transactionTypeOption of transactionTypes" [ngValue]="transactionTypeOption">{{transactionTypeOption.description}}</option>
@@ -189,6 +192,9 @@
                 <td class="length-long"><input formControlName="flatFeeOrRate" class="form-control"></td>
 
                 <td class="length-long"><input formControlName="approvedTableNumber" class="form-control"></td>
+
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="date" formControlName="dateApproved" class="form-control" /></td>
 
                 <td *ngIf="canBcmApprove || canPcmApprove || isEditing || isRecalling"><button *ngIf="transactionalConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
