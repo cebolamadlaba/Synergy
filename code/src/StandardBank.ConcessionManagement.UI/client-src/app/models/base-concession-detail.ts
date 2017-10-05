@@ -7,5 +7,7 @@ export class BaseConcessionDetail {
     legalEntityAccountId: number;
     expiryDate: Date;
     dateApproved: Date;
-    isMismatched: boolean;
+	isMismatched: boolean;
+	isExpired: boolean;
+	isExpiring: boolean;
 }

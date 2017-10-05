@@ -136,6 +136,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 {
                     concession.CanExtend = false;
                     concession.CanRenew = false;
+
+                    //if we can't extend or renew but it is approved, that means we can update it
+                    if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
+                        concession.CanUpdate = true;
                 }
             }
 

@@ -167,6 +167,9 @@
                 <td class="length-long">
                     <input formControlName="lendingConcessionDetailId" style="display: none;" />
                     <input formControlName="concessionDetailId" style="display: none;" />
+                    <input formControlName="isExpired" style="display: none;" />
+                    <input formControlName="isExpiring" style="display: none;" />
+
                     <!-- Product type -->
                     <select formControlName="productType" class="form-control" [attr.disabled]="canEdit ? null : ''">
                         <option *ngFor="let productTypeOption of productTypes" [ngValue]="productTypeOption">{{productTypeOption.description}}</option>
@@ -198,8 +201,8 @@
                 <!-- uffFee -->
                 <td class="length-medium"><input type="text" numbersOnly="true" formControlName="uffFee" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
 
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" /></td>
-                <td class="length-short"><input type="date" formControlName="dateApproved" class="form-control" /></td>
+                <td class="length-medium"><input type="date" formControlName="expiryDate" class="form-control" [style.background-color]="getBackgroundColour(i)" /></td>
+                <td class="length-medium"><input type="date" formControlName="dateApproved" class="form-control" /></td>
 
                 <td *ngIf="canBcmApprove || canPcmApprove || isEditing || isRecalling"><button type="button" *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>

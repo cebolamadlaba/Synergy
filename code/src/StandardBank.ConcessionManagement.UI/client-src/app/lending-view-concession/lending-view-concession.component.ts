@@ -238,7 +238,10 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                     if (lendingConcessionDetail.dateApproved) {
                         var formattedDateApproved = this.datepipe.transform(lendingConcessionDetail.dateApproved, 'yyyy-MM-dd');
                         currentConcession.get('dateApproved').setValue(formattedDateApproved);
-                    }
+					}
+
+					currentConcession.get('isExpired').setValue(lendingConcessionDetail.isExpired);
+					currentConcession.get('isExpiring').setValue(lendingConcessionDetail.isExpiring);
 
                     rowIndex++;
                 }
@@ -294,7 +297,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             reviewFee: [''],
             uffFee: [''],
             expiryDate: [{ value: '', disabled: true }],
-            dateApproved: [{ value: '', disabled: true }]
+			dateApproved: [{ value: '', disabled: true }],
+			isExpired: [''],
+			isExpiring: ['']
         });
     }
 
@@ -491,7 +496,25 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         }
 
         return lendingConcession;
-    }
+	}
+
+	getBackgroundColour(rowIndex: number) {
+		const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+
+		console.log(rowIndex);
+		console.log(control.controls[rowIndex].get('isExpired').value);
+		console.log(control.controls[rowIndex].get('isExpiring').value);
+
+		if (String(control.controls[rowIndex].get('isExpired').value) == "true") {
+			return "#EC7063";
+		}
+
+		if (String(control.controls[rowIndex].get('isExpiring').value) == "true") {
+			return "#F5B041";
+		}
+
+		return "";
+	}
 
     bcmApproveConcession() {
         this.isLoading = true;

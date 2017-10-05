@@ -64,6 +64,22 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public DateTime? ExpiryDate { get; set; }
 
         /// <summary>
+        /// Gets a value indicating whether this instance is expired.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is expired; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsExpired => ExpiryDate.HasValue && ExpiryDate.Value < DateTime.Now;
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is expiring.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is expiring; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsExpiring => !IsExpired && ExpiryDate.HasValue && ExpiryDate.Value < DateTime.Now.AddMonths(3);
+
+        /// <summary>
         /// Gets or sets the DateApproved.
         /// </summary>
         /// <value>
