@@ -154,7 +154,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     case "Requestor":
                         inboxConcessions.AddRange(
                             _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
-                                .ReadByRequestorIdStatusIdsIsActive(user.Id, new[] {pendingStatusId}, true)));
+                                .ReadByRequestorIdStatusIdsIsActive(user.Id, new[] { pendingStatusId }, true)));
                         break;
                     case "Suite Head":
                     case "BCM":
@@ -188,7 +188,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
                 .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(user.Id, DateTime.Now,
-                    DateTime.Now.AddMonths(3), new[] {approvedStatusId, approvedWithChangesStatusId}, true));
+                    DateTime.Now.AddMonths(3), new[] { approvedStatusId, approvedWithChangesStatusId }, true));
         }
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
                 .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(user.Id, DateTime.MinValue,
-                    DateTime.Now, new[] {approvedStatusId, approvedWithChangesStatusId}, true));
+                    DateTime.Now, new[] { approvedStatusId, approvedWithChangesStatusId }, true));
         }
 
         /// <summary>
@@ -218,7 +218,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return _mapper.Map<IEnumerable<InboxConcession>>(
                 _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsMismatchedIsActive(user.Id,
-                    new[] {approvedStatusId, approvedWithChangesStatusId}, true, true));
+                    new[] { approvedStatusId, approvedWithChangesStatusId }, true, true));
         }
 
         /// <summary>
@@ -231,7 +231,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var declinedStatusId = _lookupTableManager.GetStatusId("Declined");
 
             return _mapper.Map<IEnumerable<InboxConcession>>(
-                _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsActive(user.Id, new[] {declinedStatusId}, true));
+                _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsActive(user.Id, new[] { declinedStatusId }, true));
         }
 
         /// <summary>
@@ -399,7 +399,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var concessions =
                 _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsActive(userId,
-                    new[] {approvedStatusId, approvedWithChangesStatusId}, true);
+                    new[] { approvedStatusId, approvedWithChangesStatusId }, true);
 
             var approvedConcessions = new List<ApprovedConcession>();
 
@@ -751,7 +751,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         //this concession can be extended or renewed if there is an expiry date which is within the next three months and the concession
                         //is currently in the approved state
                         mappedConcession.CanRenew = CalculateIfCanRenew(concession, mappedConcession.Status);
-                        mappedConcession.CanExtend = CalculateIfCanExtend(concession, mappedConcession.Status, mappedConcession.CanRenew);
+                        mappedConcession.CanExtend = CalculateIfCanExtend(concession, mappedConcession.CanRenew);
                         mappedConcession.CanResubmit = CalculateIfCanResubmit(concession, mappedConcession.Status);
                         mappedConcession.CanUpdate = CalculateIfCanUpdate(concession, mappedConcession.Status, mappedConcession.CanRenew);
                     }
@@ -831,11 +831,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// Calculates if can extend.
         /// </summary>
         /// <param name="concession">The concession.</param>
-        /// <param name="currentStatus">The current status.</param>
         /// <param name="canRenew">if set to <c>true</c> [can renew].</param>
         /// <returns></returns>
-        private bool CalculateIfCanExtend(Model.Repository.Concession concession, string currentStatus, bool canRenew)
+        private bool CalculateIfCanExtend(Model.Repository.Concession concession, bool canRenew)
         {
+            //if we can't renew this has already failed that check so there's no point in carrying on
+            if (!canRenew)
+                return false;
+
             //you can only extend a concession three times
             var extensionRelationshipId = _lookupTableManager.GetRelationshipId("Extension");
 
@@ -950,7 +953,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (totalHours <= 504)
                 return "green";
-            
+
             if (totalHours > 504 && totalHours <= 1007)
                 return "yellow";
 
@@ -968,10 +971,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (totalHours <= 672)
                 return "green";
-            
+
             if (totalHours > 672 && totalHours <= 1343)
                 return "yellow";
-            
+
             return "red";
         }
 

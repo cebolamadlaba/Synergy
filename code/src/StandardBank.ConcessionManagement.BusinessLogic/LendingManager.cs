@@ -122,11 +122,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public LendingConcession GetLendingConcession(string concessionReferenceId, User currentUser)
         {
             var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
+
             var concessionLendings = _concessionLendingRepository.ReadByConcessionId(concession.Id);
 
             var lendingConcessionDetails = new List<LendingConcessionDetail>();
 
             AddMappedConcessionLendings(concessionLendings, lendingConcessionDetails);
+
+            //we are only allowed to extend or renew overdraft products
+            if (concession.CanExtend || concession.CanRenew)
+            {
+                if (!lendingConcessionDetails.Any(_ => _.ProductType == "Overdraft"))
+                {
+                    concession.CanExtend = false;
+                    concession.CanRenew = false;
+                }
+            }
 
             return new LendingConcession
             {

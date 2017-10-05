@@ -501,7 +501,11 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
         var lendingConcession = this.getLendingConcession(false);
         lendingConcession.concession.subStatus = "PCM Pending";
-        lendingConcession.concession.bcmUserId = this.lendingConcession.currentUser.id;
+		lendingConcession.concession.bcmUserId = this.lendingConcession.currentUser.id;
+
+		if (!lendingConcession.concession.comments) {
+			lendingConcession.concession.comments = "Forwarded";
+		}
 
         if (!this.validationError) {
             this.lendingService.postUpdateLendingData(lendingConcession).subscribe(entity => {
@@ -530,6 +534,10 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         lendingConcession.concession.status = "Declined";
         lendingConcession.concession.subStatus = "BCM Declined";
         lendingConcession.concession.bcmUserId = this.lendingConcession.currentUser.id;
+
+		if (!lendingConcession.concession.comments) {
+			lendingConcession.concession.comments = "Declined";
+		}
 
         if (!this.validationError) {
             this.lendingService.postUpdateLendingData(lendingConcession).subscribe(entity => {
@@ -565,7 +573,11 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             } else {
                 lendingConcession.concession.subStatus = "PCM Approved With Changes";
                 lendingConcession.concession.pcmUserId = this.lendingConcession.currentUser.id;
-            }
+			}
+
+			if (!lendingConcession.concession.comments) {
+				lendingConcession.concession.comments = "Approved With Changes";
+			}
         } else {
             lendingConcession.concession.status = "Approved";
 
@@ -575,7 +587,11 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             } else {
                 lendingConcession.concession.subStatus = "PCM Approved";
                 lendingConcession.concession.pcmUserId = this.lendingConcession.currentUser.id;
-            }
+			}
+
+			if (!lendingConcession.concession.comments) {
+				lendingConcession.concession.comments = "Approved";
+			}
         }
 
         if (!this.validationError) {
@@ -602,7 +618,11 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
         var lendingConcession = this.getLendingConcession(false);
 
-        lendingConcession.concession.status = "Declined";
+		lendingConcession.concession.status = "Declined";
+
+		if (!lendingConcession.concession.comments) {
+			lendingConcession.concession.comments = "Declined";
+		}
 
         if (this.lendingConcession.currentUser.isHO) {
             lendingConcession.concession.subStatus = "HO Declined";
@@ -758,7 +778,11 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         var lendingConcession = this.getLendingConcession(false);
         lendingConcession.concession.status = "Approved With Changes";
         lendingConcession.concession.subStatus = "Requestor Accepted Changes";
-        lendingConcession.concession.requestorId = this.lendingConcession.currentUser.id;
+		lendingConcession.concession.requestorId = this.lendingConcession.currentUser.id;
+
+		if (!lendingConcession.concession.comments) {
+			lendingConcession.concession.comments = "Accepted Changes";
+		}
 
         if (!this.validationError) {
             this.lendingService.postUpdateLendingData(lendingConcession).subscribe(entity => {
@@ -787,6 +811,10 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         lendingConcession.concession.status = "Declined";
         lendingConcession.concession.subStatus = "Requestor Declined Changes";
         lendingConcession.concession.requestorId = this.lendingConcession.currentUser.id;
+
+		if (!lendingConcession.concession.comments) {
+			lendingConcession.concession.comments = "Declined Changes";
+		}
 
         if (!this.validationError) {
             this.lendingService.postUpdateLendingData(lendingConcession).subscribe(entity => {
