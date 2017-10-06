@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.3
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{869CE2B9-6B12-4BF1-945F-763BC9FD9015}"
 EndProject
@@ -36,8 +36,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardBank.ConcessionManagement.UI.Extension", "src\StandardBank.ConcessionManagement.UI.Extension\StandardBank.ConcessionManagement.UI.Extension.csproj", "{10EE6CA7-BAB8-4C7D-B5A6-694AEA858689}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardBank.ConcessionManagement.Database.Migrator", "db\StandardBank.ConcessionManagement.Database.Migrator\StandardBank.ConcessionManagement.Database.Migrator.csproj", "{ED98F824-FE92-4E03-8F93-7572EBD11999}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StandardBank.ConcessionManagement.Scheduler", "src\StandardBank.ConcessionManagement.Scheduler\StandardBank.ConcessionManagement.Scheduler.csproj", "{576C654E-126F-4675-AD0D-2DCECDDA1C11}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,10 +95,6 @@ Global
 		{10EE6CA7-BAB8-4C7D-B5A6-694AEA858689}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ED98F824-FE92-4E03-8F93-7572EBD11999}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ED98F824-FE92-4E03-8F93-7572EBD11999}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{576C654E-126F-4675-AD0D-2DCECDDA1C11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{576C654E-126F-4675-AD0D-2DCECDDA1C11}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{576C654E-126F-4675-AD0D-2DCECDDA1C11}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{576C654E-126F-4675-AD0D-2DCECDDA1C11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -120,7 +114,6 @@ Global
 		{1AC675EE-4839-4188-82A1-303B2F9B3C60} = {AB117191-71F0-485F-B515-1809D2768EDA}
 		{10EE6CA7-BAB8-4C7D-B5A6-694AEA858689} = {869CE2B9-6B12-4BF1-945F-763BC9FD9015}
 		{ED98F824-FE92-4E03-8F93-7572EBD11999} = {AB117191-71F0-485F-B515-1809D2768EDA}
-		{576C654E-126F-4675-AD0D-2DCECDDA1C11} = {869CE2B9-6B12-4BF1-945F-763BC9FD9015}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {14EAB354-80E6-48A8-9F90-8D4138BEEDD9}

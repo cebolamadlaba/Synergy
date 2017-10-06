@@ -21,5 +21,11 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// </summary>
         /// <returns></returns>
         IEnumerable<ConcessionCount> ReadConcessionCounts();
+
+        /// <summary>
+        /// Reads for renewing ongoing conditions.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<ConcessionConditionView> ReadForRenewingOngoingConditions();
     }
 }

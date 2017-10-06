@@ -138,7 +138,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             foreach (var dailyScheduledJob in _dailyScheduledJobs)
                 await dailyScheduledJob.Run();
 
-            return Ok();
+            return Ok("Done");
         }
     }
 }

@@ -60,5 +60,22 @@ namespace StandardBank.ConcessionManagement.Repository
                     GROUP BY [PeriodType]");
             }
         }
+
+        /// <summary>
+        /// Reads for renewing ongoing conditions.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<ConcessionConditionView> ReadForRenewingOngoingConditions()
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<ConcessionConditionView>(
+                    @"SELECT [ConcessionConditionId], [ConcessionId], [ReferenceNumber], [ConcessionTypeId], [ConcessionType], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [ConditionTypeId], [ConditionType], [ConditionProductId], [ConditionProduct], [PeriodTypeId], [PeriodType], [PeriodId], [Period], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [DateApproved], [ExpiryDate], [IsActive]
+                    FROM [dbo].[ConcessionConditionView]
+                    WHERE [PeriodTypeId] = 2
+                    AND [IsActive] = 1
+                    AND [ExpiryDate] < GETDATE()");
+            }
+        }
     }
 }

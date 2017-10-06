@@ -36,6 +36,7 @@ namespace StandardBank.ConcessionManagement.UI.Extension
 
             // Add jobs
             services.AddScoped<IDailyScheduledJob, DueForExpiryNotification>();
+            services.AddScoped<IDailyScheduledJob, RenewOngoingConditions>();
 
             container.Configure(config =>
             {
