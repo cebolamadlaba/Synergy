@@ -7,7 +7,7 @@ using StandardBank.ConcessionManagement.Test.Helpers;
 using Xunit;
 using static StandardBank.ConcessionManagement.Test.Helpers.MockedDependencies;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
-using RiskGroup = StandardBank.ConcessionManagement.Model.UserInterface.Pricing.RiskGroup;
+using RiskGroup = StandardBank.ConcessionManagement.Model.UserInterface.RiskGroup;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 {
@@ -181,7 +181,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         public void GetLatestCrsOrMrs_Executes_Positive()
         {
             MockLookupTableManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
-                .Returns(new Model.UserInterface.Pricing.RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
+                .Returns(new RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
 
             MockFinancialCashRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
                 .Returns(new[] { new FinancialCash { LatestCrsOrMrs = 2000 } });

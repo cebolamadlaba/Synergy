@@ -598,13 +598,24 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 RiskGroupName = "Unit Test Risk Group",
                 IsActive = true,
                 Id = 1,
-                MarketSegmentId = 1
+                MarketSegmentId = 1,
+                RegionId = 1
             };
 
             MockRiskGroupRepository.Setup(_ => _.ReadByRiskGroupNumberIsActive(It.IsAny<int>(), true)).Returns(riskGroup);
 
             MockMarketSegmentRepository.Setup(_ => _.ReadAll()).Returns(new[]
                 {new MarketSegment {Id = 1, IsActive = true, Description = "Unit Test Market Segment"}});
+
+            MockRegionRepository.Setup(_ => _.ReadAll()).Returns(new[]
+            {
+                new Region
+                {
+                    Id = 1,
+                    IsActive = true,
+                    Description = "Unit Test Region"
+                }
+            });
 
             var result = _lookupTableManager.GetRiskGroupForRiskGroupNumber(1);
 

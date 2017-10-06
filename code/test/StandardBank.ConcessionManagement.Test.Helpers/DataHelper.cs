@@ -2083,7 +2083,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 RiskGroupNumber = 1,
                 RiskGroupName = "f48353dfd5",
                 IsActive = false,
-                MarketSegmentId = GetMarketSegmentId()
+                MarketSegmentId = GetMarketSegmentId(),
+                RegionId = GetRegionId()
             };
 
             InstantiatedDependencies.RiskGroupRepository.Create(model);

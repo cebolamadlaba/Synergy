@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using StandardBank.ConcessionManagement.Model.UserInterface.Pricing;
+using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.UI.Controllers;
 using Xunit;
 using static StandardBank.ConcessionManagement.Test.Helpers.MockedDependencies;
@@ -22,7 +22,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         /// </summary>
         public PricingControllerTest()
         {
-            _pricingController = new PricingController(MockLookupTableManager.Object);
+            _pricingController = new PricingController(MockLookupTableManager.Object, MockSiteHelper.Object);
         }
 
         /// <summary>
@@ -37,10 +37,17 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
                 Name = "Unit Test Risk Group",
                 Number = 1,
                 MarketSegmentId = 1,
-                MarketSegment = "Unit Test Market Segment"
+                MarketSegment = "Unit Test Market Segment",
+                RegionId = 1,
+                Region = "Unit Test Region"
             };
 
             MockLookupTableManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>())).Returns(riskGroup);
+
+            MockSiteHelper.Setup(_ => _.LoggedInUser(It.IsAny<Controller>())).Returns(new User()
+            {
+                SelectedRegion = new Region {Id = 1}
+            });
 
             var result = _pricingController.RiskGroup(1);
             var apiResult = Assert.IsType<OkObjectResult>(result);
@@ -55,6 +62,8 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
             Assert.Equal(riskGroup.Number, resultRiskGroup.Number);
             Assert.Equal(riskGroup.MarketSegmentId, resultRiskGroup.MarketSegmentId);
             Assert.Equal(riskGroup.MarketSegment, resultRiskGroup.MarketSegment);
+            Assert.Equal(riskGroup.RegionId, resultRiskGroup.RegionId);
+            Assert.Equal(riskGroup.Region, resultRiskGroup.Region);
         }
     }
 }

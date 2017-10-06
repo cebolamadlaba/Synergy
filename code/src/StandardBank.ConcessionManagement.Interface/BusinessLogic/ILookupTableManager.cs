@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
-using StandardBank.ConcessionManagement.Model.UserInterface.Pricing;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 {
@@ -237,5 +236,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="riskGroupNumber"></param>
         /// <returns></returns>
         RiskGroup GetRiskGroupForRiskGroupNumber(int riskGroupNumber);
+
+        /// <summary>
+        /// Gets the region description.
+        /// </summary>
+        /// <param name="regionId">The region identifier.</param>
+        /// <returns></returns>
+        string GetRegionDescription(int regionId);
     }
 }

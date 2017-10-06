@@ -22,6 +22,14 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int MarketSegmentId { get; set; }
 
         /// <summary>
+        /// Gets or sets the region identifier.
+        /// </summary>
+        /// <value>
+        /// The region identifier.
+        /// </value>
+        public int RegionId { get; set; }
+
+        /// <summary>
         /// Gets or sets the RiskGroupNumber.
         /// </summary>
         /// <value>

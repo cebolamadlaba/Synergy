@@ -14,7 +14,7 @@ using ConditionType = StandardBank.ConcessionManagement.Model.UserInterface.Cond
 using Period = StandardBank.ConcessionManagement.Model.UserInterface.Period;
 using PeriodType = StandardBank.ConcessionManagement.Model.UserInterface.PeriodType;
 using ReviewFeeType = StandardBank.ConcessionManagement.Model.UserInterface.ReviewFeeType;
-using RiskGroup = StandardBank.ConcessionManagement.Model.UserInterface.Pricing.RiskGroup;
+using RiskGroup = StandardBank.ConcessionManagement.Model.UserInterface.RiskGroup;
 using TableNumber = StandardBank.ConcessionManagement.Model.UserInterface.TableNumber;
 using TransactionType = StandardBank.ConcessionManagement.Model.UserInterface.TransactionType;
 
@@ -629,9 +629,24 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 _mapper.Map<RiskGroup>(_riskGroupRepository.ReadByRiskGroupNumberIsActive(riskGroupNumber, true));
 
             if (riskGroup != null)
+            {
                 riskGroup.MarketSegment = GetMarketSegmentName(riskGroup.MarketSegmentId);
+                riskGroup.Region = GetRegionDescription(riskGroup.RegionId);
+            }
 
             return riskGroup;
+        }
+
+        /// <summary>
+        /// Gets the region description.
+        /// </summary>
+        /// <param name="regionId">The region identifier.</param>
+        /// <returns></returns>
+        public string GetRegionDescription(int regionId)
+        {
+            var regions = _regionRepository.ReadAll();
+
+            return regions.First(_ => _.Id == regionId && _.IsActive).Description;
         }
 
         /// <summary>

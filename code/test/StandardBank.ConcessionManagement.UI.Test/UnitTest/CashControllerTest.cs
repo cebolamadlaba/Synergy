@@ -7,7 +7,6 @@ using Moq;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
-using StandardBank.ConcessionManagement.Model.UserInterface.Pricing;
 using StandardBank.ConcessionManagement.Test.Helpers;
 using Xunit;
 using static StandardBank.ConcessionManagement.Test.Helpers.MockedDependencies;

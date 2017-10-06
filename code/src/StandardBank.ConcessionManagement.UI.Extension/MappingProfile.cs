@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using StandardBank.ConcessionManagement.Model.UserInterface;
 
 namespace StandardBank.ConcessionManagement.UI.Extension
 {
@@ -164,10 +165,10 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             CreateMap<Model.Repository.ReviewFeeType, Model.UserInterface.ReviewFeeType>().ReverseMap();
      
             //RiskGroup
-            CreateMap<Model.Repository.RiskGroup, Model.UserInterface.Pricing.RiskGroup>()
+            CreateMap<Model.Repository.RiskGroup, RiskGroup>()
                 .ForMember(target => target.Name, _ => _.MapFrom(source => source.RiskGroupName))
                 .ForMember(target => target.Number, _ => _.MapFrom(source => source.RiskGroupNumber));
-            CreateMap<Model.UserInterface.Pricing.RiskGroup, Model.Repository.RiskGroup>()
+            CreateMap<RiskGroup, Model.Repository.RiskGroup>()
                 .ForMember(target => target.RiskGroupName, _ => _.MapFrom(source => source.Name))
                 .ForMember(target => target.RiskGroupNumber, _ => _.MapFrom(source => source.Number));
 

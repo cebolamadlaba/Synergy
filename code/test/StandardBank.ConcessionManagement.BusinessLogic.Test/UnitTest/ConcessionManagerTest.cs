@@ -52,7 +52,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 .Returns(new LegalEntity { IsActive = true });
 
             MockRiskGroupRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new RiskGroup { IsActive = true });
+                .Returns(new Model.Repository.RiskGroup { IsActive = true });
 
             MockLookupTableManager.Setup(_ => _.GetMarketSegmentName(It.IsAny<int>())).Returns("Market Segment Name");
             MockLookupTableManager.Setup(_ => _.GetReferenceTypeName(It.IsAny<int>())).Returns("Type Name");
@@ -162,7 +162,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 .Returns(new LegalEntity { IsActive = true });
 
             MockRiskGroupRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new RiskGroup { IsActive = true });
+                .Returns(new Model.Repository.RiskGroup { IsActive = true });
 
             MockLookupTableManager.Setup(_ => _.GetMarketSegmentName(It.IsAny<int>())).Returns("Market Segment Name");
             MockLookupTableManager.Setup(_ => _.GetReferenceTypeName(It.IsAny<int>())).Returns("Type Name");
@@ -237,7 +237,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         public void GetClientAccounts_Executes_Positive()
         {
             MockRiskGroupRepository.Setup(_ => _.ReadByRiskGroupNumberIsActive(It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new RiskGroup
+                .Returns(new Model.Repository.RiskGroup
                 {
                     Id = 1,
                     IsActive = true,
@@ -327,7 +327,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockConcessionAccountRepository.Setup(_ => _.ReadByConcessionIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
                 .Returns(new ConcessionAccount());
 
-            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup
+            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new Model.Repository.RiskGroup
             {
                 Id = 1,
                 IsActive = true,
@@ -378,7 +378,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockConcessionRepository.Setup(_ => _.ReadByConcessionRefIsActive(It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns(new[] { new Concession { IsActive = true } });
 
-            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup
+            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new Model.Repository.RiskGroup
             {
                 Id = 1,
                 IsActive = true,

@@ -5,6 +5,7 @@ using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
 using StandardBank.ConcessionManagement.Test.Helpers;
 using static StandardBank.ConcessionManagement.Test.Helpers.MockedDependencies;
 using Xunit;
+using RiskGroup = StandardBank.ConcessionManagement.Model.UserInterface.RiskGroup;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 {
@@ -37,7 +38,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         public void GetTransactionalConcessionsForRiskGroupNumber_Executes_Positive()
         {
             MockLookupTableManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
-                .Returns(new Model.UserInterface.Pricing.RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
+                .Returns(new RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
 
             MockConcessionManager.Setup(_ => _.GetConcessionsForRiskGroup(It.IsAny<int>(), It.IsAny<string>()))
                 .Returns(new[] { new Model.UserInterface.Concession() });
@@ -116,7 +117,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         public void GetTransactionalViewData_Executes_Positive()
         {
             MockLookupTableManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
-                .Returns(new Model.UserInterface.Pricing.RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
+                .Returns(new RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
 
             MockConcessionManager.Setup(_ => _.GetConcessionsForRiskGroup(It.IsAny<int>(), It.IsAny<string>()))
                 .Returns(new[] { new Model.UserInterface.Concession() });
@@ -160,7 +161,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         public void GetLatestCrsOrMrs_Executes_Positive()
         {
             MockLookupTableManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
-                .Returns(new Model.UserInterface.Pricing.RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
+                .Returns(new RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
 
             MockFinancialTransactionalRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
                 .Returns(new[] { new FinancialTransactional { LatestCrsOrMrs = 2000 } });
@@ -178,7 +179,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         public void GetTransactionalFinancialForRiskGroupNumber_Executes_Positive()
         {
             MockLookupTableManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
-                .Returns(new Model.UserInterface.Pricing.RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
+                .Returns(new RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
 
             MockFinancialTransactionalRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
                 .Returns(new[] { new FinancialTransactional { LatestCrsOrMrs = 2000 } });
