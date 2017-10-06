@@ -56,6 +56,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     canUpdate = false;
 	editType: string;
 	canArchive = false;
+	isExtensionOrRenewal = false;
 
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
@@ -194,7 +195,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 //set the resubmit and update permissions
                 this.canResubmit = lendingConcession.concession.canResubmit && lendingConcession.currentUser.canRequest;
 				this.canUpdate = lendingConcession.concession.canUpdate && lendingConcession.currentUser.canRequest;
+
 				this.canArchive = lendingConcession.concession.canArchive && lendingConcession.currentUser.canRequest;
+				this.isExtensionOrRenewal = lendingConcession.concession.isExtensionOrRenewal;
 
                 this.lendingConcessionForm.controls['mrsCrs'].setValue(this.lendingConcession.concession.mrsCrs);
                 this.lendingConcessionForm.controls['smtDealNumber'].setValue(this.lendingConcession.concession.smtDealNumber);

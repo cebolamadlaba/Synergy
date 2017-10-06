@@ -749,6 +749,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     mappedConcession.CanArchive = mappedConcession.Status == "Approved" ||
                                                   mappedConcession.Status == "Approved With Changes";
 
+                    mappedConcession.IsExtensionOrRenewal = CalculateIfIsExtensionOrRenewal(concession);
+
                     if (!HasPendingChild(concession.Id))
                     {
                         //this concession can be extended or renewed if there is an expiry date which is within the next three months and the concession
@@ -779,6 +781,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             return concessions;
+        }
+
+        /// <summary>
+        /// Calculates if is extension or renewal.
+        /// </summary>
+        /// <param name="concession">The concession.</param>
+        /// <returns></returns>
+        private bool CalculateIfIsExtensionOrRenewal(Concession concession)
+        {
+            var relationships = _concessionRelationshipRepository.ReadByChildConcessionId(concession.Id);
+            var extenionRelationshipTypeId = _lookupTableManager.GetRelationshipId("Extension");
+            var renewalRelationshipTypeId = _lookupTableManager.GetRelationshipId("Renewal");
+
+            return relationships != null &&
+                   relationships.Any(_ => _.RelationshipId == extenionRelationshipTypeId ||
+                                          _.RelationshipId == renewalRelationshipTypeId);
         }
 
         /// <summary>
@@ -852,8 +870,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             if (relationships != null && relationships.Count() >= 3)
                 return false;
 
-            //the calculation is the same as can renew here on out, so return whatever that function would return
-            return canRenew;
+            //if we get up to this point that means all the checks have passed and we can extend
+            return true;
         }
 
         /// <summary>
