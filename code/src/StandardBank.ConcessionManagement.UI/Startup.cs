@@ -10,10 +10,13 @@ using StandardBank.ConcessionManagement.UI.Extension;
 using StandardBank.ConcessionManagement.UI.Helpers.Implementation;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using MediatR;
 using StandardBank.ConcessionManagement.BusinessLogic;
 using FluentValidation.AspNetCore;
+using Hangfire;
+using StandardBank.ConcessionManagement.Interface.BusinessLogic.ScheduledJobs;
 
 namespace StandardBank.ConcessionManagement.UI
 {
@@ -62,13 +65,16 @@ namespace StandardBank.ConcessionManagement.UI
 
             // Add framework services.
             services.AddMemoryCache();
-            services.AddMvc().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>()); ;
+            services.AddMvc().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
 
             // Add automapper
             services.AddAutoMapper();
 
             // Add MediatR
             services.AddMediatR(typeof(ConcessionManager));
+
+            // Add Hangfire
+            services.AddHangfire(x => x.UseSqlServerStorage(Configuration["ConnectionString"]));
 
             // Add the custom services we've created
             var container = DependencyInjection.ConfigureServices(services, GenerateConfigurationData(Environment));
@@ -95,10 +101,12 @@ namespace StandardBank.ConcessionManagement.UI
         /// <summary>
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
-        /// <param name="app"></param>
-        /// <param name="env"></param>
-        /// <param name="loggerFactory"></param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        /// <param name="app">The application.</param>
+        /// <param name="env">The env.</param>
+        /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="serviceProvider">The service provider.</param>
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory,
+            IServiceProvider serviceProvider)
         {
             loggerFactory.AddSerilog();
 
@@ -112,6 +120,23 @@ namespace StandardBank.ConcessionManagement.UI
             app.UseStaticFiles();
 
             app.UseMvc();
+
+            GlobalConfiguration.Configuration.UseActivator(new HangfireActivator(serviceProvider));
+
+            app.UseHangfireServer();
+            app.UseHangfireDashboard();
+
+            ScheduleJobs(app);
+        }
+
+        /// <summary>
+        /// Schedules the jobs.
+        /// </summary>
+        /// <param name="builder">The builder.</param>
+        private void ScheduleJobs(IApplicationBuilder builder)
+        {
+            foreach (var dailyJob in builder.ApplicationServices.GetRequiredService<IEnumerable<IDailyScheduledJob>>())
+                RecurringJob.AddOrUpdate(dailyJob.Name, () => dailyJob.Run(), Cron.Daily(6));
         }
     }
 }

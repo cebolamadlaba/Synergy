@@ -23,7 +23,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.Integration
             _client = fixture.Client;
         }
 
-        [Fact]
+        //[Fact]
         public async Task NewLending_Should_Fail_When_concession_is_invalid()
         {
             var lend = JsonConvert.SerializeObject(new LendingConcession { Concession = new Concession { Id = 1 } });

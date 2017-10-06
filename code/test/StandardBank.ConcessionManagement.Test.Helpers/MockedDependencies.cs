@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Moq;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+using StandardBank.ConcessionManagement.Interface.BusinessLogic.ScheduledJobs;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
@@ -440,5 +441,10 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static Mock<IConcessionConditionViewRepository> MockConcessionConditionViewRepository =
             new Mock<IConcessionConditionViewRepository>();
+
+        /// <summary>
+        /// The mock daily scheduled job
+        /// </summary>
+        public static Mock<IDailyScheduledJob> MockDailyScheduledJob = new Mock<IDailyScheduledJob>();
     }
 }

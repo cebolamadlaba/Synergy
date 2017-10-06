@@ -181,5 +181,24 @@ namespace StandardBank.ConcessionManagement.Repository
                     new {hoUserId, isActive});
             }
         }
+
+        /// <summary>
+        /// Reads for due for expiry notification.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<ConcessionInboxView> ReadForDueForExpiryNotification()
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<ConcessionInboxView>(
+                    @"SELECT [ConcessionId], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [LegalEntityId], [CustomerName], [ConcessionTypeId], [ConcessionType], [ConcessionDate], [StatusId], [Status], [SubStatusId], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment], [DatesentForApproval], [ConcessionDetailId], [ExpiryDate], [DateApproved], [RequestorId], [BCMUserId], [PCMUserId], [HOUserId], [CentreId], [CentreName], [ProvinceId], [Province], [IsMismatched], [IsActive], [IsCurrent]
+                    FROM [dbo].[ConcessionInboxView]
+                    WHERE [StatusId] IN (2, 3)
+                    AND [IsActive] = 1
+                    AND [IsCurrent] = 1
+                    AND ([ExpiryDate] IS NOT NULL AND [ExpiryDate] BETWEEN GETDATE() AND @DateToCheck)",
+                    new {DateToCheck = DateTime.Now.AddMonths(3)});
+            }
+        }
     }
 }

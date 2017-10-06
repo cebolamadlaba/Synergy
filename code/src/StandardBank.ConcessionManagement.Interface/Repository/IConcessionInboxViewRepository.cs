@@ -77,5 +77,11 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <param name="isActive">if set to <c>true</c> [is active].</param>
         /// <returns></returns>
         IEnumerable<ConcessionInboxView> ReadByHoUserIdIsActive(int hoUserId, bool isActive);
+
+        /// <summary>
+        /// Reads for due for expiry notification.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<ConcessionInboxView> ReadForDueForExpiryNotification();
     }
 }
