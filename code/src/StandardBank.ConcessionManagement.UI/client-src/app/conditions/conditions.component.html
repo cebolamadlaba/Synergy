@@ -121,8 +121,8 @@
                     <td (click)="openConcessionView(condition)">{{condition.conditionValue}}</td>
                     <td (click)="openConcessionView(condition)">{{condition.expectedTurnoverValue}}</td>
                     <td>
-                        <button type="button" class="btn btn-no" (click)="conditionNotMet()">No</button>
-                        <button type="button" class="btn btn-yes" (click)="conditionMet()">Yes</button>
+                        <button type="button" class="btn btn-no" (click)="conditionNotMet(condition)">No</button>
+                        <button type="button" class="btn btn-yes" (click)="conditionMet(condition)">Yes</button>
                     </td>
                 </tr>
             </tbody>

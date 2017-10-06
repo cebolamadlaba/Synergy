@@ -46,7 +46,7 @@ namespace StandardBank.ConcessionManagement.Scheduler
         }
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-          
+
             services.AddTransient<IEmailManager, EmailManager>();
             services.AddSingleton(GenerateConfigurationData());
             services.AddTransient<IDbConnection>(_ => new SqlConnection(_.GetRequiredService<IConfigurationData>().ConnectionString));
@@ -55,7 +55,7 @@ namespace StandardBank.ConcessionManagement.Scheduler
             var builder = new ContainerBuilder();
             //This is magic to get all implementations of IJob 
             builder.RegisterAssemblyTypes(typeof(ConsessionNotificationJob).GetTypeInfo().Assembly).AsImplementedInterfaces();
-           
+
             // When you do service population, it will include your controller
             // types automatically.
             builder.Populate(services);
@@ -72,9 +72,9 @@ namespace StandardBank.ConcessionManagement.Scheduler
             ScheduleJobs(app);
             app.Run(async (context) =>
             {
-               
-              await context.Response.WriteAsync("Job Scheduler running");
-                
+
+                await context.Response.WriteAsync("Job Scheduler running");
+
             });
         }
         private void ScheduleJobs(IApplicationBuilder builder)
@@ -86,10 +86,10 @@ namespace StandardBank.ConcessionManagement.Scheduler
                 switch (job.JobType)
                 {
                     case JobType.OnceOff:
-                        BackgroundJob.Schedule(()=> job.Run(),job.OnceOffRunAt);
+                        BackgroundJob.Schedule(() => job.Run(), job.OnceOffRunAt);
                         break;
                     default:
-                        RecurringJob.AddOrUpdate(()=> job.Run(),job.Cron);
+                        RecurringJob.AddOrUpdate(() => job.Run(), job.Cron);
                         break;
                 }
             }

@@ -768,7 +768,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         mappedConcession.CanRenew = CalculateIfCanRenew(concession, mappedConcession.Status);
                         mappedConcession.CanExtend = CalculateIfCanExtend(concession, mappedConcession.CanRenew);
                         mappedConcession.CanResubmit = CalculateIfCanResubmit(concession, mappedConcession.Status);
-                        mappedConcession.CanUpdate = CalculateIfCanUpdate(concession, mappedConcession.Status, mappedConcession.CanRenew);
+                        mappedConcession.CanUpdate = CalculateIfCanUpdate(concession, mappedConcession.Status);
                     }
                     else
                     {
@@ -814,13 +814,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         /// <param name="concession">The concession.</param>
         /// <param name="currentStatus">The current status.</param>
-        /// <param name="canRenew">if set to <c>true</c> [can renew].</param>
         /// <returns></returns>
-        private bool CalculateIfCanUpdate(Model.Repository.Concession concession, string currentStatus, bool canRenew)
+        private bool CalculateIfCanUpdate(Model.Repository.Concession concession, string currentStatus)
         {
-            if (canRenew)
-                return false;
-
             return currentStatus == "Approved" || currentStatus == "Approved With Changes";
         }
 

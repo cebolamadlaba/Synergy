@@ -19,5 +19,6 @@ export class ConcessionCondition {
     concessionReferenceNumber: string;
     ragStatus: string;
     approvedDate: Date;
-    concessionType: string;
+	concessionType: string;
+	conditionMet: boolean;
 }

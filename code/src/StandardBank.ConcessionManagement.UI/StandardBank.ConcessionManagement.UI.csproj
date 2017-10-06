@@ -70,6 +70,9 @@
     <None Include="EmailTemplates\Approved.cshtml" />
     <None Include="EmailTemplates\ApprovedWithChanges.cshtml" />
     <None Include="EmailTemplates\Declined.cshtml" />
+    <None Include="EmailTemplates\ExpiringConcession.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="EmailTemplates\NewConcession.cshtml" />
   </ItemGroup>
 </Project>

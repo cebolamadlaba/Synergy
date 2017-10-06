@@ -135,5 +135,13 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// The type of the concession.
         /// </value>
         public string ConcessionType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ConditionMet.
+        /// </summary>
+        /// <value>
+        /// The ConditionMet.
+        /// </value>
+        public bool? ConditionMet { get; set; }
     }
 }

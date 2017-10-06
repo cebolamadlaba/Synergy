@@ -46,7 +46,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             {
                 var user = _siteHelper.LoggedInUser(this);
 
-                if (user.SelectedRegion.Id == riskGroup.RegionId)
+                if (user.IsHO || user.SelectedRegion.Id == riskGroup.RegionId)
                     return Ok(riskGroup);
             }
 

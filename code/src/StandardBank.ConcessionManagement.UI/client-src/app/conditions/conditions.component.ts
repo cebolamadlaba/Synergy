@@ -17,6 +17,9 @@ export class ConditionsComponent implements OnInit {
     observableConditions: ConcessionCondition[];
     periods: Period[];
 
+	observableCondition: Observable<ConcessionCondition>;
+	condition: ConcessionCondition;
+
     observableConditionCounts: Observable<ConditionCounts>;
     conditionCounts: ConditionCounts;
 
@@ -78,15 +81,37 @@ export class ConditionsComponent implements OnInit {
         this.getConditions();
     }
 
-    conditionNotMet() {
-        if (confirm("Are you sure this condition has not been met?")) {
+	conditionNotMet(concessionCondition: ConcessionCondition) {
+		if (confirm("Are you sure this condition has not been met?")) {
+			this.isLoading = true;
+			concessionCondition.conditionMet = false;
 
+			this.observableCondition = this.conditionService.updateCondition(concessionCondition);
+			this.observableCondition.subscribe(
+				condition => {
+					this.condition = condition;
+
+					//open the concession
+					this.openConcessionView(concessionCondition);
+				},
+				error => this.errorMessage = <any>error);
         }
     }
 
-    conditionMet() {
-        if (confirm("Are you sure this condition has been met?")) {
+	conditionMet(concessionCondition: ConcessionCondition) {
+		if (confirm("Are you sure this condition has been met?")) {
+			this.isLoading = true;
 
+            //update the condition in the database
+			concessionCondition.conditionMet = true;
+
+			this.observableCondition = this.conditionService.updateCondition(concessionCondition);
+			this.observableCondition.subscribe(
+				condition => {
+					this.condition = condition;
+					this.loadAll();
+				},
+				error => this.errorMessage = <any>error);
         }
     }
 

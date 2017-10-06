@@ -1,11 +1,9 @@
-﻿
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using MediatR;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
-using ConcessionCondition = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionCondition;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCondition
 {

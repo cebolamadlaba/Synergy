@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import { ConditionCounts } from "../models/condition-counts";
@@ -19,7 +19,14 @@ export class MyConditionService {
     getConditionCounts(): Observable<ConditionCounts> {
         const url = "/api/Condition/ConditionCounts";
         return this.http.get(url).map(x => x.json()).catch(this.handleErrorObservable);
-    }
+	}
+
+	updateCondition(condition: ConcessionCondition): Observable<ConcessionCondition> {
+		let headers = new Headers({ 'Content-Type': 'application/json' });
+		let options = new RequestOptions({ headers: headers });
+		const url = "/api/Condition/UpdateCondition";
+		return this.http.post(url, condition, options).map(x => x.json()).catch(this.handleErrorObservable);
+	}
 
     private handleErrorObservable(error: Response | any) {
         console.error(error.message || error);
@@ -41,5 +48,9 @@ export class MockMyConditionService {
         this.modelConditionCounts.ongoingCount = 100;
         this.modelConditionCounts.standardCount = 200;
         return Observable.of(this.modelConditionCounts);
-    }
+	}
+
+	updateCondition(condition: ConcessionCondition): Observable<ConcessionCondition> {
+		return Observable.of(this.model[0]);
+	}
 }
