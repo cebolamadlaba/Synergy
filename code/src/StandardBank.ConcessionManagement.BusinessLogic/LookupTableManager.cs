@@ -14,6 +14,7 @@ using ConditionType = StandardBank.ConcessionManagement.Model.UserInterface.Cond
 using Period = StandardBank.ConcessionManagement.Model.UserInterface.Period;
 using PeriodType = StandardBank.ConcessionManagement.Model.UserInterface.PeriodType;
 using ReviewFeeType = StandardBank.ConcessionManagement.Model.UserInterface.ReviewFeeType;
+using RiskGroup = StandardBank.ConcessionManagement.Model.UserInterface.Pricing.RiskGroup;
 using TableNumber = StandardBank.ConcessionManagement.Model.UserInterface.TableNumber;
 using TransactionType = StandardBank.ConcessionManagement.Model.UserInterface.TransactionType;
 
@@ -119,9 +120,26 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// The relationship repository
         /// </summary>
         private readonly IRelationshipRepository _relationshipRepository;
-        private readonly IRoleRepository roleRepository;
-        private readonly ICentreRepository centreRepository;
-        private readonly IRegionRepository regionRepository;
+
+        /// <summary>
+        /// The role repository
+        /// </summary>
+        private readonly IRoleRepository _roleRepository;
+
+        /// <summary>
+        /// The centre repository
+        /// </summary>
+        private readonly ICentreRepository _centreRepository;
+
+        /// <summary>
+        /// The region repository
+        /// </summary>
+        private readonly IRegionRepository _regionRepository;
+
+        /// <summary>
+        /// The risk group repository
+        /// </summary>
+        private readonly IRiskGroupRepository _riskGroupRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LookupTableManager"/> class.
@@ -145,6 +163,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="transactionTypeRepository">The transaction type repository.</param>
         /// <param name="tableNumberRepository">The table number repository.</param>
         /// <param name="relationshipRepository">The relationship repository.</param>
+        /// <param name="roleRepository">The role repository.</param>
+        /// <param name="centreRepository">The centre repository.</param>
+        /// <param name="regionRepository">The region repository.</param>
+        /// <param name="riskGroupRepository">The risk group repository.</param>
         public LookupTableManager(IStatusRepository statusRepository, ISubStatusRepository subStatusRepository,
             IReferenceTypeRepository referenceTypeRepository, IMarketSegmentRepository marketSegmentRepository,
             IProvinceRepository provinceRepository, IConcessionTypeRepository concessionTypeRepository,
@@ -156,7 +178,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IAccrualTypeRepository accrualTypeRepository, IChannelTypeRepository channelTypeRepository,
             ITransactionTypeRepository transactionTypeRepository, ITableNumberRepository tableNumberRepository,
             IRelationshipRepository relationshipRepository, IRoleRepository roleRepository,
-            ICentreRepository centreRepository, IRegionRepository regionRepository)
+            ICentreRepository centreRepository, IRegionRepository regionRepository, IRiskGroupRepository riskGroupRepository)
         {
             _statusRepository = statusRepository;
             _subStatusRepository = subStatusRepository;
@@ -177,16 +199,29 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _transactionTypeRepository = transactionTypeRepository;
             _tableNumberRepository = tableNumberRepository;
             _relationshipRepository = relationshipRepository;
-            this.roleRepository = roleRepository;
-            this.centreRepository = centreRepository;
-            this.regionRepository = regionRepository;
+            _roleRepository = roleRepository;
+            _centreRepository = centreRepository;
+            _regionRepository = regionRepository;
+            _riskGroupRepository = riskGroupRepository;
         }
 
-        public IEnumerable<Model.UserInterface.Role> GetRoles()=> _mapper.Map<IEnumerable<Model.UserInterface.Role>>(roleRepository.ReadAll());
-       
-        public IEnumerable<Model.UserInterface.Centre> GetCentres() => _mapper.Map<IEnumerable<Model.UserInterface.Centre>>(centreRepository.ReadAll());
+        /// <summary>
+        /// Gets the roles.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Model.UserInterface.Role> GetRoles()=> _mapper.Map<IEnumerable<Model.UserInterface.Role>>(_roleRepository.ReadAll());
 
-        public IEnumerable<Model.UserInterface.Region> GetRegions() => _mapper.Map<IEnumerable<Model.UserInterface.Region>>(regionRepository.ReadAll());
+        /// <summary>
+        /// Gets the centres.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Model.UserInterface.Centre> GetCentres() => _mapper.Map<IEnumerable<Model.UserInterface.Centre>>(_centreRepository.ReadAll());
+
+        /// <summary>
+        /// Gets the regions.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Model.UserInterface.Region> GetRegions() => _mapper.Map<IEnumerable<Model.UserInterface.Region>>(_regionRepository.ReadAll());
         
         /// <summary>
         /// Gets the status identifier.
@@ -581,6 +616,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var tableNumber = _mapper.Map<TableNumber>(tableNumbers.First(_ => _.Id == tableNumberId));
 
             return tableNumber.DisplayText;
+        }
+
+        /// <summary>
+        /// Gets the risk group for the number specified
+        /// </summary>
+        /// <param name="riskGroupNumber"></param>
+        /// <returns></returns>
+        public RiskGroup GetRiskGroupForRiskGroupNumber(int riskGroupNumber)
+        {
+            var riskGroup =
+                _mapper.Map<RiskGroup>(_riskGroupRepository.ReadByRiskGroupNumberIsActive(riskGroupNumber, true));
+
+            if (riskGroup != null)
+                riskGroup.MarketSegment = GetMarketSegmentName(riskGroup.MarketSegmentId);
+
+            return riskGroup;
         }
 
         /// <summary>

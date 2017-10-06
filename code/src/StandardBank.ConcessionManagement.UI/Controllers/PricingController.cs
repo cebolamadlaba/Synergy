@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 
 namespace StandardBank.ConcessionManagement.UI.Controllers
@@ -11,17 +11,17 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
     public class PricingController : Controller
     {
         /// <summary>
-        /// The pricing manager
+        /// The lookup table manager
         /// </summary>
-        private readonly IPricingManager _pricingManager;
-        
+        private readonly ILookupTableManager _lookupTableManager;
+
         /// <summary>
-        /// Initializes the controller
+        /// Initializes a new instance of the <see cref="PricingController"/> class.
         /// </summary>
-        /// <param name="pricingManager"></param>
-        public PricingController(IPricingManager pricingManager)
+        /// <param name="lookupTableManager">The lookup table manager.</param>
+        public PricingController(ILookupTableManager lookupTableManager)
         {
-            _pricingManager = pricingManager;
+            _lookupTableManager = lookupTableManager;
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("RiskGroup/{riskGroupNumber}")]
         public IActionResult RiskGroup(int riskGroupNumber)
         {
-            return Ok(_pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber));
+            return Ok(_lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber));
         }
     }
 }

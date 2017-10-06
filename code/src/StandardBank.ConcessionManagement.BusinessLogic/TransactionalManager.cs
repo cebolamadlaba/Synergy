@@ -19,11 +19,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
     public class TransactionalManager : ITransactionalManager
     {
         /// <summary>
-        /// The pricing manager
-        /// </summary>
-        private readonly IPricingManager _pricingManager;
-
-        /// <summary>
         /// The concession manager
         /// </summary>
         private readonly IConcessionManager _concessionManager;
@@ -71,7 +66,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <summary>
         /// Initializes a new instance of the <see cref="TransactionalManager"/> class.
         /// </summary>
-        /// <param name="pricingManager">The pricing manager.</param>
         /// <param name="concessionManager">The concession manager.</param>
         /// <param name="concessionTransactionalRepository">The concession transactional repository.</param>
         /// <param name="legalEntityRepository">The legal entity repository.</param>
@@ -81,7 +75,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="financialTransactionalRepository">The financial transactional repository.</param>
         /// <param name="productTransactionalRepository">The product transactional repository.</param>
         /// <param name="loadedPriceTransactionalRepository">The loaded price transactional repository.</param>
-        public TransactionalManager(IPricingManager pricingManager, IConcessionManager concessionManager,
+        public TransactionalManager(IConcessionManager concessionManager,
             IConcessionTransactionalRepository concessionTransactionalRepository,
             ILegalEntityRepository legalEntityRepository, ILegalEntityAccountRepository legalEntityAccountRepository,
             IMapper mapper, ILookupTableManager lookupTableManager,
@@ -89,7 +83,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IProductTransactionalRepository productTransactionalRepository,
             ILoadedPriceTransactionalRepository loadedPriceTransactionalRepository)
         {
-            _pricingManager = pricingManager;
             _concessionManager = concessionManager;
             _concessionTransactionalRepository = concessionTransactionalRepository;
             _legalEntityRepository = legalEntityRepository;
@@ -109,7 +102,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public IEnumerable<TransactionalConcession> GetTransactionalConcessionsForRiskGroupNumber(int riskGroupNumber)
         {
             var transactionalConcessions = new List<TransactionalConcession>();
-            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
 
             if (riskGroup != null)
             {
@@ -217,7 +210,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public TransactionalView GetTransactionalViewData(int riskGroupNumber)
         {
             var transactionalConcessions = new List<TransactionalConcession>();
-            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
 
             if (riskGroup != null)
             {
@@ -249,7 +242,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public decimal GetLatestCrsOrMrs(int riskGroupNumber)
         {
-            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
 
             var transactionFinancial =
                 _financialTransactionalRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
@@ -265,7 +258,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public TransactionalFinancial GetTransactionalFinancialForRiskGroupNumber(int riskGroupNumber)
         {
-            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
 
             return _mapper.Map<TransactionalFinancial>(
                 _financialTransactionalRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??

@@ -25,7 +25,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         /// </summary>
         public LendingManagerTest()
         {
-            _lendingManager = new LendingManager(MockPricingManager.Object, MockConcessionManager.Object,
+            _lendingManager = new LendingManager(MockConcessionManager.Object,
                 MockLegalEntityRepository.Object, MockConcessionLendingRepository.Object,
                 InstantiatedDependencies.Mapper, MockLegalEntityAccountRepository.Object,
                 MockProductLendingRepository.Object, MockFinancialLendingRepository.Object,
@@ -74,7 +74,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         [Fact]
         public void GetLendingViewData_Executes_Positive()
         {
-            MockPricingManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
+            MockLookupTableManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
                 .Returns(new Model.UserInterface.Pricing.RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
 
             MockConcessionManager.Setup(_ => _.GetConcessionsForRiskGroup(It.IsAny<int>(), It.IsAny<string>()))
@@ -138,7 +138,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         [Fact]
         public void GetLatestCrsOrMrs_Executes_Positive()
         {
-            MockPricingManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
+            MockLookupTableManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
                 .Returns(new Model.UserInterface.Pricing.RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
 
             MockFinancialLendingRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
@@ -156,7 +156,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         [Fact]
         public void GetLendingFinancialForRiskGroupNumber_Executes_Positive()
         {
-            MockPricingManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
+            MockLookupTableManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
                 .Returns(new Model.UserInterface.Pricing.RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
 
             MockFinancialLendingRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
+using StandardBank.ConcessionManagement.Model.UserInterface.Pricing;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 {
@@ -8,9 +9,24 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
     /// </summary>
     public interface ILookupTableManager
     {
+        /// <summary>
+        /// Gets the roles.
+        /// </summary>
+        /// <returns></returns>
         IEnumerable<Role> GetRoles();
+
+        /// <summary>
+        /// Gets the centres.
+        /// </summary>
+        /// <returns></returns>
         IEnumerable<Centre> GetCentres();
+
+        /// <summary>
+        /// Gets the regions.
+        /// </summary>
+        /// <returns></returns>
         IEnumerable<Region> GetRegions();
+
         /// <summary>
         /// Gets the status identifier.
         /// </summary>
@@ -214,5 +230,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="tableNumberId">The table number identifier.</param>
         /// <returns></returns>
         string GetTableNumberDescription(int tableNumberId);
+
+        /// <summary>
+        /// Gets the risk group for the number specified
+        /// </summary>
+        /// <param name="riskGroupNumber"></param>
+        /// <returns></returns>
+        RiskGroup GetRiskGroupForRiskGroupNumber(int riskGroupNumber);
     }
 }

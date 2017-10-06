@@ -282,11 +282,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static Mock<IUserRegionRepository> MockUserRegionRepository = new Mock<IUserRegionRepository>();
 
         /// <summary>
-        /// The mock PricingManager
-        /// </summary>
-        public static Mock<IPricingManager> MockPricingManager = new Mock<IPricingManager>();
-
-        /// <summary>
         /// The mock LendingManager
         /// </summary>
         public static Mock<ILendingManager> MockLendingManager = new Mock<ILendingManager>();

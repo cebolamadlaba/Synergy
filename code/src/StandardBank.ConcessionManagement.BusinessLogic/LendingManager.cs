@@ -18,11 +18,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
     public class LendingManager : ILendingManager
     {
         /// <summary>
-        /// The pricing manager
-        /// </summary>
-        private readonly IPricingManager _pricingManager;
-
-        /// <summary>
         /// The concession manager
         /// </summary>
         private readonly IConcessionManager _concessionManager;
@@ -70,7 +65,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <summary>
         /// Initializes a new instance of the <see cref="LendingManager"/> class.
         /// </summary>
-        /// <param name="pricingManager">The pricing manager.</param>
         /// <param name="concessionManager">The concession manager.</param>
         /// <param name="legalEntityRepository">The legal entity repository.</param>
         /// <param name="concessionLendingRepository">The concession lending repository.</param>
@@ -80,13 +74,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="financialLendingRepository">The financial lending repository.</param>
         /// <param name="lookupTableManager">The lookup table manager.</param>
         /// <param name="loadedPriceLendingRepository">The loaded price lending repository.</param>
-        public LendingManager(IPricingManager pricingManager, IConcessionManager concessionManager,
+        public LendingManager(IConcessionManager concessionManager,
             ILegalEntityRepository legalEntityRepository, IConcessionLendingRepository concessionLendingRepository,
             IMapper mapper, ILegalEntityAccountRepository legalEntityAccountRepository,
             IProductLendingRepository productLendingRepository, IFinancialLendingRepository financialLendingRepository,
             ILookupTableManager lookupTableManager, ILoadedPriceLendingRepository loadedPriceLendingRepository)
         {
-            _pricingManager = pricingManager;
             _concessionManager = concessionManager;
             _legalEntityRepository = legalEntityRepository;
             _concessionLendingRepository = concessionLendingRepository;
@@ -227,7 +220,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public LendingView GetLendingViewData(int riskGroupNumber)
         {
-            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
 
             var lendingConcessions = new List<LendingConcession>();
 
@@ -260,7 +253,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public decimal GetLatestCrsOrMrs(int riskGroupNumber)
         {
-            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
 
             var lendingFinancial = _mapper.Map<LendingFinancial>(
                 _financialLendingRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
@@ -276,7 +269,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public LendingFinancial GetLendingFinancialForRiskGroupNumber(int riskGroupNumber)
         {
-            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
 
             return _mapper.Map<LendingFinancial>(
                 _financialLendingRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialLending());

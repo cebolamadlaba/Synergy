@@ -30,7 +30,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 MockConditionTypeProductRepository.Object, MockAccrualTypeRepository.Object,
                 MockChannelTypeRepository.Object, MockTransactionTypeRepository.Object,
                 MockTableNumberRepository.Object, MockRelationshipRepository.Object, MockRoleRepository.Object,
-                MockCentreRepository.Object, MockRegionRepository.Object);
+                MockCentreRepository.Object, MockRegionRepository.Object, MockRiskGroupRepository.Object);
         }
 
         /// <summary>
@@ -584,6 +584,46 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             Assert.True(result.Contains("1"));
             Assert.True(result.Contains("2"));
             Assert.True(result.Contains("3"));
+        }
+
+        /// <summary>
+        /// Tests that GetRiskGroupForRiskGroupNumber for an active record executes positive
+        /// </summary>
+        [Fact]
+        public void GetRiskGroupForRiskGroupNumber_ActiveRecord_Executes_Positive()
+        {
+            var riskGroup = new RiskGroup
+            {
+                RiskGroupNumber = 1,
+                RiskGroupName = "Unit Test Risk Group",
+                IsActive = true,
+                Id = 1,
+                MarketSegmentId = 1
+            };
+
+            MockRiskGroupRepository.Setup(_ => _.ReadByRiskGroupNumberIsActive(It.IsAny<int>(), true)).Returns(riskGroup);
+
+            MockMarketSegmentRepository.Setup(_ => _.ReadAll()).Returns(new[]
+                {new MarketSegment {Id = 1, IsActive = true, Description = "Unit Test Market Segment"}});
+
+            var result = _lookupTableManager.GetRiskGroupForRiskGroupNumber(1);
+
+            Assert.NotNull(result);
+            Assert.Equal(result.Name, riskGroup.RiskGroupName);
+        }
+
+        /// <summary>
+        /// Tests that GetRiskGroupForRiskGroupNumber for an in-active record executes positive
+        /// </summary>
+        [Fact]
+        public void GetRiskGroupForRiskGroupNumber_InActiveRecord_Executes_Positive()
+        {
+            RiskGroup riskGroup = null;
+            MockRiskGroupRepository.Setup(_ => _.ReadByRiskGroupNumberIsActive(It.IsAny<int>(), true)).Returns(riskGroup);
+
+            var result = _lookupTableManager.GetRiskGroupForRiskGroupNumber(1);
+
+            Assert.Null(result);
         }
     }
 }

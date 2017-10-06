@@ -21,7 +21,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 RiskGroupNumber = 9,
                 RiskGroupName = "3b84541fd8",
-                IsActive = true
+                IsActive = true,
+                MarketSegmentId = DataHelper.GetMarketSegmentId()
             };
 
             var result = InstantiatedDependencies.RiskGroupRepository.Create(model);
@@ -96,7 +97,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 RiskGroupNumber = 9,
                 RiskGroupName = "3b84541fd8",
-                IsActive = false
+                IsActive = false,
+                MarketSegmentId = DataHelper.GetMarketSegmentId()
             };
 
             InstantiatedDependencies.RiskGroupRepository.Create(model);
@@ -134,6 +136,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.RiskGroupNumber = model.RiskGroupNumber + 1;
             model.RiskGroupName = "1cb39b8591";
             model.IsActive = !model.IsActive;
+            model.MarketSegmentId = DataHelper.GetAlternateMarketSegmentId(model.MarketSegmentId);
 
             InstantiatedDependencies.RiskGroupRepository.Update(model);
 
@@ -144,6 +147,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.RiskGroupNumber, model.RiskGroupNumber);
             Assert.Equal(updatedModel.RiskGroupName, model.RiskGroupName);
             Assert.Equal(updatedModel.IsActive, model.IsActive);
+            Assert.Equal(updatedModel.MarketSegmentId, model.MarketSegmentId);
         }
 
         /// <summary>
@@ -156,7 +160,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 RiskGroupNumber = 9,
                 RiskGroupName = "3b84541fd8",
-                IsActive = false
+                IsActive = false,
+                MarketSegmentId = DataHelper.GetMarketSegmentId()
             };
 
             var temporaryEntity = InstantiatedDependencies.RiskGroupRepository.Create(model);

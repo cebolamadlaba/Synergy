@@ -22,7 +22,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         /// </summary>
         public PricingControllerTest()
         {
-            _pricingController = new PricingController(MockPricingManager.Object);
+            _pricingController = new PricingController(MockLookupTableManager.Object);
         }
 
         /// <summary>
@@ -31,8 +31,16 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         [Fact]
         public void RiskGroup_Executes_Positive()
         {
-            var riskGroup = new RiskGroup { Id = 1, Name = "Unit Test Risk Group", Number = 1 };
-            MockPricingManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>())).Returns(riskGroup);
+            var riskGroup = new RiskGroup
+            {
+                Id = 1,
+                Name = "Unit Test Risk Group",
+                Number = 1,
+                MarketSegmentId = 1,
+                MarketSegment = "Unit Test Market Segment"
+            };
+
+            MockLookupTableManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>())).Returns(riskGroup);
 
             var result = _pricingController.RiskGroup(1);
             var apiResult = Assert.IsType<OkObjectResult>(result);
@@ -45,6 +53,8 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
             Assert.Equal(riskGroup.Id, resultRiskGroup.Id);
             Assert.Equal(riskGroup.Name, resultRiskGroup.Name);
             Assert.Equal(riskGroup.Number, resultRiskGroup.Number);
+            Assert.Equal(riskGroup.MarketSegmentId, resultRiskGroup.MarketSegmentId);
+            Assert.Equal(riskGroup.MarketSegment, resultRiskGroup.MarketSegment);
         }
     }
 }

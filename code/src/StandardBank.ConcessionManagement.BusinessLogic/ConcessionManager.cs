@@ -177,6 +177,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Gets the distinct inbox concessions.
+        /// </summary>
+        /// <param name="inboxConcessions">The inbox concessions.</param>
+        /// <returns></returns>
+        private IEnumerable<InboxConcession> GetDistinctInboxConcessions(IEnumerable<InboxConcession> inboxConcessions)
+        {
+            return inboxConcessions.GroupBy(_ => _.ReferenceNumber).Select(_ => _.First()).ToList();
+        }
+
+        /// <summary>
         /// Get the due for expiry concessions for the user
         /// </summary>
         /// <param name="user"></param>
@@ -279,7 +289,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var userConcessions = new UserConcessions();
 
-            var pendingConcessions = GetPendingConcessionsForUser(user);
+            var pendingConcessions = GetDistinctInboxConcessions(GetPendingConcessionsForUser(user));
 
             userConcessions.PendingConcessions = pendingConcessions;
             userConcessions.PendingConcessionsCount = pendingConcessions?.Count() ?? 0;
@@ -287,22 +297,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (user.CanRequest)
             {
-                var dueForExpiryConcessions = GetDueForExpiryConcessionsForUser(user);
+                var dueForExpiryConcessions = GetDistinctInboxConcessions(GetDueForExpiryConcessionsForUser(user));
                 userConcessions.DueForExpiryConcessions = dueForExpiryConcessions;
                 userConcessions.DueForExpiryConcessionsCount = dueForExpiryConcessions?.Count() ?? 0;
                 userConcessions.ShowDueForExpiryConcessions = true;
 
-                var expiredConcessions = GetExpiredConcessionsForUser(user);
+                var expiredConcessions = GetDistinctInboxConcessions(GetExpiredConcessionsForUser(user));
                 userConcessions.ExpiredConcessions = expiredConcessions;
                 userConcessions.ExpiredConcessionsCount = expiredConcessions?.Count() ?? 0;
                 userConcessions.ShowExpiredConcessions = true;
 
-                var mismatchedConcessions = GetMismatchedConcessionsForUser(user);
+                var mismatchedConcessions = GetDistinctInboxConcessions(GetMismatchedConcessionsForUser(user));
                 userConcessions.MismatchedConcessions = mismatchedConcessions;
                 userConcessions.MismatchedConcessionsCount = mismatchedConcessions?.Count() ?? 0;
                 userConcessions.ShowMismatchedConcessions = true;
 
-                var declinedConcessions = GetDeclinedConcessionsForUser(user);
+                var declinedConcessions = GetDistinctInboxConcessions(GetDeclinedConcessionsForUser(user));
                 userConcessions.DeclinedConcessions = declinedConcessions;
                 userConcessions.DeclinedConcessionsCount = declinedConcessions?.Count() ?? 0;
                 userConcessions.ShowDeclinedConcessions = true;
@@ -310,7 +320,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (user.CanBcmApprove || user.CanPcmApprove || user.IsHO)
             {
-                var actionedConcessions = GetActionedConcessionsForUser(user);
+                var actionedConcessions = GetDistinctInboxConcessions(GetActionedConcessionsForUser(user));
                 userConcessions.ActionedConcessions = actionedConcessions;
                 userConcessions.ActionedConcessionsCount = actionedConcessions?.Count() ?? 0;
                 userConcessions.ShowActionedConcessions = true;

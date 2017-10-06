@@ -441,7 +441,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             ConcessionTypeRepository, ProductRepository, ReviewFeeTypeRepository, PeriodRepository,
             PeriodTypeRepository, ConditionTypeRepository, Mapper, ConditionProductRepository,
             ConditionTypeProductRepository, AccrualTypeRepository, ChannelTypeRepository, TransactionTypeRepository,
-            TableNumberRepository, RelationshipRepository, RoleRepository, CentreRepository, RegionRepository);
+            TableNumberRepository, RelationshipRepository, RoleRepository, CentreRepository, RegionRepository, RiskGroupRepository);
 
         /// <summary>
         /// The user manager
@@ -460,14 +460,9 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 ConcessionDetailRepository, ConcessionConditionViewRepository);
 
         /// <summary>
-        /// The pricing manager
-        /// </summary>
-        public static IPricingManager PricingManager = new PricingManager(RiskGroupRepository, Mapper);
-
-        /// <summary>
         /// The lending manager
         /// </summary>
-        public static ILendingManager LendingManager = new LendingManager(PricingManager, ConcessionManager,
+        public static ILendingManager LendingManager = new LendingManager(ConcessionManager,
             LegalEntityRepository, ConcessionLendingRepository, Mapper, LegalEntityAccountRepository,
             ProductLendingRepository, FinancialLendingRepository, LookupTableManager, LoadedPriceLendingRepository);
 
@@ -475,14 +470,14 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The transactional manager
         /// </summary>
         public static ITransactionalManager TransactionalManager =
-            new TransactionalManager(PricingManager, ConcessionManager, ConcessionTransactionalRepository,
+            new TransactionalManager(ConcessionManager, ConcessionTransactionalRepository,
                 LegalEntityRepository, LegalEntityAccountRepository, Mapper, LookupTableManager,
                 FinancialTransactionalRepository, ProductTransactionalRepository, LoadedPriceTransactionalRepository);
 
         /// <summary>
         /// The cash manager
         /// </summary>
-        public static ICashManager CashManager = new CashManager(PricingManager, ConcessionManager,
+        public static ICashManager CashManager = new CashManager(ConcessionManager,
             ConcessionCashRepository, LegalEntityRepository, Mapper, LegalEntityAccountRepository,
             FinancialCashRepository, ProductCashRepository, LookupTableManager, LoadedPriceCashRepository);
     }

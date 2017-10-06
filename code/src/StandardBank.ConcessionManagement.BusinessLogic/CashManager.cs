@@ -19,11 +19,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
     public class CashManager : ICashManager
     {
         /// <summary>
-        /// The pricing manager
-        /// </summary>
-        private readonly IPricingManager _pricingManager;
-
-        /// <summary>
         /// The concession manager
         /// </summary>
         private readonly IConcessionManager _concessionManager;
@@ -71,7 +66,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <summary>
         /// Initializes a new instance of the <see cref="CashManager"/> class.
         /// </summary>
-        /// <param name="pricingManager">The pricing manager.</param>
         /// <param name="concessionManager">The concession manager.</param>
         /// <param name="concessionCashRepository">The concession cash repository.</param>
         /// <param name="legalEntityRepository">The legal entity repository.</param>
@@ -81,13 +75,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="productCashRepository">The product cash repository.</param>
         /// <param name="lookupTableManager">The lookup table manager.</param>
         /// <param name="loadedPriceCashRepository">The loaded price cash repository.</param>
-        public CashManager(IPricingManager pricingManager, IConcessionManager concessionManager,
+        public CashManager(IConcessionManager concessionManager,
             IConcessionCashRepository concessionCashRepository, ILegalEntityRepository legalEntityRepository,
             IMapper mapper, ILegalEntityAccountRepository legalEntityAccountRepository,
             IFinancialCashRepository financialCashRepository, IProductCashRepository productCashRepository,
             ILookupTableManager lookupTableManager, ILoadedPriceCashRepository loadedPriceCashRepository)
         {
-            _pricingManager = pricingManager;
             _concessionManager = concessionManager;
             _concessionCashRepository = concessionCashRepository;
             _legalEntityRepository = legalEntityRepository;
@@ -107,7 +100,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public IEnumerable<CashConcession> GetCashConcessionsForRiskGroupNumber(int riskGroupNumber)
         {
             var cashConcessions = new List<CashConcession>();
-            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
 
             if (riskGroup != null)
             {
@@ -222,7 +215,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public CashView GetCashViewData(int riskGroupNumber)
         {
             var cashConcessions = new List<CashConcession>();
-            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
 
             if (riskGroup != null)
             {
@@ -281,7 +274,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public decimal GetLatestCrsOrMrs(int riskGroupNumber)
         {
-            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
 
             var cashFinancial = _mapper.Map<CashFinancial>(
                 _financialCashRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialCash());
@@ -296,7 +289,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public CashFinancial GetCashFinancialForRiskGroupNumber(int riskGroupNumber)
         {
-            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
 
             return _mapper.Map<CashFinancial>(
                 _financialCashRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialCash());

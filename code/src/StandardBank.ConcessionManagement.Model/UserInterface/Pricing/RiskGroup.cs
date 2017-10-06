@@ -14,6 +14,22 @@
         public int Id { get; set; }
 
         /// <summary>
+        /// Gets or sets the MarketSegmentId.
+        /// </summary>
+        /// <value>
+        /// The MarketSegmentId.
+        /// </value>
+        public int MarketSegmentId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the market segment.
+        /// </summary>
+        /// <value>
+        /// The market segment.
+        /// </value>
+        public string MarketSegment { get; set; }
+
+        /// <summary>
         /// Gets or sets the number.
         /// </summary>
         /// <value>
