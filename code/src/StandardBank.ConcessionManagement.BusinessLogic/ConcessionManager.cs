@@ -746,6 +746,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 if (mapAll)
                 {
+                    mappedConcession.CanArchive = mappedConcession.Status == "Approved" ||
+                                                  mappedConcession.Status == "Approved With Changes";
+
                     if (!HasPendingChild(concession.Id))
                     {
                         //this concession can be extended or renewed if there is an expiry date which is within the next three months and the concession

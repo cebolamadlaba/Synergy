@@ -415,6 +415,7 @@
             <button type="button" class="btn btn-success" (click)="editConcession('Renew')" *ngIf="canRenew">Renew</button>
             <button type="button" class="btn btn-success" (click)="editConcession('Resubmit')" *ngIf="canResubmit">Resubmit</button>
             <button type="button" class="btn btn-success" (click)="editConcession('UpdateApproved')" *ngIf="canUpdate">Update</button>
+            <button type="button" class="btn btn-warning" (click)="archiveConcession()" *ngIf="canArchive">Archive</button>
 
             <button type="button" class="btn btn-primary" (click)="saveConcession()" *ngIf="isEditing">Save</button>
 

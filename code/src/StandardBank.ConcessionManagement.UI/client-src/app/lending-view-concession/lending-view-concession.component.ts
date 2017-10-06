@@ -54,7 +54,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     canApproveChanges: boolean;
     canResubmit = false;
     canUpdate = false;
-    editType: string;
+	editType: string;
+	canArchive = false;
 
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
@@ -192,7 +193,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
                 //set the resubmit and update permissions
                 this.canResubmit = lendingConcession.concession.canResubmit && lendingConcession.currentUser.canRequest;
-                this.canUpdate = lendingConcession.concession.canUpdate && lendingConcession.currentUser.canRequest;
+				this.canUpdate = lendingConcession.concession.canUpdate && lendingConcession.currentUser.canRequest;
+				this.canArchive = lendingConcession.concession.canArchive && lendingConcession.currentUser.canRequest;
 
                 this.lendingConcessionForm.controls['mrsCrs'].setValue(this.lendingConcession.concession.mrsCrs);
                 this.lendingConcessionForm.controls['smtDealNumber'].setValue(this.lendingConcession.concession.smtDealNumber);
@@ -684,7 +686,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 this.canBcmApprove = false;
                 this.canExtend = false;
                 this.canRenew = false;
-                this.canRecall = false;
+				this.canRecall = false;
+				this.canUpdate = false;
+				this.canArchive = false;
                 this.saveMessage = entity.concession.childReferenceNumber;
                 this.isLoading = false;
                 this.lendingConcession = entity;
@@ -707,7 +711,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.isRecalling = false;
         this.editType = editType;
         this.canResubmit = false;
-        this.canUpdate = false;
+		this.canUpdate = false;
+		this.canArchive = false;
 
         this.lendingConcessionForm.controls['motivation'].setValue('');
     }
@@ -747,10 +752,11 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.errorMessage = null;
 
         this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
-            this.warningMessage = "Concession recalled, please make the required changes and save the concession or it will be lost";
+			this.warningMessage = "Concession recalled, please make the required changes and save the concession or it will be lost";
             this.isRecalling = true;
             this.isLoading = false;
-            this.canEdit = true;
+			this.canEdit = true;
+			this.canArchive = false;
             this.motivationEnabled = true;
         }, error => {
             this.errorMessage = <any>error;
@@ -854,5 +860,36 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         } else {
             this.isLoading = false;
         }
-    }
+	}
+
+	archiveConcession() {
+		if (confirm("Are you sure you want to archive this concession?")) {
+			this.isLoading = true;
+			this.errorMessage = null;
+
+			this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
+				this.warningMessage = "Concession has been archived.";
+
+				this.isLoading = false;
+				this.canBcmApprove = false;
+				this.canPcmApprove = false;
+				this.canExtend = false;
+				this.canRenew = false;
+				this.canRecall = false;
+				this.isEditing = false;
+				this.motivationEnabled = false;
+				this.canEdit = false;
+				this.isRecalling = false;
+				this.canApproveChanges = false;
+				this.canResubmit = false;
+				this.canUpdate = false;
+				this.canArchive = false;
+
+			}, error => {
+				this.errorMessage = <any>error;
+				this.isLoading = false;
+			});
+		}
+	}
+
 }
