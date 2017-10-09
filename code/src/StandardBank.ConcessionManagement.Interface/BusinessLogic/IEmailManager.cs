@@ -1,15 +1,25 @@
-﻿using StandardBank.ConcessionManagement.Model.Common;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using StandardBank.ConcessionManagement.Model.BusinessLogic.EmailTemplates;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 {
+    /// <summary>
+    /// Email manager
+    /// </summary>
     public interface IEmailManager
     {
-        Task<bool> SendEmail(string recipient , string subject , string message);
-        Task<bool> SendTemplatedEmail(string recipient, string subject, string message , string templateName , object model);
+        /// <summary>
+        /// Sends the expiring concession email.
+        /// </summary>
+        /// <param name="expiringConcession">The expiring concession.</param>
+        /// <returns></returns>
+        Task<bool> SendExpiringConcessionEmail(ExpiringConcession expiringConcession);
 
+        /// <summary>
+        /// Sends the concession added email.
+        /// </summary>
+        /// <param name="concessionAddedEmail">The concession added email.</param>
+        /// <returns></returns>
+        Task<bool> SendConcessionAddedEmail(ConcessionAddedEmail concessionAddedEmail);
     }
 }

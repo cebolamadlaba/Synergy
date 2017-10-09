@@ -4,15 +4,38 @@ using System.Threading.Tasks;
 using StandardBank.ConcessionManagement.Interface.Common;
 using System.IO;
 using FluentEmail.Razor;
-using System.Dynamic;
 using RazorLight.Extensions;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
+using StandardBank.ConcessionManagement.Model.BusinessLogic.EmailTemplates;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
-    public class EmailManager: IEmailManager
+    /// <summary>
+    /// Email manager
+    /// </summary>
+    /// <seealso cref="StandardBank.ConcessionManagement.Interface.BusinessLogic.IEmailManager" />
+    public class EmailManager : IEmailManager
     {
-      private string DefaultEmail { get; }
+        /// <summary>
+        /// Gets the default email.
+        /// </summary>
+        /// <value>
+        /// The default email.
+        /// </value>
+        private string DefaultEmail { get; }
+
+        /// <summary>
+        /// Gets the email template path.
+        /// </summary>
+        /// <value>
+        /// The email template path.
+        /// </value>
         string EmailTemplatePath { get; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EmailManager"/> class.
+        /// </summary>
+        /// <param name="config">The configuration.</param>
         public EmailManager(IConfigurationData config)
         {
             Email.DefaultSender = new MailKitEmailSender(config);
@@ -20,8 +43,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             DefaultEmail = config.DefaultEmail;
             EmailTemplatePath = config.EmailTemplatePath;
         }
-      
-       
+
         /// <summary>
         /// Sends the email
         /// </summary>
@@ -29,7 +51,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="subject">Email subject</param>
         /// <param name="message"> The body of the email</param>
         /// <returns></returns>
-        public async Task<bool> SendEmail(string recipient, string subject, string message)
+        private async Task<bool> SendEmail(string recipient, string subject, string message)
         {
             var email = Email
                 .From(DefaultEmail)
@@ -40,17 +62,55 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return response.Successful;
         }
 
-        public async Task<bool> SendTemplatedEmail(string recipient, string subject, string message, string templateName, object model)
+        /// <summary>
+        /// Sends the templated email.
+        /// </summary>
+        /// <param name="recipient">The recipient.</param>
+        /// <param name="subject">The subject.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="templateName">Name of the template.</param>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        private async Task<bool> SendTemplatedEmail(string recipient, string subject, string message,
+            string templateName, object model)
         {
-          
-            
             var email = Email
                 .From(DefaultEmail)
                 .To(recipient)
                 .Subject(subject)
-                .UsingTemplateFromFile(Path.Combine(EmailTemplatePath,templateName+".cshtml"), model.ToExpando());
+                .UsingTemplateFromFile(Path.Combine(EmailTemplatePath, templateName + ".cshtml"), model.ToExpando());
+
             var response = await email.SendAsync();
+
             return response.Successful;
+        }
+
+        /// <summary>
+        /// Sends the expiring concession email.
+        /// </summary>
+        /// <param name="expiringConcession">The expiring concession.</param>
+        /// <returns></returns>
+        public async Task<bool> SendExpiringConcessionEmail(ExpiringConcession expiringConcession)
+        {
+            return await SendTemplatedEmail(expiringConcession.RequestorEmail,
+                "CMS Notification: Expiring Concession(s)", string.Empty, "ExpiringConcession",
+                new
+                {
+                    RequestorName = expiringConcession.RequestorName,
+                    ExpiringConcessionDetails = expiringConcession.ExpiringConcessionDetails
+                });
+        }
+
+        /// <summary>
+        /// Sends the concession added email.
+        /// </summary>
+        /// <param name="concessionAddedEmail">The concession added email.</param>
+        /// <returns></returns>
+        public async Task<bool> SendConcessionAddedEmail(ConcessionAddedEmail concessionAddedEmail)
+        {
+            return await SendTemplatedEmail(concessionAddedEmail.EmailAddress, "Pricing Tool: New Concession", null,
+                Constants.EmailTemplates.NewConcession,
+                new {Name = concessionAddedEmail.FirstName, ConcessionId = concessionAddedEmail.ConsessionId});
         }
     }
 }

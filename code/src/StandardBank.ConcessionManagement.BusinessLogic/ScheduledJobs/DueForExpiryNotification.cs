@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Hangfire;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic.ScheduledJobs;
 using StandardBank.ConcessionManagement.Interface.Repository;
@@ -60,15 +61,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
 
                 //send notifications about the expiry to the requestors
                 foreach (var expiringConcession in expiringConcessions)
-                {
-                    await _emailManager.SendTemplatedEmail(expiringConcession.RequestorEmail,
-                        "CMS Notification: Expiring Concession(s)", string.Empty, "ExpiringConcession",
-                        new
-                        {
-                            RequestorName = expiringConcession.RequestorName,
-                            ExpiringConcessionDetails = expiringConcession.ExpiringConcessionDetails
-                        });
-                }
+                    BackgroundJob.Schedule(() => _emailManager.SendExpiringConcessionEmail(expiringConcession),
+                        DateTime.Now);
             }
         }
 
