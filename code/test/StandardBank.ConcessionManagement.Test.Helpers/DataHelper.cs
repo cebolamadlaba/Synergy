@@ -3356,5 +3356,59 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
 
             return InsertProductInvestment();
         }
+
+        /// <summary>
+        /// Gets the TransactionTableNumber id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetTransactionTableNumberId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.TransactionTableNumberRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertTransactionTableNumber();
+        }
+
+        /// <summary>
+        /// Inserts a TransactionTableNumber and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertTransactionTableNumber()
+        {
+            var model = new TransactionTableNumber
+            {
+                TransactionTypeId = GetTransactionTypeId(),
+                TariffTable = 7,
+                Fee = 8592,
+                AdValorem = 445,
+                IsActive = false
+            };
+
+            InstantiatedDependencies.TransactionTableNumberRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate TransactionTableNumber id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateTransactionTableNumberId(int? model)
+        {
+            if (!model.HasValue)
+                return GetTransactionTableNumberId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.TransactionTableNumberRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertTransactionTableNumber();
+        }
     }
 }

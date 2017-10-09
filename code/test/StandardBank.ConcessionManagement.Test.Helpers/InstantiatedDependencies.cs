@@ -275,7 +275,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The ConditionTypeProduct repository
         /// </summary>
         public static IConditionTypeProductRepository ConditionTypeProductRepository =
-            new ConditionTypeProductRepository(DbConnection);
+            new ConditionTypeProductRepository(DbConnection, CacheManager);
 
         /// <summary>
         /// The LegalEntity repository
@@ -432,6 +432,12 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static IConcessionConditionViewRepository ConcessionConditionViewRepository =
             new ConcessionConditionViewRepository(DbConnection);
+
+        /// <summary>
+        /// The TransactionTableNumber repository
+        /// </summary>
+        public static ITransactionTableNumberRepository TransactionTableNumberRepository =
+            new TransactionTableNumberRepository(DbConnection, CacheManager);
 
         /// <summary>
         /// The look up table manager

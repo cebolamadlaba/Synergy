@@ -63,6 +63,11 @@
                 public const string ReadAll = "CacheKey.Repository.ConditionTypeRepository.ReadAll";
             }
 
+            public static class ConditionTypeProductRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.ConditionTypeProductRepository.ReadAll";
+            }
+
             public static class MarketSegmentRepository
             {
                 public const string ReadAll = "CacheKey.Repository.MarketSegmentRepository.ReadAll";
@@ -101,6 +106,11 @@
             public static class TransactionGroupRepository
             {
                 public const string ReadAll = "CacheKey.Repository.TransactionGroupRepository.ReadAll";
+            }
+			
+			public static class TransactionTableNumberRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.TransactionTableNumberRepository.ReadAll";
             }
 
             public static class TransactionTypeRepository

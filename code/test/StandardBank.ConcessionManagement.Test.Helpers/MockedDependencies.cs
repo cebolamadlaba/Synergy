@@ -446,5 +446,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The mock daily scheduled job
         /// </summary>
         public static Mock<IDailyScheduledJob> MockDailyScheduledJob = new Mock<IDailyScheduledJob>();
+
+        /// <summary>
+        /// The mock TransactionTableNumber repository
+        /// </summary>
+        public static Mock<ITransactionTableNumberRepository> MockTransactionTableNumberRepository =
+            new Mock<ITransactionTableNumberRepository>();
     }
 }

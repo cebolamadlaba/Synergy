@@ -3,7 +3,7 @@
     /// <summary>
     /// CSV record entity
     /// </summary>
-    public class CsvRecord
+    public class InformationSchemaRecord
     {
         /// <summary>
         /// Gets or sets the table schema.
