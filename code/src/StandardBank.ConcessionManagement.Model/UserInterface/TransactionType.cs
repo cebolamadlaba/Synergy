@@ -1,4 +1,7 @@
-﻿namespace StandardBank.ConcessionManagement.Model.UserInterface
+﻿using System.Collections.Generic;
+using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
+
+namespace StandardBank.ConcessionManagement.Model.UserInterface
 {
     /// <summary>
     /// Transaction type entity
@@ -36,5 +39,13 @@
         /// The description.
         /// </value>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Gets or sets the transaction table numbers.
+        /// </summary>
+        /// <value>
+        /// The transaction table numbers.
+        /// </value>
+        public IEnumerable<TransactionTableNumber> TransactionTableNumbers { get; set; }
     }
 }

@@ -32,11 +32,11 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int LegalEntityAccountId { get; set; }
 
         /// <summary>
-        /// Gets or sets the TableNumberId.
+        /// Gets or sets the transaction table number identifier.
         /// </summary>
         /// <value>
-        /// The TableNumberId.
+        /// The transaction table number identifier.
         /// </value>
-        public int TableNumberId { get; set; }
+        public int TransactionTableNumberId { get; set; }
     }
 }

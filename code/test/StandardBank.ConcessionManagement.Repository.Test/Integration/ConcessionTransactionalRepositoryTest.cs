@@ -16,7 +16,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void Create_Executes_Positive()
         {
-            var tableNumberId = DataHelper.GetTableNumberId();
+            var TransactionTableNumberId = DataHelper.GetTransactionTableNumberId();
 
             var model = new ConcessionTransactional
             {
@@ -24,10 +24,10 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ConcessionDetailId = DataHelper.GetConcessionDetailId(),
                 TransactionTypeId = DataHelper.GetTransactionTypeId(),
                 AdValorem = 9485,
-                BaseRate = 70,
-                TableNumberId = tableNumberId,
-                ApprovedTableNumberId = tableNumberId,
-                LoadedTableNumberId = tableNumberId,
+                Fee = 70,
+                TransactionTableNumberId = TransactionTableNumberId,
+                ApprovedTransactionTableNumberId = TransactionTableNumberId,
+                LoadedTransactionTableNumberId = TransactionTableNumberId,
                 LegalEntityId = DataHelper.GetLegalEntityId(),
                 LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
             };
@@ -95,10 +95,10 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.ConcessionDetailId = DataHelper.GetAlternateConcessionDetailId(model.ConcessionDetailId);
             model.TransactionTypeId = DataHelper.GetAlternateTransactionTypeId(model.TransactionTypeId);
             model.AdValorem = model.AdValorem + 100;
-            model.BaseRate = model.BaseRate + 100;
-            model.TableNumberId = DataHelper.GetAlternateTableNumberId(model.TableNumberId);
-            model.ApprovedTableNumberId = DataHelper.GetAlternateTableNumberId(model.ApprovedTableNumberId);
-            model.LoadedTableNumberId = DataHelper.GetAlternateTableNumberId(model.LoadedTableNumberId);
+            model.Fee = model.Fee + 100;
+            model.TransactionTableNumberId = DataHelper.GetAlternateTransactionTableNumberId(model.TransactionTableNumberId);
+            model.ApprovedTransactionTableNumberId = DataHelper.GetAlternateTransactionTableNumberId(model.ApprovedTransactionTableNumberId);
+            model.LoadedTransactionTableNumberId = DataHelper.GetAlternateTransactionTableNumberId(model.LoadedTransactionTableNumberId);
             model.LegalEntityId = DataHelper.GetAlternateLegalEntityId(model.LegalEntityId);
             model.LegalEntityAccountId = DataHelper.GetAlternateLegalEntityAccountId(model.LegalEntityAccountId);
 
@@ -112,10 +112,10 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.ConcessionDetailId, model.ConcessionDetailId);
             Assert.Equal(updatedModel.TransactionTypeId, model.TransactionTypeId);
             Assert.Equal(updatedModel.AdValorem, model.AdValorem);
-            Assert.Equal(updatedModel.BaseRate, model.BaseRate);
-            Assert.Equal(updatedModel.TableNumberId, model.TableNumberId);
-            Assert.Equal(updatedModel.ApprovedTableNumberId, model.ApprovedTableNumberId);
-            Assert.Equal(updatedModel.LoadedTableNumberId, model.LoadedTableNumberId);
+            Assert.Equal(updatedModel.Fee, model.Fee);
+            Assert.Equal(updatedModel.TransactionTableNumberId, model.TransactionTableNumberId);
+            Assert.Equal(updatedModel.ApprovedTransactionTableNumberId, model.ApprovedTransactionTableNumberId);
+            Assert.Equal(updatedModel.LoadedTransactionTableNumberId, model.LoadedTransactionTableNumberId);
             Assert.Equal(updatedModel.LegalEntityId, model.LegalEntityId);
             Assert.Equal(updatedModel.LegalEntityAccountId, model.LegalEntityAccountId);
         }
@@ -126,7 +126,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void Delete_Executes_Positive()
         {
-            var tableNumberId = DataHelper.GetTableNumberId();
+            var TransactionTableNumberId = DataHelper.GetTransactionTableNumberId();
 
             var model = new ConcessionTransactional
             {
@@ -134,10 +134,10 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ConcessionDetailId = DataHelper.GetConcessionDetailId(),
                 TransactionTypeId = DataHelper.GetTransactionTypeId(),
                 AdValorem = 9485,
-                BaseRate = 70,
-                TableNumberId = tableNumberId,
-                ApprovedTableNumberId = tableNumberId,
-                LoadedTableNumberId = tableNumberId,
+                Fee = 70,
+                TransactionTableNumberId = TransactionTableNumberId,
+                ApprovedTransactionTableNumberId = TransactionTableNumberId,
+                LoadedTransactionTableNumberId = TransactionTableNumberId,
                 LegalEntityId = DataHelper.GetLegalEntityId(),
                 LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
             };

@@ -171,10 +171,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     _concessionTransactionalRepository.ReadById(mappedConcessionTransactional.Id);
 
                 //the approved table number is the table number that was captured when approving
-                mappedConcessionTransactional.ApprovedTableNumberId = mappedConcessionTransactional.TableNumberId;
+                mappedConcessionTransactional.ApprovedTransactionTableNumberId = mappedConcessionTransactional.TransactionTableNumberId;
 
                 //the table number is what is currently in the database
-                mappedConcessionTransactional.TableNumberId = databaseTransactionalConcession.TableNumberId;
+                mappedConcessionTransactional.TransactionTableNumberId = databaseTransactionalConcession.TransactionTableNumberId;
 
                 if (mappedConcessionTransactional.TransactionTypeId.HasValue)
                 {
@@ -185,10 +185,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                     if (loadedPriceTransactional != null)
                     {
-                        mappedConcessionTransactional.LoadedTableNumberId = loadedPriceTransactional.TableNumberId;
+                        mappedConcessionTransactional.LoadedTransactionTableNumberId = loadedPriceTransactional.TransactionTableNumberId;
 
-                        if (loadedPriceTransactional.TableNumberId !=
-                            mappedConcessionTransactional.ApprovedTableNumberId)
+                        if (loadedPriceTransactional.TransactionTableNumberId !=
+                            mappedConcessionTransactional.ApprovedTransactionTableNumberId)
                             mappedConcessionTransactional.IsMismatched = true;
                     }
 
@@ -373,15 +373,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 if (legalEntityAccount != null)
                     mappedTransactionalConcessionDetail.AccountNumber = legalEntityAccount.AccountNumber;
 
-                if (mappedTransactionalConcessionDetail.ApprovedTableNumberId.HasValue)
+                if (mappedTransactionalConcessionDetail.ApprovedTransactionTableNumberId.HasValue)
                     mappedTransactionalConcessionDetail.ApprovedTableNumber =
                         _lookupTableManager.GetTableNumberDescription(mappedTransactionalConcessionDetail
-                            .ApprovedTableNumberId.Value);
+                            .ApprovedTransactionTableNumberId.Value);
 
-                if (mappedTransactionalConcessionDetail.LoadedTableNumberId.HasValue)
+                if (mappedTransactionalConcessionDetail.LoadedTransactionTableNumberId.HasValue)
                     mappedTransactionalConcessionDetail.LoadedTableNumber =
                         _lookupTableManager.GetTableNumberDescription(mappedTransactionalConcessionDetail
-                            .LoadedTableNumberId.Value);
+                            .LoadedTransactionTableNumberId.Value);
 
                 transactionalConcessionDetails.Add(mappedTransactionalConcessionDetail);
             }

@@ -142,6 +142,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IRiskGroupRepository _riskGroupRepository;
 
         /// <summary>
+        /// The transaction table number repository
+        /// </summary>
+        private readonly ITransactionTableNumberRepository _transactionTableNumberRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LookupTableManager"/> class.
         /// </summary>
         /// <param name="statusRepository">The status repository.</param>
@@ -167,6 +172,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="centreRepository">The centre repository.</param>
         /// <param name="regionRepository">The region repository.</param>
         /// <param name="riskGroupRepository">The risk group repository.</param>
+        /// <param name="transactionTableNumberRepository">The transaction table number repository.</param>
         public LookupTableManager(IStatusRepository statusRepository, ISubStatusRepository subStatusRepository,
             IReferenceTypeRepository referenceTypeRepository, IMarketSegmentRepository marketSegmentRepository,
             IProvinceRepository provinceRepository, IConcessionTypeRepository concessionTypeRepository,
@@ -178,7 +184,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IAccrualTypeRepository accrualTypeRepository, IChannelTypeRepository channelTypeRepository,
             ITransactionTypeRepository transactionTypeRepository, ITableNumberRepository tableNumberRepository,
             IRelationshipRepository relationshipRepository, IRoleRepository roleRepository,
-            ICentreRepository centreRepository, IRegionRepository regionRepository, IRiskGroupRepository riskGroupRepository)
+            ICentreRepository centreRepository, IRegionRepository regionRepository,
+            IRiskGroupRepository riskGroupRepository,
+            ITransactionTableNumberRepository transactionTableNumberRepository)
         {
             _statusRepository = statusRepository;
             _subStatusRepository = subStatusRepository;
@@ -203,6 +211,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _centreRepository = centreRepository;
             _regionRepository = regionRepository;
             _riskGroupRepository = riskGroupRepository;
+            _transactionTableNumberRepository = transactionTableNumberRepository;
         }
 
         /// <summary>
@@ -517,11 +526,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var transactionTypes = new List<TransactionType>();
 
             var concessionTypeId = GetConcessionTypeId(concessionType);
+            var transactionTableNumbers =
+                _mapper.Map<IEnumerable<Model.UserInterface.Transactional.TransactionTableNumber>>(
+                    _transactionTableNumberRepository.ReadAll());
 
-            foreach (var transactionType in _transactionTypeRepository.ReadByConcessionTypeIdIsActive(concessionTypeId, true))
+            foreach (var transactionType in _transactionTypeRepository.ReadByConcessionTypeIdIsActive(concessionTypeId,
+                true))
             {
                 var mappedTransactionType = _mapper.Map<TransactionType>(transactionType);
                 mappedTransactionType.ConcessionType = concessionType;
+
+                if (concessionType == "Transactional")
+                    mappedTransactionType.TransactionTableNumbers =
+                        transactionTableNumbers.Where(_ => _.TransactionTypeId == mappedTransactionType.Id);
+
                 transactionTypes.Add(mappedTransactionType);
             }
 

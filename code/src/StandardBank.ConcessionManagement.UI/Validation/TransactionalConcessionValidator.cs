@@ -21,7 +21,7 @@ namespace StandardBank.ConcessionManagement.UI.Validation
             RuleFor(x => x.Concession.Motivation).NotEmpty();
             RuleFor(x => x.TransactionalConcessionDetails).NotEmpty();
             RuleFor(x => x.TransactionalConcessionDetails.First()).NotEmpty();
-            RuleFor(x => x.TransactionalConcessionDetails.First().TableNumberId).NotEmpty();
+            RuleFor(x => x.TransactionalConcessionDetails.First().TransactionTableNumberId).NotEmpty();
             RuleFor(x => x.TransactionalConcessionDetails.First().LegalEntityId).NotEmpty();
         }
     }

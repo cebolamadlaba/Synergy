@@ -22,28 +22,28 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int? TransactionTypeId { get; set; }
 
         /// <summary>
-        /// Gets or sets the TableNumberId.
+        /// Gets or sets the transaction table number identifier.
         /// </summary>
         /// <value>
-        /// The TableNumberId.
+        /// The transaction table number identifier.
         /// </value>
-        public int TableNumberId { get; set; }
+        public int TransactionTableNumberId { get; set; }
 
         /// <summary>
-        /// Gets or sets the ApprovedTableNumberId.
+        /// Gets or sets the approved transaction table number identifier.
         /// </summary>
         /// <value>
-        /// The ApprovedTableNumberId.
+        /// The approved transaction table number identifier.
         /// </value>
-        public int? ApprovedTableNumberId { get; set; }
+        public int? ApprovedTransactionTableNumberId { get; set; }
 
         /// <summary>
-        /// Gets or sets the LoadedTableNumberId.
+        /// Gets or sets the loaded transaction table number identifier.
         /// </summary>
         /// <value>
-        /// The LoadedTableNumberId.
+        /// The loaded transaction table number identifier.
         /// </value>
-        public int? LoadedTableNumberId { get; set; }
+        public int? LoadedTransactionTableNumberId { get; set; }
 
         /// <summary>
         /// Gets or sets the AdValorem.
@@ -59,7 +59,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// <value>
         /// The BaseRate.
         /// </value>
-        public decimal? BaseRate { get; set; }
+        public decimal? Fee { get; set; }
 
         /// <summary>
         /// Gets or the name of the table.

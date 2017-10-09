@@ -1858,17 +1858,17 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <returns></returns>
         private static int InsertConcessionTransactional()
         {
-            var tableNumberId = GetTableNumberId();
+            var tableNumberId = GetTransactionTableNumberId();
 
             var model = new ConcessionTransactional
             {
                 ConcessionId = GetConcessionId(),
                 TransactionTypeId = GetTransactionTypeId(),
                 AdValorem = 5344,
-                BaseRate = 8369,
-                TableNumberId = tableNumberId,
-                ApprovedTableNumberId = tableNumberId,
-                LoadedTableNumberId = tableNumberId
+                Fee = 8369,
+                TransactionTableNumberId = tableNumberId,
+                ApprovedTransactionTableNumberId = tableNumberId,
+                LoadedTransactionTableNumberId = tableNumberId
             };
 
             InstantiatedDependencies.ConcessionTransactionalRepository.Create(model);
@@ -3166,7 +3166,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             {
                 TransactionTypeId = GetTransactionTypeId(),
                 LegalEntityAccountId = GetLegalEntityAccountId(),
-                TableNumberId = GetTableNumberId()
+                TransactionTableNumberId = GetTransactionTableNumberId()
             };
 
             InstantiatedDependencies.LoadedPriceTransactionalRepository.Create(model);

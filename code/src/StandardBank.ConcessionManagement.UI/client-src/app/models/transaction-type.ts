@@ -1,6 +1,9 @@
+import { TransactionTableNumber } from "./transaction-table-number";
+
 export class TransactionType {
     id: number;
     concessionTypeId: number;
     concessionType: string;
-    description: string;
+	description: string;
+	transactionTableNumbers: TransactionTableNumber[];
 }

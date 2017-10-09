@@ -31,7 +31,7 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                 .ForMember(target => target.ReferenceNumber, _ => _.MapFrom(source => source.ConcessionRef))
                 .ForMember(target => target.DateOpened, _ => _.MapFrom(source => source.ConcessionDate))
                 .ForMember(target => target.DateSentForApproval, _ => _.MapFrom(source => source.DatesentForApproval))
-                .ForMember(target => target.Requestor , _ => _.Ignore())
+                .ForMember(target => target.Requestor, _ => _.Ignore())
                 .ForMember(target => target.SmtDealNumber, _ => _.MapFrom(source => source.SMTDealNumber))
                 .ForMember(target => target.MrsCrs, _ => _.MapFrom(source => source.MRS_CRS));
             CreateMap<Model.UserInterface.Concession, Model.Repository.Concession>()
@@ -99,15 +99,19 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                 .ForMember(target => target.LoadedMarginToPrime, _ => _.MapFrom(source => source.LoadedMap));
 
             //ConcessionRelationship
-            CreateMap<Model.Repository.ConcessionRelationship, Model.UserInterface.ConcessionRelationship>().ReverseMap();
+            CreateMap<Model.Repository.ConcessionRelationship, Model.UserInterface.ConcessionRelationship>()
+                .ReverseMap();
 
             //ConcessionRelationshipDetail
-            CreateMap<Model.Repository.ConcessionRelationshipDetail, Model.UserInterface.ConcessionRelationshipDetail>().ReverseMap();
+            CreateMap<Model.Repository.ConcessionRelationshipDetail, Model.UserInterface.ConcessionRelationshipDetail>()
+                .ReverseMap();
 
             //ConcessionTransactional
-            CreateMap<Model.Repository.ConcessionTransactional, Model.UserInterface.Transactional.TransactionalConcessionDetail>()
+            CreateMap<Model.Repository.ConcessionTransactional,
+                    Model.UserInterface.Transactional.TransactionalConcessionDetail>()
                 .ForMember(target => target.TransactionalConcessionDetailId, _ => _.MapFrom(source => source.Id));
-            CreateMap<Model.UserInterface.Transactional.TransactionalConcessionDetail, Model.Repository.ConcessionTransactional>()
+            CreateMap<Model.UserInterface.Transactional.TransactionalConcessionDetail,
+                    Model.Repository.ConcessionTransactional>()
                 .ForMember(target => target.Id, _ => _.MapFrom(source => source.TransactionalConcessionDetailId));
 
             //ConcessionType
@@ -126,11 +130,12 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             CreateMap<Model.Repository.FinancialLending, Model.UserInterface.Lending.LendingFinancial>().ReverseMap();
 
             //FinancialTransactional
-            CreateMap<Model.Repository.FinancialTransactional, Model.UserInterface.Transactional.TransactionalFinancial>().ReverseMap();
+            CreateMap<Model.Repository.FinancialTransactional, Model.UserInterface.Transactional.TransactionalFinancial
+            >().ReverseMap();
 
             //Period
             CreateMap<Model.Repository.Period, Model.UserInterface.Period>().ReverseMap();
-          
+
             //PeriodType
             CreateMap<Model.Repository.PeriodType, Model.UserInterface.PeriodType>().ReverseMap();
 
@@ -160,10 +165,10 @@ namespace StandardBank.ConcessionManagement.UI.Extension
 
             //Region
             CreateMap<Model.Repository.Region, Model.UserInterface.Region>().ReverseMap();
-           
+
             //ReviewFeeType
             CreateMap<Model.Repository.ReviewFeeType, Model.UserInterface.ReviewFeeType>().ReverseMap();
-     
+
             //RiskGroup
             CreateMap<Model.Repository.RiskGroup, RiskGroup>()
                 .ForMember(target => target.Name, _ => _.MapFrom(source => source.RiskGroupName))
@@ -182,6 +187,9 @@ namespace StandardBank.ConcessionManagement.UI.Extension
 
             //TableNumber
             CreateMap<Model.Repository.TableNumber, Model.UserInterface.TableNumber>().ReverseMap();
+
+            //TransactionTableNumber
+            CreateMap<Model.Repository.TransactionTableNumber, Model.UserInterface.Transactional.TransactionTableNumber>().ReverseMap();
 
             //TransactionType
             CreateMap<Model.Repository.TransactionType, Model.UserInterface.TransactionType>().ReverseMap();

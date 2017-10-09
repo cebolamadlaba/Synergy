@@ -21,7 +21,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 TransactionTypeId = DataHelper.GetTransactionTypeId(),
                 LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
-                TableNumberId = DataHelper.GetTableNumberId()
+                TransactionTableNumberId = DataHelper.GetTransactionTableNumberId()
             };
 
             var result = InstantiatedDependencies.LoadedPriceTransactionalRepository.Create(model);
@@ -86,7 +86,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
 
             model.TransactionTypeId = DataHelper.GetAlternateTransactionTypeId(model.TransactionTypeId);
             model.LegalEntityAccountId = DataHelper.GetAlternateLegalEntityAccountId(model.LegalEntityAccountId);
-            model.TableNumberId = DataHelper.GetAlternateTableNumberId(model.TableNumberId);
+            model.TransactionTableNumberId = DataHelper.GetAlternateTransactionTableNumberId(model.TransactionTableNumberId);
 
             InstantiatedDependencies.LoadedPriceTransactionalRepository.Update(model);
 
@@ -96,7 +96,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.Id, model.Id);
             Assert.Equal(updatedModel.TransactionTypeId, model.TransactionTypeId);
             Assert.Equal(updatedModel.LegalEntityAccountId, model.LegalEntityAccountId);
-            Assert.Equal(updatedModel.TableNumberId, model.TableNumberId);
+            Assert.Equal(updatedModel.TransactionTableNumberId, model.TransactionTableNumberId);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 TransactionTypeId = DataHelper.GetTransactionTypeId(),
                 LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
-                TableNumberId = DataHelper.GetTableNumberId()
+                TransactionTableNumberId = DataHelper.GetTransactionTableNumberId()
             };
 
             var temporaryEntity = InstantiatedDependencies.LoadedPriceTransactionalRepository.Create(model);

@@ -447,7 +447,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             ConcessionTypeRepository, ProductRepository, ReviewFeeTypeRepository, PeriodRepository,
             PeriodTypeRepository, ConditionTypeRepository, Mapper, ConditionProductRepository,
             ConditionTypeProductRepository, AccrualTypeRepository, ChannelTypeRepository, TransactionTypeRepository,
-            TableNumberRepository, RelationshipRepository, RoleRepository, CentreRepository, RegionRepository, RiskGroupRepository);
+            TableNumberRepository, RelationshipRepository, RoleRepository, CentreRepository, RegionRepository,
+            RiskGroupRepository, TransactionTableNumberRepository);
 
         /// <summary>
         /// The user manager

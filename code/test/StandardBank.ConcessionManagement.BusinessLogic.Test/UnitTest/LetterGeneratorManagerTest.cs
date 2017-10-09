@@ -220,7 +220,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                     {
                         new TransactionalConcessionDetail
                         {
-                            BaseRate = 123.23m,
+                            Fee = 123.23m,
                             AdValorem = 1.05m,
                             LegalEntityId = 1,
                             DateApproved = DateTime.Now.AddDays(-100),

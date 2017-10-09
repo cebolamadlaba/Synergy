@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.Administration;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
-using StandardBank.ConcessionManagement.UI.Model;
 using System.Threading.Tasks;
+using StandardBank.ConcessionManagement.Model.UserInterface.Administration;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 
 namespace StandardBank.ConcessionManagement.UI.Controllers
@@ -27,10 +27,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("user/lookup")]
         public IActionResult GetUserAdminLookupData()
         {
-            var model = new UserAdminLookupModel();
-            model.Centres = lookupTableManager.GetCentres();
-            model.Regions = lookupTableManager.GetRegions();
-            model.Roles = lookupTableManager.GetRoles();
+            var model = new UserAdminLookupModel
+            {
+                Centres = lookupTableManager.GetCentres(),
+                Regions = lookupTableManager.GetRegions(),
+                Roles = lookupTableManager.GetRoles()
+            };
             return Ok(model);
         }
         [HttpPost("users")]

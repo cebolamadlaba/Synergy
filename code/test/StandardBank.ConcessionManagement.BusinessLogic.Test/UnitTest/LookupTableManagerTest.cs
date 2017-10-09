@@ -30,7 +30,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 MockConditionTypeProductRepository.Object, MockAccrualTypeRepository.Object,
                 MockChannelTypeRepository.Object, MockTransactionTypeRepository.Object,
                 MockTableNumberRepository.Object, MockRelationshipRepository.Object, MockRoleRepository.Object,
-                MockCentreRepository.Object, MockRegionRepository.Object, MockRiskGroupRepository.Object);
+                MockCentreRepository.Object, MockRegionRepository.Object, MockRiskGroupRepository.Object,
+                MockTransactionTableNumberRepository.Object);
         }
 
         /// <summary>

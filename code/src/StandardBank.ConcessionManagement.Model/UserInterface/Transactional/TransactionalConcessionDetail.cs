@@ -54,20 +54,20 @@
         public decimal? AdValorem { get; set; }
 
         /// <summary>
-        /// Gets or sets the base rate.
+        /// Gets or sets the fee.
         /// </summary>
         /// <value>
-        /// The base rate.
+        /// The fee.
         /// </value>
-        public decimal? BaseRate { get; set; }
+        public decimal? Fee { get; set; }
 
         /// <summary>
-        /// Gets or sets the table number identifier.
+        /// Gets or sets the transaction table number identifier.
         /// </summary>
         /// <value>
-        /// The table number identifier.
+        /// The transaction table number identifier.
         /// </value>
-        public int TableNumberId { get; set; }
+        public int TransactionTableNumberId { get; set; }
 
         /// <summary>
         /// Gets or sets the loaded price.
@@ -86,20 +86,20 @@
         public decimal ApprovedPrice { get; set; }
 
         /// <summary>
-        /// Gets or sets the approved table number identifier.
+        /// Gets or sets the approved transaction table number identifier.
         /// </summary>
         /// <value>
-        /// The approved table number identifier.
+        /// The approved transaction table number identifier.
         /// </value>
-        public int? ApprovedTableNumberId { get; set; }
+        public int? ApprovedTransactionTableNumberId { get; set; }
 
         /// <summary>
-        /// Gets or sets the loaded table number identifier.
+        /// Gets or sets the loaded transaction table number identifier.
         /// </summary>
         /// <value>
-        /// The loaded table number identifier.
+        /// The loaded transaction table number identifier.
         /// </value>
-        public int? LoadedTableNumberId { get; set; }
+        public int? LoadedTransactionTableNumberId { get; set; }
 
         /// <summary>
         /// Gets or sets the loaded table number.

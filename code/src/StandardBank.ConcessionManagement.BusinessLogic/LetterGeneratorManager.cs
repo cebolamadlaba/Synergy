@@ -188,8 +188,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 AccountNumber = transactionalConcessionDetail.AccountNumber,
                 ChannelOrFeeType = transactionalConcessionDetail.TransactionType,
                 FeeOrRate = transactionalConcessionDetail.TransactionType == "Cheque Encashment"
-                    ? $"{transactionalConcessionDetail.BaseRate.GetValueOrDefault(0):C} + {transactionalConcessionDetail.AdValorem.GetValueOrDefault(0)} %"
-                    : transactionalConcessionDetail.BaseRate.GetValueOrDefault(0).ToString("C"),
+                    ? $"{transactionalConcessionDetail.Fee.GetValueOrDefault(0):C} + {transactionalConcessionDetail.AdValorem.GetValueOrDefault(0)} %"
+                    : transactionalConcessionDetail.Fee.GetValueOrDefault(0).ToString("C"),
                 ConcessionEndDate = transactionalConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
                 ConcessionStartDate = transactionalConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy"),
                 LegalEntityId = transactionalConcessionDetail.LegalEntityId

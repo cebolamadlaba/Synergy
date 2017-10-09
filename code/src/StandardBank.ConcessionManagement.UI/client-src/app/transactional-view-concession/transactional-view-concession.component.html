@@ -170,21 +170,23 @@
                 <td class="length-long">
                     <input formControlName="transactionalConcessionDetailId" style="display: none;" />
                     <input formControlName="concessionDetailId" style="display: none;" />
+                    <input formControlName="isExpired" style="display: none;" />
+                    <input formControlName="isExpiring" style="display: none;" />
 
-                    <select formControlName="transactionType" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                    <select formControlName="transactionType" class="form-control" [attr.disabled]="canEdit && !isExtensionOrRenewal ? null : ''">
                         <option *ngFor="let transactionTypeOption of transactionTypes" [ngValue]="transactionTypeOption">{{transactionTypeOption.description}}</option>
                     </select>
                 </td>
 
                 <td class="length-long">
-                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit && !isExtensionOrRenewal ? null : ''">
                         <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
                 </td>
 
                 <td class="length-long">
-                    <select formControlName="tableNumber" class="form-control" (change)="tableNumberChanged(i)" [attr.disabled]="canEdit ? null : ''">
-                        <option *ngFor="let tableNumberOption of tableNumbers" [ngValue]="tableNumberOption">{{tableNumberOption.displayText}}</option>
+                    <select formControlName="transactionTableNumber" class="form-control" (change)="transactionTableNumberChanged(i)" [attr.disabled]="canEdit ? null : ''">
+                        <option *ngFor="let transactionTableNumberOption of transactionTableNumbers" [ngValue]="transactionTableNumberOption">{{transactionTableNumberOption.displayText}}</option>
                     </select>
                 </td>
 
@@ -193,7 +195,7 @@
 
                 <td class="length-long"><input formControlName="approvedTableNumber" class="form-control"></td>
 
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" /></td>
                 <td class="length-short"><input type="date" formControlName="dateApproved" class="form-control" /></td>
 
                 <td *ngIf="canBcmApprove || canPcmApprove || isEditing || isRecalling"><button *ngIf="transactionalConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
@@ -411,6 +413,7 @@
             <button type="button" class="btn btn-success" (click)="editConcession('Renew')" *ngIf="canRenew">Renew</button>
             <button type="button" class="btn btn-success" (click)="editConcession('Resubmit')" *ngIf="canResubmit">Resubmit</button>
             <button type="button" class="btn btn-success" (click)="editConcession('UpdateApproved')" *ngIf="canUpdate">Update</button>
+            <button type="button" class="btn btn-warning" (click)="archiveConcession()" *ngIf="canArchive">Archive</button>
 
             <button type="button" class="btn btn-primary" (click)="saveConcession()" *ngIf="isEditing">Save</button>
 
