@@ -8,7 +8,7 @@
             </div>
             <div class="col-md-10 banner-main-title">
                 <i class="fa fa-handshake-o" aria-hidden="true"></i> View Lending Concession - {{concessionReferenceId}}
-                <span class="label label-warning" style="float: right;">{{lendingConcession.concession.status}} - {{lendingConcession.concession.subStatus}}</span>
+                <span class="label label-warning" style="float: right;">{{lendingConcession?.concession?.status}} - {{lendingConcession?.concession?.subStatus}}</span>
             </div>
             <div class="col-md-1"></div>
         </div>
@@ -16,21 +16,21 @@
         <div class="col-md-12 banner-container">
             <div class="col-md-11">
                 <div class="col-md-2">
-                    <div class="subHeading">{{riskGroup.name}}</div>
-                    <div class="date lightTitle hidden-element">{{riskGroup.number}}</div>  
+                    <div class="subHeading">{{riskGroup?.name}}</div>
+                    <div class="date lightTitle hidden-element">{{riskGroup?.number}}</div>  
                     <div class="requestor"><i class="fa fa-user-circle-o" aria-hidden="true"></i><button (click)="viewRequesterModal.show()">{{lendingConcession?.concession?.requestor?.fullName}}</button></div>               
                 </div>              
                 <div class="col-md-2  hidden-element">
                     <div class="subHeading lightTitle">Total Exposure</div>
-                    <div class="score"><b>{{lendingFinancial.totalExposure | number : '1.2-2'}}</b></div>
+                    <div class="score"><b>{{lendingFinancial?.totalExposure | number : '1.2-2'}}</b></div>
                 </div>
                 <div class="col-md-2  hidden-element">
                     <div class="subHeading lightTitle"> Weighted Average MAP</div>
-                    <div class="score"><b>{{lendingFinancial.weightedAverageMap | number : '1.2-2'}}</b></div>
+                    <div class="score"><b>{{lendingFinancial?.weightedAverageMap | number : '1.2-2'}}</b></div>
                 </div>
                 <div class="col-md-2  hidden-element">
                     <div class="subHeading lightTitle"> Weighted CRS / MRS</div>
-                    <div class="score"><b>{{lendingFinancial.weightedCrsOrMrs | number : '1.2-2'}}</b></div>
+                    <div class="score"><b>{{lendingFinancial?.weightedCrsOrMrs | number : '1.2-2'}}</b></div>
                 </div>
             </div>
             <!--

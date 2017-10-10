@@ -678,6 +678,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Gets the transaction table number description.
+        /// </summary>
+        /// <param name="transactionTableNumberId">The transaction table number identifier.</param>
+        /// <returns></returns>
+        public string GetTransactionTableNumberDescription(int transactionTableNumberId)
+        {
+            var transactionTableNumbers = _transactionTableNumberRepository.ReadAll();
+
+            var transactionTableNumber =
+                _mapper.Map<TransactionTableNumber>(
+                    transactionTableNumbers.First(_ => _.Id == transactionTableNumberId));
+
+            return transactionTableNumber.DisplayText;
+        }
+
+        /// <summary>
         /// Gets the condition products
         /// </summary>
         /// <param name="conditionTypeId"></param>

@@ -250,5 +250,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// </summary>
         /// <returns></returns>
         IEnumerable<TransactionTableNumber> GetTransactionTableNumbers();
+
+        /// <summary>
+        /// Gets the transaction table number description.
+        /// </summary>
+        /// <param name="transactionTableNumberId">The transaction table number identifier.</param>
+        /// <returns></returns>
+        string GetTransactionTableNumberDescription(int transactionTableNumberId);
     }
 }

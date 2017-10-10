@@ -57,6 +57,8 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 	canResubmit = false;
 	canUpdate = false;
 	editType: string;
+	canArchive = false;
+	isExtensionOrRenewal = false;
 
 	observablePeriods: Observable<Period[]>;
 	periods: Period[];
@@ -186,6 +188,9 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 				//set the resubmit and update permissions
 				this.canResubmit = transactionalConcession.concession.canResubmit && transactionalConcession.currentUser.canRequest;
 				this.canUpdate = transactionalConcession.concession.canUpdate && transactionalConcession.currentUser.canRequest;
+
+				this.canArchive = transactionalConcession.concession.canArchive && transactionalConcession.currentUser.canRequest;
+				this.isExtensionOrRenewal = transactionalConcession.concession.isExtensionOrRenewal;
 
 				this.transactionalConcessionForm.controls['mrsCrs'].setValue(this.transactionalConcession.concession.mrsCrs);
 				this.transactionalConcessionForm.controls['smtDealNumber'].setValue(this.transactionalConcession.concession.smtDealNumber);
@@ -525,6 +530,10 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		transactionalConcession.concession.subStatus = "PCM Pending";
 		transactionalConcession.concession.bcmUserId = this.transactionalConcession.currentUser.id;
 
+		if (!transactionalConcession.concession.comments) {
+			transactionalConcession.concession.comments = "Forwarded";
+		}
+
 		if (!this.validationError) {
 			this.transactionalConcessionService.postUpdateTransactionalData(transactionalConcession).subscribe(entity => {
 				console.log("data saved");
@@ -552,6 +561,10 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		transactionalConcession.concession.status = "Declined";
 		transactionalConcession.concession.subStatus = "BCM Declined";
 		transactionalConcession.concession.bcmUserId = this.transactionalConcession.currentUser.id;
+
+		if (!transactionalConcession.concession.comments) {
+			transactionalConcession.concession.comments = "Declined";
+		}
 
 		if (!this.validationError) {
 			this.transactionalConcessionService.postUpdateTransactionalData(transactionalConcession).subscribe(entity => {
@@ -588,6 +601,10 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 				transactionalConcession.concession.subStatus = "PCM Approved With Changes";
 				transactionalConcession.concession.pcmUserId = this.transactionalConcession.currentUser.id;
 			}
+
+			if (!transactionalConcession.concession.comments) {
+				transactionalConcession.concession.comments = "Approved With Changes";
+			}
 		} else {
 			transactionalConcession.concession.status = "Approved";
 
@@ -597,6 +614,10 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 			} else {
 				transactionalConcession.concession.subStatus = "PCM Approved";
 				transactionalConcession.concession.pcmUserId = this.transactionalConcession.currentUser.id;
+			}
+
+			if (!transactionalConcession.concession.comments) {
+				transactionalConcession.concession.comments = "Approved";
 			}
 		}
 
@@ -626,6 +647,10 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		var transactionalConcession = this.getTransactionalConcession(false);
 
 		transactionalConcession.concession.status = "Declined";
+
+		if (!transactionalConcession.concession.comments) {
+			transactionalConcession.concession.comments = "Declined";
+		}
 
 		if (this.transactionalConcession.currentUser.isHO) {
 			transactionalConcession.concession.subStatus = "HO Declined";
@@ -665,6 +690,8 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 				this.canExtend = false;
 				this.canRenew = false;
 				this.canRecall = false;
+				this.canUpdate = false;
+				this.canArchive = false;
 				this.saveMessage = entity.concession.childReferenceNumber;
 				this.isLoading = false;
 				this.transactionalConcession = entity;
@@ -688,6 +715,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		this.editType = editType;
 		this.canResubmit = false;
 		this.canUpdate = false;
+		this.canArchive = false;
 
 		this.transactionalConcessionForm.controls['motivation'].setValue('');
 	}
@@ -732,6 +760,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 			this.isLoading = false;
 			this.canEdit = true;
 			this.motivationEnabled = true;
+			this.canArchive = false;
 		}, error => {
 			this.errorMessage = <any>error;
 			this.isLoading = false;
@@ -779,6 +808,10 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		transactionalConcession.concession.subStatus = "Requestor Accepted Changes";
 		transactionalConcession.concession.requestorId = this.transactionalConcession.currentUser.id;
 
+		if (!transactionalConcession.concession.comments) {
+			transactionalConcession.concession.comments = "Accepted Changes";
+		}
+
 		if (!this.validationError) {
 			this.transactionalConcessionService.postUpdateTransactionalData(transactionalConcession).subscribe(entity => {
 				console.log("data saved");
@@ -807,6 +840,10 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		transactionalConcession.concession.subStatus = "Requestor Declined Changes";
 		transactionalConcession.concession.requestorId = this.transactionalConcession.currentUser.id;
 
+		if (!transactionalConcession.concession.comments) {
+			transactionalConcession.concession.comments = "Declined Changes";
+		}
+
 		if (!this.validationError) {
 			this.transactionalConcessionService.postUpdateTransactionalData(transactionalConcession).subscribe(entity => {
 				console.log("data saved");
@@ -821,6 +858,36 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 			});
 		} else {
 			this.isLoading = false;
+		}
+	}
+
+	archiveConcession() {
+		if (confirm("Are you sure you want to archive this concession?")) {
+			this.isLoading = true;
+			this.errorMessage = null;
+
+			this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
+				this.warningMessage = "Concession has been archived.";
+
+				this.isLoading = false;
+				this.canBcmApprove = false;
+				this.canPcmApprove = false;
+				this.canExtend = false;
+				this.canRenew = false;
+				this.canRecall = false;
+				this.isEditing = false;
+				this.motivationEnabled = false;
+				this.canEdit = false;
+				this.isRecalling = false;
+				this.canApproveChanges = false;
+				this.canResubmit = false;
+				this.canUpdate = false;
+				this.canArchive = false;
+
+			}, error => {
+				this.errorMessage = <any>error;
+				this.isLoading = false;
+			});
 		}
 	}
 }

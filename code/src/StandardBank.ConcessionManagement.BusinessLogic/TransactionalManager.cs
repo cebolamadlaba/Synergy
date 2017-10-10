@@ -377,12 +377,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 if (mappedTransactionalConcessionDetail.ApprovedTransactionTableNumberId.HasValue)
                     mappedTransactionalConcessionDetail.ApprovedTableNumber =
-                        _lookupTableManager.GetTableNumberDescription(mappedTransactionalConcessionDetail
+                        _lookupTableManager.GetTransactionTableNumberDescription(mappedTransactionalConcessionDetail
                             .ApprovedTransactionTableNumberId.Value);
 
                 if (mappedTransactionalConcessionDetail.LoadedTransactionTableNumberId.HasValue)
                     mappedTransactionalConcessionDetail.LoadedTableNumber =
-                        _lookupTableManager.GetTableNumberDescription(mappedTransactionalConcessionDetail
+                        _lookupTableManager.GetTransactionTableNumberDescription(mappedTransactionalConcessionDetail
                             .LoadedTransactionTableNumberId.Value);
 
                 transactionalConcessionDetails.Add(mappedTransactionalConcessionDetail);

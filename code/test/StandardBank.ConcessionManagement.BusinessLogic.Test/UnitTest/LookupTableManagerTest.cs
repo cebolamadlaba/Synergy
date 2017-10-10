@@ -651,5 +651,31 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             Assert.NotNull(result);
             Assert.NotEmpty(result);
         }
+
+        /// <summary>
+        /// Tests that GetTransactionTableNumberDescription executes positive.
+        /// </summary>
+        [Fact]
+        public void GetTransactionTableNumberDescription_Executes_Positive()
+        {
+            MockTransactionTableNumberRepository.Setup(_ => _.ReadAll()).Returns(new[]
+            {
+                new TransactionTableNumber
+                {
+                    AdValorem = 1,
+                    Fee = 2,
+                    TariffTable = 3,
+                    Id = 1,
+                    IsActive = true
+                }
+            });
+
+            var result = _lookupTableManager.GetTransactionTableNumberDescription(1);
+
+            Assert.NotNull(result);
+            Assert.True(result.Contains("1"));
+            Assert.True(result.Contains("2"));
+            Assert.True(result.Contains("3"));
+        }
     }
 }
