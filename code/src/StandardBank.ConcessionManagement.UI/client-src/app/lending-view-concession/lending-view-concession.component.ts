@@ -56,6 +56,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     canUpdate = false;
 	editType: string;
 	canArchive = false;
+	isInProgressExtension = false;
+	isInProgressRenewal = false;
 
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
@@ -173,8 +175,11 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 }
 
                 if (lendingConcession.concession.status == "Pending" && lendingConcession.concession.subStatus == "PCM Pending") {
-                    this.canPcmApprove = lendingConcession.currentUser.canPcmApprove;
-                    this.canEdit = lendingConcession.currentUser.canPcmApprove;
+					this.canPcmApprove = lendingConcession.currentUser.canPcmApprove;
+
+					if (!lendingConcession.concession.isInProgressExtension) {
+						this.canEdit = lendingConcession.currentUser.canPcmApprove;
+					}
                 }
 
                 //if it's still pending and the user is a requestor then they can recall it
@@ -196,6 +201,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 				this.canUpdate = lendingConcession.concession.canUpdate && lendingConcession.currentUser.canRequest;
 
 				this.canArchive = lendingConcession.concession.canArchive && lendingConcession.currentUser.canRequest;
+				this.isInProgressExtension = lendingConcession.concession.isInProgressExtension;
+				this.isInProgressRenewal = lendingConcession.concession.isInProgressRenewal;
 
                 this.lendingConcessionForm.controls['mrsCrs'].setValue(this.lendingConcession.concession.mrsCrs);
                 this.lendingConcessionForm.controls['smtDealNumber'].setValue(this.lendingConcession.concession.smtDealNumber);

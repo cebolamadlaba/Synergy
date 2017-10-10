@@ -189,11 +189,17 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             {
                 lendingConcessionDetail.DateApproved = null;
 
-                if (relationshipType == "Extension" && lendingConcessionDetail.ExpiryDate.HasValue)
-                    lendingConcessionDetail.ExpiryDate = lendingConcessionDetail.ExpiryDate.Value.AddMonths(3);
+                if (relationshipType == "Extension")
+                {
+                    if (lendingConcessionDetail.ExpiryDate.HasValue)
+                        lendingConcessionDetail.ExpiryDate = lendingConcessionDetail.ExpiryDate
+                            .GetValueOrDefault(DateTime.Now).AddMonths(3);
+                }
                 else
+                {
                     lendingConcessionDetail.ExpiryDate = null;
-
+                }
+                
                 lendingConcessionDetail.LendingConcessionDetailId = 0;
                 await _mediator.Send(new AddOrUpdateLendingConcessionDetail(lendingConcessionDetail, user, concession));
             }

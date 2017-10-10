@@ -58,6 +58,8 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 	canUpdate = false;
 	editType: string;
 	canArchive = false;
+	isInProgressExtension = false;
+	isInProgressRenewal = false;
 
 	observablePeriods: Observable<Period[]>;
 	periods: Period[];
@@ -167,7 +169,10 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
 				if (transactionalConcession.concession.status == "Pending" && transactionalConcession.concession.subStatus == "PCM Pending") {
 					this.canPcmApprove = transactionalConcession.currentUser.canPcmApprove;
-					this.canEdit = transactionalConcession.currentUser.canPcmApprove;
+
+					if (!transactionalConcession.concession.isInProgressExtension) {
+						this.canEdit = transactionalConcession.currentUser.canPcmApprove;
+					}
 				}
 
 				//if it's still pending and the user is a requestor then they can recall it
@@ -189,6 +194,8 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 				this.canUpdate = transactionalConcession.concession.canUpdate && transactionalConcession.currentUser.canRequest;
 
 				this.canArchive = transactionalConcession.concession.canArchive && transactionalConcession.currentUser.canRequest;
+				this.isInProgressExtension = transactionalConcession.concession.isInProgressExtension;
+				this.isInProgressRenewal = transactionalConcession.concession.isInProgressRenewal;
 
 				this.transactionalConcessionForm.controls['mrsCrs'].setValue(this.transactionalConcession.concession.mrsCrs);
 				this.transactionalConcessionForm.controls['smtDealNumber'].setValue(this.transactionalConcession.concession.smtDealNumber);

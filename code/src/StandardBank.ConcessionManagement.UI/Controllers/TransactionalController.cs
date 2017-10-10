@@ -200,7 +200,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 transactionalConcessionDetail.DateApproved = null;
 
                 if (transactionalConcessionDetail.ExpiryDate.HasValue)
-                    transactionalConcessionDetail.ExpiryDate = transactionalConcessionDetail.ExpiryDate.Value.AddMonths(3);
+                    transactionalConcessionDetail.ExpiryDate = transactionalConcessionDetail.ExpiryDate
+                        .GetValueOrDefault(DateTime.Now).AddMonths(3);
 
                 transactionalConcessionDetail.TransactionalConcessionDetailId = 0;
                 await _mediator.Send(new AddOrUpdateTransactionalConcessionDetail(transactionalConcessionDetail, user, concession));

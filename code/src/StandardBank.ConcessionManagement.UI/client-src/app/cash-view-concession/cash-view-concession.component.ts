@@ -58,6 +58,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 	canUpdate = false;
 	editType: string;
 	canArchive = false;
+	isInProgressExtension = false;
+	isInProgressRenewal = false;
 
 	observablePeriods: Observable<Period[]>;
 	periods: Period[];
@@ -173,7 +175,10 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
 				if (cashConcession.concession.status == "Pending" && cashConcession.concession.subStatus == "PCM Pending") {
 					this.canPcmApprove = cashConcession.currentUser.canPcmApprove;
-					this.canEdit = cashConcession.currentUser.canPcmApprove;
+
+					if (!cashConcession.concession.isInProgressExtension) {
+						this.canEdit = cashConcession.currentUser.canPcmApprove;
+					}
 				}
 
 				//if it's still pending and the user is a requestor then they can recall it
@@ -195,6 +200,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 				this.canUpdate = cashConcession.concession.canUpdate && cashConcession.currentUser.canRequest;
 
 				this.canArchive = cashConcession.concession.canArchive && cashConcession.currentUser.canRequest;
+				this.isInProgressExtension = cashConcession.concession.isInProgressExtension;
+				this.isInProgressRenewal = cashConcession.concession.isInProgressRenewal;
 
 				this.cashConcessionForm.controls['smtDealNumber'].setValue(this.cashConcession.concession.smtDealNumber);
 				this.cashConcessionForm.controls['motivation'].setValue(this.cashConcession.concession.motivation);

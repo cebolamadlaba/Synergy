@@ -191,7 +191,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 cashConcessionDetail.DateApproved = null;
 
                 if (cashConcessionDetail.ExpiryDate.HasValue)
-                    cashConcessionDetail.ExpiryDate = cashConcessionDetail.ExpiryDate.Value.AddMonths(3);
+                    cashConcessionDetail.ExpiryDate = cashConcessionDetail.ExpiryDate
+                        .GetValueOrDefault(DateTime.Now).AddMonths(3);
 
                 cashConcessionDetail.CashConcessionDetailId = 0;
                 await _mediator.Send(new AddOrUpdateCashConcessionDetail(cashConcessionDetail, user, concession));
