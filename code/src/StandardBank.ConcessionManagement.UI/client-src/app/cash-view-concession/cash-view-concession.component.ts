@@ -58,7 +58,6 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 	canUpdate = false;
 	editType: string;
 	canArchive = false;
-	isExtensionOrRenewal = false;
 
 	observablePeriods: Observable<Period[]>;
 	periods: Period[];
@@ -196,7 +195,6 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 				this.canUpdate = cashConcession.concession.canUpdate && cashConcession.currentUser.canRequest;
 
 				this.canArchive = cashConcession.concession.canArchive && cashConcession.currentUser.canRequest;
-				this.isExtensionOrRenewal = cashConcession.concession.isExtensionOrRenewal;
 
 				this.cashConcessionForm.controls['smtDealNumber'].setValue(this.cashConcession.concession.smtDealNumber);
 				this.cashConcessionForm.controls['motivation'].setValue(this.cashConcession.concession.motivation);

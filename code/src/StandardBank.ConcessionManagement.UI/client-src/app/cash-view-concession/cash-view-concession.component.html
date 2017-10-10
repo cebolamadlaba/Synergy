@@ -161,13 +161,13 @@
                     <input formControlName="isExpired" style="display: none;" />
                     <input formControlName="isExpiring" style="display: none;" />
 
-                    <select formControlName="channelType" class="form-control" [attr.disabled]="canEdit && !isExtensionOrRenewal  ? null : ''">
+                    <select formControlName="channelType" class="form-control" [attr.disabled]="canEdit ? null : ''">
                         <option *ngFor="let channelTypeOption of channelTypes" [ngValue]="channelTypeOption">{{channelTypeOption.description}}</option>
                     </select>
                 </td>
 
                 <td class="length-long">
-                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit && !isExtensionOrRenewal  ? null : ''">
+                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit ? null : ''">
                         <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
                 </td>

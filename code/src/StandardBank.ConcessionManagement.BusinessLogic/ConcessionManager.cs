@@ -759,7 +759,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 if (mapAll)
                 {
-                    mappedConcession.IsExtensionOrRenewal = CalculateIfIsExtensionOrRenewal(concession, mappedConcession.Status);
+                    var isApproved = mappedConcession.Status == "Approved" ||
+                                     mappedConcession.Status == "Approved With Changes";
 
                     if (!HasPendingChild(concession.Id))
                     {
@@ -768,9 +769,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         mappedConcession.CanRenew = CalculateIfCanRenew(concession, mappedConcession.Status);
                         mappedConcession.CanExtend = CalculateIfCanExtend(concession, mappedConcession.CanRenew);
                         mappedConcession.CanResubmit = CalculateIfCanResubmit(concession, mappedConcession.Status);
-                        mappedConcession.CanUpdate = CalculateIfCanUpdate(concession, mappedConcession.Status);
-                        mappedConcession.CanArchive = mappedConcession.Status == "Approved" ||
-                                                      mappedConcession.Status == "Approved With Changes";
+                        mappedConcession.CanUpdate = isApproved;
+                        mappedConcession.CanArchive = isApproved;
                     }
                     else
                     {
@@ -817,18 +817,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                    relationships.Any(_ => _.RelationshipId == extenionRelationshipTypeId ||
                                           _.RelationshipId == renewalRelationshipTypeId);
         }
-
-        /// <summary>
-        /// Calculates if can update.
-        /// </summary>
-        /// <param name="concession">The concession.</param>
-        /// <param name="currentStatus">The current status.</param>
-        /// <returns></returns>
-        private bool CalculateIfCanUpdate(Model.Repository.Concession concession, string currentStatus)
-        {
-            return currentStatus == "Approved" || currentStatus == "Approved With Changes";
-        }
-
+        
         /// <summary>
         /// Calculates if can resubmit.
         /// </summary>

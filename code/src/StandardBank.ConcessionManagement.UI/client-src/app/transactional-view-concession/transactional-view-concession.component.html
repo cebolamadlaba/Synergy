@@ -173,13 +173,13 @@
                     <input formControlName="isExpired" style="display: none;" />
                     <input formControlName="isExpiring" style="display: none;" />
 
-                    <select formControlName="transactionType" class="form-control" [attr.disabled]="canEdit && !isExtensionOrRenewal ? null : ''" (change)="transactionTypeChanged(i)">
+                    <select formControlName="transactionType" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="transactionTypeChanged(i)">
                         <option *ngFor="let transactionTypeOption of transactionTypes" [ngValue]="transactionTypeOption">{{transactionTypeOption.description}}</option>
                     </select>
                 </td>
 
                 <td class="length-long">
-                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit && !isExtensionOrRenewal ? null : ''">
+                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit ? null : ''">
                         <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
                 </td>

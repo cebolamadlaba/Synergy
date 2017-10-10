@@ -58,7 +58,6 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 	canUpdate = false;
 	editType: string;
 	canArchive = false;
-	isExtensionOrRenewal = false;
 
 	observablePeriods: Observable<Period[]>;
 	periods: Period[];
@@ -190,7 +189,6 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 				this.canUpdate = transactionalConcession.concession.canUpdate && transactionalConcession.currentUser.canRequest;
 
 				this.canArchive = transactionalConcession.concession.canArchive && transactionalConcession.currentUser.canRequest;
-				this.isExtensionOrRenewal = transactionalConcession.concession.isExtensionOrRenewal;
 
 				this.transactionalConcessionForm.controls['mrsCrs'].setValue(this.transactionalConcession.concession.mrsCrs);
 				this.transactionalConcessionForm.controls['smtDealNumber'].setValue(this.transactionalConcession.concession.smtDealNumber);

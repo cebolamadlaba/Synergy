@@ -171,13 +171,13 @@
                     <input formControlName="isExpiring" style="display: none;" />
 
                     <!-- Product type -->
-                    <select formControlName="productType" class="form-control" [attr.disabled]="canEdit && !isExtensionOrRenewal ? null : ''">
+                    <select formControlName="productType" class="form-control" [attr.disabled]="canEdit ? null : ''">
                         <option *ngFor="let productTypeOption of productTypes" [ngValue]="productTypeOption">{{productTypeOption.description}}</option>
                     </select>
                 </td>
                 <td class="length-long">
                     <!-- Account number -->
-                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit && !isExtensionOrRenewal ? null : ''">
+                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit ? null : ''">
                         <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
                 </td>
