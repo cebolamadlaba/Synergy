@@ -458,13 +458,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         /// <param name="periodType">Type of the period.</param>
         /// <param name="period">The period.</param>
+        /// <param name="requestorId">The requestor identifier.</param>
         /// <returns></returns>
-        public IEnumerable<ConcessionCondition> GetConditions(string periodType, string period)
+        public IEnumerable<ConcessionCondition> GetConditions(string periodType, string period, int requestorId)
         {
             var periodId = _lookupTableManager.GetPeriods().First(x => x.Description == period).Id;
             var periodTypeId = _lookupTableManager.GetPeriodTypes().First(x => x.Description == periodType).Id;
 
-            var conditions = _concessionConditionViewRepository.ReadByPeriodIdPeriodTypeId(periodId, periodTypeId);
+            var conditions =
+                _concessionConditionViewRepository.ReadByPeriodIdPeriodTypeId(periodId, periodTypeId, requestorId);
 
             var results = _mapper.Map<IEnumerable<ConcessionCondition>>(conditions);
 
@@ -479,10 +481,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <summary>
         /// Gets the condition counts.
         /// </summary>
+        /// <param name="requestorId">The requestor identifier.</param>
         /// <returns></returns>
-        public ConditionCounts GetConditionCounts()
+        public ConditionCounts GetConditionCounts(int requestorId)
         {
-            var conditionCounts = _concessionConditionViewRepository.ReadConcessionCounts();
+            var conditionCounts = _concessionConditionViewRepository.ReadConcessionCounts(requestorId);
 
             return new ConditionCounts
             {
@@ -756,10 +759,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 if (mapAll)
                 {
-                    mappedConcession.CanArchive = mappedConcession.Status == "Approved" ||
-                                                  mappedConcession.Status == "Approved With Changes";
-
-                    mappedConcession.IsExtensionOrRenewal = CalculateIfIsExtensionOrRenewal(concession);
+                    mappedConcession.IsExtensionOrRenewal = CalculateIfIsExtensionOrRenewal(concession, mappedConcession.Status);
 
                     if (!HasPendingChild(concession.Id))
                     {
@@ -769,6 +769,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         mappedConcession.CanExtend = CalculateIfCanExtend(concession, mappedConcession.CanRenew);
                         mappedConcession.CanResubmit = CalculateIfCanResubmit(concession, mappedConcession.Status);
                         mappedConcession.CanUpdate = CalculateIfCanUpdate(concession, mappedConcession.Status);
+                        mappedConcession.CanArchive = mappedConcession.Status == "Approved" ||
+                                                      mappedConcession.Status == "Approved With Changes";
                     }
                     else
                     {
@@ -776,6 +778,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         mappedConcession.CanRenew = false;
                         mappedConcession.CanResubmit = false;
                         mappedConcession.CanUpdate = false;
+                        mappedConcession.CanArchive = false;
                     }
 
                     mappedConcession.ConcessionComments = GetConcessionComments(concession.Id);
@@ -797,9 +800,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// Calculates if is extension or renewal.
         /// </summary>
         /// <param name="concession">The concession.</param>
+        /// <param name="status">The status.</param>
         /// <returns></returns>
-        private bool CalculateIfIsExtensionOrRenewal(Concession concession)
+        private bool CalculateIfIsExtensionOrRenewal(Concession concession, string status)
         {
+            //if the status is not pending this check does not apply, only pending
+            //concessions needs to be checked
+            if (status != "Pending")
+                return false;
+
             var relationships = _concessionRelationshipRepository.ReadByChildConcessionId(concession.Id);
             var extenionRelationshipTypeId = _lookupTableManager.GetRelationshipId("Extension");
             var renewalRelationshipTypeId = _lookupTableManager.GetRelationshipId("Renewal");

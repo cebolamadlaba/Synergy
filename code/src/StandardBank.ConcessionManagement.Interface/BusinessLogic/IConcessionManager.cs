@@ -90,14 +90,16 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// </summary>
         /// <param name="periodType">Type of the period.</param>
         /// <param name="period">The period.</param>
+        /// <param name="requestorId">The requestor identifier.</param>
         /// <returns></returns>
-        IEnumerable<ConcessionCondition> GetConditions(string periodType, string period);
+        IEnumerable<ConcessionCondition> GetConditions(string periodType, string period, int requestorId);
 
         /// <summary>
         /// Gets the condition counts.
         /// </summary>
+        /// <param name="requestorId">The requestor identifier.</param>
         /// <returns></returns>
-        ConditionCounts GetConditionCounts();
+        ConditionCounts GetConditionCounts(int requestorId);
 
         /// <summary>
         /// Updates the concession.

@@ -13,14 +13,16 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// </summary>
         /// <param name="periodId">The period identifier.</param>
         /// <param name="periodTypeId">The period type identifier.</param>
+        /// <param name="requestorId">The requestor identifier.</param>
         /// <returns></returns>
-        IEnumerable<ConcessionConditionView> ReadByPeriodIdPeriodTypeId(int periodId, int periodTypeId);
+        IEnumerable<ConcessionConditionView> ReadByPeriodIdPeriodTypeId(int periodId, int periodTypeId, int requestorId);
 
         /// <summary>
         /// Reads the concession counts.
         /// </summary>
+        /// <param name="requestorId">The requestor identifier.</param>
         /// <returns></returns>
-        IEnumerable<ConcessionCount> ReadConcessionCounts();
+        IEnumerable<ConcessionCount> ReadConcessionCounts(int requestorId);
 
         /// <summary>
         /// Reads for renewing ongoing conditions.

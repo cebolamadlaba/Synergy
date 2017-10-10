@@ -31,33 +31,37 @@ namespace StandardBank.ConcessionManagement.Repository
         /// </summary>
         /// <param name="periodId">The period identifier.</param>
         /// <param name="periodTypeId">The period type identifier.</param>
+        /// <param name="requestorId">The requestor identifier.</param>
         /// <returns></returns>
-        public IEnumerable<ConcessionConditionView> ReadByPeriodIdPeriodTypeId(int periodId, int periodTypeId)
+        public IEnumerable<ConcessionConditionView> ReadByPeriodIdPeriodTypeId(int periodId, int periodTypeId, int requestorId)
         {
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionConditionView>(
-                    @"SELECT [ConcessionConditionId], [ConcessionId], [ReferenceNumber], [ConcessionTypeId], [ConcessionType], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [ConditionTypeId], [ConditionType], [ConditionProductId], [ConditionProduct], [PeriodTypeId], [PeriodType], [PeriodId], [Period], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [DateApproved], [ExpiryDate], [IsActive]
+                    @"SELECT [ConcessionConditionId], [ConcessionId], [RequestorId], [ReferenceNumber], [ConcessionTypeId], [ConcessionType], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [ConditionTypeId], [ConditionType], [ConditionProductId], [ConditionProduct], [PeriodTypeId], [PeriodType], [PeriodId], [Period], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [DateApproved], [ExpiryDate], [IsActive]
                     FROM [dbo].[ConcessionConditionView]
                     WHERE [ConditionMet] IS NULL
                     AND [PeriodId] = @periodId
-                    AND [PeriodTypeId] = @periodTypeId",
-                    new {periodId, periodTypeId});
+                    AND [PeriodTypeId] = @periodTypeId
+                    AND [RequestorId] = @RequestorId",
+                    new { periodId, periodTypeId, requestorId });
             }
         }
 
         /// <summary>
         /// Reads the concession counts.
         /// </summary>
+        /// <param name="requestorId">The requestor identifier.</param>
         /// <returns></returns>
-        public IEnumerable<ConcessionCount> ReadConcessionCounts()
+        public IEnumerable<ConcessionCount> ReadConcessionCounts(int requestorId)
         {
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionCount>(
                     @"SELECT [PeriodType], COUNT(*) [RecordCount] FROM [dbo].[ConcessionConditionView]
                     WHERE [ConditionMet] IS NULL
-                    GROUP BY [PeriodType]");
+                    AND [RequestorId] = @RequestorId
+                    GROUP BY [PeriodType]", new { requestorId });
             }
         }
 
@@ -70,7 +74,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionConditionView>(
-                    @"SELECT [ConcessionConditionId], [ConcessionId], [ReferenceNumber], [ConcessionTypeId], [ConcessionType], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [ConditionTypeId], [ConditionType], [ConditionProductId], [ConditionProduct], [PeriodTypeId], [PeriodType], [PeriodId], [Period], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [DateApproved], [ExpiryDate], [IsActive]
+                    @"SELECT [ConcessionConditionId], [ConcessionId], [RequestorId], [ReferenceNumber], [ConcessionTypeId], [ConcessionType], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [ConditionTypeId], [ConditionType], [ConditionProductId], [ConditionProduct], [PeriodTypeId], [PeriodType], [PeriodId], [Period], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [DateApproved], [ExpiryDate], [IsActive]
                     FROM [dbo].[ConcessionConditionView]
                     WHERE [PeriodTypeId] = 2
                     AND [IsActive] = 1
