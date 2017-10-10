@@ -35,9 +35,9 @@ namespace StandardBank.ConcessionManagement.Repository
         public ProductTransactional Create(ProductTransactional model)
         {
             const string sql =
-                @"INSERT [dbo].[tblProductTransactional] ([fkRiskGroupId], [fkLegalEntityId], [fkLegalEntityAccountId], [fkTableNumberId], [fkTransactionTypeId], [Volume], [Value], [LoadedPrice]) 
-                                VALUES (@RiskGroupId, @LegalEntityId, @LegalEntityAccountId, @TableNumberId, @TransactionTypeId, @Volume, @Value, @LoadedPrice) 
-                                SELECT CAST(SCOPE_IDENTITY() as int)";
+                @"INSERT [dbo].[tblProductTransactional] ([fkRiskGroupId], [fkLegalEntityId], [fkLegalEntityAccountId], [fkTransactionTableNumberId], [fkTransactionTypeId], [Volume], [Value], [LoadedPrice]) 
+                VALUES (@RiskGroupId, @LegalEntityId, @LegalEntityAccountId, @TransactionTableNumberId, @TransactionTypeId, @Volume, @Value, @LoadedPrice) 
+                SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
@@ -47,7 +47,7 @@ namespace StandardBank.ConcessionManagement.Repository
                         RiskGroupId = model.RiskGroupId,
                         LegalEntityId = model.LegalEntityId,
                         LegalEntityAccountId = model.LegalEntityAccountId,
-                        TableNumberId = model.TableNumberId,
+                        TransactionTableNumberId = model.TransactionTableNumberId,
                         TransactionTypeId = model.TransactionTypeId,
                         Volume = model.Volume,
                         Value = model.Value,
@@ -68,7 +68,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ProductTransactional>(
-                    "SELECT [pkProductTransactionalId] [Id], [fkRiskGroupId] [RiskGroupId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [fkTableNumberId] [TableNumberId], [fkTransactionTypeId] [TransactionTypeId], [Volume], [Value], [LoadedPrice] FROM [dbo].[tblProductTransactional] WHERE [pkProductTransactionalId] = @Id",
+                    "SELECT [pkProductTransactionalId] [Id], [fkRiskGroupId] [RiskGroupId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [fkTransactionTableNumberId] [TransactionTableNumberId], [fkTransactionTypeId] [TransactionTypeId], [Volume], [Value], [LoadedPrice] FROM [dbo].[tblProductTransactional] WHERE [pkProductTransactionalId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -83,7 +83,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ProductTransactional>(
-                    @"SELECT [pkProductTransactionalId] [Id], [fkRiskGroupId] [RiskGroupId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [fkTableNumberId] [TableNumberId], [fkTransactionTypeId] [TransactionTypeId], [Volume], [Value], [LoadedPrice] 
+                    @"SELECT [pkProductTransactionalId] [Id], [fkRiskGroupId] [RiskGroupId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [fkTransactionTableNumberId] [TransactionTableNumberId], [fkTransactionTypeId] [TransactionTypeId], [Volume], [Value], [LoadedPrice] 
                     FROM [dbo].[tblProductTransactional] 
                     WHERE [fkRiskGroupId] = @riskGroupId",
                     new { riskGroupId });
@@ -99,7 +99,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ProductTransactional>(
-                    "SELECT [pkProductTransactionalId] [Id], [fkRiskGroupId] [RiskGroupId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [fkTableNumberId] [TableNumberId], [fkTransactionTypeId] [TransactionTypeId], [Volume], [Value], [LoadedPrice] FROM [dbo].[tblProductTransactional]");
+                    "SELECT [pkProductTransactionalId] [Id], [fkRiskGroupId] [RiskGroupId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [fkTransactionTableNumberId] [TransactionTableNumberId], [fkTransactionTypeId] [TransactionTypeId], [Volume], [Value], [LoadedPrice] FROM [dbo].[tblProductTransactional]");
             }
         }
 
@@ -112,7 +112,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblProductTransactional]
-                            SET [fkRiskGroupId] = @RiskGroupId, [fkLegalEntityId] = @LegalEntityId, [fkLegalEntityAccountId] = @LegalEntityAccountId, [fkTableNumberId] = @TableNumberId, [fkTransactionTypeId] = @TransactionTypeId, [Volume] = @Volume, [Value] = @Value, [LoadedPrice] = @LoadedPrice
+                            SET [fkRiskGroupId] = @RiskGroupId, [fkLegalEntityId] = @LegalEntityId, [fkLegalEntityAccountId] = @LegalEntityAccountId, [fkTransactionTableNumberId] = @TransactionTableNumberId, [fkTransactionTypeId] = @TransactionTypeId, [Volume] = @Volume, [Value] = @Value, [LoadedPrice] = @LoadedPrice
                             WHERE [pkProductTransactionalId] = @Id",
                     new
                     {
@@ -120,7 +120,7 @@ namespace StandardBank.ConcessionManagement.Repository
                         RiskGroupId = model.RiskGroupId,
                         LegalEntityId = model.LegalEntityId,
                         LegalEntityAccountId = model.LegalEntityAccountId,
-                        TableNumberId = model.TableNumberId,
+                        TransactionTableNumberId = model.TransactionTableNumberId,
                         TransactionTypeId = model.TransactionTypeId,
                         Volume = model.Volume,
                         Value = model.Value,

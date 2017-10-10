@@ -16,6 +16,7 @@ using PeriodType = StandardBank.ConcessionManagement.Model.UserInterface.PeriodT
 using ReviewFeeType = StandardBank.ConcessionManagement.Model.UserInterface.ReviewFeeType;
 using RiskGroup = StandardBank.ConcessionManagement.Model.UserInterface.RiskGroup;
 using TableNumber = StandardBank.ConcessionManagement.Model.UserInterface.TableNumber;
+using TransactionTableNumber = StandardBank.ConcessionManagement.Model.UserInterface.Transactional.TransactionTableNumber;
 using TransactionType = StandardBank.ConcessionManagement.Model.UserInterface.TransactionType;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
@@ -665,6 +666,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var regions = _regionRepository.ReadAll();
 
             return regions.First(_ => _.Id == regionId && _.IsActive).Description;
+        }
+
+        /// <summary>
+        /// Gets the transaction table numbers.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<TransactionTableNumber> GetTransactionTableNumbers()
+        {
+            return _mapper.Map<IEnumerable<TransactionTableNumber>>(_transactionTableNumberRepository.ReadAll());
         }
 
         /// <summary>

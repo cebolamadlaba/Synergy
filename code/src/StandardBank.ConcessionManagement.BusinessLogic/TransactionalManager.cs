@@ -290,17 +290,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var mappedTransactionalProducts = new List<TransactionalProduct>();
             var transactionalProducts = _productTransactionalRepository.ReadByRiskGroupId(riskGroup.Id);
-            var tableNumbers = _lookupTableManager.GetTableNumbers("Transactional");
+            var transactionTableNumbers = _lookupTableManager.GetTransactionTableNumbers();
 
             foreach (var transactionalProduct in transactionalProducts)
             {
                 var legalEntity = _legalEntityRepository.ReadById(transactionalProduct.LegalEntityId);
-                var legalEntityAccount = _legalEntityAccountRepository.ReadById(transactionalProduct.LegalEntityAccountId);
+                var legalEntityAccount =
+                    _legalEntityAccountRepository.ReadById(transactionalProduct.LegalEntityAccountId);
                 var mappedTransactionalProduct = _mapper.Map<TransactionalProduct>(transactionalProduct);
 
                 mappedTransactionalProduct.CustomerName = legalEntity.CustomerName;
                 mappedTransactionalProduct.AccountNumber = legalEntityAccount.AccountNumber;
-                mappedTransactionalProduct.TariffTable = tableNumbers.First(_ => _.Id == transactionalProduct.TableNumberId).TariffTable;
+                mappedTransactionalProduct.TariffTable = transactionTableNumbers
+                    .First(_ => _.Id == transactionalProduct.TransactionTableNumberId).TariffTable;
 
                 mappedTransactionalProduct.TransactionType =
                     _lookupTableManager.GetTransactionTypeDescription(transactionalProduct.TransactionTypeId);

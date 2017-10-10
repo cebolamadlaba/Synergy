@@ -637,5 +637,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             Assert.Null(result);
         }
+
+        /// <summary>
+        /// Tests that GetTransactionTableNumbers executes positive.
+        /// </summary>
+        [Fact]
+        public void GetTransactionTableNumbers_Executes_Positive()
+        {
+            MockTransactionTableNumberRepository.Setup(_ => _.ReadAll()).Returns(new[] {new TransactionTableNumber()});
+
+            var result = _lookupTableManager.GetTransactionTableNumbers();
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
     }
 }

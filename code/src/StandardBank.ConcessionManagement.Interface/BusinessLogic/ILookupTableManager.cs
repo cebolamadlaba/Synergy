@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
+using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 {
@@ -243,5 +244,11 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="regionId">The region identifier.</param>
         /// <returns></returns>
         string GetRegionDescription(int regionId);
+
+        /// <summary>
+        /// Gets the transaction table numbers.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<TransactionTableNumber> GetTransactionTableNumbers();
     }
 }

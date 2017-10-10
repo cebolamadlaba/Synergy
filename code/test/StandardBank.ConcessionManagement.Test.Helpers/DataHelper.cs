@@ -3006,7 +3006,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 RiskGroupId = GetRiskGroupId(),
                 LegalEntityId = GetLegalEntityId(),
                 LegalEntityAccountId = GetLegalEntityAccountId(),
-                TableNumberId = GetTableNumberId(),
+                TransactionTableNumberId = GetTransactionTableNumberId(),
                 TransactionTypeId = GetTransactionTypeId(),
                 Volume = 845,
                 Value = 711,
