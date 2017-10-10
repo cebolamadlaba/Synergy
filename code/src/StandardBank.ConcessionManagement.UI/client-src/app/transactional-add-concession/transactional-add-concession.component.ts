@@ -33,6 +33,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 	riskGroup: RiskGroup;
 	riskGroupNumber: number;
 	selectedConditionTypes: ConditionType[];
+	selectedTransactionTypes: TransactionType[];
 	isLoading = false;
 	observableLatestCrsOrMrs: Observable<number>;
 	latestCrsOrMrs: number;
@@ -62,6 +63,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 		this.periodTypes = [new PeriodType()];
 		this.conditionTypes = [new ConditionType()];
 		this.selectedConditionTypes = [new ConditionType()];
+		this.selectedTransactionTypes = [new TransactionType()];
 		this.clientAccounts = [new ClientAccount()];
 	}
 
@@ -103,6 +105,8 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 	}
 
 	initConcessionItemRows() {
+		this.selectedTransactionTypes.push(new TransactionType());
+
 		return this.formBuilder.group({
 			transactionType: [''],
 			accountNumber: [''],
@@ -147,6 +151,8 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 	deleteConcessionRow(index: number) {
 		const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
 		control.removeAt(index);
+
+		this.selectedTransactionTypes.splice(index, 1);
 	}
 
 	deleteConditionRow(index: number) {
@@ -166,6 +172,16 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 		currentCondition.get('volume').setValue(null);
 		currentCondition.get('value').setValue(null);
 		currentCondition.get('expectedTurnoverValue').setValue(null);
+	}
+
+	transactionTypeChanged(rowIndex) {
+		const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+		this.selectedTransactionTypes[rowIndex] = control.controls[rowIndex].get('transactionType').value;
+
+		let currentTransactionType = control.controls[control.length - 1];
+
+		currentTransactionType.get('adValorem').setValue(null);
+		currentTransactionType.get('flatFeeOrRate').setValue(null);
 	}
 
 	transactionTableNumberChanged(rowIndex) {
@@ -217,7 +233,9 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 
 			if (concessionFormItem.get('transactionTableNumber').value) {
 				transactionalConcessionDetail.transactionTableNumberId = concessionFormItem.get('transactionTableNumber').value.id;
-				transactionalConcessionDetail.adValorem = concessionFormItem.get('transactionTableNumber').value.adValorem;
+
+				if (concessionFormItem.get('transactionTableNumber').value.adValorem)
+				    transactionalConcessionDetail.adValorem = concessionFormItem.get('transactionTableNumber').value.adValorem;
 
 				if (concessionFormItem.get('transactionTableNumber').value.fee)
 					transactionalConcessionDetail.fee = concessionFormItem.get('transactionTableNumber').value.fee;
@@ -292,7 +310,6 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 
 		if (!this.validationError) {
 			this.transactionalConcessionService.postNewTransactionalData(transactionalConcession).subscribe(entity => {
-				console.log("data saved");
 				this.saveMessage = entity.concession.referenceNumber;
 				this.isLoading = false;
 			}, error => {

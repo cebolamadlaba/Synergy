@@ -506,10 +506,6 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 	getBackgroundColour(rowIndex: number) {
 		const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
 
-		console.log(rowIndex);
-		console.log(control.controls[rowIndex].get('isExpired').value);
-		console.log(control.controls[rowIndex].get('isExpiring').value);
-
 		if (String(control.controls[rowIndex].get('isExpired').value) == "true") {
 			return "#EC7063";
 		}

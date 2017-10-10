@@ -102,15 +102,15 @@
                 <th>Transaction Type</th>
                 <th>Account Number</th>
                 <th>Table Number</th>
-                <th>Ad Valorem</th>
                 <th>Flat Fee/Rate</th>
+                <th>Ad Valorem</th>
                 <th>Expiry Date</th>
             </tr>
         </thead>
         <tbody class="form-concessions-table-content">
             <tr *ngFor="let itemrow of transactionalConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
                 <td class="length-long">
-                    <select formControlName="transactionType" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                    <select formControlName="transactionType" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="transactionTypeChanged(i)">
                         <option *ngFor="let transactionTypeOption of transactionTypes" [ngValue]="transactionTypeOption">{{transactionTypeOption.description}}</option>
                     </select>
                 </td>
@@ -122,13 +122,13 @@
                 </td>
 
                 <td class="length-long">
-                    <select formControlName="transactionTableNumber" class="form-control" (change)="transactionTableNumberChanged(i)" [attr.disabled]="saveMessage ? '' : null">
-                        <option *ngFor="let transactionTableNumberOption of transactionTableNumbers" [ngValue]="transactionTableNumberOption">{{transactionTableNumberOption.displayText}}</option>
+                    <select formControlName="transactionTableNumber" class="form-control" (change)="transactionTableNumberChanged(i)" [attr.disabled]="saveMessage ? '' : null" *ngIf="selectedTransactionTypes[i] != null">
+                        <option *ngFor="let transactionTableNumberOption of selectedTransactionTypes[i].transactionTableNumbers" [ngValue]="transactionTableNumberOption">{{transactionTableNumberOption.displayText}}</option>
                     </select>
                 </td>
 
-                <td class="length-medium"><input formControlName="adValorem" class="form-control"></td>
                 <td class="length-long"><input formControlName="flatFeeOrRate" class="form-control"></td>
+                <td class="length-medium"><input formControlName="adValorem" class="form-control"></td>
 
                 <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="saveMessage ? '' : null" /></td>
 

@@ -501,7 +501,6 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
         if (!this.validationError) {
             this.cashConcessionService.postUpdateCashData(cashConcession).subscribe(entity => {
-                console.log("data saved");
                 this.canBcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;

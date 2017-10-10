@@ -40,6 +40,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 	riskGroup: RiskGroup;
 	riskGroupNumber: number;
 	selectedConditionTypes: ConditionType[];
+	selectedTransactionTypes: TransactionType[];
 	isLoading = false;
 	canBcmApprove = false;
 	canPcmApprove = false;
@@ -90,6 +91,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		this.periodTypes = [new PeriodType()];
 		this.conditionTypes = [new ConditionType()];
 		this.selectedConditionTypes = [new ConditionType()];
+		this.selectedTransactionTypes = [new TransactionType()];
 		this.clientAccounts = [new ClientAccount()];
 		this.transactionalFinancial = new TransactionalFinancial();
 		this.transactionalConcession = new TransactionalConcession();
@@ -209,8 +211,10 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 					let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == transactionalConcessionDetail.legalEntityAccountId);
 					currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
 
-					//let selectedTransactionTableNumber = this.transactionTableNumbers.filter(_ => _.id == transactionalConcessionDetail.transactionTableNumberId);
-					//currentConcession.get('transactionTableNumber').setValue(selectedTransactionTableNumber[0]);
+					this.selectedTransactionTypes[rowIndex] = selectedTransactionType[0];
+
+					let selectedTransactionTableNumber = selectedTransactionType[0].transactionTableNumbers.filter(_ => _.id == transactionalConcessionDetail.transactionTableNumberId);
+					currentConcession.get('transactionTableNumber').setValue(selectedTransactionTableNumber[0]);
 
 					currentConcession.get('adValorem').setValue(transactionalConcessionDetail.adValorem);
 					currentConcession.get('flatFeeOrRate').setValue(transactionalConcessionDetail.fee);
@@ -269,6 +273,8 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 	}
 
 	initConcessionItemRows() {
+		this.selectedTransactionTypes.push(new TransactionType());
+
 		return this.formBuilder.group({
 			transactionalConcessionDetailId: [''],
 			concessionDetailId: [''],
@@ -320,6 +326,8 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 	deleteConcessionRow(index: number) {
 		const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
 		control.removeAt(index);
+
+		this.selectedTransactionTypes.splice(index, 1);
 	}
 
 	deleteConditionRow(index: number) {
@@ -339,6 +347,16 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		currentCondition.get('volume').setValue(null);
 		currentCondition.get('value').setValue(null);
 		currentCondition.get('expectedTurnoverValue').setValue(null);
+	}
+
+	transactionTypeChanged(rowIndex) {
+		const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+		this.selectedTransactionTypes[rowIndex] = control.controls[rowIndex].get('transactionType').value;
+
+		let currentTransactionType = control.controls[control.length - 1];
+
+		currentTransactionType.get('adValorem').setValue(null);
+		currentTransactionType.get('flatFeeOrRate').setValue(null);
 	}
 
 	transactionTableNumberChanged(rowIndex) {
@@ -401,7 +419,9 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
 			if (concessionFormItem.get('transactionTableNumber').value) {
 				transactionalConcessionDetail.transactionTableNumberId = concessionFormItem.get('transactionTableNumber').value.id;
-				transactionalConcessionDetail.adValorem = concessionFormItem.get('transactionTableNumber').value.adValorem;
+
+				if (concessionFormItem.get('transactionTableNumber').value.adValorem)
+				    transactionalConcessionDetail.adValorem = concessionFormItem.get('transactionTableNumber').value.adValorem;
 
 				if (concessionFormItem.get('transactionTableNumber').value.fee)
 					transactionalConcessionDetail.fee = concessionFormItem.get('transactionTableNumber').value.fee;
@@ -483,10 +503,6 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
 	getBackgroundColour(rowIndex: number) {
 		const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
-
-		console.log(rowIndex);
-		console.log(control.controls[rowIndex].get('isExpired').value);
-		console.log(control.controls[rowIndex].get('isExpiring').value);
 
 		if (String(control.controls[rowIndex].get('isExpired').value) == "true") {
 			return "#EC7063";
