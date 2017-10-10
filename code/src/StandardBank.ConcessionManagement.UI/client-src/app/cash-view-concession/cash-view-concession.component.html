@@ -8,7 +8,7 @@
             </div>
             <div class="col-md-10 banner-main-title">
                 <i class="fa fa-handshake-o" aria-hidden="true"></i> View Cash Concession - {{concessionReferenceId}}
-                <span class="label label-warning" style="float: right;">{{cashConcession.concession.status}} - {{cashConcession.concession.subStatus}}</span>
+                <span class="label label-warning" style="float: right;">{{cashConcession?.concession?.status}} - {{cashConcession?.concession?.subStatus}}</span>
             </div>
             <div class="col-md-1"></div>
         </div>
@@ -16,8 +16,8 @@
             <div class="col-md-11">
                 <div>
                     <div class="col-md-2">
-                        <div class="subHeading">{{riskGroup.name}}</div>
-                        <div class="date lightTitle hidden-element">{{riskGroup.number}}</div>
+                        <div class="subHeading">{{riskGroup?.name}}</div>
+                        <div class="date lightTitle hidden-element">{{riskGroup?.number}}</div>
                         <div class="requestor"><i class="fa fa-user-circle-o" aria-hidden="true"></i><button (click)="viewRequesterModal.show()">{{cashConcession?.concession?.requestor?.fullName}}</button></div>
                     </div>
                     <div class="col-md-3 summary-items">
@@ -158,14 +158,16 @@
                 <td class="length-long">
                     <input formControlName="cashConcessionDetailId" style="display: none;" />
                     <input formControlName="concessionDetailId" style="display: none;" />
+                    <input formControlName="isExpired" style="display: none;" />
+                    <input formControlName="isExpiring" style="display: none;" />
 
-                    <select formControlName="channelType" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                    <select formControlName="channelType" class="form-control" [attr.disabled]="canEdit && !isExtensionOrRenewal  ? null : ''">
                         <option *ngFor="let channelTypeOption of channelTypes" [ngValue]="channelTypeOption">{{channelTypeOption.description}}</option>
                     </select>
                 </td>
 
                 <td class="length-long">
-                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit && !isExtensionOrRenewal  ? null : ''">
                         <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
                 </td>
@@ -186,7 +188,7 @@
                     </select>
                 </td>
 
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" /></td>
                 <td class="length-short"><input type="date" formControlName="dateApproved" class="form-control" /></td>
 
                 <td *ngIf="canBcmApprove || canPcmApprove || isEditing || isRecalling"><button *ngIf="cashConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
@@ -404,6 +406,7 @@
             <button type="button" class="btn btn-success" (click)="editConcession('Renew')" *ngIf="canRenew">Renew</button>
             <button type="button" class="btn btn-success" (click)="editConcession('Resubmit')" *ngIf="canResubmit">Resubmit</button>
             <button type="button" class="btn btn-success" (click)="editConcession('UpdateApproved')" *ngIf="canUpdate">Update</button>
+            <button type="button" class="btn btn-warning" (click)="archiveConcession()" *ngIf="canArchive">Archive</button>
 
             <button type="button" class="btn btn-primary" (click)="saveConcession()" *ngIf="isEditing">Save</button>
 

@@ -187,11 +187,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 AccountNumber = transactionalConcessionDetail.AccountNumber,
                 ChannelOrFeeType = transactionalConcessionDetail.TransactionType,
-                FeeOrRate = transactionalConcessionDetail.TransactionType == "Cheque Encashment"
+                FeeOrRate = transactionalConcessionDetail.TransactionType == "Cheque Encashment Fee"
                     ? $"{transactionalConcessionDetail.Fee.GetValueOrDefault(0):C} + {transactionalConcessionDetail.AdValorem.GetValueOrDefault(0)} %"
                     : transactionalConcessionDetail.Fee.GetValueOrDefault(0).ToString("C"),
-                ConcessionEndDate = transactionalConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
-                ConcessionStartDate = transactionalConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy"),
+                ConcessionStartDate = transactionalConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
+                ConcessionEndDate = transactionalConcessionDetail.ExpiryDate.HasValue
+                    ? transactionalConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
+                    : string.Empty,
                 LegalEntityId = transactionalConcessionDetail.LegalEntityId
             };
         }
@@ -255,7 +257,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 ChannelType = cashConcessionDetail.Channel,
                 BaseRateAdValorem =
                     $"{cashConcessionDetail.BaseRate.GetValueOrDefault(0):C} + {cashConcessionDetail.AdValorem.GetValueOrDefault(0)}%",
-                ConcessionEndDate = cashConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy"),
+                ConcessionEndDate = cashConcessionDetail.ExpiryDate.HasValue
+                    ? cashConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
+                    : string.Empty,
                 ConcessionStartDate = cashConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
                 LegalEntityId = cashConcessionDetail.LegalEntityId
             };
