@@ -35,4 +35,6 @@ export class Concession {
     canResubmit: boolean;
     canUpdate: boolean;
 	canArchive: boolean;
+	isInProgressExtension: boolean;
+	isInProgressRenewal: boolean;
 }

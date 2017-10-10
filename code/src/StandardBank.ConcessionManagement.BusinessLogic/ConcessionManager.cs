@@ -759,6 +759,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 if (mapAll)
                 {
+                    SetIsInProgressExtensionOrRenewal(mappedConcession);
+
                     var isApproved = mappedConcession.Status == "Approved" ||
                                      mappedConcession.Status == "Approved With Changes";
 
@@ -797,25 +799,26 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
-        /// Calculates if is extension or renewal.
+        /// Sets the is in progress extension or renewal.
         /// </summary>
         /// <param name="concession">The concession.</param>
-        /// <param name="status">The status.</param>
-        /// <returns></returns>
-        private bool CalculateIfIsExtensionOrRenewal(Concession concession, string status)
+        private void SetIsInProgressExtensionOrRenewal(Model.UserInterface.Concession concession)
         {
-            //if the status is not pending this check does not apply, only pending
-            //concessions needs to be checked
-            if (status != "Pending")
-                return false;
+            //if the status is not pending then it is not in progress
+            if (concession.Status != "Pending")
+            {
+                concession.IsInProgressExtension = false;
+                concession.IsInProgressRenewal = false;
+            }
+            else
+            {
+                var relationships = _concessionRelationshipRepository.ReadByChildConcessionId(concession.Id);
+                var extenionRelationshipTypeId = _lookupTableManager.GetRelationshipId("Extension");
+                var renewalRelationshipTypeId = _lookupTableManager.GetRelationshipId("Renewal");
 
-            var relationships = _concessionRelationshipRepository.ReadByChildConcessionId(concession.Id);
-            var extenionRelationshipTypeId = _lookupTableManager.GetRelationshipId("Extension");
-            var renewalRelationshipTypeId = _lookupTableManager.GetRelationshipId("Renewal");
-
-            return relationships != null &&
-                   relationships.Any(_ => _.RelationshipId == extenionRelationshipTypeId ||
-                                          _.RelationshipId == renewalRelationshipTypeId);
+                concession.IsInProgressExtension = relationships.Any(_ => _.RelationshipId == extenionRelationshipTypeId);
+                concession.IsInProgressRenewal = relationships.Any(_ => _.RelationshipId == renewalRelationshipTypeId);
+            }
         }
         
         /// <summary>

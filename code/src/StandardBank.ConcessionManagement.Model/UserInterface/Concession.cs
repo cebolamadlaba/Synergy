@@ -203,5 +203,21 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         ///   <c>true</c> if this instance can archive; otherwise, <c>false</c>.
         /// </value>
         public bool CanArchive { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is in progress extension.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is in progress extension; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsInProgressExtension { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is in progress renewal.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is in progress renewal; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsInProgressRenewal { get; set; }
     }
 }
