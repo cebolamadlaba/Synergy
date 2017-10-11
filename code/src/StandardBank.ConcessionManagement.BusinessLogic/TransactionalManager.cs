@@ -64,6 +64,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ILoadedPriceTransactionalRepository _loadedPriceTransactionalRepository;
 
         /// <summary>
+        /// The rule manager
+        /// </summary>
+        private readonly IRuleManager _ruleManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TransactionalManager"/> class.
         /// </summary>
         /// <param name="concessionManager">The concession manager.</param>
@@ -75,13 +80,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="financialTransactionalRepository">The financial transactional repository.</param>
         /// <param name="productTransactionalRepository">The product transactional repository.</param>
         /// <param name="loadedPriceTransactionalRepository">The loaded price transactional repository.</param>
+        /// <param name="ruleManager">The rule manager.</param>
         public TransactionalManager(IConcessionManager concessionManager,
             IConcessionTransactionalRepository concessionTransactionalRepository,
             ILegalEntityRepository legalEntityRepository, ILegalEntityAccountRepository legalEntityAccountRepository,
             IMapper mapper, ILookupTableManager lookupTableManager,
             IFinancialTransactionalRepository financialTransactionalRepository,
             IProductTransactionalRepository productTransactionalRepository,
-            ILoadedPriceTransactionalRepository loadedPriceTransactionalRepository)
+            ILoadedPriceTransactionalRepository loadedPriceTransactionalRepository, IRuleManager ruleManager)
         {
             _concessionManager = concessionManager;
             _concessionTransactionalRepository = concessionTransactionalRepository;
@@ -92,6 +98,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _financialTransactionalRepository = financialTransactionalRepository;
             _productTransactionalRepository = productTransactionalRepository;
             _loadedPriceTransactionalRepository = loadedPriceTransactionalRepository;
+            _ruleManager = ruleManager;
         }
 
         /// <summary>
@@ -167,39 +174,49 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
             {
-                var databaseTransactionalConcession =
-                    _concessionTransactionalRepository.ReadById(mappedConcessionTransactional.Id);
+                UpdateApprovedTransactionTableNumberAndIsMismatched(mappedConcessionTransactional);
 
-                //the approved table number is the table number that was captured when approving
-                mappedConcessionTransactional.ApprovedTransactionTableNumberId = mappedConcessionTransactional.TransactionTableNumberId;
-
-                //the table number is what is currently in the database
-                mappedConcessionTransactional.TransactionTableNumberId = databaseTransactionalConcession.TransactionTableNumberId;
-
-                if (mappedConcessionTransactional.TransactionTypeId.HasValue)
-                {
-                    var loadedPriceTransactional =
-                        _loadedPriceTransactionalRepository.ReadByTransactionTypeIdLegalEntityAccountId(
-                            mappedConcessionTransactional.TransactionTypeId.Value,
-                            mappedConcessionTransactional.LegalEntityAccountId);
-
-                    if (loadedPriceTransactional != null)
-                    {
-                        mappedConcessionTransactional.LoadedTransactionTableNumberId = loadedPriceTransactional.TransactionTableNumberId;
-
-                        if (loadedPriceTransactional.TransactionTableNumberId !=
-                            mappedConcessionTransactional.ApprovedTransactionTableNumberId)
-                            mappedConcessionTransactional.IsMismatched = true;
-                    }
-
-                    if (!mappedConcessionTransactional.DateApproved.HasValue)
-                        mappedConcessionTransactional.DateApproved = DateTime.Now;
-                }
+                _ruleManager.UpdateBaseFieldsOnApproval(mappedConcessionTransactional);
             }
 
             _concessionTransactionalRepository.Update(mappedConcessionTransactional);
 
             return mappedConcessionTransactional;
+        }
+
+        /// <summary>
+        /// Updates the approved transaction table number and is mismatched.
+        /// </summary>
+        /// <param name="mappedConcessionTransactional">The mapped concession transactional.</param>
+        private void UpdateApprovedTransactionTableNumberAndIsMismatched(ConcessionTransactional mappedConcessionTransactional)
+        {
+            var databaseTransactionalConcession =
+                _concessionTransactionalRepository.ReadById(mappedConcessionTransactional.Id);
+
+            //the approved table number is the table number that was captured when approving
+            mappedConcessionTransactional.ApprovedTransactionTableNumberId =
+                mappedConcessionTransactional.TransactionTableNumberId;
+
+            //the table number is what is currently in the database
+            mappedConcessionTransactional.TransactionTableNumberId = databaseTransactionalConcession.TransactionTableNumberId;
+
+            if (mappedConcessionTransactional.TransactionTypeId.HasValue)
+            {
+                var loadedPriceTransactional =
+                    _loadedPriceTransactionalRepository.ReadByTransactionTypeIdLegalEntityAccountId(
+                        mappedConcessionTransactional.TransactionTypeId.Value,
+                        mappedConcessionTransactional.LegalEntityAccountId);
+
+                if (loadedPriceTransactional != null)
+                {
+                    mappedConcessionTransactional.LoadedTransactionTableNumberId =
+                        loadedPriceTransactional.TransactionTableNumberId;
+
+                    if (loadedPriceTransactional.TransactionTableNumberId !=
+                        mappedConcessionTransactional.ApprovedTransactionTableNumberId)
+                        mappedConcessionTransactional.IsMismatched = true;
+                }
+            }
         }
 
         /// <summary>

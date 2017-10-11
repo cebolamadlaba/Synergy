@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
@@ -64,6 +63,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ILoadedPriceCashRepository _loadedPriceCashRepository;
 
         /// <summary>
+        /// The rule manager
+        /// </summary>
+        private readonly IRuleManager _ruleManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CashManager"/> class.
         /// </summary>
         /// <param name="concessionManager">The concession manager.</param>
@@ -75,11 +79,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="productCashRepository">The product cash repository.</param>
         /// <param name="lookupTableManager">The lookup table manager.</param>
         /// <param name="loadedPriceCashRepository">The loaded price cash repository.</param>
+        /// <param name="ruleManager">The rule manager.</param>
         public CashManager(IConcessionManager concessionManager,
             IConcessionCashRepository concessionCashRepository, ILegalEntityRepository legalEntityRepository,
             IMapper mapper, ILegalEntityAccountRepository legalEntityAccountRepository,
             IFinancialCashRepository financialCashRepository, IProductCashRepository productCashRepository,
-            ILookupTableManager lookupTableManager, ILoadedPriceCashRepository loadedPriceCashRepository)
+            ILookupTableManager lookupTableManager, ILoadedPriceCashRepository loadedPriceCashRepository,
+            IRuleManager ruleManager)
         {
             _concessionManager = concessionManager;
             _concessionCashRepository = concessionCashRepository;
@@ -90,6 +96,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _productCashRepository = productCashRepository;
             _lookupTableManager = lookupTableManager;
             _loadedPriceCashRepository = loadedPriceCashRepository;
+            _ruleManager = ruleManager;
         }
 
         /// <summary>
@@ -177,34 +184,42 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
             {
-                var databaseCashConcession =
-                    _concessionCashRepository.ReadById(mappedConcessionCash.Id);
+                UpdateApprovedTableNumberAndIsMismatched(mappedConcessionCash);
 
-                //the approved table number is the table number that was captured when approving
-                mappedConcessionCash.ApprovedTableNumberId = mappedConcessionCash.TableNumberId;
-
-                //the table number is what is currently in the database
-                mappedConcessionCash.TableNumberId = databaseCashConcession.TableNumberId;
-
-                var loadedPriceCash =
-                    _loadedPriceCashRepository.ReadByChannelTypeIdLegalEntityAccountId(
-                        mappedConcessionCash.ChannelTypeId, mappedConcessionCash.LegalEntityAccountId);
-
-                if (loadedPriceCash != null)
-                {
-                    mappedConcessionCash.LoadedTableNumberId = loadedPriceCash.TableNumberId;
-
-                    if (loadedPriceCash.TableNumberId != mappedConcessionCash.ApprovedTableNumberId)
-                        mappedConcessionCash.IsMismatched = true;
-                }
-
-                if (!mappedConcessionCash.DateApproved.HasValue)
-                    mappedConcessionCash.DateApproved = DateTime.Now;
+                _ruleManager.UpdateBaseFieldsOnApproval(mappedConcessionCash);
             }
 
             _concessionCashRepository.Update(mappedConcessionCash);
 
             return mappedConcessionCash;
+        }
+
+        /// <summary>
+        /// Updates the approved table number and is mismatched.
+        /// </summary>
+        /// <param name="mappedConcessionCash">The mapped concession cash.</param>
+        private void UpdateApprovedTableNumberAndIsMismatched(ConcessionCash mappedConcessionCash)
+        {
+            var databaseCashConcession =
+                _concessionCashRepository.ReadById(mappedConcessionCash.Id);
+
+            //the approved table number is the table number that was captured when approving
+            mappedConcessionCash.ApprovedTableNumberId = mappedConcessionCash.TableNumberId;
+
+            //the table number is what is currently in the database
+            mappedConcessionCash.TableNumberId = databaseCashConcession.TableNumberId;
+
+            var loadedPriceCash =
+                _loadedPriceCashRepository.ReadByChannelTypeIdLegalEntityAccountId(
+                    mappedConcessionCash.ChannelTypeId, mappedConcessionCash.LegalEntityAccountId);
+
+            if (loadedPriceCash != null)
+            {
+                mappedConcessionCash.LoadedTableNumberId = loadedPriceCash.TableNumberId;
+
+                if (loadedPriceCash.TableNumberId != mappedConcessionCash.ApprovedTableNumberId)
+                    mappedConcessionCash.IsMismatched = true;
+            }
         }
 
         /// <summary>

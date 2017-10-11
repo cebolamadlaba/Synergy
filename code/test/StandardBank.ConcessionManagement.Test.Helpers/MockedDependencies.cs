@@ -452,5 +452,10 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static Mock<ITransactionTableNumberRepository> MockTransactionTableNumberRepository =
             new Mock<ITransactionTableNumberRepository>();
+
+        /// <summary>
+        /// The mock rule manager
+        /// </summary>
+        public static Mock<IRuleManager> MockRuleManager = new Mock<IRuleManager>();
     }
 }

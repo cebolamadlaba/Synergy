@@ -39,7 +39,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     warningMessage: String;
     riskGroupNumber: number;
     selectedConditionTypes: ConditionType[];
-    isLoading = false;
+	isLoading = true;
     canBcmApprove = false;
     canPcmApprove = false;
     hasChanges = false;
@@ -286,9 +286,12 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                     currentCondition.get('period').setValue(selectedPeriod[0]);
 
                     rowIndex++;
-                }
-
-            }, error => this.errorMessage = <any>error);
+				}
+				this.isLoading = false;
+			}, error => {
+				this.isLoading = false;
+				this.errorMessage = <any>error;
+			});
         }
     }
 
@@ -453,6 +456,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
             if (concessionFormItem.get('uffFee').value)
                 lendingConcessionDetail.uffFee = concessionFormItem.get('uffFee').value;
+
+			if (concessionFormItem.get('expiryDate').value)
+				lendingConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
             lendingConcession.lendingConcessionDetails.push(lendingConcessionDetail);
         }

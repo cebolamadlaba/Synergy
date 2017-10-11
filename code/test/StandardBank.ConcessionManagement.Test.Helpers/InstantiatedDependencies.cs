@@ -467,11 +467,17 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 ConcessionDetailRepository, ConcessionConditionViewRepository);
 
         /// <summary>
+        /// The rule manager
+        /// </summary>
+        public static IRuleManager RuleManager = new RuleManager(ConcessionRelationshipRepository, LookupTableManager);
+
+        /// <summary>
         /// The lending manager
         /// </summary>
         public static ILendingManager LendingManager = new LendingManager(ConcessionManager,
             LegalEntityRepository, ConcessionLendingRepository, Mapper, LegalEntityAccountRepository,
-            ProductLendingRepository, FinancialLendingRepository, LookupTableManager, LoadedPriceLendingRepository);
+            ProductLendingRepository, FinancialLendingRepository, LookupTableManager, LoadedPriceLendingRepository,
+            RuleManager);
 
         /// <summary>
         /// The transactional manager
@@ -479,13 +485,14 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static ITransactionalManager TransactionalManager =
             new TransactionalManager(ConcessionManager, ConcessionTransactionalRepository,
                 LegalEntityRepository, LegalEntityAccountRepository, Mapper, LookupTableManager,
-                FinancialTransactionalRepository, ProductTransactionalRepository, LoadedPriceTransactionalRepository);
+                FinancialTransactionalRepository, ProductTransactionalRepository, LoadedPriceTransactionalRepository,
+                RuleManager);
 
         /// <summary>
         /// The cash manager
         /// </summary>
         public static ICashManager CashManager = new CashManager(ConcessionManager,
             ConcessionCashRepository, LegalEntityRepository, Mapper, LegalEntityAccountRepository,
-            FinancialCashRepository, ProductCashRepository, LookupTableManager, LoadedPriceCashRepository);
+            FinancialCashRepository, ProductCashRepository, LookupTableManager, LoadedPriceCashRepository, RuleManager);
     }
 }

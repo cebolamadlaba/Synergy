@@ -41,7 +41,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 	riskGroupNumber: number;
 	public cashConcessionForm: FormGroup;
 	selectedConditionTypes: ConditionType[];
-	isLoading = false;
+	isLoading = true;
 	canBcmApprove = false;
 	canPcmApprove = false;
 	hasChanges = false;
@@ -283,8 +283,11 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
 					rowIndex++;
 				}
-
-			}, error => this.errorMessage = <any>error);
+				this.isLoading = false;
+			}, error => {
+				this.isLoading = false;
+				this.errorMessage = <any>error;
+			});
 		}
 	}
 

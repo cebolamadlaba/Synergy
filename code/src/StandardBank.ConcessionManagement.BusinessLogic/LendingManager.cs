@@ -63,6 +63,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ILoadedPriceLendingRepository _loadedPriceLendingRepository;
 
         /// <summary>
+        /// The rule manager
+        /// </summary>
+        private readonly IRuleManager _ruleManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LendingManager"/> class.
         /// </summary>
         /// <param name="concessionManager">The concession manager.</param>
@@ -74,11 +79,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="financialLendingRepository">The financial lending repository.</param>
         /// <param name="lookupTableManager">The lookup table manager.</param>
         /// <param name="loadedPriceLendingRepository">The loaded price lending repository.</param>
+        /// <param name="ruleManager">The rule manager.</param>
         public LendingManager(IConcessionManager concessionManager,
             ILegalEntityRepository legalEntityRepository, IConcessionLendingRepository concessionLendingRepository,
             IMapper mapper, ILegalEntityAccountRepository legalEntityAccountRepository,
             IProductLendingRepository productLendingRepository, IFinancialLendingRepository financialLendingRepository,
-            ILookupTableManager lookupTableManager, ILoadedPriceLendingRepository loadedPriceLendingRepository)
+            ILookupTableManager lookupTableManager, ILoadedPriceLendingRepository loadedPriceLendingRepository,
+            IRuleManager ruleManager)
         {
             _concessionManager = concessionManager;
             _legalEntityRepository = legalEntityRepository;
@@ -89,6 +96,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _financialLendingRepository = financialLendingRepository;
             _lookupTableManager = lookupTableManager;
             _loadedPriceLendingRepository = loadedPriceLendingRepository;
+            _ruleManager = ruleManager;
         }
 
         /// <summary>
@@ -173,26 +181,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
             {
-                var databaseLendingConcession =
-                    _concessionLendingRepository.ReadById(concessionLending.Id);
+                UpdateApprovedPriceAndIsMismatched(concessionLending);
 
-                //the approved margin to prime is what has been captured when approved
-                concessionLending.ApprovedMarginToPrime = concessionLending.MarginToPrime;
-
-                //the margin to prime is what is in the database at the moment
-                concessionLending.MarginToPrime = databaseLendingConcession.MarginToPrime;
-
-                var loadedPriceLending =
-                    _loadedPriceLendingRepository.ReadByProductTypeIdLegalEntityAccountId(
-                        concessionLending.ProductTypeId, concessionLending.LegalEntityAccountId);
-
-                if (loadedPriceLending != null)
-                {
-                    concessionLending.LoadedMarginToPrime = loadedPriceLending.MarginToPrime;
-
-                    if (loadedPriceLending.MarginToPrime != concessionLending.ApprovedMarginToPrime)
-                        concessionLending.IsMismatched = true;
-                }
+                _ruleManager.UpdateBaseFieldsOnApproval(concessionLending);
 
                 if (!concessionLending.ExpiryDate.HasValue)
                 {
@@ -203,14 +194,39 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     else if (productType != "Overdraft" && concessionLending.Term.HasValue)
                         concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
                 }
-
-                if (!concessionLending.DateApproved.HasValue)
-                    concessionLending.DateApproved = DateTime.Now;
             }
 
             _concessionLendingRepository.Update(concessionLending);
 
             return concessionLending;
+        }
+
+        /// <summary>
+        /// Updates the approved price and is mismatched.
+        /// </summary>
+        /// <param name="concessionLending">The concession lending.</param>
+        private void UpdateApprovedPriceAndIsMismatched(ConcessionLending concessionLending)
+        {
+            var databaseLendingConcession =
+                _concessionLendingRepository.ReadById(concessionLending.Id);
+
+            //the approved margin to prime is what has been captured when approved
+            concessionLending.ApprovedMarginToPrime = concessionLending.MarginToPrime;
+
+            //the margin to prime is what is in the database at the moment
+            concessionLending.MarginToPrime = databaseLendingConcession.MarginToPrime;
+
+            var loadedPriceLending =
+                _loadedPriceLendingRepository.ReadByProductTypeIdLegalEntityAccountId(
+                    concessionLending.ProductTypeId, concessionLending.LegalEntityAccountId);
+
+            if (loadedPriceLending != null)
+            {
+                concessionLending.LoadedMarginToPrime = loadedPriceLending.MarginToPrime;
+
+                if (loadedPriceLending.MarginToPrime != concessionLending.ApprovedMarginToPrime)
+                    concessionLending.IsMismatched = true;
+            }
         }
 
         /// <summary>

@@ -41,7 +41,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 	riskGroupNumber: number;
 	selectedConditionTypes: ConditionType[];
 	selectedTransactionTypes: TransactionType[];
-	isLoading = false;
+	isLoading = true;
 	canBcmApprove = false;
 	canPcmApprove = false;
 	hasChanges = false;
@@ -278,7 +278,11 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 					rowIndex++;
 				}
 
-			}, error => this.errorMessage = <any>error);
+				this.isLoading = false;
+			}, error => {
+				this.isLoading = false;
+				this.errorMessage = <any>error;
+			});
 		}
 	}
 
