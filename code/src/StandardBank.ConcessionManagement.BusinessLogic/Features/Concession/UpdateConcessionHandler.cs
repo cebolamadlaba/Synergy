@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AutoMapper;
+using Hangfire;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
+using StandardBank.ConcessionManagement.Model.BusinessLogic.EmailTemplates;
 using StandardBank.ConcessionManagement.Model.Repository;
 namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
 {
@@ -36,6 +38,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         private readonly ILookupTableManager _lookupTableManager;
 
         /// <summary>
+        /// The email manager
+        /// </summary>
+        private readonly IEmailManager _emailManager;
+
+        /// <summary>
+        /// The user manager
+        /// </summary>
+        private readonly IUserManager _userManager;
+
+        /// <summary>
         /// The logger
         /// </summary>
         private readonly ILogger<UpdateConcessionHandler> _logger;
@@ -48,13 +60,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         /// <param name="logger">The logger.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="lookupTableManager">The lookup table manager.</param>
+        /// <param name="emailManager">The email manager.</param>
+        /// <param name="userManager">The user manager.</param>
         public UpdateConcessionHandler(IConcessionManager concessionManager, IMediator mediator,
-            ILogger<UpdateConcessionHandler> logger, IMapper mapper, ILookupTableManager lookupTableManager)
+            ILogger<UpdateConcessionHandler> logger, IMapper mapper, ILookupTableManager lookupTableManager,
+            IEmailManager emailManager, IUserManager userManager)
         {
             _concessionManager = concessionManager;
             _mediator = mediator;
             _mapper = mapper;
             _lookupTableManager = lookupTableManager;
+            _emailManager = emailManager;
+            _userManager = userManager;
             _logger = logger;
         }
 
@@ -88,7 +105,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
                             break;
                         case "PCM Approved With Changes":
                         case "HO Approved With Changes":
-                            await TryAndSendEmail(message, result, Constants.ApprovalStep.RequestorApproval);
+                            var requestor = message.Concession.Requestor ?? _userManager.GetUser(message.Concession.RequestorId);
+
+                            BackgroundJob.Schedule(() =>
+                                _emailManager.SendConcessionAddedEmail(new ConcessionAddedEmail
+                                {
+                                    EmailAddress = requestor.EmailAddress,
+                                    FirstName = requestor.FirstName,
+                                    ConsessionId = message.Concession.ReferenceNumber
+                                }), DateTime.Now);
                             break;
                         default:
                             _logger.LogWarning(new EventId(1, "ApprovalEmailNotSent"), "Consession # {0} is not in any relevant sub status",
