@@ -304,7 +304,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var concession = await _mediator.Send(new AddConcession(lendingConcession.Concession, user));
 
             foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
+            {
+                if (relationship != "Extension")
+                    lendingConcessionDetail.ExpiryDate = null;
+
                 await _mediator.Send(new AddOrUpdateLendingConcessionDetail(lendingConcessionDetail, user, concession));
+            }
 
             if (lendingConcession.ConcessionConditions != null && lendingConcession.ConcessionConditions.Any())
                 foreach (var concessionCondition in lendingConcession.ConcessionConditions)
