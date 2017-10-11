@@ -35,7 +35,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         /// <param name="concessionManager">The concession manager.</param>
         /// <param name="mediator">The mediator.</param>
         /// <param name="logger">The logger.</param>
-        public AddConcessionHandler(IConcessionManager concessionManager, IMediator mediator, ILogger<AddConcessionHandler> logger)
+        public AddConcessionHandler(IConcessionManager concessionManager, IMediator mediator,
+            ILogger<AddConcessionHandler> logger)
         {
             _concessionManager = concessionManager;
             _mediator = mediator;
@@ -57,9 +58,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
             message.Concession.Id = result.Id;
 
             if (message.User.SelectedCentre?.Id > 0)
-                await TryAndSendEmail(message, result);
+                await SendNotificationEmail(message, result);
             else
-                _logger.LogWarning(new EventId(1,"ApprovalEmailNotSent"),"Consession # {0} has no selected center",result.Id);
+                _logger.LogWarning(new EventId(1, "ApprovalEmailNotSent"), "Consession # {0} has no selected center",
+                    result.Id);
 
             return message.Concession;
         }
@@ -70,21 +72,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         /// <param name="message"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        private async Task TryAndSendEmail(AddConcession message, Model.Repository.Concession result)
+        private async Task SendNotificationEmail(AddConcession message, Model.Repository.Concession result)
         {
-            try
+            await _mediator.Publish(new ConcessionAdded
             {
-                await _mediator.Publish(new ConcessionAdded
-                {
-                    CenterId = message.User.SelectedCentre.Id,
-                    ConsessionId = result.ConcessionRef
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.ToString());
-            }
-            
+                CenterId = message.User.SelectedCentre.Id,
+                ConsessionId = result.ConcessionRef
+            });
         }
     }
 }

@@ -5,10 +5,10 @@ using Hangfire;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
-using StandardBank.ConcessionManagement.Model;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.BusinessLogic.EmailTemplates;
 using StandardBank.ConcessionManagement.Model.Repository;
+
 namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
 {
     /// <summary>
@@ -93,34 +93,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
             if (message.User.SelectedCentre?.Id > 0)
             {
                 if (message.Concession.Status == "Pending" && !string.IsNullOrWhiteSpace(message.Concession.SubStatus))
-                {
-                    switch (message.Concession.SubStatus)
-                    {
-                        case "BCM Pending":
-                            await TryAndSendEmail(message, result, Constants.ApprovalStep.BCMApproval);
-                            break;
-                        case "HO Pending":
-                        case "PCM Pending":
-                            await TryAndSendEmail(message, result, Constants.ApprovalStep.PCMApproval);
-                            break;
-                        case "PCM Approved With Changes":
-                        case "HO Approved With Changes":
-                            var requestor = message.Concession.Requestor ?? _userManager.GetUser(message.Concession.RequestorId);
-
-                            BackgroundJob.Schedule(() =>
-                                _emailManager.SendConcessionAddedEmail(new ConcessionAddedEmail
-                                {
-                                    EmailAddress = requestor.EmailAddress,
-                                    FirstName = requestor.FirstName,
-                                    ConsessionId = message.Concession.ReferenceNumber
-                                }), DateTime.Now);
-                            break;
-                        default:
-                            _logger.LogWarning(new EventId(1, "ApprovalEmailNotSent"), "Consession # {0} is not in any relevant sub status",
-                                result.Id);
-                            break;
-                    }
-                }
+                    await SendNotificationEmail(message, result);
             }
             else
             {
@@ -132,27 +105,67 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         }
 
         /// <summary>
-        /// Tries the and send email.
+        /// Sends the notification email.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="result">The result.</param>
+        /// <returns></returns>
+        private async Task SendNotificationEmail(UpdateConcession message, Model.Repository.Concession result)
+        {
+            switch (message.Concession.SubStatus)
+            {
+                case "BCM Pending":
+                    await SendNotificationEmail(message, result, Constants.ApprovalStep.BCMApproval);
+                    break;
+                case "HO Pending":
+                case "PCM Pending":
+                    await SendNotificationEmail(message, result, Constants.ApprovalStep.PCMApproval);
+                    break;
+                case "PCM Approved With Changes":
+                case "HO Approved With Changes":
+                    SendApprovedWithChangesNotificationEmail(message);
+                    break;
+                default:
+                    _logger.LogWarning(new EventId(1, "ApprovalEmailNotSent"),
+                        "Consession # {0} is not in any relevant sub status",
+                        result.Id);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Sends the approved with changes notification email.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        private void SendApprovedWithChangesNotificationEmail(UpdateConcession message)
+        {
+            var requestor = message.Concession.Requestor ?? _userManager.GetUser(message.Concession.RequestorId);
+
+            BackgroundJob.Schedule(() =>
+                _emailManager.SendConcessionAddedEmail(new ConcessionAddedEmail
+                {
+                    EmailAddress = requestor.EmailAddress,
+                    FirstName = requestor.FirstName,
+                    ConsessionId = message.Concession.ReferenceNumber
+                }), DateTime.Now);
+        }
+
+        /// <summary>
+        /// Sends the notification email.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="result">The result.</param>
         /// <param name="approvalStep">The approval step.</param>
         /// <returns></returns>
-        private async Task TryAndSendEmail(UpdateConcession message, Model.Repository.Concession result, Constants.ApprovalStep approvalStep)
+        private async Task SendNotificationEmail(UpdateConcession message, Model.Repository.Concession result,
+            Constants.ApprovalStep approvalStep)
         {
-            try
+            await _mediator.Publish(new ConcessionAdded
             {
-                await _mediator.Publish(new ConcessionAdded
-                {
-                    CenterId = message.User.SelectedCentre.Id,
-                    ConsessionId = result.ConcessionRef,
-                    ApprovalStep = approvalStep
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.ToString());
-            }
+                CenterId = message.User.SelectedCentre.Id,
+                ConsessionId = result.ConcessionRef,
+                ApprovalStep = approvalStep
+            });
         }
     }
 }
