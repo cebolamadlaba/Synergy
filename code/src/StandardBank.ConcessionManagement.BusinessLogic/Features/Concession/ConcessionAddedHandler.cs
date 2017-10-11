@@ -3,7 +3,6 @@ using MediatR;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using System.Threading.Tasks;
 using Hangfire;
-using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.BusinessLogic.EmailTemplates;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
@@ -15,20 +14,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
     public class ConcessionAddedHandler : IAsyncNotificationHandler<ConcessionAdded>
     {
         /// <summary>
-        /// Gets the approval routing manager.
+        /// The approval routing manager
         /// </summary>
-        /// <value>
-        /// The approval routing manager.
-        /// </value>
-        private IApprovalRoutingManager _approvalRoutingManager { get; }
+        private readonly IApprovalRoutingManager _approvalRoutingManager;
 
         /// <summary>
-        /// Gets the email manager.
+        /// The email manager
         /// </summary>
-        /// <value>
-        /// The email manager.
-        /// </value>
-        private IEmailManager _emailManager { get; }
+        private readonly IEmailManager _emailManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionAddedHandler"/> class.
@@ -61,7 +54,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
                         ConsessionId = notification.ConsessionId
                     }), DateTime.Now);
             }
-
         }
     }
 }

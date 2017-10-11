@@ -38,6 +38,11 @@
                 public const string ReadAll = "CacheKey.Repository.ApprovalTypeRepository.ReadAll";
             }
 
+            public static class ApprovalWorkflowRepository
+            {
+                public const string GetApproversByRoles = "CacheKey.Repository.ApprovalWorkflowRepository.GetApproversByRoles";
+            }
+
             public static class BaseRateRepository
             {
                 public const string ReadAll = "CacheKey.Repository.BaseRateRepository.ReadAll";
