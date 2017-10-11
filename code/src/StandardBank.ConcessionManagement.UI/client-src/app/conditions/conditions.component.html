@@ -69,11 +69,8 @@
     <div class="form-group  filter-group">
         <div id="filter"><label for="sort" class="col-sm-1 control-label"> Filter</label></div>
         <div class="col-sm-2">
-            <select (change)="periodFilter($event.target.value)" class="form-control">
-                <option *ngFor="let p of periods"
-                        [ngValue]="p.id">
-                    {{p.description}}
-                </option>
+            <select (change)="periodFilter($event.target.value)" class="form-control" [(ngModel)]="period">
+                <option *ngFor="let p of periods" [ngValue]="p">{{p.description}}</option>
             </select>
         </div>
     </div>

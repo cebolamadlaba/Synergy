@@ -30,7 +30,7 @@ export class ConditionsComponent implements OnInit {
     isLoading = true;
 
     periodType: string = "Standard";
-    period: string = "3 Months"
+	period: Period;
 
     standardClass: string = "activeWidget";
     ongoingClass: string = "";
@@ -41,25 +41,31 @@ export class ConditionsComponent implements OnInit {
         private router: Router) { }
 
     ngOnInit() {
-        this.lookupDataService.getPeriods().subscribe(data => { this.periods = data; }, err => this.errorMessage = err);
+		this.lookupDataService.getPeriods().subscribe(data => {
+			this.periods = data;
+			this.period = this.periods[0];
 
-        this.loadAll();
+			this.loadAll();
+		}, err => this.errorMessage = err);
     }
 
     loadAll() {
         this.observableConditionCounts = this.conditionService.getConditionCounts();
         this.observableConditionCounts.subscribe(conditionCounts => this.conditionCounts = conditionCounts, error => this.errorMessage = <any>error);
 
-        this.getConditions();
+		if (this.period) {
+			this.getConditions();
+		}
     }
 
     periodFilter(value: string) {
-        this.period = value;
+		//this.period = value;
+		//this.selectedPeriod = value;
         this.getConditions();
     }
 
     getConditions() {
-        this.conditionService.getMyConditions(this.period, this.periodType).subscribe(conditions => {
+        this.conditionService.getMyConditions(this.period.description, this.periodType).subscribe(conditions => {
             this.observableConditions = conditions;
             this.isLoading = false;
         }, error => this.errorMessage = <any>error);
