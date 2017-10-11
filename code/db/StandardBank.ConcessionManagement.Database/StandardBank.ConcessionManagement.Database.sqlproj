@@ -69,6 +69,7 @@
     <Folder Include="Security\" />
     <Folder Include="Schema Compare" />
     <Folder Include="Database Scripts" />
+    <Folder Include="Change Scripts\Old Migrator" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\tblUserRole.sql" />
@@ -202,6 +203,37 @@
     <Build Include="dbo\Views\ConcessionConditionView.sql" />
     <Build Include="dbo\Tables\rtblTransactionTableNumber.sql" />
     <Build Include="Audit\Tables\rtblTransactionTableNumber.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_0_0__09_create_rtblPeriod.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_0_1__10_create_rtblPeriodType.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_0_2__11_add_data_rtlbPeriod.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_0_3__12_add_data_rtblPeriodType.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_0_4__db_changes.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_0_5__13_change_customer_relationship.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_0_6__14_add_legal_entity_account.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_0_7__15_add_region_to_concession.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_0_8__16_add_testing_users.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_0_9__17_change_cash_concession.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_1_0__18_accrual_type.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_1_1__19_more_cash_concession_changes.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_1_2__20_change_transactional_concession.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_1_3__21_table_number_changes.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_1_4__22_transactional_table_number.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_1_5__23_concession_relationships.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_1_6__24_relationship_changes.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_1_7__25_lending_integration_fields.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_1_8__26_UserCreateProc.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_1_9__27_myconditions_changes.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_2_0__28_fix_concession_comment.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_2_1__29_cash_integration_fields.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_2_2__30_updateuserproc.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_2_3__31_concession_letter_changes.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_2_4__32_addpricingfields.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_2_5__33_transactional_integration_fields.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_2_6__34_loaded_price_changes.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_2_7__35_approved_with_changes.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_2_8__36_resubmit_update.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_2_9__37_conditions_changes.sql" />
+    <Build Include="Change Scripts\Old Migrator\V1_3_0__38_redesign.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Change Scripts\09_create_rtblPeriod.sql" />
@@ -210,6 +242,6 @@
     <None Include="Change Scripts\12_add_data_rtblPeriodType.sql" />
     <None Include="Schema Compare\CMS_Dev_V2 to Project.scmp" />
     <None Include="Schema Compare\Project to ConcessionPricingTool_V2.scmp" />
-    <None Include="Database Scripts\cms_dev_v2_2017-10-10.zip" />
+    <None Include="Database Scripts\cms_dev_v2_2017-10-11.zip" />
   </ItemGroup>
 </Project>

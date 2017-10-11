@@ -1,9 +1,9 @@
 ﻿CREATE VIEW dbo.ConcessionConditionView
 AS
-SELECT        cc.pkConcessionConditionId AS ConcessionConditionId, cc.fkConcessionId AS ConcessionId, c.ConcessionRef AS ReferenceNumber, rct.pkConcessionTypeId AS ConcessionTypeId, rct.Description AS ConcessionType, 
-                         c.fkRiskGroupId AS RiskGroupId, rg.RiskGroupNumber, rg.RiskGroupName, cc.fkConditionTypeId AS ConditionTypeId, ct.Description AS ConditionType, cc.fkConditionProductId AS ConditionProductId, 
-                         cp.Description AS ConditionProduct, cc.fkPeriodTypeId AS PeriodTypeId, pt.Description AS PeriodType, cc.fkPeriodId AS PeriodId, p.Description AS Period, cc.InterestRate, cc.Volume, cc.Value, cc.ConditionMet, 
-                         cc.ExpectedTurnoverValue, cc.DateApproved, cc.ExpiryDate, cc.IsActive
+SELECT        cc.pkConcessionConditionId AS ConcessionConditionId, cc.fkConcessionId AS ConcessionId, c.fkRequestorId AS RequestorId, c.ConcessionRef AS ReferenceNumber, rct.pkConcessionTypeId AS ConcessionTypeId, 
+                         rct.Description AS ConcessionType, c.fkRiskGroupId AS RiskGroupId, rg.RiskGroupNumber, rg.RiskGroupName, cc.fkConditionTypeId AS ConditionTypeId, ct.Description AS ConditionType, 
+                         cc.fkConditionProductId AS ConditionProductId, cp.Description AS ConditionProduct, cc.fkPeriodTypeId AS PeriodTypeId, pt.Description AS PeriodType, cc.fkPeriodId AS PeriodId, p.Description AS Period, cc.InterestRate, 
+                         cc.Volume, cc.Value, cc.ConditionMet, cc.ExpectedTurnoverValue, cc.DateApproved, cc.ExpiryDate, cc.IsActive
 FROM            dbo.tblConcessionCondition AS cc INNER JOIN
                          dbo.tblConcession AS c ON c.pkConcessionId = cc.fkConcessionId INNER JOIN
                          dbo.tblRiskGroup AS rg ON rg.pkRiskGroupId = c.fkRiskGroupId INNER JOIN
