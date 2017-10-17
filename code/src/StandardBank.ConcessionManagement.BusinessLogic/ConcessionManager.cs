@@ -413,7 +413,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var approvedConcessions = new List<ApprovedConcession>();
 
-            foreach (var concession in concessions.OrderBy(_ => _.ConcessionRef))
+            foreach (var concession in concessions.OrderByDescending(_ => _.DateApproved ?? _.ConcessionDate))
             {
                 var approvedConcession =
                     approvedConcessions.FirstOrDefault(_ => _.ReferenceNumber == concession.ConcessionRef);
