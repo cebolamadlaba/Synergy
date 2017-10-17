@@ -29,7 +29,8 @@ export class DueExpiryInboxComponent implements OnInit, OnDestroy {
                 emptyTable: "No records found!",
                 search: "",
                 searchPlaceholder: "Search"
-            }
+			},
+			order: [[6, 'desc']]
         };
 
         this.loadUserConcessions();

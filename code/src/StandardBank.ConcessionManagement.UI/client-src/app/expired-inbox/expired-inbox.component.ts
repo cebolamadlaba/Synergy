@@ -28,7 +28,8 @@ export class ExpiredInboxComponent implements OnInit {
                 emptyTable: "No records found!",
                 search: "",
                 searchPlaceholder: "Search"
-            }
+			},
+			order: [[6, 'desc']]
         };
 
         this.observableUserConcessions = this.userConcessionsService.getData();

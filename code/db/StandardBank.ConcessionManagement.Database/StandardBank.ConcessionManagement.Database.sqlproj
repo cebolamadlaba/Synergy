@@ -242,6 +242,6 @@
     <None Include="Change Scripts\12_add_data_rtblPeriodType.sql" />
     <None Include="Schema Compare\CMS_Dev_V2 to Project.scmp" />
     <None Include="Schema Compare\Project to ConcessionPricingTool_V2.scmp" />
-    <None Include="Database Scripts\cms_dev_v2_2017-10-11.zip" />
+    <None Include="Database Scripts\cmd_dev_v2_2017-10-17.zip" />
   </ItemGroup>
 </Project>

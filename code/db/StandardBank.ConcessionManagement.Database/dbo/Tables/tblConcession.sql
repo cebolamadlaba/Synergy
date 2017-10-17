@@ -12,7 +12,7 @@
     [fkRegionId]          INT             NOT NULL,
     [fkCentreId]          INT             NOT NULL,
     [ConcessionRef]       VARCHAR (30)    NULL,
-    [SMTDealNumber]       VARCHAR (20)    NOT NULL,
+    [SMTDealNumber]       VARCHAR (20)    NULL,
     [ConcessionDate]      DATETIME        NOT NULL,
     [DatesentForApproval] DATETIME        NULL,
     [Motivation]          VARCHAR (1000)  NOT NULL,
