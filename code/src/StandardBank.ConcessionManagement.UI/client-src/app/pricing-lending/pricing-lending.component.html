@@ -1,4 +1,4 @@
-<!-- Loading message -->
+﻿<!-- Loading message -->
 <div class="col-md-12" *ngIf="isLoading">
     <div class="form-feedback-container">
         <div class="alert-info">
@@ -131,7 +131,7 @@
 
         <!-- Search bar -->
         <div class="input-group add-on">
-            <input class="form-control" placeholder="Concession ID" [(ngModel)]="filterConcessionId" type="text">
+            <input class="form-control" placeholder="Search Concession ID" [(ngModel)]="filterConcessionId" type="text">
         </div>
 
         <div class="section" *ngFor="let lendingConcession of lendingView.lendingConcessions | baseConcessionFilter : filterConcessionId; trackBy: index;">
