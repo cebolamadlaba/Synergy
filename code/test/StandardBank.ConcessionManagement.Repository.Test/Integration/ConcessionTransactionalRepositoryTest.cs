@@ -16,19 +16,20 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void Create_Executes_Positive()
         {
+            var TransactionTableNumberId = DataHelper.GetTransactionTableNumberId();
+
             var model = new ConcessionTransactional
             {
                 ConcessionId = DataHelper.GetConcessionId(),
+                ConcessionDetailId = DataHelper.GetConcessionDetailId(),
                 TransactionTypeId = DataHelper.GetTransactionTypeId(),
-                ChannelTypeId = DataHelper.GetChannelTypeId(),
-                TransactionVolume = 9,
-                TransactionValue = 557,
-                BaseRateId = DataHelper.GetBaseRateId(),
                 AdValorem = 9485,
+                Fee = 70,
+                TransactionTableNumberId = TransactionTableNumberId,
+                ApprovedTransactionTableNumberId = TransactionTableNumberId,
+                LoadedTransactionTableNumberId = TransactionTableNumberId,
                 LegalEntityId = DataHelper.GetLegalEntityId(),
-                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
-                BaseRate = 70,
-                TableNumberId = DataHelper.GetTableNumberId()
+                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
             };
 
             var result = InstantiatedDependencies.ConcessionTransactionalRepository.Create(model);
@@ -91,16 +92,15 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = InstantiatedDependencies.ConcessionTransactionalRepository.ReadById(id);
 
             model.ConcessionId = DataHelper.GetAlternateConcessionId(model.ConcessionId);
+            model.ConcessionDetailId = DataHelper.GetAlternateConcessionDetailId(model.ConcessionDetailId);
             model.TransactionTypeId = DataHelper.GetAlternateTransactionTypeId(model.TransactionTypeId);
-            model.ChannelTypeId = DataHelper.GetAlternateChannelTypeId(model.ChannelTypeId);
-            model.TransactionVolume = model.TransactionVolume + 1;
-            model.TransactionValue = model.TransactionValue + 100;
-            model.BaseRateId = DataHelper.GetAlternateBaseRateId(model.BaseRateId);
             model.AdValorem = model.AdValorem + 100;
+            model.Fee = model.Fee + 100;
+            model.TransactionTableNumberId = DataHelper.GetAlternateTransactionTableNumberId(model.TransactionTableNumberId);
+            model.ApprovedTransactionTableNumberId = DataHelper.GetAlternateTransactionTableNumberId(model.ApprovedTransactionTableNumberId);
+            model.LoadedTransactionTableNumberId = DataHelper.GetAlternateTransactionTableNumberId(model.LoadedTransactionTableNumberId);
             model.LegalEntityId = DataHelper.GetAlternateLegalEntityId(model.LegalEntityId);
             model.LegalEntityAccountId = DataHelper.GetAlternateLegalEntityAccountId(model.LegalEntityAccountId);
-            model.BaseRate = model.BaseRate + 100;
-            model.TableNumberId = DataHelper.GetAlternateTableNumberId(model.TableNumberId);
 
             InstantiatedDependencies.ConcessionTransactionalRepository.Update(model);
 
@@ -109,16 +109,15 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.NotNull(updatedModel);
             Assert.Equal(updatedModel.Id, model.Id);
             Assert.Equal(updatedModel.ConcessionId, model.ConcessionId);
+            Assert.Equal(updatedModel.ConcessionDetailId, model.ConcessionDetailId);
             Assert.Equal(updatedModel.TransactionTypeId, model.TransactionTypeId);
-            Assert.Equal(updatedModel.ChannelTypeId, model.ChannelTypeId);
-            Assert.Equal(updatedModel.TransactionVolume, model.TransactionVolume);
-            Assert.Equal(updatedModel.TransactionValue, model.TransactionValue);
-            Assert.Equal(updatedModel.BaseRateId, model.BaseRateId);
             Assert.Equal(updatedModel.AdValorem, model.AdValorem);
+            Assert.Equal(updatedModel.Fee, model.Fee);
+            Assert.Equal(updatedModel.TransactionTableNumberId, model.TransactionTableNumberId);
+            Assert.Equal(updatedModel.ApprovedTransactionTableNumberId, model.ApprovedTransactionTableNumberId);
+            Assert.Equal(updatedModel.LoadedTransactionTableNumberId, model.LoadedTransactionTableNumberId);
             Assert.Equal(updatedModel.LegalEntityId, model.LegalEntityId);
             Assert.Equal(updatedModel.LegalEntityAccountId, model.LegalEntityAccountId);
-            Assert.Equal(updatedModel.BaseRate, model.BaseRate);
-            Assert.Equal(updatedModel.TableNumberId, model.TableNumberId);
         }
 
         /// <summary>
@@ -127,19 +126,20 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void Delete_Executes_Positive()
         {
+            var TransactionTableNumberId = DataHelper.GetTransactionTableNumberId();
+
             var model = new ConcessionTransactional
             {
                 ConcessionId = DataHelper.GetConcessionId(),
+                ConcessionDetailId = DataHelper.GetConcessionDetailId(),
                 TransactionTypeId = DataHelper.GetTransactionTypeId(),
-                ChannelTypeId = DataHelper.GetChannelTypeId(),
-                TransactionVolume = 9,
-                TransactionValue = 557,
-                BaseRateId = DataHelper.GetBaseRateId(),
                 AdValorem = 9485,
+                Fee = 70,
+                TransactionTableNumberId = TransactionTableNumberId,
+                ApprovedTransactionTableNumberId = TransactionTableNumberId,
+                LoadedTransactionTableNumberId = TransactionTableNumberId,
                 LegalEntityId = DataHelper.GetLegalEntityId(),
-                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
-                BaseRate = 70,
-                TableNumberId = DataHelper.GetTableNumberId()
+                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
             };
 
             var temporaryEntity = InstantiatedDependencies.ConcessionTransactionalRepository.Create(model);

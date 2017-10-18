@@ -6,19 +6,19 @@
     public class ConcessionCount
     {
         /// <summary>
-        /// Gets or sets the status.
+        /// Gets or sets the type of the period.
         /// </summary>
         /// <value>
-        /// The status.
+        /// The type of the period.
         /// </value>
-        public string Status { get; set; }
+        public string PeriodType { get; set; }
 
         /// <summary>
-        /// Gets or sets the count.
+        /// Gets or sets the record count.
         /// </summary>
         /// <value>
-        /// The count.
+        /// The record count.
         /// </value>
-        public int Count { get; set; }
+        public int RecordCount { get; set; }
     }
 }

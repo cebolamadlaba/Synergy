@@ -102,7 +102,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// <summary>
         /// Gets or sets the sub status id
         /// </summary>
-        public int? SubStatusId { get; set; }
+        public int SubStatusId { get; set; }
 
         /// <summary>
         /// Gets or sets the comments
@@ -165,21 +165,12 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public IEnumerable<ConcessionRelationshipDetail> ConcessionRelationshipDetails { get; set; }
 
         /// <summary>
-        /// Gets or sets the ExpiryDate.
+        /// Gets or sets the requestor.
         /// </summary>
         /// <value>
-        /// The ExpiryDate.
+        /// The requestor.
         /// </value>
-        public DateTime? ExpiryDate { get; set; }
-
-        /// <summary>
-        /// Gets or sets the DateApproved.
-        /// </summary>
-        /// <value>
-        /// The DateApproved.
-        /// </value>
-        public DateTime? DateApproved { get; set; }
-        public RequestorModel Requestor { get; set; }
+        public User Requestor { get; set; }
 
         /// <summary>
         /// Gets the status description.
@@ -188,5 +179,45 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// The status description.
         /// </value>
         public string StatusDescription => $"{Status} - {SubStatus}";
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance can resubmit.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance can resubmit; otherwise, <c>false</c>.
+        /// </value>
+        public bool CanResubmit { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance can update.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance can update; otherwise, <c>false</c>.
+        /// </value>
+        public bool CanUpdate { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance can archive.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance can archive; otherwise, <c>false</c>.
+        /// </value>
+        public bool CanArchive { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is in progress extension.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is in progress extension; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsInProgressExtension { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is in progress renewal.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is in progress renewal; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsInProgressRenewal { get; set; }
     }
 }

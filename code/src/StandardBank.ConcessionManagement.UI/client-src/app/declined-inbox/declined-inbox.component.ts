@@ -4,7 +4,7 @@ import { UserConcessionsService } from "../services/user-concessions.service";
 import { UserConcessions } from "../models/user-concessions";
 import { Subject } from 'rxjs/Rx'
 import 'rxjs/add/operator/map';
-import { Concession } from "../models/concession";
+import { InboxConcession } from "../models/inbox-concession";
 import { Router, RouterModule } from '@angular/router';
 
 @Component({
@@ -28,7 +28,8 @@ export class DeclinedInboxComponent implements OnInit {
                 emptyTable: "No records found!",
                 search: "",
                 searchPlaceholder: "Search"
-            }
+			},
+			order: [[6, 'desc']]
         };
 
         this.observableUserConcessions = this.userConcessionsService.getData();
@@ -40,7 +41,7 @@ export class DeclinedInboxComponent implements OnInit {
             error => this.errorMessage = <any>error);
     }
 
-    openConcessionView(concession: Concession) {
+    openConcessionView(concession: InboxConcession) {
         switch (concession.concessionType) {
             case "Lending":
                 this.router.navigate(['/lending-view-concession', concession.riskGroupNumber, concession.referenceNumber]);

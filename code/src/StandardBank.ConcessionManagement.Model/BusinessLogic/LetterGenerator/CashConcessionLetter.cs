@@ -3,7 +3,7 @@
     /// <summary>
     /// Cash concession letter
     /// </summary>
-    public class CashConcessionLetter
+    public class CashConcessionLetter : BaseConcessionLetter
     {
         /// <summary>
         /// Gets or sets the account number.

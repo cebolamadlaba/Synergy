@@ -15,8 +15,8 @@
             <div class="col-md-11">
                 <div>
                     <div class="col-md-5">
-                        <div class="subHeading">{{riskGroup.name}}</div>
-                        <div class="date lightTitle hidden-element">{{riskGroup.number}}</div>
+                        <div class="subHeading">{{riskGroup?.name}}</div>
+                        <div class="date lightTitle hidden-element">{{riskGroup?.number}}</div>
                     </div>
                     <div class="col-md-2  hidden-element">
                         <div class="subHeading lightTitle"> Latest CRS / MRS</div>
@@ -72,11 +72,13 @@
 <form class="col-md-12 product-form" [formGroup]="cashConcessionForm" *ngIf="!isLoading">
     <div class="col-md-4">
         <div class="row">
+            <!-- SMT deal number -->
             <label>SMT Deal Number</label>
-            <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="saveMessage ? '' : null" />
+            <input type="text" numbersOnly="true" class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="saveMessage ? '' : null" />
         </div>
     </div>
     <div class="col-md-7 col-md-offset-1">
+        <!-- Motivation -->
         <label>Motivation</label>
         <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="saveMessage ? '' : null"></textarea>
     </div>
@@ -98,6 +100,8 @@
             <th>Ad Valorem</th>
             <th>Base Rate</th>
             <th>Accrual</th>
+            <th>Expiry Date</th>
+            <th></th>
         </tr>
         </thead>
         <tbody class="form-concessions-table-content">
@@ -129,6 +133,8 @@
                 </select>
             </td>
 
+            <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="saveMessage ? '' : null" /></td>
+
             <td class="delete"><button *ngIf="cashConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
         </tr>
         </tbody>
@@ -150,12 +156,13 @@
                         <th>Interest Rate</th>
                         <th>Volume</th>
                         <th>Value</th>
+                        <th>Expected Turnover Value</th>
                         <th>Period</th>
                     </tr>
                     </thead>
                     <tbody class="secondary-text">
                     <tr *ngIf="cashConcessionForm.controls.conditionItemsRows.controls.length == 0">
-                        <td colspan="7" class="searchEmptyState">
+                        <td colspan="8" class="searchEmptyState">
                             No conditions has been added
                         </td>
                     </tr>
@@ -166,6 +173,7 @@
                         <td>{{itemrow.get('interestRate').value}}</td>
                         <td>{{itemrow.get('volume').value}}</td>
                         <td>{{itemrow.get('value').value}}</td>
+                        <td>{{itemrow.get('expectedTurnoverValue').value}}</td>
                         <td>{{itemrow.get('periodType').value.description}} {{itemrow.get('period').value.description}}</td>
                     </tr>
                     </tbody>
@@ -185,7 +193,7 @@
                 <div class="col-md-12 modal-body">
                     <div class="row">
                         <div class="col-md-12 modal-title">
-                            <button type="button" class="btn btn-primary" (click)="addNewConditionRow()">New Conditions</button>
+                            <button type="button" class="btn btn-primary" (click)="addNewConditionRow()">Add Condition</button>
                         </div>
                     </div>
                     <table class="form-concessions-table" formArrayName="conditionItemsRows" style="width:100%">
@@ -196,6 +204,7 @@
                             <th>Interest Rate</th>
                             <th>Volume</th>
                             <th>Value</th>
+                            <th>Expected Turnover Value</th>
                             <th>Period Type</th>
                             <th>Period</th>
                             <th></th>
@@ -203,30 +212,40 @@
                         </thead>
                         <tbody class="form-concessions-table-content">
                             <tr *ngIf="cashConcessionForm.controls.conditionItemsRows.controls.length == 0">
-                                <td colspan="7" class="searchEmptyState">
+                                <td colspan="8" class="searchEmptyState">
                                     No conditions has been added
                                 </td>
                             </tr>
                             <tr *ngFor="let itemrow of cashConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
                                 <td class="length-long">
+                                    <!-- Condition type -->
                                     <select formControlName="conditionType" (change)="conditionTypeChanged(i)">
                                         <option *ngFor="let conditionTypeOption of conditionTypes" [ngValue]="conditionTypeOption">{{conditionTypeOption.description}}</option>
                                     </select>
                                 </td>
                                 <td class="length-long">
+                                    <!-- Product type -->
                                     <select formControlName="conditionProduct" *ngIf="selectedConditionTypes[i] != null">
                                         <option *ngFor="let conditionProductOption of selectedConditionTypes[i].conditionProducts" [ngValue]="conditionProductOption">{{conditionProductOption.description}}</option>
                                     </select>
                                 </td>
-                                <td class="length-medium"><input formControlName="interestRate" /></td>
-                                <td class="length-long"><input formControlName="volume" /></td>
-                                <td class="length-medium"><input formControlName="value" /></td>
+                                <!-- Interest rate -->
+                                <td class="length-medium"><input type="text" numbersOnly="true" formControlName="interestRate" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableInterestRate ? null : ''" /></td>
+                                <!-- Volume -->
+                                <td class="length-long"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionVolume ? null : ''" /></td>
+                                <!-- Value -->
+                                <td class="length-medium"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionValue ? null : ''" /></td>
+
+                                <td class="length-medium"><input type="text" numbersOnly="true" formControlName="expectedTurnoverValue" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableExpectedTurnoverValue ? null : ''" /></td>
+
                                 <td class="length-medium">
+                                    <!-- Period type -->
                                     <select formControlName="periodType">
                                         <option *ngFor="let periodTypeOption of periodTypes" [ngValue]="periodTypeOption">{{periodTypeOption.description}}</option>
                                     </select>
                                 </td>
                                 <td class="length-medium">
+                                    <!-- Period -->
                                     <select formControlName="period">
                                         <option *ngFor="let periodOption of periods" [ngValue]="periodOption">{{periodOption.description}}</option>
                                     </select>

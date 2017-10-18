@@ -22,7 +22,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 RiskGroupId = DataHelper.GetRiskGroupId(),
                 LegalEntityId = DataHelper.GetLegalEntityId(),
                 LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
-                TableNumberId = DataHelper.GetTableNumberId(),
+                TransactionTableNumberId = DataHelper.GetTransactionTableNumberId(),
                 TransactionTypeId = DataHelper.GetTransactionTypeId(),
                 Volume = 6070,
                 Value = 5104,
@@ -91,7 +91,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.RiskGroupId = DataHelper.GetAlternateRiskGroupId(model.RiskGroupId);
             model.LegalEntityId = DataHelper.GetAlternateLegalEntityId(model.LegalEntityId);
             model.LegalEntityAccountId = DataHelper.GetAlternateLegalEntityAccountId(model.LegalEntityAccountId);
-            model.TableNumberId = DataHelper.GetAlternateTableNumberId(model.TableNumberId);
+            model.TransactionTableNumberId = DataHelper.GetAlternateTransactionTableNumberId(model.TransactionTableNumberId);
             model.TransactionTypeId = DataHelper.GetAlternateTransactionTypeId(model.TransactionTypeId);
             model.Volume = model.Volume + 100;
             model.Value = model.Value + 100;
@@ -106,7 +106,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.RiskGroupId, model.RiskGroupId);
             Assert.Equal(updatedModel.LegalEntityId, model.LegalEntityId);
             Assert.Equal(updatedModel.LegalEntityAccountId, model.LegalEntityAccountId);
-            Assert.Equal(updatedModel.TableNumberId, model.TableNumberId);
+            Assert.Equal(updatedModel.TransactionTableNumberId, model.TransactionTableNumberId);
             Assert.Equal(updatedModel.TransactionTypeId, model.TransactionTypeId);
             Assert.Equal(updatedModel.Volume, model.Volume);
             Assert.Equal(updatedModel.Value, model.Value);
@@ -124,7 +124,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 RiskGroupId = DataHelper.GetRiskGroupId(),
                 LegalEntityId = DataHelper.GetLegalEntityId(),
                 LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
-                TableNumberId = DataHelper.GetTableNumberId(),
+                TransactionTableNumberId = DataHelper.GetTransactionTableNumberId(),
                 TransactionTypeId = DataHelper.GetTransactionTypeId(),
                 Volume = 6070,
                 Value = 5104,

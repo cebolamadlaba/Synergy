@@ -1,11 +1,9 @@
-export class LendingConcessionDetail {
+import { BaseConcessionDetail } from "./base-concession-detail";
+
+export class LendingConcessionDetail extends BaseConcessionDetail {
     lendingConcessionDetailId: number;
     productType: string;
     productTypeId: number;
-    customerName: string;
-    accountNumber: string;
-    legalEntityId: number;
-    legalEntityAccountId: number;
     limit: number;
     averageBalance: number;
     term: number;

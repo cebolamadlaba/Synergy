@@ -5,7 +5,7 @@ import { UserConcessions } from "../models/user-concessions";
 import { Subject } from 'rxjs/Rx'
 import 'rxjs/add/operator/map';
 import { Router, RouterModule } from '@angular/router';
-import { Concession } from "../models/concession";
+import { InboxConcession } from "../models/inbox-concession";
 
 @Component({
     selector: 'app-due-expiry-inbox',
@@ -29,7 +29,8 @@ export class DueExpiryInboxComponent implements OnInit, OnDestroy {
                 emptyTable: "No records found!",
                 search: "",
                 searchPlaceholder: "Search"
-            }
+			},
+			order: [[6, 'desc']]
         };
 
         this.loadUserConcessions();
@@ -45,7 +46,7 @@ export class DueExpiryInboxComponent implements OnInit, OnDestroy {
             error => this.errorMessage = <any>error);
     }
 
-    openConcessionView(concession: Concession) {
+    openConcessionView(concession: InboxConcession) {
         switch (concession.concessionType) {
             case "Lending":
                 this.router.navigate(['/lending-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
@@ -57,26 +58,6 @@ export class DueExpiryInboxComponent implements OnInit, OnDestroy {
                 this.router.navigate(['/transactional-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
                 break;
         }
-    }
-
-    renewConcession(concession: Concession) {
-        switch (concession.concessionType) {
-            case "Lending":
-                alert("renew concession");
-                break;
-        }
-
-        this.loadUserConcessions();
-    }
-
-    extendConcession(concession: Concession) {
-        switch (concession.concessionType) {
-            case "Lending":
-                alert("extend concession");
-                break;
-        }
-
-        this.loadUserConcessions();
     }
 
     ngOnDestroy() {

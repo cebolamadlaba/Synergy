@@ -2,10 +2,9 @@ using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
+using StandardBank.ConcessionManagement.Model.Common;
 
 namespace StandardBank.ConcessionManagement.Repository
 {
@@ -21,12 +20,19 @@ namespace StandardBank.ConcessionManagement.Repository
         private readonly IDbConnectionFactory _dbConnectionFactory;
 
         /// <summary>
+        /// The cache manager
+        /// </summary>
+        private readonly ICacheManager _cacheManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConditionTypeProductRepository"/> class.
         /// </summary>
-        /// <param name="dbConnectionFactory">The db connection factory.</param>
-        public ConditionTypeProductRepository(IDbConnectionFactory dbConnectionFactory)
+        /// <param name="dbConnectionFactory">The database connection factory.</param>
+        /// <param name="cacheManager">The cache manager.</param>
+        public ConditionTypeProductRepository(IDbConnectionFactory dbConnectionFactory, ICacheManager cacheManager)
         {
             _dbConnectionFactory = dbConnectionFactory;
+            _cacheManager = cacheManager;
         }
 
         /// <summary>
@@ -36,14 +42,23 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ConditionTypeProduct Create(ConditionTypeProduct model)
         {
-            const string sql = @"INSERT [dbo].[tblConditionTypeProduct] ([fkConditionTypeId], [fkConditionProductId], [IsActive]) 
-                                VALUES (@fkConditionTypeId, @fkConditionProductId, @IsActive) 
-                                SELECT CAST(SCOPE_IDENTITY() as int)";
+            const string sql =
+                @"INSERT [dbo].[tblConditionTypeProduct] ([fkConditionTypeId], [fkConditionProductId], [IsActive]) 
+                VALUES (@ConditionTypeId, @ConditionProductId, @IsActive) 
+                SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {fkConditionTypeId = model.ConditionTypeId, fkConditionProductId = model.ConditionProductId, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql,
+                    new
+                    {
+                        ConditionTypeId = model.ConditionTypeId,
+                        ConditionProductId = model.ConditionProductId,
+                        IsActive = model.IsActive
+                    }).Single();
             }
+
+            _cacheManager.Remove(CacheKey.Repository.ConditionTypeProductRepository.ReadAll);
 
             return model;
         }
@@ -55,12 +70,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ConditionTypeProduct ReadById(int id)
         {
-            using (var db = _dbConnectionFactory.Connection())
-            {
-                return db.Query<ConditionTypeProduct>(
-                    "SELECT [pkConditionTypeProductId] [Id], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [IsActive] FROM [dbo].[tblConditionTypeProduct] WHERE [pkConditionTypeProductId] = @Id",
-                    new {id}).SingleOrDefault();
-            }
+            return ReadAll().FirstOrDefault(_ => _.Id == id);
         }
 
         /// <summary>
@@ -69,10 +79,17 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public IEnumerable<ConditionTypeProduct> ReadAll()
         {
-            using (var db = _dbConnectionFactory.Connection())
+            IEnumerable<ConditionTypeProduct> Function()
             {
-                return db.Query<ConditionTypeProduct>("SELECT [pkConditionTypeProductId] [Id], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [IsActive] FROM [dbo].[tblConditionTypeProduct]");
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    return db.Query<ConditionTypeProduct>(
+                        "SELECT [pkConditionTypeProductId] [Id], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [IsActive] FROM [dbo].[tblConditionTypeProduct]");
+                }
             }
+
+            return _cacheManager.ReturnFromCache(Function, 1440,
+                CacheKey.Repository.ConditionTypeProductRepository.ReadAll);
         }
 
         /// <summary>
@@ -84,10 +101,18 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblConditionTypeProduct]
-                            SET [fkConditionTypeId] = @fkConditionTypeId, [fkConditionProductId] = @fkConditionProductId, [IsActive] = @IsActive
+                            SET [fkConditionTypeId] = @ConditionTypeId, [fkConditionProductId] = @ConditionProductId, [IsActive] = @IsActive
                             WHERE [pkConditionTypeProductId] = @Id",
-                    new {Id = model.Id, fkConditionTypeId = model.ConditionTypeId, fkConditionProductId = model.ConditionProductId, IsActive = model.IsActive});
+                    new
+                    {
+                        Id = model.Id,
+                        ConditionTypeId = model.ConditionTypeId,
+                        ConditionProductId = model.ConditionProductId,
+                        IsActive = model.IsActive
+                    });
             }
+
+            _cacheManager.Remove(CacheKey.Repository.ConditionTypeProductRepository.ReadAll);
         }
 
         /// <summary>
@@ -101,6 +126,8 @@ namespace StandardBank.ConcessionManagement.Repository
                 db.Execute("DELETE [dbo].[tblConditionTypeProduct] WHERE [pkConditionTypeProductId] = @Id",
                     new {model.Id});
             }
+
+            _cacheManager.Remove(CacheKey.Repository.ConditionTypeProductRepository.ReadAll);
         }
     }
 }

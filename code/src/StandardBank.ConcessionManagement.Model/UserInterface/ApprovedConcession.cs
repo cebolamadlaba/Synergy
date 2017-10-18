@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace StandardBank.ConcessionManagement.Model.UserInterface
 {
     /// <summary>
-    /// Approved concession
+    /// Approved concession entity
     /// </summary>
     public class ApprovedConcession
     {
@@ -33,20 +32,12 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public int ConcessionId { get; set; }
 
         /// <summary>
-        /// Gets or sets the concession reference number.
+        /// Gets or sets the reference number.
         /// </summary>
         /// <value>
-        /// The concession reference number.
+        /// The reference number.
         /// </value>
-        public string ConcessionReferenceNumber { get; set; }
-
-        /// <summary>
-        /// Gets or sets the type of the concession.
-        /// </summary>
-        /// <value>
-        /// The type of the concession.
-        /// </value>
-        public string ConcessionType { get; set; }
+        public string ReferenceNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the approved concession details.
@@ -55,21 +46,5 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// The approved concession details.
         /// </value>
         public IEnumerable<ApprovedConcessionDetail> ApprovedConcessionDetails { get; set; }
-
-        /// <summary>
-        /// Gets or sets the expiry date.
-        /// </summary>
-        /// <value>
-        /// The expiry date.
-        /// </value>
-        public DateTime? ExpiryDate { get; set; }
-
-        /// <summary>
-        /// Gets or sets the approved date.
-        /// </summary>
-        /// <value>
-        /// The approved date.
-        /// </value>
-        public DateTime? ApprovedDate { get; set; }
     }
 }

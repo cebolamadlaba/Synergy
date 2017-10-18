@@ -24,6 +24,7 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
     showHide = true;
     pageLoaded = false;
     canRequest = false;
+    isLoading = true;
 
     constructor(
         private router: Router,
@@ -46,6 +47,7 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
                 this.observableLendingView.subscribe(lendingView => {
                     this.lendingView = lendingView;
                     this.pageLoaded = true;
+                    this.isLoading = false;
                 }, error => this.errorMessage = <any>error);
             }
             this.userService.getData().subscribe(user => {

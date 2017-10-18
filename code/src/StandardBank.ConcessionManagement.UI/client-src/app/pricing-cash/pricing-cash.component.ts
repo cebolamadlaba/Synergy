@@ -22,6 +22,7 @@ export class PricingCashComponent implements OnInit, OnDestroy {
     errorMessage: String;
     showHide = true;
     pageLoaded = false;
+    isLoading = true;
 
     constructor(
         private router: Router,
@@ -42,6 +43,7 @@ export class PricingCashComponent implements OnInit, OnDestroy {
                 this.observableCashView.subscribe(cashView => {
                     this.cashView = cashView;
                     this.pageLoaded = true;
+                    this.isLoading = false;
                 }, error => this.errorMessage = <any>error);
             }
         });

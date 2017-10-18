@@ -1,6 +1,9 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using StandardBank.ConcessionManagement.Interface.BusinessLogic.ScheduledJobs;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
@@ -30,16 +33,25 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         private readonly ISiteHelper _siteHelper;
 
         /// <summary>
-        /// Initializes the controller
+        /// The daily scheduled jobs
         /// </summary>
-        /// <param name="exceptionLogRepository"></param>
-        /// <param name="logger"></param>
-        /// <param name="siteHelper"></param>
-        public ApplicationController(IExceptionLogRepository exceptionLogRepository, ILogger<ApplicationController> logger, ISiteHelper siteHelper)
+        private readonly IEnumerable<IDailyScheduledJob> _dailyScheduledJobs;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApplicationController"/> class.
+        /// </summary>
+        /// <param name="exceptionLogRepository">The exception log repository.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="siteHelper">The site helper.</param>
+        /// <param name="dailyScheduledJobs">The daily scheduled jobs.</param>
+        public ApplicationController(IExceptionLogRepository exceptionLogRepository,
+            ILogger<ApplicationController> logger, ISiteHelper siteHelper,
+            IEnumerable<IDailyScheduledJob> dailyScheduledJobs)
         {
             _exceptionLogRepository = exceptionLogRepository;
             _logger = logger;
             _siteHelper = siteHelper;
+            _dailyScheduledJobs = dailyScheduledJobs;
         }
 
         /// <summary>
@@ -114,6 +126,19 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult UserIdentity()
         {
             return Ok($"User Identity: {_siteHelper.UserIdentity(this)}");
+        }
+
+        /// <summary>
+        /// Runs the daily scheduled jobs.
+        /// </summary>
+        /// <returns></returns>
+        [Route("RunDailyScheduledJobs")]
+        public async Task<IActionResult> RunDailyScheduledJobs()
+        {
+            foreach (var dailyScheduledJob in _dailyScheduledJobs)
+                await dailyScheduledJob.Run();
+
+            return Ok("Done");
         }
     }
 }

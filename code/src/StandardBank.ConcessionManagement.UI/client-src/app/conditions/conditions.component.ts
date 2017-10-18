@@ -1,11 +1,12 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Subject } from 'rxjs/Rx';
-import { Condition } from '../models/condition';
 import { MyConditionService } from '../services/my-condition.service';
 import { Observable } from "rxjs";
 import { Period } from '../models/period';
 import { LookupDataService } from "../services/lookup-data.service";
 import { ConditionCounts } from "../models/condition-counts";
+import { ConcessionCondition } from "../models/concession-condition";
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-conditions',
@@ -13,10 +14,11 @@ import { ConditionCounts } from "../models/condition-counts";
     styleUrls: ['./conditions.component.css']
 })
 export class ConditionsComponent implements OnInit {
-    dtOptions: DataTables.Settings = {};
-    dtTrigger: Subject<Condition> = new Subject();
-    observableConditions: Condition[];
+    observableConditions: ConcessionCondition[];
     periods: Period[];
+
+	observableCondition: Observable<ConcessionCondition>;
+	condition: ConcessionCondition;
 
     observableConditionCounts: Observable<ConditionCounts>;
     conditionCounts: ConditionCounts;
@@ -25,54 +27,47 @@ export class ConditionsComponent implements OnInit {
     validationError: String[];
     saveMessage: String;
     warningMessage: String;
-    isLoading = false;
+    isLoading = true;
 
     periodType: string = "Standard";
-    period: string = "3 Months"
+	period: Period;
 
     standardClass: string = "activeWidget";
     ongoingClass: string = "";
 
     constructor(
         @Inject(MyConditionService) private conditionService,
-        @Inject(LookupDataService) private lookupDataService) { }
+        @Inject(LookupDataService) private lookupDataService,
+        private router: Router) { }
 
     ngOnInit() {
-        this.dtOptions = {
-            pagingType: 'full_numbers',
-            language: {
-                emptyTable: "No records found!",
-                search: "",
-                searchPlaceholder: "Search"
-            }
-        };
+		this.lookupDataService.getPeriods().subscribe(data => {
+			this.periods = data;
+			this.period = this.periods[0];
 
-        this.lookupDataService.getPeriods().subscribe(data => { this.periods = data; }, err => this.errorMessage = err);
-
-        this.loadAll();
+			this.loadAll();
+		}, err => this.errorMessage = err);
     }
 
     loadAll() {
         this.observableConditionCounts = this.conditionService.getConditionCounts();
         this.observableConditionCounts.subscribe(conditionCounts => this.conditionCounts = conditionCounts, error => this.errorMessage = <any>error);
 
-        this.getConditions(true);
+		if (this.period) {
+			this.getConditions();
+		}
     }
 
     periodFilter(value: string) {
-        this.period = value;
-        this.getConditions(false);
+		//this.period = value;
+		//this.selectedPeriod = value;
+        this.getConditions();
     }
 
-    getConditions(firstLoad: boolean) {
-        if (!firstLoad) {
-            this.dtTrigger.unsubscribe();
-            this.dtTrigger = new Subject();
-        }
-
-        this.conditionService.getMyConditions(this.period, this.periodType).subscribe(conditions => {
+    getConditions() {
+        this.conditionService.getMyConditions(this.period.description, this.periodType).subscribe(conditions => {
             this.observableConditions = conditions;
-            this.dtTrigger.next();
+            this.isLoading = false;
         }, error => this.errorMessage = <any>error);
     }
 
@@ -81,7 +76,7 @@ export class ConditionsComponent implements OnInit {
         this.ongoingClass = "";
         this.periodType = "Standard";
 
-        this.getConditions(false);
+        this.getConditions();
     }
 
     showOngoing() {
@@ -89,6 +84,54 @@ export class ConditionsComponent implements OnInit {
         this.ongoingClass = "activeWidget";
         this.periodType = "Ongoing";
 
-        this.getConditions(false);
+        this.getConditions();
+    }
+
+	conditionNotMet(concessionCondition: ConcessionCondition) {
+		if (confirm("Are you sure this condition has not been met?")) {
+			this.isLoading = true;
+			concessionCondition.conditionMet = false;
+
+			this.observableCondition = this.conditionService.updateCondition(concessionCondition);
+			this.observableCondition.subscribe(
+				condition => {
+					this.condition = condition;
+
+					//open the concession
+					this.openConcessionView(concessionCondition);
+				},
+				error => this.errorMessage = <any>error);
+        }
+    }
+
+	conditionMet(concessionCondition: ConcessionCondition) {
+		if (confirm("Are you sure this condition has been met?")) {
+			this.isLoading = true;
+
+            //update the condition in the database
+			concessionCondition.conditionMet = true;
+
+			this.observableCondition = this.conditionService.updateCondition(concessionCondition);
+			this.observableCondition.subscribe(
+				condition => {
+					this.condition = condition;
+					this.loadAll();
+				},
+				error => this.errorMessage = <any>error);
+        }
+    }
+
+    openConcessionView(concessionCondition: ConcessionCondition) {
+        switch (concessionCondition.concessionType) {
+            case "Lending":
+                this.router.navigate(['/lending-view-concession', concessionCondition.riskGroupNumber, concessionCondition.concessionReferenceNumber]);
+                break;
+            case "Cash":
+                this.router.navigate(['/cash-view-concession', concessionCondition.riskGroupNumber, concessionCondition.concessionReferenceNumber]);
+                break;
+            case "Transactional":
+                this.router.navigate(['/transactional-view-concession', concessionCondition.riskGroupNumber, concessionCondition.concessionReferenceNumber]);
+                break;
+        }
     }
 }

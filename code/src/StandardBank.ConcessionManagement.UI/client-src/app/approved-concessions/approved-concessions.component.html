@@ -1,4 +1,4 @@
-﻿<!-- Error message -->
+<!-- Error message -->
 <div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
     <div class="form-feedback-container">
         <div class="alert-danger">
@@ -25,7 +25,7 @@
 <div class="col-md-12" *ngIf="isLoading">
     <div class="form-feedback-container">
         <div class="alert-info">
-            <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Generating</p>
+            <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Loading...</p>
         </div>
     </div>
 </div>
@@ -46,13 +46,11 @@
                     </div>
                 </div>
                 <div class="col-md-10">
-                    <div class="single-print" (click)="printConcession(approvedConcession.concessionReferenceNumber)"><i class="fa fa-print" aria-hidden="true"></i></div>
+                    <div class="single-print" (click)="printConcession(approvedConcession.referenceNumber)"><i class="fa fa-print" aria-hidden="true"></i></div>
                 </div>
                 <div class="col-md-10 no-padding-left">
                     <div class="col-md-6 no-padding-left">
-                        <strong>Concession ID :</strong> {{approvedConcession.concessionReferenceNumber}}
-                        <span *ngIf="approvedConcession.expiryDate"><strong>Expiry Date :</strong> {{approvedConcession.expiryDate | date: 'yyyy/MM/dd'}}</span>
-                        <span *ngIf="approvedConcession.approvedDate"><strong>Approved Date :</strong> {{approvedConcession.approvedDate | date: 'yyyy/MM/dd'}}</span> 
+                        <strong>Concession ID :</strong> {{approvedConcession.referenceNumber}}
                     </div>
                 </div>
             </div>
@@ -68,16 +66,20 @@
                             <th>Status</th>
                             <th>Date Opened</th>
                             <th>Date Sent For Approval</th>
+                            <th>Expiry Date</th>
+                            <th>Date Approved</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let approvedConcessionDetail of approvedConcession.approvedConcessionDetails" (click)="openConcessionView(approvedConcession)">
+                        <tr *ngFor="let approvedConcessionDetail of approvedConcession.approvedConcessionDetails" (click)="openConcessionView(approvedConcession, approvedConcessionDetail.concessionType)">
                             <td> {{approvedConcessionDetail.customerName}} </td>
                             <td> {{approvedConcessionDetail.segment}} </td>
                             <td> {{approvedConcessionDetail.concessionType}} </td>
                             <td> {{approvedConcessionDetail.status}} </td>
                             <td> {{approvedConcessionDetail.dateOpened | date: 'yyyy/MM/dd'}} </td>
                             <td> {{approvedConcessionDetail.dateSentForApproval | date: 'yyyy/MM/dd'}} </td>
+                            <td> {{approvedConcessionDetail.expiryDate | date: 'yyyy/MM/dd'}} </td>
+                            <td> {{approvedConcessionDetail.dateApproved | date: 'yyyy/MM/dd'}} </td>
                         </tr>
                     </tbody>
                 </table>

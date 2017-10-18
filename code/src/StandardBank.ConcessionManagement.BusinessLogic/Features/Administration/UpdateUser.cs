@@ -1,8 +1,5 @@
 ﻿using MediatR;
 using StandardBank.ConcessionManagement.Model.UserInterface;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic.Features;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 

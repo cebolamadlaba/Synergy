@@ -3,8 +3,6 @@ using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Model.Common;
@@ -46,12 +44,12 @@ namespace StandardBank.ConcessionManagement.Repository
         public Product Create(Product model)
         {
             const string sql = @"INSERT [dbo].[rtblProduct] ([fkConcessionTypeId], [Description], [IsActive]) 
-                                VALUES (@fkConcessionTypeId, @Description, @IsActive) 
+                                VALUES (@ConcessionTypeId, @Description, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {fkConcessionTypeId = model.ConcessionTypeId, Description = model.Description, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql, new {ConcessionTypeId = model.ConcessionTypeId, Description = model.Description, IsActive = model.IsActive}).Single();
             }
 
             //clear out the cache because the data has changed
@@ -107,9 +105,9 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[rtblProduct]
-                            SET [fkConcessionTypeId] = @fkConcessionTypeId, [Description] = @Description, [IsActive] = @IsActive
+                            SET [fkConcessionTypeId] = @ConcessionTypeId, [Description] = @Description, [IsActive] = @IsActive
                             WHERE [pkProductId] = @Id",
-                    new {Id = model.Id, fkConcessionTypeId = model.ConcessionTypeId, Description = model.Description, IsActive = model.IsActive});
+                    new {Id = model.Id, ConcessionTypeId = model.ConcessionTypeId, Description = model.Description, IsActive = model.IsActive});
             }
 
             //clear out the cache because the data has changed

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using StandardBank.ConcessionManagement.Model.UserInterface;
 
 namespace StandardBank.ConcessionManagement.UI.Extension
 {
@@ -30,23 +31,20 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                 .ForMember(target => target.ReferenceNumber, _ => _.MapFrom(source => source.ConcessionRef))
                 .ForMember(target => target.DateOpened, _ => _.MapFrom(source => source.ConcessionDate))
                 .ForMember(target => target.DateSentForApproval, _ => _.MapFrom(source => source.DatesentForApproval))
-                .ForMember(target => target.Requestor , _ => _.Ignore())
-                .ForMember(target => target.SmtDealNumber, _ => _.MapFrom(source => source.SMTDealNumber));
-            CreateMap<Model.UserInterface.Concession, Model.Repository.Concession>()
                 .ForMember(target => target.Requestor, _ => _.Ignore())
+                .ForMember(target => target.SmtDealNumber, _ => _.MapFrom(source => source.SMTDealNumber))
+                .ForMember(target => target.MrsCrs, _ => _.MapFrom(source => source.MRS_CRS));
+            CreateMap<Model.UserInterface.Concession, Model.Repository.Concession>()
                 .ForMember(target => target.ConcessionRef, _ => _.MapFrom(source => source.ReferenceNumber))
                 .ForMember(target => target.ConcessionDate, _ => _.MapFrom(source => source.DateOpened))
                 .ForMember(target => target.DatesentForApproval, _ => _.MapFrom(source => source.DateSentForApproval))
-                .ForMember(target => target.SMTDealNumber, _ => _.MapFrom(source => source.SmtDealNumber));
+                .ForMember(target => target.SMTDealNumber, _ => _.MapFrom(source => source.SmtDealNumber))
+                .ForMember(target => target.MRS_CRS, _ => _.MapFrom(source => source.MrsCrs));
 
             //ConcessionCash
             CreateMap<Model.Repository.ConcessionCash, Model.UserInterface.Cash.CashConcessionDetail>()
-                .ForMember(target => target.Value, _ => _.MapFrom(source => source.CashValue))
-                .ForMember(target => target.Volume, _ => _.MapFrom(source => source.CashVolume))
                 .ForMember(target => target.CashConcessionDetailId, _ => _.MapFrom(source => source.Id));
             CreateMap<Model.UserInterface.Cash.CashConcessionDetail, Model.Repository.ConcessionCash>()
-                .ForMember(target => target.CashValue, _ => _.MapFrom(source => source.Value))
-                .ForMember(target => target.CashVolume, _ => _.MapFrom(source => source.Volume))
                 .ForMember(target => target.Id, _ => _.MapFrom(source => source.CashConcessionDetailId));
 
             //ConcessionComment
@@ -56,41 +54,68 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             CreateMap<Model.Repository.ConcessionCondition, Model.UserInterface.ConcessionCondition>()
                 .ForMember(target => target.ConditionVolume, _ => _.MapFrom(source => source.Volume))
                 .ForMember(target => target.ConditionValue, _ => _.MapFrom(source => source.Value))
-                .ForMember(target => target.ConcessionConditionId, _ => _.MapFrom(source => source.Id));
+                .ForMember(target => target.ConcessionConditionId, _ => _.MapFrom(source => source.Id))
+                .ForMember(target => target.ApprovedDate, _ => _.MapFrom(source => source.DateApproved));
             CreateMap<Model.UserInterface.ConcessionCondition, Model.Repository.ConcessionCondition>()
                 .ForMember(target => target.Volume, _ => _.MapFrom(source => source.ConditionVolume))
                 .ForMember(target => target.Value, _ => _.MapFrom(source => source.ConditionValue))
-                .ForMember(target => target.Id, _ => _.MapFrom(source => source.ConcessionConditionId));
+                .ForMember(target => target.Id, _ => _.MapFrom(source => source.ConcessionConditionId))
+                .ForMember(target => target.DateApproved, _ => _.MapFrom(source => source.ApprovedDate));
+
+            //ConcessionConditionView
+            CreateMap<Model.Repository.ConcessionConditionView, Model.UserInterface.ConcessionCondition>()
+                .ForMember(target => target.ConditionVolume, _ => _.MapFrom(source => source.Volume))
+                .ForMember(target => target.ConditionValue, _ => _.MapFrom(source => source.Value))
+                .ForMember(target => target.ApprovedDate, _ => _.MapFrom(source => source.DateApproved))
+                .ForMember(target => target.ConcessionReferenceNumber, _ => _.MapFrom(source => source.ReferenceNumber))
+                .ForMember(target => target.ProductType, _ => _.MapFrom(source => source.ConditionProduct));
+            CreateMap<Model.UserInterface.ConcessionCondition, Model.Repository.ConcessionConditionView>()
+                .ForMember(target => target.Volume, _ => _.MapFrom(source => source.ConditionVolume))
+                .ForMember(target => target.Value, _ => _.MapFrom(source => source.ConditionValue))
+                .ForMember(target => target.DateApproved, _ => _.MapFrom(source => source.ApprovedDate))
+                .ForMember(target => target.ReferenceNumber, _ => _.MapFrom(source => source.ConcessionReferenceNumber))
+                .ForMember(target => target.ConditionProduct, _ => _.MapFrom(source => source.ProductType));
+
+            //ConcessionInboxView
+            CreateMap<Model.Repository.ConcessionInboxView, Model.UserInterface.Inbox.InboxConcession>()
+                .ForMember(target => target.DateOpened, _ => _.MapFrom(source => source.ConcessionDate))
+                .ForMember(target => target.ReferenceNumber, _ => _.MapFrom(source => source.ConcessionRef))
+                .ForMember(target => target.DateSentForApproval, _ => _.MapFrom(source => source.DatesentForApproval));
+            CreateMap<Model.UserInterface.Inbox.InboxConcession, Model.Repository.ConcessionInboxView>()
+                .ForMember(target => target.ConcessionDate, _ => _.MapFrom(source => source.DateOpened))
+                .ForMember(target => target.ConcessionRef, _ => _.MapFrom(source => source.ReferenceNumber))
+                .ForMember(target => target.DatesentForApproval, _ => _.MapFrom(source => source.DateSentForApproval));
 
             //ConcessionLending
             CreateMap<Model.Repository.ConcessionLending, Model.UserInterface.Lending.LendingConcessionDetail>()
                 .ForMember(target => target.MarginAgainstPrime, _ => _.MapFrom(source => source.MarginToPrime))
-                .ForMember(target => target.LendingConcessionDetailId, _ => _.MapFrom(source => source.Id));
+                .ForMember(target => target.LendingConcessionDetailId, _ => _.MapFrom(source => source.Id))
+                .ForMember(target => target.ApprovedMap, _ => _.MapFrom(source => source.ApprovedMarginToPrime))
+                .ForMember(target => target.LoadedMap, _ => _.MapFrom(source => source.LoadedMarginToPrime));
             CreateMap<Model.UserInterface.Lending.LendingConcessionDetail, Model.Repository.ConcessionLending>()
                 .ForMember(target => target.MarginToPrime, _ => _.MapFrom(source => source.MarginAgainstPrime))
-                .ForMember(target => target.Id, _ => _.MapFrom(source => source.LendingConcessionDetailId));
+                .ForMember(target => target.Id, _ => _.MapFrom(source => source.LendingConcessionDetailId))
+                .ForMember(target => target.ApprovedMarginToPrime, _ => _.MapFrom(source => source.ApprovedMap))
+                .ForMember(target => target.LoadedMarginToPrime, _ => _.MapFrom(source => source.LoadedMap));
 
             //ConcessionRelationship
-            CreateMap<Model.Repository.ConcessionRelationship, Model.UserInterface.ConcessionRelationship>().ReverseMap();
+            CreateMap<Model.Repository.ConcessionRelationship, Model.UserInterface.ConcessionRelationship>()
+                .ReverseMap();
 
             //ConcessionRelationshipDetail
-            CreateMap<Model.Repository.ConcessionRelationshipDetail, Model.UserInterface.ConcessionRelationshipDetail>().ReverseMap();
+            CreateMap<Model.Repository.ConcessionRelationshipDetail, Model.UserInterface.ConcessionRelationshipDetail>()
+                .ReverseMap();
 
             //ConcessionTransactional
-            CreateMap<Model.Repository.ConcessionTransactional, Model.UserInterface.Transactional.TransactionalConcessionDetail>()
-                .ForMember(target => target.TransactionalConcessionDetailId, _ => _.MapFrom(source => source.Id))
-                .ForMember(target => target.Value, _ => _.MapFrom(source => source.TransactionValue))
-                .ForMember(target => target.Volume, _ => _.MapFrom(source => source.TransactionVolume));
-            CreateMap<Model.UserInterface.Transactional.TransactionalConcessionDetail, Model.Repository.ConcessionTransactional>()
-                .ForMember(target => target.Id, _ => _.MapFrom(source => source.TransactionalConcessionDetailId))
-                .ForMember(target => target.TransactionValue, _ => _.MapFrom(source => source.Value))
-                .ForMember(target => target.TransactionVolume, _ => _.MapFrom(source => source.Volume));
+            CreateMap<Model.Repository.ConcessionTransactional,
+                    Model.UserInterface.Transactional.TransactionalConcessionDetail>()
+                .ForMember(target => target.TransactionalConcessionDetailId, _ => _.MapFrom(source => source.Id));
+            CreateMap<Model.UserInterface.Transactional.TransactionalConcessionDetail,
+                    Model.Repository.ConcessionTransactional>()
+                .ForMember(target => target.Id, _ => _.MapFrom(source => source.TransactionalConcessionDetailId));
 
             //ConcessionType
             CreateMap<Model.Repository.ConcessionType, Model.UserInterface.ConcessionType>().ReverseMap();
-
-            //Condition
-            CreateMap<Model.Repository.Condition, Model.UserInterface.Condition>().ReverseMap();
 
             //ConditionProduct
             CreateMap<Model.Repository.ConditionProduct, Model.UserInterface.ConditionProduct>().ReverseMap();
@@ -105,11 +130,12 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             CreateMap<Model.Repository.FinancialLending, Model.UserInterface.Lending.LendingFinancial>().ReverseMap();
 
             //FinancialTransactional
-            CreateMap<Model.Repository.FinancialTransactional, Model.UserInterface.Transactional.TransactionalFinancial>().ReverseMap();
+            CreateMap<Model.Repository.FinancialTransactional, Model.UserInterface.Transactional.TransactionalFinancial
+            >().ReverseMap();
 
             //Period
             CreateMap<Model.Repository.Period, Model.UserInterface.Period>().ReverseMap();
-          
+
             //PeriodType
             CreateMap<Model.Repository.PeriodType, Model.UserInterface.PeriodType>().ReverseMap();
 
@@ -139,15 +165,15 @@ namespace StandardBank.ConcessionManagement.UI.Extension
 
             //Region
             CreateMap<Model.Repository.Region, Model.UserInterface.Region>().ReverseMap();
-           
+
             //ReviewFeeType
             CreateMap<Model.Repository.ReviewFeeType, Model.UserInterface.ReviewFeeType>().ReverseMap();
-     
+
             //RiskGroup
-            CreateMap<Model.Repository.RiskGroup, Model.UserInterface.Pricing.RiskGroup>()
+            CreateMap<Model.Repository.RiskGroup, RiskGroup>()
                 .ForMember(target => target.Name, _ => _.MapFrom(source => source.RiskGroupName))
                 .ForMember(target => target.Number, _ => _.MapFrom(source => source.RiskGroupNumber));
-            CreateMap<Model.UserInterface.Pricing.RiskGroup, Model.Repository.RiskGroup>()
+            CreateMap<RiskGroup, Model.Repository.RiskGroup>()
                 .ForMember(target => target.RiskGroupName, _ => _.MapFrom(source => source.Name))
                 .ForMember(target => target.RiskGroupNumber, _ => _.MapFrom(source => source.Number));
 
@@ -161,6 +187,9 @@ namespace StandardBank.ConcessionManagement.UI.Extension
 
             //TableNumber
             CreateMap<Model.Repository.TableNumber, Model.UserInterface.TableNumber>().ReverseMap();
+
+            //TransactionTableNumber
+            CreateMap<Model.Repository.TransactionTableNumber, Model.UserInterface.Transactional.TransactionTableNumber>().ReverseMap();
 
             //TransactionType
             CreateMap<Model.Repository.TransactionType, Model.UserInterface.TransactionType>().ReverseMap();

@@ -38,8 +38,11 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public bool IsActive { get; set; }
 
         /// <summary>
-        /// Gets or sets the is selected flag
+        /// Gets or sets the IsSelected.
         /// </summary>
+        /// <value>
+        /// The IsSelected.
+        /// </value>
         public bool IsSelected { get; set; }
     }
 }

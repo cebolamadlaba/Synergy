@@ -6,7 +6,7 @@
                 <p>Standard</p>
             </div>
             <div class="main">
-                <p>{{conditionCounts.standardCount}}</p>
+                <p>{{conditionCounts?.standardCount}}</p>
             </div>
         </div>
     </div>
@@ -16,7 +16,7 @@
                 <p>Ongoing</p>
             </div>
             <div class="main">
-                <p>{{conditionCounts.ongoingCount}}</p>
+                <p>{{conditionCounts?.ongoingCount}}</p>
             </div>
         </div>
     </div>
@@ -26,7 +26,7 @@
 <div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
     <div class="form-feedback-container">
         <div class="alert-danger">
-            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Unable to submit concession. Please see error(s) below.</p>
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Unable to submit condition. Please see error(s) below.</p>
             <p>{{errorMessage}}</p>
 
             <ul *ngIf="validationError">
@@ -40,7 +40,7 @@
 <div class="col-md-12" *ngIf="saveMessage && !isLoading">
     <div class="form-feedback-container">
         <div class="alert-success">
-            <p class="message-heading"><i class="fa fa-check-circle" aria-hidden="true"></i>Concession submitted successfully with ID: {{saveMessage}}</p>
+            <p class="message-heading"><i class="fa fa-check-circle" aria-hidden="true"></i>Condition submitted successfully with ID: {{saveMessage}}</p>
         </div>
     </div>
 </div>
@@ -69,18 +69,26 @@
     <div class="form-group  filter-group">
         <div id="filter"><label for="sort" class="col-sm-1 control-label"> Filter</label></div>
         <div class="col-sm-2">
-            <select (change)="periodFilter($event.target.value)" class="form-control">
-                <option *ngFor="let p of periods"
-                        [ngValue]="p.id">
-                    {{p.description}}
-                </option>
+            <select (change)="periodFilter($event.target.value)" class="form-control" [(ngModel)]="period">
+                <option *ngFor="let p of periods" [ngValue]="p">{{p.description}}</option>
             </select>
         </div>
     </div>
 
+    <!-- Search bar -->
+    <div class="input-group add-on">
+        <input class="form-control" placeholder="Search Concession ID or Risk Group Number" [(ngModel)]="concessionIdOrRiskGroupNumber" type="text">
+    </div>
+
+    <!-- Empty state if no concessions found -->
+    <div class="searchEmptyState" *ngIf="(observableConditions | conditionsFilter: concessionIdOrRiskGroupNumber)?.length === 0">
+        <i class="fa fa-inbox" aria-hidden="true"></i>
+        <p>No conditions found matching your search</p>
+    </div>
+
     <!-- Results table -->
-    <div class="table-container">
-        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-bordered table-hover header-fixed">
+    <div class="table-container" *ngIf="(observableConditions | conditionsFilter: concessionIdOrRiskGroupNumber)?.length > 0">
+        <table class="table table-bordered table-hover header-fixed">
             <thead>
                 <tr>
                     <th>Risk Group</th>
@@ -91,25 +99,27 @@
                     <th>Interest</th>
                     <th>Volume</th>
                     <th>Value</th>
+                    <th>Expected Turnover Value</th>
                     <th>Condition Met</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor='let condition of observableConditions; trackBy: index;' class="status-{{condition.ragStatus}}">
-                    <td>
+                <tr *ngFor='let condition of observableConditions | conditionsFilter: concessionIdOrRiskGroupNumber; trackBy: index;' class="status-{{condition.ragStatus}}">
+                    <td (click)="openConcessionView(condition)">
                         <p class="riskGroupName">{{condition.riskGroupName}}</p>
                         <p class="riskGroupNumber">{{condition.riskGroupNumber}}</p>
                     </td>
-                    <td>{{condition.concessionId}}</td>
-                    <td>{{condition.conditionType }}</td>
-                    <td>{{condition.productType}}</td>
-                    <td class="date">{{condition.expiryDate | date: 'yyyy/MM/dd'}}</td>
-                    <td>{{condition.interestRate}}</td>
-                    <td>{{condition.volume}}</td>
-                    <td>{{condition.value}}</td>
+                    <td (click)="openConcessionView(condition)">{{condition.concessionReferenceNumber}}</td>
+                    <td (click)="openConcessionView(condition)">{{condition.conditionType }}</td>
+                    <td (click)="openConcessionView(condition)">{{condition.productType}}</td>
+                    <td class="date" (click)="openConcessionView(condition)">{{condition.expiryDate | date: 'yyyy/MM/dd'}}</td>
+                    <td (click)="openConcessionView(condition)">{{condition.interestRate}}</td>
+                    <td (click)="openConcessionView(condition)">{{condition.conditionVolume}}</td>
+                    <td (click)="openConcessionView(condition)">{{condition.conditionValue}}</td>
+                    <td (click)="openConcessionView(condition)">{{condition.expectedTurnoverValue}}</td>
                     <td>
-                        <button type="button" class="btn btn-no">No</button>
-                        <button type="button" class="btn btn-yes">Yes</button>
+                        <button type="button" class="btn btn-no" (click)="conditionNotMet(condition)">No</button>
+                        <button type="button" class="btn btn-yes" (click)="conditionMet(condition)">Yes</button>
                     </td>
                 </tr>
             </tbody>

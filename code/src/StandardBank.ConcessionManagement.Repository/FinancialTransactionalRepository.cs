@@ -83,7 +83,7 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
-        /// Reads by the risk group id specified
+        /// Reads by the risk group id
         /// </summary>
         /// <param name="riskGroupId"></param>
         /// <returns></returns>

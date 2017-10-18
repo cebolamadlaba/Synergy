@@ -5,6 +5,7 @@ using StandardBank.ConcessionManagement.Test.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using Xunit;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
@@ -26,7 +27,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             var users = new List<User> { new User { ANumber = "A1" } , new User { ANumber ="A2" } };
             roleRepository.Setup(x => x.ReadAll()).Returns(roles);
             approvalWorkflowRepository.Setup(_ => _.GetApproversByRoles(It.IsAny<int>(), It.IsAny<IEnumerable<int>>())).Returns(users);
-            var approvers = sut.GetApproversByRole(1, Model.Constants.ApprovalStep.BCMApproval).ToList();
+            var approvers = sut.GetApproversByRole(1, Constants.ApprovalStep.BCMApproval).ToList();
             Assert.True(users.Count == approvers.Count);
             roleRepository.Verify(_ => _.ReadAll(), Times.Once());
             approvalWorkflowRepository.Verify(_ => _.GetApproversByRoles(It.IsAny<int>(), It.IsAny<IEnumerable<int>>()), Times.Once());
@@ -40,7 +41,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             var users = new List<User> { new User { ANumber = "A1" }, new User { ANumber = "A2" } };
             roleRepository.Setup(x => x.ReadAll()).Returns(roles);
             approvalWorkflowRepository.Setup(_ => _.GetApproversByRoles(It.IsAny<int>(), It.IsAny<IEnumerable<int>>())).Returns(users);
-            var approvers = sut.GetApproversByRole(1, Model.Constants.ApprovalStep.PCMApproval).ToList();
+            var approvers = sut.GetApproversByRole(1, Constants.ApprovalStep.PCMApproval).ToList();
             Assert.True(users.Count == approvers.Count);
             roleRepository.Verify(_ => _.ReadAll(), Times.Once());
             approvalWorkflowRepository.Verify(_ => _.GetApproversByRoles(It.IsAny<int>(), It.IsAny<IEnumerable<int>>()), Times.Once());

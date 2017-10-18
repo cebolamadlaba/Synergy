@@ -46,10 +46,10 @@ export class TransactionalConcessionService {
         return this.http.post(url, concessionReferenceId, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    postRenewTransactionalData(transactionalConcession: TransactionalConcession): Observable<TransactionalConcession> {
+    postChildConcession(transactionalConcession: TransactionalConcession, relationshipType: string): Observable<TransactionalConcession> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        const url = "/api/Transactional/RenewTransactional";
+        const url = "/api/Transactional/" + relationshipType + "Transactional";
         return this.http.post(url, transactionalConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
@@ -122,7 +122,7 @@ export class MockTransactionalConcessionService extends TransactionalConcessionS
         return Observable.of(this.transactionalConcession);
     }
 
-    postRenewTransactionalData(transactionalConcession: TransactionalConcession): Observable<TransactionalConcession> {
+    postChildConcession(transactionalConcession: TransactionalConcession, relationshipType: string): Observable<TransactionalConcession> {
         this.transactionalConcession.concession = new Concession();
         this.transactionalConcession.concessionConditions = [new ConcessionCondition()];
         this.transactionalConcession.transactionalConcessionDetails = [new TransactionalConcessionDetail()];

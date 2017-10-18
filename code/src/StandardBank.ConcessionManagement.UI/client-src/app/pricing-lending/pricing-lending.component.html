@@ -1,5 +1,14 @@
+﻿<!-- Loading message -->
+<div class="col-md-12" *ngIf="isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-info">
+            <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Loading...</p>
+        </div>
+    </div>
+</div>
+
 <!-- banner-->
-<div class="col-md-12 banner">
+<div class="col-md-12 banner" *ngIf="!isLoading">
     <div class="row">
         <!-- Header -->
         <div class="lending-banner-title">
@@ -64,7 +73,7 @@
 </div>
 
 <!-- lending concessions and products-->
-<div class="col-md-12">
+<div class="col-md-12" *ngIf="!isLoading">
     <div class="col-md-5">
         <h2 class="headings">Products</h2>
         <div class="section">
@@ -122,13 +131,13 @@
 
         <!-- Search bar -->
         <div class="input-group add-on">
-            <input class="form-control" placeholder="Concession ID" [(ngModel)]="filterConcessionId" type="text">
+            <input class="form-control" placeholder="Search Concession ID" [(ngModel)]="filterConcessionId" type="text">
         </div>
 
         <div class="section" *ngFor="let lendingConcession of lendingView.lendingConcessions | baseConcessionFilter : filterConcessionId; trackBy: index;">
 
             <div class="section-header small-table-title">
-                <div class="concessionID-section"> {{lendingConcession.concession.referenceNumber}}</div>
+                <div class="concessionID-section"> {{lendingConcession.concession.referenceNumber}} - {{lendingConcession.concession.statusDescription}}</div>
             </div>
             <div class="section-body">
                 <div class="table-container" [routerLink]="['/lending-view-concession', lendingView.riskGroup.number, lendingConcession.concession.referenceNumber]">

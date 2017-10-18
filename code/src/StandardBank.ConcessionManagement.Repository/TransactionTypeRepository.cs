@@ -43,18 +43,20 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public TransactionType Create(TransactionType model)
         {
-            const string sql = @"INSERT [dbo].[rtblTransactionType] ([pkTransactionTypeId], [fkConcessionTypeId], [Description], [IsActive]) 
-                                VALUES (@pkTransactionTypeId, @fkConcessionTypeId, @Description, @IsActive)";
+            const string sql = @"INSERT [dbo].[rtblTransactionType] ([fkConcessionTypeId], [Description], [IsActive]) 
+                                VALUES (@ConcessionTypeId, @Description, @IsActive) 
+                                SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
-                db.Execute(sql,
+            {
+                model.Id = db.Query<int>(sql,
                     new
                     {
-                        pkTransactionTypeId = model.Id,
-                        fkConcessionTypeId = model.ConcessionTypeId,
+                        ConcessionTypeId = model.ConcessionTypeId,
                         Description = model.Description,
                         IsActive = model.IsActive
-                    });
+                    }).Single();
+            }
 
             //clear out the cache because the data has changed
             _cacheManager.Remove(CacheKey.Repository.TransactionTypeRepository.ReadAll);
@@ -93,9 +95,10 @@ namespace StandardBank.ConcessionManagement.Repository
             Func<IEnumerable<TransactionType>> function = () =>
             {
                 using (var db = _dbConnectionFactory.Connection())
-            	{
-                	return db.Query<TransactionType>("SELECT [pkTransactionTypeId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [Description], [IsActive] FROM [dbo].[rtblTransactionType]");
-            	}
+                {
+                    return db.Query<TransactionType>(
+                        "SELECT [pkTransactionTypeId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [Description], [IsActive] FROM [dbo].[rtblTransactionType]");
+                }
             };
 
             return _cacheManager.ReturnFromCache(function, 1440, CacheKey.Repository.TransactionTypeRepository.ReadAll);
@@ -110,9 +113,15 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[rtblTransactionType]
-                            SET [fkConcessionTypeId] = @fkConcessionTypeId, [Description] = @Description, [IsActive] = @IsActive
+                            SET [fkConcessionTypeId] = @ConcessionTypeId, [Description] = @Description, [IsActive] = @IsActive
                             WHERE [pkTransactionTypeId] = @Id",
-                    new {Id = model.Id, fkConcessionTypeId = model.ConcessionTypeId, Description = model.Description, IsActive = model.IsActive});
+                    new
+                    {
+                        Id = model.Id,
+                        ConcessionTypeId = model.ConcessionTypeId,
+                        Description = model.Description,
+                        IsActive = model.IsActive
+                    });
             }
 
             //clear out the cache because the data has changed

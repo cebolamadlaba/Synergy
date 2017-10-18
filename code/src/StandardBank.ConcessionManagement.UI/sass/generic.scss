@@ -1,4 +1,4 @@
-﻿.header {
+.header {
     background: $standardBankBlue;
     height: 55px;
 
@@ -40,7 +40,7 @@
     }
 
     .section .small-table-title{
-        width: 200px;
+        width: 400px;
         font-weight: 500;
         font-size: 1.25em;
 
@@ -215,6 +215,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 .requestor-modal {
     text-align: center;
+    margin: 15px;
 
     i {
         font-size: 4em;

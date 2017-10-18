@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using StandardBank.ConcessionManagement.Model.UserInterface.Pricing;
 
 namespace StandardBank.ConcessionManagement.Model.UserInterface.Cash
 {

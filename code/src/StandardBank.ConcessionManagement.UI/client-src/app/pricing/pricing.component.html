@@ -33,6 +33,14 @@
                     <p>{{user?.selectedCentre?.province}}</p>
                 </div>
             </div>
+            <div class="row" *ngIf="riskGroup?.marketSegment">
+                <div class="col-sm-3">
+                    <p class="lightTitle">Segment</p>
+                </div>
+                <div class="col-sm-6">
+                    <p>{{riskGroup?.marketSegment}}</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -65,7 +73,7 @@
             <div class="searchEmptyState">
                 <i class="fa fa-inbox" aria-hidden="true"></i>
                 <p>
-                    No data found for risk group number
+                    No information found for risk group number entered
                 </p>
             </div>
         </div>
@@ -105,44 +113,6 @@
                         </div>                        
                     </div>
                 </div>
-                <!-- Investments -->
-                <div class="col-md-3">
-                    <div class="product-item" [routerLink]="['/pricing-investments']">
-                        <div class="product-heading">Investments</div>
-                        <div class="container-item-icon">
-                            <i class="fa fa-bar-chart" aria-hidden="true"></i>
-                        </div>
-                    </div>
-                </div>
-                <!-- BOL -->
-                <div class="col-md-3">
-                    <div class="product-item" [routerLink]="['/pricing-bol']">
-                        <div class="product-heading">BOL</div>
-                        <div class="container-item-icon">
-                            <i class="fa fa-desktop" aria-hidden="true"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-8 col-md-offset-2" style="margin-top: 20px">
-                <!-- MAS -->
-                <div class="col-md-3">
-                    <div class="product-item" [routerLink]="['/pricing-mas']">
-                        <div class="product-heading">MAS</div>
-                        <div class="container-item-icon">
-                            <i class="fa fa-calculator" aria-hidden="true"></i>
-                        </div>
-                    </div>
-                </div>
-                <!-- Trade -->
-                <div class="col-md-3">
-                    <div class="product-item" [routerLink]="['/pricing-trade']">
-                        <div class="product-heading">Trade</div>
-                        <div class="container-item-icon">
-                            <i class="fa fa-line-chart" aria-hidden="true"></i>
-                        </div>
-                    </div>
-                </div>
                 <!-- Transactional -->
                 <div class="col-md-3">
                     <div class="product-item" [routerLink]="['/pricing-transactional', riskGroup.number]">
@@ -152,15 +122,54 @@
                         </div>
                     </div>
                 </div>
+                <!-- Investments -->
+                <!--<div class="col-md-3">
+                    <div class="product-item" [routerLink]="['/pricing-investments']">
+                        <div class="product-heading">Investments</div>
+                        <div class="container-item-icon">
+                            <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>-->
+                <!-- BOL -->
+                <!--<div class="col-md-3">
+                    <div class="product-item" [routerLink]="['/pricing-bol']">
+                        <div class="product-heading">BOL</div>
+                        <div class="container-item-icon">
+                            <i class="fa fa-desktop" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>-->
+            </div>
+            <div class="col-md-8 col-md-offset-2" style="margin-top: 20px">
+                <!-- MAS -->
+                <!--<div class="col-md-3">
+                    <div class="product-item" [routerLink]="['/pricing-mas']">
+                        <div class="product-heading">MAS</div>
+                        <div class="container-item-icon">
+                            <i class="fa fa-calculator" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>-->
+                <!-- Trade -->
+                <!--<div class="col-md-3">
+                    <div class="product-item" [routerLink]="['/pricing-trade']">
+                        <div class="product-heading">Trade</div>
+                        <div class="container-item-icon">
+                            <i class="fa fa-line-chart" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>-->
+                
                 <!-- Cashman -->
-                <div class="col-md-3">
+                <!--<div class="col-md-3">
                     <div class="product-item" [routerLink]="['/pricing-cashman']">
                         <div class="product-heading">Cashman</div>
                         <div class="container-item-icon">
                             <i class="fa fa-user" aria-hidden="true"></i>
                         </div>
                     </div>
-                </div>
+                </div>-->
             </div>
 
         </div>

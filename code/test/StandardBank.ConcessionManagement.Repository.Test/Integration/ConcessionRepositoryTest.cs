@@ -28,7 +28,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ConcessionDate = DateTime.Now,
                 DatesentForApproval = DateTime.Now,
                 Motivation = "455d28a04b",
-                DateApproved = DateTime.Now,
                 RequestorId = DataHelper.GetUserId(),
                 BCMUserId = DataHelper.GetUserId(),
                 DateActionedByBCM = DateTime.Now,
@@ -36,11 +35,10 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 DateActionedByPCM = DateTime.Now,
                 HOUserId = DataHelper.GetUserId(),
                 DateActionedByHO = DateTime.Now,
-                ExpiryDate = DateTime.Now,
                 CentreId = DataHelper.GetCentreId(),
                 IsCurrent = true,
                 IsActive = true,
-                MrsCrs = 1232,
+                MRS_CRS = 1232,
                 RiskGroupId = DataHelper.GetRiskGroupId(),
                 RegionId = DataHelper.GetRegionId()
             };
@@ -68,7 +66,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ConcessionDate = DateTime.Now,
                 DatesentForApproval = DateTime.Now,
                 Motivation = "455d28a04b",
-                DateApproved = DateTime.Now,
                 RequestorId = DataHelper.GetUserId(),
                 BCMUserId = DataHelper.GetUserId(),
                 DateActionedByBCM = DateTime.Now,
@@ -76,11 +73,10 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 DateActionedByPCM = DateTime.Now,
                 HOUserId = DataHelper.GetUserId(),
                 DateActionedByHO = DateTime.Now,
-                ExpiryDate = DateTime.Now,
                 CentreId = DataHelper.GetCentreId(),
                 IsCurrent = true,
                 IsActive = false,
-                MrsCrs = 1233,
+                MRS_CRS = 1233,
                 RiskGroupId = DataHelper.GetRiskGroupId(),
                 RegionId = DataHelper.GetRegionId()
             };
@@ -106,142 +102,49 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         }
 
         /// <summary>
-        /// Tests that ReadByRequestorIdStatusIdSubStatusIdIsActive for active records executes positive
+        /// Tests that ReadByConcessionRefIsActive executes positive.
         /// </summary>
         [Fact]
-        public void ReadByRequestorIdStatusIdSubStatusIdIsActive_Active_Executes_Positive()
+        public void ReadByConcessionRefIsActive_Executes_Positive()
         {
             var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
-            var resultToTestWith = results.First(_ => _.IsActive && _.SubStatusId.HasValue);
-
-            var result =
-                InstantiatedDependencies.ConcessionRepository.ReadByRequestorIdStatusIdSubStatusIdIsActive(
-                    resultToTestWith.RequestorId, resultToTestWith.StatusId, resultToTestWith.SubStatusId.Value, true);
+            var concessionRef = results.First().ConcessionRef;
+            var isActive = results.First().IsActive;
+            var result = InstantiatedDependencies.ConcessionRepository.ReadByConcessionRefIsActive(concessionRef, isActive);
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
+
+            foreach (var record in result)
+            {
+                Assert.Equal(record.ConcessionRef, concessionRef);
+                Assert.Equal(record.IsActive, isActive);
+            }
         }
 
         /// <summary>
-        /// Tests that ReadByRequestorIdStatusIdSubStatusIdIsActive for inactive records executes positive
-        /// </summary>
-        [Fact]
-        public void ReadByRequestorIdStatusIdSubStatusIdIsActive_InActive_Executes_Positive()
-        {
-            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
-            var resultToTestWith = results.First(_ => !_.IsActive && _.SubStatusId.HasValue);
-
-            var result =
-                InstantiatedDependencies.ConcessionRepository.ReadByRequestorIdStatusIdSubStatusIdIsActive(
-                    resultToTestWith.RequestorId, resultToTestWith.StatusId, resultToTestWith.SubStatusId.Value, false);
-
-            Assert.NotNull(result);
-            Assert.NotEmpty(result);
-        }
-
-        /// <summary>
-        /// Tests that ReadByRequestorIdStatusIdIsActive for active records executes positive
-        /// </summary>
-        [Fact]
-        public void ReadByRequestorIdStatusIdIsActive_Active_Executes_Positive()
-        {
-            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
-            var resultToTestWith = results.First(_ => _.IsActive && _.SubStatusId.HasValue);
-
-            var result =
-                InstantiatedDependencies.ConcessionRepository.ReadByRequestorIdStatusIdIsActive(
-                    resultToTestWith.RequestorId, resultToTestWith.StatusId, true);
-
-            Assert.NotNull(result);
-            Assert.NotEmpty(result);
-        }
-
-        /// <summary>
-        /// Tests that ReadByRequestorIdStatusIdIsActive for inactive records executes positive
-        /// </summary>
-        [Fact]
-        public void ReadByRequestorIdStatusIdIsActive_InActive_Executes_Positive()
-        {
-            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
-            var resultToTestWith = results.First(_ => !_.IsActive && _.SubStatusId.HasValue);
-
-            var result =
-                InstantiatedDependencies.ConcessionRepository.ReadByRequestorIdStatusIdIsActive(
-                    resultToTestWith.RequestorId, resultToTestWith.StatusId, false);
-
-            Assert.NotNull(result);
-            Assert.NotEmpty(result);
-        }
-
-        /// <summary>
-        /// Tests that ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive for active records executes positive
-        /// </summary>
-        [Fact]
-        public void ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive_Active_Executes_Positive()
-        {
-            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
-            var resultToTestWith = results.First(_ => _.IsActive && _.ExpiryDate.HasValue);
-
-            var result =
-                InstantiatedDependencies.ConcessionRepository
-                    .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive(
-                        resultToTestWith.RequestorId, resultToTestWith.ExpiryDate.Value.AddMinutes(-10),
-                        resultToTestWith.ExpiryDate.Value.AddMinutes(10), true);
-
-            Assert.NotNull(result);
-            Assert.NotEmpty(result);
-        }
-
-        /// <summary>
-        /// Tests that ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive for inactive records executes positive
-        /// </summary>
-        [Fact]
-        public void ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive_InActive_Executes_Positive()
-        {
-            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
-            var resultToTestWith = results.First(_ => !_.IsActive && _.ExpiryDate.HasValue);
-
-            var result =
-                InstantiatedDependencies.ConcessionRepository.ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive(
-                    resultToTestWith.RequestorId, resultToTestWith.ExpiryDate.Value.AddMinutes(-10),
-                    resultToTestWith.ExpiryDate.Value.AddMinutes(10), false);
-
-            Assert.NotNull(result);
-            Assert.NotEmpty(result);
-        }
-
-        /// <summary>
-        /// Tests that ReadByCentreIdStatusIdSubStatusIdIsActive executes positive
-        /// </summary>
-        [Fact]
-        public void ReadByCentreIdStatusIdSubStatusIdIsActive_Executes_Positive()
-        {
-            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
-            var resultToTestWith = results.First(_ => _.IsActive && _.SubStatusId.HasValue);
-
-            var result =
-                InstantiatedDependencies.ConcessionRepository.ReadByCentreIdStatusIdSubStatusIdIsActive(
-                    resultToTestWith.CentreId, resultToTestWith.StatusId, resultToTestWith.SubStatusId.Value, true);
-
-            Assert.NotNull(result);
-            Assert.NotEmpty(result);
-        }
-
-        /// <summary>
-        /// Tests that ReadByRiskGroupIdConcessionTypeIdIsActive executes positive
+        /// Tests that ReadByRiskGroupIdConcessionTypeIdIsActive executes positive.
         /// </summary>
         [Fact]
         public void ReadByRiskGroupIdConcessionTypeIdIsActive_Executes_Positive()
         {
             var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
-            var resultToTestWith = results.First(_ => _.IsActive);
 
-            var result =
-                InstantiatedDependencies.ConcessionRepository.ReadByRiskGroupIdConcessionTypeIdIsActive(
-                    resultToTestWith.RiskGroupId, resultToTestWith.ConcessionTypeId, true);
+            var riskGroupId = results.First().RiskGroupId;
+            var concessionTypeId = results.First().ConcessionTypeId;
+            var isActive = results.First().IsActive;
+
+            var result = InstantiatedDependencies.ConcessionRepository.ReadByRiskGroupIdConcessionTypeIdIsActive(riskGroupId, concessionTypeId, isActive);
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
+
+            foreach (var record in result)
+            {
+                Assert.Equal(record.RiskGroupId, riskGroupId);
+                Assert.Equal(record.ConcessionTypeId, concessionTypeId);
+                Assert.Equal(record.IsActive, isActive);
+            }
         }
 
         /// <summary>
@@ -251,23 +154,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         public void ReadAll_Executes_Positive()
         {
             var result = InstantiatedDependencies.ConcessionRepository.ReadAll();
-
-            Assert.NotNull(result);
-            Assert.NotEmpty(result);
-        }
-
-        /// <summary>
-        /// Tests that ReadByConcessionRefIsActive executes positive
-        /// </summary>
-        [Fact]
-        public void ReadByConcessionRefIsActive_Executes_Positive()
-        {
-            var results = InstantiatedDependencies.ConcessionRepository.ReadAll();
-            var resultToTestWith = results.First(_ => _.IsActive);
-
-            var result =
-                InstantiatedDependencies.ConcessionRepository.ReadByConcessionRefIsActive(
-                    resultToTestWith.ConcessionRef, true);
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
@@ -292,7 +178,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.ConcessionDate = DataHelper.ChangeDate(model.ConcessionDate);
             model.DatesentForApproval = DataHelper.ChangeDate(model.DatesentForApproval);
             model.Motivation = "902f5e8b15";
-            model.DateApproved = DataHelper.ChangeDate(model.DateApproved);
             model.RequestorId = DataHelper.GetAlternateUserId(model.RequestorId);
             model.BCMUserId = DataHelper.GetAlternateUserId(model.BCMUserId);
             model.DateActionedByBCM = DataHelper.ChangeDate(model.DateActionedByBCM);
@@ -300,11 +185,10 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.DateActionedByPCM = DataHelper.ChangeDate(model.DateActionedByPCM);
             model.HOUserId = DataHelper.GetAlternateUserId(model.HOUserId);
             model.DateActionedByHO = DataHelper.ChangeDate(model.DateActionedByHO);
-            model.ExpiryDate = DataHelper.ChangeDate(model.ExpiryDate);
             model.CentreId = DataHelper.GetAlternateCentreId(model.CentreId);
             model.IsCurrent = !model.IsCurrent;
             model.IsActive = !model.IsActive;
-            model.MrsCrs = model.MrsCrs + 123;
+            model.MRS_CRS = model.MRS_CRS + 123;
             model.RiskGroupId = DataHelper.GetAlternateRiskGroupId(model.RiskGroupId);
             model.RegionId = DataHelper.GetAlternateRegionId(model.RegionId);
 
@@ -323,7 +207,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.ConcessionDate, model.ConcessionDate);
             Assert.Equal(updatedModel.DatesentForApproval, model.DatesentForApproval);
             Assert.Equal(updatedModel.Motivation, model.Motivation);
-            Assert.Equal(updatedModel.DateApproved, model.DateApproved);
             Assert.Equal(updatedModel.RequestorId, model.RequestorId);
             Assert.Equal(updatedModel.BCMUserId, model.BCMUserId);
             Assert.Equal(updatedModel.DateActionedByBCM, model.DateActionedByBCM);
@@ -331,11 +214,10 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.DateActionedByPCM, model.DateActionedByPCM);
             Assert.Equal(updatedModel.HOUserId, model.HOUserId);
             Assert.Equal(updatedModel.DateActionedByHO, model.DateActionedByHO);
-            Assert.Equal(updatedModel.ExpiryDate, model.ExpiryDate);
             Assert.Equal(updatedModel.CentreId, model.CentreId);
             Assert.Equal(updatedModel.IsCurrent, model.IsCurrent);
             Assert.Equal(updatedModel.IsActive, model.IsActive);
-            Assert.Equal(updatedModel.MrsCrs, model.MrsCrs);
+            Assert.Equal(updatedModel.MRS_CRS, model.MRS_CRS);
             Assert.Equal(updatedModel.RiskGroupId, model.RiskGroupId);
             Assert.Equal(updatedModel.RegionId, model.RegionId);
         }
@@ -357,7 +239,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ConcessionDate = DateTime.Now,
                 DatesentForApproval = DateTime.Now,
                 Motivation = "455d28a04b",
-                DateApproved = DateTime.Now,
                 RequestorId = DataHelper.GetUserId(),
                 BCMUserId = DataHelper.GetUserId(),
                 DateActionedByBCM = DateTime.Now,
@@ -365,11 +246,10 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 DateActionedByPCM = DateTime.Now,
                 HOUserId = DataHelper.GetUserId(),
                 DateActionedByHO = DateTime.Now,
-                ExpiryDate = DateTime.Now,
                 CentreId = DataHelper.GetCentreId(),
                 IsCurrent = false,
                 IsActive = false,
-                MrsCrs = 6533,
+                MRS_CRS = 6533,
                 RiskGroupId = DataHelper.GetRiskGroupId(),
                 RegionId = DataHelper.GetRegionId()
             };

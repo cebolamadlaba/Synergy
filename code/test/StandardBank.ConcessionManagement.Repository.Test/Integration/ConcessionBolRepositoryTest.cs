@@ -20,12 +20,15 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = new ConcessionBol
             {
                 ConcessionId = DataHelper.GetConcessionId(),
+                ConcessionDetailId = DataHelper.GetConcessionDetailId(),
                 TransactionGroupId = DataHelper.GetTransactionGroupId(),
                 BusinesOnlineTransactionTypeId = DataHelper.GetBusinesOnlineTransactionTypeId(),
                 BolUseId = DataHelper.GetBolUserId(),
                 TransactionVolume = 4,
                 TransactionValue = 9692,
-                Fee = 6453
+                Fee = 6453,
+                LegalEntityId = DataHelper.GetLegalEntityId(),
+                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
             };
 
             var result = InstantiatedDependencies.ConcessionBolRepository.Create(model);
@@ -71,12 +74,15 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = InstantiatedDependencies.ConcessionBolRepository.ReadById(id);
 
             model.ConcessionId = DataHelper.GetAlternateConcessionId(model.ConcessionId);
+            model.ConcessionDetailId = DataHelper.GetAlternateConcessionDetailId(model.ConcessionDetailId);
             model.TransactionGroupId = DataHelper.GetAlternateTransactionGroupId(model.TransactionGroupId);
             model.BusinesOnlineTransactionTypeId = DataHelper.GetAlternateBusinesOnlineTransactionTypeId(model.BusinesOnlineTransactionTypeId);
             model.BolUseId = DataHelper.GetAlternateBolUserId(model.BolUseId);
             model.TransactionVolume = model.TransactionVolume + 1;
             model.TransactionValue = model.TransactionValue + 100;
             model.Fee = model.Fee + 100;
+            model.LegalEntityId = DataHelper.GetAlternateLegalEntityId(model.LegalEntityId);
+            model.LegalEntityAccountId = DataHelper.GetAlternateLegalEntityAccountId(model.LegalEntityAccountId);
 
             InstantiatedDependencies.ConcessionBolRepository.Update(model);
 
@@ -85,12 +91,15 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.NotNull(updatedModel);
             Assert.Equal(updatedModel.Id, model.Id);
             Assert.Equal(updatedModel.ConcessionId, model.ConcessionId);
+            Assert.Equal(updatedModel.ConcessionDetailId, model.ConcessionDetailId);
             Assert.Equal(updatedModel.TransactionGroupId, model.TransactionGroupId);
             Assert.Equal(updatedModel.BusinesOnlineTransactionTypeId, model.BusinesOnlineTransactionTypeId);
             Assert.Equal(updatedModel.BolUseId, model.BolUseId);
             Assert.Equal(updatedModel.TransactionVolume, model.TransactionVolume);
             Assert.Equal(updatedModel.TransactionValue, model.TransactionValue);
             Assert.Equal(updatedModel.Fee, model.Fee);
+            Assert.Equal(updatedModel.LegalEntityId, model.LegalEntityId);
+            Assert.Equal(updatedModel.LegalEntityAccountId, model.LegalEntityAccountId);
         }
 
         /// <summary>
@@ -102,12 +111,15 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = new ConcessionBol
             {
                 ConcessionId = DataHelper.GetConcessionId(),
+                ConcessionDetailId = DataHelper.GetConcessionDetailId(),
                 TransactionGroupId = DataHelper.GetTransactionGroupId(),
                 BusinesOnlineTransactionTypeId = DataHelper.GetBusinesOnlineTransactionTypeId(),
                 BolUseId = DataHelper.GetBolUserId(),
                 TransactionVolume = 4,
                 TransactionValue = 9692,
-                Fee = 6453
+                Fee = 6453,
+                LegalEntityId = DataHelper.GetLegalEntityId(),
+                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
             };
 
             var temporaryEntity = InstantiatedDependencies.ConcessionBolRepository.Create(model);

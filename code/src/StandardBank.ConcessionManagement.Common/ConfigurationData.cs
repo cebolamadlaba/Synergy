@@ -39,16 +39,11 @@ namespace StandardBank.ConcessionManagement.Common
             LetterTemplatePath = letterTemplatePath;
         }
 
-        public ConfigurationData(string connectionString, string overrideLoggedInUser, string databaseType)
-        {
-            ConnectionString = connectionString;
-            OverrideLoggedInUser = overrideLoggedInUser;
-            DatabaseType = databaseType == "SqlServer" ? DatabaseType.SqlServer : DatabaseType.SqlLite;
-
-        }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConfigurationData"/> class.
+        /// </summary>
         public ConfigurationData()
         {
-
         }
 
         /// <summary>

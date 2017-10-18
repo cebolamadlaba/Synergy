@@ -1,4 +1,6 @@
-﻿namespace StandardBank.ConcessionManagement.Model.UserInterface
+﻿using System;
+
+namespace StandardBank.ConcessionManagement.Model.UserInterface
 {
     /// <summary>
     /// Concession condition
@@ -38,17 +40,17 @@
         /// <summary>
         /// Gets or sets the interest rate
         /// </summary>
-        public decimal InterestRate { get; set; }
+        public decimal? InterestRate { get; set; }
 
         /// <summary>
         /// Gets or sets the condition volume
         /// </summary>
-        public int ConditionVolume { get; set; }
+        public int? ConditionVolume { get; set; }
 
         /// <summary>
         /// Gets or sets the condition value
         /// </summary>
-        public decimal ConditionValue { get; set; }
+        public decimal? ConditionValue { get; set; }
 
         /// <summary>
         /// Gets or sets the period type
@@ -69,5 +71,77 @@
         /// Gets or sets the period id
         /// </summary>
         public int? PeriodId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the expected turnover value.
+        /// </summary>
+        /// <value>
+        /// The expected turnover value.
+        /// </value>
+        public decimal? ExpectedTurnoverValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets the expiry date.
+        /// </summary>
+        /// <value>
+        /// The expiry date.
+        /// </value>
+        public DateTime? ExpiryDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the risk group.
+        /// </summary>
+        /// <value>
+        /// The name of the risk group.
+        /// </value>
+        public string RiskGroupName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the risk group number.
+        /// </summary>
+        /// <value>
+        /// The risk group number.
+        /// </value>
+        public int RiskGroupNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets the concession reference number.
+        /// </summary>
+        /// <value>
+        /// The concession reference number.
+        /// </value>
+        public string ConcessionReferenceNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets the rag status.
+        /// </summary>
+        /// <value>
+        /// The rag status.
+        /// </value>
+        public string RagStatus { get; set; }
+
+        /// <summary>
+        /// Gets or sets the approved date.
+        /// </summary>
+        /// <value>
+        /// The approved date.
+        /// </value>
+        public DateTime? ApprovedDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type of the concession.
+        /// </summary>
+        /// <value>
+        /// The type of the concession.
+        /// </value>
+        public string ConcessionType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ConditionMet.
+        /// </summary>
+        /// <value>
+        /// The ConditionMet.
+        /// </value>
+        public bool? ConditionMet { get; set; }
     }
 }

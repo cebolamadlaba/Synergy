@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
+using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 {
@@ -8,9 +9,24 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
     /// </summary>
     public interface ILookupTableManager
     {
+        /// <summary>
+        /// Gets the roles.
+        /// </summary>
+        /// <returns></returns>
         IEnumerable<Role> GetRoles();
+
+        /// <summary>
+        /// Gets the centres.
+        /// </summary>
+        /// <returns></returns>
         IEnumerable<Centre> GetCentres();
+
+        /// <summary>
+        /// Gets the regions.
+        /// </summary>
+        /// <returns></returns>
         IEnumerable<Region> GetRegions();
+
         /// <summary>
         /// Gets the status identifier.
         /// </summary>
@@ -207,5 +223,39 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="channelTypeId">The channel type identifier.</param>
         /// <returns></returns>
         string GetChannelTypeName(int channelTypeId);
+
+        /// <summary>
+        /// Gets the table number description.
+        /// </summary>
+        /// <param name="tableNumberId">The table number identifier.</param>
+        /// <returns></returns>
+        string GetTableNumberDescription(int tableNumberId);
+
+        /// <summary>
+        /// Gets the risk group for the number specified
+        /// </summary>
+        /// <param name="riskGroupNumber"></param>
+        /// <returns></returns>
+        RiskGroup GetRiskGroupForRiskGroupNumber(int riskGroupNumber);
+
+        /// <summary>
+        /// Gets the region description.
+        /// </summary>
+        /// <param name="regionId">The region identifier.</param>
+        /// <returns></returns>
+        string GetRegionDescription(int regionId);
+
+        /// <summary>
+        /// Gets the transaction table numbers.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<TransactionTableNumber> GetTransactionTableNumbers();
+
+        /// <summary>
+        /// Gets the transaction table number description.
+        /// </summary>
+        /// <param name="transactionTableNumberId">The transaction table number identifier.</param>
+        /// <returns></returns>
+        string GetTransactionTableNumberDescription(int transactionTableNumberId);
     }
 }

@@ -3,7 +3,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
     /// <summary>
     /// ConcessionTransactional entity
     /// </summary>
-    public class ConcessionTransactional : IAuditable
+    public class ConcessionTransactional : ConcessionDetail, IAuditable
     {
         /// <summary>
         /// Gets or sets the Id.
@@ -14,14 +14,6 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the ConcessionId.
-        /// </summary>
-        /// <value>
-        /// The ConcessionId.
-        /// </value>
-        public int ConcessionId { get; set; }
-
-        /// <summary>
         /// Gets or sets the TransactionTypeId.
         /// </summary>
         /// <value>
@@ -30,36 +22,28 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int? TransactionTypeId { get; set; }
 
         /// <summary>
-        /// Gets or sets the ChannelTypeId.
+        /// Gets or sets the transaction table number identifier.
         /// </summary>
         /// <value>
-        /// The ChannelTypeId.
+        /// The transaction table number identifier.
         /// </value>
-        public int? ChannelTypeId { get; set; }
+        public int TransactionTableNumberId { get; set; }
 
         /// <summary>
-        /// Gets or sets the TransactionVolume.
+        /// Gets or sets the approved transaction table number identifier.
         /// </summary>
         /// <value>
-        /// The TransactionVolume.
+        /// The approved transaction table number identifier.
         /// </value>
-        public int? TransactionVolume { get; set; }
+        public int? ApprovedTransactionTableNumberId { get; set; }
 
         /// <summary>
-        /// Gets or sets the TransactionValue.
+        /// Gets or sets the loaded transaction table number identifier.
         /// </summary>
         /// <value>
-        /// The TransactionValue.
+        /// The loaded transaction table number identifier.
         /// </value>
-        public decimal? TransactionValue { get; set; }
-
-        /// <summary>
-        /// Gets or sets the BaseRateId.
-        /// </summary>
-        /// <value>
-        /// The BaseRateId.
-        /// </value>
-        public int? BaseRateId { get; set; }
+        public int? LoadedTransactionTableNumberId { get; set; }
 
         /// <summary>
         /// Gets or sets the AdValorem.
@@ -70,36 +54,12 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public decimal? AdValorem { get; set; }
 
         /// <summary>
-        /// Gets or sets the LegalEntityId.
-        /// </summary>
-        /// <value>
-        /// The LegalEntityId.
-        /// </value>
-        public int LegalEntityId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the LegalEntityAccountId.
-        /// </summary>
-        /// <value>
-        /// The LegalEntityAccountId.
-        /// </value>
-        public int LegalEntityAccountId { get; set; }
-
-        /// <summary>
         /// Gets or sets the BaseRate.
         /// </summary>
         /// <value>
         /// The BaseRate.
         /// </value>
-        public decimal? BaseRate { get; set; }
-
-        /// <summary>
-        /// Gets or sets the TableNumberId.
-        /// </summary>
-        /// <value>
-        /// The TableNumberId.
-        /// </value>
-        public int TableNumberId { get; set; }
+        public decimal? Fee { get; set; }
 
         /// <summary>
         /// Gets or the name of the table.
@@ -110,13 +70,19 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public string TableName => "tblConcessionTransactional";
 
         /// <summary>
-        /// Gets the primary key column name
+        /// Gets the name of the primary key column.
         /// </summary>
+        /// <value>
+        /// The name of the primary key column.
+        /// </value>
         public string PrimaryKeyColumnName => "pkConcessionTransactionalId";
 
         /// <summary>
-        /// Gets the primary key value
+        /// Gets the primary key value.
         /// </summary>
+        /// <value>
+        /// The primary key value.
+        /// </value>
         public object PrimaryKeyValue => Id;
     }
 }

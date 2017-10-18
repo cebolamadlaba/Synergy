@@ -3,15 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.ActivateConcession;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionComment;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionRelationship;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateConcessionCondition;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateTransactionalConcessionDetail;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteConcessionCondition;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteTransactionalConcessionDetail;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.UpdateConcession;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCondition;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.TransactionalConcession;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
@@ -164,7 +158,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             if (!string.IsNullOrWhiteSpace(transactionalConcession.Concession.Comments))
                 await _mediator.Send(new AddConcessionComment(concession.Id,
-                    databaseTransactionalConcession.Concession.SubStatusId.Value,
+                    databaseTransactionalConcession.Concession.SubStatusId,
                     transactionalConcession.Concession.Comments, user));
         }
 
@@ -185,8 +179,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             //add a new concession using the old concession's details
             var newConcession = transactionalConcession.Concession;
-            newConcession.ExpiryDate = null;
-            newConcession.DateApproved = null;
             newConcession.Id = 0;
             newConcession.Status = "Pending";
             newConcession.BcmUserId = null;
@@ -196,7 +188,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             newConcession.PcmUserId = null;
             newConcession.ReferenceNumber = string.Empty;
             newConcession.SubStatus = "BCM Pending";
-            newConcession.SubStatusId = null;
             newConcession.Type = "Existing";
 
             var concession = await _mediator.Send(new AddConcession(newConcession, user));
@@ -206,6 +197,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             //add all the new conditions and transactional details
             foreach (var transactionalConcessionDetail in transactionalConcession.TransactionalConcessionDetails)
             {
+                transactionalConcessionDetail.DateApproved = null;
                 transactionalConcessionDetail.TransactionalConcessionDetailId = 0;
                 await _mediator.Send(new AddOrUpdateTransactionalConcessionDetail(transactionalConcessionDetail, user, concession));
             }
@@ -248,6 +240,52 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
 
+            var returnConcession = await CreateChildConcession(transactionalConcession, user, "Renewal");
+
+            return Ok(returnConcession);
+        }
+
+        /// <summary>
+        /// Resubmits the transactional.
+        /// </summary>
+        /// <param name="transactionalConcession">The transactional concession.</param>
+        /// <returns></returns>
+        [Route("ResubmitTransactional")]
+        [ValidateModel]
+        public async Task<IActionResult> ResubmitTransactional([FromBody] TransactionalConcession transactionalConcession)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            var returnConcession = await CreateChildConcession(transactionalConcession, user, "Resubmit");
+
+            return Ok(returnConcession);
+        }
+
+        /// <summary>
+        /// Updates the approved transactional.
+        /// </summary>
+        /// <param name="transactionalConcession">The transactional concession.</param>
+        /// <returns></returns>
+        [Route("UpdateApprovedTransactional")]
+        [ValidateModel]
+        public async Task<IActionResult> UpdateApprovedTransactional([FromBody] TransactionalConcession transactionalConcession)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            var returnConcession = await CreateChildConcession(transactionalConcession, user, "Update");
+
+            return Ok(returnConcession);
+        }
+
+        /// <summary>
+        /// Creates the child concession.
+        /// </summary>
+        /// <param name="transactionalConcession">The transactional concession.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="relationship">The relationship.</param>
+        /// <returns></returns>
+        private async Task<TransactionalConcession> CreateChildConcession(TransactionalConcession transactionalConcession, User user, string relationship)
+        {
             //get the parent cash concession details
             var parentCashConcession =
                 _transactionalManager.GetTransactionalConcession(transactionalConcession.Concession.ReferenceNumber,
@@ -257,7 +295,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             transactionalConcession.Concession.ReferenceNumber = string.Empty;
             transactionalConcession.Concession.ConcessionType = "Transactional";
-            transactionalConcession.Concession.Type = "New";
+            transactionalConcession.Concession.Type = "Existing";
 
             var concession = await _mediator.Send(new AddConcession(transactionalConcession.Concession, user));
 
@@ -275,7 +313,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             {
                 CreationDate = DateTime.Now,
                 UserId = user.Id,
-                RelationshipDescription = "Renewal",
+                RelationshipDescription = relationship,
                 ParentConcessionId = parentConcessionId,
                 ChildConcessionId = concession.Id
             };
@@ -285,7 +323,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var returnConcession =
                 _transactionalManager.GetTransactionalConcession(parentCashConcession.Concession.ReferenceNumber, user);
             returnConcession.Concession.ChildReferenceNumber = concession.ReferenceNumber;
-            return Ok(returnConcession);
+            return returnConcession;
         }
 
         /// <summary>

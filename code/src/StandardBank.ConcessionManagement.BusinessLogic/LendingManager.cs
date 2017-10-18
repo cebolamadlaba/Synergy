@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
@@ -16,11 +17,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
     /// <seealso cref="StandardBank.ConcessionManagement.Interface.BusinessLogic.ILendingManager" />
     public class LendingManager : ILendingManager
     {
-        /// <summary>
-        /// The pricing manager
-        /// </summary>
-        private readonly IPricingManager _pricingManager;
-
         /// <summary>
         /// The concession manager
         /// </summary>
@@ -62,9 +58,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ILookupTableManager _lookupTableManager;
 
         /// <summary>
+        /// The loaded price lending repository
+        /// </summary>
+        private readonly ILoadedPriceLendingRepository _loadedPriceLendingRepository;
+
+        /// <summary>
+        /// The rule manager
+        /// </summary>
+        private readonly IRuleManager _ruleManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LendingManager"/> class.
         /// </summary>
-        /// <param name="pricingManager">The pricing manager.</param>
         /// <param name="concessionManager">The concession manager.</param>
         /// <param name="legalEntityRepository">The legal entity repository.</param>
         /// <param name="concessionLendingRepository">The concession lending repository.</param>
@@ -73,13 +78,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="productLendingRepository">The product lending repository.</param>
         /// <param name="financialLendingRepository">The financial lending repository.</param>
         /// <param name="lookupTableManager">The lookup table manager.</param>
-        public LendingManager(IPricingManager pricingManager, IConcessionManager concessionManager,
+        /// <param name="loadedPriceLendingRepository">The loaded price lending repository.</param>
+        /// <param name="ruleManager">The rule manager.</param>
+        public LendingManager(IConcessionManager concessionManager,
             ILegalEntityRepository legalEntityRepository, IConcessionLendingRepository concessionLendingRepository,
             IMapper mapper, ILegalEntityAccountRepository legalEntityAccountRepository,
             IProductLendingRepository productLendingRepository, IFinancialLendingRepository financialLendingRepository,
-            ILookupTableManager lookupTableManager)
+            ILookupTableManager lookupTableManager, ILoadedPriceLendingRepository loadedPriceLendingRepository,
+            IRuleManager ruleManager)
         {
-            _pricingManager = pricingManager;
             _concessionManager = concessionManager;
             _legalEntityRepository = legalEntityRepository;
             _concessionLendingRepository = concessionLendingRepository;
@@ -88,6 +95,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _productLendingRepository = productLendingRepository;
             _financialLendingRepository = financialLendingRepository;
             _lookupTableManager = lookupTableManager;
+            _loadedPriceLendingRepository = loadedPriceLendingRepository;
+            _ruleManager = ruleManager;
         }
 
         /// <summary>
@@ -114,11 +123,26 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public LendingConcession GetLendingConcession(string concessionReferenceId, User currentUser)
         {
             var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
+
             var concessionLendings = _concessionLendingRepository.ReadByConcessionId(concession.Id);
 
             var lendingConcessionDetails = new List<LendingConcessionDetail>();
 
             AddMappedConcessionLendings(concessionLendings, lendingConcessionDetails);
+
+            //we are only allowed to extend or renew overdraft products
+            if (concession.CanExtend || concession.CanRenew)
+            {
+                if (!lendingConcessionDetails.Any(_ => _.ProductType == "Overdraft"))
+                {
+                    concession.CanExtend = false;
+                    concession.CanRenew = false;
+
+                    //if we can't extend or renew but it is approved, that means we can update it
+                    if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
+                        concession.CanUpdate = true;
+                }
+            }
 
             return new LendingConcession
             {
@@ -155,8 +179,54 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             concessionLending.ConcessionId = concession.Id;
 
+            if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
+            {
+                UpdateApprovedPriceAndIsMismatched(concessionLending);
+
+                _ruleManager.UpdateBaseFieldsOnApproval(concessionLending);
+
+                if (!concessionLending.ExpiryDate.HasValue)
+                {
+                    var productType = _lookupTableManager.GetProductTypeName(concessionLending.ProductTypeId);
+
+                    if (productType == "Overdraft")
+                        concessionLending.ExpiryDate = DateTime.Now.AddMonths(12);
+                    else if (productType != "Overdraft" && concessionLending.Term.HasValue)
+                        concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
+                }
+            }
+
             _concessionLendingRepository.Update(concessionLending);
+
             return concessionLending;
+        }
+
+        /// <summary>
+        /// Updates the approved price and is mismatched.
+        /// </summary>
+        /// <param name="concessionLending">The concession lending.</param>
+        private void UpdateApprovedPriceAndIsMismatched(ConcessionLending concessionLending)
+        {
+            var databaseLendingConcession =
+                _concessionLendingRepository.ReadById(concessionLending.Id);
+
+            //the approved margin to prime is what has been captured when approved
+            concessionLending.ApprovedMarginToPrime = concessionLending.MarginToPrime;
+
+            //the margin to prime is what is in the database at the moment
+            concessionLending.MarginToPrime = databaseLendingConcession.MarginToPrime;
+
+            var loadedPriceLending =
+                _loadedPriceLendingRepository.ReadByProductTypeIdLegalEntityAccountId(
+                    concessionLending.ProductTypeId, concessionLending.LegalEntityAccountId);
+
+            if (loadedPriceLending != null)
+            {
+                concessionLending.LoadedMarginToPrime = loadedPriceLending.MarginToPrime;
+
+                if (loadedPriceLending.MarginToPrime != concessionLending.ApprovedMarginToPrime)
+                    concessionLending.IsMismatched = true;
+            }
         }
 
         /// <summary>
@@ -166,7 +236,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public LendingView GetLendingViewData(int riskGroupNumber)
         {
-            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
 
             var lendingConcessions = new List<LendingConcession>();
 
@@ -199,7 +269,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public decimal GetLatestCrsOrMrs(int riskGroupNumber)
         {
-            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
 
             var lendingFinancial = _mapper.Map<LendingFinancial>(
                 _financialLendingRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
@@ -215,7 +285,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public LendingFinancial GetLendingFinancialForRiskGroupNumber(int riskGroupNumber)
         {
-            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
 
             return _mapper.Map<LendingFinancial>(
                 _financialLendingRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialLending());
@@ -307,9 +377,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 if (legalEntityAccount != null)
                     mappedLendingConcessionDetail.AccountNumber = legalEntityAccount.AccountNumber;
-
-                mappedLendingConcessionDetail.LoadedMap = concessionLending?.MarginToPrime ?? 0;
-                mappedLendingConcessionDetail.ApprovedMap = concessionLending?.ApprovedMarginToPrime ?? 0;
 
                 if (mappedLendingConcessionDetail.ProductTypeId.HasValue)
                     mappedLendingConcessionDetail.ProductType =

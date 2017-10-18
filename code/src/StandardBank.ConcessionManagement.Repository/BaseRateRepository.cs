@@ -3,8 +3,6 @@ using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Model.Common;
@@ -46,12 +44,12 @@ namespace StandardBank.ConcessionManagement.Repository
         public BaseRate Create(BaseRate model)
         {
             const string sql = @"INSERT [dbo].[rtblBaseRate] ([BaseRate], [IsActive]) 
-                                VALUES (@BaseRate, @IsActive) 
+                                VALUES (@Amount, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {BaseRate = model.Amount, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql, new {Amount = model.Amount, IsActive = model.IsActive}).Single();
             }
 
             //clear out the cache because the data has changed
@@ -96,9 +94,9 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[rtblBaseRate]
-                            SET [BaseRate] = @BaseRate, [IsActive] = @IsActive
+                            SET [BaseRate] = @Amount, [IsActive] = @IsActive
                             WHERE [pkBaseRateId] = @Id",
-                    new {Id = model.Id, BaseRate = model.Amount, IsActive = model.IsActive});
+                    new {Id = model.Id, Amount = model.Amount, IsActive = model.IsActive});
             }
 
             //clear out the cache because the data has changed

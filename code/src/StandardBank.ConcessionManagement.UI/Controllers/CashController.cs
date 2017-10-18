@@ -3,18 +3,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.ActivateConcession;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcession;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionComment;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.AddConcessionRelationship;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateCashConcessionDetail;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.AddOrUpdateConcessionCondition;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteCashConcessionDetail;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.DeleteConcessionCondition;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.CashConcession;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCondition;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.UpdateConcession;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.UI.Validation;
 
@@ -154,7 +148,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
 
             if (!string.IsNullOrWhiteSpace(cashConcession.Concession.Comments))
-                await _mediator.Send(new AddConcessionComment(concession.Id, databaseCashConcession.Concession.SubStatusId.Value,
+                await _mediator.Send(new AddConcessionComment(concession.Id, databaseCashConcession.Concession.SubStatusId,
                     cashConcession.Concession.Comments, user));
         }
 
@@ -176,8 +170,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             //add a new concession using the old concession's details
             var newConcession = cashConcession.Concession;
-            newConcession.ExpiryDate = null;
-            newConcession.DateApproved = null;
             newConcession.Id = 0;
             newConcession.Status = "Pending";
             newConcession.BcmUserId = null;
@@ -187,7 +179,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             newConcession.PcmUserId = null;
             newConcession.ReferenceNumber = string.Empty;
             newConcession.SubStatus = "BCM Pending";
-            newConcession.SubStatusId = null;
             newConcession.Type = "Existing";
 
             var concession = await _mediator.Send(new AddConcession(newConcession, user));
@@ -197,6 +188,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             //add all the new conditions and cash details
             foreach (var cashConcessionDetail in cashConcession.CashConcessionDetails)
             {
+                cashConcessionDetail.DateApproved = null;
                 cashConcessionDetail.CashConcessionDetailId = 0;
                 await _mediator.Send(new AddOrUpdateCashConcessionDetail(cashConcessionDetail, user, concession));
             }
@@ -238,6 +230,52 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
 
+            var returnConcession = await CreateChildConcession(cashConcession, user, "Renewal");
+
+            return Ok(returnConcession);
+        }
+
+        /// <summary>
+        /// Resubmits the cash.
+        /// </summary>
+        /// <param name="cashConcession">The cash concession.</param>
+        /// <returns></returns>
+        [Route("ResubmitCash")]
+        [ValidateModel]
+        public async Task<IActionResult> ResubmitCash([FromBody] CashConcession cashConcession)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            var returnConcession = await CreateChildConcession(cashConcession, user, "Resubmit");
+
+            return Ok(returnConcession);
+        }
+
+        /// <summary>
+        /// Updates the approved cash.
+        /// </summary>
+        /// <param name="cashConcession">The cash concession.</param>
+        /// <returns></returns>
+        [Route("UpdateApprovedCash")]
+        [ValidateModel]
+        public async Task<IActionResult> UpdateApprovedCash([FromBody] CashConcession cashConcession)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            var returnConcession = await CreateChildConcession(cashConcession, user, "Update");
+
+            return Ok(returnConcession);
+        }
+
+        /// <summary>
+        /// Creates the child concession.
+        /// </summary>
+        /// <param name="cashConcession">The cash concession.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="relationship">The relationship.</param>
+        /// <returns></returns>
+        private async Task<CashConcession> CreateChildConcession(CashConcession cashConcession, User user, string relationship)
+        {
             //get the parent cash concession details
             var parentCashConcession = _cashManager.GetCashConcession(cashConcession.Concession.ReferenceNumber, user);
 
@@ -245,7 +283,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             cashConcession.Concession.ReferenceNumber = string.Empty;
             cashConcession.Concession.ConcessionType = "Cash";
-            cashConcession.Concession.Type = "New";
+            cashConcession.Concession.Type = "Existing";
 
             var concession = await _mediator.Send(new AddConcession(cashConcession.Concession, user));
 
@@ -261,7 +299,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             {
                 CreationDate = DateTime.Now,
                 UserId = user.Id,
-                RelationshipDescription = "Renewal",
+                RelationshipDescription = relationship,
                 ParentConcessionId = parentConcessionId,
                 ChildConcessionId = concession.Id
             };
@@ -270,7 +308,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             var returnConcession = _cashManager.GetCashConcession(parentCashConcession.Concession.ReferenceNumber, user);
             returnConcession.Concession.ChildReferenceNumber = concession.ReferenceNumber;
-            return Ok(returnConcession);
+            return returnConcession;
         }
 
         /// <summary>

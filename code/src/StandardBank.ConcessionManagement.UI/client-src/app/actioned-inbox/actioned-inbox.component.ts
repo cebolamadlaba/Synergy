@@ -4,8 +4,8 @@ import { UserConcessionsService } from "../services/user-concessions.service";
 import { UserConcessions } from "../models/user-concessions";
 import { Subject } from 'rxjs/Rx'
 import 'rxjs/add/operator/map';
-import { Concession } from "../models/concession";
 import { Router, RouterModule } from '@angular/router';
+import { InboxConcession } from "../models/inbox-concession";
 
 @Component({
   selector: 'app-actioned-inbox',
@@ -43,7 +43,7 @@ export class ActionedInboxComponent implements OnInit {
             error => this.errorMessage = <any>error);
     }
 
-    openConcessionView(concession: Concession) {
+    openConcessionView(concession: InboxConcession) {
         switch (concession.concessionType) {
             case "Lending":
                 this.router.navigate(['/lending-view-concession', concession.riskGroupNumber, concession.referenceNumber]);

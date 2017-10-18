@@ -43,8 +43,8 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public RiskGroup Create(RiskGroup model)
         {
-            const string sql = @"INSERT [dbo].[tblRiskGroup] ([RiskGroupNumber], [RiskGroupName], [IsActive]) 
-                                VALUES (@RiskGroupNumber, @RiskGroupName, @IsActive) 
+            const string sql = @"INSERT [dbo].[tblRiskGroup] ([fkMarketSegmentId], [fkRegionId], [RiskGroupNumber], [RiskGroupName], [IsActive]) 
+                                VALUES (@fkMarketSegmentId, @fkRegionId, @RiskGroupNumber, @RiskGroupName, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
@@ -52,6 +52,8 @@ namespace StandardBank.ConcessionManagement.Repository
                 model.Id = db.Query<int>(sql,
                     new
                     {
+                        fkMarketSegmentId = model.MarketSegmentId,
+                        fkRegionId = model.RegionId,
                         RiskGroupNumber = model.RiskGroupNumber,
                         RiskGroupName = model.RiskGroupName,
                         IsActive = model.IsActive
@@ -107,7 +109,7 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<RiskGroup>(
-                        "SELECT [pkRiskGroupId] [Id], [RiskGroupNumber], [RiskGroupName], [IsActive] FROM [dbo].[tblRiskGroup]");
+                        "SELECT [pkRiskGroupId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRegionId] [RegionId], [RiskGroupNumber], [RiskGroupName], [IsActive] FROM [dbo].[tblRiskGroup]");
                 }
             };
 
@@ -123,11 +125,13 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblRiskGroup]
-                            SET [RiskGroupNumber] = @RiskGroupNumber, [RiskGroupName] = @RiskGroupName, [IsActive] = @IsActive
+                            SET [fkMarketSegmentId] = @fkMarketSegmentId, [fkRegionId] = @fkRegionId, [RiskGroupNumber] = @RiskGroupNumber, [RiskGroupName] = @RiskGroupName, [IsActive] = @IsActive
                             WHERE [pkRiskGroupId] = @Id",
                     new
                     {
                         Id = model.Id,
+                        fkMarketSegmentId = model.MarketSegmentId,
+                        fkRegionId = model.RegionId,
                         RiskGroupNumber = model.RiskGroupNumber,
                         RiskGroupName = model.RiskGroupName,
                         IsActive = model.IsActive

@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 
 namespace StandardBank.ConcessionManagement.UI.Controllers
 {
@@ -11,17 +12,24 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
     public class PricingController : Controller
     {
         /// <summary>
-        /// The pricing manager
+        /// The lookup table manager
         /// </summary>
-        private readonly IPricingManager _pricingManager;
-        
+        private readonly ILookupTableManager _lookupTableManager;
+
         /// <summary>
-        /// Initializes the controller
+        /// The site helper
         /// </summary>
-        /// <param name="pricingManager"></param>
-        public PricingController(IPricingManager pricingManager)
+        private readonly ISiteHelper _siteHelper;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PricingController"/> class.
+        /// </summary>
+        /// <param name="lookupTableManager">The lookup table manager.</param>
+        /// <param name="siteHelper">The site helper.</param>
+        public PricingController(ILookupTableManager lookupTableManager, ISiteHelper siteHelper)
         {
-            _pricingManager = pricingManager;
+            _lookupTableManager = lookupTableManager;
+            _siteHelper = siteHelper;
         }
 
         /// <summary>
@@ -32,7 +40,17 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("RiskGroup/{riskGroupNumber}")]
         public IActionResult RiskGroup(int riskGroupNumber)
         {
-            return Ok(_pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber));
+            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+
+            if (riskGroup != null)
+            {
+                var user = _siteHelper.LoggedInUser(this);
+
+                if (user.IsHO || user.SelectedRegion.Id == riskGroup.RegionId)
+                    return Ok(riskGroup);
+            }
+
+            return Ok(null);
         }
     }
 }

@@ -1,5 +1,14 @@
+<!-- Loading message -->
+<div class="col-md-12" *ngIf="isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-info">
+            <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Loading...</p>
+        </div>
+    </div>
+</div>
+
 <!-- banner-->
-<div class="col-md-12 banner">
+<div class="col-md-12 banner" *ngIf="!isLoading">
     <div class="row">
         <div class="lending-banner-title">
             <div class="col-md-1">
@@ -69,7 +78,7 @@
 </div>
 <!--Table information -->
 
-<div class="col-md-12">
+<div class="col-md-12" *ngIf="!isLoading">
     <div class="col-md-5">
         <h2 class="headings">Products</h2>
         <div class="section">
@@ -123,7 +132,7 @@
 
     <!-- concessions -->
 
-    <div class="col-md-7  search-and-results-container concessions">
+    <div class="col-md-7 search-and-results-container">
         <h2 class="headings">
             Concessions
             <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/cash-add-concession', cashView.riskGroup.number]" *ngIf="pageLoaded">Add Concession</button>
@@ -136,49 +145,51 @@
 
         <div class="section" *ngFor="let cashConcession of cashView.cashConcessions | baseConcessionFilter : filterConcessionId; trackBy: index;">
             <div class="section-header small-table-title">
-                <div class="concessionID-section"> {{cashConcession.concession.referenceNumber}}</div>
+                <div class="concessionID-section"> {{cashConcession.concession.referenceNumber}} - {{cashConcession.concession.statusDescription}}</div>
             </div>
             <div class="section-body">
                 <div class="table-container" [routerLink]="['/cash-view-concession', cashView.riskGroup.number, cashConcession.concession.referenceNumber]">
                     <table class="table table-bordered table-hover header-fixed table-striped">
                         <thead>
-                            <tr>
-                                <th>Customer</th>
-                                <th>Cash Table</th>
-                                <th>Volume</th>
-                                <th>Value</th>
-                                <th>Price</th>
-                            </tr>
+                        <tr>
+                            <th>Channel</th>
+                            <th>Customer</th>
+                            <th>Cash Table</th>
+                            <th>Volume</th>
+                            <th>Value</th>
+                            <th>Price</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let concession of cashConcession.cashConcessionDetails; trackBy: index;">
-                                <td>
-                                    <div class="table-row-top">{{concession.customerName}}</div>
-                                    <div class="table-row-bottom">
-                                        <div class="secondaryText">
-                                            Acc No:
-                                            <div class="normalText">{{concession.accountNumber}}</div>
-                                        </div>
+                        <tr *ngFor="let concession of cashConcession.cashConcessionDetails; trackBy: index;">
+                            <td>{{concession.channel}}</td>
+                            <td>
+                                <div class="table-row-top">{{concession.customerName}}</div>
+                                <div class="table-row-bottom">
+                                    <div class="secondaryText">
+                                        Acc No:
+                                        <div class="normalText">{{concession.accountNumber}}</div>
                                     </div>
-                                </td>
-                                <td class="rightAlign">{{concession.tableNumberId}}</td>
-                                <td>{{concession.volume}}</td>
-                                <td>{{concession.value}}</td>
-                                <td>
-                                    <div class="table-row-top">
-                                        <div class="secondaryText">
-                                            Loaded:
-                                            <div class="normalText">R{{cashView?.cashFinancial?.loadedPrice | number : '1.2-2'}}</div>
-                                        </div>
+                                </div>
+                            </td>
+                            <td class="rightAlign">{{concession.tableNumberId}}</td>
+                            <td>{{concession.volume}}</td>
+                            <td>{{concession.value}}</td>
+                            <td>
+                                <div class="table-row-top">
+                                    <div class="secondaryText">
+                                        Loaded:
+                                        <div class="normalText">{{concession.loadedTableNumber}}</div>
                                     </div>
-                                    <div class="table-row-bottom">
-                                        <div class="secondaryText">
-                                            Approved:
-                                            <div class="normalText">R{{concession.approvedPrice | number : '1.2-2'}}</div>
-                                        </div>
+                                </div>
+                                <div class="table-row-bottom">
+                                    <div class="secondaryText">
+                                        Approved:
+                                        <div class="normalText">{{concession.approvedTableNumber}}</div>
                                     </div>
-                                </td>
-                            </tr>
+                                </div>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>

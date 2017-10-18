@@ -2,8 +2,6 @@ using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
 
@@ -21,12 +19,20 @@ namespace StandardBank.ConcessionManagement.Repository
         private readonly IDbConnectionFactory _dbConnectionFactory;
 
         /// <summary>
+        /// The concession detail repository
+        /// </summary>
+        private readonly IConcessionDetailRepository _concessionDetailRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionTradeRepository"/> class.
         /// </summary>
-        /// <param name="dbConnectionFactory">The db connection factory.</param>
-        public ConcessionTradeRepository(IDbConnectionFactory dbConnectionFactory)
+        /// <param name="dbConnectionFactory">The database connection factory.</param>
+        /// <param name="concessionDetailRepository">The concession detail repository.</param>
+        public ConcessionTradeRepository(IDbConnectionFactory dbConnectionFactory,
+            IConcessionDetailRepository concessionDetailRepository)
         {
             _dbConnectionFactory = dbConnectionFactory;
+            _concessionDetailRepository = concessionDetailRepository;
         }
 
         /// <summary>
@@ -36,13 +42,29 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ConcessionTrade Create(ConcessionTrade model)
         {
-            const string sql = @"INSERT [dbo].[tblConcessionTrade] ([fkConcessionId], [fkTransactionTypeId], [fkChannelTypeId], [TableNumber], [TransactionVolume], [TransactionValue], [fkBaseRateId], [AdValorem]) 
-                                VALUES (@fkConcessionId, @fkTransactionTypeId, @fkChannelTypeId, @TableNumber, @TransactionVolume, @TransactionValue, @fkBaseRateId, @AdValorem) 
-                                SELECT CAST(SCOPE_IDENTITY() as int)";
+            var concessionDetail = _concessionDetailRepository.Create(model);
+            model.ConcessionDetailId = concessionDetail.ConcessionDetailId;
+
+            const string sql =
+                @"INSERT [dbo].[tblConcessionTrade] ([fkConcessionId], [fkConcessionDetailId], [fkTransactionTypeId], [fkChannelTypeId], [fkBaseRateId], [TableNumber], [TransactionVolume], [TransactionValue], [AdValorem]) 
+                VALUES (@ConcessionId, @ConcessionDetailId, @TransactionTypeId, @ChannelTypeId, @BaseRateId, @TableNumber, @TransactionVolume, @TransactionValue, @AdValorem) 
+                SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {fkConcessionId = model.ConcessionId, fkTransactionTypeId = model.TransactionTypeId, fkChannelTypeId = model.ChannelTypeId, TableNumber = model.TableNumber, TransactionVolume = model.TransactionVolume, TransactionValue = model.TransactionValue, fkBaseRateId = model.BaseRateId, AdValorem = model.AdValorem}).Single();
+                model.Id = db.Query<int>(sql,
+                    new
+                    {
+                        ConcessionId = model.ConcessionId,
+                        ConcessionDetailId = model.ConcessionDetailId,
+                        TransactionTypeId = model.TransactionTypeId,
+                        ChannelTypeId = model.ChannelTypeId,
+                        BaseRateId = model.BaseRateId,
+                        TableNumber = model.TableNumber,
+                        TransactionVolume = model.TransactionVolume,
+                        TransactionValue = model.TransactionValue,
+                        AdValorem = model.AdValorem
+                    }).Single();
             }
 
             return model;
@@ -58,7 +80,10 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionTrade>(
-                    "SELECT [pkConcessionTradeId] [Id], [fkConcessionId] [ConcessionId], [fkTransactionTypeId] [TransactionTypeId], [fkChannelTypeId] [ChannelTypeId], [TableNumber], [TransactionVolume], [TransactionValue], [fkBaseRateId] [BaseRateId], [AdValorem] FROM [dbo].[tblConcessionTrade] WHERE [pkConcessionTradeId] = @Id",
+                    @"SELECT [pkConcessionTradeId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkTransactionTypeId] [TransactionTypeId], [fkChannelTypeId] [ChannelTypeId], [fkBaseRateId] [BaseRateId], [TableNumber], [TransactionVolume], [TransactionValue], [AdValorem], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
+                    FROM [dbo].[tblConcessionTrade] t
+                    JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
+                    WHERE [pkConcessionTradeId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -71,7 +96,10 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<ConcessionTrade>("SELECT [pkConcessionTradeId] [Id], [fkConcessionId] [ConcessionId], [fkTransactionTypeId] [TransactionTypeId], [fkChannelTypeId] [ChannelTypeId], [TableNumber], [TransactionVolume], [TransactionValue], [fkBaseRateId] [BaseRateId], [AdValorem] FROM [dbo].[tblConcessionTrade]");
+                return db.Query<ConcessionTrade>(
+                    @"SELECT [pkConcessionTradeId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkTransactionTypeId] [TransactionTypeId], [fkChannelTypeId] [ChannelTypeId], [fkBaseRateId] [BaseRateId], [TableNumber], [TransactionVolume], [TransactionValue], [AdValorem], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
+                    FROM [dbo].[tblConcessionTrade] t
+                    JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]");
             }
         }
 
@@ -84,10 +112,24 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblConcessionTrade]
-                            SET [fkConcessionId] = @fkConcessionId, [fkTransactionTypeId] = @fkTransactionTypeId, [fkChannelTypeId] = @fkChannelTypeId, [TableNumber] = @TableNumber, [TransactionVolume] = @TransactionVolume, [TransactionValue] = @TransactionValue, [fkBaseRateId] = @fkBaseRateId, [AdValorem] = @AdValorem
+                            SET [fkConcessionId] = @ConcessionId, [fkConcessionDetailId] = @ConcessionDetailId, [fkTransactionTypeId] = @TransactionTypeId, [fkChannelTypeId] = @ChannelTypeId, [fkBaseRateId] = @BaseRateId, [TableNumber] = @TableNumber, [TransactionVolume] = @TransactionVolume, [TransactionValue] = @TransactionValue, [AdValorem] = @AdValorem
                             WHERE [pkConcessionTradeId] = @Id",
-                    new {Id = model.Id, fkConcessionId = model.ConcessionId, fkTransactionTypeId = model.TransactionTypeId, fkChannelTypeId = model.ChannelTypeId, TableNumber = model.TableNumber, TransactionVolume = model.TransactionVolume, TransactionValue = model.TransactionValue, fkBaseRateId = model.BaseRateId, AdValorem = model.AdValorem});
+                    new
+                    {
+                        Id = model.Id,
+                        ConcessionId = model.ConcessionId,
+                        ConcessionDetailId = model.ConcessionDetailId,
+                        TransactionTypeId = model.TransactionTypeId,
+                        ChannelTypeId = model.ChannelTypeId,
+                        BaseRateId = model.BaseRateId,
+                        TableNumber = model.TableNumber,
+                        TransactionVolume = model.TransactionVolume,
+                        TransactionValue = model.TransactionValue,
+                        AdValorem = model.AdValorem
+                    });
             }
+
+            _concessionDetailRepository.Update(model);
         }
 
         /// <summary>
@@ -101,6 +143,8 @@ namespace StandardBank.ConcessionManagement.Repository
                 db.Execute("DELETE [dbo].[tblConcessionTrade] WHERE [pkConcessionTradeId] = @Id",
                     new {model.Id});
             }
+
+            _concessionDetailRepository.Delete(model);
         }
     }
 }

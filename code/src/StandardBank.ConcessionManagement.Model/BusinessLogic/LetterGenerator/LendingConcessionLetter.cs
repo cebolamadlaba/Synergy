@@ -3,7 +3,7 @@
     /// <summary>
     /// Lending concession letter
     /// </summary>
-    public class LendingConcessionLetter
+    public class LendingConcessionLetter : BaseConcessionLetter
     {
         /// <summary>
         /// Gets or sets the type of the product.

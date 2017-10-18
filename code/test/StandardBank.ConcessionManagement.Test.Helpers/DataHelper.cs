@@ -811,11 +811,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <returns></returns>
         private static int InsertTransactionType()
         {
-            var transactionTypeId = GetNewTransactionTypeIdForInsert();
-
             var model = new TransactionType
             {
-                Id = transactionTypeId,
                 ConcessionTypeId = GetConcessionTypeId(),
                 Description = "14c6862dfb",
                 IsActive = false
@@ -824,21 +821,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             InstantiatedDependencies.TransactionTypeRepository.Create(model);
 
             return model.Id;
-        }
-
-        /// <summary>
-        /// Gets a new transaction type id that can be used for insert
-        /// </summary>
-        /// <returns></returns>
-        public static int GetNewTransactionTypeIdForInsert()
-        {
-            var transactionTypeId = 1;
-            var transactionTypes = InstantiatedDependencies.TransactionTypeRepository.ReadAll();
-
-            if (transactionTypes != null && transactionTypes.Any())
-                transactionTypeId = transactionTypes.Max(_ => _.Id) + 1;
-
-            return transactionTypeId;
         }
 
         /// <summary>
@@ -1253,7 +1235,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 ConcessionDate = DateTime.Now,
                 DatesentForApproval = DateTime.Now,
                 Motivation = "9007645562",
-                DateApproved = DateTime.Now,
                 RequestorId = GetUserId(),
                 BCMUserId = GetUserId(),
                 DateActionedByBCM = DateTime.Now,
@@ -1261,11 +1242,10 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 DateActionedByPCM = DateTime.Now,
                 HOUserId = GetUserId(),
                 DateActionedByHO = DateTime.Now,
-                ExpiryDate = DateTime.Now,
-                CentreId = 6,
+                CentreId = GetCentreId(),
                 IsCurrent = false,
                 IsActive = false,
-                MrsCrs = 4354,
+                MRS_CRS = 4354,
                 RegionId = GetRegionId(),
                 RiskGroupId = GetRiskGroupId()
             };
@@ -1478,19 +1458,18 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <returns></returns>
         private static int InsertConcessionCash()
         {
+            var tableNumberId = GetTableNumberId();
+
             var model = new ConcessionCash
             {
                 ConcessionId = GetConcessionId(),
                 ChannelTypeId = GetChannelTypeId(),
-                CashVolume = 9,
-                CashValue = 1813,
-                BaseRateId = GetBaseRateId(),
                 AdValorem = 8669,
-                LegalEntityId = GetLegalEntityId(),
-                LegalEntityAccountId = GetLegalEntityAccountId(),
                 BaseRate = 1263,
                 AccrualTypeId = GetAccrualTypeId(),
-                TableNumberId = GetTableNumberId()
+                TableNumberId = tableNumberId,
+                ApprovedTableNumberId = tableNumberId,
+                LoadedTableNumberId = tableNumberId
             };
 
             InstantiatedDependencies.ConcessionCashRepository.Create(model);
@@ -1603,7 +1582,9 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 Value = 2525,
                 IsActive = false,
                 PeriodTypeId =  GetPeriodTypeId(),
-                PeriodId = GetPeriodId()
+                PeriodId = GetPeriodId(),
+                ExpectedTurnoverValue = 100,
+                ExpiryDate = DateTime.Now.AddDays(100)
             };
 
             InstantiatedDependencies.ConcessionConditionRepository.Create(model);
@@ -1717,9 +1698,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 ReviewFee = 7441,
                 UFFFee = 1095,
                 ReviewFeeTypeId = GetReviewFeeTypeId(),
-                LegalEntityId = GetLegalEntityId(),
-                LegalEntityAccountId = GetLegalEntityAccountId(),
-                AverageBalance = 234.23m
+                AverageBalance = 234.23m,
+                LoadedMarginToPrime = 2134
             };
 
             InstantiatedDependencies.ConcessionLendingRepository.Create(model);
@@ -1801,63 +1781,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         }
 
         /// <summary>
-        /// Gets the ConcessionRemovalRequest id
-        /// </summary>
-        /// <returns></returns>
-        public static int GetConcessionRemovalRequestId()
-        {
-            //read all and return the first one
-            var models = InstantiatedDependencies.ConcessionRemovalRequestRepository.ReadAll();
-
-            if (models != null && models.Any())
-                return models.First().Id;
-
-            return InsertConcessionRemovalRequest();
-        }
-
-        /// <summary>
-        /// Inserts a ConcessionRemovalRequest and returns the id
-        /// </summary>
-        /// <returns></returns>
-        private static int InsertConcessionRemovalRequest()
-        {
-            var model = new ConcessionRemovalRequest
-            {
-                ConcessionId = GetConcessionId(),
-                RequestorId = 5,
-                BCMUserId = GetUserId(),
-                PCMUserId = GetUserId(),
-                HOUserId = GetUserId(),
-                SubStatusId = GetSubStatusId(),
-                SystemDate = DateTime.Now,
-                DateApproved = DateTime.Now
-            };
-
-            InstantiatedDependencies.ConcessionRemovalRequestRepository.Create(model);
-
-            return model.Id;
-        }
-
-        /// <summary>
-        /// Gets the alternate ConcessionRemovalRequest id
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        public static int GetAlternateConcessionRemovalRequestId(int? model)
-        {
-            if (!model.HasValue)
-                return GetConcessionRemovalRequestId();
-
-            //read all and return the first one
-            var models = InstantiatedDependencies.ConcessionRemovalRequestRepository.ReadAll();
-
-            if (models != null && models.Any(_ => _.Id != model.Value))
-                return models.First(_ => _.Id != model.Value).Id;
-
-            return InsertConcessionRemovalRequest();
-        }
-
-        /// <summary>
         /// Gets the ConcessionTrade id
         /// </summary>
         /// <returns></returns>
@@ -1935,19 +1858,17 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <returns></returns>
         private static int InsertConcessionTransactional()
         {
+            var tableNumberId = GetTransactionTableNumberId();
+
             var model = new ConcessionTransactional
             {
                 ConcessionId = GetConcessionId(),
                 TransactionTypeId = GetTransactionTypeId(),
-                ChannelTypeId = GetChannelTypeId(),
-                TransactionVolume = 2,
-                TransactionValue = 4797,
-                BaseRateId = GetBaseRateId(),
                 AdValorem = 5344,
-                LegalEntityId = GetLegalEntityId(),
-                LegalEntityAccountId = GetLegalEntityAccountId(),
-                BaseRate = 8369,
-                TableNumberId = GetTableNumberId()
+                Fee = 8369,
+                TransactionTableNumberId = tableNumberId,
+                ApprovedTransactionTableNumberId = tableNumberId,
+                LoadedTransactionTableNumberId = tableNumberId
             };
 
             InstantiatedDependencies.ConcessionTransactionalRepository.Create(model);
@@ -2161,7 +2082,9 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             {
                 RiskGroupNumber = 1,
                 RiskGroupName = "f48353dfd5",
-                IsActive = false
+                IsActive = false,
+                MarketSegmentId = GetMarketSegmentId(),
+                RegionId = GetRegionId()
             };
 
             InstantiatedDependencies.RiskGroupRepository.Create(model);
@@ -2907,8 +2830,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 TotalAutosafeCashVolume = 5266,
                 WeightedAverageCCPrice = 7745,
                 WeightedAverageAFPrice = 2965,
-                LatestCrsOrMrs = 2385,
-                LoadedPrice = 2434.43m
+                LatestCrsOrMrs = 2385
             };
 
             InstantiatedDependencies.FinancialCashRepository.Create(model);
@@ -3084,7 +3006,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 RiskGroupId = GetRiskGroupId(),
                 LegalEntityId = GetLegalEntityId(),
                 LegalEntityAccountId = GetLegalEntityAccountId(),
-                TableNumberId = GetTableNumberId(),
+                TransactionTableNumberId = GetTransactionTableNumberId(),
                 TransactionTypeId = GetTransactionTypeId(),
                 Volume = 845,
                 Value = 711,
@@ -3113,6 +3035,380 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 return models.First(_ => _.Id != model.Value).Id;
 
             return InsertProductTransactional();
+        }
+
+        /// <summary>
+        /// Gets the LoadedPriceCash id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetLoadedPriceCashId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.LoadedPriceCashRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertLoadedPriceCash();
+        }
+
+        /// <summary>
+        /// Inserts a LoadedPriceCash and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertLoadedPriceCash()
+        {
+            var model = new LoadedPriceCash
+            {
+                ChannelTypeId = GetChannelTypeId(),
+                LegalEntityAccountId = GetLegalEntityAccountId(),
+                TableNumberId = GetTableNumberId()
+            };
+
+            InstantiatedDependencies.LoadedPriceCashRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate LoadedPriceCash id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateLoadedPriceCashId(int? model)
+        {
+            if (!model.HasValue)
+                return GetLoadedPriceCashId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.LoadedPriceCashRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertLoadedPriceCash();
+        }
+
+        /// <summary>
+        /// Gets the LoadedPriceLending id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetLoadedPriceLendingId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.LoadedPriceLendingRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertLoadedPriceLending();
+        }
+
+        /// <summary>
+        /// Inserts a LoadedPriceLending and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertLoadedPriceLending()
+        {
+            var model = new LoadedPriceLending
+            {
+                ProductTypeId = GetProductId(),
+                LegalEntityAccountId = GetLegalEntityAccountId(),
+                MarginToPrime = 2382
+            };
+
+            InstantiatedDependencies.LoadedPriceLendingRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate LoadedPriceLending id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateLoadedPriceLendingId(int? model)
+        {
+            if (!model.HasValue)
+                return GetLoadedPriceLendingId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.LoadedPriceLendingRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertLoadedPriceLending();
+        }
+
+        /// <summary>
+        /// Gets the LoadedPriceTransactional id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetLoadedPriceTransactionalId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.LoadedPriceTransactionalRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertLoadedPriceTransactional();
+        }
+
+        /// <summary>
+        /// Inserts a LoadedPriceTransactional and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertLoadedPriceTransactional()
+        {
+            var model = new LoadedPriceTransactional
+            {
+                TransactionTypeId = GetTransactionTypeId(),
+                LegalEntityAccountId = GetLegalEntityAccountId(),
+                TransactionTableNumberId = GetTransactionTableNumberId()
+            };
+
+            InstantiatedDependencies.LoadedPriceTransactionalRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate LoadedPriceTransactional id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateLoadedPriceTransactionalId(int? model)
+        {
+            if (!model.HasValue)
+                return GetLoadedPriceTransactionalId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.LoadedPriceTransactionalRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertLoadedPriceTransactional();
+        }
+
+        /// <summary>
+        /// Gets the ConcessionDetail id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetConcessionDetailId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.ConcessionDetailRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().ConcessionDetailId;
+
+            return InsertConcessionDetail();
+        }
+
+        /// <summary>
+        /// Inserts a ConcessionDetail and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertConcessionDetail()
+        {
+            var model = new ConcessionDetail
+            {
+                ConcessionId = GetConcessionId(),
+                LegalEntityId = GetLegalEntityId(),
+                LegalEntityAccountId = GetLegalEntityAccountId(),
+                ExpiryDate = DateTime.Now,
+                DateApproved = DateTime.Now,
+                IsMismatched = false
+            };
+
+            InstantiatedDependencies.ConcessionDetailRepository.Create(model);
+
+            return model.ConcessionDetailId;
+        }
+
+        /// <summary>
+        /// Gets the alternate ConcessionDetail id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateConcessionDetailId(int? model)
+        {
+            if (!model.HasValue)
+                return GetConcessionDetailId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.ConcessionDetailRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.ConcessionDetailId != model.Value))
+                return models.First(_ => _.ConcessionDetailId != model.Value).ConcessionDetailId;
+
+            return InsertConcessionDetail();
+        }
+
+        /// <summary>
+        /// Gets the FinancialInvestment id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetFinancialInvestmentId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.FinancialInvestmentRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertFinancialInvestment();
+        }
+
+        /// <summary>
+        /// Inserts a FinancialInvestment and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertFinancialInvestment()
+        {
+            var model = new FinancialInvestment
+            {
+                RiskGroupId = GetRiskGroupId(),
+                TotalLiabilityBalances = 7011,
+                WeightedAverageMTP = 5813,
+                WeightedAverageNetMargin = 584,
+                LatestCrsOrMrs = 2400
+            };
+
+            InstantiatedDependencies.FinancialInvestmentRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate FinancialInvestment id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateFinancialInvestmentId(int? model)
+        {
+            if (!model.HasValue)
+                return GetFinancialInvestmentId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.FinancialInvestmentRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertFinancialInvestment();
+        }
+
+        /// <summary>
+        /// Gets the ProductInvestment id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetProductInvestmentId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.ProductInvestmentRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertProductInvestment();
+        }
+
+        /// <summary>
+        /// Inserts a ProductInvestment and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertProductInvestment()
+        {
+            var model = new ProductInvestment
+            {
+                RiskGroupId = GetRiskGroupId(),
+                LegalEntityId = GetLegalEntityId(),
+                LegalEntityAccountId = GetLegalEntityAccountId(),
+                ProductId = GetProductId(),
+                AverageBalance = 4451,
+                LoadedCustomerRate = 7405
+            };
+
+            InstantiatedDependencies.ProductInvestmentRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate ProductInvestment id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateProductInvestmentId(int? model)
+        {
+            if (!model.HasValue)
+                return GetProductInvestmentId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.ProductInvestmentRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertProductInvestment();
+        }
+
+        /// <summary>
+        /// Gets the TransactionTableNumber id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetTransactionTableNumberId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.TransactionTableNumberRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertTransactionTableNumber();
+        }
+
+        /// <summary>
+        /// Inserts a TransactionTableNumber and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertTransactionTableNumber()
+        {
+            var model = new TransactionTableNumber
+            {
+                TransactionTypeId = GetTransactionTypeId(),
+                TariffTable = 7,
+                Fee = 8592,
+                AdValorem = 445,
+                IsActive = false
+            };
+
+            InstantiatedDependencies.TransactionTableNumberRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate TransactionTableNumber id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateTransactionTableNumberId(int? model)
+        {
+            if (!model.HasValue)
+                return GetTransactionTableNumberId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.TransactionTableNumberRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertTransactionTableNumber();
         }
     }
 }

@@ -7,7 +7,10 @@
     [SystemDate]              DATETIME      NOT NULL,
     [IsActive]                BIT           NOT NULL,
     CONSTRAINT [PK_tblConcessionComment] PRIMARY KEY CLUSTERED ([pkConcessionCommentId] ASC),
+    CONSTRAINT [FK_tblConcessionComment_rtblSubStatus] FOREIGN KEY ([fkConcessionSubStatusId]) REFERENCES [dbo].[rtblSubStatus] ([pkSubStatusId]),
     CONSTRAINT [FK_tblConcessionComment_tblConcession] FOREIGN KEY ([fkConcessionId]) REFERENCES [dbo].[tblConcession] ([pkConcessionId]),
     CONSTRAINT [FK_tblConcessionComment_tblUser] FOREIGN KEY ([fkUserId]) REFERENCES [dbo].[tblUser] ([pkUserId])
 );
+
+
 

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Moq;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+using StandardBank.ConcessionManagement.Interface.BusinessLogic.ScheduledJobs;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
@@ -16,17 +17,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The mock AccrualType repository
         /// </summary>
         public static Mock<IAccrualTypeRepository> MockAccrualTypeRepository = new Mock<IAccrualTypeRepository>();
-
-        /// <summary>
-        /// The mock authorizing user repository
-        /// </summary>
-        public static Mock<IAuthorizingUserRepository> MockAuthorizingUserRepository =
-            new Mock<IAuthorizingUserRepository>();
-
-        /// <summary>
-        /// The mock SMTRawData repository
-        /// </summary>
-        public static Mock<ISMTRawDataRepository> MockSMTRawDataRepository = new Mock<ISMTRawDataRepository>();
 
         /// <summary>
         /// The mock ExceptionLog repository
@@ -213,12 +203,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static Mock<IConcessionMasRepository> MockConcessionMasRepository = new Mock<IConcessionMasRepository>();
 
         /// <summary>
-        /// The mock ConcessionRemovalRequest repository
-        /// </summary>
-        public static Mock<IConcessionRemovalRequestRepository> MockConcessionRemovalRequestRepository =
-            new Mock<IConcessionRemovalRequestRepository>();
-
-        /// <summary>
         /// The mock ConcessionTrade repository
         /// </summary>
         public static Mock<IConcessionTradeRepository> MockConcessionTradeRepository =
@@ -297,11 +281,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The mock UserRegion repository
         /// </summary>
         public static Mock<IUserRegionRepository> MockUserRegionRepository = new Mock<IUserRegionRepository>();
-
-        /// <summary>
-        /// The mock PricingManager
-        /// </summary>
-        public static Mock<IPricingManager> MockPricingManager = new Mock<IPricingManager>();
 
         /// <summary>
         /// The mock LendingManager
@@ -414,5 +393,69 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static Mock<IProductTransactionalRepository> MockProductTransactionalRepository =
             new Mock<IProductTransactionalRepository>();
+
+        /// <summary>
+        /// The mock LoadedPriceCash repository
+        /// </summary>
+        public static Mock<ILoadedPriceCashRepository> MockLoadedPriceCashRepository =
+            new Mock<ILoadedPriceCashRepository>();
+
+        /// <summary>
+        /// The mock LoadedPriceLending repository
+        /// </summary>
+        public static Mock<ILoadedPriceLendingRepository> MockLoadedPriceLendingRepository =
+            new Mock<ILoadedPriceLendingRepository>();
+
+        /// <summary>
+        /// The mock LoadedPriceTransactional repository
+        /// </summary>
+        public static Mock<ILoadedPriceTransactionalRepository> MockLoadedPriceTransactionalRepository =
+            new Mock<ILoadedPriceTransactionalRepository>();
+
+        /// <summary>
+        /// The mock ConcessionDetail repository
+        /// </summary>
+        public static Mock<IConcessionDetailRepository> MockConcessionDetailRepository =
+            new Mock<IConcessionDetailRepository>();
+
+        /// <summary>
+        /// The mock FinancialInvestment repository
+        /// </summary>
+        public static Mock<IFinancialInvestmentRepository> MockFinancialInvestmentRepository =
+            new Mock<IFinancialInvestmentRepository>();
+
+        /// <summary>
+        /// The mock ProductInvestment repository
+        /// </summary>
+        public static Mock<IProductInvestmentRepository> MockProductInvestmentRepository =
+            new Mock<IProductInvestmentRepository>();
+
+        /// <summary>
+        /// The mock concession inbox view repository
+        /// </summary>
+        public static Mock<IConcessionInboxViewRepository> MockConcessionInboxViewRepository =
+            new Mock<IConcessionInboxViewRepository>();
+
+        /// <summary>
+        /// The mock concession condition view repository
+        /// </summary>
+        public static Mock<IConcessionConditionViewRepository> MockConcessionConditionViewRepository =
+            new Mock<IConcessionConditionViewRepository>();
+
+        /// <summary>
+        /// The mock daily scheduled job
+        /// </summary>
+        public static Mock<IDailyScheduledJob> MockDailyScheduledJob = new Mock<IDailyScheduledJob>();
+
+        /// <summary>
+        /// The mock TransactionTableNumber repository
+        /// </summary>
+        public static Mock<ITransactionTableNumberRepository> MockTransactionTableNumberRepository =
+            new Mock<ITransactionTableNumberRepository>();
+
+        /// <summary>
+        /// The mock rule manager
+        /// </summary>
+        public static Mock<IRuleManager> MockRuleManager = new Mock<IRuleManager>();
     }
 }

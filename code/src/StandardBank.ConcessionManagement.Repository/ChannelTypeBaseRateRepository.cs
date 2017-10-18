@@ -2,8 +2,6 @@ using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
 
@@ -37,12 +35,12 @@ namespace StandardBank.ConcessionManagement.Repository
         public ChannelTypeBaseRate Create(ChannelTypeBaseRate model)
         {
             const string sql = @"INSERT [dbo].[tblChannelTypeBaseRate] ([fkChannelTypeId], [fkBaseRateId]) 
-                                VALUES (@fkChannelTypeId, @fkBaseRateId) 
+                                VALUES (@ChannelTypeId, @BaseRateId) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {fkChannelTypeId = model.ChannelTypeId, fkBaseRateId = model.BaseRateId}).Single();
+                model.Id = db.Query<int>(sql, new {ChannelTypeId = model.ChannelTypeId, BaseRateId = model.BaseRateId}).Single();
             }
 
             return model;
@@ -84,9 +82,9 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblChannelTypeBaseRate]
-                            SET [fkChannelTypeId] = @fkChannelTypeId, [fkBaseRateId] = @fkBaseRateId
+                            SET [fkChannelTypeId] = @ChannelTypeId, [fkBaseRateId] = @BaseRateId
                             WHERE [pkChannelTypeBaseRateId] = @Id",
-                    new {Id = model.Id, fkChannelTypeId = model.ChannelTypeId, fkBaseRateId = model.BaseRateId});
+                    new {Id = model.Id, ChannelTypeId = model.ChannelTypeId, BaseRateId = model.BaseRateId});
             }
         }
 

@@ -6,7 +6,7 @@ using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
-using RiskGroup = StandardBank.ConcessionManagement.Model.UserInterface.Pricing.RiskGroup;
+using RiskGroup = StandardBank.ConcessionManagement.Model.UserInterface.RiskGroup;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
@@ -17,11 +17,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
     /// <seealso cref="StandardBank.ConcessionManagement.Interface.BusinessLogic.ICashManager" />
     public class CashManager : ICashManager
     {
-        /// <summary>
-        /// The pricing manager
-        /// </summary>
-        private readonly IPricingManager _pricingManager;
-
         /// <summary>
         /// The concession manager
         /// </summary>
@@ -63,9 +58,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ILookupTableManager _lookupTableManager;
 
         /// <summary>
+        /// The loaded price cash repository
+        /// </summary>
+        private readonly ILoadedPriceCashRepository _loadedPriceCashRepository;
+
+        /// <summary>
+        /// The rule manager
+        /// </summary>
+        private readonly IRuleManager _ruleManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CashManager"/> class.
         /// </summary>
-        /// <param name="pricingManager">The pricing manager.</param>
         /// <param name="concessionManager">The concession manager.</param>
         /// <param name="concessionCashRepository">The concession cash repository.</param>
         /// <param name="legalEntityRepository">The legal entity repository.</param>
@@ -74,13 +78,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="financialCashRepository">The financial cash repository.</param>
         /// <param name="productCashRepository">The product cash repository.</param>
         /// <param name="lookupTableManager">The lookup table manager.</param>
-        public CashManager(IPricingManager pricingManager, IConcessionManager concessionManager,
+        /// <param name="loadedPriceCashRepository">The loaded price cash repository.</param>
+        /// <param name="ruleManager">The rule manager.</param>
+        public CashManager(IConcessionManager concessionManager,
             IConcessionCashRepository concessionCashRepository, ILegalEntityRepository legalEntityRepository,
             IMapper mapper, ILegalEntityAccountRepository legalEntityAccountRepository,
             IFinancialCashRepository financialCashRepository, IProductCashRepository productCashRepository,
-            ILookupTableManager lookupTableManager)
+            ILookupTableManager lookupTableManager, ILoadedPriceCashRepository loadedPriceCashRepository,
+            IRuleManager ruleManager)
         {
-            _pricingManager = pricingManager;
             _concessionManager = concessionManager;
             _concessionCashRepository = concessionCashRepository;
             _legalEntityRepository = legalEntityRepository;
@@ -89,6 +95,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _financialCashRepository = financialCashRepository;
             _productCashRepository = productCashRepository;
             _lookupTableManager = lookupTableManager;
+            _loadedPriceCashRepository = loadedPriceCashRepository;
+            _ruleManager = ruleManager;
         }
 
         /// <summary>
@@ -99,7 +107,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public IEnumerable<CashConcession> GetCashConcessionsForRiskGroupNumber(int riskGroupNumber)
         {
             var cashConcessions = new List<CashConcession>();
-            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
 
             if (riskGroup != null)
             {
@@ -174,9 +182,44 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var mappedConcessionCash = _mapper.Map<ConcessionCash>(cashConcessionDetail);
             mappedConcessionCash.ConcessionId = concession.Id;
 
+            if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
+            {
+                UpdateApprovedTableNumberAndIsMismatched(mappedConcessionCash);
+
+                _ruleManager.UpdateBaseFieldsOnApproval(mappedConcessionCash);
+            }
+
             _concessionCashRepository.Update(mappedConcessionCash);
 
             return mappedConcessionCash;
+        }
+
+        /// <summary>
+        /// Updates the approved table number and is mismatched.
+        /// </summary>
+        /// <param name="mappedConcessionCash">The mapped concession cash.</param>
+        private void UpdateApprovedTableNumberAndIsMismatched(ConcessionCash mappedConcessionCash)
+        {
+            var databaseCashConcession =
+                _concessionCashRepository.ReadById(mappedConcessionCash.Id);
+
+            //the approved table number is the table number that was captured when approving
+            mappedConcessionCash.ApprovedTableNumberId = mappedConcessionCash.TableNumberId;
+
+            //the table number is what is currently in the database
+            mappedConcessionCash.TableNumberId = databaseCashConcession.TableNumberId;
+
+            var loadedPriceCash =
+                _loadedPriceCashRepository.ReadByChannelTypeIdLegalEntityAccountId(
+                    mappedConcessionCash.ChannelTypeId, mappedConcessionCash.LegalEntityAccountId);
+
+            if (loadedPriceCash != null)
+            {
+                mappedConcessionCash.LoadedTableNumberId = loadedPriceCash.TableNumberId;
+
+                if (loadedPriceCash.TableNumberId != mappedConcessionCash.ApprovedTableNumberId)
+                    mappedConcessionCash.IsMismatched = true;
+            }
         }
 
         /// <summary>
@@ -187,7 +230,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public CashView GetCashViewData(int riskGroupNumber)
         {
             var cashConcessions = new List<CashConcession>();
-            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
 
             if (riskGroup != null)
             {
@@ -246,7 +289,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public decimal GetLatestCrsOrMrs(int riskGroupNumber)
         {
-            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
 
             var cashFinancial = _mapper.Map<CashFinancial>(
                 _financialCashRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialCash());
@@ -261,7 +304,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public CashFinancial GetCashFinancialForRiskGroupNumber(int riskGroupNumber)
         {
-            var riskGroup = _pricingManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
 
             return _mapper.Map<CashFinancial>(
                 _financialCashRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialCash());
@@ -324,11 +367,23 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 if (legalEntityAccount != null)
                     mappedConcessionCashEntity.AccountNumber = legalEntityAccount.AccountNumber;
 
-                mappedConcessionCashEntity.ApprovedPrice = concessionCashEntity.CashValue.GetValueOrDefault(0);
-
                 if (mappedConcessionCashEntity.ChannelTypeId.HasValue)
                     mappedConcessionCashEntity.Channel =
                         _lookupTableManager.GetChannelTypeName(mappedConcessionCashEntity.ChannelTypeId.Value);
+
+                if (mappedConcessionCashEntity.ApprovedTableNumberId.HasValue)
+                {
+                    mappedConcessionCashEntity.ApprovedTableNumber =
+                        _lookupTableManager.GetTableNumberDescription(mappedConcessionCashEntity.ApprovedTableNumberId
+                            .Value);
+                }
+
+                if (mappedConcessionCashEntity.LoadedTableNumberId.HasValue)
+                {
+                    mappedConcessionCashEntity.LoadedTableNumber =
+                        _lookupTableManager.GetTableNumberDescription(mappedConcessionCashEntity.LoadedTableNumberId
+                            .Value);
+                }
 
                 cashConcessionDetails.Add(mappedConcessionCashEntity);
             }

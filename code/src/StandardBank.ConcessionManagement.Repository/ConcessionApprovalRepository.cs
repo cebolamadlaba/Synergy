@@ -2,8 +2,6 @@ using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
 
@@ -37,12 +35,12 @@ namespace StandardBank.ConcessionManagement.Repository
         public ConcessionApproval Create(ConcessionApproval model)
         {
             const string sql = @"INSERT [dbo].[tblConcessionApproval] ([fkConcessionId], [fkOldSubStatusId], [fkNewSubStatusId], [fkUserId], [SystemDate], [IsActive]) 
-                                VALUES (@fkConcessionId, @fkOldSubStatusId, @fkNewSubStatusId, @fkUserId, @SystemDate, @IsActive) 
+                                VALUES (@ConcessionId, @OldSubStatusId, @NewSubStatusId, @UserId, @SystemDate, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {fkConcessionId = model.ConcessionId, fkOldSubStatusId = model.OldSubStatusId, fkNewSubStatusId = model.NewSubStatusId, fkUserId = model.UserId, SystemDate = model.SystemDate, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql, new {ConcessionId = model.ConcessionId, OldSubStatusId = model.OldSubStatusId, NewSubStatusId = model.NewSubStatusId, UserId = model.UserId, SystemDate = model.SystemDate, IsActive = model.IsActive}).Single();
             }
 
             return model;
@@ -84,9 +82,9 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblConcessionApproval]
-                            SET [fkConcessionId] = @fkConcessionId, [fkOldSubStatusId] = @fkOldSubStatusId, [fkNewSubStatusId] = @fkNewSubStatusId, [fkUserId] = @fkUserId, [SystemDate] = @SystemDate, [IsActive] = @IsActive
+                            SET [fkConcessionId] = @ConcessionId, [fkOldSubStatusId] = @OldSubStatusId, [fkNewSubStatusId] = @NewSubStatusId, [fkUserId] = @UserId, [SystemDate] = @SystemDate, [IsActive] = @IsActive
                             WHERE [pkConcessionApprovalId] = @Id",
-                    new {Id = model.Id, fkConcessionId = model.ConcessionId, fkOldSubStatusId = model.OldSubStatusId, fkNewSubStatusId = model.NewSubStatusId, fkUserId = model.UserId, SystemDate = model.SystemDate, IsActive = model.IsActive});
+                    new {Id = model.Id, ConcessionId = model.ConcessionId, OldSubStatusId = model.OldSubStatusId, NewSubStatusId = model.NewSubStatusId, UserId = model.UserId, SystemDate = model.SystemDate, IsActive = model.IsActive});
             }
         }
 

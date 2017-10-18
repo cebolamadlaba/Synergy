@@ -1,5 +1,10 @@
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCondition;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+using StandardBank.ConcessionManagement.Model.UserInterface;
+using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 
 namespace StandardBank.ConcessionManagement.UI.Controllers
 {
@@ -11,16 +16,36 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// The lookup table manager
         /// </summary>
         private readonly ILookupTableManager _lookupTableManager;
+
+        /// <summary>
+        /// The concession manager
+        /// </summary>
         private readonly IConcessionManager _concessionManager;
 
         /// <summary>
-        /// Initializes the controller
+        /// The mediator
         /// </summary>
-        /// <param name="lookupTableManager"></param>
-        public ConditionController(ILookupTableManager lookupTableManager , IConcessionManager concessionManager)
+        private readonly IMediator _mediator;
+
+        /// <summary>
+        /// The site helper
+        /// </summary>
+        private readonly ISiteHelper _siteHelper;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConditionController"/> class.
+        /// </summary>
+        /// <param name="lookupTableManager">The lookup table manager.</param>
+        /// <param name="concessionManager">The concession manager.</param>
+        /// <param name="mediator">The mediator.</param>
+        /// <param name="siteHelper">The site helper.</param>
+        public ConditionController(ILookupTableManager lookupTableManager, IConcessionManager concessionManager,
+            IMediator mediator, ISiteHelper siteHelper)
         {
             _lookupTableManager = lookupTableManager;
             _concessionManager = concessionManager;
+            _mediator = mediator;
+            _siteHelper = siteHelper;
         }
 
         /// <summary>
@@ -53,10 +78,19 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(_lookupTableManager.GetPeriodTypes());
         }
 
+        /// <summary>
+        /// Gets the users conditions.
+        /// </summary>
+        /// <param name="period">The period.</param>
+        /// <param name="periodType">Type of the period.</param>
+        /// <returns></returns>
         [Route("MyConditions/{period}/{periodType}")]
-        public IActionResult MyConditions([FromRoute]string period = "3 Months" ,[FromRoute] string periodType = "Standard")
+        public IActionResult MyConditions([FromRoute] string period = "3 Months",
+            [FromRoute] string periodType = "Standard")
         {
-            return Ok(_concessionManager.GetConditions(periodType,period));
+            var user = _siteHelper.LoggedInUser(this);
+
+            return Ok(_concessionManager.GetConditions(periodType, period, user.Id));
         }
 
         /// <summary>
@@ -66,7 +100,26 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("ConditionCounts")]
         public IActionResult ConditionCounts()
         {
-            return Ok(_concessionManager.GetConditionCounts());
+            var user = _siteHelper.LoggedInUser(this);
+
+            return Ok(_concessionManager.GetConditionCounts(user.Id));
+        }
+
+        /// <summary>
+        /// Updates the condition.
+        /// </summary>
+        /// <param name="concessionCondition">The concession condition.</param>
+        /// <returns></returns>
+        [Route("UpdateCondition")]
+        public async Task<IActionResult> UpdateCondition([FromBody] ConcessionCondition concessionCondition)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+            var concession =
+                _concessionManager.GetConcessionForConcessionReferenceId(concessionCondition.ConcessionReferenceNumber);
+
+            var result = await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+
+            return Ok(result);
         }
     }
 }

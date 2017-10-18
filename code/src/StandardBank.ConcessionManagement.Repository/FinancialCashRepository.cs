@@ -35,8 +35,8 @@ namespace StandardBank.ConcessionManagement.Repository
         public FinancialCash Create(FinancialCash model)
         {
             const string sql =
-                @"INSERT [dbo].[tblFinancialCash] ([fkRiskGroupId], [WeightedAverageBranchPrice], [TotalCashCentrCashTurnover], [TotalCashCentrCashVolume], [TotalBranchCashTurnover], [TotalBranchCashVolume], [TotalAutosafeCashTurnover], [TotalAutosafeCashVolume], [WeightedAverageCCPrice], [WeightedAverageAFPrice], [LatestCrsOrMrs], [LoadedPrice]) 
-                                VALUES (@RiskGroupId, @WeightedAverageBranchPrice, @TotalCashCentrCashTurnover, @TotalCashCentrCashVolume, @TotalBranchCashTurnover, @TotalBranchCashVolume, @TotalAutosafeCashTurnover, @TotalAutosafeCashVolume, @WeightedAverageCCPrice, @WeightedAverageAFPrice, @LatestCrsOrMrs, @LoadedPrice) 
+                @"INSERT [dbo].[tblFinancialCash] ([fkRiskGroupId], [WeightedAverageBranchPrice], [TotalCashCentrCashTurnover], [TotalCashCentrCashVolume], [TotalBranchCashTurnover], [TotalBranchCashVolume], [TotalAutosafeCashTurnover], [TotalAutosafeCashVolume], [WeightedAverageCCPrice], [WeightedAverageAFPrice], [LatestCrsOrMrs]) 
+                                VALUES (@RiskGroupId, @WeightedAverageBranchPrice, @TotalCashCentrCashTurnover, @TotalCashCentrCashVolume, @TotalBranchCashTurnover, @TotalBranchCashVolume, @TotalAutosafeCashTurnover, @TotalAutosafeCashVolume, @WeightedAverageCCPrice, @WeightedAverageAFPrice, @LatestCrsOrMrs) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
@@ -54,8 +54,7 @@ namespace StandardBank.ConcessionManagement.Repository
                         TotalAutosafeCashVolume = model.TotalAutosafeCashVolume,
                         WeightedAverageCCPrice = model.WeightedAverageCCPrice,
                         WeightedAverageAFPrice = model.WeightedAverageAFPrice,
-                        LatestCrsOrMrs = model.LatestCrsOrMrs,
-                        LoadedPrice = model.LoadedPrice
+                        LatestCrsOrMrs = model.LatestCrsOrMrs
                     }).Single();
             }
 
@@ -72,7 +71,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<FinancialCash>(
-                    "SELECT [pkFinancialCashId] [Id], [fkRiskGroupId] [RiskGroupId], [WeightedAverageBranchPrice], [TotalCashCentrCashTurnover], [TotalCashCentrCashVolume], [TotalBranchCashTurnover], [TotalBranchCashVolume], [TotalAutosafeCashTurnover], [TotalAutosafeCashVolume], [WeightedAverageCCPrice], [WeightedAverageAFPrice], [LatestCrsOrMrs], [LoadedPrice] FROM [dbo].[tblFinancialCash] WHERE [pkFinancialCashId] = @Id",
+                    "SELECT [pkFinancialCashId] [Id], [fkRiskGroupId] [RiskGroupId], [WeightedAverageBranchPrice], [TotalCashCentrCashTurnover], [TotalCashCentrCashVolume], [TotalBranchCashTurnover], [TotalBranchCashVolume], [TotalAutosafeCashTurnover], [TotalAutosafeCashVolume], [WeightedAverageCCPrice], [WeightedAverageAFPrice], [LatestCrsOrMrs] FROM [dbo].[tblFinancialCash] WHERE [pkFinancialCashId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -87,7 +86,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<FinancialCash>(
-                    @"SELECT [pkFinancialCashId] [Id], [fkRiskGroupId] [RiskGroupId], [WeightedAverageBranchPrice], [TotalCashCentrCashTurnover], [TotalCashCentrCashVolume], [TotalBranchCashTurnover], [TotalBranchCashVolume], [TotalAutosafeCashTurnover], [TotalAutosafeCashVolume], [WeightedAverageCCPrice], [WeightedAverageAFPrice], [LatestCrsOrMrs], [LoadedPrice] 
+                    @"SELECT [pkFinancialCashId] [Id], [fkRiskGroupId] [RiskGroupId], [WeightedAverageBranchPrice], [TotalCashCentrCashTurnover], [TotalCashCentrCashVolume], [TotalBranchCashTurnover], [TotalBranchCashVolume], [TotalAutosafeCashTurnover], [TotalAutosafeCashVolume], [WeightedAverageCCPrice], [WeightedAverageAFPrice], [LatestCrsOrMrs] 
                     FROM [dbo].[tblFinancialCash] 
                     WHERE [fkRiskGroupId] = @riskGroupId",
                     new {riskGroupId});
@@ -103,7 +102,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<FinancialCash>(
-                    "SELECT [pkFinancialCashId] [Id], [fkRiskGroupId] [RiskGroupId], [WeightedAverageBranchPrice], [TotalCashCentrCashTurnover], [TotalCashCentrCashVolume], [TotalBranchCashTurnover], [TotalBranchCashVolume], [TotalAutosafeCashTurnover], [TotalAutosafeCashVolume], [WeightedAverageCCPrice], [WeightedAverageAFPrice], [LatestCrsOrMrs], [LoadedPrice] FROM [dbo].[tblFinancialCash]");
+                    "SELECT [pkFinancialCashId] [Id], [fkRiskGroupId] [RiskGroupId], [WeightedAverageBranchPrice], [TotalCashCentrCashTurnover], [TotalCashCentrCashVolume], [TotalBranchCashTurnover], [TotalBranchCashVolume], [TotalAutosafeCashTurnover], [TotalAutosafeCashVolume], [WeightedAverageCCPrice], [WeightedAverageAFPrice], [LatestCrsOrMrs] FROM [dbo].[tblFinancialCash]");
             }
         }
 
@@ -116,7 +115,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblFinancialCash]
-                            SET [fkRiskGroupId] = @RiskGroupId, [WeightedAverageBranchPrice] = @WeightedAverageBranchPrice, [TotalCashCentrCashTurnover] = @TotalCashCentrCashTurnover, [TotalCashCentrCashVolume] = @TotalCashCentrCashVolume, [TotalBranchCashTurnover] = @TotalBranchCashTurnover, [TotalBranchCashVolume] = @TotalBranchCashVolume, [TotalAutosafeCashTurnover] = @TotalAutosafeCashTurnover, [TotalAutosafeCashVolume] = @TotalAutosafeCashVolume, [WeightedAverageCCPrice] = @WeightedAverageCCPrice, [WeightedAverageAFPrice] = @WeightedAverageAFPrice, [LatestCrsOrMrs] = @LatestCrsOrMrs, [LoadedPrice] = @LoadedPrice
+                            SET [fkRiskGroupId] = @RiskGroupId, [WeightedAverageBranchPrice] = @WeightedAverageBranchPrice, [TotalCashCentrCashTurnover] = @TotalCashCentrCashTurnover, [TotalCashCentrCashVolume] = @TotalCashCentrCashVolume, [TotalBranchCashTurnover] = @TotalBranchCashTurnover, [TotalBranchCashVolume] = @TotalBranchCashVolume, [TotalAutosafeCashTurnover] = @TotalAutosafeCashTurnover, [TotalAutosafeCashVolume] = @TotalAutosafeCashVolume, [WeightedAverageCCPrice] = @WeightedAverageCCPrice, [WeightedAverageAFPrice] = @WeightedAverageAFPrice, [LatestCrsOrMrs] = @LatestCrsOrMrs
                             WHERE [pkFinancialCashId] = @Id",
                     new
                     {
@@ -131,8 +130,7 @@ namespace StandardBank.ConcessionManagement.Repository
                         TotalAutosafeCashVolume = model.TotalAutosafeCashVolume,
                         WeightedAverageCCPrice = model.WeightedAverageCCPrice,
                         WeightedAverageAFPrice = model.WeightedAverageAFPrice,
-                        LatestCrsOrMrs = model.LatestCrsOrMrs,
-                        LoadedPrice = model.LoadedPrice
+                        LatestCrsOrMrs = model.LatestCrsOrMrs
                     });
             }
         }

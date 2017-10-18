@@ -24,6 +24,7 @@ export class PricingTransactionalComponent implements OnInit, OnDestroy {
     errorMessage: String;
     pageLoaded = false;
     canRequest = false;
+    isLoading = true;
     
     constructor(
         private router: Router,
@@ -45,12 +46,13 @@ export class PricingTransactionalComponent implements OnInit, OnDestroy {
                 this.observableTransactionalView.subscribe(transactionalView => {
                     this.transactionalView = transactionalView;
                     this.pageLoaded = true;
+                    this.isLoading = false;
                 }, error => this.errorMessage = <any>error);
             }
         });
+
         this.userService.getData().subscribe(user => {
             this.canRequest = user.canRequest;
-           
         });
     }
 

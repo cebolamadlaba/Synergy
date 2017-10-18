@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
-using CsvHelper;
 using RepoGenerator.Model;
 
 namespace RepoGenerator
@@ -11,9 +13,12 @@ namespace RepoGenerator
     class Program
     {
         /// <summary>
-        /// The configuration file
+        /// Gets the connection string.
         /// </summary>
-        private const string ConfigFile = "Config\\databasecolumns.csv";
+        /// <value>
+        /// The connection string.
+        /// </value>
+        public static string ConnectionString => ConfigurationManager.ConnectionStrings["Database"].ConnectionString;
 
         /// <summary>
         /// The model template file
@@ -58,7 +63,8 @@ namespace RepoGenerator
         /// <summary>
         /// The instantiated dependency with cache template
         /// </summary>
-        private const string InstantiatedDependencyWithCacheTemplate = "Templates\\InstantiatedDependencyWithCacheTemplate.txt";
+        private const string InstantiatedDependencyWithCacheTemplate =
+            "Templates\\InstantiatedDependencyWithCacheTemplate.txt";
 
         /// <summary>
         /// The mock dependency template
@@ -222,7 +228,7 @@ namespace RepoGenerator
 
             foreach (var table in tables)
                 startUpInjects.Append(
-                  $"services.AddScoped<I{table.ClassName}Repository, {table.ClassName}Repository>();{Environment.NewLine}");
+                    $"services.AddScoped<I{table.ClassName}Repository, {table.ClassName}Repository>();{Environment.NewLine}");
 
             File.WriteAllText("Other\\StartUpInjects.txt", startUpInjects.ToString());
         }
@@ -358,9 +364,11 @@ namespace RepoGenerator
                     createPropertiesAndValues.Append($",{Environment.NewLine}");
 
                 if (column.Name.StartsWith("fk"))
-                    createPropertiesAndValues.Append($"                {column.CodeName} = DataHelper.Get{column.CodeName}()");
+                    createPropertiesAndValues.Append(
+                        $"                {column.CodeName} = DataHelper.Get{column.CodeName}()");
                 else
-                    createPropertiesAndValues.Append($"                {column.CodeName} = {GetGeneratedCodeValue(column)}");
+                    createPropertiesAndValues.Append(
+                        $"                {column.CodeName} = {GetGeneratedCodeValue(column)}");
             }
 
             return createPropertiesAndValues.ToString();
@@ -406,19 +414,21 @@ namespace RepoGenerator
         /// <param name="table">The table.</param>
         private static void GenerateRepository(Table table)
         {
-            var repositoryTemplate = table.Name.StartsWith("rtbl") ? File.ReadAllText(RepositoryWithCacheTemplate) : File.ReadAllText(RepositoryTemplate);
+            var repositoryTemplate = table.Name.StartsWith("rtbl")
+                ? File.ReadAllText(RepositoryWithCacheTemplate)
+                : File.ReadAllText(RepositoryTemplate);
 
             if (!Directory.Exists("Repository"))
                 Directory.CreateDirectory("Repository");
 
             var repository = repositoryTemplate.Replace("[[ClassName]]", table.ClassName)
-              .Replace("[[TableSchemaAndName]]", $"[{table.Schema}].[{table.Name}]")
-              .Replace("[[InsertColumnList]]", GetInsertColumnList(table))
-              .Replace("[[InsertParameterList]]", GetInsertParameterList(table))
-              .Replace("[[DapperInsertParameters]]", GetDapperInsertParameters(table))
-              .Replace("[[SelectColumnsAndAliases]]", GetSelectColumnsAndAliases(table))
-              .Replace("[[PrimaryKeyColumnName]]", $"[{table.Columns.First(_ => _.Name.StartsWith("pk")).Name}]")
-              .Replace("[[UpdateSetParameters]]", GetUpdateSetParameters(table));
+                .Replace("[[TableSchemaAndName]]", $"[{table.Schema}].[{table.Name}]")
+                .Replace("[[InsertColumnList]]", GetInsertColumnList(table))
+                .Replace("[[InsertParameterList]]", GetInsertParameterList(table))
+                .Replace("[[DapperInsertParameters]]", GetDapperInsertParameters(table))
+                .Replace("[[SelectColumnsAndAliases]]", GetSelectColumnsAndAliases(table))
+                .Replace("[[PrimaryKeyColumnName]]", $"[{table.Columns.First(_ => _.Name.StartsWith("pk")).Name}]")
+                .Replace("[[UpdateSetParameters]]", GetUpdateSetParameters(table));
 
             File.WriteAllText($"Repository\\{table.ClassName}Repository.cs", repository);
         }
@@ -571,7 +581,8 @@ namespace RepoGenerator
 
                 modelParameters.Append(modelParameterTemplate.Replace("[[ColumnName]]", column.CodeName)
                     .Replace("[[CodeDataType]]", column.CodeDataType)
-                    .Replace("[[IsNullable]]", column.IsNullable && column.CodeDataType != "string" ? "?" : string.Empty));
+                    .Replace("[[IsNullable]]",
+                        column.IsNullable && column.CodeDataType != "string" ? "?" : string.Empty));
             }
 
             var model = modelTemplate.Replace("[[ClassName]]", table.ClassName)
@@ -591,7 +602,7 @@ namespace RepoGenerator
         {
             var tables = new List<Table>();
 
-            foreach (var record in GetCsvRecords())
+            foreach (var record in GetInformationSchemaRecords())
             {
                 var className = record.TABLE_NAME.Replace("rtbl", string.Empty).Replace("tbl", string.Empty);
 
@@ -611,7 +622,7 @@ namespace RepoGenerator
                 {
                     table = new Table
                     {
-                        Columns = new[] { column },
+                        Columns = new[] {column},
                         Name = record.TABLE_NAME,
                         Schema = record.TABLE_SCHEMA,
                         ClassName = className
@@ -631,21 +642,47 @@ namespace RepoGenerator
         }
 
         /// <summary>
-        /// Gets the CSV records.
+        /// Gets the information schema records.
         /// </summary>
         /// <returns></returns>
-        private static IEnumerable<CsvRecord> GetCsvRecords()
+        private static IEnumerable<InformationSchemaRecord> GetInformationSchemaRecords()
         {
-            var records = new List<CsvRecord>();
+            var records = new List<InformationSchemaRecord>();
 
-            using (TextReader textReader = File.OpenText(ConfigFile))
+            using (var connection = new SqlConnection(ConnectionString))
             {
-                var csv = new CsvReader(textReader);
-                csv.Configuration.Delimiter = ";";
+                connection.Open();
 
-                records.AddRange(csv.GetRecords<CsvRecord>());
+                const string sql =
+                    @"select ist.TABLE_SCHEMA, ist.TABLE_NAME, isc.COLUMN_NAME, isc.IS_NULLABLE, isc.DATA_TYPE 
+                    from INFORMATION_SCHEMA.TABLES ist
+                    join INFORMATION_SCHEMA.COLUMNS isc on ist.TABLE_SCHEMA = isc.TABLE_SCHEMA and ist.TABLE_NAME = isc.TABLE_NAME
+                    where ist.TABLE_SCHEMA = 'dbo' 
+                    and ist.TABLE_NAME not in ('''Autorizing Users$''', 'changelog', 'SMTRawData', 'tblExceptionLog')
+                    and TABLE_TYPE = 'BASE TABLE'
+                    ORDER BY ist.TABLE_SCHEMA, ist.TABLE_NAME, isc.ORDINAL_POSITION";
 
-                textReader.Close();
+                using (var command = new SqlCommand(sql, connection))
+                {
+                    command.CommandType = CommandType.Text;
+
+                    using (var dataReader = command.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            records.Add(new InformationSchemaRecord
+                            {
+                                COLUMN_NAME = Convert.ToString(dataReader["COLUMN_NAME"]),
+                                DATA_TYPE = Convert.ToString(dataReader["DATA_TYPE"]),
+                                IS_NULLABLE = Convert.ToString(dataReader["IS_NULLABLE"]),
+                                TABLE_NAME = Convert.ToString(dataReader["TABLE_NAME"]),
+                                TABLE_SCHEMA = Convert.ToString(dataReader["TABLE_SCHEMA"])
+                            });
+                        }
+                    }
+                }
+
+                connection.Close();
             }
 
             return records;

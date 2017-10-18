@@ -3,7 +3,7 @@
 namespace StandardBank.ConcessionManagement.Model.UserInterface
 {
     /// <summary>
-    /// Approved concession detail
+    /// Approved concession detail entity
     /// </summary>
     public class ApprovedConcessionDetail
     {
@@ -54,5 +54,21 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// The date sent for approval.
         /// </value>
         public DateTime DateSentForApproval { get; set; }
+
+        /// <summary>
+        /// Gets or sets the expiry date.
+        /// </summary>
+        /// <value>
+        /// The expiry date.
+        /// </value>
+        public DateTime? ExpiryDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date approved.
+        /// </summary>
+        /// <value>
+        /// The date approved.
+        /// </value>
+        public DateTime? DateApproved { get; set; }
     }
 }

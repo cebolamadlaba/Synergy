@@ -1,4 +1,4 @@
-<!-- Banner -->
+﻿<!-- Banner -->
 <div class="col-md-12 banner">
     <div class="row">
         <!-- Header -->
@@ -9,7 +9,7 @@
             </div>
             <div class="col-md-10 banner-main-title">
                 <i class="fa fa-exchange" aria-hidden="true"></i> View Transactional Concession - {{concessionReferenceId}}
-                <span class="label label-warning" style="float: right;">{{transactionalConcession.concession.status}} - {{transactionalConcession.concession.subStatus}}</span>
+                <span class="label label-warning" style="float: right;">{{transactionalConcession?.concession?.status}} - {{transactionalConcession?.concession?.subStatus}}</span>
             </div>
             <div class="col-md-1"></div>
         </div>
@@ -17,8 +17,9 @@
         <div class="col-md-12 banner-container">
             <div class="col-md-11">
                 <div class="col-md-2">
-                    <div class="subHeading">{{riskGroup.name}}</div>
-                    <div class="date lightTitle hidden-element">{{riskGroup.number}}</div>
+                    <div class="subHeading">{{riskGroup?.name}}</div>
+                    <div class="date lightTitle hidden-element">{{riskGroup?.number}}</div>
+                    <div class="requestor"><i class="fa fa-user-circle-o" aria-hidden="true"></i><button (click)="viewRequesterModal.show()">{{transactionalConcession?.concession?.requestor?.fullName}}</button></div>
                 </div>
 
                 <div class="col-md-3 summary-items">
@@ -63,6 +64,22 @@
     </div>
 </div>
 
+<!-- Requester modal content -->
+<div bsModal #viewRequesterModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="viewRequesterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="requestor-modal">
+                <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                <p class="name">{{transactionalConcession?.concession?.requestor?.fullName}}</p>
+                <p class="anumber">{{transactionalConcession?.concession?.requestor?.aNumber}}</p>
+                <p>{{transactionalConcession?.concession?.requestor?.selectedCentre?.name}}</p>
+                <p>{{transactionalConcession?.concession?.requestor?.selectedRegion?.description}}</p>
+                <button type="button" class="btn btn-primary" (click)="viewRequesterModal.hide()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Error message -->
 <div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
     <div class="form-feedback-container">
@@ -90,7 +107,7 @@
 <div class="col-md-12" *ngIf="isLoading">
     <div class="form-feedback-container">
         <div class="alert-info">
-            <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Saving</p>
+            <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Loading</p>
         </div>
     </div>
 </div>
@@ -109,15 +126,11 @@
     <div class="col-md-4">
         <div class="row">
             <label>MRS/CRS</label>
-            <input class="form-control" formControlName="mrsCrs" type="number" [attr.disabled]="isRecalling ? null : ''">
+            <input type="text" numbersOnly="true" class="form-control" formControlName="mrsCrs" [attr.disabled]="isRecalling ? null : ''">
         </div>
         <div class="row">
             <label>SMT Deal Number</label>
-            <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="isRecalling ? null : ''">
-        </div>
-        <div class="row">
-            <label>Requested By</label>
-            <p>{{transactionalConcession?.concession?.requestor}}</p>
+            <input type="text" numbersOnly="true" class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="isRecalling ? null : ''">
         </div>
     </div>
     <div class="col-md-7 col-md-offset-1">
@@ -125,7 +138,7 @@
             <label>Motivation</label>
             <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="motivationEnabled ? null : ''"></textarea>
         </div>
-        <div class="row" *ngIf="canBcmApprove || canPcmApprove">
+        <div class="row" *ngIf="canBcmApprove || canPcmApprove || canApproveChanges">
             <label>Comments</label>
             <textarea class="form-control large-input" formControlName="comments" placeholder="Comments"></textarea>
         </div>
@@ -135,11 +148,7 @@
     <div class="col-md-12" style="border-bottom: 1px solid gray; margin-bottom: 15px;">
         <div class="row">
             <h3 class="table-title">Concessions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" style="margin-top: 15px;" *ngIf="canBcmApprove || canPcmApprove || isRenewing || isRecalling">New Concession</button>
-        </div>
-        <div class="row">
-            <div class="col-md-2" *ngIf="transactionalConcession?.concession?.expiryDate"><strong>Expiry Date</strong> {{transactionalConcession?.concession?.expiryDate | date: 'yyyy/MM/dd' }}</div>
-            <div class="col-md-2" *ngIf="transactionalConcession?.concession?.dateApproved"><strong>Approval Date</strong> {{transactionalConcession?.concession?.dateApproved | date: 'yyyy/MM/dd' }}</div>
+            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" style="margin-top: 15px;" *ngIf="canPcmApprove || isEditing || isRecalling">New Concession</button>
         </div>
     </div>
 
@@ -149,16 +158,22 @@
                 <th>Transaction Type</th>
                 <th>Account Number</th>
                 <th>Table Number</th>
-                <th>Ad Valorem</th>
                 <th>Flat Fee/Rate</th>
+                <th>Ad Valorem</th>
+                <th>Approved Table Number</th>
+                <th>Expiry Date</th>
+                <th>Date Approved</th>
             </tr>
         </thead>
         <tbody class="form-concessions-table-content">
             <tr *ngFor="let itemrow of transactionalConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
                 <td class="length-long">
                     <input formControlName="transactionalConcessionDetailId" style="display: none;" />
+                    <input formControlName="concessionDetailId" style="display: none;" />
+                    <input formControlName="isExpired" style="display: none;" />
+                    <input formControlName="isExpiring" style="display: none;" />
 
-                    <select formControlName="transactionType" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                    <select formControlName="transactionType" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="transactionTypeChanged(i)">
                         <option *ngFor="let transactionTypeOption of transactionTypes" [ngValue]="transactionTypeOption">{{transactionTypeOption.description}}</option>
                     </select>
                 </td>
@@ -170,15 +185,20 @@
                 </td>
 
                 <td class="length-long">
-                    <select formControlName="tableNumber" class="form-control" (change)="tableNumberChanged(i)" [attr.disabled]="canEdit ? null : ''">
-                        <option *ngFor="let tableNumberOption of tableNumbers" [ngValue]="tableNumberOption">{{tableNumberOption.displayText}}</option>
+                    <select formControlName="transactionTableNumber" class="form-control" (change)="transactionTableNumberChanged(i)" [attr.disabled]="canEdit ? null : ''" *ngIf="selectedTransactionTypes[i] != null">
+                        <option *ngFor="let transactionTableNumberOption of selectedTransactionTypes[i].transactionTableNumbers" [ngValue]="transactionTableNumberOption">{{transactionTableNumberOption.displayText}}</option>
                     </select>
                 </td>
 
-                <td class="length-medium"><input formControlName="adValorem" class="form-control"></td>
                 <td class="length-long"><input formControlName="flatFeeOrRate" class="form-control"></td>
+                <td class="length-medium"><input formControlName="adValorem" class="form-control"></td>
 
-                <td *ngIf="canBcmApprove || canPcmApprove || isRenewing || isRecalling"><button *ngIf="transactionalConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                <td class="length-long"><input formControlName="approvedTableNumber" class="form-control"></td>
+
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" /></td>
+                <td class="length-short"><input type="date" formControlName="dateApproved" class="form-control" /></td>
+
+                <td *ngIf="canBcmApprove || canPcmApprove || isEditing || isRecalling"><button *ngIf="transactionalConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
         </tbody>
     </table>
@@ -187,7 +207,7 @@
     <div class="col-md-12">
         <div class="row">
             <h3 class="table-title">Conditions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;" *ngIf="canBcmApprove || canPcmApprove || isRenewing || isRecalling">Manage Conditions</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;" *ngIf="canPcmApprove || isEditing || isRecalling">Manage Conditions</button>
 
             <div class="table-container">
                 <table class="table table-bordered table-hover header-fixed table-striped">
@@ -199,12 +219,13 @@
                             <th>Interest Rate</th>
                             <th>Volume</th>
                             <th>Value</th>
+                            <th>Expected Turnover Value</th>
                             <th>Period</th>
                         </tr>
                     </thead>
                     <tbody class="secondary-text">
                         <tr *ngIf="transactionalConcessionForm.controls.conditionItemsRows.controls.length == 0">
-                            <td colspan="7" class="searchEmptyState">
+                            <td colspan="8" class="searchEmptyState">
                                 No conditions has been added
                             </td>
                         </tr>
@@ -215,6 +236,7 @@
                             <td>{{itemrow.get('interestRate').value}}</td>
                             <td>{{itemrow.get('volume').value}}</td>
                             <td>{{itemrow.get('value').value}}</td>
+                            <td>{{itemrow.get('expectedTurnoverValue').value}}</td>
                             <td>{{itemrow.get('periodType').value?.description}} {{itemrow.get('period').value?.description}}</td>
                         </tr>
                     </tbody>
@@ -234,7 +256,7 @@
                 <div class="col-md-12 modal-body">
                     <div class="row">
                         <div class="col-md-12 modal-title">
-                            <button type="button" class="btn btn-primary" (click)="addNewConditionRow()" *ngIf="canBcmApprove || canPcmApprove || isRenewing || isRecalling">New Conditions</button>
+                            <button type="button" class="btn btn-primary" (click)="addNewConditionRow()" *ngIf="canPcmApprove || isEditing || isRecalling">Add Condition</button>
                         </div>
                     </div>
                     <table class="form-concessions-table" formArrayName="conditionItemsRows" style="width:100%">
@@ -245,6 +267,7 @@
                                 <th>Interest Rate</th>
                                 <th>Volume</th>
                                 <th>Value</th>
+                                <th>Expected Turnover Value</th>
                                 <th>Period Type</th>
                                 <th>Period</th>
                                 <th></th>
@@ -252,31 +275,38 @@
                         </thead>
                         <tbody class="form-concessions-table-content">
                             <tr *ngIf="transactionalConcessionForm.controls.conditionItemsRows.controls.length == 0">
-                                <td colspan="7" class="searchEmptyState">
+                                <td colspan="8" class="searchEmptyState">
                                     No conditions has been added
                                 </td>
                             </tr>
                             <tr *ngFor="let itemrow of transactionalConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
                                 <td class="length-long">
                                     <input formControlName="concessionConditionId" style="display: none;" />
+                                    <!-- Condition type -->
                                     <select formControlName="conditionType" (change)="conditionTypeChanged(i)">
                                         <option *ngFor="let conditionTypeOption of conditionTypes" [ngValue]="conditionTypeOption">{{conditionTypeOption?.description}}</option>
                                     </select>
                                 </td>
                                 <td class="length-long">
+                                    <!-- Product type -->
                                     <select formControlName="conditionProduct" *ngIf="selectedConditionTypes[i] != null">
                                         <option *ngFor="let conditionProductOption of selectedConditionTypes[i].conditionProducts" [ngValue]="conditionProductOption">{{conditionProductOption?.description}}</option>
                                     </select>
                                 </td>
-                                <td class="length-medium"><input formControlName="interestRate" /></td>
-                                <td class="length-long"><input formControlName="volume" /></td>
-                                <td class="length-medium"><input formControlName="value" /></td>
+
+                                <td class="length-medium"><input type="text" numbersOnly="true" formControlName="interestRate" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableInterestRate ? null : ''" /></td>
+                                <td class="length-long"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionVolume ? null : ''" /></td>
+                                <td class="length-medium"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionValue ? null : ''" /></td>
+                                <td class="length-medium"><input type="text" numbersOnly="true" formControlName="expectedTurnoverValue" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableExpectedTurnoverValue ? null : ''" /></td>
+
                                 <td class="length-medium">
+                                    <!-- Period type -->
                                     <select formControlName="periodType">
                                         <option *ngFor="let periodTypeOption of periodTypes" [ngValue]="periodTypeOption">{{periodTypeOption?.description}}</option>
                                     </select>
                                 </td>
                                 <td class="length-medium">
+                                    <!-- Period -->
                                     <select formControlName="period">
                                         <option *ngFor="let periodOption of periods" [ngValue]="periodOption">{{periodOption?.description}}</option>
                                     </select>
@@ -379,10 +409,18 @@
             <button type="button" class="btn btn-danger" (click)="pcmDeclineConcession()" *ngIf="canPcmApprove">Decline</button>
             <button type="button" class="btn btn-success" (click)="pcmApproveConcession()" *ngIf="canPcmApprove">Approve</button>
             <button type="button" class="btn btn-success" (click)="extendConcession()" *ngIf="canExtend">Extend</button>
-            <button type="button" class="btn btn-success" (click)="renewConcession()" *ngIf="canRenew">Renew</button>
-            <button type="button" class="btn btn-primary" (click)="saveRenewConcession()" *ngIf="isRenewing">Save</button>
+
+            <button type="button" class="btn btn-success" (click)="editConcession('Renew')" *ngIf="canRenew">Renew</button>
+            <button type="button" class="btn btn-success" (click)="editConcession('Resubmit')" *ngIf="canResubmit">Resubmit</button>
+            <button type="button" class="btn btn-success" (click)="editConcession('UpdateApproved')" *ngIf="canUpdate">Update</button>
+            <button type="button" class="btn btn-warning" (click)="archiveConcession()" *ngIf="canArchive">Archive</button>
+
+            <button type="button" class="btn btn-primary" (click)="saveConcession()" *ngIf="isEditing">Save</button>
+
             <button type="button" class="btn btn-success" (click)="recallConcession()" *ngIf="canRecall && !isRecalling">Recall</button>
             <button type="button" class="btn btn-primary" (click)="saveRecallConcession()" *ngIf="isRecalling">Save</button>
+            <button type="button" class="btn btn-danger" (click)="requestorDeclineConcession()" *ngIf="canApproveChanges">Decline</button>
+            <button type="button" class="btn btn-success" (click)="requestorApproveConcession()" *ngIf="canApproveChanges">Approve</button>
         </div>
     </div>
 </form>

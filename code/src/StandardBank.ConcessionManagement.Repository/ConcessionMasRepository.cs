@@ -2,8 +2,6 @@ using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
 
@@ -21,12 +19,20 @@ namespace StandardBank.ConcessionManagement.Repository
         private readonly IDbConnectionFactory _dbConnectionFactory;
 
         /// <summary>
+        /// The concession detail repository
+        /// </summary>
+        private readonly IConcessionDetailRepository _concessionDetailRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionMasRepository"/> class.
         /// </summary>
-        /// <param name="dbConnectionFactory">The db connection factory.</param>
-        public ConcessionMasRepository(IDbConnectionFactory dbConnectionFactory)
+        /// <param name="dbConnectionFactory">The database connection factory.</param>
+        /// <param name="concessionDetailRepository">The concession detail repository.</param>
+        public ConcessionMasRepository(IDbConnectionFactory dbConnectionFactory,
+            IConcessionDetailRepository concessionDetailRepository)
         {
             _dbConnectionFactory = dbConnectionFactory;
+            _concessionDetailRepository = concessionDetailRepository;
         }
 
         /// <summary>
@@ -36,13 +42,26 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ConcessionMas Create(ConcessionMas model)
         {
-            const string sql = @"INSERT [dbo].[tblConcessionMas] ([fkConcessionId], [fkTransactionTypeId], [MerchantNumber], [Turnover], [CommissionRate]) 
-                                VALUES (@fkConcessionId, @fkTransactionTypeId, @MerchantNumber, @Turnover, @CommissionRate) 
-                                SELECT CAST(SCOPE_IDENTITY() as int)";
+            var concessionDetail = _concessionDetailRepository.Create(model);
+            model.ConcessionDetailId = concessionDetail.ConcessionDetailId;
+
+            const string sql =
+                @"INSERT [dbo].[tblConcessionMas] ([fkConcessionId], [fkConcessionDetailId], [fkTransactionTypeId], [MerchantNumber], [Turnover], [CommissionRate]) 
+                VALUES (@ConcessionId, @ConcessionDetailId, @TransactionTypeId, @MerchantNumber, @Turnover, @CommissionRate) 
+                SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {fkConcessionId = model.ConcessionId, fkTransactionTypeId = model.TransactionTypeId, MerchantNumber = model.MerchantNumber, Turnover = model.Turnover, CommissionRate = model.CommissionRate}).Single();
+                model.Id = db.Query<int>(sql,
+                    new
+                    {
+                        ConcessionId = model.ConcessionId,
+                        ConcessionDetailId = model.ConcessionDetailId,
+                        TransactionTypeId = model.TransactionTypeId,
+                        MerchantNumber = model.MerchantNumber,
+                        Turnover = model.Turnover,
+                        CommissionRate = model.CommissionRate
+                    }).Single();
             }
 
             return model;
@@ -58,7 +77,10 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionMas>(
-                    "SELECT [pkConcessionMasId] [Id], [fkConcessionId] [ConcessionId], [fkTransactionTypeId] [TransactionTypeId], [MerchantNumber], [Turnover], [CommissionRate] FROM [dbo].[tblConcessionMas] WHERE [pkConcessionMasId] = @Id",
+                    @"SELECT [pkConcessionMasId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkTransactionTypeId] [TransactionTypeId], [MerchantNumber], [Turnover], [CommissionRate], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
+                    FROM [dbo].[tblConcessionMas] t
+                    JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
+                    WHERE [pkConcessionMasId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -71,7 +93,10 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<ConcessionMas>("SELECT [pkConcessionMasId] [Id], [fkConcessionId] [ConcessionId], [fkTransactionTypeId] [TransactionTypeId], [MerchantNumber], [Turnover], [CommissionRate] FROM [dbo].[tblConcessionMas]");
+                return db.Query<ConcessionMas>(
+                    @"SELECT [pkConcessionMasId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkTransactionTypeId] [TransactionTypeId], [MerchantNumber], [Turnover], [CommissionRate], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
+                    FROM [dbo].[tblConcessionMas] t
+                    JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]");
             }
         }
 
@@ -84,10 +109,21 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblConcessionMas]
-                            SET [fkConcessionId] = @fkConcessionId, [fkTransactionTypeId] = @fkTransactionTypeId, [MerchantNumber] = @MerchantNumber, [Turnover] = @Turnover, [CommissionRate] = @CommissionRate
+                            SET [fkConcessionId] = @ConcessionId, [fkConcessionDetailId] = @ConcessionDetailId, [fkTransactionTypeId] = @TransactionTypeId, [MerchantNumber] = @MerchantNumber, [Turnover] = @Turnover, [CommissionRate] = @CommissionRate
                             WHERE [pkConcessionMasId] = @Id",
-                    new {Id = model.Id, fkConcessionId = model.ConcessionId, fkTransactionTypeId = model.TransactionTypeId, MerchantNumber = model.MerchantNumber, Turnover = model.Turnover, CommissionRate = model.CommissionRate});
+                    new
+                    {
+                        Id = model.Id,
+                        ConcessionId = model.ConcessionId,
+                        ConcessionDetailId = model.ConcessionDetailId,
+                        TransactionTypeId = model.TransactionTypeId,
+                        MerchantNumber = model.MerchantNumber,
+                        Turnover = model.Turnover,
+                        CommissionRate = model.CommissionRate
+                    });
             }
+
+            _concessionDetailRepository.Update(model);
         }
 
         /// <summary>
@@ -101,6 +137,8 @@ namespace StandardBank.ConcessionManagement.Repository
                 db.Execute("DELETE [dbo].[tblConcessionMas] WHERE [pkConcessionMasId] = @Id",
                     new {model.Id});
             }
+
+            _concessionDetailRepository.Delete(model);
         }
     }
 }

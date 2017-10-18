@@ -87,7 +87,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     @"SELECT [pkProductCashId] [Id], [fkRiskGroupId] [RiskGroupId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [fkTableNumberId] [TableNumberId], [Channel], [BpId], [Volume], [Value], [LoadedPrice] 
                     FROM [dbo].[tblProductCash] 
                     WHERE [fkRiskGroupId] = @riskGroupId",
-                    new {riskGroupId});
+                    new { riskGroupId });
             }
         }
 

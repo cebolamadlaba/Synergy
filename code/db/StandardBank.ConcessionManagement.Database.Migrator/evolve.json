@@ -1,5 +1,5 @@
 {
-  "Evolve.ConnectionString": "Server=.;Database=CMS_Dev;Integrated Security=true",
+  "Evolve.ConnectionString": "Server=.;Database=CMS_Dev_V2;Integrated Security=true",
   "Evolve.Driver": "sqlserver",
   "Evolve.Locations": "Scripts",
   "Evolve.Command": "migrate"

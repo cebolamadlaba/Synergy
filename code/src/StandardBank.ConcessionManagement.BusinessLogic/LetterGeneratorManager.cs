@@ -112,7 +112,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var concessionLetters = new List<ConcessionLetter>();
 
-            //TODO: Get concession details based on concession type
             switch (concession.ConcessionType)
             {
                 case "Lending":
@@ -150,8 +149,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 var concessionLetter =
                     concessionLetters.FirstOrDefault(_ => _.TransactionalConcessionLetters != null &&
                                                           _.TransactionalConcessionLetters.Any(
-                                                              x => x.AccountNumber == transactionalConcessionDetail
-                                                                       .AccountNumber));
+                                                              x => x.LegalEntityId == transactionalConcessionDetail
+                                                                       .LegalEntityId));
 
                 if (concessionLetter == null)
                 {
@@ -169,7 +168,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 var transactionalConcessionLetters = new List<TransactionalConcessionLetter>();
                 transactionalConcessionLetters.AddRange(concessionLetter.TransactionalConcessionLetters);
-                transactionalConcessionLetters.Add(PopulateTransactionalConcessionLetter(concession, transactionalConcessionDetail));
+                transactionalConcessionLetters.Add(PopulateTransactionalConcessionLetter(transactionalConcessionDetail));
                 concessionLetter.TransactionalConcessionLetters = transactionalConcessionLetters;
             }
 
@@ -182,18 +181,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="concession">The concession.</param>
         /// <param name="transactionalConcessionDetail">The transactional concession detail.</param>
         /// <returns></returns>
-        private TransactionalConcessionLetter PopulateTransactionalConcessionLetter(Concession concession,
-            TransactionalConcessionDetail transactionalConcessionDetail)
+        private TransactionalConcessionLetter PopulateTransactionalConcessionLetter(TransactionalConcessionDetail transactionalConcessionDetail)
         {
             return new TransactionalConcessionLetter
             {
                 AccountNumber = transactionalConcessionDetail.AccountNumber,
                 ChannelOrFeeType = transactionalConcessionDetail.TransactionType,
-                FeeOrRate = transactionalConcessionDetail.TransactionType == "Cheque Encashment"
-                    ? $"{transactionalConcessionDetail.BaseRate.GetValueOrDefault(0):C} + {transactionalConcessionDetail.AdValorem.GetValueOrDefault(0)} %"
-                    : transactionalConcessionDetail.BaseRate.GetValueOrDefault(0).ToString("C"),
-                ConcessionEndDate = concession.DateApproved.Value.ToString("dd/MM/yyyy"),
-                ConcessionStartDate = concession.ExpiryDate.Value.ToString("dd/MM/yyyy")
+                FeeOrRate = transactionalConcessionDetail.TransactionType == "Cheque Encashment Fee"
+                    ? $"{transactionalConcessionDetail.Fee.GetValueOrDefault(0):C} + {transactionalConcessionDetail.AdValorem.GetValueOrDefault(0)} %"
+                    : transactionalConcessionDetail.Fee.GetValueOrDefault(0).ToString("C"),
+                ConcessionStartDate = transactionalConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
+                ConcessionEndDate = transactionalConcessionDetail.ExpiryDate.HasValue
+                    ? transactionalConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
+                    : string.Empty,
+                LegalEntityId = transactionalConcessionDetail.LegalEntityId
             };
         }
 
@@ -216,8 +217,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 var concessionLetter =
                     concessionLetters.FirstOrDefault(_ => _.CashConcessionLetters != null &&
                                                           _.CashConcessionLetters.Any(
-                                                              x => x.AccountNumber == cashConcessionDetail
-                                                                       .AccountNumber));
+                                                              x => x.LegalEntityId == cashConcessionDetail
+                                                                       .LegalEntityId));
 
                 if (concessionLetter == null)
                 {
@@ -235,7 +236,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 var cashConcessionLetters = new List<CashConcessionLetter>();
                 cashConcessionLetters.AddRange(concessionLetter.CashConcessionLetters);
-                cashConcessionLetters.Add(PopulateCashConcessionLetter(concession, cashConcessionDetail));
+                cashConcessionLetters.Add(PopulateCashConcessionLetter(cashConcessionDetail));
                 concessionLetter.CashConcessionLetters = cashConcessionLetters;
             }
 
@@ -248,7 +249,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="concession">The concession.</param>
         /// <param name="cashConcessionDetail">The cash concession detail.</param>
         /// <returns></returns>
-        private CashConcessionLetter PopulateCashConcessionLetter(Concession concession, CashConcessionDetail cashConcessionDetail)
+        private CashConcessionLetter PopulateCashConcessionLetter(CashConcessionDetail cashConcessionDetail)
         {
             return new CashConcessionLetter
             {
@@ -256,8 +257,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 ChannelType = cashConcessionDetail.Channel,
                 BaseRateAdValorem =
                     $"{cashConcessionDetail.BaseRate.GetValueOrDefault(0):C} + {cashConcessionDetail.AdValorem.GetValueOrDefault(0)}%",
-                ConcessionEndDate = concession.ExpiryDate.Value.ToString("dd/MM/yyyy"),
-                ConcessionStartDate = concession.DateApproved.Value.ToString("dd/MM/yyyy")
+                ConcessionEndDate = cashConcessionDetail.ExpiryDate.HasValue
+                    ? cashConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
+                    : string.Empty,
+                ConcessionStartDate = cashConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
+                LegalEntityId = cashConcessionDetail.LegalEntityId
             };
         }
 
@@ -281,8 +285,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 var concessionLetter =
                     concessionLetters.FirstOrDefault(_ => _.LendingConcessionLetters != null &&
                                                           _.LendingConcessionLetters.Any(
-                                                              x => x.AccountNumber == lendingConcessionDetail
-                                                                       .AccountNumber));
+                                                              x => x.LegalEntityId == lendingConcessionDetail
+                                                                       .LegalEntityId));
 
                 if (concessionLetter == null)
                 {
@@ -290,7 +294,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         concessionLetters.FirstOrDefault(
                             _ => _ != null &&
                                  _.LendingOverDraftConcessionLetters.Any(
-                                     x => x.AccountNumber == lendingConcessionDetail.AccountNumber));
+                                     x => x.LegalEntityId == lendingConcessionDetail.LegalEntityId));
                 }
 
                 if (concessionLetter == null)
@@ -313,14 +317,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     var lendingOverDraftConcessionLetters = new List<LendingOverDraftConcessionLetter>();
                     lendingOverDraftConcessionLetters.AddRange(concessionLetter.LendingOverDraftConcessionLetters);
                     lendingOverDraftConcessionLetters.Add(
-                        PopulateLendingOverDraftConcessionLetter(concession, lendingConcessionDetail));
+                        PopulateLendingOverDraftConcessionLetter(lendingConcessionDetail));
                     concessionLetter.LendingOverDraftConcessionLetters = lendingOverDraftConcessionLetters;
                 }
                 else
                 {
                     var lendingConcessionLetters = new List<LendingConcessionLetter>();
                     lendingConcessionLetters.AddRange(concessionLetter.LendingConcessionLetters);
-                    lendingConcessionLetters.Add(PopulateLendingConcessionLetter(concession, lendingConcessionDetail));
+                    lendingConcessionLetters.Add(PopulateLendingConcessionLetter(lendingConcessionDetail));
                     concessionLetter.LendingConcessionLetters = lendingConcessionLetters;
                 }
             }
@@ -331,24 +335,23 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <summary>
         /// Populates the lending over draft concession letter.
         /// </summary>
-        /// <param name="concession">The concession.</param>
         /// <param name="lendingConcessionDetail">The lending concession detail.</param>
         /// <returns></returns>
-        private LendingOverDraftConcessionLetter PopulateLendingOverDraftConcessionLetter(Concession concession,
-            LendingConcessionDetail lendingConcessionDetail)
+        private LendingOverDraftConcessionLetter PopulateLendingOverDraftConcessionLetter(LendingConcessionDetail lendingConcessionDetail)
         {
             return new LendingOverDraftConcessionLetter
             {
                 AccountNumber = lendingConcessionDetail.AccountNumber,
-                ApprovedMarginToPrime = lendingConcessionDetail.ApprovedMap.ToString("C"),
+                ApprovedMarginToPrime = lendingConcessionDetail.ApprovedMap.GetValueOrDefault(0).ToString("C"),
                 ProductType = lendingConcessionDetail.ProductType,
                 ReviewFeeType = lendingConcessionDetail.ReviewFeeType,
                 MarginToPrime = lendingConcessionDetail.MarginAgainstPrime.ToString("C"),
                 InitiationFee = lendingConcessionDetail.InitiationFee.ToString("C"),
                 ReviewFee = lendingConcessionDetail.ReviewFee.ToString("C"),
-                ConcessionEndDate = concession.ExpiryDate.Value.ToString("dd/MM/yyyy"),
-                ConcessionStartDate = concession.DateApproved.Value.ToString("dd/MM/yyyy"),
-                UFFFee = lendingConcessionDetail.UffFee.ToString("C")
+                ConcessionEndDate = lendingConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy"),
+                ConcessionStartDate = lendingConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
+                UFFFee = lendingConcessionDetail.UffFee.ToString("C"),
+                LegalEntityId = lendingConcessionDetail.LegalEntityId
             };
         }
 
@@ -362,15 +365,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var conditions = new List<ConditionConcessionLetter>();
 
             var concessionConditions = _concessionManager.GetConcessionConditions(concession.Id);
-
+            
             foreach (var concessionCondition in concessionConditions)
             {
                 conditions.Add(new ConditionConcessionLetter
                 {
-                    Value = concessionCondition.ConditionValue.ToString("C"),
+                    Value = concessionCondition.ExpectedTurnoverValue.HasValue
+                        ? concessionCondition.ExpectedTurnoverValue.Value.ToString("C")
+                        : concessionCondition.ConditionValue.GetValueOrDefault(0).ToString("C"),
                     ConditionProduct = concessionCondition.ProductType,
                     ConditionMeasure = concessionCondition.ConditionType,
-                    Deadline = $"{concessionCondition.Period} - {concessionCondition.PeriodType}"
+                    Deadline = concessionCondition.ExpiryDate.HasValue
+                        ? concessionCondition.ExpiryDate.Value.ToString("dd/MM/yyyy")
+                        : $"{concessionCondition.Period} - {concessionCondition.PeriodType}"
                 });
             }
 
@@ -380,10 +387,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <summary>
         /// Populates the lending concession letter.
         /// </summary>
-        /// <param name="concession">The concession.</param>
         /// <param name="lendingConcessionDetail">The lending concession detail.</param>
         /// <returns></returns>
-        private LendingConcessionLetter PopulateLendingConcessionLetter(Concession concession, LendingConcessionDetail lendingConcessionDetail)
+        private LendingConcessionLetter PopulateLendingConcessionLetter(LendingConcessionDetail lendingConcessionDetail)
         {
             return new LendingConcessionLetter
             {
@@ -391,8 +397,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 ProductType = lendingConcessionDetail.ProductType,
                 ChannelOrFeeType = lendingConcessionDetail.InitiationFee.ToString("C"),
                 FeeOrMarginAbovePrime = lendingConcessionDetail.MarginAgainstPrime.ToString("C"),
-                ConcessionEndDate = concession.ExpiryDate.Value.ToString("dd/MM/yyyy"),
-                ConcessionStartDate = concession.DateApproved.Value.ToString("dd/MM/yyyy")
+                ConcessionEndDate = lendingConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy"),
+                ConcessionStartDate = lendingConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
+                LegalEntityId = lendingConcessionDetail.LegalEntityId
             };
         }
 

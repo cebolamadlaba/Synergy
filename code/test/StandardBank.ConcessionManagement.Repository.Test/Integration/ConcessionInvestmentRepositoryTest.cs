@@ -20,10 +20,13 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = new ConcessionInvestment
             {
                 ConcessionId = DataHelper.GetConcessionId(),
+                ConcessionDetailId = DataHelper.GetConcessionDetailId(),
                 ProductTypeId = DataHelper.GetProductId(),
                 Balance = 2501,
                 Term = 6,
-                InterestToCustomer = 5484
+                InterestToCustomer = 5484,
+                LegalEntityId = DataHelper.GetLegalEntityId(),
+                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
             };
 
             var result = InstantiatedDependencies.ConcessionInvestmentRepository.Create(model);
@@ -69,10 +72,13 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = InstantiatedDependencies.ConcessionInvestmentRepository.ReadById(id);
 
             model.ConcessionId = DataHelper.GetAlternateConcessionId(model.ConcessionId);
+            model.ConcessionDetailId = DataHelper.GetAlternateConcessionDetailId(model.ConcessionDetailId);
             model.ProductTypeId = DataHelper.GetAlternateProductId(model.ProductTypeId);
             model.Balance = model.Balance + 100;
             model.Term = model.Term + 1;
             model.InterestToCustomer = model.InterestToCustomer + 100;
+            model.LegalEntityId = DataHelper.GetAlternateLegalEntityId(model.LegalEntityId);
+            model.LegalEntityAccountId = DataHelper.GetAlternateLegalEntityAccountId(model.LegalEntityAccountId);
 
             InstantiatedDependencies.ConcessionInvestmentRepository.Update(model);
 
@@ -81,10 +87,13 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.NotNull(updatedModel);
             Assert.Equal(updatedModel.Id, model.Id);
             Assert.Equal(updatedModel.ConcessionId, model.ConcessionId);
+            Assert.Equal(updatedModel.ConcessionDetailId, model.ConcessionDetailId);
             Assert.Equal(updatedModel.ProductTypeId, model.ProductTypeId);
             Assert.Equal(updatedModel.Balance, model.Balance);
             Assert.Equal(updatedModel.Term, model.Term);
             Assert.Equal(updatedModel.InterestToCustomer, model.InterestToCustomer);
+            Assert.Equal(updatedModel.LegalEntityId, model.LegalEntityId);
+            Assert.Equal(updatedModel.LegalEntityAccountId, model.LegalEntityAccountId);
         }
 
         /// <summary>
@@ -96,10 +105,13 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = new ConcessionInvestment
             {
                 ConcessionId = DataHelper.GetConcessionId(),
+                ConcessionDetailId = DataHelper.GetConcessionDetailId(),
                 ProductTypeId = DataHelper.GetProductId(),
                 Balance = 2501,
                 Term = 6,
-                InterestToCustomer = 5484
+                InterestToCustomer = 5484,
+                LegalEntityId = DataHelper.GetLegalEntityId(),
+                LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
             };
 
             var temporaryEntity = InstantiatedDependencies.ConcessionInvestmentRepository.Create(model);

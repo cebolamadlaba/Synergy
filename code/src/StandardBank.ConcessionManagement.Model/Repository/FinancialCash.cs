@@ -100,13 +100,5 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The LatestCrsOrMrs.
         /// </value>
         public decimal LatestCrsOrMrs { get; set; }
-
-        /// <summary>
-        /// Gets or sets the loaded price.
-        /// </summary>
-        /// <value>
-        /// The loaded price.
-        /// </value>
-        public decimal LoadedPrice { get; set; }
     }
 }

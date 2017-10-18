@@ -3,7 +3,7 @@
     /// <summary>
     /// Cash concession detail entity
     /// </summary>
-    public class CashConcessionDetail
+    public class CashConcessionDetail : BaseConcessionDetail
     {
         /// <summary>
         /// Gets or sets the cash concession detail identifier.
@@ -12,38 +12,6 @@
         /// The cash concession detail identifier.
         /// </value>
         public int CashConcessionDetailId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the customer.
-        /// </summary>
-        /// <value>
-        /// The name of the customer.
-        /// </value>
-        public string CustomerName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the account number.
-        /// </summary>
-        /// <value>
-        /// The account number.
-        /// </value>
-        public string AccountNumber { get; set; }
-
-        /// <summary>
-        /// Gets or sets the legal entity identifier.
-        /// </summary>
-        /// <value>
-        /// The legal entity identifier.
-        /// </value>
-        public int? LegalEntityId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the legal entity account identifier.
-        /// </summary>
-        /// <value>
-        /// The legal entity account identifier.
-        /// </value>
-        public int? LegalEntityAccountId { get; set; }
 
         /// <summary>
         /// Gets or sets the channel.
@@ -86,22 +54,6 @@
         public decimal? Value { get; set; }
 
         /// <summary>
-        /// Gets or sets the loaded price.
-        /// </summary>
-        /// <value>
-        /// The loaded price.
-        /// </value>
-        public decimal LoadedPrice { get; set; }
-
-        /// <summary>
-        /// Gets or sets the approved price.
-        /// </summary>
-        /// <value>
-        /// The approved price.
-        /// </value>
-        public decimal ApprovedPrice { get; set; }
-
-        /// <summary>
         /// Gets or sets the base rate.
         /// </summary>
         /// <value>
@@ -132,5 +84,37 @@
         /// The table number identifier.
         /// </value>
         public int? TableNumberId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the approved table number identifier.
+        /// </summary>
+        /// <value>
+        /// The approved table number identifier.
+        /// </value>
+        public int? ApprovedTableNumberId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the loaded table number identifier.
+        /// </summary>
+        /// <value>
+        /// The loaded table number identifier.
+        /// </value>
+        public int? LoadedTableNumberId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the approved table number.
+        /// </summary>
+        /// <value>
+        /// The approved table number.
+        /// </value>
+        public string ApprovedTableNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets the loaded table number.
+        /// </summary>
+        /// <value>
+        /// The loaded table number.
+        /// </value>
+        public string LoadedTableNumber { get; set; }
     }
 }

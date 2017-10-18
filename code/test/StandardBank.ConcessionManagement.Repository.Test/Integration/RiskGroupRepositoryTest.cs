@@ -21,7 +21,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 RiskGroupNumber = 9,
                 RiskGroupName = "3b84541fd8",
-                IsActive = true
+                IsActive = true,
+                MarketSegmentId = DataHelper.GetMarketSegmentId(),
+                RegionId = DataHelper.GetRegionId()
             };
 
             var result = InstantiatedDependencies.RiskGroupRepository.Create(model);
@@ -92,6 +94,17 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void ReadByIdIsActive_InActiveRecord_Executes_Positive()
         {
+            var model = new RiskGroup
+            {
+                RiskGroupNumber = 9,
+                RiskGroupName = "3b84541fd8",
+                IsActive = false,
+                MarketSegmentId = DataHelper.GetMarketSegmentId(),
+                RegionId = DataHelper.GetRegionId()
+            };
+
+            InstantiatedDependencies.RiskGroupRepository.Create(model);
+
             var results = InstantiatedDependencies.RiskGroupRepository.ReadAll();
             var id = results.First(_ => !_.IsActive).Id;
             var result = InstantiatedDependencies.RiskGroupRepository.ReadByIdIsActive(id, false);
@@ -125,6 +138,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.RiskGroupNumber = model.RiskGroupNumber + 1;
             model.RiskGroupName = "1cb39b8591";
             model.IsActive = !model.IsActive;
+            model.MarketSegmentId = DataHelper.GetAlternateMarketSegmentId(model.MarketSegmentId);
+            model.RegionId = DataHelper.GetAlternateRegionId(model.RegionId);
 
             InstantiatedDependencies.RiskGroupRepository.Update(model);
 
@@ -135,6 +150,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.RiskGroupNumber, model.RiskGroupNumber);
             Assert.Equal(updatedModel.RiskGroupName, model.RiskGroupName);
             Assert.Equal(updatedModel.IsActive, model.IsActive);
+            Assert.Equal(updatedModel.MarketSegmentId, model.MarketSegmentId);
+            Assert.Equal(updatedModel.RegionId, model.RegionId);
         }
 
         /// <summary>
@@ -147,7 +164,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 RiskGroupNumber = 9,
                 RiskGroupName = "3b84541fd8",
-                IsActive = false
+                IsActive = false,
+                MarketSegmentId = DataHelper.GetMarketSegmentId(),
+                RegionId = DataHelper.GetRegionId()
             };
 
             var temporaryEntity = InstantiatedDependencies.RiskGroupRepository.Create(model);

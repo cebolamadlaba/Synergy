@@ -14,7 +14,9 @@ using ConditionType = StandardBank.ConcessionManagement.Model.UserInterface.Cond
 using Period = StandardBank.ConcessionManagement.Model.UserInterface.Period;
 using PeriodType = StandardBank.ConcessionManagement.Model.UserInterface.PeriodType;
 using ReviewFeeType = StandardBank.ConcessionManagement.Model.UserInterface.ReviewFeeType;
+using RiskGroup = StandardBank.ConcessionManagement.Model.UserInterface.RiskGroup;
 using TableNumber = StandardBank.ConcessionManagement.Model.UserInterface.TableNumber;
+using TransactionTableNumber = StandardBank.ConcessionManagement.Model.UserInterface.Transactional.TransactionTableNumber;
 using TransactionType = StandardBank.ConcessionManagement.Model.UserInterface.TransactionType;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
@@ -119,9 +121,31 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// The relationship repository
         /// </summary>
         private readonly IRelationshipRepository _relationshipRepository;
-        private readonly IRoleRepository roleRepository;
-        private readonly ICentreRepository centreRepository;
-        private readonly IRegionRepository regionRepository;
+
+        /// <summary>
+        /// The role repository
+        /// </summary>
+        private readonly IRoleRepository _roleRepository;
+
+        /// <summary>
+        /// The centre repository
+        /// </summary>
+        private readonly ICentreRepository _centreRepository;
+
+        /// <summary>
+        /// The region repository
+        /// </summary>
+        private readonly IRegionRepository _regionRepository;
+
+        /// <summary>
+        /// The risk group repository
+        /// </summary>
+        private readonly IRiskGroupRepository _riskGroupRepository;
+
+        /// <summary>
+        /// The transaction table number repository
+        /// </summary>
+        private readonly ITransactionTableNumberRepository _transactionTableNumberRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LookupTableManager"/> class.
@@ -145,6 +169,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="transactionTypeRepository">The transaction type repository.</param>
         /// <param name="tableNumberRepository">The table number repository.</param>
         /// <param name="relationshipRepository">The relationship repository.</param>
+        /// <param name="roleRepository">The role repository.</param>
+        /// <param name="centreRepository">The centre repository.</param>
+        /// <param name="regionRepository">The region repository.</param>
+        /// <param name="riskGroupRepository">The risk group repository.</param>
+        /// <param name="transactionTableNumberRepository">The transaction table number repository.</param>
         public LookupTableManager(IStatusRepository statusRepository, ISubStatusRepository subStatusRepository,
             IReferenceTypeRepository referenceTypeRepository, IMarketSegmentRepository marketSegmentRepository,
             IProvinceRepository provinceRepository, IConcessionTypeRepository concessionTypeRepository,
@@ -156,7 +185,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IAccrualTypeRepository accrualTypeRepository, IChannelTypeRepository channelTypeRepository,
             ITransactionTypeRepository transactionTypeRepository, ITableNumberRepository tableNumberRepository,
             IRelationshipRepository relationshipRepository, IRoleRepository roleRepository,
-            ICentreRepository centreRepository, IRegionRepository regionRepository)
+            ICentreRepository centreRepository, IRegionRepository regionRepository,
+            IRiskGroupRepository riskGroupRepository,
+            ITransactionTableNumberRepository transactionTableNumberRepository)
         {
             _statusRepository = statusRepository;
             _subStatusRepository = subStatusRepository;
@@ -177,16 +208,30 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _transactionTypeRepository = transactionTypeRepository;
             _tableNumberRepository = tableNumberRepository;
             _relationshipRepository = relationshipRepository;
-            this.roleRepository = roleRepository;
-            this.centreRepository = centreRepository;
-            this.regionRepository = regionRepository;
+            _roleRepository = roleRepository;
+            _centreRepository = centreRepository;
+            _regionRepository = regionRepository;
+            _riskGroupRepository = riskGroupRepository;
+            _transactionTableNumberRepository = transactionTableNumberRepository;
         }
 
-        public IEnumerable<Model.UserInterface.Role> GetRoles()=> _mapper.Map<IEnumerable<Model.UserInterface.Role>>(roleRepository.ReadAll());
-       
-        public IEnumerable<Model.UserInterface.Centre> GetCentres() => _mapper.Map<IEnumerable<Model.UserInterface.Centre>>(centreRepository.ReadAll());
+        /// <summary>
+        /// Gets the roles.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Model.UserInterface.Role> GetRoles()=> _mapper.Map<IEnumerable<Model.UserInterface.Role>>(_roleRepository.ReadAll());
 
-        public IEnumerable<Model.UserInterface.Region> GetRegions() => _mapper.Map<IEnumerable<Model.UserInterface.Region>>(regionRepository.ReadAll());
+        /// <summary>
+        /// Gets the centres.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Model.UserInterface.Centre> GetCentres() => _mapper.Map<IEnumerable<Model.UserInterface.Centre>>(_centreRepository.ReadAll());
+
+        /// <summary>
+        /// Gets the regions.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Model.UserInterface.Region> GetRegions() => _mapper.Map<IEnumerable<Model.UserInterface.Region>>(_regionRepository.ReadAll());
         
         /// <summary>
         /// Gets the status identifier.
@@ -419,8 +464,21 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             foreach (var conditionType in conditionTypes.Where(_ => _.IsActive))
             {
                 var mappedConditionType = _mapper.Map<ConditionType>(conditionType);
+
+                mappedConditionType.EnableInterestRate =
+                    mappedConditionType.Description == "Mininum Average Credit Balance";
+
+                mappedConditionType.EnableConditionValue =
+                    mappedConditionType.Description != "Full Transactional Banking";
+
+                mappedConditionType.EnableConditionVolume = mappedConditionType.Description == "Mininum Turnover";
+
+                mappedConditionType.EnableExpectedTurnoverValue =
+                    mappedConditionType.Description == "Full Transactional Banking";
+
                 mappedConditionType.ConditionProducts =
                     GetConditionProducts(conditionType.Id, conditionProducts, conditionTypeProducts);
+
                 mappedConditionTypes.Add(mappedConditionType);
             }
 
@@ -469,11 +527,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var transactionTypes = new List<TransactionType>();
 
             var concessionTypeId = GetConcessionTypeId(concessionType);
+            var transactionTableNumbers =
+                _mapper.Map<IEnumerable<Model.UserInterface.Transactional.TransactionTableNumber>>(
+                    _transactionTableNumberRepository.ReadAll());
 
-            foreach (var transactionType in _transactionTypeRepository.ReadByConcessionTypeIdIsActive(concessionTypeId, true))
+            foreach (var transactionType in _transactionTypeRepository.ReadByConcessionTypeIdIsActive(concessionTypeId,
+                true))
             {
                 var mappedTransactionType = _mapper.Map<TransactionType>(transactionType);
                 mappedTransactionType.ConcessionType = concessionType;
+
+                if (concessionType == "Transactional")
+                    mappedTransactionType.TransactionTableNumbers =
+                        transactionTableNumbers.Where(_ => _.TransactionTypeId == mappedTransactionType.Id);
+
                 transactionTypes.Add(mappedTransactionType);
             }
 
@@ -554,6 +621,76 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var channelType = _channelTypeRepository.ReadById(channelTypeId);
 
             return channelType.Description;
+        }
+
+        /// <summary>
+        /// Gets the table number description.
+        /// </summary>
+        /// <param name="tableNumberId">The table number identifier.</param>
+        /// <returns></returns>
+        public string GetTableNumberDescription(int tableNumberId)
+        {
+            var tableNumbers = _tableNumberRepository.ReadAll();
+
+            var tableNumber = _mapper.Map<TableNumber>(tableNumbers.First(_ => _.Id == tableNumberId));
+
+            return tableNumber.DisplayText;
+        }
+
+        /// <summary>
+        /// Gets the risk group for the number specified
+        /// </summary>
+        /// <param name="riskGroupNumber"></param>
+        /// <returns></returns>
+        public RiskGroup GetRiskGroupForRiskGroupNumber(int riskGroupNumber)
+        {
+            var riskGroup =
+                _mapper.Map<RiskGroup>(_riskGroupRepository.ReadByRiskGroupNumberIsActive(riskGroupNumber, true));
+
+            if (riskGroup != null)
+            {
+                riskGroup.MarketSegment = GetMarketSegmentName(riskGroup.MarketSegmentId);
+                riskGroup.Region = GetRegionDescription(riskGroup.RegionId);
+            }
+
+            return riskGroup;
+        }
+
+        /// <summary>
+        /// Gets the region description.
+        /// </summary>
+        /// <param name="regionId">The region identifier.</param>
+        /// <returns></returns>
+        public string GetRegionDescription(int regionId)
+        {
+            var regions = _regionRepository.ReadAll();
+
+            return regions.First(_ => _.Id == regionId && _.IsActive).Description;
+        }
+
+        /// <summary>
+        /// Gets the transaction table numbers.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<TransactionTableNumber> GetTransactionTableNumbers()
+        {
+            return _mapper.Map<IEnumerable<TransactionTableNumber>>(_transactionTableNumberRepository.ReadAll());
+        }
+
+        /// <summary>
+        /// Gets the transaction table number description.
+        /// </summary>
+        /// <param name="transactionTableNumberId">The transaction table number identifier.</param>
+        /// <returns></returns>
+        public string GetTransactionTableNumberDescription(int transactionTableNumberId)
+        {
+            var transactionTableNumbers = _transactionTableNumberRepository.ReadAll();
+
+            var transactionTableNumber =
+                _mapper.Map<TransactionTableNumber>(
+                    transactionTableNumbers.First(_ => _.Id == transactionTableNumberId));
+
+            return transactionTableNumber.DisplayText;
         }
 
         /// <summary>

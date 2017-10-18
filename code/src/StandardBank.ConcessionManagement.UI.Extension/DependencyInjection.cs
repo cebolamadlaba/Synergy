@@ -2,7 +2,9 @@
 using MediatR.Pipeline;
 using Microsoft.Extensions.DependencyInjection;
 using StandardBank.ConcessionManagement.BusinessLogic;
+using StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs;
 using StandardBank.ConcessionManagement.Common;
+using StandardBank.ConcessionManagement.Interface.BusinessLogic.ScheduledJobs;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Repository;
 using StructureMap;
@@ -32,13 +34,17 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             services.AddScoped<IPdfUtility, WkWrapPdfUtility>();
             services.AddScoped<IRazorRenderer, FluentRazorRenderer>();
 
+            // Add jobs
+            services.AddScoped<IDailyScheduledJob, DueForExpiryNotification>();
+            services.AddScoped<IDailyScheduledJob, RenewOngoingConditions>();
+
             container.Configure(config =>
             {
                 // Register stuff in container, using the StructureMap APIs...
                 config.Scan(_ =>
                 {
                     _.AssemblyContainingType(typeof(ConcessionManager));
-                    _.AssemblyContainingType(typeof(AuthorizingUserRepository));
+                    _.AssemblyContainingType(typeof(AccrualTypeRepository));
                     _.WithDefaultConventions();
                 });
 

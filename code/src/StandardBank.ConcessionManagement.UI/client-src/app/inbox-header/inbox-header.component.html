@@ -1,5 +1,14 @@
-  <!-- Total widgets -->
-<div class="col-md-12">
+﻿<!-- Loading message -->
+<div class="col-md-12" *ngIf="isLoading" style="margin-top: 15px;">
+    <div class="form-feedback-container">
+        <div class="alert-info">
+            <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Loading...</p>
+        </div>
+    </div>
+</div>
+
+<!-- Total widgets -->
+<div class="col-md-12" *ngIf="!isLoading">
     <div class="totalsWidget outer" *ngIf="userConcessions?.showPendingConcessions">
         <div routerLink="/pending-inbox" routerLinkActive="activeWidget">
             <div class="cornered"><p>Pending</p></div>

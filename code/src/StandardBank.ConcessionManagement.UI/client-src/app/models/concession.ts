@@ -1,6 +1,7 @@
 import { ConcessionComment } from "./concession-comment";
 import { ConcessionRelationship } from "./concession-relationship";
 import { ConcessionRelationshipDetail } from "./concession-relationship-detail";
+import { User } from "./user";
 
 export class Concession {
     id: number;
@@ -29,8 +30,11 @@ export class Concession {
     canRenew: boolean;
     concessionComments: ConcessionComment[];
     concessionRelationshipDetails: ConcessionRelationshipDetail[];
-    expiryDate: Date;
-    dateApproved: Date;
-    requestor: string;
+    requestor: User;
     statusDescription: string;
+    canResubmit: boolean;
+    canUpdate: boolean;
+	canArchive: boolean;
+	isInProgressExtension: boolean;
+	isInProgressRenewal: boolean;
 }

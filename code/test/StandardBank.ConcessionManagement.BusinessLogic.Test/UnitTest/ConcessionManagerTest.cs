@@ -33,12 +33,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             _concessionManager = new ConcessionManager(MockConcessionRepository.Object, MockLookupTableManager.Object,
                 MockLegalEntityRepository.Object, MockRiskGroupRepository.Object,
-                MockConcessionAccountRepository.Object,
                 InstantiatedDependencies.Mapper, MockConcessionConditionRepository.Object,
                 MockLegalEntityAccountRepository.Object, MockConcessionCommentRepository.Object,
-                MockConcessionLendingRepository.Object, MockMarketSegmentRepository.Object,
-                MockConcessionCashRepository.Object, MockConcessionTransactionalRepository.Object,
-                MockConcessionRelationshipRepository.Object, MockAuditRepository.Object, MockUserManager.Object);
+                MockConcessionRelationshipRepository.Object, MockAuditRepository.Object, MockUserManager.Object,
+                MockConcessionInboxViewRepository.Object, MockConcessionDetailRepository.Object,
+                MockConcessionConditionViewRepository.Object);
         }
 
         /// <summary>
@@ -49,15 +48,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             MockLookupTableManager.Setup(_ => _.GetStatusId(It.IsAny<string>())).Returns(1);
 
-            MockConcessionRepository
-                .Setup(_ => _.ReadByRequestorIdStatusIdIsActive(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new[] {new Concession()});
-
             MockLegalEntityRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
                 .Returns(new LegalEntity { IsActive = true });
 
             MockRiskGroupRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new RiskGroup { IsActive = true });
+                .Returns(new Model.Repository.RiskGroup { IsActive = true });
 
             MockLookupTableManager.Setup(_ => _.GetMarketSegmentName(It.IsAny<int>())).Returns("Market Segment Name");
             MockLookupTableManager.Setup(_ => _.GetReferenceTypeName(It.IsAny<int>())).Returns("Type Name");
@@ -65,7 +60,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             var result = _concessionManager.GetPendingConcessionsForUser(new User
             {
                 Id = 1,
-                UserRoles = new[] {new Role() {Name = "Requestor"}}
+                UserRoles = new[] { new Role() { Name = "Requestor" } }
             });
 
             Assert.NotNull(result);
@@ -78,18 +73,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         [Fact]
         public void GetDueForExpiryConcessionsForUser_Requestor_Executes_Positive()
         {
-            MockConcessionRepository
-                .Setup(_ => _.ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive(It.IsAny<int>(), It.IsAny<DateTime>(),
-                    It.IsAny<DateTime>(), It.IsAny<bool>())).Returns(new[] { new Concession() });
-
-            MockLegalEntityRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new LegalEntity { IsActive = true });
-
-            MockRiskGroupRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new RiskGroup { IsActive = true });
-
-            MockLookupTableManager.Setup(_ => _.GetMarketSegmentName(It.IsAny<int>())).Returns("Market Segment Name");
-            MockLookupTableManager.Setup(_ => _.GetReferenceTypeName(It.IsAny<int>())).Returns("Type Name");
+            MockConcessionInboxViewRepository
+                .Setup(_ => _.ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(It.IsAny<int>(),
+                    It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<IEnumerable<int>>(), It.IsAny<bool>()))
+                .Returns(new[] { new ConcessionInboxView() });
 
             var result = _concessionManager.GetDueForExpiryConcessionsForUser(new User
             {
@@ -107,26 +94,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         [Fact]
         public void GetExpiredConcessionsForUser_Requestor_Executes_Positive()
         {
-            MockConcessionRepository
-                .Setup(_ => _.ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive(It.IsAny<int>(), It.IsAny<DateTime>(),
-                    It.IsAny<DateTime>(), It.IsAny<bool>())).Returns(new[] { new Concession() });
-
-            MockLegalEntityRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new LegalEntity { IsActive = true });
-
-            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup { IsActive = true });
-
-            MockLookupTableManager.Setup(_ => _.GetMarketSegmentName(It.IsAny<int>())).Returns("Market Segment Name");
-            MockLookupTableManager.Setup(_ => _.GetReferenceTypeName(It.IsAny<int>())).Returns("Type Name");
-
-            MockUserManager.Setup(_ => _.GetUser(It.IsAny<int>())).Returns(new User
-            {
-                FirstName = "Test",
-                Surname = "User",
-                ANumber = "A123",
-                SelectedCentre = new Model.UserInterface.Centre { Name = "Test Centre" },
-                SelectedRegion = new Model.UserInterface.Region { Description = "Test Region" }
-            });
+            MockConcessionInboxViewRepository
+                .Setup(_ => _.ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(It.IsAny<int>(),
+                    It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<IEnumerable<int>>(), It.IsAny<bool>()))
+                .Returns(new[] { new ConcessionInboxView() });
 
             var result = _concessionManager.GetExpiredConcessionsForUser(new User
             {
@@ -144,20 +115,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         [Fact]
         public void GetMismatchedConcessionsForUser_Requestor_Executes_Positive()
         {
-            MockLookupTableManager.Setup(_ => _.GetStatusId(It.IsAny<string>())).Returns(1);
-
-            MockConcessionRepository
-                .Setup(_ => _.ReadByRequestorIdStatusIdIsActive(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new[] {new Concession()});
-
-            MockLegalEntityRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new LegalEntity { IsActive = true });
-
-            MockRiskGroupRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new RiskGroup { IsActive = true });
-
-            MockLookupTableManager.Setup(_ => _.GetMarketSegmentName(It.IsAny<int>())).Returns("Market Segment Name");
-            MockLookupTableManager.Setup(_ => _.GetReferenceTypeName(It.IsAny<int>())).Returns("Type Name");
+            MockConcessionInboxViewRepository
+                .Setup(_ => _.ReadByRequestorIdStatusIdsIsMismatchedIsActive(It.IsAny<int>(),
+                    It.IsAny<IEnumerable<int>>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                .Returns(new[] {new ConcessionInboxView()});
 
             var result = _concessionManager.GetMismatchedConcessionsForUser(new User
             {
@@ -175,29 +136,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         [Fact]
         public void GetDeclinedConcessionsForUser_Requestor_Executes_Positive()
         {
-            MockLookupTableManager.Setup(_ => _.GetStatusId(It.IsAny<string>())).Returns(1);
-
-            MockConcessionRepository
-                .Setup(_ => _.ReadByRequestorIdStatusIdIsActive(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new[] { new Concession() });
-
-            MockLegalEntityRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new LegalEntity { IsActive = true});
-
-            MockRiskGroupRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new RiskGroup {IsActive = true});
-
-            MockLookupTableManager.Setup(_ => _.GetMarketSegmentName(It.IsAny<int>())).Returns("Market Segment Name");
-            MockLookupTableManager.Setup(_ => _.GetReferenceTypeName(It.IsAny<int>())).Returns("Type Name");
-
-            MockUserManager.Setup(_ => _.GetUser(It.IsAny<int>())).Returns(new User
-            {
-                FirstName = "Test",
-                Surname = "User",
-                ANumber = "A123",
-                SelectedCentre = new Model.UserInterface.Centre { Name = "Test Centre" },
-                SelectedRegion = new Model.UserInterface.Region { Description = "Test Region" }
-            });
+            MockConcessionInboxViewRepository
+                .Setup(_ => _.ReadByRequestorIdStatusIdsIsActive(It.IsAny<int>(), It.IsAny<IEnumerable<int>>(),
+                    It.IsAny<bool>())).Returns(new[] { new ConcessionInboxView() });
 
             var result = _concessionManager.GetDeclinedConcessionsForUser(new User
             {
@@ -217,24 +158,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             MockLookupTableManager.Setup(_ => _.GetStatusId(It.IsAny<string>())).Returns(1);
             MockLookupTableManager.Setup(_ => _.GetSubStatusId(It.IsAny<string>())).Returns(1);
-
-            MockConcessionRepository
-                .Setup(_ => _.ReadByRequestorIdStatusIdSubStatusIdIsActive(It.IsAny<int>(), It.IsAny<int>(),
-                    It.IsAny<int>(), It.IsAny<bool>())).Returns(new[] { new Concession() });
-
-            MockConcessionRepository
-                .Setup(_ => _.ReadByRequestorIdStatusIdIsActive(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new[] { new Concession() });
-
-            MockConcessionRepository
-                .Setup(_ => _.ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateIsActive(It.IsAny<int>(), It.IsAny<DateTime>(),
-                    It.IsAny<DateTime>(), It.IsAny<bool>())).Returns(new[] { new Concession() });
-
             MockLegalEntityRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
                 .Returns(new LegalEntity { IsActive = true });
 
             MockRiskGroupRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new RiskGroup { IsActive = true });
+                .Returns(new Model.Repository.RiskGroup { IsActive = true });
 
             MockLookupTableManager.Setup(_ => _.GetMarketSegmentName(It.IsAny<int>())).Returns("Market Segment Name");
             MockLookupTableManager.Setup(_ => _.GetReferenceTypeName(It.IsAny<int>())).Returns("Type Name");
@@ -309,9 +237,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         public void GetClientAccounts_Executes_Positive()
         {
             MockRiskGroupRepository.Setup(_ => _.ReadByRiskGroupNumberIsActive(It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new RiskGroup
+                .Returns(new Model.Repository.RiskGroup
                 {
-                    Id = 1, IsActive = true, RiskGroupNumber = 1, RiskGroupName = "Test Risk Group"
+                    Id = 1,
+                    IsActive = true,
+                    RiskGroupNumber = 1,
+                    RiskGroupName = "Test Risk Group"
                 });
 
             MockLegalEntityRepository.Setup(_ => _.ReadByRiskGroupIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
@@ -349,41 +280,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         [Fact]
         public void GetActionedConcessionsForBCMUser_Executes_Positive()
         {
-            MockConcessionRepository.Setup(_ => _.GetActionedByBCMUser(It.IsAny<int>())).Returns(new[] { new Concession() });
+            MockConcessionInboxViewRepository.Setup(_ => _.ReadByBcmUserIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(new[] {new ConcessionInboxView()});
 
-            MockConcessionAccountRepository.Setup(_ => _.ReadByConcessionIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new ConcessionAccount());
+            var result = _concessionManager.GetActionedConcessionsForUser(new User { UserRoles = new List<Role> { new Role { Name = "BCM" } } });
 
-            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup
-            {
-                Id = 1,
-                IsActive = true,
-                RiskGroupNumber = 10,
-                RiskGroupName = "Test Risk Group"
-            });
-
-            var result = _concessionManager.GetActionedConcessionsForUser(new User {UserRoles = new List<Role> { new Role { Name = "BCM" } } });
-          
             Assert.NotEmpty(result);
-
         }
 
         [Fact]
         public void GetActionedConcessionsForPCMUser_Executes_Positive()
         {
-            MockConcessionRepository
-            .Setup(_ => _.GetActionedByPCMUser(It.IsAny<int>())).Returns(new[] { new Concession() });
-
-            MockConcessionAccountRepository.Setup(_ => _.ReadByConcessionIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new ConcessionAccount());
-
-            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup
-            {
-                Id = 1,
-                IsActive = true,
-                RiskGroupNumber = 10,
-                RiskGroupName = "Test Risk Group"
-            });
+            MockConcessionInboxViewRepository.Setup(_ => _.ReadByPcmUserIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(new[] { new ConcessionInboxView() });
 
             var result = _concessionManager.GetActionedConcessionsForUser(new User { UserRoles = new List<Role> { new Role { Name = "PCM" } } });
 
@@ -391,16 +300,34 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             Assert.NotEmpty(result);
 
         }
+
         [Fact]
         public void GetActionedConcessionsForHOUser_Executes_Positive()
         {
-            MockConcessionRepository
-            .Setup(_ => _.GetActionedByHOUser(It.IsAny<int>())).Returns(new[] { new Concession() });
+            MockConcessionInboxViewRepository.Setup(_ => _.ReadByHoUserIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(new[] {new ConcessionInboxView()});
+
+            var result =
+                _concessionManager.GetActionedConcessionsForUser(new User
+                {
+                    UserRoles = new List<Role> {new Role {Name = "Head Office"}}
+                });
+
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that GetConcessionsForRiskGroup executes positive
+        /// </summary>
+        [Fact]
+        public void GetConcessionsForRiskGroup_Executes_Positive()
+        {
+            MockLookupTableManager.Setup(_ => _.GetConcessionTypeId(It.IsAny<string>())).Returns(1);
 
             MockConcessionAccountRepository.Setup(_ => _.ReadByConcessionIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
                 .Returns(new ConcessionAccount());
 
-            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup
+            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new Model.Repository.RiskGroup
             {
                 Id = 1,
                 IsActive = true,
@@ -417,45 +344,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 SelectedRegion = new Model.UserInterface.Region { Description = "Test Region" }
             });
 
-            var result = _concessionManager.GetActionedConcessionsForUser(new User { UserRoles = new List<Role> { new Role { Name = "Head Office" } } });
-
-
-            Assert.NotEmpty(result);
-
-        }
-
-        /// <summary>
-        /// Tests that GetConcessionsForRiskGroup executes positive
-        /// </summary>
-        [Fact]
-        public void GetConcessionsForRiskGroup_Executes_Positive()
-        {
-            MockLookupTableManager.Setup(_ => _.GetConcessionTypeId(It.IsAny<string>())).Returns(1);
-
             MockConcessionRepository
                 .Setup(_ => _.ReadByRiskGroupIdConcessionTypeIdIsActive(It.IsAny<int>(), It.IsAny<int>(),
-                    It.IsAny<bool>()))
-                .Returns(new[] {new Concession {RequestorId = 1}});
-
-            MockConcessionAccountRepository.Setup(_ => _.ReadByConcessionIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new ConcessionAccount());
-
-            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup
-            {
-                Id = 1,
-                IsActive = true,
-                RiskGroupNumber = 10,
-                RiskGroupName = "Test Risk Group"
-            });
-
-            MockUserManager.Setup(_ => _.GetUser(It.IsAny<int>())).Returns(new User
-            {
-                FirstName = "Test",
-                Surname = "User",
-                ANumber = "A123",
-                SelectedCentre = new Model.UserInterface.Centre {Name = "Test Centre"},
-                SelectedRegion = new Model.UserInterface.Region {Description = "Test Region"}
-            });
+                    It.IsAny<bool>())).Returns(new[] {new Concession()});
 
             var result = _concessionManager.GetConcessionsForRiskGroup(1, "Test");
 
@@ -485,9 +376,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         public void GetConcessionForConcessionReferenceId_Executes_Positive()
         {
             MockConcessionRepository.Setup(_ => _.ReadByConcessionRefIsActive(It.IsAny<string>(), It.IsAny<bool>()))
-                .Returns(new[] {new Concession {IsActive = true}});
+                .Returns(new[] { new Concession { IsActive = true } });
 
-            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new RiskGroup
+            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new Model.Repository.RiskGroup
             {
                 Id = 1,
                 IsActive = true,
@@ -520,10 +411,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockLookupTableManager.Setup(_ => _.GetStatusId(It.IsAny<string>())).Returns(3);
             MockLookupTableManager.Setup(_ => _.GetSubStatusId(It.IsAny<string>())).Returns(4);
 
-            MockConcessionRepository.Setup(_ => _.Create(It.IsAny<Concession>())).Returns(new Concession() {Id = 100});
+            MockConcessionRepository.Setup(_ => _.Create(It.IsAny<Concession>())).Returns(new Concession() { Id = 100 });
 
             var result =
-                _concessionManager.CreateConcession(new Model.UserInterface.Concession {ConcessionType = "UnitTest"},
+                _concessionManager.CreateConcession(new Model.UserInterface.Concession { ConcessionType = "UnitTest" },
                     (new FakeSiteHelper()).LoggedInUser(null));
 
             Assert.NotNull(result);
@@ -538,7 +429,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         public void DeactivateConcession_Executes_Positive()
         {
             MockConcessionRepository.Setup(_ => _.ReadByConcessionRefIsActive(It.IsAny<string>(), It.IsAny<bool>()))
-                .Returns(new[] {new Concession()});
+                .Returns(new[] { new Concession() });
 
             var result = _concessionManager.DeactivateConcession("U100", new User());
 
@@ -598,100 +489,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         [Fact]
         public void GetApprovedConcessionsForUser_Executes_Positive()
         {
-            MockConcessionRepository.Setup(_ => _.ReadApprovedConcessions(It.IsAny<int>()))
-                .Returns(new[] {new Concession()});
-
             MockLookupTableManager.Setup(_ => _.GetStatusId(It.IsAny<string>())).Returns(1);
 
-            MockLegalEntityRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new LegalEntity { IsActive = true });
-
-            MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
-                .Returns(new LegalEntity { IsActive = true });
-
-            MockRiskGroupRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new RiskGroup { IsActive = true });
-
-            MockRiskGroupRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
-                .Returns(new RiskGroup { IsActive = true });
-
-            MockLookupTableManager.Setup(_ => _.GetMarketSegmentName(It.IsAny<int>())).Returns("Market Segment Name");
-            MockLookupTableManager.Setup(_ => _.GetReferenceTypeName(It.IsAny<int>())).Returns("Lending");
-            MockLookupTableManager.Setup(_ => _.GetConcessionType(It.IsAny<int>()))
-                .Returns(new Model.UserInterface.ConcessionType {Description = "Lending", Code = "Lending"});
-
-            MockMarketSegmentRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new MarketSegment());
-
-            MockConcessionLendingRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
-                .Returns(new[] {new ConcessionLending()});
+            MockConcessionInboxViewRepository
+                .Setup(_ => _.ReadByRequestorIdStatusIdsIsActive(It.IsAny<int>(), It.IsAny<IEnumerable<int>>(),
+                    It.IsAny<bool>())).Returns(new[] {new ConcessionInboxView()});
 
             var result = _concessionManager.GetApprovedConcessionsForUser(1);
-
-            Assert.NotNull(result);
-            Assert.NotEmpty(result);
-        }
-
-        /// <summary>
-        /// Tests that GetApprovedConcessionDetails for lending executes positive.
-        /// </summary>
-        [Fact]
-        public void GetApprovedConcessionDetails_Lending_Executes_Positive()
-        {
-            MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
-                .Returns(new LegalEntity { IsActive = true });
-
-            MockConcessionLendingRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
-                .Returns(new[] { new ConcessionLending() });
-
-            MockMarketSegmentRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new MarketSegment());
-
-            var result =
-                _concessionManager.GetApprovedConcessionDetails(
-                    new Model.UserInterface.Concession {ConcessionType = "Lending"});
-
-            Assert.NotNull(result);
-            Assert.NotEmpty(result);
-        }
-
-        /// <summary>
-        /// Tests that GetApprovedConcessionDetails for cash executes positive.
-        /// </summary>
-        [Fact]
-        public void GetApprovedConcessionDetails_Cash_Executes_Positive()
-        {
-            MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
-                .Returns(new LegalEntity { IsActive = true });
-
-            MockConcessionCashRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
-                .Returns(new[] { new ConcessionCash() });
-
-            MockMarketSegmentRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new MarketSegment());
-
-            var result =
-                _concessionManager.GetApprovedConcessionDetails(
-                    new Model.UserInterface.Concession { ConcessionType = "Cash" });
-
-            Assert.NotNull(result);
-            Assert.NotEmpty(result);
-        }
-
-        /// <summary>
-        /// Tests that GetApprovedConcessionDetails for transactional executes positive.
-        /// </summary>
-        [Fact]
-        public void GetApprovedConcessionDetails_Transactional_Executes_Positive()
-        {
-            MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
-                .Returns(new LegalEntity { IsActive = true });
-
-            MockConcessionTransactionalRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
-                .Returns(new[] { new ConcessionTransactional() });
-
-            MockMarketSegmentRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new MarketSegment());
-
-            var result =
-                _concessionManager.GetApprovedConcessionDetails(
-                    new Model.UserInterface.Concession { ConcessionType = "Transactional" });
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
@@ -743,7 +547,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         [Fact]
         public void GetRagStatus_3Months_Withing21DaysReturnsGreen()
         {
-            var status = _concessionManager.GetRagStatus("3 Months",AddWorkingDays(21));
+            var status = _concessionManager.GetRagStatus("3 Months", AddWorkingDays(21));
             Assert.True(status == "green");
         }
         [Fact]
@@ -815,9 +619,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         private DateTime AddWorkingDays(int days)
         {
             DateTime returnDate = DateTime.Today;
-            while (days > 0 )
+            while (days > 0)
             {
-               returnDate =  returnDate.AddDays(-1);
+                returnDate = returnDate.AddDays(-1);
                 if (returnDate.DayOfWeek != DayOfWeek.Saturday && returnDate.DayOfWeek != DayOfWeek.Sunday)
                     days--;
             }

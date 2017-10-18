@@ -12,4 +12,13 @@ export class ConcessionCondition {
     periodTypeId: number;
     period: string;
     periodId: number;
+    expectedTurnoverValue: number;
+    expiryDate: Date;
+    riskGroupName: string;
+    riskGroupNumber: number;
+    concessionReferenceNumber: string;
+    ragStatus: string;
+    approvedDate: Date;
+	concessionType: string;
+	conditionMet: boolean;
 }

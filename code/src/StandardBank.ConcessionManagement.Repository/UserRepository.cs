@@ -84,7 +84,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     @"SELECT [pkUserId] [Id], [ANumber], [EmailAddress], [FirstName], [Surname], [IsActive], [ContactNumber] 
                     FROM [dbo].[tblUser] 
                     WHERE [ANumber] = @aNumber",
-                    new {aNumber}).SingleOrDefault();
+                    new { aNumber }).SingleOrDefault();
             }
         }
 

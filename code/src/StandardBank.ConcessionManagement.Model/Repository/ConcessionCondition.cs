@@ -40,6 +40,22 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int ConditionProductId { get; set; }
 
         /// <summary>
+        /// Gets or sets the PeriodTypeId.
+        /// </summary>
+        /// <value>
+        /// The PeriodTypeId.
+        /// </value>
+        public int? PeriodTypeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the PeriodId.
+        /// </summary>
+        /// <value>
+        /// The PeriodId.
+        /// </value>
+        public int? PeriodId { get; set; }
+
+        /// <summary>
         /// Gets or sets the InterestRate.
         /// </summary>
         /// <value>
@@ -64,6 +80,38 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public decimal? Value { get; set; }
 
         /// <summary>
+        /// Gets or sets the ConditionMet.
+        /// </summary>
+        /// <value>
+        /// The ConditionMet.
+        /// </value>
+        public bool? ConditionMet { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ExpectedTurnoverValue.
+        /// </summary>
+        /// <value>
+        /// The ExpectedTurnoverValue.
+        /// </value>
+        public decimal? ExpectedTurnoverValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ExpiryDate.
+        /// </summary>
+        /// <value>
+        /// The ExpiryDate.
+        /// </value>
+        public DateTime? ExpiryDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date approved.
+        /// </summary>
+        /// <value>
+        /// The date approved.
+        /// </value>
+        public DateTime? DateApproved { get; set; }
+
+        /// <summary>
         /// Gets or sets the IsActive.
         /// </summary>
         /// <value>
@@ -72,17 +120,27 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public bool IsActive { get; set; }
 
         /// <summary>
-        /// Gets or sets the period type id
+        /// Gets or the name of the table.
         /// </summary>
-        public int? PeriodTypeId { get; set; }
+        /// <value>
+        /// The name of the table.
+        /// </value>
+        public string TableName => "tblConcessionCondition";
 
         /// <summary>
-        /// Gets or sets the period id
+        /// Gets the name of the primary key column.
         /// </summary>
-        public int? PeriodId { get; set; }
-
-        public string TableName => "tblConcessionCondition";
+        /// <value>
+        /// The name of the primary key column.
+        /// </value>
         public string PrimaryKeyColumnName => "pkConcessionConditionId";
+
+        /// <summary>
+        /// Gets the primary key value.
+        /// </summary>
+        /// <value>
+        /// The primary key value.
+        /// </value>
         public object PrimaryKeyValue => Id;
     }
 }

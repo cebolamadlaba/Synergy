@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Moq;
 using StandardBank.ConcessionManagement.Model.UserInterface;
+using StandardBank.ConcessionManagement.Test.Helpers;
 using StandardBank.ConcessionManagement.UI.Controllers;
 using Xunit;
 using static StandardBank.ConcessionManagement.Test.Helpers.MockedDependencies;
@@ -22,7 +24,8 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         /// </summary>
         public ConditionControllerTest()
         {
-            _conditionController = new ConditionController(MockLookupTableManager.Object, MockConcessionManager.Object);
+            _conditionController = new ConditionController(MockLookupTableManager.Object, MockConcessionManager.Object,
+                MockMediator.Object, new FakeSiteHelper());
         }
 
         /// <summary>
@@ -76,7 +79,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         [Fact]
         public void ConditionCounts_Executes_Positive()
         {
-            MockConcessionManager.Setup(_ => _.GetConditionCounts()).Returns(new ConditionCounts());
+            MockConcessionManager.Setup(_ => _.GetConditionCounts(It.IsAny<int>())).Returns(new ConditionCounts());
 
             var result = _conditionController.ConditionCounts();
             var apiResult = Assert.IsType<OkObjectResult>(result);

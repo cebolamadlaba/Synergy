@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using static StandardBank.ConcessionManagement.Model.Constants;
+using static StandardBank.ConcessionManagement.Model.BusinessLogic.Constants;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 {

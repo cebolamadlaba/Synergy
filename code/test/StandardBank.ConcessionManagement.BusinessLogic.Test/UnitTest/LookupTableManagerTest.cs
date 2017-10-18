@@ -30,7 +30,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 MockConditionTypeProductRepository.Object, MockAccrualTypeRepository.Object,
                 MockChannelTypeRepository.Object, MockTransactionTypeRepository.Object,
                 MockTableNumberRepository.Object, MockRelationshipRepository.Object, MockRoleRepository.Object,
-                MockCentreRepository.Object, MockRegionRepository.Object);
+                MockCentreRepository.Object, MockRegionRepository.Object, MockRiskGroupRepository.Object,
+                MockTransactionTableNumberRepository.Object);
         }
 
         /// <summary>
@@ -557,6 +558,124 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             Assert.NotNull(result);
             Assert.Equal(result, channelType.Description);
+        }
+
+        /// <summary>
+        /// Tests that GetTableNumberDescription executes positive.
+        /// </summary>
+        [Fact]
+        public void GetTableNumberDescription_Executes_Positive()
+        {
+            MockTableNumberRepository.Setup(_ => _.ReadAll()).Returns(new[]
+            {
+                new TableNumber
+                {
+                    AdValorem = 1,
+                    BaseRate = 2,
+                    ConcessionTypeId = 1,
+                    TariffTable = 3,
+                    Id = 1,
+                    IsActive = true
+                }
+            });
+
+            var result = _lookupTableManager.GetTableNumberDescription(1);
+
+            Assert.NotNull(result);
+            Assert.True(result.Contains("1"));
+            Assert.True(result.Contains("2"));
+            Assert.True(result.Contains("3"));
+        }
+
+        /// <summary>
+        /// Tests that GetRiskGroupForRiskGroupNumber for an active record executes positive
+        /// </summary>
+        [Fact]
+        public void GetRiskGroupForRiskGroupNumber_ActiveRecord_Executes_Positive()
+        {
+            var riskGroup = new RiskGroup
+            {
+                RiskGroupNumber = 1,
+                RiskGroupName = "Unit Test Risk Group",
+                IsActive = true,
+                Id = 1,
+                MarketSegmentId = 1,
+                RegionId = 1
+            };
+
+            MockRiskGroupRepository.Setup(_ => _.ReadByRiskGroupNumberIsActive(It.IsAny<int>(), true)).Returns(riskGroup);
+
+            MockMarketSegmentRepository.Setup(_ => _.ReadAll()).Returns(new[]
+                {new MarketSegment {Id = 1, IsActive = true, Description = "Unit Test Market Segment"}});
+
+            MockRegionRepository.Setup(_ => _.ReadAll()).Returns(new[]
+            {
+                new Region
+                {
+                    Id = 1,
+                    IsActive = true,
+                    Description = "Unit Test Region"
+                }
+            });
+
+            var result = _lookupTableManager.GetRiskGroupForRiskGroupNumber(1);
+
+            Assert.NotNull(result);
+            Assert.Equal(result.Name, riskGroup.RiskGroupName);
+        }
+
+        /// <summary>
+        /// Tests that GetRiskGroupForRiskGroupNumber for an in-active record executes positive
+        /// </summary>
+        [Fact]
+        public void GetRiskGroupForRiskGroupNumber_InActiveRecord_Executes_Positive()
+        {
+            RiskGroup riskGroup = null;
+            MockRiskGroupRepository.Setup(_ => _.ReadByRiskGroupNumberIsActive(It.IsAny<int>(), true)).Returns(riskGroup);
+
+            var result = _lookupTableManager.GetRiskGroupForRiskGroupNumber(1);
+
+            Assert.Null(result);
+        }
+
+        /// <summary>
+        /// Tests that GetTransactionTableNumbers executes positive.
+        /// </summary>
+        [Fact]
+        public void GetTransactionTableNumbers_Executes_Positive()
+        {
+            MockTransactionTableNumberRepository.Setup(_ => _.ReadAll()).Returns(new[] {new TransactionTableNumber()});
+
+            var result = _lookupTableManager.GetTransactionTableNumbers();
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that GetTransactionTableNumberDescription executes positive.
+        /// </summary>
+        [Fact]
+        public void GetTransactionTableNumberDescription_Executes_Positive()
+        {
+            MockTransactionTableNumberRepository.Setup(_ => _.ReadAll()).Returns(new[]
+            {
+                new TransactionTableNumber
+                {
+                    AdValorem = 1,
+                    Fee = 2,
+                    TariffTable = 3,
+                    Id = 1,
+                    IsActive = true
+                }
+            });
+
+            var result = _lookupTableManager.GetTransactionTableNumberDescription(1);
+
+            Assert.NotNull(result);
+            Assert.True(result.Contains("1"));
+            Assert.True(result.Contains("2"));
+            Assert.True(result.Contains("3"));
         }
     }
 }

@@ -49,7 +49,8 @@ namespace StandardBank.ConcessionManagement.Repository
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {Description = model.Description, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql, new {Description = model.Description, IsActive = model.IsActive})
+                    .Single();
             }
 
             //clear out the cache because the data has changed
@@ -77,9 +78,10 @@ namespace StandardBank.ConcessionManagement.Repository
             Func<IEnumerable<Relationship>> function = () =>
             {
                 using (var db = _dbConnectionFactory.Connection())
-            	{
-                	return db.Query<Relationship>("SELECT [pkRelationshipId] [Id], [Description], [IsActive] FROM [dbo].[rtblRelationship]");
-            	}
+                {
+                    return db.Query<Relationship>(
+                        "SELECT [pkRelationshipId] [Id], [Description], [IsActive] FROM [dbo].[rtblRelationship]");
+                }
             };
 
             return _cacheManager.ReturnFromCache(function, 1440, CacheKey.Repository.RelationshipRepository.ReadAll);
