@@ -124,7 +124,10 @@ namespace StandardBank.ConcessionManagement.UI
             GlobalConfiguration.Configuration.UseActivator(new HangfireActivator(serviceProvider));
 
             app.UseHangfireServer();
-            app.UseHangfireDashboard();
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new[] {new HangfireDashboardAuthorizationFilter()}
+            });
 
             ScheduleJobs(app);
         }
