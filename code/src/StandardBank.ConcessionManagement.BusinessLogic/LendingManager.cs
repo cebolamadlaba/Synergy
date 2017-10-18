@@ -181,7 +181,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
             {
-                UpdateApprovedPriceAndIsMismatched(concessionLending);
+                UpdateApprovedPrice(concessionLending);
+                UpdateIsMismatched(concessionLending);
 
                 _ruleManager.UpdateBaseFieldsOnApproval(concessionLending);
 
@@ -195,6 +196,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
                 }
             }
+            else if (concession.Status == "Pending" && concession.SubStatus == "PCM Approved With Changes")
+            {
+                UpdateApprovedPrice(concessionLending);
+            }
 
             _concessionLendingRepository.Update(concessionLending);
 
@@ -202,20 +207,34 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
-        /// Updates the approved price and is mismatched.
+        /// Updates the approved price.
         /// </summary>
         /// <param name="concessionLending">The concession lending.</param>
-        private void UpdateApprovedPriceAndIsMismatched(ConcessionLending concessionLending)
+        private void UpdateApprovedPrice(ConcessionLending concessionLending)
         {
             var databaseLendingConcession =
                 _concessionLendingRepository.ReadById(concessionLending.Id);
 
-            //the approved margin to prime is what has been captured when approved
-            concessionLending.ApprovedMarginToPrime = concessionLending.MarginToPrime;
+            if (databaseLendingConcession.ApprovedMarginToPrime.HasValue)
+            {
+                concessionLending.ApprovedMarginToPrime = databaseLendingConcession.ApprovedMarginToPrime;
+            }
+            else
+            {
+                //the approved margin to prime is what has been captured when approved
+                concessionLending.ApprovedMarginToPrime = concessionLending.MarginToPrime;
 
-            //the margin to prime is what is in the database at the moment
-            concessionLending.MarginToPrime = databaseLendingConcession.MarginToPrime;
+                //the margin to prime is what is in the database at the moment
+                concessionLending.MarginToPrime = databaseLendingConcession.MarginToPrime;
+            }
+        }
 
+        /// <summary>
+        /// Updates the is mismatched.
+        /// </summary>
+        /// <param name="concessionLending">The concession lending.</param>
+        private void UpdateIsMismatched(ConcessionLending concessionLending)
+        {
             var loadedPriceLending =
                 _loadedPriceLendingRepository.ReadByProductTypeIdLegalEntityAccountId(
                     concessionLending.ProductTypeId, concessionLending.LegalEntityAccountId);

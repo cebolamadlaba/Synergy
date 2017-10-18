@@ -174,9 +174,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
             {
-                UpdateApprovedTransactionTableNumberAndIsMismatched(mappedConcessionTransactional);
+                UpdateApprovedTransactionTableNumber(mappedConcessionTransactional);
+                UpdateIsMismatched(mappedConcessionTransactional);
 
                 _ruleManager.UpdateBaseFieldsOnApproval(mappedConcessionTransactional);
+            }
+            else if (concession.Status == "Pending" && concession.SubStatus == "PCM Approved With Changes")
+            {
+                UpdateApprovedTransactionTableNumber(mappedConcessionTransactional);
             }
 
             _concessionTransactionalRepository.Update(mappedConcessionTransactional);
@@ -185,21 +190,36 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
-        /// Updates the approved transaction table number and is mismatched.
+        /// Updates the approved transaction table number.
         /// </summary>
         /// <param name="mappedConcessionTransactional">The mapped concession transactional.</param>
-        private void UpdateApprovedTransactionTableNumberAndIsMismatched(ConcessionTransactional mappedConcessionTransactional)
+        private void UpdateApprovedTransactionTableNumber(ConcessionTransactional mappedConcessionTransactional)
         {
             var databaseTransactionalConcession =
                 _concessionTransactionalRepository.ReadById(mappedConcessionTransactional.Id);
 
-            //the approved table number is the table number that was captured when approving
-            mappedConcessionTransactional.ApprovedTransactionTableNumberId =
-                mappedConcessionTransactional.TransactionTableNumberId;
+            if (databaseTransactionalConcession.ApprovedTransactionTableNumberId.HasValue)
+            {
+                mappedConcessionTransactional.ApprovedTransactionTableNumberId =
+                    databaseTransactionalConcession.ApprovedTransactionTableNumberId;
+            }
+            else
+            {
+                //the approved table number is the table number that was captured when approving
+                mappedConcessionTransactional.ApprovedTransactionTableNumberId =
+                    mappedConcessionTransactional.TransactionTableNumberId;
 
-            //the table number is what is currently in the database
-            mappedConcessionTransactional.TransactionTableNumberId = databaseTransactionalConcession.TransactionTableNumberId;
+                //the table number is what is currently in the database
+                mappedConcessionTransactional.TransactionTableNumberId = databaseTransactionalConcession.TransactionTableNumberId;
+            }
+        }
 
+        /// <summary>
+        /// Updates the is mismatched.
+        /// </summary>
+        /// <param name="mappedConcessionTransactional">The mapped concession transactional.</param>
+        private void UpdateIsMismatched(ConcessionTransactional mappedConcessionTransactional)
+        {
             if (mappedConcessionTransactional.TransactionTypeId.HasValue)
             {
                 var loadedPriceTransactional =

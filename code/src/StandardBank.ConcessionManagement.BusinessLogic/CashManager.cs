@@ -184,9 +184,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
             {
-                UpdateApprovedTableNumberAndIsMismatched(mappedConcessionCash);
+                UpdateApprovedTableNumber(mappedConcessionCash);
+                UpdateIsMismatched(mappedConcessionCash);
 
                 _ruleManager.UpdateBaseFieldsOnApproval(mappedConcessionCash);
+            }
+            else if (concession.Status == "Pending" && concession.SubStatus == "PCM Approved With Changes")
+            {
+                UpdateApprovedTableNumber(mappedConcessionCash);
             }
 
             _concessionCashRepository.Update(mappedConcessionCash);
@@ -195,20 +200,34 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
-        /// Updates the approved table number and is mismatched.
+        /// Updates the approved table number.
         /// </summary>
         /// <param name="mappedConcessionCash">The mapped concession cash.</param>
-        private void UpdateApprovedTableNumberAndIsMismatched(ConcessionCash mappedConcessionCash)
+        private void UpdateApprovedTableNumber(ConcessionCash mappedConcessionCash)
         {
             var databaseCashConcession =
                 _concessionCashRepository.ReadById(mappedConcessionCash.Id);
 
-            //the approved table number is the table number that was captured when approving
-            mappedConcessionCash.ApprovedTableNumberId = mappedConcessionCash.TableNumberId;
+            if (databaseCashConcession.ApprovedTableNumberId.HasValue)
+            {
+                mappedConcessionCash.ApprovedTableNumberId = databaseCashConcession.ApprovedTableNumberId;
+            }
+            else
+            {
+                //the approved table number is the table number that was captured when approving
+                mappedConcessionCash.ApprovedTableNumberId = mappedConcessionCash.TableNumberId;
 
-            //the table number is what is currently in the database
-            mappedConcessionCash.TableNumberId = databaseCashConcession.TableNumberId;
+                //the table number is what is currently in the database
+                mappedConcessionCash.TableNumberId = databaseCashConcession.TableNumberId;
+            }
+        }
 
+        /// <summary>
+        /// Updates the is mismatched.
+        /// </summary>
+        /// <param name="mappedConcessionCash">The mapped concession cash.</param>
+        private void UpdateIsMismatched(ConcessionCash mappedConcessionCash)
+        {
             var loadedPriceCash =
                 _loadedPriceCashRepository.ReadByChannelTypeIdLegalEntityAccountId(
                     mappedConcessionCash.ChannelTypeId, mappedConcessionCash.LegalEntityAccountId);
