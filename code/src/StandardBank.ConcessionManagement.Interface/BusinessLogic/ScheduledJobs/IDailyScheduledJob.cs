@@ -20,5 +20,21 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic.ScheduledJob
         /// The name.
         /// </value>
         string Name { get; }
+
+        /// <summary>
+        /// Gets the hour to run.
+        /// </summary>
+        /// <value>
+        /// The hour to run.
+        /// </value>
+        int HourToRun { get; }
+
+        /// <summary>
+        /// Gets the minute to run.
+        /// </summary>
+        /// <value>
+        /// The minute to run.
+        /// </value>
+        int MinuteToRun { get; }
     }
 }

@@ -21,7 +21,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 ConcessionTypeId = DataHelper.GetConcessionTypeId(),
                 Description = "c5a6c49731",
-                IsActive = false
+                IsActive = false,
+                ImportFileProductId = "sdfgsdf435"
             };
 
             var result = InstantiatedDependencies.ProductRepository.Create(model);
@@ -67,8 +68,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = InstantiatedDependencies.ProductRepository.ReadById(id);
 
             model.ConcessionTypeId = DataHelper.GetAlternateConcessionTypeId(model.ConcessionTypeId);
-            model.Description = "9ed8b4faa8";
+            model.Description = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10);
             model.IsActive = !model.IsActive;
+            model.ImportFileProductId = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10);
 
             InstantiatedDependencies.ProductRepository.Update(model);
 
@@ -79,6 +81,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.ConcessionTypeId, model.ConcessionTypeId);
             Assert.Equal(updatedModel.Description, model.Description);
             Assert.Equal(updatedModel.IsActive, model.IsActive);
+            Assert.Equal(updatedModel.ImportFileProductId, model.ImportFileProductId);
         }
 
         /// <summary>
@@ -91,7 +94,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 ConcessionTypeId = DataHelper.GetConcessionTypeId(),
                 Description = "c5a6c49731",
-                IsActive = false
+                IsActive = false,
+                ImportFileProductId = "67dfgdfjghhj"
             };
 
             var temporaryEntity = InstantiatedDependencies.ProductRepository.Create(model);

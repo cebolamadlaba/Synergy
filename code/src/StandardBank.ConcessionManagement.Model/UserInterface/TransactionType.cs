@@ -47,5 +47,13 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// The transaction table numbers.
         /// </value>
         public IEnumerable<TransactionTableNumber> TransactionTableNumbers { get; set; }
+
+        /// <summary>
+        /// Gets or sets the import file product identifier.
+        /// </summary>
+        /// <value>
+        /// The import file product identifier.
+        /// </value>
+        public string ImportFileProductId { get; set; }
     }
 }

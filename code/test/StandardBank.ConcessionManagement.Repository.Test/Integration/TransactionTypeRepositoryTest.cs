@@ -21,7 +21,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 ConcessionTypeId = DataHelper.GetConcessionTypeId(),
                 Description = "aed25144ff",
-                IsActive = true
+                IsActive = true,
+                ImportFileProductId = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)
             };
 
             var result = InstantiatedDependencies.TransactionTypeRepository.Create(model);
@@ -83,8 +84,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var model = InstantiatedDependencies.TransactionTypeRepository.ReadById(id);
 
             model.ConcessionTypeId = DataHelper.GetAlternateConcessionTypeId(model.ConcessionTypeId);
-            model.Description = "79f743b774";
+            model.Description = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10);
             model.IsActive = !model.IsActive;
+            model.ImportFileProductId = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10);
 
             InstantiatedDependencies.TransactionTypeRepository.Update(model);
 
@@ -95,6 +97,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.ConcessionTypeId, model.ConcessionTypeId);
             Assert.Equal(updatedModel.Description, model.Description);
             Assert.Equal(updatedModel.IsActive, model.IsActive);
+            Assert.Equal(updatedModel.ImportFileProductId, model.ImportFileProductId);
         }
 
         /// <summary>
@@ -107,7 +110,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 ConcessionTypeId = DataHelper.GetConcessionTypeId(),
                 Description = "aed25144ff",
-                IsActive = false
+                IsActive = false,
+                ImportFileProductId = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)
             };
 
             var temporaryEntity = InstantiatedDependencies.TransactionTypeRepository.Create(model);

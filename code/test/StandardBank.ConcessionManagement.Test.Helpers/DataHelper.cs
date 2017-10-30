@@ -198,8 +198,9 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         {
             var model = new ChannelType
             {
-                Description = "0acf12687e",
-                IsActive = false
+                Description = "d6e6724f8a",
+                IsActive = false,
+                ImportFileProductId = "240374a0dd"
             };
 
             InstantiatedDependencies.ChannelTypeRepository.Create(model);
@@ -456,7 +457,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             {
                 ConcessionTypeId = GetConcessionTypeId(),
                 Description = "d81ef0b458",
-                IsActive = false
+                IsActive = false,
+                ImportFileProductId = "7ff10e60f6"
             };
 
             InstantiatedDependencies.ProductRepository.Create(model);
@@ -815,7 +817,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             {
                 ConcessionTypeId = GetConcessionTypeId(),
                 Description = "14c6862dfb",
-                IsActive = false
+                IsActive = false,
+                ImportFileProductId = "a295111801"
             };
 
             InstantiatedDependencies.TransactionTypeRepository.Create(model);
@@ -3221,7 +3224,9 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 LegalEntityAccountId = GetLegalEntityAccountId(),
                 ExpiryDate = DateTime.Now,
                 DateApproved = DateTime.Now,
-                IsMismatched = false
+                IsMismatched = false,
+                PriceExported = false,
+                PriceExportedDate = DateTime.Now
             };
 
             InstantiatedDependencies.ConcessionDetailRepository.Create(model);
@@ -3409,6 +3414,87 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 return models.First(_ => _.Id != model.Value).Id;
 
             return InsertTransactionTableNumber();
+        }
+
+        /// <summary>
+        /// Gets the SapDataImport id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetSapDataImportId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.SapDataImportRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertSapDataImport();
+        }
+
+        /// <summary>
+        /// Inserts a SapDataImport and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertSapDataImport()
+        {
+            var model = new SapDataImport
+            {
+                PricepointId = "f6ed743e1a",
+                CustomerId = "d17f6dacb3",
+                AccountName = "fd59d4d781",
+                ProductId = "9d99faefa9",
+                Description = "11424abe13",
+                GroupId = "79b149c5a2",
+                SubGroupId = "c7b82de119",
+                BankIdentifierId = "c1cd5f710a",
+                AccountNo = "e6226be72c",
+                OptionId = "3d2430f35e",
+                UserId = "56d85333bf",
+                TierFromValue = "6d0a6e313d",
+                TierToValue = "850a885999",
+                AdvaloremFee = "5bb6933505",
+                MinimumFee = "3684922146",
+                MaximumFee = "bcc8412776",
+                FlatFee = "95a815371d",
+                CommunicationFee = "dbca65674d",
+                TableNo = "e43a092c49",
+                TransactionVolume = "7118bca0c9",
+                TransactionRevenue = "bd8492c359",
+                ProductName = "e5c7d89e49",
+                Channel = "882ccc8c24",
+                MarketSegment = "6d024d1345",
+                SequenceId = "c8d1222165",
+                EntryDate = "bebb8c1458",
+                EffectiveDate = "1baacae614",
+                ExpiryDate = "1f83957e83",
+                TerminationDate = "7e692bc149",
+                Status = "1f293fac65",
+                ImportDate = DateTime.Now,
+                LastUpdatedDate = DateTime.Now
+            };
+
+            InstantiatedDependencies.SapDataImportRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate SapDataImport id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateSapDataImportId(int? model)
+        {
+            if (!model.HasValue)
+                return GetSapDataImportId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.SapDataImportRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertSapDataImport();
         }
     }
 }

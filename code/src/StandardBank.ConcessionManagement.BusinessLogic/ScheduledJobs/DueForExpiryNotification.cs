@@ -121,5 +121,21 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
         /// The name.
         /// </value>
         public string Name => "Due For Expiry Notification";
+
+        /// <summary>
+        /// Gets the hour to run.
+        /// </summary>
+        /// <value>
+        /// The hour to run.
+        /// </value>
+        public int HourToRun => 6;
+
+        /// <summary>
+        /// Gets the minute to run.
+        /// </summary>
+        /// <value>
+        /// The minute to run.
+        /// </value>
+        public int MinuteToRun => 0;
     }
 }

@@ -43,13 +43,19 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ChannelType Create(ChannelType model)
         {
-            const string sql = @"INSERT [dbo].[rtblChannelType] ([Description], [IsActive]) 
-                                VALUES (@Description, @IsActive) 
+            const string sql = @"INSERT [dbo].[rtblChannelType] ([Description], [IsActive], [ImportFileProductId]) 
+                                VALUES (@Description, @IsActive, @ImportFileProductId) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {Description = model.Description, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql,
+                    new
+                    {
+                        Description = model.Description,
+                        IsActive = model.IsActive,
+                        ImportFileProductId = model.ImportFileProductId
+                    }).Single();
             }
 
             //clear out the cache because the data has changed
@@ -77,9 +83,10 @@ namespace StandardBank.ConcessionManagement.Repository
             Func<IEnumerable<ChannelType>> function = () =>
             {
                 using (var db = _dbConnectionFactory.Connection())
-            	{
-                	return db.Query<ChannelType>("SELECT [pkChannelTypeId] [Id], [Description], [IsActive] FROM [dbo].[rtblChannelType]");
-            	}
+                {
+                    return db.Query<ChannelType>(
+                        "SELECT [pkChannelTypeId] [Id], [Description], [IsActive], [ImportFileProductId] FROM [dbo].[rtblChannelType]");
+                }
             };
 
             return _cacheManager.ReturnFromCache(function, 1440, CacheKey.Repository.ChannelTypeRepository.ReadAll);
@@ -94,9 +101,15 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[rtblChannelType]
-                            SET [Description] = @Description, [IsActive] = @IsActive
+                            SET [Description] = @Description, [IsActive] = @IsActive, [ImportFileProductId] = @ImportFileProductId
                             WHERE [pkChannelTypeId] = @Id",
-                    new {Id = model.Id, Description = model.Description, IsActive = model.IsActive});
+                    new
+                    {
+                        Id = model.Id,
+                        Description = model.Description,
+                        IsActive = model.IsActive,
+                        ImportFileProductId = model.ImportFileProductId
+                    });
             }
 
             //clear out the cache because the data has changed

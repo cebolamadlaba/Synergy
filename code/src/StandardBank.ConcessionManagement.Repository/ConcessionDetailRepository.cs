@@ -35,9 +35,9 @@ namespace StandardBank.ConcessionManagement.Repository
         public ConcessionDetail Create(ConcessionDetail model)
         {
             const string sql =
-                @"INSERT [dbo].[tblConcessionDetail] ([fkConcessionId], [fkLegalEntityId], [fkLegalEntityAccountId], [ExpiryDate], [DateApproved], [IsMismatched]) 
-                VALUES (@ConcessionId, @LegalEntityId, @LegalEntityAccountId, @ExpiryDate, @DateApproved, @IsMismatched) 
-                SELECT CAST(SCOPE_IDENTITY() as int)";
+                @"INSERT [dbo].[tblConcessionDetail] ([fkConcessionId], [fkLegalEntityId], [fkLegalEntityAccountId], [ExpiryDate], [DateApproved], [IsMismatched], [PriceExported], [PriceExportedDate]) 
+                                VALUES (@ConcessionId, @LegalEntityId, @LegalEntityAccountId, @ExpiryDate, @DateApproved, @IsMismatched, @PriceExported, @PriceExportedDate) 
+                                SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
@@ -49,7 +49,9 @@ namespace StandardBank.ConcessionManagement.Repository
                         LegalEntityAccountId = model.LegalEntityAccountId,
                         ExpiryDate = model.ExpiryDate,
                         DateApproved = model.DateApproved,
-                        IsMismatched = model.IsMismatched
+                        IsMismatched = model.IsMismatched,
+                        PriceExported = model.PriceExported,
+                        PriceExportedDate = model.PriceExportedDate
                     }).Single();
             }
 
@@ -66,7 +68,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionDetail>(
-                    "SELECT [pkConcessionDetailId] [ConcessionDetailId], [fkConcessionId] [ConcessionId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [ExpiryDate], [DateApproved], [IsMismatched] FROM [dbo].[tblConcessionDetail] WHERE [pkConcessionDetailId] = @Id",
+                    "SELECT [pkConcessionDetailId] [ConcessionDetailId], [fkConcessionId] [ConcessionId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [ExpiryDate], [DateApproved], [IsMismatched], [PriceExported], [PriceExportedDate] FROM [dbo].[tblConcessionDetail] WHERE [pkConcessionDetailId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -81,7 +83,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionDetail>(
-                    @"SELECT [pkConcessionDetailId] [ConcessionDetailId], [fkConcessionId] [ConcessionId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [ExpiryDate], [DateApproved], [IsMismatched] 
+                    @"SELECT [pkConcessionDetailId] [ConcessionDetailId], [fkConcessionId] [ConcessionId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [ExpiryDate], [DateApproved], [IsMismatched], [PriceExported], [PriceExportedDate] 
                     FROM [dbo].[tblConcessionDetail] 
                     WHERE [fkConcessionId] = @concessionId",
                     new { concessionId });
@@ -97,7 +99,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionDetail>(
-                    "SELECT [pkConcessionDetailId] [ConcessionDetailId], [fkConcessionId] [ConcessionId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [ExpiryDate], [DateApproved], [IsMismatched] FROM [dbo].[tblConcessionDetail]");
+                    "SELECT [pkConcessionDetailId] [ConcessionDetailId], [fkConcessionId] [ConcessionId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [ExpiryDate], [DateApproved], [IsMismatched], [PriceExported], [PriceExportedDate] FROM [dbo].[tblConcessionDetail]");
             }
         }
 
@@ -110,7 +112,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblConcessionDetail]
-                            SET [fkConcessionId] = @ConcessionId, [fkLegalEntityId] = @LegalEntityId, [fkLegalEntityAccountId] = @LegalEntityAccountId, [ExpiryDate] = @ExpiryDate, [DateApproved] = @DateApproved, [IsMismatched] = @IsMismatched
+                            SET [fkConcessionId] = @ConcessionId, [fkLegalEntityId] = @LegalEntityId, [fkLegalEntityAccountId] = @LegalEntityAccountId, [ExpiryDate] = @ExpiryDate, [DateApproved] = @DateApproved, [IsMismatched] = @IsMismatched, [PriceExported] = @PriceExported, [PriceExportedDate] = @PriceExportedDate
                             WHERE [pkConcessionDetailId] = @ConcessionDetailId",
                     new
                     {
@@ -120,7 +122,9 @@ namespace StandardBank.ConcessionManagement.Repository
                         LegalEntityAccountId = model.LegalEntityAccountId,
                         ExpiryDate = model.ExpiryDate,
                         DateApproved = model.DateApproved,
-                        IsMismatched = model.IsMismatched
+                        IsMismatched = model.IsMismatched,
+                        PriceExported = model.PriceExported,
+                        PriceExportedDate = model.PriceExportedDate
                     });
             }
         }

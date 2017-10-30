@@ -5,5 +5,6 @@ export class TransactionType {
     concessionTypeId: number;
     concessionType: string;
 	description: string;
-	transactionTableNumbers: TransactionTableNumber[];
+    transactionTableNumbers: TransactionTableNumber[];
+    importFileProductId: string;
 }

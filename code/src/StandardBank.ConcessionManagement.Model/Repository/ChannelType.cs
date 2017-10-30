@@ -30,5 +30,13 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The IsActive.
         /// </value>
         public bool IsActive { get; set; }
+
+        /// <summary>
+        /// Gets or sets the import file product identifier.
+        /// </summary>
+        /// <value>
+        /// The import file product identifier.
+        /// </value>
+        public string ImportFileProductId { get; set; }
     }
 }

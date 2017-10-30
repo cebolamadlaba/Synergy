@@ -9,5 +9,7 @@ export class BaseConcessionDetail {
     dateApproved: Date;
 	isMismatched: boolean;
 	isExpired: boolean;
-	isExpiring: boolean;
+    isExpiring: boolean;
+    priceExported: boolean;
+    priceExportedDate: Date;
 }

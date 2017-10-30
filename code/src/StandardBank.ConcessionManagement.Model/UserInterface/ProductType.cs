@@ -28,5 +28,13 @@
         /// The type of the concession.
         /// </value>
         public ConcessionType ConcessionType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the import file product identifier.
+        /// </summary>
+        /// <value>
+        /// The import file product identifier.
+        /// </value>
+        public string ImportFileProductId { get; set; }
     }
 }

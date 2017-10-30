@@ -139,7 +139,11 @@ namespace StandardBank.ConcessionManagement.UI
         private void ScheduleJobs(IApplicationBuilder builder)
         {
             foreach (var dailyJob in builder.ApplicationServices.GetRequiredService<IEnumerable<IDailyScheduledJob>>())
-                RecurringJob.AddOrUpdate(dailyJob.Name, () => dailyJob.Run(), Cron.Daily(6));
+            {
+                //the UTC hour needs to be passed to the cron as it works in UTC time
+                var hourToRun = dailyJob.HourToRun - (DateTime.Now.Hour - DateTime.UtcNow.Hour);
+                RecurringJob.AddOrUpdate(dailyJob.Name, () => dailyJob.Run(), Cron.Daily(hourToRun, dailyJob.MinuteToRun));
+            }
         }
     }
 }

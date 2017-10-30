@@ -43,13 +43,21 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public Product Create(Product model)
         {
-            const string sql = @"INSERT [dbo].[rtblProduct] ([fkConcessionTypeId], [Description], [IsActive]) 
-                                VALUES (@ConcessionTypeId, @Description, @IsActive) 
+            const string sql =
+                @"INSERT [dbo].[rtblProduct] ([fkConcessionTypeId], [Description], [IsActive], [ImportFileProductId]) 
+                                VALUES (@ConcessionTypeId, @Description, @IsActive, @ImportFileProductId) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {ConcessionTypeId = model.ConcessionTypeId, Description = model.Description, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql,
+                    new
+                    {
+                        ConcessionTypeId = model.ConcessionTypeId,
+                        Description = model.Description,
+                        IsActive = model.IsActive,
+                        ImportFileProductId = model.ImportFileProductId
+                    }).Single();
             }
 
             //clear out the cache because the data has changed
@@ -88,9 +96,10 @@ namespace StandardBank.ConcessionManagement.Repository
             Func<IEnumerable<Product>> function = () =>
             {
                 using (var db = _dbConnectionFactory.Connection())
-            	{
-                	return db.Query<Product>("SELECT [pkProductId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [Description], [IsActive] FROM [dbo].[rtblProduct]");
-            	}
+                {
+                    return db.Query<Product>(
+                        "SELECT [pkProductId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [Description], [IsActive], [ImportFileProductId] FROM [dbo].[rtblProduct]");
+                }
             };
 
             return _cacheManager.ReturnFromCache(function, 1440, CacheKey.Repository.ProductRepository.ReadAll);
@@ -105,9 +114,16 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[rtblProduct]
-                            SET [fkConcessionTypeId] = @ConcessionTypeId, [Description] = @Description, [IsActive] = @IsActive
+                            SET [fkConcessionTypeId] = @ConcessionTypeId, [Description] = @Description, [IsActive] = @IsActive, [ImportFileProductId] = @ImportFileProductId
                             WHERE [pkProductId] = @Id",
-                    new {Id = model.Id, ConcessionTypeId = model.ConcessionTypeId, Description = model.Description, IsActive = model.IsActive});
+                    new
+                    {
+                        Id = model.Id,
+                        ConcessionTypeId = model.ConcessionTypeId,
+                        Description = model.Description,
+                        IsActive = model.IsActive,
+                        ImportFileProductId = model.ImportFileProductId
+                    });
             }
 
             //clear out the cache because the data has changed

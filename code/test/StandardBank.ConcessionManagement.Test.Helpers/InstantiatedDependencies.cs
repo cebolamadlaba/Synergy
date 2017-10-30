@@ -440,6 +440,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             new TransactionTableNumberRepository(DbConnection, CacheManager);
 
         /// <summary>
+        /// The SapDataImport repository
+        /// </summary>
+        public static ISapDataImportRepository SapDataImportRepository = new SapDataImportRepository(DbConnection);
+
+        /// <summary>
         /// The look up table manager
         /// </summary>
         public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,

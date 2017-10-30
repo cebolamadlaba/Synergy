@@ -457,5 +457,10 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The mock rule manager
         /// </summary>
         public static Mock<IRuleManager> MockRuleManager = new Mock<IRuleManager>();
+
+        /// <summary>
+        /// The mock SapDataImport repository
+        /// </summary>
+        public static Mock<ISapDataImportRepository> MockSapDataImportRepository = new Mock<ISapDataImportRepository>();
     }
 }

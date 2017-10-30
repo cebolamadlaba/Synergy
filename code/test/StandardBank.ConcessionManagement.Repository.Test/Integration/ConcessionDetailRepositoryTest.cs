@@ -24,7 +24,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
                 ExpiryDate = DateTime.Now,
                 DateApproved = DateTime.Now,
-                IsMismatched = false
+                IsMismatched = false,
+                PriceExported = true,
+                PriceExportedDate = DateTime.Now
             };
 
             var result = InstantiatedDependencies.ConcessionDetailRepository.Create(model);
@@ -92,6 +94,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.ExpiryDate = DataHelper.ChangeDate(model.ExpiryDate);
             model.DateApproved = DataHelper.ChangeDate(model.DateApproved);
             model.IsMismatched = !model.IsMismatched;
+            model.PriceExported = !model.PriceExported;
+            model.PriceExportedDate = DataHelper.ChangeDate(model.PriceExportedDate);
 
             InstantiatedDependencies.ConcessionDetailRepository.Update(model);
 
@@ -105,6 +109,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.ExpiryDate.Value.Date, model.ExpiryDate.Value.Date);
             Assert.Equal(updatedModel.DateApproved.Value.Date, model.DateApproved.Value.Date);
             Assert.Equal(updatedModel.IsMismatched, model.IsMismatched);
+            Assert.Equal(updatedModel.PriceExported, model.PriceExported);
+            Assert.Equal(updatedModel.PriceExportedDate.Value.Date, model.PriceExportedDate.Value.Date);
         }
 
         /// <summary>
@@ -120,7 +126,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 LegalEntityAccountId = DataHelper.GetLegalEntityAccountId(),
                 ExpiryDate = DateTime.Now,
                 DateApproved = DateTime.Now,
-                IsMismatched = false
+                IsMismatched = false,
+                PriceExported = true,
+                PriceExportedDate = DateTime.Now
             };
 
             var temporaryEntity = InstantiatedDependencies.ConcessionDetailRepository.Create(model);

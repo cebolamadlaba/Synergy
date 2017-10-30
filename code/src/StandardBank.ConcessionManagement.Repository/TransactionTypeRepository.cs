@@ -43,8 +43,9 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public TransactionType Create(TransactionType model)
         {
-            const string sql = @"INSERT [dbo].[rtblTransactionType] ([fkConcessionTypeId], [Description], [IsActive]) 
-                                VALUES (@ConcessionTypeId, @Description, @IsActive) 
+            const string sql =
+                @"INSERT [dbo].[rtblTransactionType] ([fkConcessionTypeId], [Description], [IsActive], [ImportFileProductId]) 
+                                VALUES (@ConcessionTypeId, @Description, @IsActive, @ImportFileProductId) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
@@ -54,7 +55,8 @@ namespace StandardBank.ConcessionManagement.Repository
                     {
                         ConcessionTypeId = model.ConcessionTypeId,
                         Description = model.Description,
-                        IsActive = model.IsActive
+                        IsActive = model.IsActive,
+                        ImportFileProductId = model.ImportFileProductId
                     }).Single();
             }
 
@@ -97,7 +99,7 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<TransactionType>(
-                        "SELECT [pkTransactionTypeId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [Description], [IsActive] FROM [dbo].[rtblTransactionType]");
+                        "SELECT [pkTransactionTypeId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [Description], [IsActive], [ImportFileProductId] FROM [dbo].[rtblTransactionType]");
                 }
             };
 
@@ -113,14 +115,15 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[rtblTransactionType]
-                            SET [fkConcessionTypeId] = @ConcessionTypeId, [Description] = @Description, [IsActive] = @IsActive
+                            SET [fkConcessionTypeId] = @ConcessionTypeId, [Description] = @Description, [IsActive] = @IsActive, [ImportFileProductId] = @ImportFileProductId
                             WHERE [pkTransactionTypeId] = @Id",
                     new
                     {
                         Id = model.Id,
                         ConcessionTypeId = model.ConcessionTypeId,
                         Description = model.Description,
-                        IsActive = model.IsActive
+                        IsActive = model.IsActive,
+                        ImportFileProductId = model.ImportFileProductId
                     });
             }
 

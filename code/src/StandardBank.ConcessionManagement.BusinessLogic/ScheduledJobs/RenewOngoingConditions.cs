@@ -31,7 +31,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
         /// </summary>
         private readonly IMediator _mediator;
 
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RenewOngoingConditions"/> class.
+        /// </summary>
+        /// <param name="concessionConditionViewRepository">The concession condition view repository.</param>
+        /// <param name="concessionManager">The concession manager.</param>
+        /// <param name="mediator">The mediator.</param>
         public RenewOngoingConditions(IConcessionConditionViewRepository concessionConditionViewRepository,
             IConcessionManager concessionManager, IMediator mediator)
         {
@@ -89,5 +94,21 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
         /// The name.
         /// </value>
         public string Name => "Renew Ongoing Conditions";
+
+        /// <summary>
+        /// Gets the hour to run.
+        /// </summary>
+        /// <value>
+        /// The hour to run.
+        /// </value>
+        public int HourToRun => 6;
+
+        /// <summary>
+        /// Gets the minute to run.
+        /// </summary>
+        /// <value>
+        /// The minute to run.
+        /// </value>
+        public int MinuteToRun => 5;
     }
 }
