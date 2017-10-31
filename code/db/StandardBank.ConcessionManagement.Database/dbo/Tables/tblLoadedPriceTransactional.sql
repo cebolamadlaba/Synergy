@@ -9,5 +9,3 @@
     CONSTRAINT [FK_tblLoadedPriceTransactional_tblLegalEntityAccount] FOREIGN KEY ([fkLegalEntityAccountId]) REFERENCES [dbo].[tblLegalEntityAccount] ([pkLegalEntityAccountId])
 );
 
-
-

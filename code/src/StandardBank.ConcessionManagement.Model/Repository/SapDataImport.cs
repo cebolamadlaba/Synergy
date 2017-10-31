@@ -8,20 +8,12 @@ namespace StandardBank.ConcessionManagement.Model.Repository
     public class SapDataImport
     {
         /// <summary>
-        /// Gets or sets the Id.
-        /// </summary>
-        /// <value>
-        /// The Id.
-        /// </value>
-        public int Id { get; set; }
-
-        /// <summary>
         /// Gets or sets the PricepointId.
         /// </summary>
         /// <value>
         /// The PricepointId.
         /// </value>
-        public string PricepointId { get; set; }
+        public int PricepointId { get; set; }
 
         /// <summary>
         /// Gets or sets the CustomerId.

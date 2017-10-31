@@ -41,11 +41,10 @@ ALTER COLUMN [fkTableNumberId] int NOT NULL
 GO
 
 
-ALTER TABLE [dbo].[tblConcessionTransactional]  WITH CHECK ADD  CONSTRAINT [FK_tblConcessionTransactional_rtblTableNumber] FOREIGN KEY([fkTableNumberId])
-REFERENCES [dbo].[rtblTableNumber] ([pkTableNumberId])
+
 GO
 
-ALTER TABLE [dbo].[tblConcessionTransactional] CHECK CONSTRAINT [FK_tblConcessionTransactional_rtblTableNumber]
+
 GO
 
 

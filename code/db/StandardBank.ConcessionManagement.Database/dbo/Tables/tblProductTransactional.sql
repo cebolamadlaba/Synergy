@@ -16,5 +16,3 @@
     CONSTRAINT [FK_tblProductTransactional_tblRiskGroup] FOREIGN KEY ([fkRiskGroupId]) REFERENCES [dbo].[tblRiskGroup] ([pkRiskGroupId])
 );
 
-
-

@@ -13,11 +13,10 @@ ALTER COLUMN [fkRegionId] int not null
 
 GO
 
-ALTER TABLE [dbo].[tblConcession]  WITH CHECK ADD  CONSTRAINT [FK_tblConcession_rtblRegion] FOREIGN KEY([fkRegionId])
-REFERENCES [dbo].[rtblRegion] ([pkRegionId])
+
 GO
 
-ALTER TABLE [dbo].[tblConcession] CHECK CONSTRAINT [FK_tblConcession_rtblRegion]
+
 GO
 
 

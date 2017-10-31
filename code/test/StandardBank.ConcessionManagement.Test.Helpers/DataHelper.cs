@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Data.SqlClient;
 using System.Linq;
+using Dapper;
 using StandardBank.ConcessionManagement.Model.Repository;
 
 namespace StandardBank.ConcessionManagement.Test.Helpers
@@ -3426,7 +3428,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             var models = InstantiatedDependencies.SapDataImportRepository.ReadAll();
 
             if (models != null && models.Any())
-                return models.First().Id;
+                return models.First().PricepointId;
 
             return InsertSapDataImport();
         }
@@ -3439,7 +3441,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         {
             var model = new SapDataImport
             {
-                PricepointId = "f6ed743e1a",
+                PricepointId = GetUniquePricePointId(),
                 CustomerId = "d17f6dacb3",
                 AccountName = "fd59d4d781",
                 ProductId = "9d99faefa9",
@@ -3475,7 +3477,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
 
             InstantiatedDependencies.SapDataImportRepository.Create(model);
 
-            return model.Id;
+            return model.PricepointId;
         }
 
         /// <summary>
@@ -3491,10 +3493,24 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             //read all and return the first one
             var models = InstantiatedDependencies.SapDataImportRepository.ReadAll();
 
-            if (models != null && models.Any(_ => _.Id != model.Value))
-                return models.First(_ => _.Id != model.Value).Id;
+            if (models != null && models.Any(_ => _.PricepointId != model.Value))
+                return models.First(_ => _.PricepointId != model.Value).PricepointId;
 
             return InsertSapDataImport();
+        }
+
+        /// <summary>
+        /// Gets the unique int.
+        /// </summary>
+        /// <returns></returns>
+        public static int GetUniquePricePointId()
+        {
+            using (var db = new SqlConnection(Configuration.ConnectionString))
+            {
+                return db.Query<int>(
+                        "SELECT CASE WHEN MAX(PricepointId) IS NULL THEN 1 ELSE MAX(PricepointId) + 1 END FROM [dbo].[tblSapDataImport]")
+                    .Single();
+            }
         }
     }
 }

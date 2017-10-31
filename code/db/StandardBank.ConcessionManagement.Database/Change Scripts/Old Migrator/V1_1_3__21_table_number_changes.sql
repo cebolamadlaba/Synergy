@@ -1,42 +1,20 @@
-﻿CREATE TABLE [dbo].[rtblTableNumber](
-	[pkTableNumberId] [int] IDENTITY(1,1) NOT NULL,
-	[TariffTable] [int] NOT NULL,
-	[AdValorem] [decimal](18, 2) NULL,
-	[BaseRate] [decimal](18, 3) NULL,
-	[IsActive] [bit] NOT NULL,
- CONSTRAINT [PK_rtblTableNumber] PRIMARY KEY CLUSTERED 
-(
-	[pkTableNumberId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
+﻿
 GO
 
-ALTER TABLE [dbo].[rtblTableNumber] ADD  CONSTRAINT [DF_rtblTableNumber_IsActive]  DEFAULT ((1)) FOR [IsActive]
-GO
-
-CREATE TABLE [Audit].[rtblTableNumber] (
-	[pkAuditTableNumberId] int IDENTITY(1,1) NOT NULL,
-	[pkTableNumberId] int NOT NULL,
-	[fkAuditTypeId] int NOT NULL,
-	[Entity] xml NOT NULL,
-	[Username] varchar(50) NOT NULL,
-	[DateStamp] datetime NOT NULL,
-CONSTRAINT [PK_Audit_rtblTableNumber] PRIMARY KEY CLUSTERED 
-(
-	[pkAuditTableNumberId] ASC
-) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
 
 GO
 
-ALTER TABLE [Audit].[rtblTableNumber] ADD  CONSTRAINT [DF_Audit_rtblTableNumber_DateStamp]  DEFAULT (getdate()) FOR [DateStamp]
+
+
 GO
 
-ALTER TABLE [Audit].[rtblTableNumber] WITH CHECK ADD  CONSTRAINT [FK_Audit_rtblTableNumber_AuditType] FOREIGN KEY([fkAuditTypeId])
-REFERENCES [Audit].[AuditType] ([Id])
+
 GO
 
-ALTER TABLE [Audit].[rtblTableNumber] CHECK CONSTRAINT [FK_Audit_rtblTableNumber_AuditType]
+
+GO
+
+
 GO
 
 INSERT INTO [dbo].[rtblTableNumber] ([TariffTable], [AdValorem], [BaseRate]) VALUES (30, 0, NULL)
@@ -419,11 +397,10 @@ ALTER COLUMN [fkTableNumberId] int NOT NULL
 GO
 
 
-ALTER TABLE [dbo].[tblConcessionCash]  WITH CHECK ADD  CONSTRAINT [FK_tblConcessionCash_rtblTableNumber] FOREIGN KEY([fkTableNumberId])
-REFERENCES [dbo].[rtblTableNumber] ([pkTableNumberId])
+
 GO
 
-ALTER TABLE [dbo].[tblConcessionCash] CHECK CONSTRAINT [FK_tblConcessionCash_rtblTableNumber]
+
 GO
 
 

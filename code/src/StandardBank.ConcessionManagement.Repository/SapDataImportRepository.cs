@@ -36,12 +36,11 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             const string sql =
                 @"INSERT [dbo].[tblSapDataImport] ([PricepointId], [CustomerId], [AccountName], [ProductId], [Description], [GroupId], [SubGroupId], [BankIdentifierId], [AccountNo], [OptionId], [UserId], [TierFromValue], [TierToValue], [AdvaloremFee], [MinimumFee], [MaximumFee], [FlatFee], [CommunicationFee], [TableNo], [TransactionVolume], [TransactionRevenue], [ProductName], [Channel], [MarketSegment], [SequenceId], [EntryDate], [EffectiveDate], [ExpiryDate], [TerminationDate], [Status], [ImportDate], [LastUpdatedDate]) 
-                                VALUES (@PricepointId, @CustomerId, @AccountName, @ProductId, @Description, @GroupId, @SubGroupId, @BankIdentifierId, @AccountNo, @OptionId, @UserId, @TierFromValue, @TierToValue, @AdvaloremFee, @MinimumFee, @MaximumFee, @FlatFee, @CommunicationFee, @TableNo, @TransactionVolume, @TransactionRevenue, @ProductName, @Channel, @MarketSegment, @SequenceId, @EntryDate, @EffectiveDate, @ExpiryDate, @TerminationDate, @Status, @ImportDate, @LastUpdatedDate) 
-                                SELECT CAST(SCOPE_IDENTITY() as int)";
+                                VALUES (@PricepointId, @CustomerId, @AccountName, @ProductId, @Description, @GroupId, @SubGroupId, @BankIdentifierId, @AccountNo, @OptionId, @UserId, @TierFromValue, @TierToValue, @AdvaloremFee, @MinimumFee, @MaximumFee, @FlatFee, @CommunicationFee, @TableNo, @TransactionVolume, @TransactionRevenue, @ProductName, @Channel, @MarketSegment, @SequenceId, @EntryDate, @EffectiveDate, @ExpiryDate, @TerminationDate, @Status, @ImportDate, @LastUpdatedDate)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql,
+                db.Execute(sql,
                     new
                     {
                         PricepointId = model.PricepointId,
@@ -76,7 +75,7 @@ namespace StandardBank.ConcessionManagement.Repository
                         Status = model.Status,
                         ImportDate = model.ImportDate,
                         LastUpdatedDate = model.LastUpdatedDate
-                    }).Single();
+                    });
             }
 
             return model;
@@ -92,7 +91,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<SapDataImport>(
-                    "SELECT [pkSapDataImportId] [Id], [PricepointId], [CustomerId], [AccountName], [ProductId], [Description], [GroupId], [SubGroupId], [BankIdentifierId], [AccountNo], [OptionId], [UserId], [TierFromValue], [TierToValue], [AdvaloremFee], [MinimumFee], [MaximumFee], [FlatFee], [CommunicationFee], [TableNo], [TransactionVolume], [TransactionRevenue], [ProductName], [Channel], [MarketSegment], [SequenceId], [EntryDate], [EffectiveDate], [ExpiryDate], [TerminationDate], [Status], [ImportDate], [LastUpdatedDate] FROM [dbo].[tblSapDataImport] WHERE [pkSapDataImportId] = @Id",
+                    "SELECT [PricepointId], [CustomerId], [AccountName], [ProductId], [Description], [GroupId], [SubGroupId], [BankIdentifierId], [AccountNo], [OptionId], [UserId], [TierFromValue], [TierToValue], [AdvaloremFee], [MinimumFee], [MaximumFee], [FlatFee], [CommunicationFee], [TableNo], [TransactionVolume], [TransactionRevenue], [ProductName], [Channel], [MarketSegment], [SequenceId], [EntryDate], [EffectiveDate], [ExpiryDate], [TerminationDate], [Status], [ImportDate], [LastUpdatedDate] FROM [dbo].[tblSapDataImport] WHERE [PricepointId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -106,7 +105,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<SapDataImport>(
-                    "SELECT [pkSapDataImportId] [Id], [PricepointId], [CustomerId], [AccountName], [ProductId], [Description], [GroupId], [SubGroupId], [BankIdentifierId], [AccountNo], [OptionId], [UserId], [TierFromValue], [TierToValue], [AdvaloremFee], [MinimumFee], [MaximumFee], [FlatFee], [CommunicationFee], [TableNo], [TransactionVolume], [TransactionRevenue], [ProductName], [Channel], [MarketSegment], [SequenceId], [EntryDate], [EffectiveDate], [ExpiryDate], [TerminationDate], [Status], [ImportDate], [LastUpdatedDate] FROM [dbo].[tblSapDataImport]");
+                    "SELECT [PricepointId], [CustomerId], [AccountName], [ProductId], [Description], [GroupId], [SubGroupId], [BankIdentifierId], [AccountNo], [OptionId], [UserId], [TierFromValue], [TierToValue], [AdvaloremFee], [MinimumFee], [MaximumFee], [FlatFee], [CommunicationFee], [TableNo], [TransactionVolume], [TransactionRevenue], [ProductName], [Channel], [MarketSegment], [SequenceId], [EntryDate], [EffectiveDate], [ExpiryDate], [TerminationDate], [Status], [ImportDate], [LastUpdatedDate] FROM [dbo].[tblSapDataImport]");
             }
         }
 
@@ -119,11 +118,10 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblSapDataImport]
-                            SET [PricepointId] = @PricepointId, [CustomerId] = @CustomerId, [AccountName] = @AccountName, [ProductId] = @ProductId, [Description] = @Description, [GroupId] = @GroupId, [SubGroupId] = @SubGroupId, [BankIdentifierId] = @BankIdentifierId, [AccountNo] = @AccountNo, [OptionId] = @OptionId, [UserId] = @UserId, [TierFromValue] = @TierFromValue, [TierToValue] = @TierToValue, [AdvaloremFee] = @AdvaloremFee, [MinimumFee] = @MinimumFee, [MaximumFee] = @MaximumFee, [FlatFee] = @FlatFee, [CommunicationFee] = @CommunicationFee, [TableNo] = @TableNo, [TransactionVolume] = @TransactionVolume, [TransactionRevenue] = @TransactionRevenue, [ProductName] = @ProductName, [Channel] = @Channel, [MarketSegment] = @MarketSegment, [SequenceId] = @SequenceId, [EntryDate] = @EntryDate, [EffectiveDate] = @EffectiveDate, [ExpiryDate] = @ExpiryDate, [TerminationDate] = @TerminationDate, [Status] = @Status, [ImportDate] = @ImportDate, [LastUpdatedDate] = @LastUpdatedDate
-                            WHERE [pkSapDataImportId] = @Id",
+                            SET [CustomerId] = @CustomerId, [AccountName] = @AccountName, [ProductId] = @ProductId, [Description] = @Description, [GroupId] = @GroupId, [SubGroupId] = @SubGroupId, [BankIdentifierId] = @BankIdentifierId, [AccountNo] = @AccountNo, [OptionId] = @OptionId, [UserId] = @UserId, [TierFromValue] = @TierFromValue, [TierToValue] = @TierToValue, [AdvaloremFee] = @AdvaloremFee, [MinimumFee] = @MinimumFee, [MaximumFee] = @MaximumFee, [FlatFee] = @FlatFee, [CommunicationFee] = @CommunicationFee, [TableNo] = @TableNo, [TransactionVolume] = @TransactionVolume, [TransactionRevenue] = @TransactionRevenue, [ProductName] = @ProductName, [Channel] = @Channel, [MarketSegment] = @MarketSegment, [SequenceId] = @SequenceId, [EntryDate] = @EntryDate, [EffectiveDate] = @EffectiveDate, [ExpiryDate] = @ExpiryDate, [TerminationDate] = @TerminationDate, [Status] = @Status, [ImportDate] = @ImportDate, [LastUpdatedDate] = @LastUpdatedDate
+                            WHERE [PricepointId] = @PricepointId",
                     new
                     {
-                        Id = model.Id,
                         PricepointId = model.PricepointId,
                         CustomerId = model.CustomerId,
                         AccountName = model.AccountName,
@@ -168,8 +166,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblSapDataImport] WHERE [pkSapDataImportId] = @Id",
-                    new {model.Id});
+                db.Execute("DELETE [dbo].[tblSapDataImport] WHERE [PricepointId] = @PricepointId",
+                    new {model.PricepointId });
             }
         }
     }

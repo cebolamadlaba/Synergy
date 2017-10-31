@@ -19,7 +19,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         {
             var model = new SapDataImport
             {
-                PricepointId = "39a49764a1",
+                PricepointId = DataHelper.GetUniquePricePointId(),
                 CustomerId = "ec179a717c",
                 AccountName = "f8edfc0384",
                 ProductId = "e4730e4082",
@@ -56,7 +56,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var result = InstantiatedDependencies.SapDataImportRepository.Create(model);
 
             Assert.NotNull(result);
-            Assert.NotEqual(result.Id, 0);
+            Assert.NotEqual(result.PricepointId, 0);
         }
 
         /// <summary>
@@ -66,11 +66,11 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         public void ReadById_Executes_Positive()
         {
             var results = InstantiatedDependencies.SapDataImportRepository.ReadAll();
-            var id = results.First().Id;
+            var id = results.First().PricepointId;
             var result = InstantiatedDependencies.SapDataImportRepository.ReadById(id);
 
             Assert.NotNull(result);
-            Assert.Equal(result.Id, id);
+            Assert.Equal(result.PricepointId, id);
         }
 
         /// <summary>
@@ -92,10 +92,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         public void Update_Executes_Positive()
         {
             var results = InstantiatedDependencies.SapDataImportRepository.ReadAll();
-            var id = results.First().Id;
+            var id = results.First().PricepointId;
             var model = InstantiatedDependencies.SapDataImportRepository.ReadById(id);
 
-            model.PricepointId = "d69717aac4";
             model.CustomerId = "701a0b16b6";
             model.AccountName = "f172218822";
             model.ProductId = "49cbeda592";
@@ -133,7 +132,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var updatedModel = InstantiatedDependencies.SapDataImportRepository.ReadById(id);
 
             Assert.NotNull(updatedModel);
-            Assert.Equal(updatedModel.Id, model.Id);
             Assert.Equal(updatedModel.PricepointId, model.PricepointId);
             Assert.Equal(updatedModel.CustomerId, model.CustomerId);
             Assert.Equal(updatedModel.AccountName, model.AccountName);
@@ -176,7 +174,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         {
             var model = new SapDataImport
             {
-                PricepointId = "39a49764a1",
+                PricepointId = DataHelper.GetUniquePricePointId(),
                 CustomerId = "ec179a717c",
                 AccountName = "f8edfc0384",
                 ProductId = "e4730e4082",
@@ -213,11 +211,11 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var temporaryEntity = InstantiatedDependencies.SapDataImportRepository.Create(model);
 
             Assert.NotNull(temporaryEntity);
-            Assert.NotEqual(temporaryEntity.Id, 0);
+            Assert.NotEqual(temporaryEntity.PricepointId, 0);
 
             InstantiatedDependencies.SapDataImportRepository.Delete(temporaryEntity);
 
-            var result = InstantiatedDependencies.SapDataImportRepository.ReadById(temporaryEntity.Id);
+            var result = InstantiatedDependencies.SapDataImportRepository.ReadById(temporaryEntity.PricepointId);
 
             Assert.Null(result);
         }

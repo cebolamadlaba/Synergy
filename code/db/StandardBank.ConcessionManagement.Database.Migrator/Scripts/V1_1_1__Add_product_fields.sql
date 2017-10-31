@@ -70,8 +70,7 @@ WHERE [Description] = 'Autosafe & Cash Centre Only'
 GO
 
 CREATE TABLE [dbo].[tblSapDataImport](
-	[pkSapDataImportId] [int] IDENTITY(1,1) NOT NULL,
-	[PricepointId] [varchar](50) NULL,
+	[PricepointId] [int] NOT NULL,
 	[CustomerId] [varchar](50) NULL,
 	[AccountName] [varchar](50) NULL,
 	[ProductId] [varchar](50) NULL,
@@ -105,7 +104,7 @@ CREATE TABLE [dbo].[tblSapDataImport](
 	[LastUpdatedDate] [datetime] NULL,
  CONSTRAINT [PK_tblSapDataImport] PRIMARY KEY CLUSTERED 
 (
-	[pkSapDataImportId] ASC
+	[PricepointId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO

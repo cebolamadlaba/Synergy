@@ -23,12 +23,11 @@ ALTER COLUMN [fkRiskGroupId] int NOT NULL
 
 GO
 
-ALTER TABLE [dbo].[tblConcession]  WITH CHECK ADD  CONSTRAINT [FK_tblConcession_tblRiskGroup] FOREIGN KEY([fkRiskGroupId])
-REFERENCES [dbo].[tblRiskGroup] ([pkRiskGroupId])
+
 
 GO
 
-ALTER TABLE [dbo].[tblConcession] CHECK CONSTRAINT [FK_tblConcession_tblRiskGroup]
+
 
 GO
 
@@ -49,11 +48,10 @@ ALTER COLUMN [fkLegalEntityId] int not null
 
 GO
 
-ALTER TABLE [dbo].[tblConcessionLending]  WITH CHECK ADD  CONSTRAINT [FK_tblConcessionLending_tblLegalEntity] FOREIGN KEY([fkLegalEntityId])
-REFERENCES [dbo].[tblLegalEntity] ([pkLegalEntityId])
+
 
 GO
 
-ALTER TABLE [dbo].[tblConcessionLending] CHECK CONSTRAINT [FK_tblConcessionLending_tblLegalEntity]
+
 
 GO

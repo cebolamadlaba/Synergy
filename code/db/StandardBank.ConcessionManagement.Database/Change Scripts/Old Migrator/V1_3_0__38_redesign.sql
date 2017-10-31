@@ -74,46 +74,32 @@ GO
 
 
 
-CREATE TABLE [dbo].[tblConcessionDetail](
-	[pkConcessionDetailId] [int] IDENTITY(1,1) NOT NULL,
-	[fkConcessionId] [int] NOT NULL,
-	[fkLegalEntityId] [int] NOT NULL,
-	[fkLegalEntityAccountId] [int] NOT NULL,
-	[ExpiryDate] [datetime] NULL,
- CONSTRAINT [PK_tblConcessionDetail] PRIMARY KEY CLUSTERED 
-(
-	[pkConcessionDetailId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-GO
 
-ALTER TABLE [dbo].[tblConcessionDetail]  WITH CHECK ADD  CONSTRAINT [FK_tblConcessionDetail_tblConcession] FOREIGN KEY([fkConcessionId])
-REFERENCES [dbo].[tblConcession] ([pkConcessionId])
-GO
-
-ALTER TABLE [dbo].[tblConcessionDetail] CHECK CONSTRAINT [FK_tblConcessionDetail_tblConcession]
-GO
-
-ALTER TABLE [dbo].[tblConcessionDetail]  WITH CHECK ADD  CONSTRAINT [FK_tblConcessionDetail_tblLegalEntity] FOREIGN KEY([fkLegalEntityId])
-REFERENCES [dbo].[tblLegalEntity] ([pkLegalEntityId])
-GO
-
-ALTER TABLE [dbo].[tblConcessionDetail] CHECK CONSTRAINT [FK_tblConcessionDetail_tblLegalEntity]
-GO
-
-ALTER TABLE [dbo].[tblConcessionDetail]  WITH CHECK ADD  CONSTRAINT [FK_tblConcessionDetail_tblLegalEntityAccount] FOREIGN KEY([fkLegalEntityAccountId])
-REFERENCES [dbo].[tblLegalEntityAccount] ([pkLegalEntityAccountId])
-GO
-
-ALTER TABLE [dbo].[tblConcessionDetail] CHECK CONSTRAINT [FK_tblConcessionDetail_tblLegalEntityAccount]
 GO
 
 
-ALTER TABLE [dbo].[rtblProduct]  WITH CHECK ADD  CONSTRAINT [FK_rtblProduct_rtblConcessionType] FOREIGN KEY([fkConcessionTypeId])
-REFERENCES [dbo].[rtblConcessionType] ([pkConcessionTypeId])
 GO
 
-ALTER TABLE [dbo].[rtblProduct] CHECK CONSTRAINT [FK_rtblProduct_rtblConcessionType]
+
+GO
+
+
+GO
+
+
+GO
+
+
+GO
+
+
+GO
+
+
+
+GO
+
+
 GO
 
 
@@ -181,18 +167,16 @@ DROP COLUMN [LoadedPrice]
 GO
 
 
-ALTER TABLE [dbo].[tblUserRegion]  WITH CHECK ADD  CONSTRAINT [FK_tblUserRegion_rtblRegion] FOREIGN KEY([fkRegionId])
-REFERENCES [dbo].[rtblRegion] ([pkRegionId])
+
 GO
 
-ALTER TABLE [dbo].[tblUserRegion] CHECK CONSTRAINT [FK_tblUserRegion_rtblRegion]
+
 GO
 
-ALTER TABLE [dbo].[tblUserRegion]  WITH CHECK ADD  CONSTRAINT [FK_tblUserRegion_tblUser] FOREIGN KEY([fkUserId])
-REFERENCES [dbo].[tblUser] ([pkUserId])
+
 GO
 
-ALTER TABLE [dbo].[tblUserRegion] CHECK CONSTRAINT [FK_tblUserRegion_tblUser]
+
 GO
 
 
@@ -210,11 +194,10 @@ ADD [fkConcessionDetailId] int NOT NULL
 
 GO
 
-ALTER TABLE [dbo].[tblConcessionCash]  WITH CHECK ADD  CONSTRAINT [FK_tblConcessionCash_tblConcessionDetail] FOREIGN KEY([fkConcessionDetailId])
-REFERENCES [dbo].[tblConcessionDetail] ([pkConcessionDetailId])
+
 GO
 
-ALTER TABLE [dbo].[tblConcessionCash] CHECK CONSTRAINT [FK_tblConcessionCash_tblConcessionDetail]
+
 GO
 
 DELETE FROM [dbo].[tblConcessionLending]
@@ -226,11 +209,10 @@ ADD [fkConcessionDetailId] int NOT NULL
 
 GO
 
-ALTER TABLE [dbo].[tblConcessionLending]  WITH CHECK ADD  CONSTRAINT [FK_tblConcessionLending_tblConcessionDetail] FOREIGN KEY([fkConcessionDetailId])
-REFERENCES [dbo].[tblConcessionDetail] ([pkConcessionDetailId])
+
 GO
 
-ALTER TABLE [dbo].[tblConcessionLending] CHECK CONSTRAINT [FK_tblConcessionLending_tblConcessionDetail]
+
 GO
 
 
@@ -243,11 +225,10 @@ ADD [fkConcessionDetailId] int NOT NULL
 
 GO
 
-ALTER TABLE [dbo].[tblConcessionBol]  WITH CHECK ADD  CONSTRAINT [FK_tblConcessionBol_tblConcessionDetail] FOREIGN KEY([fkConcessionDetailId])
-REFERENCES [dbo].[tblConcessionDetail] ([pkConcessionDetailId])
+
 GO
 
-ALTER TABLE [dbo].[tblConcessionBol] CHECK CONSTRAINT [FK_tblConcessionBol_tblConcessionDetail]
+
 GO
 
 
@@ -260,11 +241,10 @@ ADD [fkConcessionDetailId] int NOT NULL
 
 GO
 
-ALTER TABLE [dbo].[tblConcessionInvestment]  WITH CHECK ADD  CONSTRAINT [FK_tblConcessionInvestment_tblConcessionDetail] FOREIGN KEY([fkConcessionDetailId])
-REFERENCES [dbo].[tblConcessionDetail] ([pkConcessionDetailId])
+
 GO
 
-ALTER TABLE [dbo].[tblConcessionInvestment] CHECK CONSTRAINT [FK_tblConcessionInvestment_tblConcessionDetail]
+
 GO
 
 
@@ -277,11 +257,10 @@ ADD [fkConcessionDetailId] int NOT NULL
 
 GO
 
-ALTER TABLE [dbo].[tblConcessionMas]  WITH CHECK ADD  CONSTRAINT [FK_tblConcessionMas_tblConcessionDetail] FOREIGN KEY([fkConcessionDetailId])
-REFERENCES [dbo].[tblConcessionDetail] ([pkConcessionDetailId])
+
 GO
 
-ALTER TABLE [dbo].[tblConcessionMas] CHECK CONSTRAINT [FK_tblConcessionMas_tblConcessionDetail]
+
 GO
 
 
@@ -294,11 +273,10 @@ ADD [fkConcessionDetailId] int NOT NULL
 
 GO
 
-ALTER TABLE [dbo].[tblConcessionTrade]  WITH CHECK ADD  CONSTRAINT [FK_tblConcessionTrade_tblConcessionDetail] FOREIGN KEY([fkConcessionDetailId])
-REFERENCES [dbo].[tblConcessionDetail] ([pkConcessionDetailId])
+
 GO
 
-ALTER TABLE [dbo].[tblConcessionTrade] CHECK CONSTRAINT [FK_tblConcessionTrade_tblConcessionDetail]
+
 GO
 
 
@@ -311,11 +289,10 @@ ADD [fkConcessionDetailId] int NOT NULL
 
 GO
 
-ALTER TABLE [dbo].[tblConcessionTransactional]  WITH CHECK ADD  CONSTRAINT [FK_tblConcessionTransactional_tblConcessionDetail] FOREIGN KEY([fkConcessionDetailId])
-REFERENCES [dbo].[tblConcessionDetail] ([pkConcessionDetailId])
+
 GO
 
-ALTER TABLE [dbo].[tblConcessionTransactional] CHECK CONSTRAINT [FK_tblConcessionTransactional_tblConcessionDetail]
+
 GO
 
 

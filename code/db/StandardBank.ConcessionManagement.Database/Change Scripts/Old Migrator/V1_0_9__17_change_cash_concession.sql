@@ -31,16 +31,14 @@ ALTER COLUMN [fkLegalEntityAccountId] int NOT NULL
 
 GO
 
-ALTER TABLE [dbo].[tblConcessionCash]  WITH CHECK ADD  CONSTRAINT [FK_tblConcessionCash_tblLegalEntity] FOREIGN KEY([fkLegalEntityId])
-REFERENCES [dbo].[tblLegalEntity] ([pkLegalEntityId])
+
 GO
 
-ALTER TABLE [dbo].[tblConcessionCash] CHECK CONSTRAINT [FK_tblConcessionCash_tblLegalEntity]
+
 GO
 
-ALTER TABLE [dbo].[tblConcessionCash]  WITH CHECK ADD  CONSTRAINT [FK_tblConcessionCash_tblLegalEntityAccount] FOREIGN KEY([fkLegalEntityAccountId])
-REFERENCES [dbo].[tblLegalEntityAccount] ([pkLegalEntityAccountId])
+
 GO
 
-ALTER TABLE [dbo].[tblConcessionCash] CHECK CONSTRAINT [FK_tblConcessionCash_tblLegalEntityAccount]
+
 GO
