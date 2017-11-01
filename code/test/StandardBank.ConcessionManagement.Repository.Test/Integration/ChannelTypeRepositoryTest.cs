@@ -21,7 +21,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 Description = "ba0956864b",
                 IsActive = false,
-                ImportFileProductId = "asd345sdg"
+                ImportFileChannel = "asd345sdg"
             };
 
             var result = InstantiatedDependencies.ChannelTypeRepository.Create(model);
@@ -68,7 +68,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
 
             model.Description = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10);
             model.IsActive = !model.IsActive;
-            model.ImportFileProductId = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10);
+            model.ImportFileChannel = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10);
 
             InstantiatedDependencies.ChannelTypeRepository.Update(model);
 
@@ -78,7 +78,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.Id, model.Id);
             Assert.Equal(updatedModel.Description, model.Description);
             Assert.Equal(updatedModel.IsActive, model.IsActive);
-            Assert.Equal(updatedModel.ImportFileProductId, model.ImportFileProductId);
+            Assert.Equal(updatedModel.ImportFileChannel, model.ImportFileChannel);
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 Description = "ba0956864b",
                 IsActive = false,
-                ImportFileProductId = "657gdsf4"
+                ImportFileChannel = "657gdsf4"
             };
 
             var temporaryEntity = InstantiatedDependencies.ChannelTypeRepository.Create(model);

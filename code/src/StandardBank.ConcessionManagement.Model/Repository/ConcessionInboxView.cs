@@ -254,5 +254,21 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         ///   <c>true</c> if this instance is current; otherwise, <c>false</c>.
         /// </value>
         public bool IsCurrent { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [price exported].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [price exported]; otherwise, <c>false</c>.
+        /// </value>
+        public bool PriceExported { get; set; }
+
+        /// <summary>
+        /// Gets or sets the price exported date.
+        /// </summary>
+        /// <value>
+        /// The price exported date.
+        /// </value>
+        public DateTime? PriceExportedDate { get; set; }
     }
 }

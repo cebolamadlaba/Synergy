@@ -68,16 +68,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
         /// <returns></returns>
         public async Task Run()
         {
+            var sapDataImports = new List<SapDataImport>();
+
             //1. get configuration data
             var configurations = _sapDataImportConfigurationRepository.ReadAll();
-            var dataImported = false;
 
             foreach (var configuration in configurations)
             {
                 try
                 {
-                    if (ProcessConfiguration(configuration))
-                        dataImported = true;
+                    sapDataImports.AddRange(ProcessConfiguration(configuration));
                 }
                 catch (Exception ex)
                 {
@@ -87,12 +87,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                 }
             }
 
-            if (dataImported)
+            if (sapDataImports.Any())
             {
-                //TODO: 6. once all the data has been imported update the relevant loaded price tables
+                foreach (var sapDataImport in sapDataImports)
+                {
+                    //TODO: 6. once all the data has been imported update the relevant loaded price tables
 
-                //TODO: 7. update the approved concessions mismatched statuses based on the new data
-
+                    //TODO: 7. update the approved concessions mismatched statuses based on the new data
+                }
             }
         }
 
@@ -101,9 +103,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         /// <returns></returns>
-        private bool ProcessConfiguration(SapDataImportConfiguration configuration)
+        private IEnumerable<SapDataImport> ProcessConfiguration(SapDataImportConfiguration configuration)
         {
-            var dataImported = false;
+            var sapDataImports = new List<SapDataImport>();
 
             //2. check for the import file
             var files = _fileUtiltity.GetFilesInDirectory(configuration.FileImportLocation, true);
@@ -121,16 +123,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                 foreach (var file in files)
                 {
                     //4. if there is a file import into CMS database
-                    ImportData(file, configuration);
+                    sapDataImports.AddRange(ImportData(file, configuration));
 
                     //5. delete the file
                     _fileUtiltity.DeleteFile(file);
-
-                    dataImported = true;
                 }
             }
 
-            return dataImported;
+            return sapDataImports;
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
         /// </summary>
         /// <param name="file">The file.</param>
         /// <param name="configuration">The configuration.</param>
-        private void ImportData(string file, SapDataImportConfiguration configuration)
+        private IEnumerable<SapDataImport> ImportData(string file, SapDataImportConfiguration configuration)
         {
             var fileData = _fileUtiltity.ReadFileLines(file, true);
             var sapDataImports = GetDataFromFile(fileData.ToArray(), configuration);
@@ -148,6 +148,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                 //if the price point id exists that means it's an update, otherwise it's an insert
                 var existingSapDataImport = _sapDataImportRepository.ReadById(sapDataImport.PricepointId);
                 sapDataImport.LastUpdatedDate = DateTime.Now;
+                sapDataImport.ExportRow = false;
 
                 if (existingSapDataImport != null)
                 {
@@ -160,6 +161,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                     _sapDataImportRepository.Create(sapDataImport);
                 }
             }
+
+            return sapDataImports;
         }
 
         /// <summary>
@@ -185,7 +188,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                     if (columnHeadings.Length != recordData.Length)
                     {
                         var message =
-                            $"Record: {fileData[i]} has {recordData.Length} columns instead of required {columnHeadings.Length} columns ({fileData[0]})";
+                            $"Record: ({fileData[i]}) has {recordData.Length} columns instead of required {columnHeadings.Length} columns ({fileData[0]})";
 
                         _backgroundJobClient.Schedule(
                             () => _emailManager.SendEmail(configuration.SupportEmailAddress, $"CMS {Name} Error", message),
@@ -193,9 +196,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                     }
                     else
                     {
-                        var sapDataImport = GetSapDataImport(columnHeadings, recordData);
-
-                        sapDataImports.Add(sapDataImport);
+                        sapDataImports.Add(GetSapDataImport(columnHeadings, recordData));
                     }
                 }
             }

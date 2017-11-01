@@ -38,11 +38,11 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public bool IsActive { get; set; }
 
         /// <summary>
-        /// Gets or sets the import file product identifier.
+        /// Gets or sets the import file channel.
         /// </summary>
         /// <value>
-        /// The import file product identifier.
+        /// The import file channel.
         /// </value>
-        public string ImportFileProductId { get; set; }
+        public string ImportFileChannel { get; set; }
     }
 }

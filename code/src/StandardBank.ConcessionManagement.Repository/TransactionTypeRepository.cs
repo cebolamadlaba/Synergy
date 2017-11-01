@@ -44,8 +44,8 @@ namespace StandardBank.ConcessionManagement.Repository
         public TransactionType Create(TransactionType model)
         {
             const string sql =
-                @"INSERT [dbo].[rtblTransactionType] ([fkConcessionTypeId], [Description], [IsActive], [ImportFileProductId]) 
-                                VALUES (@ConcessionTypeId, @Description, @IsActive, @ImportFileProductId) 
+                @"INSERT [dbo].[rtblTransactionType] ([fkConcessionTypeId], [Description], [IsActive], [ImportFileChannel]) 
+                                VALUES (@ConcessionTypeId, @Description, @IsActive, @ImportFileChannel) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
@@ -56,7 +56,7 @@ namespace StandardBank.ConcessionManagement.Repository
                         ConcessionTypeId = model.ConcessionTypeId,
                         Description = model.Description,
                         IsActive = model.IsActive,
-                        ImportFileProductId = model.ImportFileProductId
+                        ImportFileChannel = model.ImportFileChannel
                     }).Single();
             }
 
@@ -99,7 +99,7 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<TransactionType>(
-                        "SELECT [pkTransactionTypeId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [Description], [IsActive], [ImportFileProductId] FROM [dbo].[rtblTransactionType]");
+                        "SELECT [pkTransactionTypeId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [Description], [IsActive], [ImportFileChannel] FROM [dbo].[rtblTransactionType]");
                 }
             };
 
@@ -115,7 +115,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[rtblTransactionType]
-                            SET [fkConcessionTypeId] = @ConcessionTypeId, [Description] = @Description, [IsActive] = @IsActive, [ImportFileProductId] = @ImportFileProductId
+                            SET [fkConcessionTypeId] = @ConcessionTypeId, [Description] = @Description, [IsActive] = @IsActive, [ImportFileChannel] = @ImportFileChannel
                             WHERE [pkTransactionTypeId] = @Id",
                     new
                     {
@@ -123,7 +123,7 @@ namespace StandardBank.ConcessionManagement.Repository
                         ConcessionTypeId = model.ConcessionTypeId,
                         Description = model.Description,
                         IsActive = model.IsActive,
-                        ImportFileProductId = model.ImportFileProductId
+                        ImportFileChannel = model.ImportFileChannel
                     });
             }
 

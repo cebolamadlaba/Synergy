@@ -50,7 +50,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 TerminationDate = "5198caf639",
                 Status = "052b12a9fc",
                 ImportDate = DateTime.Now,
-                LastUpdatedDate = DateTime.Now
+                LastUpdatedDate = DateTime.Now,
+                ExportRow = true
             };
 
             var result = InstantiatedDependencies.SapDataImportRepository.Create(model);
@@ -126,6 +127,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.Status = "1cd911ed29";
             model.ImportDate = DataHelper.ChangeDate(model.ImportDate);
             model.LastUpdatedDate = DataHelper.ChangeDate(model.LastUpdatedDate);
+            model.ExportRow = !model.ExportRow;
 
             InstantiatedDependencies.SapDataImportRepository.Update(model);
 
@@ -164,6 +166,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.Status, model.Status);
             Assert.Equal(updatedModel.ImportDate, model.ImportDate);
             Assert.Equal(updatedModel.LastUpdatedDate, model.LastUpdatedDate);
+            Assert.Equal(updatedModel.ExportRow, model.ExportRow);
         }
 
         /// <summary>
@@ -205,7 +208,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 TerminationDate = "5198caf639",
                 Status = "052b12a9fc",
                 ImportDate = DateTime.Now,
-                LastUpdatedDate = DateTime.Now
+                LastUpdatedDate = DateTime.Now,
+                ExportRow = true
             };
 
             var temporaryEntity = InstantiatedDependencies.SapDataImportRepository.Create(model);

@@ -234,6 +234,8 @@
     <Build Include="Audit\Tables\rtblAccrualType.sql" />
     <Build Include="Audit\Tables\AuditType.sql" />
     <Build Include="Security\Audit.sql" />
+    <Build Include="dbo\Tables\tblSapDataImportConfiguration.sql" />
+    <Build Include="dbo\Stored Procedures\GenerateSapExport.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Change Scripts\09_create_rtblPeriod.sql" />

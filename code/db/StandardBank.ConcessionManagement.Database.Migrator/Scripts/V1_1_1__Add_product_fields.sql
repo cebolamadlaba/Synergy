@@ -1,15 +1,15 @@
 ﻿ALTER TABLE [dbo].[rtblChannelType]
-ADD [ImportFileProductId] varchar(50) NULL
+ADD [ImportFileChannel] varchar(50) NULL
 
 GO
 
 ALTER TABLE [dbo].[rtblTransactionType]
-ADD [ImportFileProductId] varchar(50) NULL
+ADD [ImportFileChannel] varchar(50) NULL
 
 GO
 
 ALTER TABLE [dbo].[rtblProduct]
-ADD [ImportFileProductId] varchar(50) NULL
+ADD [ImportFileChannel] varchar(50) NULL
 
 GO
 
@@ -20,52 +20,6 @@ GO
 
 ALTER TABLE [dbo].[tblConcessionDetail]
 ADD [PriceExportedDate] datetime NULL
-
-GO
-
-UPDATE [dbo].[rtblTransactionType]
-SET [ImportFileProductId] = 'SX900_3'
-WHERE [fkConcessionTypeId] = (
-SELECT [pkConcessionTypeId] FROM [dbo].[rtblConcessionType]
-WHERE [Code] = 'Transactional')
-AND [Description] = 'Minimum Monthly Service Fee'
-
-UPDATE [dbo].[rtblTransactionType]
-SET [ImportFileProductId] = 'SX901_3'
-WHERE [fkConcessionTypeId] = (
-SELECT [pkConcessionTypeId] FROM [dbo].[rtblConcessionType]
-WHERE [Code] = 'Transactional')
-AND [Description] = 'Cheque Deposit Fee'
-
-UPDATE [dbo].[rtblTransactionType]
-SET [ImportFileProductId] = 'SX902_1'
-WHERE [fkConcessionTypeId] = (
-SELECT [pkConcessionTypeId] FROM [dbo].[rtblConcessionType]
-WHERE [Code] = 'Transactional')
-AND [Description] = 'Cheque Encashment Fee'
-
-UPDATE [dbo].[rtblTransactionType]
-SET [ImportFileProductId] = 'SX900_1'
-WHERE [fkConcessionTypeId] = (
-SELECT [pkConcessionTypeId] FROM [dbo].[rtblConcessionType]
-WHERE [Code] = 'Transactional')
-AND [Description] = 'Cheque Service Fee'
-
-UPDATE [dbo].[rtblChannelType]
-SET [ImportFileProductId] = 'SX901_1'
-WHERE [Description] = 'Branch Only'
-
-UPDATE [dbo].[rtblChannelType]
-SET [ImportFileProductId] = 'SX901_2'
-WHERE [Description] = 'Cash Centre Only'
-
-UPDATE [dbo].[rtblChannelType]
-SET [ImportFileProductId] = 'SX901_4'
-WHERE [Description] = 'ANA/ATM'
-
-UPDATE [dbo].[rtblChannelType]
-SET [ImportFileProductId] = 'AS_1_AutoSafe_CDF_10'
-WHERE [Description] = 'Autosafe & Cash Centre Only'
 
 GO
 
@@ -102,6 +56,7 @@ CREATE TABLE [dbo].[tblSapDataImport](
 	[Status] [varchar](50) NULL,
 	[ImportDate] [datetime] NOT NULL,
 	[LastUpdatedDate] [datetime] NULL,
+	[ExportRow] [bit] NOT NULL,
  CONSTRAINT [PK_tblSapDataImport] PRIMARY KEY CLUSTERED 
 (
 	[PricepointId] ASC
@@ -110,6 +65,9 @@ CREATE TABLE [dbo].[tblSapDataImport](
 GO
 
 ALTER TABLE [dbo].[tblSapDataImport] ADD  CONSTRAINT [DF_tblSapDataImport_ImportDate]  DEFAULT (getdate()) FOR [ImportDate]
+GO
+
+ALTER TABLE [dbo].[tblSapDataImport] ADD  CONSTRAINT [DF_tblSapDataImport_ExportRow]  DEFAULT ((0)) FOR [ExportRow]
 GO
 
 
@@ -128,5 +86,24 @@ GO
 
 INSERT INTO [dbo].[tblSapDataImportConfiguration] ([FileImportLocation], [FileExportLocation], [SupportEmailAddress]) VALUES ('C:\Temp\CMS Import', 'C:\Temp\CMS Export', 'heathesh@kohde.io')
 
+GO
+
+ALTER VIEW [dbo].[ConcessionInboxView]
+AS
+SELECT        c.pkConcessionId AS ConcessionId, rg.pkRiskGroupId AS RiskGroupId, rg.RiskGroupNumber, rg.RiskGroupName, le.pkLegalEntityId AS LegalEntityId, le.CustomerName, ct.pkConcessionTypeId AS ConcessionTypeId, 
+                         ct.Description AS ConcessionType, c.ConcessionDate, s.pkStatusId AS StatusId, s.Description AS Status, ss.pkSubStatusId AS SubStatusId, ss.Description AS SubStatus, c.ConcessionRef, 
+                         ms.pkMarketSegmentId AS MarketSegmentId, ms.Description AS Segment, c.DatesentForApproval, cd.pkConcessionDetailId AS ConcessionDetailId, cd.ExpiryDate, cd.DateApproved, c.fkRequestorId AS RequestorId, 
+                         c.fkBCMUserId AS BCMUserId, c.fkPCMUserId AS PCMUserId, c.fkHOUserId AS HOUserId, ce.pkCentreId AS CentreId, ce.CentreName, p.pkProvinceId AS ProvinceId, p.Description AS Province, cd.IsMismatched, c.IsActive, 
+                         c.IsCurrent, cd.PriceExported, cd.PriceExportedDate
+FROM            dbo.tblConcession AS c INNER JOIN
+                         dbo.tblRiskGroup AS rg ON rg.pkRiskGroupId = c.fkRiskGroupId INNER JOIN
+                         dbo.rtblConcessionType AS ct ON ct.pkConcessionTypeId = c.fkConcessionTypeId INNER JOIN
+                         dbo.tblConcessionDetail AS cd ON cd.fkConcessionId = c.pkConcessionId INNER JOIN
+                         dbo.tblLegalEntity AS le ON le.pkLegalEntityId = cd.fkLegalEntityId INNER JOIN
+                         dbo.rtblStatus AS s ON s.pkStatusId = c.fkStatusId INNER JOIN
+                         dbo.rtblSubStatus AS ss ON ss.pkSubStatusId = c.fkSubStatusId INNER JOIN
+                         dbo.rtblMarketSegment AS ms ON ms.pkMarketSegmentId = rg.fkMarketSegmentId INNER JOIN
+                         dbo.tblCentre AS ce ON ce.pkCentreId = c.fkCentreId INNER JOIN
+                         dbo.rtblProvince AS p ON p.pkProvinceId = ce.fkProvinceId
 GO
 

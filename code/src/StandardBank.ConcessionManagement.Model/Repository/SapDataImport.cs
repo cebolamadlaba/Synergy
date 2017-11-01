@@ -262,5 +262,13 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The LastUpdatedDate.
         /// </value>
         public DateTime? LastUpdatedDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [export row].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [export row]; otherwise, <c>false</c>.
+        /// </value>
+        public bool ExportRow { get; set; }
     }
 }

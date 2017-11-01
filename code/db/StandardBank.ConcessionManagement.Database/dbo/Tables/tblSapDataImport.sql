@@ -31,6 +31,9 @@
     [Status]             VARCHAR (50)  NULL,
     [ImportDate]         DATETIME      CONSTRAINT [DF_tblSapDataImport_ImportDate] DEFAULT (getdate()) NOT NULL,
     [LastUpdatedDate]    DATETIME      NULL,
+    [ExportRow]          BIT           CONSTRAINT [DF_tblSapDataImport_ExportRow] DEFAULT ((0)) NOT NULL,
     CONSTRAINT [PK_tblSapDataImport] PRIMARY KEY CLUSTERED ([PricepointId] ASC)
 );
+
+
 

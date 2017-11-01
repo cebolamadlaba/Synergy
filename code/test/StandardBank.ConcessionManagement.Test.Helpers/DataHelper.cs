@@ -202,7 +202,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             {
                 Description = "d6e6724f8a",
                 IsActive = false,
-                ImportFileProductId = "240374a0dd"
+                ImportFileChannel = "240374a0dd"
             };
 
             InstantiatedDependencies.ChannelTypeRepository.Create(model);
@@ -460,7 +460,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 ConcessionTypeId = GetConcessionTypeId(),
                 Description = "d81ef0b458",
                 IsActive = false,
-                ImportFileProductId = "7ff10e60f6"
+                ImportFileChannel = "7ff10e60f6"
             };
 
             InstantiatedDependencies.ProductRepository.Create(model);
@@ -820,7 +820,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 ConcessionTypeId = GetConcessionTypeId(),
                 Description = "14c6862dfb",
                 IsActive = false,
-                ImportFileProductId = "a295111801"
+                ImportFileChannel = "a295111801"
             };
 
             InstantiatedDependencies.TransactionTypeRepository.Create(model);
@@ -3472,7 +3472,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 TerminationDate = "7e692bc149",
                 Status = "1f293fac65",
                 ImportDate = DateTime.Now,
-                LastUpdatedDate = DateTime.Now
+                LastUpdatedDate = DateTime.Now,
+                ExportRow = true
             };
 
             InstantiatedDependencies.SapDataImportRepository.Create(model);

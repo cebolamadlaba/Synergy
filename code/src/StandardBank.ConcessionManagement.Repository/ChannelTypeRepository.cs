@@ -43,8 +43,8 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ChannelType Create(ChannelType model)
         {
-            const string sql = @"INSERT [dbo].[rtblChannelType] ([Description], [IsActive], [ImportFileProductId]) 
-                                VALUES (@Description, @IsActive, @ImportFileProductId) 
+            const string sql = @"INSERT [dbo].[rtblChannelType] ([Description], [IsActive], [ImportFileChannel]) 
+                                VALUES (@Description, @IsActive, @ImportFileChannel) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
@@ -54,7 +54,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     {
                         Description = model.Description,
                         IsActive = model.IsActive,
-                        ImportFileProductId = model.ImportFileProductId
+                        ImportFileChannel = model.ImportFileChannel
                     }).Single();
             }
 
@@ -85,7 +85,7 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<ChannelType>(
-                        "SELECT [pkChannelTypeId] [Id], [Description], [IsActive], [ImportFileProductId] FROM [dbo].[rtblChannelType]");
+                        "SELECT [pkChannelTypeId] [Id], [Description], [IsActive], [ImportFileChannel] FROM [dbo].[rtblChannelType]");
                 }
             };
 
@@ -101,14 +101,14 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[rtblChannelType]
-                            SET [Description] = @Description, [IsActive] = @IsActive, [ImportFileProductId] = @ImportFileProductId
+                            SET [Description] = @Description, [IsActive] = @IsActive, [ImportFileChannel] = @ImportFileChannel
                             WHERE [pkChannelTypeId] = @Id",
                     new
                     {
                         Id = model.Id,
                         Description = model.Description,
                         IsActive = model.IsActive,
-                        ImportFileProductId = model.ImportFileProductId
+                        ImportFileChannel = model.ImportFileChannel
                     });
             }
 

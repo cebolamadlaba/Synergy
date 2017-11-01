@@ -1,5 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Hangfire;
+using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic.ScheduledJobs;
+using StandardBank.ConcessionManagement.Interface.Common;
+using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Model.Repository;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
 {
@@ -10,18 +17,82 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
     public class ExportSapData : IDailyScheduledJob
     {
         /// <summary>
+        /// The sap data import configuration repository
+        /// </summary>
+        private readonly ISapDataImportConfigurationRepository _sapDataImportConfigurationRepository;
+
+        /// <summary>
+        /// The email manager
+        /// </summary>
+        private readonly IEmailManager _emailManager;
+
+        /// <summary>
+        /// The sap data import repository
+        /// </summary>
+        private readonly ISapDataImportRepository _sapDataImportRepository;
+
+        /// <summary>
+        /// The file utiltity
+        /// </summary>
+        private readonly IFileUtiltity _fileUtiltity;
+
+        /// <summary>
+        /// The background job client
+        /// </summary>
+        private readonly IBackgroundJobClient _backgroundJobClient;
+
+        /// <summary>
+        /// The concession inbox view repository
+        /// </summary>
+        private readonly IConcessionInboxViewRepository _concessionInboxViewRepository;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExportSapData"/> class.
+        /// </summary>
+        /// <param name="sapDataImportConfigurationRepository">The sap data import configuration repository.</param>
+        /// <param name="emailManager">The email manager.</param>
+        /// <param name="sapDataImportRepository">The sap data import repository.</param>
+        /// <param name="fileUtiltity">The file utiltity.</param>
+        /// <param name="backgroundJobClient">The background job client.</param>
+        /// <param name="concessionInboxViewRepository">The concession inbox view repository.</param>
+        public ExportSapData(ISapDataImportConfigurationRepository sapDataImportConfigurationRepository,
+            IEmailManager emailManager, ISapDataImportRepository sapDataImportRepository, IFileUtiltity fileUtiltity,
+            IBackgroundJobClient backgroundJobClient, IConcessionInboxViewRepository concessionInboxViewRepository)
+        {
+            _sapDataImportConfigurationRepository = sapDataImportConfigurationRepository;
+            _emailManager = emailManager;
+            _sapDataImportRepository = sapDataImportRepository;
+            _fileUtiltity = fileUtiltity;
+            _backgroundJobClient = backgroundJobClient;
+            _concessionInboxViewRepository = concessionInboxViewRepository;
+        }
+
+        /// <summary>
         /// Runs this instance.
         /// </summary>
         /// <returns></returns>
         public async Task Run()
         {
             //1. get the configuration data
+            var configurations = _sapDataImportConfigurationRepository.ReadAll();
 
-            //2. get all the approved concessions that have not yet been exported
+            foreach (var configuration in configurations)
+            {
+                try
+                {
+                    //TODO: Call the GenerateSapExport stored proc and get back the list of records to export
 
-            //3. generate the export file
+                    //TODO: Export the list of records
 
-            //4. update the concessions that have been exported accordingly
+                    //TODO: Reset the "ExportRow" flag on each record that's been exported
+                }
+                catch (Exception ex)
+                {
+                    _backgroundJobClient.Schedule(
+                        () => _emailManager.SendEmail(configuration.SupportEmailAddress, $"CMS {Name} Error",
+                            $"File Export Failed With: {ex}"), DateTime.Now);
+                }
+            }
         }
 
         /// <summary>

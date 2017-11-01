@@ -83,5 +83,11 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// </summary>
         /// <returns></returns>
         IEnumerable<ConcessionInboxView> ReadForDueForExpiryNotification();
+
+        /// <summary>
+        /// Reads for data export.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<ConcessionInboxView> ReadForDataExport();
     }
 }
