@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Hangfire;
+using MediatR;
 using Moq;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic.ScheduledJobs;
@@ -462,5 +463,21 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The mock SapDataImport repository
         /// </summary>
         public static Mock<ISapDataImportRepository> MockSapDataImportRepository = new Mock<ISapDataImportRepository>();
+
+        /// <summary>
+        /// The mock SapDataImportConfiguration repository
+        /// </summary>
+        public static Mock<ISapDataImportConfigurationRepository> MockSapDataImportConfigurationRepository =
+            new Mock<ISapDataImportConfigurationRepository>();
+
+        /// <summary>
+        /// The mock email manager
+        /// </summary>
+        public static Mock<IEmailManager> MockEmailManager = new Mock<IEmailManager>();
+
+        /// <summary>
+        /// The mock background job client
+        /// </summary>
+        public static Mock<IBackgroundJobClient> MockBackgroundJobClient = new Mock<IBackgroundJobClient>();
     }
 }

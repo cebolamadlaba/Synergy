@@ -113,3 +113,20 @@ ALTER TABLE [dbo].[tblSapDataImport] ADD  CONSTRAINT [DF_tblSapDataImport_Import
 GO
 
 
+CREATE TABLE [dbo].[tblSapDataImportConfiguration](
+	[pkSapDataImportConfigurationId] [int] IDENTITY(1,1) NOT NULL,
+	[FileImportLocation] [varchar](500) NOT NULL,
+	[FileExportLocation] [varchar](500) NOT NULL,
+	[SupportEmailAddress] [varchar](255) NOT NULL,
+ CONSTRAINT [PK_tblSapDataImportConfiguration] PRIMARY KEY CLUSTERED 
+(
+	[pkSapDataImportConfigurationId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
+INSERT INTO [dbo].[tblSapDataImportConfiguration] ([FileImportLocation], [FileExportLocation], [SupportEmailAddress]) VALUES ('C:\Temp\CMS Import', 'C:\Temp\CMS Export', 'heathesh@kohde.io')
+
+GO
+

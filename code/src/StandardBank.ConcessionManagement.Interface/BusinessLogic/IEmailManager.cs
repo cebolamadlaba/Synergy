@@ -9,6 +9,15 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
     public interface IEmailManager
     {
         /// <summary>
+        /// Sends the email.
+        /// </summary>
+        /// <param name="recipient">The recipient.</param>
+        /// <param name="subject">The subject.</param>
+        /// <param name="message">The message.</param>
+        /// <returns></returns>
+        Task<bool> SendEmail(string recipient, string subject, string message);
+
+        /// <summary>
         /// Sends the expiring concession email.
         /// </summary>
         /// <param name="expiringConcession">The expiring concession.</param>

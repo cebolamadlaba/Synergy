@@ -51,7 +51,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="subject">Email subject</param>
         /// <param name="message"> The body of the email</param>
         /// <returns></returns>
-        private async Task<bool> SendEmail(string recipient, string subject, string message)
+        public async Task<bool> SendEmail(string recipient, string subject, string message)
         {
             var email = Email
                 .From(DefaultEmail)

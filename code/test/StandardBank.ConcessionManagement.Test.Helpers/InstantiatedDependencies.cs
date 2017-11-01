@@ -445,6 +445,12 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static ISapDataImportRepository SapDataImportRepository = new SapDataImportRepository(DbConnection);
 
         /// <summary>
+        /// The SapDataImportConfiguration repository
+        /// </summary>
+        public static ISapDataImportConfigurationRepository SapDataImportConfigurationRepository =
+            new SapDataImportConfigurationRepository(DbConnection);
+
+        /// <summary>
         /// The look up table manager
         /// </summary>
         public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,

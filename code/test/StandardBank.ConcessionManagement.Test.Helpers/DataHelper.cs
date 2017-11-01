@@ -3512,5 +3512,57 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                     .Single();
             }
         }
+
+        /// <summary>
+        /// Gets the SapDataImportConfiguration id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetSapDataImportConfigurationId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.SapDataImportConfigurationRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertSapDataImportConfiguration();
+        }
+
+        /// <summary>
+        /// Inserts a SapDataImportConfiguration and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertSapDataImportConfiguration()
+        {
+            var model = new SapDataImportConfiguration
+            {
+                FileImportLocation = "72800b5f74",
+                FileExportLocation = "f01bbd0fd2",
+                SupportEmailAddress = "bf12bb082b"
+            };
+
+            InstantiatedDependencies.SapDataImportConfigurationRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate SapDataImportConfiguration id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateSapDataImportConfigurationId(int? model)
+        {
+            if (!model.HasValue)
+                return GetSapDataImportConfigurationId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.SapDataImportConfigurationRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertSapDataImportConfiguration();
+        }
     }
 }
