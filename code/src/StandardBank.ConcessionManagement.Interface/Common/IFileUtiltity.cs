@@ -49,9 +49,10 @@ namespace StandardBank.ConcessionManagement.Interface.Common
         /// <summary>
         /// Writes the file.
         /// </summary>
+        /// <param name="folderName">Name of the folder.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="fileContents">The file contents.</param>
         /// <param name="deleteIfExists">if set to <c>true</c> [delete if exists].</param>
-        void WriteFile(string fileName, string fileContents, bool deleteIfExists);
+        void WriteFile(string folderName, string fileName, string fileContents, bool deleteIfExists);
     }
 }

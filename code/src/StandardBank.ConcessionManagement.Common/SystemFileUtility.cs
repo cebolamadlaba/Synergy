@@ -102,15 +102,18 @@ namespace StandardBank.ConcessionManagement.Common
         /// <summary>
         /// Writes the file.
         /// </summary>
+        /// <param name="folderName">Name of the folder.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="fileContents">The file contents.</param>
         /// <param name="deleteIfExists">if set to <c>true</c> [delete if exists].</param>
-        public void WriteFile(string fileName, string fileContents, bool deleteIfExists)
+        public void WriteFile(string folderName, string fileName, string fileContents, bool deleteIfExists)
         {
-            if (deleteIfExists)
-                DeleteFile(fileName);
+            var combinedFileName = Path.Combine(folderName, fileName);
 
-            File.WriteAllText(fileName, fileContents);
+            if (deleteIfExists)
+                DeleteFile(combinedFileName);
+
+            File.WriteAllText(combinedFileName, fileContents);
         }
     }
 }

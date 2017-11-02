@@ -79,14 +79,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                     //Call the GenerateSapExport stored proc and get back the list of records to export
                     var sapDataImportsToExport = _sapDataImportRepository.GenerateSapExport();
 
-                    //Export the list of records
-                    ExportData(sapDataImportsToExport, configuration);
-
-                    //Reset the "ExportRow" flag on each record that's been exported
-                    foreach (var sapDataImportToExport in sapDataImportsToExport)
+                    if (sapDataImportsToExport != null && sapDataImportsToExport.Any())
                     {
-                        sapDataImportToExport.ExportRow = false;
-                        _sapDataImportRepository.Update(sapDataImportToExport);
+                        //Export the list of records
+                        ExportData(sapDataImportsToExport, configuration);
+
+                        //Reset the "ExportRow" flag on each record that's been exported
+                        foreach (var sapDataImportToExport in sapDataImportsToExport)
+                        {
+                            sapDataImportToExport.ExportRow = false;
+                            _sapDataImportRepository.Update(sapDataImportToExport);
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -118,8 +121,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                 output.AppendLine(GenerateSapDataImportExportLine(sapDataImportToExport, properties));
 
             var filename = $"cms_data_export_{DateTime.Now:yyyyMMdd}.txt";
+            var fileContents = output.ToString();
 
-            _fileUtiltity.WriteFile(filename, output.ToString(), true);
+            _fileUtiltity.WriteFile(configuration.FileExportLocation, filename, fileContents, true);
         }
 
         /// <summary>
