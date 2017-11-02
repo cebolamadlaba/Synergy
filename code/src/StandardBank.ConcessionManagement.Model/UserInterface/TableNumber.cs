@@ -48,10 +48,13 @@
             get
             {
                 if (AdValorem.HasValue && BaseRate.HasValue)
-                    return $"{TariffTable} (R{AdValorem.Value} + {BaseRate.Value}%)";
+                    return $"{TariffTable} (R{BaseRate.Value} + {AdValorem.Value}%)";
 
                 if (AdValorem.HasValue)
-                    return $"{TariffTable} (R{AdValorem.Value})";
+                    return $"{TariffTable} ({AdValorem.Value}%)";
+
+                if (BaseRate.HasValue)
+                    return $"{TariffTable} (R{BaseRate.Value})";
 
                 return $"{TariffTable}";
             }
