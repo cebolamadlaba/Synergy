@@ -44,8 +44,8 @@ namespace StandardBank.ConcessionManagement.Repository
         public Product Create(Product model)
         {
             const string sql =
-                @"INSERT [dbo].[rtblProduct] ([fkConcessionTypeId], [Description], [IsActive], [ImportFileChannel]) 
-                                VALUES (@ConcessionTypeId, @Description, @IsActive, @ImportFileChannel) 
+                @"INSERT [dbo].[rtblProduct] ([fkConcessionTypeId], [Description], [IsActive]) 
+                                VALUES (@ConcessionTypeId, @Description, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
@@ -55,8 +55,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     {
                         ConcessionTypeId = model.ConcessionTypeId,
                         Description = model.Description,
-                        IsActive = model.IsActive,
-                        ImportFileChannel = model.ImportFileChannel
+                        IsActive = model.IsActive
                     }).Single();
             }
 
@@ -98,7 +97,7 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<Product>(
-                        "SELECT [pkProductId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [Description], [IsActive], [ImportFileChannel] FROM [dbo].[rtblProduct]");
+                        "SELECT [pkProductId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [Description], [IsActive] FROM [dbo].[rtblProduct]");
                 }
             };
 
@@ -114,15 +113,14 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[rtblProduct]
-                            SET [fkConcessionTypeId] = @ConcessionTypeId, [Description] = @Description, [IsActive] = @IsActive, [ImportFileChannel] = @ImportFileChannel
+                            SET [fkConcessionTypeId] = @ConcessionTypeId, [Description] = @Description, [IsActive] = @IsActive
                             WHERE [pkProductId] = @Id",
                     new
                     {
                         Id = model.Id,
                         ConcessionTypeId = model.ConcessionTypeId,
                         Description = model.Description,
-                        IsActive = model.IsActive,
-                        ImportFileChannel = model.ImportFileChannel
+                        IsActive = model.IsActive
                     });
             }
 

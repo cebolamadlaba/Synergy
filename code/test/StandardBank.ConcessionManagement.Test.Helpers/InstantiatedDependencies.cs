@@ -451,6 +451,24 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             new SapDataImportConfigurationRepository(DbConnection);
 
         /// <summary>
+        /// The ChannelTypeImport repository
+        /// </summary>
+        public static IChannelTypeImportRepository ChannelTypeImportRepository =
+            new ChannelTypeImportRepository(DbConnection, CacheManager);
+
+        /// <summary>
+        /// The ProductImport repository
+        /// </summary>
+        public static IProductImportRepository ProductImportRepository =
+            new ProductImportRepository(DbConnection, CacheManager);
+
+        /// <summary>
+        /// The TransactionTypeImport repository
+        /// </summary>
+        public static ITransactionTypeImportRepository TransactionTypeImportRepository =
+            new TransactionTypeImportRepository(DbConnection, CacheManager);
+
+        /// <summary>
         /// The look up table manager
         /// </summary>
         public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,

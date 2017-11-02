@@ -10,10 +10,10 @@ using StandardBank.ConcessionManagement.Model.Common;
 namespace StandardBank.ConcessionManagement.Repository
 {
     /// <summary>
-    /// ChannelType repository
+    /// ChannelTypeImport repository
     /// </summary>
-    /// <seealso cref="StandardBank.ConcessionManagement.Interface.Repository.IChannelTypeRepository" />
-    public class ChannelTypeRepository : IChannelTypeRepository
+    /// <seealso cref="StandardBank.ConcessionManagement.Interface.Repository.IChannelTypeImportRepository" />
+    public class ChannelTypeImportRepository : IChannelTypeImportRepository
     {
         /// <summary>
         /// The db connection factory
@@ -26,11 +26,11 @@ namespace StandardBank.ConcessionManagement.Repository
         private readonly ICacheManager _cacheManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ChannelTypeRepository"/> class.
+        /// Initializes a new instance of the <see cref="ChannelTypeImportRepository"/> class.
         /// </summary>
         /// <param name="dbConnectionFactory">The db connection factory.</param>
         /// <param name="cacheManager">The cache manager.</param>
-        public ChannelTypeRepository(IDbConnectionFactory dbConnectionFactory, ICacheManager cacheManager)
+        public ChannelTypeImportRepository(IDbConnectionFactory dbConnectionFactory, ICacheManager cacheManager)
         {
             _dbConnectionFactory = dbConnectionFactory;
             _cacheManager = cacheManager;
@@ -41,24 +41,19 @@ namespace StandardBank.ConcessionManagement.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public ChannelType Create(ChannelType model)
+        public ChannelTypeImport Create(ChannelTypeImport model)
         {
-            const string sql = @"INSERT [dbo].[rtblChannelType] ([Description], [IsActive]) 
-                                VALUES (@Description, @IsActive) 
+            const string sql = @"INSERT [dbo].[rtblChannelTypeImport] ([fkChannelTypeId], [ImportFileChannel]) 
+                                VALUES (@ChannelTypeId, @ImportFileChannel) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql,
-                    new
-                    {
-                        Description = model.Description,
-                        IsActive = model.IsActive
-                    }).Single();
+                model.Id = db.Query<int>(sql, new {ChannelTypeId = model.ChannelTypeId, ImportFileChannel = model.ImportFileChannel}).Single();
             }
 
             //clear out the cache because the data has changed
-            _cacheManager.Remove(CacheKey.Repository.ChannelTypeRepository.ReadAll);
+            _cacheManager.Remove(CacheKey.Repository.ChannelTypeImportRepository.ReadAll);
 
             return model;
         }
@@ -68,7 +63,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        public ChannelType ReadById(int id)
+        public ChannelTypeImport ReadById(int id)
         {
             return ReadAll().FirstOrDefault(_ => _.Id == id);
         }
@@ -77,57 +72,51 @@ namespace StandardBank.ConcessionManagement.Repository
         /// Reads all.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<ChannelType> ReadAll()
+        public IEnumerable<ChannelTypeImport> ReadAll()
         {
-            Func<IEnumerable<ChannelType>> function = () =>
+            Func<IEnumerable<ChannelTypeImport>> function = () =>
             {
                 using (var db = _dbConnectionFactory.Connection())
-                {
-                    return db.Query<ChannelType>(
-                        "SELECT [pkChannelTypeId] [Id], [Description], [IsActive] FROM [dbo].[rtblChannelType]");
-                }
+            	{
+                	return db.Query<ChannelTypeImport>("SELECT [pkChannelTypeImportId] [Id], [fkChannelTypeId] [ChannelTypeId], [ImportFileChannel] FROM [dbo].[rtblChannelTypeImport]");
+            	}
             };
 
-            return _cacheManager.ReturnFromCache(function, 1440, CacheKey.Repository.ChannelTypeRepository.ReadAll);
+            return _cacheManager.ReturnFromCache(function, 1440, CacheKey.Repository.ChannelTypeImportRepository.ReadAll);
         }
 
         /// <summary>
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        public void Update(ChannelType model)
+        public void Update(ChannelTypeImport model)
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[rtblChannelType]
-                            SET [Description] = @Description, [IsActive] = @IsActive
-                            WHERE [pkChannelTypeId] = @Id",
-                    new
-                    {
-                        Id = model.Id,
-                        Description = model.Description,
-                        IsActive = model.IsActive
-                    });
+                db.Execute(@"UPDATE [dbo].[rtblChannelTypeImport]
+                            SET [fkChannelTypeId] = @ChannelTypeId, [ImportFileChannel] = @ImportFileChannel
+                            WHERE [pkChannelTypeImportId] = @Id",
+                    new {Id = model.Id, ChannelTypeId = model.ChannelTypeId, ImportFileChannel = model.ImportFileChannel});
             }
 
             //clear out the cache because the data has changed
-            _cacheManager.Remove(CacheKey.Repository.ChannelTypeRepository.ReadAll);
+            _cacheManager.Remove(CacheKey.Repository.ChannelTypeImportRepository.ReadAll);
         }
 
         /// <summary>
         /// Deletes the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        public void Delete(ChannelType model)
+        public void Delete(ChannelTypeImport model)
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[rtblChannelType] WHERE [pkChannelTypeId] = @Id",
+                db.Execute("DELETE [dbo].[rtblChannelTypeImport] WHERE [pkChannelTypeImportId] = @Id",
                     new {model.Id});
             }
 
             //clear out the cache because the data has changed
-            _cacheManager.Remove(CacheKey.Repository.ChannelTypeRepository.ReadAll);
+            _cacheManager.Remove(CacheKey.Repository.ChannelTypeImportRepository.ReadAll);
         }
     }
 }

@@ -1,19 +1,4 @@
-﻿ALTER TABLE [dbo].[rtblChannelType]
-ADD [ImportFileChannel] varchar(50) NULL
-
-GO
-
-ALTER TABLE [dbo].[rtblTransactionType]
-ADD [ImportFileChannel] varchar(50) NULL
-
-GO
-
-ALTER TABLE [dbo].[rtblProduct]
-ADD [ImportFileChannel] varchar(50) NULL
-
-GO
-
-ALTER TABLE [dbo].[tblConcessionDetail]
+﻿ALTER TABLE [dbo].[tblConcessionDetail]
 ADD [PriceExported] bit default(0) NOT NULL
 
 GO
@@ -105,5 +90,156 @@ FROM            dbo.tblConcession AS c INNER JOIN
                          dbo.rtblMarketSegment AS ms ON ms.pkMarketSegmentId = rg.fkMarketSegmentId INNER JOIN
                          dbo.tblCentre AS ce ON ce.pkCentreId = c.fkCentreId INNER JOIN
                          dbo.rtblProvince AS p ON p.pkProvinceId = ce.fkProvinceId
+GO
+
+CREATE TABLE [dbo].[rtblChannelTypeImport](
+	[pkChannelTypeImportId] [int] IDENTITY(1,1) NOT NULL,
+	[fkChannelTypeId] [int] NOT NULL,
+	[ImportFileChannel] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_rtblChannelTypeImport] PRIMARY KEY CLUSTERED 
+(
+	[pkChannelTypeImportId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[rtblChannelTypeImport]  WITH CHECK ADD  CONSTRAINT [FK_rtblChannelTypeImport_rtblChannelType] FOREIGN KEY([fkChannelTypeId])
+REFERENCES [dbo].[rtblChannelType] ([pkChannelTypeId])
+GO
+
+ALTER TABLE [dbo].[rtblChannelTypeImport] CHECK CONSTRAINT [FK_rtblChannelTypeImport_rtblChannelType]
+GO
+
+
+CREATE TABLE [dbo].[rtblProductImport](
+	[pkProductImportId] [int] IDENTITY(1,1) NOT NULL,
+	[fkProductId] [int] NOT NULL,
+	[ImportFileChannel] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_rtblProductImport] PRIMARY KEY CLUSTERED 
+(
+	[pkProductImportId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[rtblProductImport]  WITH CHECK ADD  CONSTRAINT [FK_rtblProductImport_rtblProduct] FOREIGN KEY([fkProductId])
+REFERENCES [dbo].[rtblProduct] ([pkProductId])
+GO
+
+ALTER TABLE [dbo].[rtblProductImport] CHECK CONSTRAINT [FK_rtblProductImport_rtblProduct]
+GO
+
+
+CREATE TABLE [dbo].[rtblTransactionTypeImport](
+	[pkTransactionTypeImportId] [int] IDENTITY(1,1) NOT NULL,
+	[fkTransactionTypeId] [int] NOT NULL,
+	[ImportFileChannel] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_rtblTransactionTypeImport] PRIMARY KEY CLUSTERED 
+(
+	[pkTransactionTypeImportId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[rtblTransactionTypeImport]  WITH CHECK ADD  CONSTRAINT [FK_rtblTransactionTypeImport_rtblTransactionType] FOREIGN KEY([fkTransactionTypeId])
+REFERENCES [dbo].[rtblTransactionType] ([pkTransactionTypeId])
+GO
+
+ALTER TABLE [dbo].[rtblTransactionTypeImport] CHECK CONSTRAINT [FK_rtblTransactionTypeImport_rtblTransactionType]
+GO
+
+INSERT INTO [dbo].[rtblTransactionTypeImport] ([fkTransactionTypeId], [ImportFileChannel])
+SELECT [pkTransactionTypeId], '405' FROM [dbo].[rtblTransactionType]
+WHERE [fkConcessionTypeId] = (
+SELECT [pkConcessionTypeId] FROM [dbo].[rtblConcessionType]
+WHERE [Code] = 'Transactional')
+AND [Description] = 'Minimum Monthly Service Fee'
+
+GO
+
+INSERT INTO [dbo].[rtblTransactionTypeImport] ([fkTransactionTypeId], [ImportFileChannel])
+SELECT [pkTransactionTypeId], '152' FROM [dbo].[rtblTransactionType]
+WHERE [fkConcessionTypeId] = (
+SELECT [pkConcessionTypeId] FROM [dbo].[rtblConcessionType]
+WHERE [Code] = 'Transactional')
+AND [Description] = 'Cheque Deposit Fee'
+
+GO
+
+INSERT INTO [dbo].[rtblTransactionTypeImport] ([fkTransactionTypeId], [ImportFileChannel])
+SELECT [pkTransactionTypeId], '154' FROM [dbo].[rtblTransactionType]
+WHERE [fkConcessionTypeId] = (
+SELECT [pkConcessionTypeId] FROM [dbo].[rtblConcessionType]
+WHERE [Code] = 'Transactional')
+AND [Description] = 'Cheque Encashment Fee'
+
+GO
+
+INSERT INTO [dbo].[rtblTransactionTypeImport] ([fkTransactionTypeId], [ImportFileChannel])
+SELECT [pkTransactionTypeId], '155' FROM [dbo].[rtblTransactionType]
+WHERE [fkConcessionTypeId] = (
+SELECT [pkConcessionTypeId] FROM [dbo].[rtblConcessionType]
+WHERE [Code] = 'Transactional')
+AND [Description] = 'Cheque Encashment Fee'
+
+GO
+
+INSERT INTO [dbo].[rtblTransactionTypeImport] ([fkTransactionTypeId], [ImportFileChannel])
+SELECT [pkTransactionTypeId], '159' FROM [dbo].[rtblTransactionType]
+WHERE [fkConcessionTypeId] = (
+SELECT [pkConcessionTypeId] FROM [dbo].[rtblConcessionType]
+WHERE [Code] = 'Transactional')
+AND [Description] = 'Cheque Encashment Fee'
+
+GO
+
+INSERT INTO [dbo].[rtblTransactionTypeImport] ([fkTransactionTypeId], [ImportFileChannel])
+SELECT [pkTransactionTypeId], '174' FROM [dbo].[rtblTransactionType]
+WHERE [fkConcessionTypeId] = (
+SELECT [pkConcessionTypeId] FROM [dbo].[rtblConcessionType]
+WHERE [Code] = 'Transactional')
+AND [Description] = 'Automatic Cheque Clearance'
+
+GO
+
+INSERT INTO [dbo].[rtblTransactionTypeImport] ([fkTransactionTypeId], [ImportFileChannel])
+SELECT [pkTransactionTypeId], '403' FROM [dbo].[rtblTransactionType]
+WHERE [fkConcessionTypeId] = (
+SELECT [pkConcessionTypeId] FROM [dbo].[rtblConcessionType]
+WHERE [Code] = 'Transactional')
+AND [Description] = 'Cheque Service Fee'
+
+GO
+
+INSERT INTO [dbo].[rtblChannelTypeImport] ([fkChannelTypeId], [ImportFileChannel])
+SELECT [pkChannelTypeId], '104' FROM [dbo].[rtblChannelType]
+WHERE [Description] = 'Branch Only'
+
+GO
+
+INSERT INTO [dbo].[rtblChannelTypeImport] ([fkChannelTypeId], [ImportFileChannel])
+SELECT [pkChannelTypeId], '107' FROM [dbo].[rtblChannelType]
+WHERE [Description] = 'Cash Centre Only'
+
+GO
+
+INSERT INTO [dbo].[rtblChannelTypeImport] ([fkChannelTypeId], [ImportFileChannel])
+SELECT [pkChannelTypeId], '108' FROM [dbo].[rtblChannelType]
+WHERE [Description] = 'Autosafe'
+
+GO
+
+INSERT INTO [dbo].[rtblChannelTypeImport] ([fkChannelTypeId], [ImportFileChannel])
+SELECT [pkChannelTypeId], '104' FROM [dbo].[rtblChannelType]
+WHERE [Description] = 'Bulk Teller'
+
+GO
+
+INSERT INTO [dbo].[rtblProductImport] ([fkProductId], [ImportFileChannel])
+SELECT [pkProductId], '6' FROM [dbo].[rtblProduct]
+WHERE [fkConcessionTypeId] = (
+SELECT [pkConcessionTypeId] FROM [dbo].[rtblConcessionType]
+WHERE [Code] = 'Lending')
+
 GO
 

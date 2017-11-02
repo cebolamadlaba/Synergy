@@ -7,9 +7,9 @@ using Xunit;
 namespace StandardBank.ConcessionManagement.Repository.Test.Integration
 {
     /// <summary>
-    /// ChannelType repository tests
+    /// ProductImport repository tests
     /// </summary>
-    public class ChannelTypeRepositoryTest
+    public class ProductImportRepositoryTest
     {
         /// <summary>
         /// Tests that Create executes positive.
@@ -17,13 +17,13 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void Create_Executes_Positive()
         {
-            var model = new ChannelType
+            var model = new ProductImport
             {
-                Description = "ba0956864b",
-                IsActive = false
+                ProductId = DataHelper.GetProductId(),
+                ImportFileChannel = "1f44737159"
             };
 
-            var result = InstantiatedDependencies.ChannelTypeRepository.Create(model);
+            var result = InstantiatedDependencies.ProductImportRepository.Create(model);
 
             Assert.NotNull(result);
             Assert.NotEqual(result.Id, 0);
@@ -35,9 +35,9 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void ReadById_Executes_Positive()
         {
-            var results = InstantiatedDependencies.ChannelTypeRepository.ReadAll();
+            var results = InstantiatedDependencies.ProductImportRepository.ReadAll();
             var id = results.First().Id;
-            var result = InstantiatedDependencies.ChannelTypeRepository.ReadById(id);
+            var result = InstantiatedDependencies.ProductImportRepository.ReadById(id);
 
             Assert.NotNull(result);
             Assert.Equal(result.Id, id);
@@ -49,7 +49,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void ReadAll_Executes_Positive()
         {
-            var result = InstantiatedDependencies.ChannelTypeRepository.ReadAll();
+            var result = InstantiatedDependencies.ProductImportRepository.ReadAll();
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
@@ -61,21 +61,21 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void Update_Executes_Positive()
         {
-            var results = InstantiatedDependencies.ChannelTypeRepository.ReadAll();
+            var results = InstantiatedDependencies.ProductImportRepository.ReadAll();
             var id = results.First().Id;
-            var model = InstantiatedDependencies.ChannelTypeRepository.ReadById(id);
+            var model = InstantiatedDependencies.ProductImportRepository.ReadById(id);
 
-            model.Description = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10);
-            model.IsActive = !model.IsActive;
+            model.ProductId = DataHelper.GetAlternateProductId(model.ProductId);
+            model.ImportFileChannel = "7308b0228a";
 
-            InstantiatedDependencies.ChannelTypeRepository.Update(model);
+            InstantiatedDependencies.ProductImportRepository.Update(model);
 
-            var updatedModel = InstantiatedDependencies.ChannelTypeRepository.ReadById(id);
+            var updatedModel = InstantiatedDependencies.ProductImportRepository.ReadById(id);
 
             Assert.NotNull(updatedModel);
             Assert.Equal(updatedModel.Id, model.Id);
-            Assert.Equal(updatedModel.Description, model.Description);
-            Assert.Equal(updatedModel.IsActive, model.IsActive);
+            Assert.Equal(updatedModel.ProductId, model.ProductId);
+            Assert.Equal(updatedModel.ImportFileChannel, model.ImportFileChannel);
         }
 
         /// <summary>
@@ -84,20 +84,20 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void Delete_Executes_Positive()
         {
-            var model = new ChannelType
+            var model = new ProductImport
             {
-                Description = "ba0956864b",
-                IsActive = false
+                ProductId = DataHelper.GetProductId(),
+                ImportFileChannel = "1f44737159"
             };
 
-            var temporaryEntity = InstantiatedDependencies.ChannelTypeRepository.Create(model);
+            var temporaryEntity = InstantiatedDependencies.ProductImportRepository.Create(model);
 
             Assert.NotNull(temporaryEntity);
             Assert.NotEqual(temporaryEntity.Id, 0);
 
-            InstantiatedDependencies.ChannelTypeRepository.Delete(temporaryEntity);
+            InstantiatedDependencies.ProductImportRepository.Delete(temporaryEntity);
 
-            var result = InstantiatedDependencies.ChannelTypeRepository.ReadById(temporaryEntity.Id);
+            var result = InstantiatedDependencies.ProductImportRepository.ReadById(temporaryEntity.Id);
 
             Assert.Null(result);
         }

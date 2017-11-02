@@ -201,8 +201,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             var model = new ChannelType
             {
                 Description = "d6e6724f8a",
-                IsActive = false,
-                ImportFileChannel = "240374a0dd"
+                IsActive = false
             };
 
             InstantiatedDependencies.ChannelTypeRepository.Create(model);
@@ -459,8 +458,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             {
                 ConcessionTypeId = GetConcessionTypeId(),
                 Description = "d81ef0b458",
-                IsActive = false,
-                ImportFileChannel = "7ff10e60f6"
+                IsActive = false
             };
 
             InstantiatedDependencies.ProductRepository.Create(model);
@@ -819,8 +817,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             {
                 ConcessionTypeId = GetConcessionTypeId(),
                 Description = "14c6862dfb",
-                IsActive = false,
-                ImportFileChannel = "a295111801"
+                IsActive = false
             };
 
             InstantiatedDependencies.TransactionTypeRepository.Create(model);
@@ -3564,6 +3561,159 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 return models.First(_ => _.Id != model.Value).Id;
 
             return InsertSapDataImportConfiguration();
+        }
+
+        /// <summary>
+        /// Gets the ChannelTypeImport id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetChannelTypeImportId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.ChannelTypeImportRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertChannelTypeImport();
+        }
+
+        /// <summary>
+        /// Inserts a ChannelTypeImport and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertChannelTypeImport()
+        {
+            var model = new ChannelTypeImport
+            {
+                ChannelTypeId = GetChannelTypeId(),
+                ImportFileChannel = "2041b19443"
+            };
+
+            InstantiatedDependencies.ChannelTypeImportRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate ChannelTypeImport id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateChannelTypeImportId(int? model)
+        {
+            if (!model.HasValue)
+                return GetChannelTypeImportId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.ChannelTypeImportRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertChannelTypeImport();
+        }
+
+        /// <summary>
+        /// Gets the ProductImport id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetProductImportId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.ProductImportRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertProductImport();
+        }
+
+        /// <summary>
+        /// Inserts a ProductImport and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertProductImport()
+        {
+            var model = new ProductImport
+            {
+                ProductId = GetProductId(),
+                ImportFileChannel = "b5c0697217"
+            };
+
+            InstantiatedDependencies.ProductImportRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate ProductImport id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateProductImportId(int? model)
+        {
+            if (!model.HasValue)
+                return GetProductImportId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.ProductImportRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertProductImport();
+        }
+
+        /// <summary>
+        /// Gets the TransactionTypeImport id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetTransactionTypeImportId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.TransactionTypeImportRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertTransactionTypeImport();
+        }
+
+        /// <summary>
+        /// Inserts a TransactionTypeImport and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertTransactionTypeImport()
+        {
+            var model = new TransactionTypeImport
+            {
+                TransactionTypeId = GetTransactionTypeId(),
+                ImportFileChannel = "eb729859bf"
+            };
+
+            InstantiatedDependencies.TransactionTypeImportRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate TransactionTypeImport id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateTransactionTypeImportId(int? model)
+        {
+            if (!model.HasValue)
+                return GetTransactionTypeImportId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.TransactionTypeImportRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertTransactionTypeImport();
         }
     }
 }

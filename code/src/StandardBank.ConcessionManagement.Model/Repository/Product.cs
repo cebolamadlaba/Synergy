@@ -36,13 +36,5 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The IsActive.
         /// </value>
         public bool IsActive { get; set; }
-
-        /// <summary>
-        /// Gets or sets the import file channel.
-        /// </summary>
-        /// <value>
-        /// The import file channel.
-        /// </value>
-        public string ImportFileChannel { get; set; }
     }
 }

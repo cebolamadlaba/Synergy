@@ -479,5 +479,20 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The mock background job client
         /// </summary>
         public static Mock<IBackgroundJobClient> MockBackgroundJobClient = new Mock<IBackgroundJobClient>();
+
+        /// <summary>
+        /// The mock ChannelTypeImport repository
+        /// </summary>
+        public static Mock<IChannelTypeImportRepository> MockChannelTypeImportRepository = new Mock<IChannelTypeImportRepository>();
+
+        /// <summary>
+        /// The mock ProductImport repository
+        /// </summary>
+        public static Mock<IProductImportRepository> MockProductImportRepository = new Mock<IProductImportRepository>();
+
+        /// <summary>
+        /// The mock TransactionTypeImport repository
+        /// </summary>
+        public static Mock<ITransactionTypeImportRepository> MockTransactionTypeImportRepository = new Mock<ITransactionTypeImportRepository>();
     }
 }

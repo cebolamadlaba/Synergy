@@ -162,6 +162,21 @@
             {
                 public const string ReadAll = "CacheKey.Repository.RiskGroupRepository.ReadAll";
             }
+
+            public static class ChannelTypeImportRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.ChannelTypeImportRepository.ReadAll";
+            }
+
+            public static class ProductImportRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.ProductImportRepository.ReadAll";
+            }
+
+            public static class TransactionTypeImportRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.TransactionTypeImportRepository.ReadAll";
+            }
         }
     }
 }

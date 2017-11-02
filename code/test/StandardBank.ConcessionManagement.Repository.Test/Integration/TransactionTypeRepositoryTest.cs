@@ -21,8 +21,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 ConcessionTypeId = DataHelper.GetConcessionTypeId(),
                 Description = "aed25144ff",
-                IsActive = true,
-                ImportFileChannel = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)
+                IsActive = true
             };
 
             var result = InstantiatedDependencies.TransactionTypeRepository.Create(model);
@@ -86,7 +85,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.ConcessionTypeId = DataHelper.GetAlternateConcessionTypeId(model.ConcessionTypeId);
             model.Description = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10);
             model.IsActive = !model.IsActive;
-            model.ImportFileChannel = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10);
 
             InstantiatedDependencies.TransactionTypeRepository.Update(model);
 
@@ -97,7 +95,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.ConcessionTypeId, model.ConcessionTypeId);
             Assert.Equal(updatedModel.Description, model.Description);
             Assert.Equal(updatedModel.IsActive, model.IsActive);
-            Assert.Equal(updatedModel.ImportFileChannel, model.ImportFileChannel);
         }
 
         /// <summary>
@@ -110,8 +107,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             {
                 ConcessionTypeId = DataHelper.GetConcessionTypeId(),
                 Description = "aed25144ff",
-                IsActive = false,
-                ImportFileChannel = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)
+                IsActive = false
             };
 
             var temporaryEntity = InstantiatedDependencies.TransactionTypeRepository.Create(model);

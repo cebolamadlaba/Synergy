@@ -3,9 +3,9 @@ using System;
 namespace StandardBank.ConcessionManagement.Model.Repository
 {
     /// <summary>
-    /// ChannelType entity
+    /// TransactionTypeImport entity
     /// </summary>
-    public class ChannelType
+    public class TransactionTypeImport
     {
         /// <summary>
         /// Gets or sets the Id.
@@ -16,19 +16,19 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the Description.
+        /// Gets or sets the TransactionTypeId.
         /// </summary>
         /// <value>
-        /// The Description.
+        /// The TransactionTypeId.
         /// </value>
-        public string Description { get; set; }
+        public int TransactionTypeId { get; set; }
 
         /// <summary>
-        /// Gets or sets the IsActive.
+        /// Gets or sets the ImportFileChannel.
         /// </summary>
         /// <value>
-        /// The IsActive.
+        /// The ImportFileChannel.
         /// </value>
-        public bool IsActive { get; set; }
+        public string ImportFileChannel { get; set; }
     }
 }
