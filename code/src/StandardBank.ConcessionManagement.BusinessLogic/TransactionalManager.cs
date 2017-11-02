@@ -236,6 +236,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         mappedConcessionTransactional.ApprovedTransactionTableNumberId)
                         mappedConcessionTransactional.IsMismatched = true;
                 }
+                else
+                {
+                    mappedConcessionTransactional.IsMismatched = true;
+                }
+            }
+            else
+            {
+                mappedConcessionTransactional.IsMismatched = true;
             }
         }
 

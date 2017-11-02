@@ -246,6 +246,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 if (loadedPriceLending.MarginToPrime != concessionLending.ApprovedMarginToPrime)
                     concessionLending.IsMismatched = true;
             }
+            else
+            {
+                concessionLending.IsMismatched = true;
+            }
         }
 
         /// <summary>

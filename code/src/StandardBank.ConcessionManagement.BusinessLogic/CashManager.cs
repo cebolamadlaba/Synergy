@@ -239,6 +239,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 if (loadedPriceCash.TableNumberId != mappedConcessionCash.ApprovedTableNumberId)
                     mappedConcessionCash.IsMismatched = true;
             }
+            else
+            {
+                mappedConcessionCash.IsMismatched = true;
+            }
         }
 
         /// <summary>
