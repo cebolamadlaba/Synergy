@@ -39,5 +39,16 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         void Delete(SapDataImport model);
+
+        /// <summary>
+        /// Updates the prices and mismatches.
+        /// </summary>
+        void UpdatePricesAndMismatches();
+
+        /// <summary>
+        /// Generates the sap export.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<SapDataImport> GenerateSapExport();
     }
 }

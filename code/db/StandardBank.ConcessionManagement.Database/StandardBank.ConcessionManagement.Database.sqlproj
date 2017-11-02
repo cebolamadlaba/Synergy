@@ -239,6 +239,7 @@
     <Build Include="dbo\Tables\rtblTransactionTypeImport.sql" />
     <Build Include="dbo\Tables\rtblProductImport.sql" />
     <Build Include="dbo\Tables\rtblChannelTypeImport.sql" />
+    <Build Include="dbo\Stored Procedures\UpdatePricesAndMismatches.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Change Scripts\09_create_rtblPeriod.sql" />

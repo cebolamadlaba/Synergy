@@ -45,5 +45,13 @@ namespace StandardBank.ConcessionManagement.Interface.Common
         /// <param name="fileName">Name of the file.</param>
         /// <param name="throwExceptionIfNotFound">if set to <c>true</c> [throw exception if not found].</param>
         void DeleteFile(string fileName, bool throwExceptionIfNotFound = false);
+
+        /// <summary>
+        /// Writes the file.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="fileContents">The file contents.</param>
+        /// <param name="deleteIfExists">if set to <c>true</c> [delete if exists].</param>
+        void WriteFile(string fileName, string fileContents, bool deleteIfExists);
     }
 }

@@ -88,14 +88,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
             }
 
             if (sapDataImports.Any())
-            {
-                foreach (var sapDataImport in sapDataImports)
-                {
-                    //TODO: 6. once all the data has been imported update the relevant loaded price tables
-
-                    //TODO: 7. update the approved concessions mismatched statuses based on the new data
-                }
-            }
+                _sapDataImportRepository.UpdatePricesAndMismatches();
         }
 
         /// <summary>

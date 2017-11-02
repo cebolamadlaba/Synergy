@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using Hangfire;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
@@ -42,11 +45,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
         private readonly IBackgroundJobClient _backgroundJobClient;
 
         /// <summary>
-        /// The concession inbox view repository
-        /// </summary>
-        private readonly IConcessionInboxViewRepository _concessionInboxViewRepository;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ExportSapData"/> class.
         /// </summary>
         /// <param name="sapDataImportConfigurationRepository">The sap data import configuration repository.</param>
@@ -54,17 +52,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
         /// <param name="sapDataImportRepository">The sap data import repository.</param>
         /// <param name="fileUtiltity">The file utiltity.</param>
         /// <param name="backgroundJobClient">The background job client.</param>
-        /// <param name="concessionInboxViewRepository">The concession inbox view repository.</param>
         public ExportSapData(ISapDataImportConfigurationRepository sapDataImportConfigurationRepository,
             IEmailManager emailManager, ISapDataImportRepository sapDataImportRepository, IFileUtiltity fileUtiltity,
-            IBackgroundJobClient backgroundJobClient, IConcessionInboxViewRepository concessionInboxViewRepository)
+            IBackgroundJobClient backgroundJobClient)
         {
             _sapDataImportConfigurationRepository = sapDataImportConfigurationRepository;
             _emailManager = emailManager;
             _sapDataImportRepository = sapDataImportRepository;
             _fileUtiltity = fileUtiltity;
             _backgroundJobClient = backgroundJobClient;
-            _concessionInboxViewRepository = concessionInboxViewRepository;
         }
 
         /// <summary>
@@ -80,11 +76,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
             {
                 try
                 {
-                    //TODO: Call the GenerateSapExport stored proc and get back the list of records to export
+                    //Call the GenerateSapExport stored proc and get back the list of records to export
+                    var sapDataImportsToExport = _sapDataImportRepository.GenerateSapExport();
 
-                    //TODO: Export the list of records
+                    //Export the list of records
+                    ExportData(sapDataImportsToExport, configuration);
 
-                    //TODO: Reset the "ExportRow" flag on each record that's been exported
+                    //Reset the "ExportRow" flag on each record that's been exported
+                    foreach (var sapDataImportToExport in sapDataImportsToExport)
+                    {
+                        sapDataImportToExport.ExportRow = false;
+                        _sapDataImportRepository.Update(sapDataImportToExport);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -93,6 +96,85 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                             $"File Export Failed With: {ex}"), DateTime.Now);
                 }
             }
+        }
+
+        /// <summary>
+        /// Exports the data.
+        /// </summary>
+        /// <param name="sapDataImportsToExport">The sap data imports to export.</param>
+        /// <param name="configuration">The configuration.</param>
+        private void ExportData(IEnumerable<SapDataImport> sapDataImportsToExport,
+            SapDataImportConfiguration configuration)
+        {
+            var output = new StringBuilder();
+
+            var properties = typeof(SapDataImport).GetProperties();
+
+            var columnHeadings = GetColumnHeadings(properties);
+
+            output.AppendLine(columnHeadings);
+
+            foreach (var sapDataImportToExport in sapDataImportsToExport)
+                output.AppendLine(GenerateSapDataImportExportLine(sapDataImportToExport, properties));
+
+            var filename = $"cms_data_export_{DateTime.Now:yyyyMMdd}.txt";
+
+            _fileUtiltity.WriteFile(filename, output.ToString(), true);
+        }
+
+        /// <summary>
+        /// Generates the sap data import export line.
+        /// </summary>
+        /// <param name="sapDataImportToExport">The sap data import to export.</param>
+        /// <param name="properties">The properties.</param>
+        /// <returns></returns>
+        private string GenerateSapDataImportExportLine(SapDataImport sapDataImportToExport, PropertyInfo[] properties)
+        {
+            var exportLine = new StringBuilder();
+
+            foreach (var property in properties)
+            {
+                if (SkipProperty(property.Name))
+                    continue;
+                
+                var valueToAppend = " ";
+                var properyValue = property.GetValue(sapDataImportToExport);
+
+                if (properyValue != null)
+                    valueToAppend = Convert.ToString(properyValue);
+
+                exportLine.Append(exportLine.Length == 0 ? valueToAppend : $"|{valueToAppend}");
+            }
+
+            return exportLine.ToString();
+        }
+
+        /// <summary>
+        /// Gets the column headings.
+        /// </summary>
+        /// <param name="properties">The properties.</param>
+        /// <returns></returns>
+        private string GetColumnHeadings(PropertyInfo[] properties)
+        {
+            var columnHeadings = new StringBuilder();
+
+            foreach (var property in properties)
+                if (!SkipProperty(property.Name))
+                    columnHeadings.Append(columnHeadings.Length == 0 ? property.Name : $"|{property.Name}");
+
+            return columnHeadings.ToString();
+        }
+
+        /// <summary>
+        /// Skips the property.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <returns></returns>
+        private bool SkipProperty(string propertyName)
+        {
+            var propertiesToSkip = new[] {"ImportDate", "LastUpdatedDate", "ExportRow"};
+
+            return propertiesToSkip.Contains(propertyName);
         }
 
         /// <summary>

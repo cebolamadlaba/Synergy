@@ -2,6 +2,7 @@ using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
 
@@ -169,8 +170,27 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[tblSapDataImport] WHERE [PricepointId] = @PricepointId",
-                    new {model.PricepointId });
+                    new {model.PricepointId});
             }
+        }
+
+        /// <summary>
+        /// Updates the prices and mismatches.
+        /// </summary>
+        public void UpdatePricesAndMismatches()
+        {
+            using (var db = _dbConnectionFactory.Connection())
+                db.Execute("[dbo].[UpdatePricesAndMismatches]", commandType: CommandType.StoredProcedure);
+        }
+
+        /// <summary>
+        /// Generates the sap export.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<SapDataImport> GenerateSapExport()
+        {
+            using (var db = _dbConnectionFactory.Connection())
+                return db.Query<SapDataImport>("[dbo].[GenerateSapExport]", commandType: CommandType.StoredProcedure);
         }
     }
 }
