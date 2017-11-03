@@ -30,5 +30,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="concessionAddedEmail">The concession added email.</param>
         /// <returns></returns>
         Task<bool> SendConcessionAddedEmail(ConcessionAddedEmail concessionAddedEmail);
+
+        /// <summary>
+        /// Sends the sap data import issues email.
+        /// </summary>
+        /// <param name="sapDataImportIssuesEmail">The sap data import issues email.</param>
+        /// <returns></returns>
+        Task<bool> SendSapDataImportIssuesEmail(SapDataImportIssuesEmail sapDataImportIssuesEmail);
     }
 }

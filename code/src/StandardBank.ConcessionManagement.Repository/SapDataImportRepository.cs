@@ -192,5 +192,16 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
                 return db.Query<SapDataImport>("[dbo].[GenerateSapExport]", commandType: CommandType.StoredProcedure);
         }
+
+        /// <summary>
+        /// Gets the sap data import issues.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<SapDataImportIssue> GetSapDataImportIssues()
+        {
+            using (var db = _dbConnectionFactory.Connection())
+                return db.Query<SapDataImportIssue>("[dbo].[SapImportDataIssues]",
+                    commandType: CommandType.StoredProcedure);
+        }
     }
 }

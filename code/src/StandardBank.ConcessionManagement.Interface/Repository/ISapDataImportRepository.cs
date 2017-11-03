@@ -50,5 +50,11 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// </summary>
         /// <returns></returns>
         IEnumerable<SapDataImport> GenerateSapExport();
+
+        /// <summary>
+        /// Gets the sap data import issues.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<SapDataImportIssue> GetSapDataImportIssues();
     }
 }

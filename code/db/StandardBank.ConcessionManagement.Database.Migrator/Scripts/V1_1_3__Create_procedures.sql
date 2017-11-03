@@ -118,7 +118,7 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 
-	-- update the loaded prices
+	-- update the loaded prices for cash
 	TRUNCATE TABLE [dbo].[tblLoadedPriceCash]
 
 	INSERT INTO [dbo].[tblLoadedPriceCash] ([fkChannelTypeId], [fkLegalEntityAccountId], [fkTableNumberId])
@@ -127,12 +127,9 @@ BEGIN
 	JOIN [dbo].[tblLegalEntityAccount] lea ON lea.[AccountNumber] = sdi.[AccountNo]
 	JOIN [dbo].[rtblTableNumber] tn ON tn.[TariffTable] = sdi.[TableNo] AND tn.[AdValorem] = sdi.[AdvaloremFee] AND tn.[BaseRate] = sdi.[FlatFee]
 
-	-- update the is mismatched flags
-	UPDATE cd
-	SET cd.[IsMismatched] = 
-		(CASE WHEN lpc.[pkLoadedPriceCashId] IS NULL THEN 1 ELSE 
-			CASE WHEN lpc.[fkTableNumberId] = cc.[fkApprovedTableNumberId] THEN 1 ELSE 0 END
-		END)
+	-- update the loaded prices for cash concessions
+	UPDATE cc
+	SET cc.[fkLoadedTableNumberId] = lpc.[fkTableNumberId] 
 	FROM [dbo].[tblConcessionDetail] cd
 	JOIN [dbo].[tblConcessionCash] cc ON cc.[fkConcessionDetailId] = cd.[pkConcessionDetailId]
 	JOIN [dbo].[tblConcession] c ON c.[pkConcessionId] = cd.[fkConcessionId]
@@ -141,7 +138,17 @@ BEGIN
 	AND c.[IsActive] = 1
 	AND c.[IsCurrent] = 1
 
-	-- update the loaded prices
+	-- update the is mismatched flags for cash
+	UPDATE cd
+	SET cd.[IsMismatched] = CASE WHEN cc.[fkTableNumberId] = cc.[fkLoadedTableNumberId] THEN 0 ELSE 1 END
+	FROM [dbo].[tblConcessionDetail] cd
+	JOIN [dbo].[tblConcessionCash] cc ON cc.[fkConcessionDetailId] = cd.[pkConcessionDetailId]
+	JOIN [dbo].[tblConcession] c ON c.[pkConcessionId] = cd.[fkConcessionId]
+	WHERE c.[fkStatusId] IN (2, 3)
+	AND c.[IsActive] = 1
+	AND c.[IsCurrent] = 1
+
+	-- update the loaded prices for lending
 	TRUNCATE TABLE [dbo].[tblLoadedPriceLending]
 
 	INSERT INTO [dbo].[tblLoadedPriceLending] ([fkProductTypeId], [fkLegalEntityAccountId], [MarginToPrime])
@@ -149,12 +156,9 @@ BEGIN
 	JOIN [dbo].[rtblProductImport] rpi on rpi.[ImportFileChannel] = sdi.[Channel]
 	JOIN [dbo].[tblLegalEntityAccount] lea ON lea.[AccountNumber] = sdi.[AccountNo]
 
-	-- update the is mismatched flags
-	UPDATE cd
-	SET cd.[IsMismatched] = 
-		(CASE WHEN lpl.[pkLoadedPriceLendingId] IS NULL THEN 1 ELSE 
-			CASE WHEN lpl.[MarginToPrime] = cl.[ApprovedMarginToPrime] THEN 1 ELSE 0 END
-		END)
+	-- update the loaded prices for lending concessions
+	UPDATE cl
+	SET cl.[LoadedMarginToPrime] = lpl.[MarginToPrime] 
 	FROM [dbo].[tblConcessionDetail] cd
 	JOIN [dbo].[tblConcessionLending] cl on cl.[fkConcessionDetailId] = cd.[pkConcessionDetailId]
 	JOIN [dbo].[tblConcession] c ON c.[pkConcessionId] = cd.[fkConcessionId]
@@ -163,7 +167,17 @@ BEGIN
 	AND c.[IsActive] = 1
 	AND c.[IsCurrent] = 1
 
-	-- update the loaded prices
+	-- update the is mismatched flags for lending
+	UPDATE cd
+	SET cd.[IsMismatched] = CASE WHEN cl.[MarginToPrime] = cl.[LoadedMarginToPrime] THEN 0 ELSE 1 END
+	FROM [dbo].[tblConcessionDetail] cd
+	JOIN [dbo].[tblConcessionLending] cl on cl.[fkConcessionDetailId] = cd.[pkConcessionDetailId]
+	JOIN [dbo].[tblConcession] c ON c.[pkConcessionId] = cd.[fkConcessionId]
+	WHERE c.[fkStatusId] IN (2, 3)
+	AND c.[IsActive] = 1
+	AND c.[IsCurrent] = 1
+
+	-- update the loaded prices for transactional
 	TRUNCATE TABLE [dbo].[tblLoadedPriceTransactional]
 
 	INSERT INTO [dbo].[tblLoadedPriceTransactional] ([fkTransactionTypeId], [fkLegalEntityAccountId], [fkTransactionTableNumberId])
@@ -172,12 +186,9 @@ BEGIN
 	JOIN [dbo].[tblLegalEntityAccount] lea ON lea.[AccountNumber] = sdi.[AccountNo]
 	JOIN [dbo].[rtblTableNumber] tn ON tn.[TariffTable] = sdi.[TableNo] AND tn.[AdValorem] = sdi.[AdvaloremFee] AND tn.[BaseRate] = sdi.[FlatFee]
 
-	-- update the is mismatched flags
-	UPDATE cd
-	SET cd.[IsMismatched] = 
-		(CASE WHEN lpt.[pkLoadedPriceTransactionalId] IS NULL THEN 1 ELSE 
-			CASE WHEN lpt.[fkTransactionTableNumberId] = ct.[fkApprovedTransactionTableNumberId] THEN 1 ELSE 0 END
-		END)
+	-- update the loaded prices for transactional concessions
+	UPDATE ct
+	SET ct.[fkLoadedTransactionTableNumberId] = lpt.[fkTransactionTableNumberId]
 	FROM [dbo].[tblConcessionDetail] cd
 	JOIN [dbo].[tblConcessionTransactional] ct on ct.[fkConcessionDetailId] = cd.[pkConcessionDetailId]
 	JOIN [dbo].[tblConcession] c ON c.[pkConcessionId] = cd.[fkConcessionId]
@@ -185,6 +196,17 @@ BEGIN
 	WHERE c.[fkStatusId] IN (2, 3)
 	AND c.[IsActive] = 1
 	AND c.[IsCurrent] = 1
+
+	-- update the is mismatched flags for transactional
+	UPDATE cd
+	SET cd.[IsMismatched] = CASE WHEN ct.[fkTransactionTableNumberId] = ct.[fkLoadedTransactionTableNumberId] THEN 0 ELSE 1 END
+	FROM [dbo].[tblConcessionDetail] cd
+	JOIN [dbo].[tblConcessionTransactional] ct on ct.[fkConcessionDetailId] = cd.[pkConcessionDetailId]
+	JOIN [dbo].[tblConcession] c ON c.[pkConcessionId] = cd.[fkConcessionId]
+	WHERE c.[fkStatusId] IN (2, 3)
+	AND c.[IsActive] = 1
+	AND c.[IsCurrent] = 1
+
 END
 
 GO
@@ -195,31 +217,13 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 
+	-- is the sap import account number in the legal entity account number table
 	SELECT 
 		'[dbo].[tblSapDataImport].[AccountNo]: ' + [AccountNo] [Column], 
 		'Missing from [tblLegalEntityAccount]' [Issue] FROM [dbo].[tblSapDataImport]
 	WHERE [AccountNo] NOT IN (	SELECT [AccountNumber] FROM [dbo].[tblLegalEntityAccount])
-	UNION
-	SELECT 
-		'[dbo].[rtblChannelTypeImport].[ImportFileChannel]: ' + cti.[ImportFileChannel] [Column], 
-		'Missing from [dbo].[tblSapDataImport]' [Issue] 
-	FROM [dbo].[rtblChannelTypeImport] cti
-	LEFT JOIN [dbo].[tblSapDataImport] sdi on sdi.[Channel] = cti.[ImportFileChannel]
-	WHERE sdi.[PricepointId] IS NULL
-	UNION
-	SELECT 
-		'[dbo].[rtblProductImport].[ImportFileChannel]: ' + rpi.[ImportFileChannel] [Column], 
-		'Missing from [dbo].[tblSapDataImport]' [Issue] 
-	FROM [dbo].[rtblProductImport] rpi
-	LEFT JOIN [dbo].[tblSapDataImport] sdi on sdi.[Channel] = rpi.[ImportFileChannel]
-	WHERE sdi.[PricepointId] IS NULL
-	UNION
-	SELECT
-		'[dbo].[rtblTransactionTypeImport].[ImportFileChannel]: ' + tti.[ImportFileChannel] [Column], 
-		'Missing from [dbo].[tblSapDataImport]' [Issue] 
-	FROM [dbo].[rtblTransactionTypeImport] tti
-	LEFT JOIN [dbo].[tblSapDataImport] sdi on sdi.[Channel] = tti.[ImportFileChannel]
-	WHERE sdi.[PricepointId] IS NULL
+	
+	-- is the legal entity entity account numbers in the sap data import table
 	UNION
 	SELECT
 		 '[dbo].[tblLegalEntityAccount].[AccountNumber]: ' + lea.[AccountNumber] [Column], 
@@ -227,6 +231,81 @@ BEGIN
 	FROM [dbo].[tblLegalEntityAccount] lea
 	WHERE lea.[AccountNumber] NOT IN (
 	SELECT [AccountNo] FROM [dbo].[tblSapDataImport])
+	
+	-- are the channel type import channels in the sap data import table
+	UNION
+	SELECT 
+		'[dbo].[rtblChannelTypeImport].[ImportFileChannel]: ' + cti.[ImportFileChannel] [Column], 
+		'Missing from [dbo].[tblSapDataImport]' [Issue] 
+	FROM [dbo].[rtblChannelTypeImport] cti
+	LEFT JOIN [dbo].[tblSapDataImport] sdi on sdi.[Channel] = cti.[ImportFileChannel]
+	WHERE sdi.[PricepointId] IS NULL
+
+	-- are the product import channels in the sap data import table 
+	UNION
+	SELECT 
+		'[dbo].[rtblProductImport].[ImportFileChannel]: ' + rpi.[ImportFileChannel] [Column], 
+		'Missing from [dbo].[tblSapDataImport]' [Issue] 
+	FROM [dbo].[rtblProductImport] rpi
+	LEFT JOIN [dbo].[tblSapDataImport] sdi on sdi.[Channel] = rpi.[ImportFileChannel]
+	WHERE sdi.[PricepointId] IS NULL
+
+	-- are the transaction type import channels in the sap data import table
+	UNION
+	SELECT
+		'[dbo].[rtblTransactionTypeImport].[ImportFileChannel]: ' + tti.[ImportFileChannel] [Column], 
+		'Missing from [dbo].[tblSapDataImport]' [Issue] 
+	FROM [dbo].[rtblTransactionTypeImport] tti
+	LEFT JOIN [dbo].[tblSapDataImport] sdi on sdi.[Channel] = tti.[ImportFileChannel]
+	WHERE sdi.[PricepointId] IS NULL
+	
+	-- are the cash specific table numbers in the sap data import table
+	UNION
+	SELECT
+		'Cash Specific [dbo].[rtblTableNumber].[TariffTable]: ' + CAST([TariffTable] AS VARCHAR(50)) [Column],
+		'Missing from [dbo].[tblSapDataImport]' [Issue] 
+	FROM [dbo].[rtblTableNumber]
+	WHERE [fkConcessionTypeId] = (
+	SELECT [pkConcessionTypeId] FROM [dbo].[rtblConcessionType]
+	WHERE [Code] = 'Cash')
+	AND [TariffTable] NOT IN (
+	SELECT sdi.[TableNo] FROM [dbo].[tblSapDataImport] sdi
+	JOIN [dbo].[rtblChannelTypeImport] cti on cti.[ImportFileChannel] = sdi.[Channel])
+
+	-- are there cash specific table numbers in the sap data import table that aren't in the table numbers lookup table for cash
+	UNION
+	SELECT
+		'[dbo].[tblSapDataImport].[TableNo]: ' + [TableNo] [Column], 
+		'Missing from [rtblTableNumber] for Cash Concession Type' [Issue]
+	FROM [dbo].[tblSapDataImport] sdi
+	JOIN [dbo].[rtblChannelTypeImport] cti on cti.[ImportFileChannel] = sdi.[Channel]
+	WHERE sdi.[TableNo] NOT IN (
+	SELECT CAST([TariffTable] AS VARCHAR(50))
+	FROM [dbo].[rtblTableNumber]
+	WHERE [fkConcessionTypeId] = (
+	SELECT [pkConcessionTypeId] FROM [dbo].[rtblConcessionType]
+	WHERE [Code] = 'Cash'))
+
+	-- are the transactional specific table numbers in the sap data import table
+	UNION
+		SELECT
+		'[dbo].[rtblTransactionTableNumber].[TariffTable]: ' + CAST([TariffTable] AS VARCHAR(50)) [Column],
+		'Missing from [dbo].[tblSapDataImport]' [Issue] 
+	FROM [dbo].[rtblTransactionTableNumber]
+	WHERE [TariffTable] NOT IN (
+	SELECT sdi.[TableNo] FROM [dbo].[tblSapDataImport] sdi
+	JOIN [dbo].[rtblTransactionTypeImport] tti on tti.[ImportFileChannel] = sdi.[Channel])
+
+	-- are there transactional specific table numbers in the sap data import table that aren't in the table numbers lookup table for transactional 
+	UNION
+	SELECT
+		'[dbo].[tblSapDataImport].[TableNo]: ' + [TableNo] [Column], 
+		'Missing from [rtblTransactionTableNumber]' [Issue]
+	FROM [dbo].[tblSapDataImport] sdi
+	JOIN [dbo].[rtblTransactionTypeImport] tti on tti.[ImportFileChannel] = sdi.[Channel]
+	WHERE sdi.[TableNo] NOT IN (
+	SELECT CAST([TariffTable] AS VARCHAR(50))
+	FROM [dbo].[rtblTransactionTableNumber])
 
 END
 

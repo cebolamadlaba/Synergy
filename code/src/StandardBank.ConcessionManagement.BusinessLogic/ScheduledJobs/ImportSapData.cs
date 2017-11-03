@@ -8,6 +8,7 @@ using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic.ScheduledJobs;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Model.BusinessLogic.EmailTemplates;
 using StandardBank.ConcessionManagement.Model.Repository;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
@@ -78,6 +79,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                 try
                 {
                     sapDataImports.AddRange(ProcessConfiguration(configuration));
+
+                    if (sapDataImports.Any())
+                        TrySendImportDataIssuesEmail(configuration);
                 }
                 catch (Exception ex)
                 {
@@ -89,6 +93,30 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
 
             if (sapDataImports.Any())
                 _sapDataImportRepository.UpdatePricesAndMismatches();
+        }
+
+        /// <summary>
+        /// Tries the send import data issues email.
+        /// </summary>
+        /// <param name="configuration">The configuration.</param>
+        private void TrySendImportDataIssuesEmail(SapDataImportConfiguration configuration)
+        {
+            try
+            {
+                var sapDataImportIssues = _sapDataImportRepository.GetSapDataImportIssues();
+
+                _backgroundJobClient.Schedule(() => _emailManager.SendSapDataImportIssuesEmail(
+                    new SapDataImportIssuesEmail
+                    {
+                        SapDataImportIssues = sapDataImportIssues,
+                        SupportEmailAddress = configuration.SupportEmailAddress
+                    }), DateTime.Now);
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = ex.ToString();
+                //ignore this error
+            }
         }
 
         /// <summary>

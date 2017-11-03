@@ -112,5 +112,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 Constants.EmailTemplates.NewConcession,
                 new {Name = concessionAddedEmail.FirstName, ConcessionId = concessionAddedEmail.ConsessionId});
         }
+
+        /// <summary>
+        /// Sends the sap data import issues email.
+        /// </summary>
+        /// <param name="sapDataImportIssuesEmail">The sap data import issues email.</param>
+        /// <returns></returns>
+        public async Task<bool> SendSapDataImportIssuesEmail(SapDataImportIssuesEmail sapDataImportIssuesEmail)
+        {
+            return await SendTemplatedEmail(sapDataImportIssuesEmail.SupportEmailAddress, "CMS SAP Data Import Issues",
+                null, "SapDataImportIssues", new {sapDataImportIssuesEmail.SapDataImportIssues});
+        }
     }
 }
