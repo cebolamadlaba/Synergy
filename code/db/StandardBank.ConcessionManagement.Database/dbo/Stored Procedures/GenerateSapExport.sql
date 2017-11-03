@@ -74,8 +74,8 @@ BEGIN
 
 	-- update all the lending records that have been approved today for export
 	UPDATE sdi
-	SET sdi.[ExportRow] = 1
-	-- TODO: For Lending we still don't know what field(s) to update with the Margin Above Prime
+	SET sdi.[ExportRow] = 1,
+	sdi.[FlatFee] = CAST(cl.[ApprovedMarginToPrime] AS VARCHAR(50))
 	FROM [dbo].[tblConcessionLending] cl
 	JOIN [dbo].[rtblProductImport] rpi on rpi.[fkProductId] = cl.[fkProductTypeId] 
 	JOIN [dbo].[tblConcessionDetail] cd on cd.[pkConcessionDetailId] = cl.[fkConcessionDetailId]

@@ -32,7 +32,7 @@ BEGIN
 	TRUNCATE TABLE [dbo].[tblLoadedPriceLending]
 
 	INSERT INTO [dbo].[tblLoadedPriceLending] ([fkProductTypeId], [fkLegalEntityAccountId], [MarginToPrime])
-	SELECT rpi.[fkProductId], lea.[pkLegalEntityAccountId], CAST([TierToValue] AS decimal(18,2)) FROM [dbo].[tblSapDataImport] sdi
+	SELECT rpi.[fkProductId], lea.[pkLegalEntityAccountId], CAST([FlatFee] AS decimal(18,2)) FROM [dbo].[tblSapDataImport] sdi
 	JOIN [dbo].[rtblProductImport] rpi on rpi.[ImportFileChannel] = sdi.[Channel]
 	JOIN [dbo].[tblLegalEntityAccount] lea ON lea.[AccountNumber] = sdi.[AccountNo]
 

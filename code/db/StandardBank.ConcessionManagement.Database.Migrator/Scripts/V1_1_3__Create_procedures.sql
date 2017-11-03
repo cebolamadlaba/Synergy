@@ -74,8 +74,8 @@ BEGIN
 
 	-- update all the lending records that have been approved today for export
 	UPDATE sdi
-	SET sdi.[ExportRow] = 1
-	-- TODO: For Lending we still don't know what field(s) to update with the Margin Above Prime
+	SET sdi.[ExportRow] = 1,
+	sdi.[FlatFee] = CAST(cl.[ApprovedMarginToPrime] AS VARCHAR(50))
 	FROM [dbo].[tblConcessionLending] cl
 	JOIN [dbo].[rtblProductImport] rpi on rpi.[fkProductId] = cl.[fkProductTypeId] 
 	JOIN [dbo].[tblConcessionDetail] cd on cd.[pkConcessionDetailId] = cl.[fkConcessionDetailId]
@@ -145,7 +145,7 @@ BEGIN
 	TRUNCATE TABLE [dbo].[tblLoadedPriceLending]
 
 	INSERT INTO [dbo].[tblLoadedPriceLending] ([fkProductTypeId], [fkLegalEntityAccountId], [MarginToPrime])
-	SELECT rpi.[fkProductId], lea.[pkLegalEntityAccountId], CAST([TierToValue] AS decimal(18,2)) FROM [dbo].[tblSapDataImport] sdi
+	SELECT rpi.[fkProductId], lea.[pkLegalEntityAccountId], CAST([FlatFee] AS decimal(18,2)) FROM [dbo].[tblSapDataImport] sdi
 	JOIN [dbo].[rtblProductImport] rpi on rpi.[ImportFileChannel] = sdi.[Channel]
 	JOIN [dbo].[tblLegalEntityAccount] lea ON lea.[AccountNumber] = sdi.[AccountNo]
 
@@ -189,3 +189,45 @@ END
 
 GO
 
+CREATE PROCEDURE [dbo].[SapImportDataIssues]
+AS
+
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT 
+		'[dbo].[tblSapDataImport].[AccountNo]: ' + [AccountNo] [Column], 
+		'Missing from [tblLegalEntityAccount]' [Issue] FROM [dbo].[tblSapDataImport]
+	WHERE [AccountNo] NOT IN (	SELECT [AccountNumber] FROM [dbo].[tblLegalEntityAccount])
+	UNION
+	SELECT 
+		'[dbo].[rtblChannelTypeImport].[ImportFileChannel]: ' + cti.[ImportFileChannel] [Column], 
+		'Missing from [dbo].[tblSapDataImport]' [Issue] 
+	FROM [dbo].[rtblChannelTypeImport] cti
+	LEFT JOIN [dbo].[tblSapDataImport] sdi on sdi.[Channel] = cti.[ImportFileChannel]
+	WHERE sdi.[PricepointId] IS NULL
+	UNION
+	SELECT 
+		'[dbo].[rtblProductImport].[ImportFileChannel]: ' + rpi.[ImportFileChannel] [Column], 
+		'Missing from [dbo].[tblSapDataImport]' [Issue] 
+	FROM [dbo].[rtblProductImport] rpi
+	LEFT JOIN [dbo].[tblSapDataImport] sdi on sdi.[Channel] = rpi.[ImportFileChannel]
+	WHERE sdi.[PricepointId] IS NULL
+	UNION
+	SELECT
+		'[dbo].[rtblTransactionTypeImport].[ImportFileChannel]: ' + tti.[ImportFileChannel] [Column], 
+		'Missing from [dbo].[tblSapDataImport]' [Issue] 
+	FROM [dbo].[rtblTransactionTypeImport] tti
+	LEFT JOIN [dbo].[tblSapDataImport] sdi on sdi.[Channel] = tti.[ImportFileChannel]
+	WHERE sdi.[PricepointId] IS NULL
+	UNION
+	SELECT
+		 '[dbo].[tblLegalEntityAccount].[AccountNumber]: ' + lea.[AccountNumber] [Column], 
+		 'Missing from [dbo].[tblSapDataImport]' [Issue] 
+	FROM [dbo].[tblLegalEntityAccount] lea
+	WHERE lea.[AccountNumber] NOT IN (
+	SELECT [AccountNo] FROM [dbo].[tblSapDataImport])
+
+END
+
+GO
