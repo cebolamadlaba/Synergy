@@ -1,4 +1,8 @@
-﻿UPDATE [dbo].[tblConcessionCash]
+﻿DELETE FROM [dbo].[tblLoadedPriceCash]
+
+GO
+
+UPDATE [dbo].[tblConcessionCash]
 SET [fkChannelTypeId] = (SELECT TOP 1 [fkChannelTypeId] FROM [dbo].[rtblChannelTypeImport])
 WHERE [fkChannelTypeId] NOT IN (
 SELECT [fkChannelTypeId] FROM [dbo].[rtblChannelTypeImport])

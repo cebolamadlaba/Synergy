@@ -125,7 +125,9 @@ BEGIN
 	SELECT cti.[fkChannelTypeId], lea.[pkLegalEntityAccountId], tn.[pkTableNumberId] FROM [dbo].[tblSapDataImport] sdi
 	JOIN [dbo].[rtblChannelTypeImport] cti ON cti.[ImportFileChannel] = sdi.[Channel]
 	JOIN [dbo].[tblLegalEntityAccount] lea ON lea.[AccountNumber] = sdi.[AccountNo]
-	JOIN [dbo].[rtblTableNumber] tn ON tn.[TariffTable] = sdi.[TableNo] AND tn.[AdValorem] = sdi.[AdvaloremFee] AND tn.[BaseRate] = sdi.[FlatFee]
+	JOIN [dbo].[rtblTableNumber] tn ON tn.[TariffTable] = sdi.[TableNo] 
+		AND (tn.[AdValorem] = CAST(sdi.[AdvaloremFee] AS decimal(18,2)) OR (tn.[AdValorem] IS NULL AND sdi.[AdvaloremFee] IS NULL))
+		AND (tn.[BaseRate] = CAST(sdi.[FlatFee] AS decimal(18,3)) OR (tn.[BaseRate] IS NULL AND sdi.[FlatFee] IS NULL))
 
 	-- update the loaded prices for cash concessions
 	UPDATE cc
@@ -181,10 +183,12 @@ BEGIN
 	TRUNCATE TABLE [dbo].[tblLoadedPriceTransactional]
 
 	INSERT INTO [dbo].[tblLoadedPriceTransactional] ([fkTransactionTypeId], [fkLegalEntityAccountId], [fkTransactionTableNumberId])
-	SELECT tti.[fkTransactionTypeId], lea.[pkLegalEntityAccountId], tn.[pkTableNumberId] FROM [dbo].[tblSapDataImport] sdi
+	SELECT tti.[fkTransactionTypeId], lea.[pkLegalEntityAccountId], tn.[pkTransactionTableNumberId] FROM [dbo].[tblSapDataImport] sdi
 	JOIN [dbo].[rtblTransactionTypeImport] tti on tti.[ImportFileChannel] = sdi.[Channel]
 	JOIN [dbo].[tblLegalEntityAccount] lea ON lea.[AccountNumber] = sdi.[AccountNo]
-	JOIN [dbo].[rtblTableNumber] tn ON tn.[TariffTable] = sdi.[TableNo] AND tn.[AdValorem] = sdi.[AdvaloremFee] AND tn.[BaseRate] = sdi.[FlatFee]
+	JOIN [dbo].[rtblTransactionTableNumber] tn ON tn.[TariffTable] = sdi.[TableNo] 
+		AND (tn.[AdValorem] = CAST(sdi.[AdvaloremFee] AS decimal(18,2)) OR (tn.[AdValorem] IS NULL AND sdi.[AdvaloremFee] IS NULL))
+		AND (tn.[Fee] = CAST(sdi.[FlatFee] AS decimal(18,3)) OR (tn.[Fee] IS NULL AND sdi.[FlatFee] IS NULL))
 
 	-- update the loaded prices for transactional concessions
 	UPDATE ct
