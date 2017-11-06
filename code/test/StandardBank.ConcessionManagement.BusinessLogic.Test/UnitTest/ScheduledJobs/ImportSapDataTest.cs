@@ -4,6 +4,7 @@ using StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
+using StandardBank.ConcessionManagement.Test.Helpers;
 using Xunit;
 using static StandardBank.ConcessionManagement.Test.Helpers.MockedDependencies;
 
@@ -51,7 +52,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest.Schedule
 
             var importSapData = new ImportSapData(mockSapDataImportConfigurationRepository.Object,
                 MockEmailManager.Object, mockSapDataImportRepository.Object, mockFileUtiltity.Object,
-                MockBackgroundJobClient.Object);
+                MockBackgroundJobClient.Object, InstantiatedDependencies.ConfigurationData);
 
             await importSapData.Run();
 
@@ -101,7 +102,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest.Schedule
 
             var importSapData = new ImportSapData(mockSapDataImportConfigurationRepository.Object,
                 MockEmailManager.Object, mockSapDataImportRepository.Object, mockFileUtiltity.Object,
-                MockBackgroundJobClient.Object);
+                MockBackgroundJobClient.Object, InstantiatedDependencies.ConfigurationData);
 
             await importSapData.Run();
 

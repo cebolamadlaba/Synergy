@@ -228,6 +228,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="mappedConcessionCash">The mapped concession cash.</param>
         private void UpdateIsMismatched(ConcessionCash mappedConcessionCash)
         {
+            mappedConcessionCash.IsMismatched = false;
+
             var loadedPriceCash =
                 _loadedPriceCashRepository.ReadByChannelTypeIdLegalEntityAccountId(
                     mappedConcessionCash.ChannelTypeId, mappedConcessionCash.LegalEntityAccountId);

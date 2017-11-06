@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
@@ -220,6 +219,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="mappedConcessionTransactional">The mapped concession transactional.</param>
         private void UpdateIsMismatched(ConcessionTransactional mappedConcessionTransactional)
         {
+            mappedConcessionTransactional.IsMismatched = false;
+
             if (mappedConcessionTransactional.TransactionTypeId.HasValue)
             {
                 var loadedPriceTransactional =

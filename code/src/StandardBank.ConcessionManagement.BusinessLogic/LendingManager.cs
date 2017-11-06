@@ -235,6 +235,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="concessionLending">The concession lending.</param>
         private void UpdateIsMismatched(ConcessionLending concessionLending)
         {
+            concessionLending.IsMismatched = false;
+
             var loadedPriceLending =
                 _loadedPriceLendingRepository.ReadByProductTypeIdLegalEntityAccountId(
                     concessionLending.ProductTypeId, concessionLending.LegalEntityAccountId);

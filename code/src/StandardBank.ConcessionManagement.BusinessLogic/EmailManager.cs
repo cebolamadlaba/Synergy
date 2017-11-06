@@ -121,7 +121,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public async Task<bool> SendSapDataImportIssuesEmail(SapDataImportIssuesEmail sapDataImportIssuesEmail)
         {
             return await SendTemplatedEmail(sapDataImportIssuesEmail.SupportEmailAddress, "CMS SAP Data Import Issues",
-                null, "SapDataImportIssues", new {sapDataImportIssuesEmail.SapDataImportIssues});
+                null, "SapDataImportIssues", new
+                {
+                    sapDataImportIssuesEmail.ServerName,
+                    sapDataImportIssuesEmail.DatabaseServer,
+                    sapDataImportIssuesEmail.DatabaseName,
+                    sapDataImportIssuesEmail.ImportFolder,
+                    sapDataImportIssuesEmail.SapDataImportIssues
+                });
         }
     }
 }

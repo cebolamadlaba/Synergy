@@ -45,6 +45,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
         private readonly IBackgroundJobClient _backgroundJobClient;
 
         /// <summary>
+        /// The configuration data
+        /// </summary>
+        private readonly IConfigurationData _configurationData;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ImportSapData"/> class.
         /// </summary>
         /// <param name="sapDataImportConfigurationRepository">The sap data import configuration repository.</param>
@@ -52,15 +57,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
         /// <param name="sapDataImportRepository">The sap data import repository.</param>
         /// <param name="fileUtiltity">The file utiltity.</param>
         /// <param name="backgroundJobClient">The background job client.</param>
+        /// <param name="configurationData">The configuration data.</param>
         public ImportSapData(ISapDataImportConfigurationRepository sapDataImportConfigurationRepository,
             IEmailManager emailManager, ISapDataImportRepository sapDataImportRepository, IFileUtiltity fileUtiltity,
-            IBackgroundJobClient backgroundJobClient)
+            IBackgroundJobClient backgroundJobClient, IConfigurationData configurationData)
         {
             _sapDataImportConfigurationRepository = sapDataImportConfigurationRepository;
             _emailManager = emailManager;
             _sapDataImportRepository = sapDataImportRepository;
             _fileUtiltity = fileUtiltity;
             _backgroundJobClient = backgroundJobClient;
+            _configurationData = configurationData;
         }
 
         /// <summary>
@@ -108,6 +115,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                 _backgroundJobClient.Schedule(() => _emailManager.SendSapDataImportIssuesEmail(
                     new SapDataImportIssuesEmail
                     {
+                        ImportFolder = configuration.FileImportLocation,
+                        ServerName = Environment.MachineName,
+                        DatabaseServer = GetDatabaseServerName(),
+                        DatabaseName = GetDatabaseName(),
                         SapDataImportIssues = sapDataImportIssues,
                         SupportEmailAddress = configuration.SupportEmailAddress
                     }), DateTime.Now);
@@ -117,6 +128,36 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                 var errorMessage = ex.ToString();
                 //ignore this error
             }
+        }
+
+        /// <summary>
+        /// Gets the name of the database.
+        /// </summary>
+        /// <returns></returns>
+        private string GetDatabaseName()
+        {
+            var connectionStringParts = _configurationData.ConnectionString.Split(';');
+
+            foreach (var part in connectionStringParts)
+                if (part.ToLowerInvariant().StartsWith("database"))
+                    return part;
+
+            return "Could not determine";
+        }
+
+        /// <summary>
+        /// Gets the name of the database server.
+        /// </summary>
+        /// <returns></returns>
+        private string GetDatabaseServerName()
+        {
+            var connectionStringParts = _configurationData.ConnectionString.Split(';');
+
+            foreach (var part in connectionStringParts)
+                if (part.ToLowerInvariant().StartsWith("server") || part.ToLowerInvariant().StartsWith("data source"))
+                    return part;
+
+            return "Could not determine";
         }
 
         /// <summary>
