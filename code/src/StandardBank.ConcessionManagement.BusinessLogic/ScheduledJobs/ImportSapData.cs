@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -8,7 +8,6 @@ using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic.ScheduledJobs;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
-using StandardBank.ConcessionManagement.Model.BusinessLogic.EmailTemplates;
 using StandardBank.ConcessionManagement.Model.Repository;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
@@ -76,8 +75,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
         /// <returns></returns>
         public async Task Run()
         {
-            var sapDataImports = new List<SapDataImport>();
-
             //1. get configuration data
             var configurations = _sapDataImportConfigurationRepository.ReadAll();
 
@@ -85,10 +82,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
             {
                 try
                 {
-                    sapDataImports.AddRange(ProcessConfiguration(configuration));
-
-                    if (sapDataImports.Any())
-                        TrySendImportDataIssuesEmail(configuration);
+                    ProcessConfiguration(configuration);
                 }
                 catch (Exception ex)
                 {
@@ -97,67 +91,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                             $"File Import Failed With: {ex}"), DateTime.Now);
                 }
             }
-
-            if (sapDataImports.Any())
-                _sapDataImportRepository.UpdatePricesAndMismatches();
-        }
-
-        /// <summary>
-        /// Tries the send import data issues email.
-        /// </summary>
-        /// <param name="configuration">The configuration.</param>
-        private void TrySendImportDataIssuesEmail(SapDataImportConfiguration configuration)
-        {
-            try
-            {
-                var sapDataImportIssues = _sapDataImportRepository.GetSapDataImportIssues();
-
-                _backgroundJobClient.Schedule(() => _emailManager.SendSapDataImportIssuesEmail(
-                    new SapDataImportIssuesEmail
-                    {
-                        ImportFolder = configuration.FileImportLocation,
-                        ServerName = Environment.MachineName,
-                        DatabaseServer = GetDatabaseServerName(),
-                        DatabaseName = GetDatabaseName(),
-                        SapDataImportIssues = sapDataImportIssues,
-                        SupportEmailAddress = configuration.SupportEmailAddress
-                    }), DateTime.Now);
-            }
-            catch (Exception ex)
-            {
-                var errorMessage = ex.ToString();
-                //ignore this error
-            }
-        }
-
-        /// <summary>
-        /// Gets the name of the database.
-        /// </summary>
-        /// <returns></returns>
-        private string GetDatabaseName()
-        {
-            var connectionStringParts = _configurationData.ConnectionString.Split(';');
-
-            foreach (var part in connectionStringParts)
-                if (part.ToLowerInvariant().StartsWith("database"))
-                    return part;
-
-            return "Could not determine";
-        }
-
-        /// <summary>
-        /// Gets the name of the database server.
-        /// </summary>
-        /// <returns></returns>
-        private string GetDatabaseServerName()
-        {
-            var connectionStringParts = _configurationData.ConnectionString.Split(';');
-
-            foreach (var part in connectionStringParts)
-                if (part.ToLowerInvariant().StartsWith("server") || part.ToLowerInvariant().StartsWith("data source"))
-                    return part;
-
-            return "Could not determine";
         }
 
         /// <summary>
@@ -165,15 +98,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         /// <returns></returns>
-        private IEnumerable<SapDataImport> ProcessConfiguration(SapDataImportConfiguration configuration)
+        private void ProcessConfiguration(SapDataImportConfiguration configuration)
         {
-            var sapDataImports = new List<SapDataImport>();
+            var importFiles = _fileUtiltity.GetFilesInDirectory(configuration.FileImportLocation);
 
-            //2. check for the import file
-            var files = _fileUtiltity.GetFilesInDirectory(configuration.FileImportLocation, true);
-
-            //3. if no import file notify support email address
-            if (files == null || !files.Any())
+            if (importFiles == null || !importFiles.Any())
             {
                 _backgroundJobClient.Schedule(
                     () => _emailManager.SendEmail(configuration.SupportEmailAddress, $"CMS {Name} Error",
@@ -182,88 +111,114 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
             }
             else
             {
-                foreach (var file in files)
+                foreach (var importFile in importFiles)
                 {
-                    //4. if there is a file import into CMS database
-                    sapDataImports.AddRange(ImportData(file, configuration));
+                    //process the file
+                    ProcessFile(configuration, importFile);
 
-                    //5. delete the file
-                    _fileUtiltity.DeleteFile(file);
+                    //delete the file when done
+                    _fileUtiltity.DeleteFile(importFile);
                 }
             }
-
-            return sapDataImports;
+            
         }
 
         /// <summary>
-        /// Imports the data.
+        /// Processes the file.
         /// </summary>
-        /// <param name="file">The file.</param>
         /// <param name="configuration">The configuration.</param>
-        private IEnumerable<SapDataImport> ImportData(string file, SapDataImportConfiguration configuration)
+        /// <param name="importFile">The import file.</param>
+        private void ProcessFile(SapDataImportConfiguration configuration, string importFile)
         {
-            var fileData = _fileUtiltity.ReadFileLines(file, true);
-            var sapDataImports = GetDataFromFile(fileData.ToArray(), configuration);
+            var isHeaderRow = true;
+            string[] columnHeadings = null;
 
-            foreach (var sapDataImport in sapDataImports)
+            //use a stream reader to read the file and process line by line
+            using (var file = File.OpenRead(importFile))
             {
-                //if the price point id exists that means it's an update, otherwise it's an insert
-                var existingSapDataImport = _sapDataImportRepository.ReadById(sapDataImport.PricepointId);
-                sapDataImport.LastUpdatedDate = DateTime.Now;
-                sapDataImport.ExportRow = false;
+                using (var reader = new StreamReader(file))
+                {
+                    while (!reader.EndOfStream)
+                    {
+                        var fileData = reader.ReadLine();
 
-                if (existingSapDataImport != null)
-                {
-                    sapDataImport.ImportDate = existingSapDataImport.ImportDate;
-                    _sapDataImportRepository.Update(sapDataImport);
-                }
-                else
-                {
-                    sapDataImport.ImportDate = DateTime.Now;
-                    _sapDataImportRepository.Create(sapDataImport);
+                        if (!string.IsNullOrWhiteSpace(fileData))
+                        {
+                            if (isHeaderRow)
+                            {
+                                columnHeadings = fileData.Split('|');
+                                isHeaderRow = false;
+                            }
+                            else
+                            {
+                                ProcessRow(configuration, fileData, columnHeadings);
+                            }
+                        }
+                    }
                 }
             }
-
-            return sapDataImports;
         }
 
         /// <summary>
-        /// Gets the data from file.
+        /// Processes the row.
         /// </summary>
+        /// <param name="configuration">The configuration.</param>
         /// <param name="fileData">The file data.</param>
-        /// <param name="configuration">The configuration.</param>
-        /// <returns></returns>
-        private IEnumerable<SapDataImport> GetDataFromFile(string[] fileData, SapDataImportConfiguration configuration)
+        /// <param name="columnHeadings">The column headings.</param>
+        private void ProcessRow(SapDataImportConfiguration configuration, string fileData, string[] columnHeadings)
         {
-            var sapDataImports = new List<SapDataImport>();
+            var recordData = fileData.Split('|');
 
-            //first row is the column headings
-            var columnHeadings = fileData[0].Split('|');
-
-            //loop through the data starting from the second row
-            for (var i = 1; i < fileData.Length; i++)
+            if (columnHeadings.Length != recordData.Length)
             {
-                if (!string.IsNullOrWhiteSpace(fileData[i]))
-                {
-                    var recordData = fileData[i].Split('|');
+                var message =
+                    $"Record: ({fileData}) has {recordData.Length} columns instead of required {columnHeadings.Length} columns ({fileData})";
 
-                    if (columnHeadings.Length != recordData.Length)
-                    {
-                        var message =
-                            $"Record: ({fileData[i]}) has {recordData.Length} columns instead of required {columnHeadings.Length} columns ({fileData[0]})";
-
-                        _backgroundJobClient.Schedule(
-                            () => _emailManager.SendEmail(configuration.SupportEmailAddress, $"CMS {Name} Error", message),
-                            DateTime.Now);
-                    }
-                    else
-                    {
-                        sapDataImports.Add(GetSapDataImport(columnHeadings, recordData));
-                    }
-                }
+                _backgroundJobClient.Schedule(
+                    () => _emailManager.SendEmail(configuration.SupportEmailAddress, $"CMS {Name} Error", message),
+                    DateTime.Now);
             }
+            else
+            {
+                var sapDataImport = GetSapDataImport(columnHeadings, recordData);
 
-            return sapDataImports;
+                InsertOrUpdateSapDataImport(sapDataImport);
+
+                UpdateLoadedPricesAndIsMismatched(sapDataImport);
+            }
+        }
+
+        /// <summary>
+        /// Updates the loaded prices and is mismatched.
+        /// </summary>
+        /// <param name="sapDataImport">The sap data import.</param>
+        private void UpdateLoadedPricesAndIsMismatched(SapDataImport sapDataImport)
+        {
+            //TODO: Update the loaded prices and is mismatched for the record we're importing
+        }
+
+        /// <summary>
+        /// Inserts the or update sap data import.
+        /// </summary>
+        /// <param name="sapDataImport">The sap data import.</param>
+        private void InsertOrUpdateSapDataImport(SapDataImport sapDataImport)
+        {
+            //if the price point id exists that means it's an update, otherwise it's an insert
+            var existingSapDataImport = _sapDataImportRepository.ReadById(sapDataImport.PricepointId);
+
+            sapDataImport.LastUpdatedDate = DateTime.Now;
+            sapDataImport.ExportRow = false;
+
+            if (existingSapDataImport != null)
+            {
+                sapDataImport.ImportDate = existingSapDataImport.ImportDate;
+                _sapDataImportRepository.Update(sapDataImport);
+            }
+            else
+            {
+                sapDataImport.ImportDate = DateTime.Now;
+                _sapDataImportRepository.Create(sapDataImport);
+            }
         }
 
         /// <summary>
