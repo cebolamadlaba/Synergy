@@ -291,7 +291,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The RiskGroup repository
         /// </summary>
-        public static IRiskGroupRepository RiskGroupRepository = new RiskGroupRepository(DbConnection, CacheManager);
+        public static IRiskGroupRepository RiskGroupRepository = new RiskGroupRepository(DbConnection);
 
         /// <summary>
         /// The ScenarioManagerToolDeal repository

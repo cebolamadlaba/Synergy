@@ -21,19 +21,12 @@ namespace StandardBank.ConcessionManagement.Repository
         private readonly IDbConnectionFactory _dbConnectionFactory;
 
         /// <summary>
-        /// The cache manager
-        /// </summary>
-        private readonly ICacheManager _cacheManager;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="RiskGroupRepository"/> class.
         /// </summary>
         /// <param name="dbConnectionFactory">The database connection factory.</param>
-        /// <param name="cacheManager">The cache manager.</param>
-        public RiskGroupRepository(IDbConnectionFactory dbConnectionFactory, ICacheManager cacheManager)
+        public RiskGroupRepository(IDbConnectionFactory dbConnectionFactory)
         {
             _dbConnectionFactory = dbConnectionFactory;
-            _cacheManager = cacheManager;
         }
 
         /// <summary>
@@ -60,9 +53,6 @@ namespace StandardBank.ConcessionManagement.Repository
                     }).Single();
             }
 
-            //clear out the cache because the data has changed
-            _cacheManager.Remove(CacheKey.Repository.RiskGroupRepository.ReadAll);
-
             return model;
         }
 
@@ -73,7 +63,13 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public RiskGroup ReadById(int id)
         {
-            return ReadAll().FirstOrDefault(_ => _.Id == id);
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<RiskGroup>(
+                    @"SELECT [pkRiskGroupId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRegionId] [RegionId], [RiskGroupNumber], [RiskGroupName], [IsActive] 
+                    FROM [dbo].[tblRiskGroup]
+                    WHERE [pkRiskGroupId] = @id", new { id }).FirstOrDefault();
+            }
         }
 
         /// <summary>
@@ -84,7 +80,14 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public RiskGroup ReadByIdIsActive(int id, bool isActive)
         {
-            return ReadAll().FirstOrDefault(_ => _.Id == id && _.IsActive == isActive);
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<RiskGroup>(
+                    @"SELECT [pkRiskGroupId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRegionId] [RegionId], [RiskGroupNumber], [RiskGroupName], [IsActive] 
+                    FROM [dbo].[tblRiskGroup]
+                    WHERE [pkRiskGroupId] = @id
+                    AND [IsActive] = @isActive", new {id, isActive}).Single();
+            }
         }
 
         /// <summary>
@@ -95,7 +98,14 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public RiskGroup ReadByRiskGroupNumberIsActive(int riskGroupNumber, bool isActive)
         {
-            return ReadAll().FirstOrDefault(_ => _.RiskGroupNumber == riskGroupNumber && _.IsActive == isActive);
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<RiskGroup>(
+                    @"SELECT [pkRiskGroupId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRegionId] [RegionId], [RiskGroupNumber], [RiskGroupName], [IsActive] 
+                    FROM [dbo].[tblRiskGroup]
+                    WHERE [RiskGroupNumber] = @riskGroupNumber
+                    AND [IsActive] = @isActive", new {riskGroupNumber, isActive}).First();
+            }
         }
 
         /// <summary>
@@ -104,16 +114,11 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public IEnumerable<RiskGroup> ReadAll()
         {
-            Func<IEnumerable<RiskGroup>> function = () =>
+            using (var db = _dbConnectionFactory.Connection())
             {
-                using (var db = _dbConnectionFactory.Connection())
-                {
-                    return db.Query<RiskGroup>(
-                        "SELECT [pkRiskGroupId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRegionId] [RegionId], [RiskGroupNumber], [RiskGroupName], [IsActive] FROM [dbo].[tblRiskGroup]");
-                }
-            };
-
-            return _cacheManager.ReturnFromCache(function, 1440, CacheKey.Repository.RiskGroupRepository.ReadAll);
+                return db.Query<RiskGroup>(
+                    "SELECT [pkRiskGroupId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRegionId] [RegionId], [RiskGroupNumber], [RiskGroupName], [IsActive] FROM [dbo].[tblRiskGroup]");
+            }
         }
 
         /// <summary>
@@ -137,9 +142,6 @@ namespace StandardBank.ConcessionManagement.Repository
                         IsActive = model.IsActive
                     });
             }
-
-            //clear out the cache because the data has changed
-            _cacheManager.Remove(CacheKey.Repository.RiskGroupRepository.ReadAll);
         }
 
         /// <summary>
@@ -153,9 +155,6 @@ namespace StandardBank.ConcessionManagement.Repository
                 db.Execute("DELETE [dbo].[tblRiskGroup] WHERE [pkRiskGroupId] = @Id",
                     new {model.Id});
             }
-
-            //clear out the cache because the data has changed
-            _cacheManager.Remove(CacheKey.Repository.RiskGroupRepository.ReadAll);
         }
     }
 }

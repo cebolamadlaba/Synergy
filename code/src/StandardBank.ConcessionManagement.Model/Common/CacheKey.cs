@@ -158,11 +158,6 @@
                 public const string ReadAll = "CacheKey.Repository.TransactionalTableNumberRepository.ReadAll";
             }
 
-            public static class RiskGroupRepository
-            {
-                public const string ReadAll = "CacheKey.Repository.RiskGroupRepository.ReadAll";
-            }
-
             public static class ChannelTypeImportRepository
             {
                 public const string ReadAll = "CacheKey.Repository.ChannelTypeImportRepository.ReadAll";
