@@ -20,6 +20,7 @@ export class PricingComponent implements OnInit, OnDestroy {
     riskGroup: RiskGroup;
     riskGroupNumber: number;
     foundRiskGroup = false;
+    isLoading = false;
 
     constructor(private route: ActivatedRoute,
         @Inject(UserService) private userService,
@@ -40,14 +41,19 @@ export class PricingComponent implements OnInit, OnDestroy {
     }
 
     searchRiskGroupNumber(riskGroupNumber: number) {
+        this.isLoading = true;
         this.foundRiskGroup = false;
         this.riskGroupNumber = riskGroupNumber;
         this.observableRiskGroup = this.lookupDataService.getRiskGroup(riskGroupNumber);
         this.observableRiskGroup.subscribe(riskGroup => {
                 this.riskGroup = riskGroup;
                 this.foundRiskGroup = true;
+                this.isLoading = false;
             },
-            error => this.errorMessage = <any>error);
+            error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
     }
 
     ngOnDestroy() {

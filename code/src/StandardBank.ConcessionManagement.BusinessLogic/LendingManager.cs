@@ -281,7 +281,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return new LendingView
             {
                 RiskGroup = riskGroup,
-                LendingConcessions = lendingConcessions,
+                LendingConcessions = lendingConcessions.OrderByDescending(_ => _.Concession.DateOpened),
                 LendingProducts = lendingProducts,
                 LendingFinancial = lendingFinancial
             };

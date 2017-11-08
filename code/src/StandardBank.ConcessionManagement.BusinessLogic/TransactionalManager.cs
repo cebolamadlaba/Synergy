@@ -275,7 +275,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return new TransactionalView
             {
                 RiskGroup = riskGroup,
-                TransactionalConcessions = transactionalConcessions,
+                TransactionalConcessions = transactionalConcessions.OrderByDescending(_ => _.Concession.DateOpened),
                 TransactionalFinancial = transactionalFinancial,
                 TransactionalProducts = transactionalProducts
             };

@@ -104,7 +104,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     @"SELECT [pkRiskGroupId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRegionId] [RegionId], [RiskGroupNumber], [RiskGroupName], [IsActive] 
                     FROM [dbo].[tblRiskGroup]
                     WHERE [RiskGroupNumber] = @riskGroupNumber
-                    AND [IsActive] = @isActive", new {riskGroupNumber, isActive}).First();
+                    AND [IsActive] = @isActive", new {riskGroupNumber, isActive}).FirstOrDefault();
             }
         }
 
