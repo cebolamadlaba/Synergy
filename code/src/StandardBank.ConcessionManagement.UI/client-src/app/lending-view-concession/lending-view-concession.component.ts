@@ -113,17 +113,6 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
             this.concessionReferenceId = params['concessionReferenceId'];
-
-            if (this.riskGroupNumber) {
-                this.observableRiskGroup = this.lookupDataService.getRiskGroup(this.riskGroupNumber);
-                this.observableRiskGroup.subscribe(riskGroup => this.riskGroup = riskGroup, error => this.errorMessage = <any>error);
-
-                this.observableClientAccounts = this.lookupDataService.getClientAccounts(this.riskGroupNumber);
-                this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
-
-                this.observableLendingFinancial = this.lendingService.getLendingFinancial(this.riskGroupNumber);
-                this.observableLendingFinancial.subscribe(lendingFinancial => this.lendingFinancial = lendingFinancial, error => this.errorMessage = <any>error);
-            }
         });
 
         this.lendingConcessionForm = this.formBuilder.group({
@@ -140,13 +129,19 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             this.lookupDataService.getProductTypes("Lending"),
             this.lookupDataService.getPeriods(),
             this.lookupDataService.getPeriodTypes(),
-            this.lookupDataService.getConditionTypes()
+            this.lookupDataService.getConditionTypes(),
+            this.lookupDataService.getRiskGroup(this.riskGroupNumber),
+            this.lookupDataService.getClientAccounts(this.riskGroupNumber),
+            this.lendingService.getLendingFinancial(this.riskGroupNumber)
         ]).subscribe(results => {
             this.reviewFeeTypes = <any>results[0];
             this.productTypes = <any>results[1];
             this.periods = <any>results[2];
             this.periodTypes = <any>results[3];
             this.conditionTypes = <any>results[4];
+            this.riskGroup = <any>results[5];
+            this.clientAccounts = <any>results[6];
+            this.lendingFinancial = <any>results[7];
 
             this.populateForm();
             }, error => this.errorMessage = <any>error);
@@ -349,8 +344,10 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     deleteConcessionRow(index: number) {
-        const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
-        control.removeAt(index);
+        if (confirm("Are you sure you want to remove this row?")) {
+            const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+            control.removeAt(index);
+        }
     }
 
     deleteConditionRow(index: number) {

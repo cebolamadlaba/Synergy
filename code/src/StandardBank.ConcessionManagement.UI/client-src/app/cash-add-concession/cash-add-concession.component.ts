@@ -34,7 +34,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
     public cashConcessionForm: FormGroup;
     selectedConditionTypes: ConditionType[];
-    isLoading = false;
+    isLoading = true;
     observableLatestCrsOrMrs: Observable<number>;
     latestCrsOrMrs: number;
 
@@ -95,23 +95,29 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             motivation: new FormControl()
         });
 
-        this.observableChannelTypes = this.lookupDataService.getChannelTypes();
-        this.observableChannelTypes.subscribe(channelTypes => this.channelTypes = channelTypes, error => this.errorMessage = <any>error);
+        Observable.forkJoin([
+            this.lookupDataService.getChannelTypes(),
+            this.lookupDataService.getPeriods(),
+            this.lookupDataService.getPeriodTypes(),
+            this.lookupDataService.getConditionTypes(),
+            this.lookupDataService.getAccrualTypes(),
+            this.lookupDataService.getTableNumbers("Cash"),
+            this.lookupDataService.getRiskGroup(this.riskGroupNumber),
+            this.lookupDataService.getClientAccounts(this.riskGroupNumber),
+            this.cashConcessionService.getlatestCrsOrMrs(this.riskGroupNumber)
+        ]).subscribe(results => {
+            this.channelTypes = <any>results[0];
+            this.periods = <any>results[1];
+            this.periodTypes = <any>results[2];
+            this.conditionTypes = <any>results[3];
+            this.accrualTypes = <any>results[4];
+            this.tableNumbers = <any>results[5];
+            this.riskGroup = <any>results[6];
+            this.clientAccounts = <any>results[7];
+            this.latestCrsOrMrs = <any>results[8];
 
-        this.observablePeriods = this.lookupDataService.getPeriods();
-        this.observablePeriods.subscribe(periods => this.periods = periods, error => this.errorMessage = <any>error);
-
-        this.observablePeriodTypes = this.lookupDataService.getPeriodTypes();
-        this.observablePeriodTypes.subscribe(periodTypes => this.periodTypes = periodTypes, error => this.errorMessage = <any>error);
-
-        this.observableConditionTypes = this.lookupDataService.getConditionTypes();
-        this.observableConditionTypes.subscribe(conditionTypes => this.conditionTypes = conditionTypes, error => this.errorMessage = <any>error);
-
-        this.observableAccrualTypes = this.lookupDataService.getAccrualTypes();
-        this.observableAccrualTypes.subscribe(accrualTypes => this.accrualTypes = accrualTypes, error => this.errorMessage = <any>error);
-
-        this.observableTableNumbers = this.lookupDataService.getTableNumbers("Cash");
-        this.observableTableNumbers.subscribe(tableNumbers => this.tableNumbers = tableNumbers, error => this.errorMessage = <any>error);
+            this.isLoading = false;
+        }, error => this.errorMessage = <any>error);
     }
 
     initConcessionItemRows() {
@@ -158,8 +164,10 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     deleteConcessionRow(index: number) {
-        const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
-        control.removeAt(index);
+        if (confirm("Are you sure you want to remove this row?")) {
+            const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
+            control.removeAt(index);
+        }
     }
 
     deleteConditionRow(index: number) {

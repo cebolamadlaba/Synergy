@@ -106,18 +106,6 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		this.sub = this.route.params.subscribe(params => {
 			this.riskGroupNumber = +params['riskGroupNumber'];
 			this.concessionReferenceId = params['concessionReferenceId'];
-
-			if (this.riskGroupNumber) {
-				this.observableRiskGroup = this.lookupDataService.getRiskGroup(this.riskGroupNumber);
-				this.observableRiskGroup.subscribe(riskGroup => this.riskGroup = riskGroup, error => this.errorMessage = <any>error);
-
-				this.observableClientAccounts = this.lookupDataService.getClientAccounts(this.riskGroupNumber);
-				this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
-
-				this.observableTransactionalFinancial = this.transactionalConcessionService.getTransactionalFinancial(this.riskGroupNumber);
-				this.observableTransactionalFinancial.subscribe(transactionalFinancial => this.transactionalFinancial = transactionalFinancial,
-					error => this.errorMessage = <any>error);
-			}
 		});
 
 		this.transactionalConcessionForm = this.formBuilder.group({
@@ -133,12 +121,18 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 			this.lookupDataService.getPeriods(),
 			this.lookupDataService.getPeriodTypes(),
 			this.lookupDataService.getConditionTypes(),
-			this.lookupDataService.getTransactionTypes("Transactional")
+            this.lookupDataService.getTransactionTypes("Transactional"),
+            this.lookupDataService.getRiskGroup(this.riskGroupNumber),
+            this.lookupDataService.getClientAccounts(this.riskGroupNumber),
+            this.transactionalConcessionService.getTransactionalFinancial(this.riskGroupNumber)
 		]).subscribe(results => {
 			this.periods = <any>results[0];
 			this.periodTypes = <any>results[1];
 			this.conditionTypes = <any>results[2];
 			this.transactionTypes = <any>results[3];
+            this.riskGroup = <any>results[4];
+            this.clientAccounts = <any>results[5];
+            this.transactionalFinancial = <any>results[6];
 
 			this.populateForm();
 		}, error => this.errorMessage = <any>error);
@@ -337,11 +331,13 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 			control.push(this.initConditionItemRows());
 	}
 
-	deleteConcessionRow(index: number) {
-		const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
-		control.removeAt(index);
+    deleteConcessionRow(index: number) {
+        if (confirm("Are you sure you want to remove this row?")) {
+            const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+            control.removeAt(index);
 
-		this.selectedTransactionTypes.splice(index, 1);
+            this.selectedTransactionTypes.splice(index, 1);
+        }
 	}
 
 	deleteConditionRow(index: number) {

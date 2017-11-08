@@ -34,7 +34,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 	riskGroupNumber: number;
 	selectedConditionTypes: ConditionType[];
 	selectedTransactionTypes: TransactionType[];
-	isLoading = false;
+	isLoading = true;
 	observableLatestCrsOrMrs: Observable<number>;
 	latestCrsOrMrs: number;
 
@@ -70,17 +70,6 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 		this.sub = this.route.params.subscribe(params => {
 			this.riskGroupNumber = +params['riskGroupNumber'];
-
-			if (this.riskGroupNumber) {
-				this.observableRiskGroup = this.lookupDataService.getRiskGroup(this.riskGroupNumber);
-				this.observableRiskGroup.subscribe(riskGroup => this.riskGroup = riskGroup, error => this.errorMessage = <any>error);
-
-				this.observableClientAccounts = this.lookupDataService.getClientAccounts(this.riskGroupNumber);
-				this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
-
-				this.observableLatestCrsOrMrs = this.transactionalConcessionService.getlatestCrsOrMrs(this.riskGroupNumber);
-				this.observableLatestCrsOrMrs.subscribe(latestCrsOrMrs => this.latestCrsOrMrs = latestCrsOrMrs, error => this.errorMessage = <any>error);
-			}
 		});
 
 		this.transactionalConcessionForm = this.formBuilder.group({
@@ -91,17 +80,25 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 			motivation: new FormControl()
 		});
 
-		this.observablePeriods = this.lookupDataService.getPeriods();
-		this.observablePeriods.subscribe(periods => this.periods = periods, error => this.errorMessage = <any>error);
+        Observable.forkJoin([
+            this.lookupDataService.getPeriods(),
+            this.lookupDataService.getPeriodTypes(),
+            this.lookupDataService.getConditionTypes(),
+            this.lookupDataService.getTransactionTypes("Transactional"),
+            this.lookupDataService.getRiskGroup(this.riskGroupNumber),
+            this.lookupDataService.getClientAccounts(this.riskGroupNumber),
+            this.transactionalConcessionService.getlatestCrsOrMrs(this.riskGroupNumber)
+        ]).subscribe(results => {
+            this.periods = <any>results[0];
+            this.periodTypes = <any>results[1];
+            this.conditionTypes = <any>results[2];
+            this.transactionTypes = <any>results[3];
+            this.riskGroup = <any>results[4];
+            this.clientAccounts = <any>results[5];
+            this.latestCrsOrMrs = <any>results[6];
 
-		this.observablePeriodTypes = this.lookupDataService.getPeriodTypes();
-		this.observablePeriodTypes.subscribe(periodTypes => this.periodTypes = periodTypes, error => this.errorMessage = <any>error);
-
-		this.observableConditionTypes = this.lookupDataService.getConditionTypes();
-		this.observableConditionTypes.subscribe(conditionTypes => this.conditionTypes = conditionTypes, error => this.errorMessage = <any>error);
-
-		this.observableTransactionTypes = this.lookupDataService.getTransactionTypes("Transactional");
-		this.observableTransactionTypes.subscribe(transactionTypes => this.transactionTypes = transactionTypes, error => this.errorMessage = <any>error);
+            this.isLoading = false;
+        }, error => this.errorMessage = <any>error);
 	}
 
 	initConcessionItemRows() {
@@ -148,11 +145,13 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 			control.push(this.initConditionItemRows());
 	}
 
-	deleteConcessionRow(index: number) {
-		const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
-		control.removeAt(index);
+    deleteConcessionRow(index: number) {
+        if (confirm("Are you sure you want to remove this row?")) {
+            const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+            control.removeAt(index);
 
-		this.selectedTransactionTypes.splice(index, 1);
+            this.selectedTransactionTypes.splice(index, 1);
+        }
 	}
 
 	deleteConditionRow(index: number) {
