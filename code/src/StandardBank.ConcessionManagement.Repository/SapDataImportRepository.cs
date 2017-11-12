@@ -229,5 +229,14 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
                 db.Execute("[dbo].[UpdateMismatches]", commandType: CommandType.StoredProcedure);
         }
+
+        /// <summary>
+        /// Updates the loaded prices tables.
+        /// </summary>
+        public void UpdateLoadedPricesTables()
+        {
+            using (var db = _dbConnectionFactory.Connection())
+                db.Execute("[dbo].[UpdateLoadedPricesTables]", commandType: CommandType.StoredProcedure);
+        }
     }
 }

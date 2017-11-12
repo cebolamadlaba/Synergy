@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="AppSettings.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="AppSettings.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StandardBank.ConcessionManagement.Common\StandardBank.ConcessionManagement.Common.csproj" />
+    <ProjectReference Include="..\StandardBank.ConcessionManagement.Interface\StandardBank.ConcessionManagement.Interface.csproj" />
+    <ProjectReference Include="..\StandardBank.ConcessionManagement.Model\StandardBank.ConcessionManagement.Model.csproj" />
+    <ProjectReference Include="..\StandardBank.ConcessionManagement.Repository\StandardBank.ConcessionManagement.Repository.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,18 @@
+<AppSettings xmlns="http://schemas.datacontract.org/2004/07/StandardBank.ConcessionManagement.OnceOffDataImport.Model" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+  <ConfigurationData xmlns:a="http://schemas.datacontract.org/2004/07/StandardBank.ConcessionManagement.Common">
+	<a:ConnectionString>Server=.;Database=CMS_Dev_V2;Integrated Security=true;MultipleActiveResultSets=true</a:ConnectionString>
+	<a:DatabaseType>SqlServer</a:DatabaseType>
+	<a:DateDatabaseConnection>Server=23267JNBDAB001V;Database=DataRepository;User Id=lean;Password=lean1;MultipleActiveResultSets=true</a:DateDatabaseConnection>
+	<a:DefaultEmail>pricingtool@localhost.com</a:DefaultEmail>
+	<a:EmailTemplatePath i:nil="true"/>
+	<a:LetterTemplatePath i:nil="true"/>
+	<a:OverrideLoggedInUser i:nil="true"/>
+	<a:SmtpPort>25</a:SmtpPort>
+	<a:SmtpServer>localhost</a:SmtpServer>
+	<a:SmtpServerPassword i:nil="true"/>
+	<a:SmtpServerUserName i:nil="true"/>
+	<a:WKhtmlToPDFExecutable i:nil="true"/>
+  </ConfigurationData>
+  <ImportFolder>C:\Temp\OnceOffImport</ImportFolder>
+  <SupportEmailAddress>heathesh@kohde.io</SupportEmailAddress>
+</AppSettings>

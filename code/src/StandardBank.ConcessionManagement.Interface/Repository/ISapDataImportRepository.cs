@@ -67,5 +67,10 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// Updates the mismatches.
         /// </summary>
         void UpdateMismatches();
+
+        /// <summary>
+        /// Updates the loaded prices tables.
+        /// </summary>
+        void UpdateLoadedPricesTables();
     }
 }
