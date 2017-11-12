@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { LendingView } from "../models/lending-view";
@@ -44,7 +44,7 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
 
             if (this.riskGroupNumber) {
                 this.observableLendingView = this.lendingService.getLendingViewData(this.riskGroupNumber);
-                this.observableLendingView.subscribe(lendingView => {
+                this.observableLendingView.subscribe(lendingView => {                 
                     this.lendingView = lendingView;
                     this.pageLoaded = true;
                     this.isLoading = false;

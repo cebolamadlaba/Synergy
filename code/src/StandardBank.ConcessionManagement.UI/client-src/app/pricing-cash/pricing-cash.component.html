@@ -1,4 +1,4 @@
-<!-- Loading message -->
+﻿<!-- Loading message -->
 <div class="col-md-12" *ngIf="isLoading">
     <div class="form-feedback-container">
         <div class="alert-info">
@@ -144,8 +144,15 @@
         </div>
 
         <div class="section" *ngFor="let cashConcession of cashView.cashConcessions | baseConcessionFilter : filterConcessionId; trackBy: index;">
-            <div class="section-header small-table-title">
-                <div class="concessionID-section"> {{cashConcession.concession.referenceNumber}} - {{cashConcession.concession.statusDescription}}</div>
+            
+            <div class="section-header">
+                <div class="concessionID-section">
+                    <div class="concession-status">
+                        <div [ngClass]="{'approved-status': (cashConcession.concession.status==='Approved') || (cashConcession.concession.status==='Approved With Changes'),'pending-status': cashConcession.concession.status==='Pending', 'declined-status': cashConcession.concession.status==='Declined'}">{{cashConcession.concession.status}}</div>
+                    </div>
+                    <p class="concession-id">{{cashConcession.concession.referenceNumber}}</p>
+                    <div class="concession-sub-status">{{cashConcession.concession.subStatus}}</div>
+                </div>
             </div>
             <div class="section-body">
                 <div class="table-container" [routerLink]="['/cash-view-concession', cashView.riskGroup.number, cashConcession.concession.referenceNumber]">
