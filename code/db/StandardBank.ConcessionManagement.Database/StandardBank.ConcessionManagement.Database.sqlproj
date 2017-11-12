@@ -241,6 +241,8 @@
     <Build Include="dbo\Tables\rtblChannelTypeImport.sql" />
     <Build Include="dbo\Stored Procedures\UpdatePricesAndMismatches.sql" />
     <Build Include="dbo\Stored Procedures\SapImportDataIssues.sql" />
+    <Build Include="dbo\Stored Procedures\UpdateMismatches.sql" />
+    <Build Include="dbo\Stored Procedures\UpdateLoadedPrices.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Change Scripts\09_create_rtblPeriod.sql" />

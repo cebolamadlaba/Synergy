@@ -1,4 +1,5 @@
-﻿CREATE PROCEDURE [dbo].[CreateUser]
+﻿
+CREATE PROCEDURE [dbo].[CreateUser]
 	@ANumber varchar(50),
 	@EmailAddress varchar(50),
 	@FirstName varchar(50),
@@ -6,7 +7,7 @@
 	@RoleId int,
 	@RegionId int,
 	@CentreId int,
-	@ContactNumber varchar(50) null
+	@ContactNumber varchar(50)
 AS
 BEGIN
 	Declare @userId  int

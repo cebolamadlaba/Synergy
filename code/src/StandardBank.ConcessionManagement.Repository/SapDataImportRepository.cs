@@ -175,15 +175,6 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
-        /// Updates the prices and mismatches.
-        /// </summary>
-        public void UpdatePricesAndMismatches()
-        {
-            using (var db = _dbConnectionFactory.Connection())
-                db.Execute("[dbo].[UpdatePricesAndMismatches]", commandType: CommandType.StoredProcedure);
-        }
-
-        /// <summary>
         /// Generates the sap export.
         /// </summary>
         /// <returns></returns>
@@ -202,6 +193,41 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
                 return db.Query<SapDataImportIssue>("[dbo].[SapImportDataIssues]",
                     commandType: CommandType.StoredProcedure);
+        }
+
+        /// <summary>
+        /// Updates the prices and mismatches.
+        /// </summary>
+        public void UpdatePricesAndMismatches()
+        {
+            using (var db = _dbConnectionFactory.Connection())
+                db.Execute("[dbo].[UpdatePricesAndMismatches]", commandType: CommandType.StoredProcedure);
+        }
+
+        /// <summary>
+        /// Updates the loaded prices.
+        /// </summary>
+        /// <param name="sapDataImport">The sap data import.</param>
+        public void UpdateLoadedPrices(SapDataImport sapDataImport)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+                db.Execute("[dbo].[UpdateLoadedPrices]",
+                    new
+                    {
+                        AccountNo = sapDataImport.AccountNo,
+                        ChannelType = sapDataImport.Channel,
+                        FlatFee = sapDataImport.FlatFee,
+                        TableNo = sapDataImport.TableNo
+                    }, commandType: CommandType.StoredProcedure);
+        }
+
+        /// <summary>
+        /// Updates the mismatches.
+        /// </summary>
+        public void UpdateMismatches()
+        {
+            using (var db = _dbConnectionFactory.Connection())
+                db.Execute("[dbo].[UpdateMismatches]", commandType: CommandType.StoredProcedure);
         }
     }
 }

@@ -56,6 +56,22 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public string CustomerName { get; set; }
 
         /// <summary>
+        /// Gets or sets the legal entity account identifier.
+        /// </summary>
+        /// <value>
+        /// The legal entity account identifier.
+        /// </value>
+        public int LegalEntityAccountId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the account number.
+        /// </summary>
+        /// <value>
+        /// The account number.
+        /// </value>
+        public string AccountNumber { get; set; }
+
+        /// <summary>
         /// Gets or sets the concession type identifier.
         /// </summary>
         /// <value>

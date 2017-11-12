@@ -7,7 +7,7 @@
 	@RegionId int,
 	@CentreId int,
 	@Id int,
-	@ContactNumber varchar(50) null
+	@ContactNumber varchar(50) 
 AS
 BEGIN
 	SET NOCOUNT ON;

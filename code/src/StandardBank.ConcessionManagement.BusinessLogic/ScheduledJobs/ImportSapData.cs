@@ -8,7 +8,6 @@ using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic.ScheduledJobs;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
-using StandardBank.ConcessionManagement.Model.BusinessLogic.EmailTemplates;
 using StandardBank.ConcessionManagement.Model.Repository;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
@@ -76,8 +75,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
         /// <returns></returns>
         public async Task Run()
         {
-            var sapDataImports = new List<SapDataImport>();
-
             //1. get configuration data
             var configurations = _sapDataImportConfigurationRepository.ReadAll();
 
@@ -85,11 +82,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
             {
                 try
                 {
-                    sapDataImports.AddRange(ProcessConfiguration(configuration));
-
-                    //commenting this out because it slows the applicaiton down significantly
-                    //if (sapDataImports.Any())
-                    //    TrySendImportDataIssuesEmail(configuration);
+                    ProcessConfiguration(configuration);
                 }
                 catch (Exception ex)
                 {
@@ -98,67 +91,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                             $"File Import Failed With: {ex}"), DateTime.Now);
                 }
             }
-
-            if (sapDataImports.Any())
-                _sapDataImportRepository.UpdatePricesAndMismatches();
-        }
-
-        /// <summary>
-        /// Tries the send import data issues email.
-        /// </summary>
-        /// <param name="configuration">The configuration.</param>
-        private void TrySendImportDataIssuesEmail(SapDataImportConfiguration configuration)
-        {
-            try
-            {
-                var sapDataImportIssues = _sapDataImportRepository.GetSapDataImportIssues();
-
-                _backgroundJobClient.Schedule(() => _emailManager.SendSapDataImportIssuesEmail(
-                    new SapDataImportIssuesEmail
-                    {
-                        ImportFolder = configuration.FileImportLocation,
-                        ServerName = Environment.MachineName,
-                        DatabaseServer = GetDatabaseServerName(),
-                        DatabaseName = GetDatabaseName(),
-                        SapDataImportIssues = sapDataImportIssues,
-                        SupportEmailAddress = configuration.SupportEmailAddress
-                    }), DateTime.Now);
-            }
-            catch (Exception ex)
-            {
-                var errorMessage = ex.ToString();
-                //ignore this error
-            }
-        }
-
-        /// <summary>
-        /// Gets the name of the database.
-        /// </summary>
-        /// <returns></returns>
-        private string GetDatabaseName()
-        {
-            var connectionStringParts = _configurationData.ConnectionString.Split(';');
-
-            foreach (var part in connectionStringParts)
-                if (part.ToLowerInvariant().StartsWith("database"))
-                    return part;
-
-            return "Could not determine";
-        }
-
-        /// <summary>
-        /// Gets the name of the database server.
-        /// </summary>
-        /// <returns></returns>
-        private string GetDatabaseServerName()
-        {
-            var connectionStringParts = _configurationData.ConnectionString.Split(';');
-
-            foreach (var part in connectionStringParts)
-                if (part.ToLowerInvariant().StartsWith("server") || part.ToLowerInvariant().StartsWith("data source"))
-                    return part;
-
-            return "Could not determine";
         }
 
         /// <summary>
@@ -166,10 +98,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         /// <returns></returns>
-        private IEnumerable<SapDataImport> ProcessConfiguration(SapDataImportConfiguration configuration)
+        private void ProcessConfiguration(SapDataImportConfiguration configuration)
         {
-            var sapDataImports = new List<SapDataImport>();
-
             //2. check for the import file
             var files = _fileUtiltity.GetFilesInDirectory(configuration.FileImportLocation, true);
 
@@ -186,14 +116,29 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                 foreach (var file in files)
                 {
                     //4. if there is a file import into CMS database
-                    sapDataImports.AddRange(ImportData(file, configuration));
+                    var sapDataImports = ImportData(file, configuration);
 
-                    //5. delete the file
+                    //5. update the prices and is mismatched records
+                    UpdateLoadedPricesAndIsMismatched(sapDataImports);
+
+                    //6. delete the file
                     _fileUtiltity.DeleteFile(file);
                 }
             }
+        }
 
-            return sapDataImports;
+        /// <summary>
+        /// Updates the loaded prices and is mismatched.
+        /// </summary>
+        /// <param name="sapDataImports">The sap data imports.</param>
+        private void UpdateLoadedPricesAndIsMismatched(IEnumerable<SapDataImport> sapDataImports)
+        {
+            //foreach (var sapDataImport in sapDataImports)
+            //    _sapDataImportRepository.UpdateLoadedPrices(sapDataImport);
+
+            //_sapDataImportRepository.UpdateMismatches();
+
+            _sapDataImportRepository.UpdatePricesAndMismatches();
         }
 
         /// <summary>
@@ -234,7 +179,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
         /// <param name="fileData">The file data.</param>
         /// <param name="configuration">The configuration.</param>
         /// <returns></returns>
-        private IEnumerable<SapDataImport> GetDataFromFile(string[] fileData, SapDataImportConfiguration configuration)
+        private IEnumerable<SapDataImport> GetDataFromFile(IReadOnlyList<string> fileData,
+            SapDataImportConfiguration configuration)
         {
             var sapDataImports = new List<SapDataImport>();
 
@@ -242,7 +188,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
             var columnHeadings = fileData[0].Split('|');
 
             //loop through the data starting from the second row
-            for (var i = 1; i < fileData.Length; i++)
+            for (var i = 1; i < fileData.Count; i++)
             {
                 if (!string.IsNullOrWhiteSpace(fileData[i]))
                 {
@@ -254,7 +200,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                             $"Record: ({fileData[i]}) has {recordData.Length} columns instead of required {columnHeadings.Length} columns ({fileData[0]})";
 
                         _backgroundJobClient.Schedule(
-                            () => _emailManager.SendEmail(configuration.SupportEmailAddress, $"CMS {Name} Error", message),
+                            () => _emailManager.SendEmail(configuration.SupportEmailAddress, $"CMS {Name} Error",
+                                message),
                             DateTime.Now);
                     }
                     else
