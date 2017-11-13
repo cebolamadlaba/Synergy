@@ -1,4 +1,4 @@
-﻿CREATE VIEW dbo.ConcessionInboxView
+﻿CREATE VIEW [dbo].[ConcessionInboxView]
 AS
 SELECT        c.pkConcessionId AS ConcessionId, rg.pkRiskGroupId AS RiskGroupId, rg.RiskGroupNumber, rg.RiskGroupName, le.pkLegalEntityId AS LegalEntityId, le.CustomerName, lea.pkLegalEntityAccountId AS LegalEntityAccountId, 
                          lea.AccountNumber, ct.pkConcessionTypeId AS ConcessionTypeId, ct.Description AS ConcessionType, c.ConcessionDate, s.pkStatusId AS StatusId, s.Description AS Status, ss.pkSubStatusId AS SubStatusId, 
@@ -21,43 +21,33 @@ EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 2, @leve
 
 
 GO
-EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane2', @value = N'
-         Begin Table = "ms"
+EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane2', @value = N'   End
+         Begin Table = "rg"
+            Begin Extent = 
+               Top = 6
+               Left = 276
+               Bottom = 136
+               Right = 463
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+         Begin Table = "c"
+            Begin Extent = 
+               Top = 6
+               Left = 38
+               Bottom = 136
+               Right = 238
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+         Begin Table = "le"
             Begin Extent = 
                Top = 138
-               Left = 685
-               Bottom = 251
-               Right = 881
-            End
-            DisplayFlags = 280
-            TopColumn = 0
-         End
-         Begin Table = "ce"
-            Begin Extent = 
-               Top = 252
-               Left = 269
-               Bottom = 382
-               Right = 439
-            End
-            DisplayFlags = 280
-            TopColumn = 0
-         End
-         Begin Table = "p"
-            Begin Extent = 
-               Top = 252
-               Left = 477
-               Bottom = 365
-               Right = 647
-            End
-            DisplayFlags = 280
-            TopColumn = 0
-         End
-         Begin Table = "lea"
-            Begin Extent = 
-               Top = 252
-               Left = 685
-               Bottom = 382
-               Right = 900
+               Left = 38
+               Bottom = 268
+               Right = 231
             End
             DisplayFlags = 280
             TopColumn = 0
@@ -89,6 +79,8 @@ EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane2', @value = N'
    End
 End
 ', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'ConcessionInboxView';
+
+
 
 
 
@@ -171,26 +163,6 @@ Begin DesignProperties =
          Left = 0
       End
       Begin Tables = 
-         Begin Table = "c"
-            Begin Extent = 
-               Top = 6
-               Left = 38
-               Bottom = 136
-               Right = 238
-            End
-            DisplayFlags = 280
-            TopColumn = 0
-         End
-         Begin Table = "rg"
-            Begin Extent = 
-               Top = 6
-               Left = 276
-               Bottom = 136
-               Right = 463
-            End
-            DisplayFlags = 280
-            TopColumn = 0
-         End
          Begin Table = "ct"
             Begin Extent = 
                Top = 6
@@ -207,16 +179,6 @@ Begin DesignProperties =
                Left = 738
                Bottom = 136
                Right = 950
-            End
-            DisplayFlags = 280
-            TopColumn = 0
-         End
-         Begin Table = "le"
-            Begin Extent = 
-               Top = 138
-               Left = 38
-               Bottom = 268
-               Right = 231
             End
             DisplayFlags = 280
             TopColumn = 0
@@ -240,7 +202,39 @@ Begin DesignProperties =
             End
             DisplayFlags = 280
             TopColumn = 0
-         End', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'ConcessionInboxView';
+         End
+         Begin Table = "ce"
+            Begin Extent = 
+               Top = 252
+               Left = 269
+               Bottom = 382
+               Right = 439
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+         Begin Table = "p"
+            Begin Extent = 
+               Top = 252
+               Left = 477
+               Bottom = 365
+               Right = 647
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+         Begin Table = "ms"
+            Begin Extent = 
+               Top = 138
+               Left = 685
+               Bottom = 251
+               Right = 881
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+      ', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'ConcessionInboxView';
+
+
 
 
 

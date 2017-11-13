@@ -1,3 +1,4 @@
+using System;
 using Dapper;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
@@ -181,7 +182,8 @@ namespace StandardBank.ConcessionManagement.Repository
         public IEnumerable<SapDataImport> GenerateSapExport()
         {
             using (var db = _dbConnectionFactory.Connection())
-                return db.Query<SapDataImport>("[dbo].[GenerateSapExport]", commandType: CommandType.StoredProcedure);
+                return db.Query<SapDataImport>("[dbo].[GenerateSapExport]", commandType: CommandType.StoredProcedure,
+                    commandTimeout: Int32.MaxValue);
         }
 
         /// <summary>
@@ -201,7 +203,8 @@ namespace StandardBank.ConcessionManagement.Repository
         public void UpdatePricesAndMismatches()
         {
             using (var db = _dbConnectionFactory.Connection())
-                db.Execute("[dbo].[UpdatePricesAndMismatches]", commandType: CommandType.StoredProcedure);
+                db.Execute("[dbo].[UpdatePricesAndMismatches]", commandType: CommandType.StoredProcedure,
+                    commandTimeout: Int32.MaxValue);
         }
 
         /// <summary>
@@ -218,7 +221,7 @@ namespace StandardBank.ConcessionManagement.Repository
                         ChannelType = sapDataImport.Channel,
                         FlatFee = sapDataImport.FlatFee,
                         TableNo = sapDataImport.TableNo
-                    }, commandType: CommandType.StoredProcedure);
+                    }, commandType: CommandType.StoredProcedure, commandTimeout: Int32.MaxValue);
         }
 
         /// <summary>
@@ -227,7 +230,8 @@ namespace StandardBank.ConcessionManagement.Repository
         public void UpdateMismatches()
         {
             using (var db = _dbConnectionFactory.Connection())
-                db.Execute("[dbo].[UpdateMismatches]", commandType: CommandType.StoredProcedure);
+                db.Execute("[dbo].[UpdateMismatches]", commandType: CommandType.StoredProcedure,
+                    commandTimeout: Int32.MaxValue);
         }
 
         /// <summary>
@@ -236,7 +240,8 @@ namespace StandardBank.ConcessionManagement.Repository
         public void UpdateLoadedPricesTables()
         {
             using (var db = _dbConnectionFactory.Connection())
-                db.Execute("[dbo].[UpdateLoadedPricesTables]", commandType: CommandType.StoredProcedure);
+                db.Execute("[dbo].[UpdateLoadedPricesTables]", commandType: CommandType.StoredProcedure,
+                    commandTimeout: Int32.MaxValue);
         }
     }
 }
