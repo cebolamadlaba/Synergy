@@ -1,37 +1,36 @@
-@model dynamic
-<body style="font-family:Arial; margin: 0;">
+﻿@model dynamic
+<body style="font-family:Arial; margin: 0; background: #eeeeee;">
+    <div style="width: 80%; margin: 50px auto 0 auto; border-radius: 15px; border-left: 1px solid #d3d3d3;border-right: 1px solid #d3d3d3;border-bottom: 1px solid #d3d3d3; border-top: 5px solid #18326f; background: #fff; padding: 30px;">
+        <div style="color: #18326f; font-weight: bold; font-size: 24px;">
+            Concession Management System Notification
+        </div>
 
-    <div style="background-color: #1f3c5a; color: white; padding: 10px; text-align:center; font-size: 22px;">
-        Concession Management System Notification
-    </div>
-
-    <div style="padding: 15px">
         <p>Dear @Model.RequestorName,</p>
         <p>
             Please be advised that the following concessions are expiring in 3 months :
             <br /><br />
-            <table style=" border-collapse: collapse; border: 1px solid black; padding: 2px;">
+            <table style=" border-collapse: collapse; border: 1px solid #7a7a7a; padding: 2px;">
                 <tr>
-                    <th style="border: 1px solid black;">Concession Reference</th>
-                    <th style="border: 1px solid black;">Concession Type</th>
-                    <th style="border: 1px solid black;">Risk Group Number</th>
-                    <th style="border: 1px solid black;">Risk Group Name</th>
-                    <th style="border: 1px solid black;">Customer Name</th>
-                    <th style="border: 1px solid black;">Expiry Date</th>
-                    <th style="border: 1px solid black;">Date Approved</th>
+                    <th style="border: 1px solid #7a7a7a;">Concession Reference</th>
+                    <th style="border: 1px solid #7a7a7a;">Concession Type</th>
+                    <th style="border: 1px solid #7a7a7a;">Risk Group Number</th>
+                    <th style="border: 1px solid #7a7a7a;">Risk Group Name</th>
+                    <th style="border: 1px solid #7a7a7a;">Customer Name</th>
+                    <th style="border: 1px solid #7a7a7a;">Expiry Date</th>
+                    <th style="border: 1px solid #7a7a7a;">Date Approved</th>
                 </tr>
 
                 @foreach (var item in Model.ExpiringConcessionDetails)
                 {
-                    <tr>
-                        <td style="border: 1px solid black;">@item.ConcessionRef</td>
-                        <td style="border: 1px solid black;">@item.ConcessionType</td>
-                        <td style="border: 1px solid black;">@item.RiskGroupNumber</td>
-                        <td style="border: 1px solid black;">@item.RiskGroupName</td>
-                        <td style="border: 1px solid black;">@item.CustomerName</td>
-                        <td style="border: 1px solid black;">@item.ExpiryDate</td>
-                        <td style="border: 1px solid black;">@item.DateApproved</td>
-                    </tr>
+                <tr>
+                    <td style="border: 1px solid #7a7a7a;">@item.ConcessionRef</td>
+                    <td style="border: 1px solid #7a7a7a;">@item.ConcessionType</td>
+                    <td style="border: 1px solid #7a7a7a;">@item.RiskGroupNumber</td>
+                    <td style="border: 1px solid #7a7a7a;">@item.RiskGroupName</td>
+                    <td style="border: 1px solid #7a7a7a;">@item.CustomerName</td>
+                    <td style="border: 1px solid #7a7a7a;">@item.ExpiryDate</td>
+                    <td style="border: 1px solid #7a7a7a;">@item.DateApproved</td>
+                </tr>
                 }
 
             </table>
@@ -39,7 +38,7 @@
         <p>Regards,</p>
         <p>Concession Management System</p>
 
-        <p style="font-style: italic;">Please do not reply to this email.</p>
+        <p style="font-style: italic; color: #7a7a7a;">Please do not reply to this email.</p>
+      
     </div>
-
 </body>

@@ -101,12 +101,12 @@
                 <th>Product Type</th>
                 <th>Account No</th>
                 <th>Limit</th>
-                <th>Term</th>
+                <th>Term (Months)</th>
                 <th>MAP</th>
                 <th>Initiation Fee</th>
                 <th>Review Fee</th>
                 <th></th>
-                <th>UFF Fee</th>
+                <th>UFF Fee %</th>
                 <th></th>
             </tr>
         </thead>
@@ -125,7 +125,7 @@
                     </select>
                 </td>
                 <!-- Limit -->
-                <td class="length-long"><input type="text" numbersOnly="true" formControlName="limit" class="form-control" [attr.disabled]="saveMessage ? '' : null"/></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="limit" class="form-control" [attr.disabled]="saveMessage ? '' : null"/></td>
                 <!-- Term -->
                 <td class="length-short"><input type="text" numbersOnly="true" formControlName="term" class="form-control" [attr.disabled]="saveMessage ? '' : null"/></td>
                 <!-- MAP -->
@@ -141,7 +141,7 @@
                 <!-- Review fee -->
                 <td class="length-medium"><input type="text" numbersOnly="true" class="form-control" formControlName="reviewFee" [attr.disabled]="saveMessage ? '' : null" /></td>
                 <!-- UFF fee -->
-                <td class="length-medium"><input type="text" numbersOnly="true" class="form-control" formControlName="uffFee" [attr.disabled]="saveMessage ? '' : null" /></td>
+                <td class="length-long"><input type="text" numbersOnly="true" class="form-control" formControlName="uffFee" [attr.disabled]="saveMessage ? '' : null" /></td>
                 <td><button *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
         </tbody>
