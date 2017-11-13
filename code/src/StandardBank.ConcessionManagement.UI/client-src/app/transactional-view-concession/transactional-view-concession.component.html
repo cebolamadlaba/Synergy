@@ -1,4 +1,4 @@
-﻿<!-- Banner -->
+<!-- Banner -->
 <div class="col-md-12 banner">
     <div class="row">
         <!-- Header -->
@@ -160,9 +160,9 @@
                 <th>Table Number</th>
                 <th>Flat Fee/Rate</th>
                 <th>Ad Valorem</th>
-                <th>Approved Table Number</th>
+                <th *ngIf="isApproved">Approved Table Number</th>
                 <th>Expiry Date</th>
-                <th>Date Approved</th>
+                <th *ngIf="isApproved">Date Approved</th>
             </tr>
         </thead>
         <tbody class="form-concessions-table-content">
@@ -193,10 +193,10 @@
                 <td class="length-long"><input formControlName="flatFeeOrRate" class="form-control"></td>
                 <td class="length-medium"><input formControlName="adValorem" class="form-control"></td>
 
-                <td class="length-long"><input formControlName="approvedTableNumber" class="form-control"></td>
+                <td class="length-long" *ngIf="isApproved"><input formControlName="approvedTableNumber" class="form-control"></td>
 
                 <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" /></td>
-                <td class="length-short"><input type="date" formControlName="dateApproved" class="form-control" /></td>
+                <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>
 
                 <td *ngIf="canBcmApprove || canPcmApprove || isEditing || isRecalling"><button *ngIf="transactionalConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>

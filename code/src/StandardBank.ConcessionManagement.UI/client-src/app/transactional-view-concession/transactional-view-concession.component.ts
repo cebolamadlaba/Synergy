@@ -59,7 +59,8 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 	editType: string;
 	canArchive = false;
 	isInProgressExtension = false;
-	isInProgressRenewal = false;
+    isInProgressRenewal = false;
+    isApproved = false;
 
 	observablePeriods: Observable<Period[]>;
 	periods: Period[];
@@ -182,6 +183,11 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 					(transactionalConcession.concession.subStatus == "PCM Approved With Changes" || transactionalConcession.concession.subStatus == "HO Approved With Changes")) {
 					this.canApproveChanges = transactionalConcession.currentUser.canRequest;
 				}
+
+                if (transactionalConcession.concession.status === "Approved" ||
+                    transactionalConcession.concession.status === "Approved With Changes") {
+			        this.isApproved = true;
+                }
 
 				//if the concession is set to can extend and the user is a requestor, then they can extend or renew it
 				this.canExtend = transactionalConcession.concession.canExtend && transactionalConcession.currentUser.canRequest;

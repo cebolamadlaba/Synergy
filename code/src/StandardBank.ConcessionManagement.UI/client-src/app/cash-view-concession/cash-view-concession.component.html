@@ -1,4 +1,4 @@
-﻿<!-- Banner expanded -->
+<!-- Banner expanded -->
 <div class="col-md-12 banner">
     <div class="row">
         <div class="lending-banner-title">
@@ -147,10 +147,10 @@
                 <th>Table Number</th>
                 <th>Base Rate</th>
                 <th>Ad Valorem</th>
-                <th>Approved Table Number</th>
+                <th *ngIf="isApproved">Approved Table Number</th>
                 <th>Accrual</th>
                 <th>Expiry Date</th>
-                <th>Date Approved</th>
+                <th *ngIf="isApproved">Date Approved</th>
             </tr>
         </thead>
         <tbody class="form-concessions-table-content">
@@ -180,7 +180,7 @@
 
                 <td class="length-long"><input formControlName="baseRate" class="form-control" /></td>
                 <td class="length-short"><input formControlName="adValorem" class="form-control" /></td>
-                <td class="length-long"><input formControlName="approvedTableNumber" class="form-control" /></td>
+                <td class="length-long" *ngIf="isApproved"><input formControlName="approvedTableNumber" class="form-control" /></td>
 
                 <td class="length-medium">
                     <select formControlName="accrualType" class="form-control" [attr.disabled]="canEdit ? null : ''">
@@ -189,7 +189,7 @@
                 </td>
 
                 <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" /></td>
-                <td class="length-short"><input type="date" formControlName="dateApproved" class="form-control" /></td>
+                <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>
 
                 <td *ngIf="canBcmApprove || canPcmApprove || isEditing || isRecalling"><button *ngIf="cashConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>

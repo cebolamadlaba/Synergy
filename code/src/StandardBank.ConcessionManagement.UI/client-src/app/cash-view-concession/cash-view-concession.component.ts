@@ -59,7 +59,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 	editType: string;
 	canArchive = false;
 	isInProgressExtension = false;
-	isInProgressRenewal = false;
+    isInProgressRenewal = false;
+    isApproved = false;
 
 	observablePeriods: Observable<Period[]>;
 	periods: Period[];
@@ -188,7 +189,12 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 				if (cashConcession.concession.status == "Pending" &&
 					(cashConcession.concession.subStatus == "PCM Approved With Changes" || cashConcession.concession.subStatus == "HO Approved With Changes")) {
 					this.canApproveChanges = cashConcession.currentUser.canRequest;
-				}
+                }
+
+                if (cashConcession.concession.status === "Approved" ||
+                    cashConcession.concession.status === "Approved With Changes") {
+                    this.isApproved = true;
+                }
 
 				//if the concession is set to can extend and the user is a requestor, then they can extend or renew it
 				this.canExtend = cashConcession.concession.canExtend && cashConcession.currentUser.canRequest;
