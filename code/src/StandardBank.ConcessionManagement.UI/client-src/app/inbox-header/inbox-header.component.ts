@@ -22,6 +22,9 @@ export class InboxHeaderComponent implements OnInit {
             this.userConcessions = userConcessions;
             this.isLoading = false;
         },
-            error => this.errorMessage = <any>error);
+            error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
     }
 }

@@ -1,13 +1,9 @@
-﻿<!-- Error message -->
-<div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
+<!-- Error message -->
+<div class="col-md-12" *ngIf="errorMessage && !isLoading">
     <div class="form-feedback-container">
         <div class="alert-danger">
-            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Unable to generate concession letter. Please see error(s) below.</p>
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
             <p>{{errorMessage}}</p>
-
-            <ul *ngIf="validationError">
-                <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
-            </ul>
         </div>
     </div>
 </div>

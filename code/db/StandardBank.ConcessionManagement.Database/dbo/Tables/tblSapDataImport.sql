@@ -37,3 +37,15 @@
 
 
 
+
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_tblSapDataImport_1]
+    ON [dbo].[tblSapDataImport]([AccountNo] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_tblSapDataImport]
+    ON [dbo].[tblSapDataImport]([Channel] ASC);
+

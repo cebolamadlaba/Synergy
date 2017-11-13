@@ -1,6 +1,16 @@
 
 <app-inbox-header></app-inbox-header>
 
+<!-- Error message -->
+<div class="col-md-12" *ngIf="errorMessage">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
+            <p>{{errorMessage}}</p>
+        </div>
+    </div>
+</div>
+
 <div class="col-md-12 search-and-results-container">
     <!-- Results table -->
     <div class="table-container">

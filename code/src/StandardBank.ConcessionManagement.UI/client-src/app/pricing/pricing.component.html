@@ -1,4 +1,4 @@
-﻿  <!-- banner-->
+  <!-- banner-->
 <div class="col-md-12 pricing-banner">
     <div class="col-md-1 pricing-user-image">
         <i class="fa fa-user-o" aria-hidden="true"></i>
@@ -50,6 +50,16 @@
     <div class="form-feedback-container">
         <div class="alert-info">
             <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Loading...</p>
+        </div>
+    </div>
+</div>
+
+<!-- Error message -->
+<div class="col-md-12" *ngIf="errorMessage && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
+            <p>{{errorMessage}}</p>
         </div>
     </div>
 </div>

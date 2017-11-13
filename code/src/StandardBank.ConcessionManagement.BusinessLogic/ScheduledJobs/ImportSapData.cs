@@ -133,12 +133,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
         /// <param name="sapDataImports">The sap data imports.</param>
         private void UpdateLoadedPricesAndIsMismatched(IEnumerable<SapDataImport> sapDataImports)
         {
-            //foreach (var sapDataImport in sapDataImports)
-            //    _sapDataImportRepository.UpdateLoadedPrices(sapDataImport);
+            foreach (var sapDataImport in sapDataImports)
+                _sapDataImportRepository.UpdateLoadedPrices(sapDataImport);
 
-            //_sapDataImportRepository.UpdateMismatches();
+            _sapDataImportRepository.UpdateMismatches();
 
-            _sapDataImportRepository.UpdatePricesAndMismatches();
+            //_sapDataImportRepository.UpdatePricesAndMismatches();
         }
 
         /// <summary>

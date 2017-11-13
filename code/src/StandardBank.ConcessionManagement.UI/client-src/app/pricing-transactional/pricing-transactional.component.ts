@@ -47,7 +47,10 @@ export class PricingTransactionalComponent implements OnInit, OnDestroy {
                     this.transactionalView = transactionalView;
                     this.pageLoaded = true;
                     this.isLoading = false;
-                }, error => this.errorMessage = <any>error);
+                }, error => {
+                    this.errorMessage = <any>error;
+                    this.isLoading = false;
+                });
             }
         });
 

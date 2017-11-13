@@ -44,7 +44,10 @@ export class PricingCashComponent implements OnInit, OnDestroy {
                     this.cashView = cashView;
                     this.pageLoaded = true;
                     this.isLoading = false;
-                }, error => this.errorMessage = <any>error);
+                }, error => {
+                    this.errorMessage = <any>error;
+                    this.isLoading = false;
+                });
             }
         });
     }

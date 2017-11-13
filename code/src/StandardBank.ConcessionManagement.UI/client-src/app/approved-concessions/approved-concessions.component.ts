@@ -12,7 +12,6 @@ import { ApprovedConcessionDetail } from "../models/approved-concession-detail";
 })
 export class ApprovedConcessionsComponent implements OnInit {
     errorMessage: String;
-    validationError: String[];
     saveMessage: String;
     isLoading = true;
 
@@ -26,7 +25,10 @@ export class ApprovedConcessionsComponent implements OnInit {
         this.observableApprovedConcessions.subscribe(approvedConcession => {
             this.approvedConcessions = approvedConcession;
             this.isLoading = false;
-        }, error => this.errorMessage = <any>error);
+        }, error => {
+            this.errorMessage = <any>error;
+            this.isLoading = false;
+        });
     }
 
     openConcessionView(approvedConcession: ApprovedConcession, concessionType: string) {
