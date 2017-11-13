@@ -32,12 +32,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         public ConcessionManagerTest()
         {
             _concessionManager = new ConcessionManager(MockConcessionRepository.Object, MockLookupTableManager.Object,
-                MockLegalEntityRepository.Object, MockRiskGroupRepository.Object,
-                InstantiatedDependencies.Mapper, MockConcessionConditionRepository.Object,
-                MockLegalEntityAccountRepository.Object, MockConcessionCommentRepository.Object,
+                MockRiskGroupRepository.Object, InstantiatedDependencies.Mapper,
+                MockConcessionConditionRepository.Object, MockConcessionCommentRepository.Object,
                 MockConcessionRelationshipRepository.Object, MockAuditRepository.Object, MockUserManager.Object,
                 MockConcessionInboxViewRepository.Object, MockConcessionDetailRepository.Object,
-                MockConcessionConditionViewRepository.Object);
+                MockConcessionConditionViewRepository.Object, MockMiscPerformanceRepository.Object);
         }
 
         /// <summary>
@@ -236,40 +235,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         [Fact]
         public void GetClientAccounts_Executes_Positive()
         {
-            MockRiskGroupRepository.Setup(_ => _.ReadByRiskGroupNumberIsActive(It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new Model.Repository.RiskGroup
-                {
-                    Id = 1,
-                    IsActive = true,
-                    RiskGroupNumber = 1,
-                    RiskGroupName = "Test Risk Group"
-                });
-
-            MockLegalEntityRepository.Setup(_ => _.ReadByRiskGroupIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new[]
-                {
-                    new LegalEntity
-                    {
-                        Id = 1,
-                        IsActive = true,
-                        CustomerName = "Test Customer Name",
-                        RiskGroupId = 1,
-                        CustomerNumber = "Test Customer Number",
-                        MarketSegmentId = 1
-                    }
-                });
-
-            MockLegalEntityAccountRepository
-                .Setup(_ => _.ReadByLegalEntityIdIsActive(It.IsAny<int>(), It.IsAny<bool>())).Returns(new[]
-                {
-                    new LegalEntityAccount
-                    {
-                        AccountNumber = "Test Account Number",
-                        Id = 1,
-                        IsActive = true,
-                        LegalEntityId = 1
-                    }
-                });
+            MockMiscPerformanceRepository.Setup(_ => _.GetClientAccounts(It.IsAny<int>()))
+                .Returns(new[] {new ClientAccount()});
 
             var result = _concessionManager.GetClientAccounts(1);
 

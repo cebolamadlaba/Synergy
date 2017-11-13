@@ -32,11 +32,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ILookupTableManager _lookupTableManager;
 
         /// <summary>
-        /// The legal entity repository
-        /// </summary>
-        private readonly ILegalEntityRepository _legalEntityRepository;
-
-        /// <summary>
         /// The risk group repository
         /// </summary>
         private readonly IRiskGroupRepository _riskGroupRepository;
@@ -50,11 +45,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// The concession condition repository
         /// </summary>
         private readonly IConcessionConditionRepository _concessionConditionRepository;
-
-        /// <summary>
-        /// The legal entity account repository
-        /// </summary>
-        private readonly ILegalEntityAccountRepository _legalEntityAccountRepository;
 
         /// <summary>
         /// The concession comment repository
@@ -92,15 +82,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IConcessionConditionViewRepository _concessionConditionViewRepository;
 
         /// <summary>
+        /// The misc performance repository
+        /// </summary>
+        private readonly IMiscPerformanceRepository _miscPerformanceRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionManager"/> class.
         /// </summary>
         /// <param name="concessionRepository">The concession repository.</param>
         /// <param name="lookupTableManager">The lookup table manager.</param>
-        /// <param name="legalEntityRepository">The legal entity repository.</param>
         /// <param name="riskGroupRepository">The risk group repository.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="concessionConditionRepository">The concession condition repository.</param>
-        /// <param name="legalEntityAccountRepository">The legal entity account repository.</param>
         /// <param name="concessionCommentRepository">The concession comment repository.</param>
         /// <param name="concessionRelationshipRepository">The concession relationship repository.</param>
         /// <param name="auditRepository">The audit repository.</param>
@@ -108,23 +101,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="concessionInboxViewRepository">The concession inbox view repository.</param>
         /// <param name="concessionDetailRepository">The concession detail repository.</param>
         /// <param name="concessionConditionViewRepository">The concession condition view repository.</param>
+        /// <param name="miscPerformanceRepository">The misc performance repository.</param>
         public ConcessionManager(IConcessionRepository concessionRepository, ILookupTableManager lookupTableManager,
-            ILegalEntityRepository legalEntityRepository, IRiskGroupRepository riskGroupRepository, IMapper mapper,
+            IRiskGroupRepository riskGroupRepository, IMapper mapper,
             IConcessionConditionRepository concessionConditionRepository,
-            ILegalEntityAccountRepository legalEntityAccountRepository,
             IConcessionCommentRepository concessionCommentRepository,
             IConcessionRelationshipRepository concessionRelationshipRepository, IAuditRepository auditRepository,
             IUserManager userManager, IConcessionInboxViewRepository concessionInboxViewRepository,
             IConcessionDetailRepository concessionDetailRepository,
-            IConcessionConditionViewRepository concessionConditionViewRepository)
+            IConcessionConditionViewRepository concessionConditionViewRepository,
+            IMiscPerformanceRepository miscPerformanceRepository)
         {
             _concessionRepository = concessionRepository;
             _lookupTableManager = lookupTableManager;
-            _legalEntityRepository = legalEntityRepository;
             _riskGroupRepository = riskGroupRepository;
             _mapper = mapper;
             _concessionConditionRepository = concessionConditionRepository;
-            _legalEntityAccountRepository = legalEntityAccountRepository;
             _concessionCommentRepository = concessionCommentRepository;
             _concessionRelationshipRepository = concessionRelationshipRepository;
             _auditRepository = auditRepository;
@@ -132,6 +124,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionInboxViewRepository = concessionInboxViewRepository;
             _concessionDetailRepository = concessionDetailRepository;
             _concessionConditionViewRepository = concessionConditionViewRepository;
+            _miscPerformanceRepository = miscPerformanceRepository;
         }
 
         /// <summary>
@@ -370,31 +363,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber)
         {
-            var clientAccounts = new List<ClientAccount>();
-
-            var riskGroup = _riskGroupRepository.ReadByRiskGroupNumberIsActive(riskGroupNumber, true);
-
-            var legalEntities = _legalEntityRepository.ReadByRiskGroupIdIsActive(riskGroup.Id, true);
-
-            foreach (var legalEntity in legalEntities)
-            {
-                var legalEntityAccounts =
-                    _legalEntityAccountRepository.ReadByLegalEntityIdIsActive(legalEntity.Id, true);
-
-                foreach (var legalEntityAccount in legalEntityAccounts)
-                {
-                    clientAccounts.Add(new ClientAccount
-                    {
-                        AccountNumber = legalEntityAccount.AccountNumber,
-                        LegalEntityId = legalEntity.Id,
-                        RiskGroupId = riskGroup.Id,
-                        LegalEntityAccountId = legalEntityAccount.Id,
-                        CustomerName = legalEntity.CustomerName
-                    });
-                }
-            }
-
-            return clientAccounts;
+            return _miscPerformanceRepository.GetClientAccounts(riskGroupNumber);
         }
 
         /// <summary>

@@ -117,25 +117,29 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 			comments: new FormControl()
 		});
 
-		Observable.forkJoin([
-			this.lookupDataService.getPeriods(),
-			this.lookupDataService.getPeriodTypes(),
-			this.lookupDataService.getConditionTypes(),
-            this.lookupDataService.getTransactionTypes("Transactional"),
-            this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-            this.lookupDataService.getClientAccounts(this.riskGroupNumber),
-            this.transactionalConcessionService.getTransactionalFinancial(this.riskGroupNumber)
-		]).subscribe(results => {
-			this.periods = <any>results[0];
-			this.periodTypes = <any>results[1];
-			this.conditionTypes = <any>results[2];
-			this.transactionTypes = <any>results[3];
-            this.riskGroup = <any>results[4];
-            this.clientAccounts = <any>results[5];
-            this.transactionalFinancial = <any>results[6];
+	    Observable.forkJoin([
+	        this.lookupDataService.getPeriods(),
+	        this.lookupDataService.getPeriodTypes(),
+	        this.lookupDataService.getConditionTypes(),
+	        this.lookupDataService.getTransactionTypes("Transactional"),
+	        this.lookupDataService.getRiskGroup(this.riskGroupNumber),
+	        this.lookupDataService.getClientAccounts(this.riskGroupNumber),
+	        this.transactionalConcessionService.getTransactionalFinancial(this.riskGroupNumber)
+	    ]).subscribe(results => {
+	            this.periods = <any>results[0];
+	            this.periodTypes = <any>results[1];
+	            this.conditionTypes = <any>results[2];
+	            this.transactionTypes = <any>results[3];
+	            this.riskGroup = <any>results[4];
+	            this.clientAccounts = <any>results[5];
+	            this.transactionalFinancial = <any>results[6];
 
-			this.populateForm();
-		}, error => this.errorMessage = <any>error);
+	            this.populateForm();
+	        },
+	        error => {
+	            this.errorMessage = <any>error;
+	            this.isLoading = false;
+	        });
 
 		this.transactionalConcessionForm.valueChanges.subscribe((value: any) => {
 			if (this.transactionalConcessionForm.dirty) {
@@ -351,7 +355,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		const control = <FormArray>this.transactionalConcessionForm.controls['conditionItemsRows'];
 		this.selectedConditionTypes[rowIndex] = control.controls[rowIndex].get('conditionType').value;
 
-		let currentCondition = control.controls[control.length - 1];
+        let currentCondition = control.controls[rowIndex];
 
 		currentCondition.get('interestRate').setValue(null);
 		currentCondition.get('volume').setValue(null);
@@ -363,7 +367,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
 		this.selectedTransactionTypes[rowIndex] = control.controls[rowIndex].get('transactionType').value;
 
-		let currentTransactionType = control.controls[control.length - 1];
+        let currentTransactionType = control.controls[rowIndex];
 
 		currentTransactionType.get('adValorem').setValue(null);
 		currentTransactionType.get('flatFeeOrRate').setValue(null);

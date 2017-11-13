@@ -105,7 +105,10 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             this.latestCrsOrMrs = <any>results[7];
 
             this.isLoading = false;
-        }, error => this.errorMessage = <any>error);
+        }, error => {
+            this.errorMessage = <any>error;
+            this.isLoading = false;
+        });
     }
 
     initConcessionItemRows() {
@@ -171,12 +174,26 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         const control = <FormArray>this.lendingConcessionForm.controls['conditionItemsRows'];
         this.selectedConditionTypes[rowIndex] = control.controls[rowIndex].get('conditionType').value;
 
-        let currentCondition = control.controls[control.length - 1];
+        let currentCondition = control.controls[rowIndex];
 
         currentCondition.get('interestRate').setValue(null);
         currentCondition.get('volume').setValue(null);
         currentCondition.get('value').setValue(null);
         currentCondition.get('expectedTurnoverValue').setValue(null);
+    }
+
+    productTypeChanged(rowIndex) {
+        const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+
+        let currentRow = control.controls[rowIndex];
+        var productType = currentRow.get('productType').value;
+
+        if (productType.description === "Overdraft") {
+            currentRow.get('term').disable();
+            currentRow.get('term').setValue('12');
+        } else {
+            currentRow.get('term').enable();
+        }
     }
 
     onSubmit() {

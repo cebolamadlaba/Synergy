@@ -121,29 +121,33 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 			comments: new FormControl()
 		});
 
-		Observable.forkJoin([
-			this.lookupDataService.getChannelTypes(),
-			this.lookupDataService.getPeriods(),
-			this.lookupDataService.getPeriodTypes(),
-			this.lookupDataService.getConditionTypes(),
-			this.lookupDataService.getAccrualTypes(),
-            this.lookupDataService.getTableNumbers("Cash"),
-            this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-            this.lookupDataService.getClientAccounts(this.riskGroupNumber),
-            this.cashConcessionService.getCashFinancial(this.riskGroupNumber)
-		]).subscribe(results => {
-			this.channelTypes = <any>results[0];
-			this.periods = <any>results[1];
-			this.periodTypes = <any>results[2];
-			this.conditionTypes = <any>results[3];
-			this.accrualTypes = <any>results[4];
-            this.tableNumbers = <any>results[5];
-            this.riskGroup = <any>results[6];
-            this.clientAccounts = <any>results[7];
-            this.cashFinancial = <any>results[8];
+	    Observable.forkJoin([
+	        this.lookupDataService.getChannelTypes(),
+	        this.lookupDataService.getPeriods(),
+	        this.lookupDataService.getPeriodTypes(),
+	        this.lookupDataService.getConditionTypes(),
+	        this.lookupDataService.getAccrualTypes(),
+	        this.lookupDataService.getTableNumbers("Cash"),
+	        this.lookupDataService.getRiskGroup(this.riskGroupNumber),
+	        this.lookupDataService.getClientAccounts(this.riskGroupNumber),
+	        this.cashConcessionService.getCashFinancial(this.riskGroupNumber)
+	    ]).subscribe(results => {
+	            this.channelTypes = <any>results[0];
+	            this.periods = <any>results[1];
+	            this.periodTypes = <any>results[2];
+	            this.conditionTypes = <any>results[3];
+	            this.accrualTypes = <any>results[4];
+	            this.tableNumbers = <any>results[5];
+	            this.riskGroup = <any>results[6];
+	            this.clientAccounts = <any>results[7];
+	            this.cashFinancial = <any>results[8];
 
-			this.populateForm();
-		}, error => this.errorMessage = <any>error);
+	            this.populateForm();
+	        },
+	        error => {
+	            this.errorMessage = <any>error;
+	            this.isLoading = false;
+	        });
 
 		this.cashConcessionForm.valueChanges.subscribe((value: any) => {
 			if (this.cashConcessionForm.dirty) {
@@ -354,7 +358,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 		const control = <FormArray>this.cashConcessionForm.controls['conditionItemsRows'];
 		this.selectedConditionTypes[rowIndex] = control.controls[rowIndex].get('conditionType').value;
 
-		let currentCondition = control.controls[control.length - 1];
+		let currentCondition = control.controls[rowIndex];
 
 		currentCondition.get('interestRate').setValue(null);
 		currentCondition.get('volume').setValue(null);

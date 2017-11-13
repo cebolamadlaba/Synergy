@@ -469,6 +469,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             new TransactionTypeImportRepository(DbConnection, CacheManager);
 
         /// <summary>
+        /// The misc performance repository
+        /// </summary>
+        public static IMiscPerformanceRepository MiscPerformanceRepository = new MiscPerformanceRepository(DbConnection);
+
+        /// <summary>
         /// The look up table manager
         /// </summary>
         public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,
@@ -490,10 +495,10 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The concession manager
         /// </summary>
         public static IConcessionManager ConcessionManager =
-            new ConcessionManager(ConcessionRepository, LookupTableManager, LegalEntityRepository, RiskGroupRepository,
-                Mapper, ConcessionConditionRepository, LegalEntityAccountRepository, ConcessionCommentRepository,
+            new ConcessionManager(ConcessionRepository, LookupTableManager, RiskGroupRepository,
+                Mapper, ConcessionConditionRepository, ConcessionCommentRepository,
                 ConcessionRelationshipRepository, AuditRepository, UserManager, ConcessionInboxViewRepository,
-                ConcessionDetailRepository, ConcessionConditionViewRepository);
+                ConcessionDetailRepository, ConcessionConditionViewRepository, MiscPerformanceRepository);
 
         /// <summary>
         /// The rule manager

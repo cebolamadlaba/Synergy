@@ -106,18 +106,22 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             this.lookupDataService.getClientAccounts(this.riskGroupNumber),
             this.cashConcessionService.getlatestCrsOrMrs(this.riskGroupNumber)
         ]).subscribe(results => {
-            this.channelTypes = <any>results[0];
-            this.periods = <any>results[1];
-            this.periodTypes = <any>results[2];
-            this.conditionTypes = <any>results[3];
-            this.accrualTypes = <any>results[4];
-            this.tableNumbers = <any>results[5];
-            this.riskGroup = <any>results[6];
-            this.clientAccounts = <any>results[7];
-            this.latestCrsOrMrs = <any>results[8];
+                this.channelTypes = <any>results[0];
+                this.periods = <any>results[1];
+                this.periodTypes = <any>results[2];
+                this.conditionTypes = <any>results[3];
+                this.accrualTypes = <any>results[4];
+                this.tableNumbers = <any>results[5];
+                this.riskGroup = <any>results[6];
+                this.clientAccounts = <any>results[7];
+                this.latestCrsOrMrs = <any>results[8];
 
-            this.isLoading = false;
-        }, error => this.errorMessage = <any>error);
+                this.isLoading = false;
+            },
+            error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
     }
 
     initConcessionItemRows() {
@@ -181,7 +185,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         const control = <FormArray>this.cashConcessionForm.controls['conditionItemsRows'];
         this.selectedConditionTypes[rowIndex] = control.controls[rowIndex].get('conditionType').value;
 
-        let currentCondition = control.controls[control.length - 1];
+        let currentCondition = control.controls[rowIndex];
 
         currentCondition.get('interestRate').setValue(null);
         currentCondition.get('volume').setValue(null);

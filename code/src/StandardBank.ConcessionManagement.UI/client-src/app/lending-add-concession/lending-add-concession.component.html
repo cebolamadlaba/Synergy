@@ -1,4 +1,4 @@
-﻿<!-- Banner expanded -->
+<!-- Banner expanded -->
 <div class="col-md-12 banner">
     <div class="row">
         <div class="lending-banner-title">
@@ -114,7 +114,7 @@
             <tr *ngFor="let itemrow of lendingConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
                 <td class="length-long">
                     <!-- Product -->
-                    <select formControlName="productType" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                    <select formControlName="productType" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="productTypeChanged(i)">
                         <option *ngFor="let productTypeOption of productTypes" [ngValue]="productTypeOption">{{productTypeOption.description}}</option>
                     </select>
                 </td>

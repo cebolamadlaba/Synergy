@@ -483,7 +483,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The mock ChannelTypeImport repository
         /// </summary>
-        public static Mock<IChannelTypeImportRepository> MockChannelTypeImportRepository = new Mock<IChannelTypeImportRepository>();
+        public static Mock<IChannelTypeImportRepository> MockChannelTypeImportRepository =
+            new Mock<IChannelTypeImportRepository>();
 
         /// <summary>
         /// The mock ProductImport repository
@@ -493,6 +494,13 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The mock TransactionTypeImport repository
         /// </summary>
-        public static Mock<ITransactionTypeImportRepository> MockTransactionTypeImportRepository = new Mock<ITransactionTypeImportRepository>();
+        public static Mock<ITransactionTypeImportRepository> MockTransactionTypeImportRepository =
+            new Mock<ITransactionTypeImportRepository>();
+
+        /// <summary>
+        /// The mock misc performance repository
+        /// </summary>
+        public static Mock<IMiscPerformanceRepository> MockMiscPerformanceRepository =
+            new Mock<IMiscPerformanceRepository>();
     }
 }

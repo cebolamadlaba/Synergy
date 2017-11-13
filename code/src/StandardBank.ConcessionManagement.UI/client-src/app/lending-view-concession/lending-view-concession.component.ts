@@ -39,6 +39,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     warningMessage: String;
     riskGroupNumber: number;
     selectedConditionTypes: ConditionType[];
+    selectedProductTypes: ProductType[];
 	isLoading = true;
     canBcmApprove = false;
     canPcmApprove = false;
@@ -102,6 +103,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.periodTypes = [new PeriodType()];
         this.conditionTypes = [new ConditionType()];
         this.selectedConditionTypes = [new ConditionType()];
+        this.selectedProductTypes = [new ProductType()];
         this.clientAccounts = [new ClientAccount()];
         this.lendingFinancial = new LendingFinancial();
         this.lendingConcession = new LendingConcession();
@@ -134,17 +136,21 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             this.lookupDataService.getClientAccounts(this.riskGroupNumber),
             this.lendingService.getLendingFinancial(this.riskGroupNumber)
         ]).subscribe(results => {
-            this.reviewFeeTypes = <any>results[0];
-            this.productTypes = <any>results[1];
-            this.periods = <any>results[2];
-            this.periodTypes = <any>results[3];
-            this.conditionTypes = <any>results[4];
-            this.riskGroup = <any>results[5];
-            this.clientAccounts = <any>results[6];
-            this.lendingFinancial = <any>results[7];
+                this.reviewFeeTypes = <any>results[0];
+                this.productTypes = <any>results[1];
+                this.periods = <any>results[2];
+                this.periodTypes = <any>results[3];
+                this.conditionTypes = <any>results[4];
+                this.riskGroup = <any>results[5];
+                this.clientAccounts = <any>results[6];
+                this.lendingFinancial = <any>results[7];
 
-            this.populateForm();
-            }, error => this.errorMessage = <any>error);
+                this.populateForm();
+            },
+            error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
 
         this.lendingConcessionForm.valueChanges.subscribe((value: any) => {
             if (this.lendingConcessionForm.dirty) {
@@ -220,6 +226,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                     let selectedProductType = this.productTypes.filter(_ => _.id === lendingConcessionDetail.productTypeId);
                     currentConcession.get('productType').setValue(selectedProductType[0]);
 
+                    this.selectedProductTypes[rowIndex] = selectedProductType[0];
+
                     let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == lendingConcessionDetail.legalEntityAccountId);
                     currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
 
@@ -291,6 +299,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     initConcessionItemRows() {
+        this.selectedProductTypes.push(new ProductType());
+
         return this.formBuilder.group({
             lendingConcessionDetailId: [''],
             concessionDetailId: [''],
@@ -347,6 +357,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         if (confirm("Are you sure you want to remove this row?")) {
             const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
             control.removeAt(index);
+
+            this.selectedProductTypes.splice(index, 1);
         }
     }
 
@@ -361,12 +373,28 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         const control = <FormArray>this.lendingConcessionForm.controls['conditionItemsRows'];
         this.selectedConditionTypes[rowIndex] = control.controls[rowIndex].get('conditionType').value;
 
-        let currentCondition = control.controls[control.length - 1];
+        let currentCondition = control.controls[rowIndex];
 
         currentCondition.get('interestRate').setValue(null);
         currentCondition.get('volume').setValue(null);
         currentCondition.get('value').setValue(null);
         currentCondition.get('expectedTurnoverValue').setValue(null);
+    }
+
+    productTypeChanged(rowIndex) {
+        const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+
+        let currentRow = control.controls[rowIndex];
+        var productType = currentRow.get('productType').value;
+
+        this.selectedProductTypes[rowIndex] = productType;
+
+        if (productType.description === "Overdraft") {
+            currentRow.get('term').disable();
+            currentRow.get('term').setValue('12');
+        } else {
+            currentRow.get('term').enable();
+        }
     }
 
     addValidationError(validationDetail) {
