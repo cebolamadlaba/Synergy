@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { Province } from "../../models/province";
 import { ProvinceService } from "../../services/province.service";
@@ -32,7 +32,10 @@ export class ProvinceComponent implements OnInit {
 
     ngOnInit() {
         this.observableProvince = this.provinceService.getProvinces();
-        this.observableProvince.subscribe(results => { this.provinces = results; }, error => this.errorMessage = <any>error);
+        this.observableProvince.subscribe(results => { this.provinces = results; }, error => {
+            this.errorMessage = <any>error;
+            this.isLoading = false;
+        });
         this.submitState = 'Create';
     }
 

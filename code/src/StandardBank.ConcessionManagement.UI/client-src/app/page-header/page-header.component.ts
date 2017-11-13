@@ -18,6 +18,9 @@ export class PageHeaderComponent implements OnInit {
     ngOnInit() {
         this.observableLoggedInUser = this.userService.getData();
         this.observableLoggedInUser.subscribe(user => this.user = user,
-            error => this.errorMessage = <any>error);
+            error => {
+                this.errorMessage = <any>error;
+                console.log(this.errorMessage);
+            });
     }
 }
