@@ -114,6 +114,71 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Sends the approved with changes concession email.
+        /// </summary>
+        /// <param name="approvedConcessionEmail">The approved concession email.</param>
+        /// <returns></returns>
+        public async Task<bool> SendApprovedWithChangesConcessionEmail(ApprovedConcessionEmail approvedConcessionEmail)
+        {
+            return await SendTemplatedEmail(approvedConcessionEmail.EmailAddress,
+                "Pricing Tool: Approved With Changes Concession",
+                null,
+                Constants.EmailTemplates.ConcessionApprovedWithChanges,
+                new
+                {
+                    approvedConcessionEmail.ConcessionId,
+                    approvedConcessionEmail.DateActioned,
+                    approvedConcessionEmail.DateOfRequest,
+                    approvedConcessionEmail.Name,
+                    approvedConcessionEmail.Product,
+                    approvedConcessionEmail.RiskGroupName
+                });
+        }
+
+        /// <summary>
+        /// Sends the approved concession email.
+        /// </summary>
+        /// <param name="approvedConcessionEmail">The approved concession email.</param>
+        /// <returns></returns>
+        public async Task<bool> SendApprovedConcessionEmail(ApprovedConcessionEmail approvedConcessionEmail)
+        {
+            return await SendTemplatedEmail(approvedConcessionEmail.EmailAddress, "Pricing Tool: Approved Concession",
+                null,
+                Constants.EmailTemplates.ConcessionApproved,
+                new
+                {
+                    approvedConcessionEmail.ConcessionId,
+                    approvedConcessionEmail.DateActioned,
+                    approvedConcessionEmail.DateOfRequest,
+                    approvedConcessionEmail.Name,
+                    approvedConcessionEmail.Product,
+                    approvedConcessionEmail.RiskGroupName
+                });
+        }
+
+        /// <summary>
+        /// Sends the declined concession email.
+        /// </summary>
+        /// <param name="declinedConcessionEmail">The declined concession email.</param>
+        /// <returns></returns>
+        public async Task<bool> SendDeclinedConcessionEmail(DeclinedConcessionEmail declinedConcessionEmail)
+        {
+            return await SendTemplatedEmail(declinedConcessionEmail.EmailAddress, "Pricing Tool: Declined Concession",
+                null,
+                Constants.EmailTemplates.ConcessionDeclined,
+                new
+                {
+                    declinedConcessionEmail.Name,
+                    declinedConcessionEmail.Approver,
+                    declinedConcessionEmail.ConcessionId,
+                    declinedConcessionEmail.DateActioned,
+                    declinedConcessionEmail.DateOfRequest,
+                    declinedConcessionEmail.RiskGroupName,
+                    declinedConcessionEmail.Product
+                });
+        }
+
+        /// <summary>
         /// Sends the sap data import issues email.
         /// </summary>
         /// <param name="sapDataImportIssuesEmail">The sap data import issues email.</param>

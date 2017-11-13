@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <title></title>
@@ -11,13 +11,13 @@
         </div>
 
         <p>Dear @Model.Name,</p>
-        <p>Please be advised that a concession you applied for has been <span style="color: #e4152c;font-weight: bold;">declined</span> based on the reasons provided. <a href=" @Model.Url">Open concession</a></p>
+        <p>Please be advised that a concession you applied for has been <span style="color: #e4152c;font-weight: bold;">declined</span> based on the reasons provided.</p>
 
         <div style="background: #18326f; height: 1px; margin-bottom: 15px;"></div>
         <table>
             <tr>
                 <td>Date of request:</td>
-                <td></td>
+                <td>@Model.DateOfRequest</td>
             </tr>
             <tr>
                 <td>Approver:</td>
@@ -25,11 +25,11 @@
             </tr>
             <tr>
                 <td>Date actioned:</td>
-                <td></td>
+                <td>@Model.DateActioned</td>
             </tr>
             <tr>
                 <td>Risk group name:</td>
-                <td></td>
+                <td>@Model.RiskGroupName</td>
             </tr>
             <tr>
                 <td>Concession ID:</td>
@@ -37,7 +37,7 @@
             </tr>
             <tr>
                 <td>Product:</td>
-                <td></td>
+                <td>@Model.Product</td>
             </tr>
         </table>
 

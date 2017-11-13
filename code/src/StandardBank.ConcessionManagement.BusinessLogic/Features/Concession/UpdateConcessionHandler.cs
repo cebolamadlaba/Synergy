@@ -5,6 +5,7 @@ using Hangfire;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.BusinessLogic.EmailTemplates;
 using StandardBank.ConcessionManagement.Model.Repository;
@@ -48,6 +49,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         private readonly IUserManager _userManager;
 
         /// <summary>
+        /// The risk group repository
+        /// </summary>
+        private readonly IRiskGroupRepository _riskGroupRepository;
+
+        /// <summary>
         /// The logger
         /// </summary>
         private readonly ILogger<UpdateConcessionHandler> _logger;
@@ -62,9 +68,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         /// <param name="lookupTableManager">The lookup table manager.</param>
         /// <param name="emailManager">The email manager.</param>
         /// <param name="userManager">The user manager.</param>
+        /// <param name="riskGroupRepository">The risk group repository.</param>
         public UpdateConcessionHandler(IConcessionManager concessionManager, IMediator mediator,
             ILogger<UpdateConcessionHandler> logger, IMapper mapper, ILookupTableManager lookupTableManager,
-            IEmailManager emailManager, IUserManager userManager)
+            IEmailManager emailManager, IUserManager userManager, IRiskGroupRepository riskGroupRepository)
         {
             _concessionManager = concessionManager;
             _mediator = mediator;
@@ -72,6 +79,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
             _lookupTableManager = lookupTableManager;
             _emailManager = emailManager;
             _userManager = userManager;
+            _riskGroupRepository = riskGroupRepository;
             _logger = logger;
         }
 
@@ -89,11 +97,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
 
             message.Concession.Status = _lookupTableManager.GetStatusDescription(result.StatusId);
             message.Concession.SubStatus = _lookupTableManager.GetSubStatusDescription(result.SubStatusId);
+            message.Concession.ConcessionType =
+                _lookupTableManager.GetConcessionType(result.ConcessionTypeId).Description;
+            message.Concession.RiskGroupName = _riskGroupRepository.ReadById(result.RiskGroupId).RiskGroupName;
 
             if (message.User.SelectedCentre?.Id > 0)
             {
                 if (message.Concession.Status == "Pending" && !string.IsNullOrWhiteSpace(message.Concession.SubStatus))
                     await SendNotificationEmail(message, result);
+
+                if (message.Concession.Status == "Approved" || message.Concession.Status == "Approved With Changes")
+                    SendApprovedNotificationEmail(message);
+
+                if (message.Concession.Status == "Declined")
+                    SendDeclinedNotificationEmail(message);
             }
             else
             {
@@ -102,6 +119,28 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
             }
 
             return message.Concession;
+        }
+
+        /// <summary>
+        /// Sends the declined notification email.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        private void SendDeclinedNotificationEmail(UpdateConcession message)
+        {
+            var requestor = message.Concession.Requestor ?? _userManager.GetUser(message.Concession.RequestorId);
+
+            BackgroundJob.Schedule(() =>
+                _emailManager.SendDeclinedConcessionEmail(new DeclinedConcessionEmail
+                {
+                    EmailAddress = requestor.EmailAddress,
+                    Name = requestor.FirstName,
+                    ConcessionId = message.Concession.ReferenceNumber,
+                    Approver = message.User.FullName,
+                    DateOfRequest = message.Concession.DateOpened.ToString("yyyy-MM-dd"),
+                    DateActioned = DateTime.Now.ToString("yyyy-MM-dd"),
+                    RiskGroupName = message.Concession.RiskGroupName,
+                    Product = message.Concession.ConcessionType
+                }), DateTime.Now);
         }
 
         /// <summary>
@@ -142,11 +181,36 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
             var requestor = message.Concession.Requestor ?? _userManager.GetUser(message.Concession.RequestorId);
 
             BackgroundJob.Schedule(() =>
-                _emailManager.SendConcessionAddedEmail(new ConcessionAddedEmail
+                _emailManager.SendApprovedWithChangesConcessionEmail(new ApprovedConcessionEmail
                 {
                     EmailAddress = requestor.EmailAddress,
-                    FirstName = requestor.FirstName,
-                    ConsessionId = message.Concession.ReferenceNumber
+                    ConcessionId = message.Concession.ReferenceNumber,
+                    Name = requestor.FirstName,
+                    DateOfRequest = message.Concession.DateOpened.ToString("yyyy-MM-dd"),
+                    DateActioned = DateTime.Now.ToString("yyyy-MM-dd"),
+                    RiskGroupName = message.Concession.RiskGroupName,
+                    Product = message.Concession.ConcessionType
+                }), DateTime.Now);
+        }
+
+        /// <summary>
+        /// Sends the approved notification email.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        private void SendApprovedNotificationEmail(UpdateConcession message)
+        {
+            var requestor = message.Concession.Requestor ?? _userManager.GetUser(message.Concession.RequestorId);
+
+            BackgroundJob.Schedule(() =>
+                _emailManager.SendApprovedConcessionEmail(new ApprovedConcessionEmail
+                {
+                    EmailAddress = requestor.EmailAddress,
+                    ConcessionId = message.Concession.ReferenceNumber,
+                    Name = requestor.FirstName,
+                    DateOfRequest = message.Concession.DateOpened.ToString("yyyy-MM-dd"),
+                    DateActioned = DateTime.Now.ToString("yyyy-MM-dd"),
+                    RiskGroupName = message.Concession.RiskGroupName,
+                    Product = message.Concession.ConcessionType
                 }), DateTime.Now);
         }
 
