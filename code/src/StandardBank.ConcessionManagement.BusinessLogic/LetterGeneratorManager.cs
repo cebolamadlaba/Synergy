@@ -137,12 +137,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="requestor">The requestor.</param>
         /// <param name="bcm">The BCM.</param>
         /// <returns></returns>
-        private IEnumerable<ConcessionLetter> GetTransactionalConcessionLetterData(Concession concession, User requestor, User bcm)
+        private IEnumerable<ConcessionLetter> GetTransactionalConcessionLetterData(Concession concession,
+            User requestor, User bcm)
         {
             var concessionLetters = new List<ConcessionLetter>();
             var pageBreakBefore = false;
-            var transactionalConcession = _transactionalManager.GetTransactionalConcession(concession.ReferenceNumber, requestor);
-            var transactionalConcessionDetails = transactionalConcession.TransactionalConcessionDetails.OrderBy(_ => _.AccountNumber);
+            var transactionalConcession =
+                _transactionalManager.GetTransactionalConcession(concession.ReferenceNumber, requestor);
+            var transactionalConcessionDetails =
+                transactionalConcession.TransactionalConcessionDetails.OrderBy(_ => _.AccountNumber);
 
             foreach (var transactionalConcessionDetail in transactionalConcessionDetails)
             {
@@ -168,7 +171,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 var transactionalConcessionLetters = new List<TransactionalConcessionLetter>();
                 transactionalConcessionLetters.AddRange(concessionLetter.TransactionalConcessionLetters);
-                transactionalConcessionLetters.Add(PopulateTransactionalConcessionLetter(transactionalConcessionDetail));
+                transactionalConcessionLetters.Add(
+                    PopulateTransactionalConcessionLetter(transactionalConcessionDetail));
                 concessionLetter.TransactionalConcessionLetters = transactionalConcessionLetters;
             }
 
@@ -181,7 +185,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="concession">The concession.</param>
         /// <param name="transactionalConcessionDetail">The transactional concession detail.</param>
         /// <returns></returns>
-        private TransactionalConcessionLetter PopulateTransactionalConcessionLetter(TransactionalConcessionDetail transactionalConcessionDetail)
+        private TransactionalConcessionLetter PopulateTransactionalConcessionLetter(
+            TransactionalConcessionDetail transactionalConcessionDetail)
         {
             return new TransactionalConcessionLetter
             {
@@ -205,7 +210,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="requestor">The requestor.</param>
         /// <param name="bcm">The BCM.</param>
         /// <returns></returns>
-        private IEnumerable<ConcessionLetter> GetCashConcessionLetterData(Concession concession, User requestor, User bcm)
+        private IEnumerable<ConcessionLetter> GetCashConcessionLetterData(Concession concession, User requestor,
+            User bcm)
         {
             var concessionLetters = new List<ConcessionLetter>();
             var pageBreakBefore = false;
@@ -337,7 +343,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         /// <param name="lendingConcessionDetail">The lending concession detail.</param>
         /// <returns></returns>
-        private LendingOverDraftConcessionLetter PopulateLendingOverDraftConcessionLetter(LendingConcessionDetail lendingConcessionDetail)
+        private LendingOverDraftConcessionLetter PopulateLendingOverDraftConcessionLetter(
+            LendingConcessionDetail lendingConcessionDetail)
         {
             return new LendingOverDraftConcessionLetter
             {
@@ -365,7 +372,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var conditions = new List<ConditionConcessionLetter>();
 
             var concessionConditions = _concessionManager.GetConcessionConditions(concession.Id);
-            
+
             foreach (var concessionCondition in concessionConditions)
             {
                 conditions.Add(new ConditionConcessionLetter
@@ -411,7 +418,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="bcm">The BCM.</param>
         /// <param name="legalEntityId">The legal entity identifier.</param>
         /// <returns></returns>
-        private ConcessionLetter PopulateBaseConcessionLetter(Concession concession, User requestor, User bcm, int legalEntityId)
+        private ConcessionLetter PopulateBaseConcessionLetter(Concession concession, User requestor, User bcm,
+            int legalEntityId)
         {
             var legalEntity = _legalEntityRepository.ReadById(legalEntityId);
 
@@ -426,15 +434,28 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 RequestorEmailAddress = requestor?.EmailAddress,
                 RequestorName = requestor?.FullName,
                 RequestorContactNumber = requestor?.ContactNumber,
-                ClientName = legalEntity.CustomerName,
-                ClientNumber = legalEntity.CustomerNumber,
-                ClientPostalAddress = legalEntity.PostalAddress,
-                ClientCity = legalEntity.City,
-                ClientContactPerson = legalEntity.ContactPerson,
-                ClientPostalCode = legalEntity.PostalCode
+                ClientName = GetValueOrDashes(legalEntity.CustomerName),
+                ClientNumber = GetValueOrDashes(legalEntity.CustomerNumber),
+                ClientPostalAddress = GetValueOrDashes(legalEntity.PostalAddress),
+                ClientCity = GetValueOrDashes(legalEntity.City),
+                ClientContactPerson = GetValueOrDashes(legalEntity.ContactPerson),
+                ClientPostalCode = GetValueOrDashes(legalEntity.PostalCode)
             };
 
             return concessionLetter;
+        }
+
+        /// <summary>
+        /// Gets the value or dashes.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        private string GetValueOrDashes(string value)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+                return value;
+
+            return "____________________________________________";
         }
 
         /// <summary>
