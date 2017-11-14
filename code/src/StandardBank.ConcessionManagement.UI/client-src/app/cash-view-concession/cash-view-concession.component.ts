@@ -231,8 +231,12 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 					let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == cashConcessionDetail.legalEntityAccountId);
 					currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
 
-					currentConcession.get('baseRate').setValue(cashConcessionDetail.baseRate);
-					currentConcession.get('adValorem').setValue(cashConcessionDetail.adValorem);
+                    if (cashConcessionDetail.baseRate)
+                        currentConcession.get('baseRate').setValue(cashConcessionDetail.baseRate.toFixed(3));
+
+                    if (cashConcessionDetail.adValorem)
+                        currentConcession.get('adValorem').setValue(cashConcessionDetail.adValorem.toFixed(2));
+
 					currentConcession.get('approvedTableNumber').setValue(cashConcessionDetail.approvedTableNumber);
 
 					let selectedTableNumber = this.tableNumbers.filter(_ => _.id == cashConcessionDetail.tableNumberId);
@@ -375,8 +379,15 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 	tableNumberChanged(rowIndex) {
 		const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
 
-		control.controls[rowIndex].get('baseRate').setValue(control.controls[rowIndex].get('tableNumber').value.baseRate);
-		control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('tableNumber').value.adValorem);
+	    if (control.controls[rowIndex].get('tableNumber').value.baseRate)
+	        control.controls[rowIndex].get('baseRate').setValue(control.controls[rowIndex].get('tableNumber').value.baseRate.toFixed(3));
+	    else
+	        control.controls[rowIndex].get('baseRate').setValue(null);
+
+	    if (control.controls[rowIndex].get('tableNumber').value.adValorem)
+	        control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('tableNumber').value.adValorem.toFixed(2));
+	    else
+	        control.controls[rowIndex].get('adValorem').setValue(null);
 	}
 
 	addValidationError(validationDetail) {
