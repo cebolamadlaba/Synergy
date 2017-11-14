@@ -108,7 +108,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = pt.[fkLegalEntityAccountId]
                     JOIN [dbo].[rtblTransactionType] tt on tt.[pkTransactionTypeId] = pt.[fkTransactionTypeId]
                     JOIN [dbo].[rtblTransactionTableNumber] ttn on ttn.[pkTransactionTableNumberId] = pt.[fkTransactionTableNumberId]
-                    WHERE pc.[fkRiskGroupId] = @riskGroupId", new {riskGroupId, riskGroupName},
+                    WHERE pt.[fkRiskGroupId] = @riskGroupId", new {riskGroupId, riskGroupName},
                     commandTimeout: Int32.MaxValue);
             }
         }

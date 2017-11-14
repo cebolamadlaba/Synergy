@@ -230,8 +230,12 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 					let selectedTransactionTableNumber = selectedTransactionType[0].transactionTableNumbers.filter(_ => _.id == transactionalConcessionDetail.transactionTableNumberId);
 					currentConcession.get('transactionTableNumber').setValue(selectedTransactionTableNumber[0]);
 
-					currentConcession.get('adValorem').setValue(transactionalConcessionDetail.adValorem);
-					currentConcession.get('flatFeeOrRate').setValue(transactionalConcessionDetail.fee);
+                    if (transactionalConcessionDetail.adValorem)
+                        currentConcession.get('adValorem').setValue(transactionalConcessionDetail.adValorem.toFixed(2));
+
+                    if (transactionalConcessionDetail.fee)
+                        currentConcession.get('flatFeeOrRate').setValue(transactionalConcessionDetail.fee.toFixed(3));
+
 					currentConcession.get('approvedTableNumber').setValue(transactionalConcessionDetail.approvedTableNumber);
 
 					if (transactionalConcessionDetail.expiryDate) {
@@ -382,8 +386,15 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 	transactionTableNumberChanged(rowIndex) {
 		const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
 
-		control.controls[rowIndex].get('flatFeeOrRate').setValue(control.controls[rowIndex].get('transactionTableNumber').value.fee);
-		control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('transactionTableNumber').value.adValorem);
+	    if (control.controls[rowIndex].get('transactionTableNumber').value.fee)
+	        control.controls[rowIndex].get('flatFeeOrRate').setValue(control.controls[rowIndex].get('transactionTableNumber').value.fee.toFixed(3));
+	    else
+	        control.controls[rowIndex].get('flatFeeOrRate').setValue(null);
+
+	    if (control.controls[rowIndex].get('transactionTableNumber').value.adValorem)
+	        control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('transactionTableNumber').value.adValorem.toFixed(2));
+	    else
+	        control.controls[rowIndex].get('adValorem').setValue(null);
 	}
 
 	getTransactionalConcession(isNew: boolean): TransactionalConcession {
