@@ -182,14 +182,14 @@
                     </select>
                 </td>
                 <!-- Limit -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="limit" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="limit" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
                 <!-- Term -->
                 <td class="length-short"><input type="text" numbersOnly="true" formControlName="term" class="form-control" [attr.disabled]="canEdit && selectedProductTypes[i].description != 'Overdraft' ? null : ''" /></td>
                 <!-- MAP -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="marginAgainstPrime" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="marginAgainstPrime" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
                 <td class="length-short" *ngIf="isApproved"><input type="text" numbersOnly="true" formControlName="approvedMarginAgainstPrime" class="form-control" /></td>
                 <!-- Initiation fee -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="initiationFee" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="initiationFee" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
                 <td class="length-medium">
                     <!-- Review fee type -->
                     <select formControlName="reviewFeeType" class="form-control" [attr.disabled]="canEdit ? null : ''">
@@ -197,9 +197,9 @@
                     </select>
                 </td>
                 <!-- Review fee -->
-                <td class="length-medium"><input type="text" numbersOnly="true" formControlName="reviewFee" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-medium"><input type="text" numbersOnly="true" formControlName="reviewFee" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
                 <!-- uffFee -->
-                <td class="length-medium"><input type="text" numbersOnly="true" formControlName="uffFee" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-medium"><input type="text" numbersOnly="true" formControlName="uffFee" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
 
                 <td class="length-medium" *ngIf="isApproved"><input type="date" formControlName="expiryDate" class="form-control" [style.background-color]="getBackgroundColour(i)" /></td>
                 <td class="length-medium" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>

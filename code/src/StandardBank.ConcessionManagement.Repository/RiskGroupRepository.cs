@@ -21,12 +21,19 @@ namespace StandardBank.ConcessionManagement.Repository
         private readonly IDbConnectionFactory _dbConnectionFactory;
 
         /// <summary>
+        /// The cache manager
+        /// </summary>
+        private readonly ICacheManager _cacheManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="RiskGroupRepository"/> class.
         /// </summary>
         /// <param name="dbConnectionFactory">The database connection factory.</param>
-        public RiskGroupRepository(IDbConnectionFactory dbConnectionFactory)
+        /// <param name="cacheManager">The cache manager.</param>
+        public RiskGroupRepository(IDbConnectionFactory dbConnectionFactory, ICacheManager cacheManager)
         {
             _dbConnectionFactory = dbConnectionFactory;
+            _cacheManager = cacheManager;
         }
 
         /// <summary>
@@ -63,13 +70,19 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public RiskGroup ReadById(int id)
         {
-            using (var db = _dbConnectionFactory.Connection())
+            RiskGroup Function()
             {
-                return db.Query<RiskGroup>(
-                    @"SELECT [pkRiskGroupId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRegionId] [RegionId], [RiskGroupNumber], [RiskGroupName], [IsActive] 
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    return db.Query<RiskGroup>(@"SELECT [pkRiskGroupId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRegionId] [RegionId], [RiskGroupNumber], [RiskGroupName], [IsActive] 
                     FROM [dbo].[tblRiskGroup]
-                    WHERE [pkRiskGroupId] = @id", new { id }).FirstOrDefault();
+                    WHERE [pkRiskGroupId] = @id", new {id})
+                        .FirstOrDefault();
+                }
             }
+
+            return _cacheManager.ReturnFromCache(Function, 30, CacheKey.Repository.RiskGroupRepository.ReadById,
+                new CacheKeyParameter(nameof(id), id));
         }
 
         /// <summary>
@@ -80,14 +93,20 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public RiskGroup ReadByIdIsActive(int id, bool isActive)
         {
-            using (var db = _dbConnectionFactory.Connection())
+            RiskGroup Function()
             {
-                return db.Query<RiskGroup>(
-                    @"SELECT [pkRiskGroupId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRegionId] [RegionId], [RiskGroupNumber], [RiskGroupName], [IsActive] 
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    return db.Query<RiskGroup>(
+                        @"SELECT [pkRiskGroupId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRegionId] [RegionId], [RiskGroupNumber], [RiskGroupName], [IsActive] 
                     FROM [dbo].[tblRiskGroup]
                     WHERE [pkRiskGroupId] = @id
                     AND [IsActive] = @isActive", new {id, isActive}).Single();
+                }
             }
+
+            return _cacheManager.ReturnFromCache(Function, 30, CacheKey.Repository.RiskGroupRepository.ReadByIdIsActive,
+                new CacheKeyParameter(nameof(id), id), new CacheKeyParameter(nameof(isActive), isActive));
         }
 
         /// <summary>
@@ -98,14 +117,22 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public RiskGroup ReadByRiskGroupNumberIsActive(int riskGroupNumber, bool isActive)
         {
-            using (var db = _dbConnectionFactory.Connection())
+            RiskGroup Function()
             {
-                return db.Query<RiskGroup>(
-                    @"SELECT [pkRiskGroupId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRegionId] [RegionId], [RiskGroupNumber], [RiskGroupName], [IsActive] 
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    return db.Query<RiskGroup>(
+                        @"SELECT [pkRiskGroupId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRegionId] [RegionId], [RiskGroupNumber], [RiskGroupName], [IsActive] 
                     FROM [dbo].[tblRiskGroup]
                     WHERE [RiskGroupNumber] = @riskGroupNumber
                     AND [IsActive] = @isActive", new {riskGroupNumber, isActive}).FirstOrDefault();
+                }
             }
+
+            return _cacheManager.ReturnFromCache(Function, 30,
+                CacheKey.Repository.RiskGroupRepository.ReadByRiskGroupNumberIsActive,
+                new CacheKeyParameter(nameof(riskGroupNumber), riskGroupNumber),
+                new CacheKeyParameter(nameof(isActive), isActive));
         }
 
         /// <summary>

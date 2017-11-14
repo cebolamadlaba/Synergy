@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
+using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 
 namespace StandardBank.ConcessionManagement.Interface.Repository
 {
@@ -14,5 +15,13 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <returns></returns>
         IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber);
+
+        /// <summary>
+        /// Gets the lending products.
+        /// </summary>
+        /// <param name="riskGroupId">The risk group identifier.</param>
+        /// <param name="riskGroupName">Name of the risk group.</param>
+        /// <returns></returns>
+        IEnumerable<LendingProduct> GetLendingProducts(int riskGroupId, string riskGroupName);
     }
 }

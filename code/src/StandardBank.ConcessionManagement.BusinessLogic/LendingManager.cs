@@ -43,11 +43,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ILegalEntityAccountRepository _legalEntityAccountRepository;
 
         /// <summary>
-        /// The product lending repository
-        /// </summary>
-        private readonly IProductLendingRepository _productLendingRepository;
-
-        /// <summary>
         /// The financial lending repository
         /// </summary>
         private readonly IFinancialLendingRepository _financialLendingRepository;
@@ -68,6 +63,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IRuleManager _ruleManager;
 
         /// <summary>
+        /// The misc performance repository
+        /// </summary>
+        private readonly IMiscPerformanceRepository _miscPerformanceRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LendingManager"/> class.
         /// </summary>
         /// <param name="concessionManager">The concession manager.</param>
@@ -75,28 +75,28 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="concessionLendingRepository">The concession lending repository.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="legalEntityAccountRepository">The legal entity account repository.</param>
-        /// <param name="productLendingRepository">The product lending repository.</param>
         /// <param name="financialLendingRepository">The financial lending repository.</param>
         /// <param name="lookupTableManager">The lookup table manager.</param>
         /// <param name="loadedPriceLendingRepository">The loaded price lending repository.</param>
         /// <param name="ruleManager">The rule manager.</param>
+        /// <param name="miscPerformanceRepository">The misc performance repository.</param>
         public LendingManager(IConcessionManager concessionManager,
             ILegalEntityRepository legalEntityRepository, IConcessionLendingRepository concessionLendingRepository,
             IMapper mapper, ILegalEntityAccountRepository legalEntityAccountRepository,
-            IProductLendingRepository productLendingRepository, IFinancialLendingRepository financialLendingRepository,
+            IFinancialLendingRepository financialLendingRepository,
             ILookupTableManager lookupTableManager, ILoadedPriceLendingRepository loadedPriceLendingRepository,
-            IRuleManager ruleManager)
+            IRuleManager ruleManager, IMiscPerformanceRepository miscPerformanceRepository)
         {
             _concessionManager = concessionManager;
             _legalEntityRepository = legalEntityRepository;
             _concessionLendingRepository = concessionLendingRepository;
             _mapper = mapper;
             _legalEntityAccountRepository = legalEntityAccountRepository;
-            _productLendingRepository = productLendingRepository;
             _financialLendingRepository = financialLendingRepository;
             _lookupTableManager = lookupTableManager;
             _loadedPriceLendingRepository = loadedPriceLendingRepository;
             _ruleManager = ruleManager;
+            _miscPerformanceRepository = miscPerformanceRepository;
         }
 
         /// <summary>
@@ -324,26 +324,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         private IEnumerable<LendingProduct> GetLendingProducts(int riskGroupId, string riskGroupName)
         {
-            var productLendings = _productLendingRepository.ReadByRiskGroupId(riskGroupId);
-            var lendingProducts = new List<LendingProduct>();
-
-            foreach (var productLending in productLendings)
-            {
-                var legalEntity = _legalEntityRepository.ReadById(productLending.LegalEntityId);
-                var legalEntityAccount = _legalEntityAccountRepository.ReadById(productLending.LegalEntityAccountId);
-                var products = _lookupTableManager.GetProductTypesForConcessionType("Lending");
-
-                var mappedProduct = _mapper.Map<LendingProduct>(productLending);
-
-                mappedProduct.CustomerName = legalEntity.CustomerName;
-                mappedProduct.AccountNumber = legalEntityAccount.AccountNumber;
-                mappedProduct.Product = products.First(_ => _.Id == productLending.ProductId).Description;
-                mappedProduct.RiskGroupName = riskGroupName;
-
-                lendingProducts.Add(mappedProduct);
-            }
-
-            return lendingProducts;
+            return _miscPerformanceRepository.GetLendingProducts(riskGroupId, riskGroupName);
         }
 
         /// <summary>

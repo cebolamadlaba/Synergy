@@ -40,7 +40,8 @@
 
             public static class ApprovalWorkflowRepository
             {
-                public const string GetApproversByRoles = "CacheKey.Repository.ApprovalWorkflowRepository.GetApproversByRoles";
+                public const string GetApproversByRoles =
+                    "CacheKey.Repository.ApprovalWorkflowRepository.GetApproversByRoles";
             }
 
             public static class BaseRateRepository
@@ -112,8 +113,8 @@
             {
                 public const string ReadAll = "CacheKey.Repository.TransactionGroupRepository.ReadAll";
             }
-			
-			public static class TransactionTableNumberRepository
+
+            public static class TransactionTableNumberRepository
             {
                 public const string ReadAll = "CacheKey.Repository.TransactionTableNumberRepository.ReadAll";
             }
@@ -171,6 +172,15 @@
             public static class TransactionTypeImportRepository
             {
                 public const string ReadAll = "CacheKey.Repository.TransactionTypeImportRepository.ReadAll";
+            }
+
+            public static class RiskGroupRepository
+            {
+                public const string ReadById = "CacheKey.Repository.RiskGroupRepository.ReadById";
+                public const string ReadByIdIsActive = "CacheKey.Repository.RiskGroupRepository.ReadByIdIsActive";
+
+                public const string ReadByRiskGroupNumberIsActive =
+                    "CacheKey.Repository.RiskGroupRepository.ReadByRiskGroupNumberIsActive";
             }
         }
     }

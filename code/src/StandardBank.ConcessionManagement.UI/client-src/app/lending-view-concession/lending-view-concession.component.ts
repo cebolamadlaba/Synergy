@@ -237,17 +237,29 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                     let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == lendingConcessionDetail.legalEntityAccountId);
                     currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
 
-                    currentConcession.get('limit').setValue(lendingConcessionDetail.limit);
+                    if (lendingConcessionDetail.limit)
+                        currentConcession.get('limit').setValue(lendingConcessionDetail.limit.toFixed(2));
+
                     currentConcession.get('term').setValue(lendingConcessionDetail.term);
-                    currentConcession.get('marginAgainstPrime').setValue(lendingConcessionDetail.marginAgainstPrime);
-                    currentConcession.get('approvedMarginAgainstPrime').setValue(lendingConcessionDetail.approvedMap);
-                    currentConcession.get('initiationFee').setValue(lendingConcessionDetail.initiationFee);
+
+                    if (lendingConcessionDetail.marginAgainstPrime)
+                        currentConcession.get('marginAgainstPrime').setValue(lendingConcessionDetail.marginAgainstPrime.toFixed(2));
+
+                    if (lendingConcessionDetail.approvedMap)
+                        currentConcession.get('approvedMarginAgainstPrime').setValue(lendingConcessionDetail.approvedMap.toFixed(2));
+
+                    if (lendingConcessionDetail.initiationFee)
+                        currentConcession.get('initiationFee')
+                            .setValue(lendingConcessionDetail.initiationFee.toFixed(2));
 
                     let selectedReviewFeeType = this.reviewFeeTypes.filter(_ => _.id == lendingConcessionDetail.reviewFeeTypeId);
                     currentConcession.get('reviewFeeType').setValue(selectedReviewFeeType[0]);
 
-                    currentConcession.get('reviewFee').setValue(lendingConcessionDetail.reviewFee);
-                    currentConcession.get('uffFee').setValue(lendingConcessionDetail.uffFee);
+                    if (lendingConcessionDetail.reviewFee)
+                        currentConcession.get('reviewFee').setValue(lendingConcessionDetail.reviewFee.toFixed(2));
+
+                    if (lendingConcessionDetail.uffFee)
+                        currentConcession.get('uffFee').setValue(lendingConcessionDetail.uffFee.toFixed(2));
 
                     if (lendingConcessionDetail.expiryDate) {
                         var formattedExpiryDate = this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd');
@@ -933,4 +945,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 		}
 	}
 
+    setTwoNumberDecimal($event) {
+        $event.target.value = parseFloat($event.target.value).toFixed(2);
+    }
 }

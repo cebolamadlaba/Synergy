@@ -125,13 +125,13 @@
                     </select>
                 </td>
                 <!-- Limit -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="limit" class="form-control" [attr.disabled]="saveMessage ? '' : null"/></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="limit" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
                 <!-- Term -->
                 <td class="length-short"><input type="text" numbersOnly="true" formControlName="term" class="form-control" [attr.disabled]="saveMessage ? '' : null"/></td>
                 <!-- MAP -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="marginAgainstPrime" class="form-control" [attr.disabled]="saveMessage ? '' : null"/></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="marginAgainstPrime" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
                 <!-- Initiation fee -->
-                <td class="length-long"><input type="text" numbersOnly="true" formControlName="initiationFee" class="form-control" [attr.disabled]="saveMessage ? '' : null"/></td>
+                <td class="length-long"><input type="text" numbersOnly="true" formControlName="initiationFee" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
                 <!-- Review fee type -->
                 <td class="length-medium">
                     <select formControlName="reviewFeeType" class="form-control" [attr.disabled]="saveMessage ? '' : null">
@@ -139,9 +139,9 @@
                     </select>
                 </td>
                 <!-- Review fee -->
-                <td class="length-medium"><input type="text" numbersOnly="true" class="form-control" formControlName="reviewFee" [attr.disabled]="saveMessage ? '' : null" /></td>
+                <td class="length-medium"><input type="text" numbersOnly="true" class="form-control" formControlName="reviewFee" [attr.disabled]="saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
                 <!-- UFF fee -->
-                <td class="length-long"><input type="text" numbersOnly="true" class="form-control" formControlName="uffFee" [attr.disabled]="saveMessage ? '' : null" /></td>
+                <td class="length-long"><input type="text" numbersOnly="true" class="form-control" formControlName="uffFee" [attr.disabled]="saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
                 <td><button *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
         </tbody>

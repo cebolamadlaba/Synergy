@@ -291,7 +291,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The RiskGroup repository
         /// </summary>
-        public static IRiskGroupRepository RiskGroupRepository = new RiskGroupRepository(DbConnection);
+        public static IRiskGroupRepository RiskGroupRepository = new RiskGroupRepository(DbConnection, CacheManager);
 
         /// <summary>
         /// The ScenarioManagerToolDeal repository
@@ -510,8 +510,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static ILendingManager LendingManager = new LendingManager(ConcessionManager,
             LegalEntityRepository, ConcessionLendingRepository, Mapper, LegalEntityAccountRepository,
-            ProductLendingRepository, FinancialLendingRepository, LookupTableManager, LoadedPriceLendingRepository,
-            RuleManager);
+            FinancialLendingRepository, LookupTableManager, LoadedPriceLendingRepository,
+            RuleManager, MiscPerformanceRepository);
 
         /// <summary>
         /// The transactional manager

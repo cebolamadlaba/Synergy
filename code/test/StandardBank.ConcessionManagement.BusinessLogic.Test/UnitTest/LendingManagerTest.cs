@@ -29,8 +29,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             _lendingManager = new LendingManager(MockConcessionManager.Object,
                 MockLegalEntityRepository.Object, MockConcessionLendingRepository.Object,
                 InstantiatedDependencies.Mapper, MockLegalEntityAccountRepository.Object,
-                MockProductLendingRepository.Object, MockFinancialLendingRepository.Object,
-                MockLookupTableManager.Object, MockLoadedPriceLendingRepository.Object, MockRuleManager.Object);
+                MockFinancialLendingRepository.Object,
+                MockLookupTableManager.Object, MockLoadedPriceLendingRepository.Object, MockRuleManager.Object,
+                MockMiscPerformanceRepository.Object);
         }
 
         /// <summary>
@@ -90,8 +91,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockLegalEntityAccountRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
                 .Returns(new LegalEntityAccount { IsActive = true });
 
-            MockProductLendingRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
-                .Returns(new[] {new ProductLending()});
+            MockMiscPerformanceRepository.Setup(_ => _.GetLendingProducts(It.IsAny<int>(), It.IsAny<string>()))
+                .Returns(new[] {new LendingProduct()});
 
             MockLookupTableManager.Setup(_ => _.GetProductTypesForConcessionType(It.IsAny<string>()))
                 .Returns(new[] {new ProductType()});
