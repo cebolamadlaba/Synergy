@@ -53,11 +53,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IFinancialTransactionalRepository _financialTransactionalRepository;
 
         /// <summary>
-        /// The product transactional repository
-        /// </summary>
-        private readonly IProductTransactionalRepository _productTransactionalRepository;
-
-        /// <summary>
         /// The loaded price transactional repository
         /// </summary>
         private readonly ILoadedPriceTransactionalRepository _loadedPriceTransactionalRepository;
@@ -66,6 +61,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// The rule manager
         /// </summary>
         private readonly IRuleManager _ruleManager;
+
+        /// <summary>
+        /// The misc performance repository
+        /// </summary>
+        private readonly IMiscPerformanceRepository _miscPerformanceRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TransactionalManager"/> class.
@@ -77,16 +77,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="mapper">The mapper.</param>
         /// <param name="lookupTableManager">The lookup table manager.</param>
         /// <param name="financialTransactionalRepository">The financial transactional repository.</param>
-        /// <param name="productTransactionalRepository">The product transactional repository.</param>
         /// <param name="loadedPriceTransactionalRepository">The loaded price transactional repository.</param>
         /// <param name="ruleManager">The rule manager.</param>
+        /// <param name="miscPerformanceRepository">The misc performance repository.</param>
         public TransactionalManager(IConcessionManager concessionManager,
             IConcessionTransactionalRepository concessionTransactionalRepository,
             ILegalEntityRepository legalEntityRepository, ILegalEntityAccountRepository legalEntityAccountRepository,
             IMapper mapper, ILookupTableManager lookupTableManager,
             IFinancialTransactionalRepository financialTransactionalRepository,
-            IProductTransactionalRepository productTransactionalRepository,
-            ILoadedPriceTransactionalRepository loadedPriceTransactionalRepository, IRuleManager ruleManager)
+            ILoadedPriceTransactionalRepository loadedPriceTransactionalRepository, IRuleManager ruleManager,
+            IMiscPerformanceRepository miscPerformanceRepository)
         {
             _concessionManager = concessionManager;
             _concessionTransactionalRepository = concessionTransactionalRepository;
@@ -95,9 +95,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _mapper = mapper;
             _lookupTableManager = lookupTableManager;
             _financialTransactionalRepository = financialTransactionalRepository;
-            _productTransactionalRepository = productTransactionalRepository;
             _loadedPriceTransactionalRepository = loadedPriceTransactionalRepository;
             _ruleManager = ruleManager;
+            _miscPerformanceRepository = miscPerformanceRepository;
         }
 
         /// <summary>
@@ -334,29 +334,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         private IEnumerable<TransactionalProduct> GetTransactionalProducts(RiskGroup riskGroup)
         {
-            var mappedTransactionalProducts = new List<TransactionalProduct>();
-            var transactionalProducts = _productTransactionalRepository.ReadByRiskGroupId(riskGroup.Id);
-            var transactionTableNumbers = _lookupTableManager.GetTransactionTableNumbers();
-
-            foreach (var transactionalProduct in transactionalProducts)
-            {
-                var legalEntity = _legalEntityRepository.ReadById(transactionalProduct.LegalEntityId);
-                var legalEntityAccount =
-                    _legalEntityAccountRepository.ReadById(transactionalProduct.LegalEntityAccountId);
-                var mappedTransactionalProduct = _mapper.Map<TransactionalProduct>(transactionalProduct);
-
-                mappedTransactionalProduct.CustomerName = legalEntity.CustomerName;
-                mappedTransactionalProduct.AccountNumber = legalEntityAccount.AccountNumber;
-                mappedTransactionalProduct.TariffTable = transactionTableNumbers
-                    .First(_ => _.Id == transactionalProduct.TransactionTableNumberId).TariffTable;
-
-                mappedTransactionalProduct.TransactionType =
-                    _lookupTableManager.GetTransactionTypeDescription(transactionalProduct.TransactionTypeId);
-
-                mappedTransactionalProducts.Add(mappedTransactionalProduct);
-            }
-
-            return mappedTransactionalProducts;
+            return _miscPerformanceRepository.GetTransactionalProducts(riskGroup.Id, riskGroup.Name);
         }
 
         /// <summary>

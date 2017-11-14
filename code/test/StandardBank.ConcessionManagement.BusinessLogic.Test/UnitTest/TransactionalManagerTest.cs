@@ -27,8 +27,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             _transactionalManager = new TransactionalManager(MockConcessionManager.Object,
                 MockConcessionTransactionalRepository.Object, MockLegalEntityRepository.Object,
                 MockLegalEntityAccountRepository.Object, InstantiatedDependencies.Mapper, MockLookupTableManager.Object,
-                MockFinancialTransactionalRepository.Object, MockProductTransactionalRepository.Object,
-                MockLoadedPriceTransactionalRepository.Object, MockRuleManager.Object);
+                MockFinancialTransactionalRepository.Object, MockLoadedPriceTransactionalRepository.Object,
+                MockRuleManager.Object, MockMiscPerformanceRepository.Object);
         }
 
         /// <summary>
@@ -134,8 +134,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockFinancialTransactionalRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
                 .Returns(new[] {new FinancialTransactional()});
 
-            MockProductTransactionalRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
-                .Returns(new[] {new ProductTransactional { TransactionTableNumberId = 1}});
+            MockMiscPerformanceRepository.Setup(_ => _.GetTransactionalProducts(It.IsAny<int>(), It.IsAny<string>()))
+                .Returns(new[] {new TransactionalProduct()});
 
             MockLookupTableManager.Setup(_ => _.GetTransactionTableNumbers())
                 .Returns(new[] {new Model.UserInterface.Transactional.TransactionTableNumber() {Id = 1}});

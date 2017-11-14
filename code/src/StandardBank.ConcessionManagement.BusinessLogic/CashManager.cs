@@ -48,11 +48,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IFinancialCashRepository _financialCashRepository;
 
         /// <summary>
-        /// The product cash repository
-        /// </summary>
-        private readonly IProductCashRepository _productCashRepository;
-
-        /// <summary>
         /// The lookup table manager
         /// </summary>
         private readonly ILookupTableManager _lookupTableManager;
@@ -68,6 +63,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IRuleManager _ruleManager;
 
         /// <summary>
+        /// The misc performance repository
+        /// </summary>
+        private readonly IMiscPerformanceRepository _miscPerformanceRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CashManager"/> class.
         /// </summary>
         /// <param name="concessionManager">The concession manager.</param>
@@ -76,16 +76,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="mapper">The mapper.</param>
         /// <param name="legalEntityAccountRepository">The legal entity account repository.</param>
         /// <param name="financialCashRepository">The financial cash repository.</param>
-        /// <param name="productCashRepository">The product cash repository.</param>
         /// <param name="lookupTableManager">The lookup table manager.</param>
         /// <param name="loadedPriceCashRepository">The loaded price cash repository.</param>
         /// <param name="ruleManager">The rule manager.</param>
+        /// <param name="miscPerformanceRepository">The misc performance repository.</param>
         public CashManager(IConcessionManager concessionManager,
             IConcessionCashRepository concessionCashRepository, ILegalEntityRepository legalEntityRepository,
             IMapper mapper, ILegalEntityAccountRepository legalEntityAccountRepository,
-            IFinancialCashRepository financialCashRepository, IProductCashRepository productCashRepository,
-            ILookupTableManager lookupTableManager, ILoadedPriceCashRepository loadedPriceCashRepository,
-            IRuleManager ruleManager)
+            IFinancialCashRepository financialCashRepository, ILookupTableManager lookupTableManager,
+            ILoadedPriceCashRepository loadedPriceCashRepository,
+            IRuleManager ruleManager, IMiscPerformanceRepository miscPerformanceRepository)
         {
             _concessionManager = concessionManager;
             _concessionCashRepository = concessionCashRepository;
@@ -93,10 +93,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _mapper = mapper;
             _legalEntityAccountRepository = legalEntityAccountRepository;
             _financialCashRepository = financialCashRepository;
-            _productCashRepository = productCashRepository;
             _lookupTableManager = lookupTableManager;
             _loadedPriceCashRepository = loadedPriceCashRepository;
             _ruleManager = ruleManager;
+            _miscPerformanceRepository = miscPerformanceRepository;
         }
 
         /// <summary>
@@ -287,24 +287,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         private IEnumerable<CashProduct> GetCashProducts(RiskGroup riskGroup)
         {
-            var mappedCashProducts = new List<CashProduct>();
-            var cashProducts = _productCashRepository.ReadByRiskGroupId(riskGroup.Id);
-            var tableNumbers = _lookupTableManager.GetTableNumbers("Cash");
-
-            foreach (var cashProduct in cashProducts)
-            {
-                var legalEntity = _legalEntityRepository.ReadById(cashProduct.LegalEntityId);
-                var legalEntityAccount = _legalEntityAccountRepository.ReadById(cashProduct.LegalEntityAccountId);
-                var mappedCashProduct = _mapper.Map<CashProduct>(cashProduct);
-
-                mappedCashProduct.CustomerName = legalEntity.CustomerName;
-                mappedCashProduct.AccountNumber = legalEntityAccount.AccountNumber;
-                mappedCashProduct.TariffTable = tableNumbers.First(_ => _.Id == cashProduct.TableNumberId).TariffTable;
-
-                mappedCashProducts.Add(mappedCashProduct);
-            }
-
-            return mappedCashProducts;
+            return _miscPerformanceRepository.GetCashProducts(riskGroup.Id, riskGroup.Name);
         }
 
         /// <summary>

@@ -29,8 +29,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             _cashManager = new CashManager(MockConcessionManager.Object,
                 MockConcessionCashRepository.Object, MockLegalEntityRepository.Object, InstantiatedDependencies.Mapper,
                 MockLegalEntityAccountRepository.Object, MockFinancialCashRepository.Object,
-                MockProductCashRepository.Object, MockLookupTableManager.Object, MockLoadedPriceCashRepository.Object,
-                MockRuleManager.Object);
+                MockLookupTableManager.Object, MockLoadedPriceCashRepository.Object,
+                MockRuleManager.Object, MockMiscPerformanceRepository.Object);
         }
 
         /// <summary>
@@ -144,8 +144,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockFinancialCashRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
                 .Returns(new[] {new FinancialCash()});
 
-            MockProductCashRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
-                .Returns(new[] {new ProductCash { TableNumberId = 1}});
+            MockMiscPerformanceRepository.Setup(_ => _.GetCashProducts(It.IsAny<int>(), It.IsAny<string>()))
+                .Returns(new[] {new CashProduct()});
 
             MockLookupTableManager.Setup(_ => _.GetTableNumbers(It.IsAny<string>()))
                 .Returns(new[] {new Model.UserInterface.TableNumber {Id = 1}});
