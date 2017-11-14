@@ -1,4 +1,4 @@
-<div class="col-md-2" style="margin-top: 15px;">
+﻿<div class="col-md-2" style="margin-top: 15px;">
     <i class="fa fa-chevron-circle-left" aria-hidden="true" style="font-size: 1.1em;"></i>
     <span class="back-button-text" style="font-size: 1.1em;" (click)="goBack()">Administration</span>
 </div>
@@ -17,7 +17,6 @@
                     <th>A-Number</th>
                     <th>Name</th>
                     <th>Surname</th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -25,7 +24,6 @@
                     <td>{{user.aNumber}}</td>
                     <td>{{user.firstName}}</td>
                     <td>{{user.surname}}</td>
-                    <td><button (click)="deleteUser(user.aNumber)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
                 </tr>
             </tbody>
         </table>
