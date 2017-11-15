@@ -915,5 +915,9 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 				this.isLoading = false;
 			});
 		}
-	}
+    }
+
+    setTwoNumberDecimal($event) {
+        $event.target.value = parseFloat($event.target.value).toFixed(2);
+    }
 }

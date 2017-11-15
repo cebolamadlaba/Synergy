@@ -338,6 +338,10 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 		this.validationError.push(validationDetail);
 	}
 
+    setTwoNumberDecimal($event) {
+        $event.target.value = parseFloat($event.target.value).toFixed(2);
+    }
+
 	goBack() {
 		this.location.back();
 	}
