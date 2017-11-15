@@ -23,11 +23,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IConcessionManager _concessionManager;
 
         /// <summary>
-        /// The legal entity repository
-        /// </summary>
-        private readonly ILegalEntityRepository _legalEntityRepository;
-
-        /// <summary>
         /// The concession lending repository
         /// </summary>
         private readonly IConcessionLendingRepository _concessionLendingRepository;
@@ -36,11 +31,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// The mapper
         /// </summary>
         private readonly IMapper _mapper;
-
-        /// <summary>
-        /// The legal entity account repository
-        /// </summary>
-        private readonly ILegalEntityAccountRepository _legalEntityAccountRepository;
 
         /// <summary>
         /// The financial lending repository
@@ -71,27 +61,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// Initializes a new instance of the <see cref="LendingManager"/> class.
         /// </summary>
         /// <param name="concessionManager">The concession manager.</param>
-        /// <param name="legalEntityRepository">The legal entity repository.</param>
         /// <param name="concessionLendingRepository">The concession lending repository.</param>
         /// <param name="mapper">The mapper.</param>
-        /// <param name="legalEntityAccountRepository">The legal entity account repository.</param>
         /// <param name="financialLendingRepository">The financial lending repository.</param>
         /// <param name="lookupTableManager">The lookup table manager.</param>
         /// <param name="loadedPriceLendingRepository">The loaded price lending repository.</param>
         /// <param name="ruleManager">The rule manager.</param>
         /// <param name="miscPerformanceRepository">The misc performance repository.</param>
         public LendingManager(IConcessionManager concessionManager,
-            ILegalEntityRepository legalEntityRepository, IConcessionLendingRepository concessionLendingRepository,
-            IMapper mapper, ILegalEntityAccountRepository legalEntityAccountRepository,
-            IFinancialLendingRepository financialLendingRepository,
-            ILookupTableManager lookupTableManager, ILoadedPriceLendingRepository loadedPriceLendingRepository,
-            IRuleManager ruleManager, IMiscPerformanceRepository miscPerformanceRepository)
+            IConcessionLendingRepository concessionLendingRepository, IMapper mapper,
+            IFinancialLendingRepository financialLendingRepository, ILookupTableManager lookupTableManager,
+            ILoadedPriceLendingRepository loadedPriceLendingRepository, IRuleManager ruleManager,
+            IMiscPerformanceRepository miscPerformanceRepository)
         {
             _concessionManager = concessionManager;
-            _legalEntityRepository = legalEntityRepository;
             _concessionLendingRepository = concessionLendingRepository;
             _mapper = mapper;
-            _legalEntityAccountRepository = legalEntityAccountRepository;
             _financialLendingRepository = financialLendingRepository;
             _lookupTableManager = lookupTableManager;
             _loadedPriceLendingRepository = loadedPriceLendingRepository;
@@ -123,12 +108,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public LendingConcession GetLendingConcession(string concessionReferenceId, User currentUser)
         {
             var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
-
-            var concessionLendings = _concessionLendingRepository.ReadByConcessionId(concession.Id);
-
-            var lendingConcessionDetails = new List<LendingConcessionDetail>();
-
-            AddMappedConcessionLendings(concessionLendings, lendingConcessionDetails);
+            var lendingConcessionDetails = _miscPerformanceRepository.GetLendingConcessionDetails(concession.Id);
 
             //we are only allowed to extend or renew overdraft products
             if (concession.CanExtend || concession.CanRenew)
@@ -262,15 +242,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public LendingView GetLendingViewData(int riskGroupNumber)
         {
             var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
-
             var lendingConcessions = new List<LendingConcession>();
+            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, "Lending");
 
-            if (riskGroup != null)
+            foreach (var concession in concessions)
             {
-                var concessions = _concessionManager.GetConcessionsForRiskGroup(riskGroup.Id, "Lending");
-
-                foreach (var concession in concessions)
-                    AddLendingConcessionData(concession, lendingConcessions);
+                lendingConcessions.Add(new LendingConcession
+                {
+                    Concession = concession,
+                    LendingConcessionDetails = _miscPerformanceRepository.GetLendingConcessionDetails(concession.Id)
+                });
             }
 
             var lendingProducts = GetLendingProducts(riskGroup.Id, riskGroup.Name);
@@ -325,75 +306,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private IEnumerable<LendingProduct> GetLendingProducts(int riskGroupId, string riskGroupName)
         {
             return _miscPerformanceRepository.GetLendingProducts(riskGroupId, riskGroupName);
-        }
-
-        /// <summary>
-        /// Adds the lending concession data
-        /// </summary>
-        /// <param name="concession"></param>
-        /// <param name="lendingConcessions"></param>
-        private void AddLendingConcessionData(Concession concession, ICollection<LendingConcession> lendingConcessions)
-        {
-            var concessionLendings = _concessionLendingRepository.ReadByConcessionId(concession.Id);
-
-            if (concessionLendings != null && concessionLendings.Any())
-            {
-                var lendingConcessionDetails = new List<LendingConcessionDetail>();
-
-                var lendingConcession =
-                    lendingConcessions.FirstOrDefault(
-                        _ => _.Concession.ReferenceNumber == concession.ReferenceNumber);
-
-                if (lendingConcession == null)
-                {
-                    lendingConcession = new LendingConcession
-                    {
-                        Concession = concession,
-                        LendingConcessionDetails = new List<LendingConcessionDetail>()
-                    };
-
-                    lendingConcessions.Add(lendingConcession);
-                }
-
-                lendingConcessionDetails.AddRange(lendingConcession.LendingConcessionDetails);
-
-                AddMappedConcessionLendings(concessionLendings, lendingConcessionDetails);
-
-                lendingConcession.LendingConcessionDetails = lendingConcessionDetails;
-            }
-        }
-
-        /// <summary>
-        /// Adds the mapped concession lendings
-        /// </summary>
-        /// <param name="concessionLendings"></param>
-        /// <param name="lendingConcessionDetails"></param>
-        private void AddMappedConcessionLendings(IEnumerable<ConcessionLending> concessionLendings,
-            ICollection<LendingConcessionDetail> lendingConcessionDetails)
-        {
-            foreach (var concessionLending in concessionLendings)
-            {
-                var legalEntity = _legalEntityRepository.ReadById(concessionLending.LegalEntityId);
-                var mappedLendingConcessionDetail = _mapper.Map<LendingConcessionDetail>(concessionLending);
-
-                mappedLendingConcessionDetail.CustomerName = legalEntity.CustomerName;
-
-                var legalEntityAccount =
-                    _legalEntityAccountRepository.ReadById(concessionLending.LegalEntityAccountId);
-
-                if (legalEntityAccount != null)
-                    mappedLendingConcessionDetail.AccountNumber = legalEntityAccount.AccountNumber;
-
-                if (mappedLendingConcessionDetail.ProductTypeId.HasValue)
-                    mappedLendingConcessionDetail.ProductType =
-                        _lookupTableManager.GetProductTypeName(mappedLendingConcessionDetail.ProductTypeId.Value);
-
-                if (mappedLendingConcessionDetail.ReviewFeeTypeId.HasValue)
-                    mappedLendingConcessionDetail.ReviewFeeType =
-                        _lookupTableManager.GetReviewFeeTypeName(mappedLendingConcessionDetail.ReviewFeeTypeId.Value);
-
-                lendingConcessionDetails.Add(mappedLendingConcessionDetail);
-            }
         }
     }
 }

@@ -41,5 +41,26 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <param name="riskGroupName">Name of the risk group.</param>
         /// <returns></returns>
         IEnumerable<TransactionalProduct> GetTransactionalProducts(int riskGroupId, string riskGroupName);
+
+        /// <summary>
+        /// Gets the cash concession details.
+        /// </summary>
+        /// <param name="concessionId">The concession identifier.</param>
+        /// <returns></returns>
+        IEnumerable<CashConcessionDetail> GetCashConcessionDetails(int concessionId);
+
+        /// <summary>
+        /// Gets the lending concession details.
+        /// </summary>
+        /// <param name="concessionId">The concession identifier.</param>
+        /// <returns></returns>
+        IEnumerable<LendingConcessionDetail> GetLendingConcessionDetails(int concessionId);
+
+        /// <summary>
+        /// Gets the transactional concession details.
+        /// </summary>
+        /// <param name="concessionId">The concession identifier.</param>
+        /// <returns></returns>
+        IEnumerable<TransactionalConcessionDetail> GetTransactionalConcessionDetails(int concessionId);
     }
 }

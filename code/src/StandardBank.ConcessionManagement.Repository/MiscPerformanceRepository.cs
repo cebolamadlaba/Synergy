@@ -151,5 +151,142 @@ namespace StandardBank.ConcessionManagement.Repository
                 new CacheKeyParameter(nameof(riskGroupId), riskGroupId),
                 new CacheKeyParameter(nameof(riskGroupName), riskGroupName));
         }
+
+        /// <summary>
+        /// Gets the cash concession details.
+        /// </summary>
+        /// <param name="concessionId">The concession identifier.</param>
+        /// <returns></returns>
+        public IEnumerable<CashConcessionDetail> GetCashConcessionDetails(int concessionId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<CashConcessionDetail>(@"SELECT
+                    cd.[pkConcessionDetailId] [ConcessionDetailId], 
+                    cd.[fkConcessionId] [ConcessionId], 
+                    cd.[fkLegalEntityId] [LegalEntityId], 
+                    cd.[fkLegalEntityAccountId] [LegalEntityAccountId], 
+                    [CustomerName], 
+                    [AccountNumber], 
+                    [ExpiryDate], 
+                    [DateApproved], 
+                    [IsMismatched], 
+                    [PriceExported], 
+                    [PriceExportedDate], 
+                    cc.[fkConcessionDetailId] [CashConcessionDetailId], 
+                    ct.[Description] [Channel], 
+                    cc.[fkChannelTypeId] [ChannelTypeId], 
+                    null [BpId], 
+                    null [Volume], 
+                    null [Value], 
+                    cc.[BaseRate], 
+                    cc.[AdValorem], 
+                    cc.[fkAccrualTypeId] [AccrualTypeId], 
+                    cc.[fkTableNumberId] [TableNumberId], 
+                    cc.[fkApprovedTableNumberId] [ApprovedTableNumberId], 
+                    cc.[fkLoadedTableNumberId] [LoadedTableNumberId], 
+                    atn.[TariffTable] [ApprovedTableNumber], 
+                    ltn.[TariffTable] [LoadedTableNumber]
+                    FROM [dbo].[tblConcessionDetail] cd
+                    JOIN [dbo].[tblConcessionCash] cc on cc.[fkConcessionDetailId] = cd.[pkConcessionDetailId]
+                    JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = cd.[fkLegalEntityId]
+                    JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = cd.[fkLegalEntityAccountId]
+                    JOIN [dbo].[rtblChannelType] ct on ct.[pkChannelTypeId] = cc.[fkChannelTypeId]
+                    LEFT JOIN [dbo].[rtblTableNumber] atn on atn.[pkTableNumberId] = cc.[fkApprovedTableNumberId]
+                    LEFT JOIN [dbo].[rtblTableNumber] ltn on ltn.[pkTableNumberId] = cc.[fkLoadedTableNumberId]
+                    WHERE cd.[fkConcessionId] = @concessionId", new {concessionId});
+            }
+        }
+
+        /// <summary>
+        /// Gets the lending concession details.
+        /// </summary>
+        /// <param name="concessionId">The concession identifier.</param>
+        /// <returns></returns>
+        public IEnumerable<LendingConcessionDetail> GetLendingConcessionDetails(int concessionId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<LendingConcessionDetail>(@"SELECT
+                    cd.[pkConcessionDetailId] [ConcessionDetailId], 
+                    cd.[fkConcessionId] [ConcessionId], 
+                    cd.[fkLegalEntityId] [LegalEntityId], 
+                    cd.[fkLegalEntityAccountId] [LegalEntityAccountId],  
+                    [CustomerName], 
+                    [AccountNumber], 
+                    [ExpiryDate], 
+                    [DateApproved], 
+                    [IsMismatched], 
+                    [PriceExported], 
+                    [PriceExportedDate], 
+                    cl.[fkConcessionDetailId] [LendingConcessionDetailId], 
+                    pt.[Description] [ProductType], 
+                    cl.[fkProductTypeId] [ProductTypeId], 
+                    [Limit], 
+                    [AverageBalance], 
+                    [Term], 
+                    cl.[LoadedMarginToPrime] [LoadedMap], 
+                    cl.[ApprovedMarginToPrime] [ApprovedMap], 
+                    cl.[MarginToPrime] [MarginAgainstPrime], 
+                    [InitiationFee], 
+                    rft.[Description] [ReviewFeeType], 
+                    cl.[fkReviewFeeTypeId] [ReviewFeeTypeId], 
+                    [ReviewFee], 
+                    [UffFee]
+                    FROM [dbo].[tblConcessionDetail] cd
+                    JOIN [dbo].[tblConcessionLending] cl on cl.[fkConcessionDetailId] = cd.[pkConcessionDetailId]
+                    JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = cd.[fkLegalEntityId]
+                    JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = cd.[fkLegalEntityAccountId]
+                    JOIN [dbo].[rtblProduct] pt on pt.[pkProductId] = cl.[fkProductTypeId]
+                    LEFT JOIN [dbo].[rtblReviewFeeType] rft on rft.[pkReviewFeeTypeId] = cl.[fkReviewFeeTypeId]
+                    WHERE cd.[fkConcessionId] = @concessionId", new {concessionId});
+            }
+        }
+
+        /// <summary>
+        /// Gets the transactional concession details.
+        /// </summary>
+        /// <param name="concessionId">The concession identifier.</param>
+        /// <returns></returns>
+        public IEnumerable<TransactionalConcessionDetail> GetTransactionalConcessionDetails(int concessionId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<TransactionalConcessionDetail>(@"SELECT
+                    cd.[pkConcessionDetailId] [ConcessionDetailId], 
+                    cd.[fkConcessionId] [ConcessionId], 
+                    cd.[fkLegalEntityId] [LegalEntityId], 
+                    cd.[fkLegalEntityAccountId] [LegalEntityAccountId],  
+                    [CustomerName], 
+                    [AccountNumber], 
+                    [ExpiryDate], 
+                    [DateApproved], 
+                    [IsMismatched], 
+                    [PriceExported], 
+                    [PriceExportedDate], 
+                    ct.[fkConcessionDetailId] [TransactionalConcessionDetailId], 
+                    tt.[Description] [TransactionType], 
+                    ct.[fkTransactionTypeId] [TransactionTypeId], 
+                    null [Volume], 
+                    null [Value], 
+                    ct.[AdValorem], 
+                    ct.[Fee], 
+                    ct.[fkTransactionTableNumberId] [TransactionTableNumberId], 
+                    null [LoadedPrice], 
+                    null [ApprovedPrice], 
+                    ct.[fkApprovedTransactionTableNumberId] [ApprovedTransactionTableNumberId], 
+                    ct.[fkLoadedTransactionTableNumberId] [LoadedTransactionTableNumberId], 
+                    atn.[TariffTable] [LoadedTableNumber], 
+                    ltn.[TariffTable] [ApprovedTableNumber]
+                    FROM [dbo].[tblConcessionDetail] cd
+                    JOIN [dbo].[tblConcessionTransactional] ct on ct.[fkConcessionDetailId] = cd.[pkConcessionDetailId]
+                    JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = cd.[fkLegalEntityId]
+                    JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = cd.[fkLegalEntityAccountId]
+                    JOIN [dbo].[rtblTransactionType] tt on tt.[pkTransactionTypeId] = ct.[fkTransactionTypeId]
+                    LEFT JOIN [dbo].[rtblTransactionTableNumber] atn on atn.[pkTransactionTableNumberId] = ct.[fkApprovedTransactionTableNumberId]
+                    LEFT JOIN [dbo].[rtblTransactionTableNumber] ltn on ltn.[pkTransactionTableNumberId] = ct.[fkLoadedTransactionTableNumberId]
+                    WHERE cd.[fkConcessionId] = @concessionId", new { concessionId });
+            }
+        }
     }
 }

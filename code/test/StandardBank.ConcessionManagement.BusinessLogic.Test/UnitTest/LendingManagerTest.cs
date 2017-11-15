@@ -1,5 +1,4 @@
-﻿using System;
-using Moq;
+﻿using Moq;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface;
@@ -26,12 +25,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         /// </summary>
         public LendingManagerTest()
         {
-            _lendingManager = new LendingManager(MockConcessionManager.Object,
-                MockLegalEntityRepository.Object, MockConcessionLendingRepository.Object,
-                InstantiatedDependencies.Mapper, MockLegalEntityAccountRepository.Object,
-                MockFinancialLendingRepository.Object,
-                MockLookupTableManager.Object, MockLoadedPriceLendingRepository.Object, MockRuleManager.Object,
-                MockMiscPerformanceRepository.Object);
+            _lendingManager = new LendingManager(MockConcessionManager.Object, MockConcessionLendingRepository.Object,
+                InstantiatedDependencies.Mapper, MockFinancialLendingRepository.Object, MockLookupTableManager.Object,
+                MockLoadedPriceLendingRepository.Object, MockRuleManager.Object, MockMiscPerformanceRepository.Object);
         }
 
         /// <summary>
@@ -43,7 +39,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockConcessionLendingRepository.Setup(_ => _.Create(It.IsAny<ConcessionLending>()))
                 .Returns(new ConcessionLending());
 
-            var result = _lendingManager.CreateConcessionLending(new LendingConcessionDetail(), new Model.UserInterface.Concession());
+            var result = _lendingManager.CreateConcessionLending(new LendingConcessionDetail(),
+                new Model.UserInterface.Concession());
 
             Assert.NotNull(result);
         }
@@ -79,23 +76,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockLookupTableManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
                 .Returns(new RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
 
-            MockConcessionManager.Setup(_ => _.GetConcessionsForRiskGroup(It.IsAny<int>(), It.IsAny<string>()))
+            MockConcessionManager.Setup(_ => _.GetApprovedConcessionsForRiskGroup(It.IsAny<int>(), It.IsAny<string>()))
                 .Returns(new[] { new Model.UserInterface.Concession() });
 
-            MockConcessionLendingRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
-                .Returns(new[] { new ConcessionLending() });
-
-            MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
-                .Returns(new LegalEntity { IsActive = true });
-
-            MockLegalEntityAccountRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
-                .Returns(new LegalEntityAccount { IsActive = true });
+            MockMiscPerformanceRepository.Setup(_ => _.GetLendingConcessionDetails(It.IsAny<int>()))
+                .Returns(new[] { new LendingConcessionDetail() });
 
             MockMiscPerformanceRepository.Setup(_ => _.GetLendingProducts(It.IsAny<int>(), It.IsAny<string>()))
                 .Returns(new[] {new LendingProduct()});
-
-            MockLookupTableManager.Setup(_ => _.GetProductTypesForConcessionType(It.IsAny<string>()))
-                .Returns(new[] {new ProductType()});
 
             MockFinancialLendingRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
                 .Returns(new[] {new FinancialLending {TotalExposure = 100}});

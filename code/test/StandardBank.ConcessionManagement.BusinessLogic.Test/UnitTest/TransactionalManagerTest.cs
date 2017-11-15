@@ -25,37 +25,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         public TransactionalManagerTest()
         {
             _transactionalManager = new TransactionalManager(MockConcessionManager.Object,
-                MockConcessionTransactionalRepository.Object, MockLegalEntityRepository.Object,
-                MockLegalEntityAccountRepository.Object, InstantiatedDependencies.Mapper, MockLookupTableManager.Object,
-                MockFinancialTransactionalRepository.Object, MockLoadedPriceTransactionalRepository.Object,
-                MockRuleManager.Object, MockMiscPerformanceRepository.Object);
-        }
-
-        /// <summary>
-        /// Tests that GetTransactionalConcessionsForRiskGroupNumber executes positive.
-        /// </summary>
-        [Fact] 
-        public void GetTransactionalConcessionsForRiskGroupNumber_Executes_Positive()
-        {
-            MockLookupTableManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
-                .Returns(new RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
-
-            MockConcessionManager.Setup(_ => _.GetConcessionsForRiskGroup(It.IsAny<int>(), It.IsAny<string>()))
-                .Returns(new[] { new Model.UserInterface.Concession() });
-
-            MockConcessionTransactionalRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
-                .Returns(new[] { new ConcessionTransactional() });
-
-            MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
-                .Returns(new LegalEntity { IsActive = true });
-
-            MockLegalEntityAccountRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
-                .Returns(new LegalEntityAccount { IsActive = true });
-
-            var result = _transactionalManager.GetTransactionalConcessionsForRiskGroupNumber(1);
-
-            Assert.NotNull(result);
-            Assert.NotEmpty(result);
+                MockConcessionTransactionalRepository.Object, InstantiatedDependencies.Mapper,
+                MockLookupTableManager.Object, MockFinancialTransactionalRepository.Object,
+                MockLoadedPriceTransactionalRepository.Object, MockRuleManager.Object,
+                MockMiscPerformanceRepository.Object);
         }
 
         /// <summary>
@@ -119,29 +92,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockLookupTableManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
                 .Returns(new RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
 
-            MockConcessionManager.Setup(_ => _.GetConcessionsForRiskGroup(It.IsAny<int>(), It.IsAny<string>()))
+            MockConcessionManager.Setup(_ => _.GetApprovedConcessionsForRiskGroup(It.IsAny<int>(), It.IsAny<string>()))
                 .Returns(new[] { new Model.UserInterface.Concession() });
 
-            MockConcessionTransactionalRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
-                .Returns(new[] { new ConcessionTransactional() });
-
-            MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
-                .Returns(new LegalEntity { IsActive = true });
-
-            MockLegalEntityAccountRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
-                .Returns(new LegalEntityAccount { IsActive = true });
+            MockMiscPerformanceRepository.Setup(_ => _.GetTransactionalConcessionDetails(It.IsAny<int>()))
+                .Returns(new[] { new TransactionalConcessionDetail() });
 
             MockFinancialTransactionalRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
                 .Returns(new[] {new FinancialTransactional()});
 
             MockMiscPerformanceRepository.Setup(_ => _.GetTransactionalProducts(It.IsAny<int>(), It.IsAny<string>()))
                 .Returns(new[] {new TransactionalProduct()});
-
-            MockLookupTableManager.Setup(_ => _.GetTransactionTableNumbers())
-                .Returns(new[] {new Model.UserInterface.Transactional.TransactionTableNumber() {Id = 1}});
-
-            MockLookupTableManager.Setup(_ => _.GetTransactionTypeDescription(It.IsAny<int>()))
-                .Returns("Test Transaction Description");
 
             var result = _transactionalManager.GetTransactionalViewData(1);
 

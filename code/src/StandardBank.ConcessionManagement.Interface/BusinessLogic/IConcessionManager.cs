@@ -181,6 +181,15 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         IEnumerable<Model.UserInterface.Concession> GetConcessionsForRiskGroup(int riskGroupId, string concessionType);
 
         /// <summary>
+        /// Gets the approved concessions for risk group.
+        /// </summary>
+        /// <param name="riskGroupId">The risk group identifier.</param>
+        /// <param name="concessionType">Type of the concession.</param>
+        /// <returns></returns>
+        IEnumerable<Model.UserInterface.Concession> GetApprovedConcessionsForRiskGroup(int riskGroupId,
+            string concessionType);
+
+        /// <summary>
         /// Gets the concession for concession reference identifier.
         /// </summary>
         /// <param name="concessionReferenceId">The concession reference identifier.</param>
