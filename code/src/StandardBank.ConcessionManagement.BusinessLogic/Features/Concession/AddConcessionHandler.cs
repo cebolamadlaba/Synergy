@@ -1,10 +1,10 @@
-﻿using System;
-using MediatR;
+﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using System.Threading.Tasks;
+using StandardBank.ConcessionManagement.Interface.Repository;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
 {
@@ -30,17 +30,32 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         private readonly ILogger<AddConcessionHandler> _logger;
 
         /// <summary>
+        /// The risk group repository
+        /// </summary>
+        private readonly IRiskGroupRepository _riskGroupRepository;
+
+        /// <summary>
+        /// The lookup table manager
+        /// </summary>
+        private readonly ILookupTableManager _lookupTableManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="AddConcessionHandler"/> class.
         /// </summary>
         /// <param name="concessionManager">The concession manager.</param>
         /// <param name="mediator">The mediator.</param>
         /// <param name="logger">The logger.</param>
+        /// <param name="riskGroupRepository">The risk group repository.</param>
+        /// <param name="lookupTableManager">The lookup table manager.</param>
         public AddConcessionHandler(IConcessionManager concessionManager, IMediator mediator,
-            ILogger<AddConcessionHandler> logger)
+            ILogger<AddConcessionHandler> logger, IRiskGroupRepository riskGroupRepository,
+            ILookupTableManager lookupTableManager)
         {
             _concessionManager = concessionManager;
             _mediator = mediator;
             _logger = logger;
+            _riskGroupRepository = riskGroupRepository;
+            _lookupTableManager = lookupTableManager;
         }
 
         /// <summary>
@@ -56,6 +71,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
 
             message.Concession.ReferenceNumber = result.ConcessionRef;
             message.Concession.Id = result.Id;
+
+            if (string.IsNullOrWhiteSpace(message.Concession.RiskGroupName))
+                message.Concession.RiskGroupName = _riskGroupRepository.ReadById(result.RiskGroupId).RiskGroupName;
+
+            if (string.IsNullOrWhiteSpace(message.Concession.ConcessionType))
+                message.Concession.ConcessionType =
+                    _lookupTableManager.GetConcessionType(result.ConcessionTypeId).Description;
 
             if (message.User.SelectedCentre?.Id > 0)
                 await SendNotificationEmail(message, result);
@@ -77,7 +99,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
             await _mediator.Publish(new ConcessionAdded
             {
                 CenterId = message.User.SelectedCentre.Id,
-                ConsessionId = result.ConcessionRef
+                ConsessionId = result.ConcessionRef,
+                RiskGroupName = message.Concession.RiskGroupName,
+                Product = message.Concession.ConcessionType,
+                DateOfRequest = result.ConcessionDate.ToString("yyyy-MM-dd")
             });
         }
     }

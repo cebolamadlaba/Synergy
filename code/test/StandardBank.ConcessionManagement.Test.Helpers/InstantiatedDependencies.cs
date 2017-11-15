@@ -471,7 +471,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The misc performance repository
         /// </summary>
-        public static IMiscPerformanceRepository MiscPerformanceRepository = new MiscPerformanceRepository(DbConnection);
+        public static IMiscPerformanceRepository MiscPerformanceRepository =
+            new MiscPerformanceRepository(DbConnection, CacheManager);
 
         /// <summary>
         /// The look up table manager

@@ -99,7 +99,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
             message.Concession.SubStatus = _lookupTableManager.GetSubStatusDescription(result.SubStatusId);
             message.Concession.ConcessionType =
                 _lookupTableManager.GetConcessionType(result.ConcessionTypeId).Description;
-            message.Concession.RiskGroupName = _riskGroupRepository.ReadById(result.RiskGroupId).RiskGroupName;
+
+            if (string.IsNullOrWhiteSpace(message.Concession.RiskGroupName))
+                message.Concession.RiskGroupName = _riskGroupRepository.ReadById(result.RiskGroupId).RiskGroupName;
 
             if (message.User.SelectedCentre?.Id > 0)
             {
@@ -228,7 +230,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
             {
                 CenterId = message.User.SelectedCentre.Id,
                 ConsessionId = result.ConcessionRef,
-                ApprovalStep = approvalStep
+                ApprovalStep = approvalStep,
+                RiskGroupName = message.Concession.RiskGroupName,
+                Product = message.Concession.ConcessionType,
+                DateOfRequest = message.Concession.DateOpened.ToString("yyyy-MM-dd")
             });
         }
     }

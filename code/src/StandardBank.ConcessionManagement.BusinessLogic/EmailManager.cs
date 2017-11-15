@@ -110,7 +110,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             return await SendTemplatedEmail(concessionAddedEmail.EmailAddress, "Pricing Tool: New Concession", null,
                 Constants.EmailTemplates.NewConcession,
-                new {Name = concessionAddedEmail.FirstName, ConcessionId = concessionAddedEmail.ConsessionId});
+                new
+                {
+                    Name = concessionAddedEmail.FirstName,
+                    ConcessionId = concessionAddedEmail.ConsessionId,
+                    concessionAddedEmail.RiskGroupName,
+                    concessionAddedEmail.DateOfRequest,
+                    concessionAddedEmail.Product
+                });
         }
 
         /// <summary>
