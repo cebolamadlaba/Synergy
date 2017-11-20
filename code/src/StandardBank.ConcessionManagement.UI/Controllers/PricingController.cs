@@ -17,19 +17,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         private readonly ILookupTableManager _lookupTableManager;
 
         /// <summary>
-        /// The site helper
-        /// </summary>
-        private readonly ISiteHelper _siteHelper;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="PricingController"/> class.
         /// </summary>
         /// <param name="lookupTableManager">The lookup table manager.</param>
-        /// <param name="siteHelper">The site helper.</param>
-        public PricingController(ILookupTableManager lookupTableManager, ISiteHelper siteHelper)
+        public PricingController(ILookupTableManager lookupTableManager)
         {
             _lookupTableManager = lookupTableManager;
-            _siteHelper = siteHelper;
         }
 
         /// <summary>
@@ -41,16 +34,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult RiskGroup(int riskGroupNumber)
         {
             var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
-
-            if (riskGroup != null)
-            {
-                var user = _siteHelper.LoggedInUser(this);
-
-                if (user.IsHO || user.SelectedRegion.Id == riskGroup.RegionId)
-                    return Ok(riskGroup);
-            }
-
-            return Ok(null);
+            
+            return Ok(riskGroup);
         }
     }
 }

@@ -22,7 +22,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         /// </summary>
         public PricingControllerTest()
         {
-            _pricingController = new PricingController(MockLookupTableManager.Object, MockSiteHelper.Object);
+            _pricingController = new PricingController(MockLookupTableManager.Object);
         }
 
         /// <summary>
@@ -43,11 +43,6 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
             };
 
             MockLookupTableManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>())).Returns(riskGroup);
-
-            MockSiteHelper.Setup(_ => _.LoggedInUser(It.IsAny<Controller>())).Returns(new User()
-            {
-                SelectedRegion = new Region {Id = 1}
-            });
 
             var result = _pricingController.RiskGroup(1);
             var apiResult = Assert.IsType<OkObjectResult>(result);
