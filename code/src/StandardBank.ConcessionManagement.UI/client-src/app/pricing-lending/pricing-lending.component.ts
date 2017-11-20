@@ -21,7 +21,7 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
     observableLendingView: Observable<LendingView>;
     lendingView: LendingView = new LendingView();
     errorMessage: String;
-    showHide = true;
+    showHide = false;
     pageLoaded = false;
     canRequest = false;
     isLoading = true;

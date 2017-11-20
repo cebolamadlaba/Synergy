@@ -16,7 +16,7 @@ import { UserService } from "../services/user.service";
     styleUrls: ['./pricing-transactional.component.css']
 })
 export class PricingTransactionalComponent implements OnInit, OnDestroy {
-    showHide = true;
+    showHide = false;
     riskGroupNumber: number;
     private sub: any;
     observableTransactionalView: Observable<TransactionalView>;

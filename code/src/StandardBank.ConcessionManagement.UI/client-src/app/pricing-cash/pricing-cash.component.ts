@@ -20,7 +20,7 @@ export class PricingCashComponent implements OnInit, OnDestroy {
     observableCashView: Observable<CashView>;
     cashView: CashView = new CashView();
     errorMessage: String;
-    showHide = true;
+    showHide = false;
     pageLoaded = false;
     isLoading = true;
 
