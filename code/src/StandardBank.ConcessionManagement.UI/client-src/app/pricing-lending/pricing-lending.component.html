@@ -1,4 +1,4 @@
-﻿<!-- Loading message -->
+<!-- Loading message -->
 <div class="col-md-12" *ngIf="isLoading" style="margin-top: 15px;">
     <div class="form-feedback-container">
         <div class="alert-info">
@@ -119,9 +119,9 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="rightAlign"> {{lendingProduct.limit}}</td>
-                                <td class="rightAlign"> {{lendingProduct.averageBalance}}</td>
-                                <td class="rightAlign"> {{lendingProduct.loadedMap}}</td>
+                                <td class="rightAlign"> {{lendingProduct.limit | number : '1.2-2'}}</td>
+                                <td class="rightAlign"> {{lendingProduct.averageBalance | number : '1.2-2'}}</td>
+                                <td class="rightAlign"> {{lendingProduct.loadedMap | number : '1.2-2'}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -173,8 +173,8 @@
                                 <p class="customerInfo">{{concession.customerName}}</p>
                                 <p class="accInfo">Acc No : {{concession.accountNumber}}</p>
                             </td>
-                            <td class="rightAlign">{{concession.limit}}</td>
-                            <td class="rightAlign">{{concession.averageBalance}}</td>
+                            <td class="rightAlign">{{concession.limit | number : '1.2-2'}}</td>
+                            <td class="rightAlign">{{concession.averageBalance | number : '1.2-2'}}</td>
                             <td class="rightAlign">{{concession.term}}</td>
                             <td>
                                 <p class="mapInfo">Loaded:{{concession.loadedMap | number : '1.2-2'}}</p>

@@ -128,8 +128,8 @@
                                 <td class="rightAlign"> {{cashProduct.tariffTable}}</td>
                                 <td class="rightAlign"> {{cashProduct.bpId}}</td>
                                 <td class="rightAlign"> {{cashProduct.volume}}</td>
-                                <td class="rightAlign"> {{cashProduct.value}}</td>
-                                <td class="rightAlign"> {{cashProduct.loadedPrice}}</td>
+                                <td class="rightAlign"> {{cashProduct.value | number : '1.2-2'}}</td>
+                                <td class="rightAlign"> {{cashProduct.loadedPrice | number : '1.2-2'}}</td>
                             </tr>
                         </tbody>
                     </table>

@@ -1,4 +1,4 @@
-﻿<!-- Loading message -->
+<!-- Loading message -->
 <div class="col-md-12" *ngIf="isLoading">
     <div class="form-feedback-container">
         <div class="alert-info">
@@ -137,8 +137,8 @@
                         <tr>
                             <td class="rightAlign"> {{transactionalProduct.tariffTable}}</td>
                             <td class="rightAlign"> {{transactionalProduct.volume}}</td>
-                            <td class="rightAlign"> {{transactionalProduct.value}}</td>
-                            <td class="rightAlign"> {{transactionalProduct.loadedPrice}}</td>
+                            <td class="rightAlign"> {{transactionalProduct.value | number : '1.2-2'}}</td>
+                            <td class="rightAlign"> {{transactionalProduct.loadedPrice | number : '1.2-2'}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -194,7 +194,7 @@
                                 </td>
                                 <!--<td class="rightAlign">{{concession.tariffTable}}</td>
                                 <td class="rightAlign">{{concession.volume}}</td>
-                                <td class="rightAlign">{{concession.value}}</td>-->
+                                <td class="rightAlign">{{concession.value | number : '1.2-2'}}</td>-->
                                 <td>
                                     <p class="mapInfo">Loaded: {{concession.loadedTableNumber}}</p>
                                     <p class="mapInfo">Approved: {{concession.approvedTableNumber}}</p>
