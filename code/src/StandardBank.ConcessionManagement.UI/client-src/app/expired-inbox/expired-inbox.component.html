@@ -1,4 +1,4 @@
-
+﻿
 <app-inbox-header></app-inbox-header>
 
 <!-- Error message -->
@@ -29,8 +29,8 @@
             <tbody>
                 <tr *ngFor='let concession of userConcessions?.expiredConcessions; trackBy: index;' (click)="openConcessionView(concession)">
                     <td>
-                        <p class="riskGroupName">{{concession?.riskGroupName}}</p>
-                        <p class="riskGroupNumber">{{concession?.riskGroupNumber}}</p>
+                        <p>{{concession?.riskGroupName}}</p>
+                        <p>{{concession?.riskGroupNumber}}</p>
                     </td>
                     <td>{{concession?.concessionType}}</td>
                     <td class="date">{{concession?.dateOpened | date: 'yyyy/MM/dd'}}</td>
