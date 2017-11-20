@@ -1,4 +1,4 @@
-﻿  <!-- Total widgets -->
+  <!-- Total widgets -->
 <div class="col-md-12" *ngIf="!isLoading">
     <div class="totalsWidget outer" (click)="showStandard()">
         <div class="activeWidget" [className]="standardClass">
@@ -113,10 +113,10 @@
                     <td (click)="openConcessionView(condition)">{{condition.conditionType }}</td>
                     <td (click)="openConcessionView(condition)">{{condition.productType}}</td>
                     <td class="date" (click)="openConcessionView(condition)">{{condition.expiryDate | date: 'yyyy/MM/dd'}}</td>
-                    <td (click)="openConcessionView(condition)">{{condition.interestRate}}</td>
+                    <td (click)="openConcessionView(condition)"><span *ngIf="condition.interestRate">{{condition.interestRate | number:'1.2-2'}}</span></td>
                     <td (click)="openConcessionView(condition)">{{condition.conditionVolume}}</td>
-                    <td (click)="openConcessionView(condition)">{{condition.conditionValue}}</td>
-                    <td (click)="openConcessionView(condition)">{{condition.expectedTurnoverValue}}</td>
+                    <td (click)="openConcessionView(condition)"><span *ngIf="condition.conditionValue">{{condition.conditionValue | number:'1.2-2'}}</span></td>
+                    <td (click)="openConcessionView(condition)"><span *ngIf="condition.expectedTurnoverValue">{{condition.expectedTurnoverValue | number:'1.2-2'}}</span></td>
                     <td>
                         <button type="button" class="btn btn-no" (click)="conditionNotMet(condition)">No</button>
                         <button type="button" class="btn btn-yes" (click)="conditionMet(condition)">Yes</button>

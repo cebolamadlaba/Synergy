@@ -21,6 +21,7 @@ import { LookupDataService } from "../services/lookup-data.service";
 import { UserConcessionsService } from "../services/user-concessions.service";
 import { LendingFinancial } from "../models/lending-financial";
 import { ConcessionComment } from "../models/concession-comment";
+import { DecimalPipe } from '@angular/common';
 
 @Component({
     selector: 'app-lending-view-concession',
@@ -238,29 +239,16 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                     let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == lendingConcessionDetail.legalEntityAccountId);
                     currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
 
-                    if (lendingConcessionDetail.limit)
-                        currentConcession.get('limit').setValue(lendingConcessionDetail.limit.toFixed(2));
-
+                    currentConcession.get('limit').setValue(this.formatDecimal(lendingConcessionDetail.limit));
                     currentConcession.get('term').setValue(lendingConcessionDetail.term);
-
-                    if (lendingConcessionDetail.marginAgainstPrime)
-                        currentConcession.get('marginAgainstPrime').setValue(lendingConcessionDetail.marginAgainstPrime.toFixed(2));
-
-                    if (lendingConcessionDetail.approvedMap)
-                        currentConcession.get('approvedMarginAgainstPrime').setValue(lendingConcessionDetail.approvedMap.toFixed(2));
-
-                    if (lendingConcessionDetail.initiationFee)
-                        currentConcession.get('initiationFee')
-                            .setValue(lendingConcessionDetail.initiationFee.toFixed(2));
+                    currentConcession.get('marginAgainstPrime').setValue(this.formatDecimal(lendingConcessionDetail.marginAgainstPrime));
+                    currentConcession.get('approvedMarginAgainstPrime').setValue(this.formatDecimal(lendingConcessionDetail.approvedMap));
+                    currentConcession.get('initiationFee').setValue(this.formatDecimal(lendingConcessionDetail.initiationFee));
 
                     let selectedReviewFeeType = this.reviewFeeTypes.filter(_ => _.id == lendingConcessionDetail.reviewFeeTypeId);
                     currentConcession.get('reviewFeeType').setValue(selectedReviewFeeType[0]);
-
-                    if (lendingConcessionDetail.reviewFee)
-                        currentConcession.get('reviewFee').setValue(lendingConcessionDetail.reviewFee.toFixed(2));
-
-                    if (lendingConcessionDetail.uffFee)
-                        currentConcession.get('uffFee').setValue(lendingConcessionDetail.uffFee.toFixed(2));
+                    currentConcession.get('reviewFee').setValue(this.formatDecimal(lendingConcessionDetail.reviewFee));
+                    currentConcession.get('uffFee').setValue(this.formatDecimal(lendingConcessionDetail.uffFee));
 
                     if (lendingConcessionDetail.expiryDate) {
                         var formattedExpiryDate = this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd');
@@ -959,6 +947,14 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 	}
 
     setTwoNumberDecimal($event) {
-        $event.target.value = parseFloat($event.target.value).toFixed(2);
+        $event.target.value = this.formatDecimal($event.target.value);
+    }
+
+    formatDecimal(itemValue: number) {
+        if (itemValue) {
+            return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
+        }
+
+        return null;
     }
 }

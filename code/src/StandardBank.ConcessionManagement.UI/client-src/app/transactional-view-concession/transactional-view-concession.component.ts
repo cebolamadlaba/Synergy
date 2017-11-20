@@ -20,6 +20,7 @@ import { TransactionalConcessionDetail } from "../models/transactional-concessio
 import { UserConcessionsService } from "../services/user-concessions.service";
 import { ConcessionComment } from "../models/concession-comment";
 import { TransactionalFinancial } from "../models/transactional-financial";
+import { DecimalPipe } from '@angular/common';
 
 @Component({
 	selector: 'app-transactional-view-concession',
@@ -919,6 +920,14 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     setTwoNumberDecimal($event) {
-        $event.target.value = parseFloat($event.target.value).toFixed(2);
+        $event.target.value = this.formatDecimal($event.target.value);
+    }
+
+    formatDecimal(itemValue: number) {
+        if (itemValue) {
+            return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
+        }
+
+        return null;
     }
 }

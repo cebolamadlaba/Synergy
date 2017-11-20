@@ -17,6 +17,7 @@ import { TransactionalConcession } from "../models/transactional-concession";
 import { Concession } from "../models/concession";
 import { ConcessionCondition } from "../models/concession-condition";
 import { TransactionalConcessionDetail } from "../models/transactional-concession-detail";
+import { DecimalPipe } from '@angular/common';
 
 @Component({
 	selector: 'app-transactional-add-concession',
@@ -340,7 +341,15 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 	}
 
     setTwoNumberDecimal($event) {
-        $event.target.value = parseFloat($event.target.value).toFixed(2);
+        $event.target.value = this.formatDecimal($event.target.value);
+    }
+
+    formatDecimal(itemValue: number) {
+        if (itemValue) {
+            return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
+        }
+
+        return null;
     }
 
 	goBack() {
