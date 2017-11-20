@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -16,7 +16,7 @@ import { UserService } from "../services/user.service";
     styleUrls: ['./pricing-transactional.component.css']
 })
 export class PricingTransactionalComponent implements OnInit, OnDestroy {
-    showHide = true;
+    showHide = false;
     riskGroupNumber: number;
     private sub: any;
     observableTransactionalView: Observable<TransactionalView>;

@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { LendingView } from "../models/lending-view";
@@ -21,7 +21,7 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
     observableLendingView: Observable<LendingView>;
     lendingView: LendingView = new LendingView();
     errorMessage: String;
-    showHide = true;
+    showHide = false;
     pageLoaded = false;
     canRequest = false;
     isLoading = true;
