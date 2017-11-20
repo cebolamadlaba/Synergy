@@ -21,6 +21,7 @@ import { TableNumber } from "../models/table-number";
 import { UserConcessionsService } from "../services/user-concessions.service";
 import { ConcessionComment } from "../models/concession-comment";
 import { CashFinancial } from "../models/cash-financial";
+import { DecimalPipe } from '@angular/common';
 
 @Component({
 	selector: 'app-cash-view-concession',
@@ -910,6 +911,14 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     setTwoNumberDecimal($event) {
-        $event.target.value = parseFloat($event.target.value).toFixed(2);
+        $event.target.value = this.formatDecimal($event.target.value);
+    }
+
+    formatDecimal(itemValue: number) {
+        if (itemValue) {
+            return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
+        }
+
+        return null;
     }
 }
