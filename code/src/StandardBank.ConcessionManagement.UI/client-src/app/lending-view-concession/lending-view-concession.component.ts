@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
@@ -33,6 +33,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     concessionReferenceId: string;
     public lendingConcessionForm: FormGroup;
     private sub: any;
+    showHide = false;
     errorMessage: String;
     validationError: String[];
     saveMessage: String;

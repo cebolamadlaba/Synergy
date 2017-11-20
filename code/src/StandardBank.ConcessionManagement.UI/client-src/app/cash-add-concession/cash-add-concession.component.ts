@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
@@ -29,6 +29,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     errorMessage: String;
     validationError: String[];
     saveMessage: String;
+    showHide = false;
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;

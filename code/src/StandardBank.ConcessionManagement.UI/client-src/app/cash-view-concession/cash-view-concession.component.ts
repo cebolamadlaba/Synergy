@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
@@ -61,6 +61,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 	isInProgressExtension = false;
     isInProgressRenewal = false;
     isApproved = false;
+    showHide = false;
 
 	observablePeriods: Observable<Period[]>;
 	periods: Period[];
