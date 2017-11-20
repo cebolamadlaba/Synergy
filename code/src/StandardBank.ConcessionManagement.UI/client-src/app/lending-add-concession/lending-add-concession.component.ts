@@ -18,6 +18,7 @@ import { ConcessionCondition } from "../models/concession-condition";
 import { Location } from '@angular/common';
 import { LookupDataService } from "../services/lookup-data.service";
 import { LendingService } from "../services/lending.service";
+import { DecimalPipe } from '@angular/common';
 
 @Component({
     selector: 'app-lending-add-concession',
@@ -347,7 +348,15 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     setTwoNumberDecimal($event) {
-        $event.target.value = parseFloat($event.target.value).toFixed(2);
+        $event.target.value = this.formatDecimal($event.target.value);
+    }
+
+    formatDecimal(itemValue: number) {
+        if (itemValue) {
+            return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
+        }
+
+        return null;
     }
 
     goBack() {
