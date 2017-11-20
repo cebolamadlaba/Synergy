@@ -658,6 +658,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Gets the approved concessions for risk group.
+        /// </summary>
+        /// <param name="riskGroupId">The risk group identifier.</param>
+        /// <param name="concessionType">Type of the concession.</param>
+        /// <returns></returns>
+        public IEnumerable<Model.UserInterface.Concession> GetApprovedConcessionsForRiskGroup(int riskGroupId,
+            string concessionType)
+        {
+            var concessionTypeId = _lookupTableManager.GetConcessionTypeId(concessionType);
+
+            return Map(_concessionRepository.ReadByRiskGroupIdConcessionTypeIdIsActiveApproved(riskGroupId,
+                concessionTypeId,
+                true), false);
+        }
+
+        /// <summary>
         /// Gets the concession for concession reference identifier.
         /// </summary>
         /// <param name="concessionReferenceId">The concession reference identifier.</param>

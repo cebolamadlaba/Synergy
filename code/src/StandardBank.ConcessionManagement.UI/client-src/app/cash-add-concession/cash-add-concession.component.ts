@@ -196,8 +196,15 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     tableNumberChanged(rowIndex) {
         const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
 
-        control.controls[rowIndex].get('baseRate').setValue(control.controls[rowIndex].get('tableNumber').value.baseRate);
-        control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('tableNumber').value.adValorem);
+        if (control.controls[rowIndex].get('tableNumber').value.baseRate)
+            control.controls[rowIndex].get('baseRate').setValue(control.controls[rowIndex].get('tableNumber').value.baseRate.toFixed(3));
+        else
+            control.controls[rowIndex].get('baseRate').setValue(null);
+
+        if (control.controls[rowIndex].get('tableNumber').value.adValorem)
+            control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('tableNumber').value.adValorem.toFixed(2));
+        else
+            control.controls[rowIndex].get('adValorem').setValue(null);
     }
 
     addValidationError(validationDetail) {
@@ -336,6 +343,10 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         } else {
             this.isLoading = false;
         }
+    }
+
+    setTwoNumberDecimal($event) {
+        $event.target.value = parseFloat($event.target.value).toFixed(2);
     }
 
     goBack() {

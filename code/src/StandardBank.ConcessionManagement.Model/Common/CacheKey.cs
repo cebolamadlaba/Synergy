@@ -182,6 +182,17 @@
                 public const string ReadByRiskGroupNumberIsActive =
                     "CacheKey.Repository.RiskGroupRepository.ReadByRiskGroupNumberIsActive";
             }
+
+            public static class MiscPerformanceRepository
+            {
+                public const string GetClientAccounts = "CacheKey.Repository.MiscPerformanceRepository.GetClientAccounts";
+
+                public const string GetLendingProducts = "CacheKey.Repository.MiscPerformanceRepository.GetLendingProducts";
+
+                public const string GetCashProducts = "CacheKey.Repository.MiscPerformanceRepository.GetCashProducts";
+
+                public const string GetTransactionalProducts = "CacheKey.Repository.MiscPerformanceRepository.GetTransactionalProducts";
+            }
         }
     }
 }

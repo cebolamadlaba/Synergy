@@ -191,8 +191,20 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         if (productType.description === "Overdraft") {
             currentRow.get('term').disable();
             currentRow.get('term').setValue('12');
+
+            currentRow.get('reviewFeeType').enable();
+            currentRow.get('reviewFee').enable();
+            currentRow.get('uffFee').enable();
         } else {
             currentRow.get('term').enable();
+
+            currentRow.get('reviewFeeType').disable();
+            currentRow.get('reviewFee').disable();
+            currentRow.get('uffFee').disable();
+
+            currentRow.get('reviewFeeType').setValue(null);
+            currentRow.get('reviewFee').setValue(null);
+            currentRow.get('uffFee').setValue(null);
         }
     }
 

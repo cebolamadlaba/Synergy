@@ -28,29 +28,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IConcessionCashRepository _concessionCashRepository;
 
         /// <summary>
-        /// The legal entity repository
-        /// </summary>
-        private readonly ILegalEntityRepository _legalEntityRepository;
-
-        /// <summary>
         /// The mapper
         /// </summary>
         private readonly IMapper _mapper;
 
         /// <summary>
-        /// The legal entity account repository
-        /// </summary>
-        private readonly ILegalEntityAccountRepository _legalEntityAccountRepository;
-
-        /// <summary>
         /// The financial cash repository
         /// </summary>
         private readonly IFinancialCashRepository _financialCashRepository;
-
-        /// <summary>
-        /// The product cash repository
-        /// </summary>
-        private readonly IProductCashRepository _productCashRepository;
 
         /// <summary>
         /// The lookup table manager
@@ -68,56 +53,34 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IRuleManager _ruleManager;
 
         /// <summary>
+        /// The misc performance repository
+        /// </summary>
+        private readonly IMiscPerformanceRepository _miscPerformanceRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CashManager"/> class.
         /// </summary>
         /// <param name="concessionManager">The concession manager.</param>
         /// <param name="concessionCashRepository">The concession cash repository.</param>
-        /// <param name="legalEntityRepository">The legal entity repository.</param>
         /// <param name="mapper">The mapper.</param>
-        /// <param name="legalEntityAccountRepository">The legal entity account repository.</param>
         /// <param name="financialCashRepository">The financial cash repository.</param>
-        /// <param name="productCashRepository">The product cash repository.</param>
         /// <param name="lookupTableManager">The lookup table manager.</param>
         /// <param name="loadedPriceCashRepository">The loaded price cash repository.</param>
         /// <param name="ruleManager">The rule manager.</param>
-        public CashManager(IConcessionManager concessionManager,
-            IConcessionCashRepository concessionCashRepository, ILegalEntityRepository legalEntityRepository,
-            IMapper mapper, ILegalEntityAccountRepository legalEntityAccountRepository,
-            IFinancialCashRepository financialCashRepository, IProductCashRepository productCashRepository,
-            ILookupTableManager lookupTableManager, ILoadedPriceCashRepository loadedPriceCashRepository,
-            IRuleManager ruleManager)
+        /// <param name="miscPerformanceRepository">The misc performance repository.</param>
+        public CashManager(IConcessionManager concessionManager, IConcessionCashRepository concessionCashRepository,
+            IMapper mapper, IFinancialCashRepository financialCashRepository, ILookupTableManager lookupTableManager,
+            ILoadedPriceCashRepository loadedPriceCashRepository, IRuleManager ruleManager,
+            IMiscPerformanceRepository miscPerformanceRepository)
         {
             _concessionManager = concessionManager;
             _concessionCashRepository = concessionCashRepository;
-            _legalEntityRepository = legalEntityRepository;
             _mapper = mapper;
-            _legalEntityAccountRepository = legalEntityAccountRepository;
             _financialCashRepository = financialCashRepository;
-            _productCashRepository = productCashRepository;
             _lookupTableManager = lookupTableManager;
             _loadedPriceCashRepository = loadedPriceCashRepository;
             _ruleManager = ruleManager;
-        }
-
-        /// <summary>
-        /// Gets the cash concessions for risk group number.
-        /// </summary>
-        /// <param name="riskGroupNumber">The risk group number.</param>
-        /// <returns></returns>
-        public IEnumerable<CashConcession> GetCashConcessionsForRiskGroupNumber(int riskGroupNumber)
-        {
-            var cashConcessions = new List<CashConcession>();
-            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
-
-            if (riskGroup != null)
-            {
-                var concessions = _concessionManager.GetConcessionsForRiskGroup(riskGroup.Id, "Cash");
-
-                foreach (var concession in concessions)
-                    AddCashConcessionData(concession, cashConcessions);
-            }
-
-            return cashConcessions;
+            _miscPerformanceRepository = miscPerformanceRepository;
         }
 
         /// <summary>
@@ -142,11 +105,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public CashConcession GetCashConcession(string concessionReferenceId, User user)
         {
             var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
-            var concessionCashEntities = _concessionCashRepository.ReadByConcessionId(concession.Id);
 
-            var cashConcessionDetails = new List<CashConcessionDetail>();
-
-            AddMappedConcessionCashEntities(concessionCashEntities, cashConcessionDetails);
+            var cashConcessionDetails = _miscPerformanceRepository.GetCashConcessionDetails(concession.Id);
 
             return new CashConcession
             {
@@ -256,13 +216,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var cashConcessions = new List<CashConcession>();
             var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, "Cash");
 
-            if (riskGroup != null)
+            foreach (var concession in concessions)
             {
-                var concessions = _concessionManager.GetConcessionsForRiskGroup(riskGroup.Id, "Cash");
-
-                foreach (var concession in concessions)
-                    AddCashConcessionData(concession, cashConcessions);
+                cashConcessions.Add(new CashConcession
+                {
+                    CashConcessionDetails = _miscPerformanceRepository.GetCashConcessionDetails(concession.Id),
+                    Concession = concession
+                });
             }
 
             var cashFinancial =
@@ -287,24 +249,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         private IEnumerable<CashProduct> GetCashProducts(RiskGroup riskGroup)
         {
-            var mappedCashProducts = new List<CashProduct>();
-            var cashProducts = _productCashRepository.ReadByRiskGroupId(riskGroup.Id);
-            var tableNumbers = _lookupTableManager.GetTableNumbers("Cash");
-
-            foreach (var cashProduct in cashProducts)
-            {
-                var legalEntity = _legalEntityRepository.ReadById(cashProduct.LegalEntityId);
-                var legalEntityAccount = _legalEntityAccountRepository.ReadById(cashProduct.LegalEntityAccountId);
-                var mappedCashProduct = _mapper.Map<CashProduct>(cashProduct);
-
-                mappedCashProduct.CustomerName = legalEntity.CustomerName;
-                mappedCashProduct.AccountNumber = legalEntityAccount.AccountNumber;
-                mappedCashProduct.TariffTable = tableNumbers.First(_ => _.Id == cashProduct.TableNumberId).TariffTable;
-
-                mappedCashProducts.Add(mappedCashProduct);
-            }
-
-            return mappedCashProducts;
+            return _miscPerformanceRepository.GetCashProducts(riskGroup.Id, riskGroup.Name);
         }
 
         /// <summary>
@@ -333,85 +278,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return _mapper.Map<CashFinancial>(
                 _financialCashRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialCash());
-        }
-
-        /// <summary>
-        /// Adds the cash concession data.
-        /// </summary>
-        /// <param name="concession">The concession.</param>
-        /// <param name="cashConcessions">The cash concessions.</param>
-        private void AddCashConcessionData(Concession concession, ICollection<CashConcession> cashConcessions)
-        {
-            var concessionCashEntities = _concessionCashRepository.ReadByConcessionId(concession.Id);
-
-            if (concessionCashEntities != null && concessionCashEntities.Any())
-            {
-                var cashConcessionDetails = new List<CashConcessionDetail>();
-
-                var cashConcession =
-                    cashConcessions.FirstOrDefault(
-                        _ => _.Concession.ReferenceNumber == concession.ReferenceNumber);
-
-                if (cashConcession == null)
-                {
-                    cashConcession = new CashConcession
-                    {
-                        Concession = concession,
-                        CashConcessionDetails = new List<CashConcessionDetail>()
-                    };
-
-                    cashConcessions.Add(cashConcession);
-                }
-
-                cashConcessionDetails.AddRange(cashConcession.CashConcessionDetails);
-
-                AddMappedConcessionCashEntities(concessionCashEntities, cashConcessionDetails);
-
-                cashConcession.CashConcessionDetails = cashConcessionDetails;
-            }
-        }
-
-        /// <summary>
-        /// Adds the mapped concession cash entities.
-        /// </summary>
-        /// <param name="concessionCashEntities">The concession cash entities.</param>
-        /// <param name="cashConcessionDetails">The cash concession details.</param>
-        private void AddMappedConcessionCashEntities(IEnumerable<ConcessionCash> concessionCashEntities,
-            ICollection<CashConcessionDetail> cashConcessionDetails)
-        {
-            foreach (var concessionCashEntity in concessionCashEntities)
-            {
-                var legalEntity = _legalEntityRepository.ReadById(concessionCashEntity.LegalEntityId);
-                var mappedConcessionCashEntity = _mapper.Map<CashConcessionDetail>(concessionCashEntity);
-
-                mappedConcessionCashEntity.CustomerName = legalEntity.CustomerName;
-
-                var legalEntityAccount =
-                    _legalEntityAccountRepository.ReadById(concessionCashEntity.LegalEntityAccountId);
-
-                if (legalEntityAccount != null)
-                    mappedConcessionCashEntity.AccountNumber = legalEntityAccount.AccountNumber;
-
-                if (mappedConcessionCashEntity.ChannelTypeId.HasValue)
-                    mappedConcessionCashEntity.Channel =
-                        _lookupTableManager.GetChannelTypeName(mappedConcessionCashEntity.ChannelTypeId.Value);
-
-                if (mappedConcessionCashEntity.ApprovedTableNumberId.HasValue)
-                {
-                    mappedConcessionCashEntity.ApprovedTableNumber =
-                        _lookupTableManager.GetTableNumberDescription(mappedConcessionCashEntity.ApprovedTableNumberId
-                            .Value);
-                }
-
-                if (mappedConcessionCashEntity.LoadedTableNumberId.HasValue)
-                {
-                    mappedConcessionCashEntity.LoadedTableNumber =
-                        _lookupTableManager.GetTableNumberDescription(mappedConcessionCashEntity.LoadedTableNumberId
-                            .Value);
-                }
-
-                cashConcessionDetails.Add(mappedConcessionCashEntity);
-            }
         }
     }
 }

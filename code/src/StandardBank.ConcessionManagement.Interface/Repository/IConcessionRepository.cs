@@ -40,6 +40,15 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         IEnumerable<Concession> ReadByRiskGroupIdConcessionTypeIdIsActive(int riskGroupId, int concessionTypeId, bool isActive);
 
         /// <summary>
+        /// Reads the by risk group identifier concession type identifier is active approved.
+        /// </summary>
+        /// <param name="riskGroupId">The risk group identifier.</param>
+        /// <param name="concessionTypeId">The concession type identifier.</param>
+        /// <param name="isActive">if set to <c>true</c> [is active].</param>
+        /// <returns></returns>
+        IEnumerable<Concession> ReadByRiskGroupIdConcessionTypeIdIsActiveApproved(int riskGroupId, int concessionTypeId, bool isActive);
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>

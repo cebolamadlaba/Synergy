@@ -26,38 +26,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         /// </summary>
         public CashManagerTest()
         {
-            _cashManager = new CashManager(MockConcessionManager.Object,
-                MockConcessionCashRepository.Object, MockLegalEntityRepository.Object, InstantiatedDependencies.Mapper,
-                MockLegalEntityAccountRepository.Object, MockFinancialCashRepository.Object,
-                MockProductCashRepository.Object, MockLookupTableManager.Object, MockLoadedPriceCashRepository.Object,
-                MockRuleManager.Object);
-        }
-
-        /// <summary>
-        /// Tests that GetCashConcessionsForRiskGroupNumber executes positive.
-        /// </summary>
-        [Fact]
-        public void GetCashConcessionsForRiskGroupNumber_Executes_Positive()
-        {
-            MockLookupTableManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
-                .Returns(new RiskGroup {Id = 1, Name = "Test Risk Group", Number = 1000});
-
-            MockConcessionManager.Setup(_ => _.GetConcessionsForRiskGroup(It.IsAny<int>(), It.IsAny<string>()))
-                .Returns(new[] {new Concession()});
-
-            MockConcessionCashRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
-                .Returns(new[] {new ConcessionCash()});
-
-            MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
-                .Returns(new LegalEntity {IsActive = true});
-
-            MockLegalEntityAccountRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
-                .Returns(new LegalEntityAccount {IsActive = true});
-
-            var result = _cashManager.GetCashConcessionsForRiskGroupNumber(1);
-
-            Assert.NotNull(result);
-            Assert.NotEmpty(result);
+            _cashManager = new CashManager(MockConcessionManager.Object, MockConcessionCashRepository.Object,
+                InstantiatedDependencies.Mapper, MockFinancialCashRepository.Object, MockLookupTableManager.Object,
+                MockLoadedPriceCashRepository.Object, MockRuleManager.Object, MockMiscPerformanceRepository.Object);
         }
 
         /// <summary>
@@ -129,32 +100,24 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockLookupTableManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
                 .Returns(new RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
 
-            MockConcessionManager.Setup(_ => _.GetConcessionsForRiskGroup(It.IsAny<int>(), It.IsAny<string>()))
+            MockConcessionManager.Setup(_ => _.GetApprovedConcessionsForRiskGroup(It.IsAny<int>(), It.IsAny<string>()))
                 .Returns(new[] { new Concession() });
 
-            MockConcessionCashRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
-                .Returns(new[] { new ConcessionCash() });
-
-            MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
-                .Returns(new LegalEntity { IsActive = true });
-
-            MockLegalEntityAccountRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
-                .Returns(new LegalEntityAccount { IsActive = true });
+            MockMiscPerformanceRepository.Setup(_ => _.GetCashConcessionDetails(It.IsAny<int>()))
+                .Returns(new[] { new CashConcessionDetail() });
 
             MockFinancialCashRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
                 .Returns(new[] {new FinancialCash()});
 
-            MockProductCashRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
-                .Returns(new[] {new ProductCash { TableNumberId = 1}});
-
-            MockLookupTableManager.Setup(_ => _.GetTableNumbers(It.IsAny<string>()))
-                .Returns(new[] {new Model.UserInterface.TableNumber {Id = 1}});
+            MockMiscPerformanceRepository.Setup(_ => _.GetCashProducts(It.IsAny<int>(), It.IsAny<string>()))
+                .Returns(new[] {new CashProduct()});
 
             var result = _cashManager.GetCashViewData(1);
 
             Assert.NotNull(result);
             Assert.NotNull(result.RiskGroup);
             Assert.NotNull(result.CashConcessions);
+            Assert.NotEmpty(result.CashConcessions);
         }
 
         /// <summary>

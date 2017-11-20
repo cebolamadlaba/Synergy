@@ -28,16 +28,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IConcessionTransactionalRepository _concessionTransactionalRepository;
 
         /// <summary>
-        /// The legal entity repository
-        /// </summary>
-        private readonly ILegalEntityRepository _legalEntityRepository;
-
-        /// <summary>
-        /// The legal entity account repository
-        /// </summary>
-        private readonly ILegalEntityAccountRepository _legalEntityAccountRepository;
-
-        /// <summary>
         /// The mapper
         /// </summary>
         private readonly IMapper _mapper;
@@ -53,11 +43,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IFinancialTransactionalRepository _financialTransactionalRepository;
 
         /// <summary>
-        /// The product transactional repository
-        /// </summary>
-        private readonly IProductTransactionalRepository _productTransactionalRepository;
-
-        /// <summary>
         /// The loaded price transactional repository
         /// </summary>
         private readonly ILoadedPriceTransactionalRepository _loadedPriceTransactionalRepository;
@@ -68,57 +53,35 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IRuleManager _ruleManager;
 
         /// <summary>
+        /// The misc performance repository
+        /// </summary>
+        private readonly IMiscPerformanceRepository _miscPerformanceRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TransactionalManager"/> class.
         /// </summary>
         /// <param name="concessionManager">The concession manager.</param>
         /// <param name="concessionTransactionalRepository">The concession transactional repository.</param>
-        /// <param name="legalEntityRepository">The legal entity repository.</param>
-        /// <param name="legalEntityAccountRepository">The legal entity account repository.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="lookupTableManager">The lookup table manager.</param>
         /// <param name="financialTransactionalRepository">The financial transactional repository.</param>
-        /// <param name="productTransactionalRepository">The product transactional repository.</param>
         /// <param name="loadedPriceTransactionalRepository">The loaded price transactional repository.</param>
         /// <param name="ruleManager">The rule manager.</param>
+        /// <param name="miscPerformanceRepository">The misc performance repository.</param>
         public TransactionalManager(IConcessionManager concessionManager,
-            IConcessionTransactionalRepository concessionTransactionalRepository,
-            ILegalEntityRepository legalEntityRepository, ILegalEntityAccountRepository legalEntityAccountRepository,
-            IMapper mapper, ILookupTableManager lookupTableManager,
-            IFinancialTransactionalRepository financialTransactionalRepository,
-            IProductTransactionalRepository productTransactionalRepository,
-            ILoadedPriceTransactionalRepository loadedPriceTransactionalRepository, IRuleManager ruleManager)
+            IConcessionTransactionalRepository concessionTransactionalRepository, IMapper mapper,
+            ILookupTableManager lookupTableManager, IFinancialTransactionalRepository financialTransactionalRepository,
+            ILoadedPriceTransactionalRepository loadedPriceTransactionalRepository, IRuleManager ruleManager,
+            IMiscPerformanceRepository miscPerformanceRepository)
         {
             _concessionManager = concessionManager;
             _concessionTransactionalRepository = concessionTransactionalRepository;
-            _legalEntityRepository = legalEntityRepository;
-            _legalEntityAccountRepository = legalEntityAccountRepository;
             _mapper = mapper;
             _lookupTableManager = lookupTableManager;
             _financialTransactionalRepository = financialTransactionalRepository;
-            _productTransactionalRepository = productTransactionalRepository;
             _loadedPriceTransactionalRepository = loadedPriceTransactionalRepository;
             _ruleManager = ruleManager;
-        }
-
-        /// <summary>
-        /// Gets the transactional concessions for risk group number.
-        /// </summary>
-        /// <param name="riskGroupNumber">The risk group number.</param>
-        /// <returns></returns>
-        public IEnumerable<TransactionalConcession> GetTransactionalConcessionsForRiskGroupNumber(int riskGroupNumber)
-        {
-            var transactionalConcessions = new List<TransactionalConcession>();
-            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
-
-            if (riskGroup != null)
-            {
-                var concessions = _concessionManager.GetConcessionsForRiskGroup(riskGroup.Id, "Transactional");
-
-                foreach (var concession in concessions)
-                    AddTransactionalConcessionData(concession, transactionalConcessions);
-            }
-
-            return transactionalConcessions;
+            _miscPerformanceRepository = miscPerformanceRepository;
         }
 
         /// <summary>
@@ -130,11 +93,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public TransactionalConcession GetTransactionalConcession(string concessionReferenceId, User user)
         {
             var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
-            var concessionCashEntities = _concessionTransactionalRepository.ReadByConcessionId(concession.Id);
-
-            var transactionalConcessionDetails = new List<TransactionalConcessionDetail>();
-
-            AddMappedConcessionTransactionals(concessionCashEntities, transactionalConcessionDetails);
+            var transactionalConcessionDetails =
+                _miscPerformanceRepository.GetTransactionalConcessionDetails(concession.Id);
 
             return new TransactionalConcession
             {
@@ -257,18 +217,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var transactionalConcessions = new List<TransactionalConcession>();
             var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, "Transactional");
 
-            if (riskGroup != null)
+            foreach (var concession in concessions)
             {
-                var concessions = _concessionManager.GetConcessionsForRiskGroup(riskGroup.Id, "Transactional");
-
-                foreach (var concession in concessions)
-                    AddTransactionalConcessionData(concession, transactionalConcessions);
+                transactionalConcessions.Add(new TransactionalConcession
+                {
+                    Concession = concession,
+                    TransactionalConcessionDetails =
+                        _miscPerformanceRepository.GetTransactionalConcessionDetails(concession.Id)
+                });
             }
 
             var transactionalFinancial =
-                _mapper.Map<TransactionalFinancial>(_financialTransactionalRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
-                                           new FinancialTransactional());
+                _mapper.Map<TransactionalFinancial>(
+                    _financialTransactionalRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
+                    new FinancialTransactional());
 
             var transactionalProducts = GetTransactionalProducts(riskGroup);
 
@@ -334,105 +298,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         private IEnumerable<TransactionalProduct> GetTransactionalProducts(RiskGroup riskGroup)
         {
-            var mappedTransactionalProducts = new List<TransactionalProduct>();
-            var transactionalProducts = _productTransactionalRepository.ReadByRiskGroupId(riskGroup.Id);
-            var transactionTableNumbers = _lookupTableManager.GetTransactionTableNumbers();
-
-            foreach (var transactionalProduct in transactionalProducts)
-            {
-                var legalEntity = _legalEntityRepository.ReadById(transactionalProduct.LegalEntityId);
-                var legalEntityAccount =
-                    _legalEntityAccountRepository.ReadById(transactionalProduct.LegalEntityAccountId);
-                var mappedTransactionalProduct = _mapper.Map<TransactionalProduct>(transactionalProduct);
-
-                mappedTransactionalProduct.CustomerName = legalEntity.CustomerName;
-                mappedTransactionalProduct.AccountNumber = legalEntityAccount.AccountNumber;
-                mappedTransactionalProduct.TariffTable = transactionTableNumbers
-                    .First(_ => _.Id == transactionalProduct.TransactionTableNumberId).TariffTable;
-
-                mappedTransactionalProduct.TransactionType =
-                    _lookupTableManager.GetTransactionTypeDescription(transactionalProduct.TransactionTypeId);
-
-                mappedTransactionalProducts.Add(mappedTransactionalProduct);
-            }
-
-            return mappedTransactionalProducts;
-        }
-
-        /// <summary>
-        /// Adds the transactional concession data.
-        /// </summary>
-        /// <param name="concession">The concession.</param>
-        /// <param name="transactionalConcessions">The transactional concessions.</param>
-        private void AddTransactionalConcessionData(Concession concession, ICollection<TransactionalConcession> transactionalConcessions)
-        {
-            var concessionTransactionals = _concessionTransactionalRepository.ReadByConcessionId(concession.Id);
-
-            if (concessionTransactionals != null && concessionTransactionals.Any())
-            {
-                var transactionalConcessionDetails = new List<TransactionalConcessionDetail>();
-
-                var transactionalConcession =
-                    transactionalConcessions.FirstOrDefault(
-                        _ => _.Concession.ReferenceNumber == concession.ReferenceNumber);
-
-                if (transactionalConcession == null)
-                {
-                    transactionalConcession = new TransactionalConcession
-                    {
-                        Concession = concession,
-                        TransactionalConcessionDetails = new List<TransactionalConcessionDetail>()
-                    };
-
-                    transactionalConcessions.Add(transactionalConcession);
-                }
-
-                transactionalConcessionDetails.AddRange(transactionalConcession.TransactionalConcessionDetails);
-
-                AddMappedConcessionTransactionals(concessionTransactionals, transactionalConcessionDetails);
-
-                transactionalConcession.TransactionalConcessionDetails = transactionalConcessionDetails;
-            }
-        }
-
-        /// <summary>
-        /// Adds the mapped concession transactionals.
-        /// </summary>
-        /// <param name="concessionTransactionals">The concession transactionals.</param>
-        /// <param name="transactionalConcessionDetails">The transactional concession details.</param>
-        private void AddMappedConcessionTransactionals(IEnumerable<ConcessionTransactional> concessionTransactionals,
-            ICollection<TransactionalConcessionDetail> transactionalConcessionDetails)
-        {
-            foreach (var concessionTransactional in concessionTransactionals)
-            {
-                var legalEntity = _legalEntityRepository.ReadById(concessionTransactional.LegalEntityId);
-                var mappedTransactionalConcessionDetail = _mapper.Map<TransactionalConcessionDetail>(concessionTransactional);
-
-                mappedTransactionalConcessionDetail.CustomerName = legalEntity.CustomerName;
-
-                if (concessionTransactional.TransactionTypeId.HasValue)
-                    mappedTransactionalConcessionDetail.TransactionType =
-                        _lookupTableManager.GetTransactionTypeDescription(concessionTransactional.TransactionTypeId
-                            .Value);
-
-                var legalEntityAccount =
-                    _legalEntityAccountRepository.ReadById(concessionTransactional.LegalEntityAccountId);
-
-                if (legalEntityAccount != null)
-                    mappedTransactionalConcessionDetail.AccountNumber = legalEntityAccount.AccountNumber;
-
-                if (mappedTransactionalConcessionDetail.ApprovedTransactionTableNumberId.HasValue)
-                    mappedTransactionalConcessionDetail.ApprovedTableNumber =
-                        _lookupTableManager.GetTransactionTableNumberDescription(mappedTransactionalConcessionDetail
-                            .ApprovedTransactionTableNumberId.Value);
-
-                if (mappedTransactionalConcessionDetail.LoadedTransactionTableNumberId.HasValue)
-                    mappedTransactionalConcessionDetail.LoadedTableNumber =
-                        _lookupTableManager.GetTransactionTableNumberDescription(mappedTransactionalConcessionDetail
-                            .LoadedTransactionTableNumberId.Value);
-
-                transactionalConcessionDetails.Add(mappedTransactionalConcessionDetail);
-            }
+            return _miscPerformanceRepository.GetTransactionalProducts(riskGroup.Id, riskGroup.Name);
         }
     }
 }

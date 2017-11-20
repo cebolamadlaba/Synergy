@@ -51,7 +51,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
                     {
                         EmailAddress = approver.EmailAddress,
                         FirstName = approver.FirstName,
-                        ConsessionId = notification.ConsessionId
+                        ConsessionId = notification.ConsessionId,
+                        RiskGroupName = notification.RiskGroupName,
+                        DateOfRequest = notification.DateOfRequest,
+                        Product = notification.Product
                     }), DateTime.Now);
             }
         }

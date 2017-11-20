@@ -471,7 +471,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The misc performance repository
         /// </summary>
-        public static IMiscPerformanceRepository MiscPerformanceRepository = new MiscPerformanceRepository(DbConnection);
+        public static IMiscPerformanceRepository MiscPerformanceRepository =
+            new MiscPerformanceRepository(DbConnection, CacheManager);
 
         /// <summary>
         /// The look up table manager
@@ -509,24 +510,22 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The lending manager
         /// </summary>
         public static ILendingManager LendingManager = new LendingManager(ConcessionManager,
-            LegalEntityRepository, ConcessionLendingRepository, Mapper, LegalEntityAccountRepository,
-            FinancialLendingRepository, LookupTableManager, LoadedPriceLendingRepository,
-            RuleManager, MiscPerformanceRepository);
+            ConcessionLendingRepository, Mapper, FinancialLendingRepository, LookupTableManager,
+            LoadedPriceLendingRepository, RuleManager, MiscPerformanceRepository);
 
         /// <summary>
         /// The transactional manager
         /// </summary>
         public static ITransactionalManager TransactionalManager =
-            new TransactionalManager(ConcessionManager, ConcessionTransactionalRepository,
-                LegalEntityRepository, LegalEntityAccountRepository, Mapper, LookupTableManager,
-                FinancialTransactionalRepository, ProductTransactionalRepository, LoadedPriceTransactionalRepository,
-                RuleManager);
+            new TransactionalManager(ConcessionManager, ConcessionTransactionalRepository, Mapper, LookupTableManager,
+                FinancialTransactionalRepository, LoadedPriceTransactionalRepository, RuleManager,
+                MiscPerformanceRepository);
 
         /// <summary>
         /// The cash manager
         /// </summary>
-        public static ICashManager CashManager = new CashManager(ConcessionManager,
-            ConcessionCashRepository, LegalEntityRepository, Mapper, LegalEntityAccountRepository,
-            FinancialCashRepository, ProductCashRepository, LookupTableManager, LoadedPriceCashRepository, RuleManager);
+        public static ICashManager CashManager = new CashManager(ConcessionManager, ConcessionCashRepository, Mapper,
+            FinancialCashRepository, LookupTableManager, LoadedPriceCashRepository, RuleManager,
+            MiscPerformanceRepository);
     }
 }

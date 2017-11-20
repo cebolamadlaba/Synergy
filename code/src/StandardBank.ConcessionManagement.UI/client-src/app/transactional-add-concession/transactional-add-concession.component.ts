@@ -190,8 +190,15 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 	transactionTableNumberChanged(rowIndex) {
 		const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
 
-		control.controls[rowIndex].get('flatFeeOrRate').setValue(control.controls[rowIndex].get('transactionTableNumber').value.fee);
-		control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('transactionTableNumber').value.adValorem);
+        if (control.controls[rowIndex].get('transactionTableNumber').value.fee)
+            control.controls[rowIndex].get('flatFeeOrRate').setValue(control.controls[rowIndex].get('transactionTableNumber').value.fee.toFixed(3));
+        else
+            control.controls[rowIndex].get('flatFeeOrRate').setValue(null);
+
+	    if (control.controls[rowIndex].get('transactionTableNumber').value.adValorem)
+	        control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('transactionTableNumber').value.adValorem.toFixed(2));
+        else
+	        control.controls[rowIndex].get('adValorem').setValue(null);
 	}
 
 	getTransactionalConcession(): TransactionalConcession {
@@ -330,6 +337,10 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 
 		this.validationError.push(validationDetail);
 	}
+
+    setTwoNumberDecimal($event) {
+        $event.target.value = parseFloat($event.target.value).toFixed(2);
+    }
 
 	goBack() {
 		this.location.back();

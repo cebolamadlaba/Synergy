@@ -21,3 +21,10 @@
     CONSTRAINT [FK_tblFinancialTransactional_tblRiskGroup] FOREIGN KEY ([fkRiskGroupId]) REFERENCES [dbo].[tblRiskGroup] ([pkRiskGroupId])
 );
 
+
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_tblFinancialTransactional]
+    ON [dbo].[tblFinancialTransactional]([fkRiskGroupId] ASC);
+
