@@ -1,4 +1,4 @@
-<!-- Banner expanded -->
+﻿<!-- Banner expanded -->
 <div class="col-md-12 banner">
     <div class="row">
         <div class="lending-banner-title">
@@ -11,7 +11,8 @@
             </div>
             <div class="col-md-1"></div>
         </div>
-        <div class="col-md-12 banner-container">
+        <!-- Dashboard expanded -->
+        <div class="col-md-12 banner-container" *ngIf="showHide">
             <div class="col-md-11">
                 <div>
                     <div class="col-md-5">
@@ -24,15 +25,31 @@
                     </div>
                 </div>
             </div>
-            <!--
             <div class="col-md-1">
                 <div class="compress">
-                    <div onclick="hideElement('hidden-element')">
-                        <i class="fa fa-compress" aria-hidden="true" id="compress-icon"></i>
+                    <div>
+                        <i class="fa fa-compress" (click)="showHide = !showHide" aria-hidden="true" id="compress-icon"></i>
                     </div>
                 </div>
             </div>
-            -->
+        </div>
+        <!-- Dashboard Collapsed -->
+        <div class="col-md-12 banner-container" *ngIf="!showHide">
+            <div class="col-md-11">
+                <div>
+                    <div class="col-md-5">
+                        <div class="subHeading">{{riskGroup?.name}}</div>
+                        <div class="date lightTitle hidden-element">{{riskGroup?.number}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="compress">
+                    <div>
+                        <i class="fa fa-expand" (click)="showHide = !showHide" aria-hidden="true" id="compress-icon"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

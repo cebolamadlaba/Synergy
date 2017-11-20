@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
@@ -37,7 +37,8 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 	selectedTransactionTypes: TransactionType[];
 	isLoading = true;
 	observableLatestCrsOrMrs: Observable<number>;
-	latestCrsOrMrs: number;
+    latestCrsOrMrs: number;
+    showHide = false;
 
 	observablePeriods: Observable<Period[]>;
 	periods: Period[];
