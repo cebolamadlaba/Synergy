@@ -367,6 +367,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Searches the client accounts.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <param name="accountNumber">The account number.</param>
+        /// <returns></returns>
+        public IEnumerable<ClientAccount> SearchClientAccounts(int riskGroupNumber, string accountNumber)
+        {
+            var clientAccounts = GetClientAccounts(riskGroupNumber);
+
+            if (clientAccounts != null && clientAccounts.Any())
+                return clientAccounts.Where(_ => _.AccountNumber.Contains(accountNumber)).Take(10);
+
+            return null;
+        }
+
+        /// <summary>
         /// Gets the approved concessions for user.
         /// </summary>
         /// <param name="userId">The user identifier.</param>

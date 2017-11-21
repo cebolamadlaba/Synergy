@@ -79,6 +79,14 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber);
 
         /// <summary>
+        /// Searches the client accounts.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <param name="accountNumber">The account number.</param>
+        /// <returns></returns>
+        IEnumerable<ClientAccount> SearchClientAccounts(int riskGroupNumber, string accountNumber);
+
+            /// <summary>
         /// Gets the approved concessions for user.
         /// </summary>
         /// <param name="userId">The user identifier.</param>

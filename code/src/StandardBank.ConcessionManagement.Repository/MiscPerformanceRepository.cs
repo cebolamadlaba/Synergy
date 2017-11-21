@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Dapper;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
@@ -49,7 +50,7 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 using (var db = _dbConnectionFactory.Connection())
                 {
-                    return db.Query<ClientAccount>(
+                    var clientAccounts = db.Query<ClientAccount>(
                         @"SELECT le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
                         FROM [dbo].[tblRiskGroup] rg
                         JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
@@ -59,7 +60,12 @@ namespace StandardBank.ConcessionManagement.Repository
                         AND le.[IsActive] = 1
                         AND lea.[IsActive] = 1",
                         new {riskGroupNumber}, commandTimeout: Int32.MaxValue);
+
+                    if (clientAccounts != null && clientAccounts.Any())
+                        return clientAccounts;
                 }
+
+                return null;
             }
 
             return _cacheManager.ReturnFromCache(Function, 30,
@@ -79,14 +85,19 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 using (var db = _dbConnectionFactory.Connection())
                 {
-                    return db.Query<LendingProduct>(
+                    var lendingProducts = db.Query<LendingProduct>(
                         @"SELECT pl.[pkProductLendingId] [LendingProductId], p.[Description] [Product], le.[CustomerName], lea.[AccountNumber], pl.[Limit], pl.[AverageBalance], pl.[LoadedMap], @riskGroupName [RiskGroupName] FROM [dbo].[tblProductLending] pl
                         JOIN [dbo].[rtblProduct] p on p.[pkProductId] = pl.[fkProductId]
                         JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = pl.[fkLegalEntityId]
                         JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = pl.[fkLegalEntityAccountId]
                         WHERE pl.[fkRiskGroupId] = @riskGroupId", new {riskGroupId, riskGroupName},
                         commandTimeout: Int32.MaxValue);
+
+                    if (lendingProducts != null && lendingProducts.Any())
+                        return lendingProducts;
                 }
+
+                return null;
             }
 
             return _cacheManager.ReturnFromCache(Function, 300,
@@ -107,14 +118,19 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 using (var db = _dbConnectionFactory.Connection())
                 {
-                    return db.Query<CashProduct>(
+                    var cashProducts = db.Query<CashProduct>(
                         @"SELECT pc.[pkProductCashId] [CashProductId], @riskGroupName [RiskGroupName], le.[CustomerName], lea.[AccountNumber], tn.[TariffTable], pc.[Channel], pc.[BpId], pc.[Volume], pc.[Value], pc.[LoadedPrice] FROM [dbo].[tblProductCash] pc
                         JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = pc.[fkLegalEntityId]
                         JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = pc.[fkLegalEntityAccountId]
                         JOIN [dbo].[rtblTableNumber] tn on tn.[pkTableNumberId] = pc.[fkTableNumberId]
                         WHERE pc.[fkRiskGroupId] = @riskGroupId", new {riskGroupId, riskGroupName},
                         commandTimeout: Int32.MaxValue);
+
+                    if (cashProducts != null && cashProducts.Any())
+                        return cashProducts;
                 }
+
+                return null;
             }
 
             return _cacheManager.ReturnFromCache(Function, 300,
@@ -135,7 +151,7 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 using (var db = _dbConnectionFactory.Connection())
                 {
-                    return db.Query<TransactionalProduct>(
+                    var transactionalProducts = db.Query<TransactionalProduct>(
                         @"SELECT pt.[pkProductTransactionalId] [TransactionalProductId], @riskGroupName [RiskGroupName], le.[CustomerName], lea.[AccountNumber], ttn.[TariffTable], tt.[Description] [TransactionType], pt.[Volume], pt.[Value], pt.[LoadedPrice] FROM [dbo].[tblProductTransactional] pt
                         JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = pt.[fkLegalEntityId]
                         JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = pt.[fkLegalEntityAccountId]
@@ -143,7 +159,12 @@ namespace StandardBank.ConcessionManagement.Repository
                         JOIN [dbo].[rtblTransactionTableNumber] ttn on ttn.[pkTransactionTableNumberId] = pt.[fkTransactionTableNumberId]
                         WHERE pt.[fkRiskGroupId] = @riskGroupId", new {riskGroupId, riskGroupName},
                         commandTimeout: Int32.MaxValue);
+
+                    if (transactionalProducts != null && transactionalProducts.Any())
+                        return transactionalProducts;
                 }
+
+                return null;
             }
 
             return _cacheManager.ReturnFromCache(Function, 300,
