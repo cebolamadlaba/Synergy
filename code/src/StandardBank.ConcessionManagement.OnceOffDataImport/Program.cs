@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 using StandardBank.ConcessionManagement.Common;
@@ -21,10 +22,12 @@ namespace StandardBank.ConcessionManagement.OnceOffDataImport
         /// <param name="args">The arguments.</param>
         static void Main(string[] args)
         {
+            var startTime = DateTime.Now;
+            var appSettings = GetAppSettings();
+            LogError(appSettings, "Please ignore: testing access to create error log file");
+
             try
             {
-                var appSettings = GetAppSettings();
-
                 var sapDataImportRepository =
                     new SapDataImportRepository(new DbConnectionFactory(appSettings.ConfigurationData));
 
@@ -39,18 +42,37 @@ namespace StandardBank.ConcessionManagement.OnceOffDataImport
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("Error occurred updating loaded prices: {0}", e);
+                        LogError(appSettings, $"Error occurred updating loaded prices: {e}");
                     }
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Error occurred importing data to staging table: {0}", e);
+                    LogError(appSettings, $"Error occurred importing data to staging table: {e}");
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error occured: {0}", e);
+                LogError(appSettings, $"Error occurred: {e}");
             }
+
+            var endTime = DateTime.Now;
+            Console.WriteLine($"Started: {startTime:yyyy/MM/dd HH:mm:ss}");
+            Console.WriteLine($"Ended: {endTime:yyyy/MM/dd HH:mm:ss}");
+            Console.WriteLine($"Minutes taken: {endTime.Subtract(startTime).TotalMinutes}");
+        }
+
+        /// <summary>
+        /// Logs the error.
+        /// </summary>
+        /// <param name="appSettings">The application settings.</param>
+        /// <param name="errorMessage">The error message.</param>
+        private static void LogError(AppSettings appSettings, string errorMessage)
+        {
+            errorMessage = $"{DateTime.Now:yyyy/MM/dd HH:mm:ss}: {errorMessage}{Environment.NewLine}";
+
+            Console.WriteLine(errorMessage);
+            var file = Path.Combine(appSettings.ErrorLog, $"error_{DateTime.Now:yyyyMMdd}.log");
+            File.AppendAllText(file, errorMessage);
         }
 
         /// <summary>
@@ -82,14 +104,12 @@ namespace StandardBank.ConcessionManagement.OnceOffDataImport
                             }
                             else
                             {
-                                var sapDataImport = GetSapDataImport(columnHeadings, line.Split('|'));
+                                var sapDataImport = GetSapDataImport(appSettings, columnHeadings, line.Split('|'));
 
-                                sapDataImport.LastUpdatedDate = DateTime.Now;
-                                sapDataImport.ExportRow = false;
-                                sapDataImport.ImportDate = DateTime.Now;
-
-                                sapDataImportRepository.Create(sapDataImport);
-                                Console.Write("\rProcessed Record: {0}", sapDataImport.PricepointId);
+                                if (sapDataImport != null)
+                                {
+                                    TryProcessRecord(appSettings, sapDataImportRepository, sapDataImport);
+                                }
                             }
 
                             line = reader.ReadLine();
@@ -101,34 +121,96 @@ namespace StandardBank.ConcessionManagement.OnceOffDataImport
             }
         }
 
+        /// <summary>
+        /// Tries to process the record.
+        /// </summary>
+        /// <param name="appSettings">The application settings.</param>
+        /// <param name="sapDataImportRepository">The sap data import repository.</param>
+        /// <param name="sapDataImport">The sap data import.</param>
+        private static void TryProcessRecord(AppSettings appSettings, SapDataImportRepository sapDataImportRepository,
+                    SapDataImport sapDataImport)
+        {
+            try
+            {
+                sapDataImport.LastUpdatedDate = DateTime.Now;
+                sapDataImport.ExportRow = false;
+                sapDataImport.ImportDate = DateTime.Now;
+
+                sapDataImportRepository.Create(sapDataImport);
+                Console.Write("\rSaved Sap Data Import Record: {0}",
+                    sapDataImport.PricepointId);
+            }
+            catch (SqlException sqlException)
+            {
+                if (sqlException.Message.Contains("Violation of PRIMARY KEY"))
+                {
+                    sapDataImportRepository.Update(sapDataImport);
+                    Console.Write("\rUpdated Sap Data Import Record: {0}",
+                        sapDataImport.PricepointId);
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    LogError(appSettings,
+                        $"Error occurred processing record ({sapDataImport.PricepointId}): {sqlException.Message}");
+                    Console.WriteLine();
+                    Console.WriteLine();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine();
+                Console.WriteLine();
+                LogError(appSettings,
+                    $"Error occurred processing record ({sapDataImport.PricepointId}): {e}");
+                Console.WriteLine();
+                Console.WriteLine();
+            }
+        }
+
 
         /// <summary>
         /// Gets the sap data import.
         /// </summary>
+        /// <param name="appSettings">The application settings.</param>
         /// <param name="columnHeadings">The column headings.</param>
         /// <param name="recordData">The record data.</param>
         /// <returns></returns>
-        private static SapDataImport GetSapDataImport(string[] columnHeadings, string[] recordData)
+        private static SapDataImport GetSapDataImport(AppSettings appSettings, string[] columnHeadings, string[] recordData)
         {
-            var sapDataImport = new SapDataImport();
-
-            for (var j = 0; j < columnHeadings.Length; j++)
+            try
             {
-                var columnToFind = columnHeadings[j];
-                var columnValue = recordData[j];
+                var sapDataImport = new SapDataImport();
 
-                if (!string.IsNullOrWhiteSpace(columnValue))
+                for (var j = 0; j < columnHeadings.Length; j++)
                 {
-                    var property = sapDataImport.GetType().GetProperty(columnToFind);
+                    var columnToFind = columnHeadings[j];
+                    var columnValue = recordData[j];
 
-                    if (columnToFind == "PricepointId")
-                        property?.SetValue(sapDataImport, Convert.ToInt32(columnValue), null);
-                    else
-                        property?.SetValue(sapDataImport, columnValue, null);
+                    if (!string.IsNullOrWhiteSpace(columnValue))
+                    {
+                        var property = sapDataImport.GetType().GetProperty(columnToFind);
+
+                        if (columnToFind == "PricepointId")
+                            property?.SetValue(sapDataImport, Convert.ToInt32(columnValue), null);
+                        else
+                            property?.SetValue(sapDataImport, columnValue, null);
+                    }
                 }
+
+                return sapDataImport;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine();
+                Console.WriteLine();
+                LogError(appSettings, $"Could not map fields, error: {e}");
+                Console.WriteLine();
+                Console.WriteLine();
             }
 
-            return sapDataImport;
+            return null;
         }
 
         /// <summary>
