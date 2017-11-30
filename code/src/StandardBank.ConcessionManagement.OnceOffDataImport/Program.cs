@@ -17,23 +17,27 @@ namespace StandardBank.ConcessionManagement.OnceOffDataImport
         private static readonly XmlMarshaller XmlMarshaller = new XmlMarshaller();
 
         /// <summary>
+        /// The application settings
+        /// </summary>
+        private static readonly AppSettings AppSettings = GetAppSettings();
+
+        /// <summary>
         /// Run the app.
         /// </summary>
         /// <param name="args">The arguments.</param>
         static void Main(string[] args)
         {
             var startTime = DateTime.Now;
-            var appSettings = GetAppSettings();
-            LogError(appSettings, "Please ignore: testing access to create error log file");
+            LogError("Please ignore: testing access to create error log file");
 
             try
             {
                 var sapDataImportRepository =
-                    new SapDataImportRepository(new DbConnectionFactory(appSettings.ConfigurationData));
+                    new SapDataImportRepository(new DbConnectionFactory(AppSettings.ConfigurationData));
 
                 try
                 {
-                    ImportDataToStagingTable(appSettings, sapDataImportRepository);
+                    ImportDataToStagingTable(sapDataImportRepository);
 
                     try
                     {
@@ -42,17 +46,17 @@ namespace StandardBank.ConcessionManagement.OnceOffDataImport
                     }
                     catch (Exception e)
                     {
-                        LogError(appSettings, $"Error occurred updating loaded prices: {e}");
+                        LogError($"Error occurred updating loaded prices: {e}");
                     }
                 }
                 catch (Exception e)
                 {
-                    LogError(appSettings, $"Error occurred importing data to staging table: {e}");
+                    LogError($"Error occurred importing data to staging table: {e}");
                 }
             }
             catch (Exception e)
             {
-                LogError(appSettings, $"Error occurred: {e}");
+                LogError($"Error occurred: {e}");
             }
 
             var endTime = DateTime.Now;
@@ -64,25 +68,23 @@ namespace StandardBank.ConcessionManagement.OnceOffDataImport
         /// <summary>
         /// Logs the error.
         /// </summary>
-        /// <param name="appSettings">The application settings.</param>
         /// <param name="errorMessage">The error message.</param>
-        private static void LogError(AppSettings appSettings, string errorMessage)
+        private static void LogError(string errorMessage)
         {
             errorMessage = $"{DateTime.Now:yyyy/MM/dd HH:mm:ss}: {errorMessage}{Environment.NewLine}";
 
             Console.WriteLine(errorMessage);
-            var file = Path.Combine(appSettings.ErrorLog, $"error_{DateTime.Now:yyyyMMdd}.log");
+            var file = Path.Combine(AppSettings.ErrorLog, $"error_{DateTime.Now:yyyyMMdd}.log");
             File.AppendAllText(file, errorMessage);
         }
 
         /// <summary>
         /// Imports the data to staging table.
         /// </summary>
-        /// <param name="appSettings">The application settings.</param>
         /// <param name="sapDataImportRepository">The sap data import repository.</param>
-        private static void ImportDataToStagingTable(AppSettings appSettings, SapDataImportRepository sapDataImportRepository)
+        private static void ImportDataToStagingTable(SapDataImportRepository sapDataImportRepository)
         {
-            foreach (var fileName in Directory.GetFiles(appSettings.ImportFolder))
+            foreach (var fileName in Directory.GetFiles(AppSettings.ImportFolder))
             {
                 Console.WriteLine("Processing file: {0}", fileName);
 
@@ -104,11 +106,11 @@ namespace StandardBank.ConcessionManagement.OnceOffDataImport
                             }
                             else
                             {
-                                var sapDataImport = GetSapDataImport(appSettings, columnHeadings, line.Split('|'));
+                                var sapDataImport = GetSapDataImport(columnHeadings, line.Split('|'));
 
                                 if (sapDataImport != null)
                                 {
-                                    TryProcessRecord(appSettings, sapDataImportRepository, sapDataImport);
+                                    TryProcessRecord(sapDataImportRepository, sapDataImport);
                                 }
                             }
 
@@ -124,10 +126,9 @@ namespace StandardBank.ConcessionManagement.OnceOffDataImport
         /// <summary>
         /// Tries to process the record.
         /// </summary>
-        /// <param name="appSettings">The application settings.</param>
         /// <param name="sapDataImportRepository">The sap data import repository.</param>
         /// <param name="sapDataImport">The sap data import.</param>
-        private static void TryProcessRecord(AppSettings appSettings, SapDataImportRepository sapDataImportRepository,
+        private static void TryProcessRecord(SapDataImportRepository sapDataImportRepository,
                     SapDataImport sapDataImport)
         {
             try
@@ -142,28 +143,49 @@ namespace StandardBank.ConcessionManagement.OnceOffDataImport
             }
             catch (SqlException sqlException)
             {
-                if (sqlException.Message.Contains("Violation of PRIMARY KEY"))
-                {
-                    sapDataImportRepository.Update(sapDataImport);
-                    Console.Write("\rUpdated Sap Data Import Record: {0}",
-                        sapDataImport.PricepointId);
-                }
-                else
-                {
-                    Console.WriteLine();
-                    Console.WriteLine();
-                    LogError(appSettings,
-                        $"Error occurred processing record ({sapDataImport.PricepointId}): {sqlException.Message}");
-                    Console.WriteLine();
-                    Console.WriteLine();
-                }
+                HandleSqlError(sapDataImportRepository, sapDataImport, sqlException);
             }
             catch (Exception e)
             {
                 Console.WriteLine();
                 Console.WriteLine();
-                LogError(appSettings,
-                    $"Error occurred processing record ({sapDataImport.PricepointId}): {e}");
+                LogError($"Error occurred processing record ({sapDataImport.PricepointId}): {e}");
+                Console.WriteLine();
+                Console.WriteLine();
+            }
+        }
+
+        /// <summary>
+        /// Handles the SQL error.
+        /// </summary>
+        /// <param name="sapDataImportRepository">The sap data import repository.</param>
+        /// <param name="sapDataImport">The sap data import.</param>
+        /// <param name="sqlException">The SQL exception.</param>
+        private static void HandleSqlError(SapDataImportRepository sapDataImportRepository, SapDataImport sapDataImport,
+                    SqlException sqlException)
+        {
+            if (sqlException.Message.Contains("Violation of PRIMARY KEY"))
+            {
+                try
+                {
+                    sapDataImportRepository.Update(sapDataImport);
+                    Console.Write("\rUpdated Sap Data Import Record: {0}",
+                        sapDataImport.PricepointId);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    LogError($"Error occurred processing record ({sapDataImport.PricepointId}): {e}");
+                    Console.WriteLine();
+                    Console.WriteLine();
+                }
+            }
+            else
+            {
+                Console.WriteLine();
+                Console.WriteLine();
+                LogError($"Error occurred processing record ({sapDataImport.PricepointId}): {sqlException}");
                 Console.WriteLine();
                 Console.WriteLine();
             }
@@ -173,11 +195,10 @@ namespace StandardBank.ConcessionManagement.OnceOffDataImport
         /// <summary>
         /// Gets the sap data import.
         /// </summary>
-        /// <param name="appSettings">The application settings.</param>
         /// <param name="columnHeadings">The column headings.</param>
         /// <param name="recordData">The record data.</param>
         /// <returns></returns>
-        private static SapDataImport GetSapDataImport(AppSettings appSettings, string[] columnHeadings, string[] recordData)
+        private static SapDataImport GetSapDataImport(string[] columnHeadings, string[] recordData)
         {
             try
             {
@@ -205,7 +226,7 @@ namespace StandardBank.ConcessionManagement.OnceOffDataImport
             {
                 Console.WriteLine();
                 Console.WriteLine();
-                LogError(appSettings, $"Could not map fields, error: {e}");
+                LogError($"Could not map fields, error: {e}");
                 Console.WriteLine();
                 Console.WriteLine();
             }
