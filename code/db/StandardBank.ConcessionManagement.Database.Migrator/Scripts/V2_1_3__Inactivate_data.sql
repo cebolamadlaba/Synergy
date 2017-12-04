@@ -27,3 +27,7 @@ AND [Description] in ('Monthly Management Fee',
 
 GO
 
+DELETE FROM [dbo].[tblSapDataImportConfiguration]
+
+GO
+

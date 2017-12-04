@@ -69,9 +69,9 @@ CREATE TABLE [dbo].[tblSapDataImportConfiguration](
 GO
 
 
-INSERT INTO [dbo].[tblSapDataImportConfiguration] ([FileImportLocation], [FileExportLocation], [SupportEmailAddress]) VALUES ('C:\Temp\CMS Import', 'C:\Temp\CMS Export', 'heathesh@kohde.io')
+-- INSERT INTO [dbo].[tblSapDataImportConfiguration] ([FileImportLocation], [FileExportLocation], [SupportEmailAddress]) VALUES ('C:\Temp\CMS Import', 'C:\Temp\CMS Export', 'thomas.nowe@standardbank.co.za')
 
-GO
+-- GO
 
 ALTER VIEW [dbo].[ConcessionInboxView]
 AS
