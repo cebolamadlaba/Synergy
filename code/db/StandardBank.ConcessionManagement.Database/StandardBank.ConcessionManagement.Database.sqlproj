@@ -244,6 +244,7 @@
     <Build Include="dbo\Stored Procedures\UpdateMismatches.sql" />
     <Build Include="dbo\Stored Procedures\UpdateLoadedPrices.sql" />
     <Build Include="dbo\Stored Procedures\UpdateLoadedPricesTables.sql" />
+    <Build Include="dbo\Stored Procedures\DeleteConcessionData.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Change Scripts\09_create_rtblPeriod.sql" />

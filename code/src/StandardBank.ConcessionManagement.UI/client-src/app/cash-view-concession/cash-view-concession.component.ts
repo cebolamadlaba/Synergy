@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
@@ -336,10 +336,12 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	addNewConcessionRow() {
-		const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
-		control.push(this.initConcessionItemRows());
-	}
+    addNewConcessionRow() {
+        const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
+        var newRow = this.initConcessionItemRows();
+        newRow.controls['accrualType'].setValue(this.accrualTypes[0]);
+        control.push(newRow);
+    }
 
 	addNewConditionRow() {
 		const control = <FormArray>this.cashConcessionForm.controls['conditionItemsRows'];

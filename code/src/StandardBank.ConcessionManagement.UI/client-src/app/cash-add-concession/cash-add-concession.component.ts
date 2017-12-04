@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
@@ -118,6 +118,9 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
                 this.clientAccounts = <any>results[7];
                 this.latestCrsOrMrs = <any>results[8];
 
+                const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
+                control.controls[0].get('accrualType').setValue(this.accrualTypes[0]);
+
                 this.isLoading = false;
             },
             error => {
@@ -155,7 +158,9 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
     addNewConcessionRow() {
         const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
-        control.push(this.initConcessionItemRows());
+        var newRow = this.initConcessionItemRows();
+        newRow.controls['accrualType'].setValue(this.accrualTypes[0]);
+        control.push(newRow);
     }
 
     addNewConditionRow() {

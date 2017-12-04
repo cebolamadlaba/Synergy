@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
@@ -182,7 +183,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <summary>
         /// Populates the transactional concession letter.
         /// </summary>
-        /// <param name="concession">The concession.</param>
         /// <param name="transactionalConcessionDetail">The transactional concession detail.</param>
         /// <returns></returns>
         private TransactionalConcessionLetter PopulateTransactionalConcessionLetter(
@@ -193,8 +193,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 AccountNumber = transactionalConcessionDetail.AccountNumber,
                 ChannelOrFeeType = transactionalConcessionDetail.TransactionType,
                 FeeOrRate = transactionalConcessionDetail.TransactionType == "Cheque Encashment Fee"
-                    ? $"{transactionalConcessionDetail.Fee.GetValueOrDefault(0):C} + {transactionalConcessionDetail.AdValorem.GetValueOrDefault(0)} %"
-                    : transactionalConcessionDetail.Fee.GetValueOrDefault(0).ToString("C"),
+                    ? $"R {transactionalConcessionDetail.Fee.GetValueOrDefault(0).ToString("N2", CultureInfo.InvariantCulture)} + {transactionalConcessionDetail.AdValorem.GetValueOrDefault(0).ToString("N2", CultureInfo.InvariantCulture)} %"
+                    : $"R {transactionalConcessionDetail.Fee.GetValueOrDefault(0).ToString("N2", CultureInfo.InvariantCulture)}",
                 ConcessionStartDate = transactionalConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
                 ConcessionEndDate = transactionalConcessionDetail.ExpiryDate.HasValue
                     ? transactionalConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
@@ -262,7 +262,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 AccountNumber = cashConcessionDetail.AccountNumber,
                 ChannelType = cashConcessionDetail.Channel,
                 BaseRateAdValorem =
-                    $"{cashConcessionDetail.BaseRate.GetValueOrDefault(0):C} + {cashConcessionDetail.AdValorem.GetValueOrDefault(0)}%",
+                    $"R {cashConcessionDetail.BaseRate.GetValueOrDefault(0).ToString("N2", CultureInfo.InvariantCulture)} + {cashConcessionDetail.AdValorem.GetValueOrDefault(0).ToString("N2", CultureInfo.InvariantCulture)}%",
                 ConcessionEndDate = cashConcessionDetail.ExpiryDate.HasValue
                     ? cashConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
                     : string.Empty,
@@ -349,15 +349,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return new LendingOverDraftConcessionLetter
             {
                 AccountNumber = lendingConcessionDetail.AccountNumber,
-                ApprovedMarginToPrime = lendingConcessionDetail.ApprovedMap.GetValueOrDefault(0).ToString("C"),
+                ApprovedMarginToPrime =
+                    $"R {lendingConcessionDetail.ApprovedMap.GetValueOrDefault(0).ToString("N2", CultureInfo.InvariantCulture)}",
                 ProductType = lendingConcessionDetail.ProductType,
                 ReviewFeeType = lendingConcessionDetail.ReviewFeeType,
-                MarginToPrime = lendingConcessionDetail.MarginAgainstPrime.ToString("C"),
-                InitiationFee = lendingConcessionDetail.InitiationFee.ToString("C"),
-                ReviewFee = lendingConcessionDetail.ReviewFee.ToString("C"),
+                MarginToPrime =
+                    $"R {lendingConcessionDetail.MarginAgainstPrime.ToString("N2", CultureInfo.InvariantCulture)}",
+                InitiationFee =
+                    $"R {lendingConcessionDetail.InitiationFee.ToString("N2", CultureInfo.InvariantCulture)}",
+                ReviewFee = $"R {lendingConcessionDetail.ReviewFee.ToString("N2", CultureInfo.InvariantCulture)}",
                 ConcessionEndDate = lendingConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy"),
                 ConcessionStartDate = lendingConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
-                UFFFee = lendingConcessionDetail.UffFee.ToString("C"),
+                UFFFee = $"R {lendingConcessionDetail.UffFee.ToString("N2", CultureInfo.InvariantCulture)}",
                 LegalEntityId = lendingConcessionDetail.LegalEntityId
             };
         }
@@ -377,9 +380,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 conditions.Add(new ConditionConcessionLetter
                 {
-                    Value = concessionCondition.ExpectedTurnoverValue.HasValue
-                        ? concessionCondition.ExpectedTurnoverValue.Value.ToString("C")
-                        : concessionCondition.ConditionValue.GetValueOrDefault(0).ToString("C"),
+                    Value =
+                        $"R {concessionCondition.ExpectedTurnoverValue.GetValueOrDefault(0).ToString("N2", CultureInfo.InvariantCulture)}",
                     ConditionProduct = concessionCondition.ProductType,
                     ConditionMeasure = concessionCondition.ConditionType,
                     Deadline = concessionCondition.ExpiryDate.HasValue
@@ -402,8 +404,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 AccountNumber = lendingConcessionDetail.AccountNumber,
                 ProductType = lendingConcessionDetail.ProductType,
-                ChannelOrFeeType = lendingConcessionDetail.InitiationFee.ToString("C"),
-                FeeOrMarginAbovePrime = lendingConcessionDetail.MarginAgainstPrime.ToString("C"),
+                ChannelOrFeeType =
+                    $"R {lendingConcessionDetail.InitiationFee.ToString("N2", CultureInfo.InvariantCulture)}",
+                FeeOrMarginAbovePrime =
+                    $"R {lendingConcessionDetail.MarginAgainstPrime.ToString("N2", CultureInfo.InvariantCulture)}",
                 ConcessionEndDate = lendingConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy"),
                 ConcessionStartDate = lendingConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
                 LegalEntityId = lendingConcessionDetail.LegalEntityId

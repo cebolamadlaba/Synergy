@@ -121,6 +121,18 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         }
 
         /// <summary>
+        /// Searches the client accounts.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <param name="accountNumber">The account number.</param>
+        /// <returns></returns>
+        [Route("SearchClientAccounts/{riskGroupNumber}/{accountNumber}")]
+        public IActionResult SearchClientAccounts(int riskGroupNumber, string accountNumber)
+        {
+            return Ok(_concessionManager.SearchClientAccounts(riskGroupNumber, accountNumber));
+        }
+
+        /// <summary>
         /// Gets the users approved concessions
         /// </summary>
         /// <returns></returns>
