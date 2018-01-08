@@ -113,7 +113,8 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         [Fact]
         public void ClientAccounts_Executes_Positive()
         {
-            MockConcessionManager.Setup(_ => _.GetClientAccounts(It.IsAny<int>())).Returns(new[] { new ClientAccount() });
+            MockConcessionManager.Setup(_ => _.GetClientAccounts(It.IsAny<int>(), It.IsAny<User>()))
+                .Returns(new[] {new ClientAccount()});
 
             var result = _concessionController.ClientAccounts(1);
             var apiResult = Assert.IsType<OkObjectResult>(result);

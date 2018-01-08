@@ -117,7 +117,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("ClientAccounts/{riskGroupNumber}")]
         public IActionResult ClientAccounts(int riskGroupNumber)
         {
-            return Ok(_concessionManager.GetClientAccounts(riskGroupNumber));
+            var user = _siteHelper.LoggedInUser(this);
+
+            return Ok(_concessionManager.GetClientAccounts(riskGroupNumber, user));
         }
 
         /// <summary>

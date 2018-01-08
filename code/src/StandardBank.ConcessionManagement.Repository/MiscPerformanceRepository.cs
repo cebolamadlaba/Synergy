@@ -43,26 +43,47 @@ namespace StandardBank.ConcessionManagement.Repository
         /// Gets the client accounts.
         /// </summary>
         /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        public IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber)
+        public IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, int? userId)
         {
             IEnumerable<ClientAccount> Function()
             {
                 using (var db = _dbConnectionFactory.Connection())
                 {
-                    var clientAccounts = db.Query<ClientAccount>(
-                        @"SELECT le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
-                        FROM [dbo].[tblRiskGroup] rg
-                        JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
-                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
-                        WHERE rg.[RiskGroupNumber] = @riskGroupNumber
-                        AND rg.[IsActive] = 1
-                        AND le.[IsActive] = 1
-                        AND lea.[IsActive] = 1",
-                        new {riskGroupNumber}, commandTimeout: Int32.MaxValue);
+                    if (userId.HasValue)
+                    {
+                        var clientAccounts = db.Query<ClientAccount>(
+                            @"SELECT le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
+                            FROM [dbo].[tblRiskGroup] rg
+                            JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
+                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                            WHERE rg.[RiskGroupNumber] = @riskGroupNumber
+                            AND rg.[IsActive] = 1
+                            AND le.[IsActive] = 1
+                            AND lea.[IsActive] = 1
+                            AND le.[fkUserId] = @userId",
+                            new { riskGroupNumber, userId }, commandTimeout: Int32.MaxValue);
 
-                    if (clientAccounts != null && clientAccounts.Any())
-                        return clientAccounts;
+                        if (clientAccounts != null && clientAccounts.Any())
+                            return clientAccounts;
+                    }
+                    else
+                    {
+                        var clientAccounts = db.Query<ClientAccount>(
+                            @"SELECT le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
+                            FROM [dbo].[tblRiskGroup] rg
+                            JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
+                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                            WHERE rg.[RiskGroupNumber] = @riskGroupNumber
+                            AND rg.[IsActive] = 1
+                            AND le.[IsActive] = 1
+                            AND lea.[IsActive] = 1",
+                            new { riskGroupNumber }, commandTimeout: Int32.MaxValue);
+
+                        if (clientAccounts != null && clientAccounts.Any())
+                            return clientAccounts;
+                    }
                 }
 
                 return null;

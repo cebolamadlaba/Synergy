@@ -230,15 +230,30 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         }
 
         /// <summary>
-        /// Tests that GetClientAccounts executes positive
+        /// Tests that GetClientAccounts when CanRequest is true executes positive
         /// </summary>
         [Fact]
-        public void GetClientAccounts_Executes_Positive()
+        public void GetClientAccounts_CanRequest_True_Executes_Positive()
         {
-            MockMiscPerformanceRepository.Setup(_ => _.GetClientAccounts(It.IsAny<int>()))
+            MockMiscPerformanceRepository.Setup(_ => _.GetClientAccounts(It.IsAny<int>(), It.IsAny<int?>()))
                 .Returns(new[] {new ClientAccount()});
 
-            var result = _concessionManager.GetClientAccounts(1);
+            var result = _concessionManager.GetClientAccounts(1, new User {  CanRequest = true});
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        /// <summary>
+        /// Tests that GetClientAccounts when CanRequest is false executes positive
+        /// </summary>
+        [Fact]
+        public void GetClientAccounts_CanRequest_False_Executes_Positive()
+        {
+            MockMiscPerformanceRepository.Setup(_ => _.GetClientAccounts(It.IsAny<int>(), It.IsAny<int?>()))
+                .Returns(new[] { new ClientAccount() });
+
+            var result = _concessionManager.GetClientAccounts(1, new User { CanRequest = false });
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);

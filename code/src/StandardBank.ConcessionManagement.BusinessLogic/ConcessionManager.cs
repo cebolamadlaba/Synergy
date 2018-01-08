@@ -360,10 +360,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// Gets the client accounts.
         /// </summary>
         /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <param name="user">The user.</param>
         /// <returns></returns>
-        public IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber)
+        public IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, User user)
         {
-            return _miscPerformanceRepository.GetClientAccounts(riskGroupNumber);
+            return user.CanRequest
+                ? _miscPerformanceRepository.GetClientAccounts(riskGroupNumber, user.Id)
+                : _miscPerformanceRepository.GetClientAccounts(riskGroupNumber, null);
         }
 
         /// <summary>
@@ -374,7 +377,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<ClientAccount> SearchClientAccounts(int riskGroupNumber, string accountNumber)
         {
-            var clientAccounts = GetClientAccounts(riskGroupNumber);
+            var clientAccounts = GetClientAccounts(riskGroupNumber, null);
 
             if (clientAccounts != null && clientAccounts.Any())
                 return clientAccounts.Where(_ => _.AccountNumber.Contains(accountNumber)).Take(10);

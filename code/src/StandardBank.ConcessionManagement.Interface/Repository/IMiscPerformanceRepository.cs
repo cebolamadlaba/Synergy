@@ -15,8 +15,9 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// Gets the client accounts.
         /// </summary>
         /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber);
+        IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, int? userId);
 
         /// <summary>
         /// Gets the lending products.
