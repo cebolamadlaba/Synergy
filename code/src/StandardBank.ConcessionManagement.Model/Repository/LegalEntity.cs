@@ -84,5 +84,13 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The PostalCode.
         /// </value>
         public string PostalCode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the user identifier.
+        /// </summary>
+        /// <value>
+        /// The user identifier.
+        /// </value>
+        public int? UserId { get; set; }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Test.Helpers;
@@ -18,7 +19,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         {
             var model = new User
             {
-                ANumber = "ef6cbdf438",
+                ANumber = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10),
                 EmailAddress = "416dcb07b0",
                 FirstName = "0ac3ff0687",
                 Surname = "42f59d39d7",
@@ -82,7 +83,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var id = results.First().Id;
             var model = InstantiatedDependencies.UserRepository.ReadById(id);
 
-            model.ANumber = "100d36692c";
+            model.ANumber = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10);
             model.EmailAddress = "c477ac58db";
             model.FirstName = "3de2516a4c";
             model.Surname = "01e39c70bf";
@@ -109,9 +110,11 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         [Fact]
         public void Delete_Executes_Positive()
         {
+            var aNumber = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10);
+
             var model = new User
             {
-                ANumber = "ef6cbdf438",
+                ANumber = aNumber,
                 EmailAddress = "416dcb07b0",
                 FirstName = "0ac3ff0687",
                 Surname = "42f59d39d7",

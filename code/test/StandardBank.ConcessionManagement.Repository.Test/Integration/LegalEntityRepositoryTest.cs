@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Test.Helpers;
@@ -27,7 +26,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 City = "Joburg",
                 ContactPerson = "Bob",
                 PostalAddress = "123 Somewhere Street",
-                PostalCode = "2001"
+                PostalCode = "2001",
+                UserId = DataHelper.GetUserId()
             };
 
             var result = InstantiatedDependencies.LegalEntityRepository.Create(model);
@@ -80,7 +80,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 City = "Joburg",
                 ContactPerson = "Bob",
                 PostalAddress = "123 Somewhere Street",
-                PostalCode = "2001"
+                PostalCode = "2001",
+                UserId = DataHelper.GetUserId()
             };
 
             InstantiatedDependencies.LegalEntityRepository.Create(model);
@@ -158,6 +159,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.ContactPerson = "John";
             model.PostalAddress = "999 Here Street";
             model.PostalCode = "5000";
+            model.UserId = DataHelper.GetAlternateUserId(model.UserId);
 
             InstantiatedDependencies.LegalEntityRepository.Update(model);
 
@@ -174,6 +176,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.ContactPerson, model.ContactPerson);
             Assert.Equal(updatedModel.PostalAddress, model.PostalAddress);
             Assert.Equal(updatedModel.PostalCode, model.PostalCode);
+            Assert.Equal(updatedModel.UserId, model.UserId);
         }
 
         /// <summary>
@@ -192,7 +195,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 City = "Joburg",
                 ContactPerson = "Bob",
                 PostalAddress = "123 Somewhere Street",
-                PostalCode = "2001"
+                PostalCode = "2001",
+                UserId = DataHelper.GetUserId()
             };
 
             var temporaryEntity = InstantiatedDependencies.LegalEntityRepository.Create(model);

@@ -35,9 +35,9 @@ namespace StandardBank.ConcessionManagement.Repository
         public LegalEntity Create(LegalEntity model)
         {
             const string sql =
-                @"INSERT [dbo].[tblLegalEntity] ([fkMarketSegmentId], [fkRiskGroupId], [CustomerName], [CustomerNumber], [IsActive], [ContactPerson], [PostalAddress], [City], [PostalCode]) 
-                                VALUES (@MarketSegmentId, @RiskGroupId, @CustomerName, @CustomerNumber, @IsActive, @ContactPerson, @PostalAddress, @City, @PostalCode) 
-                                SELECT CAST(SCOPE_IDENTITY() as int)";
+                @"INSERT [dbo].[tblLegalEntity] ([fkMarketSegmentId], [fkRiskGroupId], [CustomerName], [CustomerNumber], [IsActive], [ContactPerson], [PostalAddress], [City], [PostalCode], [fkUserId]) 
+                VALUES (@MarketSegmentId, @RiskGroupId, @CustomerName, @CustomerNumber, @IsActive, @ContactPerson, @PostalAddress, @City, @PostalCode, @UserId) 
+                SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
@@ -52,7 +52,8 @@ namespace StandardBank.ConcessionManagement.Repository
                         ContactPerson = model.ContactPerson,
                         PostalAddress = model.PostalAddress,
                         City = model.City,
-                        PostalCode = model.PostalCode
+                        PostalCode = model.PostalCode,
+                        UserId = model.UserId
                     }).Single();
             }
 
@@ -69,7 +70,9 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<LegalEntity>(
-                    "SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [CustomerName], [CustomerNumber], [IsActive], [ContactPerson], [PostalAddress], [City], [PostalCode] FROM [dbo].[tblLegalEntity] WHERE [pkLegalEntityId] = @Id",
+                    @"SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [CustomerName], [CustomerNumber], [IsActive], [ContactPerson], [PostalAddress], [City], [PostalCode], [fkUserId] [UserId] 
+                    FROM [dbo].[tblLegalEntity] 
+                    WHERE [pkLegalEntityId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -85,11 +88,11 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<LegalEntity>(
-                    @"SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [CustomerName], [CustomerNumber], [IsActive], [ContactPerson], [PostalAddress], [City], [PostalCode] 
+                    @"SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [CustomerName], [CustomerNumber], [IsActive], [ContactPerson], [PostalAddress], [City], [PostalCode], [fkUserId] [UserId] 
                     FROM [dbo].[tblLegalEntity] 
                     WHERE [pkLegalEntityId] = @Id 
                     AND [IsActive] = @isActive",
-                    new { id, isActive }).SingleOrDefault();
+                    new {id, isActive}).SingleOrDefault();
             }
         }
 
@@ -104,11 +107,11 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<LegalEntity>(
-                    @"SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [CustomerName], [CustomerNumber], [IsActive], [ContactPerson], [PostalAddress], [City], [PostalCode] 
+                    @"SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [CustomerName], [CustomerNumber], [IsActive], [ContactPerson], [PostalAddress], [City], [PostalCode], [fkUserId] [UserId] 
                     FROM [dbo].[tblLegalEntity] 
                     WHERE [fkRiskGroupId] = @riskGroupId
                     AND [IsActive] = @isActive",
-                    new { riskGroupId, isActive });
+                    new {riskGroupId, isActive});
             }
         }
 
@@ -121,7 +124,8 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<LegalEntity>(
-                    "SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [CustomerName], [CustomerNumber], [IsActive], [ContactPerson], [PostalAddress], [City], [PostalCode] FROM [dbo].[tblLegalEntity]");
+                    @"SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [CustomerName], [CustomerNumber], [IsActive], [ContactPerson], [PostalAddress], [City], [PostalCode], [fkUserId] [UserId] 
+                    FROM [dbo].[tblLegalEntity]");
             }
         }
 
@@ -134,7 +138,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblLegalEntity]
-                            SET [fkMarketSegmentId] = @MarketSegmentId, [fkRiskGroupId] = @RiskGroupId, [CustomerName] = @CustomerName, [CustomerNumber] = @CustomerNumber, [IsActive] = @IsActive, [ContactPerson] = @ContactPerson, [PostalAddress] = @PostalAddress, [City] = @City, [PostalCode] = @PostalCode
+                            SET [fkMarketSegmentId] = @MarketSegmentId, [fkRiskGroupId] = @RiskGroupId, [CustomerName] = @CustomerName, [CustomerNumber] = @CustomerNumber, [IsActive] = @IsActive, [ContactPerson] = @ContactPerson, [PostalAddress] = @PostalAddress, [City] = @City, [PostalCode] = @PostalCode, [fkUserId] = @UserId
                             WHERE [pkLegalEntityId] = @Id",
                     new
                     {
@@ -147,7 +151,8 @@ namespace StandardBank.ConcessionManagement.Repository
                         ContactPerson = model.ContactPerson,
                         PostalAddress = model.PostalAddress,
                         City = model.City,
-                        PostalCode = model.PostalCode
+                        PostalCode = model.PostalCode,
+                        UserId = model.UserId
                     });
             }
         }
