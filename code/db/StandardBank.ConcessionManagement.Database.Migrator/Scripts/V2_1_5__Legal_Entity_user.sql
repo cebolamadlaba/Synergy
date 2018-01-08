@@ -20,4 +20,4 @@ GO
 --from [dbo].[tblLegalEntity] le)
 --update legalentities
 --set [fkUserId] = (select top 1 [pkUserId] from [dbo].[tblUser] where [EmailAddress] = 'mpho.nxiwa@standardbank.co.za')
---where rownum =
+--where rownum = 1
