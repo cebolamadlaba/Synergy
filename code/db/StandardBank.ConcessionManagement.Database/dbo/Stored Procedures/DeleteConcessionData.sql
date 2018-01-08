@@ -1,4 +1,5 @@
-﻿CREATE PROCEDURE [dbo].[DeleteConcessionData]
+﻿
+CREATE PROCEDURE [dbo].[DeleteConcessionData]
 	@AreYouSure int
 AS
 
@@ -6,6 +7,9 @@ BEGIN
 
 	IF (@AreYouSure = 1)
 	BEGIN
+		DELETE FROM [dbo].[tblConcessionApproval]
+
+		DELETE FROM [dbo].[tblConcessionAccount]
 
 		DELETE FROM [dbo].[tblConcessionCondition]
 

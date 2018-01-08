@@ -16,7 +16,8 @@ BEGIN
 	JOIN [dbo].[tblConcession] c on c.[pkConcessionId] = cd.[fkConcessionId]
 	JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = cd.[fkLegalEntityAccountId]
 	JOIN [dbo].[rtblTransactionTableNumber] ttn on ttn.[pkTransactionTableNumberId] = ct.[fkApprovedTransactionTableNumberId]
-	JOIN [dbo].[tblSapDataImport] sdi ON sdi.[Channel] = tti.[ImportFileChannel] AND sdi.[AccountNo] = lea.[AccountNumber]
+	JOIN [dbo].[tblSapDataImport] sdi ON sdi.[Channel] = tti.[ImportFileChannel] 
+		AND CAST(sdi.[AccountNo] AS bigint) = CAST(lea.[AccountNumber] AS bigint)
 	WHERE c.[fkStatusId] IN (2, 3)
 	AND c.[IsActive] = 1
 	AND c.[IsCurrent] = 1
@@ -32,7 +33,8 @@ BEGIN
 	JOIN [dbo].[tblConcession] c on c.[pkConcessionId] = cd.[fkConcessionId]
 	JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = cd.[fkLegalEntityAccountId]
 	JOIN [dbo].[rtblTransactionTableNumber] ttn on ttn.[pkTransactionTableNumberId] = ct.[fkApprovedTransactionTableNumberId]
-	JOIN [dbo].[tblSapDataImport] sdi ON sdi.[Channel] = tti.[ImportFileChannel] AND sdi.[AccountNo] = lea.[AccountNumber]
+	JOIN [dbo].[tblSapDataImport] sdi ON sdi.[Channel] = tti.[ImportFileChannel] 
+		AND CAST(sdi.[AccountNo] AS bigint) = CAST(lea.[AccountNumber] AS bigint)
 	WHERE c.[fkStatusId] IN (2, 3)
 	AND c.[IsActive] = 1
 	AND c.[IsCurrent] = 1
@@ -50,7 +52,8 @@ BEGIN
 	JOIN [dbo].[tblConcession] c on c.[pkConcessionId] = cd.[fkConcessionId]
 	JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = cd.[fkLegalEntityAccountId]
 	JOIN [dbo].[rtblTableNumber] tn on tn.[pkTableNumberId] = cc.[fkApprovedTableNumberId]
-	JOIN [dbo].[tblSapDataImport] sdi ON sdi.[Channel] = cti.[ImportFileChannel] AND sdi.[AccountNo] = lea.[AccountNumber]
+	JOIN [dbo].[tblSapDataImport] sdi ON sdi.[Channel] = cti.[ImportFileChannel] 
+		AND CAST(sdi.[AccountNo] AS bigint) = CAST(lea.[AccountNumber] AS bigint)
 	WHERE c.[fkStatusId] IN (2, 3)
 	AND c.[IsActive] = 1
 	AND c.[IsCurrent] = 1
@@ -66,7 +69,8 @@ BEGIN
 	JOIN [dbo].[tblConcession] c on c.[pkConcessionId] = cd.[fkConcessionId]
 	JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = cd.[fkLegalEntityAccountId]
 	JOIN [dbo].[rtblTableNumber] tn on tn.[pkTableNumberId] = cc.[fkApprovedTableNumberId]
-	JOIN [dbo].[tblSapDataImport] sdi ON sdi.[Channel] = cti.[ImportFileChannel] AND sdi.[AccountNo] = lea.[AccountNumber]
+	JOIN [dbo].[tblSapDataImport] sdi ON sdi.[Channel] = cti.[ImportFileChannel] 
+		AND CAST(sdi.[AccountNo] AS bigint) = CAST(lea.[AccountNumber] AS bigint)
 	WHERE c.[fkStatusId] IN (2, 3)
 	AND c.[IsActive] = 1
 	AND c.[IsCurrent] = 1
@@ -81,7 +85,8 @@ BEGIN
 	JOIN [dbo].[tblConcessionDetail] cd on cd.[pkConcessionDetailId] = cl.[fkConcessionDetailId]
 	JOIN [dbo].[tblConcession] c on c.[pkConcessionId] = cd.[fkConcessionId]
 	JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = cd.[fkLegalEntityAccountId]
-	JOIN [dbo].[tblSapDataImport] sdi ON sdi.[Channel] = rpi.[ImportFileChannel] AND sdi.[AccountNo] = lea.[AccountNumber]
+	JOIN [dbo].[tblSapDataImport] sdi ON sdi.[Channel] = rpi.[ImportFileChannel] 
+		AND CAST(sdi.[AccountNo] AS bigint) = CAST(lea.[AccountNumber] AS bigint)
 	WHERE c.[fkStatusId] IN (2, 3)
 	AND c.[IsActive] = 1
 	AND c.[IsCurrent] = 1
@@ -96,7 +101,8 @@ BEGIN
 	JOIN [dbo].[tblConcessionDetail] cd on cd.[pkConcessionDetailId] = cl.[fkConcessionDetailId]
 	JOIN [dbo].[tblConcession] c on c.[pkConcessionId] = cd.[fkConcessionId]
 	JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = cd.[fkLegalEntityAccountId]
-	JOIN [dbo].[tblSapDataImport] sdi ON sdi.[Channel] = rpi.[ImportFileChannel] AND sdi.[AccountNo] = lea.[AccountNumber]
+	JOIN [dbo].[tblSapDataImport] sdi ON sdi.[Channel] = rpi.[ImportFileChannel] 
+		AND CAST(sdi.[AccountNo] AS bigint) = CAST(lea.[AccountNumber] AS bigint)
 	WHERE c.[fkStatusId] IN (2, 3)
 	AND c.[IsActive] = 1
 	AND c.[IsCurrent] = 1

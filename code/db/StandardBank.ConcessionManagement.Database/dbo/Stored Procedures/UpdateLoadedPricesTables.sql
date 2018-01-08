@@ -1,4 +1,5 @@
-﻿CREATE PROCEDURE [dbo].[UpdateLoadedPricesTables]
+﻿
+CREATE PROCEDURE [dbo].[UpdateLoadedPricesTables]
 AS
 
 BEGIN
@@ -12,8 +13,8 @@ BEGIN
 	JOIN [dbo].[rtblChannelTypeImport] cti ON cti.[ImportFileChannel] = sdi.[Channel]
 	JOIN [dbo].[tblLegalEntityAccount] lea ON lea.[AccountNumber] = sdi.[AccountNo]
 	JOIN [dbo].[rtblTableNumber] tn ON tn.[TariffTable] = sdi.[TableNo] 
-		AND (tn.[AdValorem] = CAST(sdi.[AdvaloremFee] AS decimal(18,2)) OR (tn.[AdValorem] IS NULL AND sdi.[AdvaloremFee] IS NULL))
-		AND (tn.[BaseRate] = CAST(sdi.[FlatFee] AS decimal(18,3)) OR (tn.[BaseRate] IS NULL AND sdi.[FlatFee] IS NULL))
+		--AND (tn.[AdValorem] = CAST(sdi.[AdvaloremFee] AS decimal(18,2)) OR (tn.[AdValorem] IS NULL AND sdi.[AdvaloremFee] IS NULL))
+		--AND (tn.[BaseRate] = CAST(sdi.[FlatFee] AS decimal(18,3)) OR (tn.[BaseRate] IS NULL AND sdi.[FlatFee] IS NULL))
 
 	-- update the loaded prices for lending
 	TRUNCATE TABLE [dbo].[tblLoadedPriceLending]
@@ -31,6 +32,6 @@ BEGIN
 	JOIN [dbo].[rtblTransactionTypeImport] tti on tti.[ImportFileChannel] = sdi.[Channel]
 	JOIN [dbo].[tblLegalEntityAccount] lea ON lea.[AccountNumber] = sdi.[AccountNo]
 	JOIN [dbo].[rtblTransactionTableNumber] tn ON tn.[TariffTable] = sdi.[TableNo] 
-		AND (tn.[AdValorem] = CAST(sdi.[AdvaloremFee] AS decimal(18,2)) OR (tn.[AdValorem] IS NULL AND sdi.[AdvaloremFee] IS NULL))
-		AND (tn.[Fee] = CAST(sdi.[FlatFee] AS decimal(18,3)) OR (tn.[Fee] IS NULL AND sdi.[FlatFee] IS NULL))
+		--AND (tn.[AdValorem] = CAST(sdi.[AdvaloremFee] AS decimal(18,2)) OR (tn.[AdValorem] IS NULL AND sdi.[AdvaloremFee] IS NULL))
+		--AND (tn.[Fee] = CAST(sdi.[FlatFee] AS decimal(18,3)) OR (tn.[Fee] IS NULL AND sdi.[FlatFee] IS NULL))
 END
