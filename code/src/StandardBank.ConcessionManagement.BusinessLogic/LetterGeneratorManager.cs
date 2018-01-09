@@ -6,6 +6,7 @@ using System.Text;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
@@ -115,13 +116,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             switch (concession.ConcessionType)
             {
-                case "Lending":
+                case Constants.ConcessionType.Lending:
                     concessionLetters.AddRange(GetLendingConcessionLetterData(concession, requestor, bcm));
                     break;
-                case "Cash":
+                case Constants.ConcessionType.Cash:
                     concessionLetters.AddRange(GetCashConcessionLetterData(concession, requestor, bcm));
                     break;
-                case "Transactional":
+                case Constants.ConcessionType.Transactional:
                     concessionLetters.AddRange(GetTransactionalConcessionLetterData(concession, requestor, bcm));
                     break;
                 default:
@@ -192,7 +193,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 AccountNumber = transactionalConcessionDetail.AccountNumber,
                 ChannelOrFeeType = transactionalConcessionDetail.TransactionType,
-                FeeOrRate = transactionalConcessionDetail.TransactionType == "Cheque Encashment Fee"
+                FeeOrRate = transactionalConcessionDetail.TransactionType ==
+                            Constants.Transactional.TransactionType.ChequeEncashmentFee
                     ? $"R {transactionalConcessionDetail.Fee.GetValueOrDefault(0).ToString("N2", CultureInfo.InvariantCulture)} + {transactionalConcessionDetail.AdValorem.GetValueOrDefault(0).ToString("N2", CultureInfo.InvariantCulture)} %"
                     : $"R {transactionalConcessionDetail.Fee.GetValueOrDefault(0).ToString("N2", CultureInfo.InvariantCulture)}",
                 ConcessionStartDate = transactionalConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
@@ -318,7 +320,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     concessionLetters.Add(concessionLetter);
                 }
 
-                if (lendingConcessionDetail.ProductType == "Overdraft")
+                if (lendingConcessionDetail.ProductType == Constants.Lending.ProductType.Overdraft)
                 {
                     var lendingOverDraftConcessionLetters = new List<LendingOverDraftConcessionLetter>();
                     lendingOverDraftConcessionLetters.AddRange(concessionLetter.LendingOverDraftConcessionLetters);

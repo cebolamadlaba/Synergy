@@ -52,7 +52,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCon
             }
             else
             {
-                if (message.Concession.Status == "Approved" || message.Concession.Status == "Approved With Changes")
+                if (message.Concession.Status == Constants.ConcessionStatus.Approved ||
+                    message.Concession.Status == Constants.ConcessionStatus.ApprovedWithChanges)
                 {
                     if (!message.ConcessionCondition.ExpiryDate.HasValue &&
                         message.ConcessionCondition.PeriodId.HasValue)

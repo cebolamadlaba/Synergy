@@ -4,6 +4,7 @@ using System.Linq;
 using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
@@ -90,7 +91,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="lendingConcessionDetail"></param>
         /// <param name="concession"></param>
         /// <returns></returns>
-        public ConcessionLending CreateConcessionLending(LendingConcessionDetail lendingConcessionDetail, Concession concession)
+        public ConcessionLending CreateConcessionLending(LendingConcessionDetail lendingConcessionDetail,
+            Concession concession)
         {
             var concessionLending = _mapper.Map<ConcessionLending>(lendingConcessionDetail);
 
@@ -113,13 +115,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             //we are only allowed to extend or renew overdraft products
             if (concession.CanExtend || concession.CanRenew)
             {
-                if (!lendingConcessionDetails.Any(_ => _.ProductType == "Overdraft"))
+                if (!lendingConcessionDetails.Any(_ => _.ProductType == Constants.Lending.ProductType.Overdraft))
                 {
                     concession.CanExtend = false;
                     concession.CanRenew = false;
 
                     //if we can't extend or renew but it is approved, that means we can update it
-                    if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
+                    if (concession.Status == Constants.ConcessionStatus.Approved ||
+                        concession.Status == Constants.ConcessionStatus.ApprovedWithChanges)
                         concession.CanUpdate = true;
                 }
             }
@@ -140,7 +143,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public ConcessionLending DeleteConcessionLending(LendingConcessionDetail lendingConcessionDetail)
         {
-            var concessionLending = _concessionLendingRepository.ReadById(lendingConcessionDetail.LendingConcessionDetailId);
+            var concessionLending =
+                _concessionLendingRepository.ReadById(lendingConcessionDetail.LendingConcessionDetailId);
 
             _concessionLendingRepository.Delete(concessionLending);
 
@@ -153,13 +157,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="lendingConcessionDetail">The lending concession detail.</param>
         /// <param name="concession">The concession.</param>
         /// <returns></returns>
-        public ConcessionLending UpdateConcessionLending(LendingConcessionDetail lendingConcessionDetail, Concession concession)
+        public ConcessionLending UpdateConcessionLending(LendingConcessionDetail lendingConcessionDetail,
+            Concession concession)
         {
             var concessionLending = _mapper.Map<ConcessionLending>(lendingConcessionDetail);
 
             concessionLending.ConcessionId = concession.Id;
 
-            if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
+            if (concession.Status == Constants.ConcessionStatus.Approved ||
+                concession.Status == Constants.ConcessionStatus.ApprovedWithChanges)
             {
                 UpdateApprovedPrice(concessionLending);
                 UpdateIsMismatched(concessionLending);
@@ -170,13 +176,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 {
                     var productType = _lookupTableManager.GetProductTypeName(concessionLending.ProductTypeId);
 
-                    if (productType == "Overdraft")
+                    if (productType == Constants.Lending.ProductType.Overdraft)
                         concessionLending.ExpiryDate = DateTime.Now.AddMonths(12);
-                    else if (productType != "Overdraft" && concessionLending.Term.HasValue)
+                    else if (productType != Constants.Lending.ProductType.Overdraft && concessionLending.Term.HasValue)
                         concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
                 }
             }
-            else if (concession.Status == "Pending" && concession.SubStatus == "PCM Approved With Changes")
+            else if (concession.Status == Constants.ConcessionStatus.Pending &&
+                     concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges)
             {
                 UpdateApprovedPrice(concessionLending);
             }
@@ -243,7 +250,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
             var lendingConcessions = new List<LendingConcession>();
-            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, "Lending");
+            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.Lending);
 
             foreach (var concession in concessions)
             {

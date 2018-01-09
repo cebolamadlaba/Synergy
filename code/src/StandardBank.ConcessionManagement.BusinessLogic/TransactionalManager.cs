@@ -3,6 +3,7 @@ using System.Linq;
 using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
@@ -111,7 +112,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="transactionalConcessionDetail">The transactional concession detail.</param>
         /// <param name="concession">The concession.</param>
         /// <returns></returns>
-        public ConcessionTransactional CreateConcessionTransactional(TransactionalConcessionDetail transactionalConcessionDetail,
+        public ConcessionTransactional CreateConcessionTransactional(
+            TransactionalConcessionDetail transactionalConcessionDetail,
             Concession concession)
         {
             var concessionTransactional = _mapper.Map<ConcessionTransactional>(transactionalConcessionDetail);
@@ -125,20 +127,23 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="transactionalConcessionDetail">The transactional concession detail.</param>
         /// <param name="concession">The concession.</param>
         /// <returns></returns>
-        public ConcessionTransactional UpdateConcessionTransactional(TransactionalConcessionDetail transactionalConcessionDetail,
+        public ConcessionTransactional UpdateConcessionTransactional(
+            TransactionalConcessionDetail transactionalConcessionDetail,
             Concession concession)
         {
             var mappedConcessionTransactional = _mapper.Map<ConcessionTransactional>(transactionalConcessionDetail);
             mappedConcessionTransactional.ConcessionId = concession.Id;
 
-            if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
+            if (concession.Status == Constants.ConcessionStatus.Approved ||
+                concession.Status == Constants.ConcessionStatus.ApprovedWithChanges)
             {
                 UpdateApprovedTransactionTableNumber(mappedConcessionTransactional);
                 UpdateIsMismatched(mappedConcessionTransactional);
 
                 _ruleManager.UpdateBaseFieldsOnApproval(mappedConcessionTransactional);
             }
-            else if (concession.Status == "Pending" && concession.SubStatus == "PCM Approved With Changes")
+            else if (concession.Status == Constants.ConcessionStatus.Pending &&
+                     concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges)
             {
                 UpdateApprovedTransactionTableNumber(mappedConcessionTransactional);
             }
@@ -169,7 +174,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     mappedConcessionTransactional.TransactionTableNumberId;
 
                 //the table number is what is currently in the database
-                mappedConcessionTransactional.TransactionTableNumberId = databaseTransactionalConcession.TransactionTableNumberId;
+                mappedConcessionTransactional.TransactionTableNumberId =
+                    databaseTransactionalConcession.TransactionTableNumberId;
             }
         }
 
@@ -217,7 +223,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var transactionalConcessions = new List<TransactionalConcession>();
             var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
-            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, "Transactional");
+            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.Transactional);
 
             foreach (var concession in concessions)
             {
@@ -280,7 +286,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         /// <param name="transactionalConcessionDetail">The transactional concession detail.</param>
         /// <returns></returns>
-        public ConcessionTransactional DeleteConcessionTransactional(TransactionalConcessionDetail transactionalConcessionDetail)
+        public ConcessionTransactional DeleteConcessionTransactional(
+            TransactionalConcessionDetail transactionalConcessionDetail)
         {
             var concessionTransactional =
                 _concessionTransactionalRepository.ReadById(transactionalConcessionDetail

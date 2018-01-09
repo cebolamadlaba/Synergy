@@ -7,6 +7,7 @@ using StandardBank.ConcessionManagement.BusinessLogic.Features.CashConcession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCondition;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 using StandardBank.ConcessionManagement.Model.UserInterface;
@@ -72,8 +73,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
 
-            cashConcession.Concession.ConcessionType = "Cash";
-            cashConcession.Concession.Type = "New";
+            cashConcession.Concession.ConcessionType = Constants.ConcessionType.Cash;
+            cashConcession.Concession.Type = Constants.ReferenceType.New;
 
             var concession = await _mediator.Send(new AddConcession(cashConcession.Concession, user));
 
@@ -171,15 +172,15 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             //add a new concession using the old concession's details
             var newConcession = cashConcession.Concession;
             newConcession.Id = 0;
-            newConcession.Status = "Pending";
+            newConcession.Status = Constants.ConcessionStatus.Pending;
             newConcession.BcmUserId = null;
             newConcession.DateOpened = DateTime.Now;
             newConcession.DateSentForApproval = DateTime.Now;
             newConcession.HoUserId = null;
             newConcession.PcmUserId = null;
             newConcession.ReferenceNumber = string.Empty;
-            newConcession.SubStatus = "BCM Pending";
-            newConcession.Type = "Existing";
+            newConcession.SubStatus = Constants.ConcessionSubStatus.BcmPending;
+            newConcession.Type = Constants.ReferenceType.Existing;
 
             var concession = await _mediator.Send(new AddConcession(newConcession, user));
 
@@ -207,7 +208,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             {
                 CreationDate = DateTime.Now,
                 UserId = user.Id,
-                RelationshipDescription = "Extension",
+                RelationshipDescription = Constants.RelationshipType.Extension,
                 ParentConcessionId = parentConcessionId,
                 ChildConcessionId = concession.Id
             };
@@ -230,7 +231,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
 
-            var returnConcession = await CreateChildConcession(cashConcession, user, "Renewal");
+            var returnConcession = await CreateChildConcession(cashConcession, user, Constants.RelationshipType.Renewal);
 
             return Ok(returnConcession);
         }
@@ -246,7 +247,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
 
-            var returnConcession = await CreateChildConcession(cashConcession, user, "Resubmit");
+            var returnConcession = await CreateChildConcession(cashConcession, user, Constants.RelationshipType.Resubmit);
 
             return Ok(returnConcession);
         }
@@ -262,7 +263,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
 
-            var returnConcession = await CreateChildConcession(cashConcession, user, "Update");
+            var returnConcession = await CreateChildConcession(cashConcession, user, Constants.RelationshipType.Update);
 
             return Ok(returnConcession);
         }
@@ -282,8 +283,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var parentConcessionId = parentCashConcession.Concession.Id;
 
             cashConcession.Concession.ReferenceNumber = string.Empty;
-            cashConcession.Concession.ConcessionType = "Cash";
-            cashConcession.Concession.Type = "Existing";
+            cashConcession.Concession.ConcessionType = Constants.ConcessionType.Cash;
+            cashConcession.Concession.Type = Constants.ReferenceType.Existing;
 
             var concession = await _mediator.Send(new AddConcession(cashConcession.Concession, user));
 

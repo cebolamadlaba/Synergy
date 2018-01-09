@@ -105,13 +105,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
 
             if (message.User.SelectedCentre?.Id > 0)
             {
-                if (message.Concession.Status == "Pending" && !string.IsNullOrWhiteSpace(message.Concession.SubStatus))
+                if (message.Concession.Status == Constants.ConcessionStatus.Pending && !string.IsNullOrWhiteSpace(message.Concession.SubStatus))
                     await SendNotificationEmail(message, result);
 
-                if (message.Concession.Status == "Approved" || message.Concession.Status == "Approved With Changes")
+                if (message.Concession.Status == Constants.ConcessionStatus.Approved ||
+                    message.Concession.Status == Constants.ConcessionStatus.ApprovedWithChanges)
                     SendApprovedNotificationEmail(message);
 
-                if (message.Concession.Status == "Declined")
+                if (message.Concession.Status == Constants.ConcessionStatus.Declined)
                     SendDeclinedNotificationEmail(message);
             }
             else
@@ -155,15 +156,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         {
             switch (message.Concession.SubStatus)
             {
-                case "BCM Pending":
+                case Constants.ConcessionSubStatus.BcmPending:
                     await SendNotificationEmail(message, result, Constants.ApprovalStep.BCMApproval);
                     break;
-                case "HO Pending":
-                case "PCM Pending":
+                case Constants.ConcessionSubStatus.HoPending:
+                case Constants.ConcessionSubStatus.PcmPending:
                     await SendNotificationEmail(message, result, Constants.ApprovalStep.PCMApproval);
                     break;
-                case "PCM Approved With Changes":
-                case "HO Approved With Changes":
+                case Constants.ConcessionSubStatus.PcmApprovedWithChanges:
+                case Constants.ConcessionSubStatus.HoApprovedWithChanges:
                     SendApprovedWithChangesNotificationEmail(message);
                     break;
                 default:

@@ -23,10 +23,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IMapper _mapper;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PricingManager"/> class.
+        /// Initializes a new instance of the <see cref="ProvinceManager"/> class.
         /// </summary>
-        /// <param name="riskGroupRepository">The risk group repository.</param>
-        /// <param name="mapper"></param>
+        /// <param name="provinceRepository">The province repository.</param>
+        /// <param name="mapper">The mapper.</param>
         public ProvinceManager(IProvinceRepository provinceRepository, IMapper mapper)
         {
             _provinceRepository = provinceRepository;
@@ -36,7 +36,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <summary>
         /// Gets the risk group for the risk group number specified
         /// </summary>
-        /// <param name="riskGroupNumber"></param>
         /// <returns></returns>
         public IEnumerable<Province> GetProvinces()
         {

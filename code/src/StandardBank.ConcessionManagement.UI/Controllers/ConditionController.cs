@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCondition;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 
@@ -85,8 +86,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="periodType">Type of the period.</param>
         /// <returns></returns>
         [Route("MyConditions/{period}/{periodType}")]
-        public IActionResult MyConditions([FromRoute] string period = "3 Months",
-            [FromRoute] string periodType = "Standard")
+        public IActionResult MyConditions([FromRoute] string period = Constants.Period.ThreeMonths,
+            [FromRoute] string periodType = Constants.PeriodType.Standard)
         {
             var user = _siteHelper.LoggedInUser(this);
 

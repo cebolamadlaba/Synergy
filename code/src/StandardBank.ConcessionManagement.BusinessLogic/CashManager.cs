@@ -3,6 +3,7 @@ using System.Linq;
 using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
@@ -142,14 +143,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var mappedConcessionCash = _mapper.Map<ConcessionCash>(cashConcessionDetail);
             mappedConcessionCash.ConcessionId = concession.Id;
 
-            if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
+            if (concession.Status == Constants.ConcessionStatus.Approved ||
+                concession.Status == Constants.ConcessionStatus.ApprovedWithChanges)
             {
                 UpdateApprovedTableNumber(mappedConcessionCash);
                 UpdateIsMismatched(mappedConcessionCash);
 
                 _ruleManager.UpdateBaseFieldsOnApproval(mappedConcessionCash);
             }
-            else if (concession.Status == "Pending" && concession.SubStatus == "PCM Approved With Changes")
+            else if (concession.Status == Constants.ConcessionStatus.Pending &&
+                     concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges)
             {
                 UpdateApprovedTableNumber(mappedConcessionCash);
             }
@@ -216,7 +219,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var cashConcessions = new List<CashConcession>();
             var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
-            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, "Cash");
+            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.Cash);
 
             foreach (var concession in concessions)
             {
