@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
@@ -18,6 +18,7 @@ import { Concession } from "../models/concession";
 import { ConcessionCondition } from "../models/concession-condition";
 import { TransactionalConcessionDetail } from "../models/transactional-concession-detail";
 import { DecimalPipe } from '@angular/common';
+import { ConcessionTypes } from '../constants/concession-types';
 
 @Component({
 	selector: 'app-transactional-add-concession',
@@ -86,7 +87,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 	        this.lookupDataService.getPeriods(),
 	        this.lookupDataService.getPeriodTypes(),
 	        this.lookupDataService.getConditionTypes(),
-	        this.lookupDataService.getTransactionTypes("Transactional"),
+	        this.lookupDataService.getTransactionTypes(ConcessionTypes.Transactional),
 	        this.lookupDataService.getRiskGroup(this.riskGroupNumber),
 	        this.lookupDataService.getClientAccounts(this.riskGroupNumber),
 	        this.transactionalConcessionService.getlatestCrsOrMrs(this.riskGroupNumber)
@@ -317,7 +318,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 
 		var transactionalConcession = this.getTransactionalConcession();
 
-		transactionalConcession.concession.concessionType = "Transactional";
+		transactionalConcession.concession.concessionType = ConcessionTypes.Transactional;
 		transactionalConcession.concession.type = "New";
 
 		if (!this.validationError) {

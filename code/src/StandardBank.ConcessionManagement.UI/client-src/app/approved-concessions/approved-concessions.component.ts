@@ -4,6 +4,7 @@ import { UserConcessionsService } from "../services/user-concessions.service";
 import { Router, RouterModule } from '@angular/router';
 import { ApprovedConcession } from "../models/approved-concession";
 import { ApprovedConcessionDetail } from "../models/approved-concession-detail";
+import { ConcessionTypes } from '../constants/concession-types';
 
 @Component({
     selector: 'app-approved-concessions',
@@ -33,13 +34,13 @@ export class ApprovedConcessionsComponent implements OnInit {
 
     openConcessionView(approvedConcession: ApprovedConcession, concessionType: string) {
         switch (concessionType) {
-            case "Lending":
+            case ConcessionTypes.Lending:
                 this.router.navigate(['/lending-view-concession', approvedConcession.riskGroupNumber, approvedConcession.referenceNumber]);
                 break;
-            case "Cash":
+            case ConcessionTypes.Cash:
                 this.router.navigate(['/cash-view-concession', approvedConcession.riskGroupNumber, approvedConcession.referenceNumber]);
                 break;
-            case "Transactional":
+            case ConcessionTypes.Transactional:
                 this.router.navigate(['/transactional-view-concession', approvedConcession.riskGroupNumber, approvedConcession.referenceNumber]);
                 break;
         }

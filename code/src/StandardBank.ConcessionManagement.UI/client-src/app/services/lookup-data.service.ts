@@ -15,6 +15,7 @@ import { ReviewFeeType } from "../models/review-fee-type";
 import { RiskGroup } from "../models/risk-group";
 import { TransactionType } from "../models/transaction-type";
 import { TableNumber } from "../models/table-number";
+import { ConcessionTypes } from '../constants/concession-types';
 
 @Injectable()
 export class LookupDataService {
@@ -182,7 +183,7 @@ export class MockLookupDataService extends LookupDataService {
     getTransactionTypes(concessionType): Observable<TransactionType[]> {
         this.transactionTypeModel[0].id = 1;
         this.transactionTypeModel[0].description = "Transaction Type Test";
-        this.transactionTypeModel[0].concessionType = "Transactional";
+        this.transactionTypeModel[0].concessionType = ConcessionTypes.Transactional;
         this.transactionTypeModel[0].concessionTypeId = 1;
         return Observable.of(this.transactionTypeModel);
     }

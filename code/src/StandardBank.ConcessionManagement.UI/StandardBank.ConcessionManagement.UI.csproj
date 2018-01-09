@@ -52,6 +52,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="client-src\app\constants\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

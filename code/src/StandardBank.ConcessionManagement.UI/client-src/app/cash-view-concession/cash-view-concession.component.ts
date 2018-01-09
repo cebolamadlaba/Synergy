@@ -22,6 +22,9 @@ import { UserConcessionsService } from "../services/user-concessions.service";
 import { ConcessionComment } from "../models/concession-comment";
 import { CashFinancial } from "../models/cash-financial";
 import { DecimalPipe } from '@angular/common';
+import { ConcessionTypes } from '../constants/concession-types';
+import { ConcessionStatus } from '../constants/concession-status';
+import { ConcessionSubStatus } from '../constants/concession-sub-status';
 
 @Component({
 	selector: 'app-cash-view-concession',
@@ -130,7 +133,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 	        this.lookupDataService.getPeriodTypes(),
 	        this.lookupDataService.getConditionTypes(),
 	        this.lookupDataService.getAccrualTypes(),
-	        this.lookupDataService.getTableNumbers("Cash"),
+	        this.lookupDataService.getTableNumbers(ConcessionTypes.Cash),
 	        this.lookupDataService.getRiskGroup(this.riskGroupNumber),
 	        this.lookupDataService.getClientAccounts(this.riskGroupNumber),
 	        this.cashConcessionService.getCashFinancial(this.riskGroupNumber)
@@ -171,11 +174,11 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 			this.observableCashConcession.subscribe(cashConcession => {
 				this.cashConcession = cashConcession;
 
-				if (cashConcession.concession.status == "Pending" && cashConcession.concession.subStatus == "BCM Pending") {
+				if (cashConcession.concession.status == ConcessionStatus.Pending && cashConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
 					this.canBcmApprove = cashConcession.currentUser.canBcmApprove;
 				}
 
-				if (cashConcession.concession.status == "Pending" && cashConcession.concession.subStatus == "PCM Pending") {
+				if (cashConcession.concession.status == ConcessionStatus.Pending && cashConcession.concession.subStatus == ConcessionSubStatus.PCMPending) {
 					this.canPcmApprove = cashConcession.currentUser.canPcmApprove;
 
 					if (!cashConcession.concession.isInProgressExtension) {
@@ -184,17 +187,17 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 				}
 
 				//if it's still pending and the user is a requestor then they can recall it
-				if (cashConcession.concession.status == "Pending" && cashConcession.concession.subStatus == "BCM Pending") {
+				if (cashConcession.concession.status == ConcessionStatus.Pending && cashConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
 					this.canRecall = cashConcession.currentUser.canRequest;
 				}
 
-				if (cashConcession.concession.status == "Pending" &&
-					(cashConcession.concession.subStatus == "PCM Approved With Changes" || cashConcession.concession.subStatus == "HO Approved With Changes")) {
+				if (cashConcession.concession.status == ConcessionStatus.Pending &&
+					(cashConcession.concession.subStatus == ConcessionSubStatus.PCMApprovedWithChanges || cashConcession.concession.subStatus == ConcessionSubStatus.HOApprovedWithChanges)) {
 					this.canApproveChanges = cashConcession.currentUser.canRequest;
                 }
 
-                if (cashConcession.concession.status === "Approved" ||
-                    cashConcession.concession.status === "Approved With Changes") {
+                if (cashConcession.concession.status === ConcessionStatus.Approved ||
+                    cashConcession.concession.status === ConcessionStatus.ApprovedWithChanges) {
                     this.isApproved = true;
                 }
 
@@ -404,7 +407,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 	getCashConcession(isNew: boolean): CashConcession {
 		var cashConcession = new CashConcession();
 		cashConcession.concession = new Concession();
-		cashConcession.concession.concessionType = "Cash";
+		cashConcession.concession.concessionType = ConcessionTypes.Cash;
 		cashConcession.concession.riskGroupId = this.riskGroup.id;
 		cashConcession.concession.referenceNumber = this.concessionReferenceId;
 
@@ -550,7 +553,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 		this.validationError = null;
 
 		var cashConcession = this.getCashConcession(false);
-		cashConcession.concession.subStatus = "PCM Pending";
+		cashConcession.concession.subStatus = ConcessionSubStatus.PCMPending;
 		cashConcession.concession.bcmUserId = this.cashConcession.currentUser.id;
 
 		if (!cashConcession.concession.comments) {
@@ -580,12 +583,12 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 		this.validationError = null;
 
 		var cashConcession = this.getCashConcession(false);
-		cashConcession.concession.status = "Declined";
-		cashConcession.concession.subStatus = "BCM Declined";
+		cashConcession.concession.status = ConcessionStatus.Declined;
+		cashConcession.concession.subStatus = ConcessionSubStatus.BCMDeclined;
 		cashConcession.concession.bcmUserId = this.cashConcession.currentUser.id;
 
 		if (!cashConcession.concession.comments) {
-			cashConcession.concession.comments = "Declined";
+			cashConcession.concession.comments = ConcessionStatus.Declined;
 		}
 
 		if (!this.validationError) {
@@ -614,32 +617,32 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 		var cashConcession = this.getCashConcession(false);
 
 		if (this.hasChanges) {
-			cashConcession.concession.status = "Pending";
+			cashConcession.concession.status = ConcessionStatus.Pending;
 
 			if (this.cashConcession.currentUser.isHO) {
-				cashConcession.concession.subStatus = "HO Approved With Changes";
+				cashConcession.concession.subStatus = ConcessionSubStatus.HOApprovedWithChanges;
 				cashConcession.concession.hoUserId = this.cashConcession.currentUser.id;
 			} else {
-				cashConcession.concession.subStatus = "PCM Approved With Changes";
+				cashConcession.concession.subStatus = ConcessionSubStatus.PCMApprovedWithChanges;
 				cashConcession.concession.pcmUserId = this.cashConcession.currentUser.id;
 			}
 
 			if (!cashConcession.concession.comments) {
-				cashConcession.concession.comments = "Approved With Changes";
+				cashConcession.concession.comments = ConcessionStatus.ApprovedWithChanges;
 			}
 		} else {
-			cashConcession.concession.status = "Approved";
+			cashConcession.concession.status = ConcessionStatus.Approved;
 
 			if (this.cashConcession.currentUser.isHO) {
-				cashConcession.concession.subStatus = "HO Approved";
+				cashConcession.concession.subStatus = ConcessionSubStatus.HOApproved;
 				cashConcession.concession.hoUserId = this.cashConcession.currentUser.id;
 			} else {
-				cashConcession.concession.subStatus = "PCM Approved";
+				cashConcession.concession.subStatus = ConcessionSubStatus.PCMApproved;
 				cashConcession.concession.pcmUserId = this.cashConcession.currentUser.id;
 			}
 
 			if (!cashConcession.concession.comments) {
-				cashConcession.concession.comments = "Approved";
+				cashConcession.concession.comments = ConcessionStatus.Approved;
 			}
 		}
 
@@ -668,18 +671,18 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
 		var cashConcession = this.getCashConcession(false);
 
-		cashConcession.concession.status = "Declined";
+		cashConcession.concession.status = ConcessionStatus.Declined;
 
 		if (this.cashConcession.currentUser.isHO) {
-			cashConcession.concession.subStatus = "HO Declined";
+			cashConcession.concession.subStatus = ConcessionSubStatus.HODeclined;
 			cashConcession.concession.hoUserId = this.cashConcession.currentUser.id;
 		} else {
-			cashConcession.concession.subStatus = "PCM Declined";
+			cashConcession.concession.subStatus = ConcessionSubStatus.PCMDeclined;
 			cashConcession.concession.pcmUserId = this.cashConcession.currentUser.id;
 		}
 
 		if (!cashConcession.concession.comments) {
-			cashConcession.concession.comments = "Declined";
+			cashConcession.concession.comments = ConcessionStatus.Declined;
 		}
 
 		if (!this.validationError) {
@@ -749,8 +752,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
 		var cashConcession = this.getCashConcession(true);
 
-		cashConcession.concession.status = "Pending";
-		cashConcession.concession.subStatus = "BCM Pending";
+		cashConcession.concession.status = ConcessionStatus.Pending;
+		cashConcession.concession.subStatus = ConcessionSubStatus.BCMPending;
 		cashConcession.concession.type = "Existing";
 		cashConcession.concession.referenceNumber = this.concessionReferenceId;
 
@@ -797,8 +800,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
 		var cashConcession = this.getCashConcession(true);
 
-		cashConcession.concession.status = "Pending";
-		cashConcession.concession.subStatus = "BCM Pending";
+		cashConcession.concession.status = ConcessionStatus.Pending;
+		cashConcession.concession.subStatus = ConcessionSubStatus.BCMPending;
 		cashConcession.concession.referenceNumber = this.concessionReferenceId;
 
 		if (!this.validationError) {
@@ -826,8 +829,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 		this.validationError = null;
 
 		var cashConcession = this.getCashConcession(false);
-		cashConcession.concession.status = "Approved With Changes";
-		cashConcession.concession.subStatus = "Requestor Accepted Changes";
+		cashConcession.concession.status = ConcessionStatus.ApprovedWithChanges;
+		cashConcession.concession.subStatus = ConcessionSubStatus.RequestorAcceptedChanges;
 		cashConcession.concession.requestorId = this.cashConcession.currentUser.id;
 
 		if (!cashConcession.concession.comments) {
@@ -858,8 +861,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 		this.validationError = null;
 
 		var cashConcession = this.getCashConcession(false);
-		cashConcession.concession.status = "Declined";
-		cashConcession.concession.subStatus = "Requestor Declined Changes";
+		cashConcession.concession.status = ConcessionStatus.Declined;
+		cashConcession.concession.subStatus = ConcessionSubStatus.RequestorDeclinedChanges;
 		cashConcession.concession.requestorId = this.cashConcession.currentUser.id;
 
 		if (!cashConcession.concession.comments) {

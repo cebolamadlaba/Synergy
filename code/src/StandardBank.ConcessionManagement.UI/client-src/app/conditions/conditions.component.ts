@@ -7,6 +7,7 @@ import { LookupDataService } from "../services/lookup-data.service";
 import { ConditionCounts } from "../models/condition-counts";
 import { ConcessionCondition } from "../models/concession-condition";
 import { Router, RouterModule } from '@angular/router';
+import { ConcessionTypes } from '../constants/concession-types';
 
 @Component({
     selector: 'app-conditions',
@@ -123,13 +124,13 @@ export class ConditionsComponent implements OnInit {
 
     openConcessionView(concessionCondition: ConcessionCondition) {
         switch (concessionCondition.concessionType) {
-            case "Lending":
+            case ConcessionTypes.Lending:
                 this.router.navigate(['/lending-view-concession', concessionCondition.riskGroupNumber, concessionCondition.concessionReferenceNumber]);
                 break;
-            case "Cash":
+            case ConcessionTypes.Cash:
                 this.router.navigate(['/cash-view-concession', concessionCondition.riskGroupNumber, concessionCondition.concessionReferenceNumber]);
                 break;
-            case "Transactional":
+            case ConcessionTypes.Transactional:
                 this.router.navigate(['/transactional-view-concession', concessionCondition.riskGroupNumber, concessionCondition.concessionReferenceNumber]);
                 break;
         }
