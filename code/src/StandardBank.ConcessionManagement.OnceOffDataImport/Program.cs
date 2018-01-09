@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 using StandardBank.ConcessionManagement.Common;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.OnceOffDataImport.Model;
 using StandardBank.ConcessionManagement.Repository;
@@ -213,7 +214,7 @@ namespace StandardBank.ConcessionManagement.OnceOffDataImport
                     {
                         var property = sapDataImport.GetType().GetProperty(columnToFind);
 
-                        if (columnToFind == "PricepointId")
+                        if (columnToFind == Constants.SapDataImport.PricepointId)
                             property?.SetValue(sapDataImport, Convert.ToInt32(columnValue), null);
                         else
                             property?.SetValue(sapDataImport, columnValue, null);

@@ -8,6 +8,7 @@ using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic.ScheduledJobs;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
@@ -233,7 +234,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                 {
                     var property = sapDataImport.GetType().GetProperty(columnToFind);
 
-                    if (columnToFind == "PricepointId")
+                    if (columnToFind == Constants.SapDataImport.PricepointId)
                         property?.SetValue(sapDataImport, Convert.ToInt32(columnValue), null);
                     else
                         property?.SetValue(sapDataImport, columnValue, null);

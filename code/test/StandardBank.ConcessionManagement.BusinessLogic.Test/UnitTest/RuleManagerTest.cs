@@ -1,6 +1,7 @@
 ﻿using System;
 using Moq;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using Xunit;
 using static StandardBank.ConcessionManagement.Test.Helpers.MockedDependencies;
@@ -39,7 +40,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 }
             });
 
-            MockLookupTableManager.Setup(_ => _.GetRelationshipId("Extension")).Returns(1);
+            MockLookupTableManager.Setup(_ => _.GetRelationshipId(Constants.RelationshipType.Extension)).Returns(1);
 
             var concessionDetail = new ConcessionLending
             {
@@ -68,7 +69,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 }
             });
 
-            MockLookupTableManager.Setup(_ => _.GetRelationshipId("Extension")).Returns(1);
+            MockLookupTableManager.Setup(_ => _.GetRelationshipId(Constants.RelationshipType.Extension)).Returns(1);
 
             var concessionDetail = new ConcessionCash
             {
@@ -97,7 +98,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 }
             });
 
-            MockLookupTableManager.Setup(_ => _.GetRelationshipId("Extension")).Returns(1);
+            MockLookupTableManager.Setup(_ => _.GetRelationshipId(Constants.RelationshipType.Extension)).Returns(1);
 
             var concessionDetail = new ConcessionTransactional
             {

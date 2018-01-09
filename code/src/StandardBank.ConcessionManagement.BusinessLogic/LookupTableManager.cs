@@ -4,6 +4,7 @@ using System.Linq;
 using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using AccrualType = StandardBank.ConcessionManagement.Model.UserInterface.AccrualType;
@@ -219,20 +220,23 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// Gets the roles.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Model.UserInterface.Role> GetRoles()=> _mapper.Map<IEnumerable<Model.UserInterface.Role>>(_roleRepository.ReadAll());
+        public IEnumerable<Model.UserInterface.Role> GetRoles() =>
+            _mapper.Map<IEnumerable<Model.UserInterface.Role>>(_roleRepository.ReadAll());
 
         /// <summary>
         /// Gets the centres.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Model.UserInterface.Centre> GetCentres() => _mapper.Map<IEnumerable<Model.UserInterface.Centre>>(_centreRepository.ReadAll());
+        public IEnumerable<Model.UserInterface.Centre> GetCentres() =>
+            _mapper.Map<IEnumerable<Model.UserInterface.Centre>>(_centreRepository.ReadAll());
 
         /// <summary>
         /// Gets the regions.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Model.UserInterface.Region> GetRegions() => _mapper.Map<IEnumerable<Model.UserInterface.Region>>(_regionRepository.ReadAll());
-        
+        public IEnumerable<Model.UserInterface.Region> GetRegions() =>
+            _mapper.Map<IEnumerable<Model.UserInterface.Region>>(_regionRepository.ReadAll());
+
         /// <summary>
         /// Gets the status identifier.
         /// </summary>
@@ -466,15 +470,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 var mappedConditionType = _mapper.Map<ConditionType>(conditionType);
 
                 mappedConditionType.EnableInterestRate =
-                    mappedConditionType.Description == "Mininum Average Credit Balance";
+                    mappedConditionType.Description == Constants.ConditionType.MininumAverageCreditBalance;
 
                 mappedConditionType.EnableConditionValue =
-                    mappedConditionType.Description != "Full Transactional Banking";
+                    mappedConditionType.Description != Constants.ConditionType.FullTransactionalBanking;
 
-                mappedConditionType.EnableConditionVolume = mappedConditionType.Description == "Mininum Turnover";
+                mappedConditionType.EnableConditionVolume =
+                    mappedConditionType.Description == Constants.ConditionType.MininumTurnover;
 
                 mappedConditionType.EnableExpectedTurnoverValue =
-                    mappedConditionType.Description == "Full Transactional Banking";
+                    mappedConditionType.Description == Constants.ConditionType.FullTransactionalBanking;
 
                 mappedConditionType.ConditionProducts =
                     GetConditionProducts(conditionType.Id, conditionProducts, conditionTypeProducts);
@@ -537,7 +542,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 var mappedTransactionType = _mapper.Map<TransactionType>(transactionType);
                 mappedTransactionType.ConcessionType = concessionType;
 
-                if (concessionType == "Transactional")
+                if (concessionType == Constants.ConcessionType.Transactional)
                     mappedTransactionType.TransactionTableNumbers =
                         transactionTableNumbers.Where(_ => _.TransactionTypeId == mappedTransactionType.Id);
 

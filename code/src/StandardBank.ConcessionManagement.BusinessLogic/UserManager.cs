@@ -5,6 +5,7 @@ using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Common;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 
@@ -137,12 +138,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedUser.SelectedCentre = mappedUser.UserCentres.FirstOrDefault();
             mappedUser.CentreId = mappedUser.SelectedCentre.Id;
 
-            mappedUser.CanRequest = mappedUser.UserRoles.Any(_ => _.Name == "Requestor");
+            mappedUser.CanRequest = mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.Requestor);
             mappedUser.CanBcmApprove =
-                mappedUser.UserRoles.Any(_ => _.Name.Trim() == "Suite Head" || _.Name == "BCM");
+                mappedUser.UserRoles.Any(_ => _.Name.Trim() == Constants.Roles.BCM);
             mappedUser.CanPcmApprove =
-                mappedUser.UserRoles.Any(_ => _.Name == "PCM" || _.Name == "Head Office");
-            mappedUser.IsHO = mappedUser.UserRoles.Any(_ => _.Name == "Head Office");
+                mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.PCM || _.Name == Constants.Roles.HeadOffice);
+            mappedUser.IsHO = mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.HeadOffice);
 
             return mappedUser;
         }

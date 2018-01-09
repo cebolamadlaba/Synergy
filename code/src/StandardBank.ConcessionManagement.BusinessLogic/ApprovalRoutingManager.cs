@@ -61,8 +61,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 case ApprovalStep.BCMApproval:
                     roles = _roleRepository.ReadAll()
-                        .Where(x => x.RoleName.Trim() == Roles.BCM ||
-                                    x.RoleName.Trim() == Roles.SuiteHead).Select(x => x.Id);
+                        .Where(x => x.RoleName.Trim() == Roles.BCM).Select(x => x.Id);
                     users = _approvalWorkflowRepository.GetApproversByRoles(centerId, roles);
                     return _mapper.Map<IEnumerable<User>>(users);
 

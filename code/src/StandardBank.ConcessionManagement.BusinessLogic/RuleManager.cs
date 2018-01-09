@@ -2,6 +2,7 @@
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
@@ -66,7 +67,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private bool IsExtension(int concessionId)
         {
             var parentRelationships = _concessionRelationshipRepository.ReadByChildConcessionId(concessionId);
-            var extensionRelationshipId = _lookupTableManager.GetRelationshipId("Extension");
+            var extensionRelationshipId = _lookupTableManager.GetRelationshipId(Constants.RelationshipType.Extension);
 
             return parentRelationships.Any(_ => _.RelationshipId == extensionRelationshipId);
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Inbox;
@@ -135,29 +136,28 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public IEnumerable<InboxConcession> GetPendingConcessionsForUser(User user)
         {
             var inboxConcessions = new List<InboxConcession>();
-            var pendingStatusId = _lookupTableManager.GetStatusId("Pending");
-            var bcmPendingStatusId = _lookupTableManager.GetSubStatusId("BCM Pending");
-            var pcmPendingStatusId = _lookupTableManager.GetSubStatusId("PCM Pending");
+            var pendingStatusId = _lookupTableManager.GetStatusId(Constants.ConcessionStatus.Pending);
+            var bcmPendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.BcmPending);
+            var pcmPendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.PcmPending);
 
             //loop through the user roles and get the concessions for the particular user
             foreach (var userRole in user.UserRoles)
             {
                 switch (userRole.Name.Trim())
                 {
-                    case "Requestor":
+                    case Constants.Roles.Requestor:
                         inboxConcessions.AddRange(
                             _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
-                                .ReadByRequestorIdStatusIdsIsActive(user.Id, new[] { pendingStatusId }, true)));
+                                .ReadByRequestorIdStatusIdsIsActive(user.Id, new[] {pendingStatusId}, true)));
                         break;
-                    case "Suite Head":
-                    case "BCM":
+                    case Constants.Roles.BCM:
                         inboxConcessions.AddRange(
                             _mapper.Map<IEnumerable<InboxConcession>>(
                                 _concessionInboxViewRepository.ReadByCentreIdStatusIdSubStatusIdIsActive(
                                     user.SelectedCentre.Id, pendingStatusId, bcmPendingStatusId, true)));
                         break;
-                    case "PCM":
-                    case "Head Office":
+                    case Constants.Roles.PCM:
+                    case Constants.Roles.HeadOffice:
                         inboxConcessions.AddRange(
                             _mapper.Map<IEnumerable<InboxConcession>>(
                                 _concessionInboxViewRepository.ReadByCentreIdStatusIdSubStatusIdIsActive(
@@ -186,12 +186,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<InboxConcession> GetDueForExpiryConcessionsForUser(User user)
         {
-            var approvedStatusId = _lookupTableManager.GetStatusId("Approved");
-            var approvedWithChangesStatusId = _lookupTableManager.GetStatusId("Approved With Changes");
+            var approvedStatusId = _lookupTableManager.GetStatusId(Constants.ConcessionStatus.Approved);
+            var approvedWithChangesStatusId =
+                _lookupTableManager.GetStatusId(Constants.ConcessionStatus.ApprovedWithChanges);
 
             return _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
                 .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(user.Id, DateTime.Now,
-                    DateTime.Now.AddMonths(3), new[] { approvedStatusId, approvedWithChangesStatusId }, true));
+                    DateTime.Now.AddMonths(3), new[] {approvedStatusId, approvedWithChangesStatusId}, true));
         }
 
         /// <summary>
@@ -201,12 +202,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<InboxConcession> GetExpiredConcessionsForUser(User user)
         {
-            var approvedStatusId = _lookupTableManager.GetStatusId("Approved");
-            var approvedWithChangesStatusId = _lookupTableManager.GetStatusId("Approved With Changes");
+            var approvedStatusId = _lookupTableManager.GetStatusId(Constants.ConcessionStatus.Approved);
+            var approvedWithChangesStatusId =
+                _lookupTableManager.GetStatusId(Constants.ConcessionStatus.ApprovedWithChanges);
 
             return _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
                 .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(user.Id, DateTime.MinValue,
-                    DateTime.Now, new[] { approvedStatusId, approvedWithChangesStatusId }, true));
+                    DateTime.Now, new[] {approvedStatusId, approvedWithChangesStatusId}, true));
         }
 
         /// <summary>
@@ -216,12 +218,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<InboxConcession> GetMismatchedConcessionsForUser(User user)
         {
-            var approvedStatusId = _lookupTableManager.GetStatusId("Approved");
-            var approvedWithChangesStatusId = _lookupTableManager.GetStatusId("Approved With Changes");
+            var approvedStatusId = _lookupTableManager.GetStatusId(Constants.ConcessionStatus.Approved);
+            var approvedWithChangesStatusId =
+                _lookupTableManager.GetStatusId(Constants.ConcessionStatus.ApprovedWithChanges);
 
             return _mapper.Map<IEnumerable<InboxConcession>>(
                 _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsMismatchedIsActive(user.Id,
-                    new[] { approvedStatusId, approvedWithChangesStatusId }, true, true));
+                    new[] {approvedStatusId, approvedWithChangesStatusId}, true, true));
         }
 
         /// <summary>
@@ -231,10 +234,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<InboxConcession> GetDeclinedConcessionsForUser(User user)
         {
-            var declinedStatusId = _lookupTableManager.GetStatusId("Declined");
+            var declinedStatusId = _lookupTableManager.GetStatusId(Constants.ConcessionStatus.Declined);
 
             return _mapper.Map<IEnumerable<InboxConcession>>(
-                _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsActive(user.Id, new[] { declinedStatusId }, true));
+                _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsActive(user.Id, new[] {declinedStatusId},
+                    true));
         }
 
         /// <summary>
@@ -251,18 +255,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 switch (userRole.Name.Trim())
                 {
-                    case "Suite Head":
-                    case "BCM":
+                    case Constants.Roles.BCM:
                         inboxConcessions.AddRange(
                             _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
                                 .ReadByBcmUserIdIsActive(user.Id, true)));
                         break;
-                    case "PCM":
+                    case Constants.Roles.PCM:
                         inboxConcessions.AddRange(
                             _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
                                 .ReadByPcmUserIdIsActive(user.Id, true)));
                         break;
-                    case "Head Office":
+                    case Constants.Roles.HeadOffice:
                         inboxConcessions.AddRange(
                             _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
                                 .ReadByHoUserIdIsActive(user.Id, true)));
@@ -392,12 +395,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<ApprovedConcession> GetApprovedConcessionsForUser(int userId)
         {
-            var approvedStatusId = _lookupTableManager.GetStatusId("Approved");
-            var approvedWithChangesStatusId = _lookupTableManager.GetStatusId("Approved With Changes");
+            var approvedStatusId = _lookupTableManager.GetStatusId(Constants.ConcessionStatus.Approved);
+            var approvedWithChangesStatusId =
+                _lookupTableManager.GetStatusId(Constants.ConcessionStatus.ApprovedWithChanges);
 
             var concessions =
                 _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsActive(userId,
-                    new[] { approvedStatusId, approvedWithChangesStatusId }, true);
+                    new[] {approvedStatusId, approvedWithChangesStatusId}, true);
 
             var approvedConcessions = new List<ApprovedConcession>();
 
@@ -458,10 +462,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var results = _mapper.Map<IEnumerable<ConcessionCondition>>(conditions);
 
-            results.ToList().ForEach(x =>
-            {
-                x.RagStatus = GetRagStatus(x.Period, x.ApprovedDate.Value);
-            });
+            results.ToList().ForEach(x => { x.RagStatus = GetRagStatus(x.Period, x.ApprovedDate.Value); });
 
             return results;
         }
@@ -477,8 +478,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return new ConditionCounts
             {
-                OngoingCount = conditionCounts?.FirstOrDefault(_ => _.PeriodType == "Ongoing")?.RecordCount ?? 0,
-                StandardCount = conditionCounts?.FirstOrDefault(_ => _.PeriodType == "Standard")?.RecordCount ?? 0
+                OngoingCount =
+                    conditionCounts?.FirstOrDefault(_ => _.PeriodType == Constants.PeriodType.Ongoing)?.RecordCount ??
+                    0,
+                StandardCount =
+                    conditionCounts?.FirstOrDefault(_ => _.PeriodType == Constants.PeriodType.Standard)?.RecordCount ??
+                    0
             };
         }
 
@@ -496,7 +501,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             _concessionRepository.Update(mappedConcession);
 
-            if (concession.Status == "Approved" || concession.Status == "Approved With Changes")
+            if (concession.Status == Constants.ConcessionStatus.Approved ||
+                concession.Status == Constants.ConcessionStatus.ApprovedWithChanges)
             {
                 //check if this is an extension or renewal for another concession, if it is then
                 //we need to deactivate the parent concession since this one is approved
@@ -563,8 +569,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedConcession.ConcessionTypeId =
                 _lookupTableManager.GetConcessionTypeId(concession.ConcessionType);
 
-            mappedConcession.StatusId = _lookupTableManager.GetStatusId("Pending");
-            mappedConcession.SubStatusId = _lookupTableManager.GetSubStatusId("BCM Pending");
+            mappedConcession.StatusId = _lookupTableManager.GetStatusId(Constants.ConcessionStatus.Pending);
+            mappedConcession.SubStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.BcmPending);
             mappedConcession.ConcessionDate = DateTime.Now;
             mappedConcession.RequestorId = user.Id;
 
@@ -595,7 +601,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public ConcessionRelationship CreateConcessionRelationship(
             Model.UserInterface.ConcessionRelationship concessionRelationship)
         {
-            var mappedConcessionRelationship = _mapper.Map<Model.Repository.ConcessionRelationship>(concessionRelationship);
+            var mappedConcessionRelationship =
+                _mapper.Map<Model.Repository.ConcessionRelationship>(concessionRelationship);
 
             mappedConcessionRelationship.RelationshipId =
                 _lookupTableManager.GetRelationshipId(concessionRelationship.RelationshipDescription);
@@ -723,13 +730,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             switch (period)
             {
-                case "3 Months":
+                case Constants.Period.ThreeMonths:
                     return CalculateRagStatusThreeMonths(dateApproved);
-                case "6 Months":
+                case Constants.Period.SixMonths:
                     return CalculateRagStatusSixMonths(dateApproved);
-                case "9 Months":
+                case Constants.Period.NineMonths:
                     return CalculateRagStatusNineMonths(dateApproved);
-                case "12 Months":
+                case Constants.Period.TwelveMonths:
                     return CalculateRagStatusTwelveMonths(dateApproved);
                 default:
                     return "";
@@ -742,7 +749,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="repositoryConcessions">The repository concessions.</param>
         /// <param name="mapAll">if set to <c>true</c> [map all].</param>
         /// <returns></returns>
-        private IEnumerable<Model.UserInterface.Concession> Map(IEnumerable<Concession> repositoryConcessions, bool mapAll)
+        private IEnumerable<Model.UserInterface.Concession> Map(IEnumerable<Concession> repositoryConcessions,
+            bool mapAll)
         {
             var concessions = new List<Model.UserInterface.Concession>();
 
@@ -765,8 +773,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 {
                     SetIsInProgressExtensionOrRenewal(mappedConcession);
 
-                    var isApproved = mappedConcession.Status == "Approved" ||
-                                     mappedConcession.Status == "Approved With Changes";
+                    var isApproved = mappedConcession.Status == Constants.ConcessionStatus.Approved ||
+                                     mappedConcession.Status == Constants.ConcessionStatus.ApprovedWithChanges;
 
                     if (!HasPendingChild(concession.Id))
                     {
@@ -809,7 +817,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private void SetIsInProgressExtensionOrRenewal(Model.UserInterface.Concession concession)
         {
             //if the status is not pending then it is not in progress
-            if (concession.Status != "Pending")
+            if (concession.Status != Constants.ConcessionStatus.Pending)
             {
                 concession.IsInProgressExtension = false;
                 concession.IsInProgressRenewal = false;
@@ -817,14 +825,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             else
             {
                 var relationships = _concessionRelationshipRepository.ReadByChildConcessionId(concession.Id);
-                var extenionRelationshipTypeId = _lookupTableManager.GetRelationshipId("Extension");
-                var renewalRelationshipTypeId = _lookupTableManager.GetRelationshipId("Renewal");
+                var extenionRelationshipTypeId = _lookupTableManager.GetRelationshipId(Constants.RelationshipType.Extension);
+                var renewalRelationshipTypeId = _lookupTableManager.GetRelationshipId(Constants.RelationshipType.Renewal);
 
-                concession.IsInProgressExtension = relationships.Any(_ => _.RelationshipId == extenionRelationshipTypeId);
+                concession.IsInProgressExtension =
+                    relationships.Any(_ => _.RelationshipId == extenionRelationshipTypeId);
                 concession.IsInProgressRenewal = relationships.Any(_ => _.RelationshipId == renewalRelationshipTypeId);
             }
         }
-        
+
         /// <summary>
         /// Calculates if can resubmit.
         /// </summary>
@@ -833,7 +842,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         private bool CalculateIfCanResubmit(Model.Repository.Concession concession, string currentStatus)
         {
-            return currentStatus == "Declined";
+            return currentStatus == Constants.ConcessionStatus.Declined;
         }
 
         /// <summary>
@@ -844,7 +853,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         private bool CalculateIfCanRenew(Model.Repository.Concession concession, string currentStatus)
         {
-            if (currentStatus == "Approved" || currentStatus == "Approved With Changes")
+            if (currentStatus == Constants.ConcessionStatus.Approved ||
+                currentStatus == Constants.ConcessionStatus.ApprovedWithChanges)
             {
                 var concessionDetails = _concessionDetailRepository.ReadByConcessionId(concession.Id);
 
@@ -872,7 +882,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 return false;
 
             //you can only extend a concession three times
-            var extensionRelationshipId = _lookupTableManager.GetRelationshipId("Extension");
+            var extensionRelationshipId = _lookupTableManager.GetRelationshipId(Constants.RelationshipType.Extension);
 
             var relationships =
                 _concessionRelationshipRepository.ReadByChildConcessionIdRelationshipIdRelationships(concession.Id,
@@ -905,8 +915,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                     if (childConcession.IsActive)
                     {
-                        var declinedStatus = _lookupTableManager.GetStatusId("Declined");
-                        var removedStatus = _lookupTableManager.GetStatusId("Removed");
+                        var declinedStatus = _lookupTableManager.GetStatusId(Constants.ConcessionStatus.Declined);
+                        var removedStatus = _lookupTableManager.GetStatusId(Constants.ConcessionStatus.Removed);
 
                         if (childConcession.StatusId != declinedStatus && childConcession.StatusId != removedStatus)
                             return true;
@@ -926,7 +936,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var concessionComments = _concessionCommentRepository.ReadByConcessionId(concessionId);
 
-            var mappedConcessionComments = _mapper.Map<IEnumerable<Model.UserInterface.ConcessionComment>>(concessionComments);
+            var mappedConcessionComments =
+                _mapper.Map<IEnumerable<Model.UserInterface.ConcessionComment>>(concessionComments);
 
             foreach (var mappedConcessionComment in mappedConcessionComments)
             {
@@ -948,12 +959,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var totalHours = GetWorkingDays(dateApproved, DateTime.Today) * 8;
 
             if (totalHours <= 168)
-                return "green";
+                return Constants.RagStatusResult.Green;
 
             if (totalHours > 168 && totalHours < 335)
-                return "yellow";
+                return Constants.RagStatusResult.Yellow;
 
-            return "red";
+            return Constants.RagStatusResult.Red;
         }
 
         /// <summary>
@@ -966,12 +977,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var totalHours = GetWorkingDays(dateApproved, DateTime.Today) * 8;
 
             if (totalHours <= 336)
-                return "green";
+                return Constants.RagStatusResult.Green;
 
             if (totalHours > 336 && totalHours < 672)
-                return "yellow";
+                return Constants.RagStatusResult.Yellow;
 
-            return "red";
+            return Constants.RagStatusResult.Red;
         }
 
         /// <summary>
@@ -984,12 +995,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var totalHours = GetWorkingDays(dateApproved, DateTime.Today) * 8;
 
             if (totalHours <= 504)
-                return "green";
+                return Constants.RagStatusResult.Green;
 
             if (totalHours > 504 && totalHours <= 1007)
-                return "yellow";
+                return Constants.RagStatusResult.Yellow;
 
-            return "red";
+            return Constants.RagStatusResult.Red;
         }
 
         /// <summary>
@@ -1002,12 +1013,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var totalHours = GetWorkingDays(dateApproved, DateTime.Today) * 8;
 
             if (totalHours <= 672)
-                return "green";
+                return Constants.RagStatusResult.Green;
 
             if (totalHours > 672 && totalHours <= 1343)
-                return "yellow";
+                return Constants.RagStatusResult.Yellow;
 
-            return "red";
+            return Constants.RagStatusResult.Red;
         }
 
         /// <summary>

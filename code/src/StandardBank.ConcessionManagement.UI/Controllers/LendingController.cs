@@ -7,6 +7,7 @@ using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCondition;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.LendingConcession;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
@@ -68,8 +69,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
 
-            lendingConcession.Concession.ConcessionType = "Lending";
-            lendingConcession.Concession.Type = "New";
+            lendingConcession.Concession.ConcessionType = Constants.ConcessionType.Lending;
+            lendingConcession.Concession.Type = Constants.ReferenceType.New;
 
             var concession = await _mediator.Send(new AddConcession(lendingConcession.Concession, user));
 
@@ -146,7 +147,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("ExtendConcession/{concessionReferenceId}")]
         public async Task<IActionResult> ExtendConcession(string concessionReferenceId)
         {
-            var lendingConcession = await CreateChildConcession(concessionReferenceId, "Extension");
+            var lendingConcession = await CreateChildConcession(concessionReferenceId, Constants.RelationshipType.Extension);
 
             return Ok(lendingConcession);
         }
@@ -170,15 +171,15 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             //add a new concession using the old concession's details
             var newConcession = lendingConcession.Concession;
             newConcession.Id = 0;
-            newConcession.Status = "Pending";
+            newConcession.Status = Constants.ConcessionStatus.Pending;
             newConcession.BcmUserId = null;
             newConcession.DateOpened = DateTime.Now;
             newConcession.DateSentForApproval = DateTime.Now;
             newConcession.HoUserId = null;
             newConcession.PcmUserId = null;
             newConcession.ReferenceNumber = string.Empty;
-            newConcession.SubStatus = "BCM Pending";
-            newConcession.Type = "Existing";
+            newConcession.SubStatus = Constants.ConcessionSubStatus.BcmPending;
+            newConcession.Type = Constants.ReferenceType.Existing;
 
             var concession = await _mediator.Send(new AddConcession(newConcession, user));
 
@@ -189,7 +190,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             {
                 lendingConcessionDetail.DateApproved = null;
 
-                if (relationshipType != "Extension")
+                if (relationshipType != Constants.RelationshipType.Extension)
                     lendingConcessionDetail.ExpiryDate = null;
                 
                 lendingConcessionDetail.LendingConcessionDetailId = 0;
@@ -245,7 +246,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
 
-            var returnConcession = await CreateChildConcession(lendingConcession, user, "Renewal");
+            var returnConcession = await CreateChildConcession(lendingConcession, user, Constants.RelationshipType.Renewal);
 
             return Ok(returnConcession);
         }
@@ -261,7 +262,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
 
-            var returnConcession = await CreateChildConcession(lendingConcession, user, "Resubmit");
+            var returnConcession = await CreateChildConcession(lendingConcession, user, Constants.RelationshipType.Resubmit);
 
             return Ok(returnConcession);
         }
@@ -277,7 +278,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
 
-            var returnConcession = await CreateChildConcession(lendingConcession, user, "Update");
+            var returnConcession = await CreateChildConcession(lendingConcession, user, Constants.RelationshipType.Update);
 
             return Ok(returnConcession);
         }
@@ -298,14 +299,14 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var parentConcessionId = parentLendingConcession.Concession.Id;
 
             lendingConcession.Concession.ReferenceNumber = string.Empty;
-            lendingConcession.Concession.ConcessionType = "Lending";
-            lendingConcession.Concession.Type = "Existing";
+            lendingConcession.Concession.ConcessionType = Constants.ConcessionType.Lending;
+            lendingConcession.Concession.Type = Constants.ReferenceType.Existing;
 
             var concession = await _mediator.Send(new AddConcession(lendingConcession.Concession, user));
 
             foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
             {
-                if (relationship != "Extension")
+                if (relationship != Constants.RelationshipType.Extension)
                     lendingConcessionDetail.ExpiryDate = null;
 
                 await _mediator.Send(new AddOrUpdateLendingConcessionDetail(lendingConcessionDetail, user, concession));

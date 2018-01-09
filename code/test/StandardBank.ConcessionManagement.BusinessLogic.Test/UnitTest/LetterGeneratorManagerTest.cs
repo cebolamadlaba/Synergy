@@ -4,6 +4,7 @@ using Moq;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
@@ -45,7 +46,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             var concession = new Concession
             {
-                ConcessionType = "Lending",
+                ConcessionType = Constants.ConcessionType.Lending,
                 RiskGroupNumber = 123456
             };
 
@@ -62,7 +63,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                     {
                         new LendingConcessionDetail
                         {
-                            ProductType = "Overdraft",
+                            ProductType = Constants.Lending.ProductType.Overdraft,
                             ApprovedMap = 123.23m,
                             MarginAgainstPrime = 12343.23m,
                             InitiationFee = 3244.23m,
@@ -130,7 +131,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             var concession = new Concession
             {
-                ConcessionType = "Cash",
+                ConcessionType = Constants.ConcessionType.Cash,
                 RiskGroupNumber = 123456
             };
 
@@ -143,7 +144,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 new CashConcession
                 {
                     Concession = concession,
-                    CashConcessionDetails = new []
+                    CashConcessionDetails = new[]
                     {
                         new CashConcessionDetail
                         {
@@ -154,7 +155,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                             ExpiryDate = DateTime.Now.AddDays(100)
                         }
                     },
-                    ConcessionConditions = new[] { new ConcessionCondition() },
+                    ConcessionConditions = new[] {new ConcessionCondition()},
                     CurrentUser = new User()
                 });
 
@@ -203,7 +204,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             var concession = new Concession
             {
-                ConcessionType = "Transactional",
+                ConcessionType = Constants.ConcessionType.Transactional,
                 RiskGroupNumber = 123456
             };
 
@@ -227,7 +228,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                             ExpiryDate = DateTime.Now.AddDays(100)
                         }
                     },
-                    ConcessionConditions = new[] { new ConcessionCondition() },
+                    ConcessionConditions = new[] {new ConcessionCondition()},
                     CurrentUser = new User()
                 });
 

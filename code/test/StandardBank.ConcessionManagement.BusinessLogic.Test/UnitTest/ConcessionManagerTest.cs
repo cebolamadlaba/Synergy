@@ -9,6 +9,7 @@ using Role = StandardBank.ConcessionManagement.Model.UserInterface.Role;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 using static StandardBank.ConcessionManagement.Test.Helpers.MockedDependencies;
 using System.Collections.Generic;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using ConcessionComment = StandardBank.ConcessionManagement.Model.Repository.ConcessionComment;
 using ConcessionCondition = StandardBank.ConcessionManagement.Model.Repository.ConcessionCondition;
@@ -59,7 +60,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             var result = _concessionManager.GetPendingConcessionsForUser(new User
             {
                 Id = 1,
-                UserRoles = new[] { new Role() { Name = "Requestor" } }
+                UserRoles = new[] { new Role() { Name = Constants.Roles.Requestor } }
             });
 
             Assert.NotNull(result);
@@ -80,7 +81,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             var result = _concessionManager.GetDueForExpiryConcessionsForUser(new User
             {
                 Id = 1,
-                UserRoles = new[] { new Role() { Name = "Requestor" } }
+                UserRoles = new[] { new Role() { Name = Constants.Roles.Requestor } }
             });
 
             Assert.NotNull(result);
@@ -101,7 +102,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             var result = _concessionManager.GetExpiredConcessionsForUser(new User
             {
                 Id = 1,
-                UserRoles = new[] { new Role() { Name = "Requestor" } }
+                UserRoles = new[] { new Role() { Name = Constants.Roles.Requestor } }
             });
 
             Assert.NotNull(result);
@@ -122,7 +123,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             var result = _concessionManager.GetMismatchedConcessionsForUser(new User
             {
                 Id = 1,
-                UserRoles = new[] { new Role() { Name = "Requestor" } }
+                UserRoles = new[] { new Role() { Name = Constants.Roles.Requestor } }
             });
 
             Assert.NotNull(result);
@@ -142,7 +143,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             var result = _concessionManager.GetDeclinedConcessionsForUser(new User
             {
                 Id = 1,
-                UserRoles = new[] { new Role() { Name = "Requestor" } }
+                UserRoles = new[] { new Role() { Name = Constants.Roles.Requestor } }
             });
 
             Assert.NotNull(result);
@@ -169,7 +170,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             var result = _concessionManager.GetUserConcessions(new User
             {
                 Id = 1,
-                UserRoles = new[] { new Role() { Name = "Requestor" } }
+                UserRoles = new[] { new Role() { Name = Constants.Roles.Requestor } }
             });
 
             Assert.NotNull(result);
@@ -265,7 +266,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockConcessionInboxViewRepository.Setup(_ => _.ReadByBcmUserIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
                 .Returns(new[] {new ConcessionInboxView()});
 
-            var result = _concessionManager.GetActionedConcessionsForUser(new User { UserRoles = new List<Role> { new Role { Name = "BCM" } } });
+            var result = _concessionManager.GetActionedConcessionsForUser(new User
+            {
+                UserRoles = new List<Role> {new Role {Name = Constants.Roles.BCM}}
+            });
 
             Assert.NotEmpty(result);
         }
@@ -276,11 +280,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockConcessionInboxViewRepository.Setup(_ => _.ReadByPcmUserIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
                 .Returns(new[] { new ConcessionInboxView() });
 
-            var result = _concessionManager.GetActionedConcessionsForUser(new User { UserRoles = new List<Role> { new Role { Name = "PCM" } } });
-
+            var result = _concessionManager.GetActionedConcessionsForUser(new User
+            {
+                UserRoles = new List<Role> {new Role {Name = Constants.Roles.PCM}}
+            });
 
             Assert.NotEmpty(result);
-
         }
 
         [Fact]
@@ -292,7 +297,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             var result =
                 _concessionManager.GetActionedConcessionsForUser(new User
                 {
-                    UserRoles = new List<Role> {new Role {Name = "Head Office"}}
+                    UserRoles = new List<Role> {new Role {Name = Constants.Roles.HeadOffice}}
                 });
 
             Assert.NotEmpty(result);
@@ -529,74 +534,74 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         [Fact]
         public void GetRagStatus_3Months_Withing21DaysReturnsGreen()
         {
-            var status = _concessionManager.GetRagStatus("3 Months", AddWorkingDays(21));
-            Assert.True(status == "green");
+            var status = _concessionManager.GetRagStatus(Constants.Period.ThreeMonths, AddWorkingDays(21));
+            Assert.True(status == Constants.RagStatusResult.Green);
         }
         [Fact]
         public void GetRagStatus_3Months_Withing41DaysReturnsAmber()
         {
-            var status = _concessionManager.GetRagStatus("3 Months", AddWorkingDays(41));
-            Assert.True(status == "yellow");
+            var status = _concessionManager.GetRagStatus(Constants.Period.ThreeMonths, AddWorkingDays(41));
+            Assert.True(status == Constants.RagStatusResult.Yellow);
         }
         [Fact]
         public void GetRagStatus_3Months_Withing42DaysReturnsRed()
         {
-            var status = _concessionManager.GetRagStatus("3 Months", AddWorkingDays(42));
-            Assert.True(status == "red");
+            var status = _concessionManager.GetRagStatus(Constants.Period.ThreeMonths, AddWorkingDays(42));
+            Assert.True(status == Constants.RagStatusResult.Red);
         }
         [Fact]
         public void GetRagStatus_6Months_Withing42DaysReturnsGreen()
         {
-            var status = _concessionManager.GetRagStatus("6 Months", AddWorkingDays(42));
-            Assert.True(status == "green");
+            var status = _concessionManager.GetRagStatus(Constants.Period.SixMonths, AddWorkingDays(42));
+            Assert.True(status == Constants.RagStatusResult.Green);
         }
         [Fact]
         public void GetRagStatus_6Months_Withing83DaysReturnsAmber()
         {
-            var status = _concessionManager.GetRagStatus("6 Months", AddWorkingDays(83));
-            Assert.True(status == "yellow");
+            var status = _concessionManager.GetRagStatus(Constants.Period.SixMonths, AddWorkingDays(83));
+            Assert.True(status == Constants.RagStatusResult.Yellow);
         }
         [Fact]
         public void GetRagStatus_6Months_Withing84DaysReturnsRed()
         {
-            var status = _concessionManager.GetRagStatus("6 Months", AddWorkingDays(84));
-            Assert.True(status == "red");
+            var status = _concessionManager.GetRagStatus(Constants.Period.SixMonths, AddWorkingDays(84));
+            Assert.True(status == Constants.RagStatusResult.Red);
         }
         [Fact]
         public void GetRagStatus_9Months_Withing63DaysReturnsGreen()
         {
-            var status = _concessionManager.GetRagStatus("9 Months", AddWorkingDays(63));
-            Assert.True(status == "green");
+            var status = _concessionManager.GetRagStatus(Constants.Period.NineMonths, AddWorkingDays(63));
+            Assert.True(status == Constants.RagStatusResult.Green);
         }
         [Fact]
         public void GetRagStatus_9Months_Withing64DaysReturnsAmber()
         {
-            var status = _concessionManager.GetRagStatus("9 Months", AddWorkingDays(64));
-            Assert.True(status == "yellow");
+            var status = _concessionManager.GetRagStatus(Constants.Period.NineMonths, AddWorkingDays(64));
+            Assert.True(status == Constants.RagStatusResult.Yellow);
         }
         [Fact]
         public void GetRagStatus_9Months_Withing126DaysReturnsRed()
         {
-            var status = _concessionManager.GetRagStatus("9 Months", AddWorkingDays(126));
-            Assert.True(status == "red");
+            var status = _concessionManager.GetRagStatus(Constants.Period.NineMonths, AddWorkingDays(126));
+            Assert.True(status == Constants.RagStatusResult.Red);
         }
         [Fact]
         public void GetRagStatus_12Months_Withing84DaysReturnsGreen()
         {
-            var status = _concessionManager.GetRagStatus("12 Months", AddWorkingDays(84));
-            Assert.True(status == "green");
+            var status = _concessionManager.GetRagStatus(Constants.Period.TwelveMonths, AddWorkingDays(84));
+            Assert.True(status == Constants.RagStatusResult.Green);
         }
         [Fact]
         public void GetRagStatus_12Months_Withing88DaysReturnsAmber()
         {
-            var status = _concessionManager.GetRagStatus("12 Months", AddWorkingDays(88));
-            Assert.True(status == "yellow");
+            var status = _concessionManager.GetRagStatus(Constants.Period.TwelveMonths, AddWorkingDays(88));
+            Assert.True(status == Constants.RagStatusResult.Yellow);
         }
         [Fact]
         public void GetRagStatus_12Months_Withing168DaysReturnsRed()
         {
-            var status = _concessionManager.GetRagStatus("12 Months", AddWorkingDays(168));
-            Assert.True(status == "red");
+            var status = _concessionManager.GetRagStatus(Constants.Period.TwelveMonths, AddWorkingDays(168));
+            Assert.True(status == Constants.RagStatusResult.Red);
         }
         private DateTime AddWorkingDays(int days)
         {
