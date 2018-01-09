@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
@@ -21,6 +21,9 @@ import { UserConcessionsService } from "../services/user-concessions.service";
 import { ConcessionComment } from "../models/concession-comment";
 import { TransactionalFinancial } from "../models/transactional-financial";
 import { DecimalPipe } from '@angular/common';
+import { ConcessionTypes } from '../constants/concession-types';
+import { ConcessionStatus } from '../constants/concession-status';
+import { ConcessionSubStatus } from '../constants/concession-sub-status';
 
 @Component({
 	selector: 'app-transactional-view-concession',
@@ -124,7 +127,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 	        this.lookupDataService.getPeriods(),
 	        this.lookupDataService.getPeriodTypes(),
 	        this.lookupDataService.getConditionTypes(),
-	        this.lookupDataService.getTransactionTypes("Transactional"),
+	        this.lookupDataService.getTransactionTypes(ConcessionTypes.Transactional),
 	        this.lookupDataService.getRiskGroup(this.riskGroupNumber),
 	        this.lookupDataService.getClientAccounts(this.riskGroupNumber),
 	        this.transactionalConcessionService.getTransactionalFinancial(this.riskGroupNumber)
@@ -164,11 +167,11 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 			this.observableTransactionalConcession.subscribe(transactionalConcession => {
 				this.transactionalConcession = transactionalConcession;
 
-				if (transactionalConcession.concession.status == "Pending" && transactionalConcession.concession.subStatus == "BCM Pending") {
+				if (transactionalConcession.concession.status == ConcessionStatus.Pending && transactionalConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
 					this.canBcmApprove = transactionalConcession.currentUser.canBcmApprove;
 				}
 
-				if (transactionalConcession.concession.status == "Pending" && transactionalConcession.concession.subStatus == "PCM Pending") {
+				if (transactionalConcession.concession.status == ConcessionStatus.Pending && transactionalConcession.concession.subStatus == ConcessionSubStatus.PCMPending) {
 					this.canPcmApprove = transactionalConcession.currentUser.canPcmApprove;
 
 					if (!transactionalConcession.concession.isInProgressExtension) {
@@ -177,17 +180,17 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 				}
 
 				//if it's still pending and the user is a requestor then they can recall it
-				if (transactionalConcession.concession.status == "Pending" && transactionalConcession.concession.subStatus == "BCM Pending") {
+				if (transactionalConcession.concession.status == ConcessionStatus.Pending && transactionalConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
 					this.canRecall = transactionalConcession.currentUser.canRequest;
 				}
 
-				if (transactionalConcession.concession.status == "Pending" &&
-					(transactionalConcession.concession.subStatus == "PCM Approved With Changes" || transactionalConcession.concession.subStatus == "HO Approved With Changes")) {
+				if (transactionalConcession.concession.status == ConcessionStatus.Pending &&
+					(transactionalConcession.concession.subStatus == ConcessionSubStatus.PCMApprovedWithChanges || transactionalConcession.concession.subStatus == ConcessionSubStatus.HOApprovedWithChanges)) {
 					this.canApproveChanges = transactionalConcession.currentUser.canRequest;
 				}
 
-                if (transactionalConcession.concession.status === "Approved" ||
-                    transactionalConcession.concession.status === "Approved With Changes") {
+                if (transactionalConcession.concession.status === ConcessionStatus.Approved ||
+                    transactionalConcession.concession.status === ConcessionStatus.ApprovedWithChanges) {
 			        this.isApproved = true;
                 }
 
@@ -402,7 +405,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 	getTransactionalConcession(isNew: boolean): TransactionalConcession {
 		var transactionalConcession = new TransactionalConcession();
 		transactionalConcession.concession = new Concession();
-		transactionalConcession.concession.concessionType = "Transactional";
+		transactionalConcession.concession.concessionType = ConcessionTypes.Transactional;
 		transactionalConcession.concession.riskGroupId = this.riskGroup.id;
 		transactionalConcession.concession.referenceNumber = this.concessionReferenceId;
 
@@ -555,7 +558,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		this.validationError = null;
 
 		var transactionalConcession = this.getTransactionalConcession(false);
-		transactionalConcession.concession.subStatus = "PCM Pending";
+		transactionalConcession.concession.subStatus = ConcessionSubStatus.PCMPending;
 		transactionalConcession.concession.bcmUserId = this.transactionalConcession.currentUser.id;
 
 		if (!transactionalConcession.concession.comments) {
@@ -586,12 +589,12 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		this.validationError = null;
 
 		var transactionalConcession = this.getTransactionalConcession(false);
-		transactionalConcession.concession.status = "Declined";
-		transactionalConcession.concession.subStatus = "BCM Declined";
+		transactionalConcession.concession.status = ConcessionStatus.Declined;
+		transactionalConcession.concession.subStatus = ConcessionSubStatus.BCMDeclined;
 		transactionalConcession.concession.bcmUserId = this.transactionalConcession.currentUser.id;
 
 		if (!transactionalConcession.concession.comments) {
-			transactionalConcession.concession.comments = "Declined";
+			transactionalConcession.concession.comments = ConcessionStatus.Declined;
 		}
 
 		if (!this.validationError) {
@@ -620,32 +623,32 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		var transactionalConcession = this.getTransactionalConcession(false);
 
 		if (this.hasChanges) {
-			transactionalConcession.concession.status = "Pending";
+			transactionalConcession.concession.status = ConcessionStatus.Pending;
 
 			if (this.transactionalConcession.currentUser.isHO) {
-				transactionalConcession.concession.subStatus = "HO Approved With Changes";
+				transactionalConcession.concession.subStatus = ConcessionSubStatus.HOApprovedWithChanges;
 				transactionalConcession.concession.hoUserId = this.transactionalConcession.currentUser.id;
 			} else {
-				transactionalConcession.concession.subStatus = "PCM Approved With Changes";
+				transactionalConcession.concession.subStatus = ConcessionSubStatus.PCMApprovedWithChanges;
 				transactionalConcession.concession.pcmUserId = this.transactionalConcession.currentUser.id;
 			}
 
 			if (!transactionalConcession.concession.comments) {
-				transactionalConcession.concession.comments = "Approved With Changes";
+				transactionalConcession.concession.comments = ConcessionStatus.ApprovedWithChanges;
 			}
 		} else {
-			transactionalConcession.concession.status = "Approved";
+			transactionalConcession.concession.status = ConcessionStatus.Approved;
 
 			if (this.transactionalConcession.currentUser.isHO) {
-				transactionalConcession.concession.subStatus = "HO Approved";
+				transactionalConcession.concession.subStatus = ConcessionSubStatus.HOApproved;
 				transactionalConcession.concession.hoUserId = this.transactionalConcession.currentUser.id;
 			} else {
-				transactionalConcession.concession.subStatus = "PCM Approved";
+				transactionalConcession.concession.subStatus = ConcessionSubStatus.PCMApproved;
 				transactionalConcession.concession.pcmUserId = this.transactionalConcession.currentUser.id;
 			}
 
 			if (!transactionalConcession.concession.comments) {
-				transactionalConcession.concession.comments = "Approved";
+				transactionalConcession.concession.comments = ConcessionStatus.Approved;
 			}
 		}
 
@@ -674,17 +677,17 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
 		var transactionalConcession = this.getTransactionalConcession(false);
 
-		transactionalConcession.concession.status = "Declined";
+		transactionalConcession.concession.status = ConcessionStatus.Declined;
 
 		if (!transactionalConcession.concession.comments) {
-			transactionalConcession.concession.comments = "Declined";
+			transactionalConcession.concession.comments = ConcessionStatus.Declined;
 		}
 
 		if (this.transactionalConcession.currentUser.isHO) {
-			transactionalConcession.concession.subStatus = "HO Declined";
+			transactionalConcession.concession.subStatus = ConcessionSubStatus.HODeclined;
 			transactionalConcession.concession.hoUserId = this.transactionalConcession.currentUser.id;
 		} else {
-			transactionalConcession.concession.subStatus = "PCM Declined";
+			transactionalConcession.concession.subStatus = ConcessionSubStatus.PCMDeclined;
 			transactionalConcession.concession.pcmUserId = this.transactionalConcession.currentUser.id;
 		}
 
@@ -755,8 +758,8 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
 		var transactionalConcession = this.getTransactionalConcession(true);
 
-		transactionalConcession.concession.status = "Pending";
-		transactionalConcession.concession.subStatus = "BCM Pending";
+		transactionalConcession.concession.status = ConcessionStatus.Pending;
+		transactionalConcession.concession.subStatus = ConcessionSubStatus.BCMPending;
 		transactionalConcession.concession.type = "Existing";
 		transactionalConcession.concession.referenceNumber = this.concessionReferenceId;
 
@@ -803,8 +806,8 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
 		var transactionalConcession = this.getTransactionalConcession(true);
 
-		transactionalConcession.concession.status = "Pending";
-		transactionalConcession.concession.subStatus = "BCM Pending";
+		transactionalConcession.concession.status = ConcessionStatus.Pending;
+		transactionalConcession.concession.subStatus = ConcessionSubStatus.BCMPending;
 		transactionalConcession.concession.referenceNumber = this.concessionReferenceId;
 
 		if (!this.validationError) {
@@ -832,8 +835,8 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		this.validationError = null;
 
 		var transactionalConcession = this.getTransactionalConcession(false);
-		transactionalConcession.concession.status = "Approved With Changes";
-		transactionalConcession.concession.subStatus = "Requestor Accepted Changes";
+		transactionalConcession.concession.status = ConcessionStatus.ApprovedWithChanges;
+		transactionalConcession.concession.subStatus = ConcessionSubStatus.RequestorAcceptedChanges;
 		transactionalConcession.concession.requestorId = this.transactionalConcession.currentUser.id;
 
 		if (!transactionalConcession.concession.comments) {
@@ -864,8 +867,8 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		this.validationError = null;
 
 		var transactionalConcession = this.getTransactionalConcession(false);
-		transactionalConcession.concession.status = "Declined";
-		transactionalConcession.concession.subStatus = "Requestor Declined Changes";
+		transactionalConcession.concession.status = ConcessionStatus.Declined;
+		transactionalConcession.concession.subStatus = ConcessionSubStatus.RequestorDeclinedChanges;
 		transactionalConcession.concession.requestorId = this.transactionalConcession.currentUser.id;
 
 		if (!transactionalConcession.concession.comments) {

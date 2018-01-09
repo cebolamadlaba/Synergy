@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
@@ -22,6 +22,9 @@ import { UserConcessionsService } from "../services/user-concessions.service";
 import { LendingFinancial } from "../models/lending-financial";
 import { ConcessionComment } from "../models/concession-comment";
 import { DecimalPipe } from '@angular/common';
+import { ConcessionTypes } from '../constants/concession-types';
+import { ConcessionStatus } from '../constants/concession-status';
+import { ConcessionSubStatus } from '../constants/concession-sub-status';
 
 @Component({
     selector: 'app-lending-view-concession',
@@ -131,7 +134,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
         Observable.forkJoin([
             this.lookupDataService.getReviewFeeTypes(),
-            this.lookupDataService.getProductTypes("Lending"),
+            this.lookupDataService.getProductTypes(ConcessionTypes.Lending),
             this.lookupDataService.getPeriods(),
             this.lookupDataService.getPeriodTypes(),
             this.lookupDataService.getConditionTypes(),
@@ -174,11 +177,11 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             this.observableLendingConcession.subscribe(lendingConcession => {
                 this.lendingConcession = lendingConcession;
 
-                if (lendingConcession.concession.status == "Pending" && lendingConcession.concession.subStatus == "BCM Pending") {
+                if (lendingConcession.concession.status == ConcessionStatus.Pending && lendingConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
                     this.canBcmApprove = lendingConcession.currentUser.canBcmApprove;
                 }
 
-                if (lendingConcession.concession.status == "Pending" && lendingConcession.concession.subStatus == "PCM Pending") {
+                if (lendingConcession.concession.status == ConcessionStatus.Pending && lendingConcession.concession.subStatus == ConcessionSubStatus.PCMPending) {
 					this.canPcmApprove = lendingConcession.currentUser.canPcmApprove;
 
 					if (!lendingConcession.concession.isInProgressExtension) {
@@ -187,17 +190,17 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 }
 
                 //if it's still pending and the user is a requestor then they can recall it
-                if (lendingConcession.concession.status == "Pending" && lendingConcession.concession.subStatus == "BCM Pending") {
+                if (lendingConcession.concession.status == ConcessionStatus.Pending && lendingConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
                     this.canRecall = lendingConcession.currentUser.canRequest;
                 }
 
-                if (lendingConcession.concession.status == "Pending" &&
-                    (lendingConcession.concession.subStatus == "PCM Approved With Changes" || lendingConcession.concession.subStatus == "HO Approved With Changes")) {
+                if (lendingConcession.concession.status == ConcessionStatus.Pending &&
+                    (lendingConcession.concession.subStatus == ConcessionSubStatus.PCMApprovedWithChanges || lendingConcession.concession.subStatus == ConcessionSubStatus.HOApprovedWithChanges)) {
                     this.canApproveChanges = lendingConcession.currentUser.canRequest;
                 }
 
-                if (lendingConcession.concession.status === "Approved" ||
-                    lendingConcession.concession.status === "Approved With Changes") {
+                if (lendingConcession.concession.status === ConcessionStatus.Approved ||
+                    lendingConcession.concession.status === ConcessionStatus.ApprovedWithChanges) {
                     this.isApproved = true;
                 }
 
@@ -431,7 +434,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         var lendingConcession = new LendingConcession();
 
         lendingConcession.concession = new Concession();
-        lendingConcession.concession.concessionType = "Lending";
+        lendingConcession.concession.concessionType = ConcessionTypes.Lending;
         lendingConcession.concession.referenceNumber = this.concessionReferenceId;
 
         if (this.lendingConcessionForm.controls['mrsCrs'].value)
@@ -579,7 +582,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.validationError = null;
 
         var lendingConcession = this.getLendingConcession(false);
-        lendingConcession.concession.subStatus = "PCM Pending";
+        lendingConcession.concession.subStatus = ConcessionSubStatus.PCMPending;
 		lendingConcession.concession.bcmUserId = this.lendingConcession.currentUser.id;
 
 		if (!lendingConcession.concession.comments) {
@@ -610,12 +613,12 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.validationError = null;
 
         var lendingConcession = this.getLendingConcession(false);
-        lendingConcession.concession.status = "Declined";
-        lendingConcession.concession.subStatus = "BCM Declined";
+        lendingConcession.concession.status = ConcessionStatus.Declined;
+        lendingConcession.concession.subStatus = ConcessionSubStatus.BCMDeclined;
         lendingConcession.concession.bcmUserId = this.lendingConcession.currentUser.id;
 
 		if (!lendingConcession.concession.comments) {
-			lendingConcession.concession.comments = "Declined";
+			lendingConcession.concession.comments = ConcessionStatus.Declined;
 		}
 
         if (!this.validationError) {
@@ -644,32 +647,32 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         var lendingConcession = this.getLendingConcession(false);
 
         if (this.hasChanges) {
-            lendingConcession.concession.status = "Pending";
+            lendingConcession.concession.status = ConcessionStatus.Pending;
 
             if (this.lendingConcession.currentUser.isHO) {
-                lendingConcession.concession.subStatus = "HO Approved With Changes";
+                lendingConcession.concession.subStatus = ConcessionSubStatus.HOApprovedWithChanges;
                 lendingConcession.concession.hoUserId = this.lendingConcession.currentUser.id;
             } else {
-                lendingConcession.concession.subStatus = "PCM Approved With Changes";
+                lendingConcession.concession.subStatus = ConcessionSubStatus.PCMApprovedWithChanges;
                 lendingConcession.concession.pcmUserId = this.lendingConcession.currentUser.id;
 			}
 
 			if (!lendingConcession.concession.comments) {
-				lendingConcession.concession.comments = "Approved With Changes";
+				lendingConcession.concession.comments = ConcessionStatus.ApprovedWithChanges;
 			}
         } else {
-            lendingConcession.concession.status = "Approved";
+            lendingConcession.concession.status = ConcessionStatus.Approved;
 
             if (this.lendingConcession.currentUser.isHO) {
-                lendingConcession.concession.subStatus = "HO Approved";
+                lendingConcession.concession.subStatus = ConcessionSubStatus.HOApproved;
                 lendingConcession.concession.hoUserId = this.lendingConcession.currentUser.id;
             } else {
-                lendingConcession.concession.subStatus = "PCM Approved";
+                lendingConcession.concession.subStatus = ConcessionSubStatus.PCMApproved;
                 lendingConcession.concession.pcmUserId = this.lendingConcession.currentUser.id;
 			}
 
 			if (!lendingConcession.concession.comments) {
-				lendingConcession.concession.comments = "Approved";
+				lendingConcession.concession.comments = ConcessionStatus.Approved;
 			}
         }
 
@@ -697,17 +700,17 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
         var lendingConcession = this.getLendingConcession(false);
 
-		lendingConcession.concession.status = "Declined";
+		lendingConcession.concession.status = ConcessionStatus.Declined;
 
 		if (!lendingConcession.concession.comments) {
-			lendingConcession.concession.comments = "Declined";
+			lendingConcession.concession.comments = ConcessionStatus.Declined;
 		}
 
         if (this.lendingConcession.currentUser.isHO) {
-            lendingConcession.concession.subStatus = "HO Declined";
+            lendingConcession.concession.subStatus = ConcessionSubStatus.HODeclined;
             lendingConcession.concession.hoUserId = this.lendingConcession.currentUser.id;
         } else {
-            lendingConcession.concession.subStatus = "PCM Declined";
+            lendingConcession.concession.subStatus = ConcessionSubStatus.PCMDeclined;
             lendingConcession.concession.pcmUserId = this.lendingConcession.currentUser.id;
         }
 
@@ -778,8 +781,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
         var lendingConcession = this.getLendingConcession(true);
 
-        lendingConcession.concession.status = "Pending";
-        lendingConcession.concession.subStatus = "BCM Pending";
+        lendingConcession.concession.status = ConcessionStatus.Pending;
+        lendingConcession.concession.subStatus = ConcessionSubStatus.BCMPending;
         lendingConcession.concession.type = "Existing";
         lendingConcession.concession.referenceNumber = this.concessionReferenceId;
 
@@ -826,8 +829,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
         var lendingConcession = this.getLendingConcession(true);
 
-        lendingConcession.concession.status = "Pending";
-        lendingConcession.concession.subStatus = "BCM Pending";
+        lendingConcession.concession.status = ConcessionStatus.Pending;
+        lendingConcession.concession.subStatus = ConcessionSubStatus.BCMPending;
         lendingConcession.concession.referenceNumber = this.concessionReferenceId;
 
         if (!this.validationError) {
@@ -859,8 +862,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.validationError = null;
 
         var lendingConcession = this.getLendingConcession(false);
-        lendingConcession.concession.status = "Approved With Changes";
-        lendingConcession.concession.subStatus = "Requestor Accepted Changes";
+        lendingConcession.concession.status = ConcessionStatus.ApprovedWithChanges;
+        lendingConcession.concession.subStatus = ConcessionSubStatus.RequestorAcceptedChanges;
 		lendingConcession.concession.requestorId = this.lendingConcession.currentUser.id;
 
 		if (!lendingConcession.concession.comments) {
@@ -891,8 +894,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.validationError = null;
 
         var lendingConcession = this.getLendingConcession(false);
-        lendingConcession.concession.status = "Declined";
-        lendingConcession.concession.subStatus = "Requestor Declined Changes";
+        lendingConcession.concession.status = ConcessionStatus.Declined;
+        lendingConcession.concession.subStatus = ConcessionSubStatus.RequestorDeclinedChanges;
         lendingConcession.concession.requestorId = this.lendingConcession.currentUser.id;
 
 		if (!lendingConcession.concession.comments) {

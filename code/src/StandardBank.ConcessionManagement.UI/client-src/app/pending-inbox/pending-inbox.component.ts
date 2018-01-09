@@ -6,6 +6,7 @@ import { Subject } from 'rxjs/Rx'
 import 'rxjs/add/operator/map';
 import { InboxConcession } from "../models/inbox-concession";
 import { Router, RouterModule } from '@angular/router';
+import { ConcessionTypes } from '../constants/concession-types';
 
 @Component({
     selector: 'app-pending-inbox',
@@ -46,13 +47,13 @@ export class PendingInboxComponent implements OnInit {
 
     openConcessionView(concession: InboxConcession) {
         switch (concession.concessionType) {
-            case "Lending":
+            case ConcessionTypes.Lending:
                 this.router.navigate(['/lending-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
                 break;
-            case "Cash":
+            case ConcessionTypes.Cash:
                 this.router.navigate(['/cash-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
                 break;
-            case "Transactional":
+            case ConcessionTypes.Transactional:
                 this.router.navigate(['/transactional-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
                 break;
         }

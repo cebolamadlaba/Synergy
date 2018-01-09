@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
@@ -19,6 +19,7 @@ import { Location } from '@angular/common';
 import { LookupDataService } from "../services/lookup-data.service";
 import { LendingService } from "../services/lending.service";
 import { DecimalPipe } from '@angular/common';
+import { ConcessionTypes } from '../constants/concession-types';
 
 @Component({
     selector: 'app-lending-add-concession',
@@ -89,7 +90,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
         Observable.forkJoin([
             this.lookupDataService.getReviewFeeTypes(),
-            this.lookupDataService.getProductTypes("Lending"),
+            this.lookupDataService.getProductTypes(ConcessionTypes.Lending),
             this.lookupDataService.getPeriods(),
             this.lookupDataService.getPeriodTypes(),
             this.lookupDataService.getConditionTypes(),
@@ -235,7 +236,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             this.addValidationError("Motivation not captured");
 
         lendingConcession.concession.riskGroupId = this.riskGroup.id;
-        lendingConcession.concession.concessionType = "Lending";
+        lendingConcession.concession.concessionType = ConcessionTypes.Lending;
         lendingConcession.concession.type = "New";
 
         const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];

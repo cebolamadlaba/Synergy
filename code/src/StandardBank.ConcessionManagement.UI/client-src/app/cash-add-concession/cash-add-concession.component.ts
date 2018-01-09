@@ -19,6 +19,7 @@ import { CashConcessionDetail } from "../models/cash-concession-detail";
 import { ConcessionCondition } from "../models/concession-condition";
 import { TableNumber } from "../models/table-number";
 import { DecimalPipe } from '@angular/common';
+import { ConcessionTypes } from '../constants/concession-types';
 
 @Component({
     selector: 'app-cash-add-concession',
@@ -103,7 +104,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             this.lookupDataService.getPeriodTypes(),
             this.lookupDataService.getConditionTypes(),
             this.lookupDataService.getAccrualTypes(),
-            this.lookupDataService.getTableNumbers("Cash"),
+            this.lookupDataService.getTableNumbers(ConcessionTypes.Cash),
             this.lookupDataService.getRiskGroup(this.riskGroupNumber),
             this.lookupDataService.getClientAccounts(this.riskGroupNumber),
             this.cashConcessionService.getlatestCrsOrMrs(this.riskGroupNumber)
@@ -335,7 +336,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
         var cashConcession = this.getCashConcession();
         
-        cashConcession.concession.concessionType = "Cash";
+        cashConcession.concession.concessionType = ConcessionTypes.Cash;
         cashConcession.concession.type = "New";
 
         if (!this.validationError) {
