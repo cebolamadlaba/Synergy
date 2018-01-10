@@ -146,11 +146,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedUser.SelectedCentre = mappedUser.UserCentres.FirstOrDefault();
             mappedUser.CentreId = mappedUser.SelectedCentre.Id;
 
-            mappedUser.CanRequest = mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.Requestor);
+            mappedUser.CanRequest =
+                mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.Requestor || _.Name == Constants.Roles.AA);
+
             mappedUser.CanBcmApprove =
                 mappedUser.UserRoles.Any(_ => _.Name.Trim() == Constants.Roles.BCM);
+
             mappedUser.CanPcmApprove =
                 mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.PCM || _.Name == Constants.Roles.HeadOffice);
+
             mappedUser.IsHO = mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.HeadOffice);
 
             mappedUser.IsAdminAssistant = mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.AA);

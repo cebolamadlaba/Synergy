@@ -19,5 +19,5 @@ GO
 --	ROW_NUMBER() over(partition by le.[fkRiskGroupId] order by le.[fkRiskGroupId]) as rownum 
 --from [dbo].[tblLegalEntity] le)
 --update legalentities
---set [fkUserId] = (select top 1 [pkUserId] from [dbo].[tblUser] where [EmailAddress] = 'mpho.nxiwa@standardbank.co.za')
+--set [fkUserId] = (select top 1 [pkUserId] from [dbo].[tblUser] where [ANumber] = 'A215840')
 --where rownum = 1
