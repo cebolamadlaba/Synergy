@@ -475,6 +475,12 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             new MiscPerformanceRepository(DbConnection, CacheManager);
 
         /// <summary>
+        /// The AccountExecutiveAssistant repository
+        /// </summary>
+        public static IAccountExecutiveAssistantRepository AccountExecutiveAssistantRepository =
+            new AccountExecutiveAssistantRepository(DbConnection);
+
+        /// <summary>
         /// The look up table manager
         /// </summary>
         public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,
@@ -490,7 +496,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static IUserManager UserManager = new UserManager(CacheManager, LookupTableManager, UserRepository,
             UserRoleRepository, RoleRepository, UserRegionRepository, RegionRepository, CentreRepository,
-            CentreUserRepository, Mapper);
+            CentreUserRepository, Mapper, AccountExecutiveAssistantRepository);
 
         /// <summary>
         /// The concession manager

@@ -136,11 +136,35 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public bool IsHO { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this instance is admin assistant.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is admin assistant; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsAdminAssistant { get; set; }
+
+        /// <summary>
         /// Gets or sets the contact number.
         /// </summary>
         /// <value>
         /// The contact number.
         /// </value>
         public string ContactNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets the account executive.
+        /// </summary>
+        /// <value>
+        /// The account executive.
+        /// </value>
+        public User AccountExecutive { get; set; }
+
+        /// <summary>
+        /// Gets or sets the account executive user identifier.
+        /// </summary>
+        /// <value>
+        /// The account executive user identifier.
+        /// </value>
+        public int? AccountExecutiveUserId => AccountExecutive?.Id;
     }
 }

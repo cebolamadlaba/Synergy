@@ -17,6 +17,7 @@
             public const string BCM = "BCM";
             public const string PCM = "PCM";
             public const string HeadOffice = "Head Office";
+            public const string AA = "AA";
         }
 
         public enum ApprovalStep

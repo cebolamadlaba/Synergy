@@ -502,5 +502,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static Mock<IMiscPerformanceRepository> MockMiscPerformanceRepository =
             new Mock<IMiscPerformanceRepository>();
+
+        /// <summary>
+        /// The mock AccountExecutiveAssistant repository
+        /// </summary>
+        public static Mock<IAccountExecutiveAssistantRepository> MockAccountExecutiveAssistantRepository =
+            new Mock<IAccountExecutiveAssistantRepository>();
     }
 }

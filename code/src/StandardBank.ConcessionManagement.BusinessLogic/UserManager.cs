@@ -68,22 +68,29 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IMapper _mapper;
 
         /// <summary>
+        /// The account executive assistant repository
+        /// </summary>
+        private readonly IAccountExecutiveAssistantRepository _accountExecutiveAssistantRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="UserManager"/> class.
         /// </summary>
         /// <param name="cacheManager">The cache manager.</param>
-        /// <param name="lookupTableManager"></param>
+        /// <param name="lookupTableManager">The lookup table manager.</param>
         /// <param name="userRepository">The user repository.</param>
         /// <param name="userRoleRepository">The user role repository.</param>
         /// <param name="roleRepository">The role repository.</param>
-        /// <param name="userRegionRepository"></param>
-        /// <param name="regionRepository"></param>
-        /// <param name="centreRepository"></param>
-        /// <param name="centreUserRepository"></param>
-        /// <param name="mapper"></param>
+        /// <param name="userRegionRepository">The user region repository.</param>
+        /// <param name="regionRepository">The region repository.</param>
+        /// <param name="centreRepository">The centre repository.</param>
+        /// <param name="centreUserRepository">The centre user repository.</param>
+        /// <param name="mapper">The mapper.</param>
+        /// <param name="accountExecutiveAssistantRepository">The account executive assistant repository.</param>
         public UserManager(ICacheManager cacheManager, ILookupTableManager lookupTableManager,
             IUserRepository userRepository, IUserRoleRepository userRoleRepository, IRoleRepository roleRepository,
             IUserRegionRepository userRegionRepository, IRegionRepository regionRepository,
-            ICentreRepository centreRepository, ICentreUserRepository centreUserRepository, IMapper mapper)
+            ICentreRepository centreRepository, ICentreUserRepository centreUserRepository, IMapper mapper,
+            IAccountExecutiveAssistantRepository accountExecutiveAssistantRepository)
         {
             _cacheManager = cacheManager;
             _lookupTableManager = lookupTableManager;
@@ -95,6 +102,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _centreRepository = centreRepository;
             _centreUserRepository = centreUserRepository;
             _mapper = mapper;
+            _accountExecutiveAssistantRepository = accountExecutiveAssistantRepository;
         }
 
         /// <summary>
@@ -145,7 +153,24 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.PCM || _.Name == Constants.Roles.HeadOffice);
             mappedUser.IsHO = mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.HeadOffice);
 
+            mappedUser.IsAdminAssistant = mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.AA);
+
+            if (mappedUser.IsAdminAssistant)
+                mappedUser.AccountExecutive = GetAccountExecutive(user.Id);
+
             return mappedUser;
+        }
+
+        /// <summary>
+        /// Gets the account executive.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
+        private User GetAccountExecutive(int userId)
+        {
+            var accountExecutiveAssistant = _accountExecutiveAssistantRepository.ReadByAccountAssistantUserId(userId);
+
+            return accountExecutiveAssistant != null ? GetUser(accountExecutiveAssistant.AccountExecutiveUserId) : null;
         }
 
         /// <summary>

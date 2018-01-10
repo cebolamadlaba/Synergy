@@ -3715,5 +3715,59 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
 
             return InsertTransactionTypeImport();
         }
+
+        /// <summary>
+        /// Gets the AccountExecutiveAssistant id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetAccountExecutiveAssistantId()
+        {
+            //read all and return the first one
+            var models = InstantiatedDependencies.AccountExecutiveAssistantRepository.ReadAll();
+
+            if (models != null && models.Any())
+                return models.First().Id;
+
+            return InsertAccountExecutiveAssistant();
+        }
+
+        /// <summary>
+        /// Inserts a AccountExecutiveAssistant and returns the id
+        /// </summary>
+        /// <returns></returns>
+        private static int InsertAccountExecutiveAssistant()
+        {
+            var aaUserId = GetUserId();
+
+            var model = new AccountExecutiveAssistant
+            {
+                AccountAssistantUserId = aaUserId,
+                AccountExecutiveUserId = GetAlternateUserId(aaUserId),
+                IsActive = false
+            };
+
+            InstantiatedDependencies.AccountExecutiveAssistantRepository.Create(model);
+
+            return model.Id;
+        }
+
+        /// <summary>
+        /// Gets the alternate AccountExecutiveAssistant id
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static int GetAlternateAccountExecutiveAssistantId(int? model)
+        {
+            if (!model.HasValue)
+                return GetAccountExecutiveAssistantId();
+
+            //read all and return the first one
+            var models = InstantiatedDependencies.AccountExecutiveAssistantRepository.ReadAll();
+
+            if (models != null && models.Any(_ => _.Id != model.Value))
+                return models.First(_ => _.Id != model.Value).Id;
+
+            return InsertAccountExecutiveAssistant();
+        }
     }
 }

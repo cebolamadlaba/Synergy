@@ -36,8 +36,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             const string sql =
                 @"INSERT [dbo].[tblUser] ([ANumber], [EmailAddress], [FirstName], [Surname], [IsActive], [ContactNumber]) 
-                                VALUES (@ANumber, @EmailAddress, @FirstName, @Surname, @IsActive, @ContactNumber) 
-                                SELECT CAST(SCOPE_IDENTITY() as int)";
+                VALUES (@ANumber, @EmailAddress, @FirstName, @Surname, @IsActive, @ContactNumber) 
+                SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
