@@ -367,9 +367,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, User user)
         {
-            return user.CanRequest
-                ? _miscPerformanceRepository.GetClientAccounts(riskGroupNumber, user.Id)
-                : _miscPerformanceRepository.GetClientAccounts(riskGroupNumber, null);
+            int? userId = null;
+
+            if (user.CanRequest && user.IsAdminAssistant)
+                userId = user.AccountExecutiveUserId;
+            else if (user.CanRequest && !user.IsAdminAssistant)
+                userId = user.Id;
+
+            return _miscPerformanceRepository.GetClientAccounts(riskGroupNumber, userId);
         }
 
         /// <summary>
