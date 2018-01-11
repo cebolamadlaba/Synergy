@@ -89,9 +89,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult MyConditions([FromRoute] string period = Constants.Period.ThreeMonths,
             [FromRoute] string periodType = Constants.PeriodType.Standard)
         {
-            var user = _siteHelper.LoggedInUser(this);
+            var userId = _siteHelper.GetUserIdForFiltering(this);
 
-            return Ok(_concessionManager.GetConditions(periodType, period, user.Id));
+            return Ok(_concessionManager.GetConditions(periodType, period, userId));
         }
 
         /// <summary>
@@ -101,9 +101,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("ConditionCounts")]
         public IActionResult ConditionCounts()
         {
-            var user = _siteHelper.LoggedInUser(this);
+            var userId = _siteHelper.GetUserIdForFiltering(this);
 
-            return Ok(_concessionManager.GetConditionCounts(user.Id));
+            return Ok(_concessionManager.GetConditionCounts(userId));
         }
 
         /// <summary>

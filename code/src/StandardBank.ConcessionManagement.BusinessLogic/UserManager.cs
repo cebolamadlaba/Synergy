@@ -348,5 +348,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             return _mapper.Map<IEnumerable<User>>(_userRepository.ReadAll());
         }
+
+        /// <summary>
+        /// Gets the user identifier for filtering.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
+        public int GetUserIdForFiltering(User user)
+        {
+            var userId = user.Id;
+
+            if (user.IsAdminAssistant && user.AccountExecutiveUserId.HasValue)
+                userId = user.AccountExecutiveUserId.Value;
+
+            return userId;
+        }
     }
 }

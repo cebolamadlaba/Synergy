@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Common;
@@ -65,6 +65,17 @@ namespace StandardBank.ConcessionManagement.UI.Helpers.Implementation
                 aNumber = aNumber.Substring(aNumber.LastIndexOf("\\", StringComparison.Ordinal) + 1);
 
             return aNumber;
+        }
+
+        /// <summary>
+        /// Gets the user identifier for filtering.
+        /// </summary>
+        /// <param name="controller">The controller.</param>
+        /// <returns></returns>
+        public int GetUserIdForFiltering(Controller controller)
+        {
+            var user = LoggedInUser(controller);
+            return _userManager.GetUserIdForFiltering(user);
         }
     }
 }

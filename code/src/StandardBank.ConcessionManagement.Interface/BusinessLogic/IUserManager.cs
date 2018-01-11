@@ -36,7 +36,25 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="userId"></param>
         /// <param name="regionId"></param>
         void SetUserSelectedRegion(int userId, int regionId);
+
+        /// <summary>
+        /// Creates the user.
+        /// </summary>
+        /// <param name="userModel">The user model.</param>
+        /// <returns></returns>
         int CreateUser(User userModel);
+
+        /// <summary>
+        /// Gets the users.
+        /// </summary>
+        /// <returns></returns>
         IEnumerable<User> GetUsers();
+
+        /// <summary>
+        /// Gets the user identifier for filtering.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
+        int GetUserIdForFiltering(User user);
     }
 }

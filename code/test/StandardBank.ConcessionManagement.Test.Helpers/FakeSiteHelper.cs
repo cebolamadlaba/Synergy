@@ -46,5 +46,15 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         {
             return "A1234567";
         }
+
+        /// <summary>
+        /// Gets the user identifier for filtering.
+        /// </summary>
+        /// <param name="controller">The controller.</param>
+        /// <returns></returns>
+        public int GetUserIdForFiltering(Controller controller)
+        {
+            return 1;
+        }
     }
 }

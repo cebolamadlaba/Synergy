@@ -145,6 +145,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 switch (userRole.Name.Trim())
                 {
+                    case Constants.Roles.AA:
+                        inboxConcessions.AddRange(
+                            _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
+                                .ReadByRequestorIdStatusIdsIsActive(_userManager.GetUserIdForFiltering(user), new[] {pendingStatusId},
+                                    true)));
+                        break;
                     case Constants.Roles.Requestor:
                         inboxConcessions.AddRange(
                             _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
@@ -190,8 +196,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var approvedWithChangesStatusId =
                 _lookupTableManager.GetStatusId(Constants.ConcessionStatus.ApprovedWithChanges);
 
+            var userId = _userManager.GetUserIdForFiltering(user);
+
             return _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
-                .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(user.Id, DateTime.Now,
+                .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(userId, DateTime.Now,
                     DateTime.Now.AddMonths(3), new[] {approvedStatusId, approvedWithChangesStatusId}, true));
         }
 
@@ -206,8 +214,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var approvedWithChangesStatusId =
                 _lookupTableManager.GetStatusId(Constants.ConcessionStatus.ApprovedWithChanges);
 
+            var userId = _userManager.GetUserIdForFiltering(user);
+
             return _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
-                .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(user.Id, DateTime.MinValue,
+                .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(userId, DateTime.MinValue,
                     DateTime.Now, new[] {approvedStatusId, approvedWithChangesStatusId}, true));
         }
 
@@ -222,8 +232,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var approvedWithChangesStatusId =
                 _lookupTableManager.GetStatusId(Constants.ConcessionStatus.ApprovedWithChanges);
 
+            var userId = _userManager.GetUserIdForFiltering(user);
+
             return _mapper.Map<IEnumerable<InboxConcession>>(
-                _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsMismatchedIsActive(user.Id,
+                _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsMismatchedIsActive(userId,
                     new[] {approvedStatusId, approvedWithChangesStatusId}, true, true));
         }
 
@@ -236,8 +248,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var declinedStatusId = _lookupTableManager.GetStatusId(Constants.ConcessionStatus.Declined);
 
+            var userId = _userManager.GetUserIdForFiltering(user);
+
             return _mapper.Map<IEnumerable<InboxConcession>>(
-                _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsActive(user.Id, new[] {declinedStatusId},
+                _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsActive(userId, new[] {declinedStatusId},
                     true));
         }
 
