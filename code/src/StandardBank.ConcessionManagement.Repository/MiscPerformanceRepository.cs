@@ -91,7 +91,8 @@ namespace StandardBank.ConcessionManagement.Repository
 
             return _cacheManager.ReturnFromCache(Function, 30,
                 CacheKey.Repository.MiscPerformanceRepository.GetClientAccounts,
-                new CacheKeyParameter(nameof(riskGroupNumber), riskGroupNumber));
+                new CacheKeyParameter(nameof(riskGroupNumber), riskGroupNumber),
+                new CacheKeyParameter(nameof(userId), userId));
         }
 
         /// <summary>
