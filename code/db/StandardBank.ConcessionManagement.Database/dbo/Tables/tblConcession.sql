@@ -4,6 +4,7 @@
     [fkConcessionTypeId]  INT             NOT NULL,
     [fkStatusId]          INT             NOT NULL,
     [fkSubStatusId]       INT             NOT NULL,
+    [fkAAUserId]          INT             NULL,
     [fkRequestorId]       INT             NOT NULL,
     [fkBCMUserId]         INT             NULL,
     [fkPCMUserId]         INT             NULL,
@@ -31,10 +32,13 @@
     CONSTRAINT [FK_tblConcession_tblCentre] FOREIGN KEY ([fkCentreId]) REFERENCES [dbo].[tblCentre] ([pkCentreId]),
     CONSTRAINT [FK_tblConcession_tblRiskGroup] FOREIGN KEY ([fkRiskGroupId]) REFERENCES [dbo].[tblRiskGroup] ([pkRiskGroupId]),
     CONSTRAINT [FK_tblConcession_tblUser] FOREIGN KEY ([fkRequestorId]) REFERENCES [dbo].[tblUser] ([pkUserId]),
+    CONSTRAINT [FK_tblConcession_tblUser_AA] FOREIGN KEY ([fkAAUserId]) REFERENCES [dbo].[tblUser] ([pkUserId]),
     CONSTRAINT [FK_tblConcession_tblUserBCM] FOREIGN KEY ([fkBCMUserId]) REFERENCES [dbo].[tblUser] ([pkUserId]),
     CONSTRAINT [FK_tblConcession_tblUserHO] FOREIGN KEY ([fkHOUserId]) REFERENCES [dbo].[tblUser] ([pkUserId]),
     CONSTRAINT [FK_tblConcession_tblUserPCM] FOREIGN KEY ([fkPCMUserId]) REFERENCES [dbo].[tblUser] ([pkUserId])
 );
+
+
 
 
 

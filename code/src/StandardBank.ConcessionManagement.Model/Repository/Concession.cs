@@ -48,6 +48,14 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int SubStatusId { get; set; }
 
         /// <summary>
+        /// Gets or sets the aa user identifier.
+        /// </summary>
+        /// <value>
+        /// The aa user identifier.
+        /// </value>
+        public int? AAUserId { get; set; }
+
+        /// <summary>
         /// Gets or sets the RequestorId.
         /// </summary>
         /// <value>

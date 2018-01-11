@@ -110,6 +110,14 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public string Comments { get; set; }
 
         /// <summary>
+        /// Gets or sets the aa user identifier.
+        /// </summary>
+        /// <value>
+        /// The aa user identifier.
+        /// </value>
+        public int? AAUserId { get; set; }
+
+        /// <summary>
         /// Gets or sets the requestor identifier.
         /// </summary>
         /// <value>

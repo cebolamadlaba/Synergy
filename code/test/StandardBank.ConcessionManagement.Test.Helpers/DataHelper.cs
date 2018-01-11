@@ -1237,6 +1237,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 ConcessionDate = DateTime.Now,
                 DatesentForApproval = DateTime.Now,
                 Motivation = "9007645562",
+                AAUserId = GetUserId(),
                 RequestorId = GetUserId(),
                 BCMUserId = GetUserId(),
                 DateActionedByBCM = DateTime.Now,

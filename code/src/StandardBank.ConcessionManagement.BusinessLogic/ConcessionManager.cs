@@ -591,7 +591,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedConcession.StatusId = _lookupTableManager.GetStatusId(Constants.ConcessionStatus.Pending);
             mappedConcession.SubStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.BcmPending);
             mappedConcession.ConcessionDate = DateTime.Now;
-            mappedConcession.RequestorId = user.Id;
+
+            if (user.IsAdminAssistant)
+                mappedConcession.AAUserId = user.Id;
+
+            mappedConcession.RequestorId = _userManager.GetUserIdForFiltering(user);
 
             mappedConcession.CentreId = user.SelectedCentre.Id;
             mappedConcession.RegionId = user.SelectedRegion.Id;
@@ -1094,6 +1098,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedConcession.Id = currentConcession.Id;
             mappedConcession.IsActive = currentConcession.IsActive;
             mappedConcession.IsCurrent = currentConcession.IsCurrent;
+            mappedConcession.AAUserId = currentConcession.AAUserId;
             mappedConcession.RequestorId = currentConcession.RequestorId;
             mappedConcession.DateActionedByBCM = currentConcession.DateActionedByBCM;
             mappedConcession.DateActionedByHO = currentConcession.DateActionedByHO;

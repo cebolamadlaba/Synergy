@@ -28,6 +28,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ConcessionDate = DateTime.Now,
                 DatesentForApproval = DateTime.Now,
                 Motivation = "455d28a04b",
+                AAUserId = DataHelper.GetUserId(),
                 RequestorId = DataHelper.GetUserId(),
                 BCMUserId = DataHelper.GetUserId(),
                 DateActionedByBCM = DateTime.Now,
@@ -66,6 +67,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ConcessionDate = DateTime.Now,
                 DatesentForApproval = DateTime.Now,
                 Motivation = "455d28a04b",
+                AAUserId = DataHelper.GetUserId(),
                 RequestorId = DataHelper.GetUserId(),
                 BCMUserId = DataHelper.GetUserId(),
                 DateActionedByBCM = DateTime.Now,
@@ -178,6 +180,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.ConcessionDate = DataHelper.ChangeDate(model.ConcessionDate);
             model.DatesentForApproval = DataHelper.ChangeDate(model.DatesentForApproval);
             model.Motivation = "902f5e8b15";
+            model.AAUserId = DataHelper.GetAlternateUserId(model.AAUserId);
             model.RequestorId = DataHelper.GetAlternateUserId(model.RequestorId);
             model.BCMUserId = DataHelper.GetAlternateUserId(model.BCMUserId);
             model.DateActionedByBCM = DataHelper.ChangeDate(model.DateActionedByBCM);
@@ -207,6 +210,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.ConcessionDate, model.ConcessionDate);
             Assert.Equal(updatedModel.DatesentForApproval, model.DatesentForApproval);
             Assert.Equal(updatedModel.Motivation, model.Motivation);
+            Assert.Equal(updatedModel.AAUserId, model.AAUserId);
             Assert.Equal(updatedModel.RequestorId, model.RequestorId);
             Assert.Equal(updatedModel.BCMUserId, model.BCMUserId);
             Assert.Equal(updatedModel.DateActionedByBCM, model.DateActionedByBCM);
@@ -239,6 +243,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ConcessionDate = DateTime.Now,
                 DatesentForApproval = DateTime.Now,
                 Motivation = "455d28a04b",
+                AAUserId = DataHelper.GetUserId(),
                 RequestorId = DataHelper.GetUserId(),
                 BCMUserId = DataHelper.GetUserId(),
                 DateActionedByBCM = DateTime.Now,

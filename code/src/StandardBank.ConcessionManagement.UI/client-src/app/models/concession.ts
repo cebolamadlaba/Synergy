@@ -22,6 +22,7 @@ export class Concession {
     status: string;
     subStatus: string;
     comments: string;
+    aaUserId: number;
     requestorId: number;
     bcmUserId: number;
     pcmUserId: number;
