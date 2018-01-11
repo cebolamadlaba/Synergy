@@ -141,8 +141,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("UserApprovedConcessions")]
         public IActionResult UserApprovedConcessions()
         {
-            var user = _siteHelper.LoggedInUser(this);
-            return Ok(_concessionManager.GetApprovedConcessionsForUser(user.Id));
+            var userId = _siteHelper.GetUserIdForFiltering(this);
+            return Ok(_concessionManager.GetApprovedConcessionsForUser(userId));
         }
 
         /// <summary>
