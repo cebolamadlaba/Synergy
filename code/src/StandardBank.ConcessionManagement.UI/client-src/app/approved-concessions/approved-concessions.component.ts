@@ -32,21 +32,23 @@ export class ApprovedConcessionsComponent implements OnInit {
         });
     }
 
-    openConcessionView(approvedConcession: ApprovedConcession, concessionType: string) {
-        switch (concessionType) {
+    openConcessionView(approvedConcession: ApprovedConcession, approvedConcessionDetail: ApprovedConcessionDetail) {
+        switch (approvedConcessionDetail.concessionType) {
             case ConcessionTypes.Lending:
-                this.router.navigate(['/lending-view-concession', approvedConcession.riskGroupNumber, approvedConcession.referenceNumber]);
+                this.router.navigate(['/lending-view-concession', approvedConcession.riskGroupNumber, approvedConcessionDetail.referenceNumber]);
                 break;
             case ConcessionTypes.Cash:
-                this.router.navigate(['/cash-view-concession', approvedConcession.riskGroupNumber, approvedConcession.referenceNumber]);
+                this.router.navigate(['/cash-view-concession', approvedConcession.riskGroupNumber, approvedConcessionDetail.referenceNumber]);
                 break;
             case ConcessionTypes.Transactional:
-                this.router.navigate(['/transactional-view-concession', approvedConcession.riskGroupNumber, approvedConcession.referenceNumber]);
+                this.router.navigate(['/transactional-view-concession', approvedConcession.riskGroupNumber, approvedConcessionDetail.referenceNumber]);
                 break;
         }
     }
 
-    printConcession(concessionReferenceNumber: string) {
-        window.open("/api/Concession/GenerateConcessionLetter/" + concessionReferenceNumber);
+    printConcession(legalEntityId: number) {
+        var selectedConcessions = this.approvedConcessions.filter(items => items.legalEntityId == legalEntityId);
+        console.log(selectedConcessions);
+        //window.open("/api/Concession/GenerateConcessionLetter/" + legalEntityId);
     }
 }

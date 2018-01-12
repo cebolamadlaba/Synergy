@@ -1,10 +1,12 @@
 export class ApprovedConcessionDetail {
-    customerName: string;
-    segment: string;
+    concessionId: number;
+    concessionDetailId: number;
+    referenceNumber: string;
     concessionType: string;
     status: string;
     dateOpened: Date;
     dateSentForApproval: Date;
     expiryDate: Date;
     dateApproved: Date;
+    isSelected: boolean;
 }

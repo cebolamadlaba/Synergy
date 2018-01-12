@@ -29,24 +29,24 @@
 <div class="col-md-12 search-and-results-container" *ngIf="!isLoading">
     <!-- Search bar -->
     <div class="input-group add-on">
-        <input class="form-control" placeholder="Search Concession ID or Risk Group Number" [(ngModel)]="concessionIdOrRiskGroupNumber" type="text">
+        <input class="form-control" placeholder="Search Customer Name or Risk Group Number" [(ngModel)]="customerNameOrRiskGroupNumber" type="text">
     </div>
 
     <div class="section table-hover-highlight" *ngFor="let approvedConcession of approvedConcessions | approvedConcessionFilter : concessionIdOrRiskGroupNumber; trackBy: index;">
         <div class="col-md-12 section-header">
             <div class="concessionID-section" >
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <div class="col-md-10">
                         <div class="concession-name">{{approvedConcession.riskGroupName}}</div>
                         <div>{{approvedConcession.riskGroupNumber}}</div>
                     </div>
                 </div>
-                <div class="col-md-10">
-                    <div class="single-print" (click)="printConcession(approvedConcession.referenceNumber)"><i class="fa fa-print" aria-hidden="true"></i></div>
+                <div class="col-md-9">
+                    <div class="single-print" (click)="printConcession(approvedConcession.legalEntityId)"><i class="fa fa-print" aria-hidden="true"></i></div>
                 </div>
-                <div class="col-md-10 no-padding-left">
+                <div class="col-md-9 no-padding-left">
                     <div class="col-md-6 no-padding-left">
-                        <strong>Concession ID :</strong> {{approvedConcession.referenceNumber}}
+                        <strong>{{approvedConcession.customerName}}</strong> {{approvedConcession.segment}}
                     </div>
                 </div>
             </div>
@@ -55,28 +55,28 @@
             <div class="table-container">
                 <table class="table table-bordered table-hover header-fixed table-striped">
                     <thead>
-                        <tr>
-                            <th>Customer Name</th>
-                            <th>Segment</th>
-                            <th>Type</th>
-                            <th>Status</th>
-                            <th>Date Opened</th>
-                            <th>Date Sent For Approval</th>
-                            <th>Expiry Date</th>
-                            <th>Date Approved</th>
-                        </tr>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>Concession ID</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Date Opened</th>
+                        <th>Date Sent For Approval</th>
+                        <th>Expiry Date</th>
+                        <th>Date Approved</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let approvedConcessionDetail of approvedConcession.approvedConcessionDetails" (click)="openConcessionView(approvedConcession, approvedConcessionDetail.concessionType)">
-                            <td> {{approvedConcessionDetail.customerName}} </td>
-                            <td> {{approvedConcessionDetail.segment}} </td>
-                            <td> {{approvedConcessionDetail.concessionType}} </td>
-                            <td> {{approvedConcessionDetail.status}} </td>
-                            <td> {{approvedConcessionDetail.dateOpened | date: 'yyyy/MM/dd'}} </td>
-                            <td> {{approvedConcessionDetail.dateSentForApproval | date: 'yyyy/MM/dd'}} </td>
-                            <td> {{approvedConcessionDetail.expiryDate | date: 'yyyy/MM/dd'}} </td>
-                            <td> {{approvedConcessionDetail.dateApproved | date: 'yyyy/MM/dd'}} </td>
-                        </tr>
+                    <tr *ngFor="let approvedConcessionDetail of approvedConcession.approvedConcessionDetails">
+                        <td><input type="checkbox" [(ngModel)]="approvedConcessionDetail.isSelected" /></td>
+                        <td (click)="openConcessionView(approvedConcession, approvedConcessionDetail)"> {{approvedConcessionDetail.referenceNumber}} </td>
+                        <td (click)="openConcessionView(approvedConcession, approvedConcessionDetail)"> {{approvedConcessionDetail.concessionType}} </td>
+                        <td (click)="openConcessionView(approvedConcession, approvedConcessionDetail)"> {{approvedConcessionDetail.status}} </td>
+                        <td (click)="openConcessionView(approvedConcession, approvedConcessionDetail)"> {{approvedConcessionDetail.dateOpened | date: 'yyyy/MM/dd'}} </td>
+                        <td (click)="openConcessionView(approvedConcession, approvedConcessionDetail)"> {{approvedConcessionDetail.dateSentForApproval | date: 'yyyy/MM/dd'}} </td>
+                        <td (click)="openConcessionView(approvedConcession, approvedConcessionDetail)"> {{approvedConcessionDetail.expiryDate | date: 'yyyy/MM/dd'}} </td>
+                        <td (click)="openConcessionView(approvedConcession, approvedConcessionDetail)"> {{approvedConcessionDetail.dateApproved | date: 'yyyy/MM/dd'}} </td>
+                    </tr>
                     </tbody>
                 </table>
             </div>

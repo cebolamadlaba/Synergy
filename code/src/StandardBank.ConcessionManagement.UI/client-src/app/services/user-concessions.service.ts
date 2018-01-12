@@ -58,7 +58,7 @@ export class MockUserConcessionsService extends UserConcessionsService {
     }
 
     getApprovedConcessions(): Observable<ApprovedConcession[]> {
-        this.approvedConcessionModel[0].concessionId = 1;
+        this.approvedConcessionModel[0].legalEntityId = 1;
         return Observable.of(this.approvedConcessionModel);
     }
 

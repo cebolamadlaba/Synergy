@@ -24,20 +24,28 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public int RiskGroupNumber { get; set; }
 
         /// <summary>
-        /// Gets or sets the concession identifier.
+        /// Gets or sets the legal entity identifier.
         /// </summary>
         /// <value>
-        /// The concession identifier.
+        /// The legal entity identifier.
         /// </value>
-        public int ConcessionId { get; set; }
+        public int LegalEntityId { get; set; }
 
         /// <summary>
-        /// Gets or sets the reference number.
+        /// Gets or sets the name of the customer.
         /// </summary>
         /// <value>
-        /// The reference number.
+        /// The name of the customer.
         /// </value>
-        public string ReferenceNumber { get; set; }
+        public string CustomerName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the segment.
+        /// </summary>
+        /// <value>
+        /// The segment.
+        /// </value>
+        public string Segment { get; set; }
 
         /// <summary>
         /// Gets or sets the approved concession details.

@@ -8,20 +8,28 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
     public class ApprovedConcessionDetail
     {
         /// <summary>
-        /// Gets or sets the name of the customer.
+        /// Gets or sets the concession identifier.
         /// </summary>
         /// <value>
-        /// The name of the customer.
+        /// The concession identifier.
         /// </value>
-        public string CustomerName { get; set; }
+        public int ConcessionId { get; set; }
 
         /// <summary>
-        /// Gets or sets the segment.
+        /// Gets or sets the concession detail identifier.
         /// </summary>
         /// <value>
-        /// The segment.
+        /// The concession detail identifier.
         /// </value>
-        public string Segment { get; set; }
+        public int ConcessionDetailId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the reference number.
+        /// </summary>
+        /// <value>
+        /// The reference number.
+        /// </value>
+        public string ReferenceNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the concession.

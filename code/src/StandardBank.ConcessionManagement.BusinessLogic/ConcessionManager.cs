@@ -427,16 +427,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             foreach (var concession in concessions.OrderByDescending(_ => _.DateApproved ?? _.ConcessionDate))
             {
                 var approvedConcession =
-                    approvedConcessions.FirstOrDefault(_ => _.ReferenceNumber == concession.ConcessionRef);
+                    approvedConcessions.FirstOrDefault(_ => _.LegalEntityId == concession.LegalEntityId);
 
                 if (approvedConcession == null)
                 {
                     approvedConcession = new ApprovedConcession
                     {
-                        ReferenceNumber = concession.ConcessionRef,
                         RiskGroupNumber = concession.RiskGroupNumber,
                         RiskGroupName = concession.RiskGroupName,
-                        ConcessionId = concession.ConcessionId,
+                        LegalEntityId = concession.LegalEntityId,
+                        CustomerName = concession.CustomerName,
+                        Segment = concession.Segment,
                         ApprovedConcessionDetails = new List<ApprovedConcessionDetail>()
                     };
 
@@ -451,11 +452,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     Status = concession.Status,
                     ConcessionType = concession.ConcessionType,
                     ExpiryDate = concession.ExpiryDate,
-                    CustomerName = concession.CustomerName,
                     DateApproved = concession.DateApproved,
                     DateOpened = concession.ConcessionDate,
                     DateSentForApproval = concession.DatesentForApproval,
-                    Segment = concession.Segment
+                    ConcessionDetailId = concession.ConcessionDetailId,
+                    ConcessionId = concession.ConcessionId,
+                    ReferenceNumber = concession.ConcessionRef
                 });
 
                 approvedConcession.ApprovedConcessionDetails = approvedConcessionDetails;

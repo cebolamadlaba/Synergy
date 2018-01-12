@@ -3,7 +3,8 @@ import { ApprovedConcessionDetail } from "./approved-concession-detail";
 export class ApprovedConcession {
     riskGroupName: string;
     riskGroupNumber: number;
-    concessionId: number;
-    referenceNumber: string;
+    legalEntityId: number;
+    customerName: string;
+    segment: string;
     approvedConcessionDetails: ApprovedConcessionDetail[];
 }
