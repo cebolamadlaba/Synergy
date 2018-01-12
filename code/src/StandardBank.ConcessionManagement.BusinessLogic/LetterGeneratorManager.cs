@@ -109,10 +109,23 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public byte[] GenerateLetters(string concessionReferenceId)
         {
             var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
+            var concessionLetters = new List<ConcessionLetter>();
+
+            AddConcessionLetters(concession, concessionLetters);
+
+            return GenerateConcessionLetterPdf(concessionLetters);
+        }
+
+        /// <summary>
+        /// Adds the concession letters.
+        /// </summary>
+        /// <param name="concession">The concession.</param>
+        /// <param name="concessionLetters">The concession letters.</param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void AddConcessionLetters(Concession concession, List<ConcessionLetter> concessionLetters)
+        {
             var requestor = _userManager.GetUser(concession.RequestorId);
             var bcm = _userManager.GetUser(concession.BcmUserId);
-
-            var concessionLetters = new List<ConcessionLetter>();
 
             switch (concession.ConcessionType)
             {
@@ -128,6 +141,35 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 default:
                     throw new NotImplementedException(concession.ConcessionType);
             }
+        }
+
+        /// <summary>
+        /// Generates the letters for legal entity.
+        /// </summary>
+        /// <param name="legalEntityId">The legal entity identifier.</param>
+        /// <param name="requestorId">The requestor identifier.</param>
+        /// <returns></returns>
+        public byte[] GenerateLettersForLegalEntity(int legalEntityId, int requestorId)
+        {
+            var concessionLetters = new List<ConcessionLetter>();
+
+            //TODO: Figure this out
+            throw new NotImplementedException();
+
+            return GenerateConcessionLetterPdf(concessionLetters);
+        }
+
+        /// <summary>
+        /// Generates the letters for concession details.
+        /// </summary>
+        /// <param name="concessionDetailIds">The concession detail ids.</param>
+        /// <returns></returns>
+        public byte[] GenerateLettersForConcessionDetails(IEnumerable<int> concessionDetailIds)
+        {
+            var concessionLetters = new List<ConcessionLetter>();
+
+            //TODO: Figure this out
+            throw new NotImplementedException();
 
             return GenerateConcessionLetterPdf(concessionLetters);
         }
@@ -142,12 +184,30 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private IEnumerable<ConcessionLetter> GetTransactionalConcessionLetterData(Concession concession,
             User requestor, User bcm)
         {
-            var concessionLetters = new List<ConcessionLetter>();
-            var pageBreakBefore = false;
             var transactionalConcession =
                 _transactionalManager.GetTransactionalConcession(concession.ReferenceNumber, requestor);
             var transactionalConcessionDetails =
                 transactionalConcession.TransactionalConcessionDetails.OrderBy(_ => _.AccountNumber);
+
+            return GetTransactionalConcessionLetterData(concession.RiskGroupNumber, concession.Id, requestor, bcm,
+                transactionalConcessionDetails);
+        }
+
+        /// <summary>
+        /// Gets the transactional concession letter data.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <param name="concessionId">The concession identifier.</param>
+        /// <param name="requestor">The requestor.</param>
+        /// <param name="bcm">The BCM.</param>
+        /// <param name="transactionalConcessionDetails">The transactional concession details.</param>
+        /// <returns></returns>
+        private IEnumerable<ConcessionLetter> GetTransactionalConcessionLetterData(int? riskGroupNumber,
+            int concessionId, User requestor, User bcm,
+            IOrderedEnumerable<TransactionalConcessionDetail> transactionalConcessionDetails)
+        {
+            var concessionLetters = new List<ConcessionLetter>();
+            var pageBreakBefore = false;
 
             foreach (var transactionalConcessionDetail in transactionalConcessionDetails)
             {
@@ -159,11 +219,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 if (concessionLetter == null)
                 {
-                    concessionLetter = PopulateBaseConcessionLetter(concession, requestor, bcm,
+                    concessionLetter = PopulateBaseConcessionLetter(riskGroupNumber, requestor, bcm,
                         transactionalConcessionDetail.LegalEntityId.Value);
 
                     concessionLetter.TransactionalConcessionLetters = new List<TransactionalConcessionLetter>();
-                    concessionLetter.ConditionConcessionLetters = GetConcessionConditionLetters(concession);
+                    concessionLetter.ConditionConcessionLetters = GetConcessionConditionLetters(concessionId);
                     concessionLetter.PageBreakBefore = pageBreakBefore;
 
                     pageBreakBefore = true;
@@ -215,10 +275,26 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private IEnumerable<ConcessionLetter> GetCashConcessionLetterData(Concession concession, User requestor,
             User bcm)
         {
-            var concessionLetters = new List<ConcessionLetter>();
-            var pageBreakBefore = false;
             var cashConcession = _cashManager.GetCashConcession(concession.ReferenceNumber, requestor);
             var cashConcessionDetails = cashConcession.CashConcessionDetails.OrderBy(_ => _.AccountNumber);
+
+            return GetCashConcessionLetterData(concession.RiskGroupNumber, concession.Id, requestor, bcm, cashConcessionDetails);
+        }
+
+        /// <summary>
+        /// Gets the cash concession letter data.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <param name="concessionId">The concession identifier.</param>
+        /// <param name="requestor">The requestor.</param>
+        /// <param name="bcm">The BCM.</param>
+        /// <param name="cashConcessionDetails">The cash concession details.</param>
+        /// <returns></returns>
+        private IEnumerable<ConcessionLetter> GetCashConcessionLetterData(int? riskGroupNumber, int concessionId,
+            User requestor, User bcm, IOrderedEnumerable<CashConcessionDetail> cashConcessionDetails)
+        {
+            var concessionLetters = new List<ConcessionLetter>();
+            var pageBreakBefore = false;
 
             foreach (var cashConcessionDetail in cashConcessionDetails)
             {
@@ -230,11 +306,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 if (concessionLetter == null)
                 {
-                    concessionLetter = PopulateBaseConcessionLetter(concession, requestor, bcm,
+                    concessionLetter = PopulateBaseConcessionLetter(riskGroupNumber, requestor, bcm,
                         cashConcessionDetail.LegalEntityId.Value);
 
                     concessionLetter.CashConcessionLetters = new List<CashConcessionLetter>();
-                    concessionLetter.ConditionConcessionLetters = GetConcessionConditionLetters(concession);
+                    concessionLetter.ConditionConcessionLetters = GetConcessionConditionLetters(concessionId);
                     concessionLetter.PageBreakBefore = pageBreakBefore;
 
                     pageBreakBefore = true;
@@ -254,7 +330,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <summary>
         /// Populates the cash concession letter.
         /// </summary>
-        /// <param name="concession">The concession.</param>
         /// <param name="cashConcessionDetail">The cash concession detail.</param>
         /// <returns></returns>
         private CashConcessionLetter PopulateCashConcessionLetter(CashConcessionDetail cashConcessionDetail)
@@ -283,10 +358,26 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private IEnumerable<ConcessionLetter> GetLendingConcessionLetterData(Concession concession, User requestor,
             User bcm)
         {
-            var concessionLetters = new List<ConcessionLetter>();
-            var pageBreakBefore = false;
             var lendingConcession = _lendingManager.GetLendingConcession(concession.ReferenceNumber, requestor);
             var lendingConcessionDetails = lendingConcession.LendingConcessionDetails.OrderBy(_ => _.AccountNumber);
+
+            return GetLendingConcessionLetterData(concession.RiskGroupNumber, concession.Id, requestor, bcm, lendingConcessionDetails);
+        }
+
+        /// <summary>
+        /// Gets the lending concession letter data.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <param name="concessionId">The concession identifier.</param>
+        /// <param name="requestor">The requestor.</param>
+        /// <param name="bcm">The BCM.</param>
+        /// <param name="lendingConcessionDetails">The lending concession details.</param>
+        /// <returns></returns>
+        private IEnumerable<ConcessionLetter> GetLendingConcessionLetterData(int? riskGroupNumber, int concessionId,
+            User requestor, User bcm, IOrderedEnumerable<LendingConcessionDetail> lendingConcessionDetails)
+        {
+            var concessionLetters = new List<ConcessionLetter>();
+            var pageBreakBefore = false;
 
             foreach (var lendingConcessionDetail in lendingConcessionDetails)
             {
@@ -307,12 +398,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 if (concessionLetter == null)
                 {
-                    concessionLetter = PopulateBaseConcessionLetter(concession, requestor, bcm,
+                    concessionLetter = PopulateBaseConcessionLetter(riskGroupNumber, requestor, bcm,
                         lendingConcessionDetail.LegalEntityId.Value);
 
                     concessionLetter.LendingConcessionLetters = new List<LendingConcessionLetter>();
                     concessionLetter.LendingOverDraftConcessionLetters = new List<LendingOverDraftConcessionLetter>();
-                    concessionLetter.ConditionConcessionLetters = GetConcessionConditionLetters(concession);
+                    concessionLetter.ConditionConcessionLetters = GetConcessionConditionLetters(concessionId);
                     concessionLetter.PageBreakBefore = pageBreakBefore;
 
                     pageBreakBefore = true;
@@ -370,13 +461,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <summary>
         /// Gets the concession condition letters.
         /// </summary>
-        /// <param name="concession">The concession.</param>
+        /// <param name="concessionId">The concession identifier.</param>
         /// <returns></returns>
-        private IEnumerable<ConditionConcessionLetter> GetConcessionConditionLetters(Concession concession)
+        private IEnumerable<ConditionConcessionLetter> GetConcessionConditionLetters(int concessionId)
         {
             var conditions = new List<ConditionConcessionLetter>();
 
-            var concessionConditions = _concessionManager.GetConcessionConditions(concession.Id);
+            var concessionConditions = _concessionManager.GetConcessionConditions(concessionId);
 
             foreach (var concessionCondition in concessionConditions)
             {
@@ -419,12 +510,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <summary>
         /// Populates the base concession letter.
         /// </summary>
-        /// <param name="concession">The concession.</param>
+        /// <param name="riskGroupNumber">The risk group number.</param>
         /// <param name="requestor">The requestor.</param>
         /// <param name="bcm">The BCM.</param>
         /// <param name="legalEntityId">The legal entity identifier.</param>
         /// <returns></returns>
-        private ConcessionLetter PopulateBaseConcessionLetter(Concession concession, User requestor, User bcm,
+        private ConcessionLetter PopulateBaseConcessionLetter(int? riskGroupNumber, User requestor, User bcm,
             int legalEntityId)
         {
             var legalEntity = _legalEntityRepository.ReadById(legalEntityId);
@@ -433,7 +524,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 CurrentDate = DateTime.Now.ToString("dd/MM/yyyy"),
                 TemplatePath = _templatePath,
-                RiskGroupNumber = Convert.ToString(concession.RiskGroupNumber),
+                RiskGroupNumber = Convert.ToString(riskGroupNumber),
                 BCMEmailAddress = bcm?.EmailAddress,
                 BCMContactNumber = bcm?.ContactNumber,
                 BCMName = bcm?.FullName,

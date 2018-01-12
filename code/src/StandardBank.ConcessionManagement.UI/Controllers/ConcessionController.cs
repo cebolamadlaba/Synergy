@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -195,7 +197,50 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var result = new FileContentResult(_letterGeneratorManager.GenerateLetters(concessionReferenceId),
                 "application/pdf")
             {
-                FileDownloadName = $"{concessionReferenceId}.pdf"
+                FileDownloadName = $"ConcessionLetter_{concessionReferenceId}.pdf"
+            };
+
+            return result;
+        }
+
+        /// <summary>
+        /// Generates the concession letter for legal entity.
+        /// </summary>
+        /// <param name="legalEntityId">The legal entity identifier.</param>
+        /// <returns></returns>
+        [Route("GenerateConcessionLetterForLegalEntity/{legalEntityId}")]
+        public FileResult GenerateConcessionLetterForLegalEntity(int legalEntityId)
+        {
+            var userId = _siteHelper.GetUserIdForFiltering(this);
+            HttpContext.Response.ContentType = "application/pdf";
+
+            var result = new FileContentResult(_letterGeneratorManager.GenerateLettersForLegalEntity(legalEntityId, userId),
+                "application/pdf")
+            {
+                FileDownloadName = $"ConcessionLetter_{legalEntityId}.pdf"
+            };
+
+            return result;
+        }
+
+        /// <summary>
+        /// Generates the concession letter for concession details.
+        /// </summary>
+        /// <param name="concessionDetailIds">The concession detail ids.</param>
+        /// <returns></returns>
+        [Route("GenerateConcessionLetterForConcessionDetails/{concessionDetailIds}")]
+        public FileResult GenerateConcessionLetterForConcessionDetails(string concessionDetailIds)
+        {
+            HttpContext.Response.ContentType = "application/pdf";
+
+            var convertedConcessionDetailIds = from concessionDetailId in concessionDetailIds.Split(',')
+                select Convert.ToInt32(concessionDetailId);
+
+            var result = new FileContentResult(
+                _letterGeneratorManager.GenerateLettersForConcessionDetails(convertedConcessionDetailIds),
+                "application/pdf")
+            {
+                FileDownloadName = $"ConcessionLetter_{concessionDetailIds.Replace(",", "_")}.pdf"
             };
 
             return result;

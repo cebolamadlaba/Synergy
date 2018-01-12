@@ -48,7 +48,30 @@ export class ApprovedConcessionsComponent implements OnInit {
 
     printConcession(legalEntityId: number) {
         var selectedConcessions = this.approvedConcessions.filter(items => items.legalEntityId == legalEntityId);
-        console.log(selectedConcessions);
-        //window.open("/api/Concession/GenerateConcessionLetter/" + legalEntityId);
+
+        //if there are selected concessions we need to get the concession detail id's and use those to
+        //generate the concession letter, otherwise it means the user is choosing to generate the
+        //concession letter for all the concessions for the legal entity so we use that instead
+        if (selectedConcessions != null && selectedConcessions.length > 0) {
+            var concessionDetailIds = "";
+
+            for (var i = 0; i < selectedConcessions.length; i++) {
+                var selectedConcessionDetails = selectedConcessions[i].approvedConcessionDetails.filter(item => item.isSelected);
+
+                if (selectedConcessionDetails != null && selectedConcessionDetails.length > 0) {
+                    for (var j = 0; j < selectedConcessionDetails.length; j++) {
+                        if (concessionDetailIds.length == 0) {
+                            concessionDetailIds = String(selectedConcessionDetails[j].concessionDetailId);
+                        } else {
+                            concessionDetailIds = "," + String(selectedConcessionDetails[j].concessionDetailId);
+                        }
+                    }
+                }
+            }
+
+            window.open("/api/Concession/GenerateConcessionLetterForConcessionDetails/" + concessionDetailIds);
+        } else {
+            window.open("/api/Concession/GenerateConcessionLetterForLegalEntity/" + legalEntityId);
+        }
     }
 }
