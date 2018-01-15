@@ -201,9 +201,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var riskGroupNumber = firstConcessionInboxView.RiskGroupNumber;
             var concessionId = firstConcessionInboxView.ConcessionId;
             var bcm = _userManager.GetUser(firstConcessionInboxView.BCMUserId);
+            var legalEntityId = firstConcessionInboxView.LegalEntityId;
 
-            PopulateConcessionLettersUsingDetails(requestor, concessionLetters, riskGroupNumber, concessionId, bcm,
-                cashConcessionDetails, lendingConcessionDetails, transactionalConcessionDetails);
+            concessionLetters.Add(PopulateConcessionLetterUsingDetails(requestor, riskGroupNumber, legalEntityId,
+                concessionId, bcm, cashConcessionDetails, lendingConcessionDetails, transactionalConcessionDetails));
 
             return concessionLetters;
         }
@@ -227,32 +228,63 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
-        /// Populates the concession letters using details.
+        /// Populates the concession letter using details.
         /// </summary>
         /// <param name="requestor">The requestor.</param>
-        /// <param name="concessionLetters">The concession letters.</param>
         /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <param name="legalEntityId">The legal entity identifier.</param>
         /// <param name="concessionId">The concession identifier.</param>
         /// <param name="bcm">The BCM.</param>
         /// <param name="cashConcessionDetails">The cash concession details.</param>
         /// <param name="lendingConcessionDetails">The lending concession details.</param>
         /// <param name="transactionalConcessionDetails">The transactional concession details.</param>
-        private void PopulateConcessionLettersUsingDetails(User requestor, List<ConcessionLetter> concessionLetters,
-            int riskGroupNumber, int concessionId, User bcm, IEnumerable<CashConcessionDetail> cashConcessionDetails,
+        /// <returns></returns>
+        private ConcessionLetter PopulateConcessionLetterUsingDetails(User requestor, int riskGroupNumber,
+            int legalEntityId, int concessionId, User bcm, IEnumerable<CashConcessionDetail> cashConcessionDetails,
             IEnumerable<LendingConcessionDetail> lendingConcessionDetails,
             IEnumerable<TransactionalConcessionDetail> transactionalConcessionDetails)
         {
+            var concessionLetter = PopulateBaseConcessionLetter(riskGroupNumber, requestor, bcm, legalEntityId);
+            concessionLetter.ConditionConcessionLetters = GetConcessionConditionLetters(concessionId);
+
             if (cashConcessionDetails.Any())
-                concessionLetters.AddRange(GetCashConcessionLetterData(riskGroupNumber, concessionId, requestor, bcm,
-                    cashConcessionDetails.OrderBy(_ => _.AccountNumber)));
+            {
+                var cashConcessionLetters = new List<CashConcessionLetter>();
+
+                foreach (var cashConcessionDetail in cashConcessionDetails)
+                    cashConcessionLetters.Add(PopulateCashConcessionLetter(cashConcessionDetail));
+
+                concessionLetter.CashConcessionLetters = cashConcessionLetters;
+            }
 
             if (lendingConcessionDetails.Any())
-                concessionLetters.AddRange(GetLendingConcessionLetterData(riskGroupNumber, concessionId, requestor, bcm,
-                    lendingConcessionDetails.OrderBy(_ => _.AccountNumber)));
+            {
+                var lendingConcessionLetters = new List<LendingConcessionLetter>();
+                var lendingOverdraftConcessionLetters = new List<LendingOverDraftConcessionLetter>();
+
+                foreach (var lendingConcessionDetail in lendingConcessionDetails)
+                {
+                    if (lendingConcessionDetail.ProductType == Constants.Lending.ProductType.Overdraft)
+                        lendingOverdraftConcessionLetters.Add(PopulateLendingOverDraftConcessionLetter(lendingConcessionDetail));
+                    else
+                        lendingConcessionLetters.Add(PopulateLendingConcessionLetter(lendingConcessionDetail));
+                }
+
+                concessionLetter.LendingConcessionLetters = lendingConcessionLetters;
+                concessionLetter.LendingOverDraftConcessionLetters = lendingOverdraftConcessionLetters;
+            }
 
             if (transactionalConcessionDetails.Any())
-                concessionLetters.AddRange(GetTransactionalConcessionLetterData(riskGroupNumber, concessionId,
-                    requestor, bcm, transactionalConcessionDetails.OrderBy(_ => _.AccountNumber)));
+            {
+                var transactionalConcessionLetters = new List<TransactionalConcessionLetter>();
+
+                foreach (var transactionalConcessionDetail in transactionalConcessionDetails)
+                    transactionalConcessionLetters.Add(PopulateTransactionalConcessionLetter(transactionalConcessionDetail));
+
+                concessionLetter.TransactionalConcessionLetters = transactionalConcessionLetters;
+            }
+
+            return concessionLetter;
         }
 
         /// <summary>
@@ -280,7 +312,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 foreach (var cashConcession in cashConcessions)
                 {
                     var cashDetailsToAdd = cashConcession.CashConcessionDetails.Where(_ =>
-                        _.CashConcessionDetailId == concessionInboxView.ConcessionDetailId);
+                        _.ConcessionDetailId == concessionInboxView.ConcessionDetailId);
 
                     if (cashDetailsToAdd.Any())
                         cashConcessionDetails.AddRange(cashDetailsToAdd);
@@ -289,7 +321,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 foreach (var lendingConcession in lendingConcessions)
                 {
                     var lendingDetailsToAdd = lendingConcession.LendingConcessionDetails.Where(_ =>
-                        _.LendingConcessionDetailId == concessionInboxView.ConcessionDetailId);
+                        _.ConcessionDetailId == concessionInboxView.ConcessionDetailId);
 
                     if (lendingDetailsToAdd.Any())
                         lendingConcessionDetails.AddRange(lendingDetailsToAdd);
@@ -298,7 +330,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 foreach (var transactionalConcession in transactionalConcessions)
                 {
                     var transactionalDetailsToAdd = transactionalConcession.TransactionalConcessionDetails.Where(_ =>
-                        _.TransactionalConcessionDetailId == concessionInboxView.ConcessionDetailId);
+                        _.ConcessionDetailId == concessionInboxView.ConcessionDetailId);
 
                     if (transactionalDetailsToAdd.Any())
                         transactionalConcessionDetails.AddRange(transactionalDetailsToAdd);
