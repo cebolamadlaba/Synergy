@@ -44,7 +44,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     WHERE [RequestorId] = @requestorId
                     AND [StatusId] in @statusIds
                     AND [IsActive] = @isActive",
-                    new {requestorId, statusIds, isActive});
+                    new { requestorId, statusIds, isActive });
             }
         }
 
@@ -68,7 +68,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     AND [StatusId] = @statusId
                     AND [SubStatusId] = @subStatusId
                     AND [IsActive] = @isActive",
-                    new {centreId, statusId, subStatusId, isActive});
+                    new { centreId, statusId, subStatusId, isActive });
             }
         }
 
@@ -97,7 +97,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     AND ([ExpiryDate] BETWEEN @startExpiryDate AND @endExpiryDate)
                     AND [StatusId] in @statusIds
                     AND [IsActive] = @isActive",
-                    new {requestorId, startExpiryDate, endExpiryDate, statusIds, isActive});
+                    new { requestorId, startExpiryDate, endExpiryDate, statusIds, isActive });
             }
         }
 
@@ -121,7 +121,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     AND [StatusId] in @statusIds
                     AND [IsMismatched] = @isMismatched
                     AND [IsActive] = @isActive",
-                    new {requestorId, statusIds, isMismatched, isActive});
+                    new { requestorId, statusIds, isMismatched, isActive });
             }
         }
 
@@ -140,7 +140,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     FROM [dbo].[ConcessionInboxView]
                     WHERE [BCMUserId] = @bcmUserId
                     AND [IsActive] = @isActive",
-                    new {bcmUserId, isActive});
+                    new { bcmUserId, isActive });
             }
         }
 
@@ -159,7 +159,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     FROM [dbo].[ConcessionInboxView]
                     WHERE [PCMUserId] = @pcmUserId
                     AND [IsActive] = @isActive",
-                    new {pcmUserId, isActive});
+                    new { pcmUserId, isActive });
             }
         }
 
@@ -178,7 +178,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     FROM [dbo].[ConcessionInboxView]
                     WHERE [HOUserId] = @hoUserId
                     AND [IsActive] = @isActive",
-                    new {hoUserId, isActive});
+                    new { hoUserId, isActive });
             }
         }
 
@@ -197,7 +197,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     AND [IsActive] = 1
                     AND [IsCurrent] = 1
                     AND ([ExpiryDate] IS NOT NULL AND [ExpiryDate] BETWEEN GETDATE() AND @DateToCheck)",
-                    new {DateToCheck = DateTime.Now.AddMonths(3)});
+                    new { DateToCheck = DateTime.Now.AddMonths(3) });
             }
         }
 
@@ -215,7 +215,59 @@ namespace StandardBank.ConcessionManagement.Repository
                     WHERE [StatusId] IN (2, 3)
                     AND [IsActive] = 1
                     AND [IsCurrent] = 1
-					AND [PriceExported] = 0");
+                    AND [PriceExported] = 0
+                    AND ([ExpiryDate] IS NULL OR [ExpiryDate] > GETDATE())");
+            }
+        }
+
+        /// <summary>
+        /// Reads the by legal entity identifier requestor identifier status ids is active.
+        /// </summary>
+        /// <param name="legalEntityId">The legal entity identifier.</param>
+        /// <param name="requestorId">The requestor identifier.</param>
+        /// <param name="statusIds">The status ids.</param>
+        /// <param name="isActive">if set to <c>true</c> [is active].</param>
+        /// <returns></returns>
+        public IEnumerable<ConcessionInboxView> ReadByLegalEntityIdRequestorIdStatusIdsIsActive(int legalEntityId,
+            int requestorId, IEnumerable<int> statusIds, bool isActive)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<ConcessionInboxView>(
+                    @"SELECT [ConcessionId], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [LegalEntityId], [CustomerName], [LegalEntityAccountId], [AccountNumber], [ConcessionTypeId], [ConcessionType], [ConcessionDate], [StatusId], [Status], [SubStatusId], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment], [DatesentForApproval], [ConcessionDetailId], [ExpiryDate], [DateApproved], [AAUserId], [RequestorId], [BCMUserId], [PCMUserId], [HOUserId], [CentreId], [CentreName], [ProvinceId], [Province], [IsMismatched], [IsActive], [IsCurrent], [PriceExported], [PriceExportedDate]
+                    FROM [dbo].[ConcessionInboxView]
+                    WHERE [LegalEntityId] = @LegalEntityId
+                    AND [RequestorId] = @RequestorId
+                    AND [StatusId] IN @StatusIds
+                    AND [IsActive] = @IsActive
+                    AND ([ExpiryDate] IS NULL OR [ExpiryDate] > GETDATE())",
+                    new
+                    {
+                        LegalEntityId = legalEntityId,
+                        RequestorId = requestorId,
+                        StatusIds = statusIds,
+                        IsActive = isActive
+                    });
+            }
+        }
+
+        /// <summary>
+        /// Reads the by concession detail ids.
+        /// </summary>
+        /// <param name="concessionDetailIds">The concession detail ids.</param>
+        /// <returns></returns>
+        public IEnumerable<ConcessionInboxView> ReadByConcessionDetailIds(IEnumerable<int> concessionDetailIds)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<ConcessionInboxView>(
+                    @"SELECT [ConcessionId], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [LegalEntityId], [CustomerName], [LegalEntityAccountId], [AccountNumber], [ConcessionTypeId], [ConcessionType], [ConcessionDate], [StatusId], [Status], [SubStatusId], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment], [DatesentForApproval], [ConcessionDetailId], [ExpiryDate], [DateApproved], [AAUserId], [RequestorId], [BCMUserId], [PCMUserId], [HOUserId], [CentreId], [CentreName], [ProvinceId], [Province], [IsMismatched], [IsActive], [IsCurrent], [PriceExported], [PriceExportedDate]
+                    FROM [dbo].[ConcessionInboxView]
+                    WHERE [ConcessionDetailId] IN @ConcessionDetailIds",
+                    new
+                    {
+                        ConcessionDetailIds = concessionDetailIds
+                    });
             }
         }
     }

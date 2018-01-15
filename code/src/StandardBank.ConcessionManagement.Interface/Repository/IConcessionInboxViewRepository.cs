@@ -89,5 +89,23 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// </summary>
         /// <returns></returns>
         IEnumerable<ConcessionInboxView> ReadForDataExport();
+
+        /// <summary>
+        /// Reads the by legal entity identifier requestor identifier status ids is active.
+        /// </summary>
+        /// <param name="legalEntityId">The legal entity identifier.</param>
+        /// <param name="requestorId">The requestor identifier.</param>
+        /// <param name="statusIds">The status ids.</param>
+        /// <param name="isActive">if set to <c>true</c> [is active].</param>
+        /// <returns></returns>
+        IEnumerable<ConcessionInboxView>
+            ReadByLegalEntityIdRequestorIdStatusIdsIsActive(int legalEntityId, int requestorId, IEnumerable<int> statusIds, bool isActive);
+
+        /// <summary>
+        /// Reads the by concession detail ids.
+        /// </summary>
+        /// <param name="concessionDetailIds">The concession detail ids.</param>
+        /// <returns></returns>
+        IEnumerable<ConcessionInboxView> ReadByConcessionDetailIds(IEnumerable<int> concessionDetailIds);
     }
 }

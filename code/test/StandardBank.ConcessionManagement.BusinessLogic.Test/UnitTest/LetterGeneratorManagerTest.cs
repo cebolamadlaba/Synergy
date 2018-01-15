@@ -38,11 +38,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             var cashManager = new Mock<ICashManager>();
             var razorRenderer = new Mock<IRazorRenderer>();
             var transactionalManager = new Mock<ITransactionalManager>();
+            var concessionInboxViewRepository = new Mock<IConcessionInboxViewRepository>();
+            var lookupTableManager = new Mock<ILookupTableManager>();
 
             var letterGeneratorManager = new LetterGeneratorManager(InstantiatedDependencies.ConfigurationData,
                 fileUtiltity.Object, concessionManager.Object, pdfUtility.Object, userManager.Object,
                 lendingManager.Object, legalEntityRepository.Object, cashManager.Object,
-                razorRenderer.Object, transactionalManager.Object);
+                razorRenderer.Object, transactionalManager.Object, concessionInboxViewRepository.Object,
+                lookupTableManager.Object);
 
             var concession = new Concession
             {
@@ -123,11 +126,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             var cashManager = new Mock<ICashManager>();
             var razorRenderer = new Mock<IRazorRenderer>();
             var transactionalManager = new Mock<ITransactionalManager>();
+            var concessionInboxViewRepository = new Mock<IConcessionInboxViewRepository>();
+            var lookupTableManager = new Mock<ILookupTableManager>();
 
             var letterGeneratorManager = new LetterGeneratorManager(InstantiatedDependencies.ConfigurationData,
                 fileUtiltity.Object, concessionManager.Object, pdfUtility.Object, userManager.Object,
                 lendingManager.Object, legalEntityRepository.Object, cashManager.Object,
-                razorRenderer.Object, transactionalManager.Object);
+                razorRenderer.Object, transactionalManager.Object, concessionInboxViewRepository.Object,
+                lookupTableManager.Object);
 
             var concession = new Concession
             {
@@ -196,11 +202,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             var cashManager = new Mock<ICashManager>();
             var razorRenderer = new Mock<IRazorRenderer>();
             var transactionalManager = new Mock<ITransactionalManager>();
+            var concessionInboxViewRepository = new Mock<IConcessionInboxViewRepository>();
+            var lookupTableManager = new Mock<ILookupTableManager>();
 
             var letterGeneratorManager = new LetterGeneratorManager(InstantiatedDependencies.ConfigurationData,
                 fileUtiltity.Object, concessionManager.Object, pdfUtility.Object, userManager.Object,
                 lendingManager.Object, legalEntityRepository.Object, cashManager.Object,
-                razorRenderer.Object, transactionalManager.Object);
+                razorRenderer.Object, transactionalManager.Object, concessionInboxViewRepository.Object,
+                lookupTableManager.Object);
 
             var concession = new Concession
             {

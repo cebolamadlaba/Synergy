@@ -8,10 +8,12 @@ using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator;
-using StandardBank.ConcessionManagement.Model.UserInterface;
+using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
+using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
+using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -72,6 +74,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ITransactionalManager _transactionalManager;
 
         /// <summary>
+        /// The concession inbox view repository
+        /// </summary>
+        private readonly IConcessionInboxViewRepository _concessionInboxViewRepository;
+
+        /// <summary>
+        /// The lookup table manager
+        /// </summary>
+        private readonly ILookupTableManager _lookupTableManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LetterGeneratorManager"/> class.
         /// </summary>
         /// <param name="configurationData">The configuration data.</param>
@@ -84,10 +96,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="cashManager">The cash manager.</param>
         /// <param name="razorRenderer">The razor renderer.</param>
         /// <param name="transactionalManager">The transactional manager.</param>
+        /// <param name="concessionInboxViewRepository">The concession inbox view repository.</param>
+        /// <param name="lookupTableManager">The lookup table manager.</param>
         public LetterGeneratorManager(IConfigurationData configurationData, IFileUtiltity fileUtiltity,
             IConcessionManager concessionManager, IPdfUtility pdfUtility, IUserManager userManager,
             ILendingManager lendingManager, ILegalEntityRepository legalEntityRepository, ICashManager cashManager,
-            IRazorRenderer razorRenderer, ITransactionalManager transactionalManager)
+            IRazorRenderer razorRenderer, ITransactionalManager transactionalManager,
+            IConcessionInboxViewRepository concessionInboxViewRepository, ILookupTableManager lookupTableManager)
         {
             _templatePath = configurationData.LetterTemplatePath;
             _fileUtiltity = fileUtiltity;
@@ -99,6 +114,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _cashManager = cashManager;
             _razorRenderer = razorRenderer;
             _transactionalManager = transactionalManager;
+            _concessionInboxViewRepository = concessionInboxViewRepository;
+            _lookupTableManager = lookupTableManager;
         }
 
         /// <summary>
@@ -151,27 +168,184 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public byte[] GenerateLettersForLegalEntity(int legalEntityId, int requestorId)
         {
-            var concessionLetters = new List<ConcessionLetter>();
+            var approvedStatusId = _lookupTableManager.GetStatusId(Constants.ConcessionStatus.Approved);
+            var approvedWithChangesStatusId =
+                _lookupTableManager.GetStatusId(Constants.ConcessionStatus.ApprovedWithChanges);
 
-            //TODO: Figure this out
-            throw new NotImplementedException();
+            var concessionInboxViews =
+                _concessionInboxViewRepository.ReadByLegalEntityIdRequestorIdStatusIdsIsActive(legalEntityId,
+                    requestorId, new[] {approvedStatusId, approvedWithChangesStatusId}, true);
+
+            var requestor = _userManager.GetUser(requestorId);
+
+            var concessionLetters = GetConcessionLetters(concessionInboxViews, requestor);
 
             return GenerateConcessionLetterPdf(concessionLetters);
         }
 
         /// <summary>
-        /// Generates the letters for concession details.
+        /// Gets the concession letters.
         /// </summary>
-        /// <param name="concessionDetailIds">The concession detail ids.</param>
+        /// <param name="concessionInboxViews">The concession inbox views.</param>
+        /// <param name="requestor">The requestor.</param>
         /// <returns></returns>
-        public byte[] GenerateLettersForConcessionDetails(IEnumerable<int> concessionDetailIds)
+        private IEnumerable<ConcessionLetter> GetConcessionLetters(
+                    IEnumerable<ConcessionInboxView> concessionInboxViews, User requestor)
         {
             var concessionLetters = new List<ConcessionLetter>();
 
-            //TODO: Figure this out
-            throw new NotImplementedException();
+            GetProductConcessionDetails(concessionInboxViews, requestor, out var cashConcessionDetails,
+                out var lendingConcessionDetails, out var transactionalConcessionDetails);
+
+            var firstConcessionInboxView = concessionInboxViews.First();
+            var riskGroupNumber = firstConcessionInboxView.RiskGroupNumber;
+            var concessionId = firstConcessionInboxView.ConcessionId;
+            var bcm = _userManager.GetUser(firstConcessionInboxView.BCMUserId);
+
+            PopulateConcessionLettersUsingDetails(requestor, concessionLetters, riskGroupNumber, concessionId, bcm,
+                cashConcessionDetails, lendingConcessionDetails, transactionalConcessionDetails);
+
+            return concessionLetters;
+        }
+
+
+        /// <summary>
+        /// Generates the letters for concession details.
+        /// </summary>
+        /// <param name="concessionDetailIds">The concession detail ids.</param>
+        /// <param name="requestorId">The requestor identifier.</param>
+        /// <returns></returns>
+        public byte[] GenerateLettersForConcessionDetails(IEnumerable<int> concessionDetailIds, int requestorId)
+        {
+            var concessionInboxViews = _concessionInboxViewRepository.ReadByConcessionDetailIds(concessionDetailIds);
+
+            var requestor = _userManager.GetUser(requestorId);
+
+            var concessionLetters = GetConcessionLetters(concessionInboxViews, requestor);
 
             return GenerateConcessionLetterPdf(concessionLetters);
+        }
+
+        /// <summary>
+        /// Populates the concession letters using details.
+        /// </summary>
+        /// <param name="requestor">The requestor.</param>
+        /// <param name="concessionLetters">The concession letters.</param>
+        /// <param name="riskGroupNumber">The risk group number.</param>
+        /// <param name="concessionId">The concession identifier.</param>
+        /// <param name="bcm">The BCM.</param>
+        /// <param name="cashConcessionDetails">The cash concession details.</param>
+        /// <param name="lendingConcessionDetails">The lending concession details.</param>
+        /// <param name="transactionalConcessionDetails">The transactional concession details.</param>
+        private void PopulateConcessionLettersUsingDetails(User requestor, List<ConcessionLetter> concessionLetters,
+            int riskGroupNumber, int concessionId, User bcm, IEnumerable<CashConcessionDetail> cashConcessionDetails,
+            IEnumerable<LendingConcessionDetail> lendingConcessionDetails,
+            IEnumerable<TransactionalConcessionDetail> transactionalConcessionDetails)
+        {
+            if (cashConcessionDetails.Any())
+                concessionLetters.AddRange(GetCashConcessionLetterData(riskGroupNumber, concessionId, requestor, bcm,
+                    cashConcessionDetails.OrderBy(_ => _.AccountNumber)));
+
+            if (lendingConcessionDetails.Any())
+                concessionLetters.AddRange(GetLendingConcessionLetterData(riskGroupNumber, concessionId, requestor, bcm,
+                    lendingConcessionDetails.OrderBy(_ => _.AccountNumber)));
+
+            if (transactionalConcessionDetails.Any())
+                concessionLetters.AddRange(GetTransactionalConcessionLetterData(riskGroupNumber, concessionId,
+                    requestor, bcm, transactionalConcessionDetails.OrderBy(_ => _.AccountNumber)));
+        }
+
+        /// <summary>
+        /// Gets the product concession details.
+        /// </summary>
+        /// <param name="concessionInboxViews">The concession inbox views.</param>
+        /// <param name="requestor">The requestor.</param>
+        /// <param name="cashConcessionDetails">The cash concession details.</param>
+        /// <param name="lendingConcessionDetails">The lending concession details.</param>
+        /// <param name="transactionalConcessionDetails">The transactional concession details.</param>
+        private void GetProductConcessionDetails(IEnumerable<ConcessionInboxView> concessionInboxViews, User requestor,
+            out List<CashConcessionDetail> cashConcessionDetails,
+            out List<LendingConcessionDetail> lendingConcessionDetails,
+            out List<TransactionalConcessionDetail> transactionalConcessionDetails)
+        {
+            GetConcessionsForInboxViews(concessionInboxViews, requestor, out var cashConcessions,
+                out var lendingConcessions, out var transactionalConcessions);
+
+            cashConcessionDetails = new List<CashConcessionDetail>();
+            lendingConcessionDetails = new List<LendingConcessionDetail>();
+            transactionalConcessionDetails = new List<TransactionalConcessionDetail>();
+
+            foreach (var concessionInboxView in concessionInboxViews)
+            {
+                foreach (var cashConcession in cashConcessions)
+                {
+                    var cashDetailsToAdd = cashConcession.CashConcessionDetails.Where(_ =>
+                        _.CashConcessionDetailId == concessionInboxView.ConcessionDetailId);
+
+                    if (cashDetailsToAdd.Any())
+                        cashConcessionDetails.AddRange(cashDetailsToAdd);
+                }
+
+                foreach (var lendingConcession in lendingConcessions)
+                {
+                    var lendingDetailsToAdd = lendingConcession.LendingConcessionDetails.Where(_ =>
+                        _.LendingConcessionDetailId == concessionInboxView.ConcessionDetailId);
+
+                    if (lendingDetailsToAdd.Any())
+                        lendingConcessionDetails.AddRange(lendingDetailsToAdd);
+                }
+
+                foreach (var transactionalConcession in transactionalConcessions)
+                {
+                    var transactionalDetailsToAdd = transactionalConcession.TransactionalConcessionDetails.Where(_ =>
+                        _.TransactionalConcessionDetailId == concessionInboxView.ConcessionDetailId);
+
+                    if (transactionalDetailsToAdd.Any())
+                        transactionalConcessionDetails.AddRange(transactionalDetailsToAdd);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the concessions for inbox views.
+        /// </summary>
+        /// <param name="concessionInboxViews">The concession inbox views.</param>
+        /// <param name="requestor">The requestor.</param>
+        /// <param name="cashConcessions">The cash concessions.</param>
+        /// <param name="lendingConcessions">The lending concessions.</param>
+        /// <param name="transactionalConcessions">The transactional concessions.</param>
+        private void GetConcessionsForInboxViews(IEnumerable<ConcessionInboxView> concessionInboxViews, User requestor,
+            out List<CashConcession> cashConcessions, out List<LendingConcession> lendingConcessions,
+            out List<TransactionalConcession> transactionalConcessions)
+        {
+            cashConcessions = new List<CashConcession>();
+            lendingConcessions = new List<LendingConcession>();
+            transactionalConcessions = new List<TransactionalConcession>();
+
+            foreach (var concessionInboxView in concessionInboxViews)
+            {
+                switch (concessionInboxView.ConcessionType)
+                {
+                    case Constants.ConcessionType.Cash:
+                        if (cashConcessions.All(_ => _.Concession.ReferenceNumber != concessionInboxView.ConcessionRef))
+                            cashConcessions.Add(_cashManager.GetCashConcession(concessionInboxView.ConcessionRef,
+                                requestor));
+                        break;
+                    case Constants.ConcessionType.Lending:
+                        if (lendingConcessions.All(_ =>
+                            _.Concession.ReferenceNumber != concessionInboxView.ConcessionRef))
+                            lendingConcessions.Add(
+                                _lendingManager.GetLendingConcession(concessionInboxView.ConcessionRef, requestor));
+                        break;
+                    case Constants.ConcessionType.Transactional:
+                        if (transactionalConcessions.All(_ =>
+                            _.Concession.ReferenceNumber != concessionInboxView.ConcessionRef))
+                            transactionalConcessions.Add(
+                                _transactionalManager.GetTransactionalConcession(concessionInboxView.ConcessionRef,
+                                    requestor));
+                        break;
+                }
+            }
         }
 
         /// <summary>

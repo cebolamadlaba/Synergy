@@ -231,13 +231,14 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("GenerateConcessionLetterForConcessionDetails/{concessionDetailIds}")]
         public FileResult GenerateConcessionLetterForConcessionDetails(string concessionDetailIds)
         {
+            var userId = _siteHelper.GetUserIdForFiltering(this);
             HttpContext.Response.ContentType = "application/pdf";
 
             var convertedConcessionDetailIds = from concessionDetailId in concessionDetailIds.Split(',')
                 select Convert.ToInt32(concessionDetailId);
 
             var result = new FileContentResult(
-                _letterGeneratorManager.GenerateLettersForConcessionDetails(convertedConcessionDetailIds),
+                _letterGeneratorManager.GenerateLettersForConcessionDetails(convertedConcessionDetailIds, userId),
                 "application/pdf")
             {
                 FileDownloadName = $"ConcessionLetter_{concessionDetailIds.Replace(",", "_")}.pdf"
