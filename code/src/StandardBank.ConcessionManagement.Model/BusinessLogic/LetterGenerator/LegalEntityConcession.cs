@@ -17,6 +17,14 @@ namespace StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator
         public string ConcessionReferenceNumber { get; set; }
 
         /// <summary>
+        /// Gets or sets the type of the concession.
+        /// </summary>
+        /// <value>
+        /// The type of the concession.
+        /// </value>
+        public string ConcessionType { get; set; }
+
+        /// <summary>
         /// Gets a value indicating whether this instance has condition concession letters.
         /// </summary>
         /// <value>

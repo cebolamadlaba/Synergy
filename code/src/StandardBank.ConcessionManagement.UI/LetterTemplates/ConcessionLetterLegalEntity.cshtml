@@ -58,232 +58,256 @@
 <!--risk group number-->
 <p style="margin-top:50px;page-break-before: always;">Risk Group Number : @Model.RiskGroupNumber </p>
 
-@foreach (var legalEntityConcession in Model.LegalEntityConcessions)
+@if (Model.LendingOverdraftLegalEntityConcessions != null)
 {
-    <p><strong>Concession ID:</strong> legalEntityConcession.ConcessionReferenceNumber</p>
+    <p style="font-weight: bold;">LENDING (Specific to Overdraft)</p>
 
-    if (legalEntityConcession.HasLendingOverDraftConcessionLetters)
+    foreach (var legalEntityConcession in Model.LendingOverdraftLegalEntityConcessions)
     {
-        <!--LENDING (Specific to Overdraft)-->
-        <p style="font-weight: bold;">LENDING (Specific to Overdraft)</p>
-        <table border="1" width="100%">
-            <tr style="background: #dbe5f1;">
-                <td style="padding: 5px; width: 15%;">Product Type</td>
-                <td style="padding: 5px; width: 15%;">Account Number</td>
-                <td style="padding: 5px; width: 21%;">Channel / Fee Type</td>
-                <td style="padding: 5px; width: 21%;">Fee / Margin Above Prime<br />(Incl. VAT)</td>
-                <td style="padding: 5px; width: 14%;">Concession Start Date</td>
-                <td style="padding: 5px; width: 14%;">Concession End Date</td>
-            </tr>
-            @foreach (var lendingOverDraftConcessionLetter in legalEntityConcession.LendingOverDraftConcessionLetters)
-            {
-                <tr>
-                    <td rowspan="5">@lendingOverDraftConcessionLetter.ProductType</td>
-                    <td rowspan="5">@lendingOverDraftConcessionLetter.AccountNumber</td>
-                    <td>Margin Above Prime</td>
-                    <td>@lendingOverDraftConcessionLetter.MarginToPrime</td>
-                    <td rowspan="5">@lendingOverDraftConcessionLetter.ConcessionStartDate</td>
-                    <td rowspan="5">@lendingOverDraftConcessionLetter.ConcessionEndDate</td>
+        <p><strong>Concession ID:</strong> @legalEntityConcession.ConcessionReferenceNumber</p>
+
+        if (legalEntityConcession.HasLendingOverDraftConcessionLetters)
+        {
+            <table border="1" width="100%">
+                <tr style="background: #dbe5f1;">
+                    <td style="padding: 5px; width: 15%;">Product Type</td>
+                    <td style="padding: 5px; width: 15%;">Account Number</td>
+                    <td style="padding: 5px; width: 21%;">Channel / Fee Type</td>
+                    <td style="padding: 5px; width: 21%;">Fee / Margin Above Prime<br />(Incl. VAT)</td>
+                    <td style="padding: 5px; width: 14%;">Concession Start Date</td>
+                    <td style="padding: 5px; width: 14%;">Concession End Date</td>
                 </tr>
-                <tr>
-                    <td>Initiation Fee</td>
-                    <td>@lendingOverDraftConcessionLetter.InitiationFee</td>
+                @foreach (var lendingOverDraftConcessionLetter in legalEntityConcession.LendingOverDraftConcessionLetters)
+                {
+                    <tr>
+                        <td rowspan="5">@lendingOverDraftConcessionLetter.ProductType</td>
+                        <td rowspan="5">@lendingOverDraftConcessionLetter.AccountNumber</td>
+                        <td>Margin Above Prime</td>
+                        <td>@lendingOverDraftConcessionLetter.MarginToPrime</td>
+                        <td rowspan="5">@lendingOverDraftConcessionLetter.ConcessionStartDate</td>
+                        <td rowspan="5">@lendingOverDraftConcessionLetter.ConcessionEndDate</td>
+                    </tr>
+                    <tr>
+                        <td>Initiation Fee</td>
+                        <td>@lendingOverDraftConcessionLetter.InitiationFee</td>
+                    </tr>
+                    <tr>
+                        <td>Review Fee Type</td>
+                        <td>@lendingOverDraftConcessionLetter.ReviewFeeType</td>
+                    </tr>
+                    <tr>
+                        <td>Review Fee</td>
+                        <td>@lendingOverDraftConcessionLetter.ReviewFee</td>
+                    </tr>
+                    <tr>
+                        <td>Unutilised Facility Fee</td>
+                        <td>@lendingOverDraftConcessionLetter.UFFFee</td>
+                    </tr>
+                }
+            </table>
+        }
+
+        if (legalEntityConcession.HasConditionConcessionLetters)
+        {
+            <!-- Conditions of grant -->
+            <table border="1" width="100%" style="margin-top: 15px;">
+                <tr style="background: #dbe5f1;">
+                    <td colspan="4" style="padding: 5px; font-weight: bold;">Conditions of Grant</td>
                 </tr>
-                <tr>
-                    <td>Review Fee Type</td>
-                    <td>@lendingOverDraftConcessionLetter.ReviewFeeType</td>
+                <tr style="background: #dbe5f1;">
+                    <td style="padding: 5px;">Condition Measure</td>
+                    <td style="padding: 5px;">Condition Product</td>
+                    <td style="padding: 5px;">Value</td>
+                    <td style="padding: 5px;">Deadline</td>
                 </tr>
-                <tr>
-                    <td>Review Fee</td>
-                    <td>@lendingOverDraftConcessionLetter.ReviewFee</td>
-                </tr>
-                <tr>
-                    <td>Unutilised Facility Fee</td>
-                    <td>@lendingOverDraftConcessionLetter.UFFFee</td>
-                </tr>
-            }
-        </table>
+                @foreach (var condition in legalEntityConcession.ConditionConcessionLetters)
+                {
+                    <tr>
+                        <td>@condition.ConditionMeasure</td>
+                        <td>@condition.ConditionProduct</td>
+                        <td>@condition.Value</td>
+                        <td>@condition.Deadline</td>
+                    </tr>
+                }
+            </table>
+        }
     }
+}
 
-    <!--LENDING-->
-    if (legalEntityConcession.HasLendingConcessionLetters)
+@if (Model.LendingLegalEntityConcessions != null)
+{
+    <p style="font-weight: bold;">LENDING</p>
+
+    foreach (var legalEntityConcession in Model.LendingLegalEntityConcessions)
     {
-        <p style="font-weight: bold;">LENDING</p>
-        <table border="1" width="100%">
-            <tr style="background: #dbe5f1;">
-                <td style="padding: 5px; width: 15%;">Product Type</td>
-                <td style="padding: 5px; width: 15%;">Account Number</td>
-                <td style="padding: 5px; width: 21%;">Channel / Fee Type</td>
-                <td style="padding: 5px; width: 21%;">Fee / Margin Above Prime<br />(Incl. VAT)</td>
-                <td style="padding: 5px; width: 14%;">Concession Start Date</td>
-                <td style="padding: 5px; width: 14%;">Concession End Date</td>
-            </tr>
-            @foreach (var lendingConcessionLetter in legalEntityConcession.LendingConcessionLetters)
-            {
-                <tr>
-                    <td>@lendingConcessionLetter.ProductType</td>
-                    <td>@lendingConcessionLetter.AccountNumber</td>
-                    <td>Margin Above Prime</td>
-                    <td>@lendingConcessionLetter.FeeOrMarginAbovePrime</td>
-                    <td>@lendingConcessionLetter.ConcessionStartDate</td>
-                    <td>@lendingConcessionLetter.ConcessionEndDate</td>
+        <p><strong>Concession ID:</strong> @legalEntityConcession.ConcessionReferenceNumber</p>
+
+        <!--LENDING-->
+        if (legalEntityConcession.HasLendingConcessionLetters)
+        {
+            <table border="1" width="100%">
+                <tr style="background: #dbe5f1;">
+                    <td style="padding: 5px; width: 15%;">Product Type</td>
+                    <td style="padding: 5px; width: 15%;">Account Number</td>
+                    <td style="padding: 5px; width: 21%;">Channel / Fee Type</td>
+                    <td style="padding: 5px; width: 21%;">Fee / Margin Above Prime<br />(Incl. VAT)</td>
+                    <td style="padding: 5px; width: 14%;">Concession Start Date</td>
+                    <td style="padding: 5px; width: 14%;">Concession End Date</td>
                 </tr>
-            }
-        </table>
+                @foreach (var lendingConcessionLetter in legalEntityConcession.LendingConcessionLetters)
+                {
+                    <tr>
+                        <td>@lendingConcessionLetter.ProductType</td>
+                        <td>@lendingConcessionLetter.AccountNumber</td>
+                        <td>Margin Above Prime</td>
+                        <td>@lendingConcessionLetter.FeeOrMarginAbovePrime</td>
+                        <td>@lendingConcessionLetter.ConcessionStartDate</td>
+                        <td>@lendingConcessionLetter.ConcessionEndDate</td>
+                    </tr>
+                }
+            </table>
+        }
+
+        if (legalEntityConcession.HasConditionConcessionLetters)
+        {
+            <!-- Conditions of grant -->
+            <table border="1" width="100%" style="margin-top: 15px;">
+                <tr style="background: #dbe5f1;">
+                    <td colspan="4" style="padding: 5px; font-weight: bold;">Conditions of Grant</td>
+                </tr>
+                <tr style="background: #dbe5f1;">
+                    <td style="padding: 5px;">Condition Measure</td>
+                    <td style="padding: 5px;">Condition Product</td>
+                    <td style="padding: 5px;">Value</td>
+                    <td style="padding: 5px;">Deadline</td>
+                </tr>
+                @foreach (var condition in legalEntityConcession.ConditionConcessionLetters)
+                {
+                    <tr>
+                        <td>@condition.ConditionMeasure</td>
+                        <td>@condition.ConditionProduct</td>
+                        <td>@condition.Value</td>
+                        <td>@condition.Deadline</td>
+                    </tr>
+                }
+            </table>
+        }
     }
+}
 
-    if (legalEntityConcession.HasCashConcessionLetters)
+@if (Model.CashLegalEntityConcessions != null)
+{
+    <p style="font-weight: bold;">CASH ACQUIRING</p>
+
+    foreach (var legalEntityConcession in Model.CashLegalEntityConcessions)
     {
-        <!--Cash Acquiring-->
-        <p style="font-weight: bold;">CASH ACQUIRING</p>
-        <table border="1" width="100%">
-            <tr style="background: #dbe5f1;">
-                <td style="padding: 5px;">Account Number</td>
-                <td style="padding: 5px;">Channel / Fee Type</td>
-                <td style="padding: 5px;">Fee / Rate<br />(Incl. VAT)</td>
-                <td style="padding: 5px;">Concession Start Date</td>
-                <td style="padding: 5px;">Concession End Date</td>
-            </tr>
-            @foreach (var cashConcessionLetter in legalEntityConcession.CashConcessionLetters)
-            {
-                <tr>
-                    <td>@cashConcessionLetter.AccountNumber</td>
-                    <td>@cashConcessionLetter.ChannelType</td>
-                    <td>@cashConcessionLetter.BaseRateAdValorem</td>
-                    <td>@cashConcessionLetter.ConcessionStartDate</td>
-                    <td>@cashConcessionLetter.ConcessionEndDate</td>
+        <p><strong>Concession ID:</strong> @legalEntityConcession.ConcessionReferenceNumber</p>
+
+        if (legalEntityConcession.HasCashConcessionLetters)
+        {
+            <table border="1" width="100%">
+                <tr style="background: #dbe5f1;">
+                    <td style="padding: 5px;">Account Number</td>
+                    <td style="padding: 5px;">Channel / Fee Type</td>
+                    <td style="padding: 5px;">Fee / Rate<br />(Incl. VAT)</td>
+                    <td style="padding: 5px;">Concession Start Date</td>
+                    <td style="padding: 5px;">Concession End Date</td>
                 </tr>
-            }
-        </table>
+                @foreach (var cashConcessionLetter in legalEntityConcession.CashConcessionLetters)
+                {
+                    <tr>
+                        <td>@cashConcessionLetter.AccountNumber</td>
+                        <td>@cashConcessionLetter.ChannelType</td>
+                        <td>@cashConcessionLetter.BaseRateAdValorem</td>
+                        <td>@cashConcessionLetter.ConcessionStartDate</td>
+                        <td>@cashConcessionLetter.ConcessionEndDate</td>
+                    </tr>
+                }
+            </table>
+        }
+
+        if (legalEntityConcession.HasConditionConcessionLetters)
+        {
+            <!-- Conditions of grant -->
+            <table border="1" width="100%" style="margin-top: 15px;">
+                <tr style="background: #dbe5f1;">
+                    <td colspan="4" style="padding: 5px; font-weight: bold;">Conditions of Grant</td>
+                </tr>
+                <tr style="background: #dbe5f1;">
+                    <td style="padding: 5px;">Condition Measure</td>
+                    <td style="padding: 5px;">Condition Product</td>
+                    <td style="padding: 5px;">Value</td>
+                    <td style="padding: 5px;">Deadline</td>
+                </tr>
+                @foreach (var condition in legalEntityConcession.ConditionConcessionLetters)
+                {
+                    <tr>
+                        <td>@condition.ConditionMeasure</td>
+                        <td>@condition.ConditionProduct</td>
+                        <td>@condition.Value</td>
+                        <td>@condition.Deadline</td>
+                    </tr>
+                }
+            </table>
+        }
     }
+}
 
-    if (legalEntityConcession.HasTransactionalConcessionLetters)
+@if (Model.TransactionalLegalEntityConcessions != null)
+{
+    <p style="font-weight: bold;">TRANSACTIONAL</p>
+
+    foreach (var legalEntityConcession in Model.TransactionalLegalEntityConcessions)
     {
-        <!--Transactional-->
-        <p style="font-weight: bold;">TRANSACTIONAL</p>
-        <table border="1" width="100%">
-            <tr style="background: #dbe5f1;">
-                <td style="padding: 5px;">Account Number</td>
-                <td style="padding: 5px;">Channel / Fee Type</td>
-                <td style="padding: 5px;">Fee / Rate<br />(Incl. VAT)</td>
-                <td style="padding: 5px;">Concession Start Date</td>
-                <td style="padding: 5px;">Concession End Date</td>
-            </tr>
-            @foreach (var transactionalConcessionLetter in legalEntityConcession.TransactionalConcessionLetters)
-            {
-                <tr>
-                    <td>@transactionalConcessionLetter.AccountNumber</td>
-                    <td>@transactionalConcessionLetter.ChannelOrFeeType</td>
-                    <td>@transactionalConcessionLetter.FeeOrRate</td>
-                    <td>@transactionalConcessionLetter.ConcessionStartDate</td>
-                    <td>@transactionalConcessionLetter.ConcessionEndDate</td>
+        <p><strong>Concession ID:</strong> @legalEntityConcession.ConcessionReferenceNumber</p>
+
+        if (legalEntityConcession.HasTransactionalConcessionLetters)
+        {
+            <table border="1" width="100%">
+                <tr style="background: #dbe5f1;">
+                    <td style="padding: 5px;">Account Number</td>
+                    <td style="padding: 5px;">Channel / Fee Type</td>
+                    <td style="padding: 5px;">Fee / Rate<br />(Incl. VAT)</td>
+                    <td style="padding: 5px;">Concession Start Date</td>
+                    <td style="padding: 5px;">Concession End Date</td>
                 </tr>
-            }
-        </table>
-    }
+                @foreach (var transactionalConcessionLetter in legalEntityConcession.TransactionalConcessionLetters)
+                {
+                    <tr>
+                        <td>@transactionalConcessionLetter.AccountNumber</td>
+                        <td>@transactionalConcessionLetter.ChannelOrFeeType</td>
+                        <td>@transactionalConcessionLetter.FeeOrRate</td>
+                        <td>@transactionalConcessionLetter.ConcessionStartDate</td>
+                        <td>@transactionalConcessionLetter.ConcessionEndDate</td>
+                    </tr>
+                }
+            </table>
+        }
 
-    @*
-        <!--Investments-->
-        <p style="font-weight: bold;">INVESTMENTS</p>
-        <table border="1" width="100%">
-            <tr style="background: #dbe5f1;">
-                <td style="padding: 5px;">Product Type</td>
-                <td style="padding: 5px;">Account Number</td>
-                <td style="padding: 5px;">Channel/ Fee Type</td>
-                <td style="padding: 5px;">Fee / Interest to Client (Incl. VAT)</td>
-                <td style="padding: 5px;">Concession Start Date</td>
-                <td style="padding: 5px;">Concession End Date</td>
-            </tr>
-            <tr>
-                <td>--Product type--</td>
-                <td>--Account number--</td>
-                <td>--Channel type--</td>
-                <td>--Interest to client--</td>
-                <td>--Start date--</td>
-                <td>--End date--</td>
-            </tr>
-        </table>
-
-        <!--Business online-->
-        <p style="font-weight: bold;">BUSINESS ONLINE</p>
-        <table border="1" width="100%">
-            <tr style="background: #dbe5f1;">
-                <td style="padding: 5px;">BOL User ID</td>
-                <td style="padding: 5px;">Channel/ Fee Type</td>
-                <td style="padding: 5px;">Flat Fee (Incl. VAT)</td>
-                <td style="padding: 5px;">Concession Start Date</td>
-                <td style="padding: 5px;">Concession End Date</td>
-            </tr>
-            <tr>
-                <td>--User ID--</td>
-                <td>--Channel / Fee type--</td>
-                <td>--Commission rate</td>
-                <td>--Start date--</td>
-                <td>--End date--</td>
-            </tr>
-        </table>
-
-        <!--Merchant Acquiring-->
-        <p style="font-weight: bold;">MERCHANT ACQUIRING</p>
-        <table border="1" width="100%">
-            <tr style="background: #dbe5f1;">
-                <td style="padding: 5px;">Merchant Number</td>
-                <td style="padding: 5px;">Channel/ Fee Type</td>
-                <td style="padding: 5px;">Fee / Rate (Incl. VAT)</td>
-                <td style="padding: 5px;">Concession Start Date</td>
-                <td style="padding: 5px;">Concession End Date</td>
-            </tr>
-            <tr>
-                <td>--Merchant Number--</td>
-                <td>--Channel / Fee type--</td>
-                <td>--Commission rate</td>
-                <td>--Start date--</td>
-                <td>--End date--</td>
-            </tr>
-        </table>
-
-        <!--Trade-->
-        <p style="font-weight: bold;">TRADE</p>
-        <table border="1" width="100%">
-            <tr style="background: #dbe5f1;">
-                <td style="padding: 5px;">Account Number</td>
-                <td style="padding: 5px;">Channel/ Fee Type</td>
-                <td style="padding: 5px;">Fee / Rate (Incl. VAT)</td>
-                <td style="padding: 5px;">Concession Start Date</td>
-                <td style="padding: 5px;">Concession End Date</td>
-            </tr>
-            <tr>
-                <td>--Account Number--</td>
-                <td>--Transaction type--</td>
-                <td>--Fee / Rate--</td>
-                <td>--Start date--</td>
-                <td>--End date--</td>
-            </tr>
-        </table>*@
-
-    if (legalEntityConcession.HasConditionConcessionLetters)
-    {
-        <!-- Conditions of grant -->
-        <table border="1" width="100%" style="margin-top: 15px;">
-            <tr style="background: #dbe5f1;">
-                <td colspan="4" style="padding: 5px; font-weight: bold;">Conditions of Grant</td>
-            </tr>
-            <tr style="background: #dbe5f1;">
-                <td style="padding: 5px;">Condition Measure</td>
-                <td style="padding: 5px;">Condition Product</td>
-                <td style="padding: 5px;">Value</td>
-                <td style="padding: 5px;">Deadline</td>
-            </tr>
-            @foreach (var condition in legalEntityConcession.ConditionConcessionLetters)
-            {
-                <tr>
-                    <td>@condition.ConditionMeasure</td>
-                    <td>@condition.ConditionProduct</td>
-                    <td>@condition.Value</td>
-                    <td>@condition.Deadline</td>
+        if (legalEntityConcession.HasConditionConcessionLetters)
+        {
+            <!-- Conditions of grant -->
+            <table border="1" width="100%" style="margin-top: 15px;">
+                <tr style="background: #dbe5f1;">
+                    <td colspan="4" style="padding: 5px; font-weight: bold;">Conditions of Grant</td>
                 </tr>
-            }
-        </table>
+                <tr style="background: #dbe5f1;">
+                    <td style="padding: 5px;">Condition Measure</td>
+                    <td style="padding: 5px;">Condition Product</td>
+                    <td style="padding: 5px;">Value</td>
+                    <td style="padding: 5px;">Deadline</td>
+                </tr>
+                @foreach (var condition in legalEntityConcession.ConditionConcessionLetters)
+                {
+                    <tr>
+                        <td>@condition.ConditionMeasure</td>
+                        <td>@condition.ConditionProduct</td>
+                        <td>@condition.Value</td>
+                        <td>@condition.Deadline</td>
+                    </tr>
+                }
+            </table>
+        }
     }
 }
 

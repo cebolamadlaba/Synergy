@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator
 {
@@ -134,5 +135,84 @@ namespace StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator
         /// The legal entity concessions.
         /// </value>
         public IEnumerable<LegalEntityConcession> LegalEntityConcessions { get; set; }
+
+        /// <summary>
+        /// Gets the cash legal entity concessions.
+        /// </summary>
+        /// <value>
+        /// The cash legal entity concessions.
+        /// </value>
+        public IEnumerable<LegalEntityConcession> CashLegalEntityConcessions
+        {
+            get
+            {
+                if (LegalEntityConcessions != null &&
+                    LegalEntityConcessions.Any(_ => _.ConcessionType == Constants.ConcessionType.Cash))
+                    return LegalEntityConcessions.Where(_ => _.ConcessionType == Constants.ConcessionType.Cash)
+                        .OrderBy(_ => _.ConcessionReferenceNumber);
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the lending overdraft legal entity concessions.
+        /// </summary>
+        /// <value>
+        /// The lending overdraft legal entity concessions.
+        /// </value>
+        public IEnumerable<LegalEntityConcession> LendingOverdraftLegalEntityConcessions
+        {
+            get
+            {
+                if (LegalEntityConcessions != null &&
+                    LegalEntityConcessions.Any(_ =>
+                        _.ConcessionType == Constants.ConcessionType.Lending && _.HasLendingOverDraftConcessionLetters))
+                    return LegalEntityConcessions.Where(_ =>
+                            _.ConcessionType == Constants.ConcessionType.Lending &&
+                            _.HasLendingOverDraftConcessionLetters)
+                        .OrderBy(_ => _.ConcessionReferenceNumber);
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the lending legal entity concessions.
+        /// </summary>
+        /// <value>
+        /// The lending legal entity concessions.
+        /// </value>
+        public IEnumerable<LegalEntityConcession> LendingLegalEntityConcessions
+        {
+            get
+            {
+                if (LegalEntityConcessions != null &&
+                    LegalEntityConcessions.Any(_ => _.ConcessionType == Constants.ConcessionType.Lending && _.HasLendingConcessionLetters))
+                    return LegalEntityConcessions.Where(_ => _.ConcessionType == Constants.ConcessionType.Lending && _.HasLendingConcessionLetters)
+                        .OrderBy(_ => _.ConcessionReferenceNumber);
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the transactional legal entity concessions.
+        /// </summary>
+        /// <value>
+        /// The transactional legal entity concessions.
+        /// </value>
+        public IEnumerable<LegalEntityConcession> TransactionalLegalEntityConcessions
+        {
+            get
+            {
+                if (LegalEntityConcessions != null &&
+                    LegalEntityConcessions.Any(_ => _.ConcessionType == Constants.ConcessionType.Transactional))
+                    return LegalEntityConcessions.Where(_ => _.ConcessionType == Constants.ConcessionType.Transactional)
+                        .OrderBy(_ => _.ConcessionReferenceNumber);
+
+                return null;
+            }
+        }
     }
 }
