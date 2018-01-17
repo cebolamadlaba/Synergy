@@ -37,9 +37,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
                 Name = "Unit Test Risk Group",
                 Number = 1,
                 MarketSegmentId = 1,
-                MarketSegment = "Unit Test Market Segment",
-                RegionId = 1,
-                Region = "Unit Test Region"
+                MarketSegment = "Unit Test Market Segment"
             };
 
             MockLookupTableManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>())).Returns(riskGroup);
@@ -57,8 +55,6 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
             Assert.Equal(riskGroup.Number, resultRiskGroup.Number);
             Assert.Equal(riskGroup.MarketSegmentId, resultRiskGroup.MarketSegmentId);
             Assert.Equal(riskGroup.MarketSegment, resultRiskGroup.MarketSegment);
-            Assert.Equal(riskGroup.RegionId, resultRiskGroup.RegionId);
-            Assert.Equal(riskGroup.Region, resultRiskGroup.Region);
         }
     }
 }

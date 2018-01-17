@@ -655,7 +655,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             if (riskGroup != null)
             {
                 riskGroup.MarketSegment = GetMarketSegmentName(riskGroup.MarketSegmentId);
-                riskGroup.Region = GetRegionDescription(riskGroup.RegionId);
             }
 
             return riskGroup;

@@ -30,22 +30,6 @@
         public string MarketSegment { get; set; }
 
         /// <summary>
-        /// Gets or sets the region identifier.
-        /// </summary>
-        /// <value>
-        /// The region identifier.
-        /// </value>
-        public int RegionId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the region.
-        /// </summary>
-        /// <value>
-        /// The region.
-        /// </value>
-        public string Region { get; set; }
-
-        /// <summary>
         /// Gets or sets the number.
         /// </summary>
         /// <value>

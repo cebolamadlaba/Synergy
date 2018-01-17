@@ -22,8 +22,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 RiskGroupNumber = 9,
                 RiskGroupName = "3b84541fd8",
                 IsActive = true,
-                MarketSegmentId = DataHelper.GetMarketSegmentId(),
-                RegionId = DataHelper.GetRegionId()
+                MarketSegmentId = DataHelper.GetMarketSegmentId()
             };
 
             var result = InstantiatedDependencies.RiskGroupRepository.Create(model);
@@ -99,8 +98,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 RiskGroupNumber = 9,
                 RiskGroupName = "3b84541fd8",
                 IsActive = false,
-                MarketSegmentId = DataHelper.GetMarketSegmentId(),
-                RegionId = DataHelper.GetRegionId()
+                MarketSegmentId = DataHelper.GetMarketSegmentId()
             };
 
             InstantiatedDependencies.RiskGroupRepository.Create(model);
@@ -139,7 +137,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.RiskGroupName = "1cb39b8591";
             model.IsActive = !model.IsActive;
             model.MarketSegmentId = DataHelper.GetAlternateMarketSegmentId(model.MarketSegmentId);
-            model.RegionId = DataHelper.GetAlternateRegionId(model.RegionId);
 
             InstantiatedDependencies.RiskGroupRepository.Update(model);
 
@@ -151,7 +148,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.RiskGroupName, model.RiskGroupName);
             Assert.Equal(updatedModel.IsActive, model.IsActive);
             Assert.Equal(updatedModel.MarketSegmentId, model.MarketSegmentId);
-            Assert.Equal(updatedModel.RegionId, model.RegionId);
         }
 
         /// <summary>
@@ -165,8 +161,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 RiskGroupNumber = 9,
                 RiskGroupName = "3b84541fd8",
                 IsActive = false,
-                MarketSegmentId = DataHelper.GetMarketSegmentId(),
-                RegionId = DataHelper.GetRegionId()
+                MarketSegmentId = DataHelper.GetMarketSegmentId()
             };
 
             var temporaryEntity = InstantiatedDependencies.RiskGroupRepository.Create(model);
