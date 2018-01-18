@@ -22,6 +22,13 @@ export class RegionService {
         return this.http.post(url, region, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    create(region: Region): Observable<boolean> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/Region/Create";
+        return this.http.post(url, region, options).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
     private extractData(response: Response) {
         let body = response.json();
         return body;
@@ -44,5 +51,9 @@ export class MockRegionService extends RegionService {
     validate(region: Region): Observable<string[]> {
         var model = [""];
         return Observable.of(model);
+    }
+
+    create(region: Region): Observable<boolean> {
+        return Observable.of(true);
     }
 }

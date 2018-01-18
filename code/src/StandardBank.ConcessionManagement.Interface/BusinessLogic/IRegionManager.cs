@@ -27,5 +27,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="region">The region.</param>
         /// <returns></returns>
         IEnumerable<string> ValidateRegion(Region region);
+
+        /// <summary>
+        /// Creates the region.
+        /// </summary>
+        /// <param name="region">The region.</param>
+        /// <returns></returns>
+        Model.Repository.Region CreateRegion(Region region);
     }
 }

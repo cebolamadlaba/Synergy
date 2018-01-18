@@ -3,6 +3,8 @@ import { RegionComponent } from './region.component';
 import { HttpModule } from '@angular/http';
 import { RouterTestingModule } from '@angular/router/testing';
 import { RegionService, MockRegionService } from '../../services/region.service';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { FormsModule } from '@angular/forms';
 
 describe('RegionComponent', () => {
     let component: RegionComponent;
@@ -10,7 +12,7 @@ describe('RegionComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [HttpModule, RouterTestingModule],
+            imports: [HttpModule, RouterTestingModule, ModalModule.forRoot(), FormsModule],
             declarations: [RegionComponent],
             providers: [{ provide: RegionService, useClass: MockRegionService }]
         })

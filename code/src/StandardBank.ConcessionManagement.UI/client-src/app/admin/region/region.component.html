@@ -42,7 +42,7 @@
 <div class="col-md-12 search-and-results-container" *ngIf="!isLoading">
     <!-- Input form -->
     <div class="form-inline">
-        <button class="btn btn-primary" type="button">Add Region</button>
+        <button class="btn btn-primary" type="button" (click)="addRegionModal.show()">Add Region</button>
     </div>
 
     <!-- Results table -->
@@ -68,5 +68,28 @@
         </table>
     </div>
 
+    <div bsModal #addRegionModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addRegionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="col-md-12 modal-header">
+                    <h4>Add Region</h4>
+                </div>
+                <div class="col-md-12 modal-body">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="email">Description</label>
+                        <div class="col-sm-8">
+                            <input type="text" required class="form-control" [(ngModel)]="addRegion.description">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="float-right">
+                        <button type="button" class="btn btn-cancel" (click)="addRegionModal.hide()">Close</button>
+                        <button type="button" class="btn btn-primary" (click)="createRegion()">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>

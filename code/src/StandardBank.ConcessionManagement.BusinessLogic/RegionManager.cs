@@ -3,7 +3,6 @@ using System.Linq;
 using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
-using StandardBank.ConcessionManagement.Model.Repository;
 using Region = StandardBank.ConcessionManagement.Model.UserInterface.Region;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
@@ -90,6 +89,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             return errors;
+        }
+
+        /// <summary>
+        /// Creates the region.
+        /// </summary>
+        /// <param name="region">The region.</param>
+        /// <returns></returns>
+        public Model.Repository.Region CreateRegion(Region region)
+        {
+            var mappedRegion = _mapper.Map<Model.Repository.Region>(region);
+            return _regionRepository.Create(mappedRegion);
         }
     }
 }
