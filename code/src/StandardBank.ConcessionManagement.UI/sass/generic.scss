@@ -1,4 +1,4 @@
-﻿@media (min-width: 992px) {
+@media (min-width: 992px) {
     .modal-lg {
         width: 1200px;
     }
@@ -277,4 +277,12 @@ input[type=number]::-webkit-outer-spin-button {
     border: 1px solid #ebccd1;
     padding: 5px !important;
     border-radius: 5px;
+}
+
+.green {
+    color: #008000;
+}
+
+.red {
+    color: #FF0000;
 }

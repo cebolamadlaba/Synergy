@@ -503,5 +503,10 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static Mock<IAccountExecutiveAssistantRepository> MockAccountExecutiveAssistantRepository =
             new Mock<IAccountExecutiveAssistantRepository>();
+
+        /// <summary>
+        /// The mock region manager
+        /// </summary>
+        public static Mock<IRegionManager> MockRegionManager = new Mock<IRegionManager>();
     }
 }

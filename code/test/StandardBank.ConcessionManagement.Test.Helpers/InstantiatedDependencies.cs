@@ -483,15 +483,20 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             ConcessionTypeRepository, ProductRepository, ReviewFeeTypeRepository, PeriodRepository,
             PeriodTypeRepository, ConditionTypeRepository, Mapper, ConditionProductRepository,
             ConditionTypeProductRepository, AccrualTypeRepository, ChannelTypeRepository, TransactionTypeRepository,
-            TableNumberRepository, RelationshipRepository, RoleRepository, CentreRepository, RegionRepository,
+            TableNumberRepository, RelationshipRepository, RoleRepository, CentreRepository,
             RiskGroupRepository, TransactionTableNumberRepository);
+
+        /// <summary>
+        /// The region manager
+        /// </summary>
+        public static IRegionManager RegionManager = new RegionManager(RegionRepository, Mapper);
 
         /// <summary>
         /// The user manager
         /// </summary>
         public static IUserManager UserManager = new UserManager(CacheManager, LookupTableManager, UserRepository,
             UserRoleRepository, RoleRepository, UserRegionRepository, RegionRepository, CentreRepository,
-            CentreUserRepository, Mapper, AccountExecutiveAssistantRepository);
+            CentreUserRepository, Mapper, AccountExecutiveAssistantRepository, RegionManager);
 
         /// <summary>
         /// The concession manager

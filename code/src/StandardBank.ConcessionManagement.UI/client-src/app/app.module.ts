@@ -32,7 +32,8 @@ import { ConcessionConditionsService } from "./services/concession-conditions.se
 import { LendingService } from "./services/lending.service";
 import { MyConditionService } from './services/my-condition.service';
 import { CashConcessionService } from "./services/cash-concession.service";
-import { AdminService} from './services/admin.service';
+import { AdminService } from './services/admin.service';
+import { RegionService } from './services/region.service';
 
 import { ApprovedConcessionFilterPipe } from './filters/approved-concession-filter.pipe';
 import { CashViewConcessionComponent } from './cash-view-concession/cash-view-concession.component';
@@ -56,6 +57,7 @@ import { EditUserComponent } from './admin/users/edit-user/edit-user.component';
 import { ActionedInboxComponent } from './actioned-inbox/actioned-inbox.component';
 import { ConditionsFilterPipe } from './filters/conditions-filter.pipe';
 import { NumbersonlyDirective } from './directives/numbersonly.directive';
+import { RegionComponent } from './admin/region/region.component';
 
 @NgModule({
     declarations: [
@@ -98,7 +100,8 @@ import { NumbersonlyDirective } from './directives/numbersonly.directive';
         EditUserComponent,
         NumbersonlyDirective,
         ActionedInboxComponent,
-        ConditionsFilterPipe
+        ConditionsFilterPipe,
+        RegionComponent
     ],
     imports: [
         BrowserModule,
@@ -118,7 +121,8 @@ import { NumbersonlyDirective } from './directives/numbersonly.directive';
         MyConditionService,
         CashConcessionService,
         TransactionalConcessionService,
-        AdminService
+        AdminService,
+        RegionService
     ],
     bootstrap: [AppComponent]
 })

@@ -26,7 +26,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 MockUserRepository.Object, MockUserRoleRepository.Object, MockRoleRepository.Object,
                 MockUserRegionRepository.Object, MockRegionRepository.Object, MockCentreRepository.Object,
                 MockCentreUserRepository.Object, InstantiatedDependencies.Mapper,
-                MockAccountExecutiveAssistantRepository.Object);
+                MockAccountExecutiveAssistantRepository.Object, MockRegionManager.Object);
         }
 
         /// <summary>

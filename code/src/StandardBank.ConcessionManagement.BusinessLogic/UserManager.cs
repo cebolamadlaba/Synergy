@@ -73,6 +73,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IAccountExecutiveAssistantRepository _accountExecutiveAssistantRepository;
 
         /// <summary>
+        /// The region manager
+        /// </summary>
+        private readonly IRegionManager _regionManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="UserManager"/> class.
         /// </summary>
         /// <param name="cacheManager">The cache manager.</param>
@@ -86,11 +91,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="centreUserRepository">The centre user repository.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="accountExecutiveAssistantRepository">The account executive assistant repository.</param>
+        /// <param name="regionManager">The region manager.</param>
         public UserManager(ICacheManager cacheManager, ILookupTableManager lookupTableManager,
             IUserRepository userRepository, IUserRoleRepository userRoleRepository, IRoleRepository roleRepository,
             IUserRegionRepository userRegionRepository, IRegionRepository regionRepository,
             ICentreRepository centreRepository, ICentreUserRepository centreUserRepository, IMapper mapper,
-            IAccountExecutiveAssistantRepository accountExecutiveAssistantRepository)
+            IAccountExecutiveAssistantRepository accountExecutiveAssistantRepository, IRegionManager regionManager)
         {
             _cacheManager = cacheManager;
             _lookupTableManager = lookupTableManager;
@@ -103,6 +109,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _centreUserRepository = centreUserRepository;
             _mapper = mapper;
             _accountExecutiveAssistantRepository = accountExecutiveAssistantRepository;
+            _regionManager = regionManager;
         }
 
         /// <summary>
@@ -263,7 +270,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     if (userCentreIds.Any(_ => _.CentreId == centre.Id && _.IsActive && centre.IsActive))
                     {
                         var mappedCentre = _mapper.Map<Centre>(centre);
-                        mappedCentre.Region = _lookupTableManager.GetRegionDescription(centre.RegionId);
+                        mappedCentre.Region = _regionManager.GetRegionDescription(centre.RegionId);
                         userCentres.Add(mappedCentre);
                     }
                 }

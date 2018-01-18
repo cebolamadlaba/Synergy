@@ -22,12 +22,6 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         IEnumerable<Centre> GetCentres();
 
         /// <summary>
-        /// Gets the regions.
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<Region> GetRegions();
-
-        /// <summary>
         /// Gets the status identifier.
         /// </summary>
         /// <param name="statusName">Name of the status.</param>
@@ -230,13 +224,6 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="riskGroupNumber"></param>
         /// <returns></returns>
         RiskGroup GetRiskGroupForRiskGroupNumber(int riskGroupNumber);
-
-        /// <summary>
-        /// Gets the region description.
-        /// </summary>
-        /// <param name="regionId">The region identifier.</param>
-        /// <returns></returns>
-        string GetRegionDescription(int regionId);
 
         /// <summary>
         /// Gets the transaction table numbers.

@@ -1,5 +1,6 @@
-﻿export class Region {
+export class Region {
     id: number;
     description: string;
     isSelected: boolean;
+    isActive: boolean;
 }

@@ -129,11 +129,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ICentreRepository _centreRepository;
 
         /// <summary>
-        /// The region repository
-        /// </summary>
-        private readonly IRegionRepository _regionRepository;
-
-        /// <summary>
         /// The risk group repository
         /// </summary>
         private readonly IRiskGroupRepository _riskGroupRepository;
@@ -167,7 +162,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="relationshipRepository">The relationship repository.</param>
         /// <param name="roleRepository">The role repository.</param>
         /// <param name="centreRepository">The centre repository.</param>
-        /// <param name="regionRepository">The region repository.</param>
         /// <param name="riskGroupRepository">The risk group repository.</param>
         /// <param name="transactionTableNumberRepository">The transaction table number repository.</param>
         public LookupTableManager(IStatusRepository statusRepository, ISubStatusRepository subStatusRepository,
@@ -181,7 +175,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IAccrualTypeRepository accrualTypeRepository, IChannelTypeRepository channelTypeRepository,
             ITransactionTypeRepository transactionTypeRepository, ITableNumberRepository tableNumberRepository,
             IRelationshipRepository relationshipRepository, IRoleRepository roleRepository,
-            ICentreRepository centreRepository, IRegionRepository regionRepository,
+            ICentreRepository centreRepository,
             IRiskGroupRepository riskGroupRepository,
             ITransactionTableNumberRepository transactionTableNumberRepository)
         {
@@ -205,7 +199,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _relationshipRepository = relationshipRepository;
             _roleRepository = roleRepository;
             _centreRepository = centreRepository;
-            _regionRepository = regionRepository;
             _riskGroupRepository = riskGroupRepository;
             _transactionTableNumberRepository = transactionTableNumberRepository;
         }
@@ -223,13 +216,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<Model.UserInterface.Centre> GetCentres() =>
             _mapper.Map<IEnumerable<Model.UserInterface.Centre>>(_centreRepository.ReadAll());
-
-        /// <summary>
-        /// Gets the regions.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<Model.UserInterface.Region> GetRegions() =>
-            _mapper.Map<IEnumerable<Model.UserInterface.Region>>(_regionRepository.ReadAll());
 
         /// <summary>
         /// Gets the status identifier.
@@ -640,18 +626,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             return riskGroup;
-        }
-
-        /// <summary>
-        /// Gets the region description.
-        /// </summary>
-        /// <param name="regionId">The region identifier.</param>
-        /// <returns></returns>
-        public string GetRegionDescription(int regionId)
-        {
-            var regions = _regionRepository.ReadAll();
-
-            return regions.First(_ => _.Id == regionId && _.IsActive).Description;
         }
 
         /// <summary>

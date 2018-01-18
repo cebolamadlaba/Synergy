@@ -32,6 +32,7 @@ import { BusinessCentreComponent } from "./admin/business-centre/business-centre
 import { UsersComponent } from "./admin/users/users.component";
 import { EditUserComponent } from './admin/users/edit-user/edit-user.component';
 import { ActionedInboxComponent } from "./actioned-inbox/actioned-inbox.component";
+import { RegionComponent } from './admin/region/region.component';
 
 const routes: Routes = [
     { path: '', redirectTo: '/pending-inbox', pathMatch: 'full' },
@@ -69,7 +70,8 @@ const routes: Routes = [
     { path: 'admin-menu', component: AdminMenuComponent },
     { path: 'business-centre', component: BusinessCentreComponent },
     { path: 'users', component: UsersComponent },
-    { path: 'edit-user/:id', component:EditUserComponent}
+    { path: 'edit-user/:id', component: EditUserComponent },
+    { path: 'admin/regions', component: RegionComponent }
 ];
 
 @NgModule({
