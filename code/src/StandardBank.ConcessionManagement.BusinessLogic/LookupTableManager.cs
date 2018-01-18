@@ -49,11 +49,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IMarketSegmentRepository _marketSegmentRepository;
 
         /// <summary>
-        /// The province repository
-        /// </summary>
-        private readonly IProvinceRepository _provinceRepository;
-
-        /// <summary>
         /// The concession type repository
         /// </summary>
         private readonly IConcessionTypeRepository _concessionTypeRepository;
@@ -177,7 +172,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="transactionTableNumberRepository">The transaction table number repository.</param>
         public LookupTableManager(IStatusRepository statusRepository, ISubStatusRepository subStatusRepository,
             IReferenceTypeRepository referenceTypeRepository, IMarketSegmentRepository marketSegmentRepository,
-            IProvinceRepository provinceRepository, IConcessionTypeRepository concessionTypeRepository,
+            IConcessionTypeRepository concessionTypeRepository,
             IProductRepository productRepository, IReviewFeeTypeRepository reviewFeeTypeRepository,
             IPeriodRepository periodRepository, IPeriodTypeRepository periodTypeRepository,
             IConditionTypeRepository conditionTypeRepository, IMapper mapper,
@@ -194,7 +189,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _subStatusRepository = subStatusRepository;
             _referenceTypeRepository = referenceTypeRepository;
             _marketSegmentRepository = marketSegmentRepository;
-            _provinceRepository = provinceRepository;
             _concessionTypeRepository = concessionTypeRepository;
             _productRepository = productRepository;
             _reviewFeeTypeRepository = reviewFeeTypeRepository;
@@ -319,18 +313,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var marketSegments = _marketSegmentRepository.ReadAll();
 
             return marketSegments.First(_ => _.Id == marketSegmentId && _.IsActive).Description;
-        }
-
-        /// <summary>
-        /// Gets the province name for the id specified
-        /// </summary>
-        /// <param name="provinceId"></param>
-        /// <returns></returns>
-        public string GetProvinceName(int provinceId)
-        {
-            var provinces = _provinceRepository.ReadAll();
-
-            return provinces.First(_ => _.Id == provinceId && _.IsActive).Description;
         }
 
         /// <summary>

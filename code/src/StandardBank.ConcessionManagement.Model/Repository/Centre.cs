@@ -16,12 +16,12 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the ProvinceId.
+        /// Gets or sets the region identifier.
         /// </summary>
         /// <value>
-        /// The ProvinceId.
+        /// The region identifier.
         /// </value>
-        public int ProvinceId { get; set; }
+        public int RegionId { get; set; }
 
         /// <summary>
         /// Gets or sets the CentreName.

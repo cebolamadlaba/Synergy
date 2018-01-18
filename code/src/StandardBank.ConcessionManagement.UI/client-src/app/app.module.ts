@@ -24,7 +24,6 @@ import { LendingAddConcessionComponent } from './lending-add-concession/lending-
 import { TransactionalAddConcessionComponent } from './transactional-add-concession/transactional-add-concession.component';
 import { MismatchedInboxComponent } from './mismatched-inbox/mismatched-inbox.component';
 import { LendingViewConcessionComponent } from './lending-view-concession/lending-view-concession.component';
-import { ProvinceComponent } from './admin/province/province.component';
 
 import { LookupDataService } from "./services/lookup-data.service";
 import { UserConcessionsService } from "./services/user-concessions.service";
@@ -33,7 +32,6 @@ import { ConcessionConditionsService } from "./services/concession-conditions.se
 import { LendingService } from "./services/lending.service";
 import { MyConditionService } from './services/my-condition.service';
 import { CashConcessionService } from "./services/cash-concession.service";
-import { ProvinceService } from "./services/province.service";
 import { AdminService} from './services/admin.service';
 
 import { ApprovedConcessionFilterPipe } from './filters/approved-concession-filter.pipe';
@@ -92,7 +90,6 @@ import { NumbersonlyDirective } from './directives/numbersonly.directive';
         BolAddConcessionComponent,
         MasAddConcessionComponent,
         TransactionalViewConcessionComponent,
-        ProvinceComponent,
         TradeAddConcessionComponent,
         CashmanAddConcessionComponent,
         AdminMenuComponent,
@@ -121,7 +118,6 @@ import { NumbersonlyDirective } from './directives/numbersonly.directive';
         MyConditionService,
         CashConcessionService,
         TransactionalConcessionService,
-        ProvinceService,
         AdminService
     ],
     bootstrap: [AppComponent]

@@ -84,11 +84,6 @@
                 public const string ReadAll = "CacheKey.Repository.ProductRepository.ReadAll";
             }
 
-            public static class ProvinceRepository
-            {
-                public const string ReadAll = "CacheKey.Repository.ProvinceRepository.ReadAll";
-            }
-
             public static class ReviewFeeTypeRepository
             {
                 public const string ReadAll = "CacheKey.Repository.ReviewFeeTypeRepository.ReadAll";

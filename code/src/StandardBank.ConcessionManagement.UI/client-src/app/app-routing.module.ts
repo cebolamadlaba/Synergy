@@ -25,7 +25,6 @@ import { InvestmentsAddConcessionComponent } from "./investments-add-concession/
 import { BolAddConcessionComponent } from "./bol-add-concession/bol-add-concession.component";
 import { MasAddConcessionComponent } from "./mas-add-concession/mas-add-concession.component";
 import { TransactionalViewConcessionComponent } from "./transactional-view-concession/transactional-view-concession.component";
-import { ProvinceComponent } from './admin/province/province.component';
 import { TradeAddConcessionComponent } from "./trade-add-concession/trade-add-concession.component";
 import { CashmanAddConcessionComponent } from "./cashman-add-concession/cashman-add-concession.component";
 import { AdminMenuComponent } from "./admin/admin-menu/admin-menu.component";
@@ -64,7 +63,6 @@ const routes: Routes = [
     { path: 'bol-add-concession', component: BolAddConcessionComponent },
     { path: 'mas-add-concession', component: MasAddConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
-    { path: 'province', component: ProvinceComponent },
     { path: 'trade-add-concession', component: TradeAddConcessionComponent },
     { path: 'cashman-add-concession', component: CashmanAddConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },

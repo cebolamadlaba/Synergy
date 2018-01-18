@@ -486,57 +486,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         }
 
         /// <summary>
-        /// Gets the Province id
-        /// </summary>
-        /// <returns></returns>
-        public static int GetProvinceId()
-        {
-            //read all and return the first one
-            var models = InstantiatedDependencies.ProvinceRepository.ReadAll();
-
-            if (models != null && models.Any())
-                return models.First().Id;
-
-            return InsertProvince();
-        }
-
-        /// <summary>
-        /// Inserts a Province and returns the id
-        /// </summary>
-        /// <returns></returns>
-        private static int InsertProvince()
-        {
-            var model = new Province
-            {
-                Description = "05f7d4c7bd",
-                IsActive = false
-            };
-
-            InstantiatedDependencies.ProvinceRepository.Create(model);
-
-            return model.Id;
-        }
-
-        /// <summary>
-        /// Gets the alternate Province id
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        public static int GetAlternateProvinceId(int? model)
-        {
-            if (!model.HasValue)
-                return GetProvinceId();
-
-            //read all and return the first one
-            var models = InstantiatedDependencies.ProvinceRepository.ReadAll();
-
-            if (models != null && models.Any(_ => _.Id != model.Value))
-                return models.First(_ => _.Id != model.Value).Id;
-
-            return InsertProvince();
-        }
-
-        /// <summary>
         /// Gets the ReviewFeeType id
         /// </summary>
         /// <returns></returns>
@@ -1021,7 +970,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         {
             var model = new Centre
             {
-                ProvinceId = GetProvinceId(),
+                RegionId = GetRegionId(),
                 CentreName = "37bde50be7",
                 IsActive = false
             };

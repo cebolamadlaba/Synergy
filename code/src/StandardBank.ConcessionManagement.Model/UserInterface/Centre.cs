@@ -22,11 +22,11 @@
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the province.
+        /// Gets or sets the region.
         /// </summary>
         /// <value>
-        /// The province.
+        /// The region.
         /// </value>
-        public string Province { get; set; }
+        public string Region { get; set; }
     }
 }

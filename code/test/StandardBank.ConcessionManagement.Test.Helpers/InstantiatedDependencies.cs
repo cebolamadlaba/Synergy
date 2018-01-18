@@ -124,11 +124,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static IProductRepository ProductRepository = new ProductRepository(DbConnection, CacheManager);
 
         /// <summary>
-        /// The Province repository
-        /// </summary>
-        public static IProvinceRepository ProvinceRepository = new ProvinceRepository(DbConnection, CacheManager);
-
-        /// <summary>
         /// The ReviewFeeType repository
         /// </summary>
         public static IReviewFeeTypeRepository ReviewFeeTypeRepository =
@@ -484,7 +479,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The look up table manager
         /// </summary>
         public static ILookupTableManager LookupTableManager = new LookupTableManager(StatusRepository,
-            SubStatusRepository, ReferenceTypeRepository, MarketSegmentRepository, ProvinceRepository,
+            SubStatusRepository, ReferenceTypeRepository, MarketSegmentRepository,
             ConcessionTypeRepository, ProductRepository, ReviewFeeTypeRepository, PeriodRepository,
             PeriodTypeRepository, ConditionTypeRepository, Mapper, ConditionProductRepository,
             ConditionTypeProductRepository, AccrualTypeRepository, ChannelTypeRepository, TransactionTypeRepository,

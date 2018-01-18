@@ -37,8 +37,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             var aNumber = "A1234567";
 
-            MockLookupTableManager.Setup(_ => _.GetProvinceName(It.IsAny<int>())).Returns("Unit Test Province");
-
             MockUserRepository.Setup(_ => _.ReadByANumber(It.IsAny<string>())).Returns(new User
             {
                 ANumber = aNumber
@@ -61,7 +59,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 .Returns(new[] {new CentreUser {CentreId = 1, IsActive = true}});
 
             MockCentreRepository.Setup(_ => _.ReadAll()).Returns(new[]
-                {new Centre {IsActive = true, CentreName = "Unit Test", Id = 1, ProvinceId = 1}});
+                {new Centre {IsActive = true, CentreName = "Unit Test", Id = 1, RegionId = 1}});
 
             var result = _userManager.GetUser(aNumber);
 
@@ -83,8 +81,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         public void GetUser_WithNoSelectedRegion_Executes_Positive()
         {
             var aNumber = "A1234567";
-
-            MockLookupTableManager.Setup(_ => _.GetProvinceName(It.IsAny<int>())).Returns("Unit Test Province");
 
             MockUserRepository.Setup(_ => _.ReadByANumber(It.IsAny<string>())).Returns(new User
             {
@@ -113,7 +109,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 .Returns(new[] {new CentreUser {CentreId = 1, IsActive = true}});
 
             MockCentreRepository.Setup(_ => _.ReadAll()).Returns(new[]
-                {new Centre {IsActive = true, CentreName = "Unit Test", Id = 1, ProvinceId = 1}});
+                {new Centre {IsActive = true, CentreName = "Unit Test", Id = 1, RegionId = 1}});
 
             var result = _userManager.GetUser(aNumber);
 

@@ -34,13 +34,14 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public Centre Create(Centre model)
         {
-            const string sql = @"INSERT [dbo].[tblCentre] ([fkProvinceId], [CentreName], [IsActive]) 
-                                VALUES (@ProvinceId, @CentreName, @IsActive) 
+            const string sql = @"INSERT [dbo].[tblCentre] ([fkRegionId], [CentreName], [IsActive]) 
+                                VALUES (@RegionId, @CentreName, @IsActive) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
-                model.Id = db.Query<int>(sql, new {ProvinceId = model.ProvinceId, CentreName = model.CentreName, IsActive = model.IsActive}).Single();
+                model.Id = db.Query<int>(sql,
+                    new {RegionId = model.RegionId, CentreName = model.CentreName, IsActive = model.IsActive}).Single();
             }
 
             return model;
@@ -56,7 +57,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<Centre>(
-                    "SELECT [pkCentreId] [Id], [fkProvinceId] [ProvinceId], [CentreName], [IsActive] FROM [dbo].[tblCentre] WHERE [pkCentreId] = @Id",
+                    "SELECT [pkCentreId] [Id], [fkRegionId] [RegionId], [CentreName], [IsActive] FROM [dbo].[tblCentre] WHERE [pkCentreId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -69,7 +70,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<Centre>("SELECT [pkCentreId] [Id], [fkProvinceId] [ProvinceId], [CentreName], [IsActive] FROM [dbo].[tblCentre]");
+                return db.Query<Centre>(
+                    "SELECT [pkCentreId] [Id], [fkRegionId] [RegionId], [CentreName], [IsActive] FROM [dbo].[tblCentre]");
             }
         }
 
@@ -82,9 +84,15 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblCentre]
-                            SET [fkProvinceId] = @ProvinceId, [CentreName] = @CentreName, [IsActive] = @IsActive
+                            SET [fkRegionId] = @RegionId, [CentreName] = @CentreName, [IsActive] = @IsActive
                             WHERE [pkCentreId] = @Id",
-                    new {Id = model.Id, ProvinceId = model.ProvinceId, CentreName = model.CentreName, IsActive = model.IsActive});
+                    new
+                    {
+                        Id = model.Id,
+                        RegionId = model.RegionId,
+                        CentreName = model.CentreName,
+                        IsActive = model.IsActive
+                    });
             }
         }
 

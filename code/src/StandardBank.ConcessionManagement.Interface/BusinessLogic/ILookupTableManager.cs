@@ -77,13 +77,6 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         string GetMarketSegmentName(int marketSegmentId);
 
         /// <summary>
-        /// Gets the province name for the id specified
-        /// </summary>
-        /// <param name="provinceId"></param>
-        /// <returns></returns>
-        string GetProvinceName(int provinceId);
-
-        /// <summary>
         /// Gets the condition type name
         /// </summary>
         /// <param name="conditionTypeId"></param>

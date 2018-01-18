@@ -19,7 +19,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         {
             var model = new Centre
             {
-                ProvinceId = DataHelper.GetProvinceId(),
+                RegionId = DataHelper.GetRegionId(),
                 CentreName = "7827c21c2e",
                 IsActive = false
             };
@@ -66,7 +66,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var id = results.First().Id;
             var model = InstantiatedDependencies.CentreRepository.ReadById(id);
 
-            model.ProvinceId = DataHelper.GetAlternateProvinceId(model.ProvinceId);
+            model.RegionId = DataHelper.GetAlternateRegionId(model.RegionId);
             model.CentreName = "19a72a641f";
             model.IsActive = !model.IsActive;
 
@@ -76,7 +76,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
 
             Assert.NotNull(updatedModel);
             Assert.Equal(updatedModel.Id, model.Id);
-            Assert.Equal(updatedModel.ProvinceId, model.ProvinceId);
+            Assert.Equal(updatedModel.RegionId, model.RegionId);
             Assert.Equal(updatedModel.CentreName, model.CentreName);
             Assert.Equal(updatedModel.IsActive, model.IsActive);
         }
@@ -89,7 +89,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         {
             var model = new Centre
             {
-                ProvinceId = DataHelper.GetProvinceId(),
+                RegionId = DataHelper.GetRegionId(),
                 CentreName = "7827c21c2e",
                 IsActive = false
             };

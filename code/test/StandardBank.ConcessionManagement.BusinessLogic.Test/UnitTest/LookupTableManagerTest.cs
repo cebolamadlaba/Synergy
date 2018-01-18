@@ -23,7 +23,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         public LookupTableManagerTest()
         {
             _lookupTableManager = new LookupTableManager(MockStatusRepository.Object, MockSubStatusRepository.Object,
-                MockTypeRepository.Object, MockMarketSegmentRepository.Object, MockProvinceRepository.Object,
+                MockTypeRepository.Object, MockMarketSegmentRepository.Object, 
                 MockConcessionTypeRepository.Object, MockProductRepository.Object, MockReviewFeeTypeRepository.Object,
                 MockPeriodRepository.Object, MockPeriodTypeRepository.Object, MockConditionTypeRepository.Object,
                 InstantiatedDependencies.Mapper, MockConditionProductRepository.Object,
@@ -137,22 +137,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
 
             Assert.NotNull(result);
             Assert.Equal(result, marketSegment.Description);
-        }
-
-        /// <summary>
-        /// Tests that GetProvinceName executes positive
-        /// </summary>
-        [Fact]
-        public void GetProvinceName_Executes_Positive()
-        {
-            var province = new Province {Id = 1, Description = "Unit Test Province", IsActive = true};
-
-            MockProvinceRepository.Setup(_ => _.ReadAll()).Returns(new[] {province});
-
-            var result = _lookupTableManager.GetProvinceName(province.Id);
-
-            Assert.NotNull(result);
-            Assert.Equal(result, province.Description);
         }
 
         /// <summary>

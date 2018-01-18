@@ -72,11 +72,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static Mock<IProductRepository> MockProductRepository = new Mock<IProductRepository>();
 
         /// <summary>
-        /// The mock Province repository
-        /// </summary>
-        public static Mock<IProvinceRepository> MockProvinceRepository = new Mock<IProvinceRepository>();
-
-        /// <summary>
         /// The mock ReviewFeeType repository
         /// </summary>
         public static Mock<IReviewFeeTypeRepository> MockReviewFeeTypeRepository = new Mock<IReviewFeeTypeRepository>();

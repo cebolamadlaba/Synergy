@@ -105,7 +105,6 @@
     <Build Include="dbo\Tables\rtblStatus.sql" />
     <Build Include="dbo\Tables\rtblRole.sql" />
     <Build Include="dbo\Tables\rtblReviewFeeType.sql" />
-    <Build Include="dbo\Tables\rtblProvince.sql" />
     <Build Include="dbo\Tables\rtblProduct.sql" />
     <Build Include="dbo\Tables\rtblMarketSegment.sql" />
     <Build Include="dbo\Tables\rtblConditionType.sql" />
@@ -219,7 +218,6 @@
     <Build Include="Audit\Tables\rtblReviewFeeType.sql" />
     <Build Include="Audit\Tables\rtblRelationship.sql" />
     <Build Include="Audit\Tables\rtblRegion.sql" />
-    <Build Include="Audit\Tables\rtblProvince.sql" />
     <Build Include="Audit\Tables\rtblProduct.sql" />
     <Build Include="Audit\Tables\rtblPeriodType.sql" />
     <Build Include="Audit\Tables\rtblPeriod.sql" />

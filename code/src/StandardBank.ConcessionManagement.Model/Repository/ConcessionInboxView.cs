@@ -240,20 +240,20 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public string CentreName { get; set; }
 
         /// <summary>
-        /// Gets or sets the province identifier.
+        /// Gets or sets the region identifier.
         /// </summary>
         /// <value>
-        /// The province identifier.
+        /// The region identifier.
         /// </value>
-        public int ProvinceId { get; set; }
+        public int RegionId { get; set; }
 
         /// <summary>
-        /// Gets or sets the province.
+        /// Gets or sets the region.
         /// </summary>
         /// <value>
-        /// The province.
+        /// The region.
         /// </value>
-        public string Province { get; set; }
+        public string Region { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is mismatched.

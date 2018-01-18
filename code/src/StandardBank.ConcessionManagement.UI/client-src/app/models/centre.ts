@@ -1,5 +1,5 @@
-﻿export class Centre {
+export class Centre {
     id: number;
     name: string;
-    province: string;
+    region: string;
 }

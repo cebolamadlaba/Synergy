@@ -263,7 +263,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     if (userCentreIds.Any(_ => _.CentreId == centre.Id && _.IsActive && centre.IsActive))
                     {
                         var mappedCentre = _mapper.Map<Centre>(centre);
-                        mappedCentre.Province = _lookupTableManager.GetProvinceName(centre.ProvinceId);
+                        mappedCentre.Region = _lookupTableManager.GetRegionDescription(centre.RegionId);
                         userCentres.Add(mappedCentre);
                     }
                 }
