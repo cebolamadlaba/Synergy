@@ -25,7 +25,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor='let user of users; trackBy: index;let i = index' [routerLink]="['/edit-user', user.id]">
+                <tr *ngFor='let user of users; trackBy: index;let i = index' [routerLink]="['/admin/users/edit-user', user.id]">
                     <td>{{user.aNumber}}</td>
                     <td>{{user.firstName}}</td>
                     <td>{{user.surname}}</td>

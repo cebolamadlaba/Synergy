@@ -67,10 +67,10 @@ const routes: Routes = [
     { path: 'trade-add-concession', component: TradeAddConcessionComponent },
     { path: 'cashman-add-concession', component: CashmanAddConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
-    { path: 'admin-menu', component: AdminMenuComponent },
-    { path: 'business-centre', component: BusinessCentreComponent },
-    { path: 'users', component: UsersComponent },
-    { path: 'edit-user/:id', component: EditUserComponent },
+    { path: 'admin', component: AdminMenuComponent },
+    { path: 'admin/business-centre', component: BusinessCentreComponent },
+    { path: 'admin/users', component: UsersComponent },
+    { path: 'admin/users/edit-user/:id', component: EditUserComponent },
     { path: 'admin/regions', component: RegionComponent }
 ];
 

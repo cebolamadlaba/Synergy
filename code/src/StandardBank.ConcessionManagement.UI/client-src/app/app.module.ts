@@ -34,6 +34,7 @@ import { MyConditionService } from './services/my-condition.service';
 import { CashConcessionService } from "./services/cash-concession.service";
 import { AdminService } from './services/admin.service';
 import { RegionService } from './services/region.service';
+import { BusinessCentreService } from './services/business-centre.service';
 
 import { ApprovedConcessionFilterPipe } from './filters/approved-concession-filter.pipe';
 import { CashViewConcessionComponent } from './cash-view-concession/cash-view-concession.component';
@@ -122,7 +123,8 @@ import { RegionComponent } from './admin/region/region.component';
         CashConcessionService,
         TransactionalConcessionService,
         AdminService,
-        RegionService
+        RegionService,
+        BusinessCentreService
     ],
     bootstrap: [AppComponent]
 })

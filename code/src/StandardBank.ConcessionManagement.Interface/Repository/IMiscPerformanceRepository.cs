@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
+using StandardBank.ConcessionManagement.Model.UserInterface.Administration;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
@@ -63,5 +64,11 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <param name="concessionId">The concession identifier.</param>
         /// <returns></returns>
         IEnumerable<TransactionalConcessionDetail> GetTransactionalConcessionDetails(int concessionId);
+
+        /// <summary>
+        /// Gets the business centre management models.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<BusinessCentreManagementModel> GetBusinessCentreManagementModels();
     }
 }

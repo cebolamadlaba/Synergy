@@ -6,6 +6,7 @@ using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Common;
 using StandardBank.ConcessionManagement.Model.UserInterface;
+using StandardBank.ConcessionManagement.Model.UserInterface.Administration;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
@@ -329,6 +330,33 @@ namespace StandardBank.ConcessionManagement.Repository
                     LEFT JOIN [dbo].[rtblTransactionTableNumber] atn on atn.[pkTransactionTableNumberId] = ct.[fkApprovedTransactionTableNumberId]
                     LEFT JOIN [dbo].[rtblTransactionTableNumber] ltn on ltn.[pkTransactionTableNumberId] = ct.[fkLoadedTransactionTableNumberId]
                     WHERE cd.[fkConcessionId] = @concessionId", new { concessionId });
+            }
+        }
+
+        /// <summary>
+        /// Gets the business centre management models.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<BusinessCentreManagementModel> GetBusinessCentreManagementModels()
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<BusinessCentreManagementModel>(@"SELECT
+                    c.[pkCentreId] [CentreId], c.[CentreName], c.[IsActive], bcmtable.[BCM] [BusinessCentreManager], r.[pkRegionId] [RegionId], r.[Description] [Region], 
+                    CASE WHEN requestortable.[AECount] IS NULL THEN 0 ELSE requestortable.[AECount] END [RequestorCount] 
+                    FROM [dbo].[tblCentre] c
+                    LEFT JOIN (
+                    SELECT u.[FirstName] + ' ' + u.[Surname] [BCM], cu.[fkCentreId] FROM [dbo].[tblCentreUser] cu
+                    JOIN [dbo].[tblUser] u ON u.[pkUserId] = cu.[fkUserId]
+                    JOIN [dbo].[tblUserRole] ur ON ur.[fkUserId] = u.[pkUserId]
+                    JOIN [dbo].[rtblRole] r ON r.[pkRoleId] = ur.[fkRoleId] and r.[RoleName] = 'BCM') bcmtable ON bcmtable.[fkCentreId] = c.[pkCentreId]
+                    JOIN [dbo].[rtblRegion] r ON r.[pkRegionId] = c.[fkRegionId]
+                    LEFT JOIN (
+                    SELECT count(*) [AECount], cu.[fkCentreId] FROM [dbo].[tblCentreUser] cu
+                    JOIN [dbo].[tblUser] u ON u.[pkUserId] = cu.[fkUserId]
+                    JOIN [dbo].[tblUserRole] ur ON ur.[fkUserId] = u.[pkUserId]
+                    JOIN [dbo].[rtblRole] r ON r.[pkRoleId] = ur.[fkRoleId] and r.[RoleName] = 'Requestor'
+                    GROUP BY cu.[fkCentreId]) requestortable ON requestortable.[fkCentreId] = c.[pkCentreId]");
             }
         }
     }
