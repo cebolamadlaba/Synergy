@@ -36,6 +36,13 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         IEnumerable<User> ReadAll();
 
         /// <summary>
+        /// Reads the by role.
+        /// </summary>
+        /// <param name="roleName">Name of the role.</param>
+        /// <returns></returns>
+        IEnumerable<User> ReadByRole(string roleName);
+
+        /// <summary>
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>

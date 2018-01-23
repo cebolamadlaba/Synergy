@@ -30,6 +30,14 @@
         public bool IsActive { get; set; }
 
         /// <summary>
+        /// Gets or sets the business centre manager identifier.
+        /// </summary>
+        /// <value>
+        /// The business centre manager identifier.
+        /// </value>
+        public int? BusinessCentreManagerId { get; set; }
+
+        /// <summary>
         /// Gets or sets the business centre manager.
         /// </summary>
         /// <value>

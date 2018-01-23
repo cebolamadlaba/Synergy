@@ -3,6 +3,7 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import { BusinessCentreManagementModel } from '../models/business-centre-management-model';
+import { BusinessCentreManagementLookupModel } from '../models/business-centre-management-lookup-model';
 
 
 @Injectable()
@@ -28,6 +29,11 @@ export class BusinessCentreService {
         let options = new RequestOptions({ headers: headers });
         const url = "/api/BusinessCentre/CreateBusinessCentreManagementModel";
         return this.http.post(url, businessCentreManagementModel, options).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    getBusinessCentreManagementLookupModel(): Observable<BusinessCentreManagementLookupModel> {
+        const url = "/api/BusinessCentre/BusinessCentreManagementLookupModel";
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
     private extractData(response: Response) {
@@ -57,6 +63,11 @@ export class MockBusinessCentreService extends BusinessCentreService {
 
     createBusinessCentreManagementModel(businessCentreManagementModel: BusinessCentreManagementModel): Observable<boolean> {
         return Observable.of(true);
+    }
+
+    getBusinessCentreManagementLookupModel(): Observable<BusinessCentreManagementLookupModel> {
+        var model = new BusinessCentreManagementLookupModel();
+        return Observable.of(model);
     }
 
 }

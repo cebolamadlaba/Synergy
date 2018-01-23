@@ -56,5 +56,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="user">The user.</param>
         /// <returns></returns>
         int GetUserIdForFiltering(User user);
+
+        /// <summary>
+        /// Gets the users by role.
+        /// </summary>
+        /// <param name="roleName">Name of the role.</param>
+        /// <returns></returns>
+        IEnumerable<User> GetUsersByRole(string roleName);
     }
 }

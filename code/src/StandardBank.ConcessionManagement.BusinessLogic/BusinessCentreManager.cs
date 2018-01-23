@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface.Administration;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
@@ -19,12 +18,26 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IMiscPerformanceRepository _miscPerformanceRepository;
 
         /// <summary>
+        /// The region manager
+        /// </summary>
+        private readonly IRegionManager _regionManager;
+
+        /// <summary>
+        /// The user manager
+        /// </summary>
+        private readonly IUserManager _userManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="BusinessCentreManager"/> class.
         /// </summary>
         /// <param name="miscPerformanceRepository">The misc performance repository.</param>
-        public BusinessCentreManager(IMiscPerformanceRepository miscPerformanceRepository)
+        /// <param name="regionManager">The region manager.</param>
+        /// <param name="userManager">The user manager.</param>
+        public BusinessCentreManager(IMiscPerformanceRepository miscPerformanceRepository, IRegionManager regionManager, IUserManager userManager)
         {
             _miscPerformanceRepository = miscPerformanceRepository;
+            _regionManager = regionManager;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -48,6 +61,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             //TODO: Validate the business centre
 
             return errors;
+        }
+
+        /// <summary>
+        /// Gets the business centre management lookup model.
+        /// </summary>
+        /// <returns></returns>
+        public BusinessCentreManagementLookupModel GetBusinessCentreManagementLookupModel()
+        {
+            var model = new BusinessCentreManagementLookupModel
+            {
+                Regions = _regionManager.GetRegions(),
+                AccountExecutives = _userManager.GetUsersByRole(Constants.Roles.Requestor),
+                BusinessCentreManagers = _userManager.GetUsersByRole(Constants.Roles.BCM)
+            };
+
+            return model;
         }
     }
 }

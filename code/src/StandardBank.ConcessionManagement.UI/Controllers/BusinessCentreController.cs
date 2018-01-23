@@ -78,5 +78,15 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             return Ok(true);
         }
+
+        /// <summary>
+        /// Gets the businesses centre management lookup model.
+        /// </summary>
+        /// <returns></returns>
+        [Route("BusinessCentreManagementLookupModel")]
+        public IActionResult BusinessCentreManagementLookupModel()
+        {
+            return Ok(_businessCentreManager.GetBusinessCentreManagementLookupModel());
+        }
     }
 }

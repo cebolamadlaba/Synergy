@@ -2,6 +2,7 @@ export class BusinessCentreManagementModel {
     centreId: number;
     centreName: string;
     isActive: boolean;
+    businessCentreManagerId: number;
     businessCentreManager: string;
     regionId: number;
     region: string;

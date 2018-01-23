@@ -102,6 +102,23 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Reads the by role.
+        /// </summary>
+        /// <param name="roleName">Name of the role.</param>
+        /// <returns></returns>
+        public IEnumerable<User> ReadByRole(string roleName)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<User>(
+                    @"SELECT u.[pkUserId] [Id], u.[ANumber], u.[EmailAddress], u.[FirstName], u.[Surname], u.[IsActive], u.[ContactNumber] FROM [dbo].[tblUser] u
+                    JOIN [dbo].[tblUserRole] ur ON ur.[fkUserId] = u.[pkUserId]
+                    JOIN [dbo].[rtblRole] r ON r.[pkRoleId] = ur.[fkRoleId]
+                    WHERE r.[RoleName] = @roleName", new {roleName});
+            }
+        }
+
+        /// <summary>
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>

@@ -21,5 +21,11 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <returns></returns>
         IEnumerable<string> ValidateBusinessCentreManagementModel(
             BusinessCentreManagementModel businessCentreManagementModel);
+
+        /// <summary>
+        /// Gets the business centre management lookup model.
+        /// </summary>
+        /// <returns></returns>
+        BusinessCentreManagementLookupModel GetBusinessCentreManagementLookupModel();
     }
 }

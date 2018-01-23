@@ -342,11 +342,11 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<BusinessCentreManagementModel>(@"SELECT
-                    c.[pkCentreId] [CentreId], c.[CentreName], c.[IsActive], bcmtable.[BCM] [BusinessCentreManager], r.[pkRegionId] [RegionId], r.[Description] [Region], 
+                    c.[pkCentreId] [CentreId], c.[CentreName], c.[IsActive], bcmtable.[BCMId] [BusinessCentreManagerId], bcmtable.[BCM] [BusinessCentreManager], r.[pkRegionId] [RegionId], r.[Description] [Region], 
                     CASE WHEN requestortable.[AECount] IS NULL THEN 0 ELSE requestortable.[AECount] END [RequestorCount] 
                     FROM [dbo].[tblCentre] c
                     LEFT JOIN (
-                    SELECT u.[FirstName] + ' ' + u.[Surname] [BCM], cu.[fkCentreId] FROM [dbo].[tblCentreUser] cu
+                    SELECT u.[FirstName] + ' ' + u.[Surname] [BCM], u.[pkUserId] [BCMId], cu.[fkCentreId] FROM [dbo].[tblCentreUser] cu
                     JOIN [dbo].[tblUser] u ON u.[pkUserId] = cu.[fkUserId]
                     JOIN [dbo].[tblUserRole] ur ON ur.[fkUserId] = u.[pkUserId]
                     JOIN [dbo].[rtblRole] r ON r.[pkRoleId] = ur.[fkRoleId] and r.[RoleName] = 'BCM') bcmtable ON bcmtable.[fkCentreId] = c.[pkCentreId]

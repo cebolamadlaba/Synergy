@@ -370,5 +370,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return userId;
         }
+
+        /// <summary>
+        /// Gets the users by role.
+        /// </summary>
+        /// <param name="roleName">Name of the role.</param>
+        /// <returns></returns>
+        public IEnumerable<User> GetUsersByRole(string roleName)
+        {
+            return _mapper.Map<IEnumerable<User>>(_userRepository.ReadByRole(roleName));
+        }
     }
 }
