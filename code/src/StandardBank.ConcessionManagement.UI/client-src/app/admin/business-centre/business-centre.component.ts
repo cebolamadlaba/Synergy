@@ -31,6 +31,9 @@ export class BusinessCentreComponent implements OnInit {
     observableBusinessCentreManagementLookupModel: Observable<BusinessCentreManagementLookupModel>;
     businessCentreManagementLookupModel: BusinessCentreManagementLookupModel;
 
+    selectedAccountExecutive: User;
+    selectedAccountExecutives: User[];
+
     constructor(private location: Location, private businessCentreService: BusinessCentreService) {
         this.addBusinessCentreManagementModel = new BusinessCentreManagementModel();
     }
@@ -87,6 +90,18 @@ export class BusinessCentreComponent implements OnInit {
             this.isLoading = false;
             this.errorMessage = <any>error;
         });
+    }
+
+    addAccountExecutive() {
+        if (this.selectedAccountExecutive != null) {
+            if (this.selectedAccountExecutives == null) {
+                this.selectedAccountExecutives = [];
+            }
+
+            if (!this.selectedAccountExecutives.find(result => result.id == this.selectedAccountExecutive.id)) {
+                this.selectedAccountExecutives.push(this.selectedAccountExecutive);
+            }
+        }
     }
 
     goBack() {

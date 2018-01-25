@@ -114,7 +114,29 @@ namespace StandardBank.ConcessionManagement.Repository
                     @"SELECT u.[pkUserId] [Id], u.[ANumber], u.[EmailAddress], u.[FirstName], u.[Surname], u.[IsActive], u.[ContactNumber] FROM [dbo].[tblUser] u
                     JOIN [dbo].[tblUserRole] ur ON ur.[fkUserId] = u.[pkUserId]
                     JOIN [dbo].[rtblRole] r ON r.[pkRoleId] = ur.[fkRoleId]
-                    WHERE r.[RoleName] = @roleName", new {roleName});
+                    WHERE r.[RoleName] = @roleName
+                    ORDER BY u.[FirstName], u.[Surname]", new {roleName});
+            }
+        }
+
+        /// <summary>
+        /// Reads the by role centre identifier.
+        /// </summary>
+        /// <param name="roleName">Name of the role.</param>
+        /// <param name="centreId">The centre identifier.</param>
+        /// <returns></returns>
+        public IEnumerable<User> ReadByRoleCentreId(string roleName, int centreId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<User>(
+                    @"SELECT u.[pkUserId] [Id], u.[ANumber], u.[EmailAddress], u.[FirstName], u.[Surname], u.[IsActive], u.[ContactNumber] FROM [dbo].[tblUser] u
+                    JOIN [dbo].[tblCentreUser] cu ON cu.[fkUserId] = u.[pkUserId]
+                    JOIN [dbo].[tblUserRole] ur ON ur.[fkUserId] = u.[pkUserId]
+                    JOIN [dbo].[rtblRole] r ON r.[pkRoleId] = ur.[fkRoleId]
+                    WHERE r.[RoleName] = @roleName
+                    AND cu.[fkCentreId] = @centreId
+                    ORDER BY u.[FirstName], u.[Surname]", new { roleName, centreId });
             }
         }
 

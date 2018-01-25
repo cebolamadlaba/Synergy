@@ -1,4 +1,6 @@
-﻿namespace StandardBank.ConcessionManagement.Model.UserInterface.Administration
+﻿using System.Collections.Generic;
+
+namespace StandardBank.ConcessionManagement.Model.UserInterface.Administration
 {
     /// <summary>
     /// Business centre management model
@@ -68,5 +70,13 @@
         /// The requestor count.
         /// </value>
         public int RequestorCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the account executives.
+        /// </summary>
+        /// <value>
+        /// The account executives.
+        /// </value>
+        public IEnumerable<User> AccountExecutives { get; set; }
     }
 }

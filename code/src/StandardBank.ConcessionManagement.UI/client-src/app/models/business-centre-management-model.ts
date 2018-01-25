@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export class BusinessCentreManagementModel {
     centreId: number;
     centreName: string;
@@ -7,4 +9,5 @@ export class BusinessCentreManagementModel {
     regionId: number;
     region: string;
     requestorCount: number;
+    accountExecutives: User[];
 }
