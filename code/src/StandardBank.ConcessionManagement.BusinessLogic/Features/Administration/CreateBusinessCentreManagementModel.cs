@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System.Collections.Generic;
+using MediatR;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic.Features;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
@@ -11,16 +12,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
     /// </summary>
     /// <seealso cref="MediatR.IRequest" />
     /// <seealso cref="StandardBank.ConcessionManagement.Interface.BusinessLogic.Features.IAuditableCommand" />
-    public class CreateBusinessCentreManagementModel : IRequest, IAuditableCommand
+    public class CreateBusinessCentreManagementModel : IRequest, IMultipleAuditableCommand
     {
-        /// <summary>
-        /// Gets or sets the audit record.
-        /// </summary>
-        /// <value>
-        /// The audit record.
-        /// </value>
-        public AuditRecord AuditRecord { get; set; }
-
         /// <summary>
         /// Gets or sets the business centre management model.
         /// </summary>
@@ -48,5 +41,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
             BusinessCentreManagementModel = businessCentreManagementModel;
             CurrentUser = user;
         }
+
+        /// <summary>
+        /// Gets or sets the audit records.
+        /// </summary>
+        /// <value>
+        /// The audit records.
+        /// </value>
+        public IEnumerable<AuditRecord> AuditRecords { get; set; }
     }
 }

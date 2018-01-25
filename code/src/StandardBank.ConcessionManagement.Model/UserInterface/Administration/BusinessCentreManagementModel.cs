@@ -53,7 +53,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Administration
         /// <value>
         /// The region identifier.
         /// </value>
-        public int RegionId { get; set; }
+        public int? RegionId { get; set; }
 
         /// <summary>
         /// Gets or sets the region.

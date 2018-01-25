@@ -67,6 +67,7 @@ export class BusinessCentreComponent implements OnInit {
         this.saveMessage = null;
 
         this.addBusinessCentreManagementModel.isActive = true;
+        this.addBusinessCentreManagementModel.accountExecutives = this.selectedAccountExecutives;
 
         this.observableErrors = this.businessCentreService.validateBusinessCentreManagementModel(this.addBusinessCentreManagementModel);
         this.observableErrors.subscribe(errors => {
@@ -102,6 +103,10 @@ export class BusinessCentreComponent implements OnInit {
                 this.selectedAccountExecutives.push(this.selectedAccountExecutive);
             }
         }
+    }
+
+    removeAccountExecutive(index: number) {
+        this.selectedAccountExecutives.splice(index, 1);
     }
 
     goBack() {

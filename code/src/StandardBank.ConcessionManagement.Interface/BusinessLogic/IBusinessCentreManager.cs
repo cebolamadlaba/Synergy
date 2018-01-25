@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Administration;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
@@ -27,5 +28,21 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// </summary>
         /// <returns></returns>
         BusinessCentreManagementLookupModel GetBusinessCentreManagementLookupModel();
+
+        /// <summary>
+        /// Creates the centre.
+        /// </summary>
+        /// <param name="regionId">The region identifier.</param>
+        /// <param name="centreName">Name of the centre.</param>
+        /// <returns></returns>
+        Model.Repository.Centre CreateCentre(int regionId, string centreName);
+
+        /// <summary>
+        /// Creates the centre user.
+        /// </summary>
+        /// <param name="centreId">The centre identifier.</param>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
+        Model.Repository.CentreUser CreateCentreUser(int centreId, int userId);
     }
 }

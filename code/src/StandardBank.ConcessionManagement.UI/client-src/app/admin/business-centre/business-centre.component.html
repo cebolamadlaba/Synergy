@@ -80,6 +80,7 @@
                 <div class="col-md-12 modal-header">
                     <h4>Add Business Centre</h4>
                 </div>
+
                 <div class="row">
                     <div class="col-md-6 modal-body">
                         <div class="form-group">
@@ -145,11 +146,11 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr *ngFor='let accountExecutive of selectedAccountExecutives; trackBy: index'>
+                                        <tr *ngFor='let accountExecutive of selectedAccountExecutives; trackBy: index; let i=index'>
                                             <td>{{accountExecutive.fullName}}</td>
                                             <td>{{accountExecutive.aNumber}}</td>
                                             <td>{{accountExecutive.emailAddress}}</td>
-                                            <td>Delete</td>
+                                            <td><button class="btn-delete" type="button" (click)="removeAccountExecutive(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -157,6 +158,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="modal-footer">
                     <div class="float-right">
                         <button type="button" class="btn btn-cancel" (click)="addBusinessCentreModal.hide()">Close</button>

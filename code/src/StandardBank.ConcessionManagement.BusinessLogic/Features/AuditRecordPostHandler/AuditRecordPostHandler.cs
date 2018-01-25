@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using MediatR.Pipeline;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic.Features;
 using StandardBank.ConcessionManagement.Interface.Repository;
@@ -40,6 +41,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.AuditRecordPo
             if (command?.AuditRecord != null)
                 await _auditRepository.Audit(command.AuditRecord.Entity, command.AuditRecord.AuditType,
                     command?.AuditRecord?.User?.ANumber);
+
+            var commands = request as IMultipleAuditableCommand;
+
+            if (commands?.AuditRecords != null && commands.AuditRecords.Any())
+            {
+                foreach (var auditRecord in commands.AuditRecords)
+                    await _auditRepository.Audit(auditRecord.Entity, auditRecord.AuditType, auditRecord.User?.ANumber);
+            }
         }
     }
 }
