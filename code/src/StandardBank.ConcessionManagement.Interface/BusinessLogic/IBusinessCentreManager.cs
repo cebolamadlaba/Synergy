@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Administration;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
@@ -53,5 +52,22 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
         Model.Repository.CentreUser UpdateCentreUser(int currentCentreId, int newCentreId, int userId);
+
+        /// <summary>
+        /// Updates the centre.
+        /// </summary>
+        /// <param name="centreId">The centre identifier.</param>
+        /// <param name="regionId">The region identifier.</param>
+        /// <param name="centreName">Name of the centre.</param>
+        /// <returns></returns>
+        Model.Repository.Centre UpdateCentre(int centreId, int regionId, string centreName);
+
+        /// <summary>
+        /// Deletes the centre user.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="centreId">The centre identifier.</param>
+        /// <returns></returns>
+        Model.Repository.CentreUser DeleteCentreUser(int userId, int centreId);
     }
 }

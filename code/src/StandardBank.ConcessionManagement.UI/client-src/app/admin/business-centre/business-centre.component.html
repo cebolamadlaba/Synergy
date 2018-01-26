@@ -42,7 +42,7 @@
 <div class="col-md-12 search-and-results-container" *ngIf="!isLoading">
     <!-- Input form -->
     <div class="form-inline">
-        <button class="btn btn-primary" type="button" (click)="addBusinessCentreModal.show()">Add Business Centre</button>
+        <button class="btn btn-primary" type="button" (click)="addBusinessCentre()">Add Business Centre</button>
     </div>
 
     <!-- Results table -->
@@ -59,7 +59,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor='let businessCentreManagementModel of businessCentreManagementModels; trackBy: index'>
+                <tr *ngFor='let businessCentreManagementModel of businessCentreManagementModels; trackBy: index' (click)="editBusinessCentre(businessCentreManagementModel)">
                     <td>{{businessCentreManagementModel.centreId}}</td>
                     <td>{{businessCentreManagementModel.centreName}}</td>
                     <td>
@@ -78,7 +78,9 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="col-md-12 modal-header">
-                    <h4>Add Business Centre</h4>
+                    <h4>
+                        {{actionType}} Business Centre
+                    </h4>
                 </div>
 
                 <div class="row">
@@ -146,12 +148,15 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr *ngFor='let accountExecutive of selectedAccountExecutives; trackBy: index; let i=index'>
-                                            <td>{{accountExecutive.fullName}}</td>
-                                            <td>{{accountExecutive.aNumber}}</td>
-                                            <td>{{accountExecutive.emailAddress}}</td>
-                                            <td><button class="btn-delete" type="button" (click)="removeAccountExecutive(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
-                                        </tr>
+                                    <tr *ngIf="isBcmAEsLoading">
+                                        <td colspan="4">Loading...</td>
+                                    </tr>
+                                    <tr *ngFor='let accountExecutive of selectedAccountExecutives; trackBy: index; let i=index'>
+                                        <td>{{accountExecutive.fullName}}</td>
+                                        <td>{{accountExecutive.aNumber}}</td>
+                                        <td>{{accountExecutive.emailAddress}}</td>
+                                        <td><button class="btn-delete" type="button" (click)="removeAccountExecutive(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                                    </tr>
                                     </tbody>
                                 </table>
                             </div>

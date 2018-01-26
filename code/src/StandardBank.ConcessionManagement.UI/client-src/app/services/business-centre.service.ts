@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import { BusinessCentreManagementModel } from '../models/business-centre-management-model';
 import { BusinessCentreManagementLookupModel } from '../models/business-centre-management-lookup-model';
+import { User } from '../models/user';
 
 
 @Injectable()
@@ -33,6 +34,11 @@ export class BusinessCentreService {
 
     getBusinessCentreManagementLookupModel(): Observable<BusinessCentreManagementLookupModel> {
         const url = "/api/BusinessCentre/BusinessCentreManagementLookupModel";
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    getBusinessCentreAccountExecutives(centreId: number): Observable<User[]> {
+        const url = "/api/BusinessCentre/BusinessCentreAccountExecutives/" + centreId;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
@@ -67,6 +73,11 @@ export class MockBusinessCentreService extends BusinessCentreService {
 
     getBusinessCentreManagementLookupModel(): Observable<BusinessCentreManagementLookupModel> {
         var model = new BusinessCentreManagementLookupModel();
+        return Observable.of(model);
+    }
+
+    getBusinessCentreAccountExecutives(centreId: number): Observable<User[]> {
+        var model = [new User()];
         return Observable.of(model);
     }
 

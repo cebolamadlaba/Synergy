@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
@@ -80,6 +81,29 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
             else
             {
+                var centres = _centreRepository.ReadAll();
+
+                if (!string.IsNullOrWhiteSpace(businessCentreManagementModel.CentreName) && centres != null && centres.Any())
+                {
+                    if (businessCentreManagementModel.CentreId > 0)
+                    {
+                        //this means it's an update
+                        foreach (var matchingDescriptionRegion in centres.Where(_ =>
+                            _.CentreName.ToLowerInvariant() == businessCentreManagementModel.CentreName.ToLowerInvariant()))
+                        {
+                            if (matchingDescriptionRegion.Id != businessCentreManagementModel.CentreId)
+                                errors.Add("There is already a business centre with the same description, please use another description");
+                        }
+                    }
+                    else
+                    {
+                        //this means it's a create
+                        if (centres.Any(_ => _.CentreName.ToLowerInvariant() == businessCentreManagementModel.CentreName.ToLowerInvariant()))
+                            errors.Add(
+                                "There is already a business centre with the same description, please use another description");
+                    }
+                }
+
                 if (!businessCentreManagementModel.RegionId.HasValue || businessCentreManagementModel.RegionId.Value == 0)
                     errors.Add("Please select a region");
 
@@ -158,6 +182,45 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                     return userCentre;
                 }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Updates the centre.
+        /// </summary>
+        /// <param name="centreId">The centre identifier.</param>
+        /// <param name="regionId">The region identifier.</param>
+        /// <param name="centreName">Name of the centre.</param>
+        /// <returns></returns>
+        public Centre UpdateCentre(int centreId, int regionId, string centreName)
+        {
+            var centre = _centreRepository.ReadById(centreId);
+            centre.RegionId = regionId;
+            centre.CentreName = centreName;
+
+            _centreRepository.Update(centre);
+
+            return centre;
+        }
+
+        /// <summary>
+        /// Deletes the centre user.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="centreId">The centre identifier.</param>
+        /// <returns></returns>
+        public CentreUser DeleteCentreUser(int userId, int centreId)
+        {
+            var centreUsers = _centreUserRepository.ReadByUserId(userId);
+
+            var centreToDelete = centreUsers.FirstOrDefault(_ => _.CentreId == centreId);
+
+            if (centreToDelete != null)
+            {
+                _centreUserRepository.Delete(centreToDelete);
+                return centreToDelete;
             }
 
             return null;

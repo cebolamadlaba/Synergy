@@ -140,11 +140,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             mappedUser.UserRegions = GetUserRegions(user.Id);
             mappedUser.SelectedRegion = GetSelectedRegion(mappedUser.UserRegions, user);
-            mappedUser.RegionId = mappedUser.SelectedRegion.Id;
+
+            if (mappedUser.SelectedRegion != null)
+                mappedUser.RegionId = mappedUser.SelectedRegion.Id;
 
             mappedUser.UserCentres = GetUserCentres(user.Id);
             mappedUser.SelectedCentre = mappedUser.UserCentres.FirstOrDefault();
-            mappedUser.CentreId = mappedUser.SelectedCentre.Id;
+
+            if (mappedUser.SelectedCentre != null)
+                mappedUser.CentreId = mappedUser.SelectedCentre.Id;
 
             mappedUser.CanRequest =
                 mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.Requestor || _.Name == Constants.Roles.AA);
@@ -378,6 +382,27 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             _cacheManager.Remove(CacheKey.UserInterface.SiteHelper.LoggedInUser,
                 new CacheKeyParameter(nameof(aNumber), aNumber));
+        }
+
+        /// <summary>
+        /// Gets the users by role and centre identifier.
+        /// </summary>
+        /// <param name="roleName">Name of the role.</param>
+        /// <param name="centreId">The centre identifier.</param>
+        /// <returns></returns>
+        public IEnumerable<User> GetUsersByRoleCentreId(string roleName, int centreId)
+        {
+            return _mapper.Map<IEnumerable<User>>(_userRepository.ReadByRoleCentreId(roleName, centreId));
+        }
+
+        /// <summary>
+        /// Gets the users by centre identifier.
+        /// </summary>
+        /// <param name="centreId">The centre identifier.</param>
+        /// <returns></returns>
+        public IEnumerable<User> GetUsersByCentreId(int centreId)
+        {
+            return _mapper.Map<IEnumerable<User>>(_userRepository.ReadByCentreId(centreId));
         }
     }
 }

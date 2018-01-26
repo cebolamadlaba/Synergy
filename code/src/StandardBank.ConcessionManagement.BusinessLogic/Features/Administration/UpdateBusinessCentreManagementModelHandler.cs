@@ -8,10 +8,10 @@ using StandardBank.ConcessionManagement.Model.Repository;
 namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administration
 {
     /// <summary>
-    /// Creates the business centre management model handler
+    /// Update business centre management model handler
     /// </summary>
-    /// <seealso cref="MediatR.IRequestHandler{CreateBusinessCentreManagementModel}" />
-    public class CreateBusinessCentreManagementModelHandler : IRequestHandler<CreateBusinessCentreManagementModel>
+    /// <seealso cref="MediatR.IRequestHandler{UpdateBusinessCentreManagementModel}" />
+    public class UpdateBusinessCentreManagementModelHandler : IRequestHandler<UpdateBusinessCentreManagementModel>
     {
         /// <summary>
         /// The business centre manager
@@ -24,11 +24,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
         private readonly IUserManager _userManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CreateBusinessCentreManagementModelHandler"/> class.
+        /// Initializes a new instance of the <see cref="UpdateBusinessCentreManagementModelHandler"/> class.
         /// </summary>
         /// <param name="businessCentreManager">The business centre manager.</param>
         /// <param name="userManager">The user manager.</param>
-        public CreateBusinessCentreManagementModelHandler(IBusinessCentreManager businessCentreManager, IUserManager userManager)
+        public UpdateBusinessCentreManagementModelHandler(IBusinessCentreManager businessCentreManager,
+            IUserManager userManager)
         {
             _businessCentreManager = businessCentreManager;
             _userManager = userManager;
@@ -38,16 +39,25 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
         /// Handles the specified message.
         /// </summary>
         /// <param name="message">The message.</param>
-        public void Handle(CreateBusinessCentreManagementModel message)
+        public void Handle(UpdateBusinessCentreManagementModel message)
         {
             var auditRecords = new List<AuditRecord>();
 
-            var centre = _businessCentreManager.CreateCentre(message.BusinessCentreManagementModel.RegionId.Value,
-                message.BusinessCentreManagementModel.CentreName);
+            var centre = _businessCentreManager.UpdateCentre(message.BusinessCentreManagementModel.CentreId,
+                message.BusinessCentreManagementModel.RegionId.Value, message.BusinessCentreManagementModel.CentreName);
 
-            auditRecords.Add(new AuditRecord(centre, message.CurrentUser, AuditType.Insert));
+            auditRecords.Add(new AuditRecord(centre, message.CurrentUser, AuditType.Update));
 
-            //add the users
+            //delete any and all users currently associated with this centre
+            var recordsToDelete = _userManager.GetUsersByCentreId(centre.Id);
+
+            foreach (var recordToDelete in recordsToDelete)
+            {
+                var centreUserDeleted = _businessCentreManager.DeleteCentreUser(recordToDelete.Id, centre.Id);
+                auditRecords.Add(new AuditRecord(centreUserDeleted, message.CurrentUser, AuditType.Delete));
+            }
+
+            //add the centre users
             AddCentreUsers(message, centre, auditRecords);
 
             message.AuditRecords = auditRecords;
@@ -59,7 +69,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
         /// <param name="message">The message.</param>
         /// <param name="centre">The centre.</param>
         /// <param name="auditRecords">The audit records.</param>
-        private void AddCentreUsers(CreateBusinessCentreManagementModel message, Centre centre, List<AuditRecord> auditRecords)
+        private void AddCentreUsers(UpdateBusinessCentreManagementModel message, Centre centre, List<AuditRecord> auditRecords)
         {
             if (message.BusinessCentreManagementModel.BusinessCentreManagerId.HasValue)
             {

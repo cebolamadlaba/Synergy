@@ -1,4 +1,5 @@
-﻿using StandardBank.ConcessionManagement.Model.UserInterface;
+﻿using System.Collections;
+using StandardBank.ConcessionManagement.Model.UserInterface;
 using System.Collections.Generic;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
@@ -68,5 +69,20 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// </summary>
         /// <param name="aNumber">a number.</param>
         void ResetUserCache(string aNumber);
+
+        /// <summary>
+        /// Gets the users by role and centre identifier.
+        /// </summary>
+        /// <param name="roleName">Name of the role.</param>
+        /// <param name="centreId">The centre identifier.</param>
+        /// <returns></returns>
+        IEnumerable<User> GetUsersByRoleCentreId(string roleName, int centreId);
+
+        /// <summary>
+        /// Gets the users by centre identifier.
+        /// </summary>
+        /// <param name="centreId">The centre identifier.</param>
+        /// <returns></returns>
+        IEnumerable<User> GetUsersByCentreId(int centreId);
     }
 }

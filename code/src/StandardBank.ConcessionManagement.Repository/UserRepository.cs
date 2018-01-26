@@ -141,6 +141,23 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Reads the by centre identifier.
+        /// </summary>
+        /// <param name="centreId">The centre identifier.</param>
+        /// <returns></returns>
+        public IEnumerable<User> ReadByCentreId(int centreId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<User>(
+                    @"SELECT u.[pkUserId] [Id], u.[ANumber], u.[EmailAddress], u.[FirstName], u.[Surname], u.[IsActive], u.[ContactNumber] FROM [dbo].[tblUser] u
+                    JOIN [dbo].[tblCentreUser] cu ON cu.[fkUserId] = u.[pkUserId]
+                    WHERE cu.[fkCentreId] = @centreId
+                    ORDER BY u.[FirstName], u.[Surname]", new { centreId });
+            }
+        }
+
+        /// <summary>
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>

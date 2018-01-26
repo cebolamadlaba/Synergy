@@ -51,6 +51,13 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         IEnumerable<User> ReadByRoleCentreId(string roleName, int centreId);
 
         /// <summary>
+        /// Reads the by centre identifier.
+        /// </summary>
+        /// <param name="centreId">The centre identifier.</param>
+        /// <returns></returns>
+        IEnumerable<User> ReadByCentreId(int centreId);
+
+        /// <summary>
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>

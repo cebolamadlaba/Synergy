@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.Administration;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface.Administration;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 
@@ -32,16 +33,24 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         private readonly ISiteHelper _siteHelper;
 
         /// <summary>
+        /// The user manager
+        /// </summary>
+        private readonly IUserManager _userManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="BusinessCentreController"/> class.
         /// </summary>
         /// <param name="businessCentreManager">The business centre manager.</param>
         /// <param name="mediator">The mediator.</param>
         /// <param name="siteHelper">The site helper.</param>
-        public BusinessCentreController(IBusinessCentreManager businessCentreManager, IMediator mediator, ISiteHelper siteHelper)
+        /// <param name="userManager">The user manager.</param>
+        public BusinessCentreController(IBusinessCentreManager businessCentreManager, IMediator mediator,
+            ISiteHelper siteHelper, IUserManager userManager)
         {
             _businessCentreManager = businessCentreManager;
             _mediator = mediator;
             _siteHelper = siteHelper;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -74,7 +83,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public async Task<IActionResult> CreateBusinessCentreManagementModel([FromBody] BusinessCentreManagementModel businessCentreManagementModel)
         {
             var user = _siteHelper.LoggedInUser(this);
-            await _mediator.Send(new CreateBusinessCentreManagementModel(businessCentreManagementModel, user));
+
+            if (businessCentreManagementModel.CentreId > 0)
+                await _mediator.Send(new UpdateBusinessCentreManagementModel(businessCentreManagementModel, user));
+            else
+                await _mediator.Send(new CreateBusinessCentreManagementModel(businessCentreManagementModel, user));
 
             return Ok(true);
         }
@@ -87,6 +100,17 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult BusinessCentreManagementLookupModel()
         {
             return Ok(_businessCentreManager.GetBusinessCentreManagementLookupModel());
+        }
+
+        /// <summary>
+        /// Gets the business centre account executives.
+        /// </summary>
+        /// <param name="centreId">The centre identifier.</param>
+        /// <returns></returns>
+        [Route("BusinessCentreAccountExecutives/{centreId}")]
+        public IActionResult BusinessCentreAccountExecutives(int centreId)
+        {
+            return Ok(_userManager.GetUsersByRoleCentreId(Constants.Roles.Requestor, centreId));
         }
     }
 }
