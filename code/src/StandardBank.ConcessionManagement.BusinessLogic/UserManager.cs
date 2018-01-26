@@ -23,11 +23,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ICacheManager _cacheManager;
 
         /// <summary>
-        /// The lookup table manager
-        /// </summary>
-        private readonly ILookupTableManager _lookupTableManager;
-
-        /// <summary>
         /// The user repository
         /// </summary>
         private readonly IUserRepository _userRepository;
@@ -81,7 +76,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// Initializes a new instance of the <see cref="UserManager"/> class.
         /// </summary>
         /// <param name="cacheManager">The cache manager.</param>
-        /// <param name="lookupTableManager">The lookup table manager.</param>
         /// <param name="userRepository">The user repository.</param>
         /// <param name="userRoleRepository">The user role repository.</param>
         /// <param name="roleRepository">The role repository.</param>
@@ -92,14 +86,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="mapper">The mapper.</param>
         /// <param name="accountExecutiveAssistantRepository">The account executive assistant repository.</param>
         /// <param name="regionManager">The region manager.</param>
-        public UserManager(ICacheManager cacheManager, ILookupTableManager lookupTableManager,
+        public UserManager(ICacheManager cacheManager,
             IUserRepository userRepository, IUserRoleRepository userRoleRepository, IRoleRepository roleRepository,
             IUserRegionRepository userRegionRepository, IRegionRepository regionRepository,
             ICentreRepository centreRepository, ICentreUserRepository centreUserRepository, IMapper mapper,
             IAccountExecutiveAssistantRepository accountExecutiveAssistantRepository, IRegionManager regionManager)
         {
             _cacheManager = cacheManager;
-            _lookupTableManager = lookupTableManager;
             _userRepository = userRepository;
             _userRoleRepository = userRoleRepository;
             _roleRepository = roleRepository;
@@ -247,8 +240,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var user = _userRepository.ReadById(userId);
             var aNumber = user.ANumber;
 
-            _cacheManager.Remove(CacheKey.UserInterface.SiteHelper.LoggedInUser,
-                new CacheKeyParameter(nameof(aNumber), aNumber));
+            ResetUserCache(aNumber);
         }
 
         /// <summary>
@@ -339,10 +331,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public int CreateUser(User userModel)
         {
-            var aNumber = userModel.ANumber;
-
-            _cacheManager.Remove(CacheKey.UserInterface.SiteHelper.LoggedInUser,
-                new CacheKeyParameter(nameof(aNumber), aNumber));
+            ResetUserCache(userModel.ANumber);
 
             return _userRepository.CreateUser(_mapper.Map<Model.Repository.User>(userModel));
         }
@@ -379,6 +368,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public IEnumerable<User> GetUsersByRole(string roleName)
         {
             return _mapper.Map<IEnumerable<User>>(_userRepository.ReadByRole(roleName));
+        }
+
+        /// <summary>
+        /// Resets the user cache.
+        /// </summary>
+        /// <param name="aNumber">a number.</param>
+        public void ResetUserCache(string aNumber)
+        {
+            _cacheManager.Remove(CacheKey.UserInterface.SiteHelper.LoggedInUser,
+                new CacheKeyParameter(nameof(aNumber), aNumber));
         }
     }
 }

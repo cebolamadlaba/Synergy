@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
@@ -137,6 +136,31 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 IsActive = true,
                 UserId = userId
             });
+        }
+
+        /// <summary>
+        /// Updates the centre user.
+        /// </summary>
+        /// <param name="currentCentreId">The current centre identifier.</param>
+        /// <param name="newCentreId">The new centre identifier.</param>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
+        public CentreUser UpdateCentreUser(int currentCentreId, int newCentreId, int userId)
+        {
+            var userCentres = _centreUserRepository.ReadByUserId(userId);
+
+            foreach (var userCentre in userCentres)
+            {
+                if (userCentre.CentreId == currentCentreId)
+                {
+                    userCentre.CentreId = newCentreId;
+                    _centreUserRepository.Update(userCentre);
+
+                    return userCentre;
+                }
+            }
+
+            return null;
         }
     }
 }

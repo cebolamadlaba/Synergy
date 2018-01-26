@@ -44,5 +44,14 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
         Model.Repository.CentreUser CreateCentreUser(int centreId, int userId);
+
+        /// <summary>
+        /// Updates the centre user.
+        /// </summary>
+        /// <param name="currentCentreId">The current centre identifier.</param>
+        /// <param name="newCentreId">The new centre identifier.</param>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
+        Model.Repository.CentreUser UpdateCentreUser(int currentCentreId, int newCentreId, int userId);
     }
 }

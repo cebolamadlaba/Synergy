@@ -19,12 +19,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
         private readonly IBusinessCentreManager _businessCentreManager;
 
         /// <summary>
+        /// The user manager
+        /// </summary>
+        private readonly IUserManager _userManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CreateBusinessCentreManagementModelHandler"/> class.
         /// </summary>
         /// <param name="businessCentreManager">The business centre manager.</param>
-        public CreateBusinessCentreManagementModelHandler(IBusinessCentreManager businessCentreManager)
+        /// <param name="userManager">The user manager.</param>
+        public CreateBusinessCentreManagementModelHandler(IBusinessCentreManager businessCentreManager, IUserManager userManager)
         {
             _businessCentreManager = businessCentreManager;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -42,11 +49,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
 
             if (message.BusinessCentreManagementModel.BusinessCentreManagerId.HasValue)
             {
+                var user = _userManager.GetUser(message.BusinessCentreManagementModel.BusinessCentreManagerId);
+
                 //if there is a business centre manager id, we need to add this user to this centre
                 var bcmCentreUser = _businessCentreManager.CreateCentreUser(centre.Id,
                     message.BusinessCentreManagementModel.BusinessCentreManagerId.Value);
 
                 auditRecords.Add(new AuditRecord(bcmCentreUser, message.CurrentUser, AuditType.Insert));
+
+                _userManager.ResetUserCache(user.ANumber);
             }
 
             if (message.BusinessCentreManagementModel.AccountExecutives != null &&
@@ -55,9 +66,24 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
                 //add the selected account executives
                 foreach (var accountExecutive in message.BusinessCentreManagementModel.AccountExecutives)
                 {
-                    var centreUser = _businessCentreManager.CreateCentreUser(centre.Id, accountExecutive.Id);
+                    var user = _userManager.GetUser(accountExecutive.Id);
 
-                    auditRecords.Add(new AuditRecord(centreUser, message.CurrentUser, AuditType.Insert));
+                    if (user.CentreId > 0)
+                    {
+                        var centreUser =
+                            _businessCentreManager.UpdateCentreUser(user.CentreId, centre.Id, accountExecutive.Id);
+
+                        if (centreUser != null)
+                            auditRecords.Add(new AuditRecord(centreUser, message.CurrentUser, AuditType.Update));
+                    }
+                    else
+                    {
+                        var centreUser = _businessCentreManager.CreateCentreUser(centre.Id, accountExecutive.Id);
+
+                        auditRecords.Add(new AuditRecord(centreUser, message.CurrentUser, AuditType.Insert));
+                    }
+
+                    _userManager.ResetUserCache(user.ANumber);
                 }
             }
 

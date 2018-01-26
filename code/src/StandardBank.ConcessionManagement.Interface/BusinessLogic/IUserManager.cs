@@ -1,6 +1,5 @@
 ﻿using StandardBank.ConcessionManagement.Model.UserInterface;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 {
@@ -63,5 +62,11 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="roleName">Name of the role.</param>
         /// <returns></returns>
         IEnumerable<User> GetUsersByRole(string roleName);
+
+        /// <summary>
+        /// Resets the user cache.
+        /// </summary>
+        /// <param name="aNumber">a number.</param>
+        void ResetUserCache(string aNumber);
     }
 }
