@@ -31,6 +31,17 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
             int subStatusId, bool isActive);
 
         /// <summary>
+        /// Reads the by region identifier status identifier sub status identifier is active.
+        /// </summary>
+        /// <param name="regionId">The region identifier.</param>
+        /// <param name="statusId">The status identifier.</param>
+        /// <param name="subStatusId">The sub status identifier.</param>
+        /// <param name="isActive">if set to <c>true</c> [is active].</param>
+        /// <returns></returns>
+        IEnumerable<ConcessionInboxView> ReadByRegionIdStatusIdSubStatusIdIsActive(int regionId, int statusId,
+            int subStatusId, bool isActive);
+
+        /// <summary>
         /// Reads the by requestor identifier between start expiry date end expiry date status ids is active.
         /// </summary>
         /// <param name="requestorId">The requestor identifier.</param>

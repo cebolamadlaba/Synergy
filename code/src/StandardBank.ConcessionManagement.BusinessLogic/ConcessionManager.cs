@@ -166,8 +166,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     case Constants.Roles.HeadOffice:
                         inboxConcessions.AddRange(
                             _mapper.Map<IEnumerable<InboxConcession>>(
-                                _concessionInboxViewRepository.ReadByCentreIdStatusIdSubStatusIdIsActive(
-                                    user.SelectedCentre.Id, pendingStatusId, pcmPendingStatusId, true)));
+                                _concessionInboxViewRepository.ReadByRegionIdStatusIdSubStatusIdIsActive(
+                                    user.SelectedRegion.Id, pendingStatusId, pcmPendingStatusId, true)));
                         break;
                 }
             }

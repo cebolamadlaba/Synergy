@@ -73,6 +73,29 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Reads the by region identifier status identifier sub status identifier is active.
+        /// </summary>
+        /// <param name="regionId">The region identifier.</param>
+        /// <param name="statusId">The status identifier.</param>
+        /// <param name="subStatusId">The sub status identifier.</param>
+        /// <param name="isActive">if set to <c>true</c> [is active].</param>
+        /// <returns></returns>
+        public IEnumerable<ConcessionInboxView> ReadByRegionIdStatusIdSubStatusIdIsActive(int regionId, int statusId, int subStatusId, bool isActive)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<ConcessionInboxView>(
+                    @"SELECT [ConcessionId], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [LegalEntityId], [CustomerName], [LegalEntityAccountId], [AccountNumber], [ConcessionTypeId], [ConcessionType], [ConcessionDate], [StatusId], [Status], [SubStatusId], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment], [DatesentForApproval], [ConcessionDetailId], [ExpiryDate], [DateApproved], [AAUserId], [RequestorId], [BCMUserId], [PCMUserId], [HOUserId], [CentreId], [CentreName], [RegionId], [Region], [IsMismatched], [IsActive], [IsCurrent], [PriceExported], [PriceExportedDate]
+                    FROM [dbo].[ConcessionInboxView]
+                    WHERE [RegionId] = @regionId
+                    AND [StatusId] = @statusId
+                    AND [SubStatusId] = @subStatusId
+                    AND [IsActive] = @isActive",
+                    new { regionId, statusId, subStatusId, isActive });
+            }
+        }
+
+        /// <summary>
         /// Reads the by requestor identifier between start expiry date end expiry date status ids is active.
         /// </summary>
         /// <param name="requestorId">The requestor identifier.</param>
