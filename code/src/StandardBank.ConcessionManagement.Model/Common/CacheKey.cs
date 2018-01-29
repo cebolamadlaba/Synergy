@@ -42,6 +42,9 @@
             {
                 public const string GetApproversByRoles =
                     "CacheKey.Repository.ApprovalWorkflowRepository.GetApproversByRoles";
+
+                public const string GetRegionApproversByRole =
+                    "CacheKey.Repository.ApprovalWorkflowRepository.GetRegionApproversByRole";
             }
 
             public static class BaseRateRepository

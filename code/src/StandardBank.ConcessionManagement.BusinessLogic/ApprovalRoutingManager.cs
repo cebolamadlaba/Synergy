@@ -69,7 +69,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     roles = _roleRepository.ReadAll()
                         .Where(x => x.RoleName.Trim() == Roles.PCM ||
                                     x.RoleName.Trim() == Roles.HeadOffice).Select(x => x.Id);
-                    users = _approvalWorkflowRepository.GetApproversByRoles(centerId, roles);
+                    users = _approvalWorkflowRepository.GetRegionApproversByRole(centerId, roles);
                     return _mapper.Map<IEnumerable<User>>(users);
 
                 default:
