@@ -160,6 +160,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.PCM || _.Name == Constants.Roles.HeadOffice);
 
             mappedUser.IsHO = mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.HeadOffice);
+            mappedUser.IsPCM = mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.PCM);
+            mappedUser.IsBCM = mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.BCM);
 
             mappedUser.IsAdminAssistant = mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.AA);
 

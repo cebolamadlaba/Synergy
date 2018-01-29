@@ -19,6 +19,8 @@ export class User {
     canBcmApprove: boolean;
     canPcmApprove: boolean;
     isHO: boolean;
+    isPCM: boolean;
+    isBCM: boolean;
     isAdminAssistant: boolean;
     contactNumber: string;
     accountExecutiveUserId: number;

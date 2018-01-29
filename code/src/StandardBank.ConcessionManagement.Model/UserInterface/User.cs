@@ -136,6 +136,22 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public bool IsHO { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this instance is PCM.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is PCM; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsPCM { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is BCM.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is BCM; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsBCM { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether this instance is admin assistant.
         /// </summary>
         /// <value>

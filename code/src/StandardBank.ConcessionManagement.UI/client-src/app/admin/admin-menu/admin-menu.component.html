@@ -1,9 +1,9 @@
 <div class="col-md-12">
     <h3>User Management</h3>
     <ul>
-        <li><a routerLink="/admin/users">Users</a></li>
-        <li><a routerLink="/admin/regions">Regions</a></li>
-        <li><a routerLink="/admin/business-centre">Business Centres</a></li>
+        <li *ngIf="user?.isHO"><a routerLink="/admin/users">Users</a></li>
+        <li *ngIf="user?.isHO"><a routerLink="/admin/regions">Regions</a></li>
+        <li *ngIf="user?.isHO || user?.isPCM"><a routerLink="/admin/business-centre">Business Centres</a></li>
     </ul>
     <!--
     <h3>Product Management</h3>
