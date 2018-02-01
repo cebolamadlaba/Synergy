@@ -20,15 +20,15 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
             ReadByRequestorIdStatusIdsIsActive(int requestorId, IEnumerable<int> statusIds, bool isActive);
 
         /// <summary>
-        /// Reads the by centre identifier status identifier sub status identifier is active.
+        /// Reads the by centre ids status identifier sub status identifier is active.
         /// </summary>
-        /// <param name="centreId">The centre identifier.</param>
+        /// <param name="centreIds">The centre ids.</param>
         /// <param name="statusId">The status identifier.</param>
         /// <param name="subStatusId">The sub status identifier.</param>
         /// <param name="isActive">if set to <c>true</c> [is active].</param>
         /// <returns></returns>
-        IEnumerable<ConcessionInboxView> ReadByCentreIdStatusIdSubStatusIdIsActive(int centreId, int statusId,
-            int subStatusId, bool isActive);
+        IEnumerable<ConcessionInboxView> ReadByCentreIdsStatusIdSubStatusIdIsActive(IEnumerable<int> centreIds,
+            int statusId, int subStatusId, bool isActive);
 
         /// <summary>
         /// Reads the by region identifier status identifier sub status identifier is active.

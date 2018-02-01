@@ -2272,59 +2272,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         }
 
         /// <summary>
-        /// Gets the UserRegion id
-        /// </summary>
-        /// <returns></returns>
-        public static int GetUserRegionId()
-        {
-            //read all and return the first one
-            var models = InstantiatedDependencies.UserRegionRepository.ReadAll();
-
-            if (models != null && models.Any())
-                return models.First().Id;
-
-            return InsertUserRegion();
-        }
-
-        /// <summary>
-        /// Inserts a UserRegion and returns the id
-        /// </summary>
-        /// <returns></returns>
-        private static int InsertUserRegion()
-        {
-            var model = new UserRegion
-            {
-                UserId = GetUserId(),
-                RegionId = GetRegionId(),
-                IsActive = false,
-                IsSelected = false
-            };
-
-            InstantiatedDependencies.UserRegionRepository.Create(model);
-
-            return model.Id;
-        }
-
-        /// <summary>
-        /// Gets the alternate UserRegion id
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        public static int GetAlternateUserRegionId(int? model)
-        {
-            if (!model.HasValue)
-                return GetUserRegionId();
-
-            //read all and return the first one
-            var models = InstantiatedDependencies.UserRegionRepository.ReadAll();
-
-            if (models != null && models.Any(_ => _.Id != model.Value))
-                return models.First(_ => _.Id != model.Value).Id;
-
-            return InsertUserRegion();
-        }
-
-        /// <summary>
         /// Gets the Period id
         /// </summary>
         /// <returns></returns>

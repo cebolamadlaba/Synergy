@@ -72,16 +72,6 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public IEnumerable<Role> UserRoles { get; set; }
 
         /// <summary>
-        /// Gets or sets the user regions
-        /// </summary>
-        public IEnumerable<Region> UserRegions { get; set; }
-
-        /// <summary>
-        /// Gets or sets the selected region
-        /// </summary>
-        public Region SelectedRegion { get; set; }
-
-        /// <summary>
         /// Gets or sets the user centres
         /// </summary>
         public IEnumerable<Centre> UserCentres { get; set; }
@@ -98,14 +88,6 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// The centre identifier.
         /// </value>
         public int CentreId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the region identifier.
-        /// </summary>
-        /// <value>
-        /// The region identifier.
-        /// </value>
-        public int RegionId { get; set; }
 
         /// <summary>
         /// Gets or sets the role identifier.

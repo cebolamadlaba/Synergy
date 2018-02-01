@@ -4,7 +4,6 @@
 	@FirstName varchar(50),
 	@LastName varchar(50),
 	@RoleId int,
-	@RegionId int,
 	@CentreId int,
 	@Id int,
 	@ContactNumber varchar(50) 
@@ -19,11 +18,6 @@ BEGIN
 	[Surname] =@LastName,
 	[ContactNumber] = @ContactNumber
 	where ANumber = @ANumber
-	
-
-	update [dbo].[tblUserRegion] 
-	SET [fkRegionId] = @RegionId
-	where fkUserId = @Id
 
 	update [dbo].[tblUserRole] 
 	set fkRoleId = @RoleId

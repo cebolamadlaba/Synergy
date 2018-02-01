@@ -88,6 +88,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IMiscPerformanceRepository _miscPerformanceRepository;
 
         /// <summary>
+        /// The centre repository
+        /// </summary>
+        private readonly ICentreRepository _centreRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionManager"/> class.
         /// </summary>
         /// <param name="concessionRepository">The concession repository.</param>
@@ -103,6 +108,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="concessionDetailRepository">The concession detail repository.</param>
         /// <param name="concessionConditionViewRepository">The concession condition view repository.</param>
         /// <param name="miscPerformanceRepository">The misc performance repository.</param>
+        /// <param name="centreRepository">The centre repository.</param>
         public ConcessionManager(IConcessionRepository concessionRepository, ILookupTableManager lookupTableManager,
             IRiskGroupRepository riskGroupRepository, IMapper mapper,
             IConcessionConditionRepository concessionConditionRepository,
@@ -111,7 +117,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IUserManager userManager, IConcessionInboxViewRepository concessionInboxViewRepository,
             IConcessionDetailRepository concessionDetailRepository,
             IConcessionConditionViewRepository concessionConditionViewRepository,
-            IMiscPerformanceRepository miscPerformanceRepository)
+            IMiscPerformanceRepository miscPerformanceRepository, ICentreRepository centreRepository)
         {
             _concessionRepository = concessionRepository;
             _lookupTableManager = lookupTableManager;
@@ -126,6 +132,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionDetailRepository = concessionDetailRepository;
             _concessionConditionViewRepository = concessionConditionViewRepository;
             _miscPerformanceRepository = miscPerformanceRepository;
+            _centreRepository = centreRepository;
         }
 
         /// <summary>
@@ -157,17 +164,25 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                                 .ReadByRequestorIdStatusIdsIsActive(user.Id, new[] {pendingStatusId}, true)));
                         break;
                     case Constants.Roles.BCM:
+                        var bcmCentreIds = (from centre in user.UserCentres
+                            select centre.Id).ToArray();
+
                         inboxConcessions.AddRange(
                             _mapper.Map<IEnumerable<InboxConcession>>(
-                                _concessionInboxViewRepository.ReadByCentreIdStatusIdSubStatusIdIsActive(
-                                    user.SelectedCentre.Id, pendingStatusId, bcmPendingStatusId, true)));
+                                _concessionInboxViewRepository.ReadByCentreIdsStatusIdSubStatusIdIsActive(bcmCentreIds,
+                                    pendingStatusId, bcmPendingStatusId, true)));
+
                         break;
                     case Constants.Roles.PCM:
                     case Constants.Roles.HeadOffice:
+                        var pcmCentreIds = (from centre in user.UserCentres
+                            select centre.Id).ToArray();
+
                         inboxConcessions.AddRange(
                             _mapper.Map<IEnumerable<InboxConcession>>(
-                                _concessionInboxViewRepository.ReadByRegionIdStatusIdSubStatusIdIsActive(
-                                    user.SelectedRegion.Id, pendingStatusId, pcmPendingStatusId, true)));
+                                _concessionInboxViewRepository.ReadByCentreIdsStatusIdSubStatusIdIsActive(pcmCentreIds,
+                                    pendingStatusId, pcmPendingStatusId, true)));
+
                         break;
                 }
             }
@@ -600,7 +615,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedConcession.RequestorId = _userManager.GetUserIdForFiltering(user);
 
             mappedConcession.CentreId = user.SelectedCentre.Id;
-            mappedConcession.RegionId = user.SelectedRegion.Id;
+            mappedConcession.RegionId = GetRegionForCentre(mappedConcession.CentreId);
             mappedConcession.IsCurrent = true;
             mappedConcession.IsActive = true;
             mappedConcession.DatesentForApproval = DateTime.Now;
@@ -616,6 +631,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionRepository.Update(result);
 
             return result;
+        }
+
+        /// <summary>
+        /// Gets the region for centre.
+        /// </summary>
+        /// <param name="centreId">The centre identifier.</param>
+        /// <returns></returns>
+        private int GetRegionForCentre(int centreId)
+        {
+            var centre = _centreRepository.ReadById(centreId);
+
+            return centre.RegionId;
         }
 
         /// <summary>

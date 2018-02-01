@@ -11,8 +11,6 @@ export class User {
     fullName: string;
     isActive: boolean;
     userRoles: Role[];
-    userRegions: Region[];
-    selectedRegion: Region;
     userCentres: Centre[];
     selectedCentre: Centre;
     canRequest: boolean;

@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AdminService } from '../../../services/admin.service';
 import { Region } from '../../../models/region';
@@ -29,7 +29,6 @@ export class EditUserComponent implements OnInit {
 
     ngOnInit() {
         this.adminService.GetUserLookupData().subscribe(result => {
-            this.Regions = result.regions as Region[];
             this.Centres = result.centres as Centre[];
             this.Roles = result.roles as Role[];
         });

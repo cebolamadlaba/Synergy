@@ -62,14 +62,6 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int CentreId { get; set; }
 
         /// <summary>
-        /// Gets or sets the region identifier.
-        /// </summary>
-        /// <value>
-        /// The region identifier.
-        /// </value>
-        public int RegionId { get; set; }
-
-        /// <summary>
         /// Gets or sets the role identifier.
         /// </summary>
         /// <value>

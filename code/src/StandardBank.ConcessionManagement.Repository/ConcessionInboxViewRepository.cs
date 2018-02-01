@@ -49,26 +49,26 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
-        /// Reads the by centre identifier status identifier sub status identifier is active.
+        /// Reads the by centre ids status identifier sub status identifier is active.
         /// </summary>
-        /// <param name="centreId">The centre identifier.</param>
+        /// <param name="centreIds">The centre ids.</param>
         /// <param name="statusId">The status identifier.</param>
         /// <param name="subStatusId">The sub status identifier.</param>
         /// <param name="isActive">if set to <c>true</c> [is active].</param>
         /// <returns></returns>
-        public IEnumerable<ConcessionInboxView> ReadByCentreIdStatusIdSubStatusIdIsActive(int centreId, int statusId,
-            int subStatusId, bool isActive)
+        public IEnumerable<ConcessionInboxView> ReadByCentreIdsStatusIdSubStatusIdIsActive(IEnumerable<int> centreIds, int statusId, int subStatusId,
+            bool isActive)
         {
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionInboxView>(
                     @"SELECT [ConcessionId], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [LegalEntityId], [CustomerName], [LegalEntityAccountId], [AccountNumber], [ConcessionTypeId], [ConcessionType], [ConcessionDate], [StatusId], [Status], [SubStatusId], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment], [DatesentForApproval], [ConcessionDetailId], [ExpiryDate], [DateApproved], [AAUserId], [RequestorId], [BCMUserId], [PCMUserId], [HOUserId], [CentreId], [CentreName], [RegionId], [Region], [IsMismatched], [IsActive], [IsCurrent], [PriceExported], [PriceExportedDate]
                     FROM [dbo].[ConcessionInboxView]
-                    WHERE [CentreId] = @centreId
+                    WHERE [CentreId] in @centreIds
                     AND [StatusId] = @statusId
                     AND [SubStatusId] = @subStatusId
                     AND [IsActive] = @isActive",
-                    new { centreId, statusId, subStatusId, isActive });
+                    new { centreIds, statusId, subStatusId, isActive });
             }
         }
 

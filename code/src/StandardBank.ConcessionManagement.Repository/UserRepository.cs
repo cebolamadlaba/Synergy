@@ -212,7 +212,6 @@ namespace StandardBank.ConcessionManagement.Repository
                         user.FirstName,
                         LastName = user.Surname,
                         user.RoleId,
-                        user.RegionId,
                         user.CentreId,
                         user.ContactNumber
                     }, transaction: tx, commandType: System.Data.CommandType.StoredProcedure);
@@ -238,7 +237,6 @@ namespace StandardBank.ConcessionManagement.Repository
                         user.FirstName,
                         LastName = user.Surname,
                         user.RoleId,
-                        user.RegionId,
                         user.CentreId,
                         user.Id,
                         user.ContactNumber

@@ -74,8 +74,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var isActive = true;
 
             var result =
-                InstantiatedDependencies.ConcessionInboxViewRepository.ReadByCentreIdStatusIdSubStatusIdIsActive(
-                    centreId, statusId, subStatusId, isActive);
+                InstantiatedDependencies.ConcessionInboxViewRepository.ReadByCentreIdsStatusIdSubStatusIdIsActive(
+                    new [] {centreId}, statusId, subStatusId, isActive);
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
@@ -246,3 +246,4 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         }
     }
 }
+

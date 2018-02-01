@@ -1,4 +1,4 @@
-﻿import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
@@ -40,8 +40,6 @@ export class MockUserService extends UserService {
         this.model.surname = "User";
         this.model.userCentres = [new Centre()];
         this.model.selectedCentre = new Centre();
-        this.model.userRegions = [new Region()];
-        this.model.selectedRegion = new Region();
         this.model.userRoles = [new Role()];
         return Observable.of(this.model);
     }

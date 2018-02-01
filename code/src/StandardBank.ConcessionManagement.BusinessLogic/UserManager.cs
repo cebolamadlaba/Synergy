@@ -38,11 +38,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IRoleRepository _roleRepository;
 
         /// <summary>
-        /// The user region repository
-        /// </summary>
-        private readonly IUserRegionRepository _userRegionRepository;
-
-        /// <summary>
         /// The region repository
         /// </summary>
         private readonly IRegionRepository _regionRepository;
@@ -79,16 +74,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="userRepository">The user repository.</param>
         /// <param name="userRoleRepository">The user role repository.</param>
         /// <param name="roleRepository">The role repository.</param>
-        /// <param name="userRegionRepository">The user region repository.</param>
         /// <param name="regionRepository">The region repository.</param>
         /// <param name="centreRepository">The centre repository.</param>
         /// <param name="centreUserRepository">The centre user repository.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="accountExecutiveAssistantRepository">The account executive assistant repository.</param>
         /// <param name="regionManager">The region manager.</param>
-        public UserManager(ICacheManager cacheManager,
-            IUserRepository userRepository, IUserRoleRepository userRoleRepository, IRoleRepository roleRepository,
-            IUserRegionRepository userRegionRepository, IRegionRepository regionRepository,
+        public UserManager(ICacheManager cacheManager, IUserRepository userRepository,
+            IUserRoleRepository userRoleRepository, IRoleRepository roleRepository, IRegionRepository regionRepository,
             ICentreRepository centreRepository, ICentreUserRepository centreUserRepository, IMapper mapper,
             IAccountExecutiveAssistantRepository accountExecutiveAssistantRepository, IRegionManager regionManager)
         {
@@ -96,7 +89,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _userRepository = userRepository;
             _userRoleRepository = userRoleRepository;
             _roleRepository = roleRepository;
-            _userRegionRepository = userRegionRepository;
             _regionRepository = regionRepository;
             _centreRepository = centreRepository;
             _centreUserRepository = centreUserRepository;
@@ -137,12 +129,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             mappedUser.UserRoles = GetUserRoles(user.Id);
             mappedUser.RoleId = mappedUser.UserRoles.First().Id;
-
-            mappedUser.UserRegions = GetUserRegions(user.Id);
-            mappedUser.SelectedRegion = GetSelectedRegion(mappedUser.UserRegions, user);
-
-            if (mappedUser.SelectedRegion != null)
-                mappedUser.RegionId = mappedUser.SelectedRegion.Id;
 
             mappedUser.UserCentres = GetUserCentres(user.Id);
             mappedUser.SelectedCentre = mappedUser.UserCentres.FirstOrDefault();
@@ -212,44 +198,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
-        /// Gets the selected region
-        /// </summary>
-        /// <param name="userRegions"></param>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        private Region GetSelectedRegion(IEnumerable<Region> userRegions, Model.Repository.User user)
-        {
-            var selectedRegion = userRegions.FirstOrDefault(_ => _.IsSelected);
-
-            //if there isn't a selected region but there are user regions, default the selected region to the first one
-            if (selectedRegion == null && userRegions.Any())
-            {
-                selectedRegion = userRegions.First();
-                SetUserSelectedRegion(user.Id, selectedRegion.Id);
-                selectedRegion.IsSelected = true;
-            }
-
-            return selectedRegion;
-        }
-
-        /// <summary>
-        /// Sets the user's selected region
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="regionId"></param>
-        public void SetUserSelectedRegion(int userId, int regionId)
-        {
-            //first update the region accordingly
-            _userRegionRepository.UpdateSelectedRegion(userId, regionId);
-
-            //then delete the user cache so that the user object is populated from scratch with the changes
-            var user = _userRepository.ReadById(userId);
-            var aNumber = user.ANumber;
-
-            ResetUserCache(aNumber);
-        }
-
-        /// <summary>
         /// Gets the user centres
         /// </summary>
         /// <param name="userId"></param>
@@ -275,37 +223,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             return userCentres;
-        }
-
-        /// <summary>
-        /// Gets the user regions
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        private IEnumerable<Region> GetUserRegions(int userId)
-        {
-            var userRegions = new List<Region>();
-            var userRegionIds = _userRegionRepository.ReadByUserId(userId);
-
-            if (userRegionIds != null && userRegionIds.Any())
-            {
-                var regions = _regionRepository.ReadAll();
-
-                foreach (var region in regions)
-                {
-                    var userRegion =
-                        userRegionIds.FirstOrDefault(_ => _.RegionId == region.Id && _.IsActive && region.IsActive);
-
-                    if (userRegion != null)
-                    {
-                        var mappedRegion = _mapper.Map<Region>(region);
-                        mappedRegion.IsSelected = userRegion.IsSelected;
-                        userRegions.Add(mappedRegion);
-                    }
-                }
-            }
-
-            return userRegions;
         }
 
         /// <summary>

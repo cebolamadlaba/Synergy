@@ -122,7 +122,6 @@
     <None Include="Change Scripts\Deployed to UAT\06_alter_tblConcessionLending.sql" />
     <None Include="Change Scripts\Deployed to UAT\07_update_data_tblConcessionLending.sql" />
     <None Include="Change Scripts\Deployed to UAT\08_alter_tblConcession.sql" />
-    <Build Include="dbo\Tables\tblUserRegion.sql" />
     <Build Include="dbo\Tables\tblProductInvestment.sql" />
     <Build Include="dbo\Tables\tblFinancialInvestment.sql" />
     <Build Include="dbo\Tables\rtblRegion.sql" />
@@ -180,7 +179,6 @@
     <Build Include="dbo\Tables\rtblAccrualType.sql" />
     <Build Include="dbo\Tables\tblSapDataImport.sql" />
     <Build Include="Audit\Tables\tblUserRole.sql" />
-    <Build Include="Audit\Tables\tblUserRegion.sql" />
     <Build Include="Audit\Tables\tblUser.sql" />
     <Build Include="Audit\Tables\tblScenarioManagerToolDeal.sql" />
     <Build Include="Audit\Tables\tblRiskGroup.sql" />

@@ -31,13 +31,6 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         string GetUserName(int userId);
 
         /// <summary>
-        /// Sets the user's selected region
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="regionId"></param>
-        void SetUserSelectedRegion(int userId, int regionId);
-
-        /// <summary>
         /// Creates the user.
         /// </summary>
         /// <param name="userModel">The user model.</param>

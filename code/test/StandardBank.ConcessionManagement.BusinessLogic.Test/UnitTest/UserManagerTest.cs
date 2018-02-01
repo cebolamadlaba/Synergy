@@ -22,10 +22,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         /// </summary>
         public UserManagerTest()
         {
-            _userManager = new UserManager(InstantiatedDependencies.CacheManager, MockLookupTableManager.Object,
-                MockUserRepository.Object, MockUserRoleRepository.Object, MockRoleRepository.Object,
-                MockUserRegionRepository.Object, MockRegionRepository.Object, MockCentreRepository.Object,
-                MockCentreUserRepository.Object, InstantiatedDependencies.Mapper,
+            _userManager = new UserManager(InstantiatedDependencies.CacheManager, MockUserRepository.Object,
+                MockUserRoleRepository.Object, MockRoleRepository.Object, MockRegionRepository.Object,
+                MockCentreRepository.Object, MockCentreUserRepository.Object, InstantiatedDependencies.Mapper,
                 MockAccountExecutiveAssistantRepository.Object, MockRegionManager.Object);
         }
 
@@ -48,10 +47,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockRoleRepository.Setup(_ => _.ReadAll()).Returns(new[]
                 {new Role {Id = 1, IsActive = true, RoleName = "Test", RoleDescription = "Unit Test"}});
 
-            //this is where we set whether or not there is an already selected region
-            MockUserRegionRepository.Setup(_ => _.ReadByUserId(It.IsAny<int>()))
-                .Returns(new[] {new UserRegion {RegionId = 1, IsActive = true, IsSelected = true}});
-
             MockRegionRepository.Setup(_ => _.ReadAll()).Returns(new[]
                 {new Region {Id = 1, IsActive = true, Description = "Test"}});
 
@@ -67,10 +62,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             Assert.Equal(aNumber, result.ANumber);
             Assert.NotNull(result.UserRoles);
             Assert.NotEmpty(result.UserRoles);
-            Assert.NotNull(result.SelectedRegion);
-            Assert.True(result.SelectedRegion.IsSelected);
-            Assert.NotNull(result.UserRegions);
-            Assert.NotEmpty(result.UserRegions);
             Assert.NotNull(result.SelectedCentre);
         }
 
@@ -98,10 +89,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockRoleRepository.Setup(_ => _.ReadAll()).Returns(new[]
                 {new Role {Id = 1, IsActive = true, RoleName = "Test", RoleDescription = "Unit Test"}});
 
-            //this is where we set whether or not there is an already selected region
-            MockUserRegionRepository.Setup(_ => _.ReadByUserId(It.IsAny<int>()))
-                .Returns(new[] {new UserRegion {RegionId = 1, IsActive = true, IsSelected = false}});
-
             MockRegionRepository.Setup(_ => _.ReadAll()).Returns(new[]
                 {new Region {Id = 1, IsActive = true, Description = "Test"}});
 
@@ -117,29 +104,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             Assert.Equal(aNumber, result.ANumber);
             Assert.NotNull(result.UserRoles);
             Assert.NotEmpty(result.UserRoles);
-            Assert.NotNull(result.SelectedRegion);
-            Assert.True(result.SelectedRegion.IsSelected);
-            Assert.NotNull(result.UserRegions);
-            Assert.NotEmpty(result.UserRegions);
             Assert.NotNull(result.SelectedCentre);
-        }
-
-        /// <summary>
-        /// Tests that SetUserSelectedRegion executes positive
-        /// </summary>
-        [Fact]
-        public void SetUserSelectedRegion_Executes_Positive()
-        {
-            var aNumber = "A1234567";
-
-            MockUserRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new User
-            {
-                ANumber = aNumber
-            });
-
-            _userManager.SetUserSelectedRegion(1, 1);
-
-            Assert.True(true);
         }
 
         /// <summary>

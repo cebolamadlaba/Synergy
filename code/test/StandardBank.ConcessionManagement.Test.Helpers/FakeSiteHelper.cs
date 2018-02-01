@@ -28,8 +28,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 UserRoles = new[] {new Role {Description = "Unit Test", Name = "Test", Id = 1}},
                 SelectedCentre = new Centre(),
                 CanBcmApprove = true,
-                SelectedRegion = new Region(),
-                UserRegions = new[] {new Region()},
                 CanPcmApprove = true,
                 UserCentres = new[] {new Centre()},
                 CanRequest = true,

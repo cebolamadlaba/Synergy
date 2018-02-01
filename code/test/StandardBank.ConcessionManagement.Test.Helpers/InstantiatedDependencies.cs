@@ -320,11 +320,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static IRegionRepository RegionRepository = new RegionRepository(DbConnection, CacheManager);
 
         /// <summary>
-        /// The UserRegion repository
-        /// </summary>
-        public static IUserRegionRepository UserRegionRepository = new UserRegionRepository(DbConnection);
-
-        /// <summary>
         /// The TableNumber repository
         /// </summary>
         public static ITableNumberRepository TableNumberRepository =
@@ -494,8 +489,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The user manager
         /// </summary>
-        public static IUserManager UserManager = new UserManager(CacheManager, LookupTableManager, UserRepository,
-            UserRoleRepository, RoleRepository, UserRegionRepository, RegionRepository, CentreRepository,
+        public static IUserManager UserManager = new UserManager(CacheManager, UserRepository,
+            UserRoleRepository, RoleRepository, RegionRepository, CentreRepository,
             CentreUserRepository, Mapper, AccountExecutiveAssistantRepository, RegionManager);
 
         /// <summary>
@@ -505,7 +500,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             new ConcessionManager(ConcessionRepository, LookupTableManager, RiskGroupRepository,
                 Mapper, ConcessionConditionRepository, ConcessionCommentRepository,
                 ConcessionRelationshipRepository, AuditRepository, UserManager, ConcessionInboxViewRepository,
-                ConcessionDetailRepository, ConcessionConditionViewRepository, MiscPerformanceRepository);
+                ConcessionDetailRepository, ConcessionConditionViewRepository, MiscPerformanceRepository, CentreRepository);
 
         /// <summary>
         /// The rule manager

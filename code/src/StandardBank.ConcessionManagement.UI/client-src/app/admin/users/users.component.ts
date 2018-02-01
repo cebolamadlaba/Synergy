@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { AdminService } from '../../services/admin.service';
 import { Region } from '../../models/region';
@@ -7,22 +7,20 @@ import { Role } from '../../models/role';
 import { User } from "../../models/user";
 
 @Component({
-  selector: 'app-users',
-  templateUrl: './users.component.html',
-  styleUrls: ['./users.component.css']
+    selector: 'app-users',
+    templateUrl: './users.component.html',
+    styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
-    Regions: Region[];
-    Centres:Centre[];
+    Centres: Centre[];
     Roles: Role[];
     user: User;
     users: User[];
 
-    constructor(private location: Location,private adminService: AdminService) { }
+    constructor(private location: Location, private adminService: AdminService) { }
 
     ngOnInit() {
         this.adminService.GetUserLookupData().subscribe(result => {
-            this.Regions = result.regions as Region[];
             this.Centres = result.centres as Centre[];
             this.Roles = result.roles as Role[];
         });
@@ -30,7 +28,7 @@ export class UsersComponent implements OnInit {
             this.users = r as User[];
         });
         this.user = {} as User;
-  }
+    }
 
     save() {
         this.adminService.CreateUser(this.user).subscribe(res => location.reload());

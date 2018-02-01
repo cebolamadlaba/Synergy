@@ -37,7 +37,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 MockConcessionConditionRepository.Object, MockConcessionCommentRepository.Object,
                 MockConcessionRelationshipRepository.Object, MockAuditRepository.Object, MockUserManager.Object,
                 MockConcessionInboxViewRepository.Object, MockConcessionDetailRepository.Object,
-                MockConcessionConditionViewRepository.Object, MockMiscPerformanceRepository.Object);
+                MockConcessionConditionViewRepository.Object, MockMiscPerformanceRepository.Object, MockCentreRepository.Object);
         }
 
         /// <summary>
@@ -327,8 +327,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 FirstName = "Test",
                 Surname = "User",
                 ANumber = "A123",
-                SelectedCentre = new Model.UserInterface.Centre { Name = "Test Centre" },
-                SelectedRegion = new Model.UserInterface.Region { Description = "Test Region" }
+                SelectedCentre = new Model.UserInterface.Centre { Name = "Test Centre" }
             });
 
             MockConcessionRepository
@@ -378,8 +377,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 FirstName = "Test",
                 Surname = "User",
                 ANumber = "A123",
-                SelectedCentre = new Model.UserInterface.Centre { Name = "Test Centre" },
-                SelectedRegion = new Model.UserInterface.Region { Description = "Test Region" }
+                SelectedCentre = new Model.UserInterface.Centre { Name = "Test Centre" }
             });
 
             var result = _concessionManager.GetConcessionForConcessionReferenceId("L001");
@@ -397,6 +395,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockLookupTableManager.Setup(_ => _.GetConcessionTypeId(It.IsAny<string>())).Returns(2);
             MockLookupTableManager.Setup(_ => _.GetStatusId(It.IsAny<string>())).Returns(3);
             MockLookupTableManager.Setup(_ => _.GetSubStatusId(It.IsAny<string>())).Returns(4);
+            MockCentreRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(
+                new Model.Repository.Centre() {Id = 1, IsActive = true, RegionId = 1, CentreName = "Test Centre"});
 
             MockConcessionRepository.Setup(_ => _.Create(It.IsAny<Concession>())).Returns(new Concession() { Id = 100 });
 

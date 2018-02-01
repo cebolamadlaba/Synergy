@@ -12,7 +12,6 @@ namespace StandardBank.ConcessionManagement.UI.Validation
             RuleFor(x => x.Surname).NotEmpty();
             RuleFor(x => x.RoleId).NotEmpty();
             RuleFor(x => x.CentreId).NotEmpty();
-            RuleFor(x => x.RegionId).NotEmpty();
         }
     }
 }
