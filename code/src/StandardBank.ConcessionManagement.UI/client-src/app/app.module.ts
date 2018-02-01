@@ -35,6 +35,7 @@ import { CashConcessionService } from "./services/cash-concession.service";
 import { AdminService } from './services/admin.service';
 import { RegionService } from './services/region.service';
 import { BusinessCentreService } from './services/business-centre.service';
+import { PcmManagementService } from './services/pcm-management.service';
 
 import { ApprovedConcessionFilterPipe } from './filters/approved-concession-filter.pipe';
 import { CashViewConcessionComponent } from './cash-view-concession/cash-view-concession.component';
@@ -59,6 +60,7 @@ import { ActionedInboxComponent } from './actioned-inbox/actioned-inbox.componen
 import { ConditionsFilterPipe } from './filters/conditions-filter.pipe';
 import { NumbersonlyDirective } from './directives/numbersonly.directive';
 import { RegionComponent } from './admin/region/region.component';
+import { PcmManagementComponent } from './admin/pcm-management/pcm-management.component';
 
 @NgModule({
     declarations: [
@@ -102,7 +104,8 @@ import { RegionComponent } from './admin/region/region.component';
         NumbersonlyDirective,
         ActionedInboxComponent,
         ConditionsFilterPipe,
-        RegionComponent
+        RegionComponent,
+        PcmManagementComponent
     ],
     imports: [
         BrowserModule,
@@ -124,7 +127,8 @@ import { RegionComponent } from './admin/region/region.component';
         TransactionalConcessionService,
         AdminService,
         RegionService,
-        BusinessCentreService
+        BusinessCentreService,
+        PcmManagementService
     ],
     bootstrap: [AppComponent]
 })

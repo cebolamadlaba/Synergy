@@ -1,0 +1,89 @@
+<div class="col-md-2" style="margin-top: 15px;">
+    <i class="fa fa-chevron-circle-left" aria-hidden="true" style="font-size: 1.1em;"></i>
+    <span class="back-button-text" style="font-size: 1.1em;" (click)="goBack()">Administration</span>
+</div>
+
+<div class="col-md-12">
+    <h3>PCM Management</h3>
+</div>
+
+<!-- Error message -->
+<div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
+            <p>{{errorMessage}}</p>
+
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Success message -->
+<div class="col-md-12" *ngIf="saveMessage && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-success">
+            <p class="message-heading"><i class="fa fa-check-circle" aria-hidden="true"></i>{{saveMessage}}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Loading message -->
+<div class="col-md-12" *ngIf="isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-info">
+            <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Loading</p>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12 search-and-results-container" *ngIf="!isLoading">
+    <!-- Input form -->
+    <div class="form-inline">
+        <button class="btn btn-primary" type="button" (click)="addPCM()">Add PCM</button>
+    </div>
+
+    <!-- Results table -->
+    <div class="table-container">
+        <table class="table table-bordered table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>A Number</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor='let pcmUser of pcmUsers; trackBy: index' (click)="editPcm(pcmUser)">
+                    <td>{{pcmUser.id}}</td>
+                    <td>{{pcmUser.fullName}}</td>
+                    <td>{{pcmUser.aNumber}}</td>
+                    <td>{{pcmUser.emailAddress}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div bsModal #addPCMModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addBusinessCentreModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="col-md-12 modal-header">
+                    <h4>
+                        {{actionType}} PCM
+                    </h4>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="float-right">
+                        <button type="button" class="btn btn-cancel" (click)="addPCMModal.hide()">Close</button>
+                        <button type="button" class="btn btn-primary" (click)="createPCM()">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
