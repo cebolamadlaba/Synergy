@@ -154,6 +154,7 @@
                                 <table class="table table-bordered table-hover table-striped">
                                     <thead>
                                     <tr>
+                                        <th>Region</th>
                                         <th>Name</th>
                                         <th>&nbsp;</th>
                                     </tr>
@@ -163,6 +164,7 @@
                                         <td colspan="4">Loading...</td>
                                     </tr>
                                     <tr *ngFor='let userCentre of addPcmUserModel.userCentres; trackBy: index; let i=index'>
+                                        <td>{{userCentre.region}}</td>
                                         <td>{{userCentre.name}}</td>
                                         <td><button class="btn-delete" type="button" (click)="removeUserCentre(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
                                     </tr>
@@ -176,7 +178,7 @@
                 <div class="modal-footer">
                     <div class="float-right">
                         <button type="button" class="btn btn-cancel" (click)="addPCMModal.hide()">Close</button>
-                        <button type="button" class="btn btn-primary" (click)="createPCM()">Save</button>
+                        <button type="button" class="btn btn-primary" (click)="savePCM()">Save</button>
                     </div>
                 </div>
             </div>

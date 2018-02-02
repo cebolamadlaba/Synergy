@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace StandardBank.ConcessionManagement.Model.Repository
 {
     /// <summary>
@@ -54,12 +56,12 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public bool IsActive { get; set; }
 
         /// <summary>
-        /// Gets or sets the centre identifier.
+        /// Gets or sets the centre ids.
         /// </summary>
         /// <value>
-        /// The centre identifier.
+        /// The centre ids.
         /// </value>
-        public int CentreId { get; set; }
+        public IEnumerable<int> CentreIds { get; set; }
 
         /// <summary>
         /// Gets or sets the role identifier.

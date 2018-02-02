@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.Administration;
@@ -83,9 +84,31 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [HttpPost("users")]
         public async Task<IActionResult> CreateUser([FromBody]User model)
         {
-            var id = await _mediator.Send(new CreateUser {User = model, CurrentUser = _siteHelper.LoggedInUser(this)});
+            var user = _siteHelper.LoggedInUser(this);
+
+            AddUserCentre(model);
+
+            var id = await _mediator.Send(new CreateUser(model, user));
 
             return Ok(id);
+        }
+
+        /// <summary>
+        /// Adds the user centre.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        private void AddUserCentre(User model)
+        {
+            if (model.CentreId > 0)
+            {
+                var userCentres = new List<Centre>();
+
+                if (model.UserCentres != null)
+                    userCentres.AddRange(model.UserCentres);
+
+                userCentres.Add(new Centre {Id = model.CentreId});
+                model.UserCentres = userCentres;
+            }
         }
 
         /// <summary>
@@ -97,7 +120,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [HttpPost("users/{id}")]
         public async Task<IActionResult> UpdateUser([FromBody]User model, int id)
         {
-            await _mediator.Send(new UpdateUser { Model = model, CurrentUser = _siteHelper.LoggedInUser(this) });
+            var user = _siteHelper.LoggedInUser(this);
+
+            AddUserCentre(model);
+
+            await _mediator.Send(new UpdateUser(model, user));
+
             return Ok(true);
         }
 

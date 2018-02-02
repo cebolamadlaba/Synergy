@@ -13,6 +13,7 @@ export class User {
     userRoles: Role[];
     userCentres: Centre[];
     selectedCentre: Centre;
+    centreId: number;
     canRequest: boolean;
     canBcmApprove: boolean;
     canPcmApprove: boolean;

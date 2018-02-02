@@ -266,7 +266,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 if (regionCentre.Centres != null && regionCentre.Centres.Any())
                     centresToAdd.AddRange(regionCentre.Centres);
 
-                centresToAdd.Add(_mapper.Map<Model.UserInterface.Centre>(centre));
+                var centreToAdd = _mapper.Map<Model.UserInterface.Centre>(centre);
+                centreToAdd.Region = regionCentre.RegionName;
+                centresToAdd.Add(centreToAdd);
+
                 regionCentre.Centres = centresToAdd;
             }
 

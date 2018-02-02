@@ -84,7 +84,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     @"SELECT [pkUserId] [Id], [ANumber], [EmailAddress], [FirstName], [Surname], [IsActive], [ContactNumber] 
                     FROM [dbo].[tblUser] 
                     WHERE [ANumber] = @aNumber",
-                    new { aNumber }).SingleOrDefault();
+                    new {aNumber}).SingleOrDefault();
             }
         }
 
@@ -136,7 +136,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     JOIN [dbo].[rtblRole] r ON r.[pkRoleId] = ur.[fkRoleId]
                     WHERE r.[RoleName] = @roleName
                     AND cu.[fkCentreId] = @centreId
-                    ORDER BY u.[FirstName], u.[Surname]", new { roleName, centreId });
+                    ORDER BY u.[FirstName], u.[Surname]", new {roleName, centreId});
             }
         }
 
@@ -153,7 +153,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     @"SELECT u.[pkUserId] [Id], u.[ANumber], u.[EmailAddress], u.[FirstName], u.[Surname], u.[IsActive], u.[ContactNumber] FROM [dbo].[tblUser] u
                     JOIN [dbo].[tblCentreUser] cu ON cu.[fkUserId] = u.[pkUserId]
                     WHERE cu.[fkCentreId] = @centreId
-                    ORDER BY u.[FirstName], u.[Surname]", new { centreId });
+                    ORDER BY u.[FirstName], u.[Surname]", new {centreId});
             }
         }
 
@@ -212,7 +212,6 @@ namespace StandardBank.ConcessionManagement.Repository
                         user.FirstName,
                         LastName = user.Surname,
                         user.RoleId,
-                        user.CentreId,
                         user.ContactNumber
                     }, transaction: tx, commandType: System.Data.CommandType.StoredProcedure);
                 tx.Commit();
@@ -237,7 +236,6 @@ namespace StandardBank.ConcessionManagement.Repository
                         user.FirstName,
                         LastName = user.Surname,
                         user.RoleId,
-                        user.CentreId,
                         user.Id,
                         user.ContactNumber
                     }, transaction: tx, commandType: System.Data.CommandType.StoredProcedure);

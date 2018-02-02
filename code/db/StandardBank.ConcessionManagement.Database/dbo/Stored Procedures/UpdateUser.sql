@@ -1,10 +1,10 @@
-﻿CREATE PROCEDURE [dbo].[UpdateUser]
+﻿
+CREATE PROCEDURE [dbo].[UpdateUser]
 	@ANumber varchar(50),
 	@EmailAddress varchar(50),
 	@FirstName varchar(50),
 	@LastName varchar(50),
 	@RoleId int,
-	@CentreId int,
 	@Id int,
 	@ContactNumber varchar(50) 
 AS
@@ -21,10 +21,6 @@ BEGIN
 
 	update [dbo].[tblUserRole] 
 	set fkRoleId = @RoleId
-	where fkUserId = @Id
-
-	update [dbo].[tblCentreUser] 
-	set fkCentreId = @CentreId
 	where fkUserId = @Id
 
 END

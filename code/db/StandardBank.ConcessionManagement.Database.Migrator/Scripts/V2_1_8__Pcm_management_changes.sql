@@ -12,7 +12,6 @@ ALTER PROCEDURE [dbo].[CreateUser]
 	@FirstName varchar(50),
 	@LastName varchar(50),
 	@RoleId int,
-	@CentreId int,
 	@ContactNumber varchar(50)
 AS
 BEGIN
@@ -26,9 +25,7 @@ BEGIN
 	insert into [dbo].[tblUserRole] ([fkUserId],[fkRoleId],[IsActive])
 	values(@userId,@RoleId,1)
 
-	insert into [dbo].[tblCentreUser] ([fkCentreId],[fkUserId],[IsActive])
-	values(@CentreId,@userId,1)
-
+	select @userId
 END
 
 GO
@@ -39,7 +36,6 @@ ALTER PROCEDURE [dbo].[UpdateUser]
 	@FirstName varchar(50),
 	@LastName varchar(50),
 	@RoleId int,
-	@CentreId int,
 	@Id int,
 	@ContactNumber varchar(50) 
 AS
@@ -56,10 +52,6 @@ BEGIN
 
 	update [dbo].[tblUserRole] 
 	set fkRoleId = @RoleId
-	where fkUserId = @Id
-
-	update [dbo].[tblCentreUser] 
-	set fkCentreId = @CentreId
 	where fkUserId = @Id
 
 END

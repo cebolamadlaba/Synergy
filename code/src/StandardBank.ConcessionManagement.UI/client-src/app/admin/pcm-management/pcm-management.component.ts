@@ -73,8 +73,45 @@ export class PcmManagementComponent implements OnInit {
         this.addPCMModal.show();
     }
 
-    createPCM() {
+    savePCM() {
+        //this.isLoading = true;
+        //this.errorMessage = null;
+        //this.validationError = null;
+        //this.saveMessage = null;
 
+        //this.addPcmUserModel.isActive = true;
+
+        //this.observableErrors = this.pcmManagementService.validateBusinessCentreManagementModel(this.addPcmUserModel);
+        //this.observableErrors.subscribe(errors => {
+        //    if (errors != null && errors.length > 0) {
+        //        this.loadData();
+        //        this.validationError = errors;
+        //        this.isLoading = false;
+        //    } else {
+        //        this.observableSave = this.businessCentreService.createBusinessCentreManagementModel(this.addBusinessCentreManagementModel);
+        //        this.observableSave.subscribe(errors => {
+
+        //            if (this.addBusinessCentreManagementModel.centreId != null && this.addBusinessCentreManagementModel.centreId > 0) {
+        //                this.saveMessage = "Business Centre updated successfully!";
+        //            } else {
+        //                this.saveMessage = "Business Centre created successfully!";
+        //            }
+
+        //            this.addBusinessCentreManagementModel = new BusinessCentreManagementModel();
+        //            this.selectedAccountExecutive = null;
+        //            this.selectedAccountExecutives = null;
+
+        //            //after saving reload the data
+        //            this.loadData();
+        //        }, error => {
+        //            this.isLoading = false;
+        //            this.errorMessage = <any>error;
+        //        });
+        //    }
+        //}, error => {
+        //    this.isLoading = false;
+        //    this.errorMessage = <any>error;
+        //});
     }
 
     removeUserCentre(index: number) {
