@@ -69,5 +69,11 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="centreId">The centre identifier.</param>
         /// <returns></returns>
         Model.Repository.CentreUser DeleteCentreUser(int userId, int centreId);
+
+        /// <summary>
+        /// Gets the region centres.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<RegionCentresModel> GetRegionCentres();
     }
 }

@@ -38,11 +38,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IRoleRepository _roleRepository;
 
         /// <summary>
-        /// The region repository
-        /// </summary>
-        private readonly IRegionRepository _regionRepository;
-
-        /// <summary>
         /// The centre repository
         /// </summary>
         private readonly ICentreRepository _centreRepository;
@@ -74,22 +69,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="userRepository">The user repository.</param>
         /// <param name="userRoleRepository">The user role repository.</param>
         /// <param name="roleRepository">The role repository.</param>
-        /// <param name="regionRepository">The region repository.</param>
         /// <param name="centreRepository">The centre repository.</param>
         /// <param name="centreUserRepository">The centre user repository.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="accountExecutiveAssistantRepository">The account executive assistant repository.</param>
         /// <param name="regionManager">The region manager.</param>
         public UserManager(ICacheManager cacheManager, IUserRepository userRepository,
-            IUserRoleRepository userRoleRepository, IRoleRepository roleRepository, IRegionRepository regionRepository,
-            ICentreRepository centreRepository, ICentreUserRepository centreUserRepository, IMapper mapper,
+            IUserRoleRepository userRoleRepository, IRoleRepository roleRepository, ICentreRepository centreRepository,
+            ICentreUserRepository centreUserRepository, IMapper mapper,
             IAccountExecutiveAssistantRepository accountExecutiveAssistantRepository, IRegionManager regionManager)
         {
             _cacheManager = cacheManager;
             _userRepository = userRepository;
             _userRoleRepository = userRoleRepository;
             _roleRepository = roleRepository;
-            _regionRepository = regionRepository;
             _centreRepository = centreRepository;
             _centreUserRepository = centreUserRepository;
             _mapper = mapper;
@@ -290,7 +283,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<User> GetUsersByRole(string roleName)
         {
-            return _mapper.Map<IEnumerable<User>>(_userRepository.ReadByRole(roleName));
+            var users = _userRepository.ReadByRole(roleName);
+
+            foreach (var user in users)
+                yield return Map(user);
         }
 
         /// <summary>

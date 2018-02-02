@@ -3,6 +3,7 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import { User } from '../models/user';
+import { RegionCentresModel } from '../models/region-centres-model';
 
 @Injectable()
 export class PcmManagementService {
@@ -11,6 +12,11 @@ export class PcmManagementService {
 
     getPCMUsers(): Observable<User[]> {
         const url = "/api/PCMManagement/PCMUsers";
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    getRegionCentres(): Observable<RegionCentresModel[]> {
+        const url = "/api/PCMManagement/RegionCentres";
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
@@ -32,6 +38,11 @@ export class MockPcmManagementService extends PcmManagementService {
 
     getPCMUsers(): Observable<User[]> {
         var model = [new User()];
+        return Observable.of(model);
+    }
+
+    getRegionCentres(): Observable<RegionCentresModel[]> {
+        var model = [new RegionCentresModel()];
         return Observable.of(model);
     }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
@@ -40,6 +41,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ICentreUserRepository _centreUserRepository;
 
         /// <summary>
+        /// The mapper
+        /// </summary>
+        private readonly IMapper _mapper;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="BusinessCentreManager"/> class.
         /// </summary>
         /// <param name="miscPerformanceRepository">The misc performance repository.</param>
@@ -47,14 +53,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="userManager">The user manager.</param>
         /// <param name="centreRepository">The centre repository.</param>
         /// <param name="centreUserRepository">The centre user repository.</param>
+        /// <param name="mapper">The mapper.</param>
         public BusinessCentreManager(IMiscPerformanceRepository miscPerformanceRepository, IRegionManager regionManager,
-            IUserManager userManager, ICentreRepository centreRepository, ICentreUserRepository centreUserRepository)
+            IUserManager userManager, ICentreRepository centreRepository, ICentreUserRepository centreUserRepository, IMapper mapper)
         {
             _miscPerformanceRepository = miscPerformanceRepository;
             _regionManager = regionManager;
             _userManager = userManager;
             _centreRepository = centreRepository;
             _centreUserRepository = centreUserRepository;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -224,6 +232,45 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Gets the region centres.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<RegionCentresModel> GetRegionCentres()
+        {
+            var regionCentres = new List<RegionCentresModel>();
+            var centres = _centreRepository.ReadAll();
+            var regions = _regionManager.GetRegions();
+
+            foreach (var centre in centres)
+            {
+                var regionCentre = regionCentres.FirstOrDefault(_ => _.RegionId == centre.RegionId);
+
+                if (regionCentre == null)
+                {
+                    var region = regions.First(_ => _.Id == centre.RegionId);
+
+                    regionCentre = new RegionCentresModel
+                    {
+                        RegionId = region.Id,
+                        RegionName = region.Description
+                    };
+
+                    regionCentres.Add(regionCentre);
+                }
+
+                var centresToAdd = new List<Model.UserInterface.Centre>();
+
+                if (regionCentre.Centres != null && regionCentre.Centres.Any())
+                    centresToAdd.AddRange(regionCentre.Centres);
+
+                centresToAdd.Add(_mapper.Map<Model.UserInterface.Centre>(centre));
+                regionCentre.Centres = centresToAdd;
+            }
+
+            return regionCentres;
         }
     }
 }

@@ -16,14 +16,6 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Administration
         public IEnumerable<Role> Roles { get; set; }
 
         /// <summary>
-        /// Gets or sets the regions.
-        /// </summary>
-        /// <value>
-        /// The regions.
-        /// </value>
-        public IEnumerable<Region> Regions { get; set; }
-
-        /// <summary>
         /// Gets or sets the centres.
         /// </summary>
         /// <value>

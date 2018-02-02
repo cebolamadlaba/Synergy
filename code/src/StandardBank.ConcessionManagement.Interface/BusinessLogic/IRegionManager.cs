@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
+using StandardBank.ConcessionManagement.Model.UserInterface.Administration;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 {

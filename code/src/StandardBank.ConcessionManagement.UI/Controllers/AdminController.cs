@@ -70,7 +70,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var model = new UserAdminLookupModel
             {
                 Centres = _lookupTableManager.GetCentres(),
-                Regions = _regionManager.GetRegions(),
                 Roles = _lookupTableManager.GetRoles()
             };
             return Ok(model);

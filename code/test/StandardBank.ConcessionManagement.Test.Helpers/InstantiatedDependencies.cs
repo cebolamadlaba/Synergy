@@ -489,9 +489,9 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The user manager
         /// </summary>
-        public static IUserManager UserManager = new UserManager(CacheManager, UserRepository,
-            UserRoleRepository, RoleRepository, RegionRepository, CentreRepository,
-            CentreUserRepository, Mapper, AccountExecutiveAssistantRepository, RegionManager);
+        public static IUserManager UserManager = new UserManager(CacheManager, UserRepository, UserRoleRepository,
+            RoleRepository, CentreRepository, CentreUserRepository, Mapper, AccountExecutiveAssistantRepository,
+            RegionManager);
 
         /// <summary>
         /// The concession manager
