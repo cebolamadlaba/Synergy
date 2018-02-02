@@ -75,6 +75,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
         /// <param name="model">The model.</param>
         private void AddCentreIds(CreateUser message, User model)
         {
+            if (message.User.UserCentres != null)
+            {
+                var centreIds = new List<int>();
+
+                foreach (var userCentre in message.User.UserCentres)
+                    centreIds.Add(userCentre.Id);
+
+                if (model.CentreIds != null)
+                    centreIds.AddRange(model.CentreIds);
+
+                model.CentreIds = centreIds;
+            }
+
             if (message.User.CentreId > 0)
             {
                 var centreIds = new List<int>();

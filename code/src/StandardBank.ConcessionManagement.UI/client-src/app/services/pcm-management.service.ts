@@ -20,6 +20,13 @@ export class PcmManagementService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    savePcmUser(pcmUser: User): Observable<boolean> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/PCMManagement/SavePcmUser";
+        return this.http.post(url, pcmUser, options).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
     private extractData(response: Response) {
         let body = response.json();
         return body;
@@ -44,6 +51,10 @@ export class MockPcmManagementService extends PcmManagementService {
     getRegionCentres(): Observable<RegionCentresModel[]> {
         var model = [new RegionCentresModel()];
         return Observable.of(model);
+    }
+
+    savePcmUser(pcmUser: User): Observable<boolean> {
+        return Observable.of(true);
     }
 
 }
