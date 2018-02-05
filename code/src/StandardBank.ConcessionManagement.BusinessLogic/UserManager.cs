@@ -356,6 +356,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 if (string.IsNullOrWhiteSpace(user.Surname))
                     errors.Add("Please supply a surname");
+
+                if (user.UserCentres == null || !user.UserCentres.Any())
+                    errors.Add("Please link the user to a centre");
             }
 
             return errors;
