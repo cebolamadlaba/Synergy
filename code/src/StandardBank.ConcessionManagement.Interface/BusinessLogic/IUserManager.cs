@@ -82,7 +82,8 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// Validates the user.
         /// </summary>
         /// <param name="user">The user.</param>
+        /// <param name="roleName">Name of the role.</param>
         /// <returns></returns>
-        IEnumerable<string> ValidateUser(User user);
+        IEnumerable<string> ValidateUser(User user, string roleName);
     }
 }

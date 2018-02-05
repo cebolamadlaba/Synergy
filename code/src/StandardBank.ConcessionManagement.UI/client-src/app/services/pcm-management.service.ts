@@ -64,4 +64,8 @@ export class MockPcmManagementService extends PcmManagementService {
         return Observable.of(true);
     }
 
+    validateUser(pcmUser: User): Observable<string[]> {
+        var model = [''];
+        return Observable.of(model);
+    }
 }

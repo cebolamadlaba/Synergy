@@ -324,8 +324,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// Validates the user.
         /// </summary>
         /// <param name="user">The user.</param>
+        /// <param name="roleName">Name of the role.</param>
         /// <returns></returns>
-        public IEnumerable<string> ValidateUser(User user)
+        public IEnumerable<string> ValidateUser(User user, string roleName)
         {
             var errors = new List<string>();
 
@@ -357,8 +358,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 if (string.IsNullOrWhiteSpace(user.Surname))
                     errors.Add("Please supply a surname");
 
-                if (user.UserCentres == null || !user.UserCentres.Any())
-                    errors.Add("Please link the user to a centre");
+                if (roleName == Constants.Roles.PCM)
+                {
+                    if (user.UserCentres == null || !user.UserCentres.Any())
+                        errors.Add("Please link the user to a centre");
+                }
+
+                if (roleName == Constants.Roles.BCM)
+                {
+                    if (user.CentreId == 0)
+                        errors.Add("Please select a business centre");
+                }
             }
 
             return errors;

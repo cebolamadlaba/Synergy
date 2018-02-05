@@ -110,7 +110,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("ValidateUser")]
         public IActionResult ValidateUser([FromBody] User model)
         {
-            return Ok(_userManager.ValidateUser(model));
+            return Ok(_userManager.ValidateUser(model, Constants.Roles.PCM));
         }
     }
 }
