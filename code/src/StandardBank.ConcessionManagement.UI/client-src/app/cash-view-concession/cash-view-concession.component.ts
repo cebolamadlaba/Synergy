@@ -178,8 +178,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 					this.canBcmApprove = cashConcession.currentUser.canBcmApprove;
 				}
 
-				if (cashConcession.concession.status == ConcessionStatus.Pending && cashConcession.concession.subStatus == ConcessionSubStatus.PCMPending) {
-					this.canPcmApprove = cashConcession.currentUser.canPcmApprove;
+                if (cashConcession.concession.status == ConcessionStatus.Pending && cashConcession.concession.subStatus == ConcessionSubStatus.PCMPending) {
+                    this.canPcmApprove = cashConcession.currentUser.canPcmApprove && cashConcession.currentUser.canApprove;
 
 					if (!cashConcession.concession.isInProgressExtension) {
 						this.canEdit = cashConcession.currentUser.canPcmApprove;
