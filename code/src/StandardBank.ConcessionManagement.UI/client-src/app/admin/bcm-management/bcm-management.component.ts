@@ -17,6 +17,7 @@ export class BcmManagementComponent implements OnInit {
     validationError: string[];
     saveMessage: string;
     isLoading = true;
+    isSaving = false;
 
     actionType: string;
 
@@ -29,7 +30,7 @@ export class BcmManagementComponent implements OnInit {
     observableSave: Observable<boolean>;
     observableErrors: Observable<string[]>;
 
-    constructor(private location: Location, private bcmManagementService: BcmManagementService, private adminService: AdminService) {
+    constructor(private location: Location, private bcmManagementService: BcmManagementService) {
         this.addBcmUserModel = new User();
     }
 
@@ -42,10 +43,10 @@ export class BcmManagementComponent implements OnInit {
 
         Observable.forkJoin([
             this.bcmManagementService.getBCMUsers(),
-            this.adminService.GetUserLookupData()
+            this.bcmManagementService.getCentres()
         ]).subscribe(results => {
             this.bcmUsers = <any>results[0];
-            this.centres = <any>results[1].centres;
+            this.centres = <any>results[1];
 
             this.isLoading = false;
         },
@@ -71,7 +72,7 @@ export class BcmManagementComponent implements OnInit {
     }
 
     saveBCM() {
-        this.isLoading = true;
+        this.isSaving = true;
         this.errorMessage = null;
         this.validationError = null;
         this.saveMessage = null;
@@ -79,9 +80,8 @@ export class BcmManagementComponent implements OnInit {
         this.observableErrors = this.bcmManagementService.validateUser(this.addBcmUserModel);
         this.observableErrors.subscribe(errors => {
             if (errors != null && errors.length > 0) {
-                this.loadData();
                 this.validationError = errors;
-                this.isLoading = false;
+                this.isSaving = false;
             } else {
                 this.observableSave = this.bcmManagementService.saveBcmUser(this.addBcmUserModel);
                 this.observableSave.subscribe(errors => {
@@ -94,15 +94,17 @@ export class BcmManagementComponent implements OnInit {
 
                     this.addBcmUserModel = new User();
 
+                    this.isSaving = false;
+
                     //after saving reload the data
                     this.loadData();
                 }, error => {
-                    this.isLoading = false;
+                    this.isSaving = false;
                     this.errorMessage = <any>error;
                 });
             }
         }, error => {
-            this.isLoading = false;
+            this.isSaving = false;
             this.errorMessage = <any>error;
         });
     }

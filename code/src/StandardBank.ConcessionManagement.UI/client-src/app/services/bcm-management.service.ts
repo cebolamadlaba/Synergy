@@ -3,6 +3,7 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import { User } from '../models/user';
+import { Centre } from '../models/centre';
 
 @Injectable()
 export class BcmManagementService {
@@ -26,6 +27,11 @@ export class BcmManagementService {
         let options = new RequestOptions({ headers: headers });
         const url = "/api/BCMManagement/ValidateUser";
         return this.http.post(url, bcmUser, options).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    getCentres(): Observable<Centre[]> {
+        const url = "/api/BCMManagement/Centres";
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
     private extractData(response: Response) {
@@ -54,6 +60,11 @@ export class MockBcmManagementService extends BcmManagementService {
 
     validateUser(bcmUser: User): Observable<string[]> {
         var model = [''];
+        return Observable.of(model);
+    }
+
+    getCentres(): Observable<Centre[]> {
+        var model = [new Centre()];
         return Observable.of(model);
     }
 

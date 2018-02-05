@@ -7,19 +7,7 @@
     <h3>BCM Management</h3>
 </div>
 
-<!-- Error message -->
-<div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
-    <div class="form-feedback-container">
-        <div class="alert-danger">
-            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
-            <p>{{errorMessage}}</p>
 
-            <ul *ngIf="validationError">
-                <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
-            </ul>
-        </div>
-    </div>
-</div>
 
 <!-- Success message -->
 <div class="col-md-12" *ngIf="saveMessage && !isLoading">
@@ -76,7 +64,33 @@
                     </h4>
                 </div>
 
+
                 <div class="row">
+                    <!-- Error message -->
+                    <div class="col-md-12" *ngIf="(errorMessage || validationError) && !isSaving">
+                        <div class="form-feedback-container">
+                            <div class="alert-danger">
+                                <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
+                                <p>{{errorMessage}}</p>
+
+                                <ul *ngIf="validationError">
+                                    <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Loading message -->
+                    <div class="col-md-12" *ngIf="isSaving">
+                        <div class="form-feedback-container">
+                            <div class="alert-info">
+                                <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Saving</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="!isSaving">
 
                     <!-- Left side -->
                     <div class="col-md-6 modal-body">
@@ -134,7 +148,7 @@
                     </div>
                 </div>
 
-                <div class="modal-footer">
+                <div class="modal-footer" *ngIf="!isSaving">
                     <div class="float-right">
                         <button type="button" class="btn btn-cancel" (click)="addBCMModal.hide()">Close</button>
                         <button type="button" class="btn btn-primary" (click)="saveBCM()">Save</button>

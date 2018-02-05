@@ -16,8 +16,7 @@ describe('BcmManagementComponent', () => {
             imports: [HttpModule, RouterTestingModule, ModalModule.forRoot(), FormsModule],
             declarations: [BcmManagementComponent],
             providers: [
-                { provide: BcmManagementService, useClass: MockBcmManagementService },
-                { provide: AdminService, useClass: MockAdminService }
+                { provide: BcmManagementService, useClass: MockBcmManagementService }
             ]
         })
             .compileComponents();

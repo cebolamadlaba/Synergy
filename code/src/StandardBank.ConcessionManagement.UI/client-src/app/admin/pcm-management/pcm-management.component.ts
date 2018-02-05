@@ -17,6 +17,7 @@ export class PcmManagementComponent implements OnInit {
     validationError: string[];
     saveMessage: string;
     isLoading = true;
+    isSaving = false;
 
     actionType: string;
 
@@ -80,7 +81,7 @@ export class PcmManagementComponent implements OnInit {
     }
 
     savePCM() {
-        this.isLoading = true;
+        this.isSaving = true;
         this.errorMessage = null;
         this.validationError = null;
         this.saveMessage = null;
@@ -88,9 +89,8 @@ export class PcmManagementComponent implements OnInit {
         this.observableErrors = this.pcmManagementService.validateUser(this.addPcmUserModel);
         this.observableErrors.subscribe(errors => {
             if (errors != null && errors.length > 0) {
-                this.loadData();
                 this.validationError = errors;
-                this.isLoading = false;
+                this.isSaving = false;
             } else {
                 this.observableSave = this.pcmManagementService.savePcmUser(this.addPcmUserModel);
                 this.observableSave.subscribe(errors => {
@@ -105,15 +105,17 @@ export class PcmManagementComponent implements OnInit {
                     this.selectedRegionCentresModel = new RegionCentresModel();
                     this.selectedCentre = new Centre();
 
+                    this.isSaving = false;
+
                     //after saving reload the data
                     this.loadData();
                 }, error => {
-                    this.isLoading = false;
+                    this.isSaving = false;
                     this.errorMessage = <any>error;
                 });
             }
         }, error => {
-            this.isLoading = false;
+            this.isSaving = false;
             this.errorMessage = <any>error;
         });
         

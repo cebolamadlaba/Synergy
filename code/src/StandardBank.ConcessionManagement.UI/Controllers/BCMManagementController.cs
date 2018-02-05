@@ -93,5 +93,15 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             return Ok(_userManager.ValidateUser(model, Constants.Roles.BCM));
         }
+
+        /// <summary>
+        /// Gets the centres.
+        /// </summary>
+        /// <returns></returns>
+        [Route("Centres")]
+        public IActionResult Centres()
+        {
+            return Ok(_lookupTableManager.GetCentres());
+        }
     }
 }

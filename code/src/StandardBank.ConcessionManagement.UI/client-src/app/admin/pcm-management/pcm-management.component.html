@@ -7,20 +7,6 @@
     <h3>PCM Management</h3>
 </div>
 
-<!-- Error message -->
-<div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
-    <div class="form-feedback-container">
-        <div class="alert-danger">
-            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
-            <p>{{errorMessage}}</p>
-
-            <ul *ngIf="validationError">
-                <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
-            </ul>
-        </div>
-    </div>
-</div>
-
 <!-- Success message -->
 <div class="col-md-12" *ngIf="saveMessage && !isLoading">
     <div class="form-feedback-container">
@@ -78,6 +64,33 @@
 
                 <div class="row">
 
+                    <!-- Error message -->
+                    <div class="col-md-12" *ngIf="(errorMessage || validationError) && !isSaving">
+                        <div class="form-feedback-container">
+                            <div class="alert-danger">
+                                <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
+                                <p>{{errorMessage}}</p>
+
+                                <ul *ngIf="validationError">
+                                    <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Loading message -->
+                    <div class="col-md-12" *ngIf="isSaving">
+                        <div class="form-feedback-container">
+                            <div class="alert-info">
+                                <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Saving</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row" *ngIf="!isSaving">
+
                     <!-- Left side -->
                     <div class="col-md-6 modal-body">
                         <div class="form-group">
@@ -131,7 +144,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row" *ngIf="!isSaving">
                     <div class="col-md-4 modal-body">
                         <div class="form-group">
                             <label class="control-label col-sm-4">Region</label>
@@ -162,7 +175,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row" *ngIf="!isSaving">
                     <div class="col-md-12 modal-body">
                         <div class="form-group">
                             <div class="table-container">
@@ -190,7 +203,7 @@
                     </div>
                 </div>
 
-                <div class="modal-footer">
+                <div class="modal-footer" *ngIf="!isSaving">
                     <div class="float-right">
                         <button type="button" class="btn btn-cancel" (click)="addPCMModal.hide()">Close</button>
                         <button type="button" class="btn btn-primary" (click)="savePCM()">Save</button>

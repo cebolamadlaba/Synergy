@@ -17,6 +17,7 @@ export class BusinessCentreComponent implements OnInit {
     validationError: string[];
     saveMessage: string;
     isLoading = true;
+    isSaving = false;
 
     observableBusinessCentreManagementModels: Observable<BusinessCentreManagementModel[]>;
     businessCentreManagementModels: BusinessCentreManagementModel[];
@@ -67,7 +68,7 @@ export class BusinessCentreComponent implements OnInit {
     }
 
     createBusinessCentre() {
-        this.isLoading = true;
+        this.isSaving = true;
         this.errorMessage = null;
         this.validationError = null;
         this.saveMessage = null;
@@ -78,9 +79,8 @@ export class BusinessCentreComponent implements OnInit {
         this.observableErrors = this.businessCentreService.validateBusinessCentreManagementModel(this.addBusinessCentreManagementModel);
         this.observableErrors.subscribe(errors => {
             if (errors != null && errors.length > 0) {
-                this.loadData();
                 this.validationError = errors;
-                this.isLoading = false;
+                this.isSaving = false;
             } else {
                 this.observableSave = this.businessCentreService.createBusinessCentreManagementModel(this.addBusinessCentreManagementModel);
                 this.observableSave.subscribe(errors => {
@@ -95,15 +95,17 @@ export class BusinessCentreComponent implements OnInit {
                     this.selectedAccountExecutive = null;
                     this.selectedAccountExecutives = null;
 
+                    this.isSaving = false;
+
                     //after saving reload the data
                     this.loadData();
                 }, error => {
-                    this.isLoading = false;
+                    this.isSaving = false;
                     this.errorMessage = <any>error;
                 });
             }
         }, error => {
-            this.isLoading = false;
+            this.isSaving = false;
             this.errorMessage = <any>error;
         });
     }
