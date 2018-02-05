@@ -67,7 +67,13 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("PCMUsers")]
         public IActionResult PCMUsers()
         {
-            return Ok(_userManager.GetUsersByRole(Constants.Roles.PCM));
+            var user = _siteHelper.LoggedInUser(this);
+            var pcmUsers = _userManager.GetUsersByRole(Constants.Roles.PCM);
+
+            if (user.IsPCM)
+                pcmUsers = pcmUsers.Where(_ => _.Id == user.Id);
+        
+            return Ok(pcmUsers);
         }
 
         /// <summary>

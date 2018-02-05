@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -60,7 +61,14 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("BusinessCentreManagementModels")]
         public IActionResult BusinessCentreManagementModels()
         {
-            return Ok(_businessCentreManager.GetBusinessCentreManagementModels());
+            var user = _siteHelper.LoggedInUser(this);
+            var businessCentres = _businessCentreManager.GetBusinessCentreManagementModels();
+
+            if (user.IsBCM)
+                businessCentres = businessCentres.Where(_ =>
+                    _.BusinessCentreManagerId.HasValue && _.BusinessCentreManagerId.Value == user.Id);
+
+            return Ok(businessCentres);
         }
 
         /// <summary>
@@ -99,7 +107,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("BusinessCentreManagementLookupModel")]
         public IActionResult BusinessCentreManagementLookupModel()
         {
-            return Ok(_businessCentreManager.GetBusinessCentreManagementLookupModel());
+            var businessCentreManagementLookupModel = _businessCentreManager.GetBusinessCentreManagementLookupModel();
+            businessCentreManagementLookupModel.CurrentUser = _siteHelper.LoggedInUser(this);
+            return Ok(businessCentreManagementLookupModel);
         }
 
         /// <summary>

@@ -40,6 +40,7 @@ export class BusinessCentreComponent implements OnInit {
 
     actionType: string;
     isBcmAEsLoading = false;
+    canAdd = true;
 
     constructor(private location: Location, private businessCentreService: BusinessCentreService) {
         this.addBusinessCentreManagementModel = new BusinessCentreManagementModel();
@@ -58,6 +59,11 @@ export class BusinessCentreComponent implements OnInit {
         ]).subscribe(results => {
             this.businessCentreManagementModels = <any>results[0];
             this.businessCentreManagementLookupModel = <any>results[1];
+
+            if (this.businessCentreManagementLookupModel && this.businessCentreManagementLookupModel.currentUser &&
+                this.businessCentreManagementLookupModel.currentUser.isBCM) {
+                this.canAdd = false;
+            }
 
             this.isLoading = false;
         },

@@ -5,4 +5,5 @@ export class BusinessCentreManagementLookupModel {
     businessCentreManagers: User[];
     accountExecutives: User[];
     regions: Region[];
+    currentUser: User;
 }

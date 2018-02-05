@@ -5,6 +5,7 @@ import { Observable } from "rxjs";
 import { User } from '../../models/user';
 import { RegionCentresModel } from '../../models/region-centres-model';
 import { Centre } from '../../models/centre';
+import { UserService } from '../../services/user.service';
 
 @Component({
     selector: 'app-pcm-management',
@@ -33,7 +34,9 @@ export class PcmManagementComponent implements OnInit {
     observableSave: Observable<boolean>;
     observableErrors: Observable<string[]>;
 
-    constructor(private location: Location, private pcmManagementService: PcmManagementService) {
+    currentUser: User;
+
+    constructor(private location: Location, private pcmManagementService: PcmManagementService, private userService: UserService) {
         this.addPcmUserModel = new User();
         this.selectedRegionCentresModel = new RegionCentresModel();
         this.selectedCentre = new Centre();
@@ -48,10 +51,12 @@ export class PcmManagementComponent implements OnInit {
 
         Observable.forkJoin([
             this.pcmManagementService.getPCMUsers(),
-            this.pcmManagementService.getRegionCentres()
+            this.pcmManagementService.getRegionCentres(),
+            this.userService.getData()
         ]).subscribe(results => {
             this.pcmUsers = <any>results[0];
             this.regionCentresModels = <any>results[1];
+            this.currentUser = <any>results[2];
 
             this.isLoading = false;
         },

@@ -3,9 +3,9 @@
     <ul>
         <li *ngIf="user?.isHO"><a routerLink="/admin/users">Users</a></li>
         <li *ngIf="user?.isHO"><a routerLink="/admin/regions">Regions</a></li>
-        <li *ngIf="user?.isHO || user?.isPCM"><a routerLink="/admin/business-centre">Business Centres</a></li>
+        <li *ngIf="user?.isHO || user?.isPCM || user?.isBCM"><a routerLink="/admin/business-centre">Business Centres</a></li>
         <li *ngIf="user?.isHO || user?.isPCM"><a routerLink="/admin/bcm-management">BCM Management</a></li>
-        <li *ngIf="user?.isHO"><a routerLink="/admin/pcm-management">PCM Management</a></li>
+        <li *ngIf="user?.isHO || user?.isPCM"><a routerLink="/admin/pcm-management">PCM Management</a></li>
     </ul>
     <!--
     <h3>Product Management</h3>

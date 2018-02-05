@@ -30,5 +30,13 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Administration
         /// The regions.
         /// </value>
         public IEnumerable<Region> Regions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the current user.
+        /// </summary>
+        /// <value>
+        /// The current user.
+        /// </value>
+        public User CurrentUser { get; set; }
     }
 }
