@@ -164,5 +164,13 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// The account executive user identifier.
         /// </value>
         public int? AccountExecutiveUserId => AccountExecutive?.Id;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance can approve.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance can approve; otherwise, <c>false</c>.
+        /// </value>
+        public bool CanApprove { get; set; }
     }
 }

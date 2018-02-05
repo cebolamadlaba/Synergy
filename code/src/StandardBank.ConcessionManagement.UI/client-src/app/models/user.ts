@@ -17,6 +17,7 @@ export class User {
     canRequest: boolean;
     canBcmApprove: boolean;
     canPcmApprove: boolean;
+    canApprove: boolean;
     isHO: boolean;
     isPCM: boolean;
     isBCM: boolean;

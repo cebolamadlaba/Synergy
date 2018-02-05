@@ -2141,7 +2141,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 FirstName = "e11ee71428",
                 Surname = "f20ac7c952",
                 IsActive = false,
-                ContactNumber = "011 555 1234"
+                ContactNumber = "011 555 1234",
+                CanApprove = true
             };
 
             InstantiatedDependencies.UserRepository.Create(model);

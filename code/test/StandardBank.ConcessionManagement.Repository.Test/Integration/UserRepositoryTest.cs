@@ -24,7 +24,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 FirstName = "0ac3ff0687",
                 Surname = "42f59d39d7",
                 IsActive = false,
-                ContactNumber = "011 555 1234"
+                ContactNumber = "011 555 1234",
+                CanApprove = true
             };
 
             var result = InstantiatedDependencies.UserRepository.Create(model);
@@ -89,6 +90,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.Surname = "01e39c70bf";
             model.IsActive = !model.IsActive;
             model.ContactNumber = "012123123";
+            model.CanApprove = !model.CanApprove;
 
             InstantiatedDependencies.UserRepository.Update(model);
 
@@ -102,6 +104,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.Surname, model.Surname);
             Assert.Equal(updatedModel.IsActive, model.IsActive);
             Assert.Equal(updatedModel.ContactNumber, model.ContactNumber);
+            Assert.Equal(updatedModel.CanApprove, model.CanApprove);
         }
 
         /// <summary>
@@ -119,7 +122,8 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 FirstName = "0ac3ff0687",
                 Surname = "42f59d39d7",
                 IsActive = false,
-                ContactNumber = "011 555 1234"
+                ContactNumber = "011 555 1234",
+                CanApprove = true
             };
 
             var temporaryEntity = InstantiatedDependencies.UserRepository.Create(model);

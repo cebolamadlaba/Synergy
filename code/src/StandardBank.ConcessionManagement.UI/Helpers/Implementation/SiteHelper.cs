@@ -44,7 +44,12 @@ namespace StandardBank.ConcessionManagement.UI.Helpers.Implementation
             var aNumber = UserIdentity(controller);
 
             if (!string.IsNullOrWhiteSpace(aNumber))
-                return _userManager.GetUser(aNumber);
+            {
+                var user = _userManager.GetUser(aNumber);
+
+                if (user.IsActive)
+                    return user;
+            }
 
             return null;
         }

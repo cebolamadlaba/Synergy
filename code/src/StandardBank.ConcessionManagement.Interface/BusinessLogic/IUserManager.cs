@@ -77,5 +77,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="centreId">The centre identifier.</param>
         /// <returns></returns>
         IEnumerable<User> GetUsersByCentreId(int centreId);
+
+        /// <summary>
+        /// Validates the user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
+        IEnumerable<string> ValidateUser(User user);
     }
 }

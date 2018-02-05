@@ -35,8 +35,8 @@ namespace StandardBank.ConcessionManagement.Repository
         public User Create(User model)
         {
             const string sql =
-                @"INSERT [dbo].[tblUser] ([ANumber], [EmailAddress], [FirstName], [Surname], [IsActive], [ContactNumber]) 
-                VALUES (@ANumber, @EmailAddress, @FirstName, @Surname, @IsActive, @ContactNumber) 
+                @"INSERT [dbo].[tblUser] ([ANumber], [EmailAddress], [FirstName], [Surname], [IsActive], [ContactNumber], [CanApprove]) 
+                VALUES (@ANumber, @EmailAddress, @FirstName, @Surname, @IsActive, @ContactNumber, @CanApprove) 
                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
@@ -49,7 +49,8 @@ namespace StandardBank.ConcessionManagement.Repository
                         FirstName = model.FirstName,
                         Surname = model.Surname,
                         IsActive = model.IsActive,
-                        ContactNumber = model.ContactNumber
+                        ContactNumber = model.ContactNumber,
+                        CanApprove = model.CanApprove
                     }).Single();
             }
 
@@ -66,7 +67,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<User>(
-                    "SELECT [pkUserId] [Id], [ANumber], [EmailAddress], [FirstName], [Surname], [IsActive], [ContactNumber] FROM [dbo].[tblUser] WHERE [pkUserId] = @Id",
+                    "SELECT [pkUserId] [Id], [ANumber], [EmailAddress], [FirstName], [Surname], [IsActive], [ContactNumber], [CanApprove] FROM [dbo].[tblUser] WHERE [pkUserId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -81,7 +82,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<User>(
-                    @"SELECT [pkUserId] [Id], [ANumber], [EmailAddress], [FirstName], [Surname], [IsActive], [ContactNumber] 
+                    @"SELECT [pkUserId] [Id], [ANumber], [EmailAddress], [FirstName], [Surname], [IsActive], [ContactNumber], [CanApprove] 
                     FROM [dbo].[tblUser] 
                     WHERE [ANumber] = @aNumber",
                     new {aNumber}).SingleOrDefault();
@@ -97,7 +98,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<User>(
-                    "SELECT [pkUserId] [Id], [ANumber], [EmailAddress], [FirstName], [Surname], [IsActive], [ContactNumber] FROM [dbo].[tblUser]");
+                    "SELECT [pkUserId] [Id], [ANumber], [EmailAddress], [FirstName], [Surname], [IsActive], [ContactNumber], [CanApprove] FROM [dbo].[tblUser]");
             }
         }
 
@@ -111,7 +112,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<User>(
-                    @"SELECT u.[pkUserId] [Id], u.[ANumber], u.[EmailAddress], u.[FirstName], u.[Surname], u.[IsActive], u.[ContactNumber] FROM [dbo].[tblUser] u
+                    @"SELECT u.[pkUserId] [Id], u.[ANumber], u.[EmailAddress], u.[FirstName], u.[Surname], u.[IsActive], u.[ContactNumber], u.[CanApprove] FROM [dbo].[tblUser] u
                     JOIN [dbo].[tblUserRole] ur ON ur.[fkUserId] = u.[pkUserId]
                     JOIN [dbo].[rtblRole] r ON r.[pkRoleId] = ur.[fkRoleId]
                     WHERE r.[RoleName] = @roleName
@@ -130,7 +131,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<User>(
-                    @"SELECT u.[pkUserId] [Id], u.[ANumber], u.[EmailAddress], u.[FirstName], u.[Surname], u.[IsActive], u.[ContactNumber] FROM [dbo].[tblUser] u
+                    @"SELECT u.[pkUserId] [Id], u.[ANumber], u.[EmailAddress], u.[FirstName], u.[Surname], u.[IsActive], u.[ContactNumber], u.[CanApprove] FROM [dbo].[tblUser] u
                     JOIN [dbo].[tblCentreUser] cu ON cu.[fkUserId] = u.[pkUserId]
                     JOIN [dbo].[tblUserRole] ur ON ur.[fkUserId] = u.[pkUserId]
                     JOIN [dbo].[rtblRole] r ON r.[pkRoleId] = ur.[fkRoleId]
@@ -150,7 +151,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<User>(
-                    @"SELECT u.[pkUserId] [Id], u.[ANumber], u.[EmailAddress], u.[FirstName], u.[Surname], u.[IsActive], u.[ContactNumber] FROM [dbo].[tblUser] u
+                    @"SELECT u.[pkUserId] [Id], u.[ANumber], u.[EmailAddress], u.[FirstName], u.[Surname], u.[IsActive], u.[ContactNumber], u.[CanApprove] FROM [dbo].[tblUser] u
                     JOIN [dbo].[tblCentreUser] cu ON cu.[fkUserId] = u.[pkUserId]
                     WHERE cu.[fkCentreId] = @centreId
                     ORDER BY u.[FirstName], u.[Surname]", new {centreId});
@@ -166,7 +167,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblUser]
-                            SET [ANumber] = @ANumber, [EmailAddress] = @EmailAddress, [FirstName] = @FirstName, [Surname] = @Surname, [IsActive] = @IsActive, [ContactNumber] = @ContactNumber
+                            SET [ANumber] = @ANumber, [EmailAddress] = @EmailAddress, [FirstName] = @FirstName, [Surname] = @Surname, [IsActive] = @IsActive, [ContactNumber] = @ContactNumber, [CanApprove] = @CanApprove
                             WHERE [pkUserId] = @Id",
                     new
                     {
@@ -176,7 +177,8 @@ namespace StandardBank.ConcessionManagement.Repository
                         FirstName = model.FirstName,
                         Surname = model.Surname,
                         IsActive = model.IsActive,
-                        ContactNumber = model.ContactNumber
+                        ContactNumber = model.ContactNumber,
+                        CanApprove = model.CanApprove
                     });
             }
         }
@@ -212,7 +214,9 @@ namespace StandardBank.ConcessionManagement.Repository
                         user.FirstName,
                         LastName = user.Surname,
                         user.RoleId,
-                        user.ContactNumber
+                        user.ContactNumber,
+                        user.IsActive,
+                        user.CanApprove
                     }, transaction: tx, commandType: System.Data.CommandType.StoredProcedure);
                 tx.Commit();
                 return id;
@@ -237,7 +241,9 @@ namespace StandardBank.ConcessionManagement.Repository
                         LastName = user.Surname,
                         user.RoleId,
                         user.Id,
-                        user.ContactNumber
+                        user.ContactNumber,
+                        user.IsActive,
+                        user.CanApprove
                     }, transaction: tx, commandType: System.Data.CommandType.StoredProcedure);
                 tx.Commit();
             }

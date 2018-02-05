@@ -72,6 +72,14 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int RoleId { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this instance can approve.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance can approve; otherwise, <c>false</c>.
+        /// </value>
+        public bool CanApprove { get; set; }
+
+        /// <summary>
         /// Gets or the name of the table.
         /// </summary>
         /// <value>

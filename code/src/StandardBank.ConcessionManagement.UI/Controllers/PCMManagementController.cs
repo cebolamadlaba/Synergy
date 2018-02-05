@@ -101,5 +101,16 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             return Ok(true);
         }
+
+        /// <summary>
+        /// Validates the user.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [Route("ValidateUser")]
+        public IActionResult ValidateUser([FromBody] User model)
+        {
+            return Ok(_userManager.ValidateUser(model));
+        }
     }
 }

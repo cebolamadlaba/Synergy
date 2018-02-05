@@ -30,6 +30,7 @@ export class PcmManagementComponent implements OnInit {
     isPcmBcmsLoading = false;
 
     observableSave: Observable<boolean>;
+    observableErrors: Observable<string[]>;
 
     constructor(private location: Location, private pcmManagementService: PcmManagementService) {
         this.addPcmUserModel = new User();
@@ -81,27 +82,38 @@ export class PcmManagementComponent implements OnInit {
         this.validationError = null;
         this.saveMessage = null;
 
-        this.addPcmUserModel.isActive = true;
-
-        this.observableSave = this.pcmManagementService.savePcmUser(this.addPcmUserModel);
-        this.observableSave.subscribe(errors => {
-
-            if (this.addPcmUserModel.id != null && this.addPcmUserModel.id > 0) {
-                this.saveMessage = "PCM updated successfully!";
+        this.observableErrors = this.pcmManagementService.validateUser(this.addPcmUserModel);
+        this.observableErrors.subscribe(errors => {
+            if (errors != null && errors.length > 0) {
+                this.loadData();
+                this.validationError = errors;
+                this.isLoading = false;
             } else {
-                this.saveMessage = "PCM created successfully!";
+                this.observableSave = this.pcmManagementService.savePcmUser(this.addPcmUserModel);
+                this.observableSave.subscribe(errors => {
+
+                    if (this.addPcmUserModel.id != null && this.addPcmUserModel.id > 0) {
+                        this.saveMessage = "PCM updated successfully!";
+                    } else {
+                        this.saveMessage = "PCM created successfully!";
+                    }
+
+                    this.addPcmUserModel = new User();
+                    this.selectedRegionCentresModel = new RegionCentresModel();
+                    this.selectedCentre = new Centre();
+
+                    //after saving reload the data
+                    this.loadData();
+                }, error => {
+                    this.isLoading = false;
+                    this.errorMessage = <any>error;
+                });
             }
-
-            this.addPcmUserModel = new User();
-            this.selectedRegionCentresModel = new RegionCentresModel();
-            this.selectedCentre = new Centre();
-
-            //after saving reload the data
-            this.loadData();
         }, error => {
             this.isLoading = false;
             this.errorMessage = <any>error;
         });
+        
     }
 
     removeUserCentre(index: number) {

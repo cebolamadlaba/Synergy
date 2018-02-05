@@ -6,7 +6,9 @@ CREATE PROCEDURE [dbo].[UpdateUser]
 	@LastName varchar(50),
 	@RoleId int,
 	@Id int,
-	@ContactNumber varchar(50) 
+	@ContactNumber varchar(50),
+	@IsActive bit,
+	@CanApprove bit
 AS
 BEGIN
 	SET NOCOUNT ON;
@@ -16,7 +18,9 @@ BEGIN
 	[EmailAddress]= @EmailAddress,
 	[FirstName] = @FirstName,
 	[Surname] =@LastName,
-	[ContactNumber] = @ContactNumber
+	[ContactNumber] = @ContactNumber,
+	[IsActive] = @IsActive,
+	[CanApprove] = @CanApprove
 	where ANumber = @ANumber
 
 	update [dbo].[tblUserRole] 

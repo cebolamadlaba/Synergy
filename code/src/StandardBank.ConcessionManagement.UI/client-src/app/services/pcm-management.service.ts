@@ -27,6 +27,13 @@ export class PcmManagementService {
         return this.http.post(url, pcmUser, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    validateUser(pcmUser: User): Observable<string[]> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/PCMManagement/ValidateUser";
+        return this.http.post(url, pcmUser, options).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
     private extractData(response: Response) {
         let body = response.json();
         return body;

@@ -319,5 +319,46 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             return _mapper.Map<IEnumerable<User>>(_userRepository.ReadByCentreId(centreId));
         }
+
+        /// <summary>
+        /// Validates the user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
+        public IEnumerable<string> ValidateUser(User user)
+        {
+            var errors = new List<string>();
+
+            if (user == null)
+            {
+                errors.Add("No data supplied");
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(user.ANumber))
+                {
+                    errors.Add("Please supply an A Number");
+                }
+                else
+                {
+                    var possibleDuplicateUser = GetUser(user.ANumber);
+
+                    if (possibleDuplicateUser != null)
+                        if (possibleDuplicateUser.Id != user.Id)
+                            errors.Add("You are attempting to add a duplicate A Number");
+                }
+
+                if (string.IsNullOrWhiteSpace(user.EmailAddress))
+                    errors.Add("Please supply an email address");
+
+                if (string.IsNullOrWhiteSpace(user.FirstName))
+                    errors.Add("Please supply a first name");
+
+                if (string.IsNullOrWhiteSpace(user.Surname))
+                    errors.Add("Please supply a surname");
+            }
+
+            return errors;
+        }
     }
 }
