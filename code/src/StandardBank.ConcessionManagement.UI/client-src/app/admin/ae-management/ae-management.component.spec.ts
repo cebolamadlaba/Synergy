@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { FormsModule } from '@angular/forms';
 import { AeManagementService, MockAeManagementService } from '../../services/ae-management.service';
+import { UserService, MockUserService } from '../../services/user.service';
 
 describe('AeManagementComponent', () => {
     let component: AeManagementComponent;
@@ -15,7 +16,8 @@ describe('AeManagementComponent', () => {
             imports: [HttpModule, RouterTestingModule, ModalModule.forRoot(), FormsModule],
             declarations: [AeManagementComponent],
             providers: [
-                { provide: AeManagementService, useClass: MockAeManagementService }
+                { provide: AeManagementService, useClass: MockAeManagementService },
+                { provide: UserService, useClass: MockUserService }
             ]
         })
             .compileComponents();

@@ -27,7 +27,7 @@
 
 <div class="col-md-12 search-and-results-container" *ngIf="!isLoading">
     <!-- Input form -->
-    <div class="form-inline">
+    <div class="form-inline" *ngIf="canAdd">
         <button class="btn btn-primary" type="button" (click)="addAE()">Add AE</button>
     </div>
 
@@ -87,7 +87,7 @@
                     </div>
                 </div>
 
-                <div class="row" *ngIf="!isSaving">
+                <div class="row" *ngIf="!isSaving && canAdd">
 
                     <!-- Left side -->
                     <div class="col-md-6 modal-body">

@@ -60,6 +60,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("AEUsers")]
         public IActionResult AEUsers()
         {
+            var user = _siteHelper.LoggedInUser(this);
+
+            if (user.IsRequestor)
+                return Ok(new[] {user});
+
             return Ok(_userManager.GetUsersByRole(Constants.Roles.Requestor));
         }
 

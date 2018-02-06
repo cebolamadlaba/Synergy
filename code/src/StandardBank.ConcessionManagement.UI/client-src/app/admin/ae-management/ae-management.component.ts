@@ -5,6 +5,7 @@ import { Location } from '@angular/common';
 import { Centre } from '../../models/centre';
 import { AeManagementService } from '../../services/ae-management.service';
 import { AccountExecutive } from '../../models/account-executive';
+import { UserService } from '../../services/user.service';
 
 @Component({
     selector: 'app-ae-management',
@@ -19,6 +20,7 @@ export class AeManagementComponent implements OnInit {
     isLoading = true;
     isSaving = false;
     isAeAAsLoading = false;
+    canAdd = true;
 
     actionType: string;
 
@@ -36,7 +38,9 @@ export class AeManagementComponent implements OnInit {
     observableSelectedAccountAssistants: Observable<User[]>;
     accountAssistants: User[];
 
-    constructor(private location: Location, private aeManagementService: AeManagementService) {
+    currentUser: User;
+
+    constructor(private location: Location, private aeManagementService: AeManagementService, private userService: UserService) {
         this.addAeUserModel = new User();
     }
 
@@ -50,11 +54,16 @@ export class AeManagementComponent implements OnInit {
         Observable.forkJoin([
             this.aeManagementService.getAEUsers(),
             this.aeManagementService.getCentres(),
-            this.aeManagementService.getAAUsers()
+            this.aeManagementService.getAAUsers(),
+            this.userService.getData()
         ]).subscribe(results => {
             this.aeUsers = <any>results[0];
             this.centres = <any>results[1];
             this.accountAssistants = <any>results[2];
+            this.currentUser = <any>results[3];
+
+            if (this.currentUser.isRequestor)
+                this.canAdd = false;
 
             this.isLoading = false;
         },
