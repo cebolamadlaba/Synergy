@@ -56,10 +56,7 @@ export class BcmManagementComponent implements OnInit {
     }
 
     addBCM() {
-        if (this.actionType == "Edit") {
-            this.addBcmUserModel = new User();
-        }
-
+        this.addBcmUserModel = new User();
         this.actionType = "Add";
         this.addBCMModal.show();
     }

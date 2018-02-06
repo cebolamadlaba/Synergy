@@ -30,6 +30,13 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         AccountExecutiveAssistant ReadByAccountAssistantUserId(int userId);
 
         /// <summary>
+        /// Reads the by account executive user identifier.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
+        IEnumerable<AccountExecutiveAssistant> ReadByAccountExecutiveUserId(int userId);
+
+        /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>

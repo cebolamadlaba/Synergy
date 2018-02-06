@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { Location } from '@angular/common';
 import { Centre } from '../../models/centre';
 import { AeManagementService } from '../../services/ae-management.service';
+import { AccountExecutive } from '../../models/account-executive';
 
 @Component({
     selector: 'app-ae-management',
@@ -17,6 +18,7 @@ export class AeManagementComponent implements OnInit {
     saveMessage: string;
     isLoading = true;
     isSaving = false;
+    isAeAAsLoading = false;
 
     actionType: string;
 
@@ -63,18 +65,32 @@ export class AeManagementComponent implements OnInit {
     }
 
     addAE() {
-        if (this.actionType == "Edit") {
-            this.addAeUserModel = new User();
-        }
-
+        this.addAeUserModel = new User();
+        this.selectedAccountAssistant = null;
+        this.selectedAccountAssistants = null;
         this.actionType = "Add";
         this.addAEModal.show();
     }
 
     editAe(aeUser: User) {
+        this.isAeAAsLoading = true;
         this.actionType = "Edit";
-        this.addAeUserModel = aeUser;
         this.addAEModal.show();
+        this.addAeUserModel = aeUser;
+        this.selectedAccountAssistant = null;
+        this.selectedAccountAssistants = null;
+
+        this.observableSelectedAccountAssistants = this.aeManagementService.getAEAAUsers(aeUser.id);
+        this.observableSelectedAccountAssistants.subscribe(result => {
+            if (result != null && result.length > 0)
+                this.selectedAccountAssistants = result;
+
+            this.isAeAAsLoading = false;
+        }, error => {
+            this.addAEModal.hide();
+            this.isAeAAsLoading = false;
+            this.errorMessage = <any>error;
+        });
     }
 
     addAccountAssistant() {
@@ -105,7 +121,11 @@ export class AeManagementComponent implements OnInit {
                 this.validationError = errors;
                 this.isSaving = false;
             } else {
-                this.observableSave = this.aeManagementService.saveAeUser(this.addAeUserModel);
+                var accountExecutive = new AccountExecutive();
+                accountExecutive.user = this.addAeUserModel;
+                accountExecutive.accountAssistants = this.selectedAccountAssistants;
+
+                this.observableSave = this.aeManagementService.saveAccountExecutive(accountExecutive);
                 this.observableSave.subscribe(errors => {
 
                     if (this.addAeUserModel.id != null && this.addAeUserModel.id > 0) {
@@ -115,6 +135,8 @@ export class AeManagementComponent implements OnInit {
                     }
 
                     this.addAeUserModel = new User();
+                    this.selectedAccountAssistant = null;
+                    this.selectedAccountAssistants = null;
 
                     this.isSaving = false;
 

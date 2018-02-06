@@ -6,6 +6,7 @@ using StandardBank.ConcessionManagement.BusinessLogic.Features.Administration;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
+using StandardBank.ConcessionManagement.Model.UserInterface.Administration;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 
 namespace StandardBank.ConcessionManagement.UI.Controllers
@@ -73,22 +74,29 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         }
 
         /// <summary>
-        /// Saves the AE user.
+        /// Saves the account executive.
         /// </summary>
-        /// <param name="aeUser">The AE user.</param>
+        /// <param name="accountExecutive">The account executive.</param>
         /// <returns></returns>
-        [Route("SaveAeUser")]
-        public async Task<IActionResult> SaveAeUser([FromBody] User aeUser)
+        [Route("SaveAccountExecutive")]
+        public async Task<IActionResult> SaveAccountExecutive([FromBody] AccountExecutive accountExecutive)
         {
             var user = _siteHelper.LoggedInUser(this);
             var roles = _lookupTableManager.GetRoles();
 
-            aeUser.RoleId = roles.First(_ => _.Name == Constants.Roles.Requestor).Id;
+            accountExecutive.User.RoleId = roles.First(_ => _.Name == Constants.Roles.Requestor).Id;
 
-            if (aeUser.Id > 0)
-                await _mediator.Send(new UpdateUser(aeUser, user));
+            if (accountExecutive.User.Id > 0)
+            {
+                await _mediator.Send(new UpdateUser(accountExecutive.User, user));
+            }
             else
-                await _mediator.Send(new CreateUser(aeUser, user));
+            {
+                var userId = await _mediator.Send(new CreateUser(accountExecutive.User, user));
+                accountExecutive.User.Id = userId;
+            }
+
+            await _mediator.Send(new CreateOrUpdateAccountExecutives(accountExecutive, user));
 
             return Ok(true);
         }
@@ -112,6 +120,17 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult Centres()
         {
             return Ok(_lookupTableManager.GetCentres());
+        }
+
+        /// <summary>
+        /// Gets the ae aa users.
+        /// </summary>
+        /// <param name="aeUserId">The ae user identifier.</param>
+        /// <returns></returns>
+        [Route("AEAAUsers/{aeUserId}")]
+        public IActionResult AEAAUsers(int aeUserId)
+        {
+            return Ok(_userManager.GetAccountAssistantsForAccountExecutive(aeUserId));
         }
     }
 }

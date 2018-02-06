@@ -85,5 +85,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="roleName">Name of the role.</param>
         /// <returns></returns>
         IEnumerable<string> ValidateUser(User user, string roleName);
+
+        /// <summary>
+        /// Gets the account assistants for account executive.
+        /// </summary>
+        /// <param name="accountExecutiveUserId">The account executive user identifier.</param>
+        /// <returns></returns>
+        IEnumerable<User> GetAccountAssistantsForAccountExecutive(int accountExecutiveUserId);
     }
 }

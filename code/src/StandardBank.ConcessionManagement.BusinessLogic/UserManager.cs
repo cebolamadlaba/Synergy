@@ -374,5 +374,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return errors;
         }
+
+        /// <summary>
+        /// Gets the account assistants for account executive.
+        /// </summary>
+        /// <param name="accountExecutiveUserId">The account executive user identifier.</param>
+        /// <returns></returns>
+        public IEnumerable<User> GetAccountAssistantsForAccountExecutive(int accountExecutiveUserId)
+        {
+            var accountAssistants =
+                _accountExecutiveAssistantRepository.ReadByAccountExecutiveUserId(accountExecutiveUserId);
+
+            foreach (var accountAssistant in accountAssistants)
+                yield return GetUser(accountAssistant.AccountAssistantUserId);
+        }
     }
 }

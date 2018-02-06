@@ -67,12 +67,9 @@ export class PcmManagementComponent implements OnInit {
     }
 
     addPCM() {
-        if (this.actionType == "Edit") {
-            this.addPcmUserModel = new User();
-            this.selectedRegionCentresModel = new RegionCentresModel();
-            this.selectedCentre = new Centre();
-        }
-
+        this.addPcmUserModel = new User();
+        this.selectedRegionCentresModel = new RegionCentresModel();
+        this.selectedCentre = new Centre();
         this.actionType = "Add";
         this.addPCMModal.show();
     }

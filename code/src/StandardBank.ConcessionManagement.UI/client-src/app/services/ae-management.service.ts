@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import { User } from '../models/user';
 import { Centre } from '../models/centre';
+import { AccountExecutive } from '../models/account-executive';
 
 @Injectable()
 export class AeManagementService {
@@ -20,11 +21,11 @@ export class AeManagementService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    saveAeUser(aeUser: User): Observable<boolean> {
+    saveAccountExecutive(accountExecutive: AccountExecutive): Observable<boolean> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        const url = "/api/AEManagement/SaveAeUser";
-        return this.http.post(url, aeUser, options).map(this.extractData).catch(this.handleErrorObservable);
+        const url = "/api/AEManagement/SaveAccountExecutive";
+        return this.http.post(url, accountExecutive, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
     validateUser(aeUser: User): Observable<string[]> {
@@ -36,6 +37,11 @@ export class AeManagementService {
 
     getCentres(): Observable<Centre[]> {
         const url = "/api/AEManagement/Centres";
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    getAEAAUsers(aeUserId: number): Observable<User[]> {
+        const url = "/api/AEManagement/AEAAUsers/" + aeUserId;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
@@ -64,7 +70,7 @@ export class MockAeManagementService extends AeManagementService {
         return Observable.of(model);
     }
 
-    saveAeUser(aeUser: User): Observable<boolean> {
+    saveAccountExecutive(accountExecutive: AccountExecutive): Observable<boolean> {
         return Observable.of(true);
     }
 
