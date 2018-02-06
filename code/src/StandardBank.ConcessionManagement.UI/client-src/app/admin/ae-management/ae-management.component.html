@@ -145,6 +145,54 @@
                     </div>
                 </div>
 
+                <div class="row" *ngIf="!isSaving">
+                    <div class="col-md-6 modal-body">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Account Assistant</label>
+                            <div class="col-sm-8">
+                                <select [(ngModel)]="selectedAccountAssistant" name="3" class="form-control">
+                                    <option *ngFor="let accountAssistant of accountAssistants" [ngValue]="accountAssistant">
+                                        {{accountAssistant.fullName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 modal-body">
+                        <button class="btn btn-primary" (click)="addAccountAssistant()">Add</button>
+                    </div>
+                </div>
+                <div class="row" *ngIf="!isSaving">
+                    <div class="col-md-12 modal-body">
+                        <div class="form-group">
+                            <div class="table-container">
+                                <table class="table table-bordered table-hover table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>A Number</th>
+                                            <th>Email</th>
+                                            <th>&nbsp;</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngIf="isAeAAsLoading">
+                                            <td colspan="4">Loading...</td>
+                                        </tr>
+                                        <tr *ngFor='let accountAssistant of selectedAccountAssistants; trackBy: index; let i=index'>
+                                            <td>{{accountAssistant.fullName}}</td>
+                                            <td>{{accountAssistant.aNumber}}</td>
+                                            <td>{{accountAssistant.emailAddress}}</td>
+                                            <td><button class="btn-delete" type="button" (click)="removeAccountAssistant(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="modal-footer" *ngIf="!isSaving">
                     <div class="float-right">
                         <button type="button" class="btn btn-cancel" (click)="addAEModal.hide()">Close</button>

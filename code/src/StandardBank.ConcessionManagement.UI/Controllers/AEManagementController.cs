@@ -63,6 +63,16 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         }
 
         /// <summary>
+        /// Gets the aa users.
+        /// </summary>
+        /// <returns></returns>
+        [Route("AAUsers")]
+        public IActionResult AAUsers()
+        {
+            return Ok(_userManager.GetUsersByRole(Constants.Roles.AA));
+        }
+
+        /// <summary>
         /// Saves the AE user.
         /// </summary>
         /// <param name="aeUser">The AE user.</param>

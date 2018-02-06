@@ -29,6 +29,11 @@ export class AeManagementComponent implements OnInit {
     observableSave: Observable<boolean>;
     observableErrors: Observable<string[]>;
 
+    selectedAccountAssistant: User;
+    selectedAccountAssistants: User[];
+    observableSelectedAccountAssistants: Observable<User[]>;
+    accountAssistants: User[];
+
     constructor(private location: Location, private aeManagementService: AeManagementService) {
         this.addAeUserModel = new User();
     }
@@ -42,10 +47,12 @@ export class AeManagementComponent implements OnInit {
 
         Observable.forkJoin([
             this.aeManagementService.getAEUsers(),
-            this.aeManagementService.getCentres()
+            this.aeManagementService.getCentres(),
+            this.aeManagementService.getAAUsers()
         ]).subscribe(results => {
             this.aeUsers = <any>results[0];
             this.centres = <any>results[1];
+            this.accountAssistants = <any>results[2];
 
             this.isLoading = false;
         },
@@ -68,6 +75,22 @@ export class AeManagementComponent implements OnInit {
         this.actionType = "Edit";
         this.addAeUserModel = aeUser;
         this.addAEModal.show();
+    }
+
+    addAccountAssistant() {
+        if (this.selectedAccountAssistant != null) {
+            if (this.selectedAccountAssistants == null) {
+                this.selectedAccountAssistants = [];
+            }
+
+            if (!this.selectedAccountAssistants.find(result => result.id == this.selectedAccountAssistant.id)) {
+                this.selectedAccountAssistants.push(this.selectedAccountAssistant);
+            }
+        }
+    }
+
+    removeAccountAssistant(index: number) {
+        this.selectedAccountAssistants.splice(index, 1);
     }
 
     saveAE() {

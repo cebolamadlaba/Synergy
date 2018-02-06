@@ -15,6 +15,11 @@ export class AeManagementService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    getAAUsers(): Observable<User[]> {
+        const url = "/api/AEManagement/AAUsers";
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
     saveAeUser(aeUser: User): Observable<boolean> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
@@ -50,6 +55,11 @@ export class AeManagementService {
 export class MockAeManagementService extends AeManagementService {
 
     getAEUsers(): Observable<User[]> {
+        var model = [new User()];
+        return Observable.of(model);
+    }
+
+    getAAUsers(): Observable<User[]> {
         var model = [new User()];
         return Observable.of(model);
     }
