@@ -37,6 +37,7 @@ import { RegionService } from './services/region.service';
 import { BusinessCentreService } from './services/business-centre.service';
 import { PcmManagementService } from './services/pcm-management.service';
 import { BcmManagementService } from './services/bcm-management.service';
+import { AeManagementService } from './services/ae-management.service';
 
 import { ApprovedConcessionFilterPipe } from './filters/approved-concession-filter.pipe';
 import { CashViewConcessionComponent } from './cash-view-concession/cash-view-concession.component';
@@ -63,6 +64,8 @@ import { NumbersonlyDirective } from './directives/numbersonly.directive';
 import { RegionComponent } from './admin/region/region.component';
 import { PcmManagementComponent } from './admin/pcm-management/pcm-management.component';
 import { BcmManagementComponent } from './admin/bcm-management/bcm-management.component';
+import { AeManagementComponent } from './admin/ae-management/ae-management.component';
+import { AaManagementComponent } from './admin/aa-management/aa-management.component';
 
 @NgModule({
     declarations: [
@@ -108,7 +111,9 @@ import { BcmManagementComponent } from './admin/bcm-management/bcm-management.co
         ConditionsFilterPipe,
         RegionComponent,
         PcmManagementComponent,
-        BcmManagementComponent
+        BcmManagementComponent,
+        AeManagementComponent,
+        AaManagementComponent
     ],
     imports: [
         BrowserModule,
@@ -132,7 +137,8 @@ import { BcmManagementComponent } from './admin/bcm-management/bcm-management.co
         RegionService,
         BusinessCentreService,
         PcmManagementService,
-        BcmManagementService
+        BcmManagementService,
+        AeManagementService
     ],
     bootstrap: [AppComponent]
 })

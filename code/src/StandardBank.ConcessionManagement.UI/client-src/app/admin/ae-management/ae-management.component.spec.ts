@@ -1,28 +1,28 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { BcmManagementComponent } from './bcm-management.component';
+import { AeManagementComponent } from './ae-management.component';
 import { HttpModule } from '@angular/http';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { FormsModule } from '@angular/forms';
-import { BcmManagementService, MockBcmManagementService } from '../../services/bcm-management.service';
+import { AeManagementService, MockAeManagementService } from '../../services/ae-management.service';
 
-describe('BcmManagementComponent', () => {
-    let component: BcmManagementComponent;
-    let fixture: ComponentFixture<BcmManagementComponent>;
+describe('AeManagementComponent', () => {
+    let component: AeManagementComponent;
+    let fixture: ComponentFixture<AeManagementComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [HttpModule, RouterTestingModule, ModalModule.forRoot(), FormsModule],
-            declarations: [BcmManagementComponent],
+            declarations: [AeManagementComponent],
             providers: [
-                { provide: BcmManagementService, useClass: MockBcmManagementService }
+                { provide: AeManagementService, useClass: MockAeManagementService }
             ]
         })
             .compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(BcmManagementComponent);
+        fixture = TestBed.createComponent(AeManagementComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

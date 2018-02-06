@@ -2,15 +2,15 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { User } from '../../models/user';
 import { Observable } from "rxjs";
 import { Location } from '@angular/common';
-import { BcmManagementService } from '../../services/bcm-management.service';
 import { Centre } from '../../models/centre';
+import { AeManagementService } from '../../services/ae-management.service';
 
 @Component({
-    selector: 'app-bcm-management',
-    templateUrl: './bcm-management.component.html',
-    styleUrls: ['./bcm-management.component.css']
+    selector: 'app-ae-management',
+    templateUrl: './ae-management.component.html',
+    styleUrls: ['./ae-management.component.css']
 })
-export class BcmManagementComponent implements OnInit {
+export class AeManagementComponent implements OnInit {
 
     errorMessage: string;
     validationError: string[];
@@ -20,17 +20,17 @@ export class BcmManagementComponent implements OnInit {
 
     actionType: string;
 
-    @ViewChild('addBCMModal') addBCMModal;
+    @ViewChild('addAEModal') addAEModal;
 
     centres: Centre[];
-    bcmUsers: User[];
-    addBcmUserModel: User;
+    aeUsers: User[];
+    addAeUserModel: User;
 
     observableSave: Observable<boolean>;
     observableErrors: Observable<string[]>;
 
-    constructor(private location: Location, private bcmManagementService: BcmManagementService) {
-        this.addBcmUserModel = new User();
+    constructor(private location: Location, private aeManagementService: AeManagementService) {
+        this.addAeUserModel = new User();
     }
 
     ngOnInit() {
@@ -41,10 +41,10 @@ export class BcmManagementComponent implements OnInit {
         this.isLoading = true;
 
         Observable.forkJoin([
-            this.bcmManagementService.getBCMUsers(),
-            this.bcmManagementService.getCentres()
+            this.aeManagementService.getAEUsers(),
+            this.aeManagementService.getCentres()
         ]).subscribe(results => {
-            this.bcmUsers = <any>results[0];
+            this.aeUsers = <any>results[0];
             this.centres = <any>results[1];
 
             this.isLoading = false;
@@ -55,43 +55,43 @@ export class BcmManagementComponent implements OnInit {
             });
     }
 
-    addBCM() {
+    addAE() {
         if (this.actionType == "Edit") {
-            this.addBcmUserModel = new User();
+            this.addAeUserModel = new User();
         }
 
         this.actionType = "Add";
-        this.addBCMModal.show();
+        this.addAEModal.show();
     }
 
-    editBcm(bcmUser: User) {
+    editAe(aeUser: User) {
         this.actionType = "Edit";
-        this.addBcmUserModel = bcmUser;
-        this.addBCMModal.show();
+        this.addAeUserModel = aeUser;
+        this.addAEModal.show();
     }
 
-    saveBCM() {
+    saveAE() {
         this.isSaving = true;
         this.errorMessage = null;
         this.validationError = null;
         this.saveMessage = null;
 
-        this.observableErrors = this.bcmManagementService.validateUser(this.addBcmUserModel);
+        this.observableErrors = this.aeManagementService.validateUser(this.addAeUserModel);
         this.observableErrors.subscribe(errors => {
             if (errors != null && errors.length > 0) {
                 this.validationError = errors;
                 this.isSaving = false;
             } else {
-                this.observableSave = this.bcmManagementService.saveBcmUser(this.addBcmUserModel);
+                this.observableSave = this.aeManagementService.saveAeUser(this.addAeUserModel);
                 this.observableSave.subscribe(errors => {
 
-                    if (this.addBcmUserModel.id != null && this.addBcmUserModel.id > 0) {
-                        this.saveMessage = "BCM updated successfully!";
+                    if (this.addAeUserModel.id != null && this.addAeUserModel.id > 0) {
+                        this.saveMessage = "AE updated successfully!";
                     } else {
-                        this.saveMessage = "BCM created successfully!";
+                        this.saveMessage = "AE created successfully!";
                     }
 
-                    this.addBcmUserModel = new User();
+                    this.addAeUserModel = new User();
 
                     this.isSaving = false;
 
@@ -111,4 +111,5 @@ export class BcmManagementComponent implements OnInit {
     goBack() {
         this.location.back();
     }
+
 }

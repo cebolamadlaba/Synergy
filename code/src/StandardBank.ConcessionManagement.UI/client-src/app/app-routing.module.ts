@@ -35,6 +35,8 @@ import { ActionedInboxComponent } from "./actioned-inbox/actioned-inbox.componen
 import { RegionComponent } from './admin/region/region.component';
 import { PcmManagementComponent } from './admin/pcm-management/pcm-management.component';
 import { BcmManagementComponent } from './admin/bcm-management/bcm-management.component';
+import { AeManagementComponent } from './admin/ae-management/ae-management.component';
+import { AaManagementComponent } from './admin/aa-management/aa-management.component';
 
 const routes: Routes = [
     { path: '', redirectTo: '/pending-inbox', pathMatch: 'full' },
@@ -75,7 +77,9 @@ const routes: Routes = [
     { path: 'admin/users/edit-user/:id', component: EditUserComponent },
     { path: 'admin/regions', component: RegionComponent },
     { path: 'admin/pcm-management', component: PcmManagementComponent },
-    { path: 'admin/bcm-management', component: BcmManagementComponent }
+    { path: 'admin/bcm-management', component: BcmManagementComponent },
+    { path: 'admin/ae-management', component: AeManagementComponent },
+    { path: 'admin/aa-management', component: AaManagementComponent }
 ];
 
 @NgModule({

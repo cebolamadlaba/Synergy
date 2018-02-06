@@ -113,6 +113,14 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public bool CanPcmApprove { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this instance is requestor.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is requestor; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsRequestor { get; set; }
+
+        /// <summary>
         /// Gets or sets whether or not the user is a HO
         /// </summary>
         public bool IsHO { get; set; }

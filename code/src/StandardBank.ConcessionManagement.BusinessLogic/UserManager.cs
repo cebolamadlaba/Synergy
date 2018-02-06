@@ -138,6 +138,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedUser.CanPcmApprove =
                 mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.PCM || _.Name == Constants.Roles.HeadOffice);
 
+            mappedUser.IsRequestor = mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.Requestor);
             mappedUser.IsHO = mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.HeadOffice);
             mappedUser.IsPCM = mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.PCM);
             mappedUser.IsBCM = mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.BCM);
