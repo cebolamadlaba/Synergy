@@ -38,6 +38,7 @@ import { BusinessCentreService } from './services/business-centre.service';
 import { PcmManagementService } from './services/pcm-management.service';
 import { BcmManagementService } from './services/bcm-management.service';
 import { AeManagementService } from './services/ae-management.service';
+import { AaManagementService } from './services/aa-management.service';
 
 import { ApprovedConcessionFilterPipe } from './filters/approved-concession-filter.pipe';
 import { CashViewConcessionComponent } from './cash-view-concession/cash-view-concession.component';
@@ -138,7 +139,8 @@ import { AaManagementComponent } from './admin/aa-management/aa-management.compo
         BusinessCentreService,
         PcmManagementService,
         BcmManagementService,
-        AeManagementService
+        AeManagementService,
+        AaManagementService
     ],
     bootstrap: [AppComponent]
 })

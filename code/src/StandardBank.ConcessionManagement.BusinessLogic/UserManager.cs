@@ -146,7 +146,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedUser.IsAdminAssistant = mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.AA);
 
             if (mappedUser.IsAdminAssistant)
+            {
                 mappedUser.AccountExecutive = GetAccountExecutive(user.Id);
+
+                if (mappedUser.AccountExecutive != null)
+                    mappedUser.AccountExecutiveUserId = mappedUser.AccountExecutive.Id;
+            }
 
             return mappedUser;
         }

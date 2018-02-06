@@ -33,18 +33,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
                 _accountExecutiveAssistantRepository.ReadByAccountExecutiveUserId(message.AccountExecutive.User.Id);
 
             if (accountAssistants != null && accountAssistants.Any())
-            {
                 DeleteRecords(message, accountAssistants, auditRecords);
-            }
 
             //if there are records, insert the ones that are not in the database already
             if (message.AccountExecutive.AccountAssistants != null && message.AccountExecutive.AccountAssistants.Any())
-            {
                 foreach (var accountAssistant in message.AccountExecutive.AccountAssistants)
-                {
                     AddRecord(message, accountAssistants, accountAssistant, auditRecords);
-                }
-            }
 
             message.AuditRecords = auditRecords;
         }
