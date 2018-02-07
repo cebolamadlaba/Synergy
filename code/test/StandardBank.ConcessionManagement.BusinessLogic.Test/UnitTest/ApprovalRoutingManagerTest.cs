@@ -40,11 +40,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             var roles = new List<Role> { new Role { Id = 1 } };
             var users = new List<User> { new User { ANumber = "A1" }, new User { ANumber = "A2" } };
             roleRepository.Setup(x => x.ReadAll()).Returns(roles);
-            approvalWorkflowRepository.Setup(_ => _.GetRegionApproversByRole(It.IsAny<int>(), It.IsAny<IEnumerable<int>>())).Returns(users);
+            approvalWorkflowRepository.Setup(_ => _.GetApproversByRoles(It.IsAny<int>(), It.IsAny<IEnumerable<int>>())).Returns(users);
             var approvers = sut.GetApproversByRole(1, Constants.ApprovalStep.PCMApproval).ToList();
             Assert.True(users.Count == approvers.Count);
             roleRepository.Verify(_ => _.ReadAll(), Times.Once());
-            approvalWorkflowRepository.Verify(_ => _.GetRegionApproversByRole(It.IsAny<int>(), It.IsAny<IEnumerable<int>>()), Times.Once());
+            approvalWorkflowRepository.Verify(_ => _.GetApproversByRoles(It.IsAny<int>(), It.IsAny<IEnumerable<int>>()), Times.Once());
         }
     }
 }

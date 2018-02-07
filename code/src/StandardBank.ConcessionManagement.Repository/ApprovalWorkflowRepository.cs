@@ -64,35 +64,5 @@ namespace StandardBank.ConcessionManagement.Repository
                 new CacheKeyParameter(nameof(centerId), centerId),
                 new CacheKeyParameter(nameof(roles), string.Join(",", roles)));
         }
-
-        /// <summary>
-        /// Gets the region approvers by role.
-        /// </summary>
-        /// <param name="centerId">The center identifier.</param>
-        /// <param name="roles">The roles.</param>
-        /// <returns></returns>
-        public IEnumerable<User> GetRegionApproversByRole(int centerId, IEnumerable<int> roles)
-        {
-            const string sql = @"select u.ANumber, u.EmailAddress, u.FirstName, u.Surname
-                                from [dbo].[tblUser] u
-                                join [dbo].[tblUserRole] ur on ur.fkUserId = u.pkUserId
-                                join [dbo].[tblUserRegion] ureg on ureg.[fkUserId] = u.[pkUserId]
-                                join [dbo].[tblCentre] c on c.[fkRegionId] = ureg.[fkRegionId]
-                                where ur.[fkRoleId] in @roles and c.[pkCentreId] = @centerId";
-
-            IEnumerable<User> Function()
-            {
-                using (var db = _dbConnectionFactory.Connection())
-                {
-                    return db.Query<User>(sql, new { roles = roles.ToArray(), centerId = centerId });
-                }
-            }
-
-            return _cacheManager.ReturnFromCache(Function,
-                (int)TimeSpan.FromHours(24).TotalMinutes,
-                CacheKey.Repository.ApprovalWorkflowRepository.GetRegionApproversByRole,
-                new CacheKeyParameter(nameof(centerId), centerId),
-                new CacheKeyParameter(nameof(roles), string.Join(",", roles)));
-        }
     }
 }

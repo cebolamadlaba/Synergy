@@ -182,7 +182,11 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 }
 
                 if (lendingConcession.concession.status == ConcessionStatus.Pending && lendingConcession.concession.subStatus == ConcessionSubStatus.PCMPending) {
-                    this.canPcmApprove = lendingConcession.currentUser.canPcmApprove && lendingConcession.currentUser.canApprove;
+                    if (this.lendingConcession.currentUser.isHO) {
+                        this.canPcmApprove = lendingConcession.currentUser.canPcmApprove
+                    } else {
+                        this.canPcmApprove = lendingConcession.currentUser.canPcmApprove && lendingConcession.currentUser.canApprove;
+                    }
 
 					if (!lendingConcession.concession.isInProgressExtension) {
 						this.canEdit = lendingConcession.currentUser.canPcmApprove;
