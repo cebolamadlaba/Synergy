@@ -210,7 +210,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             control.controls[rowIndex].get('baseRate').setValue(null);
 
         if (control.controls[rowIndex].get('tableNumber').value.adValorem)
-            control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('tableNumber').value.adValorem.toFixed(2));
+            control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('tableNumber').value.adValorem.toFixed(3));
         else
             control.controls[rowIndex].get('adValorem').setValue(null);
     }
