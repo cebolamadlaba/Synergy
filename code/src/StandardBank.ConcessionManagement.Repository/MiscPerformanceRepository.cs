@@ -320,8 +320,8 @@ namespace StandardBank.ConcessionManagement.Repository
                     null [ApprovedPrice], 
                     ct.[fkApprovedTransactionTableNumberId] [ApprovedTransactionTableNumberId], 
                     ct.[fkLoadedTransactionTableNumberId] [LoadedTransactionTableNumberId], 
-                    atn.[TariffTable] [LoadedTableNumber], 
-                    ltn.[TariffTable] [ApprovedTableNumber]
+                    atn.[TariffTable] [ApprovedTableNumber], 
+                    ltn.[TariffTable] [LoadedTableNumber]
                     FROM [dbo].[tblConcessionDetail] cd
                     JOIN [dbo].[tblConcessionTransactional] ct on ct.[fkConcessionDetailId] = cd.[pkConcessionDetailId]
                     JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = cd.[fkLegalEntityId]

@@ -240,10 +240,10 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 					currentConcession.get('transactionTableNumber').setValue(selectedTransactionTableNumber[0]);
 
                     if (transactionalConcessionDetail.adValorem)
-                        currentConcession.get('adValorem').setValue(transactionalConcessionDetail.adValorem.toFixed(2));
+                        currentConcession.get('adValorem').setValue(transactionalConcessionDetail.adValorem.toFixed(3));
 
                     if (transactionalConcessionDetail.fee)
-                        currentConcession.get('flatFeeOrRate').setValue(transactionalConcessionDetail.fee.toFixed(3));
+                        currentConcession.get('flatFeeOrRate').setValue(transactionalConcessionDetail.fee.toFixed(2));
 
 					currentConcession.get('approvedTableNumber').setValue(transactionalConcessionDetail.approvedTableNumber);
 
@@ -396,12 +396,12 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
 
 	    if (control.controls[rowIndex].get('transactionTableNumber').value.fee)
-	        control.controls[rowIndex].get('flatFeeOrRate').setValue(control.controls[rowIndex].get('transactionTableNumber').value.fee.toFixed(3));
+	        control.controls[rowIndex].get('flatFeeOrRate').setValue(control.controls[rowIndex].get('transactionTableNumber').value.fee.toFixed(2));
 	    else
 	        control.controls[rowIndex].get('flatFeeOrRate').setValue(null);
 
 	    if (control.controls[rowIndex].get('transactionTableNumber').value.adValorem)
-	        control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('transactionTableNumber').value.adValorem.toFixed(2));
+	        control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('transactionTableNumber').value.adValorem.toFixed(3));
 	    else
 	        control.controls[rowIndex].get('adValorem').setValue(null);
 	}
@@ -413,10 +413,10 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		transactionalConcession.concession.riskGroupId = this.riskGroup.id;
 		transactionalConcession.concession.referenceNumber = this.concessionReferenceId;
 
-		if (this.transactionalConcessionForm.controls['mrsCrs'].value)
-			transactionalConcession.concession.mrsCrs = this.transactionalConcessionForm.controls['mrsCrs'].value;
-		else
-			this.addValidationError("MRS/CRS not captured");
+		//if (this.transactionalConcessionForm.controls['mrsCrs'].value)
+		//	transactionalConcession.concession.mrsCrs = this.transactionalConcessionForm.controls['mrsCrs'].value;
+		//else
+		//	this.addValidationError("MRS/CRS not captured");
 
 		if (this.transactionalConcessionForm.controls['smtDealNumber'].value)
 			transactionalConcession.concession.smtDealNumber = this.transactionalConcessionForm.controls['smtDealNumber'].value;

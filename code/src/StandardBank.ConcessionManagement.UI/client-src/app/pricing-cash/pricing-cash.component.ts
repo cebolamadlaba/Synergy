@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -8,6 +8,7 @@ import { CashView } from "../models/cash-view";
 import { RiskGroup } from "../models/risk-group";
 import { Concession } from "../models/concession";
 import { Router, RouterModule } from '@angular/router';
+import { UserService } from "../services/user.service";
 
 @Component({
   selector: 'app-pricing-cash',
@@ -23,15 +24,18 @@ export class PricingCashComponent implements OnInit, OnDestroy {
     showHide = false;
     pageLoaded = false;
     isLoading = true;
+    canRequest = false;
 
     constructor(
         private router: Router,
         private route: ActivatedRoute,
         private location: Location,
-        @Inject(CashConcessionService) private cashConcessionService) {
+        @Inject(CashConcessionService) private cashConcessionService, private userService: UserService) {
         this.cashView.riskGroup = new RiskGroup();
         this.cashView.cashConcessions = [new CashConcession()];
         this.cashView.cashConcessions[0].concession = new Concession();
+        
+
     }
 
     ngOnInit() {
@@ -50,6 +54,11 @@ export class PricingCashComponent implements OnInit, OnDestroy {
                 });
             }
         });
+
+        this.userService.getData().subscribe(user => {
+            this.canRequest = user.canRequest;
+        });
+
     }
 
     goBack() {

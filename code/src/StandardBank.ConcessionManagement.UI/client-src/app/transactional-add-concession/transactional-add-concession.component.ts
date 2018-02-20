@@ -209,10 +209,10 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 		transactionalConcession.concession = new Concession();
 		transactionalConcession.concession.riskGroupId = this.riskGroup.id;
 
-		if (this.transactionalConcessionForm.controls['mrsCrs'].value)
-			transactionalConcession.concession.mrsCrs = this.transactionalConcessionForm.controls['mrsCrs'].value;
-		else
-			this.addValidationError("MRS/CRS not captured");
+		//if (this.transactionalConcessionForm.controls['mrsCrs'].value)
+		//	transactionalConcession.concession.mrsCrs = this.transactionalConcessionForm.controls['mrsCrs'].value;
+		//else
+		//	this.addValidationError("MRS/CRS not captured");
 
 		if (this.transactionalConcessionForm.controls['smtDealNumber'].value)
 			transactionalConcession.concession.smtDealNumber = this.transactionalConcessionForm.controls['smtDealNumber'].value;

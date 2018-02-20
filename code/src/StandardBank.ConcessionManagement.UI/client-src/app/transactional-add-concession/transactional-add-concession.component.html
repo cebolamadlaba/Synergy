@@ -1,4 +1,4 @@
-﻿<!-- Banner -->
+<!-- Banner -->
 <div class="col-md-12 banner">
     <div class="row">
         <!-- Header -->
@@ -88,10 +88,10 @@
 <!-- Form entries -->
 <form class="col-md-12 concession-information-form" [formGroup]="transactionalConcessionForm" *ngIf="!isLoading">
     <div class="col-md-4">
-        <div class="row">
+        <!--<div class="row">
             <label>MRS/CRS</label>
             <input type="text" numbersOnly="true" class="form-control" formControlName="mrsCrs" [attr.disabled]="saveMessage ? '' : null">
-        </div>
+        </div>-->
         <div class="row">
             <label>SMT Deal Number</label>
             <input type="text" numbersOnly="true" class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="saveMessage ? '' : null">

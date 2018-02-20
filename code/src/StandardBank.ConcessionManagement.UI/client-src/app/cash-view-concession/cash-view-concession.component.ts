@@ -241,7 +241,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 					currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
 
                     if (cashConcessionDetail.baseRate)
-                        currentConcession.get('baseRate').setValue(cashConcessionDetail.baseRate.toFixed(3));
+                        currentConcession.get('baseRate').setValue(cashConcessionDetail.baseRate.toFixed(2));
 
                     if (cashConcessionDetail.adValorem)
                         currentConcession.get('adValorem').setValue(cashConcessionDetail.adValorem.toFixed(3));
@@ -391,7 +391,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 		const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
 
 	    if (control.controls[rowIndex].get('tableNumber').value.baseRate)
-	        control.controls[rowIndex].get('baseRate').setValue(control.controls[rowIndex].get('tableNumber').value.baseRate.toFixed(3));
+	        control.controls[rowIndex].get('baseRate').setValue(control.controls[rowIndex].get('tableNumber').value.baseRate.toFixed(2));
 	    else
 	        control.controls[rowIndex].get('baseRate').setValue(null);
 
