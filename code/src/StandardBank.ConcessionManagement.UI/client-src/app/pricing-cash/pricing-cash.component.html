@@ -171,34 +171,36 @@
                         <tr>
                             <th>Channel</th>
                             <th>Customer</th>
-                            <th>Cash Table</th>
+                            <th>Approved Table</th>
                             <th>Price</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr *ngFor="let concession of cashConcession.cashConcessionDetails; trackBy: index;">
-                            <td>{{concession.channel}}</td>
+                        <tr *ngFor="let concessiondetail of cashConcession.cashConcessionDetails; trackBy: index;">
+                            <td>{{concessiondetail.channel}}</td>
                             <td>
-                                <div class="table-row-top">{{concession.customerName}}</div>
+                                <div class="table-row-top">{{concessiondetail.customerName}}</div>
                                 <div class="table-row-bottom">
                                     <div class="secondaryText">
                                         Acc No:
-                                        <div class="normalText">{{concession.accountNumber}}</div>
+                                        <div class="normalText">{{concessiondetail.accountNumber}}</div>
                                     </div>
                                 </div>
                             </td>
-                            <td class="rightAlign">{{concession.tableNumberId}}</td>
+                            <td class="rightAlign">{{concessiondetail.approvedTableNumber}}</td>
                             <td>
                                 <div class="table-row-top">
                                     <div class="secondaryText">
                                         Loaded:
-                                        <div class="normalText">{{concession.loadedTableNumber}}</div>
+                                        <div class="normalText">{{concessiondetail.displayTextLoaded}}</div>
                                     </div>
                                 </div>
                                 <div class="table-row-bottom">
                                     <div class="secondaryText">
+                                        <!--Approved:
+                                        <div class="normalText">{{concessiondetail.approvedTableNumber}}</div>-->
                                         Approved:
-                                        <div class="normalText">{{concession.approvedTableNumber}}</div>
+                                        <div class="normalText">{{concessiondetail.displayTextApproved}}</div>
                                     </div>
                                 </div>
                             </td>

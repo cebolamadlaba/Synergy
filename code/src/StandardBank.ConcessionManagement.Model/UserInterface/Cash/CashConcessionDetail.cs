@@ -116,5 +116,9 @@
         /// The loaded table number.
         /// </value>
         public string LoadedTableNumber { get; set; }
+
+        public string DisplayTextLoaded { get; set; }
+
+        public string DisplayTextApproved { get; set; }
     }
 }

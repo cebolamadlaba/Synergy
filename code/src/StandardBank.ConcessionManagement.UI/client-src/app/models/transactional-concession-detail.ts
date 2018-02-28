@@ -9,10 +9,12 @@ export class TransactionalConcessionDetail extends BaseConcessionDetail {
     adValorem: number;
     fee: number;
 	transactionTableNumberId: number;
-    loadedPrice: number;
+    loadedPrice: string;
     approvedPrice: number;
 	approvedTransactionTableNumberId: number;
 	loadedTransactionTableNumberId: number;
     loadedTableNumber: string;
     approvedTableNumber: string;
+    displayTextLoaded: string;
+    displayTextApproved: string;
 }

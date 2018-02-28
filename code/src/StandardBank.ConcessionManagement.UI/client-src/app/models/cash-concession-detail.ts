@@ -17,4 +17,7 @@ export class CashConcessionDetail extends BaseConcessionDetail {
     loadedTableNumberId: number;
     approvedTableNumber: string;
     loadedTableNumber: string;
+    displayTextLoaded: string;
+    displayTextApproved: string;
+
 }

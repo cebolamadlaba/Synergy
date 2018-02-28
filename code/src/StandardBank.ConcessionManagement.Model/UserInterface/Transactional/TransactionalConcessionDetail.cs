@@ -75,7 +75,7 @@
         /// <value>
         /// The loaded price.
         /// </value>
-        public decimal LoadedPrice { get; set; }
+        public string LoadedPrice { get; set; }
 
         /// <summary>
         /// Gets or sets the approved price.
@@ -116,5 +116,9 @@
         /// The approved table number.
         /// </value>
         public string ApprovedTableNumber { get; set; }
+
+        public string DisplayTextLoaded { get; set; }
+
+        public string DisplayTextApproved { get; set; }
     }
 }

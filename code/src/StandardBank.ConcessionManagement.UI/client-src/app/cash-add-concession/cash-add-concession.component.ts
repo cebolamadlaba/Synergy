@@ -205,7 +205,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
 
         if (control.controls[rowIndex].get('tableNumber').value.baseRate)
-            control.controls[rowIndex].get('baseRate').setValue(control.controls[rowIndex].get('tableNumber').value.baseRate.toFixed(3));
+            control.controls[rowIndex].get('baseRate').setValue(control.controls[rowIndex].get('tableNumber').value.baseRate.toFixed(2));
         else
             control.controls[rowIndex].get('baseRate').setValue(null);
 
@@ -226,6 +226,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         var cashConcession = new CashConcession();
         cashConcession.concession = new Concession();
         cashConcession.concession.riskGroupId = this.riskGroup.id;
+       
 
         if (this.cashConcessionForm.controls['smtDealNumber'].value)
             cashConcession.concession.smtDealNumber = this.cashConcessionForm.controls['smtDealNumber'].value;
@@ -250,6 +251,8 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             } else {
                 this.addValidationError("Channel type not selected");
             }
+
+         
 
             if (concessionFormItem.get('accountNumber').value) {
                 cashConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;

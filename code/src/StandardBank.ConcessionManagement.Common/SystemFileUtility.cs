@@ -38,7 +38,7 @@ namespace StandardBank.ConcessionManagement.Common
         public string ReadFileText(string fileName, bool throwExceptionIfNotFound = false)
         {
             if (File.Exists(fileName))
-                return File.ReadAllText(fileName);
+                return File.ReadAllText(fileName, System.Text.Encoding.UTF8);
 
             if (throwExceptionIfNotFound)
                 throw new FileNotFoundException(fileName);

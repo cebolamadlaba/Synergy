@@ -59,7 +59,7 @@
                     return $"{TariffTable} ({Fee.Value} + {AdValorem.Value}%)";
 
                 if (Fee.HasValue)
-                    return $"{TariffTable} ({Fee.Value})";
+                    return $"{TariffTable} ({Fee.Value.ToString("F2")})";
 
                 if (AdValorem.HasValue)
                     return $"{TariffTable} ({AdValorem.Value}%)";
