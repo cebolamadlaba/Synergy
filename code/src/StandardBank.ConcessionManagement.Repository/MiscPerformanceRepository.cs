@@ -232,9 +232,8 @@ namespace StandardBank.ConcessionManagement.Repository
                     atn.[TariffTable] [ApprovedTableNumber], 
                     ltn.[TariffTable] [LoadedTableNumber],
           
-                    isnull(cast(ltn.[BaseRate] as NVARCHAR(10)) +' + ' + cast(ltn.[AdValorem] as NVARCHAR(10)),'0.00 + 0.000') [displayTextLoaded],
-                    isnull(cast(atn.[BaseRate] as NVARCHAR(10)) +' + ' + cast(atn.[AdValorem] as NVARCHAR(10)),'0.00 + 0.000') [displayTextApproved]
-
+                    isnull(cast(ltn.[BaseRate] as NVARCHAR(10)),'0.00') +' + ' + isnull(cast(ltn.[AdValorem] as NVARCHAR(10)),'0.000') [displayTextLoaded],
+                    isnull(cast(atn.[BaseRate] as NVARCHAR(10)),'0.00')  +' + ' + isnull(cast(atn.[AdValorem] as NVARCHAR(10)),'0.000') [displayTextApproved]
 
                     FROM [dbo].[tblConcessionDetail] cd
                     JOIN [dbo].[tblConcessionCash] cc on cc.[fkConcessionDetailId] = cd.[pkConcessionDetailId]
@@ -328,8 +327,8 @@ namespace StandardBank.ConcessionManagement.Repository
                     atn.[TariffTable] [ApprovedTableNumber], 
                     ltn.[TariffTable] [LoadedTableNumber],                  
 
-                    isnull(cast(ltn.[fee] as NVARCHAR(10)) +' + ' + cast(ltn.[AdValorem] as NVARCHAR(10)),'0.00 + 0.000') [displayTextLoaded],
-                    isnull(cast(atn.[fee] as NVARCHAR(10)) +' + ' + cast(atn.[AdValorem] as NVARCHAR(10)),'0.00 + 0.000') [displayTextApproved]
+                    isnull(cast(ltn.[fee] as NVARCHAR(10)),'0.00') +' + ' + isnull(cast(ltn.[AdValorem] as NVARCHAR(10)),'0.000') [displayTextLoaded],
+                    isnull(cast(atn.[fee] as NVARCHAR(10)),'0.00')  +' + ' + isnull(cast(atn.[AdValorem] as NVARCHAR(10)),'0.000') [displayTextApproved]
 
                     FROM [dbo].[tblConcessionDetail] cd
                     JOIN [dbo].[tblConcessionTransactional] ct on ct.[fkConcessionDetailId] = cd.[pkConcessionDetailId]
