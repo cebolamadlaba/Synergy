@@ -194,12 +194,12 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 		const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
 
         if (control.controls[rowIndex].get('transactionTableNumber').value.fee)
-            control.controls[rowIndex].get('flatFeeOrRate').setValue(control.controls[rowIndex].get('transactionTableNumber').value.fee.toFixed(3));
+            control.controls[rowIndex].get('flatFeeOrRate').setValue(control.controls[rowIndex].get('transactionTableNumber').value.fee.toFixed(2));
         else
             control.controls[rowIndex].get('flatFeeOrRate').setValue(null);
 
 	    if (control.controls[rowIndex].get('transactionTableNumber').value.adValorem)
-	        control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('transactionTableNumber').value.adValorem.toFixed(2));
+	        control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('transactionTableNumber').value.adValorem.toFixed(3));
         else
 	        control.controls[rowIndex].get('adValorem').setValue(null);
 	}
