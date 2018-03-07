@@ -73,6 +73,8 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <returns></returns>
         IEnumerable<ConcessionInboxView> ReadByBcmUserIdIsActive(int bcmUserId, bool isActive);
 
+        IEnumerable<ConcessionInboxView> ReadbyPCMPending(int? region, int? businesscentre, DateTime? datefilter,IEnumerable<int> statusIds);
+
         /// <summary>
         /// Reads the by PCM user identifier is active.
         /// </summary>

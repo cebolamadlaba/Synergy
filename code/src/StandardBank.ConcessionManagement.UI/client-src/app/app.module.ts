@@ -11,6 +11,7 @@ import { PageHeaderComponent } from './page-header/page-header.component';
 import { PendingInboxComponent } from './pending-inbox/pending-inbox.component';
 import { ApprovedConcessionsComponent } from './approved-concessions/approved-concessions.component';
 import { ConditionsComponent } from './conditions/conditions.component';
+import { SearchComponent } from './search/search.component';
 import { PricingComponent } from './pricing/pricing.component';
 import { DueExpiryInboxComponent } from './due-expiry-inbox/due-expiry-inbox.component';
 import { ExpiredInboxComponent } from './expired-inbox/expired-inbox.component';
@@ -114,7 +115,8 @@ import { AaManagementComponent } from './admin/aa-management/aa-management.compo
         PcmManagementComponent,
         BcmManagementComponent,
         AeManagementComponent,
-        AaManagementComponent
+        AaManagementComponent,
+        SearchComponent
     ],
     imports: [
         BrowserModule,

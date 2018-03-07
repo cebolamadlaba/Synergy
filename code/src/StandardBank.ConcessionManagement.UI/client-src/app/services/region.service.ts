@@ -10,6 +10,8 @@ export class RegionService {
     constructor(private http: Http) {
     }
 
+   
+
     getAll(): Observable<Region[]> {
         const url = "/api/Region/All";
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);

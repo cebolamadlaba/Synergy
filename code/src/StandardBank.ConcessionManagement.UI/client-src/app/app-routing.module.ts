@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { PendingInboxComponent } from "./pending-inbox/pending-inbox.component";
 import { ApprovedConcessionsComponent } from "./approved-concessions/approved-concessions.component";
 import { ConditionsComponent } from "./conditions/conditions.component";
+import { SearchComponent } from "./search/search.component";
 import { PricingComponent } from "./pricing/pricing.component";
 import { DueExpiryInboxComponent } from "./due-expiry-inbox/due-expiry-inbox.component";
 import { ExpiredInboxComponent } from "./expired-inbox/expired-inbox.component";
@@ -48,6 +49,7 @@ const routes: Routes = [
     { path: 'actioned-inbox', component: ActionedInboxComponent },
     { path: 'approved-concessions', component: ApprovedConcessionsComponent },
     { path: 'conditions', component: ConditionsComponent },
+    { path: 'search', component: SearchComponent },
     { path: 'pricing', component: PricingComponent },
     { path: 'pricing/:riskGroupNumber', component: PricingComponent },
     { path: 'pricing-lending/:riskGroupNumber', component: PricingLendingComponent },

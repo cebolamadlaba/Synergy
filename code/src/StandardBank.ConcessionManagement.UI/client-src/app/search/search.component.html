@@ -1,0 +1,146 @@
+  <!-- Total widgets -->
+<!-- Error message -->
+<div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Unable to submit condition. Please see error(s) below.</p>
+            <p>{{errorMessage}}</p>
+
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Success message -->
+<div class="col-md-12" *ngIf="saveMessage && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-success">
+            <p class="message-heading"><i class="fa fa-check-circle" aria-hidden="true"></i>Condition submitted successfully with ID: {{saveMessage}}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Warning message -->
+<div class="col-md-12" *ngIf="warningMessage && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-warning">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{warningMessage}}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Loading message -->
+<div class="col-md-12" *ngIf="isLoading" style="margin-top: 15px;">
+    <div class="form-feedback-container">
+        <div class="alert-info">
+            <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Loading</p>
+        </div>
+    </div>
+</div>
+
+
+<div class="col-md-12 search-and-results-container" *ngIf="!isLoading">
+    <!-- filter-->
+    <!--<form class="col-md-12 product-form" [formGroup]="cashConcessionForm" *ngIf="!isLoading">-->
+
+    <div class="form-group  filter-group">
+        <div id="filter"><label for="sort" class="col-sm-1 control-label">Region</label></div>
+        <div class="col-sm-2">
+            <select (change)="periodFilter($event.target.value)" class="form-control" [(ngModel)]="region">               
+                <option [value]="selectUndefinedOptionValue">- All regions -</option>
+                <option *ngFor="let reg of regions" [ngValue]="reg">{{reg.description}}</option>
+            </select>
+        </div>
+
+        <div id="filter2"><label for="sort" class="col-sm-1 control-label">Business Centre:</label></div>
+
+        <div class="col-sm-2">
+            <select (change)="periodFilter($event.target.value)" class="form-control" [(ngModel)]="businesscentre">
+                <option [value]="selectUndefinedOptionValue">- All centres -</option>
+                <option *ngFor="let b of businesscentres" [ngValue]="b">{{b.name}}</option>
+            </select>
+        </div>
+
+        <div id="filter3"><label for="sort" class="col-sm-1 control-label">Status:</label></div>
+        <div class="col-sm-2">
+
+            <select (change)="periodFilter($event.target.value)" class="form-control" [(ngModel)]="status">
+                <option value="BCM">BCM Pending</option>
+            </select>
+
+        </div>
+
+
+        <div id="filter4"><label for="sort" class="col-sm-1 control-label">Date:</label></div>
+        <div class="col-sm-2">
+            <input type="date"  [ngModel]="displayDate | date:'yyyy-MM-dd'" (ngModelChange)="todaydate = $event" class="form-control">
+
+            <!--<input type="date" formControlName="expiryDate" class="form-control" [(ngModel)]="todaydate" />-->
+            <!--<select (change)="periodFilter($event.target.value)" class="form-control" [(ngModel)]="date"></select>-->
+            <!--<input type="date" class="form-control" [ngValue]="{{displayDate | date:'yyyy-MM-dd'}}" />-->
+
+        </div>
+
+
+
+
+
+
+     
+        <!-- Search bar -->
+        <div class="input-group add-on">
+            <input class="form-control" placeholder="Search Concession ID" [(ngModel)]="concessionIdOrRiskGroupNumber" type="text">
+        </div>
+
+        <!-- Empty state if no concessions found -->
+        <div class="searchEmptyState" *ngIf="(approvedConcessions)?.length === 0">
+            <i class="fa fa-inbox" aria-hidden="true"></i>
+            <p>No conditions found matching your search</p>
+        </div>
+
+
+
+        <!-- Results table -->
+        <div class="table-container section" *ngIf="(approvedConcessions)?.length > 0">
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>Risk Group</th>
+                        <th>Concession Id</th>
+                        <th>Type</th>
+                        <th>Date Opened</th>
+                        <th>Date Sent For Approval</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr *ngFor='let concessiondetail of approvedConcessions | approvedConcessionFilter: concessionIdOrRiskGroupNumber; trackBy: index;' (click)="openConcessionView(concessiondetail)">
+                        <td>
+                            <p>{{concessiondetail?.riskGroupName}}</p>
+                            <p>{{concessiondetail?.riskGroupNumber}}</p>
+                        </td>
+                        <td>{{concessiondetail?.referenceNumber}}</td>
+                        <td>{{concessiondetail?.concessionType}}</td>
+                        <td class="date">{{concessiondetail?.dateOpened | date: 'yyyy/MM/dd'}}</td>
+                        <td class="date">{{concessiondetail?.dateSentForApproval | date: 'yyyy/MM/dd'}}</td>
+                        <td>{{concessiondetail?.status}}</td>
+                        <!--<td><a href="~">Forward to PCM</a> </td>-->
+                        <td>
+
+                            <button type="button" class="btn btn-primary" (click)="forwardPCM(concessiondetail)">Forward to PCM</button>
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
+
+
+    </div>

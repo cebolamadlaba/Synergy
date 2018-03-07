@@ -16,6 +16,8 @@ import { RiskGroup } from "../models/risk-group";
 import { TransactionType } from "../models/transaction-type";
 import { TableNumber } from "../models/table-number";
 import { ConcessionTypes } from '../constants/concession-types';
+import { ApprovedConcession } from "../models/approved-concession";
+import { ApprovedConcessionDetail } from "../models/approved-concession-detail";
 
 @Injectable()
 export class LookupDataService {
@@ -41,7 +43,20 @@ export class LookupDataService {
     searchClientAccounts(riskGroupNumber, accountNumber): Observable<ClientAccount[]> {
         const url = "/api/Concession/SearchClientAccounts/" + riskGroupNumber + "/" + accountNumber;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }    
+
+
+    searchConsessions(): Observable<ApprovedConcessionDetail[]> {
+        const url = "/api/Concession/SearchConsessions";
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
+
+    searchConsessionsFiltered(region, centre, status, datefilter): Observable<ApprovedConcessionDetail[]> {
+
+        const url = "/api/Concession/SearchConsessions/"+ region + "/" + centre + "/" + status + "/" + datefilter;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
 
     getConditionTypes(): Observable<ConditionType[]> {
         const url = "/api/Condition/ConditionTypes";

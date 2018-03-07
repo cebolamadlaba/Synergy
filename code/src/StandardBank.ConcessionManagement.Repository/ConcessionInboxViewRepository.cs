@@ -48,6 +48,24 @@ namespace StandardBank.ConcessionManagement.Repository
             }
         }
 
+
+        public IEnumerable<ConcessionInboxView> ReadbyPCMPending(int? regionId, int? centreId, DateTime? datesentForApproval, IEnumerable<int> statusIds)     
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                string sql = @"SELECT [ConcessionId], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [LegalEntityId], [CustomerName], [LegalEntityAccountId], [AccountNumber], [ConcessionTypeId], [ConcessionType], [ConcessionDate], [StatusId], [Status], [SubStatusId], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment], [DatesentForApproval], [ConcessionDetailId], [ExpiryDate], [DateApproved], [AAUserId], [RequestorId], [BCMUserId], [PCMUserId], [HOUserId], [CentreId], [CentreName], [RegionId], [Region], [IsMismatched], [IsActive], [IsCurrent], [PriceExported], [PriceExportedDate]
+                    FROM [dbo].[ConcessionInboxView]
+                    WHERE 
+                    [SubStatusId] in @statusIds";
+
+                sql += (regionId == null || regionId == 0 ) ? "" : " AND [RegionId] = @regionId";
+                sql += (centreId == null || centreId == 0) ? "" : " AND [CentreId] = @centreId";
+                sql += (datesentForApproval == null) ? "" : " AND datediff(day, [DatesentForApproval],@datesentForApproval ) = 0";
+
+                return db.Query<ConcessionInboxView>(sql,new { statusIds, regionId, centreId, datesentForApproval });
+            }
+        }
+
         /// <summary>
         /// Reads the by centre ids status identifier sub status identifier is active.
         /// </summary>
