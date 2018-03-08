@@ -198,6 +198,34 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         }
 
         /// <summary>
+        /// Creates a new transactional concession
+        /// </summary>
+        /// <param name="transactionalConcession">The transactional concession.</param>
+        /// <returns></returns>
+        [Route("NewTransactional")]
+        [ValidateModel]
+        public async Task<IActionResult> NewTransactional([FromBody] TransactionalConcession transactionalConcession)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            transactionalConcession.Concession.ConcessionType = Constants.ConcessionType.Transactional;
+            transactionalConcession.Concession.Type = Constants.ReferenceType.New;
+
+            var concession = await _mediator.Send(new AddConcession(transactionalConcession.Concession, user));
+
+            foreach (var transactionalConcessionDetail in transactionalConcession.TransactionalConcessionDetails)
+                await _mediator.Send(
+                    new AddOrUpdateTransactionalConcessionDetail(transactionalConcessionDetail, user, concession));
+
+            if (transactionalConcession.ConcessionConditions != null &&
+                transactionalConcession.ConcessionConditions.Any())
+                foreach (var concessionCondition in transactionalConcession.ConcessionConditions)
+                    await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+
+            return Ok(transactionalConcession);
+        }
+
+        /// <summary>
         /// Extends the concession.
         /// </summary>
         /// <param name="concessionReferenceId">The concession reference identifier.</param>
