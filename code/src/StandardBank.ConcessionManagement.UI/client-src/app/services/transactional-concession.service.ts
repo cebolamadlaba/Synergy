@@ -9,6 +9,8 @@ import { TransactionalConcession } from "../models/transactional-concession";
 import { TransactionalView } from "../models/transactional-view";
 import { TransactionalConcessionDetail } from "../models/transactional-concession-detail";
 import { TransactionalFinancial } from "../models/transactional-financial";
+import { SearchConcessionDetail } from '../models/search-concession-detail';
+import { ApprovedConcessionDetail } from "../models/approved-concession-detail";
 
 @Injectable()
 export class TransactionalConcessionService {
@@ -29,6 +31,13 @@ export class TransactionalConcessionService {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
         const url = "/api/Transactional/NewTransactional";
+        return this.http.post(url, transactionalConcession, options).map(this.extractData).catch(this.handleErrorObservable);
+    }
+        
+    postForwardTransactionalPCM(transactionalConcession: SearchConcessionDetail): Observable<ApprovedConcessionDetail> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/Transactional/ForwardTransactionalPCM";
         return this.http.post(url, transactionalConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 

@@ -16,6 +16,9 @@ import { SearchConcessionDetail } from '../models/search-concession-detail';
 import { UserConcessionsService } from "../services/user-concessions.service";
 import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Region } from '../models/region';
+import { ConcessionSubStatus } from '../constants/concession-sub-status';
+
+import { TransactionalConcessionService } from "../services/transactional-concession.service";
 
 
 @Component({
@@ -48,6 +51,7 @@ export class SearchComponent implements OnInit {
     constructor(
         @Inject(MyConditionService) private conditionService,
         @Inject(LookupDataService) private lookupDataService,
+        @Inject(TransactionalConcessionService) private transactionalConcessionService,
         @Inject(UserConcessionsService) private userConcessionsService,
         @Inject(RegionService) private regionService,
         @Inject(BcmManagementService) private businesscentreService,
@@ -106,34 +110,67 @@ export class SearchComponent implements OnInit {
     }
 
     forwardPCM(concessiondetailed: SearchConcessionDetail) {
-        if (confirm("Are you sure you want to forward this consession to PCM ?")) {
+        
+        if (confirm("Are you sure you want to forward this concession to PCM ?")) {             
+
             this.isLoading = true;
 
-            //update the condition in the database
-            //concessionCondition.conditionMet = true;
+            this.errorMessage = null;
+            this.validationError = null;
 
-            //this.observableCondition = this.conditionService.updateCondition(concessionCondition);
-            //this.observableCondition.subscribe(
-            //    condition => {
-            //        this.condition = condition;
-            //        this.loadAll();
-            //    },
-            //    error => this.errorMessage = <any>error);
+            alert(concessiondetailed.concessionType);
+
+            switch (concessiondetailed.concessionType) {
+                case ConcessionTypes.Lending:
+                    this.forwardTransactionaltoPCM(concessiondetailed);
+                    break;
+                case ConcessionTypes.Cash:
+                    this.forwardTransactionaltoPCM(concessiondetailed);
+                    break;
+                case ConcessionTypes.Transactional:
+                    this.forwardTransactionaltoPCM(concessiondetailed);
+                    break;
+            }
+        }
+       
+    }
+
+    openConcessionView(event, concessiondetailed: SearchConcessionDetail) {
+
+        if (event.srcElement.tagName.toLowerCase() != "button") {
+
+            switch (concessiondetailed.concessionType) {
+                case ConcessionTypes.Lending:
+                    this.router.navigate(['/lending-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.referenceNumber]);
+                    break;
+                case ConcessionTypes.Cash:
+                    this.router.navigate(['/cash-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.referenceNumber]);
+                    break;
+                case ConcessionTypes.Transactional:
+                    this.router.navigate(['/transactional-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.referenceNumber]);
+                    break;
+            }
         }
     }
 
-    openConcessionView(concessiondetailed: SearchConcessionDetail) {
+    forwardTransactionaltoPCM(concessiondetailed: SearchConcessionDetail) {     
+       
+        concessiondetailed.subStatus = ConcessionSubStatus.PCMPending;       
+        concessiondetailed.comments = "Forwarded by PCM";     
 
-        switch (concessiondetailed.concessionType) {
-            case ConcessionTypes.Lending:
-                this.router.navigate(['/lending-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.referenceNumber]);
-                break;
-            case ConcessionTypes.Cash:
-                this.router.navigate(['/cash-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.referenceNumber]);
-                break;
-            case ConcessionTypes.Transactional:
-                this.router.navigate(['/transactional-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.referenceNumber]);
-                break;
+        if (!this.validationError) {
+            this.transactionalConcessionService.postForwardTransactionalPCM(concessiondetailed).subscribe(entity => {
+                console.log("data saved");
+
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
         }
-    }
+    }  
 }
