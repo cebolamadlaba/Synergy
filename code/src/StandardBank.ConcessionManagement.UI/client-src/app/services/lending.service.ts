@@ -10,6 +10,9 @@ import { LendingView } from "../models/lending-view";
 import { RiskGroup } from "../models/risk-group";
 import { LendingFinancial } from "../models/lending-financial";
 
+import { SearchConcessionDetail } from '../models/search-concession-detail';
+import { ApprovedConcessionDetail } from "../models/approved-concession-detail";
+
 @Injectable()
 export class LendingService {
 
@@ -37,6 +40,13 @@ export class LendingService {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
         const url = "/api/Lending/UpdateLending";
+        return this.http.post(url, lendingConcession, options).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    postForwardLendingPCM(lendingConcession: SearchConcessionDetail): Observable<ApprovedConcessionDetail> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/Lending/ForwardLendingPCM";
         return this.http.post(url, lendingConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
@@ -119,6 +129,7 @@ export class MockLendingService extends LendingService {
         this.model.lendingConcessionDetails = [new LendingConcessionDetail()];
         return Observable.of(this.model);
     }
+      
 
     postExtendConcession(concessionReferenceId): Observable<LendingConcession> {
         this.model.concession = new Concession();

@@ -227,5 +227,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         ///   <c>true</c> if this instance is in progress renewal; otherwise, <c>false</c>.
         /// </value>
         public bool IsInProgressRenewal { get; set; }
+
+        public bool IsInProgressForwarding { get; set; }
     }
 }

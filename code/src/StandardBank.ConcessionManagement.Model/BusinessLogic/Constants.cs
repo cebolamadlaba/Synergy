@@ -8,6 +8,7 @@
             public const string ConcessionApproved = "Approved";
             public const string ConcessionApprovedWithChanges = "ApprovedWithChanges";
             public const string ConcessionDeclined = "Declined";
+            public const string ConcessionForwarded = "Forwarded";
 
         }
 

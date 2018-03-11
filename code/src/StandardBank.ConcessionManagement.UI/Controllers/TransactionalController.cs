@@ -90,6 +90,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             transactionalConcession.Concession.SubStatus = Constants.ConcessionSubStatus.PcmPending;
             transactionalConcession.Concession.BcmUserId = user.Id;
             transactionalConcession.Concession.Comments  = "Manually forwarded by PCM";
+            transactionalConcession.Concession.IsInProgressForwarding = true;
 
             await ForwardTransactionalConcession(transactionalConcession, user);
 
@@ -195,6 +196,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 await _mediator.Send(new AddConcessionComment(concession.Id,
                     databaseTransactionalConcession.Concession.SubStatusId,
                     transactionalConcession.Concession.Comments, user));
+
+            //send the notification email
+            await _mediator.Send(new ForwardConcession(transactionalConcession.Concession, user));
         }
 
         /// <summary>

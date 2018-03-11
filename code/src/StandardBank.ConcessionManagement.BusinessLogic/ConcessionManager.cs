@@ -456,6 +456,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public IEnumerable<SearchConcessionDetail> SearchConsessions(int region, int businesscentre, string status,DateTime datefilter, int userid)
         {
             //we will only look for concessions with status BCM Pending..
+
             var bcmpendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.BcmPending);
 
             var concessions = _concessionInboxViewRepository.ReadbyPCMPending(region, businesscentre, datefilter, new[] { bcmpendingStatusId });
@@ -1204,7 +1205,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedConcession.DatesentForApproval = currentConcession.DatesentForApproval;
             mappedConcession.HOUserId = currentConcession.HOUserId;
             mappedConcession.PCMUserId = currentConcession.PCMUserId;
-            mappedConcession.RegionId = currentConcession.RegionId;
+            mappedConcession.RegionId = currentConcession.RegionId;         
 
             if (concession.BcmUserId.HasValue)
             {

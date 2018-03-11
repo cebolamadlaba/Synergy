@@ -19,6 +19,8 @@ import { Region } from '../models/region';
 import { ConcessionSubStatus } from '../constants/concession-sub-status';
 
 import { TransactionalConcessionService } from "../services/transactional-concession.service";
+import { CashConcessionService } from "../services/cash-concession.service";
+import { LendingService } from "../services/lending.service";
 
 
 @Component({
@@ -41,6 +43,10 @@ export class SearchComponent implements OnInit {
     status: string = "BCM";
     displayDate = new Date();
 
+    today: String;
+
+    planModel: any = { start_time: new Date() };
+
 
     region: Region;
     businesscentre: Centre;
@@ -52,6 +58,9 @@ export class SearchComponent implements OnInit {
         @Inject(MyConditionService) private conditionService,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(TransactionalConcessionService) private transactionalConcessionService,
+        @Inject(CashConcessionService) private cashConcessionService,
+        @Inject(LendingService) private lendingConcessionService,
+
         @Inject(UserConcessionsService) private userConcessionsService,
         @Inject(RegionService) private regionService,
         @Inject(BcmManagementService) private businesscentreService,
@@ -61,11 +70,12 @@ export class SearchComponent implements OnInit {
     observableApprovedConcessions: Observable<SearchConcessionDetail[]>;
     approvedConcessions: SearchConcessionDetail[];
 
-
     ngOnInit() {
 
 
         this.observableApprovedConcessions = this.lookupDataService.searchConsessions();
+      
+        this.today = new Date().toISOString().split('T')[0];
 
         this.observableApprovedConcessions.subscribe(approvedConcession => {
             this.approvedConcessions = approvedConcession;
@@ -78,29 +88,24 @@ export class SearchComponent implements OnInit {
         this.regionService.getAll().subscribe(data => {
             this.regions = data;
 
-            //this.region = this.regions[0];
-
-
         }, err => this.errorMessage = err);
 
         this.businesscentreService.getCentres().subscribe(data => {
             this.businesscentres = data;
-
-
-            //this.businesscentre = this.businesscentres[0];
-
 
         }, err => this.errorMessage = err);
     }
     periodFilter(value: string) {
         this.getFilteredView();
     }
+
+ 
     getFilteredView() {
 
         let businessCentreid = this.businesscentre == null ? null : this.businesscentre.id;
         let regionid = this.region == null ? null : this.region.id;
 
-        this.lookupDataService.searchConsessionsFiltered(regionid, businessCentreid, this.status, this.displayDate.toDateString()).subscribe(filteredconcessions => {
+        this.lookupDataService.searchConsessionsFiltered(regionid, businessCentreid, this.status, this.today).subscribe(filteredconcessions => {
             this.approvedConcessions = filteredconcessions;
 
             this.isLoading = false;
@@ -114,25 +119,21 @@ export class SearchComponent implements OnInit {
         if (confirm("Are you sure you want to forward this concession to PCM ?")) {             
 
             this.isLoading = true;
-
             this.errorMessage = null;
-            this.validationError = null;
-
-            alert(concessiondetailed.concessionType);
+            this.validationError = null;  
 
             switch (concessiondetailed.concessionType) {
                 case ConcessionTypes.Lending:
-                    this.forwardTransactionaltoPCM(concessiondetailed);
+                    this.forwardLendingtoPCM(concessiondetailed);
                     break;
                 case ConcessionTypes.Cash:
-                    this.forwardTransactionaltoPCM(concessiondetailed);
+                    this.forwardCashtoPCM(concessiondetailed);
                     break;
                 case ConcessionTypes.Transactional:
                     this.forwardTransactionaltoPCM(concessiondetailed);
                     break;
             }
-        }
-       
+        }       
     }
 
     openConcessionView(event, concessiondetailed: SearchConcessionDetail) {
@@ -164,6 +165,54 @@ export class SearchComponent implements OnInit {
 
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
+
+                this.getFilteredView();
+
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    forwardCashtoPCM(concessiondetailed: SearchConcessionDetail) {
+
+        concessiondetailed.subStatus = ConcessionSubStatus.PCMPending;
+        concessiondetailed.comments = "Forwarded by PCM";
+
+        if (!this.validationError) {
+            this.cashConcessionService.postForwardCashPCM(concessiondetailed).subscribe(entity => {
+                console.log("data saved");
+
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+
+                this.getFilteredView();
+
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    forwardLendingtoPCM(concessiondetailed: SearchConcessionDetail) {
+
+        concessiondetailed.subStatus = ConcessionSubStatus.PCMPending;
+        concessiondetailed.comments = "Forwarded by PCM";
+
+        if (!this.validationError) {
+            this.lendingConcessionService.postForwardLendingPCM(concessiondetailed).subscribe(entity => {
+                console.log("data saved");
+
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+
+                this.getFilteredView();
 
             }, error => {
                 this.errorMessage = <any>error;

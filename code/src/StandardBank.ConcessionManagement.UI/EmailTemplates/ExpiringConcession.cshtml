@@ -1,4 +1,4 @@
-﻿@model dynamic
+@model dynamic
 <body style="font-family:Arial; margin: 0; background: #eeeeee;">
     <div style="width: 80%; margin: 50px auto 0 auto; border-radius: 15px; border-left: 1px solid #d3d3d3;border-right: 1px solid #d3d3d3;border-bottom: 1px solid #d3d3d3; border-top: 5px solid #18326f; background: #fff; padding: 30px;">
         <div style="color: #18326f; font-weight: bold; font-size: 24px;">
@@ -21,7 +21,7 @@
                 </tr>
 
                 @foreach (var item in Model.ExpiringConcessionDetails)
-                {
+            {
                 <tr>
                     <td style="border: 1px solid #7a7a7a;">@item.ConcessionRef</td>
                     <td style="border: 1px solid #7a7a7a;">@item.ConcessionType</td>
@@ -31,14 +31,14 @@
                     <td style="border: 1px solid #7a7a7a;">@item.ExpiryDate</td>
                     <td style="border: 1px solid #7a7a7a;">@item.DateApproved</td>
                 </tr>
-                }
+        }
 
             </table>
 
         <p>Regards,</p>
-        <p>Concession Management System</p>
+        <p>Synergy system</p>
 
         <p style="font-style: italic; color: #7a7a7a;">Please do not reply to this email.</p>
-      
+
     </div>
 </body>

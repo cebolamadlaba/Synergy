@@ -45,6 +45,9 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <returns></returns>
         Task<bool> SendApprovedConcessionEmail(ApprovedConcessionEmail approvedConcessionEmail);
 
+        Task<bool> SendForwardedConcessionEmail(ApprovedConcessionEmail approvedConcessionEmail);
+
+
         /// <summary>
         /// Sends the declined concession email.
         /// </summary>

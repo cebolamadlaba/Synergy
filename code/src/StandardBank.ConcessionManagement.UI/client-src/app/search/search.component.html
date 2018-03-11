@@ -42,13 +42,12 @@
 
 
 <div class="col-md-12 search-and-results-container" *ngIf="!isLoading">
-    <!-- filter-->
-    <!--<form class="col-md-12 product-form" [formGroup]="cashConcessionForm" *ngIf="!isLoading">-->
+    <!-- filter-->  
 
     <div class="form-group  filter-group">
         <div id="filter"><label for="sort" class="col-sm-1 control-label">Region</label></div>
         <div class="col-sm-2">
-            <select (change)="periodFilter($event.target.value)" class="form-control" [(ngModel)]="region">               
+            <select (change)="periodFilter($event.target.value)" class="form-control" [(ngModel)]="region">
                 <option [value]="selectUndefinedOptionValue">- All regions -</option>
                 <option *ngFor="let reg of regions" [ngValue]="reg">{{reg.description}}</option>
             </select>
@@ -75,20 +74,12 @@
 
         <div id="filter4"><label for="sort" class="col-sm-1 control-label">Date:</label></div>
         <div class="col-sm-2">
-            <input type="date"  [ngModel]="displayDate | date:'yyyy-MM-dd'" (ngModelChange)="todaydate = $event" class="form-control">
 
-            <!--<input type="date" formControlName="expiryDate" class="form-control" [(ngModel)]="todaydate" />-->
-            <!--<select (change)="periodFilter($event.target.value)" class="form-control" [(ngModel)]="date"></select>-->
-            <!--<input type="date" class="form-control" [ngValue]="{{displayDate | date:'yyyy-MM-dd'}}" />-->
+            <input name="date" [(ngModel)]="today" type="date" required (change)="periodFilter($event.target.value)" class="form-control">
 
         </div>
 
 
-
-
-
-
-     
         <!-- Search bar -->
         <div class="input-group add-on">
             <input class="form-control" placeholder="Search Concession ID" [(ngModel)]="concessionIdOrRiskGroupNumber" type="text">
@@ -131,7 +122,7 @@
                         <!--<td><a href="~">Forward to PCM</a> </td>-->
                         <td>
                             <button type="button" class="btn btn-success" (click)="forwardPCM(concessiondetail)">Forward to PCM</button>
-                          
+
                         </td>
 
                     </tr>
@@ -144,3 +135,5 @@
 
 
     </div>
+
+</div>

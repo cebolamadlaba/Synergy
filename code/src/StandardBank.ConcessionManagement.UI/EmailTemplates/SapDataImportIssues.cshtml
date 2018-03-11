@@ -17,37 +17,37 @@
                 <tr>
                     <th style="border: 1px solid black;">Database Server</th>
                     <td style="border: 1px solid black;">@Model.DatabaseServer</td>
-            </tr>
-            <tr>
-                <th style="border: 1px solid black;">Database Name</th>
-                <td style="border: 1px solid black;">@Model.DatabaseName</td>
-            </tr>
-            <tr>
-                <th style="border: 1px solid black;">Import Folder</th>
-                <td style="border: 1px solid black;">@Model.ImportFolder</td>
-            </tr>
-        </table>
-        <br /><br />
-        <table style=" border-collapse: collapse; border: 1px solid black; padding: 2px;">
-            <tr>
-                <th style="border: 1px solid black;">Column</th>
-                <th style="border: 1px solid black;">Issue</th>
-            </tr>
+                </tr>
+                <tr>
+                    <th style="border: 1px solid black;">Database Name</th>
+                    <td style="border: 1px solid black;">@Model.DatabaseName</td>
+                </tr>
+                <tr>
+                    <th style="border: 1px solid black;">Import Folder</th>
+                    <td style="border: 1px solid black;">@Model.ImportFolder</td>
+                </tr>
+            </table>
+            <br /><br />
+            <table style=" border-collapse: collapse; border: 1px solid black; padding: 2px;">
+                <tr>
+                    <th style="border: 1px solid black;">Column</th>
+                    <th style="border: 1px solid black;">Issue</th>
+                </tr>
 
-            @foreach (var item in Model.SapDataImportIssues)
+                @foreach (var item in Model.SapDataImportIssues)
             {
                 <tr>
                     <td style="border: 1px solid black;">@item.Column</td>
                     <td style="border: 1px solid black;">@item.Issue</td>
                 </tr>
-            }
+        }
 
-        </table>
+            </table>
 
-    <p>Regards,</p>
-    <p>Concession Management System</p>
+        <p>Regards,</p>
+        <p>Synergy system</p>
 
-    <p style="font-style: italic;">Please do not reply to this email.</p>
-</div>
+        <p style="font-style: italic;">Please do not reply to this email.</p>
+    </div>
 
 </body>

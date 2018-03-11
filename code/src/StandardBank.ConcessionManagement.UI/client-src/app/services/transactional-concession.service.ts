@@ -40,6 +40,7 @@ export class TransactionalConcessionService {
         const url = "/api/Transactional/ForwardTransactionalPCM";
         return this.http.post(url, transactionalConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
+   
 
     postUpdateTransactionalData(transactionalConcession: TransactionalConcession): Observable<TransactionalConcession> {
         let headers = new Headers({ 'Content-Type': 'application/json' });

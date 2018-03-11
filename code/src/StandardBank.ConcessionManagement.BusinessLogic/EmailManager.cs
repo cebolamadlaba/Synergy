@@ -163,6 +163,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 });
         }
 
+
+        public async Task<bool> SendForwardedConcessionEmail(ApprovedConcessionEmail approvedConcessionEmail)
+        {
+            return await SendTemplatedEmail(approvedConcessionEmail.EmailAddress, "Pricing Tool: Forwarded Concession",
+                null,
+                Constants.EmailTemplates.ConcessionForwarded,
+                new
+                {
+                    approvedConcessionEmail.ConcessionId,
+                    approvedConcessionEmail.DateActioned,
+                    approvedConcessionEmail.DateOfRequest,
+                    approvedConcessionEmail.Name,
+                    approvedConcessionEmail.Product,
+                    approvedConcessionEmail.RiskGroupName
+                });
+        }
         /// <summary>
         /// Sends the declined concession email.
         /// </summary>

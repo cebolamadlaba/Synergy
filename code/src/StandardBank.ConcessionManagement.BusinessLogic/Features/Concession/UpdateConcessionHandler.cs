@@ -91,9 +91,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         public async Task<Model.UserInterface.Concession> Handle(UpdateConcession message)
         {
             var result = _concessionManager.UpdateConcession(message.Concession, message.User);
-
+           
             message.AuditRecord = new AuditRecord(result, message.User, AuditType.Update);
-            message.Concession = _mapper.Map<Model.UserInterface.Concession>(result);
+            message.Concession = _mapper.Map<Model.UserInterface.Concession>(result);            
 
             message.Concession.Status = _lookupTableManager.GetStatusDescription(result.StatusId);
             message.Concession.SubStatus = _lookupTableManager.GetSubStatusDescription(result.SubStatusId);
@@ -113,7 +113,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
                     SendApprovedNotificationEmail(message);
 
                 if (message.Concession.Status == Constants.ConcessionStatus.Declined)
-                    SendDeclinedNotificationEmail(message);
+                    SendDeclinedNotificationEmail(message);             
             }
             else
             {

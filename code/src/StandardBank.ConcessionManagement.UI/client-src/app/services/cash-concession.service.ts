@@ -10,6 +10,9 @@ import { ConcessionCondition } from "../models/concession-condition";
 import { CashConcessionDetail } from "../models/cash-concession-detail";
 import { CashFinancial } from "../models/cash-financial";
 
+import { SearchConcessionDetail } from '../models/search-concession-detail';
+import { ApprovedConcessionDetail } from "../models/approved-concession-detail";
+
 @Injectable()
 export class CashConcessionService {
 
@@ -36,6 +39,13 @@ export class CashConcessionService {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
         const url = "/api/Cash/UpdateCash";
+        return this.http.post(url, cashConcession, options).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    postForwardCashPCM(cashConcession: SearchConcessionDetail): Observable<ApprovedConcessionDetail> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/Cash/ForwardCashPCM";
         return this.http.post(url, cashConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
