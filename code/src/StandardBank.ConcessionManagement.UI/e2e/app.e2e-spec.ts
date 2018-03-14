@@ -1,10 +1,10 @@
-import { StandardBank.ConcessionManagement.UIPage } from './app.po';
+import { UIPage } from './app.po';
 
 describe('standard-bank.concession-management.ui App', () => {
-  let page: StandardBank.ConcessionManagement.UIPage;
+  let page: UIPage;
 
   beforeEach(() => {
-    page = new StandardBank.ConcessionManagement.UIPage();
+    page = new UIPage();
   });
 
   it('should display welcome message', () => {

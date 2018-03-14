@@ -786,7 +786,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 ClientPostalAddress = GetValueOrDashes(legalEntity.PostalAddress),
                 ClientCity = GetValueOrDashes(legalEntity.City),
                 ClientContactPerson = GetValueOrDashes(legalEntity.ContactPerson),
-                ClientPostalCode = GetValueOrDashes(legalEntity.PostalCode)
+                ClientPostalCode = GetValueOrDashes(legalEntity.PostalCode)             
+               
             };
 
             return concessionLetter;

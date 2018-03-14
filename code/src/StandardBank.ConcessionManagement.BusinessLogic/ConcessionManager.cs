@@ -174,14 +174,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                         break;
                     case Constants.Roles.PCM:
-                    case Constants.Roles.HeadOffice:
-                        var pcmCentreIds = (from centre in user.UserCentres
-                                            select centre.Id).ToArray();
+                    case Constants.Roles.HeadOffice:                      
 
-                        inboxConcessions.AddRange(
-                            _mapper.Map<IEnumerable<InboxConcession>>(
-                                _concessionInboxViewRepository.ReadByCentreIdsStatusIdSubStatusIdIsActive(pcmCentreIds,
-                                    pendingStatusId, pcmPendingStatusId, true)));
+                        //we will only look for concessions with status BCM Pending..
+                        var pendingStatusIds = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.PcmPending);
+                        //var concessions = _concessionInboxViewRepository.ReadbyPCMPending(null, null, null, new[] { pendingStatusIds });
+
+                        inboxConcessions.AddRange(_mapper.Map<IEnumerable<InboxConcession>>(
+                               _concessionInboxViewRepository.ReadbyPCMPending(null, null, null, new[] { pendingStatusIds })));
 
                         break;
                 }
@@ -350,6 +350,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 userConcessions.ActionedConcessionsCount = actionedConcessions?.Count() ?? 0;
                 userConcessions.ShowActionedConcessions = true;
             }
+
+          
 
             return userConcessions;
         }

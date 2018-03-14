@@ -136,6 +136,9 @@ namespace StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator
         /// </value>
         public string RiskGroupNumber { get; set; }
 
+        public int MonthsValid { get; set; }
+
+
         /// <summary>
         /// Gets a value indicating whether this instance has condition concession letters.
         /// </summary>

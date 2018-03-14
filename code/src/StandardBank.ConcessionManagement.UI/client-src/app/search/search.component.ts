@@ -21,6 +21,7 @@ import { ConcessionSubStatus } from '../constants/concession-sub-status';
 import { TransactionalConcessionService } from "../services/transactional-concession.service";
 import { CashConcessionService } from "../services/cash-concession.service";
 import { LendingService } from "../services/lending.service";
+import { SearchConcessionFilterPipe } from "../filters/search-concession-filter.pipe";
 
 
 @Component({

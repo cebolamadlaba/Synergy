@@ -128,6 +128,8 @@ namespace StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator
         /// </value>
         public string RiskGroupNumber { get; set; }
 
+        public int MonthsValid { get; set; }
+
         /// <summary>
         /// Gets or sets the legal entity concessions.
         /// </summary>

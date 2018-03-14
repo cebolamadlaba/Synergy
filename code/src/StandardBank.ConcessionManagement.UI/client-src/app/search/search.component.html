@@ -1,4 +1,13 @@
   <!-- Total widgets -->
+<!-- Loading message -->
+<div class="col-md-12" *ngIf="isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-info">
+            <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Loading...</p>
+        </div>
+    </div>
+</div>
+
 <!-- Error message -->
 <div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
     <div class="form-feedback-container">
@@ -22,6 +31,7 @@
     </div>
 </div>
 
+
 <!-- Warning message -->
 <div class="col-md-12" *ngIf="warningMessage && !isLoading">
     <div class="form-feedback-container">
@@ -42,7 +52,7 @@
 
 
 <div class="col-md-12 search-and-results-container" *ngIf="!isLoading">
-    <!-- filter-->  
+    <!-- filter-->
 
     <div class="form-group  filter-group">
         <div id="filter"><label for="sort" class="col-sm-1 control-label">Region</label></div>
@@ -109,7 +119,8 @@
                 </thead>
                 <tbody>
 
-                    <tr *ngFor='let concessiondetail of approvedConcessions | approvedConcessionFilter: concessionIdOrRiskGroupNumber; trackBy: index;' (click)="openConcessionView($event,concessiondetail)">
+                    <!--<tr *ngFor='let concessiondetail of approvedConcessions | searchConcessionFilter: concessionIdOrRiskGroupNumber; trackBy: index;' (click)="openConcessionView($event,concessiondetail)">-->
+                    <tr *ngFor='let concessiondetail of approvedConcessions' (click)="openConcessionView($event,concessiondetail)">
                         <td>
                             <p>{{concessiondetail?.riskGroupName}}</p>
                             <p>{{concessiondetail?.riskGroupNumber}}</p>
