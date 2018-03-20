@@ -33,6 +33,7 @@ import { ConcessionConditionsService } from "./services/concession-conditions.se
 import { LendingService } from "./services/lending.service";
 import { MyConditionService } from './services/my-condition.service';
 import { CashConcessionService } from "./services/cash-concession.service";
+import { BolConcessionService } from "./services/bol-concession.service";
 import { AdminService } from './services/admin.service';
 import { RegionService } from './services/region.service';
 import { BusinessCentreService } from './services/business-centre.service';
@@ -117,6 +118,7 @@ import { AaManagementComponent } from './admin/aa-management/aa-management.compo
         AeManagementComponent,
         AaManagementComponent,
         SearchComponent
+       
     ],
     imports: [
         BrowserModule,
@@ -142,7 +144,8 @@ import { AaManagementComponent } from './admin/aa-management/aa-management.compo
         PcmManagementService,
         BcmManagementService,
         AeManagementService,
-        AaManagementService
+        AaManagementService,
+        BolConcessionService
     ],
     bootstrap: [AppComponent]
 })

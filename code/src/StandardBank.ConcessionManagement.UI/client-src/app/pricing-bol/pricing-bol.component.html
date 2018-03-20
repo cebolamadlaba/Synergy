@@ -1,4 +1,4 @@
-﻿<!-- banner-->
+<!-- banner-->
 <div class="col-md-12 banner">
     <div class="row">
         <!-- Header -->
@@ -17,28 +17,24 @@
         <div class="col-md-12 banner-container" *ngIf="showHide">
             <div class="col-md-11">
                 <div class="col-md-5">
-                    <div class="subHeading">Risk Group Name //TODO</div>
-                    <div class="date lightTitle hidden-element">Risk Group Number //TODO</div>
+                    <div class="subHeading">{{bolView.riskGroup.name}}</div>
+                    <div class="date lightTitle hidden-element">{{bolView.riskGroup.number}}</div>
                 </div>
-                <div class="col-md-6">
-                    <div class="col-md-6 hidden-element">
-                        <div class="subHeading lightTitle">Total Payments</div>
-                        <div class="score"><b>//TODO</b></div>
-                    </div>
-                    <div class="col-md-6 hidden-element">
-                        <div class="subHeading lightTitle">Total Value Added Tx</div>
-                        <div class="score"><b>//TODO</b></div>
-                    </div>
-                    <div class="col-md-6 hidden-element">
-                        <div class="subHeading lightTitle">Total Collections</div>
-                        <div class="score"><b>//TODO</b></div>
-                    </div>
-                    <div class="col-md-6 hidden-element">
-                        <div class="subHeading lightTitle">Weighted AVG Price</div>
-                        <div class="score"><b>//TODO</b></div>
-                    </div>
+                <div class="col-md-2  hidden-element">
+                    <div class="subHeading lightTitle">Total Payments</div>
+                    <div class="score"><b>{{bolView.bolFinancial.totalPayments | number : '1.2-2'}}</b></div>
+                </div>
+                <div class="col-md-2  hidden-element">
+                    <div class="subHeading lightTitle"> Total Collections</div>
+                    <div class="score"><b>{{bolView.bolFinancial.totalCollections | number : '1.2-2'}}</b></div>
+                </div>
+                <div class="col-md-2  hidden-element">
+                    <div class="subHeading lightTitle"> Total Value Added</div>
+                    <div class="score"><b>{{bolView.bolFinancial.totalValueAdded | number : '1.2-2'}}</b></div>
                 </div>
             </div>
+
+           
             <div class="col-md-1">
                 <div class="compress">
                     <div>
@@ -52,8 +48,8 @@
             <div class="col-md-11">
                 <div>
                     <div class="col-md-5">
-                        <div class="subHeading">Risk Group Name //TODO</div>
-                        <div class="date lightTitle hidden-element">Risk Group Number //TODO</div>
+                        <div class="subHeading">{{bolView.riskGroup.name}}</div>
+                        <div class="date lightTitle hidden-element">{{bolView.riskGroup.number}}</div>
                     </div>
                 </div>
             </div>
@@ -74,50 +70,47 @@
     <div class="col-md-5">
         <h2 class="headings">Products</h2>
         <div class="section">
-
+        
+            <!-- End of products list -->
             <!-- Empty state for products if no data is found -->
-            <!--<div *ngIf="!investmentsView.sourceSystemProducts">
+            <div *ngIf="!bolView?.bolProducts || bolView?.bolProducts?.length == 0">
                 <div class="section-body">
                     <div class="searchEmptyState">
                         <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
                         <p>No product data found</p>
                     </div>
                 </div>
-            </div>-->
-            <!-- End of empty state -->
-            <!-- Products list -->
-            <div class="section-body">
-                <div class="product-section">
-                    <div class="product-name">Customer Name //TODO</div>
-                    <div>
-                        <div class="product-account">Account No: //TODO</div>
+            </div>
+         
+                <!-- Products list -->
+                <div class="section-body" *ngFor="let bolprod of bolView.bolProducts">
+                    <div class="product-section">
+                        <div class="product-name">{{bolprod.legalEntity}}</div>
+                        <div>
+                            <div class="product-account">User ID: {{bolprod.bolUserId}}</div>
+
+                        </div>
+                    </div>
+                    <div class="product-table-container">
+                        <table class="table table-bordered table-hover header-fixed table-striped ">
+                            <thead>
+                                <tr>
+                                    <th>Charge Code Description</th>
+                                    <th>Charge Code</th>
+                                    <th>Loaded Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="leftAlign">{{bolprod.chargeCodeDesc}}</td>
+                                    <td class="rightAlign">{{bolprod.chargeCode}}</td>
+                                    <td class="rightAlign">{{bolprod.loadedRate}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="product-table-container">
-                    <table class="table table-bordered table-hover header-fixed table-striped ">
-                        <thead>
-                            <tr>
-                                <th>Tx Group</th>
-                                <th>Tx Type</th>
-                                <th>Charge Code</th>
-                                <th>BOL User ID</th>
-                                <th>Loaded Rate</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Loop through available products here -->
-                            <tr>
-                                <td class="rightAlign">//TODO</td>
-                                <td class="rightAlign">//TODO</td>
-                                <td class="rightAlign">//TODO</td>
-                                <td class="rightAlign">//TODO</td>
-                                <td class="rightAlign">//TODO</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <!-- End of products list -->
+
 
         </div>
     </div>
@@ -126,7 +119,8 @@
     <div class="col-md-7 search-and-results-container" id="lending-search-container">
         <h2 class="headings">
             Concessions
-            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/bol-add-concession']">Add Concession</button>
+         
+            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/bol-add-concession', bolView.riskGroup.number]" *ngIf="pageLoaded && canRequest">Add Concession</button>
         </h2>
 
         <!-- Search bar -->
@@ -134,39 +128,39 @@
             <input class="form-control" placeholder="Concession ID" [(ngModel)]="filterConcessionId" type="text">
         </div>
 
-        <!-- Concession list -->
-        <div class="section">
-
-            <div class="section-header small-table-title">
-                <div class="concessionID-section">//TODO</div>
+        <div class="section" *ngFor="let bolConcession of bolView.bolConcessions | baseConcessionFilter : filterConcessionId; trackBy: index;">
+            <div class="section-header">
+                <div class="concessionID-section">
+                    <div class="concession-status">
+                        <div [ngClass]="{'approved-status': (bolConcession.concession.status==='Approved') || (bolConcession.concession.status==='Approved With Changes'),'pending-status': bolConcession.concession.status==='Pending', 'declined-status': bolConcession.concession.status==='Declined'}">{{bolConcession.concession.status}}</div>
+                    </div>
+                    <p class="concession-id">{{bolConcession.concession.referenceNumber}}</p>
+                    <div class="concession-sub-status">{{bolConcession.concession.subStatus}}</div>
+                </div>
             </div>
             <div class="section-body">
-                <div class="table-container">
+                <div class="table-container" [routerLink]="['/bol-view-concession', bolView.riskGroup.number, bolConcession.concession.referenceNumber]">
                     <table class="table table-bordered table-hover header-fixed table-striped">
                         <thead>
                             <tr>
-                                <th>Tx Group</th>
-                                <th>Tx Type</th>
+                                <th>Legal entity</th>
+                                <th>User ID</th>
+                                <th>Charge Code Description</th>
                                 <th>Charge Code</th>
-                                <th>BOL User ID</th>
-                                <th>Customer</th>
-                                <th>Loaded Rate</th>
-                                <th>Approved Rate</th>
+                                <th>Rate</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Loop through available concessions here -->
-                            <tr>
-                                <td class="rightAlign">//TODO</td>
-                                <td class="rightAlign">//TODO</td>
-                                <td class="rightAlign">//TODO</td>
-                                <td class="rightAlign">//TODO</td>
+                            <tr *ngFor="let concession of bolConcession.bolConcessionDetails; trackBy: index;">
+                                <td>{{concession.legalEntity}}</td>
+
+                                <td class="leftAlign">{{concession.bolUserID}}</td>
+                                <td class="leftAlign">{{concession.chargeCodeDesc}}</td>
+                                <td class="rightAlign">{{concession.chargeCode}}</td>
                                 <td>
-                                    <p class="customerInfo">//TODO</p>
-                                    <p class="accInfo">Acc No : //TODO</p>
+                                    <p class="mapInfo">Loaded:{{concession.loadedRate | number : '1.2-2'}}</p>
+                                    <p class="mapInfo">Approved:{{concession.approvedRate| number : '1.2-2'}}</p>
                                 </td>
-                                <td class="rightAlign">//TODO</td>
-                                <td class="rightAlign">//TODO</td>
                             </tr>
                         </tbody>
                     </table>
@@ -175,7 +169,8 @@
         </div>
 
         <!-- Empty state if no concessions found -->
-        <div class="searchEmptyState">
+        <!-- Empty state if no concessions found -->
+        <div class="searchEmptyState" *ngIf="(bolView.bolConcessions | baseConcessionFilter: filterConcessionId).length === 0">
             <i class="fa fa-inbox" aria-hidden="true"></i>
             <p>No concessions found matching your search</p>
         </div>

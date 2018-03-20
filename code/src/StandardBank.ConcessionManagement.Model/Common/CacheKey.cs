@@ -189,6 +189,8 @@
 
                 public const string GetCashProducts = "CacheKey.Repository.MiscPerformanceRepository.GetCashProducts";
 
+                public const string GetBolProducts = "CacheKey.Repository.MiscPerformanceRepository.GetBolProducts";
+
                 public const string GetTransactionalProducts = "CacheKey.Repository.MiscPerformanceRepository.GetTransactionalProducts";
             }
         }

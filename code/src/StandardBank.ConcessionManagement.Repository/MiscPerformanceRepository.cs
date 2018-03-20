@@ -10,6 +10,8 @@ using StandardBank.ConcessionManagement.Model.UserInterface.Administration;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
+using StandardBank.ConcessionManagement.Model.UserInterface.Bol;
+
 
 namespace StandardBank.ConcessionManagement.Repository
 {
@@ -162,6 +164,35 @@ namespace StandardBank.ConcessionManagement.Repository
                 new CacheKeyParameter(nameof(riskGroupName), riskGroupName));
         }
 
+        public IEnumerable<BolProduct> GetBolProducts(int riskGroupId, string riskGroupName)
+        {
+            IEnumerable<BolProduct> Function()
+            {
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    var bolProducts = db.Query<BolProduct>(
+                        @"Select bol.[pkProductBOLId] [BolProductId],@riskGroupName [RiskGroupName],
+						le.[CustomerName] [LegalEntity], lu.BOLUserId, bol.[LoadedRate], ch.ChargeCode, ch.[Description] [ChargeCodeDesc]
+					    FROM [dbo].[tblProductBOL] bol
+						JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = bol.[fkLegalEntityId]
+						JOIN [dbo].tblLegalEntityBOLUser lu on bol.fkLegalEntityBOLUserId = lu.pkLegalEntityBOLUserId
+						JOIN [dbo].rtblBOLChargeCode ch on bol.fkChargeCodeId = ch.pkChargeCodeId
+						where bol.fkRiskGroupId =  @riskGroupId", new { riskGroupId, riskGroupName },
+                        commandTimeout: Int32.MaxValue);
+
+                    if (bolProducts != null && bolProducts.Any())
+                        return bolProducts;
+                }
+
+                return null;
+            }
+
+            return _cacheManager.ReturnFromCache(Function, 300,
+                CacheKey.Repository.MiscPerformanceRepository.GetBolProducts,
+                new CacheKeyParameter(nameof(riskGroupId), riskGroupId),
+                new CacheKeyParameter(nameof(riskGroupName), riskGroupName));
+        }
+
         /// <summary>
         /// Gets the transactional products.
         /// </summary>
@@ -288,6 +319,36 @@ namespace StandardBank.ConcessionManagement.Repository
                     JOIN [dbo].[rtblProduct] pt on pt.[pkProductId] = cl.[fkProductTypeId]
                     LEFT JOIN [dbo].[rtblReviewFeeType] rft on rft.[pkReviewFeeTypeId] = cl.[fkReviewFeeTypeId]
                     WHERE cd.[fkConcessionId] = @concessionId", new {concessionId});
+            }
+        }
+
+        public IEnumerable<BolConcessionDetail> GetBolConcessionDetails(int concessionId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<BolConcessionDetail>(@"Select cd.[pkConcessionDetailId] [ConcessionDetailId], 
+                    cd.[fkConcessionId] [ConcessionId], 
+                    cd.[fkLegalEntityId] [LegalEntityId], 
+                    cd.[fkLegalEntityAccountId] [LegalEntityAccountId],  
+                    [CustomerName] [LegalEntity],                
+                    [ExpiryDate], 
+                    [DateApproved], 
+                    [IsMismatched], 
+                    [PriceExported], 
+                    [PriceExportedDate],
+					bl.pkConcessionBolId [BolConcessionDetailId],
+					LoadedRate,
+					ApprovedRate,
+					co.ChargeCode [ChargeCode],
+					co.Description [ChargeCodeDesc],
+					co.Length [ChargeCodeLength],
+					bo.BOLUserId
+                    FROM [dbo].[tblConcessionDetail] cd
+                    join [dbo].[tblConcessionBol] bl on cd.pkConcessionDetailId = bl.fkConcessionDetailId
+                    JOIN [dbo].[tblLegalEntityBOLUser] bo on bl.fkLegalEntityBOLUserId = bo.pkLegalEntityBOLUserId
+                    JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = bo.fkLegalEntityAccountId
+                    JOIN [dbo].rtblBOLChargeCode co on bl.fkChargeCodeId = co.pkChargeCodeId
+                    where cd.fkConcessionId = @concessionId", new { concessionId });
             }
         }
 

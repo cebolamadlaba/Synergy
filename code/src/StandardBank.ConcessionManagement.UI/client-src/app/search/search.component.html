@@ -118,8 +118,6 @@
                     </tr>
                 </thead>
                 <tbody>
-
-                    <!--<tr *ngFor='let concessiondetail of approvedConcessions | searchConcessionFilter: concessionIdOrRiskGroupNumber; trackBy: index;' (click)="openConcessionView($event,concessiondetail)">-->
                     <tr *ngFor='let concessiondetail of approvedConcessions' (click)="openConcessionView($event,concessiondetail)">
                         <td>
                             <p>{{concessiondetail?.riskGroupName}}</p>
@@ -130,7 +128,6 @@
                         <td class="date">{{concessiondetail?.dateOpened | date: 'yyyy/MM/dd'}}</td>
                         <td class="date">{{concessiondetail?.dateSentForApproval | date: 'yyyy/MM/dd'}}</td>
                         <td>{{concessiondetail?.status}}</td>
-                        <!--<td><a href="~">Forward to PCM</a> </td>-->
                         <td>
                             <button type="button" class="btn btn-success" (click)="forwardPCM(concessiondetail)">Forward to PCM</button>
 

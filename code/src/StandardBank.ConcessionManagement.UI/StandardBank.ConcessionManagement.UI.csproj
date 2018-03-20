@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="client-src\app\models\bol-view.ts" />
     <None Remove="client-src\app\models\search-concession-detail.ts" />
     <None Remove="LetterTemplates\images\sblogo.jpg" />
     <None Remove="LetterTemplates\TemplateFooter.html" />
@@ -80,6 +81,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="client-src\app\models\bol-view.ts" />
     <TypeScriptCompile Include="client-src\app\models\search-concession-detail.ts" />
   </ItemGroup>
 </Project>

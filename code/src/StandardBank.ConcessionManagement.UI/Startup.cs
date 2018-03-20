@@ -129,7 +129,11 @@ namespace StandardBank.ConcessionManagement.UI
                 Authorization = new[] {new HangfireDashboardAuthorizationFilter()}
             });
 
-            ScheduleJobs(app);
+            if(Configuration["LoadHangfireJobs"] == "true")
+            {
+                ScheduleJobs(app);
+            }
+          
         }
 
         /// <summary>

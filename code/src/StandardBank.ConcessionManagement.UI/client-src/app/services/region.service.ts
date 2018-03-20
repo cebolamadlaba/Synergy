@@ -8,9 +8,7 @@ import { Region } from '../models/region';
 export class RegionService {
 
     constructor(private http: Http) {
-    }
-
-   
+    }   
 
     getAll(): Observable<Region[]> {
         const url = "/api/Region/All";

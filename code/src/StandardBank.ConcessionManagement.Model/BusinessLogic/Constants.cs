@@ -35,7 +35,7 @@
             public const string MerchantAcquiring = "Merchant Acquiring";
             public const string Trade = "Trade";
             public const string Transactional = "Transactional";
-            public const string BusinessOnline = "Business Online";
+            public const string BusinessOnline = "Bol";
             public const string Cash = "Cash";
         }
 
