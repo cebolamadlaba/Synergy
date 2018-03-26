@@ -43,6 +43,8 @@ namespace StandardBank.ConcessionManagement.Common
             {
                 var item = itemToCache();
 
+                minutesToCache = 1;
+
                 _memoryCache.Set(generatedCacheKey, item, TimeSpan.FromMinutes(minutesToCache));
             }
 

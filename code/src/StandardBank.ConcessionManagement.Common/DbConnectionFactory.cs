@@ -35,13 +35,15 @@ namespace StandardBank.ConcessionManagement.Common
             Dispose(false);
         }
 
+        IDbConnection connection;
+
         /// <summary>
         /// Connection to the database.
         /// </summary>
         /// <returns></returns>
         public IDbConnection Connection()
         {
-            IDbConnection connection;
+            
             
             if (_configurationData.DatabaseType == DatabaseType.SqlServer)
                 connection = new SqlConnection(_configurationData.ConnectionString);
@@ -58,7 +60,10 @@ namespace StandardBank.ConcessionManagement.Common
         /// </summary>
         private void ReleaseUnmanagedResources()
         {
-            
+            if (connection != null)
+            {
+                connection.Close();
+            }
         }
 
         /// <summary>

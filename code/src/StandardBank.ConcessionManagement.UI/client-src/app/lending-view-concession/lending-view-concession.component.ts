@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
+
 import { ReviewFeeType } from "../models/review-fee-type";
 import { ProductType } from "../models/product-type";
 import { Period } from "../models/period";
@@ -33,6 +34,9 @@ import { ConcessionSubStatus } from '../constants/concession-sub-status';
     providers: [DatePipe]
 })
 export class LendingViewConcessionComponent implements OnInit, OnDestroy {
+
+    myDecimal: number;
+  
 
     concessionReferenceId: string;
     public lendingConcessionForm: FormGroup;
@@ -118,6 +122,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.myDecimal = -2.99;
+
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
             this.concessionReferenceId = params['concessionReferenceId'];
@@ -129,8 +135,12 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             mrsCrs: new FormControl(),
             smtDealNumber: new FormControl(),
             motivation: new FormControl(),
-            comments: new FormControl()
+            comments: new FormControl() 
+
         });
+
+
+
 
         Observable.forkJoin([
             this.lookupDataService.getReviewFeeTypes(),
@@ -323,7 +333,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             limit: [''],
             term: [''],
             marginAgainstPrime: [''],
-            approvedMarginAgainstPrime: [{ value: '', disabled: true }],
+            approvedMarginAgainstPrime: [{ value: '', disabled: true }],          
             initiationFee: [''],
             reviewFeeType: [''],
             reviewFee: [''],
@@ -953,12 +963,28 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 		}
 	}
 
-    setTwoNumberDecimal($event) {
-        $event.target.value = this.formatDecimal($event.target.value);
+    setTwoNumberDecimal($event) {      
+
+       $event.target.value = this.formatDecimal($event.target.value);       
+    }
+
+    setTwoNumberDecimalMAP($event) {
+
+        //check that it is a valid number
+        if (((isNaN($event.target.value)).valueOf()) == true) {
+
+            alert("Not a valid number for 'Prime -/+'");
+            $event.target.value = 0;
+        }
+        else {
+
+            $event.target.value = this.formatDecimal($event.target.value);
+        }
     }
 
     formatDecimal(itemValue: number) {
         if (itemValue) {
+
             return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
         }
 

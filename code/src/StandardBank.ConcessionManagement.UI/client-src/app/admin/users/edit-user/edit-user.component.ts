@@ -43,6 +43,10 @@ export class EditUserComponent implements OnInit {
     save() {
         this.adminService.UpdateUser(this.user, this.id).subscribe(r =>
         {
+            this.adminService.GetUser(this.id).subscribe(res => {
+                this.user = res as User;
+            });
+
             this.success = true;
         }, err => {
             this.error = true;

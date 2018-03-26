@@ -83,6 +83,6 @@
         /// <value>
         /// The loaded price.
         /// </value>
-        public decimal LoadedPrice { get; set; }
+        public string LoadedPrice { get; set; }
     }
 }

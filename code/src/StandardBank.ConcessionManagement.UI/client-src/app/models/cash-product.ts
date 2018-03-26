@@ -8,5 +8,5 @@ export class CashProduct {
     bpId: number;
     volume: number;
     value: number;
-    loadedPrice: number;
+    loadedPrice: string;
 }

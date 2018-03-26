@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardBank.ConcessionMana
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardBank.ConcessionManagement.Database.Migrator", "db\StandardBank.ConcessionManagement.Database.Migrator\StandardBank.ConcessionManagement.Database.Migrator.csproj", "{ED98F824-FE92-4E03-8F93-7572EBD11999}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StandardBank.ConcessionManagement.OnceOffDataImport", "src\StandardBank.ConcessionManagement.OnceOffDataImport\StandardBank.ConcessionManagement.OnceOffDataImport.csproj", "{D925B283-C350-49FB-A400-2527883A0DF9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardBank.ConcessionManagement.OnceOffDataImport", "src\StandardBank.ConcessionManagement.OnceOffDataImport\StandardBank.ConcessionManagement.OnceOffDataImport.csproj", "{D925B283-C350-49FB-A400-2527883A0DF9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

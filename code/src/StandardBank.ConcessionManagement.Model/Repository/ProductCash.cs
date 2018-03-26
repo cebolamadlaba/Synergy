@@ -83,6 +83,6 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// <value>
         /// The LoadedPrice.
         /// </value>
-        public decimal LoadedPrice { get; set; }
+        public string LoadedPrice { get; set; }
     }
 }

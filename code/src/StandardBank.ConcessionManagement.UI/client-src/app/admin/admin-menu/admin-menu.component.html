@@ -6,8 +6,8 @@
         <li *ngIf="user?.isHO || user?.isPCM || user?.isBCM"><a routerLink="/admin/business-centre">Business Centres</a></li>
 
         <li *ngIf="user?.isHO || user?.isRequestor"><a routerLink="/admin/aa-management">AA Management</a></li>
-        <li *ngIf="user?.isHO || user?.isBCM || user?.isRequestor"><a routerLink="/admin/ae-management">AE Management</a></li>
-        <li *ngIf="user?.isHO || user?.isPCM"><a routerLink="/admin/bcm-management">BCM Management</a></li>
+        <li *ngIf="user?.isHO || user?.isBCM || user?.isRequestor"><a routerLink="/admin/ae-management">RM/AE/BM Management</a></li>
+        <li *ngIf="user?.isHO || user?.isPCM"><a routerLink="/admin/bcm-management">Suite Head/BCM/SE Manager Management</a></li>
         <li *ngIf="user?.isHO || user?.isPCM"><a routerLink="/admin/pcm-management">PCM Management</a></li>
     </ul>
     <!--

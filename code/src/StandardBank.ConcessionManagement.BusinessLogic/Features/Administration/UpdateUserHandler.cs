@@ -20,6 +20,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
         /// </summary>
         private readonly IUserRepository _userRepository;
 
+        private readonly IRoleRepository _roleRepository;
+
         /// <summary>
         /// The mapper
         /// </summary>
@@ -43,12 +45,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
         /// <param name="cacheManager">The cache manager.</param>
         /// <param name="centreUserRepository">The centre user repository.</param>
         public UpdateUserHandler(IUserRepository userRepository, IMapper mapper, ICacheManager cacheManager,
-            ICentreUserRepository centreUserRepository)
+            ICentreUserRepository centreUserRepository, IRoleRepository roleRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _cacheManager = cacheManager;
             _centreUserRepository = centreUserRepository;
+            _roleRepository = roleRepository; 
         }
 
         /// <summary>
@@ -86,12 +89,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
             if (message.Model.UserCentres != null)
             {
                 var centreIds = new List<int>();
+                var currentrole = _roleRepository.ReadById(model.RoleId);
+                
+                //if user is in AE or BCM roles, we remove all other centres, as they can only belong to one centre..
+                if (currentrole.RoleName == Constants.Roles.Requestor || currentrole.RoleName == Constants.Roles.BCM)
+                {
+                    //... 
+                }
+                else
+                {
+                    //if there were previous, centres add them  again..
+                    foreach (var userCentre in message.Model.UserCentres)
+                        centreIds.Add(userCentre.Id);
 
-                foreach (var userCentre in message.Model.UserCentres)
-                    centreIds.Add(userCentre.Id);
-            
-                if (model.CentreIds != null)
-                    centreIds.AddRange(model.CentreIds);
+                    if (model.CentreIds != null)
+                        centreIds.AddRange(model.CentreIds);
+                }
 
                 model.CentreIds = centreIds;
             }
@@ -103,7 +116,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
                 if (model.CentreIds != null)
                     centreIds.AddRange(model.CentreIds);
 
-                centreIds.Add(message.Model.CentreId);
+                if (!centreIds.Contains(message.Model.CentreId))
+                    centreIds.Add(message.Model.CentreId);
+
                 model.CentreIds = centreIds;
             }
         }
@@ -126,6 +141,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
                     _centreUserRepository.Delete(userCentre);
                     auditRecords.Add(new AuditRecord(userCentre, message.CurrentUser, AuditType.Delete));
                 }
+
             }
 
             //insert the centres that don't exist
