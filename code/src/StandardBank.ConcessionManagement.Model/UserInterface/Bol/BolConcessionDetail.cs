@@ -20,5 +20,37 @@
         public string ApprovedRate { get; set; }
 
         public string LoadedRate { get; set; }
+
+
+
+        public int? fkConcessionId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the BusinesOnlineTransactionTypeId.
+        /// </summary>
+        /// <value>
+        /// The BusinesOnlineTransactionTypeId.
+        /// </value>
+        public int? fkConcessionDetailId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the BolUseId.
+        /// </summary>
+        /// <value>
+        /// The BolUseId.
+        /// </value>
+        public int? fkLegalEntityBOLUserId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the TransactionVolume.
+        /// </summary>
+        /// <value>
+        /// The TransactionVolume.
+        /// </value>
+        public int? fkChargeCodeId { get; set; }
+
+     
+
+
     }
 }

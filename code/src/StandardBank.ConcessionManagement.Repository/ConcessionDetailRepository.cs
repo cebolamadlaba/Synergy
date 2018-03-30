@@ -34,28 +34,36 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ConcessionDetail Create(ConcessionDetail model)
         {
-            const string sql =
-                @"INSERT [dbo].[tblConcessionDetail] ([fkConcessionId], [fkLegalEntityId], [fkLegalEntityAccountId], [ExpiryDate], [DateApproved], [IsMismatched], [PriceExported], [PriceExportedDate]) 
+            try
+            {
+                const string sql =
+                    @"INSERT [dbo].[tblConcessionDetail] ([fkConcessionId], [fkLegalEntityId], [fkLegalEntityAccountId], [ExpiryDate], [DateApproved], [IsMismatched], [PriceExported], [PriceExportedDate]) 
                                 VALUES (@ConcessionId, @LegalEntityId, @LegalEntityAccountId, @ExpiryDate, @DateApproved, @IsMismatched, @PriceExported, @PriceExportedDate) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
-            using (var db = _dbConnectionFactory.Connection())
-            {
-                model.ConcessionDetailId = db.Query<int>(sql,
-                    new
-                    {
-                        ConcessionId = model.ConcessionId,
-                        LegalEntityId = model.LegalEntityId,
-                        LegalEntityAccountId = model.LegalEntityAccountId,
-                        ExpiryDate = model.ExpiryDate,
-                        DateApproved = model.DateApproved,
-                        IsMismatched = model.IsMismatched,
-                        PriceExported = model.PriceExported,
-                        PriceExportedDate = model.PriceExportedDate
-                    }).Single();
-            }
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    model.ConcessionDetailId = db.Query<int>(sql,
+                        new
+                        {
+                            ConcessionId = model.ConcessionId,
+                            LegalEntityId = model.LegalEntityId,
+                            LegalEntityAccountId = model.LegalEntityAccountId,
+                            ExpiryDate = model.ExpiryDate,
+                            DateApproved = model.DateApproved,
+                            IsMismatched = model.IsMismatched,
+                            PriceExported = model.PriceExported,
+                            PriceExportedDate = model.PriceExportedDate
+                        }).Single();
+                }
 
-            return model;
+                return model;
+            }
+            catch (System.Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         /// <summary>

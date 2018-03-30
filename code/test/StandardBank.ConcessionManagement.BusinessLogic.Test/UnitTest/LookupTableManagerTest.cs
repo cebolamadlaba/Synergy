@@ -22,16 +22,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         /// </summary>
         public LookupTableManagerTest()
         {
-            _lookupTableManager = new LookupTableManager(MockStatusRepository.Object, MockSubStatusRepository.Object,
-                MockTypeRepository.Object, MockMarketSegmentRepository.Object, 
-                MockConcessionTypeRepository.Object, MockProductRepository.Object, MockReviewFeeTypeRepository.Object,
-                MockPeriodRepository.Object, MockPeriodTypeRepository.Object, MockConditionTypeRepository.Object,
-                InstantiatedDependencies.Mapper, MockConditionProductRepository.Object,
-                MockConditionTypeProductRepository.Object, MockAccrualTypeRepository.Object,
-                MockChannelTypeRepository.Object, MockTransactionTypeRepository.Object,
-                MockTableNumberRepository.Object, MockRelationshipRepository.Object, MockRoleRepository.Object,
-                MockCentreRepository.Object, MockRiskGroupRepository.Object,
-                MockTransactionTableNumberRepository.Object);
+            //_lookupTableManager = new LookupTableManager(MockStatusRepository.Object, MockSubStatusRepository.Object,
+            //    MockTypeRepository.Object, MockMarketSegmentRepository.Object, 
+            //    MockConcessionTypeRepository.Object, MockProductRepository.Object, MockReviewFeeTypeRepository.Object,
+            //    MockPeriodRepository.Object, MockPeriodTypeRepository.Object, MockConditionTypeRepository.Object,
+            //    InstantiatedDependencies.Mapper, MockConditionProductRepository.Object,
+            //    MockConditionTypeProductRepository.Object, MockAccrualTypeRepository.Object,
+            //    MockChannelTypeRepository.Object, MockTransactionTypeRepository.Object,
+            //    MockTableNumberRepository.Object, MockRelationshipRepository.Object, MockRoleRepository.Object,
+            //    MockCentreRepository.Object, MockRiskGroupRepository.Object,
+            //    MockTransactionTableNumberRepository.Object);
         }
 
         /// <summary>

@@ -133,6 +133,9 @@ export class ConditionsComponent implements OnInit {
             case ConcessionTypes.Transactional:
                 this.router.navigate(['/transactional-view-concession', concessionCondition.riskGroupNumber, concessionCondition.concessionReferenceNumber]);
                 break;
+            case ConcessionTypes.BOL:
+                this.router.navigate(['/bol-view-concession', concessionCondition.riskGroupNumber, concessionCondition.concessionReferenceNumber]);
+                break;
         }
     }
 }

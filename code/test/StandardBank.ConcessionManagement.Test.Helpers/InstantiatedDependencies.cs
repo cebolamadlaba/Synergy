@@ -468,7 +468,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The AccountExecutiveAssistant repository
         /// </summary>
         public static IAccountExecutiveAssistantRepository AccountExecutiveAssistantRepository =
-            new AccountExecutiveAssistantRepository(DbConnection);
+            new AccountExecutiveAssistantRepository(DbConnection);     
+
 
         /// <summary>
         /// The look up table manager
@@ -479,7 +480,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             PeriodTypeRepository, ConditionTypeRepository, Mapper, ConditionProductRepository,
             ConditionTypeProductRepository, AccrualTypeRepository, ChannelTypeRepository, TransactionTypeRepository,
             TableNumberRepository, RelationshipRepository, RoleRepository, CentreRepository,
-            RiskGroupRepository, TransactionTableNumberRepository);
+            RiskGroupRepository, TransactionTableNumberRepository, BolUserRepository);
 
         /// <summary>
         /// The region manager

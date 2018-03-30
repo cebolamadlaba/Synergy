@@ -52,7 +52,10 @@ import { PricingCashmanComponent } from './pricing-cashman/pricing-cashman.compo
 import { TransactionalConcessionService } from "./services/transactional-concession.service";
 import { BaseConcessionFilterPipe } from './filters/base-concession-filter.pipe';
 import { InvestmentsAddConcessionComponent } from './investments-add-concession/investments-add-concession.component';
+
 import { BolAddConcessionComponent } from './bol-add-concession/bol-add-concession.component';
+import { BolViewConcessionComponent } from './bol-view-concession/bol-view-concession.component';
+
 import { MasAddConcessionComponent } from './mas-add-concession/mas-add-concession.component';
 import { TransactionalViewConcessionComponent } from './transactional-view-concession/transactional-view-concession.component';
 import { TradeAddConcessionComponent } from './trade-add-concession/trade-add-concession.component';
@@ -101,6 +104,7 @@ import { AaManagementComponent } from './admin/aa-management/aa-management.compo
         PricingCashmanComponent,
         InvestmentsAddConcessionComponent,
         BolAddConcessionComponent,
+        BolViewConcessionComponent,
         MasAddConcessionComponent,
         TransactionalViewConcessionComponent,
         TradeAddConcessionComponent,

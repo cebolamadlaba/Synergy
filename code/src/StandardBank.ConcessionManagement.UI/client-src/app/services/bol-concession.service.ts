@@ -23,17 +23,17 @@ export class BolConcessionService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    //getBolConcessionData(concessionReferenceId): Observable<BolConcession> {
-    //    const url = "/api/Bol/BolConcessionData/" + concessionReferenceId;
-    //    return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
-    //}
+    getBolConcessionData(concessionReferenceId): Observable<BolConcession> {
+        const url = "/api/Bol/BolConcessionData/" + concessionReferenceId;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
 
-    //postNewBolData(bolConcession: BolConcession): Observable<BolConcession> {
-    //    let headers = new Headers({ 'Content-Type': 'application/json' });
-    //    let options = new RequestOptions({ headers: headers });
-    //    const url = "/api/Bol/NewBol";
-    //    return this.http.post(url, bolConcession, options).map(this.extractData).catch(this.handleErrorObservable);
-    //}
+    postNewBolData(bolConcession: BolConcession): Observable<BolConcession> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/Bol/NewBol";
+        return this.http.post(url, bolConcession, options).map(this.extractData).catch(this.handleErrorObservable);
+    }
 
     //postUpdateBolData(bolConcession: BolConcession): Observable<BolConcession> {
     //    let headers = new Headers({ 'Content-Type': 'application/json' });
@@ -86,6 +86,9 @@ export class BolConcessionService {
     }
 
     private handleErrorObservable(error: Response | any) {
+
+        alert(Response);
+
         console.error(error.message || error);
         return Observable.throw(error.message || error);
     }

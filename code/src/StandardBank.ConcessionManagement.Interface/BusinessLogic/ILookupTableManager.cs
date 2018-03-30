@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
+using StandardBank.ConcessionManagement.Model.UserInterface.Bol;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
@@ -142,6 +143,11 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// </summary>
         /// <returns></returns>
         IEnumerable<ConditionType> GetConditionTypes();
+
+        IEnumerable<BOLChargeCode> GetBOLChargeCodes();
+        IEnumerable<BOLChargeCodeType> GetBOLChargeCodeTypes();
+        IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsers();
+
 
         /// <summary>
         /// Gets the accrual types.

@@ -64,8 +64,9 @@ export class PricingBolComponent implements OnInit, OnDestroy {
 
     }
 
+
     goBack() {
-        
+
         this.router.navigate(['/pricing', this.riskGroupNumber]);
     }
 

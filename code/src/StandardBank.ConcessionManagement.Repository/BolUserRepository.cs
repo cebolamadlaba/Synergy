@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
 
+
 namespace StandardBank.ConcessionManagement.Repository
 {
     /// <summary>
@@ -26,79 +27,40 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             _dbConnectionFactory = dbConnectionFactory;
         }
-
-        /// <summary>
-        /// Creates the specified model.
-        /// </summary>
-        /// <param name="model">The model.</param>
-        /// <returns></returns>
-        public BolUser Create(BolUser model)
-        {
-            const string sql = @"INSERT [dbo].[tblBolUser] ([UserName], [IsActive]) 
-                                VALUES (@UserName, @IsActive) 
-                                SELECT CAST(SCOPE_IDENTITY() as int)";
-
-            using (var db = _dbConnectionFactory.Connection())
-            {
-                model.Id = db.Query<int>(sql, new {UserName = model.UserName, IsActive = model.IsActive}).Single();
-            }
-
-            return model;
-        }
-
-        /// <summary>
-        /// Reads the by identifier.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns></returns>
-        public BolUser ReadById(int id)
-        {
-            using (var db = _dbConnectionFactory.Connection())
-            {
-                return db.Query<BolUser>(
-                    "SELECT [pkBolUserId] [Id], [UserName], [IsActive] FROM [dbo].[tblBolUser] WHERE [pkBolUserId] = @Id",
-                    new {id}).SingleOrDefault();
-            }
-        }
+              
 
         /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<BolUser> ReadAll()
+      
+
+        public IEnumerable<BOLChargeCode> GetBOLChargeCodes()
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<BolUser>("SELECT [pkBolUserId] [Id], [UserName], [IsActive] FROM [dbo].[tblBolUser]");
+                return db.Query<BOLChargeCode>("SELECT * from rtblBOLChargeCode");
+            }
+        }
+        public IEnumerable<BOLChargeCodeType> GetBOLChargeCodeTypes()
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<BOLChargeCodeType>("SELECT * from rtblBOLChargeCodeType");
             }
         }
 
-        /// <summary>
-        /// Updates the specified model.
-        /// </summary>
-        /// <param name="model">The model.</param>
-        public void Update(BolUser model)
+        public IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsers()
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblBolUser]
-                            SET [UserName] = @UserName, [IsActive] = @IsActive
-                            WHERE [pkBolUserId] = @Id",
-                    new {Id = model.Id, UserName = model.UserName, IsActive = model.IsActive});
-            }
+                return db.Query<LegalEntityBOLUser>(@"SELECT top 100 pkLegalEntityBOLUserId,fkLegalEntityAccountId, BOLUserId,pkLegalEntityId [legalEntityId] ,pkLegalEntityAccountId [legalEntityAccountId]  from tblLegalEntityBOLUser
+                                                join tblLegalEntityAccount on tblLegalEntityBOLUser.fkLegalEntityAccountId = tblLegalEntityAccount.pkLegalEntityAccountId
+                                                join tblLegalEntity on tblLegalEntityAccount.fkLegalEntityId = tblLegalEntity.pkLegalEntityId");
+                                                            }
         }
 
-        /// <summary>
-        /// Deletes the specified model.
-        /// </summary>
-        /// <param name="model">The model.</param>
-        public void Delete(BolUser model)
-        {
-            using (var db = _dbConnectionFactory.Connection())
-            {
-                db.Execute("DELETE [dbo].[tblBolUser] WHERE [pkBolUserId] = @Id",
-                    new {model.Id});
-            }
-        }
+
+
     }
 }

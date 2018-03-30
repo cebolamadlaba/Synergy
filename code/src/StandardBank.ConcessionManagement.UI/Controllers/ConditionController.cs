@@ -59,6 +59,24 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(_lookupTableManager.GetConditionTypes());
         }
 
+        [Route("BOLChargeCodes")]
+        public IActionResult GetBOLChargeCodes()
+        {
+            return Ok(_lookupTableManager.GetBOLChargeCodes());
+        }
+
+        [Route("BOLChargeCodeTypes")]
+        public IActionResult GetBOLChargeCodeTypes()
+        {
+            return Ok(_lookupTableManager.GetBOLChargeCodeTypes());
+        }
+
+        [Route("LegalEntityBOLUsers")]
+        public IActionResult GetLegalEntityBOLUsers()
+        {
+            return Ok(_lookupTableManager.GetLegalEntityBOLUsers());
+        }
+
         /// <summary>
         /// Gets the periods
         /// </summary>

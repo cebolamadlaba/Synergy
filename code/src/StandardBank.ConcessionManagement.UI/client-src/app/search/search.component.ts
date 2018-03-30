@@ -151,6 +151,9 @@ export class SearchComponent implements OnInit {
                 case ConcessionTypes.Transactional:
                     this.router.navigate(['/transactional-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.referenceNumber]);
                     break;
+                case ConcessionTypes.BOL:
+                    this.router.navigate(['/bol-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.referenceNumber]);
+                    break;
             }
         }
     }

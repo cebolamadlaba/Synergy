@@ -42,31 +42,36 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ConcessionBol Create(ConcessionBol model)
         {
-            var concessionDetail = _concessionDetailRepository.Create(model);
-            model.ConcessionDetailId = concessionDetail.ConcessionDetailId;
+            try
+            {
+                var concessionDetail = _concessionDetailRepository.Create(model);
+                model.ConcessionDetailId = concessionDetail.ConcessionDetailId;
 
-            const string sql =
-                @"INSERT [dbo].[tblConcessionBol] ([fkConcessionId], [fkConcessionDetailId], [fkTransactionGroupId], [fkBusinesOnlineTransactionTypeId], [BolUseId], [TransactionVolume], [TransactionValue], [Fee]) 
-                VALUES (@ConcessionId, @ConcessionDetailId, @TransactionGroupId, @BusinesOnlineTransactionTypeId, @BolUseId, @TransactionVolume, @TransactionValue, @Fee) 
+                const string sql =
+                    @"INSERT [dbo].[tblConcessionBol] ([fkConcessionId], [fkConcessionDetailId], [fkLegalEntityBOLUserId], [fkChargeCodeId], [LoadedRate]) 
+                VALUES (@ConcessionId, @fkConcessionDetailId, @fkLegalEntityBOLUserId, @fkChargeCodeId, @LoadedRate) 
                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
-            using (var db = _dbConnectionFactory.Connection())
-            {
-                model.Id = db.Query<int>(sql,
-                    new
-                    {
-                        ConcessionId = model.ConcessionId,
-                        ConcessionDetailId = model.ConcessionDetailId,
-                        TransactionGroupId = model.TransactionGroupId,
-                        BusinesOnlineTransactionTypeId = model.BusinesOnlineTransactionTypeId,
-                        BolUseId = model.BolUseId,
-                        TransactionVolume = model.TransactionVolume,
-                        TransactionValue = model.TransactionValue,
-                        Fee = model.Fee
-                    }).Single();
-            }
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    model.Id = db.Query<int>(sql,
+                        new
+                        {
+                            ConcessionId = model.ConcessionId,
+                            fkConcessionDetailId = model.ConcessionDetailId,
+                            fkLegalEntityBOLUserId = model.fkLegalEntityBOLUserId,
+                            fkChargeCodeId = model.fkChargeCodeId,
+                            LoadedRate = model.LoadedRate
+                        }).Single();
+                }
 
-            return model;
+                return model;
+            }
+            catch (System.Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         /// <summary>
@@ -108,24 +113,24 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Update(ConcessionBol model)
         {
-            using (var db = _dbConnectionFactory.Connection())
-            {
-                db.Execute(@"UPDATE [dbo].[tblConcessionBol]
-                            SET [fkConcessionId] = @ConcessionId, [fkConcessionDetailId] = @ConcessionDetailId, [fkTransactionGroupId] = @TransactionGroupId, [fkBusinesOnlineTransactionTypeId] = @BusinesOnlineTransactionTypeId, [BolUseId] = @BolUseId, [TransactionVolume] = @TransactionVolume, [TransactionValue] = @TransactionValue, [Fee] = @Fee
-                            WHERE [pkConcessionBolId] = @Id",
-                    new
-                    {
-                        Id = model.Id,
-                        ConcessionId = model.ConcessionId,
-                        ConcessionDetailId = model.ConcessionDetailId,
-                        TransactionGroupId = model.TransactionGroupId,
-                        BusinesOnlineTransactionTypeId = model.BusinesOnlineTransactionTypeId,
-                        BolUseId = model.BolUseId,
-                        TransactionVolume = model.TransactionVolume,
-                        TransactionValue = model.TransactionValue,
-                        Fee = model.Fee
-                    });
-            }
+            //using (var db = _dbConnectionFactory.Connection())
+            //{
+            //    db.Execute(@"UPDATE [dbo].[tblConcessionBol]
+            //                SET [fkConcessionId] = @ConcessionId, [fkConcessionDetailId] = @ConcessionDetailId, [fkTransactionGroupId] = @TransactionGroupId, [fkBusinesOnlineTransactionTypeId] = @BusinesOnlineTransactionTypeId, [BolUseId] = @BolUseId, [TransactionVolume] = @TransactionVolume, [TransactionValue] = @TransactionValue, [Fee] = @Fee
+            //                WHERE [pkConcessionBolId] = @Id",
+            //        new
+            //        {
+            //            Id = model.Id,
+            //            ConcessionId = model.ConcessionId,
+            //            ConcessionDetailId = model.ConcessionDetailId,
+            //            TransactionGroupId = model.TransactionGroupId,
+            //            BusinesOnlineTransactionTypeId = model.BusinesOnlineTransactionTypeId,
+            //            BolUseId = model.BolUseId,
+            //            TransactionVolume = model.TransactionVolume,
+            //            TransactionValue = model.TransactionValue,
+            //            Fee = model.Fee
+            //        });
+            //}
 
             _concessionDetailRepository.Update(model);
         }

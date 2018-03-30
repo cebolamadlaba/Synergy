@@ -851,10 +851,10 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static int GetBolUserId()
         {
             //read all and return the first one
-            var models = InstantiatedDependencies.BolUserRepository.ReadAll();
+            var models = InstantiatedDependencies.BolUserRepository.GetLegalEntityBOLUsers();
 
             if (models != null && models.Any())
-                return models.First().Id;
+                return models.First().pkLegalEntityBOLUserId;
 
             return InsertBolUser();
         }
@@ -871,7 +871,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 IsActive = false
             };
 
-            InstantiatedDependencies.BolUserRepository.Create(model);
+           // InstantiatedDependencies.BolUserRepository.Create(model);
 
             return model.Id;
         }
@@ -887,10 +887,10 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 return GetBolUserId();
 
             //read all and return the first one
-            var models = InstantiatedDependencies.BolUserRepository.ReadAll();
+            var models = InstantiatedDependencies.BolUserRepository.GetLegalEntityBOLUsers();
 
-            if (models != null && models.Any(_ => _.Id != model.Value))
-                return models.First(_ => _.Id != model.Value).Id;
+            if (models != null && models.Any(_ => _.pkLegalEntityBOLUserId != model.Value))
+                return models.First(_ => _.pkLegalEntityBOLUserId != model.Value).pkLegalEntityBOLUserId;
 
             return InsertBolUser();
         }
@@ -1356,13 +1356,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         {
             var model = new ConcessionBol
             {
-                ConcessionId = GetConcessionId(),
-                TransactionGroupId = GetTransactionGroupId(),
-                BusinesOnlineTransactionTypeId = GetBusinesOnlineTransactionTypeId(),
-                BolUseId = 8,
-                TransactionVolume = 5,
-                TransactionValue = 9697,
-                Fee = 7491
+                ConcessionId = GetConcessionId()
+               
             };
 
             InstantiatedDependencies.ConcessionBolRepository.Create(model);
@@ -2787,7 +2782,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 BpId = 1,
                 Volume = 3364,
                 Value = 3187,
-                LoadedPrice = 2405
+                LoadedPrice = "2405"
             };
 
             InstantiatedDependencies.ProductCashRepository.Create(model);

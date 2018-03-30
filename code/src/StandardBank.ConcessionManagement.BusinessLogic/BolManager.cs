@@ -52,10 +52,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
               
         public ConcessionBol CreateConcessionBol(BolConcessionDetail bolConcessionDetail, Concession concession)
         {
-            //var concessionCash = _mapper.Map<ConcessionCash>(cashConcessionDetail);
-            //concessionCash.ConcessionId = concession.Id;
-            //return _concessionCashRepository.Create(concessionCash);
-            return null;
+            var concessionBol = _mapper.Map<ConcessionBol>(bolConcessionDetail);
+            concessionBol.ConcessionId = concession.Id;
+            return _concessionBolRepository.Create(concessionBol);
+          
         }
 
        

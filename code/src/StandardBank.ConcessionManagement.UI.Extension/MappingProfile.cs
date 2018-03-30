@@ -196,6 +196,13 @@ namespace StandardBank.ConcessionManagement.UI.Extension
 
             //User 
             CreateMap<Model.Repository.User, Model.UserInterface.User>().ReverseMap();
+
+            //BOL
+            CreateMap<Model.Repository.BOLChargeCode, Model.UserInterface.Bol.BOLChargeCode>().ReverseMap();
+            CreateMap<Model.Repository.BOLChargeCodeType, Model.UserInterface.Bol.BOLChargeCodeType>().ReverseMap();
+            CreateMap<Model.Repository.LegalEntityBOLUser, Model.UserInterface.Bol.LegalEntityBOLUser>().ReverseMap();
+       
+            CreateMap<Model.Repository.ConcessionBol, Model.UserInterface.Bol.BolConcessionDetail>().ReverseMap();
         }
     }
 }

@@ -19,7 +19,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// <value>
         /// The TransactionGroupId.
         /// </value>
-        public int? TransactionGroupId { get; set; }
+        public int? fkConcessionId { get; set; }
 
         /// <summary>
         /// Gets or sets the BusinesOnlineTransactionTypeId.
@@ -27,7 +27,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// <value>
         /// The BusinesOnlineTransactionTypeId.
         /// </value>
-        public int? BusinesOnlineTransactionTypeId { get; set; }
+        public int? fkConcessionDetailId { get; set; }
 
         /// <summary>
         /// Gets or sets the BolUseId.
@@ -35,7 +35,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// <value>
         /// The BolUseId.
         /// </value>
-        public int? BolUseId { get; set; }
+        public int? fkLegalEntityBOLUserId { get; set; }
 
         /// <summary>
         /// Gets or sets the TransactionVolume.
@@ -43,7 +43,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// <value>
         /// The TransactionVolume.
         /// </value>
-        public int? TransactionVolume { get; set; }
+        public int? fkChargeCodeId { get; set; }
 
         /// <summary>
         /// Gets or sets the TransactionValue.
@@ -51,7 +51,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// <value>
         /// The TransactionValue.
         /// </value>
-        public decimal? TransactionValue { get; set; }
+        public string LoadedRate { get; set; }
 
         /// <summary>
         /// Gets or sets the Fee.
@@ -59,7 +59,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// <value>
         /// The Fee.
         /// </value>
-        public decimal? Fee { get; set; }
+        public string ApprovedRate { get; set; }
 
         /// <summary>
         /// Gets or the name of the table.

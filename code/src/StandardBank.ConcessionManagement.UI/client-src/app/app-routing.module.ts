@@ -23,7 +23,10 @@ import { MismatchedInboxComponent } from "./mismatched-inbox/mismatched-inbox.co
 import { LendingViewConcessionComponent } from "./lending-view-concession/lending-view-concession.component";
 import { CashViewConcessionComponent } from "./cash-view-concession/cash-view-concession.component";
 import { InvestmentsAddConcessionComponent } from "./investments-add-concession/investments-add-concession.component";
+
 import { BolAddConcessionComponent } from "./bol-add-concession/bol-add-concession.component";
+import { BolViewConcessionComponent } from "./bol-view-concession/bol-view-concession.component";
+
 import { MasAddConcessionComponent } from "./mas-add-concession/mas-add-concession.component";
 import { TransactionalViewConcessionComponent } from "./transactional-view-concession/transactional-view-concession.component";
 import { TradeAddConcessionComponent } from "./trade-add-concession/trade-add-concession.component";
@@ -66,8 +69,11 @@ const routes: Routes = [
     { path: 'cash-view-concession/:riskGroupNumber/:concessionReferenceId', component: CashViewConcessionComponent },
     { path: 'lending-add-concession/:riskGroupNumber', component: LendingAddConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
-    { path: 'investments-add-concession', component: InvestmentsAddConcessionComponent },
-    { path: 'bol-add-concession', component: BolAddConcessionComponent },
+    { path: 'investments-add-concession', component: InvestmentsAddConcessionComponent },   
+
+    { path: 'bol-add-concession/:riskGroupNumber', component: BolAddConcessionComponent },
+    { path: 'bol-view-concession/:riskGroupNumber/:concessionReferenceId', component: BolViewConcessionComponent },
+
     { path: 'mas-add-concession', component: MasAddConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
     { path: 'trade-add-concession', component: TradeAddConcessionComponent },

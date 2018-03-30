@@ -23,7 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="client-src\app\models\bol-chargecode.ts" />
+    <None Remove="client-src\app\models\bol-chargecodetype.ts" />
     <None Remove="client-src\app\models\bol-view.ts" />
+    <None Remove="client-src\app\models\legal-entity-bol-user.ts" />
     <None Remove="client-src\app\models\search-concession-detail.ts" />
     <None Remove="LetterTemplates\images\sblogo.jpg" />
     <None Remove="LetterTemplates\TemplateFooter.html" />
@@ -81,6 +84,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="client-src\app\models\legal-entity-bol-user.ts" />
+    <TypeScriptCompile Include="client-src\app\models\bol-chargecode.ts" />
+    <TypeScriptCompile Include="client-src\app\models\bol-chargecodetype.ts" />
     <TypeScriptCompile Include="client-src\app\models\bol-view.ts" />
     <TypeScriptCompile Include="client-src\app\models\search-concession-detail.ts" />
   </ItemGroup>

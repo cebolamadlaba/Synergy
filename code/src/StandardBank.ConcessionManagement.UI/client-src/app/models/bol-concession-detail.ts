@@ -9,5 +9,7 @@ export class BolConcessionDetail extends BaseConcessionDetail {
     chargeCodeDesc: string;
     chargeCodeLength: number;
     loadedRate: string;
-    approvedRate: string; 
+    approvedRate: string;
+    fkChargeCodeId: number;
+    fkLegalEntityBOLUserId: number;
 }

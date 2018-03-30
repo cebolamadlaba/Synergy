@@ -8,7 +8,7 @@ using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCondition;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
-using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
+using StandardBank.ConcessionManagement.Model.UserInterface.Bol;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.UI.Validation;
@@ -51,6 +51,28 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult BolView(int riskGroupNumber)
         {
             return Ok(_bolManager.GetBolViewData(riskGroupNumber));
+        }
+
+     
+        [Route("NewBol")]
+        [ValidateModel]
+        public async Task<IActionResult> NewBol([FromBody] BolConcession bolConcession)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            bolConcession.Concession.ConcessionType = Constants.ConcessionType.BusinessOnline;
+            bolConcession.Concession.Type = Constants.ReferenceType.New;
+
+            var concession = await _mediator.Send(new AddConcession(bolConcession.Concession, user));
+
+            foreach (var bolConcessionDetail in bolConcession.BolConcessionDetails)
+                await _mediator.Send(new BusinessLogic.Features.BolConcession.AddOrUpdateBolConcessionDetail(bolConcessionDetail, user, concession));
+
+            if (bolConcession.ConcessionConditions != null && bolConcession.ConcessionConditions.Any())
+                foreach (var concessionCondition in bolConcession.ConcessionConditions)
+                    await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+
+            return Ok(bolConcession);
         }
     }
 }

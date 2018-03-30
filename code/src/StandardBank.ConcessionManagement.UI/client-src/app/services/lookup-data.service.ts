@@ -19,6 +19,10 @@ import { ConcessionTypes } from '../constants/concession-types';
 import { ApprovedConcession } from "../models/approved-concession";
 import { ApprovedConcessionDetail } from "../models/approved-concession-detail";
 
+import { BolChargeCodeType } from "../models/bol-chargecodetype";
+import { BolChargeCode } from "../models/bol-chargecode";
+import { LegalEntityBOLUser } from "../models/legal-entity-bol-user";
+
 @Injectable()
 export class LookupDataService {
 
@@ -62,6 +66,25 @@ export class LookupDataService {
         const url = "/api/Condition/ConditionTypes";
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
+
+
+    getBOLChargeCodes(): Observable<BolChargeCode[]> {
+        const url = "/api/Condition/BOLChargeCodes";
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    getBOLChargeCodeTypes(): Observable<BolChargeCodeType[]> {
+        const url = "/api/Condition/BOLChargeCodeTypes";
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+
+    getLegalEntityBOLUsers(): Observable<LegalEntityBOLUser[]> {
+        const url = "/api/Condition/LegalEntityBOLUsers";
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+
 
     getPeriods(): Observable<Period[]> {
         const url = "/api/Condition/Periods";

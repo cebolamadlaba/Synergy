@@ -7,6 +7,8 @@ using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface;
+using StandardBank.ConcessionManagement.Model.UserInterface.Bol;
+
 using AccrualType = StandardBank.ConcessionManagement.Model.UserInterface.AccrualType;
 using ChannelType = StandardBank.ConcessionManagement.Model.UserInterface.ChannelType;
 using ConcessionType = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionType;
@@ -19,6 +21,10 @@ using RiskGroup = StandardBank.ConcessionManagement.Model.UserInterface.RiskGrou
 using TableNumber = StandardBank.ConcessionManagement.Model.UserInterface.TableNumber;
 using TransactionTableNumber = StandardBank.ConcessionManagement.Model.UserInterface.Transactional.TransactionTableNumber;
 using TransactionType = StandardBank.ConcessionManagement.Model.UserInterface.TransactionType;
+
+using LegalEntityBOLUser = StandardBank.ConcessionManagement.Model.UserInterface.Bol.LegalEntityBOLUser;
+using BOLChargeCode = StandardBank.ConcessionManagement.Model.UserInterface.Bol.BOLChargeCode;
+using BOLChargeCodeType = StandardBank.ConcessionManagement.Model.UserInterface.Bol.BOLChargeCodeType;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -72,6 +78,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// The period type repository
         /// </summary>
         private readonly IPeriodTypeRepository _periodTypeRepository;
+
+        private readonly IBolUserRepository _bolRepository;
 
         /// <summary>
         /// The condition type repository
@@ -177,7 +185,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IRelationshipRepository relationshipRepository, IRoleRepository roleRepository,
             ICentreRepository centreRepository,
             IRiskGroupRepository riskGroupRepository,
-            ITransactionTableNumberRepository transactionTableNumberRepository)
+            ITransactionTableNumberRepository transactionTableNumberRepository, IBolUserRepository bolRepository)
         {
             _statusRepository = statusRepository;
             _subStatusRepository = subStatusRepository;
@@ -201,6 +209,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _centreRepository = centreRepository;
             _riskGroupRepository = riskGroupRepository;
             _transactionTableNumberRepository = transactionTableNumberRepository;
+            _bolRepository = bolRepository;
         }
 
         /// <summary>
@@ -422,6 +431,24 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return _mapper.Map<IEnumerable<PeriodType>>(periodTypes.Where(_ => _.IsActive));
         }
 
+        public IEnumerable<BOLChargeCode> GetBOLChargeCodes()
+        {
+            var chargecodes = _bolRepository.GetBOLChargeCodes();
+            return _mapper.Map<IEnumerable<BOLChargeCode>>(chargecodes);
+        }
+        public IEnumerable<BOLChargeCodeType> GetBOLChargeCodeTypes()
+        {
+            var chargecodetypes = _bolRepository.GetBOLChargeCodeTypes();
+            return _mapper.Map<IEnumerable<BOLChargeCodeType>>(chargecodetypes);
+        }
+
+        public IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsers()
+        {
+            var bolusers = _bolRepository.GetLegalEntityBOLUsers();
+            return _mapper.Map<IEnumerable<LegalEntityBOLUser>>(bolusers);
+        }
+
+
         /// <summary>
         /// Gets the condition types
         /// </summary>
@@ -473,6 +500,25 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         /// <returns></returns>
         public IEnumerable<ChannelType> GetChannelTypes()
+        {
+            var channelTypes = _channelTypeRepository.ReadAll();
+            return _mapper.Map<IEnumerable<ChannelType>>(channelTypes.Where(_ => _.IsActive));
+        }
+
+
+        public IEnumerable<ChannelType> GetChargeCodes()
+        {
+            var channelTypes = _channelTypeRepository.ReadAll();
+            return _mapper.Map<IEnumerable<ChannelType>>(channelTypes.Where(_ => _.IsActive));
+        }
+
+        public IEnumerable<ChannelType> GetChargeTypes()
+        {
+            var channelTypes = _channelTypeRepository.ReadAll();
+            return _mapper.Map<IEnumerable<ChannelType>>(channelTypes.Where(_ => _.IsActive));
+        }
+
+        public IEnumerable<ChannelType> GetBOLUserIDs()
         {
             var channelTypes = _channelTypeRepository.ReadAll();
             return _mapper.Map<IEnumerable<ChannelType>>(channelTypes.Where(_ => _.IsActive));
