@@ -36,7 +36,9 @@ import { ConcessionSubStatus } from '../constants/concession-sub-status';
 export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
     myDecimal: number;
-  
+
+    primeRate = "0.00";
+    today: string;
 
     concessionReferenceId: string;
     public lendingConcessionForm: FormGroup;
@@ -135,7 +137,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             mrsCrs: new FormControl(),
             smtDealNumber: new FormControl(),
             motivation: new FormControl(),
-            comments: new FormControl() 
+            comments: new FormControl(),
+             prime: new FormControl()
 
         });
 
@@ -150,7 +153,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             this.lookupDataService.getConditionTypes(),
             this.lookupDataService.getRiskGroup(this.riskGroupNumber),
             this.lookupDataService.getClientAccounts(this.riskGroupNumber),
-            this.lendingService.getLendingFinancial(this.riskGroupNumber)
+            this.lendingService.getLendingFinancial(this.riskGroupNumber),
+          
         ]).subscribe(results => {
                 this.reviewFeeTypes = <any>results[0];
                 this.productTypes = <any>results[1];
@@ -187,6 +191,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             this.observableLendingConcession.subscribe(lendingConcession => {
                 this.lendingConcession = lendingConcession;
 
+
                 if (lendingConcession.concession.status == ConcessionStatus.Pending && lendingConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
                     this.canBcmApprove = lendingConcession.currentUser.canBcmApprove;
                 }
@@ -201,6 +206,11 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 					if (!lendingConcession.concession.isInProgressExtension) {
 						this.canEdit = lendingConcession.currentUser.canPcmApprove;
 					}
+                }
+
+                if (lendingConcession.primeRate) {
+
+                    this.primeRate = lendingConcession.primeRate;
                 }
 
                 //if it's still pending and the user is a requestor then they can recall it

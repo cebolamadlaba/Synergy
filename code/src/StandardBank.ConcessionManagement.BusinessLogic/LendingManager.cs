@@ -58,6 +58,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         private readonly IMiscPerformanceRepository _miscPerformanceRepository;
 
+        private readonly IPrimeRateRepository _primeRateRepository;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LendingManager"/> class.
         /// </summary>
@@ -73,7 +75,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IConcessionLendingRepository concessionLendingRepository, IMapper mapper,
             IFinancialLendingRepository financialLendingRepository, ILookupTableManager lookupTableManager,
             ILoadedPriceLendingRepository loadedPriceLendingRepository, IRuleManager ruleManager,
-            IMiscPerformanceRepository miscPerformanceRepository)
+            IMiscPerformanceRepository miscPerformanceRepository, IPrimeRateRepository primeRateRepository)
         {
             _concessionManager = concessionManager;
             _concessionLendingRepository = concessionLendingRepository;
@@ -83,6 +85,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _loadedPriceLendingRepository = loadedPriceLendingRepository;
             _ruleManager = ruleManager;
             _miscPerformanceRepository = miscPerformanceRepository;
+            _primeRateRepository = primeRateRepository;
         }
 
         /// <summary>
@@ -111,6 +114,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
             var lendingConcessionDetails = _miscPerformanceRepository.GetLendingConcessionDetails(concession.Id);
+            var primerate = _primeRateRepository.PrimeRate(concession.DateOpened);
 
             //we are only allowed to extend or renew overdraft products
             if (concession.CanExtend || concession.CanRenew)
@@ -132,7 +136,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 Concession = concession,
                 LendingConcessionDetails = lendingConcessionDetails,
                 ConcessionConditions = _concessionManager.GetConcessionConditions(concession.Id),
-                CurrentUser = currentUser
+                CurrentUser = currentUser,
+                PrimeRate = primerate
             };
         }
 

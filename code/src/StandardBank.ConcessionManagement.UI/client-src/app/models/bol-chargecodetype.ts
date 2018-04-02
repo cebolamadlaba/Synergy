@@ -1,5 +1,5 @@
 export class BolChargeCodeType
 {
-    chargeCodeTypeId: number;
+    pkChargeCodeTypeId: number;
     description: string;
 }

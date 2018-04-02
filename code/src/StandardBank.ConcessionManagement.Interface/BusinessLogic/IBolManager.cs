@@ -15,9 +15,9 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 
         BolConcession GetBolConcession(string concessionReferenceId, User user);
 
-        ConcessionCash DeleteConcessionBol(BolConcessionDetail cashConcessionDetail);
+        ConcessionBol DeleteConcessionBol(BolConcessionDetail cashConcessionDetail);
 
-        ConcessionCash UpdateConcessionBol(BolConcessionDetail cashConcessionDetail, Concession concession);
+        ConcessionBol UpdateConcessionBol(BolConcessionDetail cashConcessionDetail, Concession concession);
 
         BolView GetBolViewData(int riskGroupNumber);
 

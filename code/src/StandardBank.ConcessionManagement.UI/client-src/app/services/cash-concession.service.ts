@@ -86,8 +86,18 @@ export class CashConcessionService {
     }
 
     private handleErrorObservable(error: Response | any) {
-        console.error(error.message || error);
-        return Observable.throw(error.message || error);
+
+        if (error._body) {
+
+            console.log(error._body);
+            console.error(error._body);
+            return Observable.throw(error._body || error);
+        }
+        else {
+
+            console.error(error.message || error);
+            return Observable.throw(error.message || error);
+        }
     }
 }
 

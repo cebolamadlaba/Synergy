@@ -56,7 +56,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     bolView: BolView = new BolView();
 
     riskGroup: RiskGroup;
-    riskGroupNumber: number;  
+    riskGroupNumber: number;
 
     public bolConcessionForm: FormGroup;
     selectedConditionTypes: ConditionType[];
@@ -113,7 +113,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         private formBuilder: FormBuilder,
         private location: Location,
         private datepipe: DatePipe,
-        @Inject(LookupDataService) private lookupDataService,     
+        @Inject(LookupDataService) private lookupDataService,
         @Inject(UserConcessionsService) private userConcessionsService,
         @Inject(BolConcessionService) private bolConcessionService) {
 
@@ -131,6 +131,10 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         this.bolView.riskGroup = new RiskGroup();
         this.bolView.bolConcessions = [new BolConcession()];
         this.bolView.bolConcessions[0].concession = new Concession();
+
+        this.bolConcession = new BolConcession();
+        this.bolConcession.concession = new Concession();
+        this.bolConcession.concession.concessionComments = [new ConcessionComment()];
     }
 
     ngOnInit() {
@@ -146,27 +150,23 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
             this.observableClientAccounts = this.lookupDataService.getClientAccounts(this.riskGroupNumber);
             this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
-
         }
 
         if (this.riskGroupNumber) {
             this.observableBolView = this.bolConcessionService.getBolViewData(this.riskGroupNumber);
             this.observableBolView.subscribe(bolView => {
                 this.bolView = bolView;
-
-                this.isLoading = false;
             }, error => {
                 this.errorMessage = <any>error;
-                this.isLoading = false;
             });
         }
-
 
         this.bolConcessionForm = this.formBuilder.group({
             concessionItemRows: this.formBuilder.array([this.initConcessionItemRows()]),
             conditionItemsRows: this.formBuilder.array([]),
             smtDealNumber: new FormControl(),
-            motivation: new FormControl()
+            motivation: new FormControl(),
+            comments: new FormControl()
         });
 
         Observable.forkJoin([
@@ -266,44 +266,44 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                         this.addNewConcessionRow();
                     }
 
-                    //const concessions = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
-                    //let currentConcession = concessions.controls[concessions.length - 1];
+                    const concessions = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+                    let currentConcession = concessions.controls[concessions.length - 1];
 
-                    //currentConcession.get('cashConcessionDetailId').setValue(bolConcessionDetail.cashConcessionDetailId);
-                    //currentConcession.get('concessionDetailId').setValue(bolConcessionDetail.concessionDetailId);
+                    currentConcession.get('bolConcessionDetailId').setValue(bolConcessionDetail.bolConcessionDetailId);
+                    currentConcession.get('concessionDetailId').setValue(bolConcessionDetail.concessionDetailId);
 
-                    //let selectedChannelType = this.channelTypes.filter(_ => _.id == bolConcessionDetail.channelTypeId);
-                    //currentConcession.get('channelType').setValue(selectedChannelType[0]);
+                    if (bolConcessionDetail.loadedRate)
+                        currentConcession.get('unitcharge').setValue(bolConcessionDetail.loadedRate);
 
-                    //let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == bolConcessionDetail.legalEntityAccountId);
-                    //currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
+                    if (bolConcessionDetail.approvedRate)
+                        currentConcession.get('unitchargeApproved').setValue(bolConcessionDetail.approvedRate);
 
-                    //if (bolConcessionDetail.baseRate)
-                    //    currentConcession.get('baseRate').setValue(bolConcessionDetail.baseRate.toFixed(2));
+                    let selectedBOLUser = this.legalentitybolusers.filter(_ => _.pkLegalEntityBOLUserId == bolConcessionDetail.fkLegalEntityBOLUserId);
+                    currentConcession.get('userid').setValue(selectedBOLUser[0]);
 
-                    //if (bolConcessionDetail.adValorem)
-                    //    currentConcession.get('adValorem').setValue(bolConcessionDetail.adValorem.toFixed(3));
+                    let selectedChargeCode = this.bolchargecodes.filter(_ => _.pkChargeCodeId == bolConcessionDetail.fkChargeCodeId);
+                    currentConcession.get('chargecode').setValue(selectedChargeCode[0]);
 
-                    //currentConcession.get('approvedTableNumber').setValue(bolConcessionDetail.approvedTableNumber);
+                    let selectedChargeCode2 = this.bolchargecodes.filter(_ => _.pkChargeCodeId == bolConcessionDetail.fkChargeCodeId);
+                    let chargecodetypeid = selectedChargeCode2[0].fkChargeCodeTypeId.valueOf();
 
-                    //let selectedTableNumber = this.tableNumbers.filter(_ => _.id == bolConcessionDetail.tableNumberId);
-                    //currentConcession.get('tableNumber').setValue(selectedTableNumber[0]);
+                    let selectedChargeCodeType = this.bolchargecodetypes.filter(_ => _.pkChargeCodeTypeId == chargecodetypeid);
+                    currentConcession.get('product').setValue(selectedChargeCodeType[0]);
 
-                    //let selectedAccrualType = this.accrualTypes.filter(_ => _.id == bolConcessionDetail.accrualTypeId);
-                    //currentConcession.get('accrualType').setValue(selectedAccrualType[0]);
 
-                    //if (bolConcessionDetail.expiryDate) {
-                    //    var formattedExpiryDate = this.datepipe.transform(bolConcessionDetail.expiryDate, 'yyyy-MM-dd');
-                    //    currentConcession.get('expiryDate').setValue(formattedExpiryDate);
-                    //}
 
-                    //if (cashConcessionDetail.dateApproved) {
-                    //    var bolConcessionDetail = this.datepipe.transform(bolConcessionDetail.dateApproved, 'yyyy-MM-dd');
-                    //    currentConcession.get('dateApproved').setValue(formattedDateApproved);
-                    //}
+                    if (bolConcessionDetail.expiryDate) {
+                        var formattedExpiryDate = this.datepipe.transform(bolConcessionDetail.expiryDate, 'yyyy-MM-dd');
+                        currentConcession.get('expiryDate').setValue(formattedExpiryDate);
+                    }
 
-                   // currentConcession.get('isExpired').setValue(bolConcessionDetail.isExpired);
-                   // currentConcession.get('isExpiring').setValue(bolConcessionDetail.isExpiring);
+                    if (bolConcessionDetail.dateApproved) {
+                        var formattedDateApproved = this.datepipe.transform(bolConcessionDetail.dateApproved, 'yyyy-MM-dd');
+                        currentConcession.get('dateApproved').setValue(formattedDateApproved);
+                    }
+
+                    currentConcession.get('isExpired').setValue(bolConcessionDetail.isExpired);
+                    currentConcession.get('isExpiring').setValue(bolConcessionDetail.isExpiring);
 
                     rowIndex++;
                 }
@@ -347,15 +347,16 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
-    initConcessionItemRows() { 
+    initConcessionItemRows() {
 
         return this.formBuilder.group({
             bolConcessionDetailId: [''],
             concessionDetailId: [''],
-            product: [''],
-            chargecode: [''],
-            unitcharge: [''],
-            userid: [''],          
+            product: [{ value: '', disabled: true }],
+            chargecode: [{ value: '', disabled: true }],
+            unitcharge: [{ value: '', disabled: true }],
+            unitchargeApproved: [{ value: '', disabled: true }],
+            userid: [{ value: '', disabled: true }],
             expiryDate: [''],
             dateApproved: [{ value: '', disabled: true }],
             isExpired: [''],
@@ -381,7 +382,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
     addNewConcessionRow() {
         const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
-        var newRow = this.initConcessionItemRows();     
+        var newRow = this.initConcessionItemRows();
         control.push(newRow);
     }
 
@@ -444,11 +445,12 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     }
 
 
-    getBolConcession(isNew: boolean): BolConcession {   
+    getBolConcession(isNew: boolean): BolConcession {
         var bolConcession = new BolConcession();
         bolConcession.concession = new Concession();
         bolConcession.concession.riskGroupId = this.riskGroup.id;
-
+        bolConcession.concession.referenceNumber = this.concessionReferenceId;
+        bolConcession.concession.concessionType = ConcessionTypes.BOL;
 
         if (this.bolConcessionForm.controls['smtDealNumber'].value)
             bolConcession.concession.smtDealNumber = this.bolConcessionForm.controls['smtDealNumber'].value;
@@ -468,12 +470,17 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
             let bolConcessionDetail = new BolConcessionDetail();
 
+            if (!isNew && concessionFormItem.get('bolConcessionDetailId').value)
+                bolConcessionDetail.bolConcessionDetailId = concessionFormItem.get('bolConcessionDetailId').value;
+
+            if (!isNew && concessionFormItem.get('concessionDetailId').value)
+                bolConcessionDetail.concessionDetailId = concessionFormItem.get('concessionDetailId').value;
+
             if (concessionFormItem.get('product').value) {
 
             } else {
                 this.addValidationError("Product not selected");
             }
-
 
             if (concessionFormItem.get('chargecode').value) {
                 bolConcessionDetail.fkChargeCodeId = concessionFormItem.get('chargecode').value.pkChargeCodeId;
@@ -481,7 +488,6 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             } else {
                 this.addValidationError("Charge code not selected");
             }
-
 
             if (concessionFormItem.get('unitcharge').value) {
                 bolConcessionDetail.loadedRate = concessionFormItem.get('unitcharge').value;
@@ -506,10 +512,15 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         const conditions = <FormArray>this.bolConcessionForm.controls['conditionItemsRows'];
 
         for (let conditionFormItem of conditions.controls) {
+
             if (!bolConcession.concessionConditions)
                 bolConcession.concessionConditions = [];
 
+
             let concessionCondition = new ConcessionCondition();
+
+            if (!isNew && conditionFormItem.get('concessionConditionId').value)
+                concessionCondition.concessionConditionId = conditionFormItem.get('concessionConditionId').value;
 
             if (conditionFormItem.get('conditionType').value)
                 concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;

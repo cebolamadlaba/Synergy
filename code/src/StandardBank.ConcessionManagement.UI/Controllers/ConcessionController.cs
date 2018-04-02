@@ -136,6 +136,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(_concessionManager.SearchClientAccounts(riskGroupNumber, accountNumber));
         }
 
+        [Route("PrimeRate/{datefilter}")]
+        public IActionResult PrimeRate(DateTime datefilter)
+        {
+            return Ok(_concessionManager.PrimeRate(datefilter));
+        } 
 
 
         [Route("SearchConsessions")]
@@ -143,9 +148,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var userId = _siteHelper.GetUserIdForFiltering(this);
             return Ok(_concessionManager.SearchConsessions(userId));
-
-
-            //return Ok(_concessionManager.SearchClientAccounts(riskGroupNumber, accountNumber));
         }
 
         [Route("SearchConsessions/{region}/{centre}/{status}/{datefilter}")]
@@ -153,9 +155,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var userId = _siteHelper.GetUserIdForFiltering(this);
             return Ok(_concessionManager.SearchConsessions(region,centre,status,datefilter, userId));
-
-
-            //return Ok(_concessionManager.SearchClientAccounts(riskGroupNumber, accountNumber));
         }
 
         /// <summary>

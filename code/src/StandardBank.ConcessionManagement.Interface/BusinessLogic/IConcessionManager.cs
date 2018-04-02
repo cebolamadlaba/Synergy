@@ -87,7 +87,10 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <returns></returns>
         IEnumerable<ClientAccount> SearchClientAccounts(int riskGroupNumber, string accountNumber);
 
-            /// <summary>
+        IEnumerable<string> PrimeRate(DateTime datefilter);
+
+
+        /// <summary>
         /// Gets the approved concessions for user.
         /// </summary>
         /// <param name="userId">The user identifier.</param>

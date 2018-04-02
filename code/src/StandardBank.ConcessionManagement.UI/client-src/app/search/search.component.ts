@@ -19,6 +19,7 @@ import { Region } from '../models/region';
 import { ConcessionSubStatus } from '../constants/concession-sub-status';
 
 import { TransactionalConcessionService } from "../services/transactional-concession.service";
+import { BolConcessionService } from "../services/bol-concession.service";
 import { CashConcessionService } from "../services/cash-concession.service";
 import { LendingService } from "../services/lending.service";
 import { SearchConcessionFilterPipe } from "../filters/search-concession-filter.pipe";
@@ -61,6 +62,7 @@ export class SearchComponent implements OnInit {
         @Inject(TransactionalConcessionService) private transactionalConcessionService,
         @Inject(CashConcessionService) private cashConcessionService,
         @Inject(LendingService) private lendingConcessionService,
+        @Inject(BolConcessionService) private bolConcessionService,
 
         @Inject(UserConcessionsService) private userConcessionsService,
         @Inject(RegionService) private regionService,
@@ -132,6 +134,10 @@ export class SearchComponent implements OnInit {
                     break;
                 case ConcessionTypes.Transactional:
                     this.forwardTransactionaltoPCM(concessiondetailed);
+                    break;
+
+                case ConcessionTypes.BOL:
+                    this.forwardBoltoPCM(concessiondetailed);
                     break;
             }
         }       
@@ -225,5 +231,28 @@ export class SearchComponent implements OnInit {
         } else {
             this.isLoading = false;
         }
-    }  
+    }
+
+    forwardBoltoPCM(concessiondetailed: SearchConcessionDetail) {
+
+        concessiondetailed.subStatus = ConcessionSubStatus.PCMPending;
+        concessiondetailed.comments = "Forwarded by PCM";
+
+        if (!this.validationError) {
+            this.bolConcessionService.postForwardBolPCM(concessiondetailed).subscribe(entity => {
+                console.log("data saved");
+
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+
+                this.getFilteredView();
+
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
 }

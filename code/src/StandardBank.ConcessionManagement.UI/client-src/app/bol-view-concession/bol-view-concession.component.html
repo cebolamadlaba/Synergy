@@ -8,7 +8,7 @@
             </div>
             <div class="col-md-10 banner-main-title">
                 <i class="fa fa-handshake-o" aria-hidden="true"></i> View Business Online Concession - {{concessionReferenceId}}
-                <span class="label label-warning" style="float: right;">{{cashConcession?.concession?.status}} - {{cashConcession?.concession?.subStatus}}</span>
+                <span class="label label-warning" style="float: right;">{{bolConcession?.concession?.status}} - {{bolConcession?.concession?.subStatus}}</span>
             </div>
             <div class="col-md-1"></div>
         </div>
@@ -18,6 +18,8 @@
                 <div class="col-md-5">
                     <div class="subHeading">{{bolView.riskGroup.name}}</div>
                     <div class="date lightTitle hidden-element">{{bolView.riskGroup.number}}</div>
+                    <div class="requestor"><i class="fa fa-user-circle-o" aria-hidden="true"></i><button (click)="viewRequesterModal.show()">{{bolConcession?.concession?.requestor?.fullName}}</button></div>
+
                 </div>
                 <div class="col-md-2  hidden-element">
                     <div class="subHeading lightTitle">Total Payments</div>
@@ -69,10 +71,10 @@
         <div class="modal-content">
             <div class="requestor-modal">
                 <i class="fa fa-user-circle-o" aria-hidden="true"></i>
-                <p class="name">{{cashConcession?.concession?.requestor?.fullName}}</p>
-                <p class="anumber">{{cashConcession?.concession?.requestor?.aNumber}}</p>
-                <p>{{cashConcession?.concession?.requestor?.selectedCentre?.name}}</p>
-                <p>{{cashConcession?.concession?.requestor?.selectedRegion?.description}}</p>
+                <p class="name">{{bolConcession?.concession?.requestor?.fullName}}</p>
+                <p class="anumber">{{bolConcession?.concession?.requestor?.aNumber}}</p>
+                <p>{{bolConcession?.concession?.requestor?.selectedCentre?.name}}</p>
+                <p>{{bolConcession?.concession?.requestor?.selectedRegion?.description}}</p>
                 <button type="button" class="btn btn-primary" (click)="viewRequesterModal.hide()">Close</button>
             </div>
         </div>
@@ -126,6 +128,9 @@
             <!-- SMT deal number -->
             <label>SMT Deal Number</label>
             <input type="text" numbersOnly="true" class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="isRecalling ? null : ''" />
+        
+
+
         </div>
     </div>
     <div class="col-md-7 col-md-offset-1">
@@ -150,59 +155,101 @@
     </div>
 
     <table class="form-concessions-table" formArrayName="concessionItemRows">
-        <thead class="form-concessions-table-headings">
+        <thead class="form-concessions-table-headings">           
+
             <tr>
-                <th>Channel Type</th>
-                <th>Account No</th>
-                <th>Table Number</th>
-                <th>Base Rate</th>
-                <th>Ad Valorem</th>
-                <th *ngIf="isApproved">Approved Table Number</th>
-                <th>Accrual</th>
+                <th>Product (Charge Code Type)</th>
+                <th>Charge code</th>
+                <th>Rate</th>
+                <th *ngIf="isApproved">Rate Approved</th>
+                <th>User ID</th>
                 <th>Expiry Date</th>
                 <th *ngIf="isApproved">Date Approved</th>
             </tr>
+
+
         </thead>
         <tbody class="form-concessions-table-content">
-            <tr *ngFor="let itemrow of cashConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
+
+            <tr *ngFor="let itemrow of bolConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
                 <td class="length-long">
-                    <input formControlName="cashConcessionDetailId" style="display: none;" />
+                    <input formControlName="bolConcessionDetailId" style="display: none;" />
                     <input formControlName="concessionDetailId" style="display: none;" />
                     <input formControlName="isExpired" style="display: none;" />
                     <input formControlName="isExpiring" style="display: none;" />
 
-                    <select formControlName="channelType" class="form-control" [attr.disabled]="canEdit ? null : ''">
-                        <option *ngFor="let channelTypeOption of channelTypes" [ngValue]="channelTypeOption">{{channelTypeOption.description}}</option>
+                    <select formControlName="product" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                        <option *ngFor="let productOption of bolchargecodetypes" [ngValue]="productOption">{{productOption.description}}</option>
                     </select>
                 </td>
 
                 <td class="length-long">
-                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit ? null : ''">
-                        <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
+                    <select formControlName="chargecode" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                        <option *ngFor="let bolchargecodeOption of bolchargecodes" [ngValue]="bolchargecodeOption">{{bolchargecodeOption.chargeCode}}</option>
                     </select>
                 </td>
 
-                <td class="length-long">
-                    <select formControlName="tableNumber" class="form-control" (change)="tableNumberChanged(i)" [attr.disabled]="canEdit ? null : ''">
-                        <option *ngFor="let tableNumberOption of tableNumbers" [ngValue]="tableNumberOption">{{tableNumberOption.displayText}}</option>
-                    </select>
-                </td>
+                <td class="length-long"><input type="number" class="form-control" formControlName="unitcharge" [attr.disabled]="canEdit ? null : ''" /></td>
 
-                <td class="length-long"><input formControlName="baseRate" class="form-control" /></td>
-                <td class="length-short"><input formControlName="adValorem" class="form-control" /></td>
-                <td class="length-long" *ngIf="isApproved"><input formControlName="approvedTableNumber" class="form-control" /></td>
-
+                <td class="length-long" *ngIf="isApproved"><input type="number" class="form-control" formControlName="unitchargeApproved" /></td>
+               
                 <td class="length-medium">
-                    <select formControlName="accrualType" class="form-control" [attr.disabled]="canEdit ? null : ''">
-                        <option *ngFor="let accrualTypeOption of accrualTypes" [ngValue]="accrualTypeOption">{{accrualTypeOption.description}}</option>
+                    <select formControlName="userid" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                        <option *ngFor="let useridOption of legalentitybolusers" [ngValue]="useridOption">{{useridOption.bolUserId}}</option>
                     </select>
                 </td>
 
                 <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" /></td>
                 <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>
 
-                <td *ngIf="canBcmApprove || canPcmApprove || isEditing || isRecalling"><button *ngIf="cashConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+
+                <td class="delete"><button *ngIf="bolConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
+
+
+
+
+
+            <!-- <tr *ngFor="let itemrow of bolConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
+              <td class="length-long">
+             <input formControlName="cashConcessionDetailId" style="display: none;" />
+             <input formControlName="concessionDetailId" style="display: none;" />
+             <input formControlName="isExpired" style="display: none;" />
+             <input formControlName="isExpiring" style="display: none;" />
+
+             <select formControlName="channelType" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                 <option *ngFor="let channelTypeOption of channelTypes" [ngValue]="channelTypeOption">{{channelTypeOption.description}}</option>
+             </select>
+         </td>
+
+         <td class="length-long">
+             <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                 <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
+             </select>
+         </td>
+
+         <td class="length-long">
+             <select formControlName="tableNumber" class="form-control" (change)="tableNumberChanged(i)" [attr.disabled]="canEdit ? null : ''">
+                 <option *ngFor="let tableNumberOption of tableNumbers" [ngValue]="tableNumberOption">{{tableNumberOption.displayText}}</option>
+             </select>
+         </td>
+
+         <td class="length-long"><input formControlName="baseRate" class="form-control" /></td>
+         <td class="length-short"><input formControlName="adValorem" class="form-control" /></td>
+         <td class="length-long" *ngIf="isApproved"><input formControlName="approvedTableNumber" class="form-control" /></td>
+
+         <td class="length-medium">
+             <select formControlName="accrualType" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                 <option *ngFor="let accrualTypeOption of accrualTypes" [ngValue]="accrualTypeOption">{{accrualTypeOption.description}}</option>
+             </select>
+         </td>
+
+         <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" /></td>
+         <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>
+
+         <td *ngIf="canBcmApprove || canPcmApprove || isEditing || isRecalling"><button *ngIf="bolConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+
+    </tr>  -->
         </tbody>
     </table>
 
@@ -227,12 +274,12 @@
                         </tr>
                     </thead>
                     <tbody class="secondary-text">
-                        <tr *ngIf="cashConcessionForm.controls.conditionItemsRows.controls.length == 0">
+                        <tr *ngIf="bolConcessionForm.controls.conditionItemsRows.controls.length == 0">
                             <td colspan="8" class="searchEmptyState">
                                 No conditions has been added
                             </td>
-                        </tr>
-                        <tr *ngFor="let itemrow of cashConcessionForm.controls.conditionItemsRows.controls; let i=index">
+                        </tr>                    
+                        <tr *ngFor="let itemrow of bolConcessionForm.controls.conditionItemsRows.controls; let i=index">
                             <td># {{i + 1}}</td>
                             <td>{{itemrow.get('conditionType').value.description}}</td>
                             <td>{{itemrow.get('conditionProduct').value.description}}</td>
@@ -264,7 +311,7 @@
                     </div>
                     <table class="form-concessions-table" formArrayName="conditionItemsRows" style="width:100%;">
                         <thead class="form-concessions-table-headings">
-                            <tr *ngIf="cashConcessionForm.controls.conditionItemsRows.controls.length > 0">
+                            <tr *ngIf="bolConcessionForm.controls.conditionItemsRows.controls.length > 0">
                                 <th>Condition Type</th>
                                 <th>Product Type</th>
                                 <th>Interest Rate</th>
@@ -277,41 +324,41 @@
                             </tr>
                         </thead>
                         <tbody class="form-concessions-table-content">
-                            <tr *ngIf="cashConcessionForm.controls.conditionItemsRows.controls.length == 0">
+                            <tr *ngIf="bolConcessionForm.controls.conditionItemsRows.controls.length == 0">
                                 <td colspan="8" class="searchEmptyState">
                                     No conditions has been added
                                 </td>
                             </tr>
-                            <tr *ngFor="let itemrow of cashConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
+                            <tr *ngFor="let itemrow of bolConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
                                 <td class="length-long">
                                     <input formControlName="concessionConditionId" style="display: none;" />
-                                    <!-- Condition type -->
+                                  
                                     <select formControlName="conditionType" (change)="conditionTypeChanged(i)">
                                         <option *ngFor="let conditionTypeOption of conditionTypes" [ngValue]="conditionTypeOption">{{conditionTypeOption?.description}}</option>
                                     </select>
                                 </td>
                                 <td class="length-long">
-                                    <!-- Product type -->
+                                 
                                     <select formControlName="conditionProduct" *ngIf="selectedConditionTypes[i] != null">
                                         <option *ngFor="let conditionProductOption of selectedConditionTypes[i].conditionProducts" [ngValue]="conditionProductOption">{{conditionProductOption?.description}}</option>
                                     </select>
                                 </td>
-                                <!-- Interest rate -->
+                              
                                 <td class="length-short"><input type="text" numbersOnly="true" formControlName="interestRate" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableInterestRate ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
-                                <!-- Volume -->
+                            
                                 <td class="length-short"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionVolume ? null : ''" /></td>
-                                <!-- Value -->
+                             
                                 <td class="length-short"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionValue ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
-                                <!-- Turnover -->
+                            
                                 <td class="length-medium"><input type="text" numbersOnly="true" formControlName="expectedTurnoverValue" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableExpectedTurnoverValue ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
-                                <!-- Period type -->
+                             
                                 <td class="length-medium">
 
                                     <select formControlName="periodType">
                                         <option *ngFor="let periodTypeOption of periodTypes" [ngValue]="periodTypeOption">{{periodTypeOption?.description}}</option>
                                     </select>
                                 </td>
-                                <!-- Period -->
+                             
                                 <td class="length-long">
 
                                     <select formControlName="period">
@@ -346,13 +393,13 @@
                             <th>Date</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr *ngIf="!cashConcession.concession.concessionComments || cashConcession.concession.concessionComments.length == 0">
+                    <tbody>                     
+                        <tr *ngIf="!bolConcession.concession.concessionComments || bolConcession.concession.concessionComments.length == 0">
                             <td colspan="4" class="searchEmptyState">
                                 No comments added.
                             </td>
                         </tr>
-                        <tr *ngFor="let comment of cashConcession.concession.concessionComments">
+                        <tr *ngFor="let comment of bolConcession.concession.concessionComments">
                             <td>{{comment.userDescription}}</td>
                             <td>{{comment.concessionSubStatusDescription}}</td>
                             <td>{{comment.comment}}</td>
@@ -379,22 +426,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngIf="!cashConcession.concession.concessionRelationshipDetails || cashConcession.concession.concessionRelationshipDetails.length == 0">
+                        <tr *ngIf="!bolConcession.concession.concessionRelationshipDetails || bolConcession.concession.concessionRelationshipDetails.length == 0">
                             <td colspan="6" class="searchEmptyState">
                                 No related concessions.
                             </td>
                         </tr>
-                        <tr *ngFor="let concessionRelationship of cashConcession.concession.concessionRelationshipDetails">
+                        <tr *ngFor="let concessionRelationship of bolConcession.concession.concessionRelationshipDetails">
                             <td>{{concessionRelationship.relationshipType}}</td>
                             <td>
                                 <span *ngIf="concessionRelationship.parentConcessionReference == concessionReferenceId"><strong>**</strong></span>
-                                <span *ngIf="concessionRelationship.parentIsActive"><a href="#" target="_blank" [routerLink]="['/cash-view-concession', riskGroup.number, concessionRelationship.parentConcessionReference]">{{concessionRelationship.parentConcession}}</a></span>
+                                <span *ngIf="concessionRelationship.parentIsActive"><a href="#" target="_blank" [routerLink]="['/bol-view-concession', riskGroup.number, concessionRelationship.parentConcessionReference]">{{concessionRelationship.parentConcession}}</a></span>
                                 <span *ngIf="!concessionRelationship.parentIsActive">{{concessionRelationship.parentConcession}}</span>
                             </td>
                             <td>{{concessionRelationship.relationship}}</td>
                             <td>
                                 <span *ngIf="concessionRelationship.childConcessionReference == concessionReferenceId"><strong>**</strong></span>
-                                <span *ngIf="concessionRelationship.childIsActive"><a href="#" target="_blank" [routerLink]="['/cash-view-concession', riskGroup.number, concessionRelationship.childConcessionReference]">{{concessionRelationship.childConcession}}</a></span>
+                                <span *ngIf="concessionRelationship.childIsActive"><a href="#" target="_blank" [routerLink]="['/bol-view-concession', riskGroup.number, concessionRelationship.childConcessionReference]">{{concessionRelationship.childConcession}}</a></span>
                                 <span *ngIf="!concessionRelationship.childIsActive">{{concessionRelationship.childConcession}}</span>
                             </td>
                             <td>{{concessionRelationship.date | date: 'yyyy/MM/dd'}}</td>
@@ -432,6 +479,6 @@
     </div>
 </form>
 
-<!--<pre>{{cashConcessionForm.value | json}}</pre>-->
+<!--<pre>{{bolConcessionForm.value | json}}</pre>-->
 
 <p>&nbsp;</p>

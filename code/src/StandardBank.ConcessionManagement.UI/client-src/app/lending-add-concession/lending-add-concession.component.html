@@ -1,4 +1,4 @@
-﻿<!-- Banner expanded -->
+<!-- Banner expanded -->
 <div class="col-md-12 banner">
     <div class="row">
         <div class="lending-banner-title">
@@ -98,6 +98,10 @@
     </div>
     <div class="col-md-7 col-md-offset-1">
         <div class="row">
+            <label>Prime</label>          
+            <input name="prime" value="{{primeRate}}" type="text" required class="form-control" disabled="disabled">
+        </div>
+        <div class="row">
             <label>Motivation</label>
             <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="saveMessage ? '' : null"></textarea>
         </div>
@@ -118,7 +122,7 @@
                 <th>Account No</th>
                 <th>Limit</th>
                 <th>Term (Months)</th>
-                <th>MAP</th>
+                <th>Prime -/+</th>
                 <th>Initiation Fee (%)</th>
                 <th>Review Fee (%)</th>
                 <th></th>

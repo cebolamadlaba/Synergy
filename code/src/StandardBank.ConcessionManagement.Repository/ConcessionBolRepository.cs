@@ -113,26 +113,34 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Update(ConcessionBol model)
         {
-            //using (var db = _dbConnectionFactory.Connection())
-            //{
-            //    db.Execute(@"UPDATE [dbo].[tblConcessionBol]
-            //                SET [fkConcessionId] = @ConcessionId, [fkConcessionDetailId] = @ConcessionDetailId, [fkTransactionGroupId] = @TransactionGroupId, [fkBusinesOnlineTransactionTypeId] = @BusinesOnlineTransactionTypeId, [BolUseId] = @BolUseId, [TransactionVolume] = @TransactionVolume, [TransactionValue] = @TransactionValue, [Fee] = @Fee
-            //                WHERE [pkConcessionBolId] = @Id",
-            //        new
-            //        {
-            //            Id = model.Id,
-            //            ConcessionId = model.ConcessionId,
-            //            ConcessionDetailId = model.ConcessionDetailId,
-            //            TransactionGroupId = model.TransactionGroupId,
-            //            BusinesOnlineTransactionTypeId = model.BusinesOnlineTransactionTypeId,
-            //            BolUseId = model.BolUseId,
-            //            TransactionVolume = model.TransactionVolume,
-            //            TransactionValue = model.TransactionValue,
-            //            Fee = model.Fee
-            //        });
-            //}
+            try
+            {
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    db.Execute(@"UPDATE [dbo].[tblConcessionBol] set [fkConcessionId] = @fkConcessionId, [fkConcessionDetailId] = @fkConcessionDetailId, [fkLegalEntityBOLUserId] = @fkLegalEntityBOLUserId, [fkChargeCodeId] = @fkChargeCodeId, [LoadedRate] = @LoadedRate, [ApprovedRate] = @ApprovedRate
+                WHERE [pkConcessionBolId] = @Id",
+                        new
+                        {
+                            Id = model.Id,
+                            fkConcessionId = model.ConcessionId,
+                            fkConcessionDetailId = model.ConcessionDetailId,
+                            fkLegalEntityBOLUserId = model.fkLegalEntityBOLUserId,
+                            fkChargeCodeId = model.fkChargeCodeId,
+                            LoadedRate = model.LoadedRate,
+                            ApprovedRate = model.ApprovedRate
+                        });
 
-            _concessionDetailRepository.Update(model);
+
+
+                }
+
+                _concessionDetailRepository.Update(model);
+            }
+            catch (System.Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         /// <summary>

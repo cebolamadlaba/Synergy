@@ -91,6 +91,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// The centre repository
         /// </summary>
         private readonly ICentreRepository _centreRepository;
+        private readonly IPrimeRateRepository _primeRateRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionManager"/> class.
@@ -117,7 +118,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IUserManager userManager, IConcessionInboxViewRepository concessionInboxViewRepository,
             IConcessionDetailRepository concessionDetailRepository,
             IConcessionConditionViewRepository concessionConditionViewRepository,
-            IMiscPerformanceRepository miscPerformanceRepository, ICentreRepository centreRepository)
+            IMiscPerformanceRepository miscPerformanceRepository, ICentreRepository centreRepository, IPrimeRateRepository primeRateRepository)
         {
             _concessionRepository = concessionRepository;
             _lookupTableManager = lookupTableManager;
@@ -133,6 +134,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionConditionViewRepository = concessionConditionViewRepository;
             _miscPerformanceRepository = miscPerformanceRepository;
             _centreRepository = centreRepository;
+            _primeRateRepository = primeRateRepository;
         }
 
         /// <summary>
@@ -174,7 +176,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                         break;
                     case Constants.Roles.PCM:
-                    case Constants.Roles.HeadOffice:                      
+                    case Constants.Roles.HeadOffice:
 
                         //we will only look for concessions with status BCM Pending..
                         var pendingStatusIds = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.PcmPending);
@@ -351,7 +353,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 userConcessions.ShowActionedConcessions = true;
             }
 
-          
+
 
             return userConcessions;
         }
@@ -428,8 +430,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             //we will only look for concessions with status BCM Pending..
             var bcmpendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.BcmPending);
-           
-            var concessions = _concessionInboxViewRepository.ReadbyPCMPending(null,null, DateTime.Today, new[] { bcmpendingStatusId});
+
+            var concessions = _concessionInboxViewRepository.ReadbyPCMPending(null, null, DateTime.Today, new[] { bcmpendingStatusId });
 
             var approvedConcessionDetails = new List<SearchConcessionDetail>();
             foreach (var concession in concessions.OrderByDescending(_ => _.DateApproved ?? _.ConcessionDate))
@@ -439,7 +441,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                     RiskGroupNumber = concession.RiskGroupNumber,
                     RiskGroupName = concession.RiskGroupName,
-                    Status =  concession.Status + " - " +concession.SubStatus,
+                    Status = concession.Status + " - " + concession.SubStatus,
                     ConcessionType = concession.ConcessionType,
                     ExpiryDate = concession.ExpiryDate,
                     DateApproved = concession.DateApproved,
@@ -455,7 +457,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return approvedConcessionDetails;
         }
 
-        public IEnumerable<SearchConcessionDetail> SearchConsessions(int region, int businesscentre, string status,DateTime datefilter, int userid)
+        public IEnumerable<SearchConcessionDetail> SearchConsessions(int region, int businesscentre, string status, DateTime datefilter, int userid)
         {
             //we will only look for concessions with status BCM Pending..
 
@@ -486,10 +488,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return approvedConcessionDetails;
 
-           
+
 
         }
 
+        /// <summary>
+        /// Gets the applicable prime rate for the timeframe
+        /// </summary>
+        /// <param name="datefilter"></param>
+        /// <returns></returns>
+        public IEnumerable<string> PrimeRate(DateTime datefilter)
+        {
+           return _primeRateRepository.PrimeRate(datefilter);           
+        }
 
         /// <summary>
         /// Gets the approved concessions for user.
@@ -573,7 +584,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
 
-     
+
 
         /// <summary>
         /// Gets the condition counts.
@@ -1207,7 +1218,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedConcession.DatesentForApproval = currentConcession.DatesentForApproval;
             mappedConcession.HOUserId = currentConcession.HOUserId;
             mappedConcession.PCMUserId = currentConcession.PCMUserId;
-            mappedConcession.RegionId = currentConcession.RegionId;         
+            mappedConcession.RegionId = currentConcession.RegionId;
 
             if (concession.BcmUserId.HasValue)
             {

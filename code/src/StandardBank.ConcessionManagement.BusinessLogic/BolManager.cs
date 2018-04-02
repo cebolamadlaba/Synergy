@@ -61,55 +61,56 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
        
         public BolConcession GetBolConcession(string concessionReferenceId, User user)
         {
-            //var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
+            var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
 
-            //var cashConcessionDetails = _miscPerformanceRepository.GetCashConcessionDetails(concession.Id);
+            var bolConcessionDetails = _miscPerformanceRepository.GetBolConcessionDetails(concession.Id);
 
-            //return new BolConcession
-            //{
-            //    Concession = concession,
-            //    CashConcessionDetails = cashConcessionDetails,
-            //    ConcessionConditions = _concessionManager.GetConcessionConditions(concession.Id),
-            //    CurrentUser = user
-            //};
-            return null;
+            return new BolConcession
+            {
+                Concession = concession,
+                BolConcessionDetails = bolConcessionDetails,
+                ConcessionConditions = _concessionManager.GetConcessionConditions(concession.Id),
+                CurrentUser = user
+            };
+          
         }
 
-        public ConcessionCash DeleteConcessionBol(BolConcessionDetail cashConcessionDetail)
+        public ConcessionBol DeleteConcessionBol(BolConcessionDetail cashConcessionDetail)
         {
-            //var concessionCash = _concessionCashRepository.ReadById(cashConcessionDetail.CashConcessionDetailId);
+            var concessionBol = _concessionBolRepository.ReadById(cashConcessionDetail.BolConcessionDetailId);
 
-            //_concessionCashRepository.Delete(concessionCash);
+            _concessionBolRepository.Delete(concessionBol);
 
-            //return concessionCash;
-            return null;
+            return concessionBol;
+           
         }
 
 
-        public ConcessionCash UpdateConcessionBol(BolConcessionDetail cashConcessionDetail, Concession concession)
+        public ConcessionBol UpdateConcessionBol(BolConcessionDetail bolConcessionDetail, Concession concession)
         {
-            //var mappedConcessionCash = _mapper.Map<ConcessionCash>(cashConcessionDetail);
-            //mappedConcessionCash.ConcessionId = concession.Id;
+            var mappedConcessionBol = _mapper.Map<ConcessionBol>(bolConcessionDetail);
+            mappedConcessionBol.ConcessionId = concession.Id;
+            mappedConcessionBol.Id = bolConcessionDetail.BolConcessionDetailId;
 
-            //if (concession.Status == Constants.ConcessionStatus.Approved ||
-            //    concession.Status == Constants.ConcessionStatus.ApprovedWithChanges)
-            //{
-            //    UpdateApprovedTableNumber(mappedConcessionCash);
-            //    UpdateIsMismatched(mappedConcessionCash);
+            if (concession.Status == Constants.ConcessionStatus.Approved ||
+                concession.Status == Constants.ConcessionStatus.ApprovedWithChanges)
+            {
+                //Loaded rate becomes approved rate
+                mappedConcessionBol.ApprovedRate = mappedConcessionBol.LoadedRate;
 
-            //    _ruleManager.UpdateBaseFieldsOnApproval(mappedConcessionCash);
-            //}
-            //else if (concession.Status == Constants.ConcessionStatus.Pending &&
-            //         concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges)
-            //{
-            //    UpdateApprovedTableNumber(mappedConcessionCash);
-            //}
+                _ruleManager.UpdateBaseFieldsOnApproval(mappedConcessionBol);
+            }
+            else if (concession.Status == Constants.ConcessionStatus.Pending &&
+                     concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges)
+            {
 
-            //_concessionCashRepository.Update(mappedConcessionCash);
+                //Loaded rate becomes approved rate
+                mappedConcessionBol.ApprovedRate = mappedConcessionBol.LoadedRate;
+            }
 
-            //return mappedConcessionCash;
+            _concessionBolRepository.Update(mappedConcessionBol);
 
-            return null;
+            return mappedConcessionBol;          
         }
 
 

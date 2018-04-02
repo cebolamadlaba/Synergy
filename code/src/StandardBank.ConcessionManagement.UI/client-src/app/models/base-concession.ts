@@ -6,4 +6,5 @@ export class BaseConcession {
     concession: Concession;
     concessionConditions: ConcessionCondition[];
     currentUser: User;
+    primeRate: string;
 }

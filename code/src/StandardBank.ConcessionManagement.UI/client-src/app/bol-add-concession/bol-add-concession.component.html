@@ -146,7 +146,7 @@
                     </select>
                 </td>
 
-                <td class="length-long"><input type="number" class="form-control" formControlName="unitcharge" /></td>
+                <td class="length-long"><input type="number" class="form-control" formControlName="unitcharge" [attr.disabled]="saveMessage ? '' : null" /></td>
 
 
 

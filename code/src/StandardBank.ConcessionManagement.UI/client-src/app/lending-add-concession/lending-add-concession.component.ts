@@ -41,6 +41,9 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     selectedConditionTypes: ConditionType[];
     isLoading = true;
 
+    primeRate = "0.00";
+    today: string;
+
     observableReviewFeeTypes: Observable<ReviewFeeType[]>;
     reviewFeeTypes: ReviewFeeType[];
 
@@ -76,6 +79,9 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+
+        this.today = new Date().toISOString().split('T')[0];
+
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
         });
@@ -85,7 +91,8 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             conditionItemsRows: this.formBuilder.array([]),
             mrsCrs: new FormControl(),
             smtDealNumber: new FormControl(),
-            motivation: new FormControl()
+            motivation: new FormControl(),
+            prime: new FormControl()
         });
 
         Observable.forkJoin([
@@ -96,7 +103,8 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             this.lookupDataService.getConditionTypes(),
             this.lookupDataService.getRiskGroup(this.riskGroupNumber),
             this.lookupDataService.getClientAccounts(this.riskGroupNumber),
-            this.lendingService.getlatestCrsOrMrs(this.riskGroupNumber)
+            this.lendingService.getlatestCrsOrMrs(this.riskGroupNumber),
+            this.lookupDataService.getPrimeRate(this.today)
         ]).subscribe(results => {
             this.reviewFeeTypes = <any>results[0];
             this.productTypes = <any>results[1];
@@ -106,6 +114,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             this.riskGroup = <any>results[5];
             this.clientAccounts = <any>results[6];
             this.latestCrsOrMrs = <any>results[7];
+            this.primeRate = <string>results[8];
 
             this.isLoading = false;
         }, error => {

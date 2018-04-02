@@ -18,5 +18,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
 
         public int BOLChargeCodeTypeId { get; set; }
 
+        public int fkChargeCodeTypeId { get; set; }
+
     }
 }

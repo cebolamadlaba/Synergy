@@ -342,7 +342,9 @@ namespace StandardBank.ConcessionManagement.Repository
 					co.ChargeCode [ChargeCode],
 					co.Description [ChargeCodeDesc],
 					co.Length [ChargeCodeLength],
-					bo.BOLUserId
+					bo.BOLUserId,
+                    bl.fkLegalEntityBOLUserId,
+                    bl.fkChargeCodeId
                     FROM [dbo].[tblConcessionDetail] cd
                     join [dbo].[tblConcessionBol] bl on cd.pkConcessionDetailId = bl.fkConcessionDetailId
                     JOIN [dbo].[tblLegalEntityBOLUser] bo on bl.fkLegalEntityBOLUserId = bo.pkLegalEntityBOLUserId

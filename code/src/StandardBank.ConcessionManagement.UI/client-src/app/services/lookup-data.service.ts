@@ -121,6 +121,11 @@ export class LookupDataService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    getPrimeRate(datefilter):Observable<string> {
+        const url = "/api/Concession/PrimeRate/" + datefilter;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
     private extractData(response: Response) {
         let body = response.json();
         return body;

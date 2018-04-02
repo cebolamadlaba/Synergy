@@ -33,5 +33,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Lending
         /// Gets or sets the current user
         /// </summary>
         public User CurrentUser { get; set; }
+
+        public IEnumerable<string> PrimeRate { get; set; }
     }
 }

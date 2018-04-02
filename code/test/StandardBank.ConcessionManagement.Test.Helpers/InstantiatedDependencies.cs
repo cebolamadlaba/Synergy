@@ -468,8 +468,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The AccountExecutiveAssistant repository
         /// </summary>
         public static IAccountExecutiveAssistantRepository AccountExecutiveAssistantRepository =
-            new AccountExecutiveAssistantRepository(DbConnection);     
+            new AccountExecutiveAssistantRepository(DbConnection);
 
+
+        public static IPrimeRateRepository PrimeRateRepository =
+        new PrimeRateRepository(DbConnection);
 
         /// <summary>
         /// The look up table manager
@@ -501,7 +504,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             new ConcessionManager(ConcessionRepository, LookupTableManager, RiskGroupRepository,
                 Mapper, ConcessionConditionRepository, ConcessionCommentRepository,
                 ConcessionRelationshipRepository, AuditRepository, UserManager, ConcessionInboxViewRepository,
-                ConcessionDetailRepository, ConcessionConditionViewRepository, MiscPerformanceRepository, CentreRepository);
+                ConcessionDetailRepository, ConcessionConditionViewRepository, MiscPerformanceRepository, CentreRepository, PrimeRateRepository);
 
         /// <summary>
         /// The rule manager

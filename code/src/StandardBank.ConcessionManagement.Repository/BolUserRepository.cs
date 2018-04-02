@@ -46,7 +46,7 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<BOLChargeCodeType>("SELECT * from rtblBOLChargeCodeType");
+                return db.Query<BOLChargeCodeType>("SELECT pkChargeCodeTypeId,Description  from rtblBOLChargeCodeType");
             }
         }
 

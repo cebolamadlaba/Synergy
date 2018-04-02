@@ -139,6 +139,10 @@
     </div>
     <div class="col-md-7 col-md-offset-1">
         <div class="row">
+            <label>Prime</label>
+            <input name="prime" value="{{primeRate}}" type="text" required class="form-control" disabled="disabled">
+        </div>
+        <div class="row">
             <!-- Motivation -->
             <label>Motivation</label>
             <textarea class="form-control large-input" [attr.disabled]="motivationEnabled ? null : ''" maxlength="800" formControlName="motivation"></textarea>
