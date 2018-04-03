@@ -69,6 +69,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
     observableBolChargeCodes: Observable<BolChargeCode[]>;
     bolchargecodes: BolChargeCode[];
+    bolchargecodesFiltered: BolChargeCode[];
 
     observableLegalEntityBOLUsers: Observable<LegalEntityBOLUser[]>;
     legalentitybolusers: LegalEntityBOLUser[];
@@ -155,7 +156,8 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
           
             this.conditionTypes = <any>results[0];
             this.bolchargecodetypes = <any>results[1];
-            this.bolchargecodes = <any>results[2];
+            this.bolchargecodes = <any>results[2];         
+
             this.legalentitybolusers = <any>results[3];
 
             this.periods = <any>results[4];
@@ -241,19 +243,18 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         currentCondition.get('expectedTurnoverValue').setValue(null);
     }
 
-    //tableNumberChanged(rowIndex) {
-    //    const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+    productTypeChanged(rowIndex) {
 
-    //    if (control.controls[rowIndex].get('tableNumber').value.baseRate)
-    //        control.controls[rowIndex].get('baseRate').setValue(control.controls[rowIndex].get('tableNumber').value.baseRate.toFixed(2));
-    //    else
-    //        control.controls[rowIndex].get('baseRate').setValue(null);
+        const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
 
-    //    if (control.controls[rowIndex].get('tableNumber').value.adValorem)
-    //        control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('tableNumber').value.adValorem.toFixed(3));
-    //    else
-    //        control.controls[rowIndex].get('adValorem').setValue(null);
-    //}
+        let currentCondition = control.controls[rowIndex];
+
+        var selectedproduct = currentCondition.get('product').value;
+
+        this.bolchargecodesFiltered = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId); 
+
+    }
+
 
     addValidationError(validationDetail) {
         if (!this.validationError)

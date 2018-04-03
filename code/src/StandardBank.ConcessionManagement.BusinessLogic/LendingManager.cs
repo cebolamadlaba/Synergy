@@ -119,7 +119,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             //we are only allowed to extend or renew overdraft products
             if (concession.CanExtend || concession.CanRenew)
             {
-                if (!lendingConcessionDetails.Any(_ => _.ProductType == Constants.Lending.ProductType.Overdraft))
+                if (!lendingConcessionDetails.Any(_ => _.ProductType == Constants.Lending.ProductType.Overdraft || _.ProductType == Constants.Lending.ProductType.TempOverdraft))
                 {
                     concession.CanExtend = false;
                     concession.CanRenew = false;
@@ -183,6 +183,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                     if (productType == Constants.Lending.ProductType.Overdraft)
                         concessionLending.ExpiryDate = DateTime.Now.AddMonths(12);
+
+                    else if (productType == Constants.Lending.ProductType.TempOverdraft)
+                        concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
+
                     else if (productType != Constants.Lending.ProductType.Overdraft && concessionLending.Term.HasValue)
                         concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
                 }

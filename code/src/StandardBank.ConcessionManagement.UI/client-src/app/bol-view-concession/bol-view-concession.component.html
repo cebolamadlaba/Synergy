@@ -159,10 +159,11 @@
 
             <tr>
                 <th>Product (Charge Code Type)</th>
+                <th>User ID</th>
                 <th>Charge code</th>
                 <th>Rate</th>
                 <th *ngIf="isApproved">Rate Approved</th>
-                <th>User ID</th>
+
                 <th>Expiry Date</th>
                 <th *ngIf="isApproved">Date Approved</th>
             </tr>
@@ -179,25 +180,25 @@
                     <input formControlName="isExpiring" style="display: none;" />
 
                     <select formControlName="product" class="form-control" [attr.disabled]="canEdit ? null : ''">
-                        <option *ngFor="let productOption of bolchargecodetypes" [ngValue]="productOption">{{productOption.description}}</option>
+                        <option *ngFor="let productOption of bolchargecodetypes" [ngValue]="productOption" (change)="productTypeChanged(i)">{{productOption.description}}</option>
                     </select>
                 </td>
-
+                <td class="length-medium">
+                    <select formControlName="userid" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                        <option *ngFor="let useridOption of legalentitybolusers" [ngValue]="useridOption">{{useridOption.bolUserId}}</option>
+                    </select>
+                </td>
                 <td class="length-long">
                     <select formControlName="chargecode" class="form-control" [attr.disabled]="canEdit ? null : ''">
-                        <option *ngFor="let bolchargecodeOption of bolchargecodes" [ngValue]="bolchargecodeOption">{{bolchargecodeOption.chargeCode}}</option>
+                        <option *ngFor="let bolchargecodeOption of bolchargecodesFiltered" [ngValue]="bolchargecodeOption">{{bolchargecodeOption.description}}</option>
                     </select>
                 </td>
 
                 <td class="length-long"><input type="number" class="form-control" formControlName="unitcharge" [attr.disabled]="canEdit ? null : ''" /></td>
 
                 <td class="length-long" *ngIf="isApproved"><input type="number" class="form-control" formControlName="unitchargeApproved" /></td>
-               
-                <td class="length-medium">
-                    <select formControlName="userid" class="form-control" [attr.disabled]="canEdit ? null : ''">
-                        <option *ngFor="let useridOption of legalentitybolusers" [ngValue]="useridOption">{{useridOption.bolUserId}}</option>
-                    </select>
-                </td>
+
+
 
                 <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" /></td>
                 <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>
@@ -462,9 +463,9 @@
             <button type="button" class="btn btn-success" (click)="bcmApproveConcession()" *ngIf="canBcmApprove">Forward</button>
             <button type="button" class="btn btn-danger" (click)="pcmDeclineConcession()" *ngIf="canPcmApprove">Decline</button>
             <button type="button" class="btn btn-success" (click)="pcmApproveConcession()" *ngIf="canPcmApprove">Approve</button>
-            <button type="button" class="btn btn-success" (click)="extendConcession()" *ngIf="canExtend">Extend</button>
+            <!--<button type="button" class="btn btn-success" (click)="extendConcession()" *ngIf="canExtend">Extend</button>-->
 
-            <button type="button" class="btn btn-success" (click)="editConcession('Renew')" *ngIf="canRenew">Renew</button>
+            <!--<button type="button" class="btn btn-success" (click)="editConcession('Renew')" *ngIf="canRenew">Renew</button>-->
             <button type="button" class="btn btn-success" (click)="editConcession('Resubmit')" *ngIf="canResubmit">Resubmit</button>
             <button type="button" class="btn btn-success" (click)="editConcession('UpdateApproved')" *ngIf="canUpdate">Update</button>
             <button type="button" class="btn btn-warning" (click)="archiveConcession()" *ngIf="canArchive">Archive</button>

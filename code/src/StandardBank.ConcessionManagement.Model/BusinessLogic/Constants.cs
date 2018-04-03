@@ -112,6 +112,7 @@
             public static class ProductType
             {
                 public const string Overdraft = "Overdraft";
+                public const string TempOverdraft = "Temporary Overdraft";
             }
         }
 

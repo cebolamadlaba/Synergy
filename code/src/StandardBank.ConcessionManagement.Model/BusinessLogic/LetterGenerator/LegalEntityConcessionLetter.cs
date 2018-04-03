@@ -216,5 +216,18 @@ namespace StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator
                 return null;
             }
         }
+
+        public IEnumerable<LegalEntityConcession> BusinessOnlineLegalEntityConcessions
+        {
+            get
+            {
+                if (LegalEntityConcessions != null &&
+                    LegalEntityConcessions.Any(_ => _.ConcessionType == "Business Online" && _.HasBusinessOnlineLegalEntityConcessions))
+                    return LegalEntityConcessions.Where(_ => _.ConcessionType == "Business Online" && _.HasBusinessOnlineLegalEntityConcessions)
+                        .OrderBy(_ => _.ConcessionReferenceNumber);
+
+                return null;
+            }
+        }
     }
 }

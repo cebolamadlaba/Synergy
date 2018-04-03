@@ -9,6 +9,7 @@ using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator;
 using StandardBank.ConcessionManagement.Model.Repository;
+using StandardBank.ConcessionManagement.Model.UserInterface.Bol;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
@@ -63,6 +64,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         private readonly ICashManager _cashManager;
 
+        private readonly IBolManager _bolManager;
+
         /// <summary>
         /// The razor renderer
         /// </summary>
@@ -102,7 +105,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IConcessionManager concessionManager, IPdfUtility pdfUtility, IUserManager userManager,
             ILendingManager lendingManager, ILegalEntityRepository legalEntityRepository, ICashManager cashManager,
             IRazorRenderer razorRenderer, ITransactionalManager transactionalManager,
-            IConcessionInboxViewRepository concessionInboxViewRepository, ILookupTableManager lookupTableManager)
+            IConcessionInboxViewRepository concessionInboxViewRepository, ILookupTableManager lookupTableManager,  IBolManager bolManager)
         {
             _templatePath = configurationData.LetterTemplatePath;
             _fileUtiltity = fileUtiltity;
@@ -116,6 +119,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _transactionalManager = transactionalManager;
             _concessionInboxViewRepository = concessionInboxViewRepository;
             _lookupTableManager = lookupTableManager;
+            _bolManager = bolManager;
         }
 
         /// <summary>
@@ -244,6 +248,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     case Constants.ConcessionType.Transactional:
                         PopulateLegalEntityTransactionalConcessionLetter(concessionInboxViews, requestor, legalEntityConcession);
                         break;
+                    case "Business Online":
+                        PopulateLegalEntityBOLConcessionLetter(concessionInboxViews, requestor, legalEntityConcession);
+                        break;
                     default:
                         throw new NotImplementedException(legalEntityConcession.ConcessionType);
                 }
@@ -257,7 +264,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="requestor">The requestor.</param>
         /// <param name="legalEntityConcession">The legal entity concession.</param>
         private void PopulateLegalEntityTransactionalConcessionLetter(IEnumerable<ConcessionInboxView> concessionInboxViews, User requestor,
-            LegalEntityConcession legalEntityConcession)
+           LegalEntityConcession legalEntityConcession)
         {
             var transactionalConcession =
                 _transactionalManager.GetTransactionalConcession(
@@ -283,6 +290,38 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                             PopulateTransactionalConcessionLetter(transactionalConcessionDetail));
                         legalEntityConcession.TransactionalConcessionLetters =
                             transactionalConcessionLetters;
+                    }
+                }
+            }
+        }
+
+        private void PopulateLegalEntityBOLConcessionLetter(IEnumerable<ConcessionInboxView> concessionInboxViews, User requestor,
+           LegalEntityConcession legalEntityConcession)
+        {
+            var bolConcession =
+                _bolManager.GetBolConcession(
+                    legalEntityConcession.ConcessionReferenceNumber,
+                    requestor);
+
+            var bolConcessionDetails =
+                bolConcession.BolConcessionDetails.OrderBy(_ => _.AccountNumber);
+
+            foreach (var concessionInboxView in concessionInboxViews)
+            {
+                foreach (var bolConcessionDetail in bolConcessionDetails)
+                {
+                    if (concessionInboxView.ConcessionDetailId ==
+                        bolConcessionDetail.ConcessionDetailId)
+                    {
+                        var bolConcessionLetters = new List<BusinessOnlineConcessionLetter>();
+
+                        if (legalEntityConcession.BusinessOnlineConcessionLetters != null)
+                            bolConcessionLetters.AddRange(legalEntityConcession.BusinessOnlineConcessionLetters);
+
+                        bolConcessionLetters.Add(
+                            PopulateBusinessOnlineConcessionLetter(bolConcessionDetail));
+                        legalEntityConcession.BusinessOnlineConcessionLetters =
+                            bolConcessionLetters;
                     }
                 }
             }
@@ -512,6 +551,23 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     ? transactionalConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
                     : string.Empty,
                 LegalEntityId = transactionalConcessionDetail.LegalEntityId
+            };
+        }
+
+        private BusinessOnlineConcessionLetter PopulateBusinessOnlineConcessionLetter(
+        BolConcessionDetail bolConcessionDetail)
+        {
+            return new BusinessOnlineConcessionLetter
+            {
+                
+                BOLuserID = bolConcessionDetail.BolUserID,
+                UnitRate = bolConcessionDetail.ApprovedRate,
+                TransactionType = bolConcessionDetail.ChargeCode,
+                ConcessionStartDate = bolConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
+                ConcessionEndDate = bolConcessionDetail.ExpiryDate.HasValue
+                    ? bolConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
+                    : string.Empty,
+                //LegalEntityId = bolConcessionDetail.LegalEntityId
             };
         }
 

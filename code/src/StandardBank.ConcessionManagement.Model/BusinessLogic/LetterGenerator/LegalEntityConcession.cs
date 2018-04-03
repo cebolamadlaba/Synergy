@@ -50,6 +50,9 @@ namespace StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator
         public bool HasLendingConcessionLetters => LendingConcessionLetters != null &&
                                                    LendingConcessionLetters.Any();
 
+        public bool HasBusinessOnlineLegalEntityConcessions => BusinessOnlineConcessionLetters != null &&
+                                                  BusinessOnlineConcessionLetters.Any();
+
         /// <summary>
         /// Gets or sets the lending concession letters.
         /// </summary>
@@ -107,5 +110,7 @@ namespace StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator
         /// The transactional concession letters.
         /// </value>
         public IEnumerable<TransactionalConcessionLetter> TransactionalConcessionLetters { get; set; }
+
+        public IEnumerable<BusinessOnlineConcessionLetter> BusinessOnlineConcessionLetters { get; set; }
     }
 }

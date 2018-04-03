@@ -45,7 +45,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 fileUtiltity.Object, concessionManager.Object, pdfUtility.Object, userManager.Object,
                 lendingManager.Object, legalEntityRepository.Object, cashManager.Object,
                 razorRenderer.Object, transactionalManager.Object, concessionInboxViewRepository.Object,
-                lookupTableManager.Object);
+                lookupTableManager.Object,null);
 
             var concession = new Concession
             {
@@ -133,7 +133,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 fileUtiltity.Object, concessionManager.Object, pdfUtility.Object, userManager.Object,
                 lendingManager.Object, legalEntityRepository.Object, cashManager.Object,
                 razorRenderer.Object, transactionalManager.Object, concessionInboxViewRepository.Object,
-                lookupTableManager.Object);
+                lookupTableManager.Object,null);
 
             var concession = new Concession
             {
@@ -209,7 +209,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 fileUtiltity.Object, concessionManager.Object, pdfUtility.Object, userManager.Object,
                 lendingManager.Object, legalEntityRepository.Object, cashManager.Object,
                 razorRenderer.Object, transactionalManager.Object, concessionInboxViewRepository.Object,
-                lookupTableManager.Object);
+                lookupTableManager.Object,null);
 
             var concession = new Concession
             {

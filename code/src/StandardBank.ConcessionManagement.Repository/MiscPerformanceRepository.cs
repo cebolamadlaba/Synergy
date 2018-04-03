@@ -348,7 +348,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     FROM [dbo].[tblConcessionDetail] cd
                     join [dbo].[tblConcessionBol] bl on cd.pkConcessionDetailId = bl.fkConcessionDetailId
                     JOIN [dbo].[tblLegalEntityBOLUser] bo on bl.fkLegalEntityBOLUserId = bo.pkLegalEntityBOLUserId
-                    JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = bo.fkLegalEntityAccountId
+                    left JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = bo.fkLegalEntityAccountId
                     JOIN [dbo].rtblBOLChargeCode co on bl.fkChargeCodeId = co.pkChargeCodeId
                     where cd.fkConcessionId = @concessionId", new { concessionId });
             }
