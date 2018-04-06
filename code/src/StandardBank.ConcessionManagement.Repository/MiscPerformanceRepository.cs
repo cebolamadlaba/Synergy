@@ -340,6 +340,7 @@ namespace StandardBank.ConcessionManagement.Repository
 					LoadedRate,
 					ApprovedRate,
 					co.ChargeCode [ChargeCode],
+                    ct.Description [ChargeCodeType]
 					co.Description [ChargeCodeDesc],
 					co.Length [ChargeCodeLength],
 					bo.BOLUserId,
@@ -350,6 +351,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     JOIN [dbo].[tblLegalEntityBOLUser] bo on bl.fkLegalEntityBOLUserId = bo.pkLegalEntityBOLUserId
                     left JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = bo.fkLegalEntityAccountId
                     JOIN [dbo].rtblBOLChargeCode co on bl.fkChargeCodeId = co.pkChargeCodeId
+                    JOIN rtblBOLChargeCodeType ct on co.fkChargeCodeTypeId = ct.pkChargeCodeTypeId
                     where cd.fkConcessionId = @concessionId", new { concessionId });
             }
         }

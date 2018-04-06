@@ -15,13 +15,13 @@
 
         public string ChargeCode { get; set; }
 
+        public string ChargeCodeType { get; set; }
+
         public int ChargeLength { get; set; }
 
         public string ApprovedRate { get; set; }
 
         public string LoadedRate { get; set; }
-
-
 
         public int? fkConcessionId { get; set; }
 

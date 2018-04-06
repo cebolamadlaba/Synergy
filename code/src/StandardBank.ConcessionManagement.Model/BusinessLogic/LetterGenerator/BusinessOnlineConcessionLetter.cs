@@ -21,6 +21,8 @@
         /// </value>
         public string TransactionType { get; set; }
 
+        public string ChargeCode { get; set; }
+
         /// <summary>
         /// Gets or sets the fee or rate.
         /// </summary>

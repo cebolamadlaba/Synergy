@@ -265,9 +265,10 @@
         {
             <table border="1" width="100%">
                 <tr style="background: #dbe5f1;">
-                    <td style="padding: 5px; width: 15%;">BOL User ID</td>                  
-                    <td style="padding: 5px; width: 21%;">Channel / Fee Type</td>
-                    <td style="padding: 5px; width: 21%;">Flat Fee<br />(Incl. VAT)</td>
+                    <td style="padding: 5px; width: 15%;">BOL User ID</td>
+                    <td style="padding: 5px; width: 21%;">Product Type</td>
+                    <td style="padding: 5px; width: 21%;">Charge Code</td>
+                    <td style="padding: 5px; width: 21%;">Rate<br />(Incl. VAT)</td>
                     <td style="padding: 5px; width: 14%;">Concession Start Date</td>
                     <td style="padding: 5px; width: 14%;">Concession End Date</td>
                 </tr>
@@ -277,7 +278,8 @@
 
                     <td>@bolConcessionLetter.BOLuserID</td>
                     <td>@bolConcessionLetter.TransactionType</td>
-                    <td>@bolConcessionLetter.UnitRate</td>                  
+                    <td>@bolConcessionLetter.ChargeCode</td>
+                    <td>@bolConcessionLetter.UnitRate</td>
                     <td>@bolConcessionLetter.ConcessionStartDate</td>
                     <td>@bolConcessionLetter.ConcessionEndDate</td>
                 </tr>

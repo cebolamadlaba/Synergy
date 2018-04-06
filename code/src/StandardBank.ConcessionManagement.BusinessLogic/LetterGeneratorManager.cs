@@ -562,7 +562,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 
                 BOLuserID = bolConcessionDetail.BolUserID,
                 UnitRate = bolConcessionDetail.ApprovedRate,
-                TransactionType = bolConcessionDetail.ChargeCode,
+                TransactionType = bolConcessionDetail.ChargeCodeType,
+                ChargeCode = bolConcessionDetail.ChargeCode,
                 ConcessionStartDate = bolConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
                 ConcessionEndDate = bolConcessionDetail.ExpiryDate.HasValue
                     ? bolConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
