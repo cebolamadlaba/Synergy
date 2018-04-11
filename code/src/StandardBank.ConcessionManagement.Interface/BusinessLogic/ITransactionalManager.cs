@@ -1,5 +1,6 @@
 ﻿using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
+using System.Threading.Tasks;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 
@@ -63,5 +64,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="transactionalConcessionDetail">The transactional concession detail.</param>
         /// <returns></returns>
         ConcessionTransactional DeleteConcessionTransactional(TransactionalConcessionDetail transactionalConcessionDetail);
+
+        Task ForwardTransactionalConcession(TransactionalConcession transactionalConcession, User user);
     }
 }

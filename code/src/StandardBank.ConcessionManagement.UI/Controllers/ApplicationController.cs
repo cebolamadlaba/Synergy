@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MyAccess;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic.ScheduledJobs;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
@@ -94,6 +95,40 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(_siteHelper.LoggedInUser(this));
         }
 
+
+        [Route("ValidateUserMyAccess")]
+        public IActionResult ValidateUserMyAccess()
+        {
+            var theuser = _siteHelper.LoggedInUser(this);
+            bool validUserForApplication = this.AuthenticateUserForApplication(theuser.ANumber, "Concession Management Service");
+
+            if (validUserForApplication)
+            {             
+                return Ok(theuser);
+            }
+            else
+            {
+                return NoContent();
+            }
+        }
+
+
+        public bool AuthenticateUserForApplication(string aNumber, string applicationName)
+        {
+            try
+            {
+                MyAccess.AuditServiceClient client = new MyAccess.AuditServiceClient();
+                AuthenticationResult result = client.AuthUserAsync(aNumber, applicationName).Result;
+
+                return result.Result;
+            }
+            catch (Exception ex)
+            {
+                // Either service is offline, or the ANumber is not linked to the provided application.
+            }
+
+            return false;
+        }
         /// <summary>
         /// Tests the logger
         /// </summary>

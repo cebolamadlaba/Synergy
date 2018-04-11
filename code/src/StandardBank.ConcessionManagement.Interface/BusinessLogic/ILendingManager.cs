@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 
@@ -60,5 +61,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <returns></returns>
         LendingFinancial GetLendingFinancialForRiskGroupNumber(int riskGroupNumber);
+
+        Task ForwardLendingConcession(LendingConcession lendingConcession, User user);
     }
 }

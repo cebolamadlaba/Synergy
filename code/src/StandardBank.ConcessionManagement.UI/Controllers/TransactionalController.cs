@@ -92,7 +92,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             transactionalConcession.Concession.Comments  = "Manually forwarded by PCM";
             transactionalConcession.Concession.IsInProgressForwarding = true;
 
-            await ForwardTransactionalConcession(transactionalConcession, user);
+            await _transactionalManager.ForwardTransactionalConcession(transactionalConcession, user);
 
             return Ok(_transactionalManager.GetTransactionalConcession(detail.ReferenceNumber, user));
         }
@@ -159,47 +159,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                     transactionalConcession.Concession.Comments, user));
         }
 
-        private async Task ForwardTransactionalConcession(TransactionalConcession transactionalConcession, User user)
-        {
-            var databaseTransactionalConcession =
-                _transactionalManager.GetTransactionalConcession(transactionalConcession.Concession.ReferenceNumber,
-                    user);
-
-            //if there are any conditions that have been removed, delete them
-            foreach (var condition in databaseTransactionalConcession.ConcessionConditions)
-                if (transactionalConcession.ConcessionConditions.All(
-                    _ => _.ConcessionConditionId != condition.ConcessionConditionId))
-                    await _mediator.Send(new DeleteConcessionCondition(condition, user));
-
-            //if there are any cash concession details that have been removed delete them
-            foreach (var transactionalConcessionDetail in databaseTransactionalConcession
-                .TransactionalConcessionDetails)
-                if (transactionalConcession.TransactionalConcessionDetails.All(
-                    _ => _.TransactionalConcessionDetailId !=
-                         transactionalConcessionDetail.TransactionalConcessionDetailId))
-                    await _mediator.Send(new DeleteTransactionalConcessionDetail(transactionalConcessionDetail, user));
-
-            //update the concession
-            var concession = await _mediator.Send(new UpdateConcession(transactionalConcession.Concession, user));
-
-            //add all the new conditions and cash details and comments
-            foreach (var transactionalConcessionDetail in transactionalConcession.TransactionalConcessionDetails)
-                await _mediator.Send(
-                    new AddOrUpdateTransactionalConcessionDetail(transactionalConcessionDetail, user, concession));
-
-            if (transactionalConcession.ConcessionConditions != null &&
-                transactionalConcession.ConcessionConditions.Any())
-                foreach (var concessionCondition in transactionalConcession.ConcessionConditions)
-                    await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
-
-            if (!string.IsNullOrWhiteSpace(transactionalConcession.Concession.Comments))
-                await _mediator.Send(new AddConcessionComment(concession.Id,
-                    databaseTransactionalConcession.Concession.SubStatusId,
-                    transactionalConcession.Concession.Comments, user));
-
-            //send the notification email
-            await _mediator.Send(new ForwardConcession(transactionalConcession.Concession, user));
-        }
+   
 
         /// <summary>
         /// Creates a new transactional concession

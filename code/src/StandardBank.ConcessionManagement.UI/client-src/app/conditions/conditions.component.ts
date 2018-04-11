@@ -30,7 +30,7 @@ export class ConditionsComponent implements OnInit {
     warningMessage: String;
     isLoading = true;
 
-    periodType: string = "Standard";
+    periodType: string = "Once-off";
 	period: Period;
 
     standardClass: string = "activeWidget";
@@ -75,7 +75,7 @@ export class ConditionsComponent implements OnInit {
     showStandard() {
         this.standardClass = "activeWidget";
         this.ongoingClass = "";
-        this.periodType = "Standard";
+        this.periodType = "Once-off";
 
         this.getConditions();
     }

@@ -36,5 +36,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic.ScheduledJob
         /// The minute to run.
         /// </value>
         int MinuteToRun { get; }
+
+        string type { get; }
     }
 }

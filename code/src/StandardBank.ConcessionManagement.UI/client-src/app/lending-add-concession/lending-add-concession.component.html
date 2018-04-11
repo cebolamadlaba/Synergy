@@ -147,9 +147,10 @@
                 <!-- Limit -->
                 <td class="length-short"><input type="text" numbersOnly="true" formControlName="limit" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
                 <!-- Term -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="term" class="form-control" [attr.disabled]="saveMessage ? '' : null"/></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="term" class="form-control" [attr.disabled]="saveMessage ? '' : null" /></td>
                 <!-- MAP -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="marginAgainstPrime" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
+          
+                <td class="length-short"><input type="text" formControlName="marginAgainstPrime" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="setTwoNumberDecimalMAP($event)" /></td>
                 <!-- Initiation fee -->
                 <td class="length-long"><input type="text" numbersOnly="true" formControlName="initiationFee" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
                 <!-- Review fee type -->

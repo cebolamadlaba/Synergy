@@ -231,8 +231,11 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 					let selectedTransactionType = this.transactionTypes.filter(_ => _.id === transactionalConcessionDetail.transactionTypeId);
 					currentConcession.get('transactionType').setValue(selectedTransactionType[0]);
 
-					let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == transactionalConcessionDetail.legalEntityAccountId);
-					currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
+                    if (this.clientAccounts) {
+
+                        let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == transactionalConcessionDetail.legalEntityAccountId);
+                        currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
+                    }
 
 					this.selectedTransactionTypes[rowIndex] = selectedTransactionType[0];
 

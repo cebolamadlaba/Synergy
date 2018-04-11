@@ -82,7 +82,7 @@
         public static class PeriodType
         {
             public const string Ongoing = "Ongoing";
-            public const string Standard = "Standard";
+            public const string Standard = "Once-off";
         }
 
         public static class ConditionType

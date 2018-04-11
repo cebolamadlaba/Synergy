@@ -34,6 +34,8 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// </summary>
         public int RiskGroupId { get; set; }
 
+        public int CentreId { get; set; }
+
         /// <summary>
         /// Gets or sets the risk group number
         /// </summary>

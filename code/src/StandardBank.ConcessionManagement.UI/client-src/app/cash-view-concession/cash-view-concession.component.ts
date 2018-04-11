@@ -237,8 +237,10 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 					let selectedChannelType = this.channelTypes.filter(_ => _.id == cashConcessionDetail.channelTypeId);
 					currentConcession.get('channelType').setValue(selectedChannelType[0]);
 
-					let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == cashConcessionDetail.legalEntityAccountId);
-					currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
+                    if (this.clientAccounts) {
+                        let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == cashConcessionDetail.legalEntityAccountId);
+                        currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
+                    }
 
                     if (cashConcessionDetail.baseRate)
                         currentConcession.get('baseRate').setValue(cashConcessionDetail.baseRate.toFixed(2));

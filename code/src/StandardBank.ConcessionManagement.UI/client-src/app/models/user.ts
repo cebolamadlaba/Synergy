@@ -25,4 +25,6 @@ export class User {
     isAdminAssistant: boolean;
     contactNumber: string;
     accountExecutiveUserId: number;
+
+    isValidUser: boolean;
 }

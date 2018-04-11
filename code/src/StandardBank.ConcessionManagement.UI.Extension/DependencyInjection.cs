@@ -35,6 +35,7 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             services.AddScoped<IRazorRenderer, FluentRazorRenderer>();
 
             // Add jobs
+            services.AddScoped<IDailyScheduledJob, DailyAutoEscalation>();
             services.AddScoped<IDailyScheduledJob, DueForExpiryNotification>();
             services.AddScoped<IDailyScheduledJob, RenewOngoingConditions>();
             services.AddScoped<IDailyScheduledJob, ImportSapData>();

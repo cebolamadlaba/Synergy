@@ -1,6 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
+using MediatR;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.CashConcession;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCondition;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
@@ -53,6 +58,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         private readonly IRuleManager _ruleManager;
 
+        private readonly IMediator _mediator;
+
         /// <summary>
         /// The misc performance repository
         /// </summary>
@@ -72,7 +79,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public CashManager(IConcessionManager concessionManager, IConcessionCashRepository concessionCashRepository,
             IMapper mapper, IFinancialCashRepository financialCashRepository, ILookupTableManager lookupTableManager,
             ILoadedPriceCashRepository loadedPriceCashRepository, IRuleManager ruleManager,
-            IMiscPerformanceRepository miscPerformanceRepository)
+            IMiscPerformanceRepository miscPerformanceRepository, IMediator mediator)
         {
             _concessionManager = concessionManager;
             _concessionCashRepository = concessionCashRepository;
@@ -82,6 +89,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _loadedPriceCashRepository = loadedPriceCashRepository;
             _ruleManager = ruleManager;
             _miscPerformanceRepository = miscPerformanceRepository;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -281,6 +289,41 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return _mapper.Map<CashFinancial>(
                 _financialCashRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialCash());
+        }
+
+        public async Task ForwardCashConcession(CashConcession cashConcession, User user)
+        {
+            var databaseCashConcession =
+              this.GetCashConcession(cashConcession.Concession.ReferenceNumber, user);
+
+            //if there are any conditions that have been removed, delete them
+            foreach (var condition in databaseCashConcession.ConcessionConditions)
+                if (cashConcession.ConcessionConditions.All(_ => _.ConcessionConditionId != condition.ConcessionConditionId))
+                    await _mediator.Send(new DeleteConcessionCondition(condition, user));
+
+            //if there are any cash concession details that have been removed delete them
+            foreach (var cashConcessionDetail in databaseCashConcession.CashConcessionDetails)
+                if (cashConcession.CashConcessionDetails.All(_ => _.CashConcessionDetailId !=
+                                                                  cashConcessionDetail.CashConcessionDetailId))
+                    await _mediator.Send(new DeleteCashConcessionDetail(cashConcessionDetail, user));
+
+            //update the concession
+            var concession = await _mediator.Send(new UpdateConcession(cashConcession.Concession, user));
+
+            //add all the new conditions and cash details and comments
+            foreach (var cashConcessionDetail in cashConcession.CashConcessionDetails)
+                await _mediator.Send(new AddOrUpdateCashConcessionDetail(cashConcessionDetail, user, concession));
+
+            if (cashConcession.ConcessionConditions != null && cashConcession.ConcessionConditions.Any())
+                foreach (var concessionCondition in cashConcession.ConcessionConditions)
+                    await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+
+            if (!string.IsNullOrWhiteSpace(cashConcession.Concession.Comments))
+                await _mediator.Send(new AddConcessionComment(concession.Id, databaseCashConcession.Concession.SubStatusId,
+                    cashConcession.Concession.Comments, user));          
+
+            //send the notification email
+            await _mediator.Send(new ForwardConcession(cashConcession.Concession, user));
         }
     }
 }

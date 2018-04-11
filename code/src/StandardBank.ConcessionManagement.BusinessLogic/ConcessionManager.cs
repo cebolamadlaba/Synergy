@@ -570,6 +570,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<ConcessionCondition> GetConditions(string periodType, string period, int requestorId)
         {
+            if (periodType == "Standard")
+                periodType = "Once-off";
+
+
             var periodId = _lookupTableManager.GetPeriods().First(x => x.Description == period).Id;
             var periodTypeId = _lookupTableManager.GetPeriodTypes().First(x => x.Description == periodType).Id;
 

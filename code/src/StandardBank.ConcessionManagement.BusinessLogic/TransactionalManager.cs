@@ -1,6 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
+using MediatR;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCondition;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.TransactionalConcession;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
@@ -53,6 +58,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         private readonly IRuleManager _ruleManager;
 
+        private readonly IMediator _mediator;
+
+
         /// <summary>
         /// The misc performance repository
         /// </summary>
@@ -73,7 +81,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IConcessionTransactionalRepository concessionTransactionalRepository, IMapper mapper,
             ILookupTableManager lookupTableManager, IFinancialTransactionalRepository financialTransactionalRepository,
             ILoadedPriceTransactionalRepository loadedPriceTransactionalRepository, IRuleManager ruleManager,
-            IMiscPerformanceRepository miscPerformanceRepository)
+            IMiscPerformanceRepository miscPerformanceRepository, IMediator mediator)
         {
             _concessionManager = concessionManager;
             _concessionTransactionalRepository = concessionTransactionalRepository;
@@ -83,6 +91,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _loadedPriceTransactionalRepository = loadedPriceTransactionalRepository;
             _ruleManager = ruleManager;
             _miscPerformanceRepository = miscPerformanceRepository;
+            _mediator = mediator;
+
         }
 
         /// <summary>
@@ -306,6 +316,48 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private IEnumerable<TransactionalProduct> GetTransactionalProducts(RiskGroup riskGroup)
         {
             return _miscPerformanceRepository.GetTransactionalProducts(riskGroup.Id, riskGroup.Name);
+        }
+
+        public async Task ForwardTransactionalConcession(TransactionalConcession transactionalConcession, User user)
+        {
+            var databaseTransactionalConcession =
+                this.GetTransactionalConcession(transactionalConcession.Concession.ReferenceNumber,
+                    user);
+
+            //if there are any conditions that have been removed, delete them
+            foreach (var condition in databaseTransactionalConcession.ConcessionConditions)
+                if (transactionalConcession.ConcessionConditions.All(
+                    _ => _.ConcessionConditionId != condition.ConcessionConditionId))
+                    await _mediator.Send(new DeleteConcessionCondition(condition, user));
+
+            //if there are any cash concession details that have been removed delete them
+            foreach (var transactionalConcessionDetail in databaseTransactionalConcession
+                .TransactionalConcessionDetails)
+                if (transactionalConcession.TransactionalConcessionDetails.All(
+                    _ => _.TransactionalConcessionDetailId !=
+                         transactionalConcessionDetail.TransactionalConcessionDetailId))
+                    await _mediator.Send(new DeleteTransactionalConcessionDetail(transactionalConcessionDetail, user));
+
+            //update the concession
+            var concession = await _mediator.Send(new UpdateConcession(transactionalConcession.Concession, user));
+
+            //add all the new conditions and cash details and comments
+            foreach (var transactionalConcessionDetail in transactionalConcession.TransactionalConcessionDetails)
+                await _mediator.Send(
+                    new AddOrUpdateTransactionalConcessionDetail(transactionalConcessionDetail, user, concession));
+
+            if (transactionalConcession.ConcessionConditions != null &&
+                transactionalConcession.ConcessionConditions.Any())
+                foreach (var concessionCondition in transactionalConcession.ConcessionConditions)
+                    await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+
+            if (!string.IsNullOrWhiteSpace(transactionalConcession.Concession.Comments))
+                await _mediator.Send(new AddConcessionComment(concession.Id,
+                    databaseTransactionalConcession.Concession.SubStatusId,
+                    transactionalConcession.Concession.Comments, user));
+
+            //send the notification email
+            await _mediator.Send(new ForwardConcession(transactionalConcession.Concession, user));
         }
     }
 }

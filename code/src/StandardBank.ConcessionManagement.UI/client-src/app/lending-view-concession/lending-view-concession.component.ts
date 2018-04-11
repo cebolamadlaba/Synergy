@@ -263,8 +263,11 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
                     this.selectedProductTypes[rowIndex] = selectedProductType[0];
 
-                    let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == lendingConcessionDetail.legalEntityAccountId);
-                    currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
+
+                    if (this.clientAccounts) {
+                        let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == lendingConcessionDetail.legalEntityAccountId);
+                        currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
+                    }
 
                     currentConcession.get('limit').setValue(this.formatDecimal(lendingConcessionDetail.limit));
                     currentConcession.get('term').setValue(lendingConcessionDetail.term);
@@ -430,7 +433,14 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             currentRow.get('reviewFeeType').enable();
             currentRow.get('reviewFee').enable();
             currentRow.get('uffFee').enable();
-        } else {
+        }
+        else if (productType.description === "Temporary Overdraft") {          
+
+            currentRow.get('reviewFeeType').enable();
+            currentRow.get('reviewFee').enable();
+            currentRow.get('uffFee').enable();
+        }
+        else {
             currentRow.get('term').enable();
 
             currentRow.get('reviewFeeType').disable();

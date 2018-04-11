@@ -142,11 +142,22 @@ namespace StandardBank.ConcessionManagement.UI
         /// <param name="builder">The builder.</param>
         private void ScheduleJobs(IApplicationBuilder builder)
         {
-            foreach (var dailyJob in builder.ApplicationServices.GetRequiredService<IEnumerable<IDailyScheduledJob>>())
+            foreach (var torunJob in builder.ApplicationServices.GetRequiredService<IEnumerable<IDailyScheduledJob>>())
             {
                 //the UTC hour needs to be passed to the cron as it works in UTC time
-                var hourToRun = dailyJob.HourToRun - (DateTime.Now.Hour - DateTime.UtcNow.Hour);
-                RecurringJob.AddOrUpdate(dailyJob.Name, () => dailyJob.Run(), Cron.Daily(hourToRun, dailyJob.MinuteToRun));
+                var hourToRun = torunJob.HourToRun - (DateTime.Now.Hour - DateTime.UtcNow.Hour);
+
+                if (torunJob.type == "Recurring")
+                {
+                    //will schedule the job to run every X amount of hours.
+                    //RecurringJob.AddOrUpdate(() => Console.WriteLine("Recurring!"),Cron.DayInterval(torunJob.HourToRun));
+
+                    RecurringJob.AddOrUpdate(torunJob.Name, () => torunJob.Run(), Cron.MinuteInterval(60));
+                }
+                else
+                {
+                    RecurringJob.AddOrUpdate(torunJob.Name, () => torunJob.Run(), Cron.Daily(hourToRun, torunJob.MinuteToRun));
+                }
             }
         }
     }

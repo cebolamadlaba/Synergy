@@ -1,6 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
+using MediatR;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.BolConcession;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCondition;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
@@ -36,18 +41,23 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         private readonly IMiscPerformanceRepository _miscPerformanceRepository;
 
-       
+        private readonly IMediator _mediator;
+
+
         public BolManager(IConcessionManager concessionManager, IConcessionBolRepository concessionBolRepository,
             IMapper mapper, IFinancialBolRepository financialBolRepository, ILookupTableManager lookupTableManager, IRuleManager ruleManager,
-            IMiscPerformanceRepository miscPerformanceRepository)
+            IMiscPerformanceRepository miscPerformanceRepository, IMediator mediator)
         {
             _concessionManager = concessionManager;
             _concessionBolRepository = concessionBolRepository;
             _mapper = mapper;
             _financialBolRepository = financialBolRepository;
-            _lookupTableManager = lookupTableManager;          
+            _lookupTableManager = lookupTableManager;
             _ruleManager = ruleManager;
             _miscPerformanceRepository = miscPerformanceRepository;
+            _mediator = mediator;
+
+           
         }
               
         public ConcessionBol CreateConcessionBol(BolConcessionDetail bolConcessionDetail, Concession concession)
@@ -159,6 +169,41 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return _mapper.Map<BolFinancial>(
                 _financialBolRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialBol());
+        }
+
+        public async Task ForwardBolConcession(BolConcession bolConcession, User user)
+        {
+            var databaseBolConcession =
+              this.GetBolConcession(bolConcession.Concession.ReferenceNumber, user);
+
+            //if there are any conditions that have been removed, delete them
+            foreach (var condition in databaseBolConcession.ConcessionConditions)
+                if (bolConcession.ConcessionConditions.All(_ => _.ConcessionConditionId != condition.ConcessionConditionId))
+                    await _mediator.Send(new DeleteConcessionCondition(condition, user));
+
+            //if there are any bol concession details that have been removed delete them
+            foreach (var bolConcessionDetail in databaseBolConcession.BolConcessionDetails)
+                if (bolConcession.BolConcessionDetails.All(_ => _.BolConcessionDetailId !=
+                                                                  bolConcessionDetail.BolConcessionDetailId))
+                    await _mediator.Send(new DeleteBolConcessionDetail(bolConcessionDetail, user));
+
+            //update the concession
+            var concession = await _mediator.Send(new UpdateConcession(bolConcession.Concession, user));
+
+            //add all the new conditions and bol details and comments
+            foreach (var bolConcessionDetail in bolConcession.BolConcessionDetails)
+                await _mediator.Send(new AddOrUpdateBolConcessionDetail(bolConcessionDetail, user, concession));
+
+            if (bolConcession.ConcessionConditions != null && bolConcession.ConcessionConditions.Any())
+                foreach (var concessionCondition in bolConcession.ConcessionConditions)
+                    await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+
+            if (!string.IsNullOrWhiteSpace(bolConcession.Concession.Comments))
+                await _mediator.Send(new AddConcessionComment(concession.Id, databaseBolConcession.Concession.SubStatusId,
+                    bolConcession.Concession.Comments, user));
+
+            //send the notification email
+            await _mediator.Send(new ForwardConcession(bolConcession.Concession, user));
         }
     }
 }

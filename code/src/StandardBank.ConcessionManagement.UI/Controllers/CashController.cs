@@ -133,50 +133,10 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             cashconsession.Concession.Comments = "Manually forwarded by PCM";
             cashconsession.Concession.IsInProgressForwarding = true;
 
-            await ForwardCashConcession(cashconsession, user);
+            await _cashManager.ForwardCashConcession(cashconsession, user);
 
             return Ok(_cashManager.GetCashConcession(detail.ReferenceNumber, user));
-        }
-
-        private async Task ForwardCashConcession(CashConcession cashConcession, User user)
-        {
-            var databaseCashConcession =
-              _cashManager.GetCashConcession(cashConcession.Concession.ReferenceNumber, user);
-
-            //if there are any conditions that have been removed, delete them
-            foreach (var condition in databaseCashConcession.ConcessionConditions)
-                if (cashConcession.ConcessionConditions.All(_ => _.ConcessionConditionId != condition.ConcessionConditionId))
-                    await _mediator.Send(new DeleteConcessionCondition(condition, user));
-
-            //if there are any cash concession details that have been removed delete them
-            foreach (var cashConcessionDetail in databaseCashConcession.CashConcessionDetails)
-                if (cashConcession.CashConcessionDetails.All(_ => _.CashConcessionDetailId !=
-                                                                  cashConcessionDetail.CashConcessionDetailId))
-                    await _mediator.Send(new DeleteCashConcessionDetail(cashConcessionDetail, user));
-
-            //update the concession
-            var concession = await _mediator.Send(new UpdateConcession(cashConcession.Concession, user));
-
-            //add all the new conditions and cash details and comments
-            foreach (var cashConcessionDetail in cashConcession.CashConcessionDetails)
-                await _mediator.Send(new AddOrUpdateCashConcessionDetail(cashConcessionDetail, user, concession));
-
-            if (cashConcession.ConcessionConditions != null && cashConcession.ConcessionConditions.Any())
-                foreach (var concessionCondition in cashConcession.ConcessionConditions)
-                    await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
-
-            if (!string.IsNullOrWhiteSpace(cashConcession.Concession.Comments))
-                await _mediator.Send(new AddConcessionComment(concession.Id, databaseCashConcession.Concession.SubStatusId,
-                    cashConcession.Concession.Comments, user));
-
-            cashConcession.Concession.SubStatus = Constants.ConcessionSubStatus.PcmPending;
-            cashConcession.Concession.BcmUserId = user.Id;
-            cashConcession.Concession.Comments = "Manually forwarded by PCM";
-            cashConcession.Concession.IsInProgressForwarding = true;
-
-            //send the notification email
-            await _mediator.Send(new ForwardConcession(cashConcession.Concession, user));
-        }
+        }     
 
 
         /// <summary>

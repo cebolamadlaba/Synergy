@@ -516,7 +516,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static ILendingManager LendingManager = new LendingManager(ConcessionManager,
             ConcessionLendingRepository, Mapper, FinancialLendingRepository, LookupTableManager,
-            LoadedPriceLendingRepository, RuleManager, MiscPerformanceRepository,null);
+            LoadedPriceLendingRepository, RuleManager, MiscPerformanceRepository,null,null);
 
         /// <summary>
         /// The transactional manager
@@ -524,13 +524,13 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static ITransactionalManager TransactionalManager =
             new TransactionalManager(ConcessionManager, ConcessionTransactionalRepository, Mapper, LookupTableManager,
                 FinancialTransactionalRepository, LoadedPriceTransactionalRepository, RuleManager,
-                MiscPerformanceRepository);
+                MiscPerformanceRepository, null);
 
         /// <summary>
         /// The cash manager
         /// </summary>
         public static ICashManager CashManager = new CashManager(ConcessionManager, ConcessionCashRepository, Mapper,
             FinancialCashRepository, LookupTableManager, LoadedPriceCashRepository, RuleManager,
-            MiscPerformanceRepository);
+            MiscPerformanceRepository, null);
     }
 }

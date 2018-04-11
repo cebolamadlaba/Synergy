@@ -286,50 +286,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             bolconsession.Concession.Comments = "Manually forwarded by PCM";
             bolconsession.Concession.IsInProgressForwarding = true;
 
-            await ForwardBolConcession(bolconsession, user);
+            await _bolManager.ForwardBolConcession(bolconsession, user);
 
             return Ok(_bolManager.GetBolConcession(detail.ReferenceNumber, user));
         }
 
-        private async Task ForwardBolConcession(BolConcession bolConcession, User user)
-        {
-            var databaseBolConcession =
-              _bolManager.GetBolConcession(bolConcession.Concession.ReferenceNumber, user);
-
-            //if there are any conditions that have been removed, delete them
-            foreach (var condition in databaseBolConcession.ConcessionConditions)
-                if (bolConcession.ConcessionConditions.All(_ => _.ConcessionConditionId != condition.ConcessionConditionId))
-                    await _mediator.Send(new DeleteConcessionCondition(condition, user));
-
-            //if there are any bol concession details that have been removed delete them
-            foreach (var bolConcessionDetail in databaseBolConcession.BolConcessionDetails)
-                if (bolConcession.BolConcessionDetails.All(_ => _.BolConcessionDetailId !=
-                                                                  bolConcessionDetail.BolConcessionDetailId))
-                    await _mediator.Send(new DeleteBolConcessionDetail(bolConcessionDetail, user));
-
-            //update the concession
-            var concession = await _mediator.Send(new UpdateConcession(bolConcession.Concession, user));
-
-            //add all the new conditions and bol details and comments
-            foreach (var bolConcessionDetail in bolConcession.BolConcessionDetails)
-                await _mediator.Send(new AddOrUpdateBolConcessionDetail(bolConcessionDetail, user, concession));
-
-            if (bolConcession.ConcessionConditions != null && bolConcession.ConcessionConditions.Any())
-                foreach (var concessionCondition in bolConcession.ConcessionConditions)
-                    await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
-
-            if (!string.IsNullOrWhiteSpace(bolConcession.Concession.Comments))
-                await _mediator.Send(new AddConcessionComment(concession.Id, databaseBolConcession.Concession.SubStatusId,
-                    bolConcession.Concession.Comments, user));
-
-            bolConcession.Concession.SubStatus = Constants.ConcessionSubStatus.PcmPending;
-            bolConcession.Concession.BcmUserId = user.Id;
-            bolConcession.Concession.Comments = "Manually forwarded by PCM";
-            bolConcession.Concession.IsInProgressForwarding = true;
-
-            //send the notification email
-            await _mediator.Send(new ForwardConcession(bolConcession.Concession, user));
-        }
+    
 
 
     }

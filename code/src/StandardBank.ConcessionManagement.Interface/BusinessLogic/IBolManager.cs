@@ -1,5 +1,6 @@
 ﻿using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Bol;
+using System.Threading.Tasks;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 
@@ -22,5 +23,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         BolView GetBolViewData(int riskGroupNumber);
 
         BolFinancial GetBolFinancialForRiskGroupNumber(int riskGroupNumber);
+
+        Task ForwardBolConcession(BolConcession bolConcession, User user);
     }
 }

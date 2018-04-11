@@ -340,7 +340,7 @@ namespace StandardBank.ConcessionManagement.Repository
 					LoadedRate,
 					ApprovedRate,
 					co.ChargeCode [ChargeCode],
-                    ct.Description [ChargeCodeType]
+                    ct.Description [ChargeCodeType],
 					co.Description [ChargeCodeDesc],
 					co.Length [ChargeCodeLength],
 					bo.BOLUserId,

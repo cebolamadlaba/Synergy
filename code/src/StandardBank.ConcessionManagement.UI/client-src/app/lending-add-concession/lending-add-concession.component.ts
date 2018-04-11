@@ -38,7 +38,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
     observableLatestCrsOrMrs: Observable<number>;
     latestCrsOrMrs: number;
-    selectedConditionTypes: ConditionType[];
+    selectedConditionTypes: ConditionType[]; 
     isLoading = true;
 
     primeRate = "0.00";
@@ -207,7 +207,15 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             currentRow.get('reviewFeeType').enable();
             currentRow.get('reviewFee').enable();
             currentRow.get('uffFee').enable();
-        } else {
+
+        }
+        else if (productType.description === "Temporary Overdraft") {            
+
+            currentRow.get('reviewFeeType').enable();
+            currentRow.get('reviewFee').enable();
+            currentRow.get('uffFee').enable();
+        }
+        else {
             currentRow.get('term').enable();
 
             currentRow.get('reviewFeeType').disable();
@@ -360,6 +368,20 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.formatDecimal($event.target.value);
+    }
+
+    setTwoNumberDecimalMAP($event) {
+
+        //check that it is a valid number
+        if (((isNaN($event.target.value)).valueOf()) == true) {
+
+            alert("Not a valid number for 'Prime -/+'");
+            $event.target.value = 0;
+        }
+        else {
+
+            $event.target.value = this.formatDecimal($event.target.value);
+        }
     }
 
     formatDecimal(itemValue: number) {

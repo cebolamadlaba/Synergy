@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
+using MediatR;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCondition;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.LendingConcession;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
@@ -53,6 +58,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         private readonly IRuleManager _ruleManager;
 
+        private readonly IMediator _mediator;
+
+
         /// <summary>
         /// The misc performance repository
         /// </summary>
@@ -75,7 +83,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IConcessionLendingRepository concessionLendingRepository, IMapper mapper,
             IFinancialLendingRepository financialLendingRepository, ILookupTableManager lookupTableManager,
             ILoadedPriceLendingRepository loadedPriceLendingRepository, IRuleManager ruleManager,
-            IMiscPerformanceRepository miscPerformanceRepository, IPrimeRateRepository primeRateRepository)
+            IMiscPerformanceRepository miscPerformanceRepository, IPrimeRateRepository primeRateRepository, IMediator mediator)
         {
             _concessionManager = concessionManager;
             _concessionLendingRepository = concessionLendingRepository;
@@ -86,6 +94,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _ruleManager = ruleManager;
             _miscPerformanceRepository = miscPerformanceRepository;
             _primeRateRepository = primeRateRepository;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -322,6 +331,44 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private IEnumerable<LendingProduct> GetLendingProducts(int riskGroupId, string riskGroupName)
         {
             return _miscPerformanceRepository.GetLendingProducts(riskGroupId, riskGroupName);
+        }
+
+
+        public async Task ForwardLendingConcession(LendingConcession lendingConcession, User user)
+        {
+            var databaseLendingConcession =
+               this.GetLendingConcession(lendingConcession.Concession.ReferenceNumber, user);
+
+            //if there are any conditions that have been removed, delete them
+            foreach (var condition in databaseLendingConcession.ConcessionConditions)
+                if (lendingConcession.ConcessionConditions.All(_ => _.ConcessionConditionId != condition.ConcessionConditionId))
+                    await _mediator.Send(new DeleteConcessionCondition(condition, user));
+
+            //if there are any lending concession details that have been removed delete them
+            foreach (var lendingConcessionDetail in databaseLendingConcession.LendingConcessionDetails)
+                if (lendingConcession.LendingConcessionDetails.All(_ => _.LendingConcessionDetailId !=
+                                                                        lendingConcessionDetail
+                                                                            .LendingConcessionDetailId))
+                    await _mediator.Send(new DeleteLendingConcessionDetail(lendingConcessionDetail, user));
+
+            //update the concession
+            var concession = await _mediator.Send(new UpdateConcession(lendingConcession.Concession, user));
+
+            //add all the new conditions and lending details and comments
+            foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
+                await _mediator.Send(new AddOrUpdateLendingConcessionDetail(lendingConcessionDetail, user, concession));
+
+            if (lendingConcession.ConcessionConditions != null && lendingConcession.ConcessionConditions.Any())
+                foreach (var concessionCondition in lendingConcession.ConcessionConditions)
+                    await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+
+            if (!string.IsNullOrWhiteSpace(lendingConcession.Concession.Comments))
+                await _mediator.Send(new AddConcessionComment(concession.Id, databaseLendingConcession.Concession.SubStatusId,
+                    lendingConcession.Concession.Comments, user));
+
+            //send the notification email
+            await _mediator.Send(new ForwardConcession(lendingConcession.Concession, user));
+
         }
     }
 }
