@@ -121,7 +121,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var mappedUser = _mapper.Map<User>(user);
 
             mappedUser.UserRoles = GetUserRoles(user.Id);
-            mappedUser.RoleId = mappedUser.UserRoles.First().Id;
+            if (mappedUser.UserRoles.Count() > 0)
+                mappedUser.RoleId = mappedUser.UserRoles.FirstOrDefault().Id;
 
             mappedUser.UserCentres = GetUserCentres(user.Id);
             mappedUser.SelectedCentre = mappedUser.UserCentres.FirstOrDefault();

@@ -108,6 +108,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             }
             else
             {
+                //for testing purposes..
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    return Ok(theuser);
+                }
                 return NoContent();
             }
         }
