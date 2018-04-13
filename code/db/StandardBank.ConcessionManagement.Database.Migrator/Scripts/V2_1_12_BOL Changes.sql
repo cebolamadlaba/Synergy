@@ -5,8 +5,6 @@
 );
 GO
 
-
-
 CREATE TABLE [dbo].[rtblBOLChargeCode] (
     [pkChargeCodeId]     INT           IDENTITY (1, 1) NOT NULL,
     [Description]        VARCHAR (250) NULL,
@@ -51,7 +49,6 @@ CREATE TABLE [dbo].[tblProductBOL] (
     CONSTRAINT [FK_tblProductBOL_tblRiskGroup] FOREIGN KEY ([fkRiskGroupId]) REFERENCES [dbo].[tblRiskGroup] ([pkRiskGroupId])
 );
 GO
-
 
 /****** Object:  Table [dbo].[tblConcessionBol]    Script Date: 2018/03/22 11:07:58 AM ******/
 SET ANSI_NULLS ON
