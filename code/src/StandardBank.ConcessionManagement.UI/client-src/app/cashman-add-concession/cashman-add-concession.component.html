@@ -1,4 +1,4 @@
-﻿<!-- Banner expanded -->
+<!-- Banner expanded -->
 <div class="col-md-12 banner">
     <div class="row">
         <div class="lending-banner-title">
@@ -158,7 +158,7 @@
                     <tbody class="secondary-text">
                         <tr *ngIf="cashmanConcessionForm.controls.conditionItemsRows.controls.length == 0">
                             <td colspan="7" class="searchEmptyState">
-                                No conditions has been added
+                                No conditions added
                             </td>
                         </tr>
                         <!-- Loop through concessions here -->
@@ -206,7 +206,7 @@
                         <tbody class="form-concessions-table-content">
                             <tr *ngIf="cashmanConcessionForm.controls.conditionItemsRows.controls.length == 0">
                                 <td colspan="7" class="searchEmptyState">
-                                    No conditions has been added
+                                    No conditions added
                                 </td>
                             </tr>
                             <tr *ngFor="let itemrow of cashmanConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">

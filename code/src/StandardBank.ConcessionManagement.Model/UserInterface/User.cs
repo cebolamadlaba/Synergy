@@ -180,5 +180,9 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         ///   <c>true</c> if this instance can approve; otherwise, <c>false</c>.
         /// </value>
         public bool CanApprove { get; set; }
+
+        public bool Validated { get; set; }
+
+        public string ErrorMessage { get; set; }
     }
 }

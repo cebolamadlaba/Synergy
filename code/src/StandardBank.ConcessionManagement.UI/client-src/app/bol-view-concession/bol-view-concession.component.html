@@ -7,7 +7,7 @@
                 <span class="back-button-text" (click)="goBack()">Back</span>
             </div>
             <div class="col-md-10 banner-main-title">
-                <i class="fa fa-handshake-o" aria-hidden="true"></i> View Business Online Concession - {{concessionReferenceId}}
+                <i class="fa fa-desktop" aria-hidden="true"></i> View Business Online Concession - {{concessionReferenceId}}
                 <span class="label label-warning" style="float: right;">{{bolConcession?.concession?.status}} - {{bolConcession?.concession?.subStatus}}</span>
             </div>
             <div class="col-md-1"></div>
@@ -277,7 +277,7 @@
                     <tbody class="secondary-text">
                         <tr *ngIf="bolConcessionForm.controls.conditionItemsRows.controls.length == 0">
                             <td colspan="8" class="searchEmptyState">
-                                No conditions has been added
+                                No conditions added
                             </td>
                         </tr>                    
                         <tr *ngFor="let itemrow of bolConcessionForm.controls.conditionItemsRows.controls; let i=index">
@@ -327,7 +327,7 @@
                         <tbody class="form-concessions-table-content">
                             <tr *ngIf="bolConcessionForm.controls.conditionItemsRows.controls.length == 0">
                                 <td colspan="8" class="searchEmptyState">
-                                    No conditions has been added
+                                    No conditions added
                                 </td>
                             </tr>
                             <tr *ngFor="let itemrow of bolConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">

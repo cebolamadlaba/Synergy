@@ -19,5 +19,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Bol
 
         public int fkChargeCodeTypeId { get; set; }
 
+        public int length { get; set; }
+
     }
 }

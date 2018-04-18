@@ -25,16 +25,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         private readonly IConcessionManager _concessionManager;
 
-     
+
         private readonly IConcessionBolRepository _concessionBolRepository;
-    
+
         private readonly IMapper _mapper;
-     
+
         private readonly IFinancialBolRepository _financialBolRepository;
 
-     
+
         private readonly ILookupTableManager _lookupTableManager;
-      
+
         private readonly IRuleManager _ruleManager;
         /// <summary>
         /// The misc performance repository
@@ -57,18 +57,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _miscPerformanceRepository = miscPerformanceRepository;
             _mediator = mediator;
 
-           
+
         }
-              
+
         public ConcessionBol CreateConcessionBol(BolConcessionDetail bolConcessionDetail, Concession concession)
         {
             var concessionBol = _mapper.Map<ConcessionBol>(bolConcessionDetail);
             concessionBol.ConcessionId = concession.Id;
             return _concessionBolRepository.Create(concessionBol);
-          
+
         }
 
-       
+
         public BolConcession GetBolConcession(string concessionReferenceId, User user)
         {
             var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
@@ -82,7 +82,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 ConcessionConditions = _concessionManager.GetConcessionConditions(concession.Id),
                 CurrentUser = user
             };
-          
+
         }
 
         public ConcessionBol DeleteConcessionBol(BolConcessionDetail cashConcessionDetail)
@@ -92,9 +92,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionBolRepository.Delete(concessionBol);
 
             return concessionBol;
-           
+
         }
 
+        public Model.UserInterface.Bol.BOLChargeCode CreateBOLChargeCode(Model.UserInterface.Bol.BOLChargeCode bolchargecode)
+        {
+            var mappedbol = _mapper.Map<Model.Repository.BOLChargeCode>(bolchargecode);
+
+            var returned = _concessionBolRepository.Create(mappedbol);
+
+            return bolchargecode;
+
+        }
 
         public ConcessionBol UpdateConcessionBol(BolConcessionDetail bolConcessionDetail, Concession concession)
         {
@@ -120,11 +129,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             _concessionBolRepository.Update(mappedConcessionBol);
 
-            return mappedConcessionBol;          
+            return mappedConcessionBol;
         }
 
 
-      
+
         public BolView GetBolViewData(int riskGroupNumber)
         {
             var bolConcessions = new List<BolConcession>();
@@ -162,7 +171,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
 
-       
+
         public BolFinancial GetBolFinancialForRiskGroupNumber(int riskGroupNumber)
         {
             var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);

@@ -45,6 +45,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         private readonly IMapper _mapper;
 
+        private readonly IRoleRepository _roleRepository;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BusinessCentreManager"/> class.
         /// </summary>
@@ -55,7 +57,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="centreUserRepository">The centre user repository.</param>
         /// <param name="mapper">The mapper.</param>
         public BusinessCentreManager(IMiscPerformanceRepository miscPerformanceRepository, IRegionManager regionManager,
-            IUserManager userManager, ICentreRepository centreRepository, ICentreUserRepository centreUserRepository, IMapper mapper)
+            IUserManager userManager, ICentreRepository centreRepository, ICentreUserRepository centreUserRepository, IMapper mapper, IRoleRepository roleRepository)
         {
             _miscPerformanceRepository = miscPerformanceRepository;
             _regionManager = regionManager;
@@ -63,6 +65,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _centreRepository = centreRepository;
             _centreUserRepository = centreUserRepository;
             _mapper = mapper;
+            _roleRepository = roleRepository;
         }
 
         /// <summary>
@@ -160,8 +163,24 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="centreId">The centre identifier.</param>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        public CentreUser CreateCentreUser(int centreId, int userId)
+        public CentreUser CreateCentreUser(int centreId, int userId, Model.UserInterface.User user)
         {
+            var existingCentresExcept = _centreUserRepository.ReadByUserId(userId).Where(c => c.CentreId != centreId);
+            var currentrole = _roleRepository.ReadById(user.RoleId);
+
+            //if user is in AE(Account-Execitive/ Requestor) or BCM roles, we remove all other centres, as they can only belong to one centre..
+            if (existingCentresExcept != null && existingCentresExcept.Count() > 0)
+            {
+                if (currentrole.RoleName == Constants.Roles.Requestor || currentrole.RoleName == Constants.Roles.BCM)
+                {
+                    //delete all centres, as AE and BCM can only belong to one centre at a time..
+                    foreach (var userCentre in existingCentresExcept)
+                    {
+                        _centreUserRepository.Delete(userCentre);
+                    }
+                }
+            }
+
             return _centreUserRepository.Create(new CentreUser
             {
                 CentreId = centreId,
@@ -177,10 +196,26 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="newCentreId">The new centre identifier.</param>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        public CentreUser UpdateCentreUser(int currentCentreId, int newCentreId, int userId)
+        public CentreUser UpdateCentreUser(int currentCentreId, int newCentreId, int userId, Model.UserInterface.User user)
         {
-            var userCentres = _centreUserRepository.ReadByUserId(userId);
+            var existingCentresExcept = _centreUserRepository.ReadByUserId(userId).Where(c => c.CentreId != currentCentreId);
+            var currentrole = _roleRepository.ReadById(user.RoleId);
 
+            //if user is in AE(Account-Execitive/ Requestor) or BCM roles, we remove all other centres, as they can only belong to one centre..
+            if (existingCentresExcept != null && existingCentresExcept.Count() > 0)
+            {
+                if (currentrole.RoleName == Constants.Roles.Requestor || currentrole.RoleName == Constants.Roles.BCM)
+                {
+                    //delete all centres, as AE and BCM can only belong to one centre at a time..
+                    foreach (var userCentre in existingCentresExcept)
+                    {
+                        _centreUserRepository.Delete(userCentre);
+                    }
+                }
+            }
+
+
+            var userCentres = _centreUserRepository.ReadByUserId(userId);
             foreach (var userCentre in userCentres)
             {
                 if (userCentre.CentreId == currentCentreId)

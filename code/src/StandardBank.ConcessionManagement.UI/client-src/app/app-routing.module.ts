@@ -42,6 +42,8 @@ import { BcmManagementComponent } from './admin/bcm-management/bcm-management.co
 import { AeManagementComponent } from './admin/ae-management/ae-management.component';
 import { AaManagementComponent } from './admin/aa-management/aa-management.component';
 
+import { BOLCHManagementComponent } from './admin/bol-chargecodes/bol-chargecodes.component';
+
 const routes: Routes = [
     { path: '', redirectTo: '/pending-inbox', pathMatch: 'full' },
     { path: 'pending-inbox', component: PendingInboxComponent },
@@ -87,7 +89,9 @@ const routes: Routes = [
     { path: 'admin/pcm-management', component: PcmManagementComponent },
     { path: 'admin/bcm-management', component: BcmManagementComponent },
     { path: 'admin/ae-management', component: AeManagementComponent },
-    { path: 'admin/aa-management', component: AaManagementComponent }
+    { path: 'admin/aa-management', component: AaManagementComponent },
+
+    { path: 'admin/bol-chargecodes', component: BOLCHManagementComponent }
 ];
 
 @NgModule({

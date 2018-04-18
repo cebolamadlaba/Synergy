@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyAccess;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic.ScheduledJobs;
+using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Model.Common;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 
@@ -38,6 +40,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// </summary>
         private readonly IEnumerable<IDailyScheduledJob> _dailyScheduledJobs;
 
+        private readonly ICacheManager _cacheManager;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationController"/> class.
         /// </summary>
@@ -47,12 +51,13 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="dailyScheduledJobs">The daily scheduled jobs.</param>
         public ApplicationController(IExceptionLogRepository exceptionLogRepository,
             ILogger<ApplicationController> logger, ISiteHelper siteHelper,
-            IEnumerable<IDailyScheduledJob> dailyScheduledJobs)
+            IEnumerable<IDailyScheduledJob> dailyScheduledJobs, ICacheManager cacheManager)
         {
             _exceptionLogRepository = exceptionLogRepository;
             _logger = logger;
             _siteHelper = siteHelper;
             _dailyScheduledJobs = dailyScheduledJobs;
+            _cacheManager = cacheManager;
         }
 
         /// <summary>
@@ -100,21 +105,57 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult ValidateUserMyAccess()
         {
             var theuser = _siteHelper.LoggedInUser(this);
-            bool validUserForApplication = this.AuthenticateUserForApplication(theuser.ANumber, "Concession Management Service");
 
-            if (validUserForApplication)
-            {             
-                return Ok(theuser);
-            }
-            else
+
+            Func<Model.UserInterface.User> function = () =>
             {
-                //for testing purposes..
-                if (System.Diagnostics.Debugger.IsAttached)
+               
+                if (theuser == null)
                 {
-                    return Ok(theuser);
+                    //for testing purposes..
+                    if (System.Diagnostics.Debugger.IsAttached)
+                    {
+                        theuser = new Model.UserInterface.User();
+                        theuser.Validated = true;
+                        theuser.ErrorMessage = "";
+
+                        return theuser;
+                    }
+                    return null;
                 }
-                return NoContent();
-            }
+
+                bool validUserForApplication = this.AuthenticateUserForApplication(theuser.ANumber, "Concession Management Service");
+
+                if (validUserForApplication)
+                {
+                    theuser.Validated = true;
+                    theuser.ErrorMessage = "";
+
+                    return theuser;
+                }
+                else
+                {
+                    //for testing purposes..
+                    if (System.Diagnostics.Debugger.IsAttached)
+                    {
+                        theuser.Validated = true;
+                        theuser.ErrorMessage = "";
+
+                        return theuser;
+                    }
+
+                    theuser.Validated = false;
+                    theuser.ErrorMessage = "Not sanctioned for access";
+
+                    return theuser;
+                }
+            };
+
+
+            var applicableuser = _cacheManager.ReturnFromCache(function, 15, CacheKey.UserInterface.SiteHelper.UserAccess,new CacheKeyParameter(nameof(theuser.ANumber), theuser));
+
+            return Ok(applicableuser);
+
         }
 
 

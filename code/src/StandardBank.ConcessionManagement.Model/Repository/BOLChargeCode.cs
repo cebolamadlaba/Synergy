@@ -20,5 +20,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
 
         public int fkChargeCodeTypeId { get; set; }
 
+        public int length { get; set; }
+
     }
 }

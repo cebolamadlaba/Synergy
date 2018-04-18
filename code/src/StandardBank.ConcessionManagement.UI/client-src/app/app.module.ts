@@ -73,6 +73,8 @@ import { BcmManagementComponent } from './admin/bcm-management/bcm-management.co
 import { AeManagementComponent } from './admin/ae-management/ae-management.component';
 import { AaManagementComponent } from './admin/aa-management/aa-management.component';
 
+import { BOLCHManagementComponent } from './admin/bol-chargecodes/bol-chargecodes.component';
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -121,7 +123,8 @@ import { AaManagementComponent } from './admin/aa-management/aa-management.compo
         BcmManagementComponent,
         AeManagementComponent,
         AaManagementComponent,
-        SearchComponent
+        SearchComponent,
+        BOLCHManagementComponent
        
     ],
     imports: [

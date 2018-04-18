@@ -68,13 +68,14 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
     bolchargecodetypes: BolChargeCodeType[];
 
     observableBolChargeCodes: Observable<BolChargeCode[]>;
-    bolchargecodes: BolChargeCode[];
-    bolchargecodesFiltered: BolChargeCode[];
+    bolchargecodes: BolChargeCode[];   
 
     observableLegalEntityBOLUsers: Observable<LegalEntityBOLUser[]>;
     legalentitybolusers: LegalEntityBOLUser[];
 
     selectedConditionTypes: ConditionType[];
+
+    selectedProducts: BolChargeCodeType[];   
 
     observableConditionTypes: Observable<ConditionType[]>;
     conditionTypes: ConditionType[];
@@ -99,6 +100,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
         this.conditionTypes = [new ConditionType()];
         this.selectedConditionTypes = [new ConditionType()];
+        this.selectedProducts = [new BolChargeCodeType()];
         this.clientAccounts = [new ClientAccount()];
 
         this.bolView.riskGroup = new RiskGroup();
@@ -148,9 +150,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
             this.lookupDataService.getBOLChargeCodes(), 
             this.lookupDataService.getLegalEntityBOLUsers(),
             this.lookupDataService.getPeriods(),
-            this.lookupDataService.getPeriodTypes()
-
-             //this.lookupDataService.getLegalEntityBOLUsers(this.riskGroupNumber),         
+            this.lookupDataService.getPeriodTypes()               
            
         ]).subscribe(results => {
           
@@ -175,6 +175,9 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     initConcessionItemRows() {
+
+        this.selectedProducts.push(new BolChargeCodeType());
+
         return this.formBuilder.group({
             product: [''],
             chargecode: [''],
@@ -221,6 +224,8 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         if (confirm("Are you sure you want to remove this row?")) {
             const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
             control.removeAt(index);
+
+            this.selectedProducts.splice(index, 1);
         }
     }
 
@@ -229,6 +234,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         control.removeAt(index);
 
         this.selectedConditionTypes.splice(index, 1);
+       
     }
 
     conditionTypeChanged(rowIndex) {
@@ -246,12 +252,12 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
     productTypeChanged(rowIndex) {
 
         const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+        this.selectedProducts[rowIndex] = control.controls[rowIndex].get('product').value;
 
-        let currentCondition = control.controls[rowIndex];
+        let currentProduct = control.controls[rowIndex];
+        var selectedproduct = currentProduct.get('product').value;
 
-        var selectedproduct = currentCondition.get('product').value;
-
-        this.bolchargecodesFiltered = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId); 
+        this.selectedProducts[rowIndex].bolchargecodes = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId); 
 
     }
 

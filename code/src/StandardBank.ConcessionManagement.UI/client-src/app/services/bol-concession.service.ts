@@ -10,6 +10,9 @@ import { ConcessionCondition } from "../models/concession-condition";
 import { BolConcessionDetail } from "../models/bol-concession-detail";
 import { BolFinancial } from "../models/bol-financial";
 
+import { BolChargeCodeType } from "../models/bol-chargecodetype";
+import { BolChargeCode } from "../models/bol-chargecode";
+
 import { SearchConcessionDetail } from '../models/search-concession-detail';
 import { ApprovedConcessionDetail } from "../models/approved-concession-detail";
 
@@ -68,7 +71,14 @@ export class BolConcessionService {
         let options = new RequestOptions({ headers: headers });
         const url = "/api/Bol/UpdateRecalledBol";
         return this.http.post(url, bolConcession, options).map(this.extractData).catch(this.handleErrorObservable);
-    }   
+    }
+
+    postNewBolChargeCode(bolChargecode: BolChargeCode): Observable<BolChargeCode> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/Bol/NewBolChargeCode";
+        return this.http.post(url, bolChargecode, options).map(this.extractData).catch(this.handleErrorObservable);
+    }
 
     private extractData(response: Response) {
         let body = response.json();

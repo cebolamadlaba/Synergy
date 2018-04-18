@@ -31,16 +31,16 @@ export class PageHeaderComponent implements OnInit {
     getLoggedInUserMyAccess() {
 
         this.observableLoggedInUser = this.userService.getLoggedInUserMyAccess();
-        this.observableLoggedInUser.subscribe((result) => {
+        this.observableLoggedInUser.subscribe(result => {
 
-            if (result == null) {              
+            if (result == null || result.validated == false) {              
                
                 window.location.href = "http://10952iisprdsdc2.za.sbicdirectory.com/ManageUserAccessAudit.htm";
                 return;
-            }
-
-            this.user.isValidUser = false;
+            }           
             
+        }, error => {           
+            this.errorMessage = <any>error;
         });
     }
 }

@@ -10,6 +10,8 @@
             public static class SiteHelper
             {
                 public const string LoggedInUser = "CacheKey.UserInterface.SiteHelper.LoggedInUser";
+
+                public const string UserAccess = "CacheKey.UserInterface.SiteHelper.UserAccess";
             }
         }
 

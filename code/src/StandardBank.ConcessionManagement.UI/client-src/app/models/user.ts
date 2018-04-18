@@ -26,5 +26,8 @@ export class User {
     contactNumber: string;
     accountExecutiveUserId: number;
 
-    isValidUser: boolean;
+    validated: boolean;
+    errorMessage: string;
+
+
 }

@@ -74,6 +74,39 @@ namespace StandardBank.ConcessionManagement.Repository
             }
         }
 
+
+        public BOLChargeCode Create(BOLChargeCode model)
+        {            try
+            {           
+
+                const string sql =
+                    @"INSERT [dbo].[rtblBOLChargeCode] ([Description], [ChargeCode], [Length], [fkChargeCodeTypeId]) 
+                VALUES (@Description, @ChargeCode, @Length, @fkChargeCodeTypeId) 
+                SELECT CAST(SCOPE_IDENTITY() as int)";
+
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    model.pkChargeCodeId = db.Query<int>(sql,
+                        new
+                        {
+                            Description = model.Description,
+                            ChargeCode = model.ChargeCode,
+                            Length = model.length,
+                            fkChargeCodeTypeId = model.fkChargeCodeTypeId 
+                            
+                        }).Single();
+                }
+
+                return model;
+            }
+            catch (System.Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
         /// <summary>
         /// Reads the by identifier.
         /// </summary>
