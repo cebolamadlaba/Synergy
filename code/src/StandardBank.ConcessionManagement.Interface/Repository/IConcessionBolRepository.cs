@@ -15,7 +15,10 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <returns></returns>
         ConcessionBol Create(ConcessionBol model);
 
-        BOLChargeCode Create(BOLChargeCode model);
+
+        BOLChargeCode CreateUpdate(BOLChargeCode model);
+
+        BOLChargeCodeType Create(BOLChargeCodeType model);
 
         /// <summary>
         /// Reads the by identifier.

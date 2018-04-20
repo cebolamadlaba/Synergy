@@ -95,13 +95,23 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         }
 
-        public Model.UserInterface.Bol.BOLChargeCode CreateBOLChargeCode(Model.UserInterface.Bol.BOLChargeCode bolchargecode)
+        public Model.UserInterface.Bol.BOLChargeCode CreateUpdateBOLChargeCode(Model.UserInterface.Bol.BOLChargeCode bolchargecode)
         {
             var mappedbol = _mapper.Map<Model.Repository.BOLChargeCode>(bolchargecode);
+            var returned = _concessionBolRepository.CreateUpdate(mappedbol);
 
-            var returned = _concessionBolRepository.Create(mappedbol);
-
+            bolchargecode.pkChargeCodeId = returned.pkChargeCodeId;
             return bolchargecode;
+
+        }
+
+        public Model.UserInterface.Bol.BOLChargeCodeType CreateBOLChargeCodeType(Model.UserInterface.Bol.BOLChargeCodeType bolchargecodetype)
+        {
+            var mappedboltype = _mapper.Map<Model.Repository.BOLChargeCodeType>(bolchargecodetype);
+            var returned = _concessionBolRepository.Create(mappedboltype);
+
+            bolchargecodetype.pkChargeCodeTypeId = returned.pkChargeCodeTypeId;
+            return bolchargecodetype;
 
         }
 

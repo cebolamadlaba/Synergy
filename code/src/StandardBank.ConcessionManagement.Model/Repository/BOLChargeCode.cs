@@ -22,5 +22,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
 
         public int length { get; set; }
 
+        public bool Active { get; set; }
+
     }
 }

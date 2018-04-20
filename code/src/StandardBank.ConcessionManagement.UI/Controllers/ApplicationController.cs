@@ -42,6 +42,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
         private readonly ICacheManager _cacheManager;
 
+        private readonly IConfigurationData _configurationData;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationController"/> class.
         /// </summary>
@@ -51,13 +53,14 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="dailyScheduledJobs">The daily scheduled jobs.</param>
         public ApplicationController(IExceptionLogRepository exceptionLogRepository,
             ILogger<ApplicationController> logger, ISiteHelper siteHelper,
-            IEnumerable<IDailyScheduledJob> dailyScheduledJobs, ICacheManager cacheManager)
+            IEnumerable<IDailyScheduledJob> dailyScheduledJobs, ICacheManager cacheManager, IConfigurationData configurationData)
         {
             _exceptionLogRepository = exceptionLogRepository;
             _logger = logger;
             _siteHelper = siteHelper;
             _dailyScheduledJobs = dailyScheduledJobs;
             _cacheManager = cacheManager;
+            _configurationData = configurationData;
         }
 
         /// <summary>
@@ -105,6 +108,28 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult ValidateUserMyAccess()
         {
             var theuser = _siteHelper.LoggedInUser(this);
+
+            if(!string.IsNullOrEmpty(_configurationData.EnforceMyAccess) && _configurationData.EnforceMyAccess == "false")
+            {
+                if (theuser == null)
+                {
+                    theuser = new Model.UserInterface.User();
+                    theuser.Validated = true;
+                    theuser.ErrorMessage = "";
+
+                    return Ok(theuser); 
+                }
+                else
+                {
+                    theuser.Validated = true;
+                    theuser.ErrorMessage = "";
+
+                    return Ok(theuser);
+                }
+
+                   
+            }
+
 
 
             Func<Model.UserInterface.User> function = () =>

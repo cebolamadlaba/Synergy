@@ -74,14 +74,24 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
 
 
-        [Route("NewBolChargeCode")]
+        [Route("createupdateBOLChargeCode")]
         [ValidateModel]
-        public async Task<IActionResult> NewBolChargeCode([FromBody]BOLChargeCode bolChargecode)
+        public async Task<IActionResult> CreateUpdateBOLChargeCode([FromBody]BOLChargeCode bolChargecode)
         {
             var user = _siteHelper.LoggedInUser(this);
 
-            var returned =_bolManager.CreateBOLChargeCode(bolChargecode);
-        
+            var returned =_bolManager.CreateUpdateBOLChargeCode(bolChargecode);        
+
+            return Ok(returned);
+        }
+
+        [Route("NewBolChargeCodeType")]
+        [ValidateModel]
+        public async Task<IActionResult> NewBolChargeCodeType([FromBody]BOLChargeCodeType bolChargecodeType)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            var returned = _bolManager.CreateBOLChargeCodeType(bolChargecodeType);
 
             return Ok(returned);
         }

@@ -29,7 +29,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         public ApplicationControllerTest()
         {
             _applicationController = new ApplicationController(MockExceptionLogRepository.Object, _logger.Object,
-                MockSiteHelper.Object, new[] {MockDailyScheduledJob.Object}, null);
+                MockSiteHelper.Object, new[] {MockDailyScheduledJob.Object}, null, null);
         }
 
         /// <summary>

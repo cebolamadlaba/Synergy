@@ -32,6 +32,8 @@ namespace StandardBank.ConcessionManagement.Interface.Common
         string DateDatabaseConnection { get; set; }
         string EmailTemplatePath  { get; set; }
 
+        string EnforceMyAccess { get; set; }
+
         /// <summary>
         /// Gets or sets the letter template path.
         /// </summary>

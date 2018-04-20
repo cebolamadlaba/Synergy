@@ -21,5 +21,8 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Bol
 
         public int length { get; set; }
 
+        public bool Active { get; set; }
+
+
     }
 }

@@ -20,7 +20,7 @@ export class BOLCHManagementComponent implements OnInit {
     validationError: string[];
     saveMessage: string;
     isLoading = true;
-    isSaving = false; 
+    isSaving = false;
 
     observable: Observable<BolChargeCodeType[]>;
     bolchargecodetypes: BolChargeCodeType[];
@@ -31,43 +31,56 @@ export class BOLCHManagementComponent implements OnInit {
     bolchargecodesFiltered: BolChargeCode[];
 
     addBolChargeCodeModel: BolChargeCode;
+    addBolChargeCodeTypeModel: BolChargeCodeType;
 
     observableErrors: Observable<string[]>;
-    observableSave: Observable<boolean>;   
+    observableSave: Observable<boolean>;
 
     @ViewChild('addBOLChargeCodeModal') addBOLChargeCodeModal;
-    @ViewChild('addBS') addBusinessCentreModal2;
+    @ViewChild('addBOLChargeCodeTypeModal') addBOLChargeCodeTypeModal;
 
     actionType: string;
     isBcmAEsLoading = false;
     canAdd = true;
 
-    constructor(private location: Location, @Inject(LookupDataService) private lookupDataService, @Inject(BolConcessionService) private bolConcessionService) {       
+    constructor(private location: Location, @Inject(LookupDataService) private lookupDataService, @Inject(BolConcessionService) private bolConcessionService) {
         this.addBolChargeCodeModel = new BolChargeCode();
-       
+        this.addBolChargeCodeModel.active = true;
+
+        this.addBolChargeCodeTypeModel = new BolChargeCodeType();
+
         this.bolchargecodetypes = [new BolChargeCodeType()];
         this.bolchargecodes = [new BolChargeCode()];
+        this.bolchargecodesFiltered = [new BolChargeCode()];
     }
 
     ngOnInit() {
-        this.loadData();
+        this.loadData(null);
     }
 
-    loadData() {
+    loadData(productype: BolChargeCodeType) {
         this.isLoading = true;
 
-        Observable.forkJoin([         
+        Observable.forkJoin([
             this.lookupDataService.getBOLChargeCodeTypes(),
             this.lookupDataService.getBOLChargeCodes()
         ]).subscribe(results => {
-          
-            this.bolchargecodetypes = <any>results[0];         
 
+            this.bolchargecodetypes = <any>results[0];
             this.bolchargecodes = <any>results[1];
             this.bolchargecodesFiltered = this.bolchargecodes;
 
             if (this.bolchargecodetypes.length > 0) {
-                this.selectedProduct = this.bolchargecodetypes[0];
+
+                if (productype == null) {
+                    this.selectedProduct = this.bolchargecodetypes[0];
+                }
+                else {
+                    this.selectedProduct = this.bolchargecodetypes.filter(c => c.pkChargeCodeTypeId == productype.pkChargeCodeTypeId)[0];
+
+                }
+
+                this.bolchargecodesFiltered = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == this.selectedProduct.pkChargeCodeTypeId);
 
             }
 
@@ -79,121 +92,130 @@ export class BOLCHManagementComponent implements OnInit {
             });
     }
 
-    createBOLChargeCode() {
+    FilterBOLProducts(selection: BolChargeCodeType) {
 
-        this.isSaving = true;     
+        this.selectedProduct = selection;
+        this.bolchargecodesFiltered = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selection.pkChargeCodeTypeId);
+    }
+
+    createupdateBOLChargeCode() {
+
+        this.isSaving = true;
 
         this.isLoading = true;
         this.errorMessage = null;
         this.validationError = null;
         this.saveMessage = null;
-      
+
         if (!this.validationError) {
-            //this.bolConcessionService.postNewBolChargeCode(this.addBolChargeCodeModel).subscribe(entity => {
-            //    console.log("data saved");
-              
-            //    this.saveMessage = "Region created successfully!";
-            //    this.isLoading = false;
-            //}, error => {
-            //    this.errorMessage = <any>error;
-            //    this.isLoading = false;
-            //});
 
-            this.saveMessage = "Region created successfully!";
-             this.isLoading = false;
+            this.addBolChargeCodeModel.fkChargeCodeTypeId = this.selectedProduct.pkChargeCodeTypeId;
+            this.addBolChargeCodeModel.active = true;
 
-            this.addBOLChargeCodeModal.hide()
+
+            this.bolConcessionService.createupdateBOLChargeCode(this.addBolChargeCodeModel).subscribe(entity => {
+                console.log("data saved");
+
+                if (this.actionType == "Add") {
+                    this.saveMessage = "Business Online Charge Code created successfully!";
+                }
+                else if (this.actionType == "Edit") {
+                    this.saveMessage = "Business Online Charge Code updated successfully!";
+                }               
+
+                this.isLoading = false;
+                this.isSaving = false;
+
+                this.loadData(this.selectedProduct);
+
+
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+                this.isSaving = false;
+            });
 
         } else {
             this.isLoading = false;
         }
 
+        //return false;
+
     }
 
 
-    createBusinessCentre() {
+    createBOLChargeCodeType() {
+
         this.isSaving = true;
+
+        this.isLoading = true;
         this.errorMessage = null;
         this.validationError = null;
         this.saveMessage = null;
 
-        //this.addBusinessCentreManagementModel.isActive = true;
-        //this.addBusinessCentreManagementModel.accountExecutives = this.selectedAccountExecutives;
+        if (!this.validationError) {
+            this.bolConcessionService.postNewBolChargeCodeType(this.addBolChargeCodeTypeModel).subscribe(entity => {
+                console.log("data saved");
 
-        //this.observableErrors = this.businessCentreService.validateBusinessCentreManagementModel(this.addBusinessCentreManagementModel);
-        //this.observableErrors.subscribe(errors => {
-        //    if (errors != null && errors.length > 0) {
-        //        this.validationError = errors;
-        //        this.isSaving = false;
-        //    } else {
-        //        this.observableSave = this.businessCentreService.createBusinessCentreManagementModel(this.addBusinessCentreManagementModel);
-        //        this.observableSave.subscribe(errors => {
+                this.saveMessage = "Product created successfully!";
+                this.isLoading = false;
+                this.isSaving = false;
 
-        //            if (this.addBusinessCentreManagementModel.centreId != null && this.addBusinessCentreManagementModel.centreId > 0) {
-        //                this.saveMessage = "Business Centre updated successfully!";
-        //            } else {
-        //                this.saveMessage = "Business Centre created successfully!";
-        //            }
-                    
-        //            this.addBusinessCentreManagementModel = new BusinessCentreManagementModel();
-        //            this.selectedAccountExecutive = null;
-        //            this.selectedAccountExecutives = null;
+                this.loadData(this.selectedProduct);
 
-        //            this.isSaving = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+                this.isSaving = false;
+            });
 
-        //            //after saving reload the data
-        //            this.loadData();
-        //        }, error => {
-        //            this.isSaving = false;
-        //            this.errorMessage = <any>error;
-        //        });
-        //    }
-        //}, error => {
-        //    this.isSaving = false;
-        //    this.errorMessage = <any>error;
-        //});
+        } else {
+            this.isLoading = false;
+        }
     }
 
-    addProduct() {
-        //if (this.selectedAccountExecutive != null) {
-        //    if (this.selectedAccountExecutives == null) {
-        //        this.selectedAccountExecutives = [];
-        //    }
 
-        //    if (!this.selectedAccountExecutives.find(result => result.id == this.selectedAccountExecutive.id)) {
-        //        this.selectedAccountExecutives.push(this.selectedAccountExecutive);
-        //    }
-        //}
+
+    editBOLChargeCode(bolchargecodeOption: BolChargeCode) {
+
+        this.addBOLChargeCodeModal.show();
+        this.actionType = "Edit";
+        this.addBolChargeCodeModel = bolchargecodeOption;
     }
 
-    removeAccountExecutive(index: number) {
-        //this.selectedAccountExecutives.splice(index, 1);
+    deleteBOLChargeCode(bolchargecodeOption: BolChargeCode) {
+
+        this.actionType = "Delete";
+        if (confirm("Are you sure you want to disable the Charge code" + bolchargecodeOption.chargeCode + " ?")) {
+
+            bolchargecodeOption.active = false;
+
+            this.bolConcessionService.createupdateBOLChargeCode(bolchargecodeOption).subscribe(entity => {
+                console.log("data saved");
+
+               if (this.actionType == "Delete") {
+                    this.saveMessage = "Business Online Charge Code disabled successfully!";
+                }
+
+                this.isLoading = false;
+                this.isSaving = false;
+
+                this.loadData(this.selectedProduct);
+
+
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+                this.isSaving = false;
+            });
+
+        }
     }
-
-    //editBusinessCentre(businessCentreManagementModel: BusinessCentreManagementModel) {
-        //this.isBcmAEsLoading = true;
-        //this.addBusinessCentreModal.show();
-        //this.actionType = "Edit";
-        //this.addBusinessCentreManagementModel = businessCentreManagementModel;
-        //this.selectedAccountExecutive = null;
-        //this.selectedAccountExecutives = null;
-
-        //this.observableSelectedAccountExecutives = this.businessCentreService.getBusinessCentreAccountExecutives(businessCentreManagementModel.centreId);
-        //this.observableSelectedAccountExecutives.subscribe(result => {
-        //    if (result != null && result.length > 0)
-        //        this.selectedAccountExecutives = result;
-
-        //    this.isBcmAEsLoading = false;
-        //}, error => {
-        //    this.addBusinessCentreModal.hide();
-        //    this.isBcmAEsLoading = false;
-        //    this.errorMessage = <any>error;
-        //});
-   // }
 
     addBOLChargeCode() {
         this.actionType = "Add";
         this.addBolChargeCodeModel = new BolChargeCode();
+        this.addBolChargeCodeModel.active = true;
 
         if (this.selectedProduct != null) {
 
@@ -203,23 +225,27 @@ export class BOLCHManagementComponent implements OnInit {
         this.addBolChargeCodeModel.description = "";
         this.addBolChargeCodeModel.chargeCode = "";
         this.addBolChargeCodeModel.length = 4;
-       
+
         this.addBOLChargeCodeModal.show();
     }
 
-    addBusinessCentre2() {
+    addBOLChargeCodeType() {
 
-        //this.addBusinessCentreModal.hide();
+        this.actionType = "Add";
+        this.addBolChargeCodeTypeModel = new BolChargeCodeType();
+        this.addBolChargeCodeTypeModel.description = "";
 
-        //this.actionType = "Add2";
-        //this.addBusinessCentreManagementModel = new BusinessCentreManagementModel();
-        //this.selectedAccountExecutive = null;
-        //this.selectedAccountExecutives = null;
-        //this.addBusinessCentreModal2.show();
+        this.addBOLChargeCodeModal.hide();
+        this.addBOLChargeCodeTypeModal.show();
+    }
+
+    closeBOLChargeCodeType() {
+
+        this.addBOLChargeCodeTypeModal.hide();
+        this.addBOLChargeCodeModal.show();
     }
 
     goBack() {
         this.location.back();
     }
-
 }

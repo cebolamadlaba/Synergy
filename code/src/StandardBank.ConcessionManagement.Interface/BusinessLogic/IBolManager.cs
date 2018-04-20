@@ -26,6 +26,8 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 
         Task ForwardBolConcession(BolConcession bolConcession, User user);
 
-        Model.UserInterface.Bol.BOLChargeCode CreateBOLChargeCode(Model.UserInterface.Bol.BOLChargeCode bolchargecode);
+        Model.UserInterface.Bol.BOLChargeCode CreateUpdateBOLChargeCode(Model.UserInterface.Bol.BOLChargeCode bolchargecode);
+
+        Model.UserInterface.Bol.BOLChargeCodeType CreateBOLChargeCodeType(Model.UserInterface.Bol.BOLChargeCodeType bolchargecodetype);
     }
 }
