@@ -79,8 +79,8 @@ export class LookupDataService {
     }
 
 
-    getLegalEntityBOLUsers(): Observable<LegalEntityBOLUser[]> {
-        const url = "/api/Condition/LegalEntityBOLUsers";
+    getLegalEntityBOLUsers(riskGroupNumber): Observable<LegalEntityBOLUser[]> {
+        const url = "/api/Condition/LegalEntityBOLUsers/" + riskGroupNumber;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 

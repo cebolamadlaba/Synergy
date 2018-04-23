@@ -67,5 +67,7 @@
                 return $"{TariffTable}";
             }
         }
+
+        public bool IsActive { get; set; }
     }
 }

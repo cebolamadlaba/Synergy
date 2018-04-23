@@ -1,5 +1,6 @@
 ﻿using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
@@ -66,5 +67,11 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         ConcessionTransactional DeleteConcessionTransactional(TransactionalConcessionDetail transactionalConcessionDetail);
 
         Task ForwardTransactionalConcession(TransactionalConcession transactionalConcession, User user);
+
+        IEnumerable<Model.UserInterface.Transactional.TransactionTableNumber> GetTransactionTableNumbers(bool isActive);
+
+        TransactionType CreateTransactionType(TransactionType transactionType);
+
+        Model.Repository.TransactionTableNumber CreateupdateTransactionTableNumber(Model.UserInterface.Transactional.TransactionTableNumber transactionTableNumber);
     }
 }

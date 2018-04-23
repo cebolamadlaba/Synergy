@@ -4,5 +4,6 @@ export class TransactionTableNumber {
 	tariffTable: number;
 	fee: number;
 	adValorem: number;
-	displayText: string;
+    displayText: string;
+    isActive: boolean;
 }

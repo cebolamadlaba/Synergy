@@ -1,0 +1,2 @@
+﻿update rtblBOLChargeCode
+ - remebr to add isactive, and default is not null

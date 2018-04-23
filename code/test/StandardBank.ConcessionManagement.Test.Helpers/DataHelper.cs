@@ -851,7 +851,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static int GetBolUserId()
         {
             //read all and return the first one
-            var models = InstantiatedDependencies.BolUserRepository.GetLegalEntityBOLUsers();
+            var models = InstantiatedDependencies.BolUserRepository.GetLegalEntityBOLUsers(0);
 
             if (models != null && models.Any())
                 return models.First().pkLegalEntityBOLUserId;
@@ -887,7 +887,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 return GetBolUserId();
 
             //read all and return the first one
-            var models = InstantiatedDependencies.BolUserRepository.GetLegalEntityBOLUsers();
+            var models = InstantiatedDependencies.BolUserRepository.GetLegalEntityBOLUsers(0);
 
             if (models != null && models.Any(_ => _.pkLegalEntityBOLUserId != model.Value))
                 return models.First(_ => _.pkLegalEntityBOLUserId != model.Value).pkLegalEntityBOLUserId;

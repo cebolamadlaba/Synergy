@@ -60,6 +60,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         private readonly IMediator _mediator;
 
+        private readonly ITransactionTableNumberRepository _transactionTableNumberRepository;
+
 
         /// <summary>
         /// The misc performance repository
@@ -81,7 +83,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IConcessionTransactionalRepository concessionTransactionalRepository, IMapper mapper,
             ILookupTableManager lookupTableManager, IFinancialTransactionalRepository financialTransactionalRepository,
             ILoadedPriceTransactionalRepository loadedPriceTransactionalRepository, IRuleManager ruleManager,
-            IMiscPerformanceRepository miscPerformanceRepository, IMediator mediator)
+            IMiscPerformanceRepository miscPerformanceRepository, IMediator mediator, ITransactionTableNumberRepository transactionTableNumberRepository)
         {
             _concessionManager = concessionManager;
             _concessionTransactionalRepository = concessionTransactionalRepository;
@@ -92,6 +94,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _ruleManager = ruleManager;
             _miscPerformanceRepository = miscPerformanceRepository;
             _mediator = mediator;
+            _transactionTableNumberRepository = transactionTableNumberRepository;
 
         }
 
@@ -187,6 +190,24 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 mappedConcessionTransactional.TransactionTableNumberId =
                     databaseTransactionalConcession.TransactionTableNumberId;
             }
+        }
+
+
+        public Model.Repository.TransactionTableNumber CreateupdateTransactionTableNumber(Model.UserInterface.Transactional.TransactionTableNumber transactionTableNumber)
+        {           
+
+            return _transactionTableNumberRepository.CreateupdateTransactionTableNumber(_mapper.Map<Model.Repository.TransactionTableNumber>(transactionTableNumber));
+        }
+
+
+        public TransactionType CreateTransactionType(TransactionType transactionType)
+        {
+           return _transactionTableNumberRepository.Create(transactionType);
+        }
+
+        public IEnumerable<Model.UserInterface.Transactional.TransactionTableNumber> GetTransactionTableNumbers(bool isActive)
+        {
+            return _mapper.Map<IEnumerable<Model.UserInterface.Transactional.TransactionTableNumber>>( _transactionTableNumberRepository.ReadAll().Where(t => t.IsActive == isActive));
         }
 
         /// <summary>

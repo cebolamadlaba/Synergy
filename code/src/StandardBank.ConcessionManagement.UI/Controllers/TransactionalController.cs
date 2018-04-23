@@ -61,6 +61,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult TransactionalView(int riskGroupNumber)
         {
             return Ok(_transactionalManager.GetTransactionalViewData(riskGroupNumber));
+
+
         }
 
         /// <summary>
@@ -89,7 +91,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             transactionalConcession.Concession.SubStatus = Constants.ConcessionSubStatus.PcmPending;
             transactionalConcession.Concession.BcmUserId = user.Id;
-            transactionalConcession.Concession.Comments  = "Manually forwarded by PCM";
+            transactionalConcession.Concession.Comments = "Manually forwarded by PCM";
             transactionalConcession.Concession.IsInProgressForwarding = true;
 
             await _transactionalManager.ForwardTransactionalConcession(transactionalConcession, user);
@@ -112,7 +114,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             return Ok(_transactionalManager.GetTransactionalConcession(transactionalConcession.Concession.ReferenceNumber, user));
         }
-      
+
 
         /// <summary>
         /// Updates the transactional concession.
@@ -159,7 +161,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                     transactionalConcession.Concession.Comments, user));
         }
 
-   
+
 
         /// <summary>
         /// Creates a new transactional concession
@@ -394,6 +396,28 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult TransactionalFinancial(int riskGroupNumber)
         {
             return Ok(_transactionalManager.GetTransactionalFinancialForRiskGroupNumber(riskGroupNumber));
+        }
+
+        [Route("GetTransactionTableNumbers/{isActive}")]
+        public IActionResult GetTransactionTableNumbers(bool isActive)
+        {
+            return Ok(_transactionalManager.GetTransactionTableNumbers(isActive));
+        }
+
+        [Route("CreateTransactionType")]
+        public async Task<IActionResult> CreateTransactionType([FromBody] TransactionType transactionType)
+        {
+            var model = new Model.Repository.TransactionType() { Description = transactionType.Description, IsActive = true };
+
+            return Ok(_transactionalManager.CreateTransactionType(model));
+        }
+
+
+        [Route("CreateupdateTransactionTableNumber")]
+        public async Task<IActionResult> CreateupdateTransactionTableNumber([FromBody] TransactionTableNumber transactionTableNumber)
+        {            
+
+            return Ok(_transactionalManager.CreateupdateTransactionTableNumber(transactionTableNumber));
         }
     }
 }

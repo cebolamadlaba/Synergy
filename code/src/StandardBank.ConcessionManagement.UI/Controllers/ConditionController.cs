@@ -73,10 +73,10 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(_lookupTableManager.GetBOLChargeCodeTypes());
         }
 
-        [Route("LegalEntityBOLUsers")]
-        public IActionResult GetLegalEntityBOLUsers()
+        [Route("LegalEntityBOLUsers/{riskGroupNumber}")]
+        public IActionResult GetLegalEntityBOLUsers(int riskGroupNumber)
         {
-            return Ok(_lookupTableManager.GetLegalEntityBOLUsers());
+            return Ok(_lookupTableManager.GetLegalEntityBOLUsers(riskGroupNumber));
         }
 
         /// <summary>

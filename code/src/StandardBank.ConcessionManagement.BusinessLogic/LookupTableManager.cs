@@ -442,9 +442,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return _mapper.Map<IEnumerable<BOLChargeCodeType>>(chargecodetypes);
         }
 
-        public IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsers()
+        public IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsers(int riskGroupNumber)
         {
-            var bolusers = _bolRepository.GetLegalEntityBOLUsers();
+            var bolusers = _bolRepository.GetLegalEntityBOLUsers(riskGroupNumber);
             return _mapper.Map<IEnumerable<LegalEntityBOLUser>>(bolusers);
         }
 
@@ -564,6 +564,49 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             return transactionTypes;
+        }
+
+        public IEnumerable<TransactionType> GetTransactionTypes(bool isActive)
+        {
+            var transactionTypes = _transactionTypeRepository.ReadAll(isActive);
+
+           return _mapper.Map<IEnumerable<TransactionType>>(transactionTypes);
+          
+        }
+
+        public IEnumerable<ConcessionType> GetConcessionTypes(bool isActive)
+        {
+            var concessionTypes = new List<ConcessionType>();
+            _concessionTypeRepository.ReadAll(isActive);
+
+
+            foreach (var concessiontType in concessionTypes)
+            {
+                var mappedTransactionType = _mapper.Map<ConcessionType>(concessiontType);
+                concessionTypes.Add(mappedTransactionType);
+            }
+
+            return concessionTypes;
+        }
+
+        public IEnumerable<TableNumber> GetTableNumbers(bool isActive)
+        {
+
+            try
+            {
+                var tableNumbers = _tableNumberRepository.ReadAll();
+
+                var newnumbers = _mapper.Map<IEnumerable<TableNumber>>(tableNumbers
+                    .Where(_ => _.IsActive == isActive).OrderBy(_ => _.TariffTable));
+
+                return newnumbers;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
         }
 
         /// <summary>

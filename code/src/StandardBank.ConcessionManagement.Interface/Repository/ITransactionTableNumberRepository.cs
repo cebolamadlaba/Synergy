@@ -28,6 +28,10 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <returns></returns>
         IEnumerable<TransactionTableNumber> ReadAll();
 
+        TransactionType Create(TransactionType model);
+
+        TransactionTableNumber CreateupdateTransactionTableNumber(TransactionTableNumber transactionTableNumber);
+
         /// <summary>
         /// Updates the specified model.
         /// </summary>

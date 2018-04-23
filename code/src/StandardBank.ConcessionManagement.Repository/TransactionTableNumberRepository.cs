@@ -58,6 +58,76 @@ namespace StandardBank.ConcessionManagement.Repository
             return model;
         }
 
+
+
+        public TransactionTableNumber CreateupdateTransactionTableNumber(TransactionTableNumber model)
+        {
+
+           
+                if (model.Id == 0)
+                {
+                    const string sql =
+                    @"INSERT [dbo].[rtblTransactionTableNumber] ([fkTransactionTypeId], [TariffTable], [Fee], [AdValorem],[IsActive]) 
+                        VALUES (@fkTransactionTypeId, @TariffTable, @Fee, @AdValorem,@IsActive) 
+                        SELECT CAST(SCOPE_IDENTITY() as int)";
+
+                    using (var db = _dbConnectionFactory.Connection())
+                    {
+                    model.Id = db.Query<int>(sql,
+                        new
+                        {
+                            fkTransactionTypeId = model.TransactionTypeId,
+                            TariffTable = model.TariffTable,
+                            Fee = model.Fee,
+                            AdValorem = model.AdValorem,
+                            IsActive = true
+                            }).Single();
+                    }
+                }
+                else
+                {
+                    const string sql =
+                   @"Update [dbo].[rtblTransactionTableNumber] set [fkTransactionTypeId] = @fkTransactionTypeId , [TariffTable] =  @TariffTable, [Fee] = @Fee , [AdValorem] = @AdValorem, [IsActive] = @IsActive where pkTransactionTableNumberId = @pkTransactionTableNumberId";
+
+                    using (var db = _dbConnectionFactory.Connection())
+                    {
+                        db.Execute(sql,
+                           new
+                           {
+                               fkTransactionTypeId = model.TransactionTypeId,
+                               TariffTable = model.TariffTable,
+                               Fee = model.Fee,
+                               AdValorem = model.AdValorem,
+                               IsActive = model.IsActive,
+                               pkTransactionTableNumberId = model.Id
+                           });
+                    }
+                }
+
+            //clear out the cache because the data has changed
+            _cacheManager.Remove(CacheKey.Repository.TransactionTableNumberRepository.ReadAll);
+
+            return model;
+
+        }
+
+        public TransactionType Create(TransactionType model)
+        {
+            const string sql = @"INSERT [dbo].[rtblTransactionType] ([fkConcessionTypeId], [Description], [IsActive]) 
+                                VALUES (@fkConcessionTypeId, @Description, @IsActive) 
+                                SELECT CAST(SCOPE_IDENTITY() as int)";
+
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                model.Id = db.Query<int>(sql, new { fkConcessionTypeId = model.ConcessionTypeId, Description = model.Description, IsActive = true }).Single();
+            }
+
+            //clear out the cache because the data has changed
+            _cacheManager.Remove(CacheKey.Repository.TransactionTypeRepository.ReadAll);
+
+            return model;
+        }
+
         /// <summary>
         /// Reads the by identifier.
         /// </summary>

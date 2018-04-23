@@ -28,7 +28,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 MockConcessionTransactionalRepository.Object, InstantiatedDependencies.Mapper,
                 MockLookupTableManager.Object, MockFinancialTransactionalRepository.Object,
                 MockLoadedPriceTransactionalRepository.Object, MockRuleManager.Object,
-                MockMiscPerformanceRepository.Object,null);
+                MockMiscPerformanceRepository.Object,null, null);
         }
 
         /// <summary>

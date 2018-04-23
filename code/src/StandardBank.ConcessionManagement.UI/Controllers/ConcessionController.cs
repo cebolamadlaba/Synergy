@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 
 namespace StandardBank.ConcessionManagement.UI.Controllers
@@ -177,6 +178,25 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult TransactionTypes(string concessionType)
         {
             return Ok(_lookupTableManager.GetTransactionTypesForConcessionType(concessionType));
+        }
+
+        [Route("GetTransactionTypes/{isActive}")]
+        public IActionResult GetTransactionTypes(bool isActive)
+        {
+            return Ok(_lookupTableManager.GetTransactionTypes(isActive));
+        }     
+
+        [Route("ConcessionTypes/{isActive}")]
+        public IActionResult GetConcessionTypes(bool isActive)
+        {
+            return Ok(_lookupTableManager.GetConcessionTypes(isActive));
+        }
+
+
+        [Route("ActiveTableNumbers/{isActive}")]
+        public IActionResult TableNumbers(bool isActive)
+        {
+            return Ok(_lookupTableManager.GetTableNumbers(isActive));
         }
 
         /// <summary>

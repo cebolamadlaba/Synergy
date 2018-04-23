@@ -42,6 +42,8 @@ import { BcmManagementService } from './services/bcm-management.service';
 import { AeManagementService } from './services/ae-management.service';
 import { AaManagementService } from './services/aa-management.service';
 
+import { AdminTransactionTablesService } from './services/admin-transaction-tables.service';
+
 import { ApprovedConcessionFilterPipe } from './filters/approved-concession-filter.pipe';
 import { CashViewConcessionComponent } from './cash-view-concession/cash-view-concession.component';
 import { PricingInvestmentsComponent } from './pricing-investments/pricing-investments.component';
@@ -74,6 +76,8 @@ import { AeManagementComponent } from './admin/ae-management/ae-management.compo
 import { AaManagementComponent } from './admin/aa-management/aa-management.component';
 
 import { BOLCHManagementComponent } from './admin/bol-chargecodes/bol-chargecodes.component';
+import { TransactionTypesManagementComponent } from './admin/transaction-types/transaction-types.component';
+
 
 @NgModule({
     declarations: [
@@ -124,7 +128,8 @@ import { BOLCHManagementComponent } from './admin/bol-chargecodes/bol-chargecode
         AeManagementComponent,
         AaManagementComponent,
         SearchComponent,
-        BOLCHManagementComponent
+        BOLCHManagementComponent,
+        TransactionTypesManagementComponent
        
     ],
     imports: [
@@ -152,7 +157,8 @@ import { BOLCHManagementComponent } from './admin/bol-chargecodes/bol-chargecode
         BcmManagementService,
         AeManagementService,
         AaManagementService,
-        BolConcessionService
+        BolConcessionService,
+        AdminTransactionTablesService
     ],
     bootstrap: [AppComponent]
 })

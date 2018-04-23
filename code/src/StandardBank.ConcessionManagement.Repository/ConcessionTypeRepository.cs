@@ -69,6 +69,11 @@ namespace StandardBank.ConcessionManagement.Repository
             return ReadAll().FirstOrDefault(_ => _.Id == id);
         }
 
+        public IEnumerable<ConcessionType> ReadAll(bool isActive)
+        {
+            return ReadAll().Where(_ => _.IsActive == isActive);
+        }
+
         /// <summary>
         /// Reads all.
         /// </summary>

@@ -43,6 +43,7 @@ import { AeManagementComponent } from './admin/ae-management/ae-management.compo
 import { AaManagementComponent } from './admin/aa-management/aa-management.component';
 
 import { BOLCHManagementComponent } from './admin/bol-chargecodes/bol-chargecodes.component';
+import { TransactionTypesManagementComponent } from './admin/transaction-types/transaction-types.component';
 
 const routes: Routes = [
     { path: '', redirectTo: '/pending-inbox', pathMatch: 'full' },
@@ -91,7 +92,10 @@ const routes: Routes = [
     { path: 'admin/ae-management', component: AeManagementComponent },
     { path: 'admin/aa-management', component: AaManagementComponent },
 
-    { path: 'admin/bol-chargecodes', component: BOLCHManagementComponent }
+    { path: 'admin/bol-chargecodes', component: BOLCHManagementComponent },
+    { path: 'admin/transaction-types', component: TransactionTypesManagementComponent }
+
+    
 ];
 
 @NgModule({

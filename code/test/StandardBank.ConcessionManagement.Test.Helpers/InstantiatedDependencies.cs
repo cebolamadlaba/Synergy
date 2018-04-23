@@ -524,7 +524,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static ITransactionalManager TransactionalManager =
             new TransactionalManager(ConcessionManager, ConcessionTransactionalRepository, Mapper, LookupTableManager,
                 FinancialTransactionalRepository, LoadedPriceTransactionalRepository, RuleManager,
-                MiscPerformanceRepository, null);
+                MiscPerformanceRepository, null, null);
 
         /// <summary>
         /// The cash manager

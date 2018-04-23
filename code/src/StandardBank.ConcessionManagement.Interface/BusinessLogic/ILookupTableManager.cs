@@ -120,10 +120,15 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <returns></returns>
         ConcessionType GetConcessionType(int concessionTypeId);
 
-        /// <summary>
-        /// Gets the review fee types.
-        /// </summary>
-        /// <returns></returns>
+        IEnumerable<TransactionType> GetTransactionTypes(bool isActive);
+
+        IEnumerable<ConcessionType> GetConcessionTypes(bool isActive);
+
+
+            /// <summary>
+            /// Gets the review fee types.
+            /// </summary>
+            /// <returns></returns>
         IEnumerable<ReviewFeeType> GetReviewFeeTypes();
 
         /// <summary>
@@ -146,7 +151,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 
         IEnumerable<BOLChargeCode> GetBOLChargeCodes();
         IEnumerable<BOLChargeCodeType> GetBOLChargeCodeTypes();
-        IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsers();
+        IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsers(int riskGroupNumber);
 
 
         /// <summary>
@@ -181,6 +186,8 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="concessionType">Type of the concession.</param>
         /// <returns></returns>
         IEnumerable<TableNumber> GetTableNumbers(string concessionType);
+
+        IEnumerable<TableNumber> GetTableNumbers(bool isActive);
 
         /// <summary>
         /// Gets the relationship identifier.

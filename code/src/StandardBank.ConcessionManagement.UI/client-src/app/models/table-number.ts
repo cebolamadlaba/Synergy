@@ -4,4 +4,6 @@ export class TableNumber {
     adValorem: number;
     baseRate: number;
     displayText: string;
+    fkConcessionTypeId: number;
+    active: boolean;
 }

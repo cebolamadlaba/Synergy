@@ -50,13 +50,15 @@ namespace StandardBank.ConcessionManagement.Repository
             }
         }
 
-        public IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsers()
+        public IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsers(int riskGroupNumber)
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<LegalEntityBOLUser>(@"SELECT top 100 pkLegalEntityBOLUserId,fkLegalEntityAccountId, BOLUserId,pkLegalEntityId [legalEntityId] ,pkLegalEntityAccountId [legalEntityAccountId]  from tblLegalEntityBOLUser
+                return db.Query<LegalEntityBOLUser>(string.Format(@"SELECT pkLegalEntityBOLUserId,fkLegalEntityAccountId, BOLUserId,pkLegalEntityId [legalEntityId] ,pkLegalEntityAccountId [legalEntityAccountId]  from tblLegalEntityBOLUser
                                                 join tblLegalEntityAccount on tblLegalEntityBOLUser.fkLegalEntityAccountId = tblLegalEntityAccount.pkLegalEntityAccountId
-                                                join tblLegalEntity on tblLegalEntityAccount.fkLegalEntityId = tblLegalEntity.pkLegalEntityId");
+                                                join tblLegalEntity on tblLegalEntityAccount.fkLegalEntityId = tblLegalEntity.pkLegalEntityId
+                                                join tblRiskGroup on tblLegalEntity.fkRiskGroupId = tblRiskGroup.pkRiskGroupId
+												where RiskGroupNumber = {0}", riskGroupNumber));
                                                             }
         }
 
