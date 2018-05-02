@@ -45,7 +45,7 @@ export class BOLCHManagementComponent implements OnInit {
 
     constructor(private location: Location, @Inject(LookupDataService) private lookupDataService, @Inject(BolConcessionService) private bolConcessionService) {
         this.addBolChargeCodeModel = new BolChargeCode();
-        this.addBolChargeCodeModel.active = true;
+        this.addBolChargeCodeModel.isActive = true;
 
         this.addBolChargeCodeTypeModel = new BolChargeCodeType();
 
@@ -63,7 +63,7 @@ export class BOLCHManagementComponent implements OnInit {
 
         Observable.forkJoin([
             this.lookupDataService.getBOLChargeCodeTypes(),
-            this.lookupDataService.getBOLChargeCodes()
+            this.lookupDataService.getBOLChargeCodesAll()
         ]).subscribe(results => {
 
             this.bolchargecodetypes = <any>results[0];
@@ -110,7 +110,7 @@ export class BOLCHManagementComponent implements OnInit {
         if (!this.validationError) {
 
             this.addBolChargeCodeModel.fkChargeCodeTypeId = this.selectedProduct.pkChargeCodeTypeId;
-            this.addBolChargeCodeModel.active = true;
+            this.addBolChargeCodeModel.isActive = true;
 
 
             this.bolConcessionService.createupdateBOLChargeCode(this.addBolChargeCodeModel).subscribe(entity => {
@@ -183,12 +183,12 @@ export class BOLCHManagementComponent implements OnInit {
         this.addBolChargeCodeModel = bolchargecodeOption;
     }
 
-    deleteBOLChargeCode(bolchargecodeOption: BolChargeCode) {
+    disableDetails(bolchargecodeOption: BolChargeCode) {
 
         this.actionType = "Delete";
         if (confirm("Are you sure you want to disable the Charge code" + bolchargecodeOption.chargeCode + " ?")) {
 
-            bolchargecodeOption.active = false;
+            bolchargecodeOption.isActive = false;
 
             this.bolConcessionService.createupdateBOLChargeCode(bolchargecodeOption).subscribe(entity => {
                 console.log("data saved");
@@ -212,10 +212,40 @@ export class BOLCHManagementComponent implements OnInit {
         }
     }
 
+    enableDetails(bolchargecodeOption: BolChargeCode) {
+
+        this.actionType = "Delete";
+        if (confirm("Are you sure you want to enable the Charge code" + bolchargecodeOption.chargeCode + " ?")) {
+
+            bolchargecodeOption.isActive = true;
+
+            this.bolConcessionService.createupdateBOLChargeCode(bolchargecodeOption).subscribe(entity => {
+                console.log("data saved");
+
+                if (this.actionType == "Delete") {
+                    this.saveMessage = "Business Online Charge Code enabled successfully!";
+                }
+
+                this.isLoading = false;
+                this.isSaving = false;
+
+                this.loadData(this.selectedProduct);
+
+
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+                this.isSaving = false;
+            });
+
+        }
+    }
+
+
     addBOLChargeCode() {
         this.actionType = "Add";
         this.addBolChargeCodeModel = new BolChargeCode();
-        this.addBolChargeCodeModel.active = true;
+        this.addBolChargeCodeModel.isActive = true;
 
         if (this.selectedProduct != null) {
 

@@ -5,17 +5,19 @@ import { Observable } from "rxjs";
 import { User } from '../../models/user';
 
 
-import { TransactionType } from "../../models/transaction-type";
-import { TransactionTableNumber } from "../../models/transaction-table-number";
+import { ChannelType } from "../../models/channel-type";
+import { TableNumber } from "../../models/table-number";
+import { LookupDataService } from "../../services/lookup-data.service";
 
-import { AdminTransactionTablesService } from "../../services/admin-transaction-tables.service";
+import { CashConcessionService } from "../../services/cash-concession.service";
+import { ConcessionTypes } from '../../constants/concession-types';
 
 @Component({
     selector: 'app-business-centre',
-    templateUrl: './transaction-types.component.html',
-    styleUrls: ['./transaction-types.component.css']
+    templateUrl: './channel-types.component.html',
+    styleUrls: ['./channel-types.component.css']
 })
-export class TransactionTypesManagementComponent implements OnInit {
+export class ChannelTypesManagementComponent implements OnInit {
 
     errorMessage: string;
     validationError: string[];
@@ -23,16 +25,16 @@ export class TransactionTypesManagementComponent implements OnInit {
     isLoading = true;
     isSaving = false;
 
-    observable: Observable<TransactionType[]>;
-    transactiontypes: TransactionType[];
-    selectedProduct: TransactionType;
+    observable: Observable<ChannelType[]>;
+    channeltypes: ChannelType[];
+    selectedProduct: ChannelType;
 
-    observableTableNumbers: Observable<TransactionTableNumber[]>;
-    tablenumbers: TransactionTableNumber[];
-    tablenumbersFiltered: TransactionTableNumber[];
+    observableTableNumbers: Observable<TableNumber[]>;
+    tablenumbers: TableNumber[];
+    tablenumbersFiltered: TableNumber[];
 
-    addTableNumberModel: TransactionTableNumber;
-    addTransactionTypeModel: TransactionType;
+    addTableNumberModel: TableNumber;
+    addChannelTypeModel: ChannelType;
 
     observableErrors: Observable<string[]>;
     observableSave: Observable<boolean>;
@@ -44,43 +46,45 @@ export class TransactionTypesManagementComponent implements OnInit {
     isBcmAEsLoading = false;
     canAdd = true;
 
-    constructor(private location: Location, @Inject(AdminTransactionTablesService) private admintransactionService) {
-        this.addTableNumberModel = new TransactionTableNumber();
+    constructor(private location: Location, @Inject(CashConcessionService) private cashConcessionservice, @Inject(LookupDataService) private lookupDataService) {
 
-        this.addTransactionTypeModel = new TransactionType();
+        this.addTableNumberModel = new TableNumber();
+        this.addChannelTypeModel = new ChannelType();
 
-        this.transactiontypes = [new TransactionType()];
-        this.tablenumbers = [new TransactionTableNumber()];
-        this.tablenumbersFiltered = [new TransactionTableNumber()];
+        this.channeltypes = [new ChannelType()];
+        this.tablenumbers = [new TableNumber()];
+        this.tablenumbersFiltered = [new TableNumber()];
     }
 
     ngOnInit() {
         this.loadData(null);
     }
 
-    loadData(productype: TransactionType) {
+    loadData(productype: ChannelType) {
         this.isLoading = true;
 
-        Observable.forkJoin([
-            this.admintransactionService.getTransactionTypes(true),
-            this.admintransactionService.getTransactionTableNumbers(true)
+        Observable.forkJoin([         
+
+              this.lookupDataService.getAllChannelTypes(),
+              this.lookupDataService.getTableNumbersAll(ConcessionTypes.Cash),
+
         ]).subscribe(results => {
 
-            this.transactiontypes = <any>results[0];
+            this.channeltypes = <any>results[0];
             this.tablenumbers = <any>results[1];
             this.tablenumbersFiltered = this.tablenumbers;
 
-            if (this.transactiontypes.length > 0) {
+            if (this.channeltypes.length > 0) {
 
                 if (productype == null) {
-                    this.selectedProduct = this.transactiontypes[0];
+                    this.selectedProduct = this.channeltypes[0];
                 }
                 else {
-                    this.selectedProduct = this.transactiontypes.filter(c => c.id == productype.id)[0];
+                    this.selectedProduct = this.channeltypes.filter(c => c.id == productype.id)[0];
 
                 }
 
-                this.tablenumbersFiltered = this.tablenumbers.filter(re => re.transactionTypeId == this.selectedProduct.id);
+               // this.tablenumbersFiltered = this.tablenumbers.filter(re => re. == this.selectedProduct.id);
 
             }
 
@@ -92,10 +96,10 @@ export class TransactionTypesManagementComponent implements OnInit {
             });
     }
 
-    filterDetails(selection: TransactionType) {
+    filterDetails(selection: ChannelType) {
 
         this.selectedProduct = selection;
-        this.tablenumbersFiltered = this.tablenumbers.filter(re => re.transactionTypeId == selection.id);
+       // this.tablenumbersFiltered = this.tablenumbers.filter(re => re.transactionTypeId == selection.id);
     }
 
     createupdateDetail() {
@@ -109,18 +113,18 @@ export class TransactionTypesManagementComponent implements OnInit {
 
         if (!this.validationError) {
 
-            this.addTableNumberModel.transactionTypeId = this.selectedProduct.id;
-            this.addTableNumberModel.isActive = true;
+           // this.addTableNumberModel. = ConcessionTypes.Cash;
+           this.addTableNumberModel.isActive = true;
 
 
-            this.admintransactionService.createupdateTransactionTableNumber(this.addTableNumberModel).subscribe(entity => {
+            this.cashConcessionservice.createupdateTableNumber(this.addTableNumberModel).subscribe(entity => {
                 console.log("data saved");
 
                 if (this.actionType == "Add") {
-                    this.saveMessage = "Transactional Table created successfully!";
+                    this.saveMessage = "Cash Table created successfully!";
                 }
                 else if (this.actionType == "Edit") {
-                    this.saveMessage = "Transactional Table updated successfully!";
+                    this.saveMessage = "Cash Table updated successfully!";
                 }               
 
                 this.isLoading = false;
@@ -150,10 +154,10 @@ export class TransactionTypesManagementComponent implements OnInit {
         this.saveMessage = null;
 
         if (!this.validationError) {
-            this.admintransactionService.postNewTransactionType(this.addTransactionTypeModel).subscribe(entity => {
+            this.cashConcessionservice.createChannelType(this.addChannelTypeModel).subscribe(entity => {
                 console.log("data saved");
 
-                this.saveMessage = "Transaction Type created successfully!";
+                this.saveMessage = "Channel Type created successfully!";
                 this.isLoading = false;
                 this.isSaving = false;
 
@@ -170,25 +174,25 @@ export class TransactionTypesManagementComponent implements OnInit {
         }
     }
 
-    editDetails(tablenumberOption: TransactionTableNumber) {
+    editDetails(tablenumberOption: TableNumber) {
 
         this.addTariffTableModal.show();
         this.actionType = "Edit";
         this.addTableNumberModel = tablenumberOption;
     }
 
-    disableDetails(tablenumberOption: TransactionTableNumber) {
+    disableDetails(tablenumberOption: TableNumber) {
 
         this.actionType = "Delete";
-        if (confirm("Are you sure you want to disable Transaction table " + tablenumberOption.tariffTable + " ?")) {
+        if (confirm("Are you sure you want to disable Cash table " + tablenumberOption.tariffTable + " ?")) {
 
             tablenumberOption.isActive = false;
 
-            this.admintransactionService.createupdateTransactionTableNumber(tablenumberOption).subscribe(entity => {
+            this.cashConcessionservice.createupdateTableNumber(tablenumberOption).subscribe(entity => {
                 console.log("data saved");
 
                if (this.actionType == "Delete") {
-                    this.saveMessage = "Transaction table disabled successfully!";
+                    this.saveMessage = "Cash table disabled successfully!";
                 }
 
                 this.isLoading = false;
@@ -206,19 +210,18 @@ export class TransactionTypesManagementComponent implements OnInit {
         }
     }
 
-
-    enableDetails(tablenumberOption: TransactionTableNumber) {
+    enableDetails(tablenumberOption: TableNumber) {
 
         this.actionType = "Delete";
-        if (confirm("Are you sure you want to enable Transaction table " + tablenumberOption.tariffTable + " ?")) {
+        if (confirm("Are you sure you want to enable Cash table " + tablenumberOption.tariffTable + " ?")) {
 
             tablenumberOption.isActive = true;
 
-            this.admintransactionService.createupdateTransactionTableNumber(tablenumberOption).subscribe(entity => {
+            this.cashConcessionservice.createupdateTableNumber(tablenumberOption).subscribe(entity => {
                 console.log("data saved");
 
                 if (this.actionType == "Delete") {
-                    this.saveMessage = "Transaction table enabled successfully!";
+                    this.saveMessage = "Cash table enabled successfully!";
                 }
 
                 this.isLoading = false;
@@ -238,16 +241,16 @@ export class TransactionTypesManagementComponent implements OnInit {
 
     addDetails() {
         this.actionType = "Add";
-        this.addTableNumberModel = new TransactionTableNumber();
+        this.addTableNumberModel = new TableNumber();
         this.addTableNumberModel.isActive = true;
 
         if (this.selectedProduct != null) {
 
-            this.addTableNumberModel.transactionTypeId = this.selectedProduct.id;
+           // this.addTableNumberModel.transactionTypeId = this.selectedProduct.id;
         }
 
         this.addTableNumberModel.adValorem = 0;
-        this.addTableNumberModel.fee = 0;
+        this.addTableNumberModel.baseRate = 0;
         this.addTableNumberModel.displayText = "";
         this.addTableNumberModel.tariffTable = 0;
 
@@ -257,8 +260,8 @@ export class TransactionTypesManagementComponent implements OnInit {
     addType() {
 
         this.actionType = "Add";
-        this.addTransactionTypeModel = new TransactionType();
-        this.addTransactionTypeModel.description = "";
+        this.addChannelTypeModel = new ChannelType();
+        this.addChannelTypeModel.description = "";
 
         this.addTariffTableModal.hide();
         this.addTypeModal.show();

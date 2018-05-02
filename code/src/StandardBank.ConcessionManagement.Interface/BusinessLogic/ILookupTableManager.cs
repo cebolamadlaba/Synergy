@@ -120,7 +120,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <returns></returns>
         ConcessionType GetConcessionType(int concessionTypeId);
 
-        IEnumerable<TransactionType> GetTransactionTypes(bool isActive);
+        IEnumerable<TransactionType> GetTransactionalTransactionTypes(bool isActive);
 
         IEnumerable<ConcessionType> GetConcessionTypes(bool isActive);
 
@@ -150,6 +150,8 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         IEnumerable<ConditionType> GetConditionTypes();
 
         IEnumerable<BOLChargeCode> GetBOLChargeCodes();
+
+        IEnumerable<BOLChargeCode> GetBOLChargeCodesAll();
         IEnumerable<BOLChargeCodeType> GetBOLChargeCodeTypes();
         IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsers(int riskGroupNumber);
 
@@ -165,6 +167,8 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// </summary>
         /// <returns></returns>
         IEnumerable<ChannelType> GetChannelTypes();
+
+        IEnumerable<ChannelType> GetAllChannelTypes();
 
         /// <summary>
         /// Gets the transaction type description.
@@ -186,6 +190,8 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="concessionType">Type of the concession.</param>
         /// <returns></returns>
         IEnumerable<TableNumber> GetTableNumbers(string concessionType);
+
+        IEnumerable<TableNumber> GetTableNumbersAll(string concessionType);
 
         IEnumerable<TableNumber> GetTableNumbers(bool isActive);
 

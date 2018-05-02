@@ -67,6 +67,15 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(codes);
         }
 
+
+        [Route("BOLChargeCodesAll")]
+        public IActionResult GetAllBOLChargeCodes()
+        {
+
+            var codes = _lookupTableManager.GetBOLChargeCodesAll();
+            return Ok(codes);
+        }
+
         [Route("BOLChargeCodeTypes")]
         public IActionResult GetBOLChargeCodeTypes()
         {

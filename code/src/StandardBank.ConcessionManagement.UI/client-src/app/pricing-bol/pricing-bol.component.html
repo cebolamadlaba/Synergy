@@ -95,6 +95,7 @@
                         <table class="table table-bordered table-hover header-fixed table-striped ">
                             <thead>
                                 <tr>
+                                    <th>Product </th>
                                     <th>Charge Code Description</th>
                                     <th>Charge Code</th>
                                     <th>Loaded Rate</th>
@@ -102,9 +103,10 @@
                             </thead>
                             <tbody>
                                 <tr>
+                                    <td class="leftAlign">{{bolprod.bolProductType}}</td>
                                     <td class="leftAlign">{{bolprod.chargeCodeDesc}}</td>
                                     <td class="rightAlign">{{bolprod.chargeCode}}</td>
-                                    <td class="rightAlign">{{bolprod.loadedRate}}</td>
+                                    <td class="rightAlign">{{bolprod.loadedRate| number : '1.5-5'}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -158,8 +160,8 @@
                                 <td class="leftAlign">{{concession.chargeCodeDesc}}</td>
                                 <td class="rightAlign">{{concession.chargeCode}}</td>
                                 <td>
-                                    <p class="mapInfo">Loaded:{{concession.loadedRate | number : '1.2-2'}}</p>
-                                    <p class="mapInfo">Approved:{{concession.approvedRate| number : '1.2-2'}}</p>
+                                    <p class="mapInfo">Loaded:{{concession.loadedRate | number : '1.5-5'}}</p>
+                                    <p class="mapInfo">Approved:{{concession.approvedRate| number : '1.5-5'}}</p>
                                 </td>
                             </tr>
                         </tbody>

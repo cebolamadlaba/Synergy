@@ -93,6 +93,7 @@ namespace StandardBank.ConcessionManagement.Repository
             }
         }
 
+      
         /// <summary>
         /// Reads all.
         /// </summary>

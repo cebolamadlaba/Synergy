@@ -112,6 +112,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(_lookupTableManager.GetChannelTypes());
         }
 
+        [Route("AllChannelTypes")]
+        public IActionResult AllChannelTypes()
+        {
+            return Ok(_lookupTableManager.GetAllChannelTypes());
+        }
+
         /// <summary>
         /// Gets the client accounts for the risk group number specified
         /// </summary>
@@ -183,7 +189,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("GetTransactionTypes/{isActive}")]
         public IActionResult GetTransactionTypes(bool isActive)
         {
-            return Ok(_lookupTableManager.GetTransactionTypes(isActive));
+            return Ok(_lookupTableManager.GetTransactionalTransactionTypes(isActive));
         }     
 
         [Route("ConcessionTypes/{isActive}")]
@@ -209,6 +215,13 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             return Ok(_lookupTableManager.GetTableNumbers(concessionType));
         }
+
+        [Route("TableNumbersAll/{concessionType}")]
+        public IActionResult TableNumbersAll(string concessionType)
+        {
+            return Ok(_lookupTableManager.GetTableNumbersAll(concessionType));
+        }
+
 
         /// <summary>
         /// Deactivates the concession.

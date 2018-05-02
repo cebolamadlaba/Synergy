@@ -39,6 +39,14 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
+                return db.Query<BOLChargeCode>("SELECT * from rtblBOLChargeCode where isactive = 1");
+            }
+        }
+
+        public IEnumerable<BOLChargeCode> GetBOLChargeCodesAll()
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
                 return db.Query<BOLChargeCode>("SELECT * from rtblBOLChargeCode");
             }
         }

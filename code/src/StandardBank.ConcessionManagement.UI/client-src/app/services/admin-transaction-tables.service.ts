@@ -19,23 +19,7 @@ import { TransactionTableNumber } from "../models/transaction-table-number";
 export class AdminTransactionTablesService {
 
     constructor(private http: Http) {
-    }   
-
-    //getChannelTypes(): Observable<ChannelType[]> {
-    //    const url = "/api/Concession/ChannelTypes";
-    //    return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
-    //}
-
-    //getTransactionTypes(concessionType): Observable<TransactionType[]> {
-    //    const url = "/api/Concession/TransactionTypes/" + concessionType;
-    //    return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
-    //}
-
-    //getTableNumbers(isActive): Observable<TableNumber[]> {
-    //    const url = "/api/Concession/ActiveTableNumbers/" + isActive;
-    //    return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
-    //}
-
+    } 
 
     postNewTransactionType(transactiontype: TransactionType): Observable<TransactionType> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
@@ -62,10 +46,7 @@ export class AdminTransactionTablesService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    //getConcessionTypes(isActive): Observable<ConcessionType[]> {
-    //    const url = "/api/Concession/ConcessionTypes/" + isActive;
-    //    return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
-    //}   
+   
 
     private extractData(response: Response) {
         let body = response.json();

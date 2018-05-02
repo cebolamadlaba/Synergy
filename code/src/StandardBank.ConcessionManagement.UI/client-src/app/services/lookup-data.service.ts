@@ -39,6 +39,11 @@ export class LookupDataService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    getAllChannelTypes(): Observable<ChannelType[]> {
+        const url = "/api/Concession/AllChannelTypes";
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
     getClientAccounts(riskGroupNumber): Observable<ClientAccount[]> {
         const url = "/api/Concession/ClientAccounts/" + riskGroupNumber;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
@@ -70,6 +75,11 @@ export class LookupDataService {
 
     getBOLChargeCodes(): Observable<BolChargeCode[]> {
         const url = "/api/Condition/BOLChargeCodes";
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    getBOLChargeCodesAll(): Observable<BolChargeCode[]> {
+        const url = "/api/Condition/BOLChargeCodesAll";
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
@@ -118,6 +128,11 @@ export class LookupDataService {
 
     getTableNumbers(concessionType): Observable<TableNumber[]> {
         const url = "/api/Concession/TableNumbers/" + concessionType;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    getTableNumbersAll(concessionType): Observable<TableNumber[]> {
+        const url = "/api/Concession/TableNumbersAll/" + concessionType;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 

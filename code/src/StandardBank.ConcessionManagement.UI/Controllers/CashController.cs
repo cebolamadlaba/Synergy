@@ -377,5 +377,22 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             return Ok(_cashManager.GetCashFinancialForRiskGroupNumber(riskGroupNumber));
         }
+
+
+        [Route("CreateChannelType")]
+        public async Task<IActionResult> CreateChannelType([FromBody] ChannelType channelType)
+        {
+            var model = new Model.Repository.ChannelType() { Description = channelType.Description, IsActive = true };
+
+            return Ok(_cashManager.CreateChannelType(model));
+        }
+
+
+        [Route("CreateupdateTableNumber")]
+        public async Task<IActionResult> CreateupdateTableNumber([FromBody] TableNumber transactionTableNumber)
+        {
+
+            return Ok(_cashManager.CreateupdateTableNumber(transactionTableNumber));
+        }
     }
 }

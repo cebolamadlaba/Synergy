@@ -44,6 +44,7 @@ import { AaManagementComponent } from './admin/aa-management/aa-management.compo
 
 import { BOLCHManagementComponent } from './admin/bol-chargecodes/bol-chargecodes.component';
 import { TransactionTypesManagementComponent } from './admin/transaction-types/transaction-types.component';
+import { ChannelTypesManagementComponent } from './admin/channel-types/channel-types.component';
 
 const routes: Routes = [
     { path: '', redirectTo: '/pending-inbox', pathMatch: 'full' },
@@ -72,7 +73,7 @@ const routes: Routes = [
     { path: 'cash-view-concession/:riskGroupNumber/:concessionReferenceId', component: CashViewConcessionComponent },
     { path: 'lending-add-concession/:riskGroupNumber', component: LendingAddConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
-    { path: 'investments-add-concession', component: InvestmentsAddConcessionComponent },   
+    { path: 'investments-add-concession', component: InvestmentsAddConcessionComponent },
 
     { path: 'bol-add-concession/:riskGroupNumber', component: BolAddConcessionComponent },
     { path: 'bol-view-concession/:riskGroupNumber/:concessionReferenceId', component: BolViewConcessionComponent },
@@ -93,9 +94,10 @@ const routes: Routes = [
     { path: 'admin/aa-management', component: AaManagementComponent },
 
     { path: 'admin/bol-chargecodes', component: BOLCHManagementComponent },
-    { path: 'admin/transaction-types', component: TransactionTypesManagementComponent }
+    { path: 'admin/transaction-types', component: TransactionTypesManagementComponent },
+    { path: 'admin/channel-types', component: ChannelTypesManagementComponent }
 
-    
+
 ];
 
 @NgModule({

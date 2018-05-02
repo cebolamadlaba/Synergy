@@ -172,11 +172,13 @@ namespace StandardBank.ConcessionManagement.Repository
                 {
                     var bolProducts = db.Query<BolProduct>(
                         @"Select bol.[pkProductBOLId] [BolProductId],@riskGroupName [RiskGroupName],
-						le.[CustomerName] [LegalEntity], lu.BOLUserId, bol.[LoadedRate], ch.ChargeCode, ch.[Description] [ChargeCodeDesc]
+						le.[CustomerName] [LegalEntity], lu.BOLUserId, bol.[LoadedRate], ch.ChargeCode, ch.[Description] [ChargeCodeDesc], ty.Description [BolProductType]
 					    FROM [dbo].[tblProductBOL] bol
 						JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = bol.[fkLegalEntityId]
 						JOIN [dbo].tblLegalEntityBOLUser lu on bol.fkLegalEntityBOLUserId = lu.pkLegalEntityBOLUserId
 						JOIN [dbo].rtblBOLChargeCode ch on bol.fkChargeCodeId = ch.pkChargeCodeId
+                        left join rtblBOLChargeCode cc on bol.fkChargeCodeId = cc.pkChargeCodeId
+						left join rtblBOLChargeCodeType ty on cc.fkChargeCodeTypeId = ty.pkChargeCodeTypeId
 						where bol.fkRiskGroupId =  @riskGroupId", new { riskGroupId, riskGroupName },
                         commandTimeout: Int32.MaxValue);
 
@@ -330,7 +332,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     cd.[fkConcessionId] [ConcessionId], 
                     cd.[fkLegalEntityId] [LegalEntityId], 
                     cd.[fkLegalEntityAccountId] [LegalEntityAccountId],  
-                    [CustomerName] [LegalEntity],                
+                    le.[CustomerName] [LegalEntity],                    
                     [ExpiryDate], 
                     [DateApproved], 
                     [IsMismatched], 
@@ -349,7 +351,8 @@ namespace StandardBank.ConcessionManagement.Repository
                     FROM [dbo].[tblConcessionDetail] cd
                     join [dbo].[tblConcessionBol] bl on cd.pkConcessionDetailId = bl.fkConcessionDetailId
                     JOIN [dbo].[tblLegalEntityBOLUser] bo on bl.fkLegalEntityBOLUserId = bo.pkLegalEntityBOLUserId
-                    left JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = bo.fkLegalEntityAccountId
+                   left join tblLegalEntityAccount la on bo.fkLegalEntityAccountId = la.pkLegalEntityAccountId
+                    left JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = la.fkLegalEntityId
                     JOIN [dbo].rtblBOLChargeCode co on bl.fkChargeCodeId = co.pkChargeCodeId
                     JOIN rtblBOLChargeCodeType ct on co.fkChargeCodeTypeId = ct.pkChargeCodeTypeId
                     where cd.fkConcessionId = @concessionId", new { concessionId });

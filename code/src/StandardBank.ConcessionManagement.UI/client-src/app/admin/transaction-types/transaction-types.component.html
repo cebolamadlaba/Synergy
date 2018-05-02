@@ -60,7 +60,8 @@
                     <th>Table Number</th>
                     <th>Fee</th>
                     <th>Advalorem</th>
-                    <th></th>
+                    <th>Is Active</th>
+                    <th style="width:130px">Disable /Enabled</th>
                 </tr>
             </thead>
             <tbody>
@@ -71,7 +72,20 @@
                     <td>{{tablenumberOption.fee}}</td>
                     <td>{{tablenumberOption.adValorem}}</td>
 
-                    <td (click)="$event.stopPropagation()"><button type="button" (click)="deleteDetails(tablenumberOption)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                    <td>
+                        <span *ngIf="tablenumberOption.isActive" class="green"><i class="fa fa-check" aria-hidden="true"></i></span>
+                        <span *ngIf="!tablenumberOption.isActive" class="red"><i class="fa fa-times" aria-hidden="true"></i></span>
+                    </td>
+
+                    <td (click)="$event.stopPropagation()">
+
+                        <button *ngIf="tablenumberOption.isActive" type="button" (click)="disableDetails(tablenumberOption)" class="btn-delete"><i class="fa fa-ban" aria-hidden="true"></i></button>
+                        <button *ngIf="!tablenumberOption.isActive" type="button" (click)="enableDetails(tablenumberOption)" class="btn-delete"><i class="fa fa-check-circle" aria-hidden="true"></i></button>
+                        
+                    </td>
+
+
+                    <!--<td (click)="$event.stopPropagation()"><button type="button" (click)="deleteDetails(tablenumberOption)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>-->
 
                 </tr>
             </tbody>

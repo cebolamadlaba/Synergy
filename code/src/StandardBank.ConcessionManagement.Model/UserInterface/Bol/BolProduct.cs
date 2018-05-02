@@ -14,6 +14,8 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Bol
         /// </value>
         public int BolProductId { get; set; }
 
+        public string BolProductType { get; set; }
+
         public string RiskGroupName { get; set; }
 
         public string LegalEntity  { get; set; }

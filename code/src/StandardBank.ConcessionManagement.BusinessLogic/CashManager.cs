@@ -60,6 +60,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         private readonly IMediator _mediator;
 
+        private readonly ITableNumberRepository _tableNumberRepository;
+
         /// <summary>
         /// The misc performance repository
         /// </summary>
@@ -79,7 +81,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public CashManager(IConcessionManager concessionManager, IConcessionCashRepository concessionCashRepository,
             IMapper mapper, IFinancialCashRepository financialCashRepository, ILookupTableManager lookupTableManager,
             ILoadedPriceCashRepository loadedPriceCashRepository, IRuleManager ruleManager,
-            IMiscPerformanceRepository miscPerformanceRepository, IMediator mediator)
+            IMiscPerformanceRepository miscPerformanceRepository, IMediator mediator, ITableNumberRepository tableNumberRepository)
         {
             _concessionManager = concessionManager;
             _concessionCashRepository = concessionCashRepository;
@@ -90,6 +92,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _ruleManager = ruleManager;
             _miscPerformanceRepository = miscPerformanceRepository;
             _mediator = mediator;
+            _tableNumberRepository = tableNumberRepository;
         }
 
         /// <summary>
@@ -324,6 +327,32 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             //send the notification email
             await _mediator.Send(new ForwardConcession(cashConcession.Concession, user));
+        }
+
+        public ChannelType CreateChannelType(ChannelType channelType)
+        {
+            return channelType;
+        }
+
+        public Model.Repository.TableNumber CreateupdateTableNumber(Model.UserInterface.TableNumber cashTableNumber)
+        {
+
+            int cashtypeid = _lookupTableManager.GetConcessionTypeId(Constants.ConcessionType.Cash);
+            cashTableNumber.ConcessionTypeId = cashtypeid;
+
+            if (cashTableNumber.Id == 0)
+            {
+            
+                return _tableNumberRepository.Create(_mapper.Map<Model.Repository.TableNumber>(cashTableNumber));
+            }
+            else
+            {
+                 _tableNumberRepository.Update(_mapper.Map<Model.Repository.TableNumber>(cashTableNumber));
+
+                return _mapper.Map<Model.Repository.TableNumber>(cashTableNumber);
+
+            }           
+
         }
     }
 }

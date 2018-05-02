@@ -81,7 +81,7 @@ namespace StandardBank.ConcessionManagement.Repository
             {
 
                 //Update or Insert
-                if (model.Active)
+                if (model.IsActive)
                 {
                     if (model.pkChargeCodeId == 0)
                     {

@@ -531,6 +531,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static ICashManager CashManager = new CashManager(ConcessionManager, ConcessionCashRepository, Mapper,
             FinancialCashRepository, LookupTableManager, LoadedPriceCashRepository, RuleManager,
-            MiscPerformanceRepository, null);
+            MiscPerformanceRepository, null,null);
     }
 }

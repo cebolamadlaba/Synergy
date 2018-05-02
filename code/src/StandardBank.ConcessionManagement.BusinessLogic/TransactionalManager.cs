@@ -207,7 +207,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         public IEnumerable<Model.UserInterface.Transactional.TransactionTableNumber> GetTransactionTableNumbers(bool isActive)
         {
-            return _mapper.Map<IEnumerable<Model.UserInterface.Transactional.TransactionTableNumber>>( _transactionTableNumberRepository.ReadAll().Where(t => t.IsActive == isActive));
+            return _mapper.Map<IEnumerable<Model.UserInterface.Transactional.TransactionTableNumber>>( _transactionTableNumberRepository.ReadAll());
         }
 
         /// <summary>

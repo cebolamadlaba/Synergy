@@ -436,6 +436,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var chargecodes = _bolRepository.GetBOLChargeCodes();
             return _mapper.Map<IEnumerable<BOLChargeCode>>(chargecodes);
         }
+
+        public IEnumerable<BOLChargeCode> GetBOLChargeCodesAll()
+        {
+            var chargecodes = _bolRepository.GetBOLChargeCodesAll();
+            return _mapper.Map<IEnumerable<BOLChargeCode>>(chargecodes);
+        }
+
         public IEnumerable<BOLChargeCodeType> GetBOLChargeCodeTypes()
         {
             var chargecodetypes = _bolRepository.GetBOLChargeCodeTypes();
@@ -505,6 +512,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return _mapper.Map<IEnumerable<ChannelType>>(channelTypes.Where(_ => _.IsActive));
         }
 
+        public IEnumerable<ChannelType> GetAllChannelTypes()
+        {
+            var channelTypes = _channelTypeRepository.ReadAll();
+            return _mapper.Map<IEnumerable<ChannelType>>(channelTypes);
+        }
 
         public IEnumerable<ChannelType> GetChargeCodes()
         {
@@ -566,11 +578,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return transactionTypes;
         }
 
-        public IEnumerable<TransactionType> GetTransactionTypes(bool isActive)
+        public IEnumerable<TransactionType> GetTransactionalTransactionTypes(bool isActive)
         {
             var transactionTypes = _transactionTypeRepository.ReadAll(isActive);
 
-           return _mapper.Map<IEnumerable<TransactionType>>(transactionTypes);
+           return GetTransactionTypesForConcessionType(Constants.ConcessionType.Transactional);
+
+           //return _mapper.Map<IEnumerable<TransactionType>>(transactionTypes);
           
         }
 
@@ -621,6 +635,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return _mapper.Map<IEnumerable<TableNumber>>(tableNumbers
                 .Where(_ => _.IsActive && _.ConcessionTypeId == concessionTypeId).OrderBy(_ => _.TariffTable));
+        }
+
+        public IEnumerable<TableNumber> GetTableNumbersAll(string concessionType)
+        {
+            var concessionTypeId = GetConcessionTypeId(concessionType);
+            var tableNumbers = _tableNumberRepository.ReadAll();
+
+            return _mapper.Map<IEnumerable<TableNumber>>(tableNumbers
+                .Where(_ =>  _.ConcessionTypeId == concessionTypeId).OrderBy(_ => _.TariffTable));
         }
 
         /// <summary>

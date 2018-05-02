@@ -1,2 +1,6 @@
 ﻿update rtblBOLChargeCode
- - remebr to add isactive, and default is not null
+ - remember to add isactive, and default is not null
+
+ update
+ tblConcessionBol
+  - change LoadedRate and ApprovedRate to decimal (18,5)

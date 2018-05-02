@@ -13,6 +13,9 @@ import { CashFinancial } from "../models/cash-financial";
 import { SearchConcessionDetail } from '../models/search-concession-detail';
 import { ApprovedConcessionDetail } from "../models/approved-concession-detail";
 
+import { ChannelType } from "../models/channel-type";
+import { TableNumber } from "../models/table-number";
+
 @Injectable()
 export class CashConcessionService {
 
@@ -79,6 +82,21 @@ export class CashConcessionService {
         const url = "/api/Cash/CashFinancial/" + riskGroupNumber;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
+
+
+    createupdateTableNumber(tablenumber: TableNumber): Observable<TableNumber> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/Cash/CreateupdateTableNumber";
+        return this.http.post(url, tablenumber, options).map(this.extractData).catch(this.handleErrorObservable);
+    }  
+
+    createChannelType(channeltype: ChannelType): Observable<ChannelType> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/Cash/CreateChannelType";
+        return this.http.post(url, channeltype, options).map(this.extractData).catch(this.handleErrorObservable);
+    }  
 
     private extractData(response: Response) {
         let body = response.json();

@@ -5,5 +5,6 @@ export class TableNumber {
     baseRate: number;
     displayText: string;
     fkConcessionTypeId: number;
-    active: boolean;
+    isActive: boolean;
+
 }
