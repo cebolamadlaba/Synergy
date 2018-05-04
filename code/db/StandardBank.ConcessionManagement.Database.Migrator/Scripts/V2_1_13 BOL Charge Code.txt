@@ -1,5 +1,5 @@
 ﻿update rtblBOLChargeCode
- - remember to add isactive, and default is not null
+ - Add isactive, and default is not null
 
  update
  tblConcessionBol
