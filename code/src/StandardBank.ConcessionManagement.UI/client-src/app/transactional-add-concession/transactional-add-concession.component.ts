@@ -98,7 +98,26 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 	            this.transactionTypes = <any>results[3];
 	            this.riskGroup = <any>results[4];
 	            this.clientAccounts = <any>results[5];
-	            this.latestCrsOrMrs = <any>results[6];
+                this.latestCrsOrMrs = <any>results[6];
+
+
+                const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+
+                if (this.transactionTypes)
+                    control.controls[0].get('transactionType').setValue(this.transactionTypes[0]);
+
+                if (this.clientAccounts)
+                    control.controls[0].get('accountNumber').setValue(this.clientAccounts[0]);            
+              
+                this.selectedTransactionTypes[0] = this.transactionTypes[0];
+                let currentTransactionType = control.controls[0];
+                currentTransactionType.get('adValorem').setValue(null);
+                currentTransactionType.get('flatFeeOrRate').setValue(null);
+
+               if (this.selectedTransactionTypes[0].transactionTableNumbers)
+                   control.controls[0].get('transactionTableNumber').setValue(this.selectedTransactionTypes[0].transactionTableNumbers[0]);           
+
+               this.transactionTableNumberChanged(0);
 
 	            this.isLoading = false;
 	        },
@@ -137,8 +156,26 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 	}
 
 	addNewConcessionRow() {
-		const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
-		control.push(this.initConcessionItemRows());
+        const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+
+        var newRow = this.initConcessionItemRows();
+
+        var length = control.controls.length;
+
+        if (this.transactionTypes)
+            newRow.controls['transactionType'].setValue(this.transactionTypes[0]);
+
+        if (this.clientAccounts)
+            newRow.controls['accountNumber'].setValue(this.clientAccounts[0]);   
+
+        this.selectedTransactionTypes[length] = this.transactionTypes[0];
+
+        if (this.transactionTypes && this.transactionTypes[0].transactionTableNumbers)
+            newRow.controls['transactionTableNumber'].setValue(this.transactionTypes[0].transactionTableNumbers[0]);      
+
+        control.push(newRow);
+
+        this.transactionTableNumberChanged(length);
 	}
 
 	addNewConditionRow() {
@@ -185,9 +222,10 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 		this.selectedTransactionTypes[rowIndex] = control.controls[rowIndex].get('transactionType').value;
 
         let currentTransactionType = control.controls[rowIndex];
-
 		currentTransactionType.get('adValorem').setValue(null);
-		currentTransactionType.get('flatFeeOrRate').setValue(null);
+        currentTransactionType.get('flatFeeOrRate').setValue(null);
+
+        control.controls[rowIndex].get('transactionTableNumber').setValue(this.selectedTransactionTypes[rowIndex].transactionTableNumbers[0]);      
 	}
 
 	transactionTableNumberChanged(rowIndex) {

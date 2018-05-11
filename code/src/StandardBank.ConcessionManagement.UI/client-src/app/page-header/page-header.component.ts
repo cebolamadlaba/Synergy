@@ -34,7 +34,9 @@ export class PageHeaderComponent implements OnInit {
         this.observableLoggedInUser.subscribe(result => {
 
             if (result == null || result.validated == false) {              
-               
+
+                console.log(result.errorMessage);
+
                 window.location.href = "http://10952iisprdsdc2.za.sbicdirectory.com/ManageUserAccessAudit.htm";
                 return;
             }           

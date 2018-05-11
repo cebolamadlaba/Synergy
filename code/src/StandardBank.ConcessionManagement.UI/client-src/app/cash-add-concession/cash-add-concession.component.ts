@@ -119,8 +119,22 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
                 this.clientAccounts = <any>results[7];
                 this.latestCrsOrMrs = <any>results[8];
 
-                const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
-                control.controls[0].get('accrualType').setValue(this.accrualTypes[0]);
+                const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];             
+
+                if (this.channelTypes)
+                    control.controls[0].get('channelType').setValue(this.channelTypes[0]);
+
+                if (this.tableNumbers)
+                    control.controls[0].get('tableNumber').setValue(this.tableNumbers[0]);
+
+                if (this.clientAccounts)
+                    control.controls[0].get('accountNumber').setValue(this.clientAccounts[0]);
+
+                if (this.accrualTypes)
+                    control.controls[0].get('accrualType').setValue(this.accrualTypes[0]);
+
+
+
 
                 this.isLoading = false;
             },
@@ -159,9 +173,22 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
     addNewConcessionRow() {
         const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
-        var newRow = this.initConcessionItemRows();
-        newRow.controls['accrualType'].setValue(this.accrualTypes[0]);
+        var newRow = this.initConcessionItemRows();      
+
+        if (this.channelTypes)
+            newRow.controls['channelType'].setValue(this.channelTypes[0]);
+
+        if (this.tableNumbers)
+            newRow.controls['tableNumber'].setValue(this.tableNumbers[0]);
+
+        if (this.clientAccounts)
+            newRow.controls['accountNumber'].setValue(this.clientAccounts[0]);
+
+        if (this.accrualTypes)
+            newRow.controls['accrualType'].setValue(this.accrualTypes[0]);
+
         control.push(newRow);
+
     }
 
     addNewConditionRow() {
@@ -225,8 +252,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     getCashConcession(): CashConcession {
         var cashConcession = new CashConcession();
         cashConcession.concession = new Concession();
-        cashConcession.concession.riskGroupId = this.riskGroup.id;
-       
+        cashConcession.concession.riskGroupId = this.riskGroup.id;     
 
         if (this.cashConcessionForm.controls['smtDealNumber'].value)
             cashConcession.concession.smtDealNumber = this.cashConcessionForm.controls['smtDealNumber'].value;
@@ -254,7 +280,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
          
 
-            if (concessionFormItem.get('accountNumber').value) {
+            if (concessionFormItem.get('accountNumber').value && concessionFormItem.get('accountNumber').value.legalEntityId) {
                 cashConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
                 cashConcessionDetail.legalEntityAccountId = concessionFormItem.get('accountNumber').value.legalEntityAccountId;
             } else {
@@ -336,6 +362,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+      
 
         var cashConcession = this.getCashConcession();
         

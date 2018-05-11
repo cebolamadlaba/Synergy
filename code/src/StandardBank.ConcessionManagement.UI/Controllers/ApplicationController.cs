@@ -125,16 +125,13 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                     theuser.ErrorMessage = "";
 
                     return Ok(theuser);
-                }
-
-                   
+                }                   
             }
-
-
 
             Func<Model.UserInterface.User> function = () =>
             {
-               
+                string reason = "";
+
                 if (theuser == null)
                 {
                     //for testing purposes..
@@ -149,7 +146,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                     return null;
                 }
 
-                bool validUserForApplication = this.AuthenticateUserForApplication(theuser.ANumber, "Concession Management Service");
+                bool validUserForApplication = this.AuthenticateUserForApplication(theuser.ANumber, "Concession Management Service",out reason);
 
                 if (validUserForApplication)
                 {
@@ -170,7 +167,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                     }
 
                     theuser.Validated = false;
-                    theuser.ErrorMessage = "Not sanctioned for access";
+                    theuser.ErrorMessage = reason;
 
                     return theuser;
                 }
@@ -184,18 +181,23 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         }
 
 
-        public bool AuthenticateUserForApplication(string aNumber, string applicationName)
+        public bool AuthenticateUserForApplication(string aNumber, string applicationName, out string reason)
         {
+            reason = "Not_Valid";
             try
             {
                 MyAccess.AuditServiceClient client = new MyAccess.AuditServiceClient();
                 AuthenticationResult result = client.AuthUserAsync(aNumber, applicationName).Result;
+
+                if (!string.IsNullOrEmpty(result.Reason))
+                    reason = result.Reason;
 
                 return result.Result;
             }
             catch (Exception ex)
             {
                 // Either service is offline, or the ANumber is not linked to the provided application.
+                reason = "Offline_Error";
             }
 
             return false;

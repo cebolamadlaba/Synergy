@@ -544,8 +544,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 ChannelOrFeeType = transactionalConcessionDetail.TransactionType,
                 FeeOrRate = transactionalConcessionDetail.TransactionType ==
                             Constants.Transactional.TransactionType.ChequeEncashmentFee
-                    ? $"R {transactionalConcessionDetail.Fee.GetValueOrDefault(0).ToString("N2", CultureInfo.InvariantCulture)} + {transactionalConcessionDetail.AdValorem.GetValueOrDefault(0).ToString("N2", CultureInfo.InvariantCulture)} %"
-                    : $"R {transactionalConcessionDetail.Fee.GetValueOrDefault(0).ToString("N2", CultureInfo.InvariantCulture)}",
+                    ? $"R {transactionalConcessionDetail.Fee.GetValueOrDefault(0).ToString("N3", CultureInfo.InvariantCulture)} + {transactionalConcessionDetail.AdValorem.GetValueOrDefault(0).ToString("N3", CultureInfo.InvariantCulture)} %"
+                    : $"R {transactionalConcessionDetail.Fee.GetValueOrDefault(0).ToString("N3", CultureInfo.InvariantCulture)}",
                 ConcessionStartDate = transactionalConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
                 ConcessionEndDate = transactionalConcessionDetail.ExpiryDate.HasValue
                     ? transactionalConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
@@ -646,7 +646,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 AccountNumber = cashConcessionDetail.AccountNumber,
                 ChannelType = cashConcessionDetail.Channel,
                 BaseRateAdValorem =
-                    $"R {cashConcessionDetail.BaseRate.GetValueOrDefault(0).ToString("N2", CultureInfo.InvariantCulture)} + {cashConcessionDetail.AdValorem.GetValueOrDefault(0).ToString("N2", CultureInfo.InvariantCulture)}%",
+                    $"R {cashConcessionDetail.BaseRate.GetValueOrDefault(0).ToString("N3", CultureInfo.InvariantCulture)} + {cashConcessionDetail.AdValorem.GetValueOrDefault(0).ToString("N3", CultureInfo.InvariantCulture)}%",
                 ConcessionEndDate = cashConcessionDetail.ExpiryDate.HasValue
                     ? cashConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
                     : string.Empty,
@@ -750,17 +750,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 AccountNumber = lendingConcessionDetail.AccountNumber,
                 ApprovedMarginToPrime =
-                    $"R {lendingConcessionDetail.ApprovedMap.GetValueOrDefault(0).ToString("N2", CultureInfo.InvariantCulture)}",
+                    $" {lendingConcessionDetail.ApprovedMap.GetValueOrDefault(0).ToString("N2", CultureInfo.InvariantCulture)}",
                 ProductType = lendingConcessionDetail.ProductType,
                 ReviewFeeType = lendingConcessionDetail.ReviewFeeType,
                 MarginToPrime =
-                    $"R {lendingConcessionDetail.MarginAgainstPrime.ToString("N2", CultureInfo.InvariantCulture)}",
+                    $" {lendingConcessionDetail.MarginAgainstPrime.ToString("N2", CultureInfo.InvariantCulture)}",
                 InitiationFee =
-                    $"R {lendingConcessionDetail.InitiationFee.ToString("N2", CultureInfo.InvariantCulture)}",
-                ReviewFee = $"R {lendingConcessionDetail.ReviewFee.ToString("N2", CultureInfo.InvariantCulture)}",
+                    $" {lendingConcessionDetail.InitiationFee.ToString("N2", CultureInfo.InvariantCulture)}",
+                ReviewFee = $" {lendingConcessionDetail.ReviewFee.ToString("N2", CultureInfo.InvariantCulture)}",
                 ConcessionEndDate = lendingConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy"),
                 ConcessionStartDate = lendingConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
-                UFFFee = $"R {lendingConcessionDetail.UffFee.ToString("N2", CultureInfo.InvariantCulture)}",
+                UFFFee = $" {lendingConcessionDetail.UffFee.ToString("N2", CultureInfo.InvariantCulture)}",
                 LegalEntityId = lendingConcessionDetail.LegalEntityId
             };
         }

@@ -116,6 +116,15 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             this.latestCrsOrMrs = <any>results[7];
             this.primeRate = <string>results[8];
 
+            const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+
+            if (this.productTypes)
+                control.controls[0].get('productType').setValue(this.productTypes[0]);
+
+            if (this.clientAccounts)
+                control.controls[0].get('accountNumber').setValue(this.clientAccounts[0]);
+
+
             this.isLoading = false;
         }, error => {
             this.errorMessage = <any>error;
@@ -154,7 +163,16 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
     addNewConcessionRow() {
         const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
-        control.push(this.initConcessionItemRows());
+
+        var newRow = this.initConcessionItemRows();
+
+        if (this.productTypes)
+            newRow.controls['productType'].setValue(this.productTypes[0]);
+
+        if (this.clientAccounts)
+            newRow.controls['accountNumber'].setValue(this.clientAccounts[0]);
+
+        control.push(newRow);
     }
 
     addNewConditionRow() {

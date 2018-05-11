@@ -47,6 +47,10 @@ namespace StandardBank.ConcessionManagement.UI.Helpers.Implementation
             {
                 var user = _userManager.GetUser(aNumber);
 
+                if(user == null)
+                {
+                    return null;
+                }
                 if (user.IsActive)
                     return user;
             }

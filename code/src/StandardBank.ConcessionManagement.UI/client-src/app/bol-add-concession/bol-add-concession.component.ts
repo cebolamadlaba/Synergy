@@ -28,10 +28,8 @@ import { BolConcession } from "../models/bol-concession";
 import { BolConcessionDetail } from "../models/bol-concession-detail";
 import { BolConcessionService } from "../services/bol-concession.service";
 
-
 import { BolView } from "../models/bol-view";
 import { Concession } from "../models/concession";
-
 import { UserService } from "../services/user.service";
 
 
@@ -164,7 +162,19 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
             this.periodTypes = <any>results[5];
 
             const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
-          
+
+            if (this.bolchargecodetypes)
+                control.controls[0].get('product').setValue(this.bolchargecodetypes[0]);
+
+            if (this.legalentitybolusers)
+                control.controls[0].get('userid').setValue(this.legalentitybolusers[0]);
+
+            this.selectedProducts[0] = this.bolchargecodetypes[0];
+
+            if (this.selectedProducts && this.selectedProducts[0].bolchargecodes)
+                control.controls[0].get('chargecode').setValue(this.selectedProducts[0].bolchargecodes[0]);
+         
+            this.productTypeChanged(0);
 
             this.isLoading = false;
         },
@@ -205,8 +215,24 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
     addNewConcessionRow() {
         const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
         var newRow = this.initConcessionItemRows();
-     
+
+        var length = control.controls.length;
+
+        if (this.bolchargecodetypes)
+            newRow.controls['product'].setValue(this.bolchargecodetypes[0]);
+
+        if (this.legalentitybolusers)
+            newRow.controls['userid'].setValue(this.legalentitybolusers[0]);
+
+        this.selectedProducts[length] = this.bolchargecodetypes[0];
+
+        if (this.selectedProducts && this.selectedProducts[0].bolchargecodes)
+            newRow.controls['chargecode'].setValue(this.selectedProducts[0].bolchargecodes[0]);   
+      
         control.push(newRow);
+
+        this.productTypeChanged(length);
+
     }
 
     addNewConditionRow() {
@@ -257,8 +283,10 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         let currentProduct = control.controls[rowIndex];
         var selectedproduct = currentProduct.get('product').value;
 
-        this.selectedProducts[rowIndex].bolchargecodes = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId); 
+        this.selectedProducts[rowIndex].bolchargecodes = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId);            
 
+        currentProduct.get('chargecode').setValue(this.selectedProducts[rowIndex].bolchargecodes[0]);     
+        
     }
 
 
