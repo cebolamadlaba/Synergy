@@ -38,6 +38,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// </summary>
         private readonly IMediator _mediator;
 
+        private readonly IBusinessCentreManager _bcmManager;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TransactionalController"/> class.
         /// </summary>
@@ -45,11 +47,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="transactionalManager">The transactional manager.</param>
         /// <param name="mediator">The mediator.</param>
         public TransactionalController(ISiteHelper siteHelper, ITransactionalManager transactionalManager,
-            IMediator mediator)
+            IMediator mediator, IBusinessCentreManager businessCentreManager)
         {
             _siteHelper = siteHelper;
             _transactionalManager = transactionalManager;
             _mediator = mediator;
+            _bcmManager = businessCentreManager;
         }
 
         /// <summary>
@@ -90,7 +93,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             TransactionalConcession transactionalConcession = _transactionalManager.GetTransactionalConcession(detail.ReferenceNumber, user);
 
             transactionalConcession.Concession.SubStatus = Constants.ConcessionSubStatus.PcmPending;
-            transactionalConcession.Concession.BcmUserId = user.Id;
+            transactionalConcession.Concession.BcmUserId = _bcmManager.GetBusinessCentreManager(transactionalConcession.Concession.CentreId).BusinessCentreManagerId;
             transactionalConcession.Concession.Comments = "Manually forwarded by PCM";
             transactionalConcession.Concession.IsInProgressForwarding = true;
 

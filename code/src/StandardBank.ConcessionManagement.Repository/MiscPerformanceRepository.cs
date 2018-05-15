@@ -435,5 +435,22 @@ namespace StandardBank.ConcessionManagement.Repository
                     GROUP BY cu.[fkCentreId]) requestortable ON requestortable.[fkCentreId] = c.[pkCentreId]");
             }
         }
+
+        public BusinessCentreManagementModel GetBusinessCentreManager(int pkCentreId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<BusinessCentreManagementModel>(@"SELECT
+                            c.[pkCentreId] [CentreId], c.[CentreName], c.[IsActive], bcmtable.[BCMId] [BusinessCentreManagerId], bcmtable.[BCM] [BusinessCentreManager], r.[pkRegionId] [RegionId], r.[Description] [Region]
+                            FROM [dbo].[tblCentre] c
+                            LEFT JOIN (
+                            SELECT u.[FirstName] + ' ' + u.[Surname] [BCM], u.[pkUserId] [BCMId], cu.[fkCentreId] FROM [dbo].[tblCentreUser] cu
+                            JOIN [dbo].[tblUser] u ON u.[pkUserId] = cu.[fkUserId]
+                            JOIN [dbo].[tblUserRole] ur ON ur.[fkUserId] = u.[pkUserId]
+                            JOIN [dbo].[rtblRole] r ON r.[pkRoleId] = ur.[fkRoleId] and r.[RoleName] = 'BCM') bcmtable ON bcmtable.[fkCentreId] = c.[pkCentreId]
+                            JOIN [dbo].[rtblRegion] r ON r.[pkRegionId] = c.[fkRegionId]
+                            where pkCentreId = @pkCentreId", new { pkCentreId }).FirstOrDefault();
+            }
+        }
     }
 }

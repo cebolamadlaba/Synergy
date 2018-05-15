@@ -86,6 +86,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         private readonly ILookupTableManager _lookupTableManager;
 
+        private readonly IBusinessCentreManager _businessCentreManager;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LetterGeneratorManager"/> class.
         /// </summary>
@@ -105,7 +107,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IConcessionManager concessionManager, IPdfUtility pdfUtility, IUserManager userManager,
             ILendingManager lendingManager, ILegalEntityRepository legalEntityRepository, ICashManager cashManager,
             IRazorRenderer razorRenderer, ITransactionalManager transactionalManager,
-            IConcessionInboxViewRepository concessionInboxViewRepository, ILookupTableManager lookupTableManager,  IBolManager bolManager)
+            IConcessionInboxViewRepository concessionInboxViewRepository, ILookupTableManager lookupTableManager,  IBolManager bolManager, IBusinessCentreManager businessCentreManager)
         {
             _templatePath = configurationData.LetterTemplatePath;
             _fileUtiltity = fileUtiltity;
@@ -120,6 +122,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionInboxViewRepository = concessionInboxViewRepository;
             _lookupTableManager = lookupTableManager;
             _bolManager = bolManager;
+            _businessCentreManager = businessCentreManager;
         }
 
         /// <summary>
@@ -418,10 +421,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             ConcessionInboxView concessionInboxView)
         {
             var riskGroupNumber = concessionInboxView.RiskGroupNumber;
-            var bcm = _userManager.GetUser(concessionInboxView.BCMUserId);
+            var bcm = _userManager.GetUser(_businessCentreManager.GetBusinessCentreManager(requestor.CentreId).BusinessCentreManagerId); //_userManager.GetUser(concessionInboxView.BCMUserId); 
             var legalEntityId = concessionInboxView.LegalEntityId;
 
             var legalEntity = _legalEntityRepository.ReadById(legalEntityId);
+
+
+          
 
             var legalEntityConcessionLetter =
                 new LegalEntityConcessionLetter
@@ -544,8 +550,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 ChannelOrFeeType = transactionalConcessionDetail.TransactionType,
                 FeeOrRate = transactionalConcessionDetail.TransactionType ==
                             Constants.Transactional.TransactionType.ChequeEncashmentFee
-                    ? $"R {transactionalConcessionDetail.Fee.GetValueOrDefault(0).ToString("N3", CultureInfo.InvariantCulture)} + {transactionalConcessionDetail.AdValorem.GetValueOrDefault(0).ToString("N3", CultureInfo.InvariantCulture)} %"
-                    : $"R {transactionalConcessionDetail.Fee.GetValueOrDefault(0).ToString("N3", CultureInfo.InvariantCulture)}",
+                    ? $"R {transactionalConcessionDetail.Fee.GetValueOrDefault(0).ToString("N2", CultureInfo.InvariantCulture)} + {transactionalConcessionDetail.AdValorem.GetValueOrDefault(0).ToString("N3", CultureInfo.InvariantCulture)} %"
+                    : $"R {transactionalConcessionDetail.Fee.GetValueOrDefault(0).ToString("N2", CultureInfo.InvariantCulture)}",
                 ConcessionStartDate = transactionalConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
                 ConcessionEndDate = transactionalConcessionDetail.ExpiryDate.HasValue
                     ? transactionalConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
@@ -646,7 +652,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 AccountNumber = cashConcessionDetail.AccountNumber,
                 ChannelType = cashConcessionDetail.Channel,
                 BaseRateAdValorem =
-                    $"R {cashConcessionDetail.BaseRate.GetValueOrDefault(0).ToString("N3", CultureInfo.InvariantCulture)} + {cashConcessionDetail.AdValorem.GetValueOrDefault(0).ToString("N3", CultureInfo.InvariantCulture)}%",
+                    $"R {cashConcessionDetail.BaseRate.GetValueOrDefault(0).ToString("N2", CultureInfo.InvariantCulture)} + {cashConcessionDetail.AdValorem.GetValueOrDefault(0).ToString("N3", CultureInfo.InvariantCulture)}%",
                 ConcessionEndDate = cashConcessionDetail.ExpiryDate.HasValue
                     ? cashConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
                     : string.Empty,
@@ -805,9 +811,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 AccountNumber = lendingConcessionDetail.AccountNumber,
                 ProductType = lendingConcessionDetail.ProductType,
                 ChannelOrFeeType =
-                    $"R {lendingConcessionDetail.InitiationFee.ToString("N2", CultureInfo.InvariantCulture)}",
+                    $"{lendingConcessionDetail.InitiationFee.ToString("N2", CultureInfo.InvariantCulture)}",
                 FeeOrMarginAbovePrime =
-                    $"R {lendingConcessionDetail.MarginAgainstPrime.ToString("N2", CultureInfo.InvariantCulture)}",
+                    $"{lendingConcessionDetail.MarginAgainstPrime.ToString("N2", CultureInfo.InvariantCulture)}",
                 ConcessionEndDate = lendingConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy"),
                 ConcessionStartDate = lendingConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
                 LegalEntityId = lendingConcessionDetail.LegalEntityId

@@ -75,5 +75,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// </summary>
         /// <returns></returns>
         IEnumerable<RegionCentresModel> GetRegionCentres();
+
+        BusinessCentreManagementModel GetBusinessCentreManager(int centreid);
     }
 }

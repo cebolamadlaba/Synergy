@@ -124,39 +124,42 @@
         </tr>
         </thead>
         <tbody class="form-concessions-table-content">
-        <tr *ngFor="let itemrow of cashConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
-            <td class="length-long">
-                <select formControlName="channelType" class="form-control" [attr.disabled]="saveMessage ? '' : null">                 
-                    <option *ngFor="let channelTypeOption of channelTypes" [ngValue]="channelTypeOption">{{channelTypeOption.description}}</option>
-                </select>
+            <tr *ngFor="let itemrow of cashConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
+                <td class="length-long">
+                    <select formControlName="channelType" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                        <option *ngFor="let channelTypeOption of channelTypes" [ngValue]="channelTypeOption">{{channelTypeOption.description}}</option>
+                    </select>
 
-            </td>
+                </td>
 
-            <td class="length-long">
-                <select formControlName="accountNumber" class="form-control" [attr.disabled]="saveMessage ? '' : null">                 
-                    <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
-                </select>
-            </td>
+                <td class="length-long">
+                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                        <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
+                    </select>
+                </td>
 
-            <td class="length-long">
-                <select formControlName="tableNumber" class="form-control" (change)="tableNumberChanged(i)" [attr.disabled]="saveMessage ? '' : null">                  
-                    <option *ngFor="let tableNumberOption of tableNumbers" [ngValue]="tableNumberOption">{{tableNumberOption.displayText}}</option>
-                </select>
-            </td>
+                <td class="length-long">
+                    <select formControlName="tableNumber" class="form-control" (change)="tableNumberChanged(i)" [attr.disabled]="saveMessage ? '' : null">
+                        <option *ngFor="let tableNumberOption of tableNumbers" [ngValue]="tableNumberOption">{{tableNumberOption.displayText}}</option>
+                    </select>
+                </td>
 
-            <td class="length-long"><input class="form-control" formControlName="baseRate" /></td>
-            <td class="length-short"><input class="form-control" formControlName="adValorem" /></td>
+                <td class="length-long"><input class="form-control" formControlName="baseRate" /></td>
+                <td class="length-short"><input class="form-control" formControlName="adValorem" /></td>
 
-            <td class="length-medium">
-                <select formControlName="accrualType" class="form-control" [attr.disabled]="saveMessage ? '' : null">                 
-                    <option *ngFor="let accrualTypeOption of accrualTypes" [ngValue]="accrualTypeOption">{{accrualTypeOption.description}}</option>
-                </select>
-            </td>
+                <td class="length-medium">
+                    <select formControlName="accrualType" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                        <option *ngFor="let accrualTypeOption of accrualTypes" [ngValue]="accrualTypeOption">{{accrualTypeOption.description}}</option>
+                    </select>
+                </td>
 
-            <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="saveMessage ? '' : null" /></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="saveMessage ? '' : null" /></td>
 
-            <td class="delete"><button *ngIf="cashConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
-        </tr>
+                <td class="delete"><button *ngIf="cashConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="copyConcessionRow(i)" class="btn-delete"><i class="fa fa-copy" aria-hidden="true"></i></button></td>
+
+                <td class="delete"><button *ngIf="cashConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+
+            </tr>
         </tbody>
     </table>
 

@@ -35,12 +35,15 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// </summary>
         private readonly IMediator _mediator;
 
+        private readonly IBusinessCentreManager _bcmManager;
+
      
-        public BolController(ISiteHelper siteHelper, IBolManager bolManager, IMediator mediator)
+        public BolController(ISiteHelper siteHelper, IBolManager bolManager, IMediator mediator,  IBusinessCentreManager businessCentreManager)
         {
             _siteHelper = siteHelper;
             _bolManager = bolManager;
             _mediator = mediator;
+            _bcmManager = businessCentreManager;
         }
      
         /// <returns></returns>
@@ -306,11 +309,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var bolconsession = _bolManager.GetBolConcession(detail.ReferenceNumber, user);
 
             bolconsession.Concession.SubStatus = Constants.ConcessionSubStatus.PcmPending;
-            bolconsession.Concession.BcmUserId = user.Id;
+            bolconsession.Concession.BcmUserId = _bcmManager.GetBusinessCentreManager(bolconsession.Concession.CentreId).BusinessCentreManagerId;
+
             bolconsession.Concession.Comments = "Manually forwarded by PCM";
             bolconsession.Concession.IsInProgressForwarding = true;
 
-            await _bolManager.ForwardBolConcession(bolconsession, user);
+           await _bolManager.ForwardBolConcession(bolconsession, user);
 
             return Ok(_bolManager.GetBolConcession(detail.ReferenceNumber, user));
         }

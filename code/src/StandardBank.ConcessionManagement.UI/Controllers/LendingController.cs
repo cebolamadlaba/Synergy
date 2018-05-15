@@ -34,17 +34,20 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// </summary>
         private readonly IMediator _mediator;
 
+        private readonly IBusinessCentreManager _bcmManager;
+
         /// <summary>
         /// Initializes the controller
         /// </summary>
         /// <param name="lendingManager"></param>
         /// <param name="siteHelper"></param>
         /// <param name="mediator"></param>
-        public LendingController(ILendingManager lendingManager, ISiteHelper siteHelper, IMediator mediator)
+        public LendingController(ILendingManager lendingManager, ISiteHelper siteHelper, IMediator mediator, IBusinessCentreManager businessCentreManager)
         {
             _lendingManager = lendingManager;
             _siteHelper = siteHelper;
             _mediator = mediator;
+            _bcmManager = businessCentreManager;
         }
 
         /// <summary>
@@ -98,7 +101,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             LendingConcession lendingConcession = _lendingManager.GetLendingConcession(detail.ReferenceNumber, user);
 
             lendingConcession.Concession.SubStatus = Constants.ConcessionSubStatus.PcmPending;
-            lendingConcession.Concession.BcmUserId = user.Id;
+            lendingConcession.Concession.BcmUserId = _bcmManager.GetBusinessCentreManager(lendingConcession.Concession.CentreId).BusinessCentreManagerId;
             lendingConcession.Concession.Comments = "Manually forwarded by PCM";
             lendingConcession.Concession.IsInProgressForwarding = true;
 

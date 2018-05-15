@@ -202,6 +202,16 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             control.push(this.initConditionItemRows());
     }
 
+    copyConcessionRow(index: number) {
+
+        const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];              
+
+        var newRow = this.initConcessionItemRows();
+
+        control.insert(index + 1, newRow);
+       
+    }
+
     deleteConcessionRow(index: number) {
         if (confirm("Are you sure you want to remove this row?")) {
             const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];

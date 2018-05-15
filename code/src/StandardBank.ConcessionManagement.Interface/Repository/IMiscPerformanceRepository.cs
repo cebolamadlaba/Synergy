@@ -75,5 +75,7 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// </summary>
         /// <returns></returns>
         IEnumerable<BusinessCentreManagementModel> GetBusinessCentreManagementModels();
+
+         BusinessCentreManagementModel GetBusinessCentreManager(int pkCentreId);
     }
 }

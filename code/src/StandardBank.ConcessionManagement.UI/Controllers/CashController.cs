@@ -38,17 +38,20 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// </summary>
         private readonly IMediator _mediator;
 
+        private readonly IBusinessCentreManager _bcmManager;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CashController"/> class.
         /// </summary>
         /// <param name="siteHelper">The site helper.</param>
         /// <param name="cashManager">The cash manager.</param>
         /// <param name="mediator">The mediator.</param>
-        public CashController(ISiteHelper siteHelper, ICashManager cashManager, IMediator mediator)
+        public CashController(ISiteHelper siteHelper, ICashManager cashManager, IMediator mediator, IBusinessCentreManager businessCentreManager)
         {
             _siteHelper = siteHelper;
             _cashManager = cashManager;
             _mediator = mediator;
+            _bcmManager = businessCentreManager;
         }
 
         /// <summary>
@@ -129,7 +132,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var cashconsession =_cashManager.GetCashConcession(detail.ReferenceNumber, user);
 
             cashconsession.Concession.SubStatus = Constants.ConcessionSubStatus.PcmPending;
-            cashconsession.Concession.BcmUserId = user.Id;
+            cashconsession.Concession.BcmUserId = _bcmManager.GetBusinessCentreManager(cashconsession.Concession.CentreId).BusinessCentreManagerId;
             cashconsession.Concession.Comments = "Manually forwarded by PCM";
             cashconsession.Concession.IsInProgressForwarding = true;
 

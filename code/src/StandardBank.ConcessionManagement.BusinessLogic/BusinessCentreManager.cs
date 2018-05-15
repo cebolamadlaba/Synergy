@@ -141,6 +141,25 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return model;
         }
 
+        public BusinessCentreManagementModel GetBusinessCentreManager(int centreid)
+        {
+
+            var centreinfo = _miscPerformanceRepository.GetBusinessCentreManager(centreid);
+
+            if(centreinfo == null)
+            {
+                return new BusinessCentreManagementModel() { };
+            }
+            else
+            {
+                return centreinfo;
+
+            }
+
+        }
+
+
+
         /// <summary>
         /// Creates the centre.
         /// </summary>
