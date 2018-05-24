@@ -52,5 +52,9 @@
         /// The concession end date.
         /// </value>
         public string ConcessionEndDate { get; set; }
+
+        public string Limit { get; set; }
+
+        public string InitiationFee { get; set; }
     }
 }

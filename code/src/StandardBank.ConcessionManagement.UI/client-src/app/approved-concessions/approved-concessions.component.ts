@@ -29,6 +29,7 @@ export class ApprovedConcessionsComponent implements OnInit {
         }, error => {
             this.errorMessage = <any>error;
             this.isLoading = false;
+            this.isLoading = false;
         });
     }
 

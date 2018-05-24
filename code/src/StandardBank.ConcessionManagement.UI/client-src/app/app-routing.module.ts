@@ -64,7 +64,7 @@ const routes: Routes = [
     { path: 'pricing-transactional/:riskGroupNumber', component: PricingTransactionalComponent },
     { path: 'pricing-investments', component: PricingInvestmentsComponent },
     { path: 'pricing-bol/:riskGroupNumber', component: PricingBolComponent },
-    { path: 'pricing-trade', component: PricingTradeComponent },
+    { path: 'pricing-trade/:riskGroupNumber', component: PricingTradeComponent },
     { path: 'pricing-mas', component: PricingMasComponent },
     { path: 'pricing-cashman', component: PricingCashmanComponent },
     { path: 'transactional-add-concession/:riskGroupNumber', component: TransactionalAddConcessionComponent },

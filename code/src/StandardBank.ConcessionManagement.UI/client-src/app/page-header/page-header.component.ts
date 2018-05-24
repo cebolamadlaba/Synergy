@@ -10,8 +10,9 @@ import { User } from "../models/user";
 })
 export class PageHeaderComponent implements OnInit {
     observableLoggedInUser: Observable<User>;
+    observableMyAccessnUser: Observable<User>;
     user: User;
-    errorMessage: String;
+    usererrorMessage: String;
 
     constructor( @Inject(UserService) private userService) { }
 
@@ -19,30 +20,48 @@ export class PageHeaderComponent implements OnInit {
         this.observableLoggedInUser = this.userService.getData();
         this.observableLoggedInUser.subscribe(user => this.user = user,
             error => {
-                this.errorMessage = <any>error;
-                console.log(this.errorMessage);
+                this.usererrorMessage = <any>error;
+                console.log(this.usererrorMessage);
             });
 
-
-        this.getLoggedInUserMyAccess();
+        this.enforceMyAcess();
     }
+      
 
+    enforceMyAcess() {
 
-    getLoggedInUserMyAccess() {
+        this.observableMyAccessnUser = this.userService.getLoggedInUserMyAccess();
 
-        this.observableLoggedInUser = this.userService.getLoggedInUserMyAccess();
-        this.observableLoggedInUser.subscribe(result => {
+        //this.usererrorMessage = "Error during My Access validation process";
 
-            if (result == null || result.validated == false) {              
+        this.observableMyAccessnUser.subscribe(maresult => {
 
-                console.log(result.errorMessage);
+            try {
+         
+                if (maresult == null || maresult.validated == false) {
 
-                window.location.href = "http://10952iisprdsdc2.za.sbicdirectory.com/ManageUserAccessAudit.htm";
-                return;
-            }           
+                    console.log(maresult.errorMessage);
+
+                    if (maresult.errorMessage == "Not_Valid") {
+
+                        window.location.href = "http://10952iisprdsdc2.za.sbicdirectory.com/ManageUserAccessAudit.htm";
+                    }
+                    else {
+
+                        this.usererrorMessage = "Error during My Access validation process: " + maresult.errorMessage;
+                    }
+                    return;
+                }
+                else {
+                    console.log("User OK: " + maresult.aNumber);
+
+                }
+            } catch (e) {
+                this.usererrorMessage = e;
+            }      
             
         }, error => {           
-            this.errorMessage = <any>error;
+            this.usererrorMessage = <any>error;
         });
     }
 }

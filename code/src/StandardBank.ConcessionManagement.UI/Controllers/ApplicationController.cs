@@ -109,7 +109,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var theuser = _siteHelper.LoggedInUser(this);
 
-            if(!string.IsNullOrEmpty(_configurationData.EnforceMyAccess) && _configurationData.EnforceMyAccess == "false")
+            if (!string.IsNullOrEmpty(_configurationData.EnforceMyAccess) && _configurationData.EnforceMyAccess == "false")
             {
                 if (theuser == null)
                 {
@@ -117,7 +117,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                     theuser.Validated = true;
                     theuser.ErrorMessage = "";
 
-                    return Ok(theuser); 
+                    return Ok(theuser);
                 }
                 else
                 {
@@ -125,58 +125,66 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                     theuser.ErrorMessage = "";
 
                     return Ok(theuser);
-                }                   
+                }
             }
 
-            Func<Model.UserInterface.User> function = () =>
+            //Func<Model.UserInterface.User> function = () =>
+            //{
+            string reason = "";
+
+            if (theuser == null)
             {
-                string reason = "";
-
-                if (theuser == null)
+                // for testing purposes..
+                if (System.Diagnostics.Debugger.IsAttached)
                 {
-                    //for testing purposes..
-                    if (System.Diagnostics.Debugger.IsAttached)
-                    {
-                        theuser = new Model.UserInterface.User();
-                        theuser.Validated = true;
-                        theuser.ErrorMessage = "";
+                    theuser = new Model.UserInterface.User();
+                    theuser.Validated = true;
+                    theuser.ErrorMessage = "";
 
-                        return theuser;
-                    }
-                    return null;
+                    return Ok(theuser);
                 }
+                else
+                {
+                    theuser = new Model.UserInterface.User();
+                    theuser.Validated = true;
+                    theuser.ErrorMessage = "User not found in repository";
 
-                bool validUserForApplication = this.AuthenticateUserForApplication(theuser.ANumber, "Concession Management Service",out reason);
+                    return Ok(theuser);
 
-                if (validUserForApplication)
+                }
+            }
+
+            bool validUserForApplication = this.AuthenticateUserForApplication(theuser.ANumber, "Concession Management Service", out reason);
+
+            if (validUserForApplication)
+            {
+                theuser.Validated = true;
+                theuser.ErrorMessage = "";
+
+                return Ok(theuser);
+            }
+            else
+            {
+                //for testing purposes..
+                if (System.Diagnostics.Debugger.IsAttached)
                 {
                     theuser.Validated = true;
                     theuser.ErrorMessage = "";
 
-                    return theuser;
+                    return Ok(theuser);
                 }
-                else
-                {
-                    //for testing purposes..
-                    if (System.Diagnostics.Debugger.IsAttached)
-                    {
-                        theuser.Validated = true;
-                        theuser.ErrorMessage = "";
 
-                        return theuser;
-                    }
+                theuser.Validated = false;
+                theuser.ErrorMessage = reason;
 
-                    theuser.Validated = false;
-                    theuser.ErrorMessage = reason;
-
-                    return theuser;
-                }
-            };
+                return Ok(theuser);
+            }
+            // };
 
 
-            var applicableuser = _cacheManager.ReturnFromCache(function, 15, CacheKey.UserInterface.SiteHelper.UserAccess,new CacheKeyParameter(nameof(theuser.ANumber), theuser));
+            //var applicableuser = _cacheManager.ReturnFromCache(function, 1, CacheKey.UserInterface.SiteHelper.UserAccess,new CacheKeyParameter(nameof(theuser.ANumber), theuser));
 
-            return Ok(applicableuser);
+            // return Ok(applicableuser);
 
         }
 
@@ -197,7 +205,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             catch (Exception ex)
             {
                 // Either service is offline, or the ANumber is not linked to the provided application.
-                reason = "Offline_Error";
+                reason = "My Access error during WS call for " + aNumber;
             }
 
             return false;

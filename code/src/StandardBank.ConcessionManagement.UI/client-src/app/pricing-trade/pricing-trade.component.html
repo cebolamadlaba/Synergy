@@ -1,42 +1,41 @@
-<!-- banner-->
+<!-- Banner expanded -->
 <div class="col-md-12 banner">
     <div class="row">
-        <!-- Header -->
         <div class="lending-banner-title">
             <div class="col-md-1">
                 <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
                 <span class="back-button-text" (click)="goBack()">Back</span>
             </div>
             <div class="col-md-10 banner-main-title">
-                <i class="fa fa-line-chart" aria-hidden="true"></i> Trade
+                <i class="fa fa-desktop" aria-hidden="true"></i> View Business Online Concession - {{concessionReferenceId}}
+                <span class="label label-warning" style="float: right;">{{bolConcession?.concession?.status}} - {{bolConcession?.concession?.subStatus}}</span>
             </div>
             <div class="col-md-1"></div>
         </div>
-
         <!-- Dashboard Expanded -->
         <div class="col-md-12 banner-container" *ngIf="showHide">
             <div class="col-md-11">
                 <div class="col-md-5">
-                    <div class="subHeading">Risk Group Name //TODO</div>
-                    <div class="date lightTitle hidden-element">Risk Group Number //TODO</div>
+                    <div class="subHeading">{{tradeView.riskGroup.name}}</div>
+                    <div class="date lightTitle hidden-element">{{tradeView.riskGroup.number}}</div>
+                    <div class="requestor"><i class="fa fa-user-circle-o" aria-hidden="true"></i><button (click)="viewRequesterModal.show()">{{bolConcession?.concession?.requestor?.fullName}}</button></div>
+
                 </div>
-                <div class="col-md-3 summary-items">
-                    <div class="summary-items-sub">Total TT Volumes<span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Total TT Values<span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Total LCs Volumes<span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Total LCs Values<span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Total FBC Volumes<span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Total FBC Values<span class="summary-item-value">//TODO</span></div>
+                <div class="col-md-2  hidden-element">
+                    <div class="subHeading lightTitle"> Total number of accounts</div>
+                    <div class="score"><b>{{tradeView.tradeFinancial.totalAccounts | number : '1.2-2'}}</b></div>
                 </div>
-                <div class="col-md-3 summary-items">
-                    <div class="summary-items-sub">Average TT Value<span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Average TT Price<span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Average LC Value<span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Average LC Price<span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Average FBC Value<span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Average FBC price<span class="summary-item-value">//TODO</span></div>
+                <div class="col-md-2  hidden-element">
+                    <div class="subHeading lightTitle"> Average account management fee</div>
+                    <div class="score"><b>{{tradeView.tradeFinancial.avgManagementFee | number : '1.2-2'}}</b></div>
+                </div>
+                <div class="col-md-2  hidden-element">
+                    <div class="subHeading lightTitle"> Overall forex margin</div>
+                    <div class="score"><b>{{tradeView.tradeFinancial.overallForexMargin | number : '1.2-2'}}</b></div>
                 </div>
             </div>
+
+
             <div class="col-md-1">
                 <div class="compress">
                     <div>
@@ -50,8 +49,8 @@
             <div class="col-md-11">
                 <div>
                     <div class="col-md-5">
-                        <div class="subHeading">Risk Group Name //TODO</div>
-                        <div class="date lightTitle hidden-element">Risk Group Number //TODO</div>
+                        <div class="subHeading">{{bolView.riskGroup.name}}</div>
+                        <div class="date lightTitle hidden-element">{{bolView.riskGroup.number}}</div>
                     </div>
                 </div>
             </div>
@@ -63,7 +62,22 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
+<!-- Requester modal content -->
+<div bsModal #viewRequesterModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="viewRequesterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="requestor-modal">
+                <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                <p class="name">{{bolConcession?.concession?.requestor?.fullName}}</p>
+                <p class="anumber">{{bolConcession?.concession?.requestor?.aNumber}}</p>
+                <p>{{bolConcession?.concession?.requestor?.selectedCentre?.name}}</p>
+                <p>{{bolConcession?.concession?.requestor?.selectedRegion?.description}}</p>
+                <button type="button" class="btn btn-primary" (click)="viewRequesterModal.hide()">Close</button>
+            </div>
+        </div>
     </div>
 </div>
 

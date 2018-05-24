@@ -208,6 +208,40 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
         var newRow = this.initConcessionItemRows();
 
+        //if (this.channelTypes)
+        //    newRow.controls['channelType'].setValue(this.channelTypes[0]);
+
+        //if (this.tableNumbers)
+        //    newRow.controls['tableNumber'].setValue(this.tableNumbers[0]);
+
+        //if (this.clientAccounts)
+        //    newRow.controls['accountNumber'].setValue(this.clientAccounts[0]);
+
+        //if (this.accrualTypes)
+        //    newRow.controls['accrualType'].setValue(this.accrualTypes[0]);
+
+
+        if (control.controls[index].get('channelType').value)
+            newRow.controls['channelType'].setValue(control.controls[index].get('channelType').value);
+
+        if (control.controls[index].get('accountNumber').value)
+            newRow.controls['accountNumber'].setValue(control.controls[index].get('accountNumber').value);
+
+        if (control.controls[index].get('accrualType').value)
+            newRow.controls['accrualType'].setValue(control.controls[index].get('accrualType').value);
+
+        if (control.controls[index].get('tableNumber').value)
+            newRow.controls['tableNumber'].setValue(control.controls[index].get('tableNumber').value);
+
+        if (control.controls[index].get('tableNumber').value.baseRate)
+            newRow.controls['baseRate'].setValue(control.controls[index].get('tableNumber').value.baseRate.toFixed(2));
+      
+        if (control.controls[index].get('tableNumber').value.baseRate)
+            newRow.controls['adValorem'].setValue(control.controls[index].get('tableNumber').value.adValorem.toFixed(3));
+      
+        if (control.controls[index].get('expiryDate').value)
+            newRow.controls['expiryDate'].setValue(control.controls[index].get('expiryDate').value);
+
         control.insert(index + 1, newRow);
        
     }

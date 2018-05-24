@@ -71,21 +71,23 @@ else
         <tr style="background: #dbe5f1;">
             <td style="padding: 5px; width: 15%;">Product Type</td>
             <td style="padding: 5px; width: 15%;">Account Number</td>
+            <td style="padding: 5px; width: 15%;">Limit</td>
             <td style="padding: 5px; width: 21%;">Channel / Fee Type</td>
-            <td style="padding: 5px; width: 21%;">Fee / Margin Above Prime<br />(Incl. VAT)</td>
+            <td style="padding: 5px; width: 21%;">Fee / Margin Above Prime %<br />(Incl. VAT)</td>          
             <td style="padding: 5px; width: 14%;">Concession Start Date</td>
             <td style="padding: 5px; width: 14%;">Concession End Date</td>
         </tr>
         @foreach (var lendingOverDraftConcessionLetter in Model.LendingOverDraftConcessionLetters)
         {
-            <tr>
-                <td rowspan="5">@lendingOverDraftConcessionLetter.ProductType</td>
-                <td rowspan="5">@lendingOverDraftConcessionLetter.AccountNumber</td>
-                <td>Margin Above Prime</td>
-                <td>@lendingOverDraftConcessionLetter.MarginToPrime</td>
-                <td rowspan="5">@lendingOverDraftConcessionLetter.ConcessionStartDate</td>
-                <td rowspan="5">@lendingOverDraftConcessionLetter.ConcessionEndDate</td>
-            </tr>
+        <tr>
+            <td rowspan="5">@lendingOverDraftConcessionLetter.ProductType</td>
+            <td rowspan="5">@lendingOverDraftConcessionLetter.AccountNumber</td>
+            <td rowspan="5">@lendingOverDraftConcessionLetter.Limit</td>
+            <td>Margin Above Prime</td>
+            <td>@lendingOverDraftConcessionLetter.MarginToPrime</td>
+            <td rowspan="5">@lendingOverDraftConcessionLetter.ConcessionStartDate</td>
+            <td rowspan="5">@lendingOverDraftConcessionLetter.ConcessionEndDate</td>
+        </tr>
             <tr>
                 <td>Initiation Fee</td>
                 <td>@lendingOverDraftConcessionLetter.InitiationFee</td>
@@ -114,21 +116,25 @@ else
         <tr style="background: #dbe5f1;">
             <td style="padding: 5px; width: 15%;">Product Type</td>
             <td style="padding: 5px; width: 15%;">Account Number</td>
+            <td style="padding: 5px; width: 15%;">Limit</td>
             <td style="padding: 5px; width: 21%;">Channel / Fee Type</td>
-            <td style="padding: 5px; width: 21%;">Fee / Margin Above Prime<br />(Incl. VAT)</td>
+            <td style="padding: 5px; width: 21%;">Fee / Margin Above Prime %<br />(Incl. VAT)</td>
+            <td style="padding: 5px; width: 15%;">Initiation Fee %</td>
             <td style="padding: 5px; width: 14%;">Concession Start Date</td>
             <td style="padding: 5px; width: 14%;">Concession End Date</td>
         </tr>
         @foreach (var lendingConcessionLetter in Model.LendingConcessionLetters)
         {
-            <tr>
-                <td>@lendingConcessionLetter.ProductType</td>
-                <td>@lendingConcessionLetter.AccountNumber</td>
-                <td>Margin Above Prime</td>
-                <td>@lendingConcessionLetter.FeeOrMarginAbovePrime</td>
-                <td>@lendingConcessionLetter.ConcessionStartDate</td>
-                <td>@lendingConcessionLetter.ConcessionEndDate</td>
-            </tr>
+        <tr>
+            <td>@lendingConcessionLetter.ProductType</td>
+            <td>@lendingConcessionLetter.AccountNumber</td>
+            <td>@lendingConcessionLetter.Limit</td>
+            <td>Margin Above Prime</td>
+            <td>@lendingConcessionLetter.FeeOrMarginAbovePrime</td>
+            <td>@lendingConcessionLetter.InitiationFee</td>
+            <td>@lendingConcessionLetter.ConcessionStartDate</td>
+            <td>@lendingConcessionLetter.ConcessionEndDate</td>
+        </tr>
         }
     </table>
 }

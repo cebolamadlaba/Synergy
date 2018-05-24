@@ -2,6 +2,20 @@
     <div class="logo-mark"></div>
     <div class="logo-text">Concession Management</div>
 </div>
+
+
+<div class="row">
+    <!-- Error message -->
+    <div class="col-md-12" *ngIf="usererrorMessage">
+        <div class="form-feedback-container" style="margin:0px;">
+            <div class="alert-warning">
+                <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
+                <p>{{usererrorMessage}}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="col-md-12 nav-pills-container">
     <ul class="nav nav-pills">
         <li routerLinkActive="selected-nav-item">
@@ -38,4 +52,4 @@
         </li>
         <li class="logout-li"><a href="#">{{user?.firstName}} {{user?.surname}}</a></li>
     </ul>
-</div> 
+</div>

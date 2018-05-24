@@ -353,7 +353,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     if (concessionInboxView.ConcessionDetailId ==
                         lendingConcessionDetail.ConcessionDetailId)
                     {
-                        if (lendingConcessionDetail.ProductType == Constants.Lending.ProductType.Overdraft)
+                        if (lendingConcessionDetail.ProductType == Constants.Lending.ProductType.Overdraft || lendingConcessionDetail.ProductType == Constants.Lending.ProductType.TempOverdraft)
                         {
                             var lendingOverdraftConcessionLetters = new List<LendingOverDraftConcessionLetter>();
 
@@ -724,7 +724,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     concessionLetters.Add(concessionLetter);
                 }
 
-                if (lendingConcessionDetail.ProductType == Constants.Lending.ProductType.Overdraft)
+                if (lendingConcessionDetail.ProductType == Constants.Lending.ProductType.Overdraft || lendingConcessionDetail.ProductType == Constants.Lending.ProductType.TempOverdraft)
                 {
                     var lendingOverDraftConcessionLetters = new List<LendingOverDraftConcessionLetter>();
                     lendingOverDraftConcessionLetters.AddRange(concessionLetter.LendingOverDraftConcessionLetters);
@@ -767,7 +767,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 ConcessionEndDate = lendingConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy"),
                 ConcessionStartDate = lendingConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
                 UFFFee = $" {lendingConcessionDetail.UffFee.ToString("N2", CultureInfo.InvariantCulture)}",
-                LegalEntityId = lendingConcessionDetail.LegalEntityId
+                LegalEntityId = lendingConcessionDetail.LegalEntityId,
+                Limit = lendingConcessionDetail.Limit.ToString("N2", CultureInfo.InvariantCulture)
             };
         }
 
@@ -816,7 +817,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     $"{lendingConcessionDetail.MarginAgainstPrime.ToString("N2", CultureInfo.InvariantCulture)}",
                 ConcessionEndDate = lendingConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy"),
                 ConcessionStartDate = lendingConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
-                LegalEntityId = lendingConcessionDetail.LegalEntityId
+                LegalEntityId = lendingConcessionDetail.LegalEntityId,
+                Limit = lendingConcessionDetail.Limit.ToString("N2", CultureInfo.InvariantCulture),
+                InitiationFee = lendingConcessionDetail.InitiationFee.ToString("N2", CultureInfo.InvariantCulture),
+
             };
         }
 
