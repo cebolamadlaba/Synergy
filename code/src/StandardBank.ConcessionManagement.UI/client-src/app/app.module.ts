@@ -34,6 +34,7 @@ import { LendingService } from "./services/lending.service";
 import { MyConditionService } from './services/my-condition.service';
 import { CashConcessionService } from "./services/cash-concession.service";
 import { BolConcessionService } from "./services/bol-concession.service";
+import { TradeConcessionService } from "./services/trade-concession.service";
 import { AdminService } from './services/admin.service';
 import { RegionService } from './services/region.service';
 import { BusinessCentreService } from './services/business-centre.service';
@@ -159,6 +160,7 @@ import { ChannelTypesManagementComponent } from './admin/channel-types/channel-t
         AeManagementService,
         AaManagementService,
         BolConcessionService,
+        TradeConcessionService,
         AdminTransactionTablesService
     ],
     bootstrap: [AppComponent]

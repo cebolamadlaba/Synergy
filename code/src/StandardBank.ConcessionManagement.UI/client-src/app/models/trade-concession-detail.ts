@@ -4,12 +4,18 @@ export class TradeConcessionDetail extends BaseConcessionDetail {
     tradeConcessionDetailId: number;
 
     legalEntity: string;
-
-    chargeCode: string;
-    chargeCodeDesc: string;
-    chargeCodeLength: number;
     loadedRate: string;
     approvedRate: string;
-    fkChargeCodeId: number;
-    fkLegalEntityBOLUserId: number;
+    TradeProduct: string;
+    TradeProductType: string;
+    ApprovedRate: number;
+    LoadedRate :number;
+    Communication: string;
+    EstablishmentFee: number;
+    FlatFee: number;
+    GBBNumber: string;
+    Max: number;
+    Min: number;
+    Term: number;
+ 
 }

@@ -129,6 +129,9 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             //FinancialBol
             CreateMap<Model.Repository.FinancialBol, Model.UserInterface.Bol.BolFinancial>().ReverseMap();
 
+            //FinancialTrade
+            CreateMap<Model.Repository.FinancialTrade, Model.UserInterface.Trade.TradeFinancial>().ReverseMap();
+
             //FinancialLending
             CreateMap<Model.Repository.FinancialLending, Model.UserInterface.Lending.LendingFinancial>().ReverseMap();
 

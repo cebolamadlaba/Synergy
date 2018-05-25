@@ -5,6 +5,7 @@ using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
 using StandardBank.ConcessionManagement.Model.UserInterface.Bol;
+using StandardBank.ConcessionManagement.Model.UserInterface.Trade;
 
 namespace StandardBank.ConcessionManagement.Interface.Repository
 {
@@ -39,6 +40,9 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
 
         IEnumerable<BolProduct> GetBolProducts(int riskGroupId, string riskGroupName);
 
+        IEnumerable<TradeProduct> GetTradeProducts(int riskGroupId, string riskGroupName);
+
+
         /// <summary>
         /// Gets the transactional products.
         /// </summary>
@@ -55,6 +59,8 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         IEnumerable<CashConcessionDetail> GetCashConcessionDetails(int concessionId);
 
         IEnumerable<BolConcessionDetail> GetBolConcessionDetails(int concessionId);
+
+        IEnumerable<TradeConcessionDetail> GetTradeConcessionDetails(int concessionId);
 
         /// <summary>
         /// Gets the lending concession details.

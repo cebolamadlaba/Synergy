@@ -11,7 +11,7 @@ using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
 using StandardBank.ConcessionManagement.Model.UserInterface.Bol;
-
+using StandardBank.ConcessionManagement.Model.UserInterface.Trade;
 
 namespace StandardBank.ConcessionManagement.Repository
 {
@@ -195,6 +195,36 @@ namespace StandardBank.ConcessionManagement.Repository
                 new CacheKeyParameter(nameof(riskGroupName), riskGroupName));
         }
 
+
+        public IEnumerable<TradeProduct> GetTradeProducts(int riskGroupId, string riskGroupName)
+        {
+            IEnumerable<TradeProduct> Function()
+            {
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    var bolProducts = db.Query<TradeProduct>(
+                        @"Select trade.pkProductTradeId [TradeProductId], @riskGroupName [RiskGroupName],lea.[AccountNumber],
+						le.[CustomerName] [LegalEntity], ty.Description [TradeProductType], prod.description [TradeProductName],LoadedRate						
+						from [tblProductTrade] trade
+						JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = trade.[fkLegalEntityId]
+						JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = trade.[fkLegalEntityAccountId]
+						JOIN [dbo].rtblTradeProduct prod on trade.fkTradeProductId = prod.pkTradeProductId
+						JOIN [dbo].rtblTradeProductType ty on prod.fkTradeProductTypeId = ty.pkTradeProductTypeId					
+						where trade.fkRiskGroupId =  @riskGroupId", new { riskGroupId, riskGroupName },
+                        commandTimeout: Int32.MaxValue);
+
+                    if (bolProducts != null && bolProducts.Any())
+                        return bolProducts;
+                }
+
+                return null;
+            }
+
+            return _cacheManager.ReturnFromCache(Function, 300,
+                CacheKey.Repository.MiscPerformanceRepository.GetTradeProducts,
+                new CacheKeyParameter(nameof(riskGroupId), riskGroupId),
+                new CacheKeyParameter(nameof(riskGroupName), riskGroupName));
+        }
         /// <summary>
         /// Gets the transactional products.
         /// </summary>
@@ -355,6 +385,46 @@ namespace StandardBank.ConcessionManagement.Repository
                     left JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = la.fkLegalEntityId
                     JOIN [dbo].rtblBOLChargeCode co on bl.fkChargeCodeId = co.pkChargeCodeId
                     JOIN rtblBOLChargeCodeType ct on co.fkChargeCodeTypeId = ct.pkChargeCodeTypeId
+                    where cd.fkConcessionId = @concessionId", new { concessionId });
+            }
+        }
+
+        public IEnumerable<TradeConcessionDetail> GetTradeConcessionDetails(int concessionId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<TradeConcessionDetail>(@"Select cd.[pkConcessionDetailId] [ConcessionDetailId], 
+                    cd.[fkConcessionId] [ConcessionId], 
+                    cd.[fkLegalEntityId] [LegalEntityId], 
+                    cd.[fkLegalEntityAccountId] [LegalEntityAccountId],  
+                    le.[CustomerName] [LegalEntity],                    
+                    [ExpiryDate], 
+                    [DateApproved], 
+                    [IsMismatched], 
+                    [PriceExported], 
+                    [PriceExportedDate],
+					tr.pkConcessionTradeId [TradeConcessionDetailId],
+                    AccountNumber,
+					LoadedRate,
+					ApprovedRate,				
+                    tp.Description TradeProduct,
+					ty.Description TradeProductType,							
+                    tr.fkLegalEntityAccountId,
+                    tr.fkTradeProductId,
+                    tr.Communication,
+					tr.EstablishmentFee,
+					tr.FlatFee,
+					tr.GBBNumber,
+					tr.[Max],
+					tr.[Min],
+					tr.[Term]
+                    FROM [dbo].[tblConcessionDetail] cd
+                    left join [dbo].[tblConcessionTrade] tr on cd.pkConcessionDetailId = tr.fkConcessionDetailId
+                    left JOIN [dbo].tblLegalEntityAccount lea on tr.fkLegalEntityAccountId = lea.pkLegalEntityAccountId                  
+                    left JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = lea.fkLegalEntityId
+                   
+				    left JOIN rtblTradeProduct tp on tr.fkTradeProductId = tp.pkTradeProductId
+                    left JOIN rtblTradeProductType ty on tp.fkTradeProductTypeId = ty.pkTradeProductTypeId
                     where cd.fkConcessionId = @concessionId", new { concessionId });
             }
         }

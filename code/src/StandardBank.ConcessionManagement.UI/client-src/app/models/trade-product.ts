@@ -2,8 +2,9 @@ export class TradeProduct {
 
     tradeProductId: number;
     tradeProductType: string;
+    tradeProductName: string;
     riskGroupName: string;
     legalEntity: string;
-    accountnumber: string; 
-    loadedRate: string;
+    accountNumber: string; 
+    loadedRate: string;  
 }
