@@ -13,13 +13,14 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
     public interface ITradeManager
     {
 
-        //ConcessionTrade CreateConcessionTrade(TradeConcessionDetail tradedConcessionDetail, Concession concession);
 
-        //TradeConcession GetTradeConcession(string concessionReferenceId, User user);
+        ConcessionTrade CreateConcessionTrade(TradeConcessionDetail tradeConcessionDetail, Concession concession);
 
-        //ConcessionTrade DeleteConcessionTrade(TradeConcessionDetail tradedConcessionDetail);
+        TradeConcession GetTradeConcession(string concessionReferenceId, User user);
 
-        //ConcessionTrade UpdateConcessionTrade(TradeConcessionDetail tradedConcessionDetail, Concession concession);
+        ConcessionTrade DeleteConcessionTrade(TradeConcessionDetail tradedConcessionDetail);
+
+        ConcessionTrade UpdateConcessionTrade(TradeConcessionDetail tradedConcessionDetail, Concession concession);
 
         TradeView GetTradeViewData(int riskGroupNumber);
 

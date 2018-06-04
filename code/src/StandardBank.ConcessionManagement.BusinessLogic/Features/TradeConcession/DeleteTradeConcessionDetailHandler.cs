@@ -3,28 +3,28 @@ using MediatR;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
-using StandardBank.ConcessionManagement.Model.UserInterface.Bol;
+using StandardBank.ConcessionManagement.Model.UserInterface.Trade;
 
-namespace StandardBank.ConcessionManagement.BusinessLogic.Features.BolConcession
+namespace StandardBank.ConcessionManagement.BusinessLogic.Features.TradeConcession
 {
     /// <summary>
     /// Delete cash concession detail command handler
     /// </summary>
     /// <seealso cref="MediatR.IAsyncRequestHandler{DeleteCashConcessionDetailCommand, CashConcessionDetail}" />
-    public class DeleteCashConcessionDetailHandler : IAsyncRequestHandler<DeleteBolConcessionDetail, BolConcessionDetail>
+    public class DeleteTradeConcessionDetailHandler : IAsyncRequestHandler<DeleteTradeConcessionDetail, TradeConcessionDetail>
     {
         /// <summary>
         /// The cash manager
         /// </summary>
-        private readonly IBolManager _bolManager;
+        private readonly ITradeManager _tradeManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeleteCashConcessionDetailHandler"/> class.
         /// </summary>
         /// <param name="cashManager">The cash manager.</param>
-        public DeleteCashConcessionDetailHandler(IBolManager bolManager)
+        public DeleteTradeConcessionDetailHandler(ITradeManager tradeManager)
         {
-            _bolManager = bolManager;
+            _tradeManager = tradeManager;
         }
 
         /// <summary>
@@ -32,13 +32,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.BolConcession
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public async Task<BolConcessionDetail> Handle(DeleteBolConcessionDetail message)
+        public async Task<TradeConcessionDetail> Handle(DeleteTradeConcessionDetail message)
         {
-            var result = _bolManager.DeleteConcessionBol(message.BolConcessionDetail);
+            var result = _tradeManager.DeleteConcessionTrade(message.TradeConcessionDetail);
 
             message.AuditRecord = new AuditRecord(result, message.User, AuditType.Delete);
 
-            return message.BolConcessionDetail;
+            return message.TradeConcessionDetail;
         }
     }
 }

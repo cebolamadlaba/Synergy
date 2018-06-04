@@ -3,15 +3,14 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import { TradeView } from "../models/trade-view";
+
 import { RiskGroup } from "../models/risk-group";
-import { BolConcession } from "../models/bol-concession";
+import { TradeConcession } from "../models/trade-concession";
 import { Concession } from "../models/concession";
 import { ConcessionCondition } from "../models/concession-condition";
-import { BolConcessionDetail } from "../models/bol-concession-detail";
-import { BolFinancial } from "../models/bol-financial";
+import { TradeConcessionDetail } from "../models/trade-concession-detail";
+import { TradeFinancial } from "../models/trade-financial";
 
-import { BolChargeCodeType } from "../models/bol-chargecodetype";
-import { BolChargeCode } from "../models/bol-chargecode";
 
 import { SearchConcessionDetail } from '../models/search-concession-detail';
 import { ApprovedConcessionDetail } from "../models/approved-concession-detail";
@@ -31,12 +30,12 @@ export class TradeConcessionService {
     //    return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     //}
 
-    //postNewBolData(bolConcession: BolConcession): Observable<BolConcession> {
-    //    let headers = new Headers({ 'Content-Type': 'application/json' });
-    //    let options = new RequestOptions({ headers: headers });
-    //    const url = "/api/Bol/NewBol";
-    //    return this.http.post(url, bolConcession, options).map(this.extractData).catch(this.handleErrorObservable);
-    //}
+    postNewTradeData(tradeConcession: TradeConcession): Observable<TradeConcession> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/Trade/NewTrade";
+        return this.http.post(url, tradeConcession, options).map(this.extractData).catch(this.handleErrorObservable);
+    }
 
     //postUpdateBolData(bolConcession: BolConcession): Observable<BolConcession> {
     //    let headers = new Headers({ 'Content-Type': 'application/json' });

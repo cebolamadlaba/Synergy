@@ -10,12 +10,18 @@ export class TradeConcessionDetail extends BaseConcessionDetail {
     TradeProductType: string;
     ApprovedRate: number;
     LoadedRate :number;
-    Communication: string;
+    Communications: string;
     EstablishmentFee: number;
     FlatFee: number;
     GBBNumber: string;
     Max: number;
     Min: number;
     Term: number;
+    fkTradeProductId: number;
+    TradeProductTypeID: number;
+    fkLegalEntityAccountId: number;
+    adValorem: number;
+    currency: number;
+
  
 }

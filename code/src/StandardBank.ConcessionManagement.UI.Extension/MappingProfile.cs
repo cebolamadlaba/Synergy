@@ -211,6 +211,10 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             CreateMap<Model.Repository.TradeProductType, Model.UserInterface.Trade.TradeProductType>().ReverseMap();
 
 
+            //Trade
+            CreateMap<Model.Repository.ConcessionTrade, Model.UserInterface.Trade.TradeConcessionDetail>().ReverseMap();
+
+
 
 
         }

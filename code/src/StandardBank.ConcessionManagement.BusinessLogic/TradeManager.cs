@@ -53,36 +53,36 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _mediator = mediator;
         }
 
-        //public ConcessionBol CreateConcessionTrade(TradeConcessionDetail tradeConcessionDetail, Concession concession)
-        //{
-        //    //var concessionBol = _mapper.Map<ConcessionBol>(tradeConcessionDetail);
-        //    //concessionBol.ConcessionId = concession.Id;
-        //    //return _concessionBolRepository.Create(concessionBol);
-        //}
+        public ConcessionTrade CreateConcessionTrade(TradeConcessionDetail tradeConcessionDetail, Concession concession)
+        {
+            var concessionTrade = _mapper.Map<ConcessionTrade>(tradeConcessionDetail);
+            concessionTrade.ConcessionId = concession.Id;
+            return _concessionTradeRpository.Create(concessionTrade);
+        }
 
-        //public BolConcession GetBolConcession(string concessionReferenceId, User user)
-        //{
-        //    var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
-        //    var bolConcessionDetails = _miscPerformanceRepository.GetBolConcessionDetails(concession.Id);
+        public TradeConcession GetTradeConcession(string concessionReferenceId, User user)
+        {
+            var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
+            var tradeConcessionDetails = _miscPerformanceRepository.GetTradeConcessionDetails(concession.Id);
 
-        //    return new BolConcession
-        //    {
-        //        Concession = concession,
-        //        BolConcessionDetails = bolConcessionDetails,
-        //        ConcessionConditions = _concessionManager.GetConcessionConditions(concession.Id),
-        //        CurrentUser = user
-        //    };
+            return new TradeConcession
+            {
+                Concession = concession,
+                TradeConcessionDetails = tradeConcessionDetails,
+                ConcessionConditions = _concessionManager.GetConcessionConditions(concession.Id),
+                CurrentUser = user
+            };
 
-        //}
+        }
 
-        //public ConcessionBol DeleteConcessionBol(BolConcessionDetail cashConcessionDetail)
-        //{
-        //    var concessionBol = _concessionBolRepository.ReadById(cashConcessionDetail.BolConcessionDetailId);
+        public ConcessionTrade DeleteConcessionTrade(TradeConcessionDetail tradeConcessionDetail)
+        {
+            var concessionBol = _concessionTradeRpository.ReadById(tradeConcessionDetail.TradeConcessionDetailId);
 
-        //    _concessionBolRepository.Delete(concessionBol);
-        //    return concessionBol;
+            _concessionTradeRpository.Delete(concessionBol);
+            return concessionBol;
 
-        //}
+        }
 
         //public Model.UserInterface.Bol.BOLChargeCode CreateUpdateBOLChargeCode(Model.UserInterface.Bol.BOLChargeCode bolchargecode)
         //{
@@ -104,32 +104,34 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         //}
 
-        //public ConcessionBol UpdateConcessionBol(BolConcessionDetail bolConcessionDetail, Concession concession)
-        //{
-        //    var mappedConcessionBol = _mapper.Map<ConcessionBol>(bolConcessionDetail);
-        //    mappedConcessionBol.ConcessionId = concession.Id;
-        //    mappedConcessionBol.Id = bolConcessionDetail.BolConcessionDetailId;
+        public ConcessionTrade UpdateConcessionTrade(TradeConcessionDetail tradeConcessionDetail, Concession concession)
+        {
+            var mappedConcessionTrade = _mapper.Map<ConcessionTrade>(tradeConcessionDetail);
+            //mappedConcessionTrade.ConcessionId = concession.Id;
+            //mappedConcessionTrade.Id = tradeConcessionDetail.TradeConcessionDetailId;
 
-        //    if (concession.Status == Constants.ConcessionStatus.Approved ||
-        //        concession.Status == Constants.ConcessionStatus.ApprovedWithChanges)
-        //    {
-        //        //Loaded rate becomes approved rate
-        //        mappedConcessionBol.ApprovedRate = mappedConcessionBol.LoadedRate;
+            //if (concession.Status == Constants.ConcessionStatus.Approved ||
+            //    concession.Status == Constants.ConcessionStatus.ApprovedWithChanges)
+            //{
+            //    //Loaded rate becomes approved rate
+            //    mappedConcessionTrade.ApprovedRate = mappedConcessionTrade.TransactionVolume;
 
-        //        _ruleManager.UpdateBaseFieldsOnApproval(mappedConcessionBol);
-        //    }
-        //    else if (concession.Status == Constants.ConcessionStatus.Pending &&
-        //             concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges)
-        //    {
+            //    _ruleManager.UpdateBaseFieldsOnApproval(mappedConcessionTrade);
+            //}
+            //else if (concession.Status == Constants.ConcessionStatus.Pending &&
+            //         concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges)
+            //{
 
-        //        //Loaded rate becomes approved rate
-        //        mappedConcessionBol.ApprovedRate = mappedConcessionBol.LoadedRate;
-        //    }
+            //    //Loaded rate becomes approved rate
+            //    mappedConcessionTrade.ApprovedRate = mappedConcessionTrade.LoadedRate;
+            //}
 
-        //    _concessionBolRepository.Update(mappedConcessionBol);
+            //_concessionTradeRpository.Update(mappedConcessionTrade);
 
-        //    return mappedConcessionBol;
-        //}
+           return mappedConcessionTrade;
+
+            //return null;
+        }
 
 
         //public List<Model.UserInterface.Trade.TradeProduct> GetTradeProducts()
@@ -159,8 +161,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 });
             }
 
-            var bolFinancial = _mapper.Map<TradeFinancial>(_financialTradeRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialTrade());
-                      
+            var bolFinancial = _mapper.Map<TradeFinancial>(_financialTradeRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialTrade());                      
 
             var tradeProducts = GetTradeProducts(riskGroup);
 

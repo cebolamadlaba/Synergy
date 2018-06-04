@@ -8,7 +8,7 @@ using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCondition;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
-using StandardBank.ConcessionManagement.Model.UserInterface.Bol;
+using StandardBank.ConcessionManagement.Model.UserInterface.Trade;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.UI.Validation;
@@ -53,27 +53,27 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(_tradeManager.GetTradeViewData(riskGroupNumber));
         }
 
-     
-        //[Route("NewBol")]
-        //[ValidateModel]
-        //public async Task<IActionResult> NewBol([FromBody] BolConcession bolConcession)
-        //{
-        //    var user = _siteHelper.LoggedInUser(this);
 
-        //    bolConcession.Concession.ConcessionType = Constants.ConcessionType.BusinessOnline;
-        //    bolConcession.Concession.Type = Constants.ReferenceType.New;
+        [Route("NewTrade")]
+        [ValidateModel]
+        public async Task<IActionResult> NewTrade([FromBody] TradeConcession tradeConcession)
+        {
+            var user = _siteHelper.LoggedInUser(this);
 
-        //    var concession = await _mediator.Send(new AddConcession(bolConcession.Concession, user));
+            tradeConcession.Concession.ConcessionType = Constants.ConcessionType.Trade;
+            tradeConcession.Concession.Type = Constants.ReferenceType.New;
 
-        //    foreach (var bolConcessionDetail in bolConcession.BolConcessionDetails)
-        //        await _mediator.Send(new BusinessLogic.Features.BolConcession.AddOrUpdateBolConcessionDetail(bolConcessionDetail, user, concession));
+            var concession = await _mediator.Send(new AddConcession(tradeConcession.Concession, user));
 
-        //    if (bolConcession.ConcessionConditions != null && bolConcession.ConcessionConditions.Any())
-        //        foreach (var concessionCondition in bolConcession.ConcessionConditions)
-        //            await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+            foreach (var tradeConcessionDetail in tradeConcession.TradeConcessionDetails)
+                await _mediator.Send(new BusinessLogic.Features.TradeConcession.AddOrUpdateTradeConcessionDetail(tradeConcessionDetail, user, concession));
 
-        //    return Ok(bolConcession);
-        //}
+            if (tradeConcession.ConcessionConditions != null && tradeConcession.ConcessionConditions.Any())
+                foreach (var concessionCondition in tradeConcession.ConcessionConditions)
+                    await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+
+            return Ok(tradeConcession);
+        }
 
 
 
@@ -251,7 +251,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         //    return Ok(returnConcession);
         //}
 
-     
+
         //[Route("UpdateApprovedBol")]
         //[ValidateModel]
         //public async Task<IActionResult> UpdateApprovedBol([FromBody] BolConcession bolConcession)
@@ -319,7 +319,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         //    return Ok(_bolManager.GetBolConcession(detail.ReferenceNumber, user));
         //}
 
-    
+
 
 
     }

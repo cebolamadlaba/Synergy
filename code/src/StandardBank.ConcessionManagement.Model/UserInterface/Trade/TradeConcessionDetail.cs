@@ -17,9 +17,23 @@
         public double EstablishmentFee { get; set; }
         public double FlatFee { get; set; }
         public string GBBNumber { get; set; }
-        public double Max { get; set; }
-        public double Min { get; set; }
-        public int Term { get; set; }
+        public double max { get; set; }
+        public double min { get; set; }
+        public int term { get; set; }        
+
+        public int? fkTradeProductId { get; set; }
+       
+        public int? fkLegalEntityAccountId { get; set; }          
+
+        public string Communications { get; set; }      
+      
+        public decimal? AdValorem { get; set; }
+
+        public string Currency { get; set; }
+
+
+
+
 
     }
 }

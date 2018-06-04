@@ -19,7 +19,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// <value>
         /// The TransactionTypeId.
         /// </value>
-        public int? TransactionTypeId { get; set; }
+        public int? fkTradeProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the ChannelTypeId.
@@ -27,7 +27,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// <value>
         /// The ChannelTypeId.
         /// </value>
-        public int? ChannelTypeId { get; set; }
+        public int? fkLegalEntityAccountId { get; set; }
 
         /// <summary>
         /// Gets or sets the BaseRateId.
@@ -35,32 +35,23 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// <value>
         /// The BaseRateId.
         /// </value>
-        public int? BaseRateId { get; set; }
+        public int? LoadedRate { get; set; }
 
-        /// <summary>
-        /// Gets or sets the TableNumber.
-        /// </summary>
-        /// <value>
-        /// The TableNumber.
-        /// </value>
-        public int? TableNumber { get; set; }
+        public int? ApprovedRate { get; set; }
 
-        /// <summary>
-        /// Gets or sets the TransactionVolume.
-        /// </summary>
-        /// <value>
-        /// The TransactionVolume.
-        /// </value>
-        public int? TransactionVolume { get; set; }
+        public string GBBNumber { get; set; }
 
-        /// <summary>
-        /// Gets or sets the TransactionValue.
-        /// </summary>
-        /// <value>
-        /// The TransactionValue.
-        /// </value>
-        public decimal? TransactionValue { get; set; }
+        public decimal? min { get; set; }
 
+        public decimal? max { get; set; }
+
+        public int? term { get; set; }
+
+        public string Communications { get; set; }
+
+        public decimal? FlatFee { get; set; }
+
+        public decimal? EstablishmentFee { get; set; }
         /// <summary>
         /// Gets or sets the AdValorem.
         /// </summary>
@@ -68,6 +59,8 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The AdValorem.
         /// </value>
         public decimal? AdValorem { get; set; }
+
+        public string Currency { get; set; }
 
         /// <summary>
         /// Gets or the name of the table.

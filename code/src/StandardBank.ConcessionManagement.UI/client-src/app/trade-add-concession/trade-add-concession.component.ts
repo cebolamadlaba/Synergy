@@ -76,8 +76,6 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
     clientAccounts: ClientAccount[];
 
 
-
-
     constructor(private route: ActivatedRoute,
         private router: Router,
         private formBuilder: FormBuilder,
@@ -113,7 +111,6 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
                 this.observableClientAccounts = this.lookupDataService.getClientAccounts(this.riskGroupNumber);
                 this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
-
             }
 
             if (this.riskGroupNumber) {
@@ -151,8 +148,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
             this.conditionTypes = <any>results[0];
             this.tradeproducttypes = <any>results[1];
-            this.tradeproducts = <any>results[2];
-          
+            this.tradeproducts = <any>results[2];          
 
             this.periods = <any>results[3];
             this.periodTypes = <any>results[4];
@@ -186,11 +182,20 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
         return this.formBuilder.group({
             product: [''],
-            chargecode: [''],
-            unitcharge: [''],
-            userid: [''],
+            producttype: [''],
+            accountnumber: [''],
+            gbbnumber: [''],
             expiryDate: [''],
             accountNumber: [''],
+            term: [''],
+            advalorem: [''],
+            min: [''],
+            max: [''],
+            communication: [''],
+            flatfee: [''],
+            currency: [''],
+            estfee: [''],
+            rate: ['']
         });
     }
 
@@ -274,18 +279,16 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
     productTypeChanged(rowIndex) {
 
-        //const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
-        //this.selectedProducts[rowIndex] = control.controls[rowIndex].get('product').value;
+        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+        this.selectedProducts[rowIndex] = control.controls[rowIndex].get('product').value;
 
-        //let currentProduct = control.controls[rowIndex];
-        //var selectedproduct = currentProduct.get('product').value;
+        let currentProduct = control.controls[rowIndex];
+        var selectedproduct = currentProduct.get('product').value;
 
-        //this.selectedProducts[rowIndex].bolchargecodes = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId);
+        this.selectedProducts[rowIndex].producttypes = this.tradeproducttypes.filter(re => re.tradeProductTypeID == selectedproduct.tradeProductTypeId);
 
-        //currentProduct.get('chargecode').setValue(this.selectedProducts[rowIndex].bolchargecodes[0]);
-
+        currentProduct.get('producttype').setValue(this.selectedProducts[rowIndex].producttypes[0]);
     }
-
 
     addValidationError(validationDetail) {
         if (!this.validationError)
@@ -294,136 +297,186 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
         this.validationError.push(validationDetail);
     }
 
-    //getBolConcession(): BolConcession {
-    //    var bolConcession = new BolConcession();
-    //    bolConcession.concession = new Concession();
-    //    bolConcession.concession.riskGroupId = this.riskGroup.id;
+    getTradeConcession(): TradeConcession {
+        var tradeConcession = new TradeConcession();
+        tradeConcession.concession = new Concession();
+        tradeConcession.concession.riskGroupId = this.riskGroup.id;
+      
+
+        if (this.tradeConcessionForm.controls['motivation'].value)
+            tradeConcession.concession.motivation = this.tradeConcessionForm.controls['motivation'].value;
+        else
+            this.addValidationError("Motivation not captured");
+
+        const concessions = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+
+        for (let concessionFormItem of concessions.controls) {
+            if (!tradeConcession.tradeConcessionDetails)
+                tradeConcession.tradeConcessionDetails = [];
+
+            let tradeConcessionDetail = new TradeConcessionDetail();
+
+            if (concessionFormItem.get('product').value) {
+                tradeConcessionDetail.fkTradeProductId = concessionFormItem.get('product').value.tradeProductId;
+
+            } else {
+                this.addValidationError("Product not selected");
+            }
 
 
-    //    if (this.bolConcessionForm.controls['smtDealNumber'].value)
-    //        bolConcession.concession.smtDealNumber = this.bolConcessionForm.controls['smtDealNumber'].value;
-    //    else
-    //        this.addValidationError("SMT Deal Number not captured");
+            if (concessionFormItem.get('producttype').value) {
+                tradeConcessionDetail.TradeProductTypeID = concessionFormItem.get('producttype').value.tradeProductTypeID;
 
-    //    if (this.bolConcessionForm.controls['motivation'].value)
-    //        bolConcession.concession.motivation = this.bolConcessionForm.controls['motivation'].value;
-    //    else
-    //        this.addValidationError("Motivation not captured");
-
-    //    const concessions = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
-
-    //    for (let concessionFormItem of concessions.controls) {
-    //        if (!bolConcession.bolConcessionDetails)
-    //            bolConcession.bolConcessionDetails = [];
-
-    //        let bolConcessionDetail = new BolConcessionDetail();
-
-    //        if (concessionFormItem.get('product').value) {
-
-    //        } else {
-    //            this.addValidationError("Product not selected");
-    //        }
+            } else {
+                this.addValidationError("Product Type code not selected");
+            }
 
 
-    //        if (concessionFormItem.get('chargecode').value) {
-    //            bolConcessionDetail.fkChargeCodeId = concessionFormItem.get('chargecode').value.pkChargeCodeId;
 
-    //        } else {
-    //            this.addValidationError("Charge code not selected");
-    //        }
+            if (concessionFormItem.get('accountNumber').value && concessionFormItem.get('accountNumber').value.legalEntityId) {
+                tradeConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
+                tradeConcessionDetail.legalEntityAccountId = concessionFormItem.get('accountNumber').value.legalEntityAccountId;
+            } else {
+                this.addValidationError("Client account not selected");
+            }
+
+            if (concessionFormItem.get('gbbnumber').value) {
+                tradeConcessionDetail.GBBNumber = concessionFormItem.get('gbbnumber').value;
+            } else {
+                this.addValidationError("GBB Number not entered");
+            }
 
 
-    //        if (concessionFormItem.get('unitcharge').value) {
-    //            bolConcessionDetail.loadedRate = concessionFormItem.get('unitcharge').value;
-    //        } else {
-    //            this.addValidationError("Charge rate not entered");
-    //        }
+            if (concessionFormItem.get('term').value) {
+                tradeConcessionDetail.Term = concessionFormItem.get('term').value;
+            } else {
+                this.addValidationError("Term not entered");
+            }
 
-    //        if (concessionFormItem.get('userid').value) {
-    //            bolConcessionDetail.fkLegalEntityBOLUserId = concessionFormItem.get('userid').value.pkLegalEntityBOLUserId;
-    //            bolConcessionDetail.legalEntityId = concessionFormItem.get('userid').value.legalEntityId;
-    //            bolConcessionDetail.legalEntityAccountId = concessionFormItem.get('userid').value.legalEntityAccountId;
-    //        } else {
-    //            this.addValidationError("User ID not selected");
-    //        }
+            if (concessionFormItem.get('advalorem').value) {
+                tradeConcessionDetail.adValorem = concessionFormItem.get('advalorem').value;
+            } else {
+                this.addValidationError("AdValorem value not entered");
+            }
 
-    //        if (concessionFormItem.get('expiryDate').value)
-    //            bolConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+            if (concessionFormItem.get('min').value) {
+                tradeConcessionDetail.Min = concessionFormItem.get('min').value;
+            } else {
+                this.addValidationError("Min value not entered");
+            }
 
-    //        bolConcession.bolConcessionDetails.push(bolConcessionDetail);
-    //    }
+            if (concessionFormItem.get('max').value) {
+                tradeConcessionDetail.Max = concessionFormItem.get('max').value;
+            } else {
+                this.addValidationError("Max value not entered");
+            }
+            ///---
+            if (concessionFormItem.get('communication').value) {
+                tradeConcessionDetail.Communications = concessionFormItem.get('communication').value;
+            } else {
+                this.addValidationError("Communication not entered");
+            }
+            if (concessionFormItem.get('flatfee').value) {
+                tradeConcessionDetail.FlatFee = concessionFormItem.get('flatfee').value;
+            } else {
+                this.addValidationError("Flat fee not entered");
+            }
 
-    //    const conditions = <FormArray>this.bolConcessionForm.controls['conditionItemsRows'];
+            if (concessionFormItem.get('currency').value) {
+                tradeConcessionDetail.currency = concessionFormItem.get('currency').value;
+            } else {
+                this.addValidationError("Currency not selected");
+            }
 
-    //    for (let conditionFormItem of conditions.controls) {
-    //        if (!bolConcession.concessionConditions)
-    //            bolConcession.concessionConditions = [];
+            if (concessionFormItem.get('estfee').value) {
+                tradeConcessionDetail.EstablishmentFee = concessionFormItem.get('estfee').value;
+            } else {
+                this.addValidationError("Est. fee not entered");
+            }
 
-    //        let concessionCondition = new ConcessionCondition();
+            if (concessionFormItem.get('rate').value) {
+                tradeConcessionDetail.loadedRate = concessionFormItem.get('rate').value;
+            } else {
+                this.addValidationError("Rate not entered");
+            }           
 
-    //        if (conditionFormItem.get('conditionType').value)
-    //            concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;
-    //        else
-    //            this.addValidationError("Condition type not selected");
+            if (concessionFormItem.get('expiryDate').value)
+                tradeConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
-    //        if (conditionFormItem.get('conditionProduct').value)
-    //            concessionCondition.conditionProductId = conditionFormItem.get('conditionProduct').value.id;
-    //        else
-    //            this.addValidationError("Condition product not selected");
+            tradeConcession.tradeConcessionDetails.push(tradeConcessionDetail);
+        }
 
-    //        if (conditionFormItem.get('interestRate').value)
-    //            concessionCondition.interestRate = conditionFormItem.get('interestRate').value;
+        const conditions = <FormArray>this.tradeConcessionForm.controls['conditionItemsRows'];
 
-    //        if (conditionFormItem.get('volume').value)
-    //            concessionCondition.conditionVolume = conditionFormItem.get('volume').value;
+        for (let conditionFormItem of conditions.controls) {
+            if (!tradeConcession.concessionConditions)
+                tradeConcession.concessionConditions = [];
 
-    //        if (conditionFormItem.get('value').value)
-    //            concessionCondition.conditionValue = conditionFormItem.get('value').value;
+            let concessionCondition = new ConcessionCondition();
 
-    //        if (conditionFormItem.get('expectedTurnoverValue').value)
-    //            concessionCondition.expectedTurnoverValue = conditionFormItem.get('expectedTurnoverValue').value;
+            if (conditionFormItem.get('conditionType').value)
+                concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;
+            else
+                this.addValidationError("Condition type not selected");
 
-    //        if (conditionFormItem.get('periodType').value) {
-    //            concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
-    //        } else {
-    //            this.addValidationError("Period type not selected");
-    //        }
+            if (conditionFormItem.get('conditionProduct').value)
+                concessionCondition.conditionProductId = conditionFormItem.get('conditionProduct').value.id;
+            else
+                this.addValidationError("Condition product not selected");
 
-    //        if (conditionFormItem.get('period').value) {
-    //            concessionCondition.periodId = conditionFormItem.get('period').value.id;
-    //        } else {
-    //            this.addValidationError("Period not selected");
-    //        }
+            if (conditionFormItem.get('interestRate').value)
+                concessionCondition.interestRate = conditionFormItem.get('interestRate').value;
 
-    //        bolConcession.concessionConditions.push(concessionCondition);
-    //    }
+            if (conditionFormItem.get('volume').value)
+                concessionCondition.conditionVolume = conditionFormItem.get('volume').value;
 
-    //    return bolConcession;
-    //}
+            if (conditionFormItem.get('value').value)
+                concessionCondition.conditionValue = conditionFormItem.get('value').value;
+
+            if (conditionFormItem.get('expectedTurnoverValue').value)
+                concessionCondition.expectedTurnoverValue = conditionFormItem.get('expectedTurnoverValue').value;
+
+            if (conditionFormItem.get('periodType').value) {
+                concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
+            } else {
+                this.addValidationError("Period type not selected");
+            }
+
+            if (conditionFormItem.get('period').value) {
+                concessionCondition.periodId = conditionFormItem.get('period').value.id;
+            } else {
+                this.addValidationError("Period not selected");
+            }
+
+            tradeConcession.concessionConditions.push(concessionCondition);
+        }
+
+        return tradeConcession;
+    }
 
     onSubmit() {
-        //this.isLoading = true;
 
-        //this.errorMessage = null;
-        //this.validationError = null;
+        this.isLoading = true;
+        this.errorMessage = null;
+        this.validationError = null;
 
-        //var bolConcession = this.getBolConcession();
+        var tradeConcession = this.getTradeConcession();
 
-        //bolConcession.concession.concessionType = ConcessionTypes.BOL;
-        //bolConcession.concession.type = "New";
+        tradeConcession.concession.concessionType = ConcessionTypes.Trade;
+        tradeConcession.concession.type = "New";
 
-        //if (!this.validationError) {
-        //    this.bolConcessionService.postNewBolData(bolConcession).subscribe(entity => {
-        //        console.log("data saved");
-        //        this.saveMessage = entity.concession.referenceNumber;
-        //        this.isLoading = false;
-        //    }, error => {
-        //        this.errorMessage = <any>error;
-        //        this.isLoading = false;
-        //    });
-        //} else {
-        //    this.isLoading = false;
-        //}
+        if (!this.validationError) {
+            this.tradeConcessionService.postNewTradeData(tradeConcession).subscribe(entity => {
+                console.log("data saved");
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
     }
 
     setTwoNumberDecimal($event) {

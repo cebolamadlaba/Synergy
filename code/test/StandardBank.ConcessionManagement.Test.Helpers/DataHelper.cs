@@ -1750,14 +1750,14 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         {
             var model = new ConcessionTrade
             {
-                ConcessionId = GetConcessionId(),
-                TransactionTypeId = GetTransactionTypeId(),
-                ChannelTypeId = GetChannelTypeId(),
-                TableNumber = 2,
-                TransactionVolume = 6,
-                TransactionValue = 9451,
-                BaseRateId = GetBaseRateId(),
-                AdValorem = 4407
+                //ConcessionId = GetConcessionId(),
+                //TransactionTypeId = GetTransactionTypeId(),
+                //ChannelTypeId = GetChannelTypeId(),
+                //TableNumber = 2,
+                //TransactionVolume = 6,
+                //TransactionValue = 9451,
+                //BaseRateId = GetBaseRateId(),
+                //AdValorem = 4407
             };
 
             InstantiatedDependencies.ConcessionTradeRepository.Create(model);

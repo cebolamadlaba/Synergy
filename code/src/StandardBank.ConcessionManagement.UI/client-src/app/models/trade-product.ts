@@ -1,3 +1,5 @@
+import { TradeProductType } from "../models/trade-product-type";
+
 export class TradeProduct {
 
     tradeProductId: number;
@@ -7,5 +9,6 @@ export class TradeProduct {
     riskGroupName: string;
     legalEntity: string;
     accountNumber: string; 
-    loadedRate: string;  
+    loadedRate: string;
+    producttypes :TradeProductType[];
 }
