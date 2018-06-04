@@ -30,7 +30,7 @@ export class MismatchedInboxComponent implements OnInit {
                 search: "",
                 searchPlaceholder: "Search"
 			},
-            order: [[6, 'desc']]
+            order: [[6, 'asc']]
         };
 
         this.observableUserConcessions = this.userConcessionsService.getData();

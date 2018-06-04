@@ -156,6 +156,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             bool validUserForApplication = this.AuthenticateUserForApplication(theuser.ANumber, "Concession Management Service", out reason);
 
+            //valid
             if (validUserForApplication)
             {
                 theuser.Validated = true;
@@ -163,6 +164,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
                 return Ok(theuser);
             }
+            //not valid
             else
             {
                 //for testing purposes..
@@ -173,42 +175,82 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
                     return Ok(theuser);
                 }
+                else
 
-                theuser.Validated = false;
-                theuser.ErrorMessage = reason;
+                {
 
-                return Ok(theuser);
+                    theuser.Validated = false;
+                    theuser.ErrorMessage = reason;
+
+                    return Ok(theuser);
+                }
             }
-            // };
-
-
-            //var applicableuser = _cacheManager.ReturnFromCache(function, 1, CacheKey.UserInterface.SiteHelper.UserAccess,new CacheKeyParameter(nameof(theuser.ANumber), theuser));
-
-            // return Ok(applicableuser);
-
         }
 
 
         public bool AuthenticateUserForApplication(string aNumber, string applicationName, out string reason)
         {
-            reason = "Not_Valid";
+            reason = "";
+
             try
-            {
-                MyAccess.AuditServiceClient client = new MyAccess.AuditServiceClient();
+            {             
+
+                MyAccess.AuditServiceClient client = new MyAccess.AuditServiceClient();                
                 AuthenticationResult result = client.AuthUserAsync(aNumber, applicationName).Result;
 
-                if (!string.IsNullOrEmpty(result.Reason))
-                    reason = result.Reason;
+                if (string.IsNullOrEmpty(result.Reason))
+                {
+                    reason = "MyAccess service replied with empty result. Please contact admin.";
+                    return false;
+                }
+                else
+                {
+                    //if access granted
+                    if (result.Result)
+                    {
+                        reason = "";
+                        return true;
+                    }
+                    //no access is givedn
+                    else
+                    {
+                        var exceptionLog = new ExceptionLog
+                        {
+                            ExceptionMessage = "No access for user",
+                            ExceptionData = "ANumber:" + aNumber + "Response:" + reason,
+                            ExceptionSource = "CMS.AuthenticateUserForApplication",
+                            ExceptionType = "MyAccess",
+                            Logdate = DateTime.Now
+                        };
 
-                return result.Result;
+                        _exceptionLogRepository.Create(exceptionLog);
+
+
+                        reason = "No access granted " +  result.Reason;
+                        return false;
+                    }                                    
+                }
+               
             }
             catch (Exception ex)
             {
-                // Either service is offline, or the ANumber is not linked to the provided application.
-                reason = "My Access error during WS call for " + aNumber;
-            }
 
-            return false;
+                var exceptionLog = new ExceptionLog
+                {
+                    ExceptionMessage = ex.Message,
+                    ExceptionData =  "ANumber:" + aNumber + "Response:" + reason,
+                    ExceptionSource = "CMS.AuthenticateUserForApplication",
+                    ExceptionType = "MyAccess",
+                    Logdate = DateTime.Now
+                };
+
+                _exceptionLogRepository.Create(exceptionLog);
+
+                // Either service is offline, or the ANumber is not linked to the provided application.
+                reason = "MyAccess service returned an error. Please contact admin.";
+                return false;
+            }
+          
         }
         /// <summary>
         /// Tests the logger

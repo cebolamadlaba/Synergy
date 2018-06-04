@@ -167,6 +167,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static IBolUserRepository BolUserRepository = new BolUserRepository(DbConnection);
 
+    
+
         /// <summary>
         /// The BusinesOnlineTransactionType repository
         /// </summary>
@@ -429,6 +431,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static ITransactionTableNumberRepository TransactionTableNumberRepository =
             new TransactionTableNumberRepository(DbConnection, CacheManager);
 
+      
         /// <summary>
         /// The SapDataImport repository
         /// </summary>
@@ -471,6 +474,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             new AccountExecutiveAssistantRepository(DbConnection);
 
 
+
         public static IPrimeRateRepository PrimeRateRepository =
         new PrimeRateRepository(DbConnection);
 
@@ -483,7 +487,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             PeriodTypeRepository, ConditionTypeRepository, Mapper, ConditionProductRepository,
             ConditionTypeProductRepository, AccrualTypeRepository, ChannelTypeRepository, TransactionTypeRepository,
             TableNumberRepository, RelationshipRepository, RoleRepository, CentreRepository,
-            RiskGroupRepository, TransactionTableNumberRepository, BolUserRepository);
+            RiskGroupRepository, TransactionTableNumberRepository, BolUserRepository,ConcessionTradeRepository );
 
         /// <summary>
         /// The region manager

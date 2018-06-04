@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
 
+
 namespace StandardBank.ConcessionManagement.Repository
 {
     /// <summary>
@@ -100,6 +101,27 @@ namespace StandardBank.ConcessionManagement.Repository
                     @"SELECT [pkConcessionTradeId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkTransactionTypeId] [TransactionTypeId], [fkChannelTypeId] [ChannelTypeId], [fkBaseRateId] [BaseRateId], [TableNumber], [TransactionVolume], [TransactionValue], [AdValorem], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
                     FROM [dbo].[tblConcessionTrade] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]");
+            }
+        }
+
+
+        public IEnumerable<TradeProduct> GetTradeProducts()
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+
+                return db.Query<TradeProduct>(
+                    @"SELECT description [tradeProductName],  pkTradeProductId [tradeProductId], fkTradeProductTypeId [tradeProductTypeId]  from rtblTradeProduct");
+            }
+        }
+
+        public IEnumerable<TradeProductType> GetTradeProductTypes()
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+
+                return db.Query<TradeProductType>(
+                    @"SELECT pkTradeProductTypeId [tradeProductTypeID], description [tradeProductType] from rtblTradeProductType");
             }
         }
 

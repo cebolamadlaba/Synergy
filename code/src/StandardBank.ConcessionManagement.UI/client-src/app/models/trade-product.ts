@@ -2,6 +2,7 @@ export class TradeProduct {
 
     tradeProductId: number;
     tradeProductType: string;
+    tradeProductTypeId: number;
     tradeProductName: string;
     riskGroupName: string;
     legalEntity: string;

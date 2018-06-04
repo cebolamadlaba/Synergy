@@ -21,6 +21,10 @@ import { ApprovedConcessionDetail } from "../models/approved-concession-detail";
 
 import { BolChargeCodeType } from "../models/bol-chargecodetype";
 import { BolChargeCode } from "../models/bol-chargecode";
+
+import { TradeProductType } from "../models/trade-product-type";
+import { TradeProduct } from "../models/trade-product";
+
 import { LegalEntityBOLUser } from "../models/legal-entity-bol-user";
 
 @Injectable()
@@ -88,9 +92,18 @@ export class LookupDataService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-
     getLegalEntityBOLUsers(riskGroupNumber): Observable<LegalEntityBOLUser[]> {
         const url = "/api/Condition/LegalEntityBOLUsers/" + riskGroupNumber;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    getTradeProductTypes(): Observable<TradeProductType[]> {
+        const url = "/api/Condition/TradeProductTypes";
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    getTradeProducts(): Observable<TradeProduct[]> {
+        const url = "/api/Condition/TradeProducts";
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 

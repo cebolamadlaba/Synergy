@@ -16,6 +16,8 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Trade
 
         public string TradeProductType { get; set; }
 
+        public string TradeProductTypeId { get; set; }
+
         public string TradeProductName{ get; set; }
 
         public string RiskGroupName { get; set; }

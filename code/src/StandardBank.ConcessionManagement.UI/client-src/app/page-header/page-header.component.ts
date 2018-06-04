@@ -42,13 +42,15 @@ export class PageHeaderComponent implements OnInit {
 
                     console.log(maresult.errorMessage);
 
-                    if (maresult.errorMessage == "Not_Valid") {
+                    //if user does not have acces, redirect to login page
+                    if (maresult.errorMessage.startsWith("No access granted")) {
 
                         window.location.href = "http://10952iisprdsdc2.za.sbicdirectory.com/ManageUserAccessAudit.htm";
                     }
+                    //Another reason that user does not have access, ie. WS 
                     else {
 
-                        this.usererrorMessage = "Error during My Access validation process: " + maresult.errorMessage;
+                        this.usererrorMessage = maresult.errorMessage;
                     }
                     return;
                 }

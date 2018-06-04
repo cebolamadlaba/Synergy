@@ -8,6 +8,7 @@ using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Bol;
+using StandardBank.ConcessionManagement.Model.UserInterface.Trade;
 
 using AccrualType = StandardBank.ConcessionManagement.Model.UserInterface.AccrualType;
 using ChannelType = StandardBank.ConcessionManagement.Model.UserInterface.ChannelType;
@@ -25,6 +26,9 @@ using TransactionType = StandardBank.ConcessionManagement.Model.UserInterface.Tr
 using LegalEntityBOLUser = StandardBank.ConcessionManagement.Model.UserInterface.Bol.LegalEntityBOLUser;
 using BOLChargeCode = StandardBank.ConcessionManagement.Model.UserInterface.Bol.BOLChargeCode;
 using BOLChargeCodeType = StandardBank.ConcessionManagement.Model.UserInterface.Bol.BOLChargeCodeType;
+
+using TradeProduct = StandardBank.ConcessionManagement.Model.UserInterface.Trade.TradeProduct;
+using TradeProductType = StandardBank.ConcessionManagement.Model.UserInterface.Trade.TradeProductType;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -80,6 +84,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IPeriodTypeRepository _periodTypeRepository;
 
         private readonly IBolUserRepository _bolRepository;
+
+        private readonly IConcessionTradeRepository _concessionTradeRepository;
 
         /// <summary>
         /// The condition type repository
@@ -185,7 +191,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IRelationshipRepository relationshipRepository, IRoleRepository roleRepository,
             ICentreRepository centreRepository,
             IRiskGroupRepository riskGroupRepository,
-            ITransactionTableNumberRepository transactionTableNumberRepository, IBolUserRepository bolRepository)
+            ITransactionTableNumberRepository transactionTableNumberRepository, IBolUserRepository bolRepository, IConcessionTradeRepository concessionTradeRepository)
         {
             _statusRepository = statusRepository;
             _subStatusRepository = subStatusRepository;
@@ -210,6 +216,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _riskGroupRepository = riskGroupRepository;
             _transactionTableNumberRepository = transactionTableNumberRepository;
             _bolRepository = bolRepository;
+            _concessionTradeRepository = concessionTradeRepository;
         }
 
         /// <summary>
@@ -453,6 +460,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var bolusers = _bolRepository.GetLegalEntityBOLUsers(riskGroupNumber);
             return _mapper.Map<IEnumerable<LegalEntityBOLUser>>(bolusers);
+        }
+
+        public IEnumerable<TradeProduct> GetTradeProducts()
+        {
+            return _mapper.Map<IEnumerable<TradeProduct>>(_concessionTradeRepository.GetTradeProducts());           
+        }
+
+        public IEnumerable<TradeProductType> GetTradeProductTypes()
+        {
+            return _mapper.Map<IEnumerable<TradeProductType>>(_concessionTradeRepository.GetTradeProductTypes());
         }
 
 

@@ -28,6 +28,10 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <returns></returns>
         IEnumerable<ConcessionTrade> ReadAll();
 
+        IEnumerable<TradeProduct> GetTradeProducts();
+
+        IEnumerable<TradeProductType> GetTradeProductTypes();
+
         /// <summary>
         /// Updates the specified model.
         /// </summary>

@@ -2,6 +2,7 @@
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Bol;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
+using StandardBank.ConcessionManagement.Model.UserInterface.Trade;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 {
@@ -153,6 +154,11 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 
         IEnumerable<BOLChargeCode> GetBOLChargeCodesAll();
         IEnumerable<BOLChargeCodeType> GetBOLChargeCodeTypes();
+
+        IEnumerable<TradeProductType> GetTradeProductTypes();
+
+        IEnumerable<TradeProduct> GetTradeProducts();
+
         IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsers(int riskGroupNumber);
 
 

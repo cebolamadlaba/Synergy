@@ -38,7 +38,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IMiscPerformanceRepository _miscPerformanceRepository;
 
         private readonly IMediator _mediator;
-
+             
         public TradeManager(IConcessionManager concessionManager, IConcessionTradeRepository concessionTradeRpository,
             IMapper mapper, IFinancialTradeRepository financialTradeRepository, ILookupTableManager lookupTableManager, IRuleManager ruleManager,
             IMiscPerformanceRepository miscPerformanceRepository, IMediator mediator)
@@ -132,6 +132,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         //}
 
 
+        //public List<Model.UserInterface.Trade.TradeProduct> GetTradeProducts()
+        //{
+        //    return _mapper.Map<List<Model.UserInterface.Trade.TradeProduct>>(_concessionTradeRpository.GetTradeProducts());
+        //}
+
+        //public List<Model.UserInterface.Trade.TradeProductType> GetTradeProductTypes()
+        //{
+        //    return _mapper.Map<List<Model.UserInterface.Trade.TradeProductType>>(_concessionTradeRpository.GetTradeProductTypes());
+        //}
+
 
         public TradeView GetTradeViewData(int riskGroupNumber)
         {
@@ -164,7 +174,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
 
-        private IEnumerable<TradeProduct> GetTradeProducts(RiskGroup riskGroup)
+        private IEnumerable<Model.UserInterface.Trade.TradeProduct> GetTradeProducts(RiskGroup riskGroup)
         {
             return _miscPerformanceRepository.GetTradeProducts(riskGroup.Id, riskGroup.Name);
         }

@@ -62,6 +62,8 @@ import { BolViewConcessionComponent } from './bol-view-concession/bol-view-conce
 import { MasAddConcessionComponent } from './mas-add-concession/mas-add-concession.component';
 import { TransactionalViewConcessionComponent } from './transactional-view-concession/transactional-view-concession.component';
 import { TradeAddConcessionComponent } from './trade-add-concession/trade-add-concession.component';
+import { TradeViewConcessionComponent } from "./trade-view-concession/trade-view-concession.component";
+
 import { CashmanAddConcessionComponent } from './cashman-add-concession/cashman-add-concession.component';
 import { AdminMenuComponent } from './admin/admin-menu/admin-menu.component';
 import { BusinessCentreComponent } from './admin/business-centre/business-centre.component';
@@ -115,6 +117,7 @@ import { ChannelTypesManagementComponent } from './admin/channel-types/channel-t
         MasAddConcessionComponent,
         TransactionalViewConcessionComponent,
         TradeAddConcessionComponent,
+        TradeViewConcessionComponent,
         CashmanAddConcessionComponent,
         AdminMenuComponent,
         BusinessCentreComponent,

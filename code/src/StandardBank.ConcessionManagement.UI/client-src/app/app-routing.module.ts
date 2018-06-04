@@ -30,6 +30,8 @@ import { BolViewConcessionComponent } from "./bol-view-concession/bol-view-conce
 import { MasAddConcessionComponent } from "./mas-add-concession/mas-add-concession.component";
 import { TransactionalViewConcessionComponent } from "./transactional-view-concession/transactional-view-concession.component";
 import { TradeAddConcessionComponent } from "./trade-add-concession/trade-add-concession.component";
+import { TradeViewConcessionComponent } from "./trade-view-concession/trade-view-concession.component";
+
 import { CashmanAddConcessionComponent } from "./cashman-add-concession/cashman-add-concession.component";
 import { AdminMenuComponent } from "./admin/admin-menu/admin-menu.component";
 import { BusinessCentreComponent } from "./admin/business-centre/business-centre.component";
@@ -45,6 +47,8 @@ import { AaManagementComponent } from './admin/aa-management/aa-management.compo
 import { BOLCHManagementComponent } from './admin/bol-chargecodes/bol-chargecodes.component';
 import { TransactionTypesManagementComponent } from './admin/transaction-types/transaction-types.component';
 import { ChannelTypesManagementComponent } from './admin/channel-types/channel-types.component';
+
+
 
 const routes: Routes = [
     { path: '', redirectTo: '/pending-inbox', pathMatch: 'full' },
@@ -80,7 +84,9 @@ const routes: Routes = [
 
     { path: 'mas-add-concession', component: MasAddConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
-    { path: 'trade-add-concession', component: TradeAddConcessionComponent },
+    { path: 'trade-add-concession/:riskGroupNumber', component: TradeAddConcessionComponent },
+    { path: 'trade-view-concession/:riskGroupNumber/:concessionReferenceId', component: TradeViewConcessionComponent },
+
     { path: 'cashman-add-concession', component: CashmanAddConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
     { path: 'admin', component: AdminMenuComponent },
