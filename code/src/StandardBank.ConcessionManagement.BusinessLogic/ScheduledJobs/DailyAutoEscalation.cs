@@ -85,7 +85,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
             var pendingStatusIds = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.BcmPending);
 
             //get the concessions that are expiring in three months
-            var dueconcessions = _concessionInboxViewRepository.ReadDueFor24HourEscaltion(new[] { pendingStatusIds });
+            var dueconcessions = _concessionInboxViewRepository.ReadDueFor72HourEscaltion(new[] { pendingStatusIds });
 
             if (dueconcessions != null && dueconcessions.Any())
             {

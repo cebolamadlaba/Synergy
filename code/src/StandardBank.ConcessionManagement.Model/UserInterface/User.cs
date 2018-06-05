@@ -1,3 +1,4 @@
+using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
 
 namespace StandardBank.ConcessionManagement.Model.UserInterface
@@ -164,6 +165,8 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// The account executive.
         /// </value>
         public User AccountExecutive { get; set; }
+
+        public List<AccountExecutiveAssistant> AccountAssistants { get; set; }
 
         /// <summary>
         /// Gets or sets the account executive user identifier.

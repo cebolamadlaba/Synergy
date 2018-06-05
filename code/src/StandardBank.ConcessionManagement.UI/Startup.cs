@@ -80,6 +80,9 @@ namespace StandardBank.ConcessionManagement.UI
             var container = DependencyInjection.ConfigureServices(services, GenerateConfigurationData(Environment));
 
             return container.GetInstance<IServiceProvider>();
+
+
+            
         }
 
         /// <summary>

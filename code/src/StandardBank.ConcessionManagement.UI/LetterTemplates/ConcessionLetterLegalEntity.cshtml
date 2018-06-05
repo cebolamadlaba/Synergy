@@ -1,6 +1,6 @@
 <p style="text-align:right;"><img src="@Model.TemplatePath/images/sblogo.jpg" /></p>
 
-<h2 style="text-align: right; color: #17365d;">Standard bank</h2>
+<h2 style="text-align: right; color: #17365d;">Standard Bank</h2>
 <!-- today date-->
 <p style="text-align:right; width: 100%;">@Model.CurrentDate</p>
 <!--client address-->
@@ -38,12 +38,14 @@
 <div style="padding-top:5px; display: inline;">
     <div style="float:left">
         <p style="margin:0; color: #17365d; font-weight:bold;">@Model.RequestorName</p>
+        <p style="margin:0;">@Model.RequestorRoleName</p>
         @*<p style="margin:0;">Relationship Manager</p>*@
         <p style="margin:0;">Telephone: @Model.RequestorContactNumber</p>
         <p style="margin:0;">Email: @Model.RequestorEmailAddress</p>
     </div>
     <div style="float:right">
         <p style="margin:0; color: #17365d; font-weight:bold;">@Model.BCMName</p>
+        <p style="margin:0;">@Model.BCMRoleName</p>
         @*<p style="margin:0;">Business Suite Head</p>*@
         <p style="margin:0;">Telephone: @Model.BCMContactNumber</p>
         <p style="margin:0;">Email: @Model.BCMEmailAddress</p>

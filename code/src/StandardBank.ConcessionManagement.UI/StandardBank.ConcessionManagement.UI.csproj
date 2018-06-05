@@ -28,6 +28,7 @@
     <None Remove="client-src\app\models\bol-view.ts" />
     <None Remove="client-src\app\models\legal-entity-bol-user.ts" />
     <None Remove="client-src\app\models\search-concession-detail.ts" />
+    <None Remove="client-src\content\img\sblogo.jpg" />
     <None Remove="LetterTemplates\images\sblogo.jpg" />
     <None Remove="LetterTemplates\TemplateFooter.html" />
     <None Remove="LetterTemplates\TemplateHeader.html" />
@@ -35,6 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="client-src\content\img\sblogo.jpg" />
     <Content Include="LetterTemplates\images\sblogo.jpg" />
     <Content Include="LetterTemplates\TemplateFooter.html" />
     <Content Include="LetterTemplates\TemplateHeader.html" />

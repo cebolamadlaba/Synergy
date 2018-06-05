@@ -80,6 +80,8 @@ namespace StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator
         /// </value>
         public string RequestorName { get; set; }
 
+       
+
         /// <summary>
         /// Gets or sets the requestor contact number.
         /// </summary>
@@ -103,6 +105,10 @@ namespace StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator
         /// The name of the BCM.
         /// </value>
         public string BCMName { get; set; }
+
+
+        public string BCMRoleName { get; set; }
+        public string RequestorRoleName { get; set; }
 
         /// <summary>
         /// Gets or sets the BCM contact number.

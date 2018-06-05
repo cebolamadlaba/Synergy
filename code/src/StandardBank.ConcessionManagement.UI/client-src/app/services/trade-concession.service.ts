@@ -25,10 +25,10 @@ export class TradeConcessionService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    //getBolConcessionData(concessionReferenceId): Observable<BolConcession> {
-    //    const url = "/api/Bol/BolConcessionData/" + concessionReferenceId;
-    //    return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
-    //}
+    getTradeConcessionData(concessionReferenceId): Observable<TradeConcession> {
+        const url = "/api/Trade/TradeConcessionData/" + concessionReferenceId;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
 
     postNewTradeData(tradeConcession: TradeConcession): Observable<TradeConcession> {
         let headers = new Headers({ 'Content-Type': 'application/json' });

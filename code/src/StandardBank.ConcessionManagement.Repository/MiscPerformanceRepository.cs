@@ -396,6 +396,7 @@ namespace StandardBank.ConcessionManagement.Repository
                 return db.Query<TradeConcessionDetail>(@"Select cd.[pkConcessionDetailId] [ConcessionDetailId], 
                     cd.[fkConcessionId] [ConcessionId], 
                     cd.[fkLegalEntityId] [LegalEntityId], 
+
                     cd.[fkLegalEntityAccountId] [LegalEntityAccountId],  
                     le.[CustomerName] [LegalEntity],                    
                     [ExpiryDate], 
@@ -403,6 +404,9 @@ namespace StandardBank.ConcessionManagement.Repository
                     [IsMismatched], 
                     [PriceExported], 
                     [PriceExportedDate],
+AdValorem,
+Currency,
+EstablishmentFee,
 					tr.pkConcessionTradeId [TradeConcessionDetailId],
                     AccountNumber,
 					LoadedRate,

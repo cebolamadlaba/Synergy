@@ -243,22 +243,22 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// </summary>
         /// <param name="concessionReferenceId">The concession reference identifier.</param>
         /// <returns></returns>
-        [Route("GenerateConcessionLetter/{concessionReferenceId}")]
-        public FileResult GenerateConcessionLetter(string concessionReferenceId)
-        {
-            HttpContext.Response.ContentType = "application/pdf";
+        //[Route("GenerateConcessionLetter/{concessionReferenceId}")]
+        //public FileResult GenerateConcessionLetter(string concessionReferenceId)
+        //{
+        //    HttpContext.Response.ContentType = "application/pdf";
 
-            var result = new FileContentResult(_letterGeneratorManager.GenerateLetters(concessionReferenceId),
-                "application/pdf")
-            {
-                FileDownloadName = $"ConcessionLetter_{concessionReferenceId}.pdf"
-            };
+        //    var result = new FileContentResult(_letterGeneratorManager.GenerateLetters(concessionReferenceId),
+        //        "application/pdf")
+        //    {
+        //        FileDownloadName = $"ConcessionLetter_{concessionReferenceId}.pdf"
+        //    };
 
-            return result;
-        }
+        //    return result;
+        //}
 
         /// <summary>
-        /// Generates the concession letter for legal entity.
+        /// Generates the concession letter for legal entity. --used
         /// </summary>
         /// <param name="legalEntityId">The legal entity identifier.</param>
         /// <returns></returns>
@@ -278,7 +278,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         }
 
         /// <summary>
-        /// Generates the concession letter for concession details.
+        /// Generates the concession letter for concession details.-- Used.
         /// </summary>
         /// <param name="concessionDetailIds">The concession detail ids.</param>
         /// <returns></returns>

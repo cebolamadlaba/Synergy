@@ -3,22 +3,21 @@ import { BaseConcessionDetail } from "./base-concession-detail";
 export class TradeConcessionDetail extends BaseConcessionDetail {
     tradeConcessionDetailId: number;
 
-    legalEntity: string;
-    loadedRate: string;
-    approvedRate: string;
-    TradeProduct: string;
-    TradeProductType: string;
-    ApprovedRate: number;
-    LoadedRate :number;
-    Communications: string;
-    EstablishmentFee: number;
-    FlatFee: number;
-    GBBNumber: string;
-    Max: number;
-    Min: number;
-    Term: number;
+    legalEntity: string;   
+  
+    tradeProduct: string;
+    tradeProductType: string;
+    approvedRate: number;
+    loadedRate :number;
+    communication: string;
+    establishmentFee: number;
+    flatFee: number;
+    gbbNumber: string;
+    max: number;
+    min: number;
+    term: number;
     fkTradeProductId: number;
-    TradeProductTypeID: number;
+    tradeProductTypeID: number;
     fkLegalEntityAccountId: number;
     adValorem: number;
     currency: number;

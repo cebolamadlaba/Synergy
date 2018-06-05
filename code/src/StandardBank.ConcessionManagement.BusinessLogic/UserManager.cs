@@ -153,6 +153,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 if (mappedUser.AccountExecutive != null)
                     mappedUser.AccountExecutiveUserId = mappedUser.AccountExecutive.Id;
             }
+            else
+            {
+                mappedUser.AccountAssistants = _accountExecutiveAssistantRepository.ReadByAccountExecutiveUserId(user.Id).ToList();
+            }
 
             return mappedUser;
         }

@@ -47,7 +47,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
     riskGroup: RiskGroup;
     riskGroupNumber: number;
 
-    observableBolView: Observable<TradeView>;
+    observableTradeView: Observable<TradeView>;
     tradeView: TradeView = new TradeView();
 
     tradeConcessionForm: FormGroup;
@@ -114,8 +114,8 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
             }
 
             if (this.riskGroupNumber) {
-                this.observableBolView = this.tradeConcessionService.getTradeViewData(this.riskGroupNumber);
-                this.observableBolView.subscribe(bolView => {
+                this.observableTradeView = this.tradeConcessionService.getTradeViewData(this.riskGroupNumber);
+                this.observableTradeView.subscribe(bolView => {
                     this.tradeView = bolView;
 
                     this.isLoading = false;
@@ -325,7 +325,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
 
             if (concessionFormItem.get('producttype').value) {
-                tradeConcessionDetail.TradeProductTypeID = concessionFormItem.get('producttype').value.tradeProductTypeID;
+                tradeConcessionDetail.tradeProductTypeID = concessionFormItem.get('producttype').value.tradeProductTypeID;
 
             } else {
                 this.addValidationError("Product Type code not selected");
@@ -341,14 +341,14 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
             }
 
             if (concessionFormItem.get('gbbnumber').value) {
-                tradeConcessionDetail.GBBNumber = concessionFormItem.get('gbbnumber').value;
+                tradeConcessionDetail.gbbNumber = concessionFormItem.get('gbbnumber').value;
             } else {
                 this.addValidationError("GBB Number not entered");
             }
 
 
             if (concessionFormItem.get('term').value) {
-                tradeConcessionDetail.Term = concessionFormItem.get('term').value;
+                tradeConcessionDetail.term = concessionFormItem.get('term').value;
             } else {
                 this.addValidationError("Term not entered");
             }
@@ -360,24 +360,24 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
             }
 
             if (concessionFormItem.get('min').value) {
-                tradeConcessionDetail.Min = concessionFormItem.get('min').value;
+                tradeConcessionDetail.min = concessionFormItem.get('min').value;
             } else {
                 this.addValidationError("Min value not entered");
             }
 
             if (concessionFormItem.get('max').value) {
-                tradeConcessionDetail.Max = concessionFormItem.get('max').value;
+                tradeConcessionDetail.max = concessionFormItem.get('max').value;
             } else {
                 this.addValidationError("Max value not entered");
             }
             ///---
             if (concessionFormItem.get('communication').value) {
-                tradeConcessionDetail.Communications = concessionFormItem.get('communication').value;
+                tradeConcessionDetail.communication = concessionFormItem.get('communication').value;
             } else {
                 this.addValidationError("Communication not entered");
             }
             if (concessionFormItem.get('flatfee').value) {
-                tradeConcessionDetail.FlatFee = concessionFormItem.get('flatfee').value;
+                tradeConcessionDetail.flatFee = concessionFormItem.get('flatfee').value;
             } else {
                 this.addValidationError("Flat fee not entered");
             }
@@ -389,7 +389,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
             }
 
             if (concessionFormItem.get('estfee').value) {
-                tradeConcessionDetail.EstablishmentFee = concessionFormItem.get('estfee').value;
+                tradeConcessionDetail.establishmentFee = concessionFormItem.get('estfee').value;
             } else {
                 this.addValidationError("Est. fee not entered");
             }

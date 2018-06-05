@@ -24,17 +24,17 @@ import { ConcessionTypes } from '../constants/concession-types';
 import { ConcessionStatus } from '../constants/concession-status';
 import { ConcessionSubStatus } from '../constants/concession-sub-status';
 
-import { BolConcession } from "../models/bol-concession";
-import { BolConcessionDetail } from "../models/bol-concession-detail";
-import { BolConcessionService } from "../services/bol-concession.service";
-import { BolView } from "../models/bol-view";
 import { UserService } from "../services/user.service";
 
-import { BolChargeCodeType } from "../models/bol-chargecodetype";
-import { BolChargeCode } from "../models/bol-chargecode";
-import { LegalEntityBOLUser } from "../models/legal-entity-bol-user";
 
+import { TradeProduct } from "../models/trade-product";
+import { TradeProductType } from "../models/trade-product-type";
 
+import { TradeConcession } from "../models/trade-concession";
+import { TradeConcessionDetail } from "../models/trade-concession-detail";
+import { TradeConcessionService } from "../services/trade-concession.service";
+
+import { TradeView } from "../models/trade-view";
 
 @Component({
     selector: 'app-trade-view-concession',
@@ -50,16 +50,16 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
     validationError: String[];
     saveMessage: String;
     warningMessage: String;
-    observableRiskGroup: Observable<RiskGroup>;
 
-    observableBolView: Observable<BolView>;
-    bolView: BolView = new BolView();
+    observableRiskGroup: Observable<RiskGroup>;
+    observableTradeView: Observable<TradeView>;
+    tradeView: TradeView = new TradeView();
 
     riskGroup: RiskGroup;
     riskGroupNumber: number;
 
-    public bolConcessionForm: FormGroup;
-    selectedConditionTypes: ConditionType[];
+    public tradeConcessionForm: FormGroup;
+   
     isLoading = true;
     canBcmApprove = false;
     canPcmApprove = false;
@@ -82,22 +82,20 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
     isApproved = false;
     showHide = false;
 
-
     observablePeriods: Observable<Period[]>;
     periods: Period[];
 
     observablePeriodTypes: Observable<PeriodType[]>;
     periodTypes: PeriodType[];
 
-    observable: Observable<BolChargeCodeType[]>;
-    bolchargecodetypes: BolChargeCodeType[];
+    observableTradeProductTypes: Observable<TradeProductType[]>;
+    tradeproducttypes: TradeProductType[];
 
-    observableBolChargeCodes: Observable<BolChargeCode[]>;
-    bolchargecodes: BolChargeCode[];
-    bolchargecodesFiltered: BolChargeCode[];
+    observableTradeProducts: Observable<TradeProduct[]>;
+    tradeproducts: TradeProduct[];
 
-    observableLegalEntityBOLUsers: Observable<LegalEntityBOLUser[]>;
-    legalentitybolusers: LegalEntityBOLUser[];
+    selectedConditionTypes: ConditionType[];
+    selectedProducts: TradeProduct[];
 
     observableConditionTypes: Observable<ConditionType[]>;
     conditionTypes: ConditionType[];
@@ -105,9 +103,8 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
     observableClientAccounts: Observable<ClientAccount[]>;
     clientAccounts: ClientAccount[];
 
-    observableBolConcession: Observable<BolConcession>;
-    bolConcession: BolConcession;
-
+    observableTradeConcession: Observable<TradeConcession>;
+    tradeConcession: TradeConcession;
 
 
     constructor(private route: ActivatedRoute,
@@ -116,26 +113,30 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
         private datepipe: DatePipe,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(UserConcessionsService) private userConcessionsService,
-        @Inject(BolConcessionService) private bolConcessionService) {
+        @Inject(TradeConcessionService) private tradeConcessionService) {
 
         this.riskGroup = new RiskGroup();
-        this.bolchargecodetypes = [new BolChargeCodeType()];
-        this.bolchargecodes = [new BolChargeCode()];
-        this.legalentitybolusers = [new LegalEntityBOLUser()];
+        this.tradeproducttypes = [new TradeProductType()];
+        this.tradeproducts = [new TradeProduct()];
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
 
         this.conditionTypes = [new ConditionType()];
         this.selectedConditionTypes = [new ConditionType()];
+        this.selectedProducts = [new TradeProduct()];
+
         this.clientAccounts = [new ClientAccount()];
 
-        this.bolView.riskGroup = new RiskGroup();
-        this.bolView.bolConcessions = [new BolConcession()];
-        this.bolView.bolConcessions[0].concession = new Concession();
+        this.tradeView.riskGroup = new RiskGroup();
+        this.tradeView.tradeConcessions = [new TradeConcession()];
+        this.tradeView.tradeConcessions[0].concession = new Concession();
 
-        this.bolConcession = new BolConcession();
-        this.bolConcession.concession = new Concession();
-        this.bolConcession.concession.concessionComments = [new ConcessionComment()];
+        this.tradeConcession = new TradeConcession();
+        this.tradeConcession.concession = new Concession();
+        this.tradeConcession.concession.concessionComments = [new ConcessionComment()];
+
+
+
     }
 
     ngOnInit() {
@@ -154,15 +155,15 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
         }
 
         if (this.riskGroupNumber) {
-            this.observableBolView = this.bolConcessionService.getBolViewData(this.riskGroupNumber);
-            this.observableBolView.subscribe(bolView => {
-                this.bolView = bolView;
+            this.observableTradeView = this.tradeConcessionService.getTradeViewData(this.riskGroupNumber);
+            this.observableTradeView.subscribe(bolView => {
+                this.tradeView = bolView;
             }, error => {
                 this.errorMessage = <any>error;
             });
         }
 
-        this.bolConcessionForm = this.formBuilder.group({
+        this.tradeConcessionForm = this.formBuilder.group({
             concessionItemRows: this.formBuilder.array([this.initConcessionItemRows()]),
             conditionItemsRows: this.formBuilder.array([]),
             smtDealNumber: new FormControl(),
@@ -172,22 +173,21 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
         Observable.forkJoin([
             this.lookupDataService.getConditionTypes(),
-            this.lookupDataService.getBOLChargeCodeTypes(),
-            this.lookupDataService.getBOLChargeCodes(),
-            this.lookupDataService.getLegalEntityBOLUsers(this.riskGroupNumber),
+
+            this.lookupDataService.getTradeProductTypes(),
+            this.lookupDataService.getTradeProducts(),
+
             this.lookupDataService.getPeriods(),
             this.lookupDataService.getPeriodTypes()
+
         ]).subscribe(results => {
 
             this.conditionTypes = <any>results[0];
-            this.bolchargecodetypes = <any>results[1];
-            this.bolchargecodes = <any>results[2];
-            this.bolchargecodesFiltered = this.bolchargecodes;
+            this.tradeproducttypes = <any>results[1];
+            this.tradeproducts = <any>results[2];
 
-            this.legalentitybolusers = <any>results[3];
-
-            this.periods = <any>results[4];
-            this.periodTypes = <any>results[5];
+            this.periods = <any>results[3];
+            this.periodTypes = <any>results[4];
 
             this.populateForm();
         },
@@ -196,8 +196,8 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                 this.isLoading = false;
             });
 
-        this.bolConcessionForm.valueChanges.subscribe((value: any) => {
-            if (this.bolConcessionForm.dirty) {
+        this.tradeConcessionForm.valueChanges.subscribe((value: any) => {
+            if (this.tradeConcessionForm.dirty) {
                 //if the captured comments is still the same as the comments that means
                 //the user has changed something else on the form
                 if (this.capturedComments == value.comments) {
@@ -211,112 +211,154 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
     populateForm() {
         if (this.concessionReferenceId) {
-            this.observableBolConcession = this.bolConcessionService.getBolConcessionData(this.concessionReferenceId);
-            this.observableBolConcession.subscribe(bolConcession => {
-                this.bolConcession = bolConcession;
+            this.observableTradeConcession = this.tradeConcessionService.getTradeConcessionData(this.concessionReferenceId);
+            this.observableTradeConcession.subscribe(tradeConcession => {
+                this.tradeConcession = tradeConcession;
 
-                if (bolConcession.concession.status == ConcessionStatus.Pending && bolConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
-                    this.canBcmApprove = bolConcession.currentUser.canBcmApprove;
+                if (tradeConcession.concession.status == ConcessionStatus.Pending && tradeConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
+                    this.canBcmApprove = tradeConcession.currentUser.canBcmApprove;
                 }
 
-                if (bolConcession.concession.status == ConcessionStatus.Pending && bolConcession.concession.subStatus == ConcessionSubStatus.PCMPending) {
-                    if (this.bolConcession.currentUser.isHO) {
-                        this.canPcmApprove = bolConcession.currentUser.canPcmApprove
+                if (tradeConcession.concession.status == ConcessionStatus.Pending && tradeConcession.concession.subStatus == ConcessionSubStatus.PCMPending) {
+                    if (this.tradeConcession.currentUser.isHO) {
+                        this.canPcmApprove = tradeConcession.currentUser.canPcmApprove
                     } else {
-                        this.canPcmApprove = bolConcession.currentUser.canPcmApprove && bolConcession.currentUser.canApprove;
+                        this.canPcmApprove = tradeConcession.currentUser.canPcmApprove && tradeConcession.currentUser.canApprove;
                     }
 
-                    if (!bolConcession.concession.isInProgressExtension) {
-                        this.canEdit = bolConcession.currentUser.canPcmApprove;
+                    if (!tradeConcession.concession.isInProgressExtension) {
+                        this.canEdit = tradeConcession.currentUser.canPcmApprove;
                     }
                 }
 
                 //if it's still pending and the user is a requestor then they can recall it
-                if (bolConcession.concession.status == ConcessionStatus.Pending && bolConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
-                    this.canRecall = bolConcession.currentUser.canRequest;
+                if (tradeConcession.concession.status == ConcessionStatus.Pending && tradeConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
+                    this.canRecall = tradeConcession.currentUser.canRequest;
                 }
 
-                if (bolConcession.concession.status == ConcessionStatus.Pending &&
-                    (bolConcession.concession.subStatus == ConcessionSubStatus.PCMApprovedWithChanges || bolConcession.concession.subStatus == ConcessionSubStatus.HOApprovedWithChanges)) {
-                    this.canApproveChanges = bolConcession.currentUser.canRequest;
+                if (tradeConcession.concession.status == ConcessionStatus.Pending &&
+                    (tradeConcession.concession.subStatus == ConcessionSubStatus.PCMApprovedWithChanges || tradeConcession.concession.subStatus == ConcessionSubStatus.HOApprovedWithChanges)) {
+                    this.canApproveChanges = tradeConcession.currentUser.canRequest;
                 }
 
-                if (bolConcession.concession.status === ConcessionStatus.Approved ||
-                    bolConcession.concession.status === ConcessionStatus.ApprovedWithChanges) {
+                if (tradeConcession.concession.status === ConcessionStatus.Approved ||
+                    tradeConcession.concession.status === ConcessionStatus.ApprovedWithChanges) {
                     this.isApproved = true;
                 }
 
                 //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
-                this.canExtend = bolConcession.concession.canExtend && bolConcession.currentUser.canRequest;
-                this.canRenew = bolConcession.concession.canRenew && bolConcession.currentUser.canRequest;
+                this.canExtend = tradeConcession.concession.canExtend && tradeConcession.currentUser.canRequest;
+                this.canRenew = tradeConcession.concession.canRenew && tradeConcession.currentUser.canRequest;
 
                 //set the resubmit and update permissions
-                this.canResubmit = bolConcession.concession.canResubmit && bolConcession.currentUser.canRequest;
-                this.canUpdate = bolConcession.concession.canUpdate && bolConcession.currentUser.canRequest;
+                this.canResubmit = tradeConcession.concession.canResubmit && tradeConcession.currentUser.canRequest;
+                this.canUpdate = tradeConcession.concession.canUpdate && tradeConcession.currentUser.canRequest;
 
-                this.canArchive = bolConcession.concession.canArchive && bolConcession.currentUser.canRequest;
-                this.isInProgressExtension = bolConcession.concession.isInProgressExtension;
-                this.isInProgressRenewal = bolConcession.concession.isInProgressRenewal;
+                this.canArchive = tradeConcession.concession.canArchive && tradeConcession.currentUser.canRequest;
+                this.isInProgressExtension = tradeConcession.concession.isInProgressExtension;
+                this.isInProgressRenewal = tradeConcession.concession.isInProgressRenewal;
 
-                this.bolConcessionForm.controls['smtDealNumber'].setValue(this.bolConcession.concession.smtDealNumber);
-                this.bolConcessionForm.controls['motivation'].setValue(this.bolConcession.concession.motivation);
+                this.tradeConcessionForm.controls['smtDealNumber'].setValue(this.tradeConcession.concession.smtDealNumber);
+                this.tradeConcessionForm.controls['motivation'].setValue(this.tradeConcession.concession.motivation);
+
+               
 
                 let rowIndex = 0;
 
-                for (let bolConcessionDetail of this.bolConcession.bolConcessionDetails) {
+                for (let tradeConcessionDetail of this.tradeConcession.tradeConcessionDetails) {
 
                     if (rowIndex != 0) {
                         this.addNewConcessionRow();
                     }
 
-                    const concessions = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+                    const concessions = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
                     let currentConcession = concessions.controls[concessions.length - 1];
 
-                    currentConcession.get('bolConcessionDetailId').setValue(bolConcessionDetail.bolConcessionDetailId);
-                    currentConcession.get('concessionDetailId').setValue(bolConcessionDetail.concessionDetailId);
+                    currentConcession.get('tradeConcessionDetailId').setValue(tradeConcessionDetail.tradeConcessionDetailId);
+                    currentConcession.get('concessionDetailId').setValue(tradeConcessionDetail.concessionDetailId);
 
-                    if (bolConcessionDetail.loadedRate)
-                        currentConcession.get('unitcharge').setValue(bolConcessionDetail.loadedRate);
+                    //if (bolConcessionDetail.accountNumber)
+                    //    currentConcession.get('accountNumber').setValue(bolConcessionDetail.accountNumber);
 
-                    if (bolConcessionDetail.approvedRate)
-                        currentConcession.get('unitchargeApproved').setValue(bolConcessionDetail.approvedRate);
+                    //if (bolConcessionDetail.approvedRate)
+                    //    currentConcession.get('unitchargeApproved').setValue(bolConcessionDetail.approvedRate);
 
-                    let selectedBOLUser = this.legalentitybolusers.filter(_ => _.pkLegalEntityBOLUserId == bolConcessionDetail.fkLegalEntityBOLUserId);
-                    currentConcession.get('userid').setValue(selectedBOLUser[0]);
+                    //let selectedBOLUser = this.legalentitybolusers.filter(_ => _.pkLegalEntityBOLUserId == bolConcessionDetail.fkLegalEntityBOLUserId);
+                    //currentConcession.get('userid').setValue(selectedBOLUser[0]);
 
-                    let selectedChargeCode = this.bolchargecodes.filter(_ => _.pkChargeCodeId == bolConcessionDetail.fkChargeCodeId);
-                    currentConcession.get('chargecode').setValue(selectedChargeCode[0]);
+                    //let selectedChargeCode = this.bolchargecodes.filter(_ => _.pkChargeCodeId == bolConcessionDetail.fkChargeCodeId);
+                    //currentConcession.get('chargecode').setValue(selectedChargeCode[0]);
 
-                    let selectedChargeCode2 = this.bolchargecodes.filter(_ => _.pkChargeCodeId == bolConcessionDetail.fkChargeCodeId);
-                    let chargecodetypeid = selectedChargeCode2[0].fkChargeCodeTypeId.valueOf();
+                    //let selectedChargeCode2 = this.bolchargecodes.filter(_ => _.pkChargeCodeId == bolConcessionDetail.fkChargeCodeId);
+                    //let chargecodetypeid = selectedChargeCode2[0].fkChargeCodeTypeId.valueOf();
 
-                    let selectedChargeCodeType = this.bolchargecodetypes.filter(_ => _.pkChargeCodeTypeId == chargecodetypeid);
-                    currentConcession.get('product').setValue(selectedChargeCodeType[0]);
+                    //let selectedChargeCodeType = this.bolchargecodetypes.filter(_ => _.pkChargeCodeTypeId == chargecodetypeid);
+                    //currentConcession.get('product').setValue(selectedChargeCodeType[0]);
+
+
+                    if (tradeConcessionDetail.adValorem)
+                        currentConcession.get('advalorem').setValue(tradeConcessionDetail.adValorem);
 
 
 
-                    if (bolConcessionDetail.expiryDate) {
-                        var formattedExpiryDate = this.datepipe.transform(bolConcessionDetail.expiryDate, 'yyyy-MM-dd');
+                    if (tradeConcessionDetail.communication)
+                        currentConcession.get('communication').setValue(tradeConcessionDetail.communication);
+
+
+                    if (tradeConcessionDetail.flatFee)
+                        currentConcession.get('flatfee').setValue(tradeConcessionDetail.flatFee);
+
+
+                    if (tradeConcessionDetail.currency)
+                        currentConcession.get('currency').setValue(tradeConcessionDetail.currency);
+
+
+                    if (tradeConcessionDetail.gbbNumber)
+                        currentConcession.get('gbbnumber').setValue(tradeConcessionDetail.gbbNumber);
+
+                    if (tradeConcessionDetail.term)
+                        currentConcession.get('term').setValue(tradeConcessionDetail.term);
+
+                    if (tradeConcessionDetail.establishmentFee)
+                        currentConcession.get('estfee').setValue(tradeConcessionDetail.establishmentFee);
+
+                    if (tradeConcessionDetail.approvedRate)
+                        currentConcession.get('approvedRate').setValue(tradeConcessionDetail.approvedRate);
+
+                    if (tradeConcessionDetail.loadedRate)
+                        currentConcession.get('loadedRate').setValue(tradeConcessionDetail.loadedRate);
+
+                    if (tradeConcessionDetail.min)
+                        currentConcession.get('min').setValue(tradeConcessionDetail.min);
+
+
+                    if (tradeConcessionDetail.max)
+                        currentConcession.get('max').setValue(tradeConcessionDetail.max);
+
+                    //this.selectedProducts[rowIndex] = sele[0];
+
+                    if (tradeConcessionDetail.expiryDate) {
+                        var formattedExpiryDate = this.datepipe.transform(tradeConcessionDetail.expiryDate, 'yyyy-MM-dd');
                         currentConcession.get('expiryDate').setValue(formattedExpiryDate);
                     }
 
-                    if (bolConcessionDetail.dateApproved) {
-                        var formattedDateApproved = this.datepipe.transform(bolConcessionDetail.dateApproved, 'yyyy-MM-dd');
+                    if (tradeConcessionDetail.dateApproved) {
+                        var formattedDateApproved = this.datepipe.transform(tradeConcessionDetail.dateApproved, 'yyyy-MM-dd');
                         currentConcession.get('dateApproved').setValue(formattedDateApproved);
                     }
 
-                    currentConcession.get('isExpired').setValue(bolConcessionDetail.isExpired);
-                    currentConcession.get('isExpiring').setValue(bolConcessionDetail.isExpiring);
+                    currentConcession.get('isExpired').setValue(tradeConcessionDetail.isExpired);
+                    currentConcession.get('isExpiring').setValue(tradeConcessionDetail.isExpiring);
 
                     rowIndex++;
                 }
 
                 rowIndex = 0;
 
-                for (let concessionCondition of this.bolConcession.concessionConditions) {
+                for (let concessionCondition of this.tradeConcession.concessionConditions) {
                     this.addNewConditionRow();
 
-                    const conditions = <FormArray>this.bolConcessionForm.controls['conditionItemsRows'];
+                    const conditions = <FormArray>this.tradeConcessionForm.controls['conditionItemsRows'];
                     let currentCondition = conditions.controls[conditions.length - 1];
 
                     currentCondition.get('concessionConditionId').setValue(concessionCondition.concessionConditionId);
@@ -352,14 +394,30 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
     initConcessionItemRows() {
 
+        this.selectedProducts.push(new TradeProduct());
+
         return this.formBuilder.group({
-            bolConcessionDetailId: [''],
+           
+
+            tradeConcessionDetailId: [''],
             concessionDetailId: [''],
             product: [{ value: '', disabled: true }],
-            chargecode: [{ value: '', disabled: true }],
-            unitcharge: [{ value: '', disabled: true }],
-            unitchargeApproved: [{ value: '', disabled: true }],
-            userid: [{ value: '', disabled: true }],
+            producttype: [''],
+            accountnumber: [''],
+            gbbnumber: [''],
+        
+            accountNumber: [''],
+            term: [''],
+            advalorem: [''],
+            min: [''],
+            max: [''],
+            communication: [''],
+            flatfee: [''],
+            currency: [''],
+            estfee: [''],
+            approvedRate: [''],
+            loadedRate: [''],
+             userid: [{ value: '', disabled: true }],
             expiryDate: [''],
             dateApproved: [{ value: '', disabled: true }],
             isExpired: [''],
@@ -384,38 +442,38 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     addNewConcessionRow() {
-        const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
         var newRow = this.initConcessionItemRows();
         control.push(newRow);
     }
 
     addNewConditionRow() {
-        const control = <FormArray>this.bolConcessionForm.controls['conditionItemsRows'];
+        const control = <FormArray>this.tradeConcessionForm.controls['conditionItemsRows'];
         control.push(this.initConditionItemRows());
     }
 
     addNewConditionRowIfNone() {
-        const control = <FormArray>this.bolConcessionForm.controls['conditionItemsRows'];
+        const control = <FormArray>this.tradeConcessionForm.controls['conditionItemsRows'];
         if (control.length == 0)
             control.push(this.initConditionItemRows());
     }
 
     deleteConcessionRow(index: number) {
         if (confirm("Are you sure you want to remove this row?")) {
-            const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+            const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
             control.removeAt(index);
         }
     }
 
     deleteConditionRow(index: number) {
-        const control = <FormArray>this.bolConcessionForm.controls['conditionItemsRows'];
+        const control = <FormArray>this.tradeConcessionForm.controls['conditionItemsRows'];
         control.removeAt(index);
 
         this.selectedConditionTypes.splice(index, 1);
     }
 
     conditionTypeChanged(rowIndex) {
-        const control = <FormArray>this.bolConcessionForm.controls['conditionItemsRows'];
+        const control = <FormArray>this.tradeConcessionForm.controls['conditionItemsRows'];
         this.selectedConditionTypes[rowIndex] = control.controls[rowIndex].get('conditionType').value;
 
         let currentCondition = control.controls[rowIndex];
@@ -428,13 +486,25 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
     productTypeChanged(rowIndex) {
 
-        const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+        //const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
 
-        let currentCondition = control.controls[rowIndex];
+        //let currentCondition = control.controls[rowIndex];
 
-        var selectedproduct = currentCondition.get('product').value;
+        //var selectedproduct = currentCondition.get('product').value;
 
-        this.bolchargecodesFiltered = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId); 
+        //this.bolchargecodesFiltered = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId);
+        
+
+
+        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+        this.selectedProducts[rowIndex] = control.controls[rowIndex].get('product').value;
+
+        let currentProduct = control.controls[rowIndex];
+        var selectedproduct = currentProduct.get('product').value;
+
+        this.selectedProducts[rowIndex].producttypes = this.tradeproducttypes.filter(re => re.tradeProductTypeID == selectedproduct.tradeProductTypeId);
+
+        currentProduct.get('producttype').setValue(this.selectedProducts[rowIndex].producttypes[0]);
 
     
 
@@ -448,125 +518,125 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
     }
 
 
-    getBolConcession(isNew: boolean): BolConcession {
-        var bolConcession = new BolConcession();
-        bolConcession.concession = new Concession();
-        bolConcession.concession.riskGroupId = this.riskGroup.id;
-        bolConcession.concession.referenceNumber = this.concessionReferenceId;
-        bolConcession.concession.concessionType = ConcessionTypes.BOL;
+    //getBolConcession(isNew: boolean): BolConcession {
+    //    var bolConcession = new BolConcession();
+    //    bolConcession.concession = new Concession();
+    //    bolConcession.concession.riskGroupId = this.riskGroup.id;
+    //    bolConcession.concession.referenceNumber = this.concessionReferenceId;
+    //    bolConcession.concession.concessionType = ConcessionTypes.BOL;
 
-        if (this.bolConcessionForm.controls['smtDealNumber'].value)
-            bolConcession.concession.smtDealNumber = this.bolConcessionForm.controls['smtDealNumber'].value;
-        else
-            this.addValidationError("SMT Deal Number not captured");
+    //    if (this.tradeConcessionForm.controls['smtDealNumber'].value)
+    //        bolConcession.concession.smtDealNumber = this.tradeConcessionForm.controls['smtDealNumber'].value;
+    //    else
+    //        this.addValidationError("SMT Deal Number not captured");
 
-        if (this.bolConcessionForm.controls['motivation'].value)
-            bolConcession.concession.motivation = this.bolConcessionForm.controls['motivation'].value;
-        else
-            this.addValidationError("Motivation not captured");
+    //    if (this.tradeConcessionForm.controls['motivation'].value)
+    //        bolConcession.concession.motivation = this.tradeConcessionForm.controls['motivation'].value;
+    //    else
+    //        this.addValidationError("Motivation not captured");
 
-        const concessions = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+    //    const concessions = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
 
-        for (let concessionFormItem of concessions.controls) {
-            if (!bolConcession.bolConcessionDetails)
-                bolConcession.bolConcessionDetails = [];
+    //    for (let concessionFormItem of concessions.controls) {
+    //        if (!bolConcession.bolConcessionDetails)
+    //            bolConcession.bolConcessionDetails = [];
 
-            let bolConcessionDetail = new BolConcessionDetail();
+    //        let bolConcessionDetail = new BolConcessionDetail();
 
-            if (!isNew && concessionFormItem.get('bolConcessionDetailId').value)
-                bolConcessionDetail.bolConcessionDetailId = concessionFormItem.get('bolConcessionDetailId').value;
+    //        if (!isNew && concessionFormItem.get('bolConcessionDetailId').value)
+    //            bolConcessionDetail.bolConcessionDetailId = concessionFormItem.get('bolConcessionDetailId').value;
 
-            if (!isNew && concessionFormItem.get('concessionDetailId').value)
-                bolConcessionDetail.concessionDetailId = concessionFormItem.get('concessionDetailId').value;
+    //        if (!isNew && concessionFormItem.get('concessionDetailId').value)
+    //            bolConcessionDetail.concessionDetailId = concessionFormItem.get('concessionDetailId').value;
 
-            if (concessionFormItem.get('product').value) {
+    //        if (concessionFormItem.get('product').value) {
 
-            } else {
-                this.addValidationError("Product not selected");
-            }
+    //        } else {
+    //            this.addValidationError("Product not selected");
+    //        }
 
-            if (concessionFormItem.get('chargecode').value) {
-                bolConcessionDetail.fkChargeCodeId = concessionFormItem.get('chargecode').value.pkChargeCodeId;
+    //        if (concessionFormItem.get('chargecode').value) {
+    //            bolConcessionDetail.fkChargeCodeId = concessionFormItem.get('chargecode').value.pkChargeCodeId;
 
-            } else {
-                this.addValidationError("Charge code not selected");
-            }
+    //        } else {
+    //            this.addValidationError("Charge code not selected");
+    //        }
 
-            if (concessionFormItem.get('unitcharge').value) {
-                bolConcessionDetail.loadedRate = concessionFormItem.get('unitcharge').value;
-            } else {
-                this.addValidationError("Charge rate not entered");
-            }
+    //        if (concessionFormItem.get('unitcharge').value) {
+    //            bolConcessionDetail.loadedRate = concessionFormItem.get('unitcharge').value;
+    //        } else {
+    //            this.addValidationError("Charge rate not entered");
+    //        }
 
-            if (concessionFormItem.get('userid').value) {
-                bolConcessionDetail.fkLegalEntityBOLUserId = concessionFormItem.get('userid').value.pkLegalEntityBOLUserId;
-                bolConcessionDetail.legalEntityId = concessionFormItem.get('userid').value.legalEntityId;
-                bolConcessionDetail.legalEntityAccountId = concessionFormItem.get('userid').value.legalEntityAccountId;
-            } else {
-                this.addValidationError("User ID not selected");
-            }
+    //        if (concessionFormItem.get('userid').value) {
+    //            bolConcessionDetail.fkLegalEntityBOLUserId = concessionFormItem.get('userid').value.pkLegalEntityBOLUserId;
+    //            bolConcessionDetail.legalEntityId = concessionFormItem.get('userid').value.legalEntityId;
+    //            bolConcessionDetail.legalEntityAccountId = concessionFormItem.get('userid').value.legalEntityAccountId;
+    //        } else {
+    //            this.addValidationError("User ID not selected");
+    //        }
 
-            if (concessionFormItem.get('expiryDate').value)
-                bolConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+    //        if (concessionFormItem.get('expiryDate').value)
+    //            bolConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
-            bolConcession.bolConcessionDetails.push(bolConcessionDetail);
-        }
+    //        bolConcession.bolConcessionDetails.push(bolConcessionDetail);
+    //    }
 
-        const conditions = <FormArray>this.bolConcessionForm.controls['conditionItemsRows'];
+    //    const conditions = <FormArray>this.tradeConcessionForm.controls['conditionItemsRows'];
 
-        for (let conditionFormItem of conditions.controls) {
+    //    for (let conditionFormItem of conditions.controls) {
 
-            if (!bolConcession.concessionConditions)
-                bolConcession.concessionConditions = [];
+    //        if (!bolConcession.concessionConditions)
+    //            bolConcession.concessionConditions = [];
 
 
-            let concessionCondition = new ConcessionCondition();
+    //        let concessionCondition = new ConcessionCondition();
 
-            if (!isNew && conditionFormItem.get('concessionConditionId').value)
-                concessionCondition.concessionConditionId = conditionFormItem.get('concessionConditionId').value;
+    //        if (!isNew && conditionFormItem.get('concessionConditionId').value)
+    //            concessionCondition.concessionConditionId = conditionFormItem.get('concessionConditionId').value;
 
-            if (conditionFormItem.get('conditionType').value)
-                concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;
-            else
-                this.addValidationError("Condition type not selected");
+    //        if (conditionFormItem.get('conditionType').value)
+    //            concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;
+    //        else
+    //            this.addValidationError("Condition type not selected");
 
-            if (conditionFormItem.get('conditionProduct').value)
-                concessionCondition.conditionProductId = conditionFormItem.get('conditionProduct').value.id;
-            else
-                this.addValidationError("Condition product not selected");
+    //        if (conditionFormItem.get('conditionProduct').value)
+    //            concessionCondition.conditionProductId = conditionFormItem.get('conditionProduct').value.id;
+    //        else
+    //            this.addValidationError("Condition product not selected");
 
-            if (conditionFormItem.get('interestRate').value)
-                concessionCondition.interestRate = conditionFormItem.get('interestRate').value;
+    //        if (conditionFormItem.get('interestRate').value)
+    //            concessionCondition.interestRate = conditionFormItem.get('interestRate').value;
 
-            if (conditionFormItem.get('volume').value)
-                concessionCondition.conditionVolume = conditionFormItem.get('volume').value;
+    //        if (conditionFormItem.get('volume').value)
+    //            concessionCondition.conditionVolume = conditionFormItem.get('volume').value;
 
-            if (conditionFormItem.get('value').value)
-                concessionCondition.conditionValue = conditionFormItem.get('value').value;
+    //        if (conditionFormItem.get('value').value)
+    //            concessionCondition.conditionValue = conditionFormItem.get('value').value;
 
-            if (conditionFormItem.get('expectedTurnoverValue').value)
-                concessionCondition.expectedTurnoverValue = conditionFormItem.get('expectedTurnoverValue').value;
+    //        if (conditionFormItem.get('expectedTurnoverValue').value)
+    //            concessionCondition.expectedTurnoverValue = conditionFormItem.get('expectedTurnoverValue').value;
 
-            if (conditionFormItem.get('periodType').value) {
-                concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
-            } else {
-                this.addValidationError("Period type not selected");
-            }
+    //        if (conditionFormItem.get('periodType').value) {
+    //            concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
+    //        } else {
+    //            this.addValidationError("Period type not selected");
+    //        }
 
-            if (conditionFormItem.get('period').value) {
-                concessionCondition.periodId = conditionFormItem.get('period').value.id;
-            } else {
-                this.addValidationError("Period not selected");
-            }
+    //        if (conditionFormItem.get('period').value) {
+    //            concessionCondition.periodId = conditionFormItem.get('period').value.id;
+    //        } else {
+    //            this.addValidationError("Period not selected");
+    //        }
 
-            bolConcession.concessionConditions.push(concessionCondition);
-        }
+    //        bolConcession.concessionConditions.push(concessionCondition);
+    //    }
 
-        return bolConcession;
-    }
+    //    return bolConcession;
+    //}
 
     getBackgroundColour(rowIndex: number) {
-        const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
 
         if (String(control.controls[rowIndex].get('isExpired').value) == "true") {
             return "#EC7063";
@@ -587,375 +657,375 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
         this.sub.unsubscribe();
     }
 
-    bcmApproveConcession() {
-        this.isLoading = true;
+    //bcmApproveConcession() {
+    //    this.isLoading = true;
 
-        this.errorMessage = null;
-        this.validationError = null;
+    //    this.errorMessage = null;
+    //    this.validationError = null;
 
-        var bolConcession = this.getBolConcession(false);
-        bolConcession.concession.subStatus = ConcessionSubStatus.PCMPending;
-        bolConcession.concession.bcmUserId = this.bolConcession.currentUser.id;
+    //    var bolConcession = this.getBolConcession(false);
+    //    bolConcession.concession.subStatus = ConcessionSubStatus.PCMPending;
+    //    bolConcession.concession.bcmUserId = this.bolConcession.currentUser.id;
 
-        if (!bolConcession.concession.comments) {
-            bolConcession.concession.comments = "Forwarded";
-        }
+    //    if (!bolConcession.concession.comments) {
+    //        bolConcession.concession.comments = "Forwarded";
+    //    }
 
-        if (!this.validationError) {
-            this.bolConcessionService.postUpdateBolData(bolConcession).subscribe(entity => {
-                this.canBcmApprove = false;
-                this.saveMessage = entity.concession.referenceNumber;
-                this.isLoading = false;
-                this.bolConcession = entity;
-                this.canEdit = false;
-            }, error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
-        } else {
-            this.isLoading = false;
-        }
-    }
+    //    if (!this.validationError) {
+    //        this.bolConcessionService.postUpdateBolData(bolConcession).subscribe(entity => {
+    //            this.canBcmApprove = false;
+    //            this.saveMessage = entity.concession.referenceNumber;
+    //            this.isLoading = false;
+    //            this.bolConcession = entity;
+    //            this.canEdit = false;
+    //        }, error => {
+    //            this.errorMessage = <any>error;
+    //            this.isLoading = false;
+    //        });
+    //    } else {
+    //        this.isLoading = false;
+    //    }
+    //}
 
-    bcmDeclineConcession() {
-        this.isLoading = true;
+    //bcmDeclineConcession() {
+    //    this.isLoading = true;
 
-        this.errorMessage = null;
-        this.validationError = null;
+    //    this.errorMessage = null;
+    //    this.validationError = null;
 
-        var bolConcession = this.getBolConcession(false);
-        bolConcession.concession.status = ConcessionStatus.Declined;
-        bolConcession.concession.subStatus = ConcessionSubStatus.BCMDeclined;
-        bolConcession.concession.bcmUserId = this.bolConcession.currentUser.id;
+    //    var bolConcession = this.getBolConcession(false);
+    //    bolConcession.concession.status = ConcessionStatus.Declined;
+    //    bolConcession.concession.subStatus = ConcessionSubStatus.BCMDeclined;
+    //    bolConcession.concession.bcmUserId = this.bolConcession.currentUser.id;
 
-        if (!bolConcession.concession.comments) {
-            bolConcession.concession.comments = ConcessionStatus.Declined;
-        }
+    //    if (!bolConcession.concession.comments) {
+    //        bolConcession.concession.comments = ConcessionStatus.Declined;
+    //    }
 
-        if (!this.validationError) {
-            this.bolConcessionService.postUpdateBolData(bolConcession).subscribe(entity => {
-                console.log("data saved");
-                this.canBcmApprove = false;
-                this.saveMessage = entity.concession.referenceNumber;
-                this.isLoading = false;
-                this.bolConcession = entity;
-                this.canEdit = false;
-            }, error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
-        } else {
-            this.isLoading = false;
-        }
-    }
+    //    if (!this.validationError) {
+    //        this.bolConcessionService.postUpdateBolData(bolConcession).subscribe(entity => {
+    //            console.log("data saved");
+    //            this.canBcmApprove = false;
+    //            this.saveMessage = entity.concession.referenceNumber;
+    //            this.isLoading = false;
+    //            this.bolConcession = entity;
+    //            this.canEdit = false;
+    //        }, error => {
+    //            this.errorMessage = <any>error;
+    //            this.isLoading = false;
+    //        });
+    //    } else {
+    //        this.isLoading = false;
+    //    }
+    //}
 
-    pcmApproveConcession() {
-        this.isLoading = true;
+    //pcmApproveConcession() {
+    //    this.isLoading = true;
 
-        this.errorMessage = null;
-        this.validationError = null;
+    //    this.errorMessage = null;
+    //    this.validationError = null;
 
-        var bolConcession = this.getBolConcession(false);
+    //    var bolConcession = this.getBolConcession(false);
 
-        if (this.hasChanges) {
-            bolConcession.concession.status = ConcessionStatus.Pending;
+    //    if (this.hasChanges) {
+    //        bolConcession.concession.status = ConcessionStatus.Pending;
 
-            if (this.bolConcession.currentUser.isHO) {
-                bolConcession.concession.subStatus = ConcessionSubStatus.HOApprovedWithChanges;
-                bolConcession.concession.hoUserId = this.bolConcession.currentUser.id;
-            } else {
-                bolConcession.concession.subStatus = ConcessionSubStatus.PCMApprovedWithChanges;
-                bolConcession.concession.pcmUserId = this.bolConcession.currentUser.id;
-            }
+    //        if (this.bolConcession.currentUser.isHO) {
+    //            bolConcession.concession.subStatus = ConcessionSubStatus.HOApprovedWithChanges;
+    //            bolConcession.concession.hoUserId = this.bolConcession.currentUser.id;
+    //        } else {
+    //            bolConcession.concession.subStatus = ConcessionSubStatus.PCMApprovedWithChanges;
+    //            bolConcession.concession.pcmUserId = this.bolConcession.currentUser.id;
+    //        }
 
-            if (!bolConcession.concession.comments) {
-                bolConcession.concession.comments = ConcessionStatus.ApprovedWithChanges;
-            }
-        } else {
-            bolConcession.concession.status = ConcessionStatus.Approved;
+    //        if (!bolConcession.concession.comments) {
+    //            bolConcession.concession.comments = ConcessionStatus.ApprovedWithChanges;
+    //        }
+    //    } else {
+    //        bolConcession.concession.status = ConcessionStatus.Approved;
 
-            if (this.bolConcession.currentUser.isHO) {
-                bolConcession.concession.subStatus = ConcessionSubStatus.HOApproved;
-                bolConcession.concession.hoUserId = this.bolConcession.currentUser.id;
-            } else {
-                bolConcession.concession.subStatus = ConcessionSubStatus.PCMApproved;
-                bolConcession.concession.pcmUserId = this.bolConcession.currentUser.id;
-            }
+    //        if (this.bolConcession.currentUser.isHO) {
+    //            bolConcession.concession.subStatus = ConcessionSubStatus.HOApproved;
+    //            bolConcession.concession.hoUserId = this.bolConcession.currentUser.id;
+    //        } else {
+    //            bolConcession.concession.subStatus = ConcessionSubStatus.PCMApproved;
+    //            bolConcession.concession.pcmUserId = this.bolConcession.currentUser.id;
+    //        }
 
-            if (!bolConcession.concession.comments) {
-                bolConcession.concession.comments = ConcessionStatus.Approved;
-            }
-        }
+    //        if (!bolConcession.concession.comments) {
+    //            bolConcession.concession.comments = ConcessionStatus.Approved;
+    //        }
+    //    }
 
-        if (!this.validationError) {
-            this.bolConcessionService.postUpdateBolData(bolConcession).subscribe(entity => {
-                console.log("data saved");
-                this.canPcmApprove = false;
-                this.saveMessage = entity.concession.referenceNumber;
-                this.isLoading = false;
-                this.bolConcession = entity;
-                this.canEdit = false;
-            }, error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
-        } else {
-            this.isLoading = false;
-        }
-    }
+    //    if (!this.validationError) {
+    //        this.bolConcessionService.postUpdateBolData(bolConcession).subscribe(entity => {
+    //            console.log("data saved");
+    //            this.canPcmApprove = false;
+    //            this.saveMessage = entity.concession.referenceNumber;
+    //            this.isLoading = false;
+    //            this.bolConcession = entity;
+    //            this.canEdit = false;
+    //        }, error => {
+    //            this.errorMessage = <any>error;
+    //            this.isLoading = false;
+    //        });
+    //    } else {
+    //        this.isLoading = false;
+    //    }
+    //}
 
-    pcmDeclineConcession() {
-        this.isLoading = true;
+    //pcmDeclineConcession() {
+    //    this.isLoading = true;
 
-        this.errorMessage = null;
-        this.validationError = null;
+    //    this.errorMessage = null;
+    //    this.validationError = null;
 
-        var bolConcession = this.getBolConcession(false);
+    //    var bolConcession = this.getBolConcession(false);
 
-        bolConcession.concession.status = ConcessionStatus.Declined;
+    //    bolConcession.concession.status = ConcessionStatus.Declined;
 
-        if (this.bolConcession.currentUser.isHO) {
-            bolConcession.concession.subStatus = ConcessionSubStatus.HODeclined;
-            bolConcession.concession.hoUserId = this.bolConcession.currentUser.id;
-        } else {
-            bolConcession.concession.subStatus = ConcessionSubStatus.PCMDeclined;
-            bolConcession.concession.pcmUserId = this.bolConcession.currentUser.id;
-        }
+    //    if (this.bolConcession.currentUser.isHO) {
+    //        bolConcession.concession.subStatus = ConcessionSubStatus.HODeclined;
+    //        bolConcession.concession.hoUserId = this.bolConcession.currentUser.id;
+    //    } else {
+    //        bolConcession.concession.subStatus = ConcessionSubStatus.PCMDeclined;
+    //        bolConcession.concession.pcmUserId = this.bolConcession.currentUser.id;
+    //    }
 
-        if (!bolConcession.concession.comments) {
-            bolConcession.concession.comments = ConcessionStatus.Declined;
-        }
+    //    if (!bolConcession.concession.comments) {
+    //        bolConcession.concession.comments = ConcessionStatus.Declined;
+    //    }
 
-        if (!this.validationError) {
-            this.bolConcessionService.postUpdateBolData(bolConcession).subscribe(entity => {
-                console.log("data saved");
-                this.canPcmApprove = false;
-                this.saveMessage = entity.concession.referenceNumber;
-                this.isLoading = false;
-                this.bolConcession = entity;
-                this.canEdit = false;
-            }, error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
-        } else {
-            this.isLoading = false;
-        }
-    }
+    //    if (!this.validationError) {
+    //        this.bolConcessionService.postUpdateBolData(bolConcession).subscribe(entity => {
+    //            console.log("data saved");
+    //            this.canPcmApprove = false;
+    //            this.saveMessage = entity.concession.referenceNumber;
+    //            this.isLoading = false;
+    //            this.bolConcession = entity;
+    //            this.canEdit = false;
+    //        }, error => {
+    //            this.errorMessage = <any>error;
+    //            this.isLoading = false;
+    //        });
+    //    } else {
+    //        this.isLoading = false;
+    //    }
+    //}
 
-    extendConcession() {
-        if (confirm("Are you sure you want to extend this concession?")) {
-            this.isLoading = true;
-            this.errorMessage = null;
-            this.validationError = null;
+    //extendConcession() {
+    //    if (confirm("Are you sure you want to extend this concession?")) {
+    //        this.isLoading = true;
+    //        this.errorMessage = null;
+    //        this.validationError = null;
 
-            this.bolConcessionService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
-                console.log("data saved");
-                this.canBcmApprove = false;
-                this.canBcmApprove = false;
-                this.canExtend = false;
-                this.canRenew = false;
-                this.canRecall = false;
-                this.canUpdate = false;
-                this.canArchive = false;
-                this.saveMessage = entity.concession.childReferenceNumber;
-                this.isLoading = false;
-                this.bolConcession = entity;
-            }, error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
-        }
-    }
+    //        this.bolConcessionService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
+    //            console.log("data saved");
+    //            this.canBcmApprove = false;
+    //            this.canBcmApprove = false;
+    //            this.canExtend = false;
+    //            this.canRenew = false;
+    //            this.canRecall = false;
+    //            this.canUpdate = false;
+    //            this.canArchive = false;
+    //            this.saveMessage = entity.concession.childReferenceNumber;
+    //            this.isLoading = false;
+    //            this.bolConcession = entity;
+    //        }, error => {
+    //            this.errorMessage = <any>error;
+    //            this.isLoading = false;
+    //        });
+    //    }
+    //}
 
-    editConcession(editType: string) {
-        this.canBcmApprove = false;
-        this.motivationEnabled = true;
-        this.canBcmApprove = false;
-        this.canExtend = false;
-        this.canRenew = false;
-        this.canRecall = false;
-        this.isEditing = true;
-        this.isRecalling = false;
-        this.canEdit = true;
-        this.editType = editType;
-        this.canResubmit = false;
-        this.canUpdate = false;
-        this.canArchive = false;
+    //editConcession(editType: string) {
+    //    this.canBcmApprove = false;
+    //    this.motivationEnabled = true;
+    //    this.canBcmApprove = false;
+    //    this.canExtend = false;
+    //    this.canRenew = false;
+    //    this.canRecall = false;
+    //    this.isEditing = true;
+    //    this.isRecalling = false;
+    //    this.canEdit = true;
+    //    this.editType = editType;
+    //    this.canResubmit = false;
+    //    this.canUpdate = false;
+    //    this.canArchive = false;
 
-        this.bolConcessionForm.controls['motivation'].setValue('');
-    }
+    //    this.tradeConcessionForm.controls['motivation'].setValue('');
+    //}
 
-    saveConcession() {
-        this.isLoading = true;
-        this.errorMessage = null;
-        this.validationError = null;
+    //saveConcession() {
+    //    this.isLoading = true;
+    //    this.errorMessage = null;
+    //    this.validationError = null;
 
-        var bolConcession = this.getBolConcession(true);
+    //    var bolConcession = this.getBolConcession(true);
 
-        bolConcession.concession.status = ConcessionStatus.Pending;
-        bolConcession.concession.subStatus = ConcessionSubStatus.BCMPending;
-        bolConcession.concession.type = "Existing";
-        bolConcession.concession.referenceNumber = this.concessionReferenceId;
+    //    bolConcession.concession.status = ConcessionStatus.Pending;
+    //    bolConcession.concession.subStatus = ConcessionSubStatus.BCMPending;
+    //    bolConcession.concession.type = "Existing";
+    //    bolConcession.concession.referenceNumber = this.concessionReferenceId;
 
-        if (!this.validationError) {
-            this.bolConcessionService.postChildConcession(bolConcession, this.editType).subscribe(entity => {
-                console.log("data saved");
-                this.isEditing = false;
-                this.saveMessage = entity.concession.childReferenceNumber;
-                this.bolConcession = entity;
-                this.isLoading = false;
-                this.canEdit = false;
-                this.motivationEnabled = false;
-            }, error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
-        } else {
-            this.isLoading = false;
-        }
-    }
+    //    if (!this.validationError) {
+    //        this.bolConcessionService.postChildConcession(bolConcession, this.editType).subscribe(entity => {
+    //            console.log("data saved");
+    //            this.isEditing = false;
+    //            this.saveMessage = entity.concession.childReferenceNumber;
+    //            this.bolConcession = entity;
+    //            this.isLoading = false;
+    //            this.canEdit = false;
+    //            this.motivationEnabled = false;
+    //        }, error => {
+    //            this.errorMessage = <any>error;
+    //            this.isLoading = false;
+    //        });
+    //    } else {
+    //        this.isLoading = false;
+    //    }
+    //}
 
-    recallConcession() {
-        this.isLoading = true;
-        this.errorMessage = null;
+    //recallConcession() {
+    //    this.isLoading = true;
+    //    this.errorMessage = null;
 
-        this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
-            this.warningMessage = "Concession recalled, please make the required changes and save the concession or it will be lost";
-            this.isRecalling = true;
-            this.isLoading = false;
-            this.canEdit = true;
-            this.motivationEnabled = true;
-            this.canArchive = false;
-        }, error => {
-            this.errorMessage = <any>error;
-            this.isLoading = false;
-        });
-    }
+    //    this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
+    //        this.warningMessage = "Concession recalled, please make the required changes and save the concession or it will be lost";
+    //        this.isRecalling = true;
+    //        this.isLoading = false;
+    //        this.canEdit = true;
+    //        this.motivationEnabled = true;
+    //        this.canArchive = false;
+    //    }, error => {
+    //        this.errorMessage = <any>error;
+    //        this.isLoading = false;
+    //    });
+    //}
 
-    saveRecallConcession() {
-        this.warningMessage = "";
-        this.isLoading = true;
-        this.errorMessage = null;
-        this.validationError = null;
+    //saveRecallConcession() {
+    //    this.warningMessage = "";
+    //    this.isLoading = true;
+    //    this.errorMessage = null;
+    //    this.validationError = null;
 
-        var bolConcession = this.getBolConcession(true);
+    //    var bolConcession = this.getBolConcession(true);
 
-        bolConcession.concession.status = ConcessionStatus.Pending;
-        bolConcession.concession.subStatus = ConcessionSubStatus.BCMPending;
-        bolConcession.concession.referenceNumber = this.concessionReferenceId;
+    //    bolConcession.concession.status = ConcessionStatus.Pending;
+    //    bolConcession.concession.subStatus = ConcessionSubStatus.BCMPending;
+    //    bolConcession.concession.referenceNumber = this.concessionReferenceId;
 
-        if (!this.validationError) {
-            this.bolConcessionService.postRecallBolData(bolConcession).subscribe(entity => {
-                console.log("data saved");
-                this.isRecalling = false;
-                this.saveMessage = entity.concession.referenceNumber;
-                this.bolConcession = entity;
-                this.isLoading = false;
-                this.canEdit = false;
-                this.motivationEnabled = false;
-            }, error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
-        } else {
-            this.isLoading = false;
-        }
-    }
+    //    if (!this.validationError) {
+    //        this.bolConcessionService.postRecallBolData(bolConcession).subscribe(entity => {
+    //            console.log("data saved");
+    //            this.isRecalling = false;
+    //            this.saveMessage = entity.concession.referenceNumber;
+    //            this.bolConcession = entity;
+    //            this.isLoading = false;
+    //            this.canEdit = false;
+    //            this.motivationEnabled = false;
+    //        }, error => {
+    //            this.errorMessage = <any>error;
+    //            this.isLoading = false;
+    //        });
+    //    } else {
+    //        this.isLoading = false;
+    //    }
+    //}
 
-    requestorApproveConcession() {
-        this.isLoading = true;
+    //requestorApproveConcession() {
+    //    this.isLoading = true;
 
-        this.errorMessage = null;
-        this.validationError = null;
+    //    this.errorMessage = null;
+    //    this.validationError = null;
 
-        var bolConcession = this.getBolConcession(false);
-        bolConcession.concession.status = ConcessionStatus.ApprovedWithChanges;
-        bolConcession.concession.subStatus = ConcessionSubStatus.RequestorAcceptedChanges;
-        bolConcession.concession.requestorId = this.bolConcession.currentUser.id;
+    //    var bolConcession = this.getBolConcession(false);
+    //    bolConcession.concession.status = ConcessionStatus.ApprovedWithChanges;
+    //    bolConcession.concession.subStatus = ConcessionSubStatus.RequestorAcceptedChanges;
+    //    bolConcession.concession.requestorId = this.bolConcession.currentUser.id;
 
-        if (!bolConcession.concession.comments) {
-            bolConcession.concession.comments = "Accepted Changes";
-        }
+    //    if (!bolConcession.concession.comments) {
+    //        bolConcession.concession.comments = "Accepted Changes";
+    //    }
 
-        if (!this.validationError) {
-            this.bolConcessionService.postUpdateBolData(bolConcession).subscribe(entity => {
-                console.log("data saved");
-                this.canApproveChanges = false;
-                this.saveMessage = entity.concession.referenceNumber;
-                this.isLoading = false;
-                this.bolConcession = entity;
-                this.canEdit = false;
-            }, error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
-        } else {
-            this.isLoading = false;
-        }
-    }
+    //    if (!this.validationError) {
+    //        this.bolConcessionService.postUpdateBolData(bolConcession).subscribe(entity => {
+    //            console.log("data saved");
+    //            this.canApproveChanges = false;
+    //            this.saveMessage = entity.concession.referenceNumber;
+    //            this.isLoading = false;
+    //            this.bolConcession = entity;
+    //            this.canEdit = false;
+    //        }, error => {
+    //            this.errorMessage = <any>error;
+    //            this.isLoading = false;
+    //        });
+    //    } else {
+    //        this.isLoading = false;
+    //    }
+    //}
 
-    requestorDeclineConcession() {
-        this.isLoading = true;
+    //requestorDeclineConcession() {
+    //    this.isLoading = true;
 
-        this.errorMessage = null;
-        this.validationError = null;
+    //    this.errorMessage = null;
+    //    this.validationError = null;
 
-        var bolConcession = this.getBolConcession(false);
-        bolConcession.concession.status = ConcessionStatus.Declined;
-        bolConcession.concession.subStatus = ConcessionSubStatus.RequestorDeclinedChanges;
-        bolConcession.concession.requestorId = this.bolConcession.currentUser.id;
+    //    var bolConcession = this.getBolConcession(false);
+    //    bolConcession.concession.status = ConcessionStatus.Declined;
+    //    bolConcession.concession.subStatus = ConcessionSubStatus.RequestorDeclinedChanges;
+    //    bolConcession.concession.requestorId = this.bolConcession.currentUser.id;
 
-        if (!bolConcession.concession.comments) {
-            bolConcession.concession.comments = "Declined Changes";
-        }
+    //    if (!bolConcession.concession.comments) {
+    //        bolConcession.concession.comments = "Declined Changes";
+    //    }
 
-        if (!this.validationError) {
-            this.bolConcessionService.postUpdateBolData(bolConcession).subscribe(entity => {
-                console.log("data saved");
-                this.canApproveChanges = false;
-                this.saveMessage = entity.concession.referenceNumber;
-                this.isLoading = false;
-                this.bolConcession = entity;
-                this.canEdit = false;
-            }, error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
-        } else {
-            this.isLoading = false;
-        }
-    }
+    //    if (!this.validationError) {
+    //        this.bolConcessionService.postUpdateBolData(bolConcession).subscribe(entity => {
+    //            console.log("data saved");
+    //            this.canApproveChanges = false;
+    //            this.saveMessage = entity.concession.referenceNumber;
+    //            this.isLoading = false;
+    //            this.bolConcession = entity;
+    //            this.canEdit = false;
+    //        }, error => {
+    //            this.errorMessage = <any>error;
+    //            this.isLoading = false;
+    //        });
+    //    } else {
+    //        this.isLoading = false;
+    //    }
+    //}
 
-    archiveConcession() {
-        if (confirm("Are you sure you want to archive this concession?")) {
-            this.isLoading = true;
-            this.errorMessage = null;
+    //archiveConcession() {
+    //    if (confirm("Are you sure you want to archive this concession?")) {
+    //        this.isLoading = true;
+    //        this.errorMessage = null;
 
-            this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
-                this.warningMessage = "Concession has been archived.";
+    //        this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
+    //            this.warningMessage = "Concession has been archived.";
 
-                this.isLoading = false;
-                this.canBcmApprove = false;
-                this.canPcmApprove = false;
-                this.canExtend = false;
-                this.canRenew = false;
-                this.canRecall = false;
-                this.isEditing = false;
-                this.motivationEnabled = false;
-                this.canEdit = false;
-                this.isRecalling = false;
-                this.canApproveChanges = false;
-                this.canResubmit = false;
-                this.canUpdate = false;
-                this.canArchive = false;
+    //            this.isLoading = false;
+    //            this.canBcmApprove = false;
+    //            this.canPcmApprove = false;
+    //            this.canExtend = false;
+    //            this.canRenew = false;
+    //            this.canRecall = false;
+    //            this.isEditing = false;
+    //            this.motivationEnabled = false;
+    //            this.canEdit = false;
+    //            this.isRecalling = false;
+    //            this.canApproveChanges = false;
+    //            this.canResubmit = false;
+    //            this.canUpdate = false;
+    //            this.canArchive = false;
 
-            }, error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
-        }
-    }
+    //        }, error => {
+    //            this.errorMessage = <any>error;
+    //            this.isLoading = false;
+    //        });
+    //    }
+    //}
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.formatDecimal($event.target.value);

@@ -54,7 +54,7 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                string sql = @"SELECT distinct [ConcessionId], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [LegalEntityId], [CustomerName], [LegalEntityAccountId], [AccountNumber], [ConcessionTypeId], [ConcessionType], [ConcessionDate], [StatusId], [Status], [SubStatusId], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment], [DatesentForApproval], 
+                string sql = @"SELECT distinct [ConcessionId], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [CustomerName], [ConcessionTypeId], [ConcessionType], [ConcessionDate], [StatusId], [Status], [SubStatusId], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment], [DatesentForApproval], 
                     [ExpiryDate], [DateApproved], [AAUserId], [RequestorId], [BCMUserId], [PCMUserId], [HOUserId], [CentreId], [CentreName], [RegionId], [Region], [IsMismatched], [IsActive], [IsCurrent], [PriceExported], [PriceExportedDate]
                     FROM [dbo].[ConcessionInboxView]
                     WHERE 
@@ -244,7 +244,7 @@ namespace StandardBank.ConcessionManagement.Repository
             }
         }
 
-        public IEnumerable<ConcessionInboxView> ReadDueFor24HourEscaltion(IEnumerable<int> statusIdlist)
+        public IEnumerable<ConcessionInboxView> ReadDueFor72HourEscaltion(IEnumerable<int> statusIdlist)
         {
             using (var db = _dbConnectionFactory.Connection())
             {
@@ -252,7 +252,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     FROM [dbo].[ConcessionInboxView]
                     WHERE 
                     [SubStatusId] in @statusIds and [DatesentForApproval] <= @DateToCheck";
-                return db.Query<ConcessionInboxView>(sql, new { statusIds = statusIdlist, DateToCheck = DateTime.Now.AddDays(-1)});
+                return db.Query<ConcessionInboxView>(sql, new { statusIds = statusIdlist, DateToCheck = DateTime.Now.AddDays(-3)});
             }
         }
 

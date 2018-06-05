@@ -92,5 +92,8 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The user identifier.
         /// </value>
         public int? UserId { get; set; }
+
+        public string BCMRoleName { get; set; }
+        public string RequestorRoleName { get; set; }
     }
 }

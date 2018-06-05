@@ -111,11 +111,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         //    return Ok(_bolManager.GetBolConcession(bolConcession.Concession.ReferenceNumber, user));
         //}
 
-        //[Route("BolConcessionData/{concessionReferenceId}")]
-        //public IActionResult BolConcessionData(string concessionReferenceId)
-        //{
-        //    return Ok(_bolManager.GetBolConcession(concessionReferenceId, _siteHelper.LoggedInUser(this)));
-        //}
+        [Route("TradeConcessionData/{concessionReferenceId}")]
+        public IActionResult BolConcessionData(string concessionReferenceId)
+        {
+            return Ok(_tradeManager.GetTradeConcession(concessionReferenceId, _siteHelper.LoggedInUser(this)));
+        }
 
 
         //private async Task UpdateBolConcession(BolConcession bolConcession, User user)

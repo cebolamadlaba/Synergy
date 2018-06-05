@@ -91,9 +91,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         public async Task<Model.UserInterface.Concession> Handle(UpdateConcession message)
         {
             var result = _concessionManager.UpdateConcession(message.Concession, message.User);
-           
+
             message.AuditRecord = new AuditRecord(result, message.User, AuditType.Update);
-            message.Concession = _mapper.Map<Model.UserInterface.Concession>(result);            
+            message.Concession = _mapper.Map<Model.UserInterface.Concession>(result);
 
             message.Concession.Status = _lookupTableManager.GetStatusDescription(result.StatusId);
             message.Concession.SubStatus = _lookupTableManager.GetSubStatusDescription(result.SubStatusId);
@@ -113,7 +113,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
                     SendApprovedNotificationEmail(message);
 
                 if (message.Concession.Status == Constants.ConcessionStatus.Declined)
-                    SendDeclinedNotificationEmail(message);             
+                    SendDeclinedNotificationEmail(message);
             }
             else
             {
@@ -131,6 +131,47 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         private void SendDeclinedNotificationEmail(UpdateConcession message)
         {
             var requestor = message.Concession.Requestor ?? _userManager.GetUser(message.Concession.RequestorId);
+
+            //send notifcation to Account executive, if it is an assitant
+            if (requestor.IsAdminAssistant && requestor.AccountExecutiveUserId != null)
+            {
+                BackgroundJob.Schedule(() =>
+               _emailManager.SendDeclinedConcessionEmail(new DeclinedConcessionEmail
+               {
+                   EmailAddress = requestor.AccountExecutive.EmailAddress,
+                   ConcessionId = message.Concession.ReferenceNumber,
+                   Name = requestor.AccountExecutive.FirstName,
+                   Approver = message.User.FullName,
+                   DateOfRequest = message.Concession.DateOpened.ToString("yyyy-MM-dd"),
+                   DateActioned = DateTime.Now.ToString("yyyy-MM-dd"),
+                   RiskGroupName = message.Concession.RiskGroupName,
+                   Product = message.Concession.ConcessionType
+               }), DateTime.Now);
+
+            }
+            //send notifcation to all assitants, if it is an Account Executive
+            else if (requestor.AccountAssistants != null && requestor.AccountAssistants.Count > 0)
+            {
+                foreach (var aa in requestor.AccountAssistants)
+                {
+                    var aauser = _userManager.GetUser(aa.AccountAssistantUserId);
+
+                    BackgroundJob.Schedule(() =>
+                      _emailManager.SendDeclinedConcessionEmail(new DeclinedConcessionEmail
+                      {
+                          EmailAddress = aauser.EmailAddress,
+                          ConcessionId = message.Concession.ReferenceNumber,
+                          Name = aauser.FirstName,
+                          Approver = message.User.FullName,
+                          DateOfRequest = message.Concession.DateOpened.ToString("yyyy-MM-dd"),
+                          DateActioned = DateTime.Now.ToString("yyyy-MM-dd"),
+                          RiskGroupName = message.Concession.RiskGroupName,
+                          Product = message.Concession.ConcessionType
+                      }), DateTime.Now);
+                }
+            }
+
+            //also send the notifcation to the original requestor
 
             BackgroundJob.Schedule(() =>
                 _emailManager.SendDeclinedConcessionEmail(new DeclinedConcessionEmail
@@ -183,6 +224,44 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         {
             var requestor = message.Concession.Requestor ?? _userManager.GetUser(message.Concession.RequestorId);
 
+            //send notifcation to Account executive, if it is an assitant
+            if (requestor.IsAdminAssistant && requestor.AccountExecutiveUserId != null)
+            {
+                BackgroundJob.Schedule(() =>
+               _emailManager.SendApprovedWithChangesConcessionEmail(new ApprovedConcessionEmail
+               {
+                   EmailAddress = requestor.AccountExecutive.EmailAddress,
+                   ConcessionId = message.Concession.ReferenceNumber,
+                   Name = requestor.AccountExecutive.FirstName,
+                   DateOfRequest = message.Concession.DateOpened.ToString("yyyy-MM-dd"),
+                   DateActioned = DateTime.Now.ToString("yyyy-MM-dd"),
+                   RiskGroupName = message.Concession.RiskGroupName,
+                   Product = message.Concession.ConcessionType
+               }), DateTime.Now);
+
+            }
+            //send notifcation to all assitants, if it is an Account Executive
+            else if (requestor.AccountAssistants != null && requestor.AccountAssistants.Count > 0)
+            {
+                foreach (var aa in requestor.AccountAssistants)
+                {
+                    var aauser = _userManager.GetUser(aa.AccountAssistantUserId);
+
+                    BackgroundJob.Schedule(() =>
+                      _emailManager.SendApprovedWithChangesConcessionEmail(new ApprovedConcessionEmail
+                      {
+                          EmailAddress = aauser.EmailAddress,
+                          ConcessionId = message.Concession.ReferenceNumber,
+                          Name = aauser.FirstName,
+                          DateOfRequest = message.Concession.DateOpened.ToString("yyyy-MM-dd"),
+                          DateActioned = DateTime.Now.ToString("yyyy-MM-dd"),
+                          RiskGroupName = message.Concession.RiskGroupName,
+                          Product = message.Concession.ConcessionType
+                      }), DateTime.Now);
+                }
+            }
+
+            //also send the notifcation to the original requestor
             BackgroundJob.Schedule(() =>
                 _emailManager.SendApprovedWithChangesConcessionEmail(new ApprovedConcessionEmail
                 {
@@ -204,6 +283,44 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         {
             var requestor = message.Concession.Requestor ?? _userManager.GetUser(message.Concession.RequestorId);
 
+            //send notifcation to Account executive, if it is an assitant
+            if (requestor.IsAdminAssistant && requestor.AccountExecutiveUserId != null)
+            {
+                BackgroundJob.Schedule(() =>
+               _emailManager.SendApprovedConcessionEmail(new ApprovedConcessionEmail
+               {
+                   EmailAddress = requestor.AccountExecutive.EmailAddress,
+                   ConcessionId = message.Concession.ReferenceNumber,
+                   Name = requestor.AccountExecutive.FirstName,
+                   DateOfRequest = message.Concession.DateOpened.ToString("yyyy-MM-dd"),
+                   DateActioned = DateTime.Now.ToString("yyyy-MM-dd"),
+                   RiskGroupName = message.Concession.RiskGroupName,
+                   Product = message.Concession.ConcessionType
+               }), DateTime.Now);
+
+            }         
+            //send notifcation to all assitants, if it is an Account Executive
+            else if (requestor.AccountAssistants != null && requestor.AccountAssistants.Count > 0)
+            {
+                foreach (var aa in requestor.AccountAssistants)
+                {
+                    var aauser = _userManager.GetUser(aa.AccountAssistantUserId);
+
+                    BackgroundJob.Schedule(() =>
+                      _emailManager.SendApprovedConcessionEmail(new ApprovedConcessionEmail
+                      {
+                          EmailAddress = aauser.EmailAddress,
+                          ConcessionId = message.Concession.ReferenceNumber,
+                          Name = aauser.FirstName,
+                          DateOfRequest = message.Concession.DateOpened.ToString("yyyy-MM-dd"),
+                          DateActioned = DateTime.Now.ToString("yyyy-MM-dd"),
+                          RiskGroupName = message.Concession.RiskGroupName,
+                          Product = message.Concession.ConcessionType
+                      }), DateTime.Now);
+                }
+            }
+
+            //also sen the notifcation to the original requestor
             BackgroundJob.Schedule(() =>
                 _emailManager.SendApprovedConcessionEmail(new ApprovedConcessionEmail
                 {

@@ -70,8 +70,9 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<LegalEntity>(
-                    @"SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [CustomerName], [CustomerNumber], [IsActive], [ContactPerson], [PostalAddress], [City], [PostalCode], [fkUserId] [UserId] 
-                    FROM [dbo].[tblLegalEntity] 
+                    @"SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [CustomerName], [CustomerNumber], le.[IsActive], [ContactPerson], [PostalAddress], [City], [PostalCode], [fkUserId] [UserId] ,se.[BCMRoleName],se.[RequestorRoleName]
+					from [dbo].[tblLegalEntity] le
+					left join rtblMarketSegment se on  le.fkMarketSegmentId = se.pkMarketSegmentId	 
                     WHERE [pkLegalEntityId] = @Id",
                     new {id}).SingleOrDefault();
             }
