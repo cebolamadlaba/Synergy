@@ -23,9 +23,7 @@
 
         public int? fkTradeProductId { get; set; }
        
-        public int? fkLegalEntityAccountId { get; set; }          
-
-        public string Communications { get; set; }      
+        public int? fkLegalEntityAccountId { get; set; } 
       
         public decimal? AdValorem { get; set; }
 

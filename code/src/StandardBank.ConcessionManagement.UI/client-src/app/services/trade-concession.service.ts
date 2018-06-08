@@ -37,12 +37,13 @@ export class TradeConcessionService {
         return this.http.post(url, tradeConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    //postUpdateBolData(bolConcession: BolConcession): Observable<BolConcession> {
-    //    let headers = new Headers({ 'Content-Type': 'application/json' });
-    //    let options = new RequestOptions({ headers: headers });
-    //    const url = "/api/Bol/UpdateBol";
-    //    return this.http.post(url, bolConcession, options).map(this.extractData).catch(this.handleErrorObservable);
-    //}
+    
+    postUpdateTradeData(tradeConcession: TradeConcession): Observable<TradeConcession> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/Trade/UpdateTrade";
+        return this.http.post(url, tradeConcession, options).map(this.extractData).catch(this.handleErrorObservable);
+    }
 
     //postForwardBolPCM(bolConcession: SearchConcessionDetail): Observable<ApprovedConcessionDetail> {
     //    let headers = new Headers({ 'Content-Type': 'application/json' });
@@ -65,12 +66,14 @@ export class TradeConcessionService {
     //    return this.http.post(url, bolConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     //}
 
-    //postRecallBolData(bolConcession: BolConcession): Observable<BolConcession> {
-    //    let headers = new Headers({ 'Content-Type': 'application/json' });
-    //    let options = new RequestOptions({ headers: headers });
-    //    const url = "/api/Bol/UpdateRecalledBol";
-    //    return this.http.post(url, bolConcession, options).map(this.extractData).catch(this.handleErrorObservable);
-    //}
+ 
+
+    postRecallTradeData(tradeConcession: TradeConcession): Observable<TradeConcession> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/Trade/UpdateRecalledTrade";
+        return this.http.post(url, tradeConcession, options).map(this.extractData).catch(this.handleErrorObservable);
+    }
 
     //createupdateBOLChargeCode(bolChargecode: BolChargeCode): Observable<BolChargeCode> {
     //    let headers = new Headers({ 'Content-Type': 'application/json' });

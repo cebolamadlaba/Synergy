@@ -61,6 +61,9 @@ export class DueExpiryInboxComponent implements OnInit, OnDestroy {
             case ConcessionTypes.BOL:
                 this.router.navigate(['/bol-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
                 break;
+            case ConcessionTypes.Trade:
+                this.router.navigate(['/trade-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                break;
         }
     }
 

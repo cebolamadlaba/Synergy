@@ -69,7 +69,7 @@ namespace StandardBank.ConcessionManagement.Repository
                             Term = model.term,
                             Min = model.min,
                             Max = model.max,
-                            Communication = model.Communications,
+                            Communication = model.Communication,
                             FlatFee = model.FlatFee,
                             EstablishmentFee = model.EstablishmentFee,
                             AdValorem = model.AdValorem,
@@ -96,8 +96,10 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
+
                 return db.Query<ConcessionTrade>(
-                    @"SELECT [pkConcessionTradeId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkTransactionTypeId] [TransactionTypeId], [fkChannelTypeId] [ChannelTypeId], [fkBaseRateId] [BaseRateId], [TableNumber], [TransactionVolume], [TransactionValue], [AdValorem], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
+                    @"SELECT [pkConcessionTradeId] [Id], t.[fkConcessionId] [ConcessionId],d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate], [fkConcessionDetailId],[fkTradeProductId],
+                                                    [LoadedRate], [ApprovedRate], [GBBNumber], [Term],[Min],[Max],[Communication],[FlatFee],[EstablishmentFee],[AdValorem],[Currency] 
                     FROM [dbo].[tblConcessionTrade] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
                     WHERE [pkConcessionTradeId] = @Id",
@@ -114,7 +116,8 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionTrade>(
-                    @"SELECT [pkConcessionTradeId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkTransactionTypeId] [TransactionTypeId], [fkChannelTypeId] [ChannelTypeId], [fkBaseRateId] [BaseRateId], [TableNumber], [TransactionVolume], [TransactionValue], [AdValorem], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
+                    @"SELECT[pkConcessionTradeId] [Id], t.[fkConcessionId] [ConcessionId],d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate], [fkConcessionDetailId],[fkTradeProductId],
+                                                    [LoadedRate], [ApprovedRate], [GBBNumber], [Term],[Min],[Max],[Communication],[FlatFee],[EstablishmentFee],[AdValorem],[Currency] 
                     FROM [dbo].[tblConcessionTrade] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]");
             }
@@ -147,27 +150,45 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Update(ConcessionTrade model)
         {
-            using (var db = _dbConnectionFactory.Connection())
+            try
             {
-                //db.Execute(@"UPDATE [dbo].[tblConcessionTrade]
-                //            SET [fkConcessionId] = @ConcessionId, [fkConcessionDetailId] = @ConcessionDetailId, [fkTransactionTypeId] = @TransactionTypeId, [fkChannelTypeId] = @ChannelTypeId, [fkBaseRateId] = @BaseRateId, [TableNumber] = @TableNumber, [TransactionVolume] = @TransactionVolume, [TransactionValue] = @TransactionValue, [AdValorem] = @AdValorem
-                //            WHERE [pkConcessionTradeId] = @Id",
-                //    new
-                //    {
-                //        Id = model.Id,
-                //        ConcessionId = model.ConcessionId,
-                //        ConcessionDetailId = model.ConcessionDetailId,
-                //        TransactionTypeId = model.TransactionTypeId,
-                //        ChannelTypeId = model.ChannelTypeId,
-                //        BaseRateId = model.BaseRateId,
-                //        TableNumber = model.TableNumber,
-                //        TransactionVolume = model.TransactionVolume,
-                //        TransactionValue = model.TransactionValue,
-                //        AdValorem = model.AdValorem
-                //    });
-            }
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    const string sql =
+           @"UPDATE [dbo].[tblConcessionTrade] set [fkConcessionId] = @fkConcessionId, [fkConcessionDetailId] = @fkConcessionDetailId,[fkTradeProductId] = @fkTradeProductId, [fkLegalEntityAccountId] = @fkLegalEntityAccountId,
+                                                    [LoadedRate] = @LoadedRate, [ApprovedRate] = @ApprovedRate, [GBBNumber] = @GBBNumber, [Term] = @Term,[Min] = @Min,[Max] = @Max,[Communication] = @Communication,[FlatFee] = @FlatFee,[EstablishmentFee] = @EstablishmentFee,[AdValorem] = @AdValorem,[Currency] = @Currency where
+                pkConcessionTradeId =  @Id
+               ";
 
-            _concessionDetailRepository.Update(model);
+                    db.Execute(sql, new
+                    {
+                        @Id = model.Id,
+                        fkConcessionId = model.ConcessionId,
+                        fkConcessionDetailId = model.ConcessionDetailId,
+                        fkTradeProductId = model.fkTradeProductId,
+                        fkLegalEntityAccountId = model.LegalEntityAccountId,
+                        LoadedRate = model.LoadedRate,
+                        ApprovedRate = model.ApprovedRate,
+                        GBBNumber = model.GBBNumber,
+                        Term = model.term,
+                        Min = model.min,
+                        Max = model.max,
+                        Communication = model.Communication,
+                        FlatFee = model.FlatFee,
+                        EstablishmentFee = model.EstablishmentFee,
+                        AdValorem = model.AdValorem,
+                        Currency = model.Currency
+
+                    });
+                }
+
+                _concessionDetailRepository.Update(model);
+            }
+            catch (System.Exception ex)
+            {
+
+                throw;
+            }
         }
 
         /// <summary>

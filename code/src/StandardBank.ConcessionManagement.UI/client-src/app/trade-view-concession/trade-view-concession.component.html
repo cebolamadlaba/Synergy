@@ -172,14 +172,21 @@
         </thead>
         <tbody class="form-concessions-table-content">
 
-            <tr *ngFor="let itemrow of tradeConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
+            <tr *ngFor="let itemrow of tradeConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">            
+
+
                 <td class="length-short">
-                    <select formControlName="product" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="productTypeChanged(i)">
+                    <input formControlName="tradeConcessionDetailId" style="display: none;" />
+                    <input formControlName="concessionDetailId" style="display: none;" />
+                    <input formControlName="isExpired" style="display: none;" />
+                    <input formControlName="isExpiring" style="display: none;" />
+
+                    <select formControlName="product" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="productTypeChanged(i)">
                         <option *ngFor="let productOption of tradeproducts" [ngValue]="productOption">{{productOption.tradeProductName}}</option>
                     </select>
                 </td>
                 <td class="length-short">
-                    <select formControlName="producttype" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                    <select formControlName="producttype" class="form-control" [attr.disabled]="canEdit ? null : ''">
                         <option *ngFor="let tradeproductypteOption of selectedProducts[i].producttypes" [ngValue]="tradeproductypteOption">{{tradeproductypteOption.tradeProductType}}</option>
                     </select>
                 </td>
@@ -192,65 +199,33 @@
                 </td>
 
 
-                <td class="length-short"><input type="text" class="form-control" formControlName="gbbnumber" [attr.disabled]="saveMessage ? '' : null" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="term" [attr.disabled]="saveMessage ? '' : null" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="advalorem" [attr.disabled]="saveMessage ? '' : null" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="min" [attr.disabled]="saveMessage ? '' : null" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="max" [attr.disabled]="saveMessage ? '' : null" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="communication" [attr.disabled]="saveMessage ? '' : null" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="flatfee" [attr.disabled]="saveMessage ? '' : null" /></td>
+                <td class="length-short"><input type="text" class="form-control" formControlName="gbbnumber" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="term" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="advalorem" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="min" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="max" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="communication" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="flatfee" [attr.disabled]="canEdit ? null : ''" /></td>
                 <td class="length-short">
-                    <select formControlName="currency" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                    <select formControlName="currency" class="form-control" [attr.disabled]="canEdit ? null : ''">
                         <option>EUR</option>
                         <option>ZAR</option>
                         <option>GBP</option>
                         <option>USD</option>
                     </select>
                 </td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="estfee" [attr.disabled]="saveMessage ? '' : null" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="estfee" [attr.disabled]="canEdit ? null : ''" /></td>
 
-                <td class="length-short" *ngIf="isApproved"><input type="number" class="form-control" formControlName="approvedRate" [attr.disabled]="saveMessage ? '' : null" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="loadedRate" [attr.disabled]="saveMessage ? '' : null" /></td>
+                <td class="length-short" *ngIf="isApproved"><input type="number" class="form-control" formControlName="approvedRate" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="loadedRate" [attr.disabled]="canEdit ? null : ''" /></td>
 
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="saveMessage ? '' : null" /></td>
-                <td class="delete"><button *ngIf="tradeConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
+
+                <td class="delete"><button *ngIf="tradeConcessionForm.controls.concessionItemRows.controls.length > 1 && canEdit" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+
             </tr>
 
 
-            <!--<tr *ngFor="let itemrow of bolConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
-                <td class="length-long">
-                    <input formControlName="bolConcessionDetailId" style="display: none;" />
-                    <input formControlName="concessionDetailId" style="display: none;" />
-                    <input formControlName="isExpired" style="display: none;" />
-                    <input formControlName="isExpiring" style="display: none;" />
-
-                    <select formControlName="product" class="form-control" [attr.disabled]="canEdit ? null : ''">
-                        <option *ngFor="let productOption of bolchargecodetypes" [ngValue]="productOption" (change)="productTypeChanged(i)">{{productOption.description}}</option>
-                    </select>
-                </td>
-                <td class="length-medium">
-                    <select formControlName="userid" class="form-control" [attr.disabled]="canEdit ? null : ''">
-                        <option *ngFor="let useridOption of legalentitybolusers" [ngValue]="useridOption">{{useridOption.bolUserId}}</option>
-                    </select>
-                </td>
-                <td class="length-long">
-                    <select formControlName="chargecode" class="form-control" [attr.disabled]="canEdit ? null : ''">
-                        <option *ngFor="let bolchargecodeOption of bolchargecodesFiltered" [ngValue]="bolchargecodeOption">{{bolchargecodeOption.description}}</option>
-                    </select>
-                </td>
-
-                <td class="length-long"><input type="number" class="form-control" formControlName="unitcharge" [attr.disabled]="canEdit ? null : ''" /></td>
-
-                <td class="length-long" *ngIf="isApproved"><input type="number" class="form-control" formControlName="unitchargeApproved" /></td>
-
-
-
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" /></td>
-                <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>
-
-
-                <td class="delete"><button *ngIf="bolConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
-            </tr>-->
 
 
 

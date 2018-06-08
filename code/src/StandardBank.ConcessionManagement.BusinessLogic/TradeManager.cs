@@ -107,28 +107,28 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public ConcessionTrade UpdateConcessionTrade(TradeConcessionDetail tradeConcessionDetail, Concession concession)
         {
             var mappedConcessionTrade = _mapper.Map<ConcessionTrade>(tradeConcessionDetail);
-            //mappedConcessionTrade.ConcessionId = concession.Id;
-            //mappedConcessionTrade.Id = tradeConcessionDetail.TradeConcessionDetailId;
+            mappedConcessionTrade.ConcessionId = concession.Id;
+            mappedConcessionTrade.Id = tradeConcessionDetail.TradeConcessionDetailId;
 
-            //if (concession.Status == Constants.ConcessionStatus.Approved ||
-            //    concession.Status == Constants.ConcessionStatus.ApprovedWithChanges)
-            //{
-            //    //Loaded rate becomes approved rate
-            //    mappedConcessionTrade.ApprovedRate = mappedConcessionTrade.TransactionVolume;
+            if (concession.Status == Constants.ConcessionStatus.Approved ||
+                concession.Status == Constants.ConcessionStatus.ApprovedWithChanges)
+            {
+                //Loaded rate becomes approved rate
+                mappedConcessionTrade.ApprovedRate = mappedConcessionTrade.LoadedRate;
 
-            //    _ruleManager.UpdateBaseFieldsOnApproval(mappedConcessionTrade);
-            //}
-            //else if (concession.Status == Constants.ConcessionStatus.Pending &&
-            //         concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges)
-            //{
+                _ruleManager.UpdateBaseFieldsOnApproval(mappedConcessionTrade);
+            }
+            else if (concession.Status == Constants.ConcessionStatus.Pending &&
+                     concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges)
+            {
 
-            //    //Loaded rate becomes approved rate
-            //    mappedConcessionTrade.ApprovedRate = mappedConcessionTrade.LoadedRate;
-            //}
+                //Loaded rate becomes approved rate
+                mappedConcessionTrade.ApprovedRate = mappedConcessionTrade.LoadedRate;
+            }
 
-            //_concessionTradeRpository.Update(mappedConcessionTrade);
+            _concessionTradeRpository.Update(mappedConcessionTrade);
 
-           return mappedConcessionTrade;
+            return mappedConcessionTrade;
 
             //return null;
         }

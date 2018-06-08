@@ -47,6 +47,9 @@ export class ApprovedConcessionsComponent implements OnInit {
             case ConcessionTypes.BOL:
                 this.router.navigate(['/bol-view-concession', approvedConcession.riskGroupNumber, approvedConcessionDetail.referenceNumber]);
                 break;
+            case ConcessionTypes.Trade:
+                this.router.navigate(['/trade-view-concession', approvedConcession.riskGroupNumber, approvedConcessionDetail.referenceNumber]);
+                break;
         }
     }
 

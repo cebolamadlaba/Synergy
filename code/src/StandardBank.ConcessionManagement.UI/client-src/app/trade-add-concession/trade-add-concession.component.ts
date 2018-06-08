@@ -296,6 +296,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
         this.validationError.push(validationDetail);
     }
+  
 
     getTradeConcession(): TradeConcession {
         var tradeConcession = new TradeConcession();

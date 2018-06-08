@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.BolConcession;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.TradeConcession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCondition;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
@@ -24,10 +24,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// The site helper
         /// </summary>
         private readonly ISiteHelper _siteHelper;
-
-        /// <summary>
-        /// The bol manager
-        /// </summary>
+      
         private readonly ITradeManager _tradeManager;
 
         /// <summary>
@@ -100,73 +97,72 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         //}
 
 
-        //[Route("UpdateBol")]
-        //[ValidateModel]
-        //public async Task<IActionResult> UpdateBol([FromBody] BolConcession bolConcession)
-        //{
-        //    var user = _siteHelper.LoggedInUser(this);
+        [Route("UpdateTrade")]
+        [ValidateModel]
+        public async Task<IActionResult> UpdateTrade([FromBody] TradeConcession tradeConcession)
+        {
+            var user = _siteHelper.LoggedInUser(this);
 
-        //    await UpdateBolConcession(bolConcession, user);
-
-        //    return Ok(_bolManager.GetBolConcession(bolConcession.Concession.ReferenceNumber, user));
-        //}
+            await UpdateTradeConcession(tradeConcession, user);
+       
+            return Ok(_tradeManager.GetTradeConcession(tradeConcession.Concession.ReferenceNumber, user));
+        }
 
         [Route("TradeConcessionData/{concessionReferenceId}")]
-        public IActionResult BolConcessionData(string concessionReferenceId)
+        public IActionResult TradeConcessionData(string concessionReferenceId)
         {
             return Ok(_tradeManager.GetTradeConcession(concessionReferenceId, _siteHelper.LoggedInUser(this)));
         }
 
+        private async Task UpdateTradeConcession(TradeConcession tradeConcession, User user)
+        {
+            var databaseTradeConcession =
+                _tradeManager.GetTradeConcession(tradeConcession.Concession.ReferenceNumber, user);
 
-        //private async Task UpdateBolConcession(BolConcession bolConcession, User user)
-        //{
-        //    var databaseBolConcession =
-        //        _bolManager.GetBolConcession(bolConcession.Concession.ReferenceNumber, user);
+            //if there are any conditions that have been removed, delete them
+            foreach (var condition in databaseTradeConcession.ConcessionConditions)
+                if (tradeConcession.ConcessionConditions.All(_ => _.ConcessionConditionId != condition.ConcessionConditionId))
+                    await _mediator.Send(new DeleteConcessionCondition(condition, user));
 
-        //    //if there are any conditions that have been removed, delete them
-        //    foreach (var condition in databaseBolConcession.ConcessionConditions)
-        //        if (bolConcession.ConcessionConditions.All(_ => _.ConcessionConditionId != condition.ConcessionConditionId))
-        //            await _mediator.Send(new DeleteConcessionCondition(condition, user));
+            //if there are any bol concession details that have been removed delete them
+            foreach (var tradeConcessionDetail in databaseTradeConcession.TradeConcessionDetails)
+                if (tradeConcession.TradeConcessionDetails.All(_ => _.TradeConcessionDetailId !=
+                                                                  tradeConcessionDetail.TradeConcessionDetailId))
+                    await _mediator.Send(new DeleteTradeConcessionDetail(tradeConcessionDetail, user));
 
-        //    //if there are any bol concession details that have been removed delete them
-        //    foreach (var bolConcessionDetail in databaseBolConcession.BolConcessionDetails)
-        //        if (bolConcession.BolConcessionDetails.All(_ => _.BolConcessionDetailId !=
-        //                                                          bolConcessionDetail.BolConcessionDetailId))
-        //            await _mediator.Send(new DeleteBolConcessionDetail(bolConcessionDetail, user));
+            //update the concession
+            var concession = await _mediator.Send(new UpdateConcession(tradeConcession.Concession, user));
 
-        //    //update the concession
-        //    var concession = await _mediator.Send(new UpdateConcession(bolConcession.Concession, user));
+            //add all the new conditions and bol details and comments
+            foreach (var tradeConcessionDetail in tradeConcession.TradeConcessionDetails)
+                await _mediator.Send(new AddOrUpdateTradeConcessionDetail(tradeConcessionDetail, user, concession));
 
-        //    //add all the new conditions and bol details and comments
-        //    foreach (var bolConcessionDetail in bolConcession.BolConcessionDetails)
-        //        await _mediator.Send(new AddOrUpdateBolConcessionDetail(bolConcessionDetail, user, concession));
+            if (tradeConcession.ConcessionConditions != null && tradeConcession.ConcessionConditions.Any())
+                foreach (var concessionCondition in tradeConcession.ConcessionConditions)
+                    await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
 
-        //    if (bolConcession.ConcessionConditions != null && bolConcession.ConcessionConditions.Any())
-        //        foreach (var concessionCondition in bolConcession.ConcessionConditions)
-        //            await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
-
-        //    if (!string.IsNullOrWhiteSpace(bolConcession.Concession.Comments))
-        //        await _mediator.Send(new AddConcessionComment(concession.Id, databaseBolConcession.Concession.SubStatusId,
-        //            bolConcession.Concession.Comments, user));
-        //}
+            if (!string.IsNullOrWhiteSpace(tradeConcession.Concession.Comments))
+                await _mediator.Send(new AddConcessionComment(concession.Id, databaseTradeConcession.Concession.SubStatusId,
+                    tradeConcession.Concession.Comments, user));
+        }
 
 
-        //[Route("UpdateRecalledBol")]
-        //[ValidateModel]
-        //public async Task<IActionResult> UpdateRecalledBol([FromBody] BolConcession bolConcession)
-        //{
-        //    var user = _siteHelper.LoggedInUser(this);
+        [Route("UpdateRecalledTrade")]
+        [ValidateModel]
+        public async Task<IActionResult> UpdateRecalledTrade([FromBody] TradeConcession tradeConcession)
+        {
+            var user = _siteHelper.LoggedInUser(this);
 
-        //    //activate the concession after the recall disabled it
-        //    await _mediator.Send(new ActivateConcession(bolConcession.Concession.ReferenceNumber, user));
+            //activate the concession after the recall disabled it
+            await _mediator.Send(new ActivateConcession(tradeConcession.Concession.ReferenceNumber, user));
 
-        //    //update the concession accordingly
-        //    await UpdateBolConcession(bolConcession, user);
+            //update the concession accordingly
+            await UpdateTradeConcession(tradeConcession, user);
 
-        //    return Ok(_bolManager.GetBolConcession(bolConcession.Concession.ReferenceNumber, user));
-        //}
+            return Ok(_tradeManager.GetTradeConcession(tradeConcession.Concession.ReferenceNumber, user));
+        }
 
-        //[Route("ExtendConcession/{concessionReferenceId}")]
+       // [Route("ExtendConcession/{concessionReferenceId}")]
         //public async Task<IActionResult> ExtendConcession(string concessionReferenceId)
         //{
         //    var user = _siteHelper.LoggedInUser(this);

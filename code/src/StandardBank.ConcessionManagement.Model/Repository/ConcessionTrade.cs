@@ -47,7 +47,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
 
         public int? term { get; set; }
 
-        public string Communications { get; set; }
+        public string Communication { get; set; }
 
         public decimal? FlatFee { get; set; }
 
