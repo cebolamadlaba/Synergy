@@ -24,6 +24,8 @@ import { CashConcessionService } from "../services/cash-concession.service";
 import { LendingService } from "../services/lending.service";
 import { SearchConcessionFilterPipe } from "../filters/search-concession-filter.pipe";
 
+import { TradeConcessionService } from "../services/trade-concession.service";
+
 
 @Component({
     selector: 'app-conditions',
@@ -67,6 +69,7 @@ export class SearchComponent implements OnInit {
         @Inject(UserConcessionsService) private userConcessionsService,
         @Inject(RegionService) private regionService,
         @Inject(BcmManagementService) private businesscentreService,
+        @Inject(TradeConcessionService) private tradeConcessionService,
 
         private router: Router) { }
 
@@ -139,6 +142,10 @@ export class SearchComponent implements OnInit {
                 case ConcessionTypes.BOL:
                     this.forwardBoltoPCM(concessiondetailed);
                     break;
+
+                case ConcessionTypes.Trade:
+                    this.forwardTradetoPCM(concessiondetailed);
+                    break;
             }
         }       
     }
@@ -159,6 +166,9 @@ export class SearchComponent implements OnInit {
                     break;
                 case ConcessionTypes.BOL:
                     this.router.navigate(['/bol-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.referenceNumber]);
+                    break;
+                case ConcessionTypes.Trade:
+                    this.router.navigate(['/trade-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.referenceNumber]);
                     break;
             }
         }
@@ -240,6 +250,29 @@ export class SearchComponent implements OnInit {
 
         if (!this.validationError) {
             this.bolConcessionService.postForwardBolPCM(concessiondetailed).subscribe(entity => {
+                console.log("data saved");
+
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+
+                this.getFilteredView();
+
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    forwardTradetoPCM(concessiondetailed: SearchConcessionDetail) {
+
+        concessiondetailed.subStatus = ConcessionSubStatus.PCMPending;
+        concessiondetailed.comments = "Forwarded by PCM";
+
+        if (!this.validationError) {
+            this.tradeConcessionService.postForwardTradePCM(concessiondetailed).subscribe(entity => {
                 console.log("data saved");
 
                 this.saveMessage = entity.concession.referenceNumber;

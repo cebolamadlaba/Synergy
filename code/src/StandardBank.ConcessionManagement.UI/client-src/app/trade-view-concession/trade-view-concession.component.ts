@@ -865,78 +865,78 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
-    //extendConcession() {
-    //    if (confirm("Are you sure you want to extend this concession?")) {
-    //        this.isLoading = true;
-    //        this.errorMessage = null;
-    //        this.validationError = null;
+    extendConcession() {
+        if (confirm("Are you sure you want to extend this concession?")) {
+            this.isLoading = true;
+            this.errorMessage = null;
+            this.validationError = null;
 
-    //        this.bolConcessionService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
-    //            console.log("data saved");
-    //            this.canBcmApprove = false;
-    //            this.canBcmApprove = false;
-    //            this.canExtend = false;
-    //            this.canRenew = false;
-    //            this.canRecall = false;
-    //            this.canUpdate = false;
-    //            this.canArchive = false;
-    //            this.saveMessage = entity.concession.childReferenceNumber;
-    //            this.isLoading = false;
-    //            this.bolConcession = entity;
-    //        }, error => {
-    //            this.errorMessage = <any>error;
-    //            this.isLoading = false;
-    //        });
-    //    }
-    //}
+            this.tradeConcessionService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
+                console.log("data saved");
+                this.canBcmApprove = false;
+                this.canBcmApprove = false;
+                this.canExtend = false;
+                this.canRenew = false;
+                this.canRecall = false;
+                this.canUpdate = false;
+                this.canArchive = false;
+                this.saveMessage = entity.concession.childReferenceNumber;
+                this.isLoading = false;
+                this.tradeConcession = entity;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        }
+    }
 
-    //editConcession(editType: string) {
-    //    this.canBcmApprove = false;
-    //    this.motivationEnabled = true;
-    //    this.canBcmApprove = false;
-    //    this.canExtend = false;
-    //    this.canRenew = false;
-    //    this.canRecall = false;
-    //    this.isEditing = true;
-    //    this.isRecalling = false;
-    //    this.canEdit = true;
-    //    this.editType = editType;
-    //    this.canResubmit = false;
-    //    this.canUpdate = false;
-    //    this.canArchive = false;
+    editConcession(editType: string) {
+        this.canBcmApprove = false;
+        this.motivationEnabled = true;
+        this.canBcmApprove = false;
+        this.canExtend = false;
+        this.canRenew = false;
+        this.canRecall = false;
+        this.isEditing = true;
+        this.isRecalling = false;
+        this.canEdit = true;
+        this.editType = editType;
+        this.canResubmit = false;
+        this.canUpdate = false;
+        this.canArchive = false;
 
-    //    this.tradeConcessionForm.controls['motivation'].setValue('');
-    //}
+        this.tradeConcessionForm.controls['motivation'].setValue('');
+    }
 
-    //saveConcession() {
-    //    this.isLoading = true;
-    //    this.errorMessage = null;
-    //    this.validationError = null;
+    saveConcession() {
+        this.isLoading = true;
+        this.errorMessage = null;
+        this.validationError = null;
 
-    //    var bolConcession = this.getBolConcession(true);
+        var tradeConcession = this.getTradeConcession(true);
 
-    //    bolConcession.concession.status = ConcessionStatus.Pending;
-    //    bolConcession.concession.subStatus = ConcessionSubStatus.BCMPending;
-    //    bolConcession.concession.type = "Existing";
-    //    bolConcession.concession.referenceNumber = this.concessionReferenceId;
+        tradeConcession.concession.status = ConcessionStatus.Pending;
+        tradeConcession.concession.subStatus = ConcessionSubStatus.BCMPending;
+        tradeConcession.concession.type = "Existing";
+        tradeConcession.concession.referenceNumber = this.concessionReferenceId;
 
-    //    if (!this.validationError) {
-    //        this.bolConcessionService.postChildConcession(bolConcession, this.editType).subscribe(entity => {
-    //            console.log("data saved");
-    //            this.isEditing = false;
-    //            this.saveMessage = entity.concession.childReferenceNumber;
-    //            this.bolConcession = entity;
-    //            this.isLoading = false;
-    //            this.canEdit = false;
-    //            this.motivationEnabled = false;
-    //        }, error => {
-    //            this.errorMessage = <any>error;
-    //            this.isLoading = false;
-    //        });
-    //    } else {
-    //        this.isLoading = false;
-    //    }
-    //}
+        if (!this.validationError) {
+            this.tradeConcessionService.postChildConcession(tradeConcession, this.editType).subscribe(entity => {
+                console.log("data saved");
+                this.isEditing = false;
+                this.saveMessage = entity.concession.childReferenceNumber;
+                this.tradeConcession = entity;
+                this.isLoading = false;
+                this.canEdit = false;
+                this.motivationEnabled = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
 
     recallConcession() {
         this.isLoading = true;
@@ -1050,35 +1050,35 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
-    //archiveConcession() {
-    //    if (confirm("Are you sure you want to archive this concession?")) {
-    //        this.isLoading = true;
-    //        this.errorMessage = null;
+    archiveConcession() {
+        if (confirm("Are you sure you want to archive this concession?")) {
+            this.isLoading = true;
+            this.errorMessage = null;
 
-    //        this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
-    //            this.warningMessage = "Concession has been archived.";
+            this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
+                this.warningMessage = "Concession has been archived.";
 
-    //            this.isLoading = false;
-    //            this.canBcmApprove = false;
-    //            this.canPcmApprove = false;
-    //            this.canExtend = false;
-    //            this.canRenew = false;
-    //            this.canRecall = false;
-    //            this.isEditing = false;
-    //            this.motivationEnabled = false;
-    //            this.canEdit = false;
-    //            this.isRecalling = false;
-    //            this.canApproveChanges = false;
-    //            this.canResubmit = false;
-    //            this.canUpdate = false;
-    //            this.canArchive = false;
+                this.isLoading = false;
+                this.canBcmApprove = false;
+                this.canPcmApprove = false;
+                this.canExtend = false;
+                this.canRenew = false;
+                this.canRecall = false;
+                this.isEditing = false;
+                this.motivationEnabled = false;
+                this.canEdit = false;
+                this.isRecalling = false;
+                this.canApproveChanges = false;
+                this.canResubmit = false;
+                this.canUpdate = false;
+                this.canArchive = false;
 
-    //        }, error => {
-    //            this.errorMessage = <any>error;
-    //            this.isLoading = false;
-    //        });
-    //    }
-    //}
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        }
+    }
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.formatDecimal($event.target.value);

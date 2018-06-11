@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.BolConcession;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.TradeConcession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCondition;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
@@ -84,26 +84,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         }
 
-        //public Model.UserInterface.Bol.BOLChargeCode CreateUpdateBOLChargeCode(Model.UserInterface.Bol.BOLChargeCode bolchargecode)
-        //{
-        //    var mappedbol = _mapper.Map<Model.Repository.BOLChargeCode>(bolchargecode);
-        //    var returned = _concessionBolRepository.CreateUpdate(mappedbol);
-
-        //    bolchargecode.pkChargeCodeId = returned.pkChargeCodeId;
-        //    return bolchargecode;
-
-        //}
-
-        //public Model.UserInterface.Bol.BOLChargeCodeType CreateBOLChargeCodeType(Model.UserInterface.Bol.BOLChargeCodeType bolchargecodetype)
-        //{
-        //    var mappedboltype = _mapper.Map<Model.Repository.BOLChargeCodeType>(bolchargecodetype);
-        //    var returned = _concessionBolRepository.Create(mappedboltype);
-
-        //    bolchargecodetype.pkChargeCodeTypeId = returned.pkChargeCodeTypeId;
-        //    return bolchargecodetype;
-
-        //}
-
         public ConcessionTrade UpdateConcessionTrade(TradeConcessionDetail tradeConcessionDetail, Concession concession)
         {
             var mappedConcessionTrade = _mapper.Map<ConcessionTrade>(tradeConcessionDetail);
@@ -129,20 +109,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionTradeRpository.Update(mappedConcessionTrade);
 
             return mappedConcessionTrade;
-
-            //return null;
+         
         }
-
-
-        //public List<Model.UserInterface.Trade.TradeProduct> GetTradeProducts()
-        //{
-        //    return _mapper.Map<List<Model.UserInterface.Trade.TradeProduct>>(_concessionTradeRpository.GetTradeProducts());
-        //}
-
-        //public List<Model.UserInterface.Trade.TradeProductType> GetTradeProductTypes()
-        //{
-        //    return _mapper.Map<List<Model.UserInterface.Trade.TradeProductType>>(_concessionTradeRpository.GetTradeProductTypes());
-        //}
 
 
         public TradeView GetTradeViewData(int riskGroupNumber)
@@ -161,7 +129,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 });
             }
 
-            var bolFinancial = _mapper.Map<TradeFinancial>(_financialTradeRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialTrade());                      
+            var tradeFinancial = _mapper.Map<TradeFinancial>(_financialTradeRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialTrade());                      
 
             var tradeProducts = GetTradeProducts(riskGroup);
 
@@ -169,7 +137,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 RiskGroup = riskGroup,
                 TradeConcessions = tradeConcessions.OrderByDescending(_ => _.Concession.DateOpened),
-                TradeFinancial = bolFinancial,
+                TradeFinancial = tradeFinancial,
                 TradeProducts = tradeProducts
             };
         }
@@ -178,51 +146,41 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private IEnumerable<Model.UserInterface.Trade.TradeProduct> GetTradeProducts(RiskGroup riskGroup)
         {
             return _miscPerformanceRepository.GetTradeProducts(riskGroup.Id, riskGroup.Name);
+        }   
+
+        public async Task ForwardTradeConcession(TradeConcession tradeConcession, User user)
+        {
+            var databaseTradeConcession =
+              this.GetTradeConcession(tradeConcession.Concession.ReferenceNumber, user);
+
+            //if there are any conditions that have been removed, delete them
+            foreach (var condition in databaseTradeConcession.ConcessionConditions)
+                if (tradeConcession.ConcessionConditions.All(_ => _.ConcessionConditionId != condition.ConcessionConditionId))
+                    await _mediator.Send(new DeleteConcessionCondition(condition, user));
+
+            //if there are any bol concession details that have been removed delete them
+            foreach (var tradeConcessionDetail in databaseTradeConcession.TradeConcessionDetails)
+                if (tradeConcession.TradeConcessionDetails.All(_ => _.TradeConcessionDetailId !=
+                                                                  tradeConcessionDetail.TradeConcessionDetailId))
+                    await _mediator.Send(new DeleteTradeConcessionDetail(tradeConcessionDetail, user));
+
+            //update the concession
+            var concession = await _mediator.Send(new UpdateConcession(tradeConcession.Concession, user));
+
+            //add all the new conditions and bol details and comments
+            foreach (var tradeConcessionDetail in tradeConcession.TradeConcessionDetails)
+                await _mediator.Send(new AddOrUpdateTradeConcessionDetail(tradeConcessionDetail, user, concession));
+
+            if (tradeConcession.ConcessionConditions != null && tradeConcession.ConcessionConditions.Any())
+                foreach (var concessionCondition in tradeConcession.ConcessionConditions)
+                    await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+
+            if (!string.IsNullOrWhiteSpace(tradeConcession.Concession.Comments))
+                await _mediator.Send(new AddConcessionComment(concession.Id, databaseTradeConcession.Concession.SubStatusId,
+                    tradeConcession.Concession.Comments, user));
+
+            //send the notification email
+            await _mediator.Send(new ForwardConcession(tradeConcession.Concession, user));
         }
-
-
-
-       // public BolFinancial GetBolFinancialForRiskGroupNumber(int riskGroupNumber)
-       // {
-            //var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
-
-            //return _mapper.Map<BolFinancial>(
-            //    _financialBolRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialBol());
-       // }
-
-        //public async Task ForwardBolConcession(BolConcession bolConcession, User user)
-       // {
-            //var databaseBolConcession =
-            //  this.GetBolConcession(bolConcession.Concession.ReferenceNumber, user);
-
-            ////if there are any conditions that have been removed, delete them
-            //foreach (var condition in databaseBolConcession.ConcessionConditions)
-            //    if (bolConcession.ConcessionConditions.All(_ => _.ConcessionConditionId != condition.ConcessionConditionId))
-            //        await _mediator.Send(new DeleteConcessionCondition(condition, user));
-
-            ////if there are any bol concession details that have been removed delete them
-            //foreach (var bolConcessionDetail in databaseBolConcession.BolConcessionDetails)
-            //    if (bolConcession.BolConcessionDetails.All(_ => _.BolConcessionDetailId !=
-            //                                                      bolConcessionDetail.BolConcessionDetailId))
-            //        await _mediator.Send(new DeleteBolConcessionDetail(bolConcessionDetail, user));
-
-            ////update the concession
-            //var concession = await _mediator.Send(new UpdateConcession(bolConcession.Concession, user));
-
-            ////add all the new conditions and bol details and comments
-            //foreach (var bolConcessionDetail in bolConcession.BolConcessionDetails)
-            //    await _mediator.Send(new AddOrUpdateBolConcessionDetail(bolConcessionDetail, user, concession));
-
-            //if (bolConcession.ConcessionConditions != null && bolConcession.ConcessionConditions.Any())
-            //    foreach (var concessionCondition in bolConcession.ConcessionConditions)
-            //        await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
-
-            //if (!string.IsNullOrWhiteSpace(bolConcession.Concession.Comments))
-            //    await _mediator.Send(new AddConcessionComment(concession.Id, databaseBolConcession.Concession.SubStatusId,
-            //        bolConcession.Concession.Comments, user));
-
-            ////send the notification email
-            //await _mediator.Send(new ForwardConcession(bolConcession.Concession, user));
-       // }
     }
 }

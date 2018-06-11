@@ -45,26 +45,26 @@ export class TradeConcessionService {
         return this.http.post(url, tradeConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    //postForwardBolPCM(bolConcession: SearchConcessionDetail): Observable<ApprovedConcessionDetail> {
-    //    let headers = new Headers({ 'Content-Type': 'application/json' });
-    //    let options = new RequestOptions({ headers: headers });
-    //    const url = "/api/Bol/ForwardBolPCM";
-    //    return this.http.post(url, bolConcession, options).map(this.extractData).catch(this.handleErrorObservable);
-    //}
+    postForwardTradePCM(tradeConcession: SearchConcessionDetail): Observable<ApprovedConcessionDetail> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/Trade/ForwardTradePCM";
+        return this.http.post(url, tradeConcession, options).map(this.extractData).catch(this.handleErrorObservable);
+    }
 
-    //postExtendConcession(concessionReferenceId): Observable<BolConcession> {
-    //    let headers = new Headers({ 'Content-Type': 'application/json' });
-    //    let options = new RequestOptions({ headers: headers });
-    //    const url = "/api/Bol/ExtendConcession/" + concessionReferenceId;
-    //    return this.http.post(url, concessionReferenceId, options).map(this.extractData).catch(this.handleErrorObservable);
-    //}
+    postExtendConcession(concessionReferenceId): Observable<TradeConcession> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/Trade/ExtendConcession/" + concessionReferenceId;
+        return this.http.post(url, concessionReferenceId, options).map(this.extractData).catch(this.handleErrorObservable);
+    }
 
-    //postChildConcession(bolConcession: BolConcession, relationshipType: string): Observable<BolConcession> {
-    //    let headers = new Headers({ 'Content-Type': 'application/json' });
-    //    let options = new RequestOptions({ headers: headers });
-    //    const url = "/api/Bol/" + relationshipType + "Bol";
-    //    return this.http.post(url, bolConcession, options).map(this.extractData).catch(this.handleErrorObservable);
-    //}
+    postChildConcession(bolConcession: TradeConcession, relationshipType: string): Observable<TradeConcession> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/Trade/" + relationshipType + "Trade";
+        return this.http.post(url, bolConcession, options).map(this.extractData).catch(this.handleErrorObservable);
+    }
 
  
 

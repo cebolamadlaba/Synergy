@@ -31,7 +31,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 
         //TradeFinancial GetTradeFinancialForRiskGroupNumber(int riskGroupNumber);
 
-        //Task ForwardTradeConcession(TradeConcession bolConcession, User user);
+        Task ForwardTradeConcession(TradeConcession bolConcession, User user);
 
     }
 }

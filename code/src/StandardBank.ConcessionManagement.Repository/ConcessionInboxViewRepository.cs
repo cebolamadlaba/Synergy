@@ -39,13 +39,23 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionInboxView>(
-                    @"SELECT [ConcessionId], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [LegalEntityId], [CustomerName], [LegalEntityAccountId], [AccountNumber], [ConcessionTypeId], [ConcessionType], [ConcessionDate], [StatusId], [Status], [SubStatusId], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment], [DatesentForApproval], 
-                    [ConcessionDetailId], [ExpiryDate], [DateApproved], [AAUserId], [RequestorId], [BCMUserId], [PCMUserId], [HOUserId], [CentreId], [CentreName], [RegionId], [Region], [IsMismatched], [IsActive], [IsCurrent], [PriceExported], [PriceExportedDate]
+                @"SELECT distinct [ConcessionId], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [LegalEntityId], [CustomerName], [LegalEntityAccountId], [AccountNumber], [ConcessionTypeId], [ConcessionType], convert(date, [ConcessionDate]) 'ConcessionDate', [StatusId], [Status], [SubStatusId], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment], convert(date, [DatesentForApproval]) 'DatesentForApproval', 
+                    convert(date, [ExpiryDate]) 'ExpiryDate',  [IsMismatched], [IsActive], [IsCurrent], convert(date, [DateApproved]) 'DateApproved'
                     FROM [dbo].[ConcessionInboxView]
                     WHERE [RequestorId] = @requestorId
                     AND [StatusId] in @statusIds
                     AND [IsActive] = @isActive",
-                    new { requestorId, statusIds, isActive });
+                new { requestorId, statusIds, isActive });
+
+
+                //return db.Query<ConcessionInboxView>(
+                //    @"SELECT [ConcessionId], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [LegalEntityId], [CustomerName], [LegalEntityAccountId], [AccountNumber], [ConcessionTypeId], [ConcessionType], [ConcessionDate], [StatusId], [Status], [SubStatusId], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment], [DatesentForApproval], 
+                //    [ConcessionDetailId], [ExpiryDate], [DateApproved], [AAUserId], [RequestorId], [BCMUserId], [PCMUserId], [HOUserId], [CentreId], [CentreName], [RegionId], [Region], [IsMismatched], [IsActive], [IsCurrent], [PriceExported], [PriceExportedDate]
+                //    FROM [dbo].[ConcessionInboxView]
+                //    WHERE [RequestorId] = @requestorId
+                //    AND [StatusId] in @statusIds
+                //    AND [IsActive] = @isActive",
+                //    new { requestorId, statusIds, isActive });
             }
         }
 

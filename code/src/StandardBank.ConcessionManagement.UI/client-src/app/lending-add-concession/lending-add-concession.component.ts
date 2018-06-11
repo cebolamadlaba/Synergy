@@ -38,7 +38,8 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
     observableLatestCrsOrMrs: Observable<number>;
     latestCrsOrMrs: number;
-    selectedConditionTypes: ConditionType[]; 
+    selectedConditionTypes: ConditionType[];
+    selectedProductTypes: ProductType[];
     isLoading = true;
 
     primeRate = "0.00";
@@ -71,11 +72,13 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         this.riskGroup = new RiskGroup();
         this.reviewFeeTypes = [new ReviewFeeType()];
         this.productTypes = [new ProductType()];
+        this.selectedProductTypes = [new ProductType()];
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
         this.conditionTypes = [new ConditionType()];
         this.selectedConditionTypes = [new ConditionType()];
         this.clientAccounts = [new ClientAccount()];
+     
     }
 
     ngOnInit() {
@@ -118,8 +121,43 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
             const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
 
-            if (this.productTypes)
+            if (this.productTypes) {
                 control.controls[0].get('productType').setValue(this.productTypes[0]);
+
+                this.selectedProductTypes[0] = this.productTypes[0];
+
+                let currentRow = control.controls[0];
+                var productType = currentRow.get('productType').value;
+
+                if (productType.description === "Overdraft") {
+                  
+                    currentRow.get('term').setValue('12');
+                   currentRow.get('term').disable();
+
+                    currentRow.get('reviewFeeType').enable();
+                    currentRow.get('reviewFee').enable();
+                    currentRow.get('uffFee').enable();
+
+                }
+                else if (productType.description === "Temporary Overdraft") {
+
+                    currentRow.get('reviewFeeType').enable();
+                    currentRow.get('reviewFee').enable();
+                    currentRow.get('uffFee').enable();
+                }
+                else {
+                    currentRow.get('term').enable();
+
+                    currentRow.get('reviewFeeType').disable();
+                    currentRow.get('reviewFee').disable();
+                    currentRow.get('uffFee').disable();
+
+                    currentRow.get('reviewFeeType').setValue(null);
+                    currentRow.get('reviewFee').setValue(null);
+                    currentRow.get('uffFee').setValue(null);
+                }
+
+            }
 
             if (this.clientAccounts)
                 control.controls[0].get('accountNumber').setValue(this.clientAccounts[0]);
@@ -133,11 +171,14 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     initConcessionItemRows() {
+
+        this.selectedProductTypes.push(new ProductType());
+
         return this.formBuilder.group({
             productType: [''],
             accountNumber: [''],
-            limit: [''],
-            term: [''],
+            limit: [''],          
+            term: [{ value: '', disabled: true }],    
             marginAgainstPrime: [''],
             initiationFee: [''],
             reviewFeeType: [''],
@@ -189,6 +230,9 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     deleteConcessionRow(index: number) {
         if (confirm("Are you sure you want to remove this row?")) {
             const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+
+            this.selectedProductTypes.splice(index, 1);
+
             control.removeAt(index);
         }
     }
@@ -217,6 +261,8 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
         let currentRow = control.controls[rowIndex];
         var productType = currentRow.get('productType').value;
+
+        this.selectedProductTypes[rowIndex] = productType;
 
         if (productType.description === "Overdraft") {
             currentRow.get('term').disable();

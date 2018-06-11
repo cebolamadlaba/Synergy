@@ -27,7 +27,7 @@ export class AdminService {
         return this.http.get('api/admin/users').map(r => r.json()).catch(this.handleErrorObservable);
     }
     GetUser(id :number) {
-        return this.http.get('api/admin/users/'+ id).map(r => r.json()).catch(this.handleErrorObservable);
+        return this.http.get('api/admin/users/' + id + "?random=" + new Date().getTime() ).map(r => r.json()).catch(this.handleErrorObservable);
     }
     DeleteUser(anumber) {
         return this.http.delete('api/admin/user/'+ anumber).map(r => r.json()).catch(this.handleErrorObservable);

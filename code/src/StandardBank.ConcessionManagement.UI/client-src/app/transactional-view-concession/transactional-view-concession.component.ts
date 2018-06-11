@@ -281,8 +281,12 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
 					this.selectedConditionTypes[rowIndex] = selectedConditionType[0];
 
-					let selectedConditionProduct = selectedConditionType[0].conditionProducts.filter(_ => _.id == concessionCondition.conditionProductId);
-					currentCondition.get('conditionProduct').setValue(selectedConditionProduct[0]);
+                    let selectedConditionProduct = selectedConditionType[0].conditionProducts.filter(_ => _.id == concessionCondition.conditionProductId);
+                    if (selectedConditionProduct != null && selectedConditionProduct.length > 0) {
+
+                        currentCondition.get('conditionProduct').setValue(selectedConditionProduct[0]);
+                    }
+					
 
 					currentCondition.get('interestRate').setValue(concessionCondition.interestRate);
 					currentCondition.get('volume').setValue(concessionCondition.conditionVolume);

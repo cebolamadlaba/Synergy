@@ -226,43 +226,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var returnConcession = _bolManager.GetBolConcession(concessionReferenceId, user);
             returnConcession.Concession.ChildReferenceNumber = concession.ReferenceNumber;
             return Ok(returnConcession);
-        }
-
-        [Route("RenewBol")]
-        [ValidateModel]
-        public async Task<IActionResult> RenewBol([FromBody] BolConcession bolConcession)
-        {
-            var user = _siteHelper.LoggedInUser(this);
-
-            var returnConcession = await CreateChildConcession(bolConcession, user, Constants.RelationshipType.Renewal);
-
-            return Ok(returnConcession);
-        }
-
-
-        [Route("ResubmitBol")]
-        [ValidateModel]
-        public async Task<IActionResult> ResubmitBol([FromBody] BolConcession bolConcession)
-        {
-            var user = _siteHelper.LoggedInUser(this);
-
-            var returnConcession = await CreateChildConcession(bolConcession, user, Constants.RelationshipType.Resubmit);
-
-            return Ok(returnConcession);
-        }
-
+        } 
      
-        [Route("UpdateApprovedBol")]
-        [ValidateModel]
-        public async Task<IActionResult> UpdateApprovedBol([FromBody] BolConcession bolConcession)
-        {
-            var user = _siteHelper.LoggedInUser(this);
-
-            var returnConcession = await CreateChildConcession(bolConcession, user, Constants.RelationshipType.Update);
-
-            return Ok(returnConcession);
-        }
-
+    
         private async Task<BolConcession> CreateChildConcession(BolConcession bolConcession, User user, string relationship)
         {
             //get the parent bol concession details
