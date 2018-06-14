@@ -16,6 +16,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
     /// <seealso cref="StandardBank.ConcessionManagement.Interface.BusinessLogic.IEmailManager" />
     public class EmailManager : IEmailManager
     {
+        string _serverPath;
+
+
         /// <summary>
         /// Gets the default email.
         /// </summary>
@@ -42,6 +45,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             Email.DefaultRenderer = new RazorRenderer();
             DefaultEmail = config.DefaultEmail;
             EmailTemplatePath = config.EmailTemplatePath;
+            _serverPath = config.ServerURL;
         }
 
         /// <summary>
@@ -97,7 +101,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 new
                 {
                     RequestorName = expiringConcession.RequestorName,
-                    ExpiringConcessionDetails = expiringConcession.ExpiringConcessionDetails
+                    ExpiringConcessionDetails = expiringConcession.ExpiringConcessionDetails,
+                    ServerURL = _serverPath
                 });
         }
 
@@ -116,7 +121,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     ConcessionId = concessionAddedEmail.ConsessionId,
                     concessionAddedEmail.RiskGroupName,
                     concessionAddedEmail.DateOfRequest,
-                    concessionAddedEmail.Product
+                    concessionAddedEmail.Product,
+                    ServerURL = _serverPath
                 });
         }
 
@@ -138,7 +144,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     approvedConcessionEmail.DateOfRequest,
                     approvedConcessionEmail.Name,
                     approvedConcessionEmail.Product,
-                    approvedConcessionEmail.RiskGroupName
+                    approvedConcessionEmail.RiskGroupName,
+                    ServerURL = _serverPath
                 });
         }
 
@@ -159,7 +166,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     approvedConcessionEmail.DateOfRequest,
                     approvedConcessionEmail.Name,
                     approvedConcessionEmail.Product,
-                    approvedConcessionEmail.RiskGroupName
+                    approvedConcessionEmail.RiskGroupName,
+                    ServerURL = _serverPath
                 });
         }
 
@@ -176,7 +184,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     approvedConcessionEmail.DateOfRequest,
                     approvedConcessionEmail.Name,
                     approvedConcessionEmail.Product,
-                    approvedConcessionEmail.RiskGroupName
+                    approvedConcessionEmail.RiskGroupName,
+                    ServerURL = _serverPath
                 });
         }
         /// <summary>
@@ -197,7 +206,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     declinedConcessionEmail.DateActioned,
                     declinedConcessionEmail.DateOfRequest,
                     declinedConcessionEmail.RiskGroupName,
-                    declinedConcessionEmail.Product
+                    declinedConcessionEmail.Product,
+                    ServerURL = _serverPath
                 });
         }
 

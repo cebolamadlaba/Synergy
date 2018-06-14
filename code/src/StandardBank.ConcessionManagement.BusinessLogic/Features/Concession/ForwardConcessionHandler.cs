@@ -5,6 +5,7 @@ using Hangfire;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.BusinessLogic.EmailTemplates;
@@ -18,6 +19,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
     /// <seealso cref="MediatR.IAsyncRequestHandler{UpdateConcessionCommand, Concession}" />
     public class ForwardConcessionHandler : IAsyncRequestHandler<ForwardConcession, Model.UserInterface.Concession>
     {
+       
+
         /// <summary>
         /// The concession manager
         /// </summary>
@@ -80,7 +83,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
             _emailManager = emailManager;
             _userManager = userManager;
             _riskGroupRepository = riskGroupRepository;
-            _logger = logger;
+            _logger = logger;           
         }
 
         /// <summary>
@@ -115,6 +118,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
             BackgroundJob.Schedule(() =>
                 _emailManager.SendForwardedConcessionEmail(new ApprovedConcessionEmail
                 {
+                  
                     EmailAddress = requestor.EmailAddress,
                     ConcessionId = message.Concession.ReferenceNumber,
                     Name = requestor.FirstName,

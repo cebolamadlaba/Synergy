@@ -27,7 +27,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <summary>
         /// The template path
         /// </summary>
-        private readonly string _templatePath;
+        private readonly string _templatePath;     
 
         /// <summary>
         /// The file utiltity
@@ -122,7 +122,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionInboxViewRepository = concessionInboxViewRepository;
             _lookupTableManager = lookupTableManager;
             _bolManager = bolManager;
-            _businessCentreManager = businessCentreManager;
+            _businessCentreManager = businessCentreManager;           
         }
 
         /// <summary>
