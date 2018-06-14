@@ -29,4 +29,21 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Trade
         public decimal LoadedRate { get; set; }
 
     }
+
+    public class TradeProductGroup
+    {
+        /// <summary>
+        /// Gets or sets the cash product identifier.
+        /// </summary>
+        /// <value>
+        /// The cash product identifier.       /// </value>
+      
+
+        public string RiskGroupName { get; set; }
+
+        public string LegalEntity { get; set; }
+
+        public List<TradeProduct> TradeProducts { get; set; }
+
+    }
 }

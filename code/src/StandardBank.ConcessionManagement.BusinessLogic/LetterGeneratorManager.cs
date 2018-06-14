@@ -254,6 +254,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     case "Business Online":
                         PopulateLegalEntityBOLConcessionLetter(concessionInboxViews, requestor, legalEntityConcession);
                         break;
+                    case Constants.ConcessionType.Trade:
+
+                        break;
                     default:
                         throw new NotImplementedException(legalEntityConcession.ConcessionType);
                 }

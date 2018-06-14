@@ -37,6 +37,6 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Cash
         /// <value>
         /// The cash products.
         /// </value>
-        public IEnumerable<CashProduct> CashProducts { get; set; }
+        public IEnumerable<CashProductGroup> CashProductGroups { get; set; }
     }
 }

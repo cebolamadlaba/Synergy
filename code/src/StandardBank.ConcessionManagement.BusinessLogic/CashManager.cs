@@ -247,12 +247,36 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var cashProducts = GetCashProducts(riskGroup);
 
+            //grouping of products
+            var groupedinfo = new List<CashProductGroup>();
+            if (cashProducts != null)
+            {
+                foreach (var product in cashProducts)
+                {
+                    var productgrouping = groupedinfo.Where(g => g.CustomerName == product.CustomerName).FirstOrDefault();
+                    if (productgrouping == null)
+                    {
+                        CashProductGroup newgroup = new CashProductGroup();
+                        newgroup.CustomerName = product.CustomerName;
+                        newgroup.RiskGroupName = product.RiskGroupName;
+                        newgroup.CashProducts = new List<CashProduct>();
+                        newgroup.CashProducts.Add(product);
+
+                        groupedinfo.Add(newgroup);
+                    }
+                    else
+                    {
+                        productgrouping.CashProducts.Add(product);
+                    }
+                }
+            }
+
             return new CashView
             {
                 RiskGroup = riskGroup,
                 CashConcessions = cashConcessions.OrderByDescending(_ => _.Concession.DateOpened),
                 CashFinancial = cashFinancial,
-                CashProducts = cashProducts
+                CashProductGroups = groupedinfo
             };
         }
 

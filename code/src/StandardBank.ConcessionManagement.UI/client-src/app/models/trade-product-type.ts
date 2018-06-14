@@ -1,6 +1,5 @@
 export class TradeProductType {
 
     tradeProductTypeID: number;
-    tradeProductType: string;
-  
+    tradeProductType: string;  
 }

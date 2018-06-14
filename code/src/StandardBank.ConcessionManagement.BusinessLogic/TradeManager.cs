@@ -133,12 +133,38 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var tradeProducts = GetTradeProducts(riskGroup);
 
+
+            //grouping of products
+            var groupedinfo = new List<TradeProductGroup>();
+            if (tradeProducts != null)
+            {
+                foreach (var product in tradeProducts)
+                {
+                    var productgrouping = groupedinfo.Where(g => g.LegalEntity == product.LegalEntity).FirstOrDefault();
+                    if (productgrouping == null)
+                    {
+                        TradeProductGroup newgroup = new TradeProductGroup();
+                        newgroup.LegalEntity = product.LegalEntity;
+                        newgroup.RiskGroupName = product.RiskGroupName;
+                        newgroup.TradeProducts = new List<Model.UserInterface.Trade.TradeProduct>();
+                        newgroup.TradeProducts.Add(product);
+
+                        groupedinfo.Add(newgroup);
+                    }
+                    else
+                    {
+                        productgrouping.TradeProducts.Add(product);
+                    }
+                }
+            }
+
+
             return new TradeView
             {
                 RiskGroup = riskGroup,
                 TradeConcessions = tradeConcessions.OrderByDescending(_ => _.Concession.DateOpened),
                 TradeFinancial = tradeFinancial,
-                TradeProducts = tradeProducts
+                TradeProductGroups = groupedinfo
             };
         }
 

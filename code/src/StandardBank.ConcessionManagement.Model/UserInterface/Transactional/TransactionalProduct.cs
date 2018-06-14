@@ -1,4 +1,6 @@
-﻿namespace StandardBank.ConcessionManagement.Model.UserInterface.Transactional
+﻿using System.Collections.Generic;
+
+namespace StandardBank.ConcessionManagement.Model.UserInterface.Transactional
 {
     /// <summary>
     /// Transactional product entity
@@ -76,5 +78,30 @@
         /// The loaded price.
         /// </value>
         public string LoadedPrice { get; set; }
+    }
+
+    public class TransactionalProductGroup
+    {
+       
+
+        /// <summary>
+        /// Gets or sets the name of the risk group.
+        /// </summary>
+        /// <value>
+        /// The name of the risk group.
+        /// </value>
+        public string RiskGroupName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the customer.
+        /// </summary>
+        /// <value>
+        /// The name of the customer.
+        /// </value>
+        public string CustomerName { get; set; }
+       
+
+        public List<TransactionalProduct> TransactionalProducts { get; set; }
+
     }
 }

@@ -165,12 +165,36 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var bolProducts = GetBolProducts(riskGroup);
 
+            //grouping of products
+            var groupedinfo = new List<BolProductGroup>();
+            if (bolProducts != null)
+            {
+                foreach (var product in bolProducts)
+                {
+                    var productgrouping = groupedinfo.Where(g => g.LegalEntity == product.LegalEntity).FirstOrDefault();
+                    if (productgrouping == null)
+                    {
+                        BolProductGroup newgroup = new BolProductGroup();
+                        newgroup.LegalEntity = product.LegalEntity;
+                        newgroup.RiskGroupName = product.RiskGroupName;
+                        newgroup.BolProducts = new List<BolProduct>();
+                        newgroup.BolProducts.Add(product);
+
+                        groupedinfo.Add(newgroup);
+                    }
+                    else
+                    {
+                        productgrouping.BolProducts.Add(product);
+                    }
+                }
+            }
+
             return new BolView
             {
                 RiskGroup = riskGroup,
                 BolConcessions = bolConcessions.OrderByDescending(_ => _.Concession.DateOpened),
                 BolFinancial = bolFinancial,
-                BolProducts = bolProducts
+                BolProductGroups = groupedinfo
             };
         }
 

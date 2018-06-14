@@ -8,7 +8,7 @@ export class TradeProduct {
     tradeProductName: string;
     riskGroupName: string;
     legalEntity: string;
-    accountNumber: string; 
+    accountNumber: string;
     loadedRate: string;
-    producttypes :TradeProductType[];
+    producttypes: TradeProductType[];
 }

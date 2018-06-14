@@ -273,12 +273,37 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var transactionalProducts = GetTransactionalProducts(riskGroup);
 
+
+            //grouping of products
+            var groupedinfo = new List<TransactionalProductGroup>();
+            if (transactionalProducts != null)
+            {
+                foreach (var product in transactionalProducts)
+                {
+                    var productgrouping = groupedinfo.Where(g => g.CustomerName == product.CustomerName).FirstOrDefault();
+                    if (productgrouping == null)
+                    {
+                        TransactionalProductGroup newgroup = new TransactionalProductGroup();
+                        newgroup.CustomerName = product.CustomerName;
+                        newgroup.RiskGroupName = product.RiskGroupName;
+                        newgroup.TransactionalProducts = new List<TransactionalProduct>();
+                        newgroup.TransactionalProducts.Add(product);
+
+                        groupedinfo.Add(newgroup);
+                    }
+                    else
+                    {
+                        productgrouping.TransactionalProducts.Add(product);
+                    }
+                }
+            }
+
             return new TransactionalView
             {
                 RiskGroup = riskGroup,
                 TransactionalConcessions = transactionalConcessions.OrderByDescending(_ => _.Concession.DateOpened),
                 TransactionalFinancial = transactionalFinancial,
-                TransactionalProducts = transactionalProducts
+                TransactionalProductGroups = groupedinfo
             };
         }
 

@@ -1,4 +1,6 @@
-﻿namespace StandardBank.ConcessionManagement.Model.UserInterface.Lending
+﻿using System.Collections.Generic;
+
+namespace StandardBank.ConcessionManagement.Model.UserInterface.Lending
 {
     /// <summary>
     /// Lending product entity
@@ -68,5 +70,17 @@
         /// The loaded map.
         /// </value>
         public decimal LoadedMap { get; set; }
+    }
+
+    public class LendingProductGroup
+    {
+       
+        public string RiskGroupName { get; set; }
+
+    
+        public string CustomerName { get; set; }
+
+       
+        public List<LendingProduct> LendingProducts { get; set; }
     }
 }

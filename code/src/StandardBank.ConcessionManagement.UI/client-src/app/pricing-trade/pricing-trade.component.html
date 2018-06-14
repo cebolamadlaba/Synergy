@@ -66,13 +66,13 @@
 
 <!-- lending concessions and products-->
 <div class="col-md-12">
-    <div class="col-md-5">
+    <div class="col-md-5 search-and-results-container">
         <h2 class="headings">Products</h2>
         <div class="section">
 
             <!-- End of products list -->
             <!-- Empty state for products if no data is found -->
-            <div *ngIf="!tradeView?.tradeProducts || tradeView?.tradeProducts?.length == 0">
+            <div *ngIf="!tradeView?.tradeProductGroups || tradeView?.tradeProductGroups?.length == 0">
                 <div class="section-body">
                     <div class="searchEmptyState">
                         <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
@@ -81,8 +81,46 @@
                 </div>
             </div>
 
+
+            <!-- Products grouping -->
+
+            <div class="section-body" *ngFor="let tradeprodgroup of tradeView.tradeProductGroups">
+
+                <div class="product-section">
+                    <div class="product-name">{{tradeprodgroup.legalEntity}}</div>
+
+                </div>
+
+                <!-- Products list -->
+                <div class="section-body">
+
+                    <div class="product-table-container">
+                        <table class="table table-bordered table-hover header-fixed table-striped ">
+                            <thead>
+                                <tr>
+                                    <th>Account(No.)</th>
+                                    <th>Product </th>
+                                    <th>Type</th>
+                                    <th>Loaded Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let tradeprod of tradeprodgroup.tradeProducts">
+                                    <td class="leftAlign">{{tradeprod.accountNumber}}</td>
+                                    <td class="leftAlign">{{tradeprod.tradeProductName}}</td>
+                                    <td class="leftAlign">{{tradeprod.tradeProductType}}</td>
+                                    <td class="rightAlign">{{tradeprod.loadedRate| number : '1.5-5'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+
             <!-- Products list -->
-            <div class="section-body" *ngFor="let tradeprod of tradeView.tradeProducts">
+            <!--<div class="section-body" *ngFor="let tradeprod of tradeView.tradeProducts">
                 <div class="product-section">
                     <div class="product-name">{{tradeprod.legalEntity}}</div>
                     <div>
@@ -106,12 +144,12 @@
                                 <td class="leftAlign">{{tradeprod.tradeProductType}}</td>
                                 <td class="leftAlign">{{tradeprod.accountNumber}}</td>
                                 <td class="rightAlign">{{tradeprod.loadedRate| number : '1.5-5'}}</td>
-                             
+
                             </tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </div>-->
 
 
         </div>
@@ -125,7 +163,7 @@
             <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/trade-add-concession', tradeView.riskGroup.number]" *ngIf="pageLoaded && canRequest">Add Concession</button>
         </h2>
 
-      
+
         <div class="input-group add-on">
             <input class="form-control" placeholder="Concession ID" [(ngModel)]="filterConcessionId" type="text">
         </div>
@@ -170,8 +208,8 @@
             </div>
         </div>
 
-       
-       
+
+
         <div class="searchEmptyState" *ngIf="(tradeView.tradeConcessions | baseConcessionFilter: filterConcessionId).length === 0">
             <i class="fa fa-inbox" aria-hidden="true"></i>
             <p>No concessions found matching your search</p>

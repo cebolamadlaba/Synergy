@@ -280,15 +280,42 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             var lendingProducts = GetLendingProducts(riskGroup.Id, riskGroup.Name);
+
             var lendingFinancial = _mapper.Map<LendingFinancial>(
                 _financialLendingRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
                 new FinancialLending());
+
+
+
+            //grouping of products
+            var groupedinfo = new List<LendingProductGroup>();
+            if (lendingProducts != null)
+            {
+                foreach (var product in lendingProducts)
+                {
+                    var productgrouping = groupedinfo.Where(g => g.CustomerName == product.CustomerName).FirstOrDefault();
+                    if (productgrouping == null)
+                    {
+                        LendingProductGroup newgroup = new LendingProductGroup();
+                        newgroup.CustomerName = product.CustomerName;
+                        newgroup.RiskGroupName = product.RiskGroupName;
+                        newgroup.LendingProducts = new List<LendingProduct>();
+                        newgroup.LendingProducts.Add(product);
+
+                        groupedinfo.Add(newgroup);
+                    }
+                    else
+                    {
+                        productgrouping.LendingProducts.Add(product);
+                    }
+                }
+            }
 
             return new LendingView
             {
                 RiskGroup = riskGroup,
                 LendingConcessions = lendingConcessions.OrderByDescending(_ => _.Concession.DateOpened),
-                LendingProducts = lendingProducts,
+                LendingProductGroups = groupedinfo,
                 LendingFinancial = lendingFinancial
             };
         }

@@ -36,7 +36,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Trade
         /// <value>
         /// The cash products.
         /// </value>
-        public IEnumerable<TradeProduct> TradeProducts { get; set; }
+        public IEnumerable<TradeProductGroup> TradeProductGroups { get; set; }
 
     }
 }

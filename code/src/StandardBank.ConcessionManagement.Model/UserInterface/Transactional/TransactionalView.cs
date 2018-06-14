@@ -37,6 +37,6 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Transactional
         /// <value>
         /// The transactional products.
         /// </value>
-        public IEnumerable<TransactionalProduct> TransactionalProducts { get; set; }
+        public IEnumerable<TransactionalProductGroup> TransactionalProductGroups { get; set; }
     }
 }

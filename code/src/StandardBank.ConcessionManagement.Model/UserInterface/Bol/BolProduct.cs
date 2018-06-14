@@ -29,4 +29,15 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Bol
         public decimal LoadedRate { get; set; }
 
     }
+
+
+    public class BolProductGroup
+    {
+        public string RiskGroupName { get; set; }
+
+        public string LegalEntity { get; set; }    
+
+        public List<BolProduct> BolProducts { get; set; }
+    }
+
 }
