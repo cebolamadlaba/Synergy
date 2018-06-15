@@ -84,12 +84,12 @@
 
 <!-- lending concessions and products-->
 <div class="col-md-12" *ngIf="!isLoading">
-    <div class="col-md-5 search-and-results-container">
+    <div class="col-md-6 search-and-results-container">
         <h2 class="headings">Products</h2>
         <div class="section">
 
             <!-- Empty state for products if no data is found -->
-            <div *ngIf="lendingView?.lendingProducts?.length == 0">
+            <div *ngIf="lendingView?.lendingProductGroups?.length == 0">
                 <div class="section-body">
                     <div class="searchEmptyState">
                         <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
@@ -172,7 +172,7 @@
     </div>
 
     <!-- Concessions list -->
-    <div class="col-md-7 search-and-results-container" id="lending-search-container">
+    <div class="col-md-6 search-and-results-container" id="lending-search-container">
         <h2 class="headings">
             Concessions
             <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/lending-add-concession', lendingView.riskGroup.number]" *ngIf="pageLoaded && canRequest">Add Concession</button>

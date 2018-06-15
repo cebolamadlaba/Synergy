@@ -412,6 +412,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
         let currentCondition = control.controls[rowIndex];
 
+        currentCondition.get('conditionProduct').setValue(null);
         currentCondition.get('interestRate').setValue(null);
         currentCondition.get('volume').setValue(null);
         currentCondition.get('value').setValue(null);

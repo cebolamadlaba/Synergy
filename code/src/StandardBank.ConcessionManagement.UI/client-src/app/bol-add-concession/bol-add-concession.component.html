@@ -166,7 +166,7 @@
     <div class="col-md-12">
         <div class="row">
             <h3 class="table-title">Conditions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;" *ngIf="!saveMessage">Add Conditions</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;" *ngIf="!saveMessage">Manage Conditions</button>
 
             <div class="table-container">
                 <table class="table table-bordered table-hover header-fixed table-striped">
@@ -190,8 +190,8 @@
                         </tr>
                         <tr *ngFor="let itemrow of bolConcessionForm.controls.conditionItemsRows.controls; let i=index">
                             <td># {{i + 1}}</td>
-                            <td>{{itemrow.get('conditionType').value.description}}</td>
-                            <td>{{itemrow.get('conditionProduct').value.description}}</td>
+                            <td>{{itemrow.get('conditionType').value?.description}}</td>
+                            <td>{{itemrow.get('conditionProduct').value?.description}}</td>
                             <td><span *ngIf="itemrow.get('interestRate').value">{{itemrow.get('interestRate').value | number:'1.2-2'}}</span></td>
                             <td>{{itemrow.get('volume').value}}</td>
                             <td><span *ngIf="itemrow.get('value').value">{{itemrow.get('value').value | number:'1.2-2'}}</span></td>

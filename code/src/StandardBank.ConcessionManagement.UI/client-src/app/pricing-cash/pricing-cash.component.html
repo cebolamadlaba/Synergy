@@ -89,7 +89,7 @@
 <!--Table information -->
 
 <div class="col-md-12" *ngIf="!isLoading">
-    <div class="col-md-5 search-and-results-container">
+    <div class="col-md-6 search-and-results-container">
         <h2 class="headings">Products</h2>
         <div class="section">
 
@@ -180,7 +180,7 @@
 
     <!-- concessions -->
 
-    <div class="col-md-7 search-and-results-container">
+    <div class="col-md-6 search-and-results-container">
         <h2 class="headings">
             Concessions
             <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/cash-add-concession', cashView.riskGroup.number]" *ngIf="pageLoaded && canRequest">Add Concession</button>
