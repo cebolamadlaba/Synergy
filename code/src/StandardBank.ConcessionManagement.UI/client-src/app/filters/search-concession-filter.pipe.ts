@@ -1,14 +1,14 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ApprovedConcession } from "../models/approved-concession";
+import { SearchConcessionDetail } from '../models/search-concession-detail';
 
 @Pipe({
     name: 'searchConcessionFilter'
 })
 export class SearchConcessionFilterPipe implements PipeTransform {
 
-    transform(items: ApprovedConcession[], customerNameOrRiskGroupNumber): any {
-        return customerNameOrRiskGroupNumber
-            ? items.filter(item => item.customerName.indexOf(customerNameOrRiskGroupNumber) !== -1 || String(item.riskGroupNumber).indexOf(customerNameOrRiskGroupNumber) !== -1)
+    transform(items: SearchConcessionDetail[], concessionId): any {
+        return concessionId
+            ? items.filter(item => item.referenceNumber.indexOf(concessionId) !== -1)
             : items;
     }
 

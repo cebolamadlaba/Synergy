@@ -29,7 +29,7 @@
 <div class="col-md-12 search-and-results-container" *ngIf="!isLoading">
     <!-- Search bar -->
     <div class="input-group add-on">
-        <input class="form-control" placeholder="Search Customer Name or Risk Group Number" [(ngModel)]="customerNameOrRiskGroupNumber" type="text">
+        <input class="form-control" placeholder="Search Customer Name or Risk Group Number" [(ngModel)]="concessionIdOrRiskGroupNumber" type="text">
     </div>
 
     <div class="section table-hover-highlight" *ngFor="let approvedConcession of approvedConcessions | approvedConcessionFilter : concessionIdOrRiskGroupNumber; trackBy: index;">

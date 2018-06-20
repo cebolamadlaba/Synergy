@@ -92,7 +92,7 @@
 
         <!-- Search bar -->
         <div class="input-group add-on">
-            <input class="form-control" placeholder="Search Concession ID" [(ngModel)]="concessionIdOrRiskGroupNumber" type="text">
+            <input class="form-control" placeholder="Search Concession ID" [(ngModel)]="concessionId" type="text">
         </div>
 
         <!-- Empty state if no concessions found -->
@@ -118,6 +118,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <!--<tr *ngFor='let concessiondetail of approvedConcessions | searchConcessionFilter : concessionId; trackBy: index;' (click)="openConcessionView($event,concessiondetail)">-->
                     <tr *ngFor='let concessiondetail of approvedConcessions' (click)="openConcessionView($event,concessiondetail)">
                         <td>
                             <p>{{concessiondetail?.riskGroupName}}</p>
