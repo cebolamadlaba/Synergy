@@ -95,7 +95,8 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
     tradeproducts: TradeProduct[];
 
     selectedConditionTypes: ConditionType[];
-    selectedProducts: TradeProduct[];
+    selectedProductTypes: TradeProductType[];
+    selectedTradeConcession: boolean[];
 
     observableConditionTypes: Observable<ConditionType[]>;
     conditionTypes: ConditionType[];
@@ -123,7 +124,8 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
         this.conditionTypes = [new ConditionType()];
         this.selectedConditionTypes = [new ConditionType()];
-        this.selectedProducts = [new TradeProduct()];
+        this.selectedProductTypes = [new TradeProductType()];
+        this.selectedTradeConcession = [false];
 
         this.clientAccounts = [new ClientAccount()];
 
@@ -273,43 +275,36 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
                     currentConcession.get('tradeConcessionDetailId').setValue(tradeConcessionDetail.tradeConcessionDetailId);
                     currentConcession.get('concessionDetailId').setValue(tradeConcessionDetail.concessionDetailId);
-
-                   // if (tradeConcessionDetail.accountNumber)
-                       // currentConcession.get('accountNumber').setValue(tradeConcessionDetail.accountNumber);
-
-                    //if (bolConcessionDetail.approvedRate)
-                    //    currentConcession.get('unitchargeApproved').setValue(bolConcessionDetail.approvedRate);
-
-                    //let selectedBOLUser = this.legalentitybolusers.filter(_ => _.pkLegalEntityBOLUserId == bolConcessionDetail.fkLegalEntityBOLUserId);
-                    //currentConcession.get('userid').setValue(selectedBOLUser[0]);
-
-                    //let selectedChargeCode = this.bolchargecodes.filter(_ => _.pkChargeCodeId == bolConcessionDetail.fkChargeCodeId);
-                    //currentConcession.get('chargecode').setValue(selectedChargeCode[0]);
-
-                    //let selectedChargeCode2 = this.bolchargecodes.filter(_ => _.pkChargeCodeId == bolConcessionDetail.fkChargeCodeId);
-                    //let chargecodetypeid = selectedChargeCode2[0].fkChargeCodeTypeId.valueOf();
-
-                    //let selectedChargeCodeType = this.bolchargecodetypes.filter(_ => _.pkChargeCodeTypeId == chargecodetypeid);
-                    //currentConcession.get('product').setValue(selectedChargeCodeType[0]);
-
+                 
                     if (this.clientAccounts) {
                         let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == tradeConcessionDetail.legalEntityAccountId);
                         currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
                     }
 
 
-                    if (this.tradeproducts) {
-                        let selectedproduct = this.tradeproducts.filter(_ => _.tradeProductId == tradeConcessionDetail.fkTradeProductId);
-                        currentConcession.get('product').setValue(selectedproduct[0]);
+                    if (this.tradeproducts) {                                           
 
-                        //let selectedproducttype = this.tradeproducttypes.filter(re => re.tradeProductTypeID == selectedproduct[0].tradeProductTypeId);
-                       // currentConcession.get('producttype').setValue(selectedproduct[0].producttypes);
+                        let currentproduct = this.tradeproducts.filter(_ => _.tradeProductId == tradeConcessionDetail.fkTradeProductId);
+                        currentConcession.get('product').setValue(currentproduct[0]);
 
-                        //selectedProducts[i].producttypes
+                        let selectedproducttype = this.tradeproducttypes.filter(re => re.tradeProductTypeID == currentproduct[0].tradeProductTypeId);                       
 
-                        this.selectedProducts[rowIndex].producttypes = this.tradeproducttypes.filter(re => re.tradeProductTypeID == selectedproduct[0].tradeProductTypeId);
-                        currentConcession.get('producttype').setValue(this.selectedProducts[rowIndex].producttypes[0]);                        
+                        this.selectedProductTypes[rowIndex].products = this.tradeproducts.filter(re => re.tradeProductTypeId == selectedproducttype[0].tradeProductTypeID);
 
+                        currentConcession.get('producttype').setValue(selectedproducttype[0]);
+
+                        if (selectedproducttype[0].tradeProductType == "Local guarantee") {
+
+                            this.selectedTradeConcession[rowIndex] = true;
+                            currentConcession.get('disablecontrolset').setValue(true);
+
+                        }
+                        else {
+
+                            this.selectedTradeConcession[rowIndex] = false;
+                            currentConcession.get('disablecontrolset').setValue(false);
+
+                        }
                     }
 
 
@@ -355,6 +350,9 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                         var formattedDateApproved = this.datepipe.transform(tradeConcessionDetail.dateApproved, 'yyyy-MM-dd');
                         currentConcession.get('dateApproved').setValue(formattedDateApproved);
                     }
+
+
+                  
 
                     currentConcession.get('isExpired').setValue(tradeConcessionDetail.isExpired);
                     currentConcession.get('isExpiring').setValue(tradeConcessionDetail.isExpiring);
@@ -403,11 +401,12 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
     initConcessionItemRows() {
 
-        this.selectedProducts.push(new TradeProduct());
+        this.selectedProductTypes.push(new TradeProductType());
+        this.selectedTradeConcession.push(false)
 
         return this.formBuilder.group({
            
-
+            disablecontrolset: [''],
             tradeConcessionDetailId: [''],
             concessionDetailId: [''],
             product: [{ value: '', disabled: true }],
@@ -471,6 +470,10 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
         if (confirm("Are you sure you want to remove this row?")) {
             const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
             control.removeAt(index);
+
+
+            this.selectedProductTypes.splice(index, 1);
+            this.selectedTradeConcession.splice(index, 1);
         }
     }
 
@@ -496,20 +499,43 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
     productTypeChanged(rowIndex) {
 
-        //const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
-        //let currentCondition = control.controls[rowIndex];
-        //var selectedproduct = currentCondition.get('product').value;
-        //this.bolchargecodesFiltered = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId);
-
         const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
-        this.selectedProducts[rowIndex] = control.controls[rowIndex].get('product').value;
+
+        this.selectedProductTypes[rowIndex] = control.controls[rowIndex].get('producttype').value;
+
         let currentProduct = control.controls[rowIndex];
-        var selectedproduct = currentProduct.get('product').value;
+        var selectedproducttype = currentProduct.get('producttype').value;
 
-        this.selectedProducts[rowIndex].producttypes = this.tradeproducttypes.filter(re => re.tradeProductTypeID == selectedproduct.tradeProductTypeId);
+        this.selectedProductTypes[rowIndex].products = this.tradeproducts.filter(re => re.tradeProductTypeId == selectedproducttype.tradeProductTypeID);
 
-        currentProduct.get('producttype').setValue(this.selectedProducts[rowIndex].producttypes[0]);  
+        currentProduct.get('product').setValue(this.selectedProductTypes[rowIndex].products[0]);
 
+        if (selectedproducttype.tradeProductType == "Local guarantee") {
+
+            this.selectedTradeConcession[rowIndex] = true;
+
+            currentProduct.get('disablecontrolset').setValue(true);
+            
+            currentProduct.get('advalorem').setValue(null);
+            currentProduct.get('min').setValue(null);
+            currentProduct.get('max').setValue(null);
+
+            currentProduct.get('communication').setValue(null);
+            currentProduct.get('flatfee').setValue(null);
+            currentProduct.get('currency').setValue(null);
+
+        }
+        else {
+
+            this.selectedTradeConcession[rowIndex] = false;
+
+            currentProduct.get('disablecontrolset').setValue(false);
+
+            currentProduct.get('gbbnumber').setValue(null);
+            currentProduct.get('term').setValue(null);
+            currentProduct.get('estfee').setValue(null);
+            currentProduct.get('loadedRate').setValue(null);
+        }
     }
 
     addValidationError(validationDetail) {
@@ -545,6 +571,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
             if (!isNew && concessionFormItem.get('concessionDetailId').value)
                 tradeConcessionDetail.concessionDetailId = concessionFormItem.get('concessionDetailId').value;
 
+            tradeConcessionDetail.disablecontrolset = concessionFormItem.get('disablecontrolset').value;
 
             if (concessionFormItem.get('product').value) {
                 tradeConcessionDetail.fkTradeProductId = concessionFormItem.get('product').value.tradeProductId;
@@ -563,71 +590,95 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
 
 
-            if (concessionFormItem.get('accountNumber').value && concessionFormItem.get('accountNumber').value.legalEntityId) {
+            if ((concessionFormItem.get('accountNumber').value && concessionFormItem.get('accountNumber').value.legalEntityId)) {
                 tradeConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
                 tradeConcessionDetail.legalEntityAccountId = concessionFormItem.get('accountNumber').value.legalEntityAccountId;
             } else {
+
+                //if (!tradeConcessionDetail.disablecontrolset) {
+
                 this.addValidationError("Client account not selected");
+                // }
             }
 
             if (concessionFormItem.get('gbbnumber').value) {
                 tradeConcessionDetail.gbbNumber = concessionFormItem.get('gbbnumber').value;
             } else {
-                this.addValidationError("GBB Number not entered");
+                if (tradeConcessionDetail.disablecontrolset) {
+                    this.addValidationError("GBB Number not entered");
+                }
             }
 
 
             if (concessionFormItem.get('term').value) {
                 tradeConcessionDetail.term = concessionFormItem.get('term').value;
             } else {
-                this.addValidationError("Term not entered");
+                if (tradeConcessionDetail.disablecontrolset) {
+                    this.addValidationError("Term not entered");
+                }
             }
 
             if (concessionFormItem.get('advalorem').value) {
                 tradeConcessionDetail.adValorem = concessionFormItem.get('advalorem').value;
             } else {
-                this.addValidationError("AdValorem value not entered");
+                if (!tradeConcessionDetail.disablecontrolset) {
+                    this.addValidationError("AdValorem value not entered");
+                }
             }
 
             if (concessionFormItem.get('min').value) {
                 tradeConcessionDetail.min = concessionFormItem.get('min').value;
             } else {
-                this.addValidationError("Min value not entered");
+                if (!tradeConcessionDetail.disablecontrolset) {
+                    this.addValidationError("Min value not entered");
+                }
             }
 
             if (concessionFormItem.get('max').value) {
                 tradeConcessionDetail.max = concessionFormItem.get('max').value;
             } else {
-                this.addValidationError("Max value not entered");
+                if (!tradeConcessionDetail.disablecontrolset) {
+                    this.addValidationError("Max value not entered");
+                }
             }
             ///---
             if (concessionFormItem.get('communication').value) {
                 tradeConcessionDetail.communication = concessionFormItem.get('communication').value;
             } else {
-                this.addValidationError("Communication not entered");
+                if (!tradeConcessionDetail.disablecontrolset) {
+                    this.addValidationError("Communication not entered");
+                }
             }
             if (concessionFormItem.get('flatfee').value) {
                 tradeConcessionDetail.flatFee = concessionFormItem.get('flatfee').value;
             } else {
-                this.addValidationError("Flat fee not entered");
+                if (!tradeConcessionDetail.disablecontrolset) {
+                    this.addValidationError("Flat fee not entered");
+                }
             }
 
             if (concessionFormItem.get('currency').value) {
                 tradeConcessionDetail.currency = concessionFormItem.get('currency').value;
             } else {
-                this.addValidationError("Currency not selected");
+                if (!tradeConcessionDetail.disablecontrolset) {
+                    this.addValidationError("Currency not selected");
+                }
             }
 
             if (concessionFormItem.get('estfee').value) {
                 tradeConcessionDetail.establishmentFee = concessionFormItem.get('estfee').value;
             } else {
-                this.addValidationError("Est. fee not entered");
+                if (tradeConcessionDetail.disablecontrolset) {
+                    this.addValidationError("Est. fee not entered");
+                }
             }
 
             if (concessionFormItem.get('loadedRate').value) {
                 tradeConcessionDetail.loadedRate = concessionFormItem.get('loadedRate').value;
             } else {
-                this.addValidationError("Rate not entered");
+                if (tradeConcessionDetail.disablecontrolset) {
+                    this.addValidationError("Rate not entered");
+                }
             }
 
             if (concessionFormItem.get('expiryDate').value)

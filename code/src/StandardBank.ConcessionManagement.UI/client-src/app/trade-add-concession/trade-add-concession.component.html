@@ -124,6 +124,8 @@
             <tr>
                 <th>Product</th>
                 <th>Type</th>
+              
+
                 <th>Acc No.</th>
                 <th>GBB Number</th>
                 <th>Term(months)</th>
@@ -143,13 +145,17 @@
             
             <tr *ngFor="let itemrow of tradeConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
                 <td class="length-short">
-                    <select formControlName="product" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="productTypeChanged(i)">
-                        <option *ngFor="let productOption of tradeproducts" [ngValue]="productOption">{{productOption.tradeProductName}}</option>
+                    <input formControlName="disablecontrolset" style="display: none;" />
+
+                    <select formControlName="producttype" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="productTypeChanged(i)">
+                        <option *ngFor="let tradeproductypteOption of tradeproducttypes" [ngValue]="tradeproductypteOption">{{tradeproductypteOption.tradeProductType}}</option>
                     </select>
+
                 </td>
                 <td class="length-short">
-                    <select formControlName="producttype" class="form-control" [attr.disabled]="saveMessage ? '' : null">
-                        <option *ngFor="let tradeproductypteOption of selectedProducts[i].producttypes" [ngValue]="tradeproductypteOption">{{tradeproductypteOption.tradeProductType}}</option>
+
+                    <select formControlName="product" class="form-control" [attr.disabled]="saveMessage ? '' : null" >
+                        <option *ngFor="let productOption of selectedProductTypes[i].products" [ngValue]="productOption">{{productOption.tradeProductName}}</option>
                     </select>
                 </td>
                 <td class="length-short">
@@ -157,24 +163,24 @@
                         <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
                 </td>
-                <td class="length-short"><input type="text" class="form-control" formControlName="gbbnumber" [attr.disabled]="saveMessage ? '' : null" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="term" [attr.disabled]="saveMessage ? '' : null" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="advalorem" [attr.disabled]="saveMessage ? '' : null" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="min" [attr.disabled]="saveMessage ? '' : null" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="max" [attr.disabled]="saveMessage ? '' : null" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="communication" [attr.disabled]="saveMessage ? '' : null" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="flatfee" [attr.disabled]="saveMessage ? '' : null" /></td>
+                <td class="length-short"><input type="text" class="form-control" formControlName="gbbnumber" [attr.disabled]="(!selectedTradeConcession[i]) && !saveMessage ? '' : null" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="term" [attr.disabled]="(!selectedTradeConcession[i]) && !saveMessage ? '' : null" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="advalorem" [attr.disabled]="(selectedTradeConcession[i]) && !saveMessage ? '' : null" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="min" [attr.disabled]="(selectedTradeConcession[i]) && !saveMessage ? '' : null" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="max" [attr.disabled]="(selectedTradeConcession[i]) && !saveMessage ? '' : null" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="communication" [attr.disabled]="(selectedTradeConcession[i]) && !saveMessage ? '' : null" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="flatfee" [attr.disabled]="(selectedTradeConcession[i]) && !saveMessage ? '' : null" /></td>
                 <td class="length-short">
-                    <select formControlName="currency" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                    <select formControlName="currency" class="form-control" [attr.disabled]="(selectedTradeConcession[i]) && !saveMessage ? '' : null">
                         <option>EUR</option>
                         <option>ZAR</option>
                         <option>GBP</option>
                         <option>USD</option>
                     </select>
                 </td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="estfee" [attr.disabled]="saveMessage ? '' : null" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="rate" [attr.disabled]="saveMessage ? '' : null" /></td>
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="saveMessage ? '' : null" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="estfee" [attr.disabled]="(!selectedTradeConcession[i]) && !saveMessage ? '' : null" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="rate" [attr.disabled]="(!selectedTradeConcession[i]) && !saveMessage ? '' : null" /></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="(selectedTradeConcession[i]) && !saveMessage ? '' : null" /></td>
                 <td class="delete"><button *ngIf="tradeConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
         </tbody>

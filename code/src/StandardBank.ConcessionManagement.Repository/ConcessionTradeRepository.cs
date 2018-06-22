@@ -54,28 +54,58 @@ namespace StandardBank.ConcessionManagement.Repository
                 VALUES (@fkConcessionId, @fkConcessionDetailId, @fkTradeProductId, @fkLegalEntityAccountId, @LoadedRate, @ApprovedRate, @GBBNumber, @Term, @Min,@Max,@Communication,@FlatFee,@EstablishmentFee,@AdValorem,@Currency) 
                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
-                using (var db = _dbConnectionFactory.Connection())
+                if (model.LegalEntityAccountId == 0)
                 {
-                    model.Id = db.Query<int>(sql,
-                        new
-                        {
-                            fkConcessionId = model.ConcessionId,
-                            fkConcessionDetailId = model.ConcessionDetailId,
-                            fkTradeProductId = model.fkTradeProductId,
-                            fkLegalEntityAccountId = model.LegalEntityAccountId,
-                            LoadedRate = model.LoadedRate,
-                            ApprovedRate = model.ApprovedRate,
-                            GBBNumber = model.GBBNumber,
-                            Term = model.term,
-                            Min = model.min,
-                            Max = model.max,
-                            Communication = model.Communication,
-                            FlatFee = model.FlatFee,
-                            EstablishmentFee = model.EstablishmentFee,
-                            AdValorem = model.AdValorem,
-                            Currency = model.Currency
+                    using (var db = _dbConnectionFactory.Connection())
+                    {
+                        model.Id = db.Query<int>(sql,
+                            new
+                            {
+                                fkConcessionId = model.ConcessionId,
+                                fkConcessionDetailId = model.ConcessionDetailId,
+                                fkTradeProductId = model.fkTradeProductId,
+                                fkLegalEntityAccountId = (string)null,
+                                LoadedRate = model.LoadedRate,
+                                ApprovedRate = model.ApprovedRate,
+                                GBBNumber = model.GBBNumber,
+                                Term = model.term,
+                                Min = model.min,
+                                Max = model.max,
+                                Communication = model.Communication,
+                                FlatFee = model.FlatFee,
+                                EstablishmentFee = model.EstablishmentFee,
+                                AdValorem = model.AdValorem,
+                                Currency = model.Currency
 
-                        }).Single();
+                            }).Single();
+                    }
+                }
+                else
+                {
+
+                    using (var db = _dbConnectionFactory.Connection())
+                    {
+                        model.Id = db.Query<int>(sql,
+                            new
+                            {
+                                fkConcessionId = model.ConcessionId,
+                                fkConcessionDetailId = model.ConcessionDetailId,
+                                fkTradeProductId = model.fkTradeProductId,
+                                fkLegalEntityAccountId = model.LegalEntityAccountId,
+                                LoadedRate = model.LoadedRate,
+                                ApprovedRate = model.ApprovedRate,
+                                GBBNumber = model.GBBNumber,
+                                Term = model.term,
+                                Min = model.min,
+                                Max = model.max,
+                                Communication = model.Communication,
+                                FlatFee = model.FlatFee,
+                                EstablishmentFee = model.EstablishmentFee,
+                                AdValorem = model.AdValorem,
+                                Currency = model.Currency
+
+                            }).Single();
+                    }
                 }
 
                 return model;
@@ -103,7 +133,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     FROM [dbo].[tblConcessionTrade] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
                     WHERE [pkConcessionTradeId] = @Id",
-                    new {id}).SingleOrDefault();
+                    new { id }).SingleOrDefault();
             }
         }
 
@@ -200,7 +230,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[tblConcessionTrade] WHERE [pkConcessionTradeId] = @Id",
-                    new {model.Id});
+                    new { model.Id });
             }
 
             _concessionDetailRepository.Delete(model);

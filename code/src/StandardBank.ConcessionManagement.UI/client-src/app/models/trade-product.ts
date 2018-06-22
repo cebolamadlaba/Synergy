@@ -1,4 +1,3 @@
-import { TradeProductType } from "../models/trade-product-type";
 
 export class TradeProduct {
 
@@ -9,6 +8,6 @@ export class TradeProduct {
     riskGroupName: string;
     legalEntity: string;
     accountNumber: string;
-    loadedRate: string;
-    producttypes: TradeProductType[];
+    loadedRate: string; 
+  
 }

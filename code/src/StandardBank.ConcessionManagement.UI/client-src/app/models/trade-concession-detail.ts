@@ -22,5 +22,5 @@ export class TradeConcessionDetail extends BaseConcessionDetail {
     adValorem: number;
     currency: number;
 
- 
+    disablecontrolset: boolean;
 }
