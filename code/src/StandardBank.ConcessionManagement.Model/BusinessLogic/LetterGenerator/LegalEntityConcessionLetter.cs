@@ -235,5 +235,18 @@ namespace StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator
                 return null;
             }
         }
+
+        public IEnumerable<LegalEntityConcession> TradeLegalEntityConcessions
+        {
+            get
+            {
+                if (LegalEntityConcessions != null &&
+                    LegalEntityConcessions.Any(_ => _.ConcessionType == Constants.ConcessionType.Trade))
+                    return LegalEntityConcessions.Where(_ => _.ConcessionType == Constants.ConcessionType.Trade)
+                        .OrderBy(_ => _.ConcessionReferenceNumber);
+
+                return null;
+            }
+        }
     }
 }
