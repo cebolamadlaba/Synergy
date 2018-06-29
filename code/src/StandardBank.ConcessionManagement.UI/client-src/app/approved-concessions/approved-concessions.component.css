@@ -1,0 +1,28 @@
+.downloadtd {
+    white-space: nowrap;
+       width:90px;
+}
+
+    .downloadtd > div {
+        display: inline-block;
+        white-space: normal;
+        padding-left:25px;
+    }
+
+
+.image-upload > input {
+    display: none;
+}
+
+.image-upload img {
+    width: 30px;
+    cursor: pointer;
+}
+
+
+
+.image-download img {
+    width: 30px;
+    cursor: pointer;
+}
+

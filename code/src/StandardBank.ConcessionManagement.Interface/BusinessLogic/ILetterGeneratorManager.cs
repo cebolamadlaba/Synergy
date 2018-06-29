@@ -29,5 +29,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="requestorId">The requestor identifier.</param>
         /// <returns></returns>
         byte[] GenerateLettersForConcessionDetails(IEnumerable<int> concessionDetailIds, int requestorId);
+
+        byte[] DownloadLetterForConcessionDetail(int concessionDetailId, int requestorId);
     }
 }

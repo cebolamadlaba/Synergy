@@ -556,7 +556,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     DateSentForApproval = concession.DatesentForApproval,
                     ConcessionDetailId = concession.ConcessionDetailId,
                     ConcessionId = concession.ConcessionId,
-                    ReferenceNumber = concession.ConcessionRef
+                    ReferenceNumber = concession.ConcessionRef,
+                    ConcessionLetterURL = concession.ConcessionLetterURL
                 });
 
                 approvedConcession.ApprovedConcessionDetails = approvedConcessionDetails;

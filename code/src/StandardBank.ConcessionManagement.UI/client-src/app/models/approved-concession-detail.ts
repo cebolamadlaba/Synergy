@@ -9,4 +9,5 @@ export class ApprovedConcessionDetail {
     expiryDate: Date;
     dateApproved: Date;
     isSelected: boolean;
+    concessionLetterURL: string;
 }

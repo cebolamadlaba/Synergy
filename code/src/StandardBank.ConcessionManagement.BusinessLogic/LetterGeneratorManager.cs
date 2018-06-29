@@ -508,6 +508,27 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return GenerateLegalEntityConcessionLetterPdf(legalEntityConcessionLetter);
         }
 
+
+        public byte[] DownloadLetterForConcessionDetail(int concessionDetailId, int requestorId)
+        {
+            var concessionInboxViews = _concessionInboxViewRepository.ReadByConcessionDetailIds(new int[] { concessionDetailId });
+
+            if(concessionInboxViews != null && concessionInboxViews.FirstOrDefault() != null)
+            {
+               string url = concessionInboxViews.FirstOrDefault().ConcessionLetterURL;
+
+                if(System.IO.File.Exists(url))
+                {
+                   return System.IO.File.ReadAllBytes(url);
+
+                }
+            }
+
+            return null;
+        }
+
+
+
         /// <summary>
         /// Gets the transactional concession letter data.
         /// </summary>

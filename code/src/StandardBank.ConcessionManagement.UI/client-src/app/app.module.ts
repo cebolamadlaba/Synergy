@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
@@ -140,6 +141,7 @@ import { ChannelTypesManagementComponent } from './admin/channel-types/channel-t
     imports: [
         BrowserModule,
         HttpModule,
+        HttpClientModule,
         FormsModule,
         AppRoutingModule,
         ModalModule.forRoot(),

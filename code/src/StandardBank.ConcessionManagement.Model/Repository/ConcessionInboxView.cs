@@ -294,5 +294,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The price exported date.
         /// </value>
         public DateTime? PriceExportedDate { get; set; }
+
+        public string ConcessionLetterURL { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
@@ -276,6 +277,67 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             return result;
         }
+
+
+
+
+        [HttpPost, Route("UploadLetter")]
+        public async Task<IActionResult> UploadLetter()
+        {
+            var files = Request.Form.Files; // now you have them
+
+            var ConcessionDetailedId = Request.Form["ConcessionDetailedId"].ToString();
+
+            if (ConcessionDetailedId != null && files != null)
+            {
+                foreach (var f in files)
+                {
+                    //save to disk
+                    string filename = string.Format(@"c:\cms\{0}.pdf", ConcessionDetailedId.ToString());
+
+                    using (var fileStream = new FileStream(filename, FileMode.Create))
+                    {
+                        await f.CopyToAsync(fileStream);
+                    }
+
+                    //save the entry to the db to retrieve
+                 
+
+                    //save to DB
+
+                }
+            }
+
+            return Ok(true);
+        }
+
+        [Route("DownloadLetter/{concessionDetailId}")]
+        public FileResult DownloadLetter(string concessionDetailId)
+        {
+            var userId = _siteHelper.GetUserIdForFiltering(this);
+            HttpContext.Response.ContentType = "application/pdf";
+
+            var convertedConcessionDetailId = Convert.ToInt32(concessionDetailId);
+
+            var result = new FileContentResult(
+
+                //this will be repalced by the actual bytes retrieved from db or disk  - TBA
+                _letterGeneratorManager.DownloadLetterForConcessionDetail(convertedConcessionDetailId, userId),
+
+
+                "application/pdf")
+            {
+                FileDownloadName = $"ConcessionLetter_{concessionDetailId.Replace(",", "_")}.pdf"
+            };
+
+            return result;
+
+
+        }
+
+
+
+
 
         /// <summary>
         /// Generates the concession letter for concession details.-- Used.

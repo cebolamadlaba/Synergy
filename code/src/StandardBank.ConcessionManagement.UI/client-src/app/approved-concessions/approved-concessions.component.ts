@@ -1,10 +1,15 @@
 import { Component, OnInit, Inject } from '@angular/core';
+import { HttpClient, HttpRequest, HttpEventType, HttpResponse } from '@angular/common/http'
+
 import { Observable } from "rxjs";
 import { UserConcessionsService } from "../services/user-concessions.service";
 import { Router, RouterModule } from '@angular/router';
 import { ApprovedConcession } from "../models/approved-concession";
 import { ApprovedConcessionDetail } from "../models/approved-concession-detail";
 import { ConcessionTypes } from '../constants/concession-types';
+
+
+
 
 @Component({
     selector: 'app-approved-concessions',
@@ -16,10 +21,12 @@ export class ApprovedConcessionsComponent implements OnInit {
     saveMessage: String;
     isLoading = true;
 
+    public uploadProgress: number;
+
     observableApprovedConcessions: Observable<ApprovedConcession[]>;
     approvedConcessions: ApprovedConcession[];
 
-    constructor( @Inject(UserConcessionsService) private userConcessionsService, private router: Router) { }
+    constructor( @Inject(UserConcessionsService) private userConcessionsService, private router: Router, private http: HttpClient) { }
 
     ngOnInit() {
         this.observableApprovedConcessions = this.userConcessionsService.getApprovedConcessions();
@@ -83,4 +90,53 @@ export class ApprovedConcessionsComponent implements OnInit {
             window.open("/api/Concession/GenerateConcessionLetterForLegalEntity/" + legalEntityId);
         }
     }
+
+    upload(event, concessionDetailId) {
+        let reader = new FileReader();
+        if (event.target.files && event.target.files.length > 0) {
+            let file = event.target.files[0];
+
+            const formData = new FormData();
+            formData.append("ConcessionDetailedId", concessionDetailId);
+            formData.append("file", file);
+      
+
+            const req = new HttpRequest('POST', 'api/Concession/UploadLetter' , formData, {
+                reportProgress: true,
+            });
+
+            this.http.request(req).subscribe(event => {
+                if (event.type === HttpEventType.UploadProgress)
+                    this.uploadProgress = Math.round(100 * event.loaded / event.total);
+                else if (event instanceof HttpResponse)
+                    console.log('Files uploaded!');
+            });
+
+
+           
+        }
+    }
+
+
+    //upload(files, concessionDetailId) {
+    //    if (files.length === 0)
+    //        return;
+
+    //    const formData = new FormData();
+    //    formData.append("ConcessionDetailedId",concessionDetailId);
+
+    //    for (let file of files)
+    //        formData.append(concessionDetailId, file);
+
+    //    const req = new HttpRequest('POST', 'api/Concession/UploadLetter' , formData, {
+    //        reportProgress: true,
+    //    });
+
+    //    this.http.request(req).subscribe(event => {
+    //        if (event.type === HttpEventType.UploadProgress)
+    //            this.uploadProgress = Math.round(100 * event.loaded / event.total);
+    //        else if (event instanceof HttpResponse)
+    //            console.log('Files uploaded!');
+    //    });
+    //}
 }
