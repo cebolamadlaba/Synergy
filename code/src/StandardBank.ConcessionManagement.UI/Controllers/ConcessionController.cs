@@ -293,17 +293,16 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 foreach (var f in files)
                 {
                     //save to disk
-                    string filename = string.Format(@"c:\cms\{0}.pdf", ConcessionDetailedId.ToString());
+                    string FQDNLocation = string.Format(@"c:\cms\{0}.pdf", ConcessionDetailedId.ToString());
 
-                    using (var fileStream = new FileStream(filename, FileMode.Create))
+                    using (var fileStream = new FileStream(FQDNLocation, FileMode.Create))
                     {
                         await f.CopyToAsync(fileStream);
-                    }
+                    }                   
 
-                    //save the entry to the db to retrieve
-                 
-
-                    //save to DB
+                    //save the entry to the db
+                    _concessionManager.CreateConcessionLetter(new Model.Repository.ConcessionLetter { fkConcessionDetailId = int.Parse(ConcessionDetailedId), Location = FQDNLocation });
+                   
 
                 }
             }

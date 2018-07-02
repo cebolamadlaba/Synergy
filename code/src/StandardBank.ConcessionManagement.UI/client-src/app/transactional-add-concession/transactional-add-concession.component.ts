@@ -358,7 +358,8 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 		var transactionalConcession = this.getTransactionalConcession();
 
 		transactionalConcession.concession.concessionType = ConcessionTypes.Transactional;
-		transactionalConcession.concession.type = "New";
+        transactionalConcession.concession.type = "New";
+        transactionalConcession.concession.comments = "Created";
 
 		if (!this.validationError) {
 			this.transactionalConcessionService.postNewTransactionalData(transactionalConcession).subscribe(entity => {

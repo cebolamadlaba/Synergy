@@ -110,33 +110,17 @@ export class ApprovedConcessionsComponent implements OnInit {
                     this.uploadProgress = Math.round(100 * event.loaded / event.total);
                 else if (event instanceof HttpResponse)
                     console.log('Files uploaded!');
-            });
 
-
-           
+                this.observableApprovedConcessions = this.userConcessionsService.getApprovedConcessions();
+                this.observableApprovedConcessions.subscribe(approvedConcession => {
+                    this.approvedConcessions = approvedConcession;
+                    this.isLoading = false;
+                }, error => {
+                    this.errorMessage = <any>error;
+                    this.isLoading = false;
+                    this.isLoading = false;
+                });
+            });           
         }
     }
-
-
-    //upload(files, concessionDetailId) {
-    //    if (files.length === 0)
-    //        return;
-
-    //    const formData = new FormData();
-    //    formData.append("ConcessionDetailedId",concessionDetailId);
-
-    //    for (let file of files)
-    //        formData.append(concessionDetailId, file);
-
-    //    const req = new HttpRequest('POST', 'api/Concession/UploadLetter' , formData, {
-    //        reportProgress: true,
-    //    });
-
-    //    this.http.request(req).subscribe(event => {
-    //        if (event.type === HttpEventType.UploadProgress)
-    //            this.uploadProgress = Math.round(100 * event.loaded / event.total);
-    //        else if (event instanceof HttpResponse)
-    //            console.log('Files uploaded!');
-    //    });
-    //}
 }

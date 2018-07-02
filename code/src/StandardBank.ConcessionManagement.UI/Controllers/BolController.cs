@@ -36,14 +36,16 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         private readonly IMediator _mediator;
 
         private readonly IBusinessCentreManager _bcmManager;
+        private readonly ILookupTableManager _lookupTableManager;
 
      
-        public BolController(ISiteHelper siteHelper, IBolManager bolManager, IMediator mediator,  IBusinessCentreManager businessCentreManager)
+        public BolController(ISiteHelper siteHelper, IBolManager bolManager, IMediator mediator,  IBusinessCentreManager businessCentreManager, ILookupTableManager lookupTableManager)
         {
             _siteHelper = siteHelper;
             _bolManager = bolManager;
             _mediator = mediator;
             _bcmManager = businessCentreManager;
+            _lookupTableManager = lookupTableManager;
         }
      
         /// <returns></returns>
@@ -71,6 +73,13 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             if (bolConcession.ConcessionConditions != null && bolConcession.ConcessionConditions.Any())
                 foreach (var concessionCondition in bolConcession.ConcessionConditions)
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+
+
+            var bcmPendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.NewSubmission);
+
+            if (!string.IsNullOrWhiteSpace(bolConcession.Concession.Comments))
+                await _mediator.Send(new AddConcessionComment(concession.Id, bcmPendingStatusId,
+                    bolConcession.Concession.Comments, user));
 
             return Ok(bolConcession);
         }

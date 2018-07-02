@@ -36,18 +36,21 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
         private readonly IBusinessCentreManager _bcmManager;
 
+        private readonly ILookupTableManager _lookupTableManager;
+
         /// <summary>
         /// Initializes the controller
         /// </summary>
         /// <param name="lendingManager"></param>
         /// <param name="siteHelper"></param>
         /// <param name="mediator"></param>
-        public LendingController(ILendingManager lendingManager, ISiteHelper siteHelper, IMediator mediator, IBusinessCentreManager businessCentreManager)
+        public LendingController(ILendingManager lendingManager, ISiteHelper siteHelper, IMediator mediator, IBusinessCentreManager businessCentreManager, ILookupTableManager lookupTableManager)
         {
             _lendingManager = lendingManager;
             _siteHelper = siteHelper;
             _mediator = mediator;
             _bcmManager = businessCentreManager;
+            _lookupTableManager = lookupTableManager;
         }
 
         /// <summary>
@@ -83,6 +86,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             if (lendingConcession.ConcessionConditions != null && lendingConcession.ConcessionConditions.Any())
                 foreach (var concessionCondition in lendingConcession.ConcessionConditions)
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+
+            var bcmPendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.NewSubmission);
+
+            if (!string.IsNullOrWhiteSpace(lendingConcession.Concession.Comments))
+                await _mediator.Send(new AddConcessionComment(concession.Id, bcmPendingStatusId,
+                    lendingConcession.Concession.Comments, user));
 
             return Ok(lendingConcession);
         }

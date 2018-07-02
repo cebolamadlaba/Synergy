@@ -415,6 +415,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
         bolConcession.concession.concessionType = ConcessionTypes.BOL;
         bolConcession.concession.type = "New";
+        bolConcession.concession.comments = "Created";
 
         if (!this.validationError) {
             this.bolConcessionService.postNewBolData(bolConcession).subscribe(entity => {

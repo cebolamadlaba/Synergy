@@ -22,6 +22,8 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Inbox
         /// </summary>
         public bool ShowPendingConcessions { get; set; }
 
+        public bool IsElevatedUser { get; set; }
+
         /// <summary>
         /// Gets or sets the due for expiry concessions count
         /// </summary>

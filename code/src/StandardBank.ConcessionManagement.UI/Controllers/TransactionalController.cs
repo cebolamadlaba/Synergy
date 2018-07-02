@@ -40,6 +40,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
         private readonly IBusinessCentreManager _bcmManager;
 
+        private readonly ILookupTableManager _lookupTableManager;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TransactionalController"/> class.
         /// </summary>
@@ -47,12 +49,13 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="transactionalManager">The transactional manager.</param>
         /// <param name="mediator">The mediator.</param>
         public TransactionalController(ISiteHelper siteHelper, ITransactionalManager transactionalManager,
-            IMediator mediator, IBusinessCentreManager businessCentreManager)
+            IMediator mediator, IBusinessCentreManager businessCentreManager, ILookupTableManager lookupTableManager)
         {
             _siteHelper = siteHelper;
             _transactionalManager = transactionalManager;
             _mediator = mediator;
             _bcmManager = businessCentreManager;
+            _lookupTableManager = lookupTableManager;
         }
 
         /// <summary>
@@ -190,6 +193,13 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 transactionalConcession.ConcessionConditions.Any())
                 foreach (var concessionCondition in transactionalConcession.ConcessionConditions)
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+
+
+            var bcmPendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.NewSubmission);
+
+            if (!string.IsNullOrWhiteSpace(transactionalConcession.Concession.Comments))
+                await _mediator.Send(new AddConcessionComment(concession.Id, bcmPendingStatusId,
+                    transactionalConcession.Concession.Comments, user));
 
             return Ok(transactionalConcession);
         }

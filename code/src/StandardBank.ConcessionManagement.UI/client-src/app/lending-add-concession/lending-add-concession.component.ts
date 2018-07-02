@@ -320,6 +320,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         lendingConcession.concession.riskGroupId = this.riskGroup.id;
         lendingConcession.concession.concessionType = ConcessionTypes.Lending;
         lendingConcession.concession.type = "New";
+        lendingConcession.concession.comments = "Created";
 
         const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
 

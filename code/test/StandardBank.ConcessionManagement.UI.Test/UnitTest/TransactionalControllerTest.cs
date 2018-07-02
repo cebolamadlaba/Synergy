@@ -29,7 +29,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         public TransactionalControllerTest()
         {
             _transactionalController = new TransactionalController(new FakeSiteHelper(),
-                MockTransactionalManager.Object, MockMediator.Object,null);
+                MockTransactionalManager.Object, MockMediator.Object,null,null);
         }
 
         /// <summary>

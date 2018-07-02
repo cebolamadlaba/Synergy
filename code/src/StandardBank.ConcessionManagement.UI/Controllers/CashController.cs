@@ -40,18 +40,21 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
         private readonly IBusinessCentreManager _bcmManager;
 
+        private readonly ILookupTableManager _lookupTableManager;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CashController"/> class.
         /// </summary>
         /// <param name="siteHelper">The site helper.</param>
         /// <param name="cashManager">The cash manager.</param>
         /// <param name="mediator">The mediator.</param>
-        public CashController(ISiteHelper siteHelper, ICashManager cashManager, IMediator mediator, IBusinessCentreManager businessCentreManager)
+        public CashController(ISiteHelper siteHelper, ICashManager cashManager, IMediator mediator, IBusinessCentreManager businessCentreManager, ILookupTableManager lookupTableManager)
         {
             _siteHelper = siteHelper;
             _cashManager = cashManager;
             _mediator = mediator;
             _bcmManager = businessCentreManager;
+            _lookupTableManager = lookupTableManager;
         }
 
         /// <summary>
@@ -87,6 +90,13 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             if (cashConcession.ConcessionConditions != null && cashConcession.ConcessionConditions.Any())
                 foreach (var concessionCondition in cashConcession.ConcessionConditions)
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+
+
+            var bcmPendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.NewSubmission);
+
+            if (!string.IsNullOrWhiteSpace(cashConcession.Concession.Comments))
+                await _mediator.Send(new AddConcessionComment(concession.Id, bcmPendingStatusId,
+                    cashConcession.Concession.Comments, user));
 
             return Ok(cashConcession);
         }

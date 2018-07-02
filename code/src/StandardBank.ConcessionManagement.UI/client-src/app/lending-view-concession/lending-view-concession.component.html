@@ -134,7 +134,7 @@
         <div class="row">
             <!-- SMT deal number -->
             <label>SMT Deal Number</label>
-            <input type="text" numbersOnly="true" class="form-control" [attr.disabled]="isRecalling ? null : ''" formControlName="smtDealNumber" maxlength="16" required />
+            <input type="text" numbersOnly="true" class="form-control" [attr.disabled]="(isRecalling || canEdit) ? null : ''" formControlName="smtDealNumber" maxlength="16" required />
         </div>
     </div>
     <div class="col-md-7 col-md-offset-1">
@@ -177,8 +177,8 @@
                     <th>Prime -/+</th>
                     <th *ngIf="isApproved">Appr. Prime -/+</th>
                     <th>Initiation Fee</th>
+                    <th>Review Fee Type</th>
                     <th>Review Fee</th>
-                    <th></th>
                     <th>UFF Fee</th>
                     <th *ngIf="isApproved">Expiry Date</th>
                     <th *ngIf="isApproved">Date Approved</th>

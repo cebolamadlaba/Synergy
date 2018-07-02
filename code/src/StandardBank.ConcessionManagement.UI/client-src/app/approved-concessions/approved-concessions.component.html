@@ -86,7 +86,7 @@
                             <td (click)="openConcessionView(approvedConcession, approvedConcessionDetail)"> {{approvedConcessionDetail.expiryDate | date: 'yyyy/MM/dd'}} </td>
                             <td (click)="openConcessionView(approvedConcession, approvedConcessionDetail)"> {{approvedConcessionDetail.dateApproved | date: 'yyyy/MM/dd'}} </td>
                             <td class="downloadtd">
-                                {{approvedConcessionDetail.concessionDetailId}} {{i}}
+                             
 
                                 <div class="image-upload" *ngIf="approvedConcessionDetail.concessionLetterURL == null">
                                     <label for="fileinput_{{i}}">
@@ -96,22 +96,6 @@
                                     <input id="fileinput_{{i}}"type="file" (change)="upload($event, approvedConcessionDetail.concessionDetailId)" accept="application/pdf" />
 
                                 </div>
-
-
-
-                                <!--<div class="image-upload" *ngIf="approvedConcessionDetail.concessionLetterURL == null">
-                                    <label for="fileinput">
-                                        <img src="../../content/img/upload.png" />
-                                    </label>
-                                    <input #fileinput id="fileinput" type="file" (change)="upload(fileinput.files, approvedConcessionDetail.concessionDetailId)" accept="application/pdf" />
-
-                                </div>-->
-
-
-
-
-
-
 
                                 <div class="image-download" *ngIf="approvedConcessionDetail.concessionLetterURL != null">
 

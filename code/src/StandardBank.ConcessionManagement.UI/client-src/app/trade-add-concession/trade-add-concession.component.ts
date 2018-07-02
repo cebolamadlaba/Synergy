@@ -527,6 +527,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
         tradeConcession.concession.concessionType = ConcessionTypes.Trade;
         tradeConcession.concession.type = "New";
+        tradeConcession.concession.comments = "Created";
 
         if (!this.validationError) {
             this.tradeConcessionService.postNewTradeData(tradeConcession).subscribe(entity => {

@@ -508,7 +508,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             new ConcessionManager(ConcessionRepository, LookupTableManager, RiskGroupRepository,
                 Mapper, ConcessionConditionRepository, ConcessionCommentRepository,
                 ConcessionRelationshipRepository, AuditRepository, UserManager, ConcessionInboxViewRepository,
-                ConcessionDetailRepository, ConcessionConditionViewRepository, MiscPerformanceRepository, CentreRepository, PrimeRateRepository);
+                ConcessionDetailRepository, ConcessionConditionViewRepository, MiscPerformanceRepository, CentreRepository, PrimeRateRepository,null);
 
         /// <summary>
         /// The rule manager

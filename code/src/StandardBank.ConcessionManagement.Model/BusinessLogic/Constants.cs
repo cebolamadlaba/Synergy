@@ -56,6 +56,7 @@
 
         public static class ConcessionSubStatus
         {
+            public const string NewSubmission = "New submission";
             public const string BcmPending = "BCM Pending";
             public const string BcmApproved = "BCM Approved";
             public const string BcmDeclined = "BCM Declined";

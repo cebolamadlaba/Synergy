@@ -61,7 +61,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     isEditing = false;
     motivationEnabled = false;
     canEdit = false;
-    isRecalling = false;
+   
     capturedComments: string;
     canApproveChanges: boolean;
     canResubmit = false;
@@ -71,6 +71,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 	isInProgressExtension = false;
     isInProgressRenewal = false;
     isApproved = false;
+
+    isRecalling = false;
+  
 
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
@@ -805,6 +808,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.canResubmit = false;
 		this.canUpdate = false;
 		this.canArchive = false;
+
 
         this.lendingConcessionForm.controls['motivation'].setValue('');
     }

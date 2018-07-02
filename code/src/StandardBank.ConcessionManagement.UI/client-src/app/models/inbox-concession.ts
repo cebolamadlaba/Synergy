@@ -10,4 +10,7 @@ export class InboxConcession {
     dateSentForApproval: Date;
     expiryDate: Date;
     dateApproved: Date;
+    centreName: string;
+    region: string;
+
 }

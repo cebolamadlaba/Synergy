@@ -25,6 +25,8 @@ export class PendingInboxComponent implements OnInit {
     observableLoggedInUser: Observable<User>;
     user: User;
 
+    isElevatedUser = false;
+
     constructor(
         @Inject(UserConcessionsService) private userConcessionsService,
         @Inject(UserService) private userService,
@@ -49,6 +51,7 @@ export class PendingInboxComponent implements OnInit {
                 this.dtTrigger.next();
             },
             error => this.errorMessage = <any>error);
+      
 
     }    
 

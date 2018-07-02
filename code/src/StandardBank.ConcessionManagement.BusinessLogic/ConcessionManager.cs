@@ -93,6 +93,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ICentreRepository _centreRepository;
         private readonly IPrimeRateRepository _primeRateRepository;
 
+        private readonly IConcessionLetterRepository _concessionLetterRepository;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionManager"/> class.
         /// </summary>
@@ -118,7 +120,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IUserManager userManager, IConcessionInboxViewRepository concessionInboxViewRepository,
             IConcessionDetailRepository concessionDetailRepository,
             IConcessionConditionViewRepository concessionConditionViewRepository,
-            IMiscPerformanceRepository miscPerformanceRepository, ICentreRepository centreRepository, IPrimeRateRepository primeRateRepository)
+            IMiscPerformanceRepository miscPerformanceRepository, ICentreRepository centreRepository, IPrimeRateRepository primeRateRepository, IConcessionLetterRepository concessionLetterRepository)
         {
             _concessionRepository = concessionRepository;
             _lookupTableManager = lookupTableManager;
@@ -135,6 +137,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _miscPerformanceRepository = miscPerformanceRepository;
             _centreRepository = centreRepository;
             _primeRateRepository = primeRateRepository;
+            _concessionLetterRepository = concessionLetterRepository;
         }
 
         /// <summary>
@@ -201,6 +204,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private IEnumerable<InboxConcession> GetDistinctInboxConcessions(IEnumerable<InboxConcession> inboxConcessions)
         {
             return inboxConcessions.GroupBy(_ => _.ReferenceNumber).Select(_ => _.First()).ToList();
+        }
+
+
+       public ConcessionLetter CreateConcessionLetter(ConcessionLetter model)
+        {
+
+            return _concessionLetterRepository.Create(model);
+
         }
 
         /// <summary>
@@ -355,6 +366,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     userConcessions.ActionedConcessions = actionedConcessions;
                     userConcessions.ActionedConcessionsCount = actionedConcessions?.Count() ?? 0;
                     userConcessions.ShowActionedConcessions = true;
+                }
+
+                if(user.IsHO || user.IsPCM)
+                {
+                    userConcessions.IsElevatedUser = true;
+
                 }
 
             }

@@ -17,6 +17,8 @@ using StandardBank.ConcessionManagement.Model.UserInterface.Trade;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 
+
+
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
     /// <summary>
@@ -536,7 +538,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="requestor">The requestor.</param>
         /// <param name="bcm">The BCM.</param>
         /// <returns></returns>
-        private IEnumerable<ConcessionLetter> GetTransactionalConcessionLetterData(Concession concession,
+        private IEnumerable<Model.BusinessLogic.LetterGenerator.ConcessionLetter> GetTransactionalConcessionLetterData(Concession concession,
             User requestor, User bcm)
         {
             var transactionalConcession =
@@ -557,11 +559,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="bcm">The BCM.</param>
         /// <param name="transactionalConcessionDetails">The transactional concession details.</param>
         /// <returns></returns>
-        private IEnumerable<ConcessionLetter> GetTransactionalConcessionLetterData(int? riskGroupNumber,
+        private IEnumerable<Model.BusinessLogic.LetterGenerator.ConcessionLetter> GetTransactionalConcessionLetterData(int? riskGroupNumber,
             int concessionId, User requestor, User bcm,
             IOrderedEnumerable<TransactionalConcessionDetail> transactionalConcessionDetails)
         {
-            var concessionLetters = new List<ConcessionLetter>();
+            var concessionLetters = new List<Model.BusinessLogic.LetterGenerator.ConcessionLetter>();
             var pageBreakBefore = false;
 
             foreach (var transactionalConcessionDetail in transactionalConcessionDetails)
@@ -763,10 +765,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="bcm">The BCM.</param>
         /// <param name="lendingConcessionDetails">The lending concession details.</param>
         /// <returns></returns>
-        private IEnumerable<ConcessionLetter> GetLendingConcessionLetterData(int? riskGroupNumber, int concessionId,
+        private IEnumerable<Model.BusinessLogic.LetterGenerator.ConcessionLetter> GetLendingConcessionLetterData(int? riskGroupNumber, int concessionId,
             User requestor, User bcm, IOrderedEnumerable<LendingConcessionDetail> lendingConcessionDetails)
         {
-            var concessionLetters = new List<ConcessionLetter>();
+            var concessionLetters = new List<Model.BusinessLogic.LetterGenerator.ConcessionLetter>();
             var pageBreakBefore = false;
 
             foreach (var lendingConcessionDetail in lendingConcessionDetails)
@@ -909,12 +911,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="bcm">The BCM.</param>
         /// <param name="legalEntityId">The legal entity identifier.</param>
         /// <returns></returns>
-        private ConcessionLetter PopulateBaseConcessionLetter(int? riskGroupNumber, User requestor, User bcm,
+        private Model.BusinessLogic.LetterGenerator.ConcessionLetter PopulateBaseConcessionLetter(int? riskGroupNumber, User requestor, User bcm,
             int legalEntityId)
         {
             var legalEntity = _legalEntityRepository.ReadById(legalEntityId);
 
-            var concessionLetter = new ConcessionLetter
+            var concessionLetter = new Model.BusinessLogic.LetterGenerator.ConcessionLetter
             {
                 CurrentDate = DateTime.Now.ToString("dd/MM/yyyy"),
                 TemplatePath = _templatePath,
@@ -955,7 +957,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         /// <param name="concessionLetters">The concession letters.</param>
         /// <returns></returns>
-        private byte[] GenerateConcessionLetterPdf(IEnumerable<ConcessionLetter> concessionLetters)
+        private byte[] GenerateConcessionLetterPdf(IEnumerable<Model.BusinessLogic.LetterGenerator.ConcessionLetter> concessionLetters)
         {
             var templateHeaderPath = System.IO.Path.Combine(_templatePath, "TemplateHeader.html");
             var templateFooterPath = System.IO.Path.Combine(_templatePath, "TemplateFooter.html");

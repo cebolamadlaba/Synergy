@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Inbox;
 using Concession = StandardBank.ConcessionManagement.Model.Repository.Concession;
@@ -225,5 +226,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="dateApproved">The date approved.</param>
         /// <returns></returns>
         string GetRagStatus(string period, DateTime dateApproved);
+
+        ConcessionLetter CreateConcessionLetter(ConcessionLetter model);
     }
 }

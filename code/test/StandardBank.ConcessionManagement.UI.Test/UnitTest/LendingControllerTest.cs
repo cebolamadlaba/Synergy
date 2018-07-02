@@ -29,7 +29,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         public LendingControllerTest()
         {
             _lendingController = new LendingController(MockLendingManager.Object, MockSiteHelper.Object,
-                MockMediator.Object,null);
+                MockMediator.Object,null,null);
         }
 
         /// <summary>

@@ -413,6 +413,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         
         cashConcession.concession.concessionType = ConcessionTypes.Cash;
         cashConcession.concession.type = "New";
+        cashConcession.concession.comments = "Created";
 
         if (!this.validationError) {
             this.cashConcessionService.postNewCashData(cashConcession).subscribe(entity => {
