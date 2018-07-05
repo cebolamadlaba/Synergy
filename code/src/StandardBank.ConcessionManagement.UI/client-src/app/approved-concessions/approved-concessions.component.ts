@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { HttpClient, HttpRequest, HttpEventType, HttpResponse } from '@angular/common/http'
+import { HttpClient, HttpRequest, HttpEventType, HttpResponse } from '@angular/common/http';
 
 import { Observable } from "rxjs";
 import { UserConcessionsService } from "../services/user-concessions.service";

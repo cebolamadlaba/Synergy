@@ -9,7 +9,6 @@ obj\Debug
 .suo
 .vs
 *FileListAbsolute.txt
-node_modules
 site.min.js
 web.pubxml.user
 *StandardBank.ConcessionManagement.Database.dbmdl
