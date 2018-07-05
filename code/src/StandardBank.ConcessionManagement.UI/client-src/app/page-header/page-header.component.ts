@@ -2,6 +2,9 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { Observable } from "rxjs";
 import { UserService } from "../services/user.service";
 import { User } from "../models/user";
+import { AccountExecutiveAssistant } from "../models/account-executive-assistant";
+
+import { StaticClass } from '../models/static-class';
 
 @Component({
   selector: 'app-page-header',
@@ -12,28 +15,49 @@ export class PageHeaderComponent implements OnInit {
     observableLoggedInUser: Observable<User>;
     observableMyAccessnUser: Observable<User>;
     user: User;
-    usererrorMessage: String;
+    usererrorMessage: String 
+    currentExecutiveUser = "";
 
-    constructor( @Inject(UserService) private userService) { }
+    constructor( @Inject(UserService) private userService) { }  
 
-    ngOnInit() {
+    ngOnInit() {      
+
+        //this.currentExecutiveUser = StaticClass.GetUser();
+
         this.observableLoggedInUser = this.userService.getData();
-        this.observableLoggedInUser.subscribe(user => this.user = user,
+        this.observableLoggedInUser.subscribe(user => {
+
+            //set AE to first value
+            this.user = user;
+            var ae = this.user.accountExecutives[0];
+            var aename = ae.accountExecutiveDisplayName;
+            StaticClass.SetUser(aename, ae.isActive);
+            this.currentExecutiveUser = StaticClass.GetUser();
+
+        },
             error => {
                 this.usererrorMessage = <any>error;
                 console.log(this.usererrorMessage);
+
             });
 
         this.enforceMyAcess();
     }
-      
+
+    aESelected(ae: AccountExecutiveAssistant) {
+
+        console.log(ae.accountExecutiveDisplayName);
+
+        var aename = ae.accountExecutiveDisplayName;
+        StaticClass.SetUser(aename, ae.accountExecutiveUserId);
+
+        this.currentExecutiveUser = StaticClass.GetUser();
+        this.user.accountExecutiveUserId = StaticClass.GetUserID();
+    }      
 
     enforceMyAcess() {
 
         this.observableMyAccessnUser = this.userService.getLoggedInUserMyAccess();
-
-        //this.usererrorMessage = "Error during My Access validation process";
-
         this.observableMyAccessnUser.subscribe(maresult => {
 
             try {

@@ -11,6 +11,8 @@ import { ConcessionTypes } from '../constants/concession-types';
 import { User } from "../models/user";
 import { UserService } from "../services/user.service";
 
+import { AccountExecutiveAssistant } from "../models/account-executive-assistant";
+
 @Component({
     selector: 'app-pending-inbox',
     templateUrl: './pending-inbox.component.html',
@@ -51,9 +53,7 @@ export class PendingInboxComponent implements OnInit {
                 this.dtTrigger.next();
             },
             error => this.errorMessage = <any>error);
-      
-
-    }    
+    }   
 
 
     openConcessionView(concession: InboxConcession) {

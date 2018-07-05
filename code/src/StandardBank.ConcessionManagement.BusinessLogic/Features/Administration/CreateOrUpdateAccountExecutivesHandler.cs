@@ -37,8 +37,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
 
             //if there are records, insert the ones that are not in the database already
             if (message.AccountExecutive.AccountAssistants != null && message.AccountExecutive.AccountAssistants.Any())
+            {
                 foreach (var accountAssistant in message.AccountExecutive.AccountAssistants)
-                    AddRecord(message, accountAssistants, accountAssistant, auditRecords);
+                {
+                    if (accountAssistants.Where(aa => aa.AccountAssistantUserId == accountAssistant.Id).FirstOrDefault() == null)
+                    {
+                       
+                        AddRecord(message, accountAssistants, accountAssistant, auditRecords);
+                    }
+                }
+
+            }
 
             message.AuditRecords = auditRecords;
         }
@@ -96,7 +105,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
 
             if (addRecord)
             {
-                RemoveExistingLinkIfPresent(message, accountAssistant, auditRecords);
+                //moveExistingLinkIfPresent(message, accountAssistant, auditRecords);
 
                 var result = _accountExecutiveAssistantRepository.Create(new AccountExecutiveAssistant
                 {
@@ -115,17 +124,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
         /// <param name="message">The message.</param>
         /// <param name="accountAssistant">The account assistant.</param>
         /// <param name="auditRecords">The audit records.</param>
-        private void RemoveExistingLinkIfPresent(CreateOrUpdateAccountExecutives message, User accountAssistant,
-            List<AuditRecord> auditRecords)
-        {
-            var recordToRemove =
-                _accountExecutiveAssistantRepository.ReadByAccountAssistantUserId(accountAssistant.Id);
+        //private void RemoveExistingLinkIfPresent(CreateOrUpdateAccountExecutives message, User accountAssistant,
+        //    List<AuditRecord> auditRecords)
+        //{
+        //    var recordToRemove =
+        //        _accountExecutiveAssistantRepository.ReadByAccountAssistantUserId(accountAssistant.Id);
 
-            if (recordToRemove != null)
-            {
-                _accountExecutiveAssistantRepository.Delete(recordToRemove);
-                auditRecords.Add(new AuditRecord(recordToRemove, message.CurrentUser, AuditType.Delete));
-            }
-        }
+        //    if (recordToRemove != null)
+        //    {
+        //        _accountExecutiveAssistantRepository.Delete(recordToRemove);
+        //        auditRecords.Add(new AuditRecord(recordToRemove, message.CurrentUser, AuditType.Delete));
+        //    }
+        //}
     }
 }

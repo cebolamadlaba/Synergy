@@ -148,10 +148,21 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (mappedUser.IsAdminAssistant)
             {
-                mappedUser.AccountExecutive = GetAccountExecutive(user.Id);
+               // mappedUser.AccountExecutive = GetAccountExecutive(user.Id);
 
-                if (mappedUser.AccountExecutive != null)
-                    mappedUser.AccountExecutiveUserId = mappedUser.AccountExecutive.Id;
+               // if (mappedUser.AccountExecutive != null)
+                  //  mappedUser.AccountExecutiveUserId = mappedUser.AccountExecutive.Id;
+
+                mappedUser.AccountExecutives = _accountExecutiveAssistantRepository.ReadByAccountAssistantUserId(user.Id).ToList();
+
+                if (mappedUser.AccountExecutives != null)
+                {
+                    //set current to first one
+                    mappedUser.AccountExecutiveUserId = mappedUser.AccountExecutives.FirstOrDefault().AccountExecutiveUserId;
+
+                    mappedUser.AccountExecutive = mappedUser.AccountExecutiveUserId != null ? GetUser(mappedUser.AccountExecutiveUserId) : null;
+                }
+
             }
             else
             {
@@ -166,12 +177,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        private User GetAccountExecutive(int userId)
-        {
-            var accountExecutiveAssistant = _accountExecutiveAssistantRepository.ReadByAccountAssistantUserId(userId);
+        //private User GetAccountExecutive(int userId)
+        //{
+        //    var accountExecutiveAssistant = _accountExecutiveAssistantRepository.ReadByAccountAssistantUserId(userId);
 
-            return accountExecutiveAssistant != null ? GetUser(accountExecutiveAssistant.AccountExecutiveUserId) : null;
-        }
+        //    return accountExecutiveAssistant != null ? GetUser(accountExecutiveAssistant.AccountExecutiveUserId) : null;
+        //}
 
         /// <summary>
         /// Gets the user.

@@ -52,7 +52,21 @@
         </li>
         <li>
             <a href="/assets/documents/userguide.pdf" target="_blank">User Guide</a>
+        </li>       
+
+        <li class="dropdown" dropdown>         
+            <a dropdownToggle role="button">
+                AE: {{currentExecutiveUser}} ({{this.user.accountExecutiveUserId}})<span class="caret"></span>
+            </a>
+            <ul *dropdownMenu class="dropdown-menu">
+
+                <li *ngFor="let accountExecutive of user.accountExecutives"  (click)="aESelected(accountExecutive)">
+                    <a>{{accountExecutive.accountExecutiveDisplayName}}</a>                 
+
+                </li>
+            </ul>
         </li>
+
         <li class="logout-li"><a href="#">{{user?.firstName}} {{user?.surname}}</a></li>
     </ul>
 </div>

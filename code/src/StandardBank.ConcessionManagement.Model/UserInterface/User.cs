@@ -168,6 +168,8 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
 
         public List<AccountExecutiveAssistant> AccountAssistants { get; set; }
 
+        public List<AccountExecutiveAssistant> AccountExecutives { get; set; }
+
         /// <summary>
         /// Gets or sets the account executive user identifier.
         /// </summary>

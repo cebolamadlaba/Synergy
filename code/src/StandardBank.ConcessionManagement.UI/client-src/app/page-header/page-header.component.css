@@ -1,0 +1,14 @@
+
+.dropdown > a {
+    color :#18326f !important;
+}
+
+.dropdown-menu > li > a:focus, .dropdown-menu > li > a:hover {
+    color: #18326f !important;
+    text-decoration: none !important;
+    background-color: #f5f5f5 !important;
+}
+
+
+
+

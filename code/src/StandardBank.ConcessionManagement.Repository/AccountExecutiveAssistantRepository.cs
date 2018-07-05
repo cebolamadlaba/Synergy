@@ -73,16 +73,17 @@ namespace StandardBank.ConcessionManagement.Repository
         /// </summary>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        public AccountExecutiveAssistant ReadByAccountAssistantUserId(int userId)
+        public IEnumerable<AccountExecutiveAssistant> ReadByAccountAssistantUserId(int userId)
         {
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<AccountExecutiveAssistant>(
-                    @"SELECT [pkAccountExecutiveAssistantId] [Id], [fkAccountAssistantUserId] [AccountAssistantUserId], [fkAccountExecutiveUserId] [AccountExecutiveUserId], [IsActive]
+                    @"SELECT [pkAccountExecutiveAssistantId] [Id], [fkAccountAssistantUserId] [AccountAssistantUserId], [fkAccountExecutiveUserId] [AccountExecutiveUserId], [tblAccountExecutiveAssistant].[IsActive], tblUser.FirstName + ' ' + tblUser.Surname as 'AccountExecutiveDisplayName'
                     FROM [dbo].[tblAccountExecutiveAssistant] 
+					left join tblUser on [tblAccountExecutiveAssistant].fkAccountExecutiveUserId = tblUser.pkUserId
                     WHERE [fkAccountAssistantUserId] = @userId
-                    AND [IsActive] = 1",
-                    new { userId }).FirstOrDefault();
+                    AND [tblAccountExecutiveAssistant].[IsActive] = 1",
+                    new { userId });
             }
         }
 

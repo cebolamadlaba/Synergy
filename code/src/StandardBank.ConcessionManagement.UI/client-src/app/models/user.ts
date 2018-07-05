@@ -2,6 +2,8 @@ import { Role } from "./role";
 import { Centre } from "./centre";
 import { Region } from "./region";
 
+import { AccountExecutiveAssistant } from "./account-executive-assistant";
+
 export class User {
     id: number;
     aNumber: string;
@@ -26,8 +28,9 @@ export class User {
     contactNumber: string;
     accountExecutiveUserId: number;
 
+    accountExecutives: AccountExecutiveAssistant[];
+
     validated: boolean;
     errorMessage: string;
-
 
 }

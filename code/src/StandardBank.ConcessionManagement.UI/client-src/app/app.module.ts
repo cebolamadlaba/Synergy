@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { DataTablesModule } from 'angular-datatables';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 import { AppComponent } from './app.component';
 import { PageHeaderComponent } from './page-header/page-header.component';
@@ -146,7 +147,8 @@ import { ChannelTypesManagementComponent } from './admin/channel-types/channel-t
         AppRoutingModule,
         ModalModule.forRoot(),
         DataTablesModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        BsDropdownModule.forRoot(),
     ],
     providers: [
         LookupDataService,
