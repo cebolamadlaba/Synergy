@@ -45,6 +45,8 @@ export class EditUserComponent implements OnInit {
         {
             this.adminService.GetUser(this.id).subscribe(res => {
                 this.user = res as User;
+
+                //location.reload();
             });
 
             this.success = true;

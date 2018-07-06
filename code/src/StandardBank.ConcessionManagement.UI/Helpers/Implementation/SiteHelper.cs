@@ -1,5 +1,6 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Model.UserInterface;
@@ -23,6 +24,8 @@ namespace StandardBank.ConcessionManagement.UI.Helpers.Implementation
         /// </summary>
         private readonly IUserManager _userManager;
 
+    
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SiteHelper"/> class.
         /// </summary>
@@ -32,6 +35,7 @@ namespace StandardBank.ConcessionManagement.UI.Helpers.Implementation
         {
             _configurationData = configurationData;
             _userManager = userManager;
+           
         }
 
         /// <summary>
@@ -51,9 +55,10 @@ namespace StandardBank.ConcessionManagement.UI.Helpers.Implementation
                 {
                     return null;
                 }
+              
                 if (user.IsActive)
                     return user;
-            }
+            }  
 
             return null;
         }

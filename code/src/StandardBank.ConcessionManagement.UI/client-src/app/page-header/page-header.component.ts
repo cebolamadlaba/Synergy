@@ -5,6 +5,8 @@ import { User } from "../models/user";
 import { AccountExecutiveAssistant } from "../models/account-executive-assistant";
 
 import { StaticClass } from '../models/static-class';
+import { UserConcessionsService } from "../services/user-concessions.service";
+
 
 @Component({
   selector: 'app-page-header',
@@ -18,7 +20,7 @@ export class PageHeaderComponent implements OnInit {
     usererrorMessage: String 
     currentExecutiveUser = "";
 
-    constructor( @Inject(UserService) private userService) { }  
+    constructor( @Inject(UserService) private userService, @Inject(UserConcessionsService) private userConcessionsService,) { }  
 
     ngOnInit() {      
 
@@ -29,10 +31,27 @@ export class PageHeaderComponent implements OnInit {
 
             //set AE to first value
             this.user = user;
-            var ae = this.user.accountExecutives[0];
-            var aename = ae.accountExecutiveDisplayName;
-            StaticClass.SetUser(aename, ae.isActive);
-            this.currentExecutiveUser = StaticClass.GetUser();
+
+            if (user.isAdminAssistant) {
+
+                if (user.accountExecutiveUserId > 0) {
+
+                    var ae = this.user.accountExecutives.find(r => r.accountExecutiveUserId == user.accountExecutiveUserId);
+                    if (ae) {
+                        var aename = ae.accountExecutiveDisplayName;
+                        StaticClass.SetUser(aename, ae.isActive);
+                        this.currentExecutiveUser = StaticClass.GetUser();
+                    }
+                }
+                else {
+
+                    var ae = this.user.accountExecutives[0];
+                    var aename = ae.accountExecutiveDisplayName;
+                    StaticClass.SetUser(aename, ae.isActive);
+                    this.currentExecutiveUser = StaticClass.GetUser();
+                }
+            }
+
 
         },
             error => {
@@ -49,11 +68,24 @@ export class PageHeaderComponent implements OnInit {
         console.log(ae.accountExecutiveDisplayName);
 
         var aename = ae.accountExecutiveDisplayName;
+
         StaticClass.SetUser(aename, ae.accountExecutiveUserId);
 
         this.currentExecutiveUser = StaticClass.GetUser();
         this.user.accountExecutiveUserId = StaticClass.GetUserID();
-    }      
+
+        this.userConcessionsService.getCacheAEUser(ae.accountExecutiveUserId).subscribe(entity => {
+            console.log("CacheAEUser");
+            var results = entity;
+
+            location.reload();
+
+        }, error => {
+            console.log("error:" + <any>error);
+
+        });
+    }
+
 
     enforceMyAcess() {
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Microsoft.Extensions.Caching.Memory;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
@@ -62,6 +63,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         private readonly IRegionManager _regionManager;
 
+        private readonly IMemoryCache _cache;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="UserManager"/> class.
         /// </summary>
@@ -77,7 +80,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public UserManager(ICacheManager cacheManager, IUserRepository userRepository,
             IUserRoleRepository userRoleRepository, IRoleRepository roleRepository, ICentreRepository centreRepository,
             ICentreUserRepository centreUserRepository, IMapper mapper,
-            IAccountExecutiveAssistantRepository accountExecutiveAssistantRepository, IRegionManager regionManager)
+            IAccountExecutiveAssistantRepository accountExecutiveAssistantRepository, IRegionManager regionManager, IMemoryCache memoryCache)
         {
             _cacheManager = cacheManager;
             _userRepository = userRepository;
@@ -88,6 +91,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _mapper = mapper;
             _accountExecutiveAssistantRepository = accountExecutiveAssistantRepository;
             _regionManager = regionManager;
+            _cache = memoryCache;
         }
 
         /// <summary>
@@ -107,8 +111,25 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 return null;
             };
 
-            return _cacheManager.ReturnFromCache(function, 1440, CacheKey.UserInterface.SiteHelper.LoggedInUser,
-                new CacheKeyParameter(nameof(aNumber), aNumber));
+            var usr = _cacheManager.ReturnFromCache(function, 1440, CacheKey.UserInterface.SiteHelper.LoggedInUser, new CacheKeyParameter(nameof(aNumber), aNumber));
+
+            //If an accountExecitive was set from UI side, re-populate it.
+            if (usr != null)
+            {
+                if (usr.IsAdminAssistant)
+                {
+                    int accountExecutiveUserId;
+
+                    // Look for cache key.
+                    if (_cache.TryGetValue(aNumber.ToLower() + "_accountExecutiveUserId", out accountExecutiveUserId))
+                    {
+                        usr.AccountExecutiveUserId = accountExecutiveUserId;
+                        usr.AccountExecutive = usr.AccountExecutiveUserId != null ? GetUser(usr.AccountExecutiveUserId) : null;
+                    }
+                }
+            }
+
+            return usr;
         }
 
         /// <summary>
@@ -147,22 +168,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedUser.IsAdminAssistant = mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.AA);
 
             if (mappedUser.IsAdminAssistant)
-            {
-               // mappedUser.AccountExecutive = GetAccountExecutive(user.Id);
-
-               // if (mappedUser.AccountExecutive != null)
-                  //  mappedUser.AccountExecutiveUserId = mappedUser.AccountExecutive.Id;
-
+            { 
                 mappedUser.AccountExecutives = _accountExecutiveAssistantRepository.ReadByAccountAssistantUserId(user.Id).ToList();
 
                 if (mappedUser.AccountExecutives != null)
                 {
                     //set current to first one
                     mappedUser.AccountExecutiveUserId = mappedUser.AccountExecutives.FirstOrDefault().AccountExecutiveUserId;
-
                     mappedUser.AccountExecutive = mappedUser.AccountExecutiveUserId != null ? GetUser(mappedUser.AccountExecutiveUserId) : null;
                 }
-
             }
             else
             {

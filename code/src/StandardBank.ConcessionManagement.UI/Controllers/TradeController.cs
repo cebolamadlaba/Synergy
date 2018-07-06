@@ -36,6 +36,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
         private readonly ILookupTableManager _lookupTableManager;
 
+        
+
 
         public TradeController(ISiteHelper siteHelper, ITradeManager tradeManager, IMediator mediator,  IBusinessCentreManager businessCentreManager, ILookupTableManager lookupTableManager)
         {

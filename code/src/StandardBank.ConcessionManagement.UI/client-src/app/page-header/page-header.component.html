@@ -52,21 +52,20 @@
         </li>
         <li>
             <a href="/assets/documents/userguide.pdf" target="_blank">User Guide</a>
-        </li>       
+        </li>
+     
 
-        <li class="dropdown" dropdown>         
+        <li class="dropdown" dropdown *ngIf="user?.isAdminAssistant">
             <a dropdownToggle role="button">
-                AE: {{currentExecutiveUser}} ({{this.user.accountExecutiveUserId}})<span class="caret"></span>
+                AE: {{currentExecutiveUser}} ({{user?.accountExecutiveUserId}})<span class="caret"></span>
             </a>
             <ul *dropdownMenu class="dropdown-menu">
-
-                <li *ngFor="let accountExecutive of user.accountExecutives"  (click)="aESelected(accountExecutive)">
-                    <a>{{accountExecutive.accountExecutiveDisplayName}}</a>                 
-
+                <li *ngFor="let accountExecutive of user.accountExecutives" (click)="aESelected(accountExecutive)">
+                    <a>{{accountExecutive.accountExecutiveDisplayName}}</a>
                 </li>
             </ul>
         </li>
-
         <li class="logout-li"><a href="#">{{user?.firstName}} {{user?.surname}}</a></li>
-    </ul>
+    </ul> 
+
 </div>

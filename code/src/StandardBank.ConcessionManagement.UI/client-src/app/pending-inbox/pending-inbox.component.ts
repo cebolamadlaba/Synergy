@@ -52,8 +52,8 @@ export class PendingInboxComponent implements OnInit {
                 this.userConcessions = userConcessions;
                 this.dtTrigger.next();
             },
-            error => this.errorMessage = <any>error);
-    }   
+            error => this.errorMessage = <any>error);       
+    }  
 
 
     openConcessionView(concession: InboxConcession) {
@@ -75,4 +75,6 @@ export class PendingInboxComponent implements OnInit {
                 break;
         }
     }
+
+   
 }
