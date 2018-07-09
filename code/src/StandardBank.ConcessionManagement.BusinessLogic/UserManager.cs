@@ -171,7 +171,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             { 
                 mappedUser.AccountExecutives = _accountExecutiveAssistantRepository.ReadByAccountAssistantUserId(user.Id).ToList();
 
-                if (mappedUser.AccountExecutives != null)
+                if (mappedUser.AccountExecutives != null && mappedUser.AccountExecutives.Count > 0)
                 {
                     //set current to first one
                     mappedUser.AccountExecutiveUserId = mappedUser.AccountExecutives.FirstOrDefault().AccountExecutiveUserId;

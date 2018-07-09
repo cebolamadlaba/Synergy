@@ -6,10 +6,14 @@ import { SearchConcessionDetail } from '../models/search-concession-detail';
 })
 export class SearchConcessionFilterPipe implements PipeTransform {
 
-    transform(items: SearchConcessionDetail[], concessionId): any {
-        return concessionId
-            ? items.filter(item => item.referenceNumber.indexOf(concessionId) !== -1)
+    transform(items: SearchConcessionDetail[], filterConcessionId): any {
+        return filterConcessionId
+            ? items.filter(item => item.referenceNumber.indexOf(filterConcessionId) !== -1)
             : items;
     }
+
+
+  
+
 
 }

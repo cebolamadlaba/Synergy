@@ -23,7 +23,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         /// </summary>
         public InboxControllerTest()
         {
-            _inboxController = new InboxController(MockConcessionManager.Object, MockSiteHelper.Object);
+            _inboxController = new InboxController(MockConcessionManager.Object, MockSiteHelper.Object, null);
         }
 
         /// <summary>

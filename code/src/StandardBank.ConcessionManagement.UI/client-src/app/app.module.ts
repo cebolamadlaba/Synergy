@@ -56,6 +56,8 @@ import { PricingMasComponent } from './pricing-mas/pricing-mas.component';
 import { PricingCashmanComponent } from './pricing-cashman/pricing-cashman.component';
 import { TransactionalConcessionService } from "./services/transactional-concession.service";
 import { BaseConcessionFilterPipe } from './filters/base-concession-filter.pipe';
+
+import { SearchConcessionFilterPipe } from './filters/search-concession-filter.pipe';
 import { InvestmentsAddConcessionComponent } from './investments-add-concession/investments-add-concession.component';
 
 import { BolAddConcessionComponent } from './bol-add-concession/bol-add-concession.component';
@@ -107,6 +109,7 @@ import { ChannelTypesManagementComponent } from './admin/channel-types/channel-t
         ApprovedConcessionFilterPipe,
         CashViewConcessionComponent,
         BaseConcessionFilterPipe,
+        SearchConcessionFilterPipe,
         CashViewConcessionComponent,
         PricingInvestmentsComponent,
         PricingBolComponent,

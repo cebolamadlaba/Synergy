@@ -25,7 +25,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             _userManager = new UserManager(InstantiatedDependencies.CacheManager, MockUserRepository.Object,
                 MockUserRoleRepository.Object, MockRoleRepository.Object, MockCentreRepository.Object,
                 MockCentreUserRepository.Object, InstantiatedDependencies.Mapper,
-                MockAccountExecutiveAssistantRepository.Object, MockRegionManager.Object);
+                MockAccountExecutiveAssistantRepository.Object, MockRegionManager.Object,null);
         }
 
         /// <summary>

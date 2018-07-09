@@ -46,6 +46,7 @@ export class SearchComponent implements OnInit {
     isLoading = true;
     status: string = "BCM";
     displayDate = new Date();
+    enforcedate = true;
 
     today: String;
 
@@ -78,10 +79,10 @@ export class SearchComponent implements OnInit {
 
     ngOnInit() {
 
-
+        this.isLoading = true;
         this.observableApprovedConcessions = this.lookupDataService.searchConsessions();
       
-        this.today = new Date().toISOString().split('T')[0];
+        //this.today = new Date().toISOString().split('T')[0];
 
         this.observableApprovedConcessions.subscribe(approvedConcession => {
             this.approvedConcessions = approvedConcession;
@@ -108,14 +109,32 @@ export class SearchComponent implements OnInit {
  
     getFilteredView() {
 
+        this.isLoading = true;
+
         let businessCentreid = this.businesscentre == null ? null : this.businesscentre.id;
         let regionid = this.region == null ? null : this.region.id;
 
-        this.lookupDataService.searchConsessionsFiltered(regionid, businessCentreid, this.status, this.today).subscribe(filteredconcessions => {
+        var datetofilter = this.today;
+
+        if (!this.enforcedate) {
+
+            datetofilter = null;
+        }
+
+        if (datetofilter == "") {
+
+            datetofilter = null;
+        }
+
+
+        this.lookupDataService.searchConsessionsFiltered(regionid, businessCentreid, this.status, datetofilter).subscribe(filteredconcessions => {
             this.approvedConcessions = filteredconcessions;
 
             this.isLoading = false;
-        }, error => this.errorMessage = <any>error);
+        }, error => {
+            this.errorMessage = <any>error;
+            this.isLoading = false;
+        });
 
 
     }

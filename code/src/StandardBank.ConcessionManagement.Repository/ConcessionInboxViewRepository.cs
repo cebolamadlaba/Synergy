@@ -76,7 +76,7 @@ namespace StandardBank.ConcessionManagement.Repository
 
                 sql += (regionId == null || regionId == 0 ) ? "" : " AND [RegionId] = @regionId";
                 sql += (centreId == null || centreId == 0) ? "" : " AND [CentreId] = @centreId";
-                sql += (datesentForApproval == null) ? "" : " AND datediff(day, [DatesentForApproval],@datesentForApproval ) = 0";
+                sql += (datesentForApproval == null || datesentForApproval.Value.Year == 1) ? "" : " AND datediff(day, [DatesentForApproval],@datesentForApproval ) = 0";
 
                 return db.Query<ConcessionInboxView>(sql,new { statusIds, regionId, centreId, datesentForApproval });
             }

@@ -1,12 +1,5 @@
   <!-- Total widgets -->
-<!-- Loading message -->
-<div class="col-md-12" *ngIf="isLoading">
-    <div class="form-feedback-container">
-        <div class="alert-info">
-            <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Loading...</p>
-        </div>
-    </div>
-</div>
+
 
 <!-- Error message -->
 <div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
@@ -41,17 +34,9 @@
     </div>
 </div>
 
-<!-- Loading message -->
-<div class="col-md-12" *ngIf="isLoading" style="margin-top: 15px;">
-    <div class="form-feedback-container">
-        <div class="alert-info">
-            <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Loading</p>
-        </div>
-    </div>
-</div>
 
 
-<div class="col-md-12 search-and-results-container" *ngIf="!isLoading">
+<div class="col-md-12 search-and-results-container">
     <!-- filter-->
 
     <div class="form-group  filter-group">
@@ -74,25 +59,25 @@
 
         <div id="filter3"><label for="sort" class="col-sm-1 control-label">Status:</label></div>
         <div class="col-sm-2">
-
             <select (change)="periodFilter($event.target.value)" class="form-control" [(ngModel)]="status">
                 <option value="BCM">BCM Pending</option>
             </select>
-
         </div>
 
-
-        <div id="filter4"><label for="sort" class="col-sm-1 control-label">Date:</label></div>
+        <div id="filter4"><label for="sort" class="col-sm-1 control-label">Date Sent:</label></div>
         <div class="col-sm-2">
-
-            <input name="date" [(ngModel)]="today" type="date" required (change)="periodFilter($event.target.value)" class="form-control">
+            <input name="date" [(ngModel)]="today" type="date" required (change)="periodFilter($event.target.value)" class="form-control" [attr.disabled]="enforcedate == false ? '' : null">
 
         </div>
-
-
+        <!--<div id="filter4"><label for="sort" class="col-sm-2 control-label">Enforce Date:</label></div>
+    <div class="col-sm-1">
+        <input name="applydate" type="checkbox" checked="checked" [(ngModel)]="enforcedate" (change)="periodFilter($event.target.value)"/>
+    </div>-->
         <!-- Search bar -->
         <div class="input-group add-on">
-            <input class="form-control" placeholder="Search Concession ID" [(ngModel)]="concessionId" type="text">
+            <!--<input class="form-control" placeholder="Search Concession ID" [(ngModel)]="concessionId" type="text">-->
+
+            <input class="form-control" placeholder="Filter by Concession ID" [(ngModel)]="filterConcessionId" type="text">
         </div>
 
         <!-- Empty state if no concessions found -->
@@ -103,8 +88,18 @@
 
 
 
+        <!-- Loading message -->
+        <div class="col-md-12" *ngIf="isLoading">
+            <div class="form-feedback-container">
+                <div class="alert-info">
+                    <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Loading...</p>
+                </div>
+            </div>
+        </div>
+
+
         <!-- Results table -->
-        <div class="table-container section" *ngIf="(approvedConcessions)?.length > 0">
+        <div class="table-container section" *ngIf="!isLoading && ((approvedConcessions)?.length > 0)">
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
@@ -118,8 +113,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!--<tr *ngFor='let concessiondetail of approvedConcessions | searchConcessionFilter : concessionId; trackBy: index;' (click)="openConcessionView($event,concessiondetail)">-->
-                    <tr *ngFor='let concessiondetail of approvedConcessions' (click)="openConcessionView($event,concessiondetail)">
+                    <tr *ngFor='let concessiondetail of approvedConcessions | searchConcessionFilter: filterConcessionId; trackBy: index;' (click)="openConcessionView($event,concessiondetail)">
                         <td>
                             <p>{{concessiondetail?.riskGroupName}}</p>
                             <p>{{concessiondetail?.riskGroupNumber}}</p>
@@ -133,16 +127,10 @@
                             <button type="button" class="btn btn-success" (click)="forwardPCM(concessiondetail)">Forward to PCM</button>
 
                         </td>
-
                     </tr>
                 </tbody>
             </table>
         </div>
-
-
-
-
-
     </div>
 
 </div>

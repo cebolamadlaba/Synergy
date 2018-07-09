@@ -57,7 +57,7 @@
 
         <li class="dropdown" dropdown *ngIf="user?.isAdminAssistant">
             <a dropdownToggle role="button">
-                AE: {{currentExecutiveUser}} ({{user?.accountExecutiveUserId}})<span class="caret"></span>
+                AE: {{currentExecutiveUser}}<span class="caret"></span>
             </a>
             <ul *dropdownMenu class="dropdown-menu">
                 <li *ngFor="let accountExecutive of user.accountExecutives" (click)="aESelected(accountExecutive)">
