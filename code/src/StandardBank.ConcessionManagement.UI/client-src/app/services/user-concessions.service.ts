@@ -41,6 +41,11 @@ export class UserConcessionsService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    deactivateConcessionDetailed(concessionReferenceDetailedId: number): Observable<boolean> {
+        const url = "/api/Concession/DeactivateConcessionDetailed/" + concessionReferenceDetailedId;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
     getCacheAEUser(accountExecutiveUserId: number): any {
    
         let headers = new Headers({ 'Content-Type': 'application/json' });

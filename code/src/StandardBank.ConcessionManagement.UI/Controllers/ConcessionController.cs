@@ -239,6 +239,18 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(true);
         }
 
+        [Route("DeactivateConcessionDetailed/{concessionReferenceDetailedId}")]
+        public async Task<IActionResult> DeactivateConcessionDetailed(int concessionReferenceDetailedId)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            await _mediator.Send(new DeactivateConcessionDetailed(concessionReferenceDetailedId, user));
+
+            return Ok(true);
+        }
+
+      
+
         /// <summary>
         /// Generates the concession letter.
         /// </summary>

@@ -228,5 +228,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         string GetRagStatus(string period, DateTime dateApproved);
 
         ConcessionLetter CreateConcessionLetter(ConcessionLetter model);
+
+        ConcessionDetail DeactivateConcessionDetailed(int ConcessionDetailId, User user);
     }
 }

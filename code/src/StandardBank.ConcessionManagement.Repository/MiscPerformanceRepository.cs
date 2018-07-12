@@ -305,7 +305,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     JOIN [dbo].[rtblChannelType] ct on ct.[pkChannelTypeId] = cc.[fkChannelTypeId]
                     LEFT JOIN [dbo].[rtblTableNumber] atn on atn.[pkTableNumberId] = cc.[fkApprovedTableNumberId]
                     LEFT JOIN [dbo].[rtblTableNumber] ltn on ltn.[pkTableNumberId] = cc.[fkLoadedTableNumberId]
-                    WHERE cd.[fkConcessionId] = @concessionId", new {concessionId});
+                    WHERE cd.[fkConcessionId] = @concessionId  and cd.Archived is null", new {concessionId});
             }
         }
 
@@ -350,7 +350,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = cd.[fkLegalEntityAccountId]
                     JOIN [dbo].[rtblProduct] pt on pt.[pkProductId] = cl.[fkProductTypeId]
                     LEFT JOIN [dbo].[rtblReviewFeeType] rft on rft.[pkReviewFeeTypeId] = cl.[fkReviewFeeTypeId]
-                    WHERE cd.[fkConcessionId] = @concessionId", new {concessionId});
+                    WHERE cd.[fkConcessionId] = @concessionId and cd.Archived is null", new {concessionId});
             }
         }
 
@@ -385,7 +385,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     left JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = la.fkLegalEntityId
                     JOIN [dbo].rtblBOLChargeCode co on bl.fkChargeCodeId = co.pkChargeCodeId
                     JOIN rtblBOLChargeCodeType ct on co.fkChargeCodeTypeId = ct.pkChargeCodeTypeId
-                    where cd.fkConcessionId = @concessionId", new { concessionId });
+                    where cd.fkConcessionId = @concessionId  and cd.Archived is null", new { concessionId });
             }
         }
 
@@ -404,9 +404,9 @@ namespace StandardBank.ConcessionManagement.Repository
                     [IsMismatched], 
                     [PriceExported], 
                     [PriceExportedDate],
-AdValorem,
-Currency,
-EstablishmentFee,
+                    AdValorem,
+                    Currency,
+                    EstablishmentFee,
 					tr.pkConcessionTradeId [TradeConcessionDetailId],
                     AccountNumber,
 					LoadedRate,
@@ -429,7 +429,7 @@ EstablishmentFee,
                    
 				    left JOIN rtblTradeProduct tp on tr.fkTradeProductId = tp.pkTradeProductId
                     left JOIN rtblTradeProductType ty on tp.fkTradeProductTypeId = ty.pkTradeProductTypeId
-                    where cd.fkConcessionId = @concessionId", new { concessionId });
+                    where cd.fkConcessionId = @concessionId  and cd.Archived is null", new { concessionId });
             }
         }
 
@@ -479,7 +479,7 @@ EstablishmentFee,
                     JOIN [dbo].[rtblTransactionType] tt on tt.[pkTransactionTypeId] = ct.[fkTransactionTypeId]
                     LEFT JOIN [dbo].[rtblTransactionTableNumber] atn on atn.[pkTransactionTableNumberId] = ct.[fkApprovedTransactionTableNumberId]
                     LEFT JOIN [dbo].[rtblTransactionTableNumber] ltn on ltn.[pkTransactionTableNumberId] = ct.[fkLoadedTransactionTableNumberId]
-                    WHERE cd.[fkConcessionId] = @concessionId", new { concessionId });
+                    WHERE cd.[fkConcessionId] = @concessionId  and cd.Archived is null", new { concessionId });
             }
         }
 

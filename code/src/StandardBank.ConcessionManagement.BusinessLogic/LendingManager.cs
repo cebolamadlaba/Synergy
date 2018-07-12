@@ -123,6 +123,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
             var lendingConcessionDetails = _miscPerformanceRepository.GetLendingConcessionDetails(concession.Id);
+
             var primerate = _primeRateRepository.PrimeRate(concession.DateOpened);
 
             //we are only allowed to extend or renew overdraft products

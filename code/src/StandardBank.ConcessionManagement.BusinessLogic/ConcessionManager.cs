@@ -787,10 +787,24 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             concession.IsActive = false;
             concession.IsCurrent = false;
+            concession.Archived = DateTime.Now;
 
             _concessionRepository.Update(concession);
 
             return concession;
+        }
+
+        public ConcessionDetail DeactivateConcessionDetailed(int ConcessionDetailId, User user)
+        {
+            var concession = _concessionDetailRepository.ReadById(ConcessionDetailId);
+         
+            concession.Archived = DateTime.Now;
+
+            _concessionDetailRepository.Update(concession);
+
+            return concession;
+
+
         }
 
         /// <summary>

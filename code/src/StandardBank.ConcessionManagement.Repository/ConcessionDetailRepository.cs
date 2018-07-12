@@ -117,23 +117,32 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Update(ConcessionDetail model)
         {
-            using (var db = _dbConnectionFactory.Connection())
+            try
             {
-                db.Execute(@"UPDATE [dbo].[tblConcessionDetail]
-                            SET [fkConcessionId] = @ConcessionId, [fkLegalEntityId] = @LegalEntityId, [fkLegalEntityAccountId] = @LegalEntityAccountId, [ExpiryDate] = @ExpiryDate, [DateApproved] = @DateApproved, [IsMismatched] = @IsMismatched, [PriceExported] = @PriceExported, [PriceExportedDate] = @PriceExportedDate
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    db.Execute(@"UPDATE [dbo].[tblConcessionDetail]
+                            SET [fkConcessionId] = @ConcessionId, [fkLegalEntityId] = @LegalEntityId, [fkLegalEntityAccountId] = @LegalEntityAccountId, [ExpiryDate] = @ExpiryDate, [DateApproved] = @DateApproved, [IsMismatched] = @IsMismatched, [PriceExported] = @PriceExported, [PriceExportedDate] = @PriceExportedDate,[Archived] = @Archived
                             WHERE [pkConcessionDetailId] = @ConcessionDetailId",
-                    new
-                    {
-                        ConcessionDetailId = model.ConcessionDetailId,
-                        ConcessionId = model.ConcessionId,
-                        LegalEntityId = model.LegalEntityId,
-                        LegalEntityAccountId = model.LegalEntityAccountId,
-                        ExpiryDate = model.ExpiryDate,
-                        DateApproved = model.DateApproved,
-                        IsMismatched = model.IsMismatched,
-                        PriceExported = model.PriceExported,
-                        PriceExportedDate = model.PriceExportedDate
-                    });
+                        new
+                        {
+                            ConcessionDetailId = model.ConcessionDetailId,
+                            ConcessionId = model.ConcessionId,
+                            LegalEntityId = model.LegalEntityId,
+                            LegalEntityAccountId = model.LegalEntityAccountId,
+                            ExpiryDate = model.ExpiryDate,
+                            DateApproved = model.DateApproved,
+                            IsMismatched = model.IsMismatched,
+                            PriceExported = model.PriceExported,
+                            PriceExportedDate = model.PriceExportedDate,
+                            Archived = model.Archived
+                        });
+                }
+            }
+            catch (System.Exception ex)
+            {
+
+                throw ex;
             }
         }
 
