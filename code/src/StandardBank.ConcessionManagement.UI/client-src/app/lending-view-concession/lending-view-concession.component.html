@@ -183,6 +183,7 @@
                     <th *ngIf="isApproved">Expiry Date</th>
                     <th *ngIf="isApproved">Date Approved</th>
                     <th></th>
+                    <th *ngIf="canArchive"></th>
                 </tr>
             </thead>
 
@@ -214,7 +215,7 @@
                     <!-- MAP -->
                     <td class="length-short">
 
-                        <input type="text" formControlName="marginAgainstPrime"  [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimalMAP($event)" class="form-control" />
+                        <input type="text" formControlName="marginAgainstPrime" [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimalMAP($event)" class="form-control" />
 
                         <!--<input type="text" numbersOnly="true" formControlName="marginAgainstPrime" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimal($event)" />-->
                     </td>
@@ -237,7 +238,9 @@
 
                     <td class="length-medium" *ngIf="isApproved"><input type="date" formControlName="expiryDate" class="form-control" [style.background-color]="getBackgroundColour(i)" /></td>
                     <td class="length-medium" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>
-
+                    <td *ngIf="canArchive" class="delete">
+                        <button *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="archiveConcessiondetail(itemrow.get('concessionDetailId').value)" class="btn-delete" title="Remove"><i class="fa fa-trash" aria-hidden="true" style="color:#920000"></i></button>
+                    </td>
                     <td *ngIf="canBcmApprove || canPcmApprove || isEditing || isRecalling"><button type="button" *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
                 </tr>
             </tbody>

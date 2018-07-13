@@ -956,15 +956,36 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         } else {
             this.isLoading = false;
         }
-	}
+    }
+
+    archiveConcessiondetail(concessionDetailId: number) {
+
+        if (confirm("Please note that the account will be put back to standard pricing. Are you sure you want to delete the concession item ?")) {
+            this.isLoading = true;
+            this.errorMessage = null;
+
+            this.userConcessionsService.deactivateConcessionDetailed(concessionDetailId).subscribe(entity => {
+
+                this.warningMessage = "Concession item has been deleted, and account put back to standard pricing.";
+
+                this.isLoading = false;
+
+                this.ngOnInit();
+
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        }
+    }
 
 	archiveConcession() {
-		if (confirm("Are you sure you want to archive this concession?")) {
-			this.isLoading = true;
-			this.errorMessage = null;
+        if (confirm("Please note that the account will be put back to standard pricing. Are you sure you want to delete this concession ?")) {
+            this.isLoading = true;
+            this.errorMessage = null;
 
-			this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
-				this.warningMessage = "Concession has been archived.";
+            this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
+                this.warningMessage = "Concession has been deleted, and account put back to standard pricing.";
 
 				this.isLoading = false;
 				this.canBcmApprove = false;

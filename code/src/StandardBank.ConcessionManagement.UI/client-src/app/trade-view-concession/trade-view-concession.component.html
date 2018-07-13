@@ -134,6 +134,13 @@
             <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="motivationEnabled ? null : ''"></textarea>
         </div>
 
+        <div class="row" *ngIf="canBcmApprove || canPcmApprove || canApproveChanges">
+            <!-- Comments -->
+            <label>Comments:</label>
+            <textarea class="form-control large-input" formControlName="comments" placeholder="Comments"></textarea>
+
+        </div>
+
     </div>
 
 
@@ -204,55 +211,48 @@
                     </select>
                 </td>
 
+                <!--<td class="length-short">-->
+                <!--{{canEdit == true}} : {{selectedTradeConcession[i]}} : {{(canEdit == true && !selectedTradeConcession[i])  ? 0 : 1}}-->
+                <!--<input type="text" class="form-control" formControlName="gbbnumber" [attr.disabled]="(canEdit && !selectedTradeConcession[i]) ? 'disabled' : null" />-->
+                <!--<input type="text" class="form-control" formControlName="gbbnumber" [attr.disabled]="(canEdit && !selectedTradeConcession[i]) ? null : ''" />-->
+                <!--</td>-->
+              
+
+                <td class="length-short"><input type="text" class="form-control" formControlName="gbbnumber" [attr.disabled]="(selectedTradeConcession[i]) && canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="term" [attr.disabled]="(selectedTradeConcession[i]) && canEdit ? null : ''" /></td>
+
+                <td class="length-short"><input type="number" class="form-control" formControlName="advalorem" [attr.disabled]="(!selectedTradeConcession[i]) && canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="min" [attr.disabled]="(!selectedTradeConcession[i]) && canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="max" [attr.disabled]="(!selectedTradeConcession[i]) && canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="communication" [attr.disabled]="(!selectedTradeConcession[i]) && canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="flatfee" [attr.disabled]="(!selectedTradeConcession[i]) && canEdit ? null : ''" /></td>
                 <td class="length-short">
-                    <!--{{canEdit == true}} : {{selectedTradeConcession[i]}} : {{(canEdit == true && !selectedTradeConcession[i])  ? 0 : 1}}-->
-                    <!--<input type="text" class="form-control" formControlName="gbbnumber" [attr.disabled]="(canEdit && !selectedTradeConcession[i]) ? 'disabled' : null" />-->
-
-                    <input type="text" class="form-control" formControlName="gbbnumber" [attr.disabled]="(canEdit && !selectedTradeConcession[i]) ? null : ''" />
-
-                </td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="term" [attr.disabled]="(canEdit && !selectedTradeConcession[i]) ? null : ''" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="advalorem" [attr.disabled]="(canEdit && selectedTradeConcession[i]) ? null : ''" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="min" [attr.disabled]="(canEdit && selectedTradeConcession[i]) ? null : ''" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="max" [attr.disabled]="(canEdit && selectedTradeConcession[i]) ? null : ''" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="communication" [attr.disabled]="(canEdit && selectedTradeConcession[i]) ? null : ''" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="flatfee" [attr.disabled]="(canEdit && selectedTradeConcession[i]) ? null : ''" /></td>
-
-                <td class="length-short">
-                    <select formControlName="currency" class="form-control" [attr.disabled]="(canEdit && selectedTradeConcession[i]) ? null : ''">
+                    <select formControlName="currency" class="form-control" [attr.disabled]="(!selectedTradeConcession[i]) && canEdit ? null : ''">
                         <option>EUR</option>
                         <option>ZAR</option>
                         <option>GBP</option>
                         <option>USD</option>
                     </select>
                 </td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="estfee" [attr.disabled]="(canEdit && !selectedTradeConcession[i]) ? null : ''" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="estfee" [attr.disabled]="(selectedTradeConcession[i]) && canEdit ? null : ''" /></td>
+                <td class="length-short" *ngIf="isApproved"><input type="number" class="form-control" formControlName="approvedRate" [attr.disabled]="canEdit ? null : ''" /></td>
 
-                <td class="length-short" *ngIf="isApproved"><input type="number" class="form-control" formControlName="approvedRate" [attr.disabled]="(canEdit && !selectedTradeConcession[i]) ? null : ''" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="loadedRate" [attr.disabled]="(canEdit && !selectedTradeConcession[i]) ? null : ''" /></td>
-                
+                <td class="length-short"><input type="number" class="form-control" formControlName="loadedRate" [attr.disabled]="(selectedTradeConcession[i]) && canEdit ? null : ''" /></td>
+
                 <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" /></td>
-
                 <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>
-
-                <td *ngIf="canArchive">       
-
-                <button *ngIf="tradeConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="archiveConcessiondetail(itemrow.get('concessionDetailId').value)" class="btn-delete" title="Remove"><i class="fa fa-trash" aria-hidden="true" style="color:#920000"></i></button>
-
+                <td *ngIf="canArchive" class="delete">
+                    <button *ngIf="tradeConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="archiveConcessiondetail(itemrow.get('concessionDetailId').value)" class="btn-delete" title="Remove"><i class="fa fa-trash" aria-hidden="true" style="color:#920000"></i></button>
                 </td>
-
                 <td *ngIf="canBcmApprove || canPcmApprove || isEditing || isRecalling"><button *ngIf="tradeConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
-                
             </tr>
         </tbody>
     </table>
-
     <!-- Conditions table -->
     <div class="col-md-12">
         <div class="row">
             <h3 class="table-title">Conditions</h3>
             <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" *ngIf="canPcmApprove || isEditing || isRecalling" style="margin-top: 15px;">Manage Conditions</button>
-
             <div class="table-container">
                 <table class="table table-bordered table-hover header-fixed table-striped">
                     <thead>
@@ -274,15 +274,16 @@
                             </td>
                         </tr>
                         <tr *ngFor="let itemrow of tradeConcessionForm.controls.conditionItemsRows.controls; let i=index">
-                            <td># {{i + 1}}</td>
-                            <td>{{itemrow.get('conditionType').value?.description}}</td>
-                            <td>{{itemrow.get('conditionProduct').value?.description}}</td>
-                            <td><span *ngIf="itemrow.get('interestRate').value">{{itemrow.get('interestRate').value | number:'1.2-2'}}</span></td>
-                            <td>{{itemrow.get('volume').value}}</td>
-                            <td><span *ngIf="itemrow.get('value').value">{{itemrow.get('value').value | number:'1.2-2'}}</span></td>
-                            <td><span *ngIf="itemrow.get('expectedTurnoverValue').value">{{itemrow.get('expectedTurnoverValue').value | number:'1.2-2'}}</span></td>
-                            <td>{{itemrow.get('periodType').value?.description}} {{itemrow.get('period').value?.description}}</td>
-                        </tr>
+                            <td># {{i + 1
+                }}</td>
+                <td>{{itemrow.get('conditionType').value?.description}}</td>
+                <td>{{itemrow.get('conditionProduct').value?.description}}</td>
+                <td><span *ngIf="itemrow.get('interestRate').value">{{itemrow.get('interestRate').value | number:'1.2-2'}}</span></td>
+                <td>{{itemrow.get('volume').value}}</td>
+                <td><span *ngIf="itemrow.get('value').value">{{itemrow.get('value').value | number:'1.2-2'}}</span></td>
+                <td><span *ngIf="itemrow.get('expectedTurnoverValue').value">{{itemrow.get('expectedTurnoverValue').value | number:'1.2-2'}}</span></td>
+                <td>{{itemrow.get('periodType').value?.description}} {{itemrow.get('period').value?.description}}</td>
+            </tr>
                     </tbody>
                 </table>
             </div>

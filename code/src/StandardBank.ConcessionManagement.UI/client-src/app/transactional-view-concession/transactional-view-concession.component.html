@@ -179,6 +179,7 @@
                 <th *ngIf="isApproved">Approved Table Number</th>
                 <th>Expiry Date</th>
                 <th *ngIf="isApproved">Date Approved</th>
+                <th *ngIf="canArchive"></th>
             </tr>
         </thead>
         <tbody class="form-concessions-table-content">
@@ -213,7 +214,9 @@
 
                 <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" /></td>
                 <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>
-
+                <td *ngIf="canArchive" class="delete">
+                    <button *ngIf="transactionalConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="archiveConcessiondetail(itemrow.get('concessionDetailId').value)" class="btn-delete" title="Remove"><i class="fa fa-trash" aria-hidden="true" style="color:#920000"></i></button>
+                </td>
                 <td *ngIf="canBcmApprove || canPcmApprove || isEditing || isRecalling"><button *ngIf="transactionalConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
         </tbody>

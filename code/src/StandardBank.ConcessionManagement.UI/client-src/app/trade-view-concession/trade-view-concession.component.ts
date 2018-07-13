@@ -158,8 +158,8 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
         if (this.riskGroupNumber) {
             this.observableTradeView = this.tradeConcessionService.getTradeViewData(this.riskGroupNumber);
-            this.observableTradeView.subscribe(bolView => {
-                this.tradeView = bolView;
+            this.observableTradeView.subscribe(tradeView => {
+                this.tradeView = tradeView;
             }, error => {
                 this.errorMessage = <any>error;
             });
@@ -471,7 +471,6 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
             const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
             control.removeAt(index);
 
-
             this.selectedProductTypes.splice(index, 1);
             this.selectedTradeConcession.splice(index, 1);
         }
@@ -556,6 +555,9 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
             tradeConcession.concession.motivation = this.tradeConcessionForm.controls['motivation'].value;
         else
             this.addValidationError("Motivation not captured");
+
+        if (this.tradeConcessionForm.controls['comments'].value)
+            tradeConcession.concession.comments = this.tradeConcessionForm.controls['comments'].value;
 
         const concessions = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
 
@@ -1113,8 +1115,8 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                 this.warningMessage = "Concession item has been deleted, and account put back to standard pricing.";
 
                 this.isLoading = false;
-
-                this.populateForm();             
+               
+                this.ngOnInit();          
 
             }, error => {
                 this.errorMessage = <any>error;
@@ -1122,7 +1124,6 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
             });
         }
     }
-
 
 
     archiveConcession() {
