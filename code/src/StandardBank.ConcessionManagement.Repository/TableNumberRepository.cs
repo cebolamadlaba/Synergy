@@ -95,6 +95,42 @@ namespace StandardBank.ConcessionManagement.Repository
             return _cacheManager.ReturnFromCache(function, 1440, CacheKey.Repository.TableNumberRepository.ReadAll);
         }
 
+        public IEnumerable<TableNumber> ReadAll(string ConcessionType, int ConcessionTypeId)
+        {
+            Func<IEnumerable<TableNumber>> function = () =>
+            {
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    //disregard standard pricing
+                    if (ConcessionType.ToLower() == "cash")
+                    {
+                        return db.Query<TableNumber>(
+                            "SELECT [pkTableNumberId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [TariffTable], [AdValorem], [BaseRate], [IsActive] FROM [dbo].[rtblTableNumber] where TariffTable not in (select StandardPricingTable from rtblChannelType where StandardPricingTable is not null)");
+                   
+                    }
+                    //disregard standard pricing
+                    else if (ConcessionType.ToLower() == "transactional")
+                    {
+                        return db.Query<TableNumber>(
+                                             string.Format("SELECT [pkTableNumberId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [TariffTable], [AdValorem], [BaseRate], [IsActive] FROM [dbo].[rtblTableNumber]  where TariffTable not in (select StandardPricingTable from rtblTransactionType where fkConcessionTypeId = {0} and StandardPricingTable is not null)", ConcessionTypeId));
+
+
+                    }
+                    else
+                    {
+
+                        return db.Query<TableNumber>(
+                            "SELECT [pkTableNumberId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [TariffTable], [AdValorem], [BaseRate], [IsActive] FROM [dbo].[rtblTableNumber]");
+                    }
+
+                }
+            };
+
+            
+
+            return _cacheManager.ReturnFromCache(function, 1440, CacheKey.Repository.TableNumberRepository.ReadAll);
+        }
+
         /// <summary>
         /// Updates the specified model.
         /// </summary>
@@ -130,7 +166,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[rtblTableNumber] WHERE [pkTableNumberId] = @Id",
-                    new {model.Id});
+                    new { model.Id });
             }
 
             //clear out the cache because the data has changed

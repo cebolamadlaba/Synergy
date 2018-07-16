@@ -642,19 +642,46 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         private TradeConcessionLetter PopulateTradeConcessionLetter(TradeConcessionDetail tradeConcessionDetail)
         {
-            return new TradeConcessionLetter
+            if (tradeConcessionDetail.TradeProductType.ToLower() == "local guarantee")
             {
+                return new TradeConcessionLetter
+                {
 
-                ProductType = tradeConcessionDetail.TradeProductType,
-                Product = tradeConcessionDetail.TradeProduct,              
-                UnitRate = tradeConcessionDetail.ApprovedRate,
+                    ProductType = tradeConcessionDetail.TradeProductType,
+                    Product = tradeConcessionDetail.TradeProduct,
 
-                ConcessionStartDate = tradeConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
-                ConcessionEndDate = tradeConcessionDetail.ExpiryDate.HasValue
-                    ? tradeConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
-                    : string.Empty,
-                //LegalEntityId = bolConcessionDetail.LegalEntityId
-            };
+                    UnitRate = tradeConcessionDetail.ApprovedRate,
+
+                    ConcessionStartDate = tradeConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
+                    ConcessionEndDate = tradeConcessionDetail.ExpiryDate.HasValue
+                  ? tradeConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
+                  : string.Empty,
+                    //LegalEntityId = bolConcessionDetail.LegalEntityId
+                };
+
+            }
+            else
+            {
+                return new TradeConcessionLetter
+                {
+
+                    ProductType = tradeConcessionDetail.TradeProductType,
+                    Product = tradeConcessionDetail.TradeProduct,
+
+                    UnitRate = tradeConcessionDetail.FlatFee.ToString(),
+
+                    ConcessionStartDate = tradeConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
+                    ConcessionEndDate = tradeConcessionDetail.ExpiryDate.HasValue
+                  ? tradeConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
+                  : string.Empty,
+                    //LegalEntityId = bolConcessionDetail.LegalEntityId
+                };
+
+            }
+
+
+
+          
         }
 
         /// <summary>

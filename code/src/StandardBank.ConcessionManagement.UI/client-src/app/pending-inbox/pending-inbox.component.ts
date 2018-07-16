@@ -36,20 +36,52 @@ export class PendingInboxComponent implements OnInit {
     }
 
     ngOnInit() {
+
         this.dtOptions = {
             pagingType: 'full_numbers',
             language: {
                 emptyTable: "No records found!",
                 search: "",
                 searchPlaceholder: "Search"
-			},
-			order: [[6, 'desc']]
+            },
+            order: [[6, 'desc']]
         };
 
         this.observableUserConcessions = this.userConcessionsService.getData();
         this.observableUserConcessions.subscribe(
             userConcessions => {
                 this.userConcessions = userConcessions;
+
+                if (userConcessions && userConcessions.isElevatedUser) {
+
+                    this.dtOptions = {
+                        pagingType: 'full_numbers',
+                        language: {
+                            emptyTable: "No records found!",
+                            search: "",
+                            searchPlaceholder: "Search here"
+                        },
+                        order: [[8, 'desc']]
+                    };
+
+                }
+                else {
+
+
+                    this.dtOptions = {
+                        pagingType: 'full_numbers',
+                        language: {
+                            emptyTable: "No records found!",
+                            search: "",
+                            searchPlaceholder: "Search"
+                        },
+                        order: [[6, 'desc']]
+                    };
+                }
+
+
+
+
                 this.dtTrigger.next();
             },
             error => this.errorMessage = <any>error);       

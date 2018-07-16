@@ -648,7 +648,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public IEnumerable<TableNumber> GetTableNumbers(string concessionType)
         {
             var concessionTypeId = GetConcessionTypeId(concessionType);
-            var tableNumbers = _tableNumberRepository.ReadAll();
+            var tableNumbers = _tableNumberRepository.ReadAll(concessionType,concessionTypeId);
 
             return _mapper.Map<IEnumerable<TableNumber>>(tableNumbers
                 .Where(_ => _.IsActive && _.ConcessionTypeId == concessionTypeId).OrderBy(_ => _.TariffTable));

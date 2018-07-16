@@ -287,23 +287,26 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                         let currentproduct = this.tradeproducts.filter(_ => _.tradeProductId == tradeConcessionDetail.fkTradeProductId);
                         currentConcession.get('product').setValue(currentproduct[0]);
 
-                        let selectedproducttype = this.tradeproducttypes.filter(re => re.tradeProductTypeID == currentproduct[0].tradeProductTypeId);                       
 
-                        this.selectedProductTypes[rowIndex].products = this.tradeproducts.filter(re => re.tradeProductTypeId == selectedproducttype[0].tradeProductTypeID);
+                        if (currentproduct[0] && currentproduct[0].tradeProductTypeId) {
+                            let selectedproducttype = this.tradeproducttypes.filter(re => re.tradeProductTypeID == currentproduct[0].tradeProductTypeId);
 
-                        currentConcession.get('producttype').setValue(selectedproducttype[0]);
+                            this.selectedProductTypes[rowIndex].products = this.tradeproducts.filter(re => re.tradeProductTypeId == selectedproducttype[0].tradeProductTypeID);
 
-                        if (selectedproducttype[0].tradeProductType == "Local guarantee") {
+                            currentConcession.get('producttype').setValue(selectedproducttype[0]);
 
-                            this.selectedTradeConcession[rowIndex] = true;
-                            currentConcession.get('disablecontrolset').setValue(true);
+                            if (selectedproducttype[0].tradeProductType == "Local guarantee") {
 
-                        }
-                        else {
+                                this.selectedTradeConcession[rowIndex] = true;
+                                currentConcession.get('disablecontrolset').setValue(true);
 
-                            this.selectedTradeConcession[rowIndex] = false;
-                            currentConcession.get('disablecontrolset').setValue(false);
+                            }
+                            else {
 
+                                this.selectedTradeConcession[rowIndex] = false;
+                                currentConcession.get('disablecontrolset').setValue(false);
+
+                            }
                         }
                     }
 

@@ -200,11 +200,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         }
 
 
-        [Route("ActiveTableNumbers/{isActive}")]
-        public IActionResult TableNumbers(bool isActive)
-        {
-            return Ok(_lookupTableManager.GetTableNumbers(isActive));
-        }
+        //[Route("ActiveTableNumbers/{isActive}")]
+        //public IActionResult TableNumbers(bool isActive)
+        //{
+        //    return Ok(_lookupTableManager.GetTableNumbers(isActive));
+        //}
 
         /// <summary>
         /// Tables the numbers.

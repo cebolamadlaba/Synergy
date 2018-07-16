@@ -107,8 +107,9 @@
                             <tbody>
                                 <tr *ngFor="let tradeprod of tradeprodgroup.tradeProducts">
                                     <td class="leftAlign">{{tradeprod.accountNumber}}</td>
-                                    <td class="leftAlign">{{tradeprod.tradeProductName}}</td>
                                     <td class="leftAlign">{{tradeprod.tradeProductType}}</td>
+                                    <td class="leftAlign">{{tradeprod.tradeProductName}}</td>
+
                                     <td class="rightAlign">{{tradeprod.loadedRate| number : '1.5-5'}}</td>
                                 </tr>
                             </tbody>
@@ -193,9 +194,9 @@
                         <tbody>
                             <tr *ngFor="let concession of tradeConcession.tradeConcessionDetails; trackBy: index;">
                                 <td>{{concession.legalEntity}}</td>
-
-                                <td class="leftAlign">{{concession.tradeProduct}}</td>
                                 <td class="leftAlign">{{concession.tradeProductType}}</td>
+                                <td class="leftAlign">{{concession.tradeProduct}}</td>
+
                                 <td class="rightAlign">{{concession.accountNumber}}</td>
                                 <td>
                                     <p class="mapInfo">Loaded:{{concession.loadedRate | number : '1.5-5'}}</p>
