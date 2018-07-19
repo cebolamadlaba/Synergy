@@ -26,6 +26,7 @@ import { ConcessionSubStatus } from '../constants/concession-sub-status';
 
 import { UserService } from "../services/user.service";
 
+import { LegalEntityGBBNumber } from "../models/legal-entity-gbb-number";
 
 import { TradeProduct } from "../models/trade-product";
 import { TradeProductType } from "../models/trade-product-type";
@@ -94,6 +95,9 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
     observableTradeProducts: Observable<TradeProduct[]>;
     tradeproducts: TradeProduct[];
 
+    observableLegalEntityGBbNumbers: Observable<LegalEntityGBBNumber[]>;
+    legalentitygbbnumbers: LegalEntityGBBNumber[];
+
     selectedConditionTypes: ConditionType[];
     selectedProductTypes: TradeProductType[];
     selectedTradeConcession: boolean[];
@@ -121,6 +125,8 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
         this.tradeproducts = [new TradeProduct()];
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
+
+        this.legalentitygbbnumbers = [new LegalEntityGBBNumber()];
 
         this.conditionTypes = [new ConditionType()];
         this.selectedConditionTypes = [new ConditionType()];
@@ -180,7 +186,8 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
             this.lookupDataService.getTradeProducts(),
 
             this.lookupDataService.getPeriods(),
-            this.lookupDataService.getPeriodTypes()
+            this.lookupDataService.getPeriodTypes(),
+            this.lookupDataService.getLegalEntityGBBNumbers(this.riskGroupNumber)
 
         ]).subscribe(results => {
 
@@ -190,6 +197,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
             this.periods = <any>results[3];
             this.periodTypes = <any>results[4];
+            this.legalentitygbbnumbers = <any>results[5];
 
             this.populateForm();
         },
@@ -209,6 +217,25 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                 this.capturedComments = value.comments;
             }
         });
+    }
+
+
+    gbbNumberChanged(rowIndex: number) {
+
+
+        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+        let currentRow = control.controls[rowIndex];
+
+        var LegalEntityAccount = currentRow.get('gbbnumber').value;
+
+        var legalentityaccount = this.clientAccounts.filter(cli => cli.legalEntityAccountId == LegalEntityAccount.fkLegalEntityAccountId);
+
+        if (legalentityaccount) {
+
+            var oldaccountnumber = currentRow.get('accountNumber').value;
+            currentRow.get('accountNumber').setValue(legalentityaccount[0]);
+        }
+
     }
 
     populateForm() {

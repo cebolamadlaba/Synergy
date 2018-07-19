@@ -70,7 +70,7 @@ namespace StandardBank.ConcessionManagement.Repository
                                                             }
         }
 
-
+      
 
     }
 }

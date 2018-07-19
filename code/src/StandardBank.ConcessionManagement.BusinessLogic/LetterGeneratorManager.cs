@@ -510,6 +510,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return GenerateLegalEntityConcessionLetterPdf(legalEntityConcessionLetter);
         }
 
+        public byte[] GenerateLettersForConcessions(IEnumerable<int> concessionIds, int requestorId)
+        {
+            var concessionInboxViews = _concessionInboxViewRepository.ReadByConcessionIds(concessionIds);
+
+            var requestor = _userManager.GetUser(requestorId);
+
+            var legalEntityConcessionLetter = GetLegalEntityConcessionLetter(concessionInboxViews, requestor);
+
+            return GenerateLegalEntityConcessionLetterPdf(legalEntityConcessionLetter);
+        }
+
+
+        
+
 
         public byte[] DownloadLetterForConcessionDetail(int concessionDetailId, int requestorId)
         {

@@ -22,6 +22,8 @@ import { ConditionType } from "../models/condition-type";
 import { TradeProduct } from "../models/trade-product";
 import { TradeProductType } from "../models/trade-product-type";
 
+import { LegalEntityGBBNumber } from "../models/legal-entity-gbb-number";
+
 import { TradeConcession } from "../models/trade-concession";
 import { TradeConcessionDetail } from "../models/trade-concession-detail";
 import { TradeConcessionService } from "../services/trade-concession.service";
@@ -65,6 +67,9 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
     observableTradeProducts: Observable<TradeProduct[]>;
     tradeproducts: TradeProduct[];
+
+    observableLegalEntityGBbNumbers: Observable<LegalEntityGBBNumber[]>;
+    legalentitygbbnumbers: LegalEntityGBBNumber[];
  
     selectedConditionTypes: ConditionType[];
     selectedProductTypes: TradeProductType[];
@@ -90,6 +95,8 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
+
+        this.legalentitygbbnumbers = [new LegalEntityGBBNumber()];
 
         this.conditionTypes = [new ConditionType()];
         this.selectedConditionTypes = [new ConditionType()];
@@ -145,7 +152,8 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
             this.lookupDataService.getTradeProducts(),
        
             this.lookupDataService.getPeriods(),
-            this.lookupDataService.getPeriodTypes()
+            this.lookupDataService.getPeriodTypes(),
+            this.lookupDataService.getLegalEntityGBBNumbers(this.riskGroupNumber),
 
         ]).subscribe(results => {
 
@@ -155,8 +163,12 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
             this.periods = <any>results[3];
             this.periodTypes = <any>results[4];
+            this.legalentitygbbnumbers = <any>results[5];
 
             const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+
+            //if (this.legalentitygbbnumbers)
+            //    control.controls[0].get('gbbnumber').setValue(this.legalentitygbbnumbers[0]);
 
             //if (this.bolchargecodetypes)
             //    control.controls[0].get('product').setValue(this.bolchargecodetypes[0]);
@@ -223,6 +235,10 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
         const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
         var newRow = this.initConcessionItemRows();
 
+        //if (this.legalentitygbbnumbers)
+        //    newRow.controls['gbbnumber'].setValue(this.legalentitygbbnumbers[0]);
+
+
         //var length = control.controls.length;
 
         //if (this.bolchargecodetypes)
@@ -284,6 +300,24 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
         currentCondition.get('expectedTurnoverValue').setValue(null);
     }
 
+    gbbNumberChanged(rowIndex: number) {       
+
+
+        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];      
+        let currentRow = control.controls[rowIndex];
+
+        var LegalEntityAccount = currentRow.get('gbbnumber').value;
+
+        var legalentityaccount = this.clientAccounts.filter(cli => cli.legalEntityAccountId == LegalEntityAccount.fkLegalEntityAccountId);
+
+        if (legalentityaccount) {
+
+            var oldaccountnumber = currentRow.get('accountNumber').value;
+            currentRow.get('accountNumber').setValue(legalentityaccount[0]);
+        }
+
+    }
+
     productTypeChanged(rowIndex) {
 
         const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
@@ -317,7 +351,8 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
             this.selectedTradeConcession[rowIndex] = false;
             currentProduct.get('disablecontrolset').setValue(false);
-            currentProduct.get('gbbnumber').setValue(null);
+            currentProduct.get('gbbnumber').setValue(null);          
+
             currentProduct.get('term').setValue(null);
             currentProduct.get('estfee').setValue(null);
             currentProduct.get('rate').setValue(null);

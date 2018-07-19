@@ -17,6 +17,7 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         IEnumerable<BOLChargeCodeType> GetBOLChargeCodeTypes();
 
         IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsers(int riskGroupNumber);
+       
 
     }
 }

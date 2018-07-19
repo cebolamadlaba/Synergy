@@ -373,5 +373,24 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             return result;
         }
+
+        [Route("GenerateConcessionLetterForConcessions/{concessionIds}")]
+        public FileResult GenerateLettersForConcessions(string concessionIds)
+        {
+            var userId = _siteHelper.GetUserIdForFiltering(this);
+            HttpContext.Response.ContentType = "application/pdf";
+
+            var convertedConcessionIds = from concessionDetailId in concessionIds.Split(',')
+                                               select Convert.ToInt32(concessionDetailId);
+
+            var result = new FileContentResult(
+                _letterGeneratorManager.GenerateLettersForConcessions(convertedConcessionIds, userId),
+                "application/pdf")
+            {
+                FileDownloadName = $"ConcessionLetter_{concessionIds.Replace(",", "_")}.pdf"
+            };
+
+            return result;
+        }
     }
 }

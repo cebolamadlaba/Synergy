@@ -97,6 +97,12 @@ export class LookupDataService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    getLegalEntityGBBNumbers(riskGroupNumber): Observable<LegalEntityBOLUser[]> {
+        const url = "/api/Condition/LegalEntityGBBNumbers/" + riskGroupNumber;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+    
+
     getTradeProductTypes(): Observable<TradeProductType[]> {
         const url = "/api/Condition/TradeProductTypes";
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);

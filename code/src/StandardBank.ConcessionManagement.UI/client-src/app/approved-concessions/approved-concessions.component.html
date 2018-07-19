@@ -93,13 +93,13 @@
                                         <img src="../../content/img/upload.png" />
                                      </label>
 
-                                    <input id="fileinput_{{i}}"type="file" (change)="upload($event, approvedConcessionDetail.concessionDetailId)" accept="application/pdf" />
+                                    <input id="fileinput_{{i}}"type="file" (change)="upload($event, approvedConcessionDetail.concessionId)" accept="application/pdf" />
 
                                 </div>
 
                                 <div class="image-download" *ngIf="approvedConcessionDetail.concessionLetterURL != null">
 
-                                    <a href="/api/Concession/DownloadLetter/ {{approvedConcessionDetail.concessionDetailId}}">
+                                    <a href="/api/Concession/DownloadLetter/ {{approvedConcessionDetail.concessionId}}">
 
                                         <img src="../../content/img/download.png" />
 

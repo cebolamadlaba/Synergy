@@ -30,6 +30,8 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <returns></returns>
         byte[] GenerateLettersForConcessionDetails(IEnumerable<int> concessionDetailIds, int requestorId);
 
+        byte[] GenerateLettersForConcessions(IEnumerable<int> concessionIds, int requestorId);
+
         byte[] DownloadLetterForConcessionDetail(int concessionDetailId, int requestorId);
     }
 }

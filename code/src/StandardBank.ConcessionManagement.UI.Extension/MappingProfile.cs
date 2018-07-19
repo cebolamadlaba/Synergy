@@ -214,7 +214,7 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             //Trade
             CreateMap<Model.Repository.ConcessionTrade, Model.UserInterface.Trade.TradeConcessionDetail>().ReverseMap();
 
-
+            CreateMap<Model.Repository.LegalEntityGBBNumber, Model.UserInterface.Trade.LegalEntityGBBNumber>().ReverseMap();
 
 
         }

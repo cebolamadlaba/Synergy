@@ -92,7 +92,7 @@
 <div class="col-md-12" *ngIf="isLoading">
     <div class="form-feedback-container">
         <div class="alert-info">
-            <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Saving</p>
+            <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Loading...</p>
         </div>
     </div>
 </div>
@@ -124,7 +124,7 @@
             <tr>
                 <th>Product</th>
                 <th>Type</th>
-              
+
 
                 <th>Acc No.</th>
                 <th>GBB Number</th>
@@ -142,7 +142,7 @@
             </tr>
         </thead>
         <tbody class="form-concessions-table-content">
-            
+
             <tr *ngFor="let itemrow of tradeConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
                 <td class="length-short">
                     <input formControlName="disablecontrolset" style="display: none;" />
@@ -154,16 +154,23 @@
                 </td>
                 <td class="length-short">
 
-                    <select formControlName="product" class="form-control" [attr.disabled]="saveMessage ? '' : null" >
+                    <select formControlName="product" class="form-control" [attr.disabled]="saveMessage ? '' : null">
                         <option *ngFor="let productOption of selectedProductTypes[i].products" [ngValue]="productOption">{{productOption.tradeProductName}}</option>
                     </select>
                 </td>
                 <td class="length-short">
-                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="(selectedTradeConcession[i]) && !saveMessage ? '' : null" >
                         <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
+                </td>             
+
+                <td class="length-short">
+                    <select formControlName="gbbnumber" class="form-control" [attr.disabled]="(!selectedTradeConcession[i]) && !saveMessage ? '' : null" (change)="gbbNumberChanged(i)">
+                        <option *ngFor="let clientGBBOption of legalentitygbbnumbers" [ngValue]="clientGBBOption">{{clientGBBOption.gbbNumber}}</option>
+                    </select>
                 </td>
-                <td class="length-short"><input type="text" class="form-control" formControlName="gbbnumber" [attr.disabled]="(!selectedTradeConcession[i]) && !saveMessage ? '' : null" /></td>
+
+
                 <td class="length-short"><input type="number" class="form-control" formControlName="term" [attr.disabled]="(!selectedTradeConcession[i]) && !saveMessage ? '' : null" /></td>
                 <td class="length-short"><input type="number" class="form-control" formControlName="advalorem" [attr.disabled]="(selectedTradeConcession[i]) && !saveMessage ? '' : null" /></td>
                 <td class="length-short"><input type="number" class="form-control" formControlName="min" [attr.disabled]="(selectedTradeConcession[i]) && !saveMessage ? '' : null" /></td>

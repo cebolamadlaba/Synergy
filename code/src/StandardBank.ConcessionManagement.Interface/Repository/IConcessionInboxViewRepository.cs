@@ -121,6 +121,8 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <returns></returns>
         IEnumerable<ConcessionInboxView> ReadByConcessionDetailIds(IEnumerable<int> concessionDetailIds);
 
+        IEnumerable<ConcessionInboxView> ReadByConcessionIds(IEnumerable<int> concessionDetailIds);
+
         IEnumerable<ConcessionInboxView> ReadDueFor72HourEscaltion(IEnumerable<int> statusIdlist);
     }
 }

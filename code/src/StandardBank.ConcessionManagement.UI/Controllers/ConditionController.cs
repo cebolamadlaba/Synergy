@@ -103,6 +103,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(_lookupTableManager.GetLegalEntityBOLUsers(riskGroupNumber));
         }
 
+        [Route("LegalEntityGBBNumbers/{riskGroupNumber}")]
+        public IActionResult GetLegalEntityGBBNumbers(int riskGroupNumber)
+        {
+            return Ok(_lookupTableManager.GetLegalEntityGBBNumbers(riskGroupNumber));
+        }
+
         /// <summary>
         /// Gets the periods
         /// </summary>

@@ -206,19 +206,20 @@
 
 
                 <td class="length-short">
-                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="(!selectedTradeConcession[i]) && canEdit ? null :''">
                         <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
                 </td>
 
-                <!--<td class="length-short">-->
-                <!--{{canEdit == true}} : {{selectedTradeConcession[i]}} : {{(canEdit == true && !selectedTradeConcession[i])  ? 0 : 1}}-->
-                <!--<input type="text" class="form-control" formControlName="gbbnumber" [attr.disabled]="(canEdit && !selectedTradeConcession[i]) ? 'disabled' : null" />-->
-                <!--<input type="text" class="form-control" formControlName="gbbnumber" [attr.disabled]="(canEdit && !selectedTradeConcession[i]) ? null : ''" />-->
-                <!--</td>-->
-              
 
-                <td class="length-short"><input type="text" class="form-control" formControlName="gbbnumber" [attr.disabled]="(selectedTradeConcession[i]) && canEdit ? null : ''" /></td>
+                <!--<td class="length-short"><input type="text" class="form-control" formControlName="gbbnumber" [attr.disabled]="(selectedTradeConcession[i]) && canEdit ? null : ''" /></td>-->
+
+                <td class="length-short">
+                    <select formControlName="gbbnumber" class="form-control" [attr.disabled]="(selectedTradeConcession[i]) && canEdit ? null : ''" (change)="gbbNumberChanged(i)">
+                        <option *ngFor="let clientGBBOption of legalentitygbbnumbers" [ngValue]="clientGBBOption">{{clientGBBOption.gbbNumber}}</option>
+                    </select>
+                </td>
+
                 <td class="length-short"><input type="number" class="form-control" formControlName="term" [attr.disabled]="(selectedTradeConcession[i]) && canEdit ? null : ''" /></td>
 
                 <td class="length-short"><input type="number" class="form-control" formControlName="advalorem" [attr.disabled]="(!selectedTradeConcession[i]) && canEdit ? null : ''" /></td>

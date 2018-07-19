@@ -462,6 +462,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return _mapper.Map<IEnumerable<LegalEntityBOLUser>>(bolusers);
         }
 
+        public IEnumerable<Model.UserInterface.Trade.LegalEntityGBBNumber> GetLegalEntityGBBNumbers(int riskGroupNumber)
+        {
+            var gbbnumbers = _concessionTradeRepository.GetLegalEntityGBBNumbers(riskGroupNumber);
+
+            return _mapper.Map<IEnumerable<Model.UserInterface.Trade.LegalEntityGBBNumber>>(gbbnumbers);
+        }
+
         public IEnumerable<TradeProduct> GetTradeProducts()
         {
             return _mapper.Map<IEnumerable<TradeProduct>>(_concessionTradeRepository.GetTradeProducts());           
