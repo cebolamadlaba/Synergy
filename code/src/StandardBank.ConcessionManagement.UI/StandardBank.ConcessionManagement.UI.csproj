@@ -39,7 +39,9 @@
 
   <ItemGroup>
     <Content Include="client-src\content\img\sblogo.jpg" />
-    <Content Include="LetterTemplates\images\sblogo.jpg" />
+    <Content Include="LetterTemplates\images\sblogo.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="LetterTemplates\TemplateFooter.html" />
     <Content Include="LetterTemplates\TemplateHeader.html" />
   </ItemGroup>
