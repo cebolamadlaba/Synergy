@@ -26,7 +26,8 @@ namespace StandardBank.ConcessionManagement.Repository
         public ConcessionLetter Create(ConcessionLetter model)
         {
             const string sql =
-                @"INSERT [dbo].[tblConcessionLetter] ([fkConcessionDetailId], [Location]) 
+                @"delete from [tblConcessionLetter] where fkConcessionDetailId = @fkConcessionDetailId;
+                INSERT [tblConcessionLetter] ([fkConcessionDetailId], [Location]) 
                                 VALUES (@fkConcessionDetailId, @Location) 
                                 SELECT CAST(SCOPE_IDENTITY() as int)";
 

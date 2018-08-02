@@ -23,8 +23,12 @@
 
         public int? fkTradeProductId { get; set; }
        
-        public int? fkLegalEntityAccountId { get; set; } 
-      
+        public int? fkLegalEntityAccountId { get; set; }
+
+        public int? fkLegalEntityGBBNumber { get; set; }
+
+        public int? fkLegalEntityId { get; set; }
+
         public decimal? AdValorem { get; set; }
 
         public string Currency { get; set; }

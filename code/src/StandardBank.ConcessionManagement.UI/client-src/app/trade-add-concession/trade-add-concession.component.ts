@@ -300,23 +300,23 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
         currentCondition.get('expectedTurnoverValue').setValue(null);
     }
 
-    gbbNumberChanged(rowIndex: number) {       
+    //gbbNumberChanged(rowIndex: number) {       
 
 
-        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];      
-        let currentRow = control.controls[rowIndex];
+    //    const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];      
+    //    let currentRow = control.controls[rowIndex];
 
-        var LegalEntityAccount = currentRow.get('gbbnumber').value;
+    //    var LegalEntityAccount = currentRow.get('gbbnumber').value;
 
-        var legalentityaccount = this.clientAccounts.filter(cli => cli.legalEntityAccountId == LegalEntityAccount.fkLegalEntityAccountId);
+    //    var legalentityaccount = this.clientAccounts.filter(cli => cli.legalEntityAccountId == LegalEntityAccount.fkLegalEntityAccountId);
 
-        if (legalentityaccount) {
+    //    if (legalentityaccount) {
 
-            var oldaccountnumber = currentRow.get('accountNumber').value;
-            currentRow.get('accountNumber').setValue(legalentityaccount[0]);
-        }
+    //        var oldaccountnumber = currentRow.get('accountNumber').value;
+    //        currentRow.get('accountNumber').setValue(legalentityaccount[0]);
+    //    }
 
-    }
+    //}
 
     productTypeChanged(rowIndex) {
 
@@ -336,15 +336,14 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
          
             this.selectedTradeConcession[rowIndex] = true;
             currentProduct.get('disablecontrolset').setValue(true);
-           // currentProduct.get('accountNumber').setValue(null);
+            currentProduct.get('accountNumber').setValue(null);
             currentProduct.get('advalorem').setValue(null);
             currentProduct.get('min').setValue(null);
             currentProduct.get('max').setValue(null);
 
             currentProduct.get('communication').setValue(null);
             currentProduct.get('flatfee').setValue(null);
-            currentProduct.get('currency').setValue(null);
-         
+            currentProduct.get('currency').setValue(null);         
 
         }
         else {
@@ -412,14 +411,19 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                 tradeConcessionDetail.legalEntityAccountId = concessionFormItem.get('accountNumber').value.legalEntityAccountId;
             } else {
 
-                //if (!tradeConcessionDetail.disablecontrolset) {
+                if (!tradeConcessionDetail.disablecontrolset) {
 
                     this.addValidationError("Client account not selected");
-               // }
+                }
             }
 
             if (concessionFormItem.get('gbbnumber').value) {
-                tradeConcessionDetail.gbbNumber = concessionFormItem.get('gbbnumber').value;
+               
+                var gbbnumber = concessionFormItem.get('gbbnumber').value;
+                tradeConcessionDetail.legalEntityId = gbbnumber.legalEntityId;
+                tradeConcessionDetail.legalEntityAccountId = gbbnumber.legalEntityAccountId;
+                tradeConcessionDetail.fkLegalEntityGBBNumber = gbbnumber.pkLegalEntityGBBNumber;
+
             } else {
                 if (tradeConcessionDetail.disablecontrolset) {
                     this.addValidationError("GBB Number not entered");

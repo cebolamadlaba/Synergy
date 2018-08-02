@@ -535,8 +535,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 _lookupTableManager.GetStatusId(Constants.ConcessionStatus.ApprovedWithChanges);
 
             var concessions =
-                _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsActive(userId,
-                    new[] { approvedStatusId, approvedWithChangesStatusId }, true);
+                _concessionInboxViewRepository.GetapporvedView(userId, new[] { approvedStatusId, approvedWithChangesStatusId }, true);
 
             var approvedConcessions = new List<ApprovedConcession>();
 
@@ -563,7 +562,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 var approvedConcessionDetails = new List<ApprovedConcessionDetail>();
                 approvedConcessionDetails.AddRange(approvedConcession.ApprovedConcessionDetails);
 
-                approvedConcessionDetails.Add(new ApprovedConcessionDetail
+
+                var newapproved = new ApprovedConcessionDetail
                 {
                     Status = concession.Status,
                     ConcessionType = concession.ConcessionType,
@@ -575,7 +575,27 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     ConcessionId = concession.ConcessionId,
                     ReferenceNumber = concession.ConcessionRef,
                     ConcessionLetterURL = concession.ConcessionLetterURL
-                });
+                };
+
+                //approvedConcessionDetails.Add(new ApprovedConcessionDetail
+                //{
+                //    Status = concession.Status,
+                //    ConcessionType = concession.ConcessionType,
+                //    ExpiryDate = concession.ExpiryDate,
+                //    DateApproved = concession.DateApproved,
+                //    DateOpened = concession.ConcessionDate,
+                //    DateSentForApproval = concession.DatesentForApproval,
+                //    ConcessionDetailId = concession.ConcessionDetailId,
+                //    ConcessionId = concession.ConcessionId,
+                //    ReferenceNumber = concession.ConcessionRef,
+                //    ConcessionLetterURL = concession.ConcessionLetterURL
+                //});
+
+                //remove doubles.
+                if (!approvedConcessionDetails.Contains(newapproved))
+                {
+                    approvedConcessionDetails.Add(newapproved);
+                }
 
                 approvedConcession.ApprovedConcessionDetails = approvedConcessionDetails;
             }
@@ -789,7 +809,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             concession.IsCurrent = false;
             concession.Archived = DateTime.Now;
 
-            _concessionRepository.Update(concession);
+            _concessionRepository.DeactivateConcession(concession);
 
             return concession;
         }

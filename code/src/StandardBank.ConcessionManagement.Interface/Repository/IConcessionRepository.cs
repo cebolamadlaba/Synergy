@@ -60,6 +60,8 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <param name="model">The model.</param>
         void Update(Concession model);
 
+        void DeactivateConcession(Concession model);
+
         /// <summary>
         /// Deletes the specified model.
         /// </summary>

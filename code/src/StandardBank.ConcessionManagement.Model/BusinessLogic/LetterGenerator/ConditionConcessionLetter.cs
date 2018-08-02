@@ -21,6 +21,8 @@
         /// </value>
         public string ConditionProduct { get; set; }
 
+        public string ConditionPeriod { get; set; }
+
         /// <summary>
         /// Gets or sets the value.
         /// </summary>

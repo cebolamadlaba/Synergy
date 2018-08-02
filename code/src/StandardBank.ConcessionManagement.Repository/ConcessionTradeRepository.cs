@@ -45,13 +45,15 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             try
             {
+               
+
                 var concessionDetail = _concessionDetailRepository.Create(model);
                 model.ConcessionDetailId = concessionDetail.ConcessionDetailId;
 
                 const string sql =
-                    @"INSERT [dbo].[tblConcessionTrade] ([fkConcessionId], [fkConcessionDetailId],[fkTradeProductId], [fkLegalEntityAccountId],
-                                                    [LoadedRate], [ApprovedRate], [GBBNumber], [Term],[Min],[Max],[Communication],[FlatFee],[EstablishmentFee],[AdValorem],[Currency]) 
-                VALUES (@fkConcessionId, @fkConcessionDetailId, @fkTradeProductId, @fkLegalEntityAccountId, @LoadedRate, @ApprovedRate, @GBBNumber, @Term, @Min,@Max,@Communication,@FlatFee,@EstablishmentFee,@AdValorem,@Currency) 
+                    @"INSERT [dbo].[tblConcessionTrade] ([fkConcessionId], [fkConcessionDetailId],[fkTradeProductId], [fkLegalEntityAccountId],[fkLegalEntityId],[fkLegalEntityGBBNumber],
+                                                    [LoadedRate], [ApprovedRate], [Term],[Min],[Max],[Communication],[FlatFee],[EstablishmentFee],[AdValorem],[Currency]) 
+                VALUES (@fkConcessionId, @fkConcessionDetailId, @fkTradeProductId, @fkLegalEntityAccountId,@fkLegalEntityId,@fkLegalEntityGBBNumber, @LoadedRate, @ApprovedRate, @Term, @Min,@Max,@Communication,@FlatFee,@EstablishmentFee,@AdValorem,@Currency) 
                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
                 if (model.LegalEntityAccountId == 0)
@@ -65,9 +67,10 @@ namespace StandardBank.ConcessionManagement.Repository
                                 fkConcessionDetailId = model.ConcessionDetailId,
                                 fkTradeProductId = model.fkTradeProductId,
                                 fkLegalEntityAccountId = (string)null,
+                                fkLegalEntityId = model.LegalEntityId,
+                                fkLegalEntityGBBNumber = model.fkLegalEntityGBBNumber,
                                 LoadedRate = model.LoadedRate,
-                                ApprovedRate = model.ApprovedRate,
-                                GBBNumber = model.GBBNumber,
+                                ApprovedRate = model.ApprovedRate,                              
                                 Term = model.term,
                                 Min = model.min,
                                 Max = model.max,
@@ -92,9 +95,10 @@ namespace StandardBank.ConcessionManagement.Repository
                                 fkConcessionDetailId = model.ConcessionDetailId,
                                 fkTradeProductId = model.fkTradeProductId,
                                 fkLegalEntityAccountId = model.LegalEntityAccountId,
+                                fkLegalEntityId = model.LegalEntityId,
+                                fkLegalEntityGBBNumber = model.fkLegalEntityGBBNumber,
                                 LoadedRate = model.LoadedRate,
-                                ApprovedRate = model.ApprovedRate,
-                                GBBNumber = model.GBBNumber,
+                                ApprovedRate = model.ApprovedRate,                             
                                 Term = model.term,
                                 Min = model.min,
                                 Max = model.max,

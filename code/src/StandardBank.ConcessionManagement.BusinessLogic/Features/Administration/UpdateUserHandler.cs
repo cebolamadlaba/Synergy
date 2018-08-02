@@ -92,7 +92,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
                 var currentrole = _roleRepository.ReadById(model.RoleId);
                 
                 //if user is in AE(Account-Execitive/ Requestor) or BCM roles, we remove all other centres, as they can only belong to one centre..
-                if (currentrole.RoleName == Constants.Roles.Requestor || currentrole.RoleName == Constants.Roles.BCM)
+                if (currentrole.RoleName == Constants.Roles.Requestor || currentrole.RoleName == Constants.Roles.BCM || currentrole.RoleName == Constants.Roles.AA)
                 {
                     //... 
                 }

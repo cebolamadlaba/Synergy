@@ -61,7 +61,7 @@
             </a>
             <ul *dropdownMenu class="dropdown-menu">
                 <li *ngFor="let accountExecutive of user.accountExecutives" (click)="aESelected(accountExecutive)">
-                    <a>{{accountExecutive.accountExecutiveDisplayName}}</a>
+                    <a>{{accountExecutive?.accountExecutiveDisplayName}}</a>
                 </li>
             </ul>
         </li>

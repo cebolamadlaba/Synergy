@@ -930,13 +930,13 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
     archiveConcessiondetail(concessionDetailId: number) {
 
-        if (confirm("Please note that the account will be put back to standard pricing. Are you sure you want to delete the concession item ?")) {
+        if (confirm("Are you sure you want to delete the concession item ?")) {
             this.isLoading = true;
             this.errorMessage = null;
 
             this.userConcessionsService.deactivateConcessionDetailed(concessionDetailId).subscribe(entity => {
 
-                this.warningMessage = "Concession item has been deleted, and account put back to standard pricing.";
+                this.warningMessage = "Concession item has been deleted";
 
                 this.isLoading = false;
 
@@ -950,12 +950,12 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     archiveConcession() {
-        if (confirm("Please note that the account will be put back to standard pricing. Are you sure you want to delete this concession ?")) {
+        if (confirm("Are you sure you want to delete this concession ?")) {
             this.isLoading = true;
             this.errorMessage = null;
 
             this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
-                this.warningMessage = "Concession has been deleted, and account put back to standard pricing.";
+                this.warningMessage = "Concession has been deleted";
 
                 this.isLoading = false;
                 this.canBcmApprove = false;

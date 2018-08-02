@@ -670,6 +670,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     ConcessionEndDate = tradeConcessionDetail.ExpiryDate.HasValue
                   ? tradeConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
                   : string.Empty,
+                    EstFee = tradeConcessionDetail.EstablishmentFee.ToString(), 
+                    RatePercentage = tradeConcessionDetail.ApprovedRate.ToString()
                     //LegalEntityId = bolConcessionDetail.LegalEntityId
                 };
 
@@ -688,6 +690,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     ConcessionEndDate = tradeConcessionDetail.ExpiryDate.HasValue
                   ? tradeConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
                   : string.Empty,
+                    EstFee = "NA",
+                    RatePercentage = "NA"
                     //LegalEntityId = bolConcessionDetail.LegalEntityId
                 };
 
@@ -913,8 +917,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     ConditionMeasure = concessionCondition.ConditionType,
                     Deadline = concessionCondition.ExpiryDate.HasValue
                         ? concessionCondition.ExpiryDate.Value.ToString("dd/MM/yyyy")
-                        : $"{concessionCondition.Period} - {concessionCondition.PeriodType}"
-                });
+                        : $"{concessionCondition.Period} - {concessionCondition.PeriodType}",
+                    ConditionPeriod = concessionCondition.PeriodType
+                    });
             }
 
             return conditions;
@@ -998,29 +1003,29 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         /// <param name="concessionLetters">The concession letters.</param>
         /// <returns></returns>
-        private byte[] GenerateConcessionLetterPdf(IEnumerable<Model.BusinessLogic.LetterGenerator.ConcessionLetter> concessionLetters)
-        {
-            var templateHeaderPath = System.IO.Path.Combine(_templatePath, "TemplateHeader.html");
-            var templateFooterPath = System.IO.Path.Combine(_templatePath, "TemplateFooter.html");
-            var concessionLetterPath = System.IO.Path.Combine(_templatePath, "ConcessionLetter.cshtml");
-            var concessionLetterHtml = _fileUtiltity.ReadFileText(concessionLetterPath);
+        //private byte[] GenerateConcessionLetterPdf(IEnumerable<Model.BusinessLogic.LetterGenerator.ConcessionLetter> concessionLetters)
+        //{
+        //    var templateHeaderPath = System.IO.Path.Combine(_templatePath, "TemplateHeader.html");
+        //    var templateFooterPath = System.IO.Path.Combine(_templatePath, "TemplateFooter.html");
+        //    var concessionLetterPath = System.IO.Path.Combine(_templatePath, "ConcessionLetter.cshtml");
+        //    var concessionLetterHtml = _fileUtiltity.ReadFileText(concessionLetterPath);
 
-            var html = new StringBuilder();
+        //    var html = new StringBuilder();
 
-            //add the header
-            html.Append(_fileUtiltity.ReadFileText(templateHeaderPath));
+        //    //add the header
+        //    html.Append(_fileUtiltity.ReadFileText(templateHeaderPath));
 
-            //loop through the concession letters and add each one, run the razor rendered to populate the template
-            //with the relevant details
-            foreach (var concessionLetter in concessionLetters)
-                html.Append(_razorRenderer.Parse(concessionLetterHtml, concessionLetter));
+        //    //loop through the concession letters and add each one, run the razor rendered to populate the template
+        //    //with the relevant details
+        //    foreach (var concessionLetter in concessionLetters)
+        //        html.Append(_razorRenderer.Parse(concessionLetterHtml, concessionLetter));
 
-            //add the footer
-            html.Append(_fileUtiltity.ReadFileText(templateFooterPath));
+        //    //add the footer
+        //    html.Append(_fileUtiltity.ReadFileText(templateFooterPath));
 
-            //generate a pdf from the html
-            return _pdfUtility.GeneratePdfFromHtml(html.ToString());
-        }
+        //    //generate a pdf from the html
+        //    return _pdfUtility.GeneratePdfFromHtml(html.ToString());
+        //}
 
         /// <summary>
         /// Generates the legal entity concession letter PDF.

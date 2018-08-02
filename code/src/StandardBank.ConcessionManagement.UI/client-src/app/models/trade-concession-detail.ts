@@ -18,7 +18,10 @@ export class TradeConcessionDetail extends BaseConcessionDetail {
     term: number;
     fkTradeProductId: number;
     tradeProductTypeID: number;
-    fkLegalEntityAccountId: number;
+
+    fkLegalEntityAccountId: number;  
+    fkLegalEntityGBBNumber: number;
+
     adValorem: number;
     currency: number;
 

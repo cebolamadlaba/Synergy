@@ -28,6 +28,11 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The ChannelTypeId.
         /// </value>
         public int? fkLegalEntityAccountId { get; set; }
+     
+
+        public int? fkLegalEntityGBBNumber { get; set; }
+
+        public int? fkLegalEntityId { get; set; }
 
         /// <summary>
         /// Gets or sets the BaseRateId.

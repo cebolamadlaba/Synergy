@@ -45,10 +45,17 @@ export class PageHeaderComponent implements OnInit {
                 }
                 else {
 
-                    var ae = this.user.accountExecutives[0];
-                    var aename = ae.accountExecutiveDisplayName;
-                    StaticClass.SetUser(aename, ae.isActive);
-                    this.currentExecutiveUser = StaticClass.GetUser();
+                    if (this.user.accountExecutives.length > 0) {
+
+                        var ae = this.user.accountExecutives[0];
+                        var aename = ae.accountExecutiveDisplayName;
+                        StaticClass.SetUser(aename, ae.isActive);
+                        this.currentExecutiveUser = StaticClass.GetUser();
+                    }
+                    else {
+
+                        this.currentExecutiveUser = "Manager to link";
+                    }
                 }
             }
 

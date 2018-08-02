@@ -1,12 +1,12 @@
 .downloadtd {
     white-space: nowrap;
-       width:90px;
+       width:100px;
 }
 
     .downloadtd > div {
         display: inline-block;
         white-space: normal;
-        padding-left:25px;
+        padding-left:8px;
     }
 
 

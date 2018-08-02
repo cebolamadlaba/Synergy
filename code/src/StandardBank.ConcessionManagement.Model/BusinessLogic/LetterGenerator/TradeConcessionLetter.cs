@@ -38,5 +38,10 @@
         /// The concession end date.
         /// </value>
         public string ConcessionEndDate { get; set; }
+
+        public string EstFee { get; set; }
+
+
+        public string RatePercentage { get; set; }
     }
 }

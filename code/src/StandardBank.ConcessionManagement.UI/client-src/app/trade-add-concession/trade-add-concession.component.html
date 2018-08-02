@@ -165,7 +165,7 @@
                 </td>             
 
                 <td class="length-short">
-                    <select formControlName="gbbnumber" class="form-control" [attr.disabled]="(!selectedTradeConcession[i]) && !saveMessage ? '' : null" (change)="gbbNumberChanged(i)">
+                    <select formControlName="gbbnumber" class="form-control" [attr.disabled]="(!selectedTradeConcession[i]) && !saveMessage ? '' : null">
                         <option *ngFor="let clientGBBOption of legalentitygbbnumbers" [ngValue]="clientGBBOption">{{clientGBBOption.gbbNumber}}</option>
                     </select>
                 </td>
