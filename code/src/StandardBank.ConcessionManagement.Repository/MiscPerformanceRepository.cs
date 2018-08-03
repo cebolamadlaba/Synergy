@@ -395,8 +395,7 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 return db.Query<TradeConcessionDetail>(@"Select cd.[pkConcessionDetailId] [ConcessionDetailId], 
                     cd.[fkConcessionId] [ConcessionId], 
-                    cd.[fkLegalEntityId] [LegalEntityId], 
-
+                    cd.[fkLegalEntityId] [LegalEntityId],
                     cd.[fkLegalEntityAccountId] [LegalEntityAccountId],  
                     le.[CustomerName] [LegalEntity],                    
                     [ExpiryDate], 
@@ -408,7 +407,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     Currency,
                     EstablishmentFee,
 					tr.pkConcessionTradeId [TradeConcessionDetailId],
-                    AccountNumber,
+                    ac.AccountNumber,
 					LoadedRate,
 					ApprovedRate,				
                     tp.Description TradeProduct,
@@ -418,15 +417,19 @@ namespace StandardBank.ConcessionManagement.Repository
                     tr.Communication,
 					tr.EstablishmentFee,
 					tr.FlatFee,
-					tr.GBBNumber,
+					gb.GBBNumber,
 					tr.[Max],
 					tr.[Min],
-					tr.[Term]
+					tr.[Term],
+                    tr.fkLegalEntityGBBNumber,
+					tr.fkLegalEntityAccountId
                     FROM [dbo].[tblConcessionDetail] cd
                     left join [dbo].[tblConcessionTrade] tr on cd.pkConcessionDetailId = tr.fkConcessionDetailId
                     left JOIN [dbo].tblLegalEntityAccount lea on tr.fkLegalEntityAccountId = lea.pkLegalEntityAccountId                  
                     left JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = lea.fkLegalEntityId
-                   
+                    left join tblLegalEntityAccount ac on tr.fkLegalEntityAccountId = ac.pkLegalEntityAccountId
+					left join tblLegalEntityGBBNumber gb on tr.fkLegalEntityGBBNumber = gb.pkLegalEntityGBBNumber
+
 				    left JOIN rtblTradeProduct tp on tr.fkTradeProductId = tp.pkTradeProductId
                     left JOIN rtblTradeProductType ty on tp.fkTradeProductTypeId = ty.pkTradeProductTypeId
                     where cd.fkConcessionId = @concessionId  and cd.Archived is null", new { concessionId });

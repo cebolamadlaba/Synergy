@@ -153,14 +153,14 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
         }
 
-        if (this.riskGroupNumber) {
-            this.observableBolView = this.bolConcessionService.getBolViewData(this.riskGroupNumber);
-            this.observableBolView.subscribe(bolView => {
-                this.bolView = bolView;
-            }, error => {
-                this.errorMessage = <any>error;
-            });
-        }
+        //if (this.riskGroupNumber) {
+        //    this.observableBolView = this.bolConcessionService.getBolViewData(this.riskGroupNumber);
+        //    this.observableBolView.subscribe(bolView => {
+        //        this.bolView = bolView;
+        //    }, error => {
+        //        this.errorMessage = <any>error;
+        //    });
+        //}
 
         this.bolConcessionForm = this.formBuilder.group({
             concessionItemRows: this.formBuilder.array([this.initConcessionItemRows()]),

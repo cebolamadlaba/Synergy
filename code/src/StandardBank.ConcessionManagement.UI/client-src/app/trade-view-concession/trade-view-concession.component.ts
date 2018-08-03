@@ -162,14 +162,14 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
             this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
         }
 
-        if (this.riskGroupNumber) {
-            this.observableTradeView = this.tradeConcessionService.getTradeViewData(this.riskGroupNumber);
-            this.observableTradeView.subscribe(tradeView => {
-                this.tradeView = tradeView;
-            }, error => {
-                this.errorMessage = <any>error;
-            });
-        }
+        //if (this.riskGroupNumber) {
+        //    this.observableTradeView = this.tradeConcessionService.getTradeViewData(this.riskGroupNumber);
+        //    this.observableTradeView.subscribe(tradeView => {
+        //        this.tradeView = tradeView;
+        //    }, error => {
+        //        this.errorMessage = <any>error;
+        //    });
+        //}
 
         this.tradeConcessionForm = this.formBuilder.group({
             concessionItemRows: this.formBuilder.array([this.initConcessionItemRows()]),
@@ -220,23 +220,23 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
     }
 
 
-    gbbNumberChanged(rowIndex: number) {
+    //gbbNumberChanged(rowIndex: number) {
 
 
-        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
-        let currentRow = control.controls[rowIndex];
+    //    const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+    //    let currentRow = control.controls[rowIndex];
 
-        var LegalEntityAccount = currentRow.get('gbbnumber').value;
+    //    var LegalEntityAccount = currentRow.get('gbbnumber').value;
 
-        var legalentityaccount = this.clientAccounts.filter(cli => cli.legalEntityAccountId == LegalEntityAccount.fkLegalEntityAccountId);
+    //    var legalentityaccount = this.clientAccounts.filter(cli => cli.legalEntityAccountId == LegalEntityAccount.fkLegalEntityAccountId);
 
-        if (legalentityaccount) {
+    //    if (legalentityaccount) {
 
-            var oldaccountnumber = currentRow.get('accountNumber').value;
-            currentRow.get('accountNumber').setValue(legalentityaccount[0]);
-        }
+    //        var oldaccountnumber = currentRow.get('accountNumber').value;
+    //        currentRow.get('accountNumber').setValue(legalentityaccount[0]);
+    //    }
 
-    }
+    //}
 
     populateForm() {
         if (this.concessionReferenceId) {
@@ -350,8 +350,12 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                     if (tradeConcessionDetail.currency)
                         currentConcession.get('currency').setValue(tradeConcessionDetail.currency);
 
-                    if (tradeConcessionDetail.gbbNumber)
-                        currentConcession.get('gbbnumber').setValue(tradeConcessionDetail.gbbNumber);
+                    if (tradeConcessionDetail.gbbNumber) {
+
+                        let selectedGBBNo = this.legalentitygbbnumbers.filter(_ => _.pkLegalEntityGBBNumber == tradeConcessionDetail.fkLegalEntityGBBNumber);
+                        currentConcession.get('gbbnumber').setValue(selectedGBBNo[0]);
+                        currentConcession.get('accountNumber').setValue(null);
+                    }                       
 
                     if (tradeConcessionDetail.term)
                         currentConcession.get('term').setValue(tradeConcessionDetail.term);
@@ -627,14 +631,19 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                 tradeConcessionDetail.legalEntityAccountId = concessionFormItem.get('accountNumber').value.legalEntityAccountId;
             } else {
 
-                //if (!tradeConcessionDetail.disablecontrolset) {
+                if (!tradeConcessionDetail.disablecontrolset) {
 
                 this.addValidationError("Client account not selected");
-                // }
+                 }
             }
 
             if (concessionFormItem.get('gbbnumber').value) {
-                tradeConcessionDetail.gbbNumber = concessionFormItem.get('gbbnumber').value;
+
+                var gbbnumber = concessionFormItem.get('gbbnumber').value;
+                tradeConcessionDetail.legalEntityId = gbbnumber.legalEntityId;
+                tradeConcessionDetail.legalEntityAccountId = gbbnumber.legalEntityAccountId;
+                tradeConcessionDetail.fkLegalEntityGBBNumber = gbbnumber.pkLegalEntityGBBNumber;
+
             } else {
                 if (tradeConcessionDetail.disablecontrolset) {
                     this.addValidationError("GBB Number not entered");
