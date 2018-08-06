@@ -246,22 +246,12 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 	getTransactionalConcession(): TransactionalConcession {
 		var transactionalConcession = new TransactionalConcession();
 		transactionalConcession.concession = new Concession();
-		transactionalConcession.concession.riskGroupId = this.riskGroup.id;
-
-		//if (this.transactionalConcessionForm.controls['mrsCrs'].value)
-		//	transactionalConcession.concession.mrsCrs = this.transactionalConcessionForm.controls['mrsCrs'].value;
-		//else
-		//	this.addValidationError("MRS/CRS not captured");
+		transactionalConcession.concession.riskGroupId = this.riskGroup.id;	
 
 		if (this.transactionalConcessionForm.controls['smtDealNumber'].value)
 			transactionalConcession.concession.smtDealNumber = this.transactionalConcessionForm.controls['smtDealNumber'].value;
 		else
-			this.addValidationError("SMT Deal Number not captured");
-
-		if (this.transactionalConcessionForm.controls['motivation'].value)
-			transactionalConcession.concession.motivation = this.transactionalConcessionForm.controls['motivation'].value;
-		else
-			this.addValidationError("Motivation not captured");
+			this.addValidationError("SMT Deal Number not captured");		
 
 		const concessions = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
 

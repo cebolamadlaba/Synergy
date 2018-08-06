@@ -371,13 +371,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
     getTradeConcession(): TradeConcession {
         var tradeConcession = new TradeConcession();
         tradeConcession.concession = new Concession();
-        tradeConcession.concession.riskGroupId = this.riskGroup.id;
-      
-
-        if (this.tradeConcessionForm.controls['motivation'].value)
-            tradeConcession.concession.motivation = this.tradeConcessionForm.controls['motivation'].value;
-        else
-            this.addValidationError("Motivation not captured");
+        tradeConcession.concession.riskGroupId = this.riskGroup.id;    
 
         const concessions = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
 

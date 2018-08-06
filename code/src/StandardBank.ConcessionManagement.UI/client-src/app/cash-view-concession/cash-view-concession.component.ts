@@ -422,12 +422,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 			cashConcession.concession.smtDealNumber = this.cashConcessionForm.controls['smtDealNumber'].value;
 		else
 			this.addValidationError("SMT Deal Number not captured");
-
-		if (this.cashConcessionForm.controls['motivation'].value)
-			cashConcession.concession.motivation = this.cashConcessionForm.controls['motivation'].value;
-		else
-			this.addValidationError("Motivation not captured");
-
+		
 		if (this.cashConcessionForm.controls['comments'].value)
 			cashConcession.concession.comments = this.cashConcessionForm.controls['comments'].value;
 

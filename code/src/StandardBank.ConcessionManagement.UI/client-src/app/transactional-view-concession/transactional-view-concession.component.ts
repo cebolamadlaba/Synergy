@@ -419,22 +419,12 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		transactionalConcession.concession = new Concession();
 		transactionalConcession.concession.concessionType = ConcessionTypes.Transactional;
 		transactionalConcession.concession.riskGroupId = this.riskGroup.id;
-		transactionalConcession.concession.referenceNumber = this.concessionReferenceId;
-
-		//if (this.transactionalConcessionForm.controls['mrsCrs'].value)
-		//	transactionalConcession.concession.mrsCrs = this.transactionalConcessionForm.controls['mrsCrs'].value;
-		//else
-		//	this.addValidationError("MRS/CRS not captured");
+		transactionalConcession.concession.referenceNumber = this.concessionReferenceId;		
 
 		if (this.transactionalConcessionForm.controls['smtDealNumber'].value)
 			transactionalConcession.concession.smtDealNumber = this.transactionalConcessionForm.controls['smtDealNumber'].value;
 		else
-			this.addValidationError("SMT Deal Number not captured");
-
-		if (this.transactionalConcessionForm.controls['motivation'].value)
-			transactionalConcession.concession.motivation = this.transactionalConcessionForm.controls['motivation'].value;
-		else
-			this.addValidationError("Motivation not captured");
+			this.addValidationError("SMT Deal Number not captured");	
 
 		if (this.transactionalConcessionForm.controls['comments'].value)
 			transactionalConcession.concession.comments = this.transactionalConcessionForm.controls['comments'].value;

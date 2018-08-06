@@ -88,7 +88,7 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<TableNumber>(
-                        "SELECT [pkTableNumberId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [TariffTable], [AdValorem], [BaseRate], [IsActive] FROM [dbo].[rtblTableNumber]");
+                        "SELECT [pkTableNumberId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [TariffTable], [AdValorem], [BaseRate], [IsActive] FROM [dbo].[rtblTableNumber] where ActiveUntil is null");
                 }
             };
 
@@ -137,20 +137,33 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <param name="model">The model.</param>
         public void Update(TableNumber model)
         {
-            using (var db = _dbConnectionFactory.Connection())
+            try
             {
-                db.Execute(@"UPDATE [dbo].[rtblTableNumber]
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    db.Execute(@"if not exists(Select [fkConcessionTypeId],TariffTable, AdValorem, BaseRate, isactive from rtblTableNumber where pkTableNumberId = @pkTableNumberId and TariffTable = @TariffTable and AdValorem =  @AdValorem and BaseRate = @BaseRate)
+                                    INSERT [dbo].[rtblTableNumber] ([fkConcessionTypeId], [TariffTable], [AdValorem], [BaseRate],[IsActive],[ActiveUntil]) 
+                                        Select [fkConcessionTypeId], [TariffTable], [AdValorem], [BaseRate], 0, @ActiveUntil from rtblTableNumber where pkTableNumberId = @pkTableNumberId;
+
+                            UPDATE [dbo].[rtblTableNumber]
                             SET [fkConcessionTypeId] = @ConcessionTypeId, [TariffTable] = @TariffTable, [AdValorem] = @AdValorem, [BaseRate] = @BaseRate, [IsActive] = @IsActive
-                            WHERE [pkTableNumberId] = @Id",
-                    new
-                    {
-                        Id = model.Id,
-                        ConcessionTypeId = model.ConcessionTypeId,
-                        TariffTable = model.TariffTable,
-                        AdValorem = model.AdValorem,
-                        BaseRate = model.BaseRate,
-                        IsActive = model.IsActive
-                    });
+                            WHERE [pkTableNumberId] = @pkTableNumberId",
+                        new
+                        {
+                            pkTableNumberId = model.Id,
+                            ConcessionTypeId = model.ConcessionTypeId,
+                            TariffTable = model.TariffTable,
+                            AdValorem = model.AdValorem,
+                            BaseRate = model.BaseRate,
+                            IsActive = model.IsActive,
+                            ActiveUntil = DateTime.Now
+                        });
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
             }
 
             //clear out the cache because the data has changed

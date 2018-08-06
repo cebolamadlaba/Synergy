@@ -309,11 +309,6 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         else
             this.addValidationError("SMT Deal Number not captured");
 
-        if (this.bolConcessionForm.controls['motivation'].value)
-            bolConcession.concession.motivation = this.bolConcessionForm.controls['motivation'].value;
-        else
-            this.addValidationError("Motivation not captured");
-
         const concessions = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
 
         for (let concessionFormItem of concessions.controls) {

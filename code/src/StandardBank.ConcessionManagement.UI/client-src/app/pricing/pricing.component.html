@@ -24,15 +24,7 @@
         </div>
     </div>
     <div class="col-md-5">
-        <div class="pricing-form">
-            <!--<div class="row">
-                <div class="col-sm-3">
-                    <p class="lightTitle">Province</p>
-                </div>
-                <div class="col-sm-6">
-                    <p>{{user?.selectedCentre?.province}}</p>
-                </div>
-            </div>-->
+        <div class="pricing-form">           
             <div class="row" *ngIf="riskGroup?.marketSegment">
                 <div class="col-sm-3">
                     <p class="lightTitle">Segment</p>
@@ -174,14 +166,14 @@
                         </div>
                     </div>-->
                     <!-- Trade -->
-                    <!--<div class="col-md-3">
+                    <div class="col-md-3">
                         <div class="product-item" [routerLink]="['/pricing-trade',riskGroup.number]">
                             <div class="product-heading">Trade</div>
                             <div class="container-item-icon">
                                 <i class="fa fa-line-chart" aria-hidden="true"></i>
                             </div>
                         </div>
-                    </div>-->
+                    </div>
                     <!-- Cashman -->
                     <!--<div class="col-md-3">
                         <div class="product-item" [routerLink]="['/pricing-cashman']">

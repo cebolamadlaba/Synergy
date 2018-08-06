@@ -583,12 +583,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
         tradeConcession.concession = new Concession();      
         tradeConcession.concession.riskGroupId = this.riskGroup.id;
         tradeConcession.concession.referenceNumber = this.concessionReferenceId;
-        tradeConcession.concession.concessionType = ConcessionTypes.Trade;
-
-        if (this.tradeConcessionForm.controls['motivation'].value)
-            tradeConcession.concession.motivation = this.tradeConcessionForm.controls['motivation'].value;
-        else
-            this.addValidationError("Motivation not captured");
+        tradeConcession.concession.concessionType = ConcessionTypes.Trade;     
 
         if (this.tradeConcessionForm.controls['comments'].value)
             tradeConcession.concession.comments = this.tradeConcessionForm.controls['comments'].value;

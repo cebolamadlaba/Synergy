@@ -36,7 +36,7 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        void Update(TransactionTableNumber model);
+       // void Update(TransactionTableNumber model);
 
         /// <summary>
         /// Deletes the specified model.

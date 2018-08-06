@@ -485,11 +485,6 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         //else
         //    this.addValidationError("SMT Deal Number not captured");
 
-        if (this.lendingConcessionForm.controls['motivation'].value)
-            lendingConcession.concession.motivation = this.lendingConcessionForm.controls['motivation'].value;
-        else
-            this.addValidationError("Motivation not captured");
-
         if (this.lendingConcessionForm.controls['comments'].value)
             lendingConcession.concession.comments = this.lendingConcessionForm.controls['comments'].value;
 
