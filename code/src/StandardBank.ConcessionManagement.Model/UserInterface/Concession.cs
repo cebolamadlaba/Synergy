@@ -59,6 +59,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// <summary>
         /// Gets or sets the motivation
         /// </summary>
+        /// 
         public string Motivation { get; set; }
 
         /// <summary>

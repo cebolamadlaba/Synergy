@@ -175,7 +175,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="concessionReferenceNumber">The concession reference number.</param>
         /// <param name="user">The user.</param>
         /// <returns></returns>
-        Concession DeactivateConcession(string concessionReferenceNumber, User user);
+        Concession DeactivateConcession(string concessionReferenceNumber, bool isRecall, User user);
 
         /// <summary>
         /// Creates the concession condition.

@@ -36,6 +36,12 @@ export class UserConcessionsService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+
+    recallConcession(concessionReferenceId: string): Observable<boolean> {
+        const url = "/api/Concession/RecallConcession/" + concessionReferenceId;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
     deactivateConcession(concessionReferenceId: string): Observable<boolean> {
         const url = "/api/Concession/DeactivateConcession/" + concessionReferenceId;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);

@@ -424,7 +424,12 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 			this.addValidationError("SMT Deal Number not captured");
 		
 		if (this.cashConcessionForm.controls['comments'].value)
-			cashConcession.concession.comments = this.cashConcessionForm.controls['comments'].value;
+            cashConcession.concession.comments = this.cashConcessionForm.controls['comments'].value;
+
+        if (this.cashConcessionForm.controls['motivation'].value)
+            cashConcession.concession.motivation = this.cashConcessionForm.controls['motivation'].value;
+        else
+            cashConcession.concession.motivation = '.';
 
 		const concessions = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
 
@@ -781,7 +786,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 		this.isLoading = true;
 		this.errorMessage = null;
 
-		this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
+        this.userConcessionsService.recallConcession(this.concessionReferenceId).subscribe(entity => {
 			this.warningMessage = "Concession recalled, please make the required changes and save the concession or it will be lost";
 			this.isRecalling = true;
 			this.isLoading = false;

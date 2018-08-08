@@ -124,15 +124,19 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
                 if (this.channelTypes)
                     control.controls[0].get('channelType').setValue(this.channelTypes[0]);
 
-                if (this.tableNumbers)
-                    control.controls[0].get('tableNumber').setValue(this.tableNumbers[0]);
-
+               
                 if (this.clientAccounts)
                     control.controls[0].get('accountNumber').setValue(this.clientAccounts[0]);
 
                 if (this.accrualTypes)
                     control.controls[0].get('accrualType').setValue(this.accrualTypes[0]);
 
+                if (this.tableNumbers) {
+                    control.controls[0].get('tableNumber').setValue(this.tableNumbers[0]);
+
+                    this.tableNumberChanged(0);
+
+                }
 
 
 
@@ -236,7 +240,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         if (control.controls[index].get('tableNumber').value.baseRate)
             newRow.controls['baseRate'].setValue(control.controls[index].get('tableNumber').value.baseRate.toFixed(2));
       
-        if (control.controls[index].get('tableNumber').value.baseRate)
+        if (control.controls[index].get('tableNumber').value.adValorem)
             newRow.controls['adValorem'].setValue(control.controls[index].get('tableNumber').value.adValorem.toFixed(3));
       
         if (control.controls[index].get('expiryDate').value)
@@ -303,6 +307,11 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             cashConcession.concession.smtDealNumber = this.cashConcessionForm.controls['smtDealNumber'].value;
         else
             this.addValidationError("SMT Deal Number not captured");
+
+        if (this.cashConcessionForm.controls['motivation'].value)
+            cashConcession.concession.motivation = this.cashConcessionForm.controls['motivation'].value;
+        else
+            cashConcession.concession.motivation = '.';
 
         const concessions = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
 

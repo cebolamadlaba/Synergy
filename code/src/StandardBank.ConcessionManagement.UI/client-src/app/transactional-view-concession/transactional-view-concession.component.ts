@@ -424,7 +424,13 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		if (this.transactionalConcessionForm.controls['smtDealNumber'].value)
 			transactionalConcession.concession.smtDealNumber = this.transactionalConcessionForm.controls['smtDealNumber'].value;
 		else
-			this.addValidationError("SMT Deal Number not captured");	
+            this.addValidationError("SMT Deal Number not captured");
+
+
+        if (this.transactionalConcessionForm.controls['motivation'].value)
+            transactionalConcession.concession.motivation = this.transactionalConcessionForm.controls['motivation'].value;
+        else
+            transactionalConcession.concession.motivation = '.';
 
 		if (this.transactionalConcessionForm.controls['comments'].value)
 			transactionalConcession.concession.comments = this.transactionalConcessionForm.controls['comments'].value;
@@ -787,7 +793,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		this.isLoading = true;
 		this.errorMessage = null;
 
-		this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
+        this.userConcessionsService.recallConcession(this.concessionReferenceId).subscribe(entity => {
 			this.warningMessage = "Concession recalled, please make the required changes and save the concession or it will be lost";
 			this.isRecalling = true;
 			this.isLoading = false;

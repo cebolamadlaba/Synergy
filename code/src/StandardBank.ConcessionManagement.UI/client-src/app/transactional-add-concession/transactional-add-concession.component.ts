@@ -251,7 +251,12 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 		if (this.transactionalConcessionForm.controls['smtDealNumber'].value)
 			transactionalConcession.concession.smtDealNumber = this.transactionalConcessionForm.controls['smtDealNumber'].value;
 		else
-			this.addValidationError("SMT Deal Number not captured");		
+            this.addValidationError("SMT Deal Number not captured");
+
+        if (this.transactionalConcessionForm.controls['motivation'].value)
+            transactionalConcession.concession.motivation = this.transactionalConcessionForm.controls['motivation'].value;
+        else
+            transactionalConcession.concession.motivation = '.';
 
 		const concessions = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
 

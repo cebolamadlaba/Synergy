@@ -588,6 +588,11 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
         if (this.tradeConcessionForm.controls['comments'].value)
             tradeConcession.concession.comments = this.tradeConcessionForm.controls['comments'].value;
 
+        if (this.tradeConcessionForm.controls['motivation'].value)
+            tradeConcession.concession.motivation = this.tradeConcessionForm.controls['motivation'].value;
+        else
+            tradeConcession.concession.motivation = '.';
+
         const concessions = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
 
         for (let concessionFormItem of concessions.controls) {
@@ -1030,7 +1035,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         this.errorMessage = null;
 
-        this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
+        this.userConcessionsService.recallConcession(this.concessionReferenceId).subscribe(entity => {
             this.warningMessage = "Concession recalled, please make the required changes and save the concession or it will be lost";
             this.isRecalling = true;
             this.isLoading = false;

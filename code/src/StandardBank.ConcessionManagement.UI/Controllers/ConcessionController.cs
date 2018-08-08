@@ -234,7 +234,17 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
 
-            await _mediator.Send(new DeactivateConcession(concessionReferenceId, user));
+            await _mediator.Send(new DeactivateConcession(concessionReferenceId, false, user));
+
+            return Ok(true);
+        }
+
+        [Route("RecallConcession/{concessionReferenceId}")]
+        public async Task<IActionResult> RecallConcession(string concessionReferenceId)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            await _mediator.Send(new DeactivateConcession(concessionReferenceId, true, user));
 
             return Ok(true);
         }

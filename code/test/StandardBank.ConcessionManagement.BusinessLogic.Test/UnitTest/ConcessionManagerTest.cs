@@ -418,7 +418,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockConcessionRepository.Setup(_ => _.ReadByConcessionRefIsActive(It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns(new[] { new Concession() });
 
-            var result = _concessionManager.DeactivateConcession("U100", new User());
+            var result = _concessionManager.DeactivateConcession("U100", true ,new User());
 
             Assert.NotNull(result);
         }

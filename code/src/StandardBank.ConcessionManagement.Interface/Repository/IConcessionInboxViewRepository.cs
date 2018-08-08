@@ -75,6 +75,9 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
 
         IEnumerable<ConcessionInboxView> ReadbyPCMPending(int? region, int? businesscentre, DateTime? datefilter,IEnumerable<int> statusIds);
 
+        IEnumerable<ConcessionInboxView> Search(int? region, int? businesscentre, DateTime? datefilter, IEnumerable<int> statusIds);
+
+
         /// <summary>
         /// Reads the by PCM user identifier is active.
         /// </summary>

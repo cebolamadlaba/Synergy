@@ -90,7 +90,28 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
 
+        public IEnumerable<ConcessionInboxView> Search(int? regionId, int? centreId, DateTime? datesentForApproval, IEnumerable<int> statusIds)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                string sql = @"SELECT distinct [ConcessionId], [RiskGroupId], [RiskGroupNumber], [RiskGroupName],[ConcessionTypeId], [ConcessionType], [ConcessionDate], [StatusId], [Status], [SubStatusId], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment], min([DatesentForApproval]) DatesentForApproval , 
+                    min([ExpiryDate]) ExpiryDate, min([DateApproved]) DateApproved , [AAUserId], [RequestorId], [BCMUserId], [PCMUserId], [HOUserId], [CentreId], [CentreName], [RegionId], [Region], [IsMismatched], [IsActive], [IsCurrent]
+                    FROM [dbo].[ConcessionInboxView]
+                    WHERE                    
+                    [IsActive] = 1
+                    AND [Archived] is null
+                    AND [SubStatusId] in @statusIds";
 
+                sql += (regionId == null || regionId == 0) ? "" : " AND [RegionId] = @regionId";
+                sql += (centreId == null || centreId == 0) ? "" : " AND [CentreId] = @centreId";
+                sql += (datesentForApproval == null || datesentForApproval.Value.Year == 1) ? "" : " AND datediff(day, [DatesentForApproval],@datesentForApproval ) = 0";
+
+                sql += @" group by [ConcessionId], [RiskGroupId], [RiskGroupNumber], [RiskGroupName],[ConcessionTypeId], [ConcessionType], [ConcessionDate], [StatusId], [Status], [SubStatusId], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment],
+                    [AAUserId], [RequestorId], [BCMUserId], [PCMUserId], [HOUserId], [CentreId], [CentreName], [RegionId], [Region], [IsMismatched], [IsActive], [IsCurrent]";
+
+                return db.Query<ConcessionInboxView>(sql, new { statusIds, regionId, centreId, datesentForApproval });
+            }
+        }
 
 
         public IEnumerable<ConcessionInboxView> ReadbyPCMPending(int? regionId, int? centreId, DateTime? datesentForApproval, IEnumerable<int> statusIds)     
@@ -100,8 +121,10 @@ namespace StandardBank.ConcessionManagement.Repository
                 string sql = @"SELECT distinct [ConcessionId], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [CustomerName], [ConcessionTypeId], [ConcessionType], [ConcessionDate], [StatusId], [Status], [SubStatusId], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment], [DatesentForApproval], 
                     [ExpiryDate], [DateApproved], [AAUserId], [RequestorId], [BCMUserId], [PCMUserId], [HOUserId], [CentreId], [CentreName], [RegionId], [Region], [IsMismatched], [IsActive], [IsCurrent], [PriceExported], [PriceExportedDate]
                     FROM [dbo].[ConcessionInboxView]
-                    WHERE 
-                    [SubStatusId] in @statusIds";
+                    WHERE                    
+                    [IsActive] = 1
+                    AND [Archived] is null
+                    AND [SubStatusId] in @statusIds";
 
                 sql += (regionId == null || regionId == 0 ) ? "" : " AND [RegionId] = @regionId";
                 sql += (centreId == null || centreId == 0) ? "" : " AND [CentreId] = @centreId";
@@ -282,6 +305,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     WHERE [StatusId] IN (2, 3)
                     AND [IsActive] = 1
                     AND [IsCurrent] = 1
+                    AND [Archived] is null
                     AND ([ExpiryDate] IS NOT NULL AND [ExpiryDate] BETWEEN GETDATE() AND @DateToCheck)",
                     new { DateToCheck = DateTime.Now.AddMonths(3) });
             }
@@ -294,7 +318,10 @@ namespace StandardBank.ConcessionManagement.Repository
                 string sql = @"SELECT distinct [ConcessionId], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [LegalEntityId], [CustomerName], [LegalEntityAccountId], [AccountNumber], [ConcessionTypeId], [ConcessionType], [ConcessionDate], [StatusId], [Status], [SubStatusId], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment], [DatesentForApproval], [ExpiryDate], [DateApproved], [AAUserId], [RequestorId], [BCMUserId], [PCMUserId], [HOUserId], [CentreId], [CentreName], [RegionId], [Region], [IsMismatched], [IsActive], [IsCurrent], [PriceExported], [PriceExportedDate]
                     FROM [dbo].[ConcessionInboxView]
                     WHERE 
-                    [SubStatusId] in @statusIds and [DatesentForApproval] <= @DateToCheck";
+                    [SubStatusId] in @statusIds
+                    AND [DatesentForApproval] <= @DateToCheck
+                    AND [IsActive] = 1
+                    AND [Archived] is null";
                 return db.Query<ConcessionInboxView>(sql, new { statusIds = statusIdlist, DateToCheck = DateTime.Now.AddDays(-3)});
             }
         }

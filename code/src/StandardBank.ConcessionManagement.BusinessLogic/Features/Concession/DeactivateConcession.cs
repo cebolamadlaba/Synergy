@@ -20,6 +20,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         /// </value>
         public string ConcessionReferenceNumber { get; set; }
 
+        public bool IsRecall { get; set; }
+
         /// <summary>
         /// Gets or sets the user.
         /// </summary>
@@ -41,10 +43,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         /// </summary>
         /// <param name="concessionReferenceNumber">The concession reference number.</param>
         /// <param name="user">The user.</param>
-        public DeactivateConcession(string concessionReferenceNumber, User user)
+        public DeactivateConcession(string concessionReferenceNumber, bool isRecall, User user)
         {
             ConcessionReferenceNumber = concessionReferenceNumber;
             User = user;
+            IsRecall = isRecall;
         }
     }
 }

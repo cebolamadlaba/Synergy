@@ -452,7 +452,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             //we will only look for concessions with status BCM Pending..
             var bcmpendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.BcmPending);
 
-            var concessions = _concessionInboxViewRepository.ReadbyPCMPending(null, null, null, new[] { bcmpendingStatusId });
+            var concessions = _concessionInboxViewRepository.Search(null, null, null, new[] { bcmpendingStatusId });
 
             var approvedConcessionDetails = new List<SearchConcessionDetail>();
             foreach (var concession in concessions.OrderByDescending(_ => _.DateApproved ?? _.ConcessionDate))
@@ -797,7 +797,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="concessionReferenceNumber">The concession reference number.</param>
         /// <param name="user">The user.</param>
         /// <returns></returns>
-        public Concession DeactivateConcession(string concessionReferenceNumber, User user)
+        public Concession DeactivateConcession(string concessionReferenceNumber, bool isRecall, User user)
         {
             var concessions = _concessionRepository.ReadByConcessionRefIsActive(concessionReferenceNumber, true);
 
@@ -807,7 +807,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             concession.IsActive = false;
             concession.IsCurrent = false;
-            concession.Archived = DateTime.Now;
+
+            if (!isRecall)
+            {
+                concession.Archived = DateTime.Now;
+            }
 
             _concessionRepository.DeactivateConcession(concession);
 
