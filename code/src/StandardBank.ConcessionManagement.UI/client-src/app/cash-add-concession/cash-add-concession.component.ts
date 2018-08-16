@@ -83,7 +83,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
                 this.observableRiskGroup = this.lookupDataService.getRiskGroup(this.riskGroupNumber);
                 this.observableRiskGroup.subscribe(riskGroup => this.riskGroup = riskGroup, error => this.errorMessage = <any>error);
 
-                this.observableClientAccounts = this.lookupDataService.getClientAccounts(this.riskGroupNumber);
+                this.observableClientAccounts = this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Cash);
                 this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
 
                 this.observableLatestCrsOrMrs = this.cashConcessionService.getlatestCrsOrMrs(this.riskGroupNumber);
@@ -106,7 +106,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             this.lookupDataService.getAccrualTypes(),
             this.lookupDataService.getTableNumbers(ConcessionTypes.Cash),
             this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-            this.lookupDataService.getClientAccounts(this.riskGroupNumber),
+            this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Cash),
             this.cashConcessionService.getlatestCrsOrMrs(this.riskGroupNumber)
         ]).subscribe(results => {
                 this.channelTypes = <any>results[0];

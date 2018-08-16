@@ -105,7 +105,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             this.lookupDataService.getPeriodTypes(),
             this.lookupDataService.getConditionTypes(),
             this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-            this.lookupDataService.getClientAccounts(this.riskGroupNumber),
+            this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Lending),
             this.lendingService.getlatestCrsOrMrs(this.riskGroupNumber),
             this.lookupDataService.getPrimeRate(this.today)
         ]).subscribe(results => {
@@ -144,7 +144,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
                     currentRow.get('reviewFeeType').enable();
                     currentRow.get('reviewFee').enable();
                     currentRow.get('uffFee').enable();
-                }
+                }               
                 else {
                     currentRow.get('term').enable();
 
@@ -183,7 +183,9 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             initiationFee: [''],
             reviewFeeType: [''],
             reviewFee: [''],
-            uffFee: ['']
+            uffFee: [''],
+            frequency: [{ value: '', disabled: true }],
+            serviceFee: [{ value: '', disabled:'disabled'}],
         });
     }
 
@@ -273,12 +275,23 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             currentRow.get('reviewFee').enable();
             currentRow.get('uffFee').enable();
 
+            currentRow.get('frequency').disable();
+            currentRow.get('serviceFee').disable();
+
         }
         else if (productType.description === "Temporary Overdraft") {            
 
             currentRow.get('reviewFeeType').enable();
             currentRow.get('reviewFee').enable();
             currentRow.get('uffFee').enable();
+
+            currentRow.get('frequency').disable();
+            currentRow.get('serviceFee').disable();
+        }
+        else if (productType.description.indexOf("VAF") == 0) {
+
+            currentRow.get('frequency').enable();
+            currentRow.get('serviceFee').enable();
         }
         else {
             currentRow.get('term').enable();
@@ -290,6 +303,9 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             currentRow.get('reviewFeeType').setValue(null);
             currentRow.get('reviewFee').setValue(null);
             currentRow.get('uffFee').setValue(null);
+
+            currentRow.get('frequency').disable();
+            currentRow.get('serviceFee').disable();
         }
     }
 

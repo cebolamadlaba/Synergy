@@ -78,7 +78,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <param name="user">The user.</param>
         /// <returns></returns>
-        IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, User user);
+        IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, User user, string concessiontype);
 
         /// <summary>
         /// Searches the client accounts.
@@ -86,7 +86,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <param name="accountNumber">The account number.</param>
         /// <returns></returns>
-        IEnumerable<ClientAccount> SearchClientAccounts(int riskGroupNumber, string accountNumber);
+        //IEnumerable<ClientAccount> SearchClientAccounts(int riskGroupNumber, string accountNumber);
 
         IEnumerable<string> PrimeRate(DateTime datefilter);
 

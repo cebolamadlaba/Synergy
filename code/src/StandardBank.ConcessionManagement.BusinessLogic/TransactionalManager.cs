@@ -202,7 +202,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         public TransactionType CreateTransactionType(TransactionType transactionType)
         {
-           return _transactionTableNumberRepository.Create(transactionType);
+
+            int transactionaltypeid = _lookupTableManager.GetConcessionTypeId(Constants.ConcessionType.Transactional);
+            transactionType.ConcessionTypeId = transactionaltypeid;          
+
+
+            return _transactionTableNumberRepository.Create(transactionType);
         }
 
         public IEnumerable<Model.UserInterface.Transactional.TransactionTableNumber> GetTransactionTableNumbers(bool isActive)

@@ -128,8 +128,8 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 	        this.lookupDataService.getPeriodTypes(),
 	        this.lookupDataService.getConditionTypes(),
 	        this.lookupDataService.getTransactionTypes(ConcessionTypes.Transactional),
-	        this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-	        this.lookupDataService.getClientAccounts(this.riskGroupNumber),
+            this.lookupDataService.getRiskGroup(this.riskGroupNumber),
+            this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Transactional),
 	        this.transactionalConcessionService.getTransactionalFinancial(this.riskGroupNumber)
 	    ]).subscribe(results => {
 	            this.periods = <any>results[0];

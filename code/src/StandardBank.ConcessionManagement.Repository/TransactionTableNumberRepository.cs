@@ -124,6 +124,15 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 model.Id = db.Query<int>(sql, new { fkConcessionTypeId = model.ConcessionTypeId, Description = model.Description, IsActive = true }).Single();
+
+
+                if (model.ImportFileChannel != "" && model.Id > 0)
+                {
+                    string insert = @"INSERT INTO [dbo].[rtblTransactionTypeImport]([fkTransactionTypeId],[ImportFileChannel]) values(@fkTransactionTypeId,@ImportFileChannel);";
+                    db.Execute(insert, new { fkTransactionTypeId = model.Id, ImportFileChannel = model.ImportFileChannel });
+                }
+
+
             }
 
             //clear out the cache because the data has changed

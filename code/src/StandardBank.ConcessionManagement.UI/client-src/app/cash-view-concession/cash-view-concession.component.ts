@@ -134,8 +134,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 	        this.lookupDataService.getConditionTypes(),
 	        this.lookupDataService.getAccrualTypes(),
 	        this.lookupDataService.getTableNumbers(ConcessionTypes.Cash),
-	        this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-	        this.lookupDataService.getClientAccounts(this.riskGroupNumber),
+            this.lookupDataService.getRiskGroup(this.riskGroupNumber),
+            this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Cash),
 	        this.cashConcessionService.getCashFinancial(this.riskGroupNumber)
 	    ]).subscribe(results => {
 	            this.channelTypes = <any>results[0];

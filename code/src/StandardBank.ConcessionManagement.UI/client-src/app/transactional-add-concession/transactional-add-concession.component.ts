@@ -89,7 +89,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 	        this.lookupDataService.getConditionTypes(),
 	        this.lookupDataService.getTransactionTypes(ConcessionTypes.Transactional),
 	        this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-	        this.lookupDataService.getClientAccounts(this.riskGroupNumber),
+            this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Transactional),
 	        this.transactionalConcessionService.getlatestCrsOrMrs(this.riskGroupNumber)
 	    ]).subscribe(results => {
 	            this.periods = <any>results[0];

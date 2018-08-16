@@ -129,7 +129,15 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
 
-            return Ok(_concessionManager.GetClientAccounts(riskGroupNumber, user));
+            return Ok(_concessionManager.GetClientAccounts(riskGroupNumber, user,""));
+        }
+
+        [Route("ClientAccountsConcessionType/{riskGroupNumber}/{concessiontype}")]
+        public IActionResult ClientAccountsConcessionType(int riskGroupNumber, string concessiontype)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            return Ok(_concessionManager.GetClientAccounts(riskGroupNumber, user, concessiontype));
         }
 
         /// <summary>
@@ -138,11 +146,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <param name="accountNumber">The account number.</param>
         /// <returns></returns>
-        [Route("SearchClientAccounts/{riskGroupNumber}/{accountNumber}")]
-        public IActionResult SearchClientAccounts(int riskGroupNumber, string accountNumber)
-        {
-            return Ok(_concessionManager.SearchClientAccounts(riskGroupNumber, accountNumber));
-        }
+        //[Route("SearchClientAccounts/{riskGroupNumber}/{accountNumber}")]
+        //public IActionResult SearchClientAccounts(int riskGroupNumber, string accountNumber)
+        //{
+        //    return Ok(_concessionManager.SearchClientAccounts(riskGroupNumber, accountNumber));
+        //}
 
         [Route("PrimeRate/{datefilter}")]
         public IActionResult PrimeRate(DateTime datefilter)

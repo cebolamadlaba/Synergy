@@ -419,7 +419,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <param name="user">The user.</param>
         /// <returns></returns>
-        public IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, User user)
+        public IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, User user,  string concessiontype)
         {
             int? userId = null;
 
@@ -428,7 +428,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             else if (user.CanRequest && !user.IsAdminAssistant)
                 userId = user.Id;
 
-            return _miscPerformanceRepository.GetClientAccounts(riskGroupNumber, userId);
+            return _miscPerformanceRepository.GetClientAccounts(riskGroupNumber, userId, concessiontype);
         }
 
         /// <summary>
@@ -436,16 +436,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <param name="accountNumber">The account number.</param>
-        /// <returns></returns>
-        public IEnumerable<ClientAccount> SearchClientAccounts(int riskGroupNumber, string accountNumber)
-        {
-            var clientAccounts = GetClientAccounts(riskGroupNumber, null);
+        ///// <returns></returns>
+        //public IEnumerable<ClientAccount> SearchClientAccounts(int riskGroupNumber, string accountNumber)
+        //{
+        //    var clientAccounts = GetClientAccounts(riskGroupNumber, null);
 
-            if (clientAccounts != null && clientAccounts.Any())
-                return clientAccounts.Where(_ => _.AccountNumber.Contains(accountNumber)).Take(10);
+        //    if (clientAccounts != null && clientAccounts.Any())
+        //        return clientAccounts.Where(_ => _.AccountNumber.Contains(accountNumber)).Take(10);
 
-            return null;
-        }
+        //    return null;
+        //}
 
         public IEnumerable<SearchConcessionDetail> SearchConsessions(int userId)
         {

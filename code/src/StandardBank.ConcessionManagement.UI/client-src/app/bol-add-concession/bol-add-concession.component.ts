@@ -78,8 +78,8 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
     observableConditionTypes: Observable<ConditionType[]>;
     conditionTypes: ConditionType[];
 
-    observableClientAccounts: Observable<ClientAccount[]>;
-    clientAccounts: ClientAccount[];
+    //observableClientAccounts: Observable<ClientAccount[]>;
+    //clientAccounts: ClientAccount[];
 
 
     constructor(private route: ActivatedRoute,
@@ -99,7 +99,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         this.conditionTypes = [new ConditionType()];
         this.selectedConditionTypes = [new ConditionType()];
         this.selectedProducts = [new BolChargeCodeType()];
-        this.clientAccounts = [new ClientAccount()];
+        //this.clientAccounts = [new ClientAccount()];
 
         this.bolView.riskGroup = new RiskGroup();
         this.bolView.bolConcessions = [new BolConcession()];
@@ -115,8 +115,8 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
                 this.observableRiskGroup = this.lookupDataService.getRiskGroup(this.riskGroupNumber);
                 this.observableRiskGroup.subscribe(riskGroup => this.riskGroup = riskGroup, error => this.errorMessage = <any>error);
 
-                this.observableClientAccounts = this.lookupDataService.getClientAccounts(this.riskGroupNumber);
-                this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
+               // this.observableClientAccounts = this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.BOL);
+               // this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
 
             }
 

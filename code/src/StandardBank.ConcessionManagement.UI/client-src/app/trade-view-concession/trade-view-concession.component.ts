@@ -158,7 +158,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
             this.observableRiskGroup = this.lookupDataService.getRiskGroup(this.riskGroupNumber);
             this.observableRiskGroup.subscribe(riskGroup => this.riskGroup = riskGroup, error => this.errorMessage = <any>error);
 
-            this.observableClientAccounts = this.lookupDataService.getClientAccounts(this.riskGroupNumber);
+            this.observableClientAccounts = this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Trade);
             this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
         }
 

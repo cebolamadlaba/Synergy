@@ -155,7 +155,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             this.lookupDataService.getPeriodTypes(),
             this.lookupDataService.getConditionTypes(),
             this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-            this.lookupDataService.getClientAccounts(this.riskGroupNumber),
+            this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Lending),
             this.lendingService.getLendingFinancial(this.riskGroupNumber),
           
         ]).subscribe(results => {

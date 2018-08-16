@@ -420,7 +420,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("CreateTransactionType")]
         public async Task<IActionResult> CreateTransactionType([FromBody] TransactionType transactionType)
         {
-            var model = new Model.Repository.TransactionType() { Description = transactionType.Description, IsActive = true };
+            var model = new Model.Repository.TransactionType() { Description = transactionType.Description, IsActive = true, ImportFileChannel = transactionType.ImportFileChannel };
 
             return Ok(_transactionalManager.CreateTransactionType(model));
         }
