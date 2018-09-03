@@ -56,5 +56,9 @@
         public string Limit { get; set; }
 
         public string InitiationFee { get; set; }
+
+        public string Frequency { get; set; }
+
+        public string ServiceFee { get; set; }
     }
 }

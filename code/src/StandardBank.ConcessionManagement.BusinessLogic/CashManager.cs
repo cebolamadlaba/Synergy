@@ -274,9 +274,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return new CashView
             {
                 RiskGroup = riskGroup,
-                CashConcessions = cashConcessions.OrderByDescending(_ => _.Concession.DateOpened),
+                CashConcessions = cashConcessions.OrderBy(_ => _.Concession.AccountNumber),
                 CashFinancial = cashFinancial,
-                CashProductGroups = groupedinfo
+                CashProductGroups = groupedinfo.OrderBy(o => o.CustomerName)
             };
         }
 

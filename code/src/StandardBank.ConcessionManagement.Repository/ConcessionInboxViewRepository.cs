@@ -72,8 +72,8 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionInboxView>(
-                    @"SELECT distinct [ConcessionId], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [CustomerName], [ConcessionTypeId], [ConcessionType], max([ConcessionDate]) ConcessionDate, [StatusId], [Status], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment], max([DatesentForApproval]) DatesentForApproval, 
-                    min([ExpiryDate]) ExpiryDate, max([DateApproved]) DateApproved, [CentreId], [CentreName], [RegionId], [Region], [IsMismatched], [IsActive], [IsCurrent], [Location] 'ConcessionLetterURL'
+                    @"SELECT distinct [ConcessionId],LegalEntityId, [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [CustomerName], [ConcessionTypeId], [ConcessionType], max([ConcessionDate]) ConcessionDate, [StatusId], [Status], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment], max([DatesentForApproval]) DatesentForApproval, 
+                    min([ExpiryDate]) ExpiryDate, max([DateApproved]) DateApproved, [CentreId], [CentreName], [RegionId], [Region],[Location] 'ConcessionLetterURL'
                     FROM [dbo].[ConcessionInboxView]					
 					left join tblConcessionLetter on [ConcessionInboxView].ConcessionId = tblConcessionLetter.fkConcessionDetailId  
 
@@ -81,8 +81,8 @@ namespace StandardBank.ConcessionManagement.Repository
                     AND [StatusId] in @statusIds
                     AND [IsActive] = @isActive
 
-                    group by [ConcessionId], [RiskGroupId], [RiskGroupNumber], [RiskGroupName],[CustomerName], [ConcessionTypeId], [ConcessionType],[StatusId], [Status],[SubStatus], [ConcessionRef], [MarketSegmentId], [Segment],
-                    [CentreId], [CentreName], [RegionId], [Region], [IsMismatched], [IsActive], [IsCurrent], [Location]"
+                    group by [ConcessionId],LegalEntityId, [RiskGroupId], [RiskGroupNumber], [RiskGroupName],[CustomerName], [ConcessionTypeId], [ConcessionType],[StatusId], [Status],[SubStatus], [ConcessionRef], [MarketSegmentId], [Segment],
+                    [CentreId], [CentreName], [RegionId], [Region], [Location]"
 
                     ,
                     new { requestorId, statusIds, isActive });

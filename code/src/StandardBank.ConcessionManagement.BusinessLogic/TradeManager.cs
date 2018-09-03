@@ -162,9 +162,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return new TradeView
             {
                 RiskGroup = riskGroup,
-                TradeConcessions = tradeConcessions.OrderByDescending(_ => _.Concession.DateOpened),
+                TradeConcessions = tradeConcessions.OrderBy(_ => _.Concession.AccountNumber),
                 TradeFinancial = tradeFinancial,
-                TradeProductGroups = groupedinfo
+                TradeProductGroups = groupedinfo.OrderBy(o => o.LegalEntity)
             };
         }
 

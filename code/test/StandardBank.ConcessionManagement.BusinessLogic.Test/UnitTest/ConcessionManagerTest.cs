@@ -239,7 +239,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockMiscPerformanceRepository.Setup(_ => _.GetClientAccounts(It.IsAny<int>(), It.IsAny<int?>(), ""))
                 .Returns(new[] {new ClientAccount()});
 
-            var result = _concessionManager.GetClientAccounts(1, new User {  CanRequest = true});
+            var result = _concessionManager.GetClientAccounts(1, new User {  CanRequest = true},"");
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
@@ -254,7 +254,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockMiscPerformanceRepository.Setup(_ => _.GetClientAccounts(It.IsAny<int>(), It.IsAny<int?>(),""))
                 .Returns(new[] { new ClientAccount() });
 
-            var result = _concessionManager.GetClientAccounts(1, new User { CanRequest = false });
+            var result = _concessionManager.GetClientAccounts(1, new User { CanRequest = false },"");
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);

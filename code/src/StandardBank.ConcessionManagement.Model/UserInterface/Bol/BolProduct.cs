@@ -26,7 +26,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Bol
 
         public string ChargeCodeDesc { get; set; }
 
-        public decimal LoadedRate { get; set; }
+        public string LoadedRate { get; set; }
 
     }
 

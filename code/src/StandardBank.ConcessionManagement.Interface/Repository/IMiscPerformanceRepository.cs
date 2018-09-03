@@ -23,6 +23,10 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, int? userId, string concessiontype);
 
 
+        IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, int? userId);
+
+
+
         /// <summary>
         /// Gets the lending products.
         /// </summary>

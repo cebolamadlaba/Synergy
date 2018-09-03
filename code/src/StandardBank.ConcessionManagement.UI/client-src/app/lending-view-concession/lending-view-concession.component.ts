@@ -283,6 +283,10 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                     currentConcession.get('reviewFee').setValue(this.formatDecimal(lendingConcessionDetail.reviewFee));
                     currentConcession.get('uffFee').setValue(this.formatDecimal(lendingConcessionDetail.uffFee));
 
+
+                    currentConcession.get('serviceFee').setValue(this.formatDecimal(lendingConcessionDetail.serviceFee));
+                    currentConcession.get('frequency').setValue(lendingConcessionDetail.frequency);
+
                     if (lendingConcessionDetail.expiryDate) {
                         var formattedExpiryDate = this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd');
                         currentConcession.get('expiryDate').setValue(formattedExpiryDate);
@@ -357,7 +361,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             expiryDate: [{ value: '', disabled: true }],
 			dateApproved: [{ value: '', disabled: true }],
 			isExpired: [''],
-			isExpiring: ['']
+            isExpiring: [''],
+            frequency: [{ value: '', disabled: true }],
+            serviceFee: [{ value: '', disabled: true }],
         });
     }
 
@@ -437,12 +443,42 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             currentRow.get('reviewFeeType').enable();
             currentRow.get('reviewFee').enable();
             currentRow.get('uffFee').enable();
+
+            currentRow.get('frequency').disable();
+            currentRow.get('serviceFee').disable();
+
+            currentRow.get('frequency').setValue(null);
+            currentRow.get('serviceFee').setValue(null);
+
+
         }
-        else if (productType.description === "Temporary Overdraft") {          
+        else if (productType.description === "Temporary Overdraft") {
 
             currentRow.get('reviewFeeType').enable();
             currentRow.get('reviewFee').enable();
             currentRow.get('uffFee').enable();
+
+            currentRow.get('frequency').disable();
+            currentRow.get('serviceFee').disable();
+
+            currentRow.get('frequency').setValue(null);
+            currentRow.get('serviceFee').setValue(null);
+
+        }
+        else if (productType.description.indexOf("VAF") == 0) {
+
+            currentRow.get('frequency').enable();
+            currentRow.get('serviceFee').enable();
+
+            currentRow.get('reviewFeeType').disable();
+            currentRow.get('reviewFee').disable();
+            currentRow.get('uffFee').disable();
+
+            currentRow.get('reviewFeeType').setValue(null);
+            currentRow.get('reviewFee').setValue(null);
+            currentRow.get('uffFee').setValue(null);
+
+
         }
         else {
             currentRow.get('term').enable();
@@ -454,6 +490,13 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             currentRow.get('reviewFeeType').setValue(null);
             currentRow.get('reviewFee').setValue(null);
             currentRow.get('uffFee').setValue(null);
+
+            currentRow.get('frequency').disable();
+            currentRow.get('serviceFee').disable();
+
+            currentRow.get('frequency').setValue(null);
+            currentRow.get('serviceFee').setValue(null);
+
         }
     }
 
@@ -541,6 +584,12 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
             if (concessionFormItem.get('uffFee').value)
                 lendingConcessionDetail.uffFee = concessionFormItem.get('uffFee').value;
+
+            if (concessionFormItem.get('serviceFee').value)
+                lendingConcessionDetail.serviceFee = concessionFormItem.get('serviceFee').value;
+
+            if (concessionFormItem.get('frequency').value)
+                lendingConcessionDetail.frequency = concessionFormItem.get('frequency').value;
 
 			if (concessionFormItem.get('expiryDate').value)
 				lendingConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);

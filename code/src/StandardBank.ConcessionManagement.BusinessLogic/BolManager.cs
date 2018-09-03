@@ -154,7 +154,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 bolConcessions.Add(new BolConcession
                 {
-                    BolConcessionDetails = _miscPerformanceRepository.GetBolConcessionDetails(concession.Id),
+                    BolConcessionDetails = _miscPerformanceRepository.GetBolConcessionDetails(concession.Id).OrderBy(o => o.BolUserID),
                     Concession = concession
                 });
             }
@@ -163,7 +163,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 _mapper.Map<BolFinancial>(_financialBolRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
                                            new FinancialBol());
 
-            var bolProducts = GetBolProducts(riskGroup);
+            var bolProducts = GetBolProducts(riskGroup).OrderBy(o => o.BOLUserId);
 
             //grouping of products
             var groupedinfo = new List<BolProductGroup>();
@@ -192,9 +192,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return new BolView
             {
                 RiskGroup = riskGroup,
-                BolConcessions = bolConcessions.OrderByDescending(_ => _.Concession.DateOpened),
+                BolConcessions = bolConcessions, //.OrderBy(_ => _.Concession.AccountNumber),
                 BolFinancial = bolFinancial,
-                BolProductGroups = groupedinfo
+                BolProductGroups = groupedinfo.OrderBy(o => o.LegalEntity)
             };
         }
 

@@ -15,4 +15,10 @@ export class LendingConcessionDetail extends BaseConcessionDetail {
     reviewFeeTypeId: number;
     reviewFee: number;
     uffFee: number;
+
+    frequency: string;
+    serviceFee: number;
+
+
+
 }

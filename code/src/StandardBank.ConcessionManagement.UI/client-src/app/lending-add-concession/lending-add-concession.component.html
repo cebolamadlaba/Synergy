@@ -143,8 +143,9 @@
                 <td class="length-long">
                     <!-- Account No -->
                     <select formControlName="accountNumber" class="form-control" [attr.disabled]="saveMessage ? '' : null">
-                        <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
+                        <option *ngFor="let clientAccountOption of selectedAccountNumbers[i].clientaccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
+
                 </td>
                 <!-- Limit -->
                 <td class="length-short"><input type="text" numbersOnly="true" formControlName="limit" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
@@ -156,9 +157,9 @@
                 <!-- Prime -->
                 <td class="length-short"><input type="text" formControlName="marginAgainstPrime" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="setTwoNumberDecimalMAP($event)" /></td>
 
-                <!-- Frequncy -->
+                <!-- Frequency -->
                 <td class="length-short">
-                    <select formControlName="frequency" class="form-control" [attr.disabled]="(selectedProductTypes[i]) && !saveMessage ? '' : null">
+                    <select formControlName="frequency" class="form-control" [attr.disabled]="saveMessage ? '' : null" >
                         <option>Monthly</option>
                         <option>Quarterly</option>
                         <option>Bi-annually </option>
@@ -170,7 +171,7 @@
                 <td class="length-short"><input type="text" numbersOnly="true" formControlName="initiationFee" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
 
                 <!-- Service fee -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="serviceFee" class="form-control" [attr.disabled]="(selectedProductTypes[i]) && !saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="serviceFee" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
 
                 <!-- Review fee type -->
                 <td class="length-short">

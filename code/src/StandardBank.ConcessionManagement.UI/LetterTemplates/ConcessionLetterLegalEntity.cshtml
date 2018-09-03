@@ -159,22 +159,34 @@
                     <td style="padding: 5px; width: 15%;">Limit</td>
                     <td style="padding: 5px; width: 21%;">Channel / Fee Type</td>
                     <td style="padding: 5px; width: 21%;">Fee / Margin Above Prime %<br />(Incl. VAT)</td>
+
+
+                    <td style="padding: 5px; width: 15%;">Freq</td>
                     <td style="padding: 5px; width: 15%;">Initiation Fee %</td>
+                    <td style="padding: 5px; width: 15%;">Service Fee %</td>
+
+
+
                     <td style="padding: 5px; width: 14%;">Concession Start Date</td>
                     <td style="padding: 5px; width: 14%;">Concession End Date</td>
                 </tr>
                 @foreach (var lendingConcessionLetter in legalEntityConcession.LendingConcessionLetters)
                 {
-                    <tr>
-                        <td>@lendingConcessionLetter.ProductType</td>
-                        <td>@lendingConcessionLetter.AccountNumber</td>
-                        <td>@lendingConcessionLetter.Limit</td>
-                        <td>Margin Above Prime</td>
-                        <td>@lendingConcessionLetter.FeeOrMarginAbovePrime</td>
-                        <td>@lendingConcessionLetter.InitiationFee</td>
-                        <td>@lendingConcessionLetter.ConcessionStartDate</td>
-                        <td>@lendingConcessionLetter.ConcessionEndDate</td>
-                    </tr>
+                <tr>
+                    <td>@lendingConcessionLetter.ProductType</td>
+                    <td>@lendingConcessionLetter.AccountNumber</td>
+                    <td>@lendingConcessionLetter.Limit</td>
+                    <td>Margin Above Prime</td>
+                    <td>@lendingConcessionLetter.FeeOrMarginAbovePrime</td>
+
+                    <td>@lendingConcessionLetter.Frequency</td>
+                    <td>@lendingConcessionLetter.InitiationFee</td>
+                    <td>@lendingConcessionLetter.ServiceFee</td>
+
+
+                    <td>@lendingConcessionLetter.ConcessionStartDate</td>
+                    <td>@lendingConcessionLetter.ConcessionEndDate</td>
+                </tr>
                 }
             </table>
         }

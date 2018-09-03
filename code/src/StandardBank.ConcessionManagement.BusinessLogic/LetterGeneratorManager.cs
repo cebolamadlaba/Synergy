@@ -936,6 +936,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 AccountNumber = lendingConcessionDetail.AccountNumber,
                 ProductType = lendingConcessionDetail.ProductType,
+                ServiceFee = lendingConcessionDetail.ServiceFee.ToString("N2", CultureInfo.InvariantCulture),
+                Frequency = lendingConcessionDetail.Frequency,
                 ChannelOrFeeType =
                     $"{lendingConcessionDetail.InitiationFee.ToString("N2", CultureInfo.InvariantCulture)}",
                 FeeOrMarginAbovePrime =

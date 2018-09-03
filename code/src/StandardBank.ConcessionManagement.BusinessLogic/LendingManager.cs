@@ -129,7 +129,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             //we are only allowed to extend or renew overdraft products
             if (concession.CanExtend || concession.CanRenew)
             {
-                if (!lendingConcessionDetails.Any(_ => _.ProductType == Constants.Lending.ProductType.Overdraft || _.ProductType == Constants.Lending.ProductType.TempOverdraft))
+                if (!lendingConcessionDetails.Any(_ => _.ProductType == Constants.Lending.ProductType.Overdraft || _.ProductType == Constants.Lending.ProductType.TempOverdraft || _.ProductType.StartsWith("VAF")))
                 {
                     concession.CanExtend = false;
                     concession.CanRenew = false;
@@ -315,8 +315,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return new LendingView
             {
                 RiskGroup = riskGroup,
-                LendingConcessions = lendingConcessions.OrderByDescending(_ => _.Concession.DateOpened),
-                LendingProductGroups = groupedinfo,
+                LendingConcessions = lendingConcessions.OrderBy(_ => _.Concession.AccountNumber),
+                LendingProductGroups = groupedinfo.OrderBy(m => m.CustomerName),
                 LendingFinancial = lendingFinancial
             };
         }

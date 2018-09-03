@@ -114,6 +114,7 @@
             {
                 public const string Overdraft = "Overdraft";
                 public const string TempOverdraft = "Temporary Overdraft";
+                public const string VAF = "VAF";
             }
         }
 
