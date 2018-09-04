@@ -95,7 +95,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 string sql = @"SELECT distinct [ConcessionId], [RiskGroupId], [RiskGroupNumber], [RiskGroupName],[ConcessionTypeId], [ConcessionType], [ConcessionDate], [StatusId], [Status], [SubStatusId], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment], min([DatesentForApproval]) DatesentForApproval , 
-                    min([ExpiryDate]) ExpiryDate, min([DateApproved]) DateApproved , [AAUserId], [RequestorId], [BCMUserId], [PCMUserId], [HOUserId], [CentreId], [CentreName], [RegionId], [Region], [IsMismatched], [IsActive], [IsCurrent]
+                    min([ExpiryDate]) ExpiryDate, min([DateApproved]) DateApproved , [AAUserId], [RequestorId], [BCMUserId], [PCMUserId], [HOUserId], [CentreId], [CentreName], [RegionId], [Region]
                     FROM [dbo].[ConcessionInboxView]
                     WHERE                    
                     [IsActive] = 1
@@ -107,7 +107,7 @@ namespace StandardBank.ConcessionManagement.Repository
                 sql += (datesentForApproval == null || datesentForApproval.Value.Year == 1) ? "" : " AND datediff(day, [DatesentForApproval],@datesentForApproval ) = 0";
 
                 sql += @" group by [ConcessionId], [RiskGroupId], [RiskGroupNumber], [RiskGroupName],[ConcessionTypeId], [ConcessionType], [ConcessionDate], [StatusId], [Status], [SubStatusId], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment],
-                    [AAUserId], [RequestorId], [BCMUserId], [PCMUserId], [HOUserId], [CentreId], [CentreName], [RegionId], [Region], [IsMismatched], [IsActive], [IsCurrent]";
+                    [AAUserId], [RequestorId], [BCMUserId], [PCMUserId], [HOUserId], [CentreId], [CentreName], [RegionId], [Region]";
 
                 return db.Query<ConcessionInboxView>(sql, new { statusIds, regionId, centreId, datesentForApproval });
             }
