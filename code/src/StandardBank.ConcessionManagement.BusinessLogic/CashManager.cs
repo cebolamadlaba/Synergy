@@ -269,10 +269,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         productgrouping.CashProducts.Add(product);
                     }
 
-                    if (productgrouping != null && productgrouping.CashProducts != null)
-                        productgrouping.CashProducts = productgrouping.CashProducts.OrderBy(o => o.AccountNumber).OrderBy(o => o.Channel).ToList();
-
+                  
                 }
+                //sort
+                foreach(var productgrouping in groupedinfo)
+                {
+                    if (productgrouping != null && productgrouping.CashProducts != null)
+                        productgrouping.CashProducts = productgrouping.CashProducts.OrderBy(o => o.AccountNumber).ThenBy(o => o.Channel).ToList();
+                                                       }
             }
 
             return new CashView

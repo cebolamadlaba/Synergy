@@ -26,6 +26,8 @@ import { SearchConcessionFilterPipe } from "../filters/search-concession-filter.
 
 import { TradeConcessionService } from "../services/trade-concession.service";
 
+import { IMyDpOptions, IMyDateModel } from 'angular4-datepicker/src/my-date-picker/interfaces'
+
 
 @Component({
     selector: 'app-conditions',
@@ -49,9 +51,16 @@ export class SearchComponent implements OnInit {
     enforcedate = true;
 
     today: String;
+    //planModel: any = { start_time: new Date() };
+   // now = 
 
-    planModel: any = { start_time: new Date() };
 
+    public myDatePickerOptions: IMyDpOptions = {
+        // other options...
+        dateFormat: 'yyyy-mm-dd',
+    };
+    // Initialized to specific date (09.10.2018).
+    public model: [null];// any = { date: { year: this.displayDate.getFullYear(), month: this.displayDate.getMonth() + 1, day: this.displayDate.getDate() } };
 
     region: Region;
     businesscentre: Centre;
@@ -70,8 +79,7 @@ export class SearchComponent implements OnInit {
         @Inject(UserConcessionsService) private userConcessionsService,
         @Inject(RegionService) private regionService,
         @Inject(BcmManagementService) private businesscentreService,
-        @Inject(TradeConcessionService) private tradeConcessionService,
-
+        @Inject(TradeConcessionService) private tradeConcessionService, 
         private router: Router) { }
 
     observableApprovedConcessions: Observable<SearchConcessionDetail[]>;
@@ -103,6 +111,15 @@ export class SearchComponent implements OnInit {
         }, err => this.errorMessage = err);
     }
     periodFilter(value: string) {
+        this.getFilteredView();
+    }
+
+    // dateChanged callback function called when the user select the date. This is mandatory callback
+    // in this option. There are also optional inputFieldChanged and calendarViewChanged callbacks.
+    onDateChanged(event: IMyDateModel) {
+        // event properties are: event.date, event.jsdate, event.formatted and event.epoc
+
+        this.today = event.formatted;
         this.getFilteredView();
     }
 

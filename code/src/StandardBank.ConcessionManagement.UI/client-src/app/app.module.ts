@@ -7,7 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { DataTablesModule } from 'angular-datatables';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-
+import { MyDatePickerModule } from 'angular4-datepicker/src/my-date-picker/my-date-picker.module';
 
 
 import { AppComponent } from './app.component';
@@ -154,6 +154,7 @@ import { ChannelTypesManagementComponent } from './admin/channel-types/channel-t
         DataTablesModule,
         ReactiveFormsModule,
         BsDropdownModule.forRoot(),
+        MyDatePickerModule 
     ],
     providers: [
         LookupDataService,

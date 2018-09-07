@@ -186,9 +186,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     {
                         productgrouping.BolProducts.Add(product);
                     }
-
+                }
+                //sort
+                foreach (var productgrouping in groupedinfo)
+                {
                     if (productgrouping != null && productgrouping.BolProducts != null)
-                        productgrouping.BolProducts = productgrouping.BolProducts.OrderBy(o => o.BOLUserId).OrderBy(o => o.BolProductType).ToList();
+                        productgrouping.BolProducts = productgrouping.BolProducts.OrderBy(o => o.BOLUserId).ThenBy(o => o.BolProductType).ToList();
+
 
                 }
             }
