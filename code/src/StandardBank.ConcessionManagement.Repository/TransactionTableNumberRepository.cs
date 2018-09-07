@@ -107,8 +107,9 @@ namespace StandardBank.ConcessionManagement.Repository
                            });
                     }
                 }
+          
+             _cacheManager.Remove(CacheKey.Repository.MiscPerformanceRepository.GetClientAccounts);
 
-            //clear out the cache because the data has changed
             _cacheManager.Remove(CacheKey.Repository.TransactionTableNumberRepository.ReadAll);
 
             return model;

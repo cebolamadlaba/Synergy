@@ -162,9 +162,7 @@
             <h3 class="table-title">Concessions</h3>
             <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" *ngIf="canPcmApprove || isEditing || isRecalling" style="margin-top: 15px;">New Concession</button>
         </div>
-    </div>
-
-  
+    </div> 
    
 
         <table class="form-concessions-table" formArrayName="concessionItemRows">
@@ -245,14 +243,14 @@
 
                     <td class="length-short">
                         <!-- Review fee type -->
-                        <select formControlName="reviewFeeType" class="form-control" [attr.disabled]="canEdit && selectedProductTypes[i].description == 'Overdraft' ? null : ''">
+                        <select formControlName="reviewFeeType" class="form-control" [attr.disabled]="canEdit && (selectedProductTypes[i].description == 'Overdraft'  || selectedProductTypes[i].description == 'Temporary Overdraft') ? null : ''">
                             <option *ngFor="let reviewFeeTypeOption of reviewFeeTypes" [ngValue]="reviewFeeTypeOption">{{reviewFeeTypeOption.description}}</option>
                         </select>
                     </td>
                     <!-- Review fee -->
-                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="reviewFee" class="form-control" [attr.disabled]="canEdit && selectedProductTypes[i].description == 'Overdraft' ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
+                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="reviewFee" class="form-control" [attr.disabled]="canEdit && (selectedProductTypes[i].description == 'Overdraft'  || selectedProductTypes[i].description == 'Temporary Overdraft')? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
                     <!-- uffFee -->
-                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="uffFee" class="form-control" [attr.disabled]="canEdit && selectedProductTypes[i].description == 'Overdraft' ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
+                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="uffFee" class="form-control" [attr.disabled]="canEdit && (selectedProductTypes[i].description == 'Overdraft'  || selectedProductTypes[i].description == 'Temporary Overdraft') ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
 
                     <td class="length-medium" *ngIf="isApproved"><input type="date" formControlName="expiryDate" class="form-control" [style.background-color]="getBackgroundColour(i)" /></td>
                     <td class="length-medium" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>

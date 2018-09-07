@@ -159,7 +159,7 @@
 
                 <!-- Frequency -->
                 <td class="length-short">
-                    <select formControlName="frequency" class="form-control" [attr.disabled]="saveMessage ? '' : null" >
+                    <select formControlName="frequency" class="form-control" [attr.disabled]="(selectedProductTypes[i].description != 'Overdraft') && !saveMessage ? null : ''" >
                         <option>Monthly</option>
                         <option>Quarterly</option>
                         <option>Bi-annually </option>

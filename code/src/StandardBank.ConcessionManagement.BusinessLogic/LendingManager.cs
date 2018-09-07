@@ -309,6 +309,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     {
                         productgrouping.LendingProducts.Add(product);
                     }
+
+
+                    if (productgrouping != null && productgrouping.LendingProducts != null)
+                        productgrouping.LendingProducts = productgrouping.LendingProducts.OrderBy(o => o.AccountNumber).OrderBy(o => o.Product).ToList();
+
                 }
             }
 

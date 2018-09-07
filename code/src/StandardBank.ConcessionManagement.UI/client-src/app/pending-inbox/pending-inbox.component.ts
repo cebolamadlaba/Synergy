@@ -79,9 +79,6 @@ export class PendingInboxComponent implements OnInit {
                     };
                 }
 
-
-
-
                 this.dtTrigger.next();
             },
             error => this.errorMessage = <any>error);       

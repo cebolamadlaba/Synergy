@@ -454,15 +454,37 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         }
         else if (productType.description === "Temporary Overdraft") {
 
+            //currentRow.get('term').enable();
+
+            //currentRow.get('reviewFeeType').disable();
+            //currentRow.get('reviewFee').disable();
+            //currentRow.get('uffFee').disable();
+
+            //currentRow.get('reviewFeeType').setValue(null);
+            //currentRow.get('reviewFee').setValue(null);
+            //currentRow.get('uffFee').setValue(null);
+
+            //currentRow.get('frequency').disable();
+            //currentRow.get('serviceFee').disable();
+
+            //currentRow.get('frequency').setValue(null);
+            //currentRow.get('serviceFee').setValue(null);
+
+            ///---
+
             currentRow.get('reviewFeeType').enable();
             currentRow.get('reviewFee').enable();
             currentRow.get('uffFee').enable();
 
-            currentRow.get('frequency').disable();
-            currentRow.get('serviceFee').disable();
+            currentRow.get('reviewFeeType').setValue(null);
+            currentRow.get('reviewFee').setValue(null);
+            currentRow.get('uffFee').setValue(null);
 
             currentRow.get('frequency').setValue(null);
             currentRow.get('serviceFee').setValue(null);
+
+            currentRow.get('frequency').disable();
+            currentRow.get('serviceFee').disable();
 
         }
         else if (productType.description.indexOf("VAF") == 0) {

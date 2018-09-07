@@ -134,7 +134,6 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
                 var productType = currentRow.get('productType').value;            
 
                 this.productTypeChanged(0);
-
             }
 
             if (this.clientAccounts)

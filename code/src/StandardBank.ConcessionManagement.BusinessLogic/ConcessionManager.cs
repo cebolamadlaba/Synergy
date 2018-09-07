@@ -484,7 +484,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var bcmpendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.BcmPending);
 
-            var concessions = _concessionInboxViewRepository.ReadbyPCMPending(region, businesscentre, datefilter, new[] { bcmpendingStatusId });
+            var concessions = _concessionInboxViewRepository.Search(region, businesscentre, datefilter, new[] { bcmpendingStatusId });
 
             var approvedConcessionDetails = new List<SearchConcessionDetail>();
             foreach (var concession in concessions.OrderByDescending(_ => _.DateApproved ?? _.ConcessionDate))

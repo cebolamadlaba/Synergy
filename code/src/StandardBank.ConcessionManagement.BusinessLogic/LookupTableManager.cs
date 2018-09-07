@@ -584,7 +584,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var concessionTypeId = GetConcessionTypeId(concessionType);
             var transactionTableNumbers =
                 _mapper.Map<IEnumerable<Model.UserInterface.Transactional.TransactionTableNumber>>(
-                    _transactionTableNumberRepository.ReadAll());
+                    _transactionTableNumberRepository.ReadAll().Where((_ => _.IsActive == true)));          
+
 
             foreach (var transactionType in _transactionTypeRepository.ReadByConcessionTypeIdIsActive(concessionTypeId,
                 true))
