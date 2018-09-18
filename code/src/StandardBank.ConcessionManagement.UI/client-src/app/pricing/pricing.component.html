@@ -24,7 +24,7 @@
         </div>
     </div>
     <div class="col-md-5">
-        <div class="pricing-form">           
+        <div class="pricing-form">
             <div class="row" *ngIf="riskGroup?.marketSegment">
                 <div class="col-sm-3">
                     <p class="lightTitle">Segment</p>
@@ -136,15 +136,7 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Investments -->
-                    <!--<div class="col-md-3">
-                        <div class="product-item" [routerLink]="['/pricing-investments']">
-                            <div class="product-heading">Investments</div>
-                            <div class="container-item-icon">
-                                <i class="fa fa-bar-chart" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>-->
+
                     <!-- BOL -->
                     <div class="col-md-3">
                         <div class="product-item" [routerLink]="['/pricing-bol', riskGroup.number]">
@@ -156,6 +148,7 @@
                     </div>
                 </div>
                 <div class="col-md-8 col-md-offset-2" style="margin-top: 20px">
+
                     <!-- MAS -->
                     <!--<div class="col-md-3">
                         <div class="product-item" [routerLink]="['/pricing-mas']">
@@ -174,6 +167,15 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Investments -->
+                    <!--<div class="col-md-3">
+                        <div class="product-item" [routerLink]="['/pricing-investments']">
+                            <div class="product-heading">Investments</div>
+                            <div class="container-item-icon">
+                                <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>-->
                     <!-- Cashman -->
                     <!--<div class="col-md-3">
                         <div class="product-item" [routerLink]="['/pricing-cashman']">
