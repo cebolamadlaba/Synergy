@@ -176,11 +176,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             period: ['']
         });
     }
-
-    testEnabling() {
-
-        this.productTypeChanged(0);
-    }
+  
 
     addNewConcessionRow() {
         const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
@@ -263,6 +259,18 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
         if (this.clientAccounts && this.clientAccounts.length > 0) {
             this.selectedAccountNumbers[rowIndex].clientaccounts = this.clientAccounts.filter(re => re.accountType == productType.description);
+
+
+
+            if (this.selectedAccountNumbers[rowIndex].clientaccounts.length == 0) {
+                control.controls[rowIndex].get('accountNumber').setValue(null);
+            }
+            else {
+
+                control.controls[rowIndex].get('accountNumber').setValue(this.selectedAccountNumbers[rowIndex].clientaccounts[0]);
+
+            }
+
         }
 
         if (productType.description === "Overdraft") {

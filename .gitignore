@@ -14,3 +14,4 @@ web.pubxml.user
 *StandardBank.ConcessionManagement.Database.dbmdl
 *StandardBank.ConcessionManagement.Database.jfm
 /code/src/StandardBank.ConcessionManagement.Scheduler/logs
+/code/src/StandardBank.ConcessionManagement.UI/node_modules
