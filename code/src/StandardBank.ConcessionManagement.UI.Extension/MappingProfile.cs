@@ -132,6 +132,9 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             //FinancialTrade
             CreateMap<Model.Repository.FinancialTrade, Model.UserInterface.Trade.TradeFinancial>().ReverseMap();
 
+            //FinancialInvestment
+            CreateMap<Model.Repository.FinancialInvestment, Model.UserInterface.Investment.InvestmentFinancial>().ReverseMap();
+
             //FinancialLending
             CreateMap<Model.Repository.FinancialLending, Model.UserInterface.Lending.LendingFinancial>().ReverseMap();
 
@@ -203,18 +206,20 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             //BOL
             CreateMap<Model.Repository.BOLChargeCode, Model.UserInterface.Bol.BOLChargeCode>().ReverseMap();
             CreateMap<Model.Repository.BOLChargeCodeType, Model.UserInterface.Bol.BOLChargeCodeType>().ReverseMap();
-            CreateMap<Model.Repository.LegalEntityBOLUser, Model.UserInterface.Bol.LegalEntityBOLUser>().ReverseMap();
-       
+            CreateMap<Model.Repository.LegalEntityBOLUser, Model.UserInterface.Bol.LegalEntityBOLUser>().ReverseMap();       
             CreateMap<Model.Repository.ConcessionBol, Model.UserInterface.Bol.BolConcessionDetail>().ReverseMap();
 
+            //Trade
             CreateMap<Model.Repository.TradeProduct, Model.UserInterface.Trade.TradeProduct>().ReverseMap();
             CreateMap<Model.Repository.TradeProductType, Model.UserInterface.Trade.TradeProductType>().ReverseMap();
-
-
-            //Trade
             CreateMap<Model.Repository.ConcessionTrade, Model.UserInterface.Trade.TradeConcessionDetail>().ReverseMap();
-
             CreateMap<Model.Repository.LegalEntityGBBNumber, Model.UserInterface.Trade.LegalEntityGBBNumber>().ReverseMap();
+
+            //Investment
+            CreateMap<Model.Repository.InvestmentProduct, Model.UserInterface.Investment.InvestmentProduct>().ReverseMap();
+            CreateMap<Model.Repository.InvestmentProductType, Model.UserInterface.Investment.InvestmentProductType>().ReverseMap();
+            CreateMap<Model.Repository.ConcessionInvestment, Model.UserInterface.Investment.InvestmentConcessionDetail>().ReverseMap();
+            CreateMap<Model.Repository.LegalEntityGBBNumber, Model.UserInterface.Investment.LegalEntityGBBNumber>().ReverseMap();
 
 
         }

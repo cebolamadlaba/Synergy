@@ -30,7 +30,6 @@ export class PricingTradeComponent implements OnInit, OnDestroy {
     isLoading = true;
     canRequest = false;
 
-
     constructor(
         private router: Router,
         private route: ActivatedRoute,
@@ -77,8 +76,5 @@ export class PricingTradeComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.sub.unsubscribe();
     }
-
-    
-
 
 }

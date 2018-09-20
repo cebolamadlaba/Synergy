@@ -13,7 +13,6 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
     public interface ITradeManager
     {
 
-
         ConcessionTrade CreateConcessionTrade(TradeConcessionDetail tradeConcessionDetail, Concession concession);
 
         TradeConcession GetTradeConcession(string concessionReferenceId, User user);
@@ -22,14 +21,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 
         ConcessionTrade UpdateConcessionTrade(TradeConcessionDetail tradedConcessionDetail, Concession concession);
 
-        TradeView GetTradeViewData(int riskGroupNumber);
-
-        //List<Model.UserInterface.Trade.TradeProductType> GetTradeProductTypes();
-
-        //List<Model.UserInterface.Trade.TradeProduct> GetTradeProducts();
-
-
-        //TradeFinancial GetTradeFinancialForRiskGroupNumber(int riskGroupNumber);
+        TradeView GetTradeViewData(int riskGroupNumber); 
 
         Task ForwardTradeConcession(TradeConcession bolConcession, User user);
 

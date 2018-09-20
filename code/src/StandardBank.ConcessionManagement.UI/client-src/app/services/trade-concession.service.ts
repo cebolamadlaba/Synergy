@@ -64,9 +64,7 @@ export class TradeConcessionService {
         let options = new RequestOptions({ headers: headers });
         const url = "/api/Trade/" + relationshipType + "Trade";
         return this.http.post(url, bolConcession, options).map(this.extractData).catch(this.handleErrorObservable);
-    }
-
- 
+    } 
 
     postRecallTradeData(tradeConcession: TradeConcession): Observable<TradeConcession> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
@@ -74,19 +72,7 @@ export class TradeConcessionService {
         const url = "/api/Trade/UpdateRecalledTrade";
         return this.http.post(url, tradeConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
-
-    //createupdateBOLChargeCode(bolChargecode: BolChargeCode): Observable<BolChargeCode> {
-    //    let headers = new Headers({ 'Content-Type': 'application/json' });
-    //    let options = new RequestOptions({ headers: headers });
-    //    const url = "/api/Bol/createupdateBOLChargeCode";
-    //    return this.http.post(url, bolChargecode, options).map(this.extractData).catch(this.handleErrorObservable);
-    //}
-    //postNewBolChargeCodeType(bolChargecodeType: BolChargeCodeType): Observable<BolChargeCodeType> {
-    //    let headers = new Headers({ 'Content-Type': 'application/json' });
-    //    let options = new RequestOptions({ headers: headers });
-    //    const url = "/api/Bol/NewBolChargeCodeType";
-    //    return this.http.post(url, bolChargecodeType, options).map(this.extractData).catch(this.handleErrorObservable);
-    //}
+      
 
     private extractData(response: Response) {
         let body = response.json();

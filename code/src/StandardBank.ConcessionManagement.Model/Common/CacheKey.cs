@@ -196,6 +196,11 @@
                 public const string GetTradeProducts = "CacheKey.Repository.MiscPerformanceRepository.GetTradeProducts";                
 
                 public const string GetTransactionalProducts = "CacheKey.Repository.MiscPerformanceRepository.GetTransactionalProducts";
+
+                public const string GetInvestmentProducts = "CacheKey.Repository.MiscPerformanceRepository.GetInvestmentProducts";
+
+
+                
             }
         }
     }

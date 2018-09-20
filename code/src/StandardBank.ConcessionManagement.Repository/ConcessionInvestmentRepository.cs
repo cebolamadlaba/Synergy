@@ -60,7 +60,7 @@ namespace StandardBank.ConcessionManagement.Repository
                         ProductTypeId = model.ProductTypeId,
                         Balance = model.Balance,
                         Term = model.Term,
-                        InterestToCustomer = model.InterestToCustomer
+                       
                     }).Single();
             }
 
@@ -118,8 +118,8 @@ namespace StandardBank.ConcessionManagement.Repository
                         ConcessionDetailId = model.ConcessionDetailId,
                         ProductTypeId = model.ProductTypeId,
                         Balance = model.Balance,
-                        Term = model.Term,
-                        InterestToCustomer = model.InterestToCustomer
+                        Term = model.Term
+                      
                     });
             }
 

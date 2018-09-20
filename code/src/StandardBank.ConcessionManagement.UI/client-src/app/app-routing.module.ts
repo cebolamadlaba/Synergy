@@ -22,7 +22,9 @@ import { LendingAddConcessionComponent } from "./lending-add-concession/lending-
 import { MismatchedInboxComponent } from "./mismatched-inbox/mismatched-inbox.component";
 import { LendingViewConcessionComponent } from "./lending-view-concession/lending-view-concession.component";
 import { CashViewConcessionComponent } from "./cash-view-concession/cash-view-concession.component";
+
 import { InvestmentsAddConcessionComponent } from "./investments-add-concession/investments-add-concession.component";
+import { InvestmentsViewConcessionComponent} from "./investments-view-concession/investments-view-concession.component";
 
 import { BolAddConcessionComponent } from "./bol-add-concession/bol-add-concession.component";
 import { BolViewConcessionComponent } from "./bol-view-concession/bol-view-concession.component";
@@ -66,7 +68,7 @@ const routes: Routes = [
     { path: 'pricing-lending/:riskGroupNumber', component: PricingLendingComponent },
     { path: 'pricing-cash/:riskGroupNumber', component: PricingCashComponent },
     { path: 'pricing-transactional/:riskGroupNumber', component: PricingTransactionalComponent },
-    { path: 'pricing-investments', component: PricingInvestmentsComponent },
+    { path: 'pricing-investments/:riskGroupNumber', component: PricingInvestmentsComponent },
     { path: 'pricing-bol/:riskGroupNumber', component: PricingBolComponent },
     { path: 'pricing-trade/:riskGroupNumber', component: PricingTradeComponent },
     { path: 'pricing-mas', component: PricingMasComponent },
@@ -77,7 +79,8 @@ const routes: Routes = [
     { path: 'cash-view-concession/:riskGroupNumber/:concessionReferenceId', component: CashViewConcessionComponent },
     { path: 'lending-add-concession/:riskGroupNumber', component: LendingAddConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
-    { path: 'investments-add-concession', component: InvestmentsAddConcessionComponent },
+    { path: 'investments-add-concession/:riskGroupNumber', component: InvestmentsAddConcessionComponent },
+    { path: 'investments-view-concession/:riskGroupNumber', component: InvestmentsViewConcessionComponent },
 
     { path: 'bol-add-concession/:riskGroupNumber', component: BolAddConcessionComponent },
     { path: 'bol-view-concession/:riskGroupNumber/:concessionReferenceId', component: BolViewConcessionComponent },

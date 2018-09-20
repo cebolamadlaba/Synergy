@@ -1584,8 +1584,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 ConcessionId = GetConcessionId(),
                 ProductTypeId = GetProductId(),
                 Balance = 163,
-                Term = 3,
-                InterestToCustomer = 2110
+                Term = 3
+               
             };
 
             InstantiatedDependencies.ConcessionInvestmentRepository.Create(model);

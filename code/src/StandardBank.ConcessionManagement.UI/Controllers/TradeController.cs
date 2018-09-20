@@ -18,25 +18,17 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
  
     [Produces("application/json")]
     [Route("api/Trade")]
-    public class TradeController : Controller
-    {
-        /// <summary>
-        /// The site helper
-        /// </summary>
+    public class TradeController : Controller    {
+       
         private readonly ISiteHelper _siteHelper;
       
         private readonly ITradeManager _tradeManager;
-
-        /// <summary>
-        /// The mediator
-        /// </summary>
+      
         private readonly IMediator _mediator;
 
         private readonly IBusinessCentreManager _bcmManager;
 
-        private readonly ILookupTableManager _lookupTableManager;
-
-        
+        private readonly ILookupTableManager _lookupTableManager;        
 
 
         public TradeController(ISiteHelper siteHelper, ITradeManager tradeManager, IMediator mediator,  IBusinessCentreManager businessCentreManager, ILookupTableManager lookupTableManager)
@@ -111,7 +103,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 if (tradeConcession.ConcessionConditions.All(_ => _.ConcessionConditionId != condition.ConcessionConditionId))
                     await _mediator.Send(new DeleteConcessionCondition(condition, user));
 
-            //if there are any bol concession details that have been removed delete them
+            //if there are any concession details that have been removed delete them
             foreach (var tradeConcessionDetail in databaseTradeConcession.TradeConcessionDetails)
                 if (tradeConcession.TradeConcessionDetails.All(_ => _.TradeConcessionDetailId !=
                                                                   tradeConcessionDetail.TradeConcessionDetailId))
@@ -120,7 +112,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             //update the concession
             var concession = await _mediator.Send(new UpdateConcession(tradeConcession.Concession, user));
 
-            //add all the new conditions and bol details and comments
+            //add all the new conditions and details and comments
             foreach (var tradeConcessionDetail in tradeConcession.TradeConcessionDetails)
                 await _mediator.Send(new AddOrUpdateTradeConcessionDetail(tradeConcessionDetail, user, concession));
 
@@ -154,7 +146,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
 
-            //get the bol concession details
+            //get the concession details
             var tradeConcession =
                 _tradeManager.GetTradeConcession(concessionReferenceId, user);
 
@@ -177,12 +169,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             tradeConcession.Concession = concession;
 
-            //add all the new conditions and bol details
-            foreach (var bolConcessionDetail in tradeConcession.TradeConcessionDetails)
+            //add all the new conditions and details
+            foreach (var tradeConcessionDetail in tradeConcession.TradeConcessionDetails)
             {
-                bolConcessionDetail.DateApproved = null;
-                bolConcessionDetail.TradeConcessionDetailId = 0;
-                await _mediator.Send(new AddOrUpdateTradeConcessionDetail(bolConcessionDetail, user, concession));
+                tradeConcessionDetail.DateApproved = null;
+                tradeConcessionDetail.TradeConcessionDetailId = 0;
+                await _mediator.Send(new AddOrUpdateTradeConcessionDetail(tradeConcessionDetail, user, concession));
             }
 
             if (tradeConcession.ConcessionConditions != null && tradeConcession.ConcessionConditions.Any())
@@ -289,15 +281,15 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
 
-            var bolconsession = _tradeManager.GetTradeConcession(detail.ReferenceNumber, user);
+            var tradeconsession = _tradeManager.GetTradeConcession(detail.ReferenceNumber, user);
 
-            bolconsession.Concession.SubStatus = Constants.ConcessionSubStatus.PcmPending;
-            bolconsession.Concession.BcmUserId = _bcmManager.GetBusinessCentreManager(bolconsession.Concession.CentreId).BusinessCentreManagerId;
+            tradeconsession.Concession.SubStatus = Constants.ConcessionSubStatus.PcmPending;
+            tradeconsession.Concession.BcmUserId = _bcmManager.GetBusinessCentreManager(tradeconsession.Concession.CentreId).BusinessCentreManagerId;
 
-            bolconsession.Concession.Comments = "Manually forwarded by PCM";
-            bolconsession.Concession.IsInProgressForwarding = true;
+            tradeconsession.Concession.Comments = "Manually forwarded by PCM";
+            tradeconsession.Concession.IsInProgressForwarding = true;
 
-            await _tradeManager.ForwardTradeConcession(bolconsession, user);
+            await _tradeManager.ForwardTradeConcession(tradeconsession, user);
 
             return Ok(_tradeManager.GetTradeConcession(detail.ReferenceNumber, user));
         }

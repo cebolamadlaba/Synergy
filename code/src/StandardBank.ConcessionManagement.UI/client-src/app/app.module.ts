@@ -39,6 +39,7 @@ import { MyConditionService } from './services/my-condition.service';
 import { CashConcessionService } from "./services/cash-concession.service";
 import { BolConcessionService } from "./services/bol-concession.service";
 import { TradeConcessionService } from "./services/trade-concession.service";
+import { InvestmentConcessionService } from "./services/investment-concession.service";
 import { AdminService } from './services/admin.service';
 import { RegionService } from './services/region.service';
 import { BusinessCentreService } from './services/business-centre.service';
@@ -61,6 +62,7 @@ import { BaseConcessionFilterPipe } from './filters/base-concession-filter.pipe'
 
 import { SearchConcessionFilterPipe } from './filters/search-concession-filter.pipe';
 import { InvestmentsAddConcessionComponent } from './investments-add-concession/investments-add-concession.component';
+import { InvestmentsViewConcessionComponent } from './investments-view-concession/investments-view-concession.component';
 
 import { BolAddConcessionComponent } from './bol-add-concession/bol-add-concession.component';
 import { BolViewConcessionComponent } from './bol-view-concession/bol-view-concession.component';
@@ -119,6 +121,7 @@ import { ChannelTypesManagementComponent } from './admin/channel-types/channel-t
         PricingMasComponent,
         PricingCashmanComponent,
         InvestmentsAddConcessionComponent,
+        InvestmentsViewConcessionComponent,
         BolAddConcessionComponent,
         BolViewConcessionComponent,
         MasAddConcessionComponent,
@@ -166,6 +169,7 @@ import { ChannelTypesManagementComponent } from './admin/channel-types/channel-t
         CashConcessionService,
         TransactionalConcessionService,
         AdminService,
+        AdminTransactionTablesService,
         RegionService,
         BusinessCentreService,
         PcmManagementService,
@@ -173,8 +177,8 @@ import { ChannelTypesManagementComponent } from './admin/channel-types/channel-t
         AeManagementService,
         AaManagementService,
         BolConcessionService,
-        TradeConcessionService,
-        AdminTransactionTablesService
+        TradeConcessionService,     
+        InvestmentConcessionService
     ],
     bootstrap: [AppComponent]
 })

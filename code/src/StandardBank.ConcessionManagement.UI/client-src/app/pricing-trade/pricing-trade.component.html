@@ -116,42 +116,7 @@
                         </table>
                     </div>
                 </div>
-
-
-            </div>
-
-            <!-- Products list -->
-            <!--<div class="section-body" *ngFor="let tradeprod of tradeView.tradeProducts">
-                <div class="product-section">
-                    <div class="product-name">{{tradeprod.legalEntity}}</div>
-                    <div>
-                        <div class="product-account">Account ID: {{tradeprod.accountNumber}}</div>
-
-                    </div>
-                </div>
-                <div class="product-table-container">
-                    <table class="table table-bordered table-hover header-fixed table-striped ">
-                        <thead>
-                            <tr>
-                                <th>Product </th>
-                                <th>Type</th>
-                                <th>Account(No.)</th>
-                                <th>Loaded Rate</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="leftAlign">{{tradeprod.tradeProductName}}</td>
-                                <td class="leftAlign">{{tradeprod.tradeProductType}}</td>
-                                <td class="leftAlign">{{tradeprod.accountNumber}}</td>
-                                <td class="rightAlign">{{tradeprod.loadedRate| number : '1.5-5'}}</td>
-
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>-->
-
+            </div>          
 
         </div>
     </div>
@@ -208,7 +173,6 @@
                 </div>
             </div>
         </div>
-
 
 
         <div class="searchEmptyState" *ngIf="(tradeView.tradeConcessions | baseConcessionFilter: filterConcessionId).length === 0">

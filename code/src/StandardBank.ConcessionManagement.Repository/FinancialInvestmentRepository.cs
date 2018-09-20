@@ -118,5 +118,17 @@ namespace StandardBank.ConcessionManagement.Repository
                     new {model.Id});
             }
         }
+
+        public IEnumerable<FinancialInvestment> ReadByRiskGroupId(int riskGroupId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<FinancialInvestment>(
+                    @"SELECT [pkFinancialInvestmentId] [Id], [fkRiskGroupId] [RiskGroupId], [TotalLiabilityBalances], [WeightedAverageMTP] ,[WeightedAverageNetMargin]
+                    FROM [dbo].[tblFinancialInvestment] 
+                    WHERE [fkRiskGroupId] = @riskGroupId",
+                    new { riskGroupId });
+            }
+        }
     }
 }

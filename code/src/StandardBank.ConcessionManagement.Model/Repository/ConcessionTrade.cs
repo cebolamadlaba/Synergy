@@ -20,29 +20,16 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The TransactionTypeId.
         /// </value>
         public int? fkTradeProductId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the ChannelTypeId.
-        /// </summary>
-        /// <value>
-        /// The ChannelTypeId.
-        /// </value>
-        public int? fkLegalEntityAccountId { get; set; }
      
+        public int? fkLegalEntityAccountId { get; set; }     
 
         public int? fkLegalEntityGBBNumber { get; set; }
 
         public int? fkLegalEntityId { get; set; }
+      
+        public decimal? LoadedRate { get; set; }
 
-        /// <summary>
-        /// Gets or sets the BaseRateId.
-        /// </summary>
-        /// <value>
-        /// The BaseRateId.
-        /// </value>
-        public int? LoadedRate { get; set; }
-
-        public int? ApprovedRate { get; set; }
+        public decimal? ApprovedRate { get; set; }
 
         public string GBBNumber { get; set; }
 
@@ -57,12 +44,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public decimal? FlatFee { get; set; }
 
         public decimal? EstablishmentFee { get; set; }
-        /// <summary>
-        /// Gets or sets the AdValorem.
-        /// </summary>
-        /// <value>
-        /// The AdValorem.
-        /// </value>
+       
         public decimal? AdValorem { get; set; }
 
         public string Currency { get; set; }
