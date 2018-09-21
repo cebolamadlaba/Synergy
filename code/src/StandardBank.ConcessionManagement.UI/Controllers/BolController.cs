@@ -120,6 +120,17 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(_bolManager.GetBolConcession(bolConcession.Concession.ReferenceNumber, user));
         }
 
+        [Route("UpdateApprovedBol")]
+        [ValidateModel]
+        public async Task<IActionResult> UpdateApprovedBol([FromBody] BolConcession bolConcession)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            var returnConcession = await CreateChildConcession(bolConcession, user, Constants.RelationshipType.Update);
+
+            return Ok(returnConcession);
+        }
+
         [Route("BolConcessionData/{concessionReferenceId}")]
         public IActionResult BolConcessionData(string concessionReferenceId)
         {

@@ -729,7 +729,7 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<InvestmentConcessionDetail>(@"Select cd.[pkConcessionDetailId] [ConcessionDetailId], 
+                return db.Query<InvestmentConcessionDetail>(@"select cd.[pkConcessionDetailId] [ConcessionDetailId], 
                     cd.[fkConcessionId] [ConcessionId], 
                     cd.[fkLegalEntityId] [LegalEntityId],
                     cd.[fkLegalEntityAccountId] [LegalEntityAccountId],  
@@ -738,36 +738,30 @@ namespace StandardBank.ConcessionManagement.Repository
                     [DateApproved], 
                     [IsMismatched], 
                     [PriceExported], 
-                    [PriceExportedDate],
-                    AdValorem,
-                    Currency,
-                    EstablishmentFee,
-					tr.pkConcessionTradeId [TradeConcessionDetailId],
+                    [PriceExportedDate],                  
+					pinv.pkConcessionInvestmentId [InvestmentConcessionDetailId],
                     ac.AccountNumber,
 					LoadedRate,
 					ApprovedRate,				
-                    tp.Description TradeProduct,
-					ty.Description TradeProductType,							
-                    tr.fkLegalEntityAccountId,
-                    tr.fkTradeProductId,
-                    tr.Communication,
-					tr.EstablishmentFee,
-					tr.FlatFee,
-					gb.GBBNumber,
-					tr.[Max],
-					tr.[Min],
-					tr.[Term],
-                    tr.fkLegalEntityGBBNumber,
-					tr.fkLegalEntityAccountId
-                    FROM [dbo].[tblConcessionDetail] cd
-                    left join [dbo].[tblConcessionTrade] tr on cd.pkConcessionDetailId = tr.fkConcessionDetailId
-                    left JOIN [dbo].tblLegalEntityAccount lea on tr.fkLegalEntityAccountId = lea.pkLegalEntityAccountId                  
-                    left JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = lea.fkLegalEntityId
-                    left join tblLegalEntityAccount ac on tr.fkLegalEntityAccountId = ac.pkLegalEntityAccountId
-					left join tblLegalEntityGBBNumber gb on tr.fkLegalEntityGBBNumber = gb.pkLegalEntityGBBNumber
+                    p.Description InvestmentProduct,										
+                    pinv.fkLegalEntityAccountId,
+                    pinv.fkProductId,                  
+					--gb.GBBNumber,
+				
+					pinv.[Term],
+                    --pinv.fkLegalEntityGBBNumber,
+					pinv.fkLegalEntityAccountId
 
-				    left JOIN rtblTradeProduct tp on tr.fkTradeProductId = tp.pkTradeProductId
-                    left JOIN rtblTradeProductType ty on tp.fkTradeProductTypeId = ty.pkTradeProductTypeId
+
+from [dbo].[tblConcessionDetail] cd
+
+left join [dbo].[tblConcessionInvestment] pinv on cd.pkConcessionDetailId = pinv.fkConcessionDetailId
+   left JOIN [dbo].tblLegalEntityAccount lea on pinv.fkLegalEntityAccountId = lea.pkLegalEntityAccountId  
+     left JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = lea.fkLegalEntityId
+                    left join tblLegalEntityAccount ac on pinv.fkLegalEntityAccountId = ac.pkLegalEntityAccountId
+					--left join tblLegalEntityGBBNumber gb on tr.fkLegalEntityGBBNumber = gb.pkLegalEntityGBBNumber 
+					  left JOIN [dbo].[rtblProduct] p on p.[pkProductId] = pinv.fkProductId
+
                     where cd.fkConcessionId = @concessionId  and cd.Archived is null", new { concessionId });
             }
         }

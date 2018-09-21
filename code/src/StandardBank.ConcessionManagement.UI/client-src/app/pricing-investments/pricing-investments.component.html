@@ -99,15 +99,14 @@
                             <thead>
                                 <tr>
                                     <th>Account(No.)</th>
-                                    <th>Product </th>
-                                    <th>Type</th>
+                                    <th>Product </th>                                  
                                     <th>Loaded Rate</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let investmentprod of investmentprodgroup.investmentProducts">
                                     <td class="leftAlign">{{investmentprod.accountNumber}}</td>
-                                    <td class="leftAlign">{{investmentprod.investmentProductType}}</td>
+                                  
                                     <td class="leftAlign">{{investmentprod.investmentProductName}}</td>
 
                                     <td class="rightAlign">{{investmentprod.loadedRate}}</td>
@@ -145,13 +144,12 @@
                 </div>
             </div>
             <div class="section-body">
-                <div class="table-container" [routerLink]="['/investment-view-concession', investmentView.riskGroup.number, investmentConcession.concession.referenceNumber]">
+                <div class="table-container" [routerLink]="['/investments-view-concession', investmentView.riskGroup.number, investmentConcession.concession.referenceNumber]">
                     <table class="table table-bordered table-hover header-fixed table-striped">
                         <thead>
                             <tr>
                                 <th>Legal Entity</th>
-                                <th>Product</th>
-                                <th>Type</th>
+                                <th>Product</th>                               
                                 <th>Account(No.)</th>
                                 <th>Rate</th>
                             </tr>
@@ -159,7 +157,7 @@
                         <tbody>
                             <tr *ngFor="let concession of investmentConcession.investmentConcessionDetails; trackBy: index;">
                                 <td>{{concession.legalEntity}}</td>
-                                <td class="leftAlign">{{concession.investmentProductType}}</td>
+                             
                                 <td class="leftAlign">{{concession.investmentProduct}}</td>
 
                                 <td class="rightAlign">{{concession.accountNumber}}</td>

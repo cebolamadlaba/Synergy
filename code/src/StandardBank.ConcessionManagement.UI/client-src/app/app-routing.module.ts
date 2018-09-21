@@ -80,7 +80,7 @@ const routes: Routes = [
     { path: 'lending-add-concession/:riskGroupNumber', component: LendingAddConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
     { path: 'investments-add-concession/:riskGroupNumber', component: InvestmentsAddConcessionComponent },
-    { path: 'investments-view-concession/:riskGroupNumber', component: InvestmentsViewConcessionComponent },
+    { path: 'investments-view-concession/:riskGroupNumber/:concessionReferenceId', component: InvestmentsViewConcessionComponent },
 
     { path: 'bol-add-concession/:riskGroupNumber', component: BolAddConcessionComponent },
     { path: 'bol-view-concession/:riskGroupNumber/:concessionReferenceId', component: BolViewConcessionComponent },

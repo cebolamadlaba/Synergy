@@ -216,7 +216,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
         [Route("ResubmitInvestment")]
         [ValidateModel]
-        public async Task<IActionResult> ResubmitBol([FromBody] InvestmentConcession investmentConcession)
+        public async Task<IActionResult> ResubmitInvestment([FromBody] InvestmentConcession investmentConcession)
         {
             var user = _siteHelper.LoggedInUser(this);
 
@@ -228,7 +228,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
         [Route("UpdateApprovedInvestment")]
         [ValidateModel]
-        public async Task<IActionResult> UpdateApprovedBol([FromBody] InvestmentConcession investmentConcession)
+        public async Task<IActionResult> UpdateApprovedInvestment([FromBody] InvestmentConcession investmentConcession)
         {
             var user = _siteHelper.LoggedInUser(this);
 

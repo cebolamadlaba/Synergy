@@ -660,7 +660,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         if (this.lendingConcessionForm.controls['mrsCrs'].value)
             lendingConcession.concession.mrsCrs = this.lendingConcessionForm.controls['mrsCrs'].value;
         else
-            this.addValidationError("MRS/CRS not captured");
+            if (this.lendingConcessionForm.controls['mrsCrs'].value != 0) {
+                this.addValidationError("MRS/CRS not captured");
+            }
 
         if (this.lendingConcessionForm.controls['smtDealNumber'].value)
             lendingConcession.concession.smtDealNumber = this.lendingConcessionForm.controls['smtDealNumber'].value;
