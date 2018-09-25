@@ -93,8 +93,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult TradeProducts()
         {
             return Ok(_lookupTableManager.GetTradeProducts());
-        }
-
+        }       
 
 
         [Route("LegalEntityBOLUsers/{riskGroupNumber}")]

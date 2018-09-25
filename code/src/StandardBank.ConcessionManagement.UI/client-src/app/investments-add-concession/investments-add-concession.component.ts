@@ -4,54 +4,212 @@ import { ActivatedRoute } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
+
+import { Router, RouterModule } from '@angular/router';
+
 import { Location } from '@angular/common';
 import { Period } from "../models/period";
 import { PeriodType } from "../models/period-type";
-import { ConditionType } from "../models/condition-type";
+
 import { ClientAccount } from "../models/client-account";
+import { ClientAccountArray } from "../models/client-account-array";
+
 import { LookupDataService } from "../services/lookup-data.service";
 import { ConcessionCondition } from "../models/concession-condition";
+
+import { DecimalPipe } from '@angular/common';
+import { ConcessionTypes } from '../constants/concession-types';
+import { ConditionType } from "../models/condition-type";
+import { ProductType } from "../models/product-type";
+import { InvestmentProduct } from "../models/investment-product";
+
+import { LegalEntityGBBNumber } from "../models/legal-entity-gbb-number";
+
+import { InvestmentConcession } from "../models/investment-concession";
+import { InvestmentConcessionDetail } from "../models/investment-concession-detail";
+import { InvestmentConcessionService } from "../services/investment-concession.service";
+
+import { InvestmentView } from "../models/investment-view";
+import { Concession } from "../models/concession";
+import { UserService } from "../services/user.service";
+
 
 @Component({
     selector: 'app-investments-add-concession',
     templateUrl: './investments-add-concession.component.html',
     styleUrls: ['./investments-add-concession.component.css']
 })
-export class InvestmentsAddConcessionComponent implements OnInit {
-    public investmentsConcessionForm: FormGroup;
+export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
     private sub: any;
+
     errorMessage: String;
     validationError: String[];
     saveMessage: String;
+    showHide = false;
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
+
+    primeRate = "0.00";
+    today: string;
+
+    observableInvestmentView: Observable<InvestmentView>;
+    investmentView: InvestmentView = new InvestmentView();
+
+    investmentConcessionForm: FormGroup;
+
+    isLoading = true;   
+    selectedAccountNumbers: ClientAccountArray[];
+
+    observablePeriods: Observable<Period[]>;
+    periods: Period[];
+
+    observablePeriodTypes: Observable<PeriodType[]>;
+    periodTypes: PeriodType[];
+
+    observableInvestmentProducts: Observable<InvestmentProduct[]>;
+    investmentproducts: InvestmentProduct[];
+
+    observableLegalEntityGBbNumbers: Observable<LegalEntityGBBNumber[]>;
+    legalentitygbbnumbers: LegalEntityGBBNumber[];
+ 
     selectedConditionTypes: ConditionType[];
-    isLoading = false;
+    selectedProductTypes: ProductType[];
+
+    observableProductTypes: Observable<ProductType[]>;
+    productTypes: ProductType[];
+
+    selectedInvestmentConcession: boolean[];
+
+    observableConditionTypes: Observable<ConditionType[]>;
+    conditionTypes: ConditionType[];
+
+    observableClientAccounts: Observable<ClientAccount[]>;
+    clientAccounts: ClientAccount[];
 
     constructor(private route: ActivatedRoute,
+        private router: Router,
         private formBuilder: FormBuilder,
         private location: Location,
-        @Inject(LookupDataService) private lookupDataService) {
+        @Inject(LookupDataService) private lookupDataService,
+        @Inject(InvestmentConcessionService) private investmentConcessionService) {
         this.riskGroup = new RiskGroup();
+
+        this.productTypes = [new ProductType()];
+        this.selectedProductTypes = [new ProductType()];
+        this.selectedAccountNumbers = [new ClientAccountArray()];
+        this.investmentproducts = [new InvestmentProduct()];
+
+        this.periods = [new Period()];
+        this.periodTypes = [new PeriodType()];
+
+        this.legalentitygbbnumbers = [new LegalEntityGBBNumber()];
+
+        this.conditionTypes = [new ConditionType()];
+        this.selectedConditionTypes = [new ConditionType()];       
+        this.selectedInvestmentConcession = [false];
+
+        this.clientAccounts = [new ClientAccount()];
+
+        this.investmentView.riskGroup = new RiskGroup();
+        this.investmentView.investmentConcessions = [new InvestmentConcession()];
+        this.investmentView.investmentConcessions[0].concession = new Concession();
     }
 
     ngOnInit() {
-        this.investmentsConcessionForm = this.formBuilder.group({
+
+        this.today = new Date().toISOString().split('T')[0];
+
+        this.sub = this.route.params.subscribe(params => {
+            this.riskGroupNumber = +params['riskGroupNumber'];         
+
+
+            if (this.riskGroupNumber) {
+
+                this.observableRiskGroup = this.lookupDataService.getRiskGroup(this.riskGroupNumber);
+                this.observableRiskGroup.subscribe(riskGroup => this.riskGroup = riskGroup, error => this.errorMessage = <any>error);
+
+                this.observableClientAccounts = this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Investment);
+                this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
+            }
+
+            if (this.riskGroupNumber) {
+                this.observableInvestmentView = this.investmentConcessionService.getInvestmentViewData(this.riskGroupNumber);
+                this.observableInvestmentView.subscribe(bolView => {
+                    this.investmentView = bolView;
+
+                    this.isLoading = false;
+                }, error => {
+                    this.errorMessage = <any>error;
+                    this.isLoading = false;
+                });
+            }
+        });
+
+
+        this.investmentConcessionForm = this.formBuilder.group({
             concessionItemRows: this.formBuilder.array([this.initConcessionItemRows()]),
             conditionItemsRows: this.formBuilder.array([]),
-            mrsCrs: new FormControl(),
             smtDealNumber: new FormControl(),
-            motivation: new FormControl()
+            motivation: new FormControl(),
+            prime: new FormControl()
         });
+
+        Observable.forkJoin([
+
+            this.lookupDataService.getProductTypes(ConcessionTypes.Investment),
+            this.lookupDataService.getPeriods(),
+            this.lookupDataService.getPeriodTypes(),
+            this.lookupDataService.getConditionTypes(),
+            this.lookupDataService.getRiskGroup(this.riskGroupNumber),
+            this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Investment),
+           
+            this.lookupDataService.getPrimeRate(this.today)
+        ]).subscribe(results => {
+           
+            this.productTypes = <any>results[0];
+            this.periods = <any>results[1];
+            this.periodTypes = <any>results[2];
+            this.conditionTypes = <any>results[3];
+            this.riskGroup = <any>results[4];
+            this.clientAccounts = <any>results[5];          
+            this.primeRate = <string>results[6];
+
+            this.isLoading = false;
+
+            const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
+            if (this.productTypes) {
+                control.controls[0].get('productType').setValue(this.productTypes[0]);
+
+                this.selectedProductTypes[0] = this.productTypes[0];
+                this.productTypeChanged(0);
+            }
+
+            if (this.clientAccounts)
+                control.controls[0].get('accountNumber').setValue(this.clientAccounts[0]);
+
+
+        }, error => {
+            this.errorMessage = <any>error;
+            this.isLoading = false;
+        });
+        
     }
 
-    initConcessionItemRows() {
+    initConcessionItemRows() {      
+    
+
+        this.selectedProductTypes.push(new ProductType());
+        this.selectedAccountNumbers.push(new ClientAccountArray());
+
         return this.formBuilder.group({
+            disablecontrolset: [''],         
             productType: [''],
             accountNumber: [''],
             balance: [''],
-            interestRate: ['']
+            noticeperiod: [''],
+            rate: ['']                    
+          
         });
     }
 
@@ -64,13 +222,266 @@ export class InvestmentsAddConcessionComponent implements OnInit {
             interestRate: [''],
             volume: [''],
             value: [''],
+            expectedTurnoverValue: [''],
             periodType: [''],
             period: ['']
         });
     }
 
-    goBack() {
-        this.location.back();
+    addNewConcessionRow() {       
+
+        const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
+
+        var newRow = this.initConcessionItemRows();
+
+        if (this.productTypes)
+            newRow.controls['productType'].setValue(this.productTypes[0]);
+
+        if (this.clientAccounts)
+            newRow.controls['accountNumber'].setValue(this.clientAccounts[0]);
+
+        control.push(newRow);
+        this.productTypeChanged(control.controls.length - 1)
+
     }
 
+    addNewConditionRow() {
+        const control = <FormArray>this.investmentConcessionForm.controls['conditionItemsRows'];
+        control.push(this.initConditionItemRows());
+    }
+
+    addNewConditionRowIfNone() {
+        const control = <FormArray>this.investmentConcessionForm.controls['conditionItemsRows'];
+        if (control.length == 0)
+            control.push(this.initConditionItemRows());
+    }
+
+    deleteConcessionRow(index: number) {
+        if (confirm("Are you sure you want to remove this row?")) {
+            const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
+            control.removeAt(index);
+
+           this.selectedProductTypes.splice(index, 1);
+            this.selectedInvestmentConcession.splice(index, 1);
+        }
+    }
+
+    deleteConditionRow(index: number) {
+        const control = <FormArray>this.investmentConcessionForm.controls['conditionItemsRows'];
+        control.removeAt(index);
+
+        this.selectedConditionTypes.splice(index, 1);
+
+    }
+
+    conditionTypeChanged(rowIndex) {
+        const control = <FormArray>this.investmentConcessionForm.controls['conditionItemsRows'];
+        this.selectedConditionTypes[rowIndex] = control.controls[rowIndex].get('conditionType').value;
+
+        let currentCondition = control.controls[rowIndex];
+
+        currentCondition.get('conditionProduct').setValue(null);
+        currentCondition.get('interestRate').setValue(null);
+        currentCondition.get('volume').setValue(null);
+        currentCondition.get('value').setValue(null);
+        currentCondition.get('expectedTurnoverValue').setValue(null);
+    }  
+
+    productTypeChanged(rowIndex) {
+
+        const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
+
+        let currentRow = control.controls[rowIndex];
+        var productType = currentRow.get('productType').value;
+
+        this.selectedProductTypes[rowIndex] = productType;
+
+        if (this.clientAccounts && this.clientAccounts.length > 0) {
+            this.selectedAccountNumbers[rowIndex].clientaccounts = this.clientAccounts.filter(re => re.accountType == productType.description);
+
+            if (this.selectedAccountNumbers[rowIndex].clientaccounts.length == 0) {
+                control.controls[rowIndex].get('accountNumber').setValue(null);
+            }
+            else {
+
+                control.controls[rowIndex].get('accountNumber').setValue(this.selectedAccountNumbers[rowIndex].clientaccounts[0]);
+
+            }
+
+        }
+
+
+
+
+    }
+
+    addValidationError(validationDetail) {
+        if (!this.validationError)
+            this.validationError = [];
+
+        this.validationError.push(validationDetail);
+    }  
+
+    getInvestmentConcession(): InvestmentConcession {
+        var investmentConcession = new InvestmentConcession();
+        investmentConcession.concession = new Concession();
+        investmentConcession.concession.riskGroupId = this.riskGroup.id;
+
+        if (this.investmentConcessionForm.controls['smtDealNumber'].value)
+            investmentConcession.concession.smtDealNumber = this.investmentConcessionForm.controls['smtDealNumber'].value;
+
+
+        if (this.investmentConcessionForm.controls['motivation'].value)
+            investmentConcession.concession.motivation = this.investmentConcessionForm.controls['motivation'].value;
+        else
+            investmentConcession.concession.motivation = '.';
+
+
+        const concessions = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
+
+        for (let concessionFormItem of concessions.controls) {
+            if (!investmentConcession.investmentConcessionDetails)
+                investmentConcession.investmentConcessionDetails = [];
+
+            let investmentConcessionDetail = new InvestmentConcessionDetail();
+
+            investmentConcessionDetail.disablecontrolset = concessionFormItem.get('disablecontrolset').value;
+
+            if (concessionFormItem.get('productType').value)
+                investmentConcessionDetail.investmentProduct = concessionFormItem.get('productType').value.id;
+            else
+                this.addValidationError("Product not selected");     
+
+
+            if ((concessionFormItem.get('accountNumber').value && concessionFormItem.get('accountNumber').value.legalEntityId)) {
+                investmentConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
+                investmentConcessionDetail.legalEntityAccountId = concessionFormItem.get('accountNumber').value.legalEntityAccountId;
+            } else {
+
+                if (!investmentConcessionDetail.disablecontrolset) {
+
+                    this.addValidationError("Client account not selected");
+                }
+            }           
+
+            if (concessionFormItem.get('balance').value) {
+                investmentConcessionDetail.balance = concessionFormItem.get('balance').value;
+            } else {
+                if (investmentConcessionDetail.disablecontrolset) {
+                    this.addValidationError("Balance not entered");
+                }
+            }
+
+            if (concessionFormItem.get('noticeperiod').value) {
+                investmentConcessionDetail.noticeperiod = concessionFormItem.get('noticeperiod').value;
+            } else {
+                if (!investmentConcessionDetail.disablecontrolset) {
+                    this.addValidationError("Notice period value not entered");
+                }
+            }
+          
+            if (concessionFormItem.get('rate').value) {
+                investmentConcessionDetail.rate = concessionFormItem.get('rate').value;
+            } else {
+                if (!investmentConcessionDetail.disablecontrolset) {
+                    this.addValidationError("Rate value not entered");
+                }
+            }          
+
+            investmentConcession.investmentConcessionDetails.push(investmentConcessionDetail);
+        }
+
+        const conditions = <FormArray>this.investmentConcessionForm.controls['conditionItemsRows'];
+
+        for (let conditionFormItem of conditions.controls) {
+            if (!investmentConcession.concessionConditions)
+                investmentConcession.concessionConditions = [];
+
+            let concessionCondition = new ConcessionCondition();
+
+            if (conditionFormItem.get('conditionType').value)
+                concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;
+            else
+                this.addValidationError("Condition type not selected");
+
+            if (conditionFormItem.get('conditionProduct').value)
+                concessionCondition.conditionProductId = conditionFormItem.get('conditionProduct').value.id;
+            else
+                this.addValidationError("Condition product not selected");
+
+            if (conditionFormItem.get('interestRate').value)
+                concessionCondition.interestRate = conditionFormItem.get('interestRate').value;
+
+            if (conditionFormItem.get('volume').value)
+                concessionCondition.conditionVolume = conditionFormItem.get('volume').value;
+
+            if (conditionFormItem.get('value').value)
+                concessionCondition.conditionValue = conditionFormItem.get('value').value;
+
+            if (conditionFormItem.get('expectedTurnoverValue').value)
+                concessionCondition.expectedTurnoverValue = conditionFormItem.get('expectedTurnoverValue').value;
+
+            if (conditionFormItem.get('periodType').value) {
+                concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
+            } else {
+                this.addValidationError("Period type not selected");
+            }
+
+            if (conditionFormItem.get('period').value) {
+                concessionCondition.periodId = conditionFormItem.get('period').value.id;
+            } else {
+                this.addValidationError("Period not selected");
+            }
+
+            investmentConcession.concessionConditions.push(concessionCondition);
+        }
+
+        return investmentConcession;
+    }
+
+    onSubmit() {
+
+        this.isLoading = true;
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var investmentConcession = this.getInvestmentConcession();
+
+        investmentConcession.concession.concessionType = ConcessionTypes.Investment;
+        investmentConcession.concession.type = "New";
+        investmentConcession.concession.comments = "Created";
+
+        if (!this.validationError) {
+            this.investmentConcessionService.postNewInvestmentData(investmentConcession).subscribe(entity => {
+                console.log("data saved");
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    setTwoNumberDecimal($event) {
+        $event.target.value = this.formatDecimal($event.target.value);
+    }
+
+    formatDecimal(itemValue: number) {
+        if (itemValue) {
+            return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
+        }
+
+        return null;
+    }
+
+    goBack() {
+        this.router.navigate(['/pricing', this.riskGroupNumber]);
+    }
+
+    ngOnDestroy() {
+        this.sub.unsubscribe();
+    }
 }

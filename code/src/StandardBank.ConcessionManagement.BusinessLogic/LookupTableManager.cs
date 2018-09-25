@@ -30,6 +30,8 @@ using BOLChargeCodeType = StandardBank.ConcessionManagement.Model.UserInterface.
 using TradeProduct = StandardBank.ConcessionManagement.Model.UserInterface.Trade.TradeProduct;
 using TradeProductType = StandardBank.ConcessionManagement.Model.UserInterface.Trade.TradeProductType;
 
+using InvestmentProduct = StandardBank.ConcessionManagement.Model.UserInterface.Investment.InvestmentProduct;
+
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
     /// <summary>
@@ -86,6 +88,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IBolUserRepository _bolRepository;
 
         private readonly IConcessionTradeRepository _concessionTradeRepository;
+
+        private readonly IConcessionInvestmentRepository _concessionInvestmentRepository;
 
         /// <summary>
         /// The condition type repository
@@ -191,7 +195,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IRelationshipRepository relationshipRepository, IRoleRepository roleRepository,
             ICentreRepository centreRepository,
             IRiskGroupRepository riskGroupRepository,
-            ITransactionTableNumberRepository transactionTableNumberRepository, IBolUserRepository bolRepository, IConcessionTradeRepository concessionTradeRepository)
+            ITransactionTableNumberRepository transactionTableNumberRepository, IBolUserRepository bolRepository, IConcessionTradeRepository concessionTradeRepository, IConcessionInvestmentRepository concessionInvestmentRepository)
         {
             _statusRepository = statusRepository;
             _subStatusRepository = subStatusRepository;
@@ -217,6 +221,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _transactionTableNumberRepository = transactionTableNumberRepository;
             _bolRepository = bolRepository;
             _concessionTradeRepository = concessionTradeRepository;
+            _concessionInvestmentRepository = concessionInvestmentRepository;
         }
 
         /// <summary>
@@ -478,6 +483,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             return _mapper.Map<IEnumerable<TradeProductType>>(_concessionTradeRepository.GetTradeProductTypes());
         }
+
 
 
         /// <summary>

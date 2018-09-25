@@ -23,7 +23,7 @@ import { MismatchedInboxComponent } from "./mismatched-inbox/mismatched-inbox.co
 import { LendingViewConcessionComponent } from "./lending-view-concession/lending-view-concession.component";
 import { CashViewConcessionComponent } from "./cash-view-concession/cash-view-concession.component";
 
-import { InvestmentsAddConcessionComponent } from "./investments-add-concession/investments-add-concession.component";
+import { InvestmentAddConcessionComponent } from "./investments-add-concession/investments-add-concession.component";
 import { InvestmentsViewConcessionComponent} from "./investments-view-concession/investments-view-concession.component";
 
 import { BolAddConcessionComponent } from "./bol-add-concession/bol-add-concession.component";
@@ -79,7 +79,7 @@ const routes: Routes = [
     { path: 'cash-view-concession/:riskGroupNumber/:concessionReferenceId', component: CashViewConcessionComponent },
     { path: 'lending-add-concession/:riskGroupNumber', component: LendingAddConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
-    { path: 'investments-add-concession/:riskGroupNumber', component: InvestmentsAddConcessionComponent },
+    { path: 'investments-add-concession/:riskGroupNumber', component: InvestmentAddConcessionComponent },
     { path: 'investments-view-concession/:riskGroupNumber/:concessionReferenceId', component: InvestmentsViewConcessionComponent },
 
     { path: 'bol-add-concession/:riskGroupNumber', component: BolAddConcessionComponent },

@@ -24,6 +24,7 @@ import { BolChargeCode } from "../models/bol-chargecode";
 
 import { TradeProductType } from "../models/trade-product-type";
 import { TradeProduct } from "../models/trade-product";
+import { InvestmentProduct } from "../models/investment-product";
 
 import { LegalEntityBOLUser } from "../models/legal-entity-bol-user";
 
@@ -118,8 +119,7 @@ export class LookupDataService {
         const url = "/api/Condition/TradeProducts";
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
-
-
+   
 
     getPeriods(): Observable<Period[]> {
         const url = "/api/Condition/Periods";

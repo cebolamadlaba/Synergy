@@ -8,22 +8,17 @@ export class InvestmentConcessionDetail extends BaseConcessionDetail {
     investmentProduct: string;
     investmentProductType: string;
     approvedRate: number;
-    loadedRate :number;
-    communication: string;
-    establishmentFee: number;
-    flatFee: number;
-    gbbNumber: string;
-    max: number;
-    min: number;
-    term: number;
+    loadedRate :number;  
+  
+    balance: number;
+    noticeperiod: number;
+    rate: number;
+
     fkInvestmentProductId: number;
     investmentProductTypeID: number;
 
     fkLegalEntityAccountId: number;  
-    fkLegalEntityGBBNumber: number;
-
-    adValorem: number;
-    currency: number;
+    fkLegalEntityGBBNumber: number;   
 
     disablecontrolset: boolean;
 }

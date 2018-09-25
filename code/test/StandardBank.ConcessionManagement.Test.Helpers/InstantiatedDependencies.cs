@@ -261,6 +261,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static IConcessionTradeRepository ConcessionTradeRepository =
             new ConcessionTradeRepository(DbConnection, ConcessionDetailRepository);
+       
 
         /// <summary>
         /// The ConcessionTransactional repository
@@ -487,7 +488,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             PeriodTypeRepository, ConditionTypeRepository, Mapper, ConditionProductRepository,
             ConditionTypeProductRepository, AccrualTypeRepository, ChannelTypeRepository, TransactionTypeRepository,
             TableNumberRepository, RelationshipRepository, RoleRepository, CentreRepository,
-            RiskGroupRepository, TransactionTableNumberRepository, BolUserRepository,ConcessionTradeRepository );
+            RiskGroupRepository, TransactionTableNumberRepository, BolUserRepository,ConcessionTradeRepository, ConcessionInvestmentRepository);
 
         /// <summary>
         /// The region manager

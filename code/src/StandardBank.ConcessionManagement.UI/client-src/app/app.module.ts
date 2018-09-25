@@ -61,7 +61,7 @@ import { TransactionalConcessionService } from "./services/transactional-concess
 import { BaseConcessionFilterPipe } from './filters/base-concession-filter.pipe';
 
 import { SearchConcessionFilterPipe } from './filters/search-concession-filter.pipe';
-import { InvestmentsAddConcessionComponent } from './investments-add-concession/investments-add-concession.component';
+import { InvestmentAddConcessionComponent } from './investments-add-concession/investments-add-concession.component';
 import { InvestmentsViewConcessionComponent } from './investments-view-concession/investments-view-concession.component';
 
 import { BolAddConcessionComponent } from './bol-add-concession/bol-add-concession.component';
@@ -120,7 +120,7 @@ import { ChannelTypesManagementComponent } from './admin/channel-types/channel-t
         PricingTradeComponent,
         PricingMasComponent,
         PricingCashmanComponent,
-        InvestmentsAddConcessionComponent,
+        InvestmentAddConcessionComponent,
         InvestmentsViewConcessionComponent,
         BolAddConcessionComponent,
         BolViewConcessionComponent,

@@ -191,6 +191,8 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
         control.push(newRow);
         this.productTypeChanged(control.controls.length - 1)
+
+
     }
 
     addNewConditionRow() {
@@ -259,8 +261,6 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
         if (this.clientAccounts && this.clientAccounts.length > 0) {
             this.selectedAccountNumbers[rowIndex].clientaccounts = this.clientAccounts.filter(re => re.accountType == productType.description);
-
-
 
             if (this.selectedAccountNumbers[rowIndex].clientaccounts.length == 0) {
                 control.controls[rowIndex].get('accountNumber').setValue(null);

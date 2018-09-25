@@ -4,4 +4,5 @@ export class ConcessionTypes {
     public static readonly Transactional = "Transactional";
     public static readonly BOL = "Business Online";
     public static readonly Trade = "Trade";
+    public static readonly Investment = "Investment";
 }

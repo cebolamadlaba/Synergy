@@ -140,5 +140,15 @@ namespace StandardBank.ConcessionManagement.Repository
 
             _concessionDetailRepository.Delete(model);
         }
+
+        public IEnumerable<InvestmentProduct> GetInvestmentProducts()
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+
+                return db.Query<InvestmentProduct>(
+                    @"SELECT description [tradeProductName],  pkTradeProductId [tradeProductId], fkTradeProductTypeId [tradeProductTypeId]  from rtblTradeProduct");
+            }
+        }
     }
 }
