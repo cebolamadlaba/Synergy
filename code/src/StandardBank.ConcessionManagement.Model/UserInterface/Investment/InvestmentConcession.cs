@@ -38,5 +38,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Investment
         /// </value>
         public User CurrentUser { get; set; }
 
+        public IEnumerable<string> PrimeRate { get; set; }
+
     }
 }

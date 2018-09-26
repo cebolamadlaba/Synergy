@@ -775,22 +775,17 @@ namespace StandardBank.ConcessionManagement.Repository
 					ApprovedRate,				
                     p.Description InvestmentProduct,										
                     pinv.fkLegalEntityAccountId,
-                    pinv.fkProductId,                  
-					--gb.GBBNumber,
-				
-					pinv.[Term],
-                    --pinv.fkLegalEntityGBBNumber,
+                    pinv.fkProductId [productTypeId],                  
+					pinv.Balance,				
+					pinv.[Term],                
 					pinv.fkLegalEntityAccountId
 
-
-from [dbo].[tblConcessionDetail] cd
-
-left join [dbo].[tblConcessionInvestment] pinv on cd.pkConcessionDetailId = pinv.fkConcessionDetailId
-   left JOIN [dbo].tblLegalEntityAccount lea on pinv.fkLegalEntityAccountId = lea.pkLegalEntityAccountId  
-     left JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = lea.fkLegalEntityId
-                    left join tblLegalEntityAccount ac on pinv.fkLegalEntityAccountId = ac.pkLegalEntityAccountId
-					--left join tblLegalEntityGBBNumber gb on tr.fkLegalEntityGBBNumber = gb.pkLegalEntityGBBNumber 
-					  left JOIN [dbo].[rtblProduct] p on p.[pkProductId] = pinv.fkProductId
+                    from [dbo].[tblConcessionDetail] cd
+                    left join [dbo].[tblConcessionInvestment] pinv on cd.pkConcessionDetailId = pinv.fkConcessionDetailId
+                    left JOIN [dbo].tblLegalEntityAccount lea on pinv.fkLegalEntityAccountId = lea.pkLegalEntityAccountId  
+                    left JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = lea.fkLegalEntityId
+                    left join tblLegalEntityAccount ac on pinv.fkLegalEntityAccountId = ac.pkLegalEntityAccountId				
+                    left JOIN [dbo].[rtblProduct] p on p.[pkProductId] = pinv.fkProductId
 
                     where cd.fkConcessionId = @concessionId  and cd.Archived is null", new { concessionId });
             }

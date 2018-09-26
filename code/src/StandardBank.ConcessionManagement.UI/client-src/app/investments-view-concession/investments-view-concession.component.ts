@@ -28,14 +28,14 @@ import { UserService } from "../services/user.service";
 
 import { LegalEntityGBBNumber } from "../models/legal-entity-gbb-number";
 
-import { TradeProduct } from "../models/trade-product";
-import { TradeProductType } from "../models/trade-product-type";
+import { InvestmentProduct } from "../models/investment-product";
+import { ProductType } from "../models/product-type";
 
-import { TradeConcession } from "../models/trade-concession";
-import { TradeConcessionDetail } from "../models/trade-concession-detail";
-import { TradeConcessionService } from "../services/trade-concession.service";
+import { InvestmentConcession } from "../models/investment-concession";
+import { InvestmentConcessionDetail } from "../models/investment-concession-detail";
+import { InvestmentConcessionService } from "../services/investment-concession.service";
 
-import { TradeView } from "../models/trade-view";
+import { InvestmentView } from "../models/investment-view";
 
 @Component({
     selector: 'app-investments-view-concession',
@@ -53,13 +53,16 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     warningMessage: String;
 
     observableRiskGroup: Observable<RiskGroup>;
-    observableTradeView: Observable<TradeView>;
-    tradeView: TradeView = new TradeView();
+    observableInvestmentView: Observable<InvestmentView>;
+    investmentView: InvestmentView = new InvestmentView();
 
     riskGroup: RiskGroup;
     riskGroupNumber: number;
 
-    public tradeConcessionForm: FormGroup;
+    primeRate = "0.00";
+    today: string;
+
+    public investmentConcessionForm: FormGroup;
    
     isLoading = true;
     canBcmApprove = false;
@@ -89,18 +92,20 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     observablePeriodTypes: Observable<PeriodType[]>;
     periodTypes: PeriodType[];
 
-    observableTradeProductTypes: Observable<TradeProductType[]>;
-    tradeproducttypes: TradeProductType[];
+    productTypes: ProductType[];
 
-    observableTradeProducts: Observable<TradeProduct[]>;
-    tradeproducts: TradeProduct[];
+    //observableInvestmentProductTypes: Observable<InvestmentProductType[]>;
+    //investmentproducttypes: InvestmentProductType[];
+
+    observableInvestmentProducts: Observable<InvestmentProduct[]>;
+    investmentproducts: InvestmentProduct[];
 
     observableLegalEntityGBbNumbers: Observable<LegalEntityGBBNumber[]>;
     legalentitygbbnumbers: LegalEntityGBBNumber[];
 
     selectedConditionTypes: ConditionType[];
-    selectedProductTypes: TradeProductType[];
-    selectedTradeConcession: boolean[];
+    //selectedProductTypes: InvestmentProductType[];
+    selectedInvestmentConcession: boolean[];
 
     observableConditionTypes: Observable<ConditionType[]>;
     conditionTypes: ConditionType[];
@@ -108,8 +113,8 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     observableClientAccounts: Observable<ClientAccount[]>;
     clientAccounts: ClientAccount[];
 
-    observableTradeConcession: Observable<TradeConcession>;
-    tradeConcession: TradeConcession;
+    observableInvestmentConcession: Observable<InvestmentConcession>;
+    investmentConcession: InvestmentConcession;
 
 
     constructor(private route: ActivatedRoute,
@@ -118,11 +123,13 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         private datepipe: DatePipe,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(UserConcessionsService) private userConcessionsService,
-        @Inject(TradeConcessionService) private tradeConcessionService) {
+        @Inject(InvestmentConcessionService) private investmentConcessionService) {
 
         this.riskGroup = new RiskGroup();
-        this.tradeproducttypes = [new TradeProductType()];
-        this.tradeproducts = [new TradeProduct()];
+        //this.investmentproducttypes = [new InvestmentProductType()];
+        //this.investmentproducts = [new InvestmentProduct()];
+
+        this.productTypes = [new ProductType()];
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
 
@@ -130,24 +137,28 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
         this.conditionTypes = [new ConditionType()];
         this.selectedConditionTypes = [new ConditionType()];
-        this.selectedProductTypes = [new TradeProductType()];
-        this.selectedTradeConcession = [false];
+        //this.selectedProductTypes = [new InvestmentProductType()];
+
+        this.selectedInvestmentConcession = [false];
 
         this.clientAccounts = [new ClientAccount()];
 
-        this.tradeView.riskGroup = new RiskGroup();
-        this.tradeView.tradeConcessions = [new TradeConcession()];
-        this.tradeView.tradeConcessions[0].concession = new Concession();
+        this.investmentView.riskGroup = new RiskGroup();
+        this.investmentView.investmentConcessions = [new InvestmentConcession()];
+        this.investmentView.investmentConcessions[0].concession = new Concession();
 
-        this.tradeConcession = new TradeConcession();
-        this.tradeConcession.concession = new Concession();
-        this.tradeConcession.concession.concessionComments = [new ConcessionComment()];
+        this.investmentConcession = new InvestmentConcession();
+        this.investmentConcession.concession = new Concession();
+        this.investmentConcession.concession.concessionComments = [new ConcessionComment()];
 
 
 
     }
 
     ngOnInit() {
+
+        this.today = new Date().toISOString().split('T')[0];
+
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
             this.concessionReferenceId = params['concessionReferenceId'];
@@ -158,20 +169,32 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             this.observableRiskGroup = this.lookupDataService.getRiskGroup(this.riskGroupNumber);
             this.observableRiskGroup.subscribe(riskGroup => this.riskGroup = riskGroup, error => this.errorMessage = <any>error);
 
-            this.observableClientAccounts = this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Trade);
+            this.observableClientAccounts = this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Investment);
             this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
         }
 
+        if (this.riskGroupNumber) {
+            this.observableInvestmentView = this.investmentConcessionService.getInvestmentViewData(this.riskGroupNumber);
+            this.observableInvestmentView.subscribe(tempView => {
+                this.investmentView = tempView;
+
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        }
+
         //if (this.riskGroupNumber) {
-        //    this.observableTradeView = this.tradeConcessionService.getTradeViewData(this.riskGroupNumber);
-        //    this.observableTradeView.subscribe(tradeView => {
-        //        this.tradeView = tradeView;
+        //    this.observableInvestmentView = this.investmentConcessionService.getInvestmentViewData(this.riskGroupNumber);
+        //    this.observableInvestmentView.subscribe(investmentView => {
+        //        this.investmentView = investmentView;
         //    }, error => {
         //        this.errorMessage = <any>error;
         //    });
         //}
 
-        this.tradeConcessionForm = this.formBuilder.group({
+        this.investmentConcessionForm = this.formBuilder.group({
             concessionItemRows: this.formBuilder.array([this.initConcessionItemRows()]),
             conditionItemsRows: this.formBuilder.array([]),
             smtDealNumber: new FormControl(),
@@ -180,24 +203,32 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         });
 
         Observable.forkJoin([
-            this.lookupDataService.getConditionTypes(),
 
-            this.lookupDataService.getTradeProductTypes(),
-            this.lookupDataService.getTradeProducts(),
-
+            this.lookupDataService.getProductTypes(ConcessionTypes.Investment),
             this.lookupDataService.getPeriods(),
             this.lookupDataService.getPeriodTypes(),
-            this.lookupDataService.getLegalEntityGBBNumbers(this.riskGroupNumber)
+            this.lookupDataService.getConditionTypes(),
+            this.lookupDataService.getRiskGroup(this.riskGroupNumber),
+            this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Investment)
+
 
         ]).subscribe(results => {
 
-            this.conditionTypes = <any>results[0];
-            this.tradeproducttypes = <any>results[1];
-            this.tradeproducts = <any>results[2];
+            this.productTypes = <any>results[0];
+            this.periods = <any>results[1];
+            this.periodTypes = <any>results[2];
+            this.conditionTypes = <any>results[3];
+            this.riskGroup = <any>results[4];
+            this.clientAccounts = <any>results[5];
+            this.primeRate = <string>results[6];
 
-            this.periods = <any>results[3];
-            this.periodTypes = <any>results[4];
-            this.legalentitygbbnumbers = <any>results[5];
+            //this.conditionTypes = <any>results[0];
+            //this.productTypes = <any>results[1];
+            //this.investmentproducts = <any>results[2];
+
+            //this.periods = <any>results[3];
+            //this.periodTypes = <any>results[4];
+            //this.legalentitygbbnumbers = <any>results[5];
 
             this.populateForm();
         },
@@ -206,8 +237,8 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                 this.isLoading = false;
             });
 
-        this.tradeConcessionForm.valueChanges.subscribe((value: any) => {
-            if (this.tradeConcessionForm.dirty) {
+        this.investmentConcessionForm.valueChanges.subscribe((value: any) => {
+            if (this.investmentConcessionForm.dirty) {
                 //if the captured comments is still the same as the comments that means
                 //the user has changed something else on the form
                 if (this.capturedComments == value.comments) {
@@ -223,7 +254,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     //gbbNumberChanged(rowIndex: number) {
 
 
-    //    const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+    //    const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
     //    let currentRow = control.controls[rowIndex];
 
     //    var LegalEntityAccount = currentRow.get('gbbnumber').value;
@@ -240,166 +271,122 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
     populateForm() {
         if (this.concessionReferenceId) {
-            this.observableTradeConcession = this.tradeConcessionService.getTradeConcessionData(this.concessionReferenceId);
-            this.observableTradeConcession.subscribe(tradeConcession => {
-                this.tradeConcession = tradeConcession;
+            this.observableInvestmentConcession = this.investmentConcessionService.getInvestmentConcessionData(this.concessionReferenceId);
+            this.observableInvestmentConcession.subscribe(investmentConcession => {
+                this.investmentConcession = investmentConcession;
 
-                if (tradeConcession.concession.status == ConcessionStatus.Pending && tradeConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
-                    this.canBcmApprove = tradeConcession.currentUser.canBcmApprove;
+                if (investmentConcession.concession.status == ConcessionStatus.Pending && investmentConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
+                    this.canBcmApprove = investmentConcession.currentUser.canBcmApprove;
                 }
 
-                if (tradeConcession.concession.status == ConcessionStatus.Pending && tradeConcession.concession.subStatus == ConcessionSubStatus.PCMPending) {
-                    if (this.tradeConcession.currentUser.isHO) {
-                        this.canPcmApprove = tradeConcession.currentUser.canPcmApprove
+                if (investmentConcession.concession.status == ConcessionStatus.Pending && investmentConcession.concession.subStatus == ConcessionSubStatus.PCMPending) {
+                    if (this.investmentConcession.currentUser.isHO) {
+                        this.canPcmApprove = investmentConcession.currentUser.canPcmApprove
                     } else {
-                        this.canPcmApprove = tradeConcession.currentUser.canPcmApprove && tradeConcession.currentUser.canApprove;
+                        this.canPcmApprove = investmentConcession.currentUser.canPcmApprove && investmentConcession.currentUser.canApprove;
                     }
 
-                    if (!tradeConcession.concession.isInProgressExtension) {
-                        this.canEdit = tradeConcession.currentUser.canPcmApprove;
+                    if (!investmentConcession.concession.isInProgressExtension) {
+                        this.canEdit = investmentConcession.currentUser.canPcmApprove;
                     }
+                }
+
+
+                if (investmentConcession.primeRate) {
+
+                    this.primeRate = investmentConcession.primeRate;
                 }
 
                 //if it's still pending and the user is a requestor then they can recall it
-                if (tradeConcession.concession.status == ConcessionStatus.Pending && tradeConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
-                    this.canRecall = tradeConcession.currentUser.canRequest;
+                if (investmentConcession.concession.status == ConcessionStatus.Pending && investmentConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
+                    this.canRecall = investmentConcession.currentUser.canRequest;
                 }
 
-                if (tradeConcession.concession.status == ConcessionStatus.Pending &&
-                    (tradeConcession.concession.subStatus == ConcessionSubStatus.PCMApprovedWithChanges || tradeConcession.concession.subStatus == ConcessionSubStatus.HOApprovedWithChanges)) {
-                    this.canApproveChanges = tradeConcession.currentUser.canRequest;
+                if (investmentConcession.concession.status == ConcessionStatus.Pending &&
+                    (investmentConcession.concession.subStatus == ConcessionSubStatus.PCMApprovedWithChanges || investmentConcession.concession.subStatus == ConcessionSubStatus.HOApprovedWithChanges)) {
+                    this.canApproveChanges = investmentConcession.currentUser.canRequest;
                 }
 
-                if (tradeConcession.concession.status === ConcessionStatus.Approved ||
-                    tradeConcession.concession.status === ConcessionStatus.ApprovedWithChanges) {
+                if (investmentConcession.concession.status === ConcessionStatus.Approved ||
+                    investmentConcession.concession.status === ConcessionStatus.ApprovedWithChanges) {
                     this.isApproved = true;
                 }
 
                 //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
-                this.canExtend = tradeConcession.concession.canExtend && tradeConcession.currentUser.canRequest;
-                this.canRenew = tradeConcession.concession.canRenew && tradeConcession.currentUser.canRequest;
+                this.canExtend = investmentConcession.concession.canExtend && investmentConcession.currentUser.canRequest;
+                this.canRenew = investmentConcession.concession.canRenew && investmentConcession.currentUser.canRequest;
 
                 //set the resubmit and update permissions
-                this.canResubmit = tradeConcession.concession.canResubmit && tradeConcession.currentUser.canRequest;
-                this.canUpdate = tradeConcession.concession.canUpdate && tradeConcession.currentUser.canRequest;
+                this.canResubmit = investmentConcession.concession.canResubmit && investmentConcession.currentUser.canRequest;
+                this.canUpdate = investmentConcession.concession.canUpdate && investmentConcession.currentUser.canRequest;
 
-                this.canArchive = tradeConcession.concession.canArchive && tradeConcession.currentUser.canRequest;
-                this.isInProgressExtension = tradeConcession.concession.isInProgressExtension;
-                this.isInProgressRenewal = tradeConcession.concession.isInProgressRenewal;
+                this.canArchive = investmentConcession.concession.canArchive && investmentConcession.currentUser.canRequest;
+                this.isInProgressExtension = investmentConcession.concession.isInProgressExtension;
+                this.isInProgressRenewal = investmentConcession.concession.isInProgressRenewal;
               
-                this.tradeConcessionForm.controls['motivation'].setValue(this.tradeConcession.concession.motivation);               
+                this.investmentConcessionForm.controls['motivation'].setValue(this.investmentConcession.concession.motivation);               
+                this.investmentConcessionForm.controls['smtDealNumber'].setValue(this.investmentConcession.concession.smtDealNumber);
 
                 let rowIndex = 0;
 
-                for (let tradeConcessionDetail of this.tradeConcession.tradeConcessionDetails) {
+                for (let investmentConcessionDetail of this.investmentConcession.investmentConcessionDetails) {
 
                     if (rowIndex != 0) {
                         this.addNewConcessionRow();
                     }
 
-                    const concessions = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+                    const concessions = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
                     let currentConcession = concessions.controls[concessions.length - 1];
 
-                    currentConcession.get('tradeConcessionDetailId').setValue(tradeConcessionDetail.tradeConcessionDetailId);
-                    currentConcession.get('concessionDetailId').setValue(tradeConcessionDetail.concessionDetailId);
+                    currentConcession.get('investmentConcessionDetailId').setValue(investmentConcessionDetail.investmentConcessionDetailId);
+                    currentConcession.get('concessionDetailId').setValue(investmentConcessionDetail.concessionDetailId);
                  
                     if (this.clientAccounts) {
-                        let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == tradeConcessionDetail.legalEntityAccountId);
+                        let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == investmentConcessionDetail.legalEntityAccountId);
                         currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
                     }
 
 
-                    if (this.tradeproducts) {                                           
+                    if (this.productTypes) {                                           
 
-                        let currentproduct = this.tradeproducts.filter(_ => _.tradeProductId == tradeConcessionDetail.fkTradeProductId);
-                        currentConcession.get('product').setValue(currentproduct[0]);
-
-
-                        if (currentproduct[0] && currentproduct[0].tradeProductTypeId) {
-                            let selectedproducttype = this.tradeproducttypes.filter(re => re.tradeProductTypeID == currentproduct[0].tradeProductTypeId);
-
-                            this.selectedProductTypes[rowIndex].products = this.tradeproducts.filter(re => re.tradeProductTypeId == selectedproducttype[0].tradeProductTypeID);
-
-                            currentConcession.get('producttype').setValue(selectedproducttype[0]);
-
-                            if (selectedproducttype[0].tradeProductType == "Local guarantee") {
-
-                                this.selectedTradeConcession[rowIndex] = true;
-                                currentConcession.get('disablecontrolset').setValue(true);
-
-                            }
-                            else {
-
-                                this.selectedTradeConcession[rowIndex] = false;
-                                currentConcession.get('disablecontrolset').setValue(false);
-
-                            }
-                        }
+                        let selectedProductType = this.productTypes.filter(_ => _.id === investmentConcessionDetail.productTypeId);
+                        currentConcession.get('productType').setValue(selectedProductType[0]);                      
                     }
 
+                    if (investmentConcessionDetail.balance)
+                        currentConcession.get('balance').setValue(investmentConcessionDetail.balance);
 
-                    if (tradeConcessionDetail.adValorem)
-                        currentConcession.get('advalorem').setValue(tradeConcessionDetail.adValorem);
+                    if (investmentConcessionDetail.approvedRate)
+                        currentConcession.get('approvedRate').setValue(investmentConcessionDetail.approvedRate);
 
-                    if (tradeConcessionDetail.communication)
-                        currentConcession.get('communication').setValue(tradeConcessionDetail.communication);
+                    if (investmentConcessionDetail.loadedRate)
+                        currentConcession.get('loadedRate').setValue(investmentConcessionDetail.loadedRate);
 
-                    if (tradeConcessionDetail.flatFee)
-                        currentConcession.get('flatfee').setValue(tradeConcessionDetail.flatFee);
+                    if (investmentConcessionDetail.term)
+                        currentConcession.get('noticeperiod').setValue(investmentConcessionDetail.term);                                
 
-                    if (tradeConcessionDetail.currency)
-                        currentConcession.get('currency').setValue(tradeConcessionDetail.currency);
-
-                    if (tradeConcessionDetail.gbbNumber) {
-
-                        let selectedGBBNo = this.legalentitygbbnumbers.filter(_ => _.pkLegalEntityGBBNumber == tradeConcessionDetail.fkLegalEntityGBBNumber);
-                        currentConcession.get('gbbnumber').setValue(selectedGBBNo[0]);
-                        currentConcession.get('accountNumber').setValue(null);
-                    }                       
-
-                    if (tradeConcessionDetail.term)
-                        currentConcession.get('term').setValue(tradeConcessionDetail.term);
-
-                    if (tradeConcessionDetail.establishmentFee)
-                        currentConcession.get('estfee').setValue(tradeConcessionDetail.establishmentFee);
-
-                    if (tradeConcessionDetail.approvedRate)
-                        currentConcession.get('approvedRate').setValue(tradeConcessionDetail.approvedRate);
-
-                    if (tradeConcessionDetail.loadedRate)
-                        currentConcession.get('loadedRate').setValue(tradeConcessionDetail.loadedRate);
-
-                    if (tradeConcessionDetail.min)
-                        currentConcession.get('min').setValue(tradeConcessionDetail.min);
-
-                    if (tradeConcessionDetail.max)
-                        currentConcession.get('max').setValue(tradeConcessionDetail.max);                  
-
-                    if (tradeConcessionDetail.expiryDate) {
-                        var formattedExpiryDate = this.datepipe.transform(tradeConcessionDetail.expiryDate, 'yyyy-MM-dd');
+                    if (investmentConcessionDetail.expiryDate) {
+                        var formattedExpiryDate = this.datepipe.transform(investmentConcessionDetail.expiryDate, 'yyyy-MM-dd');
                         currentConcession.get('expiryDate').setValue(formattedExpiryDate);
                     }
 
-                    if (tradeConcessionDetail.dateApproved) {
-                        var formattedDateApproved = this.datepipe.transform(tradeConcessionDetail.dateApproved, 'yyyy-MM-dd');
+                    if (investmentConcessionDetail.dateApproved) {
+                        var formattedDateApproved = this.datepipe.transform(investmentConcessionDetail.dateApproved, 'yyyy-MM-dd');
                         currentConcession.get('dateApproved').setValue(formattedDateApproved);
-                    }
+                    }                  
 
-
-                  
-
-                    currentConcession.get('isExpired').setValue(tradeConcessionDetail.isExpired);
-                    currentConcession.get('isExpiring').setValue(tradeConcessionDetail.isExpiring);
+                    currentConcession.get('isExpired').setValue(investmentConcessionDetail.isExpired);
+                    currentConcession.get('isExpiring').setValue(investmentConcessionDetail.isExpiring);
 
                     rowIndex++;
                 }
 
                 rowIndex = 0;
 
-                for (let concessionCondition of this.tradeConcession.concessionConditions) {
+                for (let concessionCondition of this.investmentConcession.concessionConditions) {
                     this.addNewConditionRow();
 
-                    const conditions = <FormArray>this.tradeConcessionForm.controls['conditionItemsRows'];
+                    const conditions = <FormArray>this.investmentConcessionForm.controls['conditionItemsRows'];
                     let currentCondition = conditions.controls[conditions.length - 1];
 
                     currentCondition.get('concessionConditionId').setValue(concessionCondition.concessionConditionId);
@@ -434,32 +421,21 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     initConcessionItemRows() {
-
-        this.selectedProductTypes.push(new TradeProductType());
-        this.selectedTradeConcession.push(false)
+     
+        this.selectedInvestmentConcession.push(false)
 
         return this.formBuilder.group({
            
             disablecontrolset: [''],
-            tradeConcessionDetailId: [''],
+            investmentConcessionDetailId: [''],
             concessionDetailId: [''],
             product: [{ value: '', disabled: true }],
-            producttype: [''],
-            accountnumber: [''],
-            gbbnumber: [''],
-        
+            productType: [''],
             accountNumber: [''],
-            term: [''],
-            advalorem: [''],
-            min: [''],
-            max: [''],
-            communication: [''],
-            flatfee: [''],
-            currency: [''],
-            estfee: [''],
+            balance: [''],
+            noticeperiod: [''],          
             approvedRate: [''],
-            loadedRate: [''],
-             userid: [{ value: '', disabled: true }],
+            loadedRate: [''],        
             expiryDate: [''],
             dateApproved: [{ value: '', disabled: true }],
             isExpired: [''],
@@ -484,41 +460,40 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     addNewConcessionRow() {
-        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+        const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
         var newRow = this.initConcessionItemRows();
         control.push(newRow);
     }
 
     addNewConditionRow() {
-        const control = <FormArray>this.tradeConcessionForm.controls['conditionItemsRows'];
+        const control = <FormArray>this.investmentConcessionForm.controls['conditionItemsRows'];
         control.push(this.initConditionItemRows());
     }
 
     addNewConditionRowIfNone() {
-        const control = <FormArray>this.tradeConcessionForm.controls['conditionItemsRows'];
+        const control = <FormArray>this.investmentConcessionForm.controls['conditionItemsRows'];
         if (control.length == 0)
             control.push(this.initConditionItemRows());
     }
 
     deleteConcessionRow(index: number) {
         if (confirm("Are you sure you want to remove this row?")) {
-            const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+            const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
             control.removeAt(index);
-
-            this.selectedProductTypes.splice(index, 1);
-            this.selectedTradeConcession.splice(index, 1);
+        
+            this.selectedInvestmentConcession.splice(index, 1);
         }
     }
 
     deleteConditionRow(index: number) {
-        const control = <FormArray>this.tradeConcessionForm.controls['conditionItemsRows'];
+        const control = <FormArray>this.investmentConcessionForm.controls['conditionItemsRows'];
         control.removeAt(index);
 
         this.selectedConditionTypes.splice(index, 1);
     }
 
     conditionTypeChanged(rowIndex) {
-        const control = <FormArray>this.tradeConcessionForm.controls['conditionItemsRows'];
+        const control = <FormArray>this.investmentConcessionForm.controls['conditionItemsRows'];
         this.selectedConditionTypes[rowIndex] = control.controls[rowIndex].get('conditionType').value;
 
         let currentCondition = control.controls[rowIndex];
@@ -532,43 +507,41 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
     productTypeChanged(rowIndex) {
 
-        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
-
-        this.selectedProductTypes[rowIndex] = control.controls[rowIndex].get('producttype').value;
+        const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];      
 
         let currentProduct = control.controls[rowIndex];
         var selectedproducttype = currentProduct.get('producttype').value;
 
-        this.selectedProductTypes[rowIndex].products = this.tradeproducts.filter(re => re.tradeProductTypeId == selectedproducttype.tradeProductTypeID);
+        //this.selectedProductTypes[rowIndex].products = this.investmentproducts.filter(re => re.investmentProductTypeId == selectedproducttype.investmentProductTypeID);
 
-        currentProduct.get('product').setValue(this.selectedProductTypes[rowIndex].products[0]);
+       // currentProduct.get('product').setValue(this.selectedProductTypes[rowIndex].products[0]);
 
-        if (selectedproducttype.tradeProductType == "Local guarantee") {
+        //if (selectedproducttype.investmentProductType == "Local guarantee") {
 
-            this.selectedTradeConcession[rowIndex] = true;
+        //    this.selectedInvestmentConcession[rowIndex] = true;
 
-            currentProduct.get('disablecontrolset').setValue(true);
+        //    currentProduct.get('disablecontrolset').setValue(true);
             
-            currentProduct.get('advalorem').setValue(null);
-            currentProduct.get('min').setValue(null);
-            currentProduct.get('max').setValue(null);
+        //    currentProduct.get('advalorem').setValue(null);
+        //    currentProduct.get('min').setValue(null);
+        //    currentProduct.get('max').setValue(null);
 
-            currentProduct.get('communication').setValue(null);
-            currentProduct.get('flatfee').setValue(null);
-            currentProduct.get('currency').setValue(null);
+        //    currentProduct.get('communication').setValue(null);
+        //    currentProduct.get('flatfee').setValue(null);
+        //    currentProduct.get('currency').setValue(null);
 
-        }
-        else {
+        //}
+        //else {
 
-            this.selectedTradeConcession[rowIndex] = false;
+        //    this.selectedInvestmentConcession[rowIndex] = false;
 
-            currentProduct.get('disablecontrolset').setValue(false);
+        //    currentProduct.get('disablecontrolset').setValue(false);
 
-            currentProduct.get('gbbnumber').setValue(null);
-            currentProduct.get('term').setValue(null);
-            currentProduct.get('estfee').setValue(null);
-            currentProduct.get('loadedRate').setValue(null);
-        }
+        //    currentProduct.get('gbbnumber').setValue(null);
+        //    currentProduct.get('term').setValue(null);
+        //    currentProduct.get('estfee').setValue(null);
+        //    currentProduct.get('loadedRate').setValue(null);
+        //}
     }
 
     addValidationError(validationDetail) {
@@ -578,161 +551,78 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.validationError.push(validationDetail);
     }  
   
-    getTradeConcession(isNew: boolean): TradeConcession {
-        var tradeConcession = new TradeConcession();
-        tradeConcession.concession = new Concession();      
-        tradeConcession.concession.riskGroupId = this.riskGroup.id;
-        tradeConcession.concession.referenceNumber = this.concessionReferenceId;
-        tradeConcession.concession.concessionType = ConcessionTypes.Trade;     
+    getInvestmentConcession(isNew: boolean): InvestmentConcession {
+        var investmentConcession = new InvestmentConcession();
+        investmentConcession.concession = new Concession();      
+        investmentConcession.concession.riskGroupId = this.riskGroup.id;
+        investmentConcession.concession.referenceNumber = this.concessionReferenceId;
+        investmentConcession.concession.concessionType = ConcessionTypes.Investment;     
 
-        if (this.tradeConcessionForm.controls['comments'].value)
-            tradeConcession.concession.comments = this.tradeConcessionForm.controls['comments'].value;
+        if (this.investmentConcessionForm.controls['comments'].value)
+            investmentConcession.concession.comments = this.investmentConcessionForm.controls['comments'].value;
 
-        if (this.tradeConcessionForm.controls['motivation'].value)
-            tradeConcession.concession.motivation = this.tradeConcessionForm.controls['motivation'].value;
+        if (this.investmentConcessionForm.controls['motivation'].value)
+            investmentConcession.concession.motivation = this.investmentConcessionForm.controls['motivation'].value;
         else
-            tradeConcession.concession.motivation = '.';
+            investmentConcession.concession.motivation = '.';
 
-        const concessions = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+        const concessions = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
 
         for (let concessionFormItem of concessions.controls) {
-            if (!tradeConcession.tradeConcessionDetails)
-                tradeConcession.tradeConcessionDetails = [];
+            if (!investmentConcession.investmentConcessionDetails)
+                investmentConcession.investmentConcessionDetails = [];
 
-            let tradeConcessionDetail = new TradeConcessionDetail();
+            let investmentConcessionDetail = new InvestmentConcessionDetail();
 
-            if (!isNew && concessionFormItem.get('tradeConcessionDetailId').value)
-                tradeConcessionDetail.tradeConcessionDetailId = concessionFormItem.get('tradeConcessionDetailId').value;
+            investmentConcessionDetail.disablecontrolset = concessionFormItem.get('disablecontrolset').value;
 
-            if (!isNew && concessionFormItem.get('concessionDetailId').value)
-                tradeConcessionDetail.concessionDetailId = concessionFormItem.get('concessionDetailId').value;
-
-            tradeConcessionDetail.disablecontrolset = concessionFormItem.get('disablecontrolset').value;
-
-            if (concessionFormItem.get('product').value) {
-                tradeConcessionDetail.fkTradeProductId = concessionFormItem.get('product').value.tradeProductId;
-
-            } else {
+            if (concessionFormItem.get('productType').value)
+                investmentConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;
+            else
                 this.addValidationError("Product not selected");
-            }
-
-
-            if (concessionFormItem.get('producttype').value) {
-                tradeConcessionDetail.tradeProductTypeID = concessionFormItem.get('producttype').value.tradeProductTypeID;
-
-            } else {
-                this.addValidationError("Product Type code not selected");
-            }
-
 
 
             if ((concessionFormItem.get('accountNumber').value && concessionFormItem.get('accountNumber').value.legalEntityId)) {
-                tradeConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
-                tradeConcessionDetail.legalEntityAccountId = concessionFormItem.get('accountNumber').value.legalEntityAccountId;
+                investmentConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
+                investmentConcessionDetail.legalEntityAccountId = concessionFormItem.get('accountNumber').value.legalEntityAccountId;
             } else {
-
-                if (!tradeConcessionDetail.disablecontrolset) {
 
                 this.addValidationError("Client account not selected");
-                 }
+
             }
 
-            if (concessionFormItem.get('gbbnumber').value) {
-
-                var gbbnumber = concessionFormItem.get('gbbnumber').value;
-                tradeConcessionDetail.legalEntityId = gbbnumber.legalEntityId;
-                tradeConcessionDetail.legalEntityAccountId = gbbnumber.legalEntityAccountId;
-                tradeConcessionDetail.fkLegalEntityGBBNumber = gbbnumber.pkLegalEntityGBBNumber;
-
+            if (concessionFormItem.get('balance').value) {
+                investmentConcessionDetail.balance = concessionFormItem.get('balance').value;
             } else {
-                if (tradeConcessionDetail.disablecontrolset) {
-                    this.addValidationError("GBB Number not entered");
-                }
+
+                this.addValidationError("Balance not entered");
+
             }
 
+            if (concessionFormItem.get('noticeperiod').value) {
+                investmentConcessionDetail.term = concessionFormItem.get('noticeperiod').value;
+            } else {
 
-            if (concessionFormItem.get('term').value) {
-                tradeConcessionDetail.term = concessionFormItem.get('term').value;
-            } else {
-                if (tradeConcessionDetail.disablecontrolset) {
-                    this.addValidationError("Term not entered");
-                }
-            }
+                this.addValidationError("Notice period value not entered");
 
-            if (concessionFormItem.get('advalorem').value) {
-                tradeConcessionDetail.adValorem = concessionFormItem.get('advalorem').value;
-            } else {
-                if (!tradeConcessionDetail.disablecontrolset) {
-                    this.addValidationError("AdValorem value not entered");
-                }
-            }
-
-            if (concessionFormItem.get('min').value) {
-                tradeConcessionDetail.min = concessionFormItem.get('min').value;
-            } else {
-                if (!tradeConcessionDetail.disablecontrolset) {
-                    this.addValidationError("Min value not entered");
-                }
-            }
-
-            if (concessionFormItem.get('max').value) {
-                tradeConcessionDetail.max = concessionFormItem.get('max').value;
-            } else {
-                if (!tradeConcessionDetail.disablecontrolset) {
-                    this.addValidationError("Max value not entered");
-                }
-            }
-            ///---
-            if (concessionFormItem.get('communication').value) {
-                tradeConcessionDetail.communication = concessionFormItem.get('communication').value;
-            } else {
-                if (!tradeConcessionDetail.disablecontrolset) {
-                    this.addValidationError("Communication not entered");
-                }
-            }
-            if (concessionFormItem.get('flatfee').value) {
-                tradeConcessionDetail.flatFee = concessionFormItem.get('flatfee').value;
-            } else {
-                if (!tradeConcessionDetail.disablecontrolset) {
-                    this.addValidationError("Flat fee not entered");
-                }
-            }
-
-            if (concessionFormItem.get('currency').value) {
-                tradeConcessionDetail.currency = concessionFormItem.get('currency').value;
-            } else {
-                if (!tradeConcessionDetail.disablecontrolset) {
-                    this.addValidationError("Currency not selected");
-                }
-            }
-
-            if (concessionFormItem.get('estfee').value) {
-                tradeConcessionDetail.establishmentFee = concessionFormItem.get('estfee').value;
-            } else {
-                if (tradeConcessionDetail.disablecontrolset) {
-                    this.addValidationError("Est. fee not entered");
-                }
             }
 
             if (concessionFormItem.get('loadedRate').value) {
-                tradeConcessionDetail.loadedRate = concessionFormItem.get('loadedRate').value;
+                investmentConcessionDetail.loadedRate = concessionFormItem.get('loadedRate').value;
             } else {
-                if (tradeConcessionDetail.disablecontrolset) {
-                    this.addValidationError("Rate not entered");
-                }
+
+                this.addValidationError("Rate value not entered");
+
             }
 
-            if (concessionFormItem.get('expiryDate').value)
-                tradeConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+            investmentConcession.investmentConcessionDetails.push(investmentConcessionDetail);
+        }      
 
-            tradeConcession.tradeConcessionDetails.push(tradeConcessionDetail);
-        }
-
-        const conditions = <FormArray>this.tradeConcessionForm.controls['conditionItemsRows'];
+        const conditions = <FormArray>this.investmentConcessionForm.controls['conditionItemsRows'];
 
         for (let conditionFormItem of conditions.controls) {
-            if (!tradeConcession.concessionConditions)
-                tradeConcession.concessionConditions = [];
+            if (!investmentConcession.concessionConditions)
+                investmentConcession.concessionConditions = [];
 
             let concessionCondition = new ConcessionCondition();
 
@@ -773,15 +663,15 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                 this.addValidationError("Period not selected");
             }
 
-            tradeConcession.concessionConditions.push(concessionCondition);
+            investmentConcession.concessionConditions.push(concessionCondition);
         }
 
-        return tradeConcession;
+        return investmentConcession;
     }
     
 
     getBackgroundColour(rowIndex: number) {
-        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+        const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
 
         if (String(control.controls[rowIndex].get('isExpired').value) == "true") {
             return "#EC7063";
@@ -808,20 +698,20 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.errorMessage = null;
         this.validationError = null;
 
-        var tradeConcession = this.getTradeConcession(false);
-        tradeConcession.concession.subStatus = ConcessionSubStatus.PCMPending;
-        tradeConcession.concession.bcmUserId = this.tradeConcession.currentUser.id;
+        var investmentConcession = this.getInvestmentConcession(false);
+        investmentConcession.concession.subStatus = ConcessionSubStatus.PCMPending;
+        investmentConcession.concession.bcmUserId = this.investmentConcession.currentUser.id;
 
-        if (!tradeConcession.concession.comments) {
-            tradeConcession.concession.comments = "Forwarded";
+        if (!investmentConcession.concession.comments) {
+            investmentConcession.concession.comments = "Forwarded";
         }
 
         if (!this.validationError) {
-            this.tradeConcessionService.postUpdateTradeData(tradeConcession).subscribe(entity => {
+            this.investmentConcessionService.postUpdateInvestmentData(investmentConcession).subscribe(entity => {
                 this.canBcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
-                this.tradeConcession = entity;
+                this.investmentConcession = entity;
                 this.canEdit = false;
             }, error => {
                 this.errorMessage = <any>error;
@@ -838,22 +728,22 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.errorMessage = null;
         this.validationError = null;
 
-        var tradeConcession = this.getTradeConcession(false);
-        tradeConcession.concession.status = ConcessionStatus.Declined;
-        tradeConcession.concession.subStatus = ConcessionSubStatus.BCMDeclined;
-        tradeConcession.concession.bcmUserId = this.tradeConcession.currentUser.id;
+        var investmentConcession = this.getInvestmentConcession(false);
+        investmentConcession.concession.status = ConcessionStatus.Declined;
+        investmentConcession.concession.subStatus = ConcessionSubStatus.BCMDeclined;
+        investmentConcession.concession.bcmUserId = this.investmentConcession.currentUser.id;
 
-        if (!tradeConcession.concession.comments) {
-            tradeConcession.concession.comments = ConcessionStatus.Declined;
+        if (!investmentConcession.concession.comments) {
+            investmentConcession.concession.comments = ConcessionStatus.Declined;
         }
 
         if (!this.validationError) {
-            this.tradeConcessionService.postUpdateTradeData(tradeConcession).subscribe(entity => {
+            this.investmentConcessionService.postUpdateInvestmentData(investmentConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canBcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
-                this.tradeConcession = entity;
+                this.investmentConcession = entity;
                 this.canEdit = false;
             }, error => {
                 this.errorMessage = <any>error;
@@ -870,45 +760,45 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.errorMessage = null;
         this.validationError = null;
 
-        var tradeConcession = this.getTradeConcession(false);
+        var investmentConcession = this.getInvestmentConcession(false);
 
         if (this.hasChanges) {
-            tradeConcession.concession.status = ConcessionStatus.Pending;
+            investmentConcession.concession.status = ConcessionStatus.Pending;
 
-            if (this.tradeConcession.currentUser.isHO) {
-                tradeConcession.concession.subStatus = ConcessionSubStatus.HOApprovedWithChanges;
-                tradeConcession.concession.hoUserId = this.tradeConcession.currentUser.id;
+            if (this.investmentConcession.currentUser.isHO) {
+                investmentConcession.concession.subStatus = ConcessionSubStatus.HOApprovedWithChanges;
+                investmentConcession.concession.hoUserId = this.investmentConcession.currentUser.id;
             } else {
-                tradeConcession.concession.subStatus = ConcessionSubStatus.PCMApprovedWithChanges;
-                tradeConcession.concession.pcmUserId = this.tradeConcession.currentUser.id;
+                investmentConcession.concession.subStatus = ConcessionSubStatus.PCMApprovedWithChanges;
+                investmentConcession.concession.pcmUserId = this.investmentConcession.currentUser.id;
             }
 
-            if (!tradeConcession.concession.comments) {
-                tradeConcession.concession.comments = ConcessionStatus.ApprovedWithChanges;
+            if (!investmentConcession.concession.comments) {
+                investmentConcession.concession.comments = ConcessionStatus.ApprovedWithChanges;
             }
         } else {
-            tradeConcession.concession.status = ConcessionStatus.Approved;
+            investmentConcession.concession.status = ConcessionStatus.Approved;
 
-            if (this.tradeConcession.currentUser.isHO) {
-                tradeConcession.concession.subStatus = ConcessionSubStatus.HOApproved;
-                tradeConcession.concession.hoUserId = this.tradeConcession.currentUser.id;
+            if (this.investmentConcession.currentUser.isHO) {
+                investmentConcession.concession.subStatus = ConcessionSubStatus.HOApproved;
+                investmentConcession.concession.hoUserId = this.investmentConcession.currentUser.id;
             } else {
-                tradeConcession.concession.subStatus = ConcessionSubStatus.PCMApproved;
-                tradeConcession.concession.pcmUserId = this.tradeConcession.currentUser.id;
+                investmentConcession.concession.subStatus = ConcessionSubStatus.PCMApproved;
+                investmentConcession.concession.pcmUserId = this.investmentConcession.currentUser.id;
             }
 
-            if (!tradeConcession.concession.comments) {
-                tradeConcession.concession.comments = ConcessionStatus.Approved;
+            if (!investmentConcession.concession.comments) {
+                investmentConcession.concession.comments = ConcessionStatus.Approved;
             }
         }
 
         if (!this.validationError) {
-            this.tradeConcessionService.postUpdateTradeData(tradeConcession).subscribe(entity => {
+            this.investmentConcessionService.postUpdateInvestmentData(investmentConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canPcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
-                this.tradeConcession = entity;
+                this.investmentConcession = entity;
                 this.canEdit = false;
             }, error => {
                 this.errorMessage = <any>error;
@@ -925,29 +815,29 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.errorMessage = null;
         this.validationError = null;
 
-        var tradeConcession = this.getTradeConcession(false);
+        var investmentConcession = this.getInvestmentConcession(false);
 
-        tradeConcession.concession.status = ConcessionStatus.Declined;
+        investmentConcession.concession.status = ConcessionStatus.Declined;
 
-        if (this.tradeConcession.currentUser.isHO) {
-            tradeConcession.concession.subStatus = ConcessionSubStatus.HODeclined;
-            tradeConcession.concession.hoUserId = this.tradeConcession.currentUser.id;
+        if (this.investmentConcession.currentUser.isHO) {
+            investmentConcession.concession.subStatus = ConcessionSubStatus.HODeclined;
+            investmentConcession.concession.hoUserId = this.investmentConcession.currentUser.id;
         } else {
-            tradeConcession.concession.subStatus = ConcessionSubStatus.PCMDeclined;
-            tradeConcession.concession.pcmUserId = this.tradeConcession.currentUser.id;
+            investmentConcession.concession.subStatus = ConcessionSubStatus.PCMDeclined;
+            investmentConcession.concession.pcmUserId = this.investmentConcession.currentUser.id;
         }
 
-        if (!tradeConcession.concession.comments) {
-            tradeConcession.concession.comments = ConcessionStatus.Declined;
+        if (!investmentConcession.concession.comments) {
+            investmentConcession.concession.comments = ConcessionStatus.Declined;
         }
 
         if (!this.validationError) {
-            this.tradeConcessionService.postUpdateTradeData(tradeConcession).subscribe(entity => {
+            this.investmentConcessionService.postUpdateInvestmentData(investmentConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canPcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
-                this.tradeConcession = entity;
+                this.investmentConcession = entity;
                 this.canEdit = false;
             }, error => {
                 this.errorMessage = <any>error;
@@ -964,7 +854,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             this.errorMessage = null;
             this.validationError = null;
 
-            this.tradeConcessionService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
+            this.investmentConcessionService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
                 console.log("data saved");
                 this.canBcmApprove = false;
                 this.canBcmApprove = false;
@@ -975,7 +865,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                 this.canArchive = false;
                 this.saveMessage = entity.concession.childReferenceNumber;
                 this.isLoading = false;
-                this.tradeConcession = entity;
+                this.investmentConcession = entity;
             }, error => {
                 this.errorMessage = <any>error;
                 this.isLoading = false;
@@ -998,7 +888,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.canUpdate = false;
         this.canArchive = false;
 
-        this.tradeConcessionForm.controls['motivation'].setValue('');
+        this.investmentConcessionForm.controls['motivation'].setValue('');
     }
 
     saveConcession() {
@@ -1006,19 +896,19 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.errorMessage = null;
         this.validationError = null;
 
-        var tradeConcession = this.getTradeConcession(true);
+        var investmentConcession = this.getInvestmentConcession(true);
 
-        tradeConcession.concession.status = ConcessionStatus.Pending;
-        tradeConcession.concession.subStatus = ConcessionSubStatus.BCMPending;
-        tradeConcession.concession.type = "Existing";
-        tradeConcession.concession.referenceNumber = this.concessionReferenceId;
+        investmentConcession.concession.status = ConcessionStatus.Pending;
+        investmentConcession.concession.subStatus = ConcessionSubStatus.BCMPending;
+        investmentConcession.concession.type = "Existing";
+        investmentConcession.concession.referenceNumber = this.concessionReferenceId;
 
         if (!this.validationError) {
-            this.tradeConcessionService.postChildConcession(tradeConcession, this.editType).subscribe(entity => {
+            this.investmentConcessionService.postChildConcession(investmentConcession, this.editType).subscribe(entity => {
                 console.log("data saved");
                 this.isEditing = false;
                 this.saveMessage = entity.concession.childReferenceNumber;
-                this.tradeConcession = entity;
+                this.investmentConcession = entity;
                 this.isLoading = false;
                 this.canEdit = false;
                 this.motivationEnabled = false;
@@ -1054,18 +944,18 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.errorMessage = null;
         this.validationError = null;
 
-        var tradeConcession = this.getTradeConcession(false);
+        var investmentConcession = this.getInvestmentConcession(false);
 
-        tradeConcession.concession.status = ConcessionStatus.Pending;
-        tradeConcession.concession.subStatus = ConcessionSubStatus.BCMPending;
-        tradeConcession.concession.referenceNumber = this.concessionReferenceId;
+        investmentConcession.concession.status = ConcessionStatus.Pending;
+        investmentConcession.concession.subStatus = ConcessionSubStatus.BCMPending;
+        investmentConcession.concession.referenceNumber = this.concessionReferenceId;
 
         if (!this.validationError) {
-            this.tradeConcessionService.postRecallTradeData(tradeConcession).subscribe(entity => {
+            this.investmentConcessionService.postRecallInvestmentData(investmentConcession).subscribe(entity => {
                 console.log("data saved");
                 this.isRecalling = false;
                 this.saveMessage = entity.concession.referenceNumber;
-                this.tradeConcession = entity;
+                this.investmentConcession = entity;
                 this.isLoading = false;
                 this.canEdit = false;
                 this.motivationEnabled = false;
@@ -1084,22 +974,22 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.errorMessage = null;
         this.validationError = null;
 
-        var tradeConcession = this.getTradeConcession(false);
-        tradeConcession.concession.status = ConcessionStatus.ApprovedWithChanges;
-        tradeConcession.concession.subStatus = ConcessionSubStatus.RequestorAcceptedChanges;
-        tradeConcession.concession.requestorId = this.tradeConcession.currentUser.id;
+        var investmentConcession = this.getInvestmentConcession(false);
+        investmentConcession.concession.status = ConcessionStatus.ApprovedWithChanges;
+        investmentConcession.concession.subStatus = ConcessionSubStatus.RequestorAcceptedChanges;
+        investmentConcession.concession.requestorId = this.investmentConcession.currentUser.id;
 
-        if (!tradeConcession.concession.comments) {
-            tradeConcession.concession.comments = "Accepted Changes";
+        if (!investmentConcession.concession.comments) {
+            investmentConcession.concession.comments = "Accepted Changes";
         }
 
         if (!this.validationError) {
-            this.tradeConcessionService.postUpdateTradeData(tradeConcession).subscribe(entity => {
+            this.investmentConcessionService.postUpdateInvestmentData(investmentConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canApproveChanges = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
-                this.tradeConcession = entity;
+                this.investmentConcession = entity;
                 this.canEdit = false;
             }, error => {
                 this.errorMessage = <any>error;
@@ -1117,22 +1007,22 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.validationError = null;
 
       
-        var tradeConcession = this.getTradeConcession(false);
-        tradeConcession.concession.status = ConcessionStatus.Declined;
-        tradeConcession.concession.subStatus = ConcessionSubStatus.RequestorDeclinedChanges;
-        tradeConcession.concession.requestorId = this.tradeConcession.currentUser.id;
+        var investmentConcession = this.getInvestmentConcession(false);
+        investmentConcession.concession.status = ConcessionStatus.Declined;
+        investmentConcession.concession.subStatus = ConcessionSubStatus.RequestorDeclinedChanges;
+        investmentConcession.concession.requestorId = this.investmentConcession.currentUser.id;
 
-        if (!tradeConcession.concession.comments) {
-            tradeConcession.concession.comments = "Declined Changes";
+        if (!investmentConcession.concession.comments) {
+            investmentConcession.concession.comments = "Declined Changes";
         }
 
         if (!this.validationError) {
-            this.tradeConcessionService.postUpdateTradeData(tradeConcession).subscribe(entity => {
+            this.investmentConcessionService.postUpdateInvestmentData(investmentConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canApproveChanges = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
-                this.tradeConcession = entity;
+                this.investmentConcession = entity;
                 this.canEdit = false;
             }, error => {
                 this.errorMessage = <any>error;

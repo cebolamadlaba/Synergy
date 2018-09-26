@@ -38,10 +38,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IMiscPerformanceRepository _miscPerformanceRepository;
 
         private readonly IMediator _mediator;
-             
+
+        private readonly IPrimeRateRepository _primeRateRepository;
+
         public InvestmentManager(IConcessionManager concessionManager, IConcessionInvestmentRepository concessionInvestmentRpository,
             IMapper mapper, IFinancialInvestmentRepository financialInvestmentRepository, ILookupTableManager lookupTableManager, IRuleManager ruleManager,
-            IMiscPerformanceRepository miscPerformanceRepository, IMediator mediator)
+            IMiscPerformanceRepository miscPerformanceRepository, IMediator mediator, IPrimeRateRepository primeRateRepository)
         {
             _concessionManager = concessionManager;
             _concessionInvestmentRpository = concessionInvestmentRpository;
@@ -51,6 +53,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _ruleManager = ruleManager;
             _miscPerformanceRepository = miscPerformanceRepository;
             _mediator = mediator;
+            _primeRateRepository = primeRateRepository;
         }
 
         public ConcessionInvestment CreateConcessionInvestment(InvestmentConcessionDetail investmentConcessionDetail, Concession concession)
@@ -65,12 +68,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
             var investmentConcessionDetails = _miscPerformanceRepository.GetInvestmentConcessionDetails(concession.Id);
 
+            var primerate = _primeRateRepository.PrimeRate(concession.DateOpened);
+
             return new InvestmentConcession
             {
                 Concession = concession,
                 InvestmentConcessionDetails = investmentConcessionDetails,
                 ConcessionConditions = _concessionManager.GetConcessionConditions(concession.Id),
-                CurrentUser = user
+                CurrentUser = user,
+                PrimeRate = primerate
             };
 
         }

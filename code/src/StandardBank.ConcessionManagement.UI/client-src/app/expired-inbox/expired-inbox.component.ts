@@ -59,6 +59,9 @@ export class ExpiredInboxComponent implements OnInit {
             case ConcessionTypes.Trade:
                 this.router.navigate(['/trade-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
                 break;
+            case ConcessionTypes.Investment:
+                this.router.navigate(['/investments-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                break;
         }
     }
 }

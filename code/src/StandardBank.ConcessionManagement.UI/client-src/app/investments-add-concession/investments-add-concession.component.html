@@ -156,15 +156,15 @@
 
                 <td class="length-long">
                     <!-- Account No -->
-                    <select formControlName="accountNumber" class="form-control">
+                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="saveMessage ? '' : null">
                         <option *ngFor="let clientAccountOption of selectedAccountNumbers[i].clientaccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
                 </td>             
 
-                <td class="length-short"><input type="number" class="form-control" formControlName="balance" [attr.disabled]="(selectedInvestmentConcession[i]) && !saveMessage ? '' : null" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="balance" [attr.disabled]="saveMessage ? '' : null" /></td>
                 
                 <td class="length-short">
-                    <select formControlName="noticeperiod" class="form-control" [attr.disabled]="(selectedInvestmentConcession[i]) && !saveMessage ? '' : null">
+                    <select formControlName="noticeperiod" class="form-control" [attr.disabled]="saveMessage ? '' : null">
                         <option value="1">33 days</option>
                         <option value="2">60 days</option>
                         <option value="3">90 days</option>
@@ -173,7 +173,7 @@
                         <option value="6">180 days</option>
                     </select>
                 </td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="rate" [attr.disabled]="(selectedInvestmentConcession[i]) && !saveMessage ? '' : null" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="rate" [attr.disabled]="saveMessage ? '' : null" /></td>
 
                 <td class="delete"><button *ngIf="investmentConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>

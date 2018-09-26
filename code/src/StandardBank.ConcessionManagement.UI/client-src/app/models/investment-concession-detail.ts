@@ -11,11 +11,10 @@ export class InvestmentConcessionDetail extends BaseConcessionDetail {
     loadedRate :number;  
   
     balance: number;
-    noticeperiod: number;
-    rate: number;
+    term: number; 
 
-    fkInvestmentProductId: number;
-    investmentProductTypeID: number;
+    fkProductId: number;
+    productTypeId: number;
 
     fkLegalEntityAccountId: number;  
     fkLegalEntityGBBNumber: number;   

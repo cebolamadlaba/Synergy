@@ -147,9 +147,6 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
         });
 
-
-
-
         Observable.forkJoin([
             this.lookupDataService.getReviewFeeTypes(),
             this.lookupDataService.getProductTypes(ConcessionTypes.Lending),
