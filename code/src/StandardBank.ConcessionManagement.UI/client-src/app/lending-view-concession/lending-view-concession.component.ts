@@ -190,8 +190,6 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     getvisible(productType: Number) {
 
 
-
-
         return true;
     }
 

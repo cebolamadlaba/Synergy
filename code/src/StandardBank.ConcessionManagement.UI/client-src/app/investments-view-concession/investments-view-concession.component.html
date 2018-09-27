@@ -220,12 +220,12 @@
                     </select>
                 </td>
 
-                <td class="length-short">
+                <td class="length-long">
 
                     <input type="text" formControlName="loadedRate" [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimal($event)" class="form-control" />
 
                 </td>
-                <td class="length-short" *ngIf="isApproved"><input type="text" numbersOnly="true" formControlName="approvedRate" class="form-control" /></td>
+                <td class="length-long" *ngIf="isApproved"><input type="text" numbersOnly="true" formControlName="approvedRate" class="form-control" /></td>
 
                 <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" /></td>
                 <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>

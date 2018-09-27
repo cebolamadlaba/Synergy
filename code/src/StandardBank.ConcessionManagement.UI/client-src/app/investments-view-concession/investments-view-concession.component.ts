@@ -340,6 +340,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
                     currentConcession.get('investmentConcessionDetailId').setValue(investmentConcessionDetail.investmentConcessionDetailId);
                     currentConcession.get('concessionDetailId').setValue(investmentConcessionDetail.concessionDetailId);
+
                  
                     if (this.clientAccounts) {
                         let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == investmentConcessionDetail.legalEntityAccountId);
@@ -575,6 +576,13 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             let investmentConcessionDetail = new InvestmentConcessionDetail();
 
             investmentConcessionDetail.disablecontrolset = concessionFormItem.get('disablecontrolset').value;
+
+            if (!isNew && concessionFormItem.get('investmentConcessionDetailId').value)
+                investmentConcessionDetail.investmentConcessionDetailId = concessionFormItem.get('investmentConcessionDetailId').value;
+
+            if (!isNew && concessionFormItem.get('concessionDetailId').value)
+                investmentConcessionDetail.concessionDetailId = concessionFormItem.get('concessionDetailId').value;
+
 
             if (concessionFormItem.get('productType').value)
                 investmentConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;

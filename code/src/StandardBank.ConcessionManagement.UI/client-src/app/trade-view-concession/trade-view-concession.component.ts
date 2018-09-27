@@ -162,14 +162,14 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
             this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
         }
 
-        //if (this.riskGroupNumber) {
-        //    this.observableTradeView = this.tradeConcessionService.getTradeViewData(this.riskGroupNumber);
-        //    this.observableTradeView.subscribe(tradeView => {
-        //        this.tradeView = tradeView;
-        //    }, error => {
-        //        this.errorMessage = <any>error;
-        //    });
-        //}
+        if (this.riskGroupNumber) {
+            this.observableTradeView = this.tradeConcessionService.getTradeViewData(this.riskGroupNumber);
+            this.observableTradeView.subscribe(tradeView => {
+                this.tradeView = tradeView;
+            }, error => {
+                this.errorMessage = <any>error;
+            });
+        }
 
         this.tradeConcessionForm = this.formBuilder.group({
             concessionItemRows: this.formBuilder.array([this.initConcessionItemRows()]),
