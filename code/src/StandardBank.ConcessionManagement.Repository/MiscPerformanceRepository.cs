@@ -70,7 +70,7 @@ namespace StandardBank.ConcessionManagement.Repository
                             JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
                             join tblProductLending on lea.pkLegalEntityAccountId = tblProductLending.fkLegalEntityAccountId
                             join rtblProduct prod on tblProductLending.fkProductId = prod.pkProductId
-                            WHERE rg.[RiskGroupNumber] = @riskGroupNumber
+                            WHERE rg.[RiskGroupNumber] = @riskGroupNumber                          
                             AND rg.[IsActive] = 1
                             AND le.[IsActive] = 1
                             AND lea.[IsActive] = 1
@@ -394,7 +394,8 @@ namespace StandardBank.ConcessionManagement.Repository
                         JOIN [dbo].[rtblProduct] p on p.[pkProductId] = pl.[fkProductId]
                         JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = pl.[fkLegalEntityId]
                         JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = pl.[fkLegalEntityAccountId]
-                        WHERE pl.[fkRiskGroupId] = @riskGroupId", new { riskGroupId, riskGroupName },
+                        WHERE pl.[fkRiskGroupId] = @riskGroupId
+                        AND p.showpricing = 1", new { riskGroupId, riskGroupName },
                         commandTimeout: Int32.MaxValue);
 
                     if (lendingProducts != null && lendingProducts.Any())
