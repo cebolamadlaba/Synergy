@@ -37,6 +37,7 @@ import { InvestmentConcessionService } from "../services/investment-concession.s
 
 import { InvestmentView } from "../models/investment-view";
 
+
 @Component({
     selector: 'app-investments-view-concession',
     templateUrl: './investments-view-concession.component.html',
@@ -51,6 +52,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     validationError: String[];
     saveMessage: String;
     warningMessage: String;
+  
 
     observableRiskGroup: Observable<RiskGroup>;
     observableInvestmentView: Observable<InvestmentView>;
@@ -60,9 +62,9 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
 
     primeRate = "0.00";
-    today: string;
+    today: string;   
 
-    public investmentConcessionForm: FormGroup;
+    public investmentConcessionForm: FormGroup;   
    
     isLoading = true;
     canBcmApprove = false;
@@ -92,10 +94,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     observablePeriodTypes: Observable<PeriodType[]>;
     periodTypes: PeriodType[];
 
-    productTypes: ProductType[];
-
-    //observableInvestmentProductTypes: Observable<InvestmentProductType[]>;
-    //investmentproducttypes: InvestmentProductType[];
+    productTypes: ProductType[];   
 
     observableInvestmentProducts: Observable<InvestmentProduct[]>;
     investmentproducts: InvestmentProduct[];
@@ -103,8 +102,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     observableLegalEntityGBbNumbers: Observable<LegalEntityGBBNumber[]>;
     legalentitygbbnumbers: LegalEntityGBBNumber[];
 
-    selectedConditionTypes: ConditionType[];
-    //selectedProductTypes: InvestmentProductType[];
+    selectedConditionTypes: ConditionType[];  
     selectedInvestmentConcession: boolean[];
 
     observableConditionTypes: Observable<ConditionType[]>;
@@ -150,8 +148,6 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.investmentConcession = new InvestmentConcession();
         this.investmentConcession.concession = new Concession();
         this.investmentConcession.concession.concessionComments = [new ConcessionComment()];
-
-
 
     }
 
@@ -248,26 +244,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                 this.capturedComments = value.comments;
             }
         });
-    }
-
-
-    //gbbNumberChanged(rowIndex: number) {
-
-
-    //    const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
-    //    let currentRow = control.controls[rowIndex];
-
-    //    var LegalEntityAccount = currentRow.get('gbbnumber').value;
-
-    //    var legalentityaccount = this.clientAccounts.filter(cli => cli.legalEntityAccountId == LegalEntityAccount.fkLegalEntityAccountId);
-
-    //    if (legalentityaccount) {
-
-    //        var oldaccountnumber = currentRow.get('accountNumber').value;
-    //        currentRow.get('accountNumber').setValue(legalentityaccount[0]);
-    //    }
-
-    //}
+    }    
 
     populateForm() {
         if (this.concessionReferenceId) {
@@ -413,13 +390,17 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
                     rowIndex++;
                 }
+
+                this.changearray = this.lookupDataService.checkforLC(this.investmentConcession.concession.status, this.investmentConcession.concession.subStatus, investmentConcession.concession.concessionComments);
+
                 this.isLoading = false;
             }, error => {
                 this.isLoading = false;
                 this.errorMessage = <any>error;
             });
         }
-    }
+    }  
+        
 
     initConcessionItemRows() {
      
@@ -762,6 +743,8 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
+    
+
     pcmApproveConcession() {
         this.isLoading = true;
 
@@ -771,6 +754,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         var investmentConcession = this.getInvestmentConcession(false);
 
         if (this.hasChanges) {
+
             investmentConcession.concession.status = ConcessionStatus.Pending;
 
             if (this.investmentConcession.currentUser.isHO) {
@@ -783,7 +767,10 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
             if (!investmentConcession.concession.comments) {
                 investmentConcession.concession.comments = ConcessionStatus.ApprovedWithChanges;
-            }
+            }          
+           
+            investmentConcession.concession.concessionComments = this.GetChanges(investmentConcession.concession.id);
+
         } else {
             investmentConcession.concession.status = ConcessionStatus.Approved;
 
@@ -815,6 +802,57 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         } else {
             this.isLoading = false;
         }
+    }
+
+    private GetChanges(concessionid: number): any[] {
+        let comments = this.getChangedProperties();
+
+        let commentarray = [];
+        let comment = new ConcessionComment();
+        comment.concessionId = concessionid;
+        comment.comment = comments;
+        comment.userDescription = "LogChanges";
+        commentarray.push(comment);
+        return commentarray;
+    }
+
+    private getChangedProperties(): string {
+
+        let changedProperties = [];
+        let rowIndex = 0;
+
+        const concessions = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
+
+        //this is detailed line items,  but not yet the controls
+        for (let concessionFormItem of concessions.controls) {
+
+            let controls = (<FormGroup>concessionFormItem).controls;
+
+            for (const fieldname in controls) { // 'field' is a string
+
+                const abstractControl = controls[fieldname];
+                if (abstractControl.dirty) {
+
+                    changedProperties.push({ rowIndex, fieldname });
+                }
+            }
+            rowIndex++;
+        }
+        return JSON.stringify(changedProperties);
+    }
+
+    changearray: any[];
+    checkforchanges: boolean;
+    bcmhochanged(index: number, controlname: string) {
+
+        if (this.changearray) {
+
+            let found = this.changearray.find(f => f.rowIndex == index && f.fieldname == controlname);
+            if (found) {
+                return true;
+            }
+        }
+        return false;
     }
 
     pcmDeclineConcession() {

@@ -381,7 +381,10 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                     currentCondition.get('period').setValue(selectedPeriod[0]);
 
                     rowIndex++;
-				}
+                }
+
+                this.changearray = this.lookupDataService.checkforLC(this.lendingConcession.concession.status, this.lendingConcession.concession.subStatus, lendingConcession.concession.concessionComments);
+
 				this.isLoading = false;
 			}, error => {
 				this.isLoading = false;
@@ -882,7 +885,10 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
 			if (!lendingConcession.concession.comments) {
 				lendingConcession.concession.comments = ConcessionStatus.ApprovedWithChanges;
-			}
+            }
+
+            lendingConcession.concession.concessionComments = this.GetChanges(lendingConcession.concession.id);
+
         } else {
             lendingConcession.concession.status = ConcessionStatus.Approved;
 
@@ -914,6 +920,57 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         } else {
             this.isLoading = false;
         }
+    }
+
+    private GetChanges(concessionid: number): any[] {
+        let comments = this.getChangedProperties();
+
+        let commentarray = [];
+        let comment = new ConcessionComment();
+        comment.concessionId = concessionid;
+        comment.comment = comments;
+        comment.userDescription = "LogChanges";
+        commentarray.push(comment);
+        return commentarray;
+    }
+
+    private getChangedProperties(): string {
+
+        let changedProperties = [];
+        let rowIndex = 0;
+
+        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+
+        //this is detailed line items,  but not yet the controls
+        for (let concessionFormItem of concessions.controls) {
+
+            let controls = (<FormGroup>concessionFormItem).controls;
+
+            for (const fieldname in controls) { // 'field' is a string
+
+                const abstractControl = controls[fieldname];
+                if (abstractControl.dirty) {
+
+                    changedProperties.push({ rowIndex, fieldname });
+                }
+            }
+            rowIndex++;
+        }
+        return JSON.stringify(changedProperties);
+    }
+
+    changearray: any[];
+    checkforchanges: boolean;
+    bcmhochanged(index: number, controlname: string) {
+
+        if (this.changearray) {
+
+            let found = this.changearray.find(f => f.rowIndex == index && f.fieldname == controlname);
+            if (found) {
+                return true;
+            }
+        }
+        return false;
     }
 
     pcmDeclineConcession() {

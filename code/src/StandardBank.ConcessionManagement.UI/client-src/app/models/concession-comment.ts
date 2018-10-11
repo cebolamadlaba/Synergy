@@ -7,4 +7,5 @@ export class ConcessionComment {
     concessionSubStatusDescription: string;
     comment: string;
     systemDate: Date;
+    hide: boolean;
 }

@@ -27,6 +27,8 @@ import { TradeProduct } from "../models/trade-product";
 import { InvestmentProduct } from "../models/investment-product";
 
 import { LegalEntityBOLUser } from "../models/legal-entity-bol-user";
+import { ConcessionStatus } from '../constants/concession-status';
+import { ConcessionSubStatus } from '../constants/concession-sub-status';
 
 @Injectable()
 export class LookupDataService {
@@ -164,6 +166,26 @@ export class LookupDataService {
     getPrimeRate(datefilter):Observable<string> {
         const url = "/api/Concession/PrimeRate/" + datefilter;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    checkforLC(status: ConcessionStatus, subStatus: ConcessionSubStatus, concessionComments):any[] {
+
+        if (status == ConcessionStatus.Pending) {
+
+            if (subStatus == ConcessionSubStatus.PCMApprovedWithChanges || subStatus == ConcessionSubStatus.HOApprovedWithChanges) {
+
+
+                let arrLen = concessionComments ? concessionComments.length : 0;
+                if (arrLen > 0) {
+                    let lastComment = concessionComments[arrLen - 1];
+                    if (lastComment.comment && lastComment.comment.startsWith('LogChanges:[')) {
+                      
+                        return JSON.parse(lastComment.comment.replace('LogChanges:', ''));
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     private extractData(response: Response) {

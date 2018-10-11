@@ -265,29 +265,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             await _mediator.Send(new DeactivateConcessionDetailed(concessionReferenceDetailedId, user));
 
             return Ok(true);
-        }
-
+        } 
       
-
-        /// <summary>
-        /// Generates the concession letter.
-        /// </summary>
-        /// <param name="concessionReferenceId">The concession reference identifier.</param>
-        /// <returns></returns>
-        //[Route("GenerateConcessionLetter/{concessionReferenceId}")]
-        //public FileResult GenerateConcessionLetter(string concessionReferenceId)
-        //{
-        //    HttpContext.Response.ContentType = "application/pdf";
-
-        //    var result = new FileContentResult(_letterGeneratorManager.GenerateLetters(concessionReferenceId),
-        //        "application/pdf")
-        //    {
-        //        FileDownloadName = $"ConcessionLetter_{concessionReferenceId}.pdf"
-        //    };
-
-        //    return result;
-        //}
-
         /// <summary>
         /// Generates the concession letter for legal entity. --used
         /// </summary>
@@ -307,9 +286,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             return result;
         }
-
-
-
 
         [HttpPost, Route("UploadLetter")]
         public async Task<IActionResult> UploadLetter()

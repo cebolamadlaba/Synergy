@@ -1025,3 +1025,8 @@ label, th {
 .modal-dialog .modal-body .form-concessions-table-content tr .delete {
     width: 2%
 }
+
+.markred {
+    background-color: orange !important;
+    color: gray;
+}

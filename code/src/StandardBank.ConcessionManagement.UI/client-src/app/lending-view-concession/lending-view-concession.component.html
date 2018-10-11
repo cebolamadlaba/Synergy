@@ -201,32 +201,31 @@
                         <input formControlName="isExpiring" style="display: none;" />
 
                         <!-- Product type -->
-                        <select formControlName="productType" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="productTypeChanged(i)">
+                        <select formControlName="productType" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="productTypeChanged(i)" [class.markred]="bcmhochanged(i,'productType')">
                             <option *ngFor="let productTypeOption of productTypes" [ngValue]="productTypeOption">{{productTypeOption.description}}</option>
                         </select>
                     </td>
                     <td class="length-short">
                         <!-- Account number -->
-                        <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                        <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit ? null : ''" [class.markred]="bcmhochanged(i,'accountNumber')">
                             <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                         </select>
                     </td>
                     <!-- Limit -->
-                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="limit" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
+                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="limit" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimal($event)" [class.markred]="bcmhochanged(i,'limit')" /></td>
                     <!-- Term -->
-                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="term" class="form-control" [attr.disabled]="this.lendingConcession.lendingConcessionDetails[i].show_term && canEdit ? null : ''" /></td>
+                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="term" class="form-control" [attr.disabled]="this.lendingConcession.lendingConcessionDetails[i].show_term && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'term')" /></td>
                     <!-- MAP -->
                     <td class="length-short">
 
-                        <input type="text" formControlName="marginAgainstPrime" [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimalMAP($event)" class="form-control" />
+                        <input type="text" formControlName="marginAgainstPrime" [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimalMAP($event)" class="form-control" [class.markred]="bcmhochanged(i,'marginAgainstPrime')" />
 
-                        <!--<input type="text" numbersOnly="true" formControlName="marginAgainstPrime" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimal($event)" />-->
                     </td>
                     <td class="length-short" *ngIf="isApproved"><input type="text" numbersOnly="true" formControlName="approvedMarginAgainstPrime" class="form-control" /></td>
 
                     <!-- Frequency -->
                     <td class="length-short">
-                        <select formControlName="frequency" class="form-control" [attr.disabled]="this.lendingConcession.lendingConcessionDetails[i].show_frequency && canEdit ? null : ''">
+                        <select formControlName="frequency" class="form-control" [attr.disabled]="this.lendingConcession.lendingConcessionDetails[i].show_frequency && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'frequency')">
                             <option>Monthly</option>
                             <option>Quarterly</option>
                             <option>Bi-annually </option>
@@ -237,25 +236,25 @@
                     <!-- Initiation fee -->
                     <td class="length-short">                       
 
-                        <input type="text" numbersOnly="true" formControlName="initiationFee" class="form-control" [attr.disabled]="canEdit ? null :''" (change)="setTwoNumberDecimal($event)" />
+                        <input type="text" numbersOnly="true" formControlName="initiationFee" class="form-control" [attr.disabled]="canEdit ? null :''" (change)="setTwoNumberDecimal($event)" [class.markred]="bcmhochanged(i,'initiationFee')" />
                     </td>
 
                     <!-- Service fee -->
-                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="serviceFee" class="form-control" [attr.disabled]="this.lendingConcession.lendingConcessionDetails[i].show_serviceFee && canEdit ? null :''" (change)="setTwoNumberDecimal($event)" /></td>
+                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="serviceFee" class="form-control" [attr.disabled]="this.lendingConcession.lendingConcessionDetails[i].show_serviceFee && canEdit ? null :''" (change)="setTwoNumberDecimal($event)" [class.markred]="bcmhochanged(i,'serviceFee')" /></td>
 
 
                     <td class="length-short">
                         <!-- Review fee type -->
-                        <select formControlName="reviewFeeType" class="form-control" [attr.disabled]="this.lendingConcession.lendingConcessionDetails[i].show_reviewFeeType && canEdit ? null : ''">
+                        <select formControlName="reviewFeeType" class="form-control" [attr.disabled]="this.lendingConcession.lendingConcessionDetails[i].show_reviewFeeType && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'reviewFeeType')">
                             <option *ngFor="let reviewFeeTypeOption of reviewFeeTypes" [ngValue]="reviewFeeTypeOption">{{reviewFeeTypeOption.description}}</option>
                         </select>
                     </td>
                     <!-- Review fee -->
-                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="reviewFee" class="form-control" [attr.disabled]="this.lendingConcession.lendingConcessionDetails[i].show_reviewFee && canEdit ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
+                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="reviewFee" class="form-control" [attr.disabled]="this.lendingConcession.lendingConcessionDetails[i].show_reviewFee && canEdit ? null : ''" (change)="setTwoNumberDecimal($event)" [class.markred]="bcmhochanged(i,'reviewFee')" /></td>
                     <!-- uffFee -->
-                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="uffFee" class="form-control" [attr.disabled]="this.lendingConcession.lendingConcessionDetails[i].show_uffFee && canEdit ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
+                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="uffFee" class="form-control" [attr.disabled]="this.lendingConcession.lendingConcessionDetails[i].show_uffFee && canEdit ? null : ''" (change)="setTwoNumberDecimal($event)" [class.markred]="bcmhochanged(i,'uffFee')" /></td>
 
-                    <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="expiryDate" class="form-control" [style.background-color]="getBackgroundColour(i)" /></td>
+                    <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="expiryDate" class="form-control" [style.background-color]="getBackgroundColour(i)" [class.markred]="bcmhochanged(i,'expiryDate')" /></td>
                     <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>
                     <td *ngIf="canArchive" class="delete">
                         <button *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="archiveConcessiondetail(itemrow.get('concessionDetailId').value)" class="btn-delete" title="Remove"><i class="fa fa-trash" aria-hidden="true" style="color:#920000"></i></button>

@@ -305,14 +305,8 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
             else {
 
                 control.controls[rowIndex].get('accountNumber').setValue(this.selectedAccountNumbers[rowIndex].clientaccounts[0]);
-
             }
-
         }
-
-
-
-
     }
 
     addValidationError(validationDetail) {
@@ -430,6 +424,12 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
             } else {
                 this.addValidationError("Period not selected");
             }
+
+            if (conditionFormItem.get('period').value) {
+                concessionCondition.periodId = conditionFormItem.get('period').value.id;
+            } else {
+                this.addValidationError("Period not selected");
+            }           
 
             investmentConcession.concessionConditions.push(concessionCondition);
         }

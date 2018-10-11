@@ -120,8 +120,20 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
 
             if (!string.IsNullOrWhiteSpace(investmentConcession.Concession.Comments))
+            {
                 await _mediator.Send(new AddConcessionComment(concession.Id, databaseInvestmentConcession.Concession.SubStatusId,
                     investmentConcession.Concession.Comments, user));
+
+                if(investmentConcession.Concession.Comments == "Approved With Changes" && investmentConcession.Concession.ConcessionComments != null)
+                {
+                    if (investmentConcession.Concession.ConcessionComments.Count() > 0 && investmentConcession.Concession.ConcessionComments.First().UserDescription == "LogChanges")
+                    {
+                        await _mediator.Send(new AddConcessionComment(concession.Id, databaseInvestmentConcession.Concession.SubStatusId, "LogChanges:" + investmentConcession.Concession.ConcessionComments.First().Comment, user));
+
+
+                    } 
+                }
+            }
         }
 
 

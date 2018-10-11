@@ -157,6 +157,9 @@
         <div class="row">
             <h3 class="table-title">Concessions</h3>
             <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" *ngIf="canPcmApprove || isEditing || isRecalling" style="margin-top: 15px;">New Concession</button>
+
+            <button type="button" class="btn btn-primary btn-concession" (click)="GetChanges()" *ngIf="canPcmApprove || isEditing || isRecalling" style="margin-top: 15px;">Get Changes</button>
+            
         </div>
     </div>
 
@@ -192,7 +195,7 @@
                     <input formControlName="isExpiring" style="display: none;" />
 
                     <!-- Product type -->
-                    <select formControlName="productType" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="productTypeChanged(i)">
+                    <select formControlName="productType" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="productTypeChanged(i)"  [class.markred]="bcmhochanged(i,'productType')">
                         <option *ngFor="let productTypeOption of productTypes" [ngValue]="productTypeOption">{{productTypeOption.description}}</option>
                     </select>
                 </td>
@@ -201,16 +204,16 @@
                 <td class="length-long">
               
                     <!-- Account number -->
-                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit ? null : ''"  [class.markred]="bcmhochanged(i,'accountNumber')">
                         <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
                 </td>
 
 
-                <td class="length-long"><input type="number" class="form-control" formControlName="balance" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-long"><input type="number" class="form-control" [class.markred]="bcmhochanged(i,'balance')" formControlName="balance" [attr.disabled]="canEdit ? null : ''" /></td>
 
                 <td class="length-long">
-                    <select formControlName="noticeperiod" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                    <select formControlName="noticeperiod" class="form-control" [attr.disabled]="canEdit ? null : ''"  [class.markred]="bcmhochanged(i,'noticeperiod')" >
                         <option value="1">33 days</option>
                         <option value="2">60 days</option>
                         <option value="3">90 days</option>
@@ -222,12 +225,12 @@
 
                 <td class="length-long">
 
-                    <input type="text" formControlName="loadedRate" [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimal($event)" class="form-control" />
+                    <input type="text" formControlName="loadedRate" [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimal($event)" class="form-control" [class.markred]="bcmhochanged(i,'loadedRate')" />
 
                 </td>
-                <td class="length-long" *ngIf="isApproved"><input type="text" numbersOnly="true" formControlName="approvedRate" class="form-control" /></td>
+                <td class="length-long" *ngIf="isApproved"><input type="text" numbersOnly="true" formControlName="approvedRate" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
 
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" /></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)"  [class.markred]="bcmhochanged(i,'expiryDate')" /></td>
                 <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>
 
                
@@ -390,10 +393,11 @@ i + 1
                                 No comments added.
                             </td>
                         </tr>
-                        <tr *ngFor="let comment of investmentConcession.concession.concessionComments">
-                            <td>{{comment.userDescription}}</td>
+                        <tr *ngFor="let comment of investmentConcession.concession.concessionComments | commentsFilter : 'LogChanges';">                           
+
+                            <td >{{comment.userDescription}}</td>
                             <td>{{comment.concessionSubStatusDescription}}</td>
-                            <td>{{comment.comment}}</td>
+                            <td >{{comment.comment}}</td>
                             <td>{{comment.systemDate | date: 'yyyy/MM/dd'}}</td>
                         </tr>
                     </tbody>

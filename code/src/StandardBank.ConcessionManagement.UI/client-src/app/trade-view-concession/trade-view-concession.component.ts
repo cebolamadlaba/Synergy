@@ -59,6 +59,8 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
     riskGroup: RiskGroup;
     riskGroupNumber: number;
 
+    x
+
     public tradeConcessionForm: FormGroup;
    
     isLoading = true;
@@ -147,6 +149,8 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
     }
 
+
+
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
@@ -218,6 +222,8 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
             }
         });
     }
+
+    
 
 
     //gbbNumberChanged(rowIndex: number) {
@@ -425,6 +431,8 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
                     rowIndex++;
                 }
+                this.changearray = this.lookupDataService.checkforLC(this.tradeConcession.concession.status, this.tradeConcession.concession.subStatus, tradeConcession.concession.concessionComments);
+
                 this.isLoading = false;
             }, error => {
                 this.isLoading = false;
@@ -832,6 +840,57 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
+    private GetChanges(concessionid: number): any[] {
+        let comments = this.getChangedProperties();
+
+        let commentarray = [];
+        let comment = new ConcessionComment();
+        comment.concessionId = concessionid;
+        comment.comment = comments;
+        comment.userDescription = "LogChanges";
+        commentarray.push(comment);
+        return commentarray;
+    }
+
+    private getChangedProperties(): string {
+
+        let changedProperties = [];
+        let rowIndex = 0;
+
+        const concessions = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+
+        //this is detailed line items,  but not yet the controls
+        for (let concessionFormItem of concessions.controls) {
+
+            let controls = (<FormGroup>concessionFormItem).controls;
+
+            for (const fieldname in controls) { // 'field' is a string
+
+                const abstractControl = controls[fieldname];
+                if (abstractControl.dirty) {
+
+                    changedProperties.push({ rowIndex, fieldname });
+                }
+            }
+            rowIndex++;
+        }
+        return JSON.stringify(changedProperties);
+    }
+
+    changearray: any[];
+    checkforchanges: boolean;
+    bcmhochanged(index: number, controlname: string) {
+
+        if (this.changearray) {
+
+            let found = this.changearray.find(f => f.rowIndex == index && f.fieldname == controlname);
+            if (found) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     bcmDeclineConcession() {
         this.isLoading = true;
 
@@ -886,6 +945,9 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
             if (!tradeConcession.concession.comments) {
                 tradeConcession.concession.comments = ConcessionStatus.ApprovedWithChanges;
             }
+
+            tradeConcession.concession.concessionComments = this.GetChanges(tradeConcession.concession.id);
+
         } else {
             tradeConcession.concession.status = ConcessionStatus.Approved;
 

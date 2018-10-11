@@ -342,6 +342,9 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
                     rowIndex++;
                 }
+
+                this.changearray = this.lookupDataService.checkforLC(this.bolConcession.concession.status, this.bolConcession.concession.subStatus, bolConcession.concession.concessionComments);
+
                 this.isLoading = false;
             }, error => {
                 this.isLoading = false;
@@ -435,9 +438,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
         var selectedproduct = currentCondition.get('product').value;
 
-        this.bolchargecodesFiltered = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId); 
-
-    
+        this.bolchargecodesFiltered = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId);     
 
     }
 
@@ -447,7 +448,6 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
         this.validationError.push(validationDetail);
     }
-
 
     getBolConcession(isNew: boolean): BolConcession {
         var bolConcession = new BolConcession();
@@ -673,6 +673,9 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             if (!bolConcession.concession.comments) {
                 bolConcession.concession.comments = ConcessionStatus.ApprovedWithChanges;
             }
+
+            bolConcession.concession.concessionComments = this.GetChanges(bolConcession.concession.id);
+
         } else {
             bolConcession.concession.status = ConcessionStatus.Approved;
 
@@ -704,6 +707,58 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         } else {
             this.isLoading = false;
         }
+    }
+
+
+    private GetChanges(concessionid: number): any[] {
+        let comments = this.getChangedProperties();
+
+        let commentarray = [];
+        let comment = new ConcessionComment();
+        comment.concessionId = concessionid;
+        comment.comment = comments;
+        comment.userDescription = "LogChanges";
+        commentarray.push(comment);
+        return commentarray;
+    }
+
+    private getChangedProperties(): string {
+
+        let changedProperties = [];
+        let rowIndex = 0;
+
+        const concessions = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+
+        //this is detailed line items,  but not yet the controls
+        for (let concessionFormItem of concessions.controls) {
+
+            let controls = (<FormGroup>concessionFormItem).controls;
+
+            for (const fieldname in controls) { // 'field' is a string
+
+                const abstractControl = controls[fieldname];
+                if (abstractControl.dirty) {
+
+                    changedProperties.push({ rowIndex, fieldname });
+                }
+            }
+            rowIndex++;
+        }
+        return JSON.stringify(changedProperties);
+    }
+
+    changearray: any[];
+    checkforchanges: boolean;
+    bcmhochanged(index: number, controlname: string) {
+
+        if (this.changearray) {
+
+            let found = this.changearray.find(f => f.rowIndex == index && f.fieldname == controlname);
+            if (found) {
+                return true;
+            }
+        }
+        return false;
     }
 
     pcmDeclineConcession() {

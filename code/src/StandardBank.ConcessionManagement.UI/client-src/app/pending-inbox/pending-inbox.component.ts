@@ -105,9 +105,7 @@ export class PendingInboxComponent implements OnInit {
             case ConcessionTypes.Investment:
                 this.router.navigate(['/investments-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
                 break;
-            case ConcessionTypes.Investment:
-                this.router.navigate(['/investments-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
-                break;
+          
         }
     }
 
