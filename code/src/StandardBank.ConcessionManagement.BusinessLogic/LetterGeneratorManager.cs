@@ -16,8 +16,7 @@ using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
 using StandardBank.ConcessionManagement.Model.UserInterface.Trade;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
-
-
+using StandardBank.ConcessionManagement.Model.UserInterface.Investment;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -71,6 +70,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         private readonly ITradeManager _tradeManager;
 
+        private readonly IInvestmentManager _investmentManager;
+
         /// <summary>
         /// The razor renderer
         /// </summary>
@@ -112,7 +113,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IConcessionManager concessionManager, IPdfUtility pdfUtility, IUserManager userManager,
             ILendingManager lendingManager, ILegalEntityRepository legalEntityRepository, ICashManager cashManager,
             IRazorRenderer razorRenderer, ITransactionalManager transactionalManager,
-            IConcessionInboxViewRepository concessionInboxViewRepository, ILookupTableManager lookupTableManager,  IBolManager bolManager, IBusinessCentreManager businessCentreManager, ITradeManager tradeManager)
+            IConcessionInboxViewRepository concessionInboxViewRepository, ILookupTableManager lookupTableManager,  IBolManager bolManager, IBusinessCentreManager businessCentreManager, ITradeManager tradeManager, IInvestmentManager investmentManager)
         {
             _templatePath = configurationData.LetterTemplatePath;
             _fileUtiltity = fileUtiltity;
@@ -129,6 +130,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _bolManager = bolManager;
             _businessCentreManager = businessCentreManager;
             _tradeManager = tradeManager;
+            _investmentManager = investmentManager;
         }
 
         /// <summary>
@@ -263,6 +265,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     case Constants.ConcessionType.Trade:
                         PopulateLegalEntityTradeConcessionLetter(concessionInboxViews, requestor, legalEntityConcession);
                         break;
+                    case Constants.ConcessionType.Investment:
+                        PopulateLegalEntityInvestmentConcessionLetter(concessionInboxViews, requestor, legalEntityConcession);
+                        break;
                     default:
                         throw new NotImplementedException(legalEntityConcession.ConcessionType);
                 }
@@ -366,6 +371,36 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                             PopulateTradeConcessionLetter(tradeConcessionDetail));
                         legalEntityConcession.TradeConcessionLetters =
                             tradeConcessionLetters;
+                    }
+                }
+            }
+        }
+
+        private void PopulateLegalEntityInvestmentConcessionLetter(IEnumerable<ConcessionInboxView> concessionInboxViews, User requestor,
+       LegalEntityConcession legalEntityConcession)
+        {
+            var investmentConcession =
+                _investmentManager.GetInvestmentConcession(
+                    legalEntityConcession.ConcessionReferenceNumber,
+                    requestor);
+
+            var investmentConcessionDetails =
+                investmentConcession.InvestmentConcessionDetails.OrderBy(_ => _.AccountNumber);
+
+            foreach (var concessionInboxView in concessionInboxViews)
+            {
+                foreach (var investmentConcessionDetail in investmentConcessionDetails)
+                {
+                    if (concessionInboxView.ConcessionDetailId == investmentConcessionDetail.ConcessionDetailId)
+                    {
+                        var investmentConcessionLetters = new List<InvestmentConcessionLetter>();
+
+                        if (legalEntityConcession.InvestmentConcessionLetters != null)
+                            investmentConcessionLetters.AddRange(legalEntityConcession.InvestmentConcessionLetters);
+
+                        investmentConcessionLetters.Add(
+                            PopulateInvestmentConcessionLetter(investmentConcessionDetail));
+                        legalEntityConcession.InvestmentConcessionLetters =investmentConcessionLetters;
                     }
                 }
             }
@@ -663,7 +698,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                     ProductType = tradeConcessionDetail.TradeProductType,
                     Product = tradeConcessionDetail.TradeProduct,
-
                     UnitRate = tradeConcessionDetail.ApprovedRate,
 
                     ConcessionStartDate = tradeConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
@@ -671,8 +705,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                   ? tradeConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
                   : string.Empty,
                     EstFee = tradeConcessionDetail.EstablishmentFee.ToString(), 
-                    RatePercentage = tradeConcessionDetail.ApprovedRate.ToString()
-                    //LegalEntityId = bolConcessionDetail.LegalEntityId
+                    RatePercentage = tradeConcessionDetail.ApprovedRate.ToString()                   
                 };
 
             }
@@ -691,15 +724,50 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                   ? tradeConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
                   : string.Empty,
                     EstFee = "NA",
-                    RatePercentage = "NA"
-                    //LegalEntityId = bolConcessionDetail.LegalEntityId
+                    RatePercentage = "NA"                   
                 };
+            }          
+        }
 
-            }
+        Dictionary<int, string> Termdictionary = new Dictionary<int, string>() {
+              {1, "33 Days" },
+              {2, "60 Days"},
+              {3, "90 Days"},                                  
+              {4, "120 Days"},
+              {5, "150 Days"},
+              {6, "180 Days"}
+        } ;
+        
 
 
+        private InvestmentConcessionLetter PopulateInvestmentConcessionLetter(
+       InvestmentConcessionDetail investmentConcessionDetail)
+        {
+            return new InvestmentConcessionLetter
+            {
 
-          
+                Product = investmentConcessionDetail.InvestmentProduct,
+                AccountNumber = investmentConcessionDetail.AccountNumber,
+                Balance = investmentConcessionDetail.Balance.Value, 
+                NoticePeriod = Termdictionary[investmentConcessionDetail.Term],
+               
+                Rate = investmentConcessionDetail.ApprovedRate, 
+                ConcessionStartDate = investmentConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
+                ConcessionEndDate = investmentConcessionDetail.ExpiryDate.HasValue
+                    ? investmentConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
+                    : string.Empty
+
+
+                //BOLuserID = bolConcessionDetail.BolUserID,
+                //UnitRate = bolConcessionDetail.ApprovedRate,
+                //TransactionType = bolConcessionDetail.ChargeCodeType,
+                //ChargeCode = bolConcessionDetail.ChargeCode,
+                //ConcessionStartDate = bolConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
+                //ConcessionEndDate = bolConcessionDetail.ExpiryDate.HasValue
+                //    ? bolConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
+                //    : string.Empty,
+
+            };
         }
 
         /// <summary>

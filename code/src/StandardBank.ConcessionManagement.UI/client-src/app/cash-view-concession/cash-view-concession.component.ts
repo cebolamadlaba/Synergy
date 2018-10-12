@@ -477,8 +477,10 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 				this.addValidationError("Accrual type not selected");
 			}
 
-			if (concessionFormItem.get('expiryDate').value)
-				cashConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+            if (concessionFormItem.get('expiryDate').value) {
+                cashConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+            }
+
 
 			cashConcession.cashConcessionDetails.push(cashConcessionDetail);
 		}

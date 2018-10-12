@@ -1230,7 +1230,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
             this.userConcessionsService.deactivateConcessionDetailed(concessionDetailId).subscribe(entity => {
 
-                this.warningMessage = "Concession item has been deleted, and account put back to standard pricing.";
+                this.warningMessage = "Concession item has been deleted";
 
                 this.isLoading = false;
 
@@ -1249,7 +1249,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             this.errorMessage = null;
 
             this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
-                this.warningMessage = "Concession has been deleted, and account put back to standard pricing.";
+                this.warningMessage = "Concession has been deleted";
 
 				this.isLoading = false;
 				this.canBcmApprove = false;

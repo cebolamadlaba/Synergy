@@ -238,7 +238,6 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
         //if (this.legalentitygbbnumbers)
         //    newRow.controls['gbbnumber'].setValue(this.legalentitygbbnumbers[0]);
 
-
         //var length = control.controls.length;
 
         //if (this.bolchargecodetypes)
@@ -298,25 +297,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
         currentCondition.get('volume').setValue(null);
         currentCondition.get('value').setValue(null);
         currentCondition.get('expectedTurnoverValue').setValue(null);
-    }
-
-    //gbbNumberChanged(rowIndex: number) {       
-
-
-    //    const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];      
-    //    let currentRow = control.controls[rowIndex];
-
-    //    var LegalEntityAccount = currentRow.get('gbbnumber').value;
-
-    //    var legalentityaccount = this.clientAccounts.filter(cli => cli.legalEntityAccountId == LegalEntityAccount.fkLegalEntityAccountId);
-
-    //    if (legalentityaccount) {
-
-    //        var oldaccountnumber = currentRow.get('accountNumber').value;
-    //        currentRow.get('accountNumber').setValue(legalentityaccount[0]);
-    //    }
-
-    //}
+    }   
 
     productTypeChanged(rowIndex) {
 
@@ -331,10 +312,10 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
         currentProduct.get('product').setValue(this.selectedProductTypes[rowIndex].products[0]);
 
-        if (selectedproducttype.tradeProductType == "Local guarantee") {         
+        if (selectedproducttype.tradeProductType == "Local guarantee") {
 
-         
             this.selectedTradeConcession[rowIndex] = true;
+
             currentProduct.get('disablecontrolset').setValue(true);
             currentProduct.get('accountNumber').setValue(null);
             currentProduct.get('advalorem').setValue(null);
@@ -343,7 +324,8 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
             currentProduct.get('communication').setValue(null);
             currentProduct.get('flatfee').setValue(null);
-            currentProduct.get('currency').setValue(null);         
+            currentProduct.get('currency').setValue(null);
+            currentProduct.get('expiryDate').setValue('');    
 
         }
         else {
@@ -386,6 +368,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                 tradeConcession.tradeConcessionDetails = [];
 
             let tradeConcessionDetail = new TradeConcessionDetail();
+            let applyexpirydate = true;
 
             tradeConcessionDetail.disablecontrolset = concessionFormItem.get('disablecontrolset').value;
 
@@ -396,15 +379,16 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                 this.addValidationError("Product not selected");
             }
 
-
             if (concessionFormItem.get('producttype').value) {
                 tradeConcessionDetail.tradeProductTypeID = concessionFormItem.get('producttype').value.tradeProductTypeID;
+
+                if (concessionFormItem.get('producttype').value.tradeProductType == "Local guarantee") {
+                    applyexpirydate = false;
+                }
 
             } else {
                 this.addValidationError("Product Type code not selected");
             }
-
-
 
             if ((concessionFormItem.get('accountNumber').value && concessionFormItem.get('accountNumber').value.legalEntityId)) {
                 tradeConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
@@ -412,7 +396,6 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
             } else {
 
                 if (!tradeConcessionDetail.disablecontrolset) {
-
                     this.addValidationError("Client account not selected");
                 }
             }
@@ -462,8 +445,8 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                     this.addValidationError("Max value not entered");
                 }
             }
-            ///---
-            if (concessionFormItem.get('communication').value) {
+           
+            if (concessionFormItem.get('communication').value || concessionFormItem.get('communication').value == 0) {
                 tradeConcessionDetail.communication = concessionFormItem.get('communication').value;
             } else {
                 if (!tradeConcessionDetail.disablecontrolset) {
@@ -500,10 +483,16 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                 if (tradeConcessionDetail.disablecontrolset) {
                     this.addValidationError("Rate not entered");
                 }
-            }           
+            } 
 
-            if (concessionFormItem.get('expiryDate').value)
+            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
                 tradeConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+            }
+            else {
+                if (applyexpirydate) {
+                    this.addValidationError("Expiry date not selected");
+                }
+            }
 
             tradeConcession.tradeConcessionDetails.push(tradeConcessionDetail);
         }
@@ -584,6 +573,52 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.formatDecimal($event.target.value);
+    }
+
+
+    setadvalorem($event, rowIndex, controlname) {
+
+        if (event.target != null && $event.target.value != "") {
+
+            const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+            let currentrow = control.controls[rowIndex];
+
+            if (controlname == "advalorem") {
+
+                currentrow.get('flatfee').disable();
+                currentrow.get('flatfee').setValue(null);
+            }
+            else {
+                currentrow.get('advalorem').disable();
+                currentrow.get('min').disable();
+                currentrow.get('max').disable();
+
+                currentrow.get('advalorem').setValue(null);
+                currentrow.get('min').setValue(null);
+                currentrow.get('max').setValue(null);
+
+            }
+        }
+        else {
+            const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+            let currentrow = control.controls[rowIndex];
+
+            if (controlname == "advalorem") {
+
+                currentrow.get('flatfee').enable();
+            }
+            else {
+
+                currentrow.get('advalorem').enable();
+                currentrow.get('min').enable();
+                currentrow.get('max').enable();
+
+
+            }
+        }
+
+
+        //$event.target.value = this.formatDecimal($event.target.value);
     }
 
     formatDecimal(itemValue: number) {

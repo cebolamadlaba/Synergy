@@ -183,21 +183,15 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
 
                 this.selectedProductTypes[0] = this.productTypes[0];
                 this.productTypeChanged(0);
-            }
-
-            if (this.clientAccounts)
-                control.controls[0].get('accountNumber').setValue(this.clientAccounts[0]);
-
+            } 
 
         }, error => {
             this.errorMessage = <any>error;
             this.isLoading = false;
         });
-
     }
 
     initConcessionItemRows() {
-
 
         this.selectedProductTypes.push(new ProductType());
         this.selectedAccountNumbers.push(new ClientAccountArray());
@@ -208,8 +202,8 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
             accountNumber: [''],
             balance: [''],
             noticeperiod: [''],
-            rate: ['']
-
+            rate: [''],
+            expiryDate: ['']
         });
     }
 
@@ -300,12 +294,24 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
             this.selectedAccountNumbers[rowIndex].clientaccounts = this.clientAccounts.filter(re => re.accountType == productType.description);
 
             if (this.selectedAccountNumbers[rowIndex].clientaccounts.length == 0) {
-                control.controls[rowIndex].get('accountNumber').setValue(null);
+                currentRow.get('accountNumber').setValue(null);
             }
             else {
 
-                control.controls[rowIndex].get('accountNumber').setValue(this.selectedAccountNumbers[rowIndex].clientaccounts[0]);
+                currentRow.get('accountNumber').setValue(this.selectedAccountNumbers[rowIndex].clientaccounts[0]);
             }
+        }
+
+        if (productType.description == 'Notice Deposits') {
+
+            this.selectedInvestmentConcession[rowIndex] = false;
+            currentRow.get('noticeperiod').setValue(null);
+            currentRow.get('expiryDate').setValue('');  
+        }
+        else{
+
+            this.selectedInvestmentConcession[rowIndex] = true;
+
         }
     }
 
@@ -341,8 +347,16 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
 
             investmentConcessionDetail.disablecontrolset = concessionFormItem.get('disablecontrolset').value;
 
-            if (concessionFormItem.get('productType').value)
+            let applyexpirydate = false;
+
+            if (concessionFormItem.get('productType').value) {
+
+                if (concessionFormItem.get('productType').value.description == 'Notice Deposits') {
+                    applyexpirydate = true;
+                }
                 investmentConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;
+                
+            }
             else
                 this.addValidationError("Product not selected");
 
@@ -369,7 +383,6 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
             } else {
 
                 this.addValidationError("Notice period value not entered");
-
             }
 
             if (concessionFormItem.get('rate').value) {
@@ -377,8 +390,17 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
             } else {
 
                 this.addValidationError("Rate value not entered");
-
             }
+
+            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
+                investmentConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+            }
+            else {
+                if (applyexpirydate) {
+                    this.addValidationError("Expiry date not selected");
+                }
+            }
+
 
             investmentConcession.investmentConcessionDetails.push(investmentConcessionDetail);
         }
@@ -429,7 +451,9 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
                 concessionCondition.periodId = conditionFormItem.get('period').value.id;
             } else {
                 this.addValidationError("Period not selected");
-            }           
+            }
+
+
 
             investmentConcession.concessionConditions.push(concessionCondition);
         }
@@ -461,6 +485,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
         } else {
             this.isLoading = false;
         }
+
     }
 
     setTwoNumberDecimal($event) {

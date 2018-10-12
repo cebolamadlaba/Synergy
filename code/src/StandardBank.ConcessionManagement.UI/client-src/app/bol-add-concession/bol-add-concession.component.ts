@@ -349,10 +349,15 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
                 bolConcessionDetail.legalEntityAccountId = concessionFormItem.get('userid').value.legalEntityAccountId;
             } else {
                 this.addValidationError("User ID not selected");
-            }
+            }           
 
-            if (concessionFormItem.get('expiryDate').value)
+
+            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
                 bolConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+            }
+            else {
+                this.addValidationError("Expiry date not selected");
+            }
 
             bolConcession.bolConcessionDetails.push(bolConcessionDetail);
         }

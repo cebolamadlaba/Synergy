@@ -1107,7 +1107,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             this.errorMessage = null;
 
             this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
-                this.warningMessage = "Concession item has been deleted";
+                this.warningMessage = "Concession has been deleted";
 
                 this.isLoading = false;
                 this.canBcmApprove = false;

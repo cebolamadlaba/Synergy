@@ -289,9 +289,13 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 			} else {
 				this.addValidationError("Table Number not selected");
 			}
-
-			if (concessionFormItem.get('expiryDate').value)
-				transactionalConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+            
+            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
+                transactionalConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+            }
+            else {
+                this.addValidationError("Expiry date not selected");
+            }
 
 			transactionalConcession.transactionalConcessionDetails.push(transactionalConcessionDetail);
 		}

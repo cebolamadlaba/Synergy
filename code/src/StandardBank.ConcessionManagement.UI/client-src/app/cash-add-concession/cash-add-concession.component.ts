@@ -350,10 +350,14 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
                 cashConcessionDetail.accrualTypeId = concessionFormItem.get('accrualType').value.id;
             } else {
                 this.addValidationError("Accrual type not selected");
-            }
+            }          
 
-            if (concessionFormItem.get('expiryDate').value)
+            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
                 cashConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+            }
+            else {
+                this.addValidationError("Expiry date not selected");
+            }
 
             cashConcession.cashConcessionDetails.push(cashConcessionDetail);
         }
