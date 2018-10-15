@@ -93,8 +93,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     bolchargecodetypes: BolChargeCodeType[];
 
     observableBolChargeCodes: Observable<BolChargeCode[]>;
-    bolchargecodes: BolChargeCode[];
-    bolchargecodesFiltered: BolChargeCode[];
+    bolchargecodes: BolChargeCode[]; 
 
     observableLegalEntityBOLUsers: Observable<LegalEntityBOLUser[]>;
     legalentitybolusers: LegalEntityBOLUser[];
@@ -108,7 +107,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     observableBolConcession: Observable<BolConcession>;
     bolConcession: BolConcession;
 
-
+    selectedProducts: BolChargeCodeType[];   
 
     constructor(private route: ActivatedRoute,
         private formBuilder: FormBuilder,
@@ -124,6 +123,8 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         this.legalentitybolusers = [new LegalEntityBOLUser()];
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
+
+        this.selectedProducts = [new BolChargeCodeType()];
 
         this.conditionTypes = [new ConditionType()];
         this.selectedConditionTypes = [new ConditionType()];
@@ -181,8 +182,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
             this.conditionTypes = <any>results[0];
             this.bolchargecodetypes = <any>results[1];
-            this.bolchargecodes = <any>results[2];
-            this.bolchargecodesFiltered = this.bolchargecodes;
+            this.bolchargecodes = <any>results[2];       
 
             this.legalentitybolusers = <any>results[3];
 
@@ -284,14 +284,24 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                     let selectedBOLUser = this.legalentitybolusers.filter(_ => _.pkLegalEntityBOLUserId == bolConcessionDetail.fkLegalEntityBOLUserId);
                     currentConcession.get('userid').setValue(selectedBOLUser[0]);
 
-                    let selectedChargeCode = this.bolchargecodes.filter(_ => _.pkChargeCodeId == bolConcessionDetail.fkChargeCodeId);
-                    currentConcession.get('chargecode').setValue(selectedChargeCode[0]);
+                    //let selectedChargeCode = this.bolchargecodes.filter(_ => _.pkChargeCodeId == bolConcessionDetail.fkChargeCodeId);
+                    //currentConcession.get('chargecode').setValue(selectedChargeCode[0]);
 
-                    let selectedChargeCode2 = this.bolchargecodes.filter(_ => _.pkChargeCodeId == bolConcessionDetail.fkChargeCodeId);
-                    let chargecodetypeid = selectedChargeCode2[0].fkChargeCodeTypeId.valueOf();
+                    let selectedChargeCode = this.bolchargecodes.filter(_ => _.pkChargeCodeId == bolConcessionDetail.fkChargeCodeId);
+                    let chargecodetypeid = selectedChargeCode[0].fkChargeCodeTypeId.valueOf();
 
                     let selectedChargeCodeType = this.bolchargecodetypes.filter(_ => _.pkChargeCodeTypeId == chargecodetypeid);
                     currentConcession.get('product').setValue(selectedChargeCodeType[0]);
+
+                    //---------
+                    //let currentProduct = control.controls[rowIndex];
+                    var selectedproduct = currentConcession.get('product').value;
+                    let chargecodes = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedChargeCodeType[0].pkChargeCodeTypeId);
+                    this.selectedProducts[rowIndex].bolchargecodes = chargecodes;
+                
+                    currentConcession.get('chargecode').setValue(selectedChargeCode[0]);   
+                    //------------
+
 
 
 
@@ -355,6 +365,8 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
     initConcessionItemRows() {
 
+        this.selectedProducts.push(new BolChargeCodeType());
+
         return this.formBuilder.group({
             bolConcessionDetailId: [''],
             concessionDetailId: [''],
@@ -387,9 +399,21 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     addNewConcessionRow() {
+
         const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
         var newRow = this.initConcessionItemRows();
+
+        var length = control.controls.length;
+
+        if (this.bolchargecodetypes)
+            newRow.controls['product'].setValue(this.bolchargecodetypes[0]);
+
+        if (this.legalentitybolusers)
+            newRow.controls['userid'].setValue(this.legalentitybolusers[0]);
+
         control.push(newRow);
+        this.productTypeChanged(length);      
+
     }
 
     addNewConditionRow() {
@@ -405,6 +429,10 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
     deleteConcessionRow(index: number) {
         if (confirm("Are you sure you want to remove this row?")) {
+
+            this.selectedProducts.splice(index, 1);
+
+
             const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
             control.removeAt(index);
         }
@@ -432,13 +460,14 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
     productTypeChanged(rowIndex) {
 
-        const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+        const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];     
 
-        let currentCondition = control.controls[rowIndex];
+        let currentProduct = control.controls[rowIndex];
+        var selectedproduct = currentProduct.get('product').value;
 
-        var selectedproduct = currentCondition.get('product').value;
+        this.selectedProducts[rowIndex].bolchargecodes = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId);
 
-        this.bolchargecodesFiltered = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId);     
+        currentProduct.get('chargecode').setValue(this.selectedProducts[rowIndex].bolchargecodes[0]);
 
     }
 

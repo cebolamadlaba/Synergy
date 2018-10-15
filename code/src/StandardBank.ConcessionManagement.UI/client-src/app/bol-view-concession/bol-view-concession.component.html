@@ -180,20 +180,22 @@
                     <input formControlName="isExpired" style="display: none;" />
                     <input formControlName="isExpiring" style="display: none;" />
 
-                    <select formControlName="product" class="form-control" [attr.disabled]="canEdit ? null : ''" [class.markred]="bcmhochanged(i,'product')">
-                        <option *ngFor="let productOption of bolchargecodetypes" [ngValue]="productOption" (change)="productTypeChanged(i)">{{productOption.description}}</option>
+                    <select formControlName="product" class="form-control" [attr.disabled]="canEdit ? null : ''"  (change)="productTypeChanged(i)" [class.markred]="bcmhochanged(i,'product')">
+                        <option *ngFor="let productOption of bolchargecodetypes" [ngValue]="productOption">{{productOption.description}}</option>
                     </select>
                 </td>
                 <td class="length-medium">
                     <select formControlName="userid" class="form-control" [attr.disabled]="canEdit ? null : ''" [class.markred]="bcmhochanged(i,'userid')">
                         <option *ngFor="let useridOption of legalentitybolusers" [ngValue]="useridOption">{{useridOption.bolUserId}}</option>
                     </select>
-                </td>
+                </td>              
+
                 <td class="length-long">
-                    <select formControlName="chargecode" class="form-control" [attr.disabled]="canEdit ? null : ''" [class.markred]="bcmhochanged(i,'chargecode')">
-                        <option *ngFor="let bolchargecodeOption of bolchargecodesFiltered" [ngValue]="bolchargecodeOption">{{bolchargecodeOption.description}}</option>
+                    <select formControlName="chargecode" class="form-control" [attr.disabled]="canEdit ? null : ''" [class.markred]="bcmhochanged(i,'chargecode')"> 
+                        <option *ngFor="let bolchargecodeOption of selectedProducts[i].bolchargecodes" [ngValue]="bolchargecodeOption">{{bolchargecodeOption.description}}</option>
                     </select>
                 </td>
+
 
                 <td class="length-long"><input type="number" class="form-control" formControlName="unitcharge" [attr.disabled]="canEdit ? null : ''" [class.markred]="bcmhochanged(i,'unitcharge')" /></td>
 
@@ -360,7 +362,7 @@
                                 No comments added.
                             </td>
                         </tr>
-                        <tr *ngFor="let comment of bolConcession.concession.concessionComments">
+                        <tr *ngFor="let comment of bolConcession.concession.concessionComments  | commentsFilter : 'LogChanges';">
                             <td>{{comment.userDescription}}</td>
                             <td>{{comment.concessionSubStatusDescription}}</td>
                             <td>{{comment.comment}}</td>

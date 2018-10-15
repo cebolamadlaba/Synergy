@@ -51,8 +51,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     errorMessage: String;
     validationError: String[];
     saveMessage: String;
-    warningMessage: String;
-  
+    warningMessage: String;  
 
     observableRiskGroup: Observable<RiskGroup>;
     observableInvestmentView: Observable<InvestmentView>;

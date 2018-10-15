@@ -151,7 +151,9 @@
                     <select formControlName="chargecode" class="form-control" [attr.disabled]="saveMessage ? '' : null">
                         <option *ngFor="let bolchargecodeOption of selectedProducts[i].bolchargecodes" [ngValue]="bolchargecodeOption">{{bolchargecodeOption.description}}</option>
                     </select>
-                </td>               
+                </td>
+
+
               
                 <td class="length-long"><input type="number" class="form-control" formControlName="unitcharge" [attr.disabled]="saveMessage ? '' : null" /></td>
                                 <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="saveMessage ? '' : null" /></td>

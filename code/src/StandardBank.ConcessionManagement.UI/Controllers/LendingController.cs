@@ -174,6 +174,17 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             if (!string.IsNullOrWhiteSpace(lendingConcession.Concession.Comments))
                 await _mediator.Send(new AddConcessionComment(concession.Id, databaseLendingConcession.Concession.SubStatusId,
                     lendingConcession.Concession.Comments, user));
+
+            if (lendingConcession.Concession.Comments == "Approved With Changes" && lendingConcession.Concession.ConcessionComments != null)
+            {
+                if (lendingConcession.Concession.ConcessionComments.Count() > 0 && lendingConcession.Concession.ConcessionComments.First().UserDescription == "LogChanges")
+                {
+                    await _mediator.Send(new AddConcessionComment(concession.Id, databaseLendingConcession.Concession.SubStatusId, "LogChanges:" + lendingConcession.Concession.ConcessionComments.First().Comment, user));
+
+
+                }
+            }
+
         }
 
         /// <summary>

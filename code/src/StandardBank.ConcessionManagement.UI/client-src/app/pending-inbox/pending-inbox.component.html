@@ -11,12 +11,7 @@
     </div>
 </div>
 
-
 <div class="col-md-12 search-and-results-container">
-
-
-  
-
 
     <!-- Results table -->
     <div class="table-container">
@@ -27,11 +22,11 @@
                     <th>Type</th>
                     <th>Opened</th>
                     <th>Concession Id</th>
-                    <th *ngIf="userConcessions?.isElevatedUser">Region</th>
-                    <th *ngIf="userConcessions?.isElevatedUser">Centre</th>
                     <th>Segment</th>
                     <th>Status</th>
                     <th>Sent For Approval</th>
+                    <th *ngIf="userConcessions?.isElevatedUser">Region</th>
+                    <th *ngIf="userConcessions?.isElevatedUser">Centre</th>
                 </tr>
             </thead>
             <tbody>
@@ -44,15 +39,13 @@
                     <td class="date">{{concession?.dateOpened | date: 'yyyy/MM/dd'}}</td>
                     <td>{{concession?.referenceNumber}}</td>
 
-
+                    <td>{{concession?.segment}}</td>
+                    <td>{{concession?.statusDescription}}</td>
+                    <td class="date">{{concession?.dateSentForApproval | date: 'yyyy/MM/dd'}}</td>
 
 
                     <td *ngIf="userConcessions?.isElevatedUser">{{concession?.region}}</td>
                     <td *ngIf="userConcessions?.isElevatedUser">{{concession?.centreName}}</td>
-
-                    <td>{{concession?.segment}}</td>
-                    <td>{{concession?.statusDescription}}</td>
-                    <td class="date">{{concession?.dateSentForApproval | date: 'yyyy/MM/dd'}}</td>
                 </tr>
             </tbody>
         </table>

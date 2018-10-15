@@ -366,7 +366,7 @@
                                 No comments added.
                             </td>
                         </tr>
-                        <tr *ngFor="let comment of cashConcession.concession.concessionComments">
+                        <tr *ngFor="let comment of cashConcession.concession.concessionComments | commentsFilter : 'LogChanges';">
                             <td>{{comment.userDescription}}</td>
                             <td>{{comment.concessionSubStatusDescription}}</td>
                             <td>{{comment.comment}}</td>

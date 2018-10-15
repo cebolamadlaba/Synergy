@@ -123,6 +123,16 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             if (!string.IsNullOrWhiteSpace(tradeConcession.Concession.Comments))
                 await _mediator.Send(new AddConcessionComment(concession.Id, databaseTradeConcession.Concession.SubStatusId,
                     tradeConcession.Concession.Comments, user));
+
+            if (tradeConcession.Concession.Comments == "Approved With Changes" && tradeConcession.Concession.ConcessionComments != null)
+            {
+                if (tradeConcession.Concession.ConcessionComments.Count() > 0 && tradeConcession.Concession.ConcessionComments.First().UserDescription == "LogChanges")
+                {
+                    await _mediator.Send(new AddConcessionComment(concession.Id, databaseTradeConcession.Concession.SubStatusId, "LogChanges:" + tradeConcession.Concession.ConcessionComments.First().Comment, user));
+
+
+                }
+            }
         }
 
 
