@@ -20,5 +20,9 @@ export class ConcessionCondition {
     ragStatus: string;
     approvedDate: Date;
 	concessionType: string;
-	conditionMet: boolean;
+    conditionMet: boolean;
+
+    actualVolume: string;
+    actualValue: string;
+    actualTurnover: string;
 }

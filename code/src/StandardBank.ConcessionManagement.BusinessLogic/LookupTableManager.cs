@@ -502,7 +502,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 var mappedConditionType = _mapper.Map<ConditionType>(conditionType);
 
                 mappedConditionType.EnableInterestRate =
-                    mappedConditionType.Description == Constants.ConditionType.MininumAverageCreditBalance;
+                    ((mappedConditionType.Description == Constants.ConditionType.MininumAverageCreditBalance) | (mappedConditionType.Description == Constants.ConditionType.CreditFacility));
 
                 mappedConditionType.EnableConditionValue =
                     mappedConditionType.Description != Constants.ConditionType.FullTransactionalBanking;

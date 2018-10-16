@@ -91,6 +91,7 @@
             public const string FullTransactionalBanking = "Full Transactional Banking";
             public const string MininumAverageCreditBalance = "Mininum Average Credit Balance";
             public const string MininumTurnover = "Mininum Turnover";
+            public const string CreditFacility  = "Credit Facility";
         }
 
         public static class RagStatusResult

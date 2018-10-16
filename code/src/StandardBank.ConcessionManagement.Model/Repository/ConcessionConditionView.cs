@@ -198,5 +198,10 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         ///   <c>true</c> if this instance is active; otherwise, <c>false</c>.
         /// </value>
         public bool IsActive { get; set; }
+
+        public string ActualVolume { get; set; }
+        public string ActualValue { get; set; }
+        public string ActualTurnover { get; set; }
+
     }
 }

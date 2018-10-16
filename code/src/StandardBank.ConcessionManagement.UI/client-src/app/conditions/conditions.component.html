@@ -91,7 +91,13 @@
         <table class="table table-bordered table-hover header-fixed">
             <thead>
                 <tr>
-                    <th>Risk Group</th>
+                    <th colspan="9"></th>
+                    <th colspan="3" style="border: 1px solid #ddd; background-color:#387cad">Actuals </th>
+                   <th></th>
+                </tr>
+
+                <tr>
+                    <th >Risk Group</th>
                     <th>Concession ID</th>
                     <th>Condition Type</th>
                     <th>Product Type</th>
@@ -100,7 +106,12 @@
                     <th>Volume</th>
                     <th>Value</th>
                     <th>Expected Turnover Value</th>
-                    <th>Condition Met</th>
+
+                    <th style="border: 1px solid #ddd; background-color:#387cad">Volume</th>
+                    <th style="background-color:#387cad">Value</th>
+                    <th style="border: 1px solid #ddd; background-color:#387cad">Turnover</th>
+
+                    <th rowspan="2">Condition Met</th>
                 </tr>
             </thead>
             <tbody>
@@ -117,6 +128,11 @@
                     <td (click)="openConcessionView(condition)">{{condition.conditionVolume}}</td>
                     <td (click)="openConcessionView(condition)"><span *ngIf="condition.conditionValue">{{condition.conditionValue | number:'1.2-2'}}</span></td>
                     <td (click)="openConcessionView(condition)"><span *ngIf="condition.expectedTurnoverValue">{{condition.expectedTurnoverValue | number:'1.2-2'}}</span></td>
+
+                    <td (click)="openConcessionView(condition)">{{condition.actualVolume}}</td>
+                    <td (click)="openConcessionView(condition)">{{condition.actualValue}}</td>
+                    <td (click)="openConcessionView(condition)">{{condition.actualTurnover}}</td>
+
                     <td>
                         <button type="button" class="btn btn-no" (click)="conditionNotMet(condition)">No</button>
                         <button type="button" class="btn btn-yes" (click)="conditionMet(condition)">Yes</button>

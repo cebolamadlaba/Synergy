@@ -38,7 +38,8 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionConditionView>(
-                    @"SELECT [ConcessionConditionId], [ConcessionId], [RequestorId], [ReferenceNumber], [ConcessionTypeId], [ConcessionType], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [ConditionTypeId], [ConditionType], [ConditionProductId], [ConditionProduct], [PeriodTypeId], [PeriodType], [PeriodId], [Period], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [DateApproved], [ExpiryDate], [IsActive]
+                    @"SELECT [ConcessionConditionId], [ConcessionId], [RequestorId], [ReferenceNumber], [ConcessionTypeId], [ConcessionType], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [ConditionTypeId], [ConditionType], [ConditionProductId], [ConditionProduct], [PeriodTypeId], [PeriodType], [PeriodId], [Period], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [DateApproved], [ExpiryDate], [IsActive],
+                    isnull(cast([ActualVolume] as varchar),'Unavailable') 'ActualVolume', isnull(cast([ActualValue] as varchar),'Unavailable') 'ActualValue', isnull(cast([ActualTurnover] as varchar),'Unavailable') 'ActualTurnover'
                     FROM [dbo].[ConcessionConditionView]
                     WHERE [ConditionMet] IS NULL
                     AND [PeriodId] = @periodId
