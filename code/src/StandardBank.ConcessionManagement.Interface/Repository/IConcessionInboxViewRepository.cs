@@ -75,6 +75,9 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
 
         IEnumerable<ConcessionInboxView> ReadbyPCMPending(int? region, int? businesscentre, DateTime? datefilter,IEnumerable<int> statusIds);
 
+        IEnumerable<ConcessionInboxView> Search(int? region, int? businesscentre, DateTime? datefilter, IEnumerable<int> statusIds);
+
+
         /// <summary>
         /// Reads the by PCM user identifier is active.
         /// </summary>
@@ -121,6 +124,10 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <returns></returns>
         IEnumerable<ConcessionInboxView> ReadByConcessionDetailIds(IEnumerable<int> concessionDetailIds);
 
-        IEnumerable<ConcessionInboxView> ReadDueFor24HourEscaltion(IEnumerable<int> statusIdlist);
+        IEnumerable<ConcessionInboxView> ReadByConcessionIds(IEnumerable<int> concessionDetailIds);
+
+        IEnumerable<ConcessionInboxView> ReadDueFor72HourEscaltion(IEnumerable<int> statusIdlist);
+
+        IEnumerable<ConcessionInboxView> GetapporvedView(int requestorId, IEnumerable<int> statusIds, bool isActive);
     }
 }

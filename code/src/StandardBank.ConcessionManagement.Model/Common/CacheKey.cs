@@ -10,6 +10,8 @@
             public static class SiteHelper
             {
                 public const string LoggedInUser = "CacheKey.UserInterface.SiteHelper.LoggedInUser";
+
+                public const string UserAccess = "CacheKey.UserInterface.SiteHelper.UserAccess";
             }
         }
 
@@ -191,7 +193,14 @@
 
                 public const string GetBolProducts = "CacheKey.Repository.MiscPerformanceRepository.GetBolProducts";
 
+                public const string GetTradeProducts = "CacheKey.Repository.MiscPerformanceRepository.GetTradeProducts";                
+
                 public const string GetTransactionalProducts = "CacheKey.Repository.MiscPerformanceRepository.GetTransactionalProducts";
+
+                public const string GetInvestmentProducts = "CacheKey.Repository.MiscPerformanceRepository.GetInvestmentProducts";
+
+
+                
             }
         }
     }

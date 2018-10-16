@@ -32,8 +32,10 @@ export class ActionedInboxComponent implements OnInit {
                 emptyTable: "No records found!",
                 search: "",
                 searchPlaceholder: "Search"
-            }
+            },
+            order: [[6, 'desc']]
         };
+
 
         this.observableUserConcessions = this.userConcessionsService.getData();
         this.observableUserConcessions.subscribe(
@@ -57,6 +59,12 @@ export class ActionedInboxComponent implements OnInit {
                 break;
             case ConcessionTypes.BOL:
                 this.router.navigate(['/bol-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                break;
+            case ConcessionTypes.Trade:
+                this.router.navigate(['/trade-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                break;
+            case ConcessionTypes.Investment:
+                this.router.navigate(['/investments-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
                 break;
         }
     }

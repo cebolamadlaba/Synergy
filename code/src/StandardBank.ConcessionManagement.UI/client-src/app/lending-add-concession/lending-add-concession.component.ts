@@ -11,6 +11,7 @@ import { PeriodType } from "../models/period-type";
 import { ConditionType } from "../models/condition-type";
 import { ConditionProduct } from "../models/condition-product";
 import { ClientAccount } from "../models/client-account";
+import { ClientAccountArray } from "../models/client-account-array";
 import { LendingConcession } from "../models/lending-concession";
 import { Concession } from "../models/concession";
 import { LendingConcessionDetail } from "../models/lending-concession-detail";
@@ -38,7 +39,10 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
     observableLatestCrsOrMrs: Observable<number>;
     latestCrsOrMrs: number;
-    selectedConditionTypes: ConditionType[]; 
+    selectedConditionTypes: ConditionType[];
+    selectedProductTypes: ProductType[];
+    selectedAccountNumbers: ClientAccountArray[];
+
     isLoading = true;
 
     primeRate = "0.00";
@@ -71,6 +75,8 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         this.riskGroup = new RiskGroup();
         this.reviewFeeTypes = [new ReviewFeeType()];
         this.productTypes = [new ProductType()];
+        this.selectedProductTypes = [new ProductType()];
+        this.selectedAccountNumbers = [new ClientAccountArray()];
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
         this.conditionTypes = [new ConditionType()];
@@ -102,7 +108,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             this.lookupDataService.getPeriodTypes(),
             this.lookupDataService.getConditionTypes(),
             this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-            this.lookupDataService.getClientAccounts(this.riskGroupNumber),
+            this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Lending),
             this.lendingService.getlatestCrsOrMrs(this.riskGroupNumber),
             this.lookupDataService.getPrimeRate(this.today)
         ]).subscribe(results => {
@@ -117,6 +123,19 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             this.primeRate = <string>results[8];
 
             this.isLoading = false;
+
+            const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+            if (this.productTypes) {
+                control.controls[0].get('productType').setValue(this.productTypes[0]);
+
+                this.selectedProductTypes[0] = this.productTypes[0];
+                this.productTypeChanged(0);
+            }
+
+            if (this.clientAccounts)
+                control.controls[0].get('accountNumber').setValue(this.clientAccounts[0]);
+
+
         }, error => {
             this.errorMessage = <any>error;
             this.isLoading = false;
@@ -124,16 +143,22 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     initConcessionItemRows() {
+
+        this.selectedProductTypes.push(new ProductType());
+        this.selectedAccountNumbers.push(new ClientAccountArray());
+
         return this.formBuilder.group({
             productType: [''],
             accountNumber: [''],
             limit: [''],
-            term: [''],
+            term: [{ value: '' }],
             marginAgainstPrime: [''],
             initiationFee: [''],
             reviewFeeType: [''],
             reviewFee: [''],
-            uffFee: ['']
+            uffFee: [''],
+            frequency: [{ value: '', disabled: true }],
+            serviceFee: [{ value: '', disabled: true }],
         });
     }
 
@@ -151,10 +176,23 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             period: ['']
         });
     }
+  
 
     addNewConcessionRow() {
         const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
-        control.push(this.initConcessionItemRows());
+
+        var newRow = this.initConcessionItemRows();
+
+        if (this.productTypes)
+            newRow.controls['productType'].setValue(this.productTypes[0]);
+
+        if (this.clientAccounts)
+            newRow.controls['accountNumber'].setValue(this.clientAccounts[0]);
+
+        control.push(newRow);
+        this.productTypeChanged(control.controls.length - 1)
+
+
     }
 
     addNewConditionRow() {
@@ -171,6 +209,10 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     deleteConcessionRow(index: number) {
         if (confirm("Are you sure you want to remove this row?")) {
             const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+
+            this.selectedProductTypes.splice(index, 1);
+            this.selectedAccountNumbers.splice(index, 1);
+
             control.removeAt(index);
         }
     }
@@ -180,27 +222,59 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         control.removeAt(index);
 
         this.selectedConditionTypes.splice(index, 1);
+
     }
 
     conditionTypeChanged(rowIndex) {
+
         const control = <FormArray>this.lendingConcessionForm.controls['conditionItemsRows'];
         this.selectedConditionTypes[rowIndex] = control.controls[rowIndex].get('conditionType').value;
 
         let currentCondition = control.controls[rowIndex];
 
+        currentCondition.get('conditionProduct').setValue(null);
         currentCondition.get('interestRate').setValue(null);
         currentCondition.get('volume').setValue(null);
         currentCondition.get('value').setValue(null);
         currentCondition.get('expectedTurnoverValue').setValue(null);
     }
 
-    productTypeChanged(rowIndex) {
+    disableRows() { 
+
+        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        for (let concessionFormItem of concessions.controls) {
+
+            concessionFormItem.disable();
+        }
+    }
+
+    productTypeChanged(rowIndex: number) {
+
+        console.log('Row:' + rowIndex);
+
         const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
 
         let currentRow = control.controls[rowIndex];
         var productType = currentRow.get('productType').value;
 
+        this.selectedProductTypes[rowIndex] = productType;
+
+        if (this.clientAccounts && this.clientAccounts.length > 0) {
+            this.selectedAccountNumbers[rowIndex].clientaccounts = this.clientAccounts.filter(re => re.accountType == productType.description);
+
+            if (this.selectedAccountNumbers[rowIndex].clientaccounts.length == 0) {
+                control.controls[rowIndex].get('accountNumber').setValue(null);
+            }
+            else {
+
+                control.controls[rowIndex].get('accountNumber').setValue(this.selectedAccountNumbers[rowIndex].clientaccounts[0]);
+
+            }
+
+        }
+
         if (productType.description === "Overdraft") {
+
             currentRow.get('term').disable();
             currentRow.get('term').setValue('12');
 
@@ -208,23 +282,43 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             currentRow.get('reviewFee').enable();
             currentRow.get('uffFee').enable();
 
+            currentRow.get('frequency').disable();
+            currentRow.get('serviceFee').disable();           
+
         }
-        else if (productType.description === "Temporary Overdraft") {            
+        else if (productType.description === "Temporary Overdraft") {
+
+            currentRow.get('term').enable();
 
             currentRow.get('reviewFeeType').enable();
             currentRow.get('reviewFee').enable();
-            currentRow.get('uffFee').enable();
+            currentRow.get('uffFee').enable();          
+
+            currentRow.get('frequency').disable();
+            currentRow.get('serviceFee').disable();          
+
         }
-        else {
+        else if (productType.description.indexOf("VAF") == 0) {
+
             currentRow.get('term').enable();
+
+            currentRow.get('frequency').enable();
+            currentRow.get('serviceFee').enable();
 
             currentRow.get('reviewFeeType').disable();
             currentRow.get('reviewFee').disable();
             currentRow.get('uffFee').disable();
+        }
+        else {
 
-            currentRow.get('reviewFeeType').setValue(null);
-            currentRow.get('reviewFee').setValue(null);
-            currentRow.get('uffFee').setValue(null);
+            currentRow.get('term').enable();
+
+            currentRow.get('reviewFeeType').disable();
+            currentRow.get('reviewFee').disable();
+            currentRow.get('uffFee').disable();          
+
+            currentRow.get('frequency').disable();
+            currentRow.get('serviceFee').disable();
         }
     }
 
@@ -244,17 +338,17 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
         if (this.lendingConcessionForm.controls['smtDealNumber'].value)
             lendingConcession.concession.smtDealNumber = this.lendingConcessionForm.controls['smtDealNumber'].value;
-        //else
-        //    this.addValidationError("SMT Deal Number not captured");
+       
 
         if (this.lendingConcessionForm.controls['motivation'].value)
             lendingConcession.concession.motivation = this.lendingConcessionForm.controls['motivation'].value;
         else
-            this.addValidationError("Motivation not captured");
+            lendingConcession.concession.motivation = '.';
 
         lendingConcession.concession.riskGroupId = this.riskGroup.id;
         lendingConcession.concession.concessionType = ConcessionTypes.Lending;
         lendingConcession.concession.type = "New";
+        lendingConcession.concession.comments = "Created";
 
         const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
 
@@ -296,6 +390,12 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
             if (concessionFormItem.get('uffFee').value)
                 lendingConcessionDetail.uffFee = concessionFormItem.get('uffFee').value;
+
+            if (concessionFormItem.get('serviceFee').value)
+                lendingConcessionDetail.serviceFee = concessionFormItem.get('serviceFee').value;
+
+            if (concessionFormItem.get('frequency').value)
+                lendingConcessionDetail.frequency = concessionFormItem.get('frequency').value;
 
             lendingConcession.lendingConcessionDetails.push(lendingConcessionDetail);
         }
@@ -346,6 +446,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         }
 
         if (!this.validationError) {
+            this.disableRows();
             this.lendingService.postNewLendingData(lendingConcession).subscribe(entity => {
                 console.log("data saved");
                 this.saveMessage = entity.concession.referenceNumber;

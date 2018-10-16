@@ -29,7 +29,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Lending
         /// <value>
         /// The lending products.
         /// </value>
-        public IEnumerable<LendingProduct> LendingProducts { get; set; }
+        public IEnumerable<LendingProductGroup> LendingProductGroups { get; set; }
 
         /// <summary>
         /// Gets or sets the lending financial.

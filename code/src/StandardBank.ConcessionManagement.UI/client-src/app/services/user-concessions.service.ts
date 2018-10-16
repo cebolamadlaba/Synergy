@@ -36,9 +36,28 @@ export class UserConcessionsService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+
+    recallConcession(concessionReferenceId: string): Observable<boolean> {
+        const url = "/api/Concession/RecallConcession/" + concessionReferenceId;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
     deactivateConcession(concessionReferenceId: string): Observable<boolean> {
         const url = "/api/Concession/DeactivateConcession/" + concessionReferenceId;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    deactivateConcessionDetailed(concessionReferenceDetailedId: number): Observable<boolean> {
+        const url = "/api/Concession/DeactivateConcessionDetailed/" + concessionReferenceDetailedId;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    getCacheAEUser(accountExecutiveUserId: number): any {
+   
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/inbox/CacheAEUser";
+        return this.http.post(url, accountExecutiveUserId, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 }
 

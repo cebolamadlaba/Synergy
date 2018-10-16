@@ -17,6 +17,7 @@ using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Bol;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
+using StandardBank.ConcessionManagement.Model.UserInterface.Trade;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
 {
@@ -45,6 +46,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
 
         private readonly IBolManager _bolManager;
 
+        private readonly ITradeManager _tradeManager;
+
         private readonly ITransactionalManager _transactionalManager;
 
         private readonly ICashManager _cashManager;
@@ -60,7 +63,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
         /// <param name="userRepository">The user repository.</param>
         /// <param name="emailManager">The email manager.</param>
         public DailyAutoEscalation(IConcessionInboxViewRepository concessionInboxViewRepository,
-            IUserRepository userRepository, IEmailManager emailManager, ILendingManager lendingManager, ILookupTableManager lookupTableManager, IMediator mediator, IBolManager bolManager, ITransactionalManager transactionalManager, ICashManager cashManager)
+            IUserRepository userRepository, IEmailManager emailManager, ILendingManager lendingManager, ILookupTableManager lookupTableManager, IMediator mediator, IBolManager bolManager, ITransactionalManager transactionalManager, ICashManager cashManager, ITradeManager tradeManager)
         {
             _concessionInboxViewRepository = concessionInboxViewRepository;
             _userRepository = userRepository;
@@ -71,6 +74,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
             _bolManager = bolManager;
             _transactionalManager = transactionalManager;
             _cashManager = cashManager;
+            _tradeManager = tradeManager;
 
         }
 
@@ -85,7 +89,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
             var pendingStatusIds = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.BcmPending);
 
             //get the concessions that are expiring in three months
-            var dueconcessions = _concessionInboxViewRepository.ReadDueFor24HourEscaltion(new[] { pendingStatusIds });
+            var dueconcessions = _concessionInboxViewRepository.ReadDueFor72HourEscaltion(new[] { pendingStatusIds });
 
             if (dueconcessions != null && dueconcessions.Any())
             {
@@ -160,6 +164,24 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                                 bolConcession.Concession.IsInProgressForwarding = true; 
 
                                 await _bolManager.ForwardBolConcession(bolConcession, system);
+                            }
+                        }
+                    }
+                    else if (dueconcession.ConcessionType == Constants.ConcessionType.Trade)
+                    {
+                        TradeConcession tradeConcession = _tradeManager.GetTradeConcession(dueconcession.ConcessionRef, system);
+
+                        if (tradeConcession.Concession.RequestorId.HasValue)
+                        {
+                            if (tradeConcession.Concession.RequestorId.HasValue)
+                            {
+                                system.Id = tradeConcession.Concession.RequestorId.Value;
+                                system.SelectedCentre = new Model.UserInterface.Centre() { Id = tradeConcession.Concession.CentreId };
+                                tradeConcession.Concession.SubStatus = Constants.ConcessionSubStatus.PcmPending;
+                                tradeConcession.Concession.Comments = "Auto(24H) forwarded by system";
+                                tradeConcession.Concession.IsInProgressForwarding = true;
+
+                                await _tradeManager.ForwardTradeConcession(tradeConcession, system);
                             }
                         }
                     }

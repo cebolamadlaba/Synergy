@@ -62,7 +62,18 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("BOLChargeCodes")]
         public IActionResult GetBOLChargeCodes()
         {
-            return Ok(_lookupTableManager.GetBOLChargeCodes());
+
+            var codes = _lookupTableManager.GetBOLChargeCodes();
+            return Ok(codes);
+        }
+
+
+        [Route("BOLChargeCodesAll")]
+        public IActionResult GetAllBOLChargeCodes()
+        {
+
+            var codes = _lookupTableManager.GetBOLChargeCodesAll();
+            return Ok(codes);
         }
 
         [Route("BOLChargeCodeTypes")]
@@ -71,10 +82,30 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(_lookupTableManager.GetBOLChargeCodeTypes());
         }
 
-        [Route("LegalEntityBOLUsers")]
-        public IActionResult GetLegalEntityBOLUsers()
+
+        [Route("TradeProductTypes")]
+        public IActionResult GetTradeProductTypes()
         {
-            return Ok(_lookupTableManager.GetLegalEntityBOLUsers());
+            return Ok(_lookupTableManager.GetTradeProductTypes());
+        }
+
+        [Route("TradeProducts")]
+        public IActionResult TradeProducts()
+        {
+            return Ok(_lookupTableManager.GetTradeProducts());
+        }       
+
+
+        [Route("LegalEntityBOLUsers/{riskGroupNumber}")]
+        public IActionResult GetLegalEntityBOLUsers(int riskGroupNumber)
+        {
+            return Ok(_lookupTableManager.GetLegalEntityBOLUsers(riskGroupNumber));
+        }
+
+        [Route("LegalEntityGBBNumbers/{riskGroupNumber}")]
+        public IActionResult GetLegalEntityGBBNumbers(int riskGroupNumber)
+        {
+            return Ok(_lookupTableManager.GetLegalEntityGBBNumbers(riskGroupNumber));
         }
 
         /// <summary>

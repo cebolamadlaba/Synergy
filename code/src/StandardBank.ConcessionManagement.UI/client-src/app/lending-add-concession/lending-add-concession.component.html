@@ -98,7 +98,7 @@
     </div>
     <div class="col-md-7 col-md-offset-1">
         <div class="row">
-            <label>Prime</label>          
+            <label>Prime</label>
             <input name="prime" value="{{primeRate}}" type="text" required class="form-control" disabled="disabled">
         </div>
         <div class="row">
@@ -110,11 +110,10 @@
     <!-- Concession table -->
     <div class="col-md-12" style="border-bottom: 1px solid gray; margin-bottom: 15px;">
         <div class="row">
-            <h3 class="table-title">Concessions</h3>
+            <h3 class="table-title">Concessions</h3>        
             <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" style="margin-top: 15px;" *ngIf="!saveMessage">New Concession</button>
         </div>
     </div>
-
     <table class="form-concessions-table" formArrayName="concessionItemRows">
         <thead class="form-concessions-table-headings">
             <tr>
@@ -122,10 +121,12 @@
                 <th>Account No</th>
                 <th>Limit</th>
                 <th>Term (Months)</th>
-                <th>Prime -/+</th>
+                <th>Prime(-/+) / Fixed rate</th>
+                <th>Frequency</th>
                 <th>Initiation Fee (%)</th>
+                <th>Service Fee (%)</th>
+                <th>Review Fee Type</th>
                 <th>Review Fee (%)</th>
-                <th></th>
                 <th>UFF Fee (%)</th>
                 <th></th>
             </tr>
@@ -134,35 +135,52 @@
             <tr *ngFor="let itemrow of lendingConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
                 <td class="length-long">
                     <!-- Product -->
-                    <select formControlName="productType" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="productTypeChanged(i)">
+                    <select formControlName="productType" class="form-control" (change)="productTypeChanged(i)">
                         <option *ngFor="let productTypeOption of productTypes" [ngValue]="productTypeOption">{{productTypeOption.description}}</option>
                     </select>
                 </td>
                 <td class="length-long">
                     <!-- Account No -->
-                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="saveMessage ? '' : null">
-                        <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
+                    <select formControlName="accountNumber" class="form-control" >
+                        <option *ngFor="let clientAccountOption of selectedAccountNumbers[i].clientaccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
+
                 </td>
                 <!-- Limit -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="limit" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="limit" class="form-control" (change)="setTwoNumberDecimal($event)" /></td>
                 <!-- Term -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="term" class="form-control" [attr.disabled]="saveMessage ? '' : null" /></td>
-                <!-- MAP -->
-          
-                <td class="length-short"><input type="text" formControlName="marginAgainstPrime" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="setTwoNumberDecimalMAP($event)" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="term" class="form-control" /></td>
+
+                <!-- Prime -->
+                <td class="length-short"><input type="text" formControlName="marginAgainstPrime" class="form-control" (change)="setTwoNumberDecimalMAP($event)" /></td>
+
+                <!-- Frequency -->
+                <td class="length-short">
+                    <select formControlName="frequency" class="form-control">
+                        <option>Monthly</option>
+                        <option>Quarterly</option>
+                        <option>Bi-annually </option>
+                        <option>Annually </option>
+                    </select>
+                </td>
+
                 <!-- Initiation fee -->
-                <td class="length-long"><input type="text" numbersOnly="true" formControlName="initiationFee" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="initiationFee" class="form-control" (change)="setTwoNumberDecimal($event)" /></td>
+
+                <!-- Service fee -->
+
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="serviceFee" class="form-control" (change)="setTwoNumberDecimal($event)" /></td>
+
                 <!-- Review fee type -->
-                <td class="length-medium">
-                    <select formControlName="reviewFeeType" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                <td class="length-short">
+                    <select formControlName="reviewFeeType" class="form-control">
                         <option *ngFor="let reviewFeeTypeOption of reviewFeeTypes" [ngValue]="reviewFeeTypeOption">{{reviewFeeTypeOption.description}}</option>
                     </select>
                 </td>
                 <!-- Review fee -->
-                <td class="length-medium"><input type="text" numbersOnly="true" class="form-control" formControlName="reviewFee" [attr.disabled]="saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="reviewFee" (change)="setTwoNumberDecimal($event)" /></td>
                 <!-- UFF fee -->
-                <td class="length-long"><input type="text" numbersOnly="true" class="form-control" formControlName="uffFee" [attr.disabled]="saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="uffFee" (change)="setTwoNumberDecimal($event)" /></td>
                 <td><button *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
         </tbody>
@@ -172,7 +190,7 @@
     <div class="col-md-12">
         <div class="row">
             <h3 class="table-title">Conditions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;" *ngIf="!saveMessage">Add Conditions</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;" *ngIf="!saveMessage">Manage Conditions</button>
 
             <div class="table-container">
                 <table class="table table-bordered table-hover header-fixed table-striped">
@@ -191,13 +209,13 @@
                     <tbody class="secondary-text">
                         <tr *ngIf="lendingConcessionForm.controls.conditionItemsRows.controls.length == 0">
                             <td colspan="8" class="searchEmptyState">
-                                No conditions has been added
+                                No conditions added
                             </td>
                         </tr>
                         <tr *ngFor="let itemrow of lendingConcessionForm.controls.conditionItemsRows.controls; let i=index">
                             <td># {{i + 1}}</td>
-                            <td>{{itemrow.get('conditionType').value.description}}</td>
-                            <td>{{itemrow.get('conditionProduct').value.description}}</td>
+                            <td>{{itemrow.get('conditionType').value?.description}}</td>
+                            <td>{{itemrow.get('conditionProduct').value?.description}}</td>
                             <td><span *ngIf="itemrow.get('interestRate').value">{{itemrow.get('interestRate').value | number:'1.2-2'}}</span></td>
                             <td>{{itemrow.get('volume').value}}</td>
                             <td><span *ngIf="itemrow.get('value').value">{{itemrow.get('value').value | number:'1.2-2'}}</span></td>
@@ -241,7 +259,7 @@
                         <tbody class="form-concessions-table-content">
                             <tr *ngIf="lendingConcessionForm.controls.conditionItemsRows.controls.length == 0">
                                 <td colspan="8" class="searchEmptyState">
-                                    No conditions has been added
+                                    No conditions added
                                 </td>
                             </tr>
                             <tr *ngFor="let itemrow of lendingConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
@@ -290,7 +308,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Form buttons -->
     <div class="footer-buttons">
         <div class="float-right">
@@ -298,7 +316,7 @@
             <button class="btn btn-primary" type="button" (click)="onSubmit()" *ngIf="!saveMessage">Submit</button>
         </div>
     </div>
-    
+
 </form>
 
 <!--<pre>{{lendingConcessionForm.value | json}}</pre>-->

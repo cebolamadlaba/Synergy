@@ -38,17 +38,23 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// </summary>
         private readonly IMediator _mediator;
 
+        private readonly IBusinessCentreManager _bcmManager;
+
+        private readonly ILookupTableManager _lookupTableManager;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CashController"/> class.
         /// </summary>
         /// <param name="siteHelper">The site helper.</param>
         /// <param name="cashManager">The cash manager.</param>
         /// <param name="mediator">The mediator.</param>
-        public CashController(ISiteHelper siteHelper, ICashManager cashManager, IMediator mediator)
+        public CashController(ISiteHelper siteHelper, ICashManager cashManager, IMediator mediator, IBusinessCentreManager businessCentreManager, ILookupTableManager lookupTableManager)
         {
             _siteHelper = siteHelper;
             _cashManager = cashManager;
             _mediator = mediator;
+            _bcmManager = businessCentreManager;
+            _lookupTableManager = lookupTableManager;
         }
 
         /// <summary>
@@ -84,6 +90,13 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             if (cashConcession.ConcessionConditions != null && cashConcession.ConcessionConditions.Any())
                 foreach (var concessionCondition in cashConcession.ConcessionConditions)
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+
+
+            var bcmPendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.NewSubmission);
+
+            if (!string.IsNullOrWhiteSpace(cashConcession.Concession.Comments))
+                await _mediator.Send(new AddConcessionComment(concession.Id, bcmPendingStatusId,
+                    cashConcession.Concession.Comments, user));
 
             return Ok(cashConcession);
         }
@@ -129,7 +142,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var cashconsession =_cashManager.GetCashConcession(detail.ReferenceNumber, user);
 
             cashconsession.Concession.SubStatus = Constants.ConcessionSubStatus.PcmPending;
-            cashconsession.Concession.BcmUserId = user.Id;
+            cashconsession.Concession.BcmUserId = _bcmManager.GetBusinessCentreManager(cashconsession.Concession.CentreId).BusinessCentreManagerId;
             cashconsession.Concession.Comments = "Manually forwarded by PCM";
             cashconsession.Concession.IsInProgressForwarding = true;
 
@@ -175,6 +188,17 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             if (!string.IsNullOrWhiteSpace(cashConcession.Concession.Comments))
                 await _mediator.Send(new AddConcessionComment(concession.Id, databaseCashConcession.Concession.SubStatusId,
                     cashConcession.Concession.Comments, user));
+
+
+            if (cashConcession.Concession.Comments == "Approved With Changes" && cashConcession.Concession.ConcessionComments != null)
+            {
+                if (cashConcession.Concession.ConcessionComments.Count() > 0 && cashConcession.Concession.ConcessionComments.First().UserDescription == "LogChanges")
+                {
+                    await _mediator.Send(new AddConcessionComment(concession.Id, databaseCashConcession.Concession.SubStatusId, "LogChanges:" + cashConcession.Concession.ConcessionComments.First().Comment, user));
+
+
+                }
+            }
         }
 
         /// <summary>
@@ -376,6 +400,23 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult CashFinancial(int riskGroupNumber)
         {
             return Ok(_cashManager.GetCashFinancialForRiskGroupNumber(riskGroupNumber));
+        }
+
+
+        [Route("CreateChannelType")]
+        public async Task<IActionResult> CreateChannelType([FromBody] ChannelType channelType)
+        {
+            var model = new Model.Repository.ChannelType() { Description = channelType.Description, IsActive = true };
+
+            return Ok(_cashManager.CreateChannelType(model));
+        }
+
+
+        [Route("CreateupdateTableNumber")]
+        public async Task<IActionResult> CreateupdateTableNumber([FromBody] TableNumber transactionTableNumber)
+        {
+
+            return Ok(_cashManager.CreateupdateTableNumber(transactionTableNumber));
         }
     }
 }

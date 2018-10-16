@@ -25,7 +25,7 @@ namespace StandardBank.ConcessionManagement.Common
         /// <param name="letterTemplatePath">The letter template path.</param>
         public ConfigurationData(string connectionString, string overrideLoggedInUser, string databaseType,
             string smtpServer, string smtpUserName, string smtpPassword, string defaultEmail, int smtpPort,
-            string emailTemplatePath, string letterTemplatePath)
+            string emailTemplatePath, string letterTemplatePath, string enforceMyAccess, string serverURL)
         {
             ConnectionString = connectionString;
             OverrideLoggedInUser = overrideLoggedInUser;
@@ -37,6 +37,8 @@ namespace StandardBank.ConcessionManagement.Common
             SmtpPort = smtpPort;
             EmailTemplatePath = emailTemplatePath;
             LetterTemplatePath = letterTemplatePath;
+            EnforceMyAccess = enforceMyAccess;
+            ServerURL = serverURL;
         }
 
         /// <summary>
@@ -103,5 +105,9 @@ namespace StandardBank.ConcessionManagement.Common
         public string WKhtmlToPDFExecutable { get; set; }
 
         public string DateDatabaseConnection { get ; set ; }
+
+        public string EnforceMyAccess { get; set; }
+
+        public  string ServerURL { get; set; }
     }
 }

@@ -8,6 +8,7 @@ using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Bol;
+using StandardBank.ConcessionManagement.Model.UserInterface.Trade;
 
 using AccrualType = StandardBank.ConcessionManagement.Model.UserInterface.AccrualType;
 using ChannelType = StandardBank.ConcessionManagement.Model.UserInterface.ChannelType;
@@ -25,6 +26,11 @@ using TransactionType = StandardBank.ConcessionManagement.Model.UserInterface.Tr
 using LegalEntityBOLUser = StandardBank.ConcessionManagement.Model.UserInterface.Bol.LegalEntityBOLUser;
 using BOLChargeCode = StandardBank.ConcessionManagement.Model.UserInterface.Bol.BOLChargeCode;
 using BOLChargeCodeType = StandardBank.ConcessionManagement.Model.UserInterface.Bol.BOLChargeCodeType;
+
+using TradeProduct = StandardBank.ConcessionManagement.Model.UserInterface.Trade.TradeProduct;
+using TradeProductType = StandardBank.ConcessionManagement.Model.UserInterface.Trade.TradeProductType;
+
+using InvestmentProduct = StandardBank.ConcessionManagement.Model.UserInterface.Investment.InvestmentProduct;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -80,6 +86,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IPeriodTypeRepository _periodTypeRepository;
 
         private readonly IBolUserRepository _bolRepository;
+
+        private readonly IConcessionTradeRepository _concessionTradeRepository;
+
+        private readonly IConcessionInvestmentRepository _concessionInvestmentRepository;
 
         /// <summary>
         /// The condition type repository
@@ -185,7 +195,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IRelationshipRepository relationshipRepository, IRoleRepository roleRepository,
             ICentreRepository centreRepository,
             IRiskGroupRepository riskGroupRepository,
-            ITransactionTableNumberRepository transactionTableNumberRepository, IBolUserRepository bolRepository)
+            ITransactionTableNumberRepository transactionTableNumberRepository, IBolUserRepository bolRepository, IConcessionTradeRepository concessionTradeRepository, IConcessionInvestmentRepository concessionInvestmentRepository)
         {
             _statusRepository = statusRepository;
             _subStatusRepository = subStatusRepository;
@@ -210,6 +220,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _riskGroupRepository = riskGroupRepository;
             _transactionTableNumberRepository = transactionTableNumberRepository;
             _bolRepository = bolRepository;
+            _concessionTradeRepository = concessionTradeRepository;
+            _concessionInvestmentRepository = concessionInvestmentRepository;
         }
 
         /// <summary>
@@ -436,17 +448,42 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var chargecodes = _bolRepository.GetBOLChargeCodes();
             return _mapper.Map<IEnumerable<BOLChargeCode>>(chargecodes);
         }
+
+        public IEnumerable<BOLChargeCode> GetBOLChargeCodesAll()
+        {
+            var chargecodes = _bolRepository.GetBOLChargeCodesAll();
+            return _mapper.Map<IEnumerable<BOLChargeCode>>(chargecodes);
+        }
+
         public IEnumerable<BOLChargeCodeType> GetBOLChargeCodeTypes()
         {
             var chargecodetypes = _bolRepository.GetBOLChargeCodeTypes();
             return _mapper.Map<IEnumerable<BOLChargeCodeType>>(chargecodetypes);
         }
 
-        public IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsers()
+        public IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsers(int riskGroupNumber)
         {
-            var bolusers = _bolRepository.GetLegalEntityBOLUsers();
+            var bolusers = _bolRepository.GetLegalEntityBOLUsers(riskGroupNumber);
             return _mapper.Map<IEnumerable<LegalEntityBOLUser>>(bolusers);
         }
+
+        public IEnumerable<Model.UserInterface.Trade.LegalEntityGBBNumber> GetLegalEntityGBBNumbers(int riskGroupNumber)
+        {
+            var gbbnumbers = _concessionTradeRepository.GetLegalEntityGBBNumbers(riskGroupNumber);
+
+            return _mapper.Map<IEnumerable<Model.UserInterface.Trade.LegalEntityGBBNumber>>(gbbnumbers);
+        }
+
+        public IEnumerable<TradeProduct> GetTradeProducts()
+        {
+            return _mapper.Map<IEnumerable<TradeProduct>>(_concessionTradeRepository.GetTradeProducts());           
+        }
+
+        public IEnumerable<TradeProductType> GetTradeProductTypes()
+        {
+            return _mapper.Map<IEnumerable<TradeProductType>>(_concessionTradeRepository.GetTradeProductTypes());
+        }
+
 
 
         /// <summary>
@@ -465,7 +502,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 var mappedConditionType = _mapper.Map<ConditionType>(conditionType);
 
                 mappedConditionType.EnableInterestRate =
-                    mappedConditionType.Description == Constants.ConditionType.MininumAverageCreditBalance;
+                    ((mappedConditionType.Description == Constants.ConditionType.MininumAverageCreditBalance) | (mappedConditionType.Description == Constants.ConditionType.CreditFacility));
 
                 mappedConditionType.EnableConditionValue =
                     mappedConditionType.Description != Constants.ConditionType.FullTransactionalBanking;
@@ -505,6 +542,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return _mapper.Map<IEnumerable<ChannelType>>(channelTypes.Where(_ => _.IsActive));
         }
 
+        public IEnumerable<ChannelType> GetAllChannelTypes()
+        {
+            var channelTypes = _channelTypeRepository.ReadAll();
+            return _mapper.Map<IEnumerable<ChannelType>>(channelTypes);
+        }
 
         public IEnumerable<ChannelType> GetChargeCodes()
         {
@@ -548,7 +590,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var concessionTypeId = GetConcessionTypeId(concessionType);
             var transactionTableNumbers =
                 _mapper.Map<IEnumerable<Model.UserInterface.Transactional.TransactionTableNumber>>(
-                    _transactionTableNumberRepository.ReadAll());
+                    _transactionTableNumberRepository.ReadAll().Where((_ => _.IsActive == true)));          
+
 
             foreach (var transactionType in _transactionTypeRepository.ReadByConcessionTypeIdIsActive(concessionTypeId,
                 true))
@@ -566,6 +609,51 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return transactionTypes;
         }
 
+        public IEnumerable<TransactionType> GetTransactionalTransactionTypes(bool isActive)
+        {
+            var transactionTypes = _transactionTypeRepository.ReadAll(isActive);
+
+           return GetTransactionTypesForConcessionType(Constants.ConcessionType.Transactional);
+
+           //return _mapper.Map<IEnumerable<TransactionType>>(transactionTypes);
+          
+        }
+
+        public IEnumerable<ConcessionType> GetConcessionTypes(bool isActive)
+        {
+            var concessionTypes = new List<ConcessionType>();
+            _concessionTypeRepository.ReadAll(isActive);
+
+
+            foreach (var concessiontType in concessionTypes)
+            {
+                var mappedTransactionType = _mapper.Map<ConcessionType>(concessiontType);
+                concessionTypes.Add(mappedTransactionType);
+            }
+
+            return concessionTypes;
+        }
+
+        public IEnumerable<TableNumber> GetTableNumbers(bool isActive)
+        {
+
+            try
+            {
+                var tableNumbers = _tableNumberRepository.ReadAll();
+
+                var newnumbers = _mapper.Map<IEnumerable<TableNumber>>(tableNumbers
+                    .Where(_ => _.IsActive == isActive).OrderBy(_ => _.TariffTable));
+
+                return newnumbers;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
         /// <summary>
         /// Gets the table numbers.
         /// </summary>
@@ -574,10 +662,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public IEnumerable<TableNumber> GetTableNumbers(string concessionType)
         {
             var concessionTypeId = GetConcessionTypeId(concessionType);
-            var tableNumbers = _tableNumberRepository.ReadAll();
+            var tableNumbers = _tableNumberRepository.ReadAll(concessionType,concessionTypeId);
 
             return _mapper.Map<IEnumerable<TableNumber>>(tableNumbers
                 .Where(_ => _.IsActive && _.ConcessionTypeId == concessionTypeId).OrderBy(_ => _.TariffTable));
+        }
+
+        public IEnumerable<TableNumber> GetTableNumbersAll(string concessionType)
+        {
+            var concessionTypeId = GetConcessionTypeId(concessionType);
+            var tableNumbers = _tableNumberRepository.ReadAll();
+
+            return _mapper.Map<IEnumerable<TableNumber>>(tableNumbers
+                .Where(_ =>  _.ConcessionTypeId == concessionTypeId).OrderBy(_ => _.TariffTable));
         }
 
         /// <summary>

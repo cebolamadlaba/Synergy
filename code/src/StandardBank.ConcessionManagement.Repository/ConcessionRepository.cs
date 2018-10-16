@@ -170,14 +170,15 @@ namespace StandardBank.ConcessionManagement.Repository
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        public void Update(Concession model)
+        public void DeactivateConcession(Concession model)
         {
             try
             {
                 using (var db = _dbConnectionFactory.Connection())
                 {
-                    db.Execute(@"UPDATE [dbo].[tblConcession]
-                            SET [fkTypeId] = @TypeId, [fkConcessionTypeId] = @ConcessionTypeId, [fkStatusId] = @StatusId, [fkSubStatusId] = @SubStatusId, [fkAAUserId] = @AAUserId, [fkRequestorId] = @RequestorId, [fkBCMUserId] = @BCMUserId, [fkPCMUserId] = @PCMUserId, [fkHOUserId] = @HOUserId, [fkRiskGroupId] = @RiskGroupId, [fkRegionId] = @RegionId, [fkCentreId] = @CentreId, [ConcessionRef] = @ConcessionRef, [SMTDealNumber] = @SMTDealNumber, [ConcessionDate] = @ConcessionDate, [DatesentForApproval] = @DatesentForApproval, [Motivation] = @Motivation, [DateActionedByBCM] = @DateActionedByBCM, [DateActionedByPCM] = @DateActionedByPCM, [DateActionedByHO] = @DateActionedByHO, [MRS_CRS] = @MRS_CRS, [IsCurrent] = @IsCurrent, [IsActive] = @IsActive
+                    db.Execute(@"UPDATE [dbo].[tblConcessionDetail] set [Archived] = @Archived  WHERE [fkConcessionId] = @Id; 
+                            UPDATE [dbo].[tblConcession]
+                            SET [fkTypeId] = @TypeId, [fkConcessionTypeId] = @ConcessionTypeId, [fkStatusId] = @StatusId, [fkSubStatusId] = @SubStatusId, [fkAAUserId] = @AAUserId, [fkRequestorId] = @RequestorId, [fkBCMUserId] = @BCMUserId, [fkPCMUserId] = @PCMUserId, [fkHOUserId] = @HOUserId, [fkRiskGroupId] = @RiskGroupId, [fkRegionId] = @RegionId, [fkCentreId] = @CentreId, [ConcessionRef] = @ConcessionRef, [SMTDealNumber] = @SMTDealNumber, [ConcessionDate] = @ConcessionDate, [DatesentForApproval] = @DatesentForApproval, [Motivation] = @Motivation, [DateActionedByBCM] = @DateActionedByBCM, [DateActionedByPCM] = @DateActionedByPCM, [DateActionedByHO] = @DateActionedByHO, [MRS_CRS] = @MRS_CRS, [IsCurrent] = @IsCurrent, [IsActive] = @IsActive, [Archived] = @Archived
                             WHERE [pkConcessionId] = @Id",
                         new
                         {
@@ -204,7 +205,54 @@ namespace StandardBank.ConcessionManagement.Repository
                             DateActionedByHO = model.DateActionedByHO,
                             MRS_CRS = model.MRS_CRS,
                             IsCurrent = model.IsCurrent,
-                            IsActive = model.IsActive
+                            IsActive = model.IsActive,
+                            Archived = model.Archived
+                        });
+                }
+            }
+            catch (System.Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public void Update(Concession model)
+        {
+            try
+            {
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    db.Execute(@"UPDATE [dbo].[tblConcession]
+                            SET [fkTypeId] = @TypeId, [fkConcessionTypeId] = @ConcessionTypeId, [fkStatusId] = @StatusId, [fkSubStatusId] = @SubStatusId, [fkAAUserId] = @AAUserId, [fkRequestorId] = @RequestorId, [fkBCMUserId] = @BCMUserId, [fkPCMUserId] = @PCMUserId, [fkHOUserId] = @HOUserId, [fkRiskGroupId] = @RiskGroupId, [fkRegionId] = @RegionId, [fkCentreId] = @CentreId, [ConcessionRef] = @ConcessionRef, [SMTDealNumber] = @SMTDealNumber, [ConcessionDate] = @ConcessionDate, [DatesentForApproval] = @DatesentForApproval, [Motivation] = @Motivation, [DateActionedByBCM] = @DateActionedByBCM, [DateActionedByPCM] = @DateActionedByPCM, [DateActionedByHO] = @DateActionedByHO, [MRS_CRS] = @MRS_CRS, [IsCurrent] = @IsCurrent, [IsActive] = @IsActive, [Archived] = @Archived
+                            WHERE [pkConcessionId] = @Id",
+                        new
+                        {
+                            Id = model.Id,
+                            TypeId = model.TypeId,
+                            ConcessionTypeId = model.ConcessionTypeId,
+                            StatusId = model.StatusId,
+                            SubStatusId = model.SubStatusId,
+                            AAUserId = model.AAUserId,
+                            RequestorId = model.RequestorId,
+                            BCMUserId = model.BCMUserId,
+                            PCMUserId = model.PCMUserId,
+                            HOUserId = model.HOUserId,
+                            RiskGroupId = model.RiskGroupId,
+                            RegionId = model.RegionId,
+                            CentreId = model.CentreId,
+                            ConcessionRef = model.ConcessionRef,
+                            SMTDealNumber = model.SMTDealNumber,
+                            ConcessionDate = model.ConcessionDate,
+                            DatesentForApproval = model.DatesentForApproval,
+                            Motivation = model.Motivation,
+                            DateActionedByBCM = model.DateActionedByBCM,
+                            DateActionedByPCM = model.DateActionedByPCM,
+                            DateActionedByHO = model.DateActionedByHO,
+                            MRS_CRS = model.MRS_CRS,
+                            IsCurrent = model.IsCurrent,
+                            IsActive = model.IsActive,
+                            Archived = model.Archived
                         });
                 }
             }

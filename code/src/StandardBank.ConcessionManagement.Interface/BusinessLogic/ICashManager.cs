@@ -64,5 +64,10 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         CashFinancial GetCashFinancialForRiskGroupNumber(int riskGroupNumber);
 
         Task ForwardCashConcession(CashConcession cashConcession, User user);
+
+        ChannelType CreateChannelType(ChannelType channelType);
+
+        Model.Repository.TableNumber CreateupdateTableNumber(Model.UserInterface.TableNumber cashTableNumber);
+
     }
 }

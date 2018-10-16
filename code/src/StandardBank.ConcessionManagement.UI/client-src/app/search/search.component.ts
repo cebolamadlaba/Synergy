@@ -24,6 +24,11 @@ import { CashConcessionService } from "../services/cash-concession.service";
 import { LendingService } from "../services/lending.service";
 import { SearchConcessionFilterPipe } from "../filters/search-concession-filter.pipe";
 
+import { TradeConcessionService } from "../services/trade-concession.service";
+import { InvestmentConcessionService } from "../services/investment-concession.service";
+
+import { IMyDpOptions, IMyDateModel } from 'angular4-datepicker/src/my-date-picker/interfaces'
+
 
 @Component({
     selector: 'app-conditions',
@@ -44,11 +49,19 @@ export class SearchComponent implements OnInit {
     isLoading = true;
     status: string = "BCM";
     displayDate = new Date();
+    enforcedate = true;
 
     today: String;
+    //planModel: any = { start_time: new Date() };
+   // now = 
 
-    planModel: any = { start_time: new Date() };
 
+    public myDatePickerOptions: IMyDpOptions = {
+        // other options...
+        dateFormat: 'yyyy-mm-dd',
+    };
+    // Initialized to specific date (09.10.2018).
+    public model: any = {date: null} // [null];//any = { date: { year: this.displayDate.getFullYear(), month: this.displayDate.getMonth() + 1, day: this.displayDate.getDate() } };
 
     region: Region;
     businesscentre: Centre;
@@ -60,6 +73,7 @@ export class SearchComponent implements OnInit {
         @Inject(MyConditionService) private conditionService,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(TransactionalConcessionService) private transactionalConcessionService,
+        @Inject(InvestmentConcessionService) private investmentConcessionService,
         @Inject(CashConcessionService) private cashConcessionService,
         @Inject(LendingService) private lendingConcessionService,
         @Inject(BolConcessionService) private bolConcessionService,
@@ -67,7 +81,7 @@ export class SearchComponent implements OnInit {
         @Inject(UserConcessionsService) private userConcessionsService,
         @Inject(RegionService) private regionService,
         @Inject(BcmManagementService) private businesscentreService,
-
+        @Inject(TradeConcessionService) private tradeConcessionService, 
         private router: Router) { }
 
     observableApprovedConcessions: Observable<SearchConcessionDetail[]>;
@@ -75,10 +89,8 @@ export class SearchComponent implements OnInit {
 
     ngOnInit() {
 
-
+        this.isLoading = true;
         this.observableApprovedConcessions = this.lookupDataService.searchConsessions();
-      
-        this.today = new Date().toISOString().split('T')[0];
 
         this.observableApprovedConcessions.subscribe(approvedConcession => {
             this.approvedConcessions = approvedConcession;
@@ -102,18 +114,40 @@ export class SearchComponent implements OnInit {
         this.getFilteredView();
     }
 
+    // dateChanged callback function called when the user select the date. This is mandatory callback
+    // in this option. There are also optional inputFieldChanged and calendarViewChanged callbacks.
+    onDateChanged(event: IMyDateModel) {
+        // event properties are: event.date, event.jsdate, event.formatted and event.epoc
+
+        this.today = event.formatted;
+        this.getFilteredView();
+    }
+
  
     getFilteredView() {
+
+        this.isLoading = true;
 
         let businessCentreid = this.businesscentre == null ? null : this.businesscentre.id;
         let regionid = this.region == null ? null : this.region.id;
 
-        this.lookupDataService.searchConsessionsFiltered(regionid, businessCentreid, this.status, this.today).subscribe(filteredconcessions => {
+        var datetofilter = this.today;
+
+        if (!this.enforcedate) {
+            datetofilter = null;
+        }
+        if (datetofilter == "") {
+            datetofilter = null;
+        }
+
+        this.lookupDataService.searchConsessionsFiltered(regionid, businessCentreid, this.status, datetofilter).subscribe(filteredconcessions => {
             this.approvedConcessions = filteredconcessions;
 
             this.isLoading = false;
-        }, error => this.errorMessage = <any>error);
-
+        }, error => {
+            this.errorMessage = <any>error;
+            this.isLoading = false;
+        });
 
     }
 
@@ -139,6 +173,14 @@ export class SearchComponent implements OnInit {
                 case ConcessionTypes.BOL:
                     this.forwardBoltoPCM(concessiondetailed);
                     break;
+
+                case ConcessionTypes.Trade:
+                    this.forwardTradetoPCM(concessiondetailed);
+                    break;
+
+                case ConcessionTypes.Investment:
+                    this.forwardInvestmenttoPCM(concessiondetailed);
+                    break;
             }
         }       
     }
@@ -160,6 +202,12 @@ export class SearchComponent implements OnInit {
                 case ConcessionTypes.BOL:
                     this.router.navigate(['/bol-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.referenceNumber]);
                     break;
+                case ConcessionTypes.Trade:
+                    this.router.navigate(['/trade-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.referenceNumber]);
+                    break;
+                case ConcessionTypes.Investment:
+                    this.router.navigate(['/investments-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.referenceNumber]);
+                    break;
             }
         }
     }
@@ -171,6 +219,30 @@ export class SearchComponent implements OnInit {
 
         if (!this.validationError) {
             this.transactionalConcessionService.postForwardTransactionalPCM(concessiondetailed).subscribe(entity => {
+                console.log("data saved");
+
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+
+                this.getFilteredView();
+
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+
+    forwardInvestmenttoPCM(concessiondetailed: SearchConcessionDetail) {
+
+        concessiondetailed.subStatus = ConcessionSubStatus.PCMPending;
+        concessiondetailed.comments = "Forwarded by PCM";
+
+        if (!this.validationError) {
+            this.investmentConcessionService.postForwardInvestmentPCM(concessiondetailed).subscribe(entity => {
                 console.log("data saved");
 
                 this.saveMessage = entity.concession.referenceNumber;
@@ -240,6 +312,29 @@ export class SearchComponent implements OnInit {
 
         if (!this.validationError) {
             this.bolConcessionService.postForwardBolPCM(concessiondetailed).subscribe(entity => {
+                console.log("data saved");
+
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+
+                this.getFilteredView();
+
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    forwardTradetoPCM(concessiondetailed: SearchConcessionDetail) {
+
+        concessiondetailed.subStatus = ConcessionSubStatus.PCMPending;
+        concessiondetailed.comments = "Forwarded by PCM";
+
+        if (!this.validationError) {
+            this.tradeConcessionService.postForwardTradePCM(concessiondetailed).subscribe(entity => {
                 console.log("data saved");
 
                 this.saveMessage = entity.concession.referenceNumber;

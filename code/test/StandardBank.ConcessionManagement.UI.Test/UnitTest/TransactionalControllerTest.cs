@@ -29,7 +29,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         public TransactionalControllerTest()
         {
             _transactionalController = new TransactionalController(new FakeSiteHelper(),
-                MockTransactionalManager.Object, MockMediator.Object);
+                MockTransactionalManager.Object, MockMediator.Object,null,null);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
                     RiskGroup = riskGroup,
                     TransactionalFinancial = new TransactionalFinancial(),
                     TransactionalConcessions = new[] {new TransactionalConcession()},
-                    TransactionalProducts = new[] {new TransactionalProduct()}
+                    TransactionalProductGroups = new[] {new TransactionalProductGroup()}
                 });
 
             var result = _transactionalController.TransactionalView(1);

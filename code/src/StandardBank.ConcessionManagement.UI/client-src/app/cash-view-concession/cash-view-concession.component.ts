@@ -134,8 +134,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 	        this.lookupDataService.getConditionTypes(),
 	        this.lookupDataService.getAccrualTypes(),
 	        this.lookupDataService.getTableNumbers(ConcessionTypes.Cash),
-	        this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-	        this.lookupDataService.getClientAccounts(this.riskGroupNumber),
+            this.lookupDataService.getRiskGroup(this.riskGroupNumber),
+            this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Cash),
 	        this.cashConcessionService.getCashFinancial(this.riskGroupNumber)
 	    ]).subscribe(results => {
 	            this.channelTypes = <any>results[0];
@@ -302,7 +302,10 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 					currentCondition.get('period').setValue(selectedPeriod[0]);
 
 					rowIndex++;
-				}
+                }
+
+                this.changearray = this.lookupDataService.checkforLC(this.cashConcession.concession.status, this.cashConcession.concession.subStatus, cashConcession.concession.concessionComments);
+
 				this.isLoading = false;
 			}, error => {
 				this.isLoading = false;
@@ -383,6 +386,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
 		let currentCondition = control.controls[rowIndex];
 
+        currentCondition.get('conditionProduct').setValue(null);
 		currentCondition.get('interestRate').setValue(null);
 		currentCondition.get('volume').setValue(null);
 		currentCondition.get('value').setValue(null);
@@ -421,14 +425,14 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 			cashConcession.concession.smtDealNumber = this.cashConcessionForm.controls['smtDealNumber'].value;
 		else
 			this.addValidationError("SMT Deal Number not captured");
-
-		if (this.cashConcessionForm.controls['motivation'].value)
-			cashConcession.concession.motivation = this.cashConcessionForm.controls['motivation'].value;
-		else
-			this.addValidationError("Motivation not captured");
-
+		
 		if (this.cashConcessionForm.controls['comments'].value)
-			cashConcession.concession.comments = this.cashConcessionForm.controls['comments'].value;
+            cashConcession.concession.comments = this.cashConcessionForm.controls['comments'].value;
+
+        if (this.cashConcessionForm.controls['motivation'].value)
+            cashConcession.concession.motivation = this.cashConcessionForm.controls['motivation'].value;
+        else
+            cashConcession.concession.motivation = '.';
 
 		const concessions = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
 
@@ -473,8 +477,10 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 				this.addValidationError("Accrual type not selected");
 			}
 
-			if (concessionFormItem.get('expiryDate').value)
-				cashConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+            if (concessionFormItem.get('expiryDate').value) {
+                cashConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+            }
+
 
 			cashConcession.cashConcessionDetails.push(cashConcessionDetail);
 		}
@@ -635,7 +641,10 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
 			if (!cashConcession.concession.comments) {
 				cashConcession.concession.comments = ConcessionStatus.ApprovedWithChanges;
-			}
+            }
+
+            cashConcession.concession.concessionComments = this.GetChanges(cashConcession.concession.id);
+
 		} else {
 			cashConcession.concession.status = ConcessionStatus.Approved;
 
@@ -667,7 +676,58 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 		} else {
 			this.isLoading = false;
 		}
-	}
+    }
+
+    private GetChanges(concessionid: number): any[] {
+        let comments = this.getChangedProperties();
+
+        let commentarray = [];
+        let comment = new ConcessionComment();
+        comment.concessionId = concessionid;
+        comment.comment = comments;
+        comment.userDescription = "LogChanges";
+        commentarray.push(comment);
+        return commentarray;
+    }
+
+    private getChangedProperties(): string {
+
+        let changedProperties = [];
+        let rowIndex = 0;
+
+        const concessions = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
+
+        //this is detailed line items,  but not yet the controls
+        for (let concessionFormItem of concessions.controls) {
+
+            let controls = (<FormGroup>concessionFormItem).controls;
+
+            for (const fieldname in controls) { // 'field' is a string
+
+                const abstractControl = controls[fieldname];
+                if (abstractControl.dirty) {
+
+                    changedProperties.push({ rowIndex, fieldname });
+                }
+            }
+            rowIndex++;
+        }
+        return JSON.stringify(changedProperties);
+    }
+
+    changearray: any[];
+    checkforchanges: boolean;
+    bcmhochanged(index: number, controlname: string) {
+
+        if (this.changearray) {
+
+            let found = this.changearray.find(f => f.rowIndex == index && f.fieldname == controlname);
+            if (found) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 	pcmDeclineConcession() {
 		this.isLoading = true;
@@ -785,7 +845,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 		this.isLoading = true;
 		this.errorMessage = null;
 
-		this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
+        this.userConcessionsService.recallConcession(this.concessionReferenceId).subscribe(entity => {
 			this.warningMessage = "Concession recalled, please make the required changes and save the concession or it will be lost";
 			this.isRecalling = true;
 			this.isLoading = false;
@@ -890,15 +950,36 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 		} else {
 			this.isLoading = false;
 		}
-	}
+    }
 
+    archiveConcessiondetail(concessionDetailId: number) {
+
+        if (confirm("Please note that the account will be put back to standard pricing. Are you sure you want to delete the concession item ?")) {
+            this.isLoading = true;
+            this.errorMessage = null;
+
+            this.userConcessionsService.deactivateConcessionDetailed(concessionDetailId).subscribe(entity => {
+
+                this.warningMessage = "Concession item has been deleted, and account put back to standard pricing.";
+
+                this.isLoading = false;
+
+                this.ngOnInit();
+
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        }
+    }
+   
 	archiveConcession() {
-		if (confirm("Are you sure you want to archive this concession?")) {
-			this.isLoading = true;
-			this.errorMessage = null;
+        if (confirm("Please note that the account will be put back to standard pricing. Are you sure you want to delete this concession ?")) {
+            this.isLoading = true;
+            this.errorMessage = null;
 
-			this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
-				this.warningMessage = "Concession has been archived.";
+            this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
+                this.warningMessage = "Concession has been deleted, and account put back to standard pricing.";
 
 				this.isLoading = false;
 				this.canBcmApprove = false;

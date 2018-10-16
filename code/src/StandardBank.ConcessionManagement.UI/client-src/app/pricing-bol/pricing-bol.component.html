@@ -34,7 +34,7 @@
                 </div>
             </div>
 
-           
+
             <div class="col-md-1">
                 <div class="compress">
                     <div>
@@ -65,15 +65,15 @@
     </div>
 </div>
 
-<!-- lending concessions and products-->
+<!-- bol concessions and products-->
 <div class="col-md-12">
-    <div class="col-md-5">
+    <div class="col-md-5 search-and-results-container">
         <h2 class="headings">Products</h2>
         <div class="section">
-        
+
             <!-- End of products list -->
             <!-- Empty state for products if no data is found -->
-            <div *ngIf="!bolView?.bolProducts || bolView?.bolProducts?.length == 0">
+            <div *ngIf="!bolView?.bolProductGroups || bolView?.bolProductGroups?.length == 0">
                 <div class="section-body">
                     <div class="searchEmptyState">
                         <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
@@ -81,27 +81,37 @@
                     </div>
                 </div>
             </div>
-         
-                <!-- Products list -->
-                <div class="section-body" *ngFor="let bolprod of bolView.bolProducts">
-                    <div class="product-section">
-                        <div class="product-name">{{bolprod.legalEntity}}</div>
-                        <div>
-                            <div class="product-account">User ID: {{bolprod.bolUserId}}</div>
 
-                        </div>
-                    </div>
+            <!-- Products grouping -->
+
+            <div class="section-body" *ngFor="let bolprodgroup of bolView.bolProductGroups">
+
+                <div class="product-section">
+                    <div class="product-name">{{bolprodgroup.legalEntity}}</div>
+                    <!--<div>
+                        <div class="product-account">User ID: {{bolprodgroup.bolUserId}}</div>
+
+                    </div>-->
+                </div>
+
+                <!-- Products list -->
+                <div class="section-body">
+
                     <div class="product-table-container">
                         <table class="table table-bordered table-hover header-fixed table-striped ">
                             <thead>
                                 <tr>
+                                    <th>User ID </th>
+                                    <th>Product </th>
                                     <th>Charge Code Description</th>
                                     <th>Charge Code</th>
                                     <th>Loaded Rate</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <tr *ngFor="let bolprod of bolprodgroup.bolProducts">
+                                    <td class="leftAlign">{{bolprod.bolUserId}}</td>
+                                    <td class="leftAlign">{{bolprod.bolProductType}}</td>
                                     <td class="leftAlign">{{bolprod.chargeCodeDesc}}</td>
                                     <td class="rightAlign">{{bolprod.chargeCode}}</td>
                                     <td class="rightAlign">{{bolprod.loadedRate}}</td>
@@ -112,6 +122,8 @@
                 </div>
 
 
+            </div>
+
         </div>
     </div>
 
@@ -119,7 +131,7 @@
     <div class="col-md-7 search-and-results-container" id="lending-search-container">
         <h2 class="headings">
             Concessions
-         
+
             <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/bol-add-concession', bolView.riskGroup.number]" *ngIf="pageLoaded && canRequest">Add Concession</button>
         </h2>
 
@@ -158,8 +170,8 @@
                                 <td class="leftAlign">{{concession.chargeCodeDesc}}</td>
                                 <td class="rightAlign">{{concession.chargeCode}}</td>
                                 <td>
-                                    <p class="mapInfo">Loaded:{{concession.loadedRate | number : '1.2-2'}}</p>
-                                    <p class="mapInfo">Approved:{{concession.approvedRate| number : '1.2-2'}}</p>
+                                    <p class="mapInfo">Loaded:{{concession.loadedRate | number : '1.5-5'}}</p>
+                                    <p class="mapInfo">Approved:{{concession.approvedRate| number : '1.5-5'}}</p>
                                 </td>
                             </tr>
                         </tbody>

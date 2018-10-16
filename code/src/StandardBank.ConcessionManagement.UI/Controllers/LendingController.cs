@@ -34,17 +34,23 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// </summary>
         private readonly IMediator _mediator;
 
+        private readonly IBusinessCentreManager _bcmManager;
+
+        private readonly ILookupTableManager _lookupTableManager;
+
         /// <summary>
         /// Initializes the controller
         /// </summary>
         /// <param name="lendingManager"></param>
         /// <param name="siteHelper"></param>
         /// <param name="mediator"></param>
-        public LendingController(ILendingManager lendingManager, ISiteHelper siteHelper, IMediator mediator)
+        public LendingController(ILendingManager lendingManager, ISiteHelper siteHelper, IMediator mediator, IBusinessCentreManager businessCentreManager, ILookupTableManager lookupTableManager)
         {
             _lendingManager = lendingManager;
             _siteHelper = siteHelper;
             _mediator = mediator;
+            _bcmManager = businessCentreManager;
+            _lookupTableManager = lookupTableManager;
         }
 
         /// <summary>
@@ -81,6 +87,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 foreach (var concessionCondition in lendingConcession.ConcessionConditions)
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
 
+            var bcmPendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.NewSubmission);
+
+            if (!string.IsNullOrWhiteSpace(lendingConcession.Concession.Comments))
+                await _mediator.Send(new AddConcessionComment(concession.Id, bcmPendingStatusId,
+                    lendingConcession.Concession.Comments, user));
+
             return Ok(lendingConcession);
         }
 
@@ -98,7 +110,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             LendingConcession lendingConcession = _lendingManager.GetLendingConcession(detail.ReferenceNumber, user);
 
             lendingConcession.Concession.SubStatus = Constants.ConcessionSubStatus.PcmPending;
-            lendingConcession.Concession.BcmUserId = user.Id;
+            lendingConcession.Concession.BcmUserId = _bcmManager.GetBusinessCentreManager(lendingConcession.Concession.CentreId).BusinessCentreManagerId;
             lendingConcession.Concession.Comments = "Manually forwarded by PCM";
             lendingConcession.Concession.IsInProgressForwarding = true;
 
@@ -162,6 +174,17 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             if (!string.IsNullOrWhiteSpace(lendingConcession.Concession.Comments))
                 await _mediator.Send(new AddConcessionComment(concession.Id, databaseLendingConcession.Concession.SubStatusId,
                     lendingConcession.Concession.Comments, user));
+
+            if (lendingConcession.Concession.Comments == "Approved With Changes" && lendingConcession.Concession.ConcessionComments != null)
+            {
+                if (lendingConcession.Concession.ConcessionComments.Count() > 0 && lendingConcession.Concession.ConcessionComments.First().UserDescription == "LogChanges")
+                {
+                    await _mediator.Send(new AddConcessionComment(concession.Id, databaseLendingConcession.Concession.SubStatusId, "LogChanges:" + lendingConcession.Concession.ConcessionComments.First().Comment, user));
+
+
+                }
+            }
+
         }
 
         /// <summary>

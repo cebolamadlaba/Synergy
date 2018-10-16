@@ -102,13 +102,13 @@
 
         <div class="row">
             <label>SMT Deal Number</label>
-            <input class="form-control" formControlName="smtDealNumber" maxlength="16" />
+            <input class="form-control" formControlName="smtDealNumber" maxlength="16"  [attr.disabled]="saveMessage ? '' : null" />
         </div>
 
     </div>
     <div class="col-md-7 col-md-offset-1">
         <label>Motivation</label>
-        <textarea class="form-control large-input" maxlength="800" formControlName="motivation"></textarea>
+        <textarea class="form-control large-input" maxlength="800" formControlName="motivation"  [attr.disabled]="saveMessage ? '' : null"></textarea>
     </div>
 
     <!-- Concession table -->
@@ -134,6 +134,8 @@
             </tr>
         </thead>
         <tbody class="form-concessions-table-content">
+         
+
             <tr *ngFor="let itemrow of bolConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
                 <td class="length-long">
                     <select formControlName="product" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="productTypeChanged(i)">
@@ -147,17 +149,14 @@
                 </td>
                 <td class="length-long">
                     <select formControlName="chargecode" class="form-control" [attr.disabled]="saveMessage ? '' : null">
-                        <option *ngFor="let bolchargecodeOption of bolchargecodesFiltered" [ngValue]="bolchargecodeOption">{{bolchargecodeOption.description}}</option>
+                        <option *ngFor="let bolchargecodeOption of selectedProducts[i].bolchargecodes" [ngValue]="bolchargecodeOption">{{bolchargecodeOption.description}}</option>
                     </select>
                 </td>
 
+
+              
                 <td class="length-long"><input type="number" class="form-control" formControlName="unitcharge" [attr.disabled]="saveMessage ? '' : null" /></td>
-
-
-
-
-
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="saveMessage ? '' : null" /></td>
+                                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="saveMessage ? '' : null" /></td>
 
                 <td class="delete"><button *ngIf="bolConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
@@ -169,7 +168,7 @@
     <div class="col-md-12">
         <div class="row">
             <h3 class="table-title">Conditions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;" *ngIf="!saveMessage">Add Conditions</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;" *ngIf="!saveMessage">Manage Conditions</button>
 
             <div class="table-container">
                 <table class="table table-bordered table-hover header-fixed table-striped">
@@ -188,13 +187,13 @@
                     <tbody class="secondary-text">
                         <tr *ngIf="bolConcessionForm.controls.conditionItemsRows.controls.length == 0">
                             <td colspan="8" class="searchEmptyState">
-                                No conditions has been added
+                                No conditions added
                             </td>
                         </tr>
                         <tr *ngFor="let itemrow of bolConcessionForm.controls.conditionItemsRows.controls; let i=index">
                             <td># {{i + 1}}</td>
-                            <td>{{itemrow.get('conditionType').value.description}}</td>
-                            <td>{{itemrow.get('conditionProduct').value.description}}</td>
+                            <td>{{itemrow.get('conditionType').value?.description}}</td>
+                            <td>{{itemrow.get('conditionProduct').value?.description}}</td>
                             <td><span *ngIf="itemrow.get('interestRate').value">{{itemrow.get('interestRate').value | number:'1.2-2'}}</span></td>
                             <td>{{itemrow.get('volume').value}}</td>
                             <td><span *ngIf="itemrow.get('value').value">{{itemrow.get('value').value | number:'1.2-2'}}</span></td>
@@ -228,7 +227,7 @@
                                 <th>Product Type</th>
                                 <th>Interest Rate</th>
                                 <th>Volume</th>
-                                <th>Value</th>
+                                <th>Value/Balance</th>
                                 <th>Expected Turnover Value</th>
                                 <th>Period Type</th>
                                 <th>Period</th>
@@ -238,7 +237,7 @@
                         <tbody class="form-concessions-table-content">
                             <tr *ngIf="bolConcessionForm.controls.conditionItemsRows.controls.length == 0">
                                 <td colspan="8" class="searchEmptyState">
-                                    No conditions has been added
+                                    No conditions added
                                 </td>
                             </tr>
                             <tr *ngFor="let itemrow of bolConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">

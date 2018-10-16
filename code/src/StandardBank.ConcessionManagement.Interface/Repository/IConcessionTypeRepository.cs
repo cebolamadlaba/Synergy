@@ -28,6 +28,8 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <returns></returns>
         IEnumerable<ConcessionType> ReadAll();
 
+        IEnumerable<ConcessionType> ReadAll(bool isActive);
+
         /// <summary>
         /// Updates the specified model.
         /// </summary>

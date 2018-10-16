@@ -25,5 +25,9 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         BolFinancial GetBolFinancialForRiskGroupNumber(int riskGroupNumber);
 
         Task ForwardBolConcession(BolConcession bolConcession, User user);
+
+        Model.UserInterface.Bol.BOLChargeCode CreateUpdateBOLChargeCode(Model.UserInterface.Bol.BOLChargeCode bolchargecode);
+
+        Model.UserInterface.Bol.BOLChargeCodeType CreateBOLChargeCodeType(Model.UserInterface.Bol.BOLChargeCodeType bolchargecodetype);
     }
 }

@@ -145,7 +145,8 @@
         </div>-->
         <div class="row">
             <label>SMT Deal Number</label>
-            <input type="text" numbersOnly="true" class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="isRecalling ? null : ''">
+            <!--<input type="text" numbersOnly="true" class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="isRecalling ? null : ''">-->
+            <input type="text" numbersOnly="true" class="form-control" [attr.disabled]="(isRecalling || canEdit) ? null : ''" formControlName="smtDealNumber" maxlength="16" required />
         </div>
     </div>
     <div class="col-md-7 col-md-offset-1">
@@ -178,6 +179,7 @@
                 <th *ngIf="isApproved">Approved Table Number</th>
                 <th>Expiry Date</th>
                 <th *ngIf="isApproved">Date Approved</th>
+                <th *ngIf="canArchive"></th>
             </tr>
         </thead>
         <tbody class="form-concessions-table-content">
@@ -188,31 +190,33 @@
                     <input formControlName="isExpired" style="display: none;" />
                     <input formControlName="isExpiring" style="display: none;" />
 
-                    <select formControlName="transactionType" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="transactionTypeChanged(i)">
+                    <select formControlName="transactionType" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="transactionTypeChanged(i)"  [class.markred]="bcmhochanged(i,'transactionType')">
                         <option *ngFor="let transactionTypeOption of transactionTypes" [ngValue]="transactionTypeOption">{{transactionTypeOption.description}}</option>
                     </select>
                 </td>
 
                 <td class="length-long">
-                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit ? null : ''"  [class.markred]="bcmhochanged(i,'accountNumber')">
                         <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
                 </td>
 
                 <td class="length-long">
-                    <select formControlName="transactionTableNumber" class="form-control" (change)="transactionTableNumberChanged(i)" [attr.disabled]="canEdit ? null : ''" *ngIf="selectedTransactionTypes[i] != null">
+                    <select formControlName="transactionTableNumber" class="form-control" (change)="transactionTableNumberChanged(i)" [attr.disabled]="canEdit ? null : ''" *ngIf="selectedTransactionTypes[i] != null"  [class.markred]="bcmhochanged(i,'transactionTableNumber')">
                         <option *ngFor="let transactionTableNumberOption of selectedTransactionTypes[i].transactionTableNumbers" [ngValue]="transactionTableNumberOption">{{transactionTableNumberOption.displayText}}</option>
                     </select>
                 </td>
 
-                <td class="length-long"><input formControlName="flatFeeOrRate" class="form-control"></td>
-                <td class="length-medium"><input formControlName="adValorem" class="form-control"></td>
+                <td class="length-long"><input formControlName="flatFeeOrRate" class="form-control"  [class.markred]="bcmhochanged(i,'flatFeeOrRate')"></td>
+                <td class="length-medium"><input formControlName="adValorem" class="form-control"  [class.markred]="bcmhochanged(i,'adValorem')"></td>
 
                 <td class="length-long" *ngIf="isApproved"><input formControlName="approvedTableNumber" class="form-control"></td>
 
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" /></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)"  [class.markred]="bcmhochanged(i,'expiryDate')" /></td>
                 <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>
-
+                <td *ngIf="canArchive" class="delete">
+                    <button *ngIf="transactionalConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="archiveConcessiondetail(itemrow.get('concessionDetailId').value)" class="btn-delete" title="Remove"><i class="fa fa-trash" aria-hidden="true" style="color:#920000"></i></button>
+                </td>
                 <td *ngIf="canBcmApprove || canPcmApprove || isEditing || isRecalling"><button *ngIf="transactionalConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
         </tbody>
@@ -222,7 +226,7 @@
     <div class="col-md-12">
         <div class="row">
             <h3 class="table-title">Conditions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;" *ngIf="canPcmApprove || isEditing || isRecalling">Add Conditions</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;" *ngIf="canPcmApprove || isEditing || isRecalling">Manage Conditions</button>
 
             <div class="table-container">
                 <table class="table table-bordered table-hover header-fixed table-striped">
@@ -241,13 +245,13 @@
                     <tbody class="secondary-text">
                         <tr *ngIf="transactionalConcessionForm.controls.conditionItemsRows.controls.length == 0">
                             <td colspan="8" class="searchEmptyState">
-                                No conditions has been added
+                                No conditions added
                             </td>
                         </tr>
                         <tr *ngFor="let itemrow of transactionalConcessionForm.controls.conditionItemsRows.controls; let i=index">
                             <td># {{i + 1}}</td>
-                            <td>{{itemrow.get('conditionType').value.description}}</td>
-                            <td>{{itemrow.get('conditionProduct').value.description}}</td>
+                            <td>{{itemrow.get('conditionType').value?.description}}</td>
+                            <td>{{itemrow.get('conditionProduct').value?.description}}</td>
                             <td><span *ngIf="itemrow.get('interestRate').value">{{itemrow.get('interestRate').value | number:'1.2-2'}}</span></td>
                             <td>{{itemrow.get('volume').value}}</td>
                             <td><span *ngIf="itemrow.get('value').value">{{itemrow.get('value').value | number:'1.2-2'}}</span></td>
@@ -291,7 +295,7 @@
                         <tbody class="form-concessions-table-content">
                             <tr *ngIf="transactionalConcessionForm.controls.conditionItemsRows.controls.length == 0">
                                 <td colspan="8" class="searchEmptyState">
-                                    No conditions has been added
+                                    No conditions added
                                 </td>
                             </tr>
                             <tr *ngFor="let itemrow of transactionalConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
@@ -360,7 +364,7 @@
                                 No comments added.
                             </td>
                         </tr>
-                        <tr *ngFor="let comment of transactionalConcession.concession.concessionComments">
+                        <tr *ngFor="let comment of transactionalConcession.concession.concessionComments | commentsFilter : 'LogChanges';">
                             <td>{{comment.userDescription}}</td>
                             <td>{{comment.concessionSubStatusDescription}}</td>
                             <td>{{comment.comment}}</td>

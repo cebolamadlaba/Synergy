@@ -13,6 +13,8 @@
         /// </value>
         public string EmailAddress { get; set; }
 
+        public string ServerURL { get; set; }
+
         /// <summary>
         /// Gets or sets the name.
         /// </summary>

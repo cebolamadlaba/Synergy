@@ -93,7 +93,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             Assert.NotNull(result);
             Assert.NotEmpty(result.LendingConcessions);
             Assert.NotNull(result.RiskGroup);
-            Assert.NotEmpty(result.LendingProducts);
+            Assert.NotEmpty(result.LendingProductGroups);
             Assert.NotNull(result.LendingFinancial);
             Assert.Equal(result.LendingFinancial.TotalExposure, 100);
         }

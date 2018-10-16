@@ -191,6 +191,8 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// </value>
         public bool IsCurrent { get; set; }
 
+        public DateTime? Archived { get; set; }
+
         /// <summary>
         /// Gets or sets the IsActive.
         /// </summary>

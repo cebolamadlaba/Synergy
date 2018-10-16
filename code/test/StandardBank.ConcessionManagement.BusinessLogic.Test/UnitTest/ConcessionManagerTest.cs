@@ -37,7 +37,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 MockConcessionConditionRepository.Object, MockConcessionCommentRepository.Object,
                 MockConcessionRelationshipRepository.Object, MockAuditRepository.Object, MockUserManager.Object,
                 MockConcessionInboxViewRepository.Object, MockConcessionDetailRepository.Object,
-                MockConcessionConditionViewRepository.Object, MockMiscPerformanceRepository.Object, MockCentreRepository.Object, null);
+                MockConcessionConditionViewRepository.Object, MockMiscPerformanceRepository.Object, MockCentreRepository.Object, null,null);
         }
 
         /// <summary>
@@ -236,10 +236,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         [Fact]
         public void GetClientAccounts_CanRequest_True_Executes_Positive()
         {
-            MockMiscPerformanceRepository.Setup(_ => _.GetClientAccounts(It.IsAny<int>(), It.IsAny<int?>()))
+            MockMiscPerformanceRepository.Setup(_ => _.GetClientAccounts(It.IsAny<int>(), It.IsAny<int?>(), ""))
                 .Returns(new[] {new ClientAccount()});
 
-            var result = _concessionManager.GetClientAccounts(1, new User {  CanRequest = true});
+            var result = _concessionManager.GetClientAccounts(1, new User {  CanRequest = true},"");
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
@@ -251,10 +251,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         [Fact]
         public void GetClientAccounts_CanRequest_False_Executes_Positive()
         {
-            MockMiscPerformanceRepository.Setup(_ => _.GetClientAccounts(It.IsAny<int>(), It.IsAny<int?>()))
+            MockMiscPerformanceRepository.Setup(_ => _.GetClientAccounts(It.IsAny<int>(), It.IsAny<int?>(),""))
                 .Returns(new[] { new ClientAccount() });
 
-            var result = _concessionManager.GetClientAccounts(1, new User { CanRequest = false });
+            var result = _concessionManager.GetClientAccounts(1, new User { CanRequest = false },"");
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
@@ -418,7 +418,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockConcessionRepository.Setup(_ => _.ReadByConcessionRefIsActive(It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns(new[] { new Concession() });
 
-            var result = _concessionManager.DeactivateConcession("U100", new User());
+            var result = _concessionManager.DeactivateConcession("U100", true ,new User());
 
             Assert.NotNull(result);
         }

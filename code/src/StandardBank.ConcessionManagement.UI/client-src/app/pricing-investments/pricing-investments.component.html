@@ -1,4 +1,4 @@
-<!-- banner-->
+
 <div class="col-md-12 banner">
     <div class="row">
         <!-- Header -->
@@ -12,27 +12,29 @@
             </div>
             <div class="col-md-1"></div>
         </div>
-
         <!-- Dashboard Expanded -->
         <div class="col-md-12 banner-container" *ngIf="showHide">
             <div class="col-md-11">
                 <div class="col-md-5">
-                    <div class="subHeading">Risk Group Name //TODO</div>
-                    <div class="date lightTitle hidden-element">Risk Group Number //TODO</div>
+                    <div class="subHeading">{{investmentView.riskGroup.name}}</div>
+                    <div class="date lightTitle hidden-element">{{investmentView.riskGroup.number}}</div>
+
                 </div>
-                <div class="col-md-2 hidden-element">
-                    <div class="subHeading lightTitle">Total Liability Balances</div>
-                    <div class="score"><b>//TODO</b></div>
+                <div class="col-md-2  hidden-element">
+                    <div class="subHeading lightTitle"> Total liability balances</div>
+                    <div class="score"><b>{{investmentView.investmentFinancial.totalLiabilityBalances | number : '1.2-2'}}</b></div>
                 </div>
-                <div class="col-md-2 hidden-element">
-                    <div class="subHeading lightTitle">Weighted Average MTP</div>
-                    <div class="score"><b>//TODO</b></div>
+                <div class="col-md-2  hidden-element">
+                    <div class="subHeading lightTitle"> Weighted Average MTP</div>
+                    <div class="score"><b>{{investmentView.investmentFinancial.weightedAverageMTP | number : '1.2-2'}}</b></div>
                 </div>
-                <div class="col-md-2 hidden-element">
-                    <div class="subHeading lightTitle">Weighted Average Net Margin</div>
-                    <div class="score"><b>//TODO</b></div>
+                <div class="col-md-2  hidden-element">
+                    <div class="subHeading lightTitle"> Weighted Average Net Margin</div>
+                    <div class="score"><b>{{investmentView.investmentFinancial.weightedAverageNetMargin | number : '1.2-2'}}</b></div>
                 </div>
             </div>
+
+
             <div class="col-md-1">
                 <div class="compress">
                     <div>
@@ -46,8 +48,8 @@
             <div class="col-md-11">
                 <div>
                     <div class="col-md-5">
-                        <div class="subHeading">Risk Group Name //TODO</div>
-                        <div class="date lightTitle hidden-element">Risk Group Number //TODO</div>
+                        <div class="subHeading">{{investmentView.riskGroup.name}}</div>
+                        <div class="date lightTitle hidden-element">{{investmentView.riskGroup.number}}</div>
                     </div>
                 </div>
             </div>
@@ -59,99 +61,110 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 
 <!-- lending concessions and products-->
 <div class="col-md-12">
-    <div class="col-md-5">
+    <div class="col-md-6 search-and-results-container">
         <h2 class="headings">Products</h2>
         <div class="section">
 
+            <!-- End of products list -->
             <!-- Empty state for products if no data is found -->
-            <!--<div *ngIf="!investmentsView.sourceSystemProducts">
+            <div *ngIf="!investmentView?.investmentProductGroups || investmentView?.investmentProductGroups?.length == 0">
                 <div class="section-body">
                     <div class="searchEmptyState">
                         <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
                         <p>No product data found</p>
                     </div>
                 </div>
-            </div>-->
-            <!-- End of empty state -->
-            <!-- Products list -->
-            <div class="section-body">
+            </div>
+
+
+            <!-- Products grouping -->
+
+            <div class="section-body" *ngFor="let investmentprodgroup of investmentView.investmentProductGroups">
+
                 <div class="product-section">
-                    <div class="product-name">Customer Name //TODO</div>
-                    <div>
-                        <div class="product-account">Account No: //TODO</div>
-                        <div class="product-code">Product: //TODO</div>
+                    <div class="product-name">{{investmentprodgroup.legalEntity}}</div>
+
+                </div>
+
+                <!-- Products list -->
+                <div class="section-body">
+
+                    <div class="product-table-container">
+                        <table class="table table-bordered table-hover header-fixed table-striped ">
+                            <thead>
+                                <tr>
+                                    <th>Account(No.)</th>
+                                    <th>Product </th>                                  
+                                    <th>Loaded Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let investmentprod of investmentprodgroup.investmentProducts">
+                                    <td class="leftAlign">{{investmentprod.accountNumber}}</td>
+                                  
+                                    <td class="leftAlign">{{investmentprod.investmentProductName}}</td>
+
+                                    <td class="rightAlign">{{investmentprod.loadedRate}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="product-table-container">
-                    <table class="table table-bordered table-hover header-fixed table-striped ">
-                        <thead>
-                            <tr>
-                                <th>AVG Balance</th>
-                                <th>Loaded Customer Rate</th>                               
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Loop through available products here -->
-                            <tr>
-                                <td class="rightAlign">//TODO</td>
-                                <td class="rightAlign">//TODO</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
             </div>
-            <!-- End of products list -->
 
         </div>
     </div>
 
     <!-- Concessions list -->
-    <div class="col-md-7 search-and-results-container" id="lending-search-container">
+    <div class="col-md-6 search-and-results-container" id="lending-search-container">
         <h2 class="headings">
             Concessions
-            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/investments-add-concession']">Add Concession</button>
+
+            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/investments-add-concession', investmentView.riskGroup.number]" *ngIf="pageLoaded && canRequest">Add Concession</button>
         </h2>
 
-        <!-- Search bar -->
+
         <div class="input-group add-on">
             <input class="form-control" placeholder="Concession ID" [(ngModel)]="filterConcessionId" type="text">
         </div>
 
-        <!-- Concession list -->
-        <div class="section">
-
-            <div class="section-header small-table-title">
-                <div class="concessionID-section">//TODO</div>
+        <div class="section" *ngFor="let investmentConcession of investmentView.investmentConcessions | baseConcessionFilter : filterConcessionId; trackBy: index;">
+            <div class="section-header">
+                <div class="concessionID-section">
+                    <div class="concession-status">
+                        <div [ngClass]="{'approved-status': (investmentConcession.concession.status==='Approved') || (investmentConcession.concession.status==='Approved With Changes'),'pending-status': investmentConcession.concession.status==='Pending', 'declined-status': investmentConcession.concession.status==='Declined'}">{{investmentConcession.concession.status}}</div>
+                    </div>
+                    <p class="concession-id">{{investmentConcession.concession.referenceNumber}}</p>
+                    <div class="concession-sub-status">{{investmentConcession.concession.subStatus}}</div>
+                </div>
             </div>
             <div class="section-body">
-                <div class="table-container">
+                <div class="table-container" [routerLink]="['/investments-view-concession', investmentView.riskGroup.number, investmentConcession.concession.referenceNumber]">
                     <table class="table table-bordered table-hover header-fixed table-striped">
                         <thead>
                             <tr>
-                                <th>Customer</th>         
-                                <th>Product</th>
-                                <th>Average Balance</th>
-                                <th>Loaded Customer Rate</th>
-                                <th>Approved Customer Rate</th>
+                                <th>Legal Entity</th>
+                                <th>Product</th>                               
+                                <th>Account(No.)</th>
+                                <th>Rate</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Loop through available concessions here -->
-                            <tr>
+                            <tr *ngFor="let concession of investmentConcession.investmentConcessionDetails; trackBy: index;">
+                                <td>{{concession.legalEntity}}</td>
+                             
+                                <td class="leftAlign">{{concession.investmentProduct}}</td>
+
+                                <td class="rightAlign">{{concession.accountNumber}}</td>
                                 <td>
-                                    <p class="customerInfo">//TODO</p>
-                                    <p class="accInfo">Acc No : //TODO</p>
+                                    <p class="mapInfo">Loaded:{{concession.loadedRate | number : '1.5-5'}}</p>
+                                    <p class="mapInfo">Approved:{{concession.approvedRate| number : '1.5-5'}}</p>
                                 </td>
-                                <td class="rightAlign">//TODO</td>
-                                <td class="rightAlign">//TODO</td>
-                                <td class="rightAlign">//TODO</td>
-                                <td class="rightAlign">//TODO</td>                             
                             </tr>
                         </tbody>
                     </table>
@@ -159,8 +172,8 @@
             </div>
         </div>
 
-        <!-- Empty state if no concessions found -->
-        <div class="searchEmptyState">
+
+        <div class="searchEmptyState" *ngIf="(investmentView.investmentConcessions | baseConcessionFilter: filterConcessionId).length === 0">
             <i class="fa fa-inbox" aria-hidden="true"></i>
             <p>No concessions found matching your search</p>
         </div>

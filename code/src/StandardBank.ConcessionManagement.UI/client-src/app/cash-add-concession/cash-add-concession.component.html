@@ -1,4 +1,4 @@
-﻿<!-- Banner expanded -->
+<!-- Banner expanded -->
 <div class="col-md-12 banner">
     <div class="row">
         <div class="lending-banner-title">
@@ -124,38 +124,42 @@
         </tr>
         </thead>
         <tbody class="form-concessions-table-content">
-        <tr *ngFor="let itemrow of cashConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
-            <td class="length-long">
-                <select formControlName="channelType" class="form-control" [attr.disabled]="saveMessage ? '' : null">
-                    <option *ngFor="let channelTypeOption of channelTypes" [ngValue]="channelTypeOption">{{channelTypeOption.description}}</option>
-                </select>
-            </td>
+            <tr *ngFor="let itemrow of cashConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
+                <td class="length-long">
+                    <select formControlName="channelType" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                        <option *ngFor="let channelTypeOption of channelTypes" [ngValue]="channelTypeOption">{{channelTypeOption.description}}</option>
+                    </select>
 
-            <td class="length-long">
-                <select formControlName="accountNumber" class="form-control" [attr.disabled]="saveMessage ? '' : null">
-                    <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
-                </select>
-            </td>
+                </td>
 
-            <td class="length-long">
-                <select formControlName="tableNumber" class="form-control" (change)="tableNumberChanged(i)" [attr.disabled]="saveMessage ? '' : null">
-                    <option *ngFor="let tableNumberOption of tableNumbers" [ngValue]="tableNumberOption">{{tableNumberOption.displayText}}</option>
-                </select>
-            </td>
+                <td class="length-long">
+                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                        <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
+                    </select>
+                </td>
 
-            <td class="length-long"><input class="form-control" formControlName="baseRate" /></td>
-            <td class="length-short"><input class="form-control" formControlName="adValorem" /></td>
+                <td class="length-long">
+                    <select formControlName="tableNumber" class="form-control" (change)="tableNumberChanged(i)" [attr.disabled]="saveMessage ? '' : null">
+                        <option *ngFor="let tableNumberOption of tableNumbers" [ngValue]="tableNumberOption">{{tableNumberOption.displayText}}</option>
+                    </select>
+                </td>
 
-            <td class="length-medium">
-                <select formControlName="accrualType" class="form-control" [attr.disabled]="saveMessage ? '' : null">
-                    <option *ngFor="let accrualTypeOption of accrualTypes" [ngValue]="accrualTypeOption">{{accrualTypeOption.description}}</option>
-                </select>
-            </td>
+                <td class="length-long"><input class="form-control" formControlName="baseRate" /></td>
+                <td class="length-short"><input class="form-control" formControlName="adValorem" /></td>
 
-            <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="saveMessage ? '' : null" /></td>
+                <td class="length-medium">
+                    <select formControlName="accrualType" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                        <option *ngFor="let accrualTypeOption of accrualTypes" [ngValue]="accrualTypeOption">{{accrualTypeOption.description}}</option>
+                    </select>
+                </td>
 
-            <td class="delete"><button *ngIf="cashConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
-        </tr>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="saveMessage ? '' : null" /></td>
+
+                <td class="delete"><button *ngIf="cashConcessionForm.controls.concessionItemRows.controls.length >= 1 && !saveMessage" (click)="copyConcessionRow(i)" class="btn-delete"><i class="fa fa-copy" aria-hidden="true"></i></button></td>
+
+                <td class="delete"><button *ngIf="cashConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+
+            </tr>
         </tbody>
     </table>
 
@@ -163,7 +167,7 @@
     <div class="col-md-12">
         <div class="row">
             <h3 class="table-title">Conditions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;" *ngIf="!saveMessage">Add Conditions</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;" *ngIf="!saveMessage">Manage Conditions</button>
 
             <div class="table-container">
                 <table class="table table-bordered table-hover header-fixed table-striped">
@@ -182,13 +186,13 @@
                     <tbody class="secondary-text">
                     <tr *ngIf="cashConcessionForm.controls.conditionItemsRows.controls.length == 0">
                         <td colspan="8" class="searchEmptyState">
-                            No conditions has been added
+                            No conditions added
                         </td>
                     </tr>
                     <tr *ngFor="let itemrow of cashConcessionForm.controls.conditionItemsRows.controls; let i=index">
                         <td># {{i + 1}}</td>
-                        <td>{{itemrow.get('conditionType').value.description}}</td>
-                        <td>{{itemrow.get('conditionProduct').value.description}}</td>
+                        <td>{{itemrow.get('conditionType').value?.description}}</td>
+                        <td>{{itemrow.get('conditionProduct').value?.description}}</td>
                         <td><span *ngIf="itemrow.get('interestRate').value">{{itemrow.get('interestRate').value | number:'1.2-2'}}</span></td>
                         <td>{{itemrow.get('volume').value}}</td>
                         <td><span *ngIf="itemrow.get('value').value">{{itemrow.get('value').value | number:'1.2-2'}}</span></td>
@@ -232,7 +236,7 @@
                         <tbody class="form-concessions-table-content">
                             <tr *ngIf="cashConcessionForm.controls.conditionItemsRows.controls.length == 0">
                                 <td colspan="8" class="searchEmptyState">
-                                    No conditions has been added
+                                    No conditions added
                                 </td>
                             </tr>
                             <tr *ngFor="let itemrow of cashConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">

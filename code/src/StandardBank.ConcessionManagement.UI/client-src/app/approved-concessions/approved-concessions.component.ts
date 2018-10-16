@@ -1,10 +1,15 @@
 import { Component, OnInit, Inject } from '@angular/core';
+import { HttpClient, HttpRequest, HttpEventType, HttpResponse } from '@angular/common/http';
+
 import { Observable } from "rxjs";
 import { UserConcessionsService } from "../services/user-concessions.service";
 import { Router, RouterModule } from '@angular/router';
 import { ApprovedConcession } from "../models/approved-concession";
 import { ApprovedConcessionDetail } from "../models/approved-concession-detail";
 import { ConcessionTypes } from '../constants/concession-types';
+
+
+
 
 @Component({
     selector: 'app-approved-concessions',
@@ -16,10 +21,12 @@ export class ApprovedConcessionsComponent implements OnInit {
     saveMessage: String;
     isLoading = true;
 
+    public uploadProgress: number;
+
     observableApprovedConcessions: Observable<ApprovedConcession[]>;
     approvedConcessions: ApprovedConcession[];
 
-    constructor( @Inject(UserConcessionsService) private userConcessionsService, private router: Router) { }
+    constructor( @Inject(UserConcessionsService) private userConcessionsService, private router: Router, private http: HttpClient) { }
 
     ngOnInit() {
         this.observableApprovedConcessions = this.userConcessionsService.getApprovedConcessions();
@@ -28,6 +35,7 @@ export class ApprovedConcessionsComponent implements OnInit {
             this.isLoading = false;
         }, error => {
             this.errorMessage = <any>error;
+            this.isLoading = false;
             this.isLoading = false;
         });
     }
@@ -46,12 +54,18 @@ export class ApprovedConcessionsComponent implements OnInit {
             case ConcessionTypes.BOL:
                 this.router.navigate(['/bol-view-concession', approvedConcession.riskGroupNumber, approvedConcessionDetail.referenceNumber]);
                 break;
+            case ConcessionTypes.Trade:
+                this.router.navigate(['/trade-view-concession', approvedConcession.riskGroupNumber, approvedConcessionDetail.referenceNumber]);
+                break;
+            case ConcessionTypes.Investment:
+                this.router.navigate(['/investments-view-concession', approvedConcession.riskGroupNumber, approvedConcessionDetail.referenceNumber]);
+                break;
         }
-    }
+    } 
 
     printConcession(legalEntityId: number) {
         var selectedConcessions = this.approvedConcessions.filter(items => items.legalEntityId == legalEntityId);
-        var concessionDetailIds = "";
+        var concessionIds = "";
 
         //if there are selected concessions we need to get the concession detail id's and use those to
         //generate the concession letter, otherwise it means the user is choosing to generate the
@@ -63,20 +77,53 @@ export class ApprovedConcessionsComponent implements OnInit {
 
                 if (selectedConcessionDetails != null && selectedConcessionDetails.length > 0) {
                     for (var j = 0; j < selectedConcessionDetails.length; j++) {
-                        if (concessionDetailIds.length == 0) {
-                            concessionDetailIds = String(selectedConcessionDetails[j].concessionDetailId);
+                        if (concessionIds.length == 0) {
+                            concessionIds = String(selectedConcessionDetails[j].concessionId);
                         } else {
-                            concessionDetailIds = concessionDetailIds + "," + String(selectedConcessionDetails[j].concessionDetailId);
+                            concessionIds = concessionIds + "," + String(selectedConcessionDetails[j].concessionId);
                         }
                     }
                 }
             }
         }
 
-        if (concessionDetailIds != null && concessionDetailIds.length > 0) {
-            window.open("/api/Concession/GenerateConcessionLetterForConcessionDetails/" + concessionDetailIds);
+        if (concessionIds != null && concessionIds.length > 0) {
+            window.open("/api/Concession/GenerateConcessionLetterForConcessions/" + concessionIds);
         } else {
             window.open("/api/Concession/GenerateConcessionLetterForLegalEntity/" + legalEntityId);
+        }
+    }
+
+    upload(event, concessionDetailId) {
+        let reader = new FileReader();
+        if (event.target.files && event.target.files.length > 0) {
+            let file = event.target.files[0];
+
+            const formData = new FormData();
+            formData.append("ConcessionDetailedId", concessionDetailId);
+            formData.append("file", file);
+      
+
+            const req = new HttpRequest('POST', 'api/Concession/UploadLetter' , formData, {
+                reportProgress: true,
+            });
+
+            this.http.request(req).subscribe(event => {
+                if (event.type === HttpEventType.UploadProgress)
+                    this.uploadProgress = Math.round(100 * event.loaded / event.total);
+                else if (event instanceof HttpResponse)
+                    console.log('Files uploaded!');
+
+                this.observableApprovedConcessions = this.userConcessionsService.getApprovedConcessions();
+                this.observableApprovedConcessions.subscribe(approvedConcession => {
+                    this.approvedConcessions = approvedConcession;
+                    this.isLoading = false;
+                }, error => {
+                    this.errorMessage = <any>error;
+                    this.isLoading = false;
+                    this.isLoading = false;
+                });
+            });           
         }
     }
 }

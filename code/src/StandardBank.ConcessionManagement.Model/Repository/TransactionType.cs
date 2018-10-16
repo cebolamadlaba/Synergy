@@ -36,5 +36,9 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The IsActive.
         /// </value>
         public bool IsActive { get; set; }
+
+        public int? pkTransactionTypeImportId { get; set; }
+
+        public string ImportFileChannel { get; set; }
     }
 }

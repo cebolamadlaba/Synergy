@@ -84,5 +84,9 @@
         /// The uff fee.
         /// </value>
         public string UFFFee { get; set; }
+
+        public string Limit { get; set; }
+
+
     }
 }

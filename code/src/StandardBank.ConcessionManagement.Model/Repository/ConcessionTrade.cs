@@ -19,55 +19,35 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// <value>
         /// The TransactionTypeId.
         /// </value>
-        public int? TransactionTypeId { get; set; }
+        public int? fkTradeProductId { get; set; }
+     
+        public int? fkLegalEntityAccountId { get; set; }     
 
-        /// <summary>
-        /// Gets or sets the ChannelTypeId.
-        /// </summary>
-        /// <value>
-        /// The ChannelTypeId.
-        /// </value>
-        public int? ChannelTypeId { get; set; }
+        public int? fkLegalEntityGBBNumber { get; set; }
 
-        /// <summary>
-        /// Gets or sets the BaseRateId.
-        /// </summary>
-        /// <value>
-        /// The BaseRateId.
-        /// </value>
-        public int? BaseRateId { get; set; }
+        public int? fkLegalEntityId { get; set; }
+      
+        public decimal? LoadedRate { get; set; }
 
-        /// <summary>
-        /// Gets or sets the TableNumber.
-        /// </summary>
-        /// <value>
-        /// The TableNumber.
-        /// </value>
-        public int? TableNumber { get; set; }
+        public decimal? ApprovedRate { get; set; }
 
-        /// <summary>
-        /// Gets or sets the TransactionVolume.
-        /// </summary>
-        /// <value>
-        /// The TransactionVolume.
-        /// </value>
-        public int? TransactionVolume { get; set; }
+        public string GBBNumber { get; set; }
 
-        /// <summary>
-        /// Gets or sets the TransactionValue.
-        /// </summary>
-        /// <value>
-        /// The TransactionValue.
-        /// </value>
-        public decimal? TransactionValue { get; set; }
+        public decimal? min { get; set; }
 
-        /// <summary>
-        /// Gets or sets the AdValorem.
-        /// </summary>
-        /// <value>
-        /// The AdValorem.
-        /// </value>
+        public decimal? max { get; set; }
+
+        public int? term { get; set; }
+
+        public string Communication { get; set; }
+
+        public decimal? FlatFee { get; set; }
+
+        public decimal? EstablishmentFee { get; set; }
+       
         public decimal? AdValorem { get; set; }
+
+        public string Currency { get; set; }
 
         /// <summary>
         /// Gets or the name of the table.

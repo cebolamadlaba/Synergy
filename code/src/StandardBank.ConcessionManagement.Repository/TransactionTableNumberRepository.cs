@@ -58,6 +58,90 @@ namespace StandardBank.ConcessionManagement.Repository
             return model;
         }
 
+
+
+        public TransactionTableNumber CreateupdateTransactionTableNumber(TransactionTableNumber model)
+        {           
+                if (model.Id == 0)
+                {
+                    const string sql =
+                    @"INSERT [dbo].[rtblTransactionTableNumber] ([fkTransactionTypeId], [TariffTable], [Fee], [AdValorem],[IsActive]) 
+                        VALUES (@fkTransactionTypeId, @TariffTable, @Fee, @AdValorem,@IsActive) 
+                        SELECT CAST(SCOPE_IDENTITY() as int)";
+
+                    using (var db = _dbConnectionFactory.Connection())
+                    {
+                    model.Id = db.Query<int>(sql,
+                        new
+                        {
+                            fkTransactionTypeId = model.TransactionTypeId,
+                            TariffTable = model.TariffTable,
+                            Fee = model.Fee,
+                            AdValorem = model.AdValorem,
+                            IsActive = true
+                            }).Single();
+                    }
+                }
+                else
+                {
+                    //insert a new value, if any values except isactive changes..
+                    const string sql =
+                    @"if not exists(Select [fkTransactionTypeId],TariffTable, fee, AdValorem, isactive from rtblTransactionTableNumber where pkTransactionTableNumberId = @pkTransactionTableNumberId and TariffTable = @TariffTable and fee =  @Fee and AdValorem = @AdValorem)
+                        INSERT [dbo].[rtblTransactionTableNumber] ([fkTransactionTypeId], [TariffTable], [Fee], [AdValorem],[IsActive],[ActiveUntil]) 
+                            Select [fkTransactionTypeId], [TariffTable], [Fee], [AdValorem],0,@ActiveUntil from rtblTransactionTableNumber where pkTransactionTableNumberId = @pkTransactionTableNumberId;
+
+                    Update [dbo].[rtblTransactionTableNumber] set [fkTransactionTypeId] = @fkTransactionTypeId , [TariffTable] =  @TariffTable, [Fee] = @Fee , [AdValorem] = @AdValorem, [IsActive] = @IsActive where pkTransactionTableNumberId = @pkTransactionTableNumberId";
+
+                    using (var db = _dbConnectionFactory.Connection())
+                    {
+                    db.Execute(sql,
+                       new
+                       {
+                           fkTransactionTypeId = model.TransactionTypeId,
+                           TariffTable = model.TariffTable,
+                           Fee = model.Fee,
+                           AdValorem = model.AdValorem,
+                           IsActive = model.IsActive,
+                           pkTransactionTableNumberId = model.Id,
+                           ActiveUntil = DateTime.Now
+                           });
+                    }
+                }
+          
+             _cacheManager.Remove(CacheKey.Repository.MiscPerformanceRepository.GetClientAccounts);
+
+            _cacheManager.Remove(CacheKey.Repository.TransactionTableNumberRepository.ReadAll);
+
+            return model;
+
+        }
+
+        public TransactionType Create(TransactionType model)
+        {
+            const string sql = @"INSERT [dbo].[rtblTransactionType] ([fkConcessionTypeId], [Description], [IsActive]) 
+                                VALUES (@fkConcessionTypeId, @Description, @IsActive) 
+                                SELECT CAST(SCOPE_IDENTITY() as int)";
+
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                model.Id = db.Query<int>(sql, new { fkConcessionTypeId = model.ConcessionTypeId, Description = model.Description, IsActive = true }).Single();
+
+
+                if (model.ImportFileChannel != "" && model.Id > 0)
+                {
+                    string insert = @"INSERT INTO [dbo].[rtblTransactionTypeImport]([fkTransactionTypeId],[ImportFileChannel]) values(@fkTransactionTypeId,@ImportFileChannel);";
+                    db.Execute(insert, new { fkTransactionTypeId = model.Id, ImportFileChannel = model.ImportFileChannel });
+                }
+
+
+            }
+
+            //clear out the cache because the data has changed
+            _cacheManager.Remove(CacheKey.Repository.TransactionTypeRepository.ReadAll);
+
+            return model;
+        }
+
         /// <summary>
         /// Reads the by identifier.
         /// </summary>
@@ -78,7 +162,7 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 using (var db = _dbConnectionFactory.Connection())
             	{
-                	return db.Query<TransactionTableNumber>("SELECT [pkTransactionTableNumberId] [Id], [fkTransactionTypeId] [TransactionTypeId], [TariffTable], [Fee], [AdValorem], [IsActive] FROM [dbo].[rtblTransactionTableNumber]");
+                	return db.Query<TransactionTableNumber>("SELECT [pkTransactionTableNumberId] [Id], [fkTransactionTypeId] [TransactionTypeId], [TariffTable], [Fee], [AdValorem], [IsActive] FROM [dbo].[rtblTransactionTableNumber] where ActiveUntil is null");
             	}
             };
 
@@ -89,19 +173,20 @@ namespace StandardBank.ConcessionManagement.Repository
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        public void Update(TransactionTableNumber model)
-        {
-            using (var db = _dbConnectionFactory.Connection())
-            {
-                db.Execute(@"UPDATE [dbo].[rtblTransactionTableNumber]
-                            SET [fkTransactionTypeId] = @TransactionTypeId, [TariffTable] = @TariffTable, [Fee] = @Fee, [AdValorem] = @AdValorem, [IsActive] = @IsActive
-                            WHERE [pkTransactionTableNumberId] = @Id",
-                    new {Id = model.Id, TransactionTypeId = model.TransactionTypeId, TariffTable = model.TariffTable, Fee = model.Fee, AdValorem = model.AdValorem, IsActive = model.IsActive});
-            }
+        //public void Update(TransactionTableNumber model)
+        //{
+        //    using (var db = _dbConnectionFactory.Connection())
+        //    {
+        //        db.Execute(@"Insert in
+        //                    UPDATE [dbo].[rtblTransactionTableNumber]
+        //                    SET [fkTransactionTypeId] = @TransactionTypeId, [TariffTable] = @TariffTable, [Fee] = @Fee, [AdValorem] = @AdValorem, [IsActive] = @IsActive
+        //                    WHERE [pkTransactionTableNumberId] = @Id",
+        //            new {Id = model.Id, TransactionTypeId = model.TransactionTypeId, TariffTable = model.TariffTable, Fee = model.Fee, AdValorem = model.AdValorem, IsActive = model.IsActive});
+        //    }
 
-            //clear out the cache because the data has changed
-            _cacheManager.Remove(CacheKey.Repository.TransactionTableNumberRepository.ReadAll);
-        }
+        //    //clear out the cache because the data has changed
+        //    _cacheManager.Remove(CacheKey.Repository.TransactionTableNumberRepository.ReadAll);
+        //}
 
         /// <summary>
         /// Deletes the specified model.

@@ -1,0 +1,261 @@
+<div class="col-md-2" style="margin-top: 15px;">
+    <i class="fa fa-chevron-circle-left" aria-hidden="true" style="font-size: 1.1em;"></i>
+    <span class="back-button-text" style="font-size: 1.1em;" (click)="goBack()">Administration</span>
+</div>
+
+<div class="col-md-12">
+    <h3>Transactional Tariff tables</h3>
+</div>
+
+<!-- Success message -->
+<div class="col-md-12" *ngIf="saveMessage && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-success">
+            <p class="message-heading"><i class="fa fa-check-circle" aria-hidden="true"></i>{{saveMessage}}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Loading message -->
+<div class="col-md-12" *ngIf="isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-info">
+            <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Loading</p>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12 search-and-results-container" *ngIf="!isLoading">
+    <!-- Input form -->
+    <div class="form-inline" *ngIf="canAdd">
+
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row" style="padding: 8px 0px 8px 0px">
+                <div class="col-sm-6">
+                    <button class="btn btn-primary" type="button" (click)="addDetails()">Add Transactional Tariff table</button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <select [(ngModel)]="selectedProduct" class="form-control" (change)="filterDetails(selectedProduct)">
+                        <option *ngFor="let transactiontypeoption of transactiontypes" [ngValue]="transactiontypeoption">{{transactiontypeoption.description}}</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Results table -->
+    <div class="table-container">
+        <table class="table table-bordered table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Table Number</th>
+                    <th>Fee</th>
+                    <th>Advalorem</th>
+                    <th>Is Active</th>
+                    <th style="width:130px">Disable /Enabled</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr *ngFor='let tablenumberOption of tablenumbersFiltered; trackBy: index' (click)="editDetails(tablenumberOption)">
+
+                    <td>{{tablenumberOption.tariffTable}}</td>
+                    <td>{{tablenumberOption.fee}}</td>
+                    <td>{{tablenumberOption.adValorem}}</td>
+
+                    <td>
+                        <span *ngIf="tablenumberOption.isActive" class="green"><i class="fa fa-check" aria-hidden="true"></i></span>
+                        <span *ngIf="!tablenumberOption.isActive" class="red"><i class="fa fa-times" aria-hidden="true"></i></span>
+                    </td>
+
+                    <td (click)="$event.stopPropagation()">
+
+                        <button *ngIf="tablenumberOption.isActive" type="button" (click)="disableDetails(tablenumberOption)" class="btn-delete"><i class="fa fa-ban" aria-hidden="true"></i></button>
+                        <button *ngIf="!tablenumberOption.isActive" type="button" (click)="enableDetails(tablenumberOption)" class="btn-delete"><i class="fa fa-check-circle" aria-hidden="true"></i></button>
+                        
+                    </td>
+
+
+                    <!--<td (click)="$event.stopPropagation()"><button type="button" (click)="deleteDetails(tablenumberOption)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>-->
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div bsModal #addTariffTableModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addBusinessCentreModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="col-md-12 modal-header">
+                    <h4>
+                        {{actionType}} Transactional Tariff tables
+                    </h4>
+                </div>
+
+                <div class="row">
+
+                    <!-- Error message -->
+                    <div class="col-md-12" *ngIf="(errorMessage || validationError) && !isSaving">
+                        <div class="form-feedback-container">
+                            <div class="alert-danger">
+                                <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
+                                <p>{{errorMessage}}</p>
+
+                                <ul *ngIf="validationError">
+                                    <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Loading message -->
+                    <div class="col-md-12" *ngIf="isSaving">
+                        <div class="form-feedback-container">
+                            <div class="alert-info">
+                                <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Saving</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-12" style="margin-top: 20px;">
+                    <div class="form-horizontal">
+
+                        <div class="row">
+
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="email">Transaction Type</label>
+                                    <div class="col-sm-5">
+
+                                        <select [(ngModel)]="selectedProduct" class="form-control" (change)="filterDetails(selectedProduct)">
+                                            <option *ngFor="let transactiontype of transactiontypes" [ngValue]="transactiontype">{{transactiontype.description}}</option>
+                                        </select>
+
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button class="btn btn-primary" (click)="addType()">New Transaction Type</button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="email">Table Number</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" required class="form-control" name="6" [(ngModel)]="addTableNumberModel.tariffTable">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="email">Fee</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" required class="form-control" name="5" [(ngModel)]="addTableNumberModel.fee">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="email">Ad Valorem</label>
+                                    <div class="col-sm-8">
+                                        <input type="number" required class="form-control" name="4" [(ngModel)]="addTableNumberModel.adValorem">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer" *ngIf="!isSaving">
+                    <div class="float-right">
+
+                        <button type="button" class="btn btn-cancel" (click)="addTariffTableModal.hide()">Close</button>
+                        <button type="button" class="btn btn-primary" (click)="createupdateDetail()">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div bsModal #addTypeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addBusinessCentreModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="col-md-12 modal-header">
+                    <h4>
+                        {{actionType}} Transaction Type
+                    </h4>
+                </div>
+
+                <div class="row">
+
+                    <!-- Error message -->
+                    <div class="col-md-12" *ngIf="(errorMessage || validationError) && !isSaving">
+                        <div class="form-feedback-container">
+                            <div class="alert-danger">
+                                <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
+                                <p>{{errorMessage}}</p>
+
+                                <ul *ngIf="validationError">
+                                    <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Loading message -->
+                    <div class="col-md-12" *ngIf="isSaving">
+                        <div class="form-feedback-container">
+                            <div class="alert-info">
+                                <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Saving</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-12" style="margin-top: 20px;">
+                    <div class="form-horizontal">
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="email">Product</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" required class="form-control" name="6" [(ngModel)]="addTransactionTypeModel.description">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="email">Channel Number</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" required class="form-control" name="6" [(ngModel)]="addTransactionTypeModel.importFileChannel">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer" *ngIf="!isSaving">
+                    <div class="float-right">
+
+                        <button type="button" class="btn btn-cancel" (click)="closeType()">Close</button>
+                        <button type="button" class="btn btn-primary" (click)="saveType();false;">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

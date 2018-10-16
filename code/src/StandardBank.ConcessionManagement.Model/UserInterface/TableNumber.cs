@@ -59,5 +59,11 @@
                 return $"{TariffTable}";
             }
         }
+
+        public int ConcessionTypeId { get; set; }
+
+        public bool IsActive { get; set; }
+
+
     }
 }

@@ -7,4 +7,5 @@ export class TransactionType {
 	description: string;
     transactionTableNumbers: TransactionTableNumber[];
     importFileProductId: string;
+    importFileChannel: string;
 }

@@ -39,5 +39,6 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         void Delete(ConcessionInvestment model);
+
     }
 }

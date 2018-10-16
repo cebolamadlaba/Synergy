@@ -28,6 +28,8 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <returns></returns>
         IEnumerable<TableNumber> ReadAll();
 
+        IEnumerable<TableNumber> ReadAll(string ConcessionType, int ConcessionTypeId);
+
         /// <summary>
         /// Updates the specified model.
         /// </summary>

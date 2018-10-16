@@ -60,6 +60,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         private readonly IMediator _mediator;
 
+        private readonly ITransactionTableNumberRepository _transactionTableNumberRepository;
+
 
         /// <summary>
         /// The misc performance repository
@@ -81,7 +83,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IConcessionTransactionalRepository concessionTransactionalRepository, IMapper mapper,
             ILookupTableManager lookupTableManager, IFinancialTransactionalRepository financialTransactionalRepository,
             ILoadedPriceTransactionalRepository loadedPriceTransactionalRepository, IRuleManager ruleManager,
-            IMiscPerformanceRepository miscPerformanceRepository, IMediator mediator)
+            IMiscPerformanceRepository miscPerformanceRepository, IMediator mediator, ITransactionTableNumberRepository transactionTableNumberRepository)
         {
             _concessionManager = concessionManager;
             _concessionTransactionalRepository = concessionTransactionalRepository;
@@ -92,6 +94,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _ruleManager = ruleManager;
             _miscPerformanceRepository = miscPerformanceRepository;
             _mediator = mediator;
+            _transactionTableNumberRepository = transactionTableNumberRepository;
 
         }
 
@@ -189,6 +192,29 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
         }
 
+
+        public Model.Repository.TransactionTableNumber CreateupdateTransactionTableNumber(Model.UserInterface.Transactional.TransactionTableNumber transactionTableNumber)
+        {           
+
+            return _transactionTableNumberRepository.CreateupdateTransactionTableNumber(_mapper.Map<Model.Repository.TransactionTableNumber>(transactionTableNumber));
+        }
+
+
+        public TransactionType CreateTransactionType(TransactionType transactionType)
+        {
+
+            int transactionaltypeid = _lookupTableManager.GetConcessionTypeId(Constants.ConcessionType.Transactional);
+            transactionType.ConcessionTypeId = transactionaltypeid;          
+
+
+            return _transactionTableNumberRepository.Create(transactionType);
+        }
+
+        public IEnumerable<Model.UserInterface.Transactional.TransactionTableNumber> GetTransactionTableNumbers(bool isActive)
+        {
+            return _mapper.Map<IEnumerable<Model.UserInterface.Transactional.TransactionTableNumber>>( _transactionTableNumberRepository.ReadAll());
+        }
+
         /// <summary>
         /// Updates the is mismatched.
         /// </summary>
@@ -252,12 +278,45 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var transactionalProducts = GetTransactionalProducts(riskGroup);
 
+
+            //grouping of products
+            var groupedinfo = new List<TransactionalProductGroup>();
+            if (transactionalProducts != null)
+            {
+                foreach (var product in transactionalProducts)
+                {
+                    var productgrouping = groupedinfo.Where(g => g.CustomerName == product.CustomerName).FirstOrDefault();
+                    if (productgrouping == null)
+                    {
+                        TransactionalProductGroup newgroup = new TransactionalProductGroup();
+                        newgroup.CustomerName = product.CustomerName;
+                        newgroup.RiskGroupName = product.RiskGroupName;
+                        newgroup.TransactionalProducts = new List<TransactionalProduct>();
+                        newgroup.TransactionalProducts.Add(product);
+
+                        groupedinfo.Add(newgroup);
+                    }
+                    else
+                    {
+                        productgrouping.TransactionalProducts.Add(product);
+                    }
+ }
+                //sort
+                foreach (var productgrouping in groupedinfo)
+                {
+                    if (productgrouping != null && productgrouping.TransactionalProducts != null)
+                        productgrouping.TransactionalProducts = productgrouping.TransactionalProducts.OrderBy(o => o.AccountNumber).ThenBy(o => o.TransactionType).ToList();
+
+
+                }
+            }
+
             return new TransactionalView
             {
                 RiskGroup = riskGroup,
-                TransactionalConcessions = transactionalConcessions.OrderByDescending(_ => _.Concession.DateOpened),
+                TransactionalConcessions = transactionalConcessions.OrderBy(_ => _.Concession.AccountNumber),
                 TransactionalFinancial = transactionalFinancial,
-                TransactionalProducts = transactionalProducts
+                TransactionalProductGroups = groupedinfo.OrderBy(o => o.CustomerName)
             };
         }
 

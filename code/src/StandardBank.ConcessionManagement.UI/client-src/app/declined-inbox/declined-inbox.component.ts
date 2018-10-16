@@ -30,7 +30,7 @@ export class DeclinedInboxComponent implements OnInit {
                 search: "",
                 searchPlaceholder: "Search"
 			},
-			order: [[6, 'desc']]
+			order: [[6, 'asc']]
         };
 
         this.observableUserConcessions = this.userConcessionsService.getData();
@@ -55,6 +55,12 @@ export class DeclinedInboxComponent implements OnInit {
                 break;
             case ConcessionTypes.BOL:
                 this.router.navigate(['/bol-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                break;
+            case ConcessionTypes.Trade:
+                this.router.navigate(['/trade-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                break;
+            case ConcessionTypes.Investment:
+                this.router.navigate(['/investments-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
                 break;
         }
     }

@@ -110,5 +110,9 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Inbox
         /// The date approved.
         /// </value>
         public DateTime DateApproved { get; set; }
+
+        public string CentreName { get; set; }
+      
+        public string Region { get; set; }
     }
 }

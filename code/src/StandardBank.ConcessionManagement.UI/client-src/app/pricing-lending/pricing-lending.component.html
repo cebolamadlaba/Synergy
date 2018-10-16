@@ -84,56 +84,95 @@
 
 <!-- lending concessions and products-->
 <div class="col-md-12" *ngIf="!isLoading">
-    <div class="col-md-5 search-and-results-container">
+    <div class="col-md-6 search-and-results-container">
         <h2 class="headings">Products</h2>
         <div class="section">
 
             <!-- Empty state for products if no data is found -->
-            <div *ngIf="lendingView?.lendingProducts?.length == 0">
+            <div *ngIf="lendingView?.lendingProductGroups?.length == 0">
                 <div class="section-body">
                     <div class="searchEmptyState">
                         <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
                         <p>No product data found</p>
-                    </div>                    
+                    </div>
                 </div>
             </div>
             <!-- End of empty state -->
+            <!-- Products grouping -->
 
-            <!-- Products list -->
-            <div class="section-body" *ngFor="let lendingProduct of lendingView.lendingProducts; trackBy: index;">
+            <div class="section-body" *ngFor="let lendingprodgroup of lendingView.lendingProductGroups">
+
                 <div class="product-section">
-                    <div class="product-name"> {{lendingProduct.customerName}}</div>
-                    <div>
-                        <div class="product-account">Account No: {{lendingProduct.accountNumber}}</div>
-                        <div class="product-code">Product: {{lendingProduct.product}}</div>
+                    <div class="product-name">{{lendingprodgroup.customerName}}</div>
+
+                </div>
+
+                <!-- Products list -->
+                <div class="section-body">
+
+                    <div class="product-table-container">
+                        <table class="table table-bordered table-hover header-fixed table-striped ">
+                            <thead>
+                                <tr>
+                                    <th>Account(No.)</th>
+                                    <th>Product</th>
+                                    <th>Limit</th>
+                                    <th>Average Balance</th>
+                                    <th>Loaded MAP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let lendingProduct of lendingprodgroup.lendingProducts">
+                                    <td class="leftAlign">{{lendingProduct.accountNumber}}</td>
+                                    <td class="leftAlign">{{lendingProduct.product}}</td>
+                                    <td class="rightAlign"> {{lendingProduct.limit | number : '1.2-2'}}</td>
+                                    <td class="rightAlign"> {{lendingProduct.averageBalance | number : '1.2-2'}}</td>
+                                    <td class="rightAlign"> {{lendingProduct.loadedMap | number : '1.2-2'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="product-table-container">
-                    <table class="table table-bordered table-hover header-fixed table-striped ">
-                        <thead>
-                            <tr>
-                                <th>Limit</th>
-                                <th>Average Balance</th>
-                                <th>Loaded MAP</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="rightAlign"> {{lendingProduct.limit | number : '1.2-2'}}</td>
-                                <td class="rightAlign"> {{lendingProduct.averageBalance | number : '1.2-2'}}</td>
-                                <td class="rightAlign"> {{lendingProduct.loadedMap | number : '1.2-2'}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+
+
             </div>
+
+
+            <!-- Products list -->
+            <!--<div class="section-body" *ngFor="let lendingProduct of lendingView.lendingProducts; trackBy: index;">
+        <div class="product-section">
+            <div class="product-name"> {{lendingProduct.customerName}}</div>
+            <div>
+                <div class="product-account">Account No: {{lendingProduct.accountNumber}}</div>
+                <div class="product-code">Product: {{lendingProduct.product}}</div>
+            </div>
+        </div>
+        <div class="product-table-container">
+            <table class="table table-bordered table-hover header-fixed table-striped ">
+                <thead>
+                    <tr>
+                        <th>Limit</th>
+                        <th>Average Balance</th>
+                        <th>Loaded MAP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="rightAlign"> {{lendingProduct.limit | number : '1.2-2'}}</td>
+                        <td class="rightAlign"> {{lendingProduct.averageBalance | number : '1.2-2'}}</td>
+                        <td class="rightAlign"> {{lendingProduct.loadedMap | number : '1.2-2'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>-->
             <!-- End of products list -->
 
         </div>
     </div>
 
     <!-- Concessions list -->
-    <div class="col-md-7 search-and-results-container" id="lending-search-container">
+    <div class="col-md-6 search-and-results-container" id="lending-search-container">
         <h2 class="headings">
             Concessions
             <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/lending-add-concession', lendingView.riskGroup.number]" *ngIf="pageLoaded && canRequest">Add Concession</button>

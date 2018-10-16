@@ -78,5 +78,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// The date approved.
         /// </value>
         public DateTime? DateApproved { get; set; }
+
+        public string ConcessionLetterURL { get; set; }
     }
 }

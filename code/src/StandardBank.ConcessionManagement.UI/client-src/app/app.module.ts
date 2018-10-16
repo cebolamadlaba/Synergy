@@ -1,10 +1,14 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { DataTablesModule } from 'angular-datatables';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { MyDatePickerModule } from 'angular4-datepicker/src/my-date-picker/my-date-picker.module';
+
 
 import { AppComponent } from './app.component';
 import { PageHeaderComponent } from './page-header/page-header.component';
@@ -34,6 +38,8 @@ import { LendingService } from "./services/lending.service";
 import { MyConditionService } from './services/my-condition.service';
 import { CashConcessionService } from "./services/cash-concession.service";
 import { BolConcessionService } from "./services/bol-concession.service";
+import { TradeConcessionService } from "./services/trade-concession.service";
+import { InvestmentConcessionService } from "./services/investment-concession.service";
 import { AdminService } from './services/admin.service';
 import { RegionService } from './services/region.service';
 import { BusinessCentreService } from './services/business-centre.service';
@@ -41,6 +47,8 @@ import { PcmManagementService } from './services/pcm-management.service';
 import { BcmManagementService } from './services/bcm-management.service';
 import { AeManagementService } from './services/ae-management.service';
 import { AaManagementService } from './services/aa-management.service';
+
+import { AdminTransactionTablesService } from './services/admin-transaction-tables.service';
 
 import { ApprovedConcessionFilterPipe } from './filters/approved-concession-filter.pipe';
 import { CashViewConcessionComponent } from './cash-view-concession/cash-view-concession.component';
@@ -51,7 +59,11 @@ import { PricingMasComponent } from './pricing-mas/pricing-mas.component';
 import { PricingCashmanComponent } from './pricing-cashman/pricing-cashman.component';
 import { TransactionalConcessionService } from "./services/transactional-concession.service";
 import { BaseConcessionFilterPipe } from './filters/base-concession-filter.pipe';
-import { InvestmentsAddConcessionComponent } from './investments-add-concession/investments-add-concession.component';
+
+import { SearchConcessionFilterPipe } from './filters/search-concession-filter.pipe';
+import { CommentsFilterPipe } from './filters/comments-filter.pipe';
+import { InvestmentAddConcessionComponent } from './investments-add-concession/investments-add-concession.component';
+import { InvestmentsViewConcessionComponent } from './investments-view-concession/investments-view-concession.component';
 
 import { BolAddConcessionComponent } from './bol-add-concession/bol-add-concession.component';
 import { BolViewConcessionComponent } from './bol-view-concession/bol-view-concession.component';
@@ -59,6 +71,8 @@ import { BolViewConcessionComponent } from './bol-view-concession/bol-view-conce
 import { MasAddConcessionComponent } from './mas-add-concession/mas-add-concession.component';
 import { TransactionalViewConcessionComponent } from './transactional-view-concession/transactional-view-concession.component';
 import { TradeAddConcessionComponent } from './trade-add-concession/trade-add-concession.component';
+import { TradeViewConcessionComponent } from "./trade-view-concession/trade-view-concession.component";
+
 import { CashmanAddConcessionComponent } from './cashman-add-concession/cashman-add-concession.component';
 import { AdminMenuComponent } from './admin/admin-menu/admin-menu.component';
 import { BusinessCentreComponent } from './admin/business-centre/business-centre.component';
@@ -72,6 +86,10 @@ import { PcmManagementComponent } from './admin/pcm-management/pcm-management.co
 import { BcmManagementComponent } from './admin/bcm-management/bcm-management.component';
 import { AeManagementComponent } from './admin/ae-management/ae-management.component';
 import { AaManagementComponent } from './admin/aa-management/aa-management.component';
+
+import { BOLCHManagementComponent } from './admin/bol-chargecodes/bol-chargecodes.component';
+import { TransactionTypesManagementComponent } from './admin/transaction-types/transaction-types.component';
+import { ChannelTypesManagementComponent } from './admin/channel-types/channel-types.component';
 
 @NgModule({
     declarations: [
@@ -96,18 +114,22 @@ import { AaManagementComponent } from './admin/aa-management/aa-management.compo
         ApprovedConcessionFilterPipe,
         CashViewConcessionComponent,
         BaseConcessionFilterPipe,
+        SearchConcessionFilterPipe,
+        CommentsFilterPipe,
         CashViewConcessionComponent,
         PricingInvestmentsComponent,
         PricingBolComponent,
         PricingTradeComponent,
         PricingMasComponent,
         PricingCashmanComponent,
-        InvestmentsAddConcessionComponent,
+        InvestmentAddConcessionComponent,
+        InvestmentsViewConcessionComponent,
         BolAddConcessionComponent,
         BolViewConcessionComponent,
         MasAddConcessionComponent,
         TransactionalViewConcessionComponent,
         TradeAddConcessionComponent,
+        TradeViewConcessionComponent,
         CashmanAddConcessionComponent,
         AdminMenuComponent,
         BusinessCentreComponent,
@@ -121,17 +143,23 @@ import { AaManagementComponent } from './admin/aa-management/aa-management.compo
         BcmManagementComponent,
         AeManagementComponent,
         AaManagementComponent,
-        SearchComponent
+        SearchComponent,
+        BOLCHManagementComponent,
+        TransactionTypesManagementComponent,
+        ChannelTypesManagementComponent
        
     ],
     imports: [
         BrowserModule,
         HttpModule,
+        HttpClientModule,
         FormsModule,
         AppRoutingModule,
         ModalModule.forRoot(),
         DataTablesModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        BsDropdownModule.forRoot(),
+        MyDatePickerModule 
     ],
     providers: [
         LookupDataService,
@@ -143,13 +171,16 @@ import { AaManagementComponent } from './admin/aa-management/aa-management.compo
         CashConcessionService,
         TransactionalConcessionService,
         AdminService,
+        AdminTransactionTablesService,
         RegionService,
         BusinessCentreService,
         PcmManagementService,
         BcmManagementService,
         AeManagementService,
         AaManagementService,
-        BolConcessionService
+        BolConcessionService,
+        TradeConcessionService,     
+        InvestmentConcessionService
     ],
     bootstrap: [AppComponent]
 })

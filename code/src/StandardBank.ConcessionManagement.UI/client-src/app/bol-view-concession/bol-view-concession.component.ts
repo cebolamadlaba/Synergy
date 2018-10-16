@@ -93,8 +93,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     bolchargecodetypes: BolChargeCodeType[];
 
     observableBolChargeCodes: Observable<BolChargeCode[]>;
-    bolchargecodes: BolChargeCode[];
-    bolchargecodesFiltered: BolChargeCode[];
+    bolchargecodes: BolChargeCode[]; 
 
     observableLegalEntityBOLUsers: Observable<LegalEntityBOLUser[]>;
     legalentitybolusers: LegalEntityBOLUser[];
@@ -108,7 +107,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     observableBolConcession: Observable<BolConcession>;
     bolConcession: BolConcession;
 
-
+    selectedProducts: BolChargeCodeType[];   
 
     constructor(private route: ActivatedRoute,
         private formBuilder: FormBuilder,
@@ -124,6 +123,8 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         this.legalentitybolusers = [new LegalEntityBOLUser()];
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
+
+        this.selectedProducts = [new BolChargeCodeType()];
 
         this.conditionTypes = [new ConditionType()];
         this.selectedConditionTypes = [new ConditionType()];
@@ -149,7 +150,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             this.observableRiskGroup = this.lookupDataService.getRiskGroup(this.riskGroupNumber);
             this.observableRiskGroup.subscribe(riskGroup => this.riskGroup = riskGroup, error => this.errorMessage = <any>error);
 
-            this.observableClientAccounts = this.lookupDataService.getClientAccounts(this.riskGroupNumber);
+            this.observableClientAccounts = this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.BOL);
             this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
         }
 
@@ -174,15 +175,14 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             this.lookupDataService.getConditionTypes(),
             this.lookupDataService.getBOLChargeCodeTypes(),
             this.lookupDataService.getBOLChargeCodes(),
-            this.lookupDataService.getLegalEntityBOLUsers(),
+            this.lookupDataService.getLegalEntityBOLUsers(this.riskGroupNumber),
             this.lookupDataService.getPeriods(),
             this.lookupDataService.getPeriodTypes()
         ]).subscribe(results => {
 
             this.conditionTypes = <any>results[0];
             this.bolchargecodetypes = <any>results[1];
-            this.bolchargecodes = <any>results[2];
-            this.bolchargecodesFiltered = this.bolchargecodes;
+            this.bolchargecodes = <any>results[2];       
 
             this.legalentitybolusers = <any>results[3];
 
@@ -284,14 +284,24 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                     let selectedBOLUser = this.legalentitybolusers.filter(_ => _.pkLegalEntityBOLUserId == bolConcessionDetail.fkLegalEntityBOLUserId);
                     currentConcession.get('userid').setValue(selectedBOLUser[0]);
 
-                    let selectedChargeCode = this.bolchargecodes.filter(_ => _.pkChargeCodeId == bolConcessionDetail.fkChargeCodeId);
-                    currentConcession.get('chargecode').setValue(selectedChargeCode[0]);
+                    //let selectedChargeCode = this.bolchargecodes.filter(_ => _.pkChargeCodeId == bolConcessionDetail.fkChargeCodeId);
+                    //currentConcession.get('chargecode').setValue(selectedChargeCode[0]);
 
-                    let selectedChargeCode2 = this.bolchargecodes.filter(_ => _.pkChargeCodeId == bolConcessionDetail.fkChargeCodeId);
-                    let chargecodetypeid = selectedChargeCode2[0].fkChargeCodeTypeId.valueOf();
+                    let selectedChargeCode = this.bolchargecodes.filter(_ => _.pkChargeCodeId == bolConcessionDetail.fkChargeCodeId);
+                    let chargecodetypeid = selectedChargeCode[0].fkChargeCodeTypeId.valueOf();
 
                     let selectedChargeCodeType = this.bolchargecodetypes.filter(_ => _.pkChargeCodeTypeId == chargecodetypeid);
                     currentConcession.get('product').setValue(selectedChargeCodeType[0]);
+
+                    //---------
+                    //let currentProduct = control.controls[rowIndex];
+                    var selectedproduct = currentConcession.get('product').value;
+                    let chargecodes = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedChargeCodeType[0].pkChargeCodeTypeId);
+                    this.selectedProducts[rowIndex].bolchargecodes = chargecodes;
+                
+                    currentConcession.get('chargecode').setValue(selectedChargeCode[0]);   
+                    //------------
+
 
 
 
@@ -342,6 +352,9 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
                     rowIndex++;
                 }
+
+                this.changearray = this.lookupDataService.checkforLC(this.bolConcession.concession.status, this.bolConcession.concession.subStatus, bolConcession.concession.concessionComments);
+
                 this.isLoading = false;
             }, error => {
                 this.isLoading = false;
@@ -351,6 +364,8 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     initConcessionItemRows() {
+
+        this.selectedProducts.push(new BolChargeCodeType());
 
         return this.formBuilder.group({
             bolConcessionDetailId: [''],
@@ -384,9 +399,21 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     addNewConcessionRow() {
+
         const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
         var newRow = this.initConcessionItemRows();
+
+        var length = control.controls.length;
+
+        if (this.bolchargecodetypes)
+            newRow.controls['product'].setValue(this.bolchargecodetypes[0]);
+
+        if (this.legalentitybolusers)
+            newRow.controls['userid'].setValue(this.legalentitybolusers[0]);
+
         control.push(newRow);
+        this.productTypeChanged(length);      
+
     }
 
     addNewConditionRow() {
@@ -402,6 +429,10 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
     deleteConcessionRow(index: number) {
         if (confirm("Are you sure you want to remove this row?")) {
+
+            this.selectedProducts.splice(index, 1);
+
+
             const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
             control.removeAt(index);
         }
@@ -420,6 +451,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
         let currentCondition = control.controls[rowIndex];
 
+        currentCondition.get('conditionProduct').setValue(null);
         currentCondition.get('interestRate').setValue(null);
         currentCondition.get('volume').setValue(null);
         currentCondition.get('value').setValue(null);
@@ -428,15 +460,14 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
     productTypeChanged(rowIndex) {
 
-        const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+        const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];     
 
-        let currentCondition = control.controls[rowIndex];
+        let currentProduct = control.controls[rowIndex];
+        var selectedproduct = currentProduct.get('product').value;
 
-        var selectedproduct = currentCondition.get('product').value;
+        this.selectedProducts[rowIndex].bolchargecodes = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId);
 
-        this.bolchargecodesFiltered = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId); 
-
-    
+        currentProduct.get('chargecode').setValue(this.selectedProducts[rowIndex].bolchargecodes[0]);
 
     }
 
@@ -446,7 +477,6 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
         this.validationError.push(validationDetail);
     }
-
 
     getBolConcession(isNew: boolean): BolConcession {
         var bolConcession = new BolConcession();
@@ -463,9 +493,10 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         if (this.bolConcessionForm.controls['motivation'].value)
             bolConcession.concession.motivation = this.bolConcessionForm.controls['motivation'].value;
         else
-            this.addValidationError("Motivation not captured");
+            bolConcession.concession.motivation = '.';
 
-        const concessions = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+
+       const concessions = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
 
         for (let concessionFormItem of concessions.controls) {
             if (!bolConcession.bolConcessionDetails)
@@ -671,6 +702,9 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             if (!bolConcession.concession.comments) {
                 bolConcession.concession.comments = ConcessionStatus.ApprovedWithChanges;
             }
+
+            bolConcession.concession.concessionComments = this.GetChanges(bolConcession.concession.id);
+
         } else {
             bolConcession.concession.status = ConcessionStatus.Approved;
 
@@ -702,6 +736,58 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         } else {
             this.isLoading = false;
         }
+    }
+
+
+    private GetChanges(concessionid: number): any[] {
+        let comments = this.getChangedProperties();
+
+        let commentarray = [];
+        let comment = new ConcessionComment();
+        comment.concessionId = concessionid;
+        comment.comment = comments;
+        comment.userDescription = "LogChanges";
+        commentarray.push(comment);
+        return commentarray;
+    }
+
+    private getChangedProperties(): string {
+
+        let changedProperties = [];
+        let rowIndex = 0;
+
+        const concessions = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+
+        //this is detailed line items,  but not yet the controls
+        for (let concessionFormItem of concessions.controls) {
+
+            let controls = (<FormGroup>concessionFormItem).controls;
+
+            for (const fieldname in controls) { // 'field' is a string
+
+                const abstractControl = controls[fieldname];
+                if (abstractControl.dirty) {
+
+                    changedProperties.push({ rowIndex, fieldname });
+                }
+            }
+            rowIndex++;
+        }
+        return JSON.stringify(changedProperties);
+    }
+
+    changearray: any[];
+    checkforchanges: boolean;
+    bcmhochanged(index: number, controlname: string) {
+
+        if (this.changearray) {
+
+            let found = this.changearray.find(f => f.rowIndex == index && f.fieldname == controlname);
+            if (found) {
+                return true;
+            }
+        }
+        return false;
     }
 
     pcmDeclineConcession() {
@@ -820,7 +906,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         this.errorMessage = null;
 
-        this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
+        this.userConcessionsService.recallConcession(this.concessionReferenceId).subscribe(entity => {
             this.warningMessage = "Concession recalled, please make the required changes and save the concession or it will be lost";
             this.isRecalling = true;
             this.isLoading = false;
@@ -927,13 +1013,34 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
+    archiveConcessiondetail(concessionDetailId: number) {
+
+        if (confirm("Are you sure you want to delete the concession item ?")) {
+            this.isLoading = true;
+            this.errorMessage = null;
+
+            this.userConcessionsService.deactivateConcessionDetailed(concessionDetailId).subscribe(entity => {
+
+                this.warningMessage = "Concession item has been deleted";
+
+                this.isLoading = false;
+
+                this.ngOnInit();
+
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        }
+    }
+
     archiveConcession() {
-        if (confirm("Are you sure you want to archive this concession?")) {
+        if (confirm("Are you sure you want to delete this concession ?")) {
             this.isLoading = true;
             this.errorMessage = null;
 
             this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
-                this.warningMessage = "Concession has been archived.";
+                this.warningMessage = "Concession has been deleted";
 
                 this.isLoading = false;
                 this.canBcmApprove = false;

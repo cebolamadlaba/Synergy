@@ -37,13 +37,10 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// </value>
         public int Term { get; set; }
 
-        /// <summary>
-        /// Gets or sets the InterestToCustomer.
-        /// </summary>
-        /// <value>
-        /// The InterestToCustomer.
-        /// </value>
-        public decimal InterestToCustomer { get; set; }
+        public decimal? LoadedRate { get; set; }
+
+        public decimal? ApprovedRate { get; set; }
+
 
         /// <summary>
         /// Gets or the name of the table.

@@ -5,6 +5,8 @@ using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
 using StandardBank.ConcessionManagement.Model.UserInterface.Bol;
+using StandardBank.ConcessionManagement.Model.UserInterface.Trade;
+using StandardBank.ConcessionManagement.Model.UserInterface.Investment;
 
 namespace StandardBank.ConcessionManagement.Interface.Repository
 {
@@ -19,7 +21,12 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
+        IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, int? userId, string concessiontype);
+
+
         IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, int? userId);
+
+
 
         /// <summary>
         /// Gets the lending products.
@@ -39,6 +46,11 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
 
         IEnumerable<BolProduct> GetBolProducts(int riskGroupId, string riskGroupName);
 
+        IEnumerable<TradeProduct> GetTradeProducts(int riskGroupId, string riskGroupName);
+
+        IEnumerable<InvestmentProduct> GetInvestmentProducts(int riskGroupId, string riskGroupName);
+
+
         /// <summary>
         /// Gets the transactional products.
         /// </summary>
@@ -55,6 +67,10 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         IEnumerable<CashConcessionDetail> GetCashConcessionDetails(int concessionId);
 
         IEnumerable<BolConcessionDetail> GetBolConcessionDetails(int concessionId);
+
+        IEnumerable<TradeConcessionDetail> GetTradeConcessionDetails(int concessionId);
+
+        IEnumerable<InvestmentConcessionDetail> GetInvestmentConcessionDetails(int concessionId);
 
         /// <summary>
         /// Gets the lending concession details.
@@ -75,5 +91,7 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// </summary>
         /// <returns></returns>
         IEnumerable<BusinessCentreManagementModel> GetBusinessCentreManagementModels();
+
+         BusinessCentreManagementModel GetBusinessCentreManager(int pkCentreId);
     }
 }

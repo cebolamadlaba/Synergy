@@ -5,7 +5,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
     /// <summary>
     /// ConcessionDetail entity
     /// </summary>
-    public class ConcessionDetail
+    public class ConcessionDetail : IAuditable
     {
         /// <summary>
         /// Gets or sets the ConcessionDetailId.
@@ -55,6 +55,8 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// </value>
         public DateTime? DateApproved { get; set; }
 
+        public DateTime? Archived { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether this instance is mismatched.
         /// </summary>
@@ -78,5 +80,23 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The price exported date.
         /// </value>
         public DateTime? PriceExportedDate { get; set; }
+
+        public string TableName => "tblConcessionDetail";
+
+        /// <summary>
+        /// Gets the name of the primary key column.
+        /// </summary>
+        /// <value>
+        /// The name of the primary key column.
+        /// </value>
+        public string PrimaryKeyColumnName => "pkConcessionDetailId";
+
+        /// <summary>
+        /// Gets the primary key value.
+        /// </summary>
+        /// <value>
+        /// The primary key value.
+        /// </value>
+        public object PrimaryKeyValue => ConcessionDetailId;
     }
 }

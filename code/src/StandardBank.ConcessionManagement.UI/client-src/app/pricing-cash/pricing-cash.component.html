@@ -89,12 +89,12 @@
 <!--Table information -->
 
 <div class="col-md-12" *ngIf="!isLoading">
-    <div class="col-md-5 search-and-results-container">
+    <div class="col-md-6 search-and-results-container">
         <h2 class="headings">Products</h2>
         <div class="section">
 
             <!-- Empty state for products if no data is found -->
-            <div *ngIf="!cashView?.cashProducts || cashView?.cashProducts?.length == 0">
+            <div *ngIf="!cashView?.cashProductGroups || cashView?.cashProductGroups?.length == 0">
                 <div class="section-body">
                     <div class="searchEmptyState">
                         <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
@@ -103,38 +103,76 @@
                 </div>
             </div>
             <!-- End of empty state -->
-            <!-- Products list -->
-            <div class="section-body" *ngFor="let cashProduct of cashView.cashProducts; trackBy: index;">
+            <!-- Products grouping -->
+
+            <div class="section-body" *ngFor="let cashprodgroup of cashView.cashProductGroups">
+
                 <div class="product-section">
-                    <div class="product-name"> {{cashProduct.customerName}}</div>
-                    <div>
-                        <div class="product-account">Account No: {{cashProduct.accountNumber}}</div>
-                        <div class="product-code">Channel: {{cashProduct.channel}}</div>
+                    <div class="product-name">{{cashprodgroup.customerName}}</div>
+
+                </div>
+
+                <!-- Products list -->
+                <div class="section-body">
+
+                    <div class="product-table-container">
+                        <table class="table table-bordered table-hover header-fixed table-striped ">
+                            <thead>
+                                <tr>
+                                    <th>Account(No.)</th>
+                                    <th>Channel</th>
+                                    <th>Table Number</th>
+                                    <th>BP ID</th>
+                                    <th>Loaded Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let cashProduct of cashprodgroup.cashProducts">
+                                    <td class="leftAlign">{{cashProduct.accountNumber}}</td>
+                                    <td class="leftAlign">{{cashProduct.channel}}</td>
+                                    <td class="leftAlign"> {{cashProduct.tariffTable}}</td>
+                                    <td class="rightAlign"> {{cashProduct.bpId}}</td>
+                                    <td class="rightAlign"> {{cashProduct.loadedPrice}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="product-table-container">
-                    <table class="table table-bordered table-hover header-fixed table-striped ">
-                        <thead>
-                            <tr>
-                                <th>Table Number</th>
-                                <th>BP ID</th>
-                                <!--<th>Volume</th>
-                                <th>Value</th>-->
-                                <th>Loaded Price</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="rightAlign"> {{cashProduct.tariffTable}}</td>
-                                <td class="rightAlign"> {{cashProduct.bpId}}</td>
-                                <!--<td class="rightAlign"> {{cashProduct.volume}}</td>
-                                <td class="rightAlign"> {{cashProduct.value | number : '1.2-2'}}</td>-->
-                                <td class="rightAlign"> {{cashProduct.loadedPrice}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+
+
             </div>
+
+
+            <!-- Products list -->
+            <!--<div class="section-body" *ngFor="let cashProduct of cashView.cashProducts; trackBy: index;">
+        <div class="product-section">
+            <div class="product-name"> {{cashProduct.customerName}}</div>
+            <div>
+                <div class="product-account">Account No: {{cashProduct.accountNumber}}</div>
+                <div class="product-code">Channel: {{cashProduct.channel}}</div>
+            </div>
+        </div>
+        <div class="product-table-container">
+            <table class="table table-bordered table-hover header-fixed table-striped ">
+                <thead>
+                    <tr>
+                        <th>Table Number</th>
+                        <th>BP ID</th>
+
+                        <th>Loaded Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="rightAlign"> {{cashProduct.tariffTable}}</td>
+                        <td class="rightAlign"> {{cashProduct.bpId}}</td>
+
+                        <td class="rightAlign"> {{cashProduct.loadedPrice}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>-->
             <!-- End of products list -->
 
         </div>
@@ -142,7 +180,7 @@
 
     <!-- concessions -->
 
-    <div class="col-md-7 search-and-results-container">
+    <div class="col-md-6 search-and-results-container">
         <h2 class="headings">
             Concessions
             <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/cash-add-concession', cashView.riskGroup.number]" *ngIf="pageLoaded && canRequest">Add Concession</button>

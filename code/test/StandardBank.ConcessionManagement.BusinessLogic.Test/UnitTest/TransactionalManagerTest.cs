@@ -28,7 +28,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 MockConcessionTransactionalRepository.Object, InstantiatedDependencies.Mapper,
                 MockLookupTableManager.Object, MockFinancialTransactionalRepository.Object,
                 MockLoadedPriceTransactionalRepository.Object, MockRuleManager.Object,
-                MockMiscPerformanceRepository.Object,null);
+                MockMiscPerformanceRepository.Object,null, null);
         }
 
         /// <summary>
@@ -111,8 +111,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             Assert.NotNull(result.TransactionalConcessions);
             Assert.NotEmpty(result.TransactionalConcessions);
             Assert.NotNull(result.TransactionalFinancial);
-            Assert.NotNull(result.TransactionalProducts);
-            Assert.NotEmpty(result.TransactionalProducts);
+            Assert.NotNull(result.TransactionalProductGroups);
+           
         }
 
         /// <summary>

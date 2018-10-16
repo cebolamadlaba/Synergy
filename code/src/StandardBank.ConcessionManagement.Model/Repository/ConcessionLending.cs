@@ -101,6 +101,10 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// </value>
         public decimal? AverageBalance { get; set; }
 
+        public string Frequency { get; set; }
+
+        public decimal? ServiceFee { get; set; }
+
         /// <summary>
         /// Gets or the name of the table.
         /// </summary>

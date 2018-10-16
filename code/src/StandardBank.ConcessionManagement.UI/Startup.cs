@@ -80,6 +80,9 @@ namespace StandardBank.ConcessionManagement.UI
             var container = DependencyInjection.ConfigureServices(services, GenerateConfigurationData(Environment));
 
             return container.GetInstance<IServiceProvider>();
+
+
+            
         }
 
         /// <summary>
@@ -117,9 +120,9 @@ namespace StandardBank.ConcessionManagement.UI
             app.UseStatusCodePagesWithReExecute("/");
 
             app.UseDefaultFiles();
+            app.UseMvc();
             app.UseStaticFiles();
 
-            app.UseMvc();
 
             GlobalConfiguration.Configuration.UseActivator(new HangfireActivator(serviceProvider));
 

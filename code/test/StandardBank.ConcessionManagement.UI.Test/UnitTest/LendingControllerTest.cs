@@ -29,7 +29,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         public LendingControllerTest()
         {
             _lendingController = new LendingController(MockLendingManager.Object, MockSiteHelper.Object,
-                MockMediator.Object);
+                MockMediator.Object,null,null);
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
             {
                 RiskGroup = riskGroup,
                 LendingConcessions = new[] {new LendingConcession()},
-                LendingProducts = new[] {new LendingProduct()},
+                LendingProductGroups = new[] {new LendingProductGroup()},
                 LendingFinancial = new LendingFinancial
                 {
                     TotalExposure = 100,

@@ -93,6 +93,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ICentreRepository _centreRepository;
         private readonly IPrimeRateRepository _primeRateRepository;
 
+        private readonly IConcessionLetterRepository _concessionLetterRepository;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ConcessionManager"/> class.
         /// </summary>
@@ -118,7 +120,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IUserManager userManager, IConcessionInboxViewRepository concessionInboxViewRepository,
             IConcessionDetailRepository concessionDetailRepository,
             IConcessionConditionViewRepository concessionConditionViewRepository,
-            IMiscPerformanceRepository miscPerformanceRepository, ICentreRepository centreRepository, IPrimeRateRepository primeRateRepository)
+            IMiscPerformanceRepository miscPerformanceRepository, ICentreRepository centreRepository, IPrimeRateRepository primeRateRepository, IConcessionLetterRepository concessionLetterRepository)
         {
             _concessionRepository = concessionRepository;
             _lookupTableManager = lookupTableManager;
@@ -135,6 +137,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _miscPerformanceRepository = miscPerformanceRepository;
             _centreRepository = centreRepository;
             _primeRateRepository = primeRateRepository;
+            _concessionLetterRepository = concessionLetterRepository;
         }
 
         /// <summary>
@@ -150,44 +153,45 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var pcmPendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.PcmPending);
 
             //loop through the user roles and get the concessions for the particular user
-            foreach (var userRole in user.UserRoles)
-            {
-                switch (userRole.Name.Trim())
+            if (user != null && user.UserRoles != null && user.UserRoles.Count() > 0)
+                foreach (var userRole in user.UserRoles)
                 {
-                    case Constants.Roles.AA:
-                        inboxConcessions.AddRange(
-                            _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
-                                .ReadByRequestorIdStatusIdsIsActive(_userManager.GetUserIdForFiltering(user), new[] { pendingStatusId },
-                                    true)));
-                        break;
-                    case Constants.Roles.Requestor:
-                        inboxConcessions.AddRange(
-                            _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
-                                .ReadByRequestorIdStatusIdsIsActive(user.Id, new[] { pendingStatusId }, true)));
-                        break;
-                    case Constants.Roles.BCM:
-                        var bcmCentreIds = (from centre in user.UserCentres
-                                            select centre.Id).ToArray();
+                    switch (userRole.Name.Trim())
+                    {
+                        case Constants.Roles.AA:
+                            inboxConcessions.AddRange(
+                                _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
+                                    .ReadByRequestorIdStatusIdsIsActive(_userManager.GetUserIdForFiltering(user), new[] { pendingStatusId },
+                                        true)));
+                            break;
+                        case Constants.Roles.Requestor:
+                            inboxConcessions.AddRange(
+                                _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
+                                    .ReadByRequestorIdStatusIdsIsActive(user.Id, new[] { pendingStatusId }, true)));
+                            break;
+                        case Constants.Roles.BCM:
+                            var bcmCentreIds = (from centre in user.UserCentres
+                                                select centre.Id).ToArray();
 
-                        inboxConcessions.AddRange(
-                            _mapper.Map<IEnumerable<InboxConcession>>(
-                                _concessionInboxViewRepository.ReadByCentreIdsStatusIdSubStatusIdIsActive(bcmCentreIds,
-                                    pendingStatusId, bcmPendingStatusId, true)));
+                            inboxConcessions.AddRange(
+                                _mapper.Map<IEnumerable<InboxConcession>>(
+                                    _concessionInboxViewRepository.ReadByCentreIdsStatusIdSubStatusIdIsActive(bcmCentreIds,
+                                        pendingStatusId, bcmPendingStatusId, true)));
 
-                        break;
-                    case Constants.Roles.PCM:
-                    case Constants.Roles.HeadOffice:
+                            break;
+                        case Constants.Roles.PCM:
+                        case Constants.Roles.HeadOffice:
 
-                        //we will only look for concessions with status BCM Pending..
-                        var pendingStatusIds = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.PcmPending);
-                        //var concessions = _concessionInboxViewRepository.ReadbyPCMPending(null, null, null, new[] { pendingStatusIds });
+                            //we will only look for concessions with status BCM Pending..
+                            var pendingStatusIds = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.PcmPending);
+                            //var concessions = _concessionInboxViewRepository.ReadbyPCMPending(null, null, null, new[] { pendingStatusIds });
 
-                        inboxConcessions.AddRange(_mapper.Map<IEnumerable<InboxConcession>>(
-                               _concessionInboxViewRepository.ReadbyPCMPending(null, null, null, new[] { pendingStatusIds })));
+                            inboxConcessions.AddRange(_mapper.Map<IEnumerable<InboxConcession>>(
+                                   _concessionInboxViewRepository.ReadbyPCMPending(null, null, null, new[] { pendingStatusIds })));
 
-                        break;
+                            break;
+                    }
                 }
-            }
 
             return inboxConcessions;
         }
@@ -200,6 +204,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private IEnumerable<InboxConcession> GetDistinctInboxConcessions(IEnumerable<InboxConcession> inboxConcessions)
         {
             return inboxConcessions.GroupBy(_ => _.ReferenceNumber).Select(_ => _.First()).ToList();
+        }
+
+
+       public ConcessionLetter CreateConcessionLetter(ConcessionLetter model)
+        {
+
+            return _concessionLetterRepository.Create(model);
+
         }
 
         /// <summary>
@@ -316,44 +328,53 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var userConcessions = new UserConcessions();
 
-            var pendingConcessions = GetDistinctInboxConcessions(GetPendingConcessionsForUser(user));
-
-            userConcessions.PendingConcessions = pendingConcessions;
-            userConcessions.PendingConcessionsCount = pendingConcessions?.Count() ?? 0;
-            userConcessions.ShowPendingConcessions = true;
-
-            if (user.CanRequest)
+            if (user != null)
             {
-                var dueForExpiryConcessions = GetDistinctInboxConcessions(GetDueForExpiryConcessionsForUser(user));
-                userConcessions.DueForExpiryConcessions = dueForExpiryConcessions;
-                userConcessions.DueForExpiryConcessionsCount = dueForExpiryConcessions?.Count() ?? 0;
-                userConcessions.ShowDueForExpiryConcessions = true;
 
-                var expiredConcessions = GetDistinctInboxConcessions(GetExpiredConcessionsForUser(user));
-                userConcessions.ExpiredConcessions = expiredConcessions;
-                userConcessions.ExpiredConcessionsCount = expiredConcessions?.Count() ?? 0;
-                userConcessions.ShowExpiredConcessions = true;
+                var pendingConcessions = GetDistinctInboxConcessions(GetPendingConcessionsForUser(user));
 
-                var mismatchedConcessions = GetDistinctInboxConcessions(GetMismatchedConcessionsForUser(user));
-                userConcessions.MismatchedConcessions = mismatchedConcessions;
-                userConcessions.MismatchedConcessionsCount = mismatchedConcessions?.Count() ?? 0;
-                userConcessions.ShowMismatchedConcessions = true;
+                userConcessions.PendingConcessions = pendingConcessions;
+                userConcessions.PendingConcessionsCount = pendingConcessions?.Count() ?? 0;
+                userConcessions.ShowPendingConcessions = true;
 
-                var declinedConcessions = GetDistinctInboxConcessions(GetDeclinedConcessionsForUser(user));
-                userConcessions.DeclinedConcessions = declinedConcessions;
-                userConcessions.DeclinedConcessionsCount = declinedConcessions?.Count() ?? 0;
-                userConcessions.ShowDeclinedConcessions = true;
+                if (user.CanRequest)
+                {
+                    var dueForExpiryConcessions = GetDistinctInboxConcessions(GetDueForExpiryConcessionsForUser(user));
+                    userConcessions.DueForExpiryConcessions = dueForExpiryConcessions;
+                    userConcessions.DueForExpiryConcessionsCount = dueForExpiryConcessions?.Count() ?? 0;
+                    userConcessions.ShowDueForExpiryConcessions = true;
+
+                    var expiredConcessions = GetDistinctInboxConcessions(GetExpiredConcessionsForUser(user));
+                    userConcessions.ExpiredConcessions = expiredConcessions;
+                    userConcessions.ExpiredConcessionsCount = expiredConcessions?.Count() ?? 0;
+                    userConcessions.ShowExpiredConcessions = true;
+
+                    var mismatchedConcessions = GetDistinctInboxConcessions(GetMismatchedConcessionsForUser(user));
+                    userConcessions.MismatchedConcessions = mismatchedConcessions;
+                    userConcessions.MismatchedConcessionsCount = mismatchedConcessions?.Count() ?? 0;
+                    userConcessions.ShowMismatchedConcessions = true;
+
+                    var declinedConcessions = GetDistinctInboxConcessions(GetDeclinedConcessionsForUser(user));
+                    userConcessions.DeclinedConcessions = declinedConcessions;
+                    userConcessions.DeclinedConcessionsCount = declinedConcessions?.Count() ?? 0;
+                    userConcessions.ShowDeclinedConcessions = true;
+                }
+
+                if (user.CanBcmApprove || user.CanPcmApprove || user.IsHO)
+                {
+                    var actionedConcessions = GetDistinctInboxConcessions(GetActionedConcessionsForUser(user));
+                    userConcessions.ActionedConcessions = actionedConcessions;
+                    userConcessions.ActionedConcessionsCount = actionedConcessions?.Count() ?? 0;
+                    userConcessions.ShowActionedConcessions = true;
+                }
+
+                if(user.IsHO || user.IsPCM)
+                {
+                    userConcessions.IsElevatedUser = true;
+
+                }
+
             }
-
-            if (user.CanBcmApprove || user.CanPcmApprove || user.IsHO)
-            {
-                var actionedConcessions = GetDistinctInboxConcessions(GetActionedConcessionsForUser(user));
-                userConcessions.ActionedConcessions = actionedConcessions;
-                userConcessions.ActionedConcessionsCount = actionedConcessions?.Count() ?? 0;
-                userConcessions.ShowActionedConcessions = true;
-            }
-
-
 
             return userConcessions;
         }
@@ -398,7 +419,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <param name="user">The user.</param>
         /// <returns></returns>
-        public IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, User user)
+        public IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, User user,  string concessiontype)
         {
             int? userId = null;
 
@@ -407,7 +428,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             else if (user.CanRequest && !user.IsAdminAssistant)
                 userId = user.Id;
 
-            return _miscPerformanceRepository.GetClientAccounts(riskGroupNumber, userId);
+            return _miscPerformanceRepository.GetClientAccounts(riskGroupNumber, userId, concessiontype);
         }
 
         /// <summary>
@@ -415,23 +436,23 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <param name="accountNumber">The account number.</param>
-        /// <returns></returns>
-        public IEnumerable<ClientAccount> SearchClientAccounts(int riskGroupNumber, string accountNumber)
-        {
-            var clientAccounts = GetClientAccounts(riskGroupNumber, null);
+        ///// <returns></returns>
+        //public IEnumerable<ClientAccount> SearchClientAccounts(int riskGroupNumber, string accountNumber)
+        //{
+        //    var clientAccounts = GetClientAccounts(riskGroupNumber, null);
 
-            if (clientAccounts != null && clientAccounts.Any())
-                return clientAccounts.Where(_ => _.AccountNumber.Contains(accountNumber)).Take(10);
+        //    if (clientAccounts != null && clientAccounts.Any())
+        //        return clientAccounts.Where(_ => _.AccountNumber.Contains(accountNumber)).Take(10);
 
-            return null;
-        }
+        //    return null;
+        //}
 
         public IEnumerable<SearchConcessionDetail> SearchConsessions(int userId)
         {
             //we will only look for concessions with status BCM Pending..
             var bcmpendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.BcmPending);
 
-            var concessions = _concessionInboxViewRepository.ReadbyPCMPending(null, null, DateTime.Today, new[] { bcmpendingStatusId });
+            var concessions = _concessionInboxViewRepository.Search(null, null, null, new[] { bcmpendingStatusId });
 
             var approvedConcessionDetails = new List<SearchConcessionDetail>();
             foreach (var concession in concessions.OrderByDescending(_ => _.DateApproved ?? _.ConcessionDate))
@@ -463,7 +484,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var bcmpendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.BcmPending);
 
-            var concessions = _concessionInboxViewRepository.ReadbyPCMPending(region, businesscentre, datefilter, new[] { bcmpendingStatusId });
+            var concessions = _concessionInboxViewRepository.Search(region, businesscentre, datefilter, new[] { bcmpendingStatusId });
 
             var approvedConcessionDetails = new List<SearchConcessionDetail>();
             foreach (var concession in concessions.OrderByDescending(_ => _.DateApproved ?? _.ConcessionDate))
@@ -499,7 +520,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<string> PrimeRate(DateTime datefilter)
         {
-           return _primeRateRepository.PrimeRate(datefilter);           
+            return _primeRateRepository.PrimeRate(datefilter);
         }
 
         /// <summary>
@@ -514,8 +535,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 _lookupTableManager.GetStatusId(Constants.ConcessionStatus.ApprovedWithChanges);
 
             var concessions =
-                _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsActive(userId,
-                    new[] { approvedStatusId, approvedWithChangesStatusId }, true);
+                _concessionInboxViewRepository.GetapporvedView(userId, new[] { approvedStatusId, approvedWithChangesStatusId }, true);
 
             var approvedConcessions = new List<ApprovedConcession>();
 
@@ -542,7 +562,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 var approvedConcessionDetails = new List<ApprovedConcessionDetail>();
                 approvedConcessionDetails.AddRange(approvedConcession.ApprovedConcessionDetails);
 
-                approvedConcessionDetails.Add(new ApprovedConcessionDetail
+
+                var newapproved = new ApprovedConcessionDetail
                 {
                     Status = concession.Status,
                     ConcessionType = concession.ConcessionType,
@@ -552,8 +573,29 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     DateSentForApproval = concession.DatesentForApproval,
                     ConcessionDetailId = concession.ConcessionDetailId,
                     ConcessionId = concession.ConcessionId,
-                    ReferenceNumber = concession.ConcessionRef
-                });
+                    ReferenceNumber = concession.ConcessionRef,
+                    ConcessionLetterURL = concession.ConcessionLetterURL
+                };
+
+                //approvedConcessionDetails.Add(new ApprovedConcessionDetail
+                //{
+                //    Status = concession.Status,
+                //    ConcessionType = concession.ConcessionType,
+                //    ExpiryDate = concession.ExpiryDate,
+                //    DateApproved = concession.DateApproved,
+                //    DateOpened = concession.ConcessionDate,
+                //    DateSentForApproval = concession.DatesentForApproval,
+                //    ConcessionDetailId = concession.ConcessionDetailId,
+                //    ConcessionId = concession.ConcessionId,
+                //    ReferenceNumber = concession.ConcessionRef,
+                //    ConcessionLetterURL = concession.ConcessionLetterURL
+                //});
+
+                //remove doubles.
+                if (!approvedConcessionDetails.Contains(newapproved))
+                {
+                    approvedConcessionDetails.Add(newapproved);
+                }
 
                 approvedConcession.ApprovedConcessionDetails = approvedConcessionDetails;
             }
@@ -755,7 +797,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="concessionReferenceNumber">The concession reference number.</param>
         /// <param name="user">The user.</param>
         /// <returns></returns>
-        public Concession DeactivateConcession(string concessionReferenceNumber, User user)
+        public Concession DeactivateConcession(string concessionReferenceNumber, bool isRecall, User user)
         {
             var concessions = _concessionRepository.ReadByConcessionRefIsActive(concessionReferenceNumber, true);
 
@@ -766,9 +808,27 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             concession.IsActive = false;
             concession.IsCurrent = false;
 
-            _concessionRepository.Update(concession);
+            if (!isRecall)
+            {
+                concession.Archived = DateTime.Now;
+            }
+
+            _concessionRepository.DeactivateConcession(concession);
 
             return concession;
+        }
+
+        public ConcessionDetail DeactivateConcessionDetailed(int ConcessionDetailId, User user)
+        {
+            var concession = _concessionDetailRepository.ReadById(ConcessionDetailId);
+         
+            concession.Archived = DateTime.Now;
+
+            _concessionDetailRepository.Update(concession);
+
+            return concession;
+
+
         }
 
         /// <summary>

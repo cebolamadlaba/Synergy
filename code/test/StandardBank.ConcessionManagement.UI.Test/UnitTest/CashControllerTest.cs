@@ -28,7 +28,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         /// </summary>
         public CashControllerTest()
         {
-            _cashController = new CashController(new FakeSiteHelper(), MockCashManager.Object, MockMediator.Object);
+            _cashController = new CashController(new FakeSiteHelper(), MockCashManager.Object, MockMediator.Object, null, null);
         }
 
         /// <summary>

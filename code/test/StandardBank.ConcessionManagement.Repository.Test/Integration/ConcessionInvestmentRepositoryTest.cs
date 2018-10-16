@@ -23,8 +23,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ConcessionDetailId = DataHelper.GetConcessionDetailId(),
                 ProductTypeId = DataHelper.GetProductId(),
                 Balance = 2501,
-                Term = 6,
-                InterestToCustomer = 5484,
+                Term = 6,             
                 LegalEntityId = DataHelper.GetLegalEntityId(),
                 LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
             };
@@ -75,8 +74,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.ConcessionDetailId = DataHelper.GetAlternateConcessionDetailId(model.ConcessionDetailId);
             model.ProductTypeId = DataHelper.GetAlternateProductId(model.ProductTypeId);
             model.Balance = model.Balance + 100;
-            model.Term = model.Term + 1;
-            model.InterestToCustomer = model.InterestToCustomer + 100;
+            model.Term = model.Term + 1;        
             model.LegalEntityId = DataHelper.GetAlternateLegalEntityId(model.LegalEntityId);
             model.LegalEntityAccountId = DataHelper.GetAlternateLegalEntityAccountId(model.LegalEntityAccountId);
 
@@ -90,8 +88,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.ConcessionDetailId, model.ConcessionDetailId);
             Assert.Equal(updatedModel.ProductTypeId, model.ProductTypeId);
             Assert.Equal(updatedModel.Balance, model.Balance);
-            Assert.Equal(updatedModel.Term, model.Term);
-            Assert.Equal(updatedModel.InterestToCustomer, model.InterestToCustomer);
+            Assert.Equal(updatedModel.Term, model.Term);         
             Assert.Equal(updatedModel.LegalEntityId, model.LegalEntityId);
             Assert.Equal(updatedModel.LegalEntityAccountId, model.LegalEntityAccountId);
         }
@@ -108,8 +105,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 ConcessionDetailId = DataHelper.GetConcessionDetailId(),
                 ProductTypeId = DataHelper.GetProductId(),
                 Balance = 2501,
-                Term = 6,
-                InterestToCustomer = 5484,
+                Term = 6,             
                 LegalEntityId = DataHelper.GetLegalEntityId(),
                 LegalEntityAccountId = DataHelper.GetLegalEntityAccountId()
             };

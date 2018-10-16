@@ -1,4 +1,4 @@
-<!-- banner-->
+<!-- Banner expanded -->
 <div class="col-md-12 banner">
     <div class="row">
         <!-- Header -->
@@ -12,31 +12,29 @@
             </div>
             <div class="col-md-1"></div>
         </div>
-
         <!-- Dashboard Expanded -->
         <div class="col-md-12 banner-container" *ngIf="showHide">
             <div class="col-md-11">
                 <div class="col-md-5">
-                    <div class="subHeading">Risk Group Name //TODO</div>
-                    <div class="date lightTitle hidden-element">Risk Group Number //TODO</div>
+                    <div class="subHeading">{{tradeView.riskGroup.name}}</div>
+                    <div class="date lightTitle hidden-element">{{tradeView.riskGroup.number}}</div>
+
                 </div>
-                <div class="col-md-3 summary-items">
-                    <div class="summary-items-sub">Total TT Volumes<span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Total TT Values<span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Total LCs Volumes<span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Total LCs Values<span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Total FBC Volumes<span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Total FBC Values<span class="summary-item-value">//TODO</span></div>
+                <div class="col-md-2  hidden-element">
+                    <div class="subHeading lightTitle"> Total number of accounts</div>
+                    <div class="score"><b>{{tradeView.tradeFinancial.totalAccounts | number : '1.2-2'}}</b></div>
                 </div>
-                <div class="col-md-3 summary-items">
-                    <div class="summary-items-sub">Average TT Value<span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Average TT Price<span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Average LC Value<span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Average LC Price<span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Average FBC Value<span class="summary-item-value">//TODO</span></div>
-                    <div class="summary-items-sub">Average FBC price<span class="summary-item-value">//TODO</span></div>
+                <div class="col-md-2  hidden-element">
+                    <div class="subHeading lightTitle"> Average account management fee</div>
+                    <div class="score"><b>{{tradeView.tradeFinancial.avgFee | number : '1.2-2'}}</b></div>
+                </div>
+                <div class="col-md-2  hidden-element">
+                    <div class="subHeading lightTitle"> Overall forex margin</div>
+                    <div class="score"><b>{{tradeView.tradeFinancial.overallForexMargin | number : '1.2-2'}}</b></div>
                 </div>
             </div>
+         
+
             <div class="col-md-1">
                 <div class="compress">
                     <div>
@@ -50,8 +48,8 @@
             <div class="col-md-11">
                 <div>
                     <div class="col-md-5">
-                        <div class="subHeading">Risk Group Name //TODO</div>
-                        <div class="date lightTitle hidden-element">Risk Group Number //TODO</div>
+                        <div class="subHeading">{{tradeView.riskGroup.name}}</div>
+                        <div class="date lightTitle hidden-element">{{tradeView.riskGroup.number}}</div>
                     </div>
                 </div>
             </div>
@@ -62,109 +60,113 @@
                     </div>
                 </div>
             </div>
-        </div>
-
+        </div>     
     </div>
 </div>
 
 <!-- lending concessions and products-->
 <div class="col-md-12">
-    <div class="col-md-5">
+    <div class="col-md-6 search-and-results-container">
         <h2 class="headings">Products</h2>
         <div class="section">
 
+            <!-- End of products list -->
             <!-- Empty state for products if no data is found -->
-            <!--<div *ngIf="!investmentsView.sourceSystemProducts">
+            <div *ngIf="!tradeView?.tradeProductGroups || tradeView?.tradeProductGroups?.length == 0">
                 <div class="section-body">
                     <div class="searchEmptyState">
                         <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
                         <p>No product data found</p>
                     </div>
                 </div>
-            </div>-->
-            <!-- End of empty state -->
-            <!-- Products list -->
-            <div class="section-body">
+            </div>
+
+
+            <!-- Products grouping -->
+
+            <div class="section-body" *ngFor="let tradeprodgroup of tradeView.tradeProductGroups">
+
                 <div class="product-section">
-                    <div class="product-name">Customer Name //TODO</div>
-                    <div>
-                        <div class="product-account">Account No: //TODO</div>
+                    <div class="product-name">{{tradeprodgroup.legalEntity}}</div>
+
+                </div>
+
+                <!-- Products list -->
+                <div class="section-body">
+
+                    <div class="product-table-container">
+                        <table class="table table-bordered table-hover header-fixed table-striped ">
+                            <thead>
+                                <tr>
+                                    <th>Account(No.)</th>
+                                    <th>Product </th>
+                                    <th>Type</th>
+                                    <th>Loaded Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let tradeprod of tradeprodgroup.tradeProducts">
+                                    <td class="leftAlign">{{tradeprod.accountNumber}}</td>
+                                    <td class="leftAlign">{{tradeprod.tradeProductType}}</td>
+                                    <td class="leftAlign">{{tradeprod.tradeProductName}}</td>
+
+                                    <td class="rightAlign">{{tradeprod.loadedRate}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="product-table-container">
-                    <table class="table table-bordered table-hover header-fixed table-striped ">
-                        <thead>
-                            <tr>
-                                <th>Trans Type</th>
-                                <th>Tariff Table</th>
-                                <th>Vol</th>
-                                <th>Value</th>
-                                <th>Loaded Price</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Loop through available products here -->
-                            <tr>
-                                <td class="rightAlign">//TODO</td>
-                                <td class="rightAlign">//TODO</td>
-                                <td class="rightAlign">//TODO</td>
-                                <td class="rightAlign">//TODO</td>
-                                <td class="rightAlign">//TODO</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <!-- End of products list -->
+            </div>          
 
         </div>
     </div>
 
     <!-- Concessions list -->
-    <div class="col-md-7 search-and-results-container" id="lending-search-container">
+    <div class="col-md-6 search-and-results-container" id="lending-search-container">
         <h2 class="headings">
             Concessions
-            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/trade-add-concession']" *ngIf="canRequest">Add Concession</button>
+
+            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/trade-add-concession', tradeView.riskGroup.number]" *ngIf="pageLoaded && canRequest">Add Concession</button>
         </h2>
 
-        <!-- Search bar -->
+
         <div class="input-group add-on">
             <input class="form-control" placeholder="Concession ID" [(ngModel)]="filterConcessionId" type="text">
         </div>
 
-        <!-- Concession list -->
-        <div class="section">
-
-            <div class="section-header small-table-title">
-                <div class="concessionID-section">//TODO</div>
+        <div class="section" *ngFor="let tradeConcession of tradeView.tradeConcessions | baseConcessionFilter : filterConcessionId; trackBy: index;">
+            <div class="section-header">
+                <div class="concessionID-section">
+                    <div class="concession-status">
+                        <div [ngClass]="{'approved-status': (tradeConcession.concession.status==='Approved') || (tradeConcession.concession.status==='Approved With Changes'),'pending-status': tradeConcession.concession.status==='Pending', 'declined-status': tradeConcession.concession.status==='Declined'}">{{tradeConcession.concession.status}}</div>
+                    </div>
+                    <p class="concession-id">{{tradeConcession.concession.referenceNumber}}</p>
+                    <div class="concession-sub-status">{{tradeConcession.concession.subStatus}}</div>
+                </div>
             </div>
             <div class="section-body">
-                <div class="table-container">
+                <div class="table-container" [routerLink]="['/trade-view-concession', tradeView.riskGroup.number, tradeConcession.concession.referenceNumber]">
                     <table class="table table-bordered table-hover header-fixed table-striped">
                         <thead>
                             <tr>
-                                <th>Trans Type</th>
-                                <th>Tariff Table</th>
-                                <th>Customer</th>
-                                <th>Vol</th>
-                                <th>Value</th>
-                                <th>Loaded Price</th>
-                                <th>Approved Price</th>
+                                <th>Legal Entity</th>
+                                <th>Product</th>
+                                <th>Type</th>
+                                <th>Account(No.)</th>
+                                <th>Rate</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Loop through available concessions here -->
-                            <tr>
-                                <td class="rightAlign">//TODO</td>
-                                <td class="rightAlign">//TODO</td>
+                            <tr *ngFor="let concession of tradeConcession.tradeConcessionDetails; trackBy: index;">
+                                <td>{{concession.legalEntity}}</td>
+                                <td class="leftAlign">{{concession.tradeProductType}}</td>
+                                <td class="leftAlign">{{concession.tradeProduct}}</td>
+
+                                <td class="rightAlign">{{concession.accountNumber}}</td>
                                 <td>
-                                    <p class="customerInfo">//TODO</p>
-                                    <p class="accInfo">Acc No : //TODO</p>
+                                    <p class="mapInfo">Loaded:{{concession.loadedRate | number : '1.5-5'}}</p>
+                                    <p class="mapInfo">Approved:{{concession.approvedRate| number : '1.5-5'}}</p>
                                 </td>
-                                <td class="rightAlign">//TODO</td>
-                                <td class="rightAlign">//TODO</td>
-                                <td class="rightAlign">//TODO</td>
-                                <td class="rightAlign">//TODO</td>
                             </tr>
                         </tbody>
                     </table>
@@ -172,8 +174,8 @@
             </div>
         </div>
 
-        <!-- Empty state if no concessions found -->
-        <div class="searchEmptyState">
+
+        <div class="searchEmptyState" *ngIf="(tradeView.tradeConcessions | baseConcessionFilter: filterConcessionId).length === 0">
             <i class="fa fa-inbox" aria-hidden="true"></i>
             <p>No concessions found matching your search</p>
         </div>

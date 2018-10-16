@@ -77,7 +77,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
 
                 //if there is a business centre manager id, we need to add this user to this centre
                 var bcmCentreUser = _businessCentreManager.CreateCentreUser(centre.Id,
-                    message.BusinessCentreManagementModel.BusinessCentreManagerId.Value);
+                    message.BusinessCentreManagementModel.BusinessCentreManagerId.Value, user);
 
                 auditRecords.Add(new AuditRecord(bcmCentreUser, message.CurrentUser, AuditType.Insert));
 
@@ -95,14 +95,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
                     if (user.CentreId > 0)
                     {
                         var centreUser =
-                            _businessCentreManager.UpdateCentreUser(user.CentreId, centre.Id, accountExecutive.Id);
+                            _businessCentreManager.UpdateCentreUser(user.CentreId, centre.Id, accountExecutive.Id, user);
 
                         if (centreUser != null)
                             auditRecords.Add(new AuditRecord(centreUser, message.CurrentUser, AuditType.Update));
                     }
                     else
                     {
-                        var centreUser = _businessCentreManager.CreateCentreUser(centre.Id, accountExecutive.Id);
+                        var centreUser = _businessCentreManager.CreateCentreUser(centre.Id, accountExecutive.Id, user);
 
                         auditRecords.Add(new AuditRecord(centreUser, message.CurrentUser, AuditType.Insert));
                     }

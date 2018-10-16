@@ -12,7 +12,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// </summary>
         /// <param name="concessionReferenceId">The concession reference identifier.</param>
         /// <returns></returns>
-        byte[] GenerateLetters(string concessionReferenceId);
+        //byte[] GenerateLetters(string concessionReferenceId);
 
         /// <summary>
         /// Generates the letters for legal entity.
@@ -29,5 +29,9 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="requestorId">The requestor identifier.</param>
         /// <returns></returns>
         byte[] GenerateLettersForConcessionDetails(IEnumerable<int> concessionDetailIds, int requestorId);
+
+        byte[] GenerateLettersForConcessions(IEnumerable<int> concessionIds, int requestorId);
+
+        byte[] DownloadLetterForConcessionDetail(int concessionDetailId, int requestorId);
     }
 }

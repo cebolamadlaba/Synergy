@@ -28,6 +28,10 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <returns></returns>
         IEnumerable<ConcessionTrade> ReadAll();
 
+        IEnumerable<TradeProduct> GetTradeProducts();
+
+        IEnumerable<TradeProductType> GetTradeProductTypes();
+
         /// <summary>
         /// Updates the specified model.
         /// </summary>
@@ -39,5 +43,7 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         void Delete(ConcessionTrade model);
+
+        IEnumerable<LegalEntityGBBNumber> GetLegalEntityGBBNumbers(int riskGroupNumber);
     }
 }

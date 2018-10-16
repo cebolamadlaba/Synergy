@@ -38,6 +38,10 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// </summary>
         private readonly IMediator _mediator;
 
+        private readonly IBusinessCentreManager _bcmManager;
+
+        private readonly ILookupTableManager _lookupTableManager;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TransactionalController"/> class.
         /// </summary>
@@ -45,11 +49,13 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="transactionalManager">The transactional manager.</param>
         /// <param name="mediator">The mediator.</param>
         public TransactionalController(ISiteHelper siteHelper, ITransactionalManager transactionalManager,
-            IMediator mediator)
+            IMediator mediator, IBusinessCentreManager businessCentreManager, ILookupTableManager lookupTableManager)
         {
             _siteHelper = siteHelper;
             _transactionalManager = transactionalManager;
             _mediator = mediator;
+            _bcmManager = businessCentreManager;
+            _lookupTableManager = lookupTableManager;
         }
 
         /// <summary>
@@ -61,6 +67,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult TransactionalView(int riskGroupNumber)
         {
             return Ok(_transactionalManager.GetTransactionalViewData(riskGroupNumber));
+
+
         }
 
         /// <summary>
@@ -88,8 +96,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             TransactionalConcession transactionalConcession = _transactionalManager.GetTransactionalConcession(detail.ReferenceNumber, user);
 
             transactionalConcession.Concession.SubStatus = Constants.ConcessionSubStatus.PcmPending;
-            transactionalConcession.Concession.BcmUserId = user.Id;
-            transactionalConcession.Concession.Comments  = "Manually forwarded by PCM";
+            transactionalConcession.Concession.BcmUserId = _bcmManager.GetBusinessCentreManager(transactionalConcession.Concession.CentreId).BusinessCentreManagerId;
+            transactionalConcession.Concession.Comments = "Manually forwarded by PCM";
             transactionalConcession.Concession.IsInProgressForwarding = true;
 
             await _transactionalManager.ForwardTransactionalConcession(transactionalConcession, user);
@@ -112,7 +120,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             return Ok(_transactionalManager.GetTransactionalConcession(transactionalConcession.Concession.ReferenceNumber, user));
         }
-      
+
 
         /// <summary>
         /// Updates the transactional concession.
@@ -157,9 +165,20 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 await _mediator.Send(new AddConcessionComment(concession.Id,
                     databaseTransactionalConcession.Concession.SubStatusId,
                     transactionalConcession.Concession.Comments, user));
+
+
+            if (transactionalConcession.Concession.Comments == "Approved With Changes" && transactionalConcession.Concession.ConcessionComments != null)
+            {
+                if (transactionalConcession.Concession.ConcessionComments.Count() > 0 && transactionalConcession.Concession.ConcessionComments.First().UserDescription == "LogChanges")
+                {
+                    await _mediator.Send(new AddConcessionComment(concession.Id, databaseTransactionalConcession.Concession.SubStatusId, "LogChanges:" + transactionalConcession.Concession.ConcessionComments.First().Comment, user));
+
+
+                }
+            }
         }
 
-   
+
 
         /// <summary>
         /// Creates a new transactional concession
@@ -185,6 +204,13 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 transactionalConcession.ConcessionConditions.Any())
                 foreach (var concessionCondition in transactionalConcession.ConcessionConditions)
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+
+
+            var bcmPendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.NewSubmission);
+
+            if (!string.IsNullOrWhiteSpace(transactionalConcession.Concession.Comments))
+                await _mediator.Send(new AddConcessionComment(concession.Id, bcmPendingStatusId,
+                    transactionalConcession.Concession.Comments, user));
 
             return Ok(transactionalConcession);
         }
@@ -394,6 +420,28 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult TransactionalFinancial(int riskGroupNumber)
         {
             return Ok(_transactionalManager.GetTransactionalFinancialForRiskGroupNumber(riskGroupNumber));
+        }
+
+        [Route("GetTransactionTableNumbers/{isActive}")]
+        public IActionResult GetTransactionTableNumbers(bool isActive)
+        {
+            return Ok(_transactionalManager.GetTransactionTableNumbers(isActive));
+        }
+
+        [Route("CreateTransactionType")]
+        public async Task<IActionResult> CreateTransactionType([FromBody] TransactionType transactionType)
+        {
+            var model = new Model.Repository.TransactionType() { Description = transactionType.Description, IsActive = true, ImportFileChannel = transactionType.ImportFileChannel };
+
+            return Ok(_transactionalManager.CreateTransactionType(model));
+        }
+
+
+        [Route("CreateupdateTransactionTableNumber")]
+        public async Task<IActionResult> CreateupdateTransactionTableNumber([FromBody] TransactionTableNumber transactionTableNumber)
+        {            
+
+            return Ok(_transactionalManager.CreateupdateTransactionTableNumber(transactionTableNumber));
         }
     }
 }

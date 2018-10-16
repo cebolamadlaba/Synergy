@@ -9,9 +9,9 @@ obj\Debug
 .suo
 .vs
 *FileListAbsolute.txt
-node_modules
 site.min.js
 web.pubxml.user
 *StandardBank.ConcessionManagement.Database.dbmdl
 *StandardBank.ConcessionManagement.Database.jfm
 /code/src/StandardBank.ConcessionManagement.Scheduler/logs
+/code/src/StandardBank.ConcessionManagement.UI/node_modules

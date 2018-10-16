@@ -98,5 +98,11 @@
         /// Gets or sets the uff fee
         /// </summary>
         public decimal UffFee { get; set; }
+
+        public decimal ServiceFee { get; set; }
+
+        public string Frequency { get; set; }
+
+      
     }
 }

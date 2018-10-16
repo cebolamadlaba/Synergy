@@ -42,29 +42,39 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ConcessionInvestment Create(ConcessionInvestment model)
         {
-            var concessionDetail = _concessionDetailRepository.Create(model);
-            model.ConcessionDetailId = concessionDetail.ConcessionDetailId;
+            try
+            {
+                var concessionDetail = _concessionDetailRepository.Create(model);
+                model.ConcessionDetailId = concessionDetail.ConcessionDetailId;
 
-            const string sql =
-                @"INSERT [dbo].[tblConcessionInvestment] ([fkConcessionId], [fkConcessionDetailId], [fkProductTypeId], [Balance], [Term], [InterestToCustomer]) 
-                VALUES (@ConcessionId, @ConcessionDetailId, @ProductTypeId, @Balance, @Term, @InterestToCustomer) 
+                const string sql =
+                    @"INSERT [dbo].[tblConcessionInvestment] ([fkConcessionId], [fkConcessionDetailId], [fkProductId],[fkLegalEntityAccountId], [Balance], [Term], [LoadedRate]) 
+                VALUES (@ConcessionId, @ConcessionDetailId, @fkProductId, @fkLegalEntityAccountId,  @Balance, @Term, @LoadedRate) 
                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
-            using (var db = _dbConnectionFactory.Connection())
-            {
-                model.Id = db.Query<int>(sql,
-                    new
-                    {
-                        ConcessionId = model.ConcessionId,
-                        ConcessionDetailId = model.ConcessionDetailId,
-                        ProductTypeId = model.ProductTypeId,
-                        Balance = model.Balance,
-                        Term = model.Term,
-                        InterestToCustomer = model.InterestToCustomer
-                    }).Single();
-            }
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    model.Id = db.Query<int>(sql,
+                        new
+                        {
+                            ConcessionId = model.ConcessionId,
+                            ConcessionDetailId = model.ConcessionDetailId,
+                            fkProductId = model.ProductTypeId,
+                            fkLegalEntityAccountId = model.LegalEntityAccountId,
+                            Balance = model.Balance,
+                            Term = model.Term,
+                            LoadedRate = model.LoadedRate
 
-            return model;
+                        }).Single();
+                }
+
+                return model;
+            }
+            catch (System.Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         /// <summary>
@@ -77,10 +87,11 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionInvestment>(
-                    @"SELECT [pkConcessionInvestmentId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkProductTypeId] [ProductTypeId], [Balance], [Term], [InterestToCustomer], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
+                    @"SELECT [pkConcessionInvestmentId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkProductId], d.[fkLegalEntityAccountId], [Balance], [Term], [LoadedRate], [ApprovedRate], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
                     FROM [dbo].[tblConcessionInvestment] t
-                    JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
-                    WHERE [pkConcessionInvestmentId] = @Id",
+                      FROM [dbo].[tblConcessionInvestment] t
+                      JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
+                      WHERE t.[fkConcessionId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -94,7 +105,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionInvestment>(
-                    @"SELECT [pkConcessionInvestmentId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkProductTypeId] [ProductTypeId], [Balance], [Term], [InterestToCustomer], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
+                    @"Select [pkConcessionInvestmentId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkProductId], d.[fkLegalEntityAccountId], [Balance], [Term], [LoadedRate], [ApprovedRate], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
                     FROM [dbo].[tblConcessionInvestment] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]");
             }
@@ -109,17 +120,20 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblConcessionInvestment]
-                            SET [fkConcessionId] = @ConcessionId, [fkConcessionDetailId] = @ConcessionDetailId, [fkProductTypeId] = @ProductTypeId, [Balance] = @Balance, [Term] = @Term, [InterestToCustomer] = @InterestToCustomer
+                            SET [fkConcessionId] = @ConcessionId, [fkConcessionDetailId] = @ConcessionDetailId, [fkProductId] = @fkProductId, [fkLegalEntityAccountId] = @fkLegalEntityAccountId, [Balance] = @Balance, [Term] = @Term, LoadedRate = @LoadedRate,ApprovedRate = @ApprovedRate
                             WHERE [pkConcessionInvestmentId] = @Id",
                     new
                     {
                         Id = model.Id,
                         ConcessionId = model.ConcessionId,
                         ConcessionDetailId = model.ConcessionDetailId,
-                        ProductTypeId = model.ProductTypeId,
+                        fkProductId = model.ProductTypeId,
+                        fkLegalEntityAccountId = model.LegalEntityAccountId,
                         Balance = model.Balance,
                         Term = model.Term,
-                        InterestToCustomer = model.InterestToCustomer
+                        LoadedRate = model.LoadedRate,
+                        ApprovedRate = model.ApprovedRate
+
                     });
             }
 
@@ -139,6 +153,16 @@ namespace StandardBank.ConcessionManagement.Repository
             }
 
             _concessionDetailRepository.Delete(model);
+        }
+
+        public IEnumerable<InvestmentProduct> GetInvestmentProducts()
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+
+                return db.Query<InvestmentProduct>(
+                    @"SELECT description [tradeProductName], pkTradeProductId [tradeProductId], fkTradeProductTypeId [tradeProductTypeId]  from rtblTradeProduct");
+            }
         }
     }
 }

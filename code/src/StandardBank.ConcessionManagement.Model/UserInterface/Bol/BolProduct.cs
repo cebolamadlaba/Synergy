@@ -14,6 +14,8 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Bol
         /// </value>
         public int BolProductId { get; set; }
 
+        public string BolProductType { get; set; }
+
         public string RiskGroupName { get; set; }
 
         public string LegalEntity  { get; set; }
@@ -24,7 +26,18 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Bol
 
         public string ChargeCodeDesc { get; set; }
 
-        public decimal LoadedRate { get; set; }
+        public string LoadedRate { get; set; }
 
     }
+
+
+    public class BolProductGroup
+    {
+        public string RiskGroupName { get; set; }
+
+        public string LegalEntity { get; set; }    
+
+        public List<BolProduct> BolProducts { get; set; }
+    }
+
 }

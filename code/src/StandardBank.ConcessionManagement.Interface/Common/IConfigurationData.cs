@@ -32,13 +32,17 @@ namespace StandardBank.ConcessionManagement.Interface.Common
         string DateDatabaseConnection { get; set; }
         string EmailTemplatePath  { get; set; }
 
+        string EnforceMyAccess { get; set; }
+
+        string ServerURL { get; set; }
+
         /// <summary>
         /// Gets or sets the letter template path.
         /// </summary>
         /// <value>
         /// The letter template path.
         /// </value>
-        string LetterTemplatePath { get; set; }
+        string LetterTemplatePath { get; set; }    
 
         /// <summary>
         /// Gets or sets the WK HTML to PDF executable.

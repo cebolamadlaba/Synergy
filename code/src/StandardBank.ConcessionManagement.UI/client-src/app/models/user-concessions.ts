@@ -21,4 +21,6 @@ export class UserConcessions {
     showMismatchedConcessions: boolean;
     showDeclinedConcessions: boolean;
     showActionedConcessions: boolean;
+
+    isElevatedUser: boolean;
 }

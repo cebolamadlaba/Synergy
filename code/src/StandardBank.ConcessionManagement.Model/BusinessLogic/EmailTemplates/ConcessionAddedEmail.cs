@@ -52,5 +52,7 @@
         /// The product.
         /// </value>
         public string Product { get; set; }
+
+        public string ServerURL { get; set; }
     }
 }

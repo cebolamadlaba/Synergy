@@ -74,7 +74,7 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.AdValorem = model.AdValorem + 100;
             model.IsActive = !model.IsActive;
 
-            InstantiatedDependencies.TransactionTableNumberRepository.Update(model);
+           // InstantiatedDependencies.TransactionTableNumberRepository.Update(model);
 
             var updatedModel = InstantiatedDependencies.TransactionTableNumberRepository.ReadById(id);
 

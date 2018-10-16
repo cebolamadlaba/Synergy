@@ -61,7 +61,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     isEditing = false;
     motivationEnabled = false;
     canEdit = false;
-    isRecalling = false;
+   
     capturedComments: string;
     canApproveChanges: boolean;
     canResubmit = false;
@@ -71,6 +71,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 	isInProgressExtension = false;
     isInProgressRenewal = false;
     isApproved = false;
+
+    isRecalling = false;
+    visiblearray: object[];
 
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
@@ -121,6 +124,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.lendingConcession = new LendingConcession();
         this.lendingConcession.concession = new Concession();
         this.lendingConcession.concession.concessionComments = [new ConcessionComment()];
+
+      
     }
 
     ngOnInit() {
@@ -142,9 +147,6 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
         });
 
-
-
-
         Observable.forkJoin([
             this.lookupDataService.getReviewFeeTypes(),
             this.lookupDataService.getProductTypes(ConcessionTypes.Lending),
@@ -152,7 +154,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             this.lookupDataService.getPeriodTypes(),
             this.lookupDataService.getConditionTypes(),
             this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-            this.lookupDataService.getClientAccounts(this.riskGroupNumber),
+            this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Lending),
             this.lendingService.getLendingFinancial(this.riskGroupNumber),
           
         ]).subscribe(results => {
@@ -185,6 +187,12 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         });
     }
 
+    getvisible(productType: Number) {
+
+
+        return true;
+    }
+
     populateForm() {
         if (this.concessionReferenceId) {
             this.observableLendingConcession = this.lendingService.getLendingConcessionData(this.concessionReferenceId);
@@ -213,6 +221,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                     this.primeRate = lendingConcession.primeRate;
                 }
 
+                
                 //if it's still pending and the user is a requestor then they can recall it
                 if (lendingConcession.concession.status == ConcessionStatus.Pending && lendingConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
                     this.canRecall = lendingConcession.currentUser.canRequest;
@@ -252,6 +261,48 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                         this.addNewConcessionRow();
                     }
 
+                    if (lendingConcessionDetail.productType == 'Overdraft') {
+
+                        lendingConcessionDetail.show_term = false;
+                        lendingConcessionDetail.show_reviewFeeType = true;
+                        lendingConcessionDetail.show_reviewFee = true;
+                        lendingConcessionDetail.show_uffFee = true;
+                        lendingConcessionDetail.show_frequency = false;
+                        lendingConcessionDetail.show_serviceFee = false;                      
+
+                    }
+                    else if (lendingConcessionDetail.productType === "Temporary Overdraft") {
+
+
+                        lendingConcessionDetail.show_term = true;
+                        lendingConcessionDetail.show_reviewFeeType = true;
+                        lendingConcessionDetail.show_reviewFee = true;
+                        lendingConcessionDetail.show_uffFee = true;
+                        lendingConcessionDetail.show_frequency = false;
+                        lendingConcessionDetail.show_serviceFee = false;  
+                                                                                          
+
+                    }
+                    else if (lendingConcessionDetail.productType.indexOf("VAF") == 0) {
+
+                        lendingConcessionDetail.show_term = true;
+                        lendingConcessionDetail.show_reviewFeeType = false;
+                        lendingConcessionDetail.show_reviewFee = false;
+                        lendingConcessionDetail.show_uffFee = false;
+                        lendingConcessionDetail.show_frequency = true;
+                        lendingConcessionDetail.show_serviceFee = true; 
+                    }
+                    else {                     
+
+                        lendingConcessionDetail.show_term = true;
+                        lendingConcessionDetail.show_reviewFeeType = false;
+                        lendingConcessionDetail.show_reviewFee = false;
+                        lendingConcessionDetail.show_uffFee = false;
+                        lendingConcessionDetail.show_frequency = false;
+                        lendingConcessionDetail.show_serviceFee = false;  
+                    }
+             
+
                     const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
                     let currentConcession = concessions.controls[concessions.length - 1];
 
@@ -262,7 +313,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                     currentConcession.get('productType').setValue(selectedProductType[0]);
 
                     this.selectedProductTypes[rowIndex] = selectedProductType[0];
-
+                  
 
                     if (this.clientAccounts) {
                         let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == lendingConcessionDetail.legalEntityAccountId);
@@ -279,6 +330,10 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                     currentConcession.get('reviewFeeType').setValue(selectedReviewFeeType[0]);
                     currentConcession.get('reviewFee').setValue(this.formatDecimal(lendingConcessionDetail.reviewFee));
                     currentConcession.get('uffFee').setValue(this.formatDecimal(lendingConcessionDetail.uffFee));
+
+
+                    currentConcession.get('serviceFee').setValue(this.formatDecimal(lendingConcessionDetail.serviceFee));
+                    currentConcession.get('frequency').setValue(lendingConcessionDetail.frequency);
 
                     if (lendingConcessionDetail.expiryDate) {
                         var formattedExpiryDate = this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd');
@@ -326,7 +381,10 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                     currentCondition.get('period').setValue(selectedPeriod[0]);
 
                     rowIndex++;
-				}
+                }
+
+                this.changearray = this.lookupDataService.checkforLC(this.lendingConcession.concession.status, this.lendingConcession.concession.subStatus, lendingConcession.concession.concessionComments);
+
 				this.isLoading = false;
 			}, error => {
 				this.isLoading = false;
@@ -354,7 +412,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             expiryDate: [{ value: '', disabled: true }],
 			dateApproved: [{ value: '', disabled: true }],
 			isExpired: [''],
-			isExpiring: ['']
+            isExpiring: [''],
+            frequency: [{ value: '', disabled: true }],
+            serviceFee: [{ value: '', disabled: true }],
         });
     }
 
@@ -412,13 +472,17 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
         let currentCondition = control.controls[rowIndex];
 
+        currentCondition.get('conditionProduct').setValue(null);
         currentCondition.get('interestRate').setValue(null);
         currentCondition.get('volume').setValue(null);
         currentCondition.get('value').setValue(null);
         currentCondition.get('expectedTurnoverValue').setValue(null);
     }
 
-    productTypeChanged(rowIndex) {
+    productTypeChanged(rowIndex: number) {
+
+        console.log('Row:' + rowIndex);
+
         const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
 
         let currentRow = control.controls[rowIndex];
@@ -426,32 +490,152 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
         this.selectedProductTypes[rowIndex] = productType;
 
+        if (this.clientAccounts && this.clientAccounts.length > 0) {
+            //this.selectedAccountNumbers[rowIndex].clientaccounts = this.clientAccounts.filter(re => re.accountType == productType.description);
+        }
+
         if (productType.description === "Overdraft") {
+
             currentRow.get('term').disable();
             currentRow.get('term').setValue('12');
 
             currentRow.get('reviewFeeType').enable();
             currentRow.get('reviewFee').enable();
             currentRow.get('uffFee').enable();
+
+            currentRow.get('frequency').disable();
+            currentRow.get('serviceFee').disable();
+
         }
-        else if (productType.description === "Temporary Overdraft") {          
+        else if (productType.description === "Temporary Overdraft") {
+
+            currentRow.get('term').enable();
 
             currentRow.get('reviewFeeType').enable();
             currentRow.get('reviewFee').enable();
             currentRow.get('uffFee').enable();
+
+            currentRow.get('frequency').disable();
+            currentRow.get('serviceFee').disable();
+
+        }
+        else if (productType.description.indexOf("VAF") == 0) {
+
+            currentRow.get('term').enable();
+
+            currentRow.get('frequency').enable();
+            currentRow.get('serviceFee').enable();
+
+            currentRow.get('reviewFeeType').disable();
+            currentRow.get('reviewFee').disable();
+            currentRow.get('uffFee').disable();
         }
         else {
+
             currentRow.get('term').enable();
 
             currentRow.get('reviewFeeType').disable();
             currentRow.get('reviewFee').disable();
             currentRow.get('uffFee').disable();
 
-            currentRow.get('reviewFeeType').setValue(null);
-            currentRow.get('reviewFee').setValue(null);
-            currentRow.get('uffFee').setValue(null);
+            currentRow.get('frequency').disable();
+            currentRow.get('serviceFee').disable();
         }
     }
+
+    //productTypeChanged(rowIndex) {
+    //    const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+
+    //    let currentRow = control.controls[rowIndex];
+    //    var productType = currentRow.get('productType').value;
+
+    //    this.selectedProductTypes[rowIndex] = productType;
+
+    //    if (productType.description === "Overdraft") {
+    //        currentRow.get('term').disable();
+    //        currentRow.get('term').setValue('12');
+
+    //        currentRow.get('reviewFeeType').enable();
+    //        currentRow.get('reviewFee').enable();
+    //        currentRow.get('uffFee').enable();
+
+    //        currentRow.get('frequency').disable();
+    //        currentRow.get('serviceFee').disable();
+
+    //        currentRow.get('frequency').setValue(null);
+    //        currentRow.get('serviceFee').setValue(null);
+
+
+    //    }
+    //    else if (productType.description === "Temporary Overdraft") {
+
+    //        //currentRow.get('term').enable();
+
+    //        //currentRow.get('reviewFeeType').disable();
+    //        //currentRow.get('reviewFee').disable();
+    //        //currentRow.get('uffFee').disable();
+
+    //        //currentRow.get('reviewFeeType').setValue(null);
+    //        //currentRow.get('reviewFee').setValue(null);
+    //        //currentRow.get('uffFee').setValue(null);
+
+    //        //currentRow.get('frequency').disable();
+    //        //currentRow.get('serviceFee').disable();
+
+    //        //currentRow.get('frequency').setValue(null);
+    //        //currentRow.get('serviceFee').setValue(null);
+
+    //        ///---
+
+    //        currentRow.get('reviewFeeType').enable();
+    //        currentRow.get('reviewFee').enable();
+    //        currentRow.get('uffFee').enable();
+
+    //        currentRow.get('reviewFeeType').setValue(null);
+    //        currentRow.get('reviewFee').setValue(null);
+    //        currentRow.get('uffFee').setValue(null);
+
+    //        currentRow.get('frequency').setValue(null);
+    //        currentRow.get('serviceFee').setValue(null);
+
+    //        currentRow.get('frequency').disable();
+    //        currentRow.get('serviceFee').disable();
+
+    //    }
+    //    else if (productType.description.indexOf("VAF") == 0) {
+
+    //        currentRow.get('frequency').enable();
+    //        currentRow.get('serviceFee').enable();
+
+    //        currentRow.get('reviewFeeType').disable();
+    //        currentRow.get('reviewFee').disable();
+    //        currentRow.get('uffFee').disable();
+
+    //        currentRow.get('reviewFeeType').setValue(null);
+    //        currentRow.get('reviewFee').setValue(null);
+    //        currentRow.get('uffFee').setValue(null);
+
+
+    //    }
+    //    else {
+    //        currentRow.get('term').enable();
+
+    //        currentRow.get('reviewFeeType').disable();
+    //        currentRow.get('reviewFee').disable();
+    //        currentRow.get('uffFee').disable();
+
+    //        currentRow.get('reviewFeeType').setValue(null);
+    //        currentRow.get('reviewFee').setValue(null);
+    //        currentRow.get('uffFee').setValue(null);
+
+    //        currentRow.get('frequency').disable();
+    //        currentRow.get('serviceFee').disable();
+
+    //        currentRow.get('frequency').setValue(null);
+    //        currentRow.get('serviceFee').setValue(null);
+
+    //    }
+    //}
 
     addValidationError(validationDetail) {
         if (!this.validationError)
@@ -474,7 +658,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         if (this.lendingConcessionForm.controls['mrsCrs'].value)
             lendingConcession.concession.mrsCrs = this.lendingConcessionForm.controls['mrsCrs'].value;
         else
-            this.addValidationError("MRS/CRS not captured");
+            if (this.lendingConcessionForm.controls['mrsCrs'].value != 0) {
+                this.addValidationError("MRS/CRS not captured");
+            }
 
         if (this.lendingConcessionForm.controls['smtDealNumber'].value)
             lendingConcession.concession.smtDealNumber = this.lendingConcessionForm.controls['smtDealNumber'].value;
@@ -484,7 +670,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         if (this.lendingConcessionForm.controls['motivation'].value)
             lendingConcession.concession.motivation = this.lendingConcessionForm.controls['motivation'].value;
         else
-            this.addValidationError("Motivation not captured");
+            lendingConcession.concession.motivation = '.';
 
         if (this.lendingConcessionForm.controls['comments'].value)
             lendingConcession.concession.comments = this.lendingConcessionForm.controls['comments'].value;
@@ -537,6 +723,12 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
             if (concessionFormItem.get('uffFee').value)
                 lendingConcessionDetail.uffFee = concessionFormItem.get('uffFee').value;
+
+            if (concessionFormItem.get('serviceFee').value)
+                lendingConcessionDetail.serviceFee = concessionFormItem.get('serviceFee').value;
+
+            if (concessionFormItem.get('frequency').value)
+                lendingConcessionDetail.frequency = concessionFormItem.get('frequency').value;
 
 			if (concessionFormItem.get('expiryDate').value)
 				lendingConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
@@ -693,7 +885,10 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
 			if (!lendingConcession.concession.comments) {
 				lendingConcession.concession.comments = ConcessionStatus.ApprovedWithChanges;
-			}
+            }
+
+            lendingConcession.concession.concessionComments = this.GetChanges(lendingConcession.concession.id);
+
         } else {
             lendingConcession.concession.status = ConcessionStatus.Approved;
 
@@ -725,6 +920,57 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         } else {
             this.isLoading = false;
         }
+    }
+
+    private GetChanges(concessionid: number): any[] {
+        let comments = this.getChangedProperties();
+
+        let commentarray = [];
+        let comment = new ConcessionComment();
+        comment.concessionId = concessionid;
+        comment.comment = comments;
+        comment.userDescription = "LogChanges";
+        commentarray.push(comment);
+        return commentarray;
+    }
+
+    private getChangedProperties(): string {
+
+        let changedProperties = [];
+        let rowIndex = 0;
+
+        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+
+        //this is detailed line items,  but not yet the controls
+        for (let concessionFormItem of concessions.controls) {
+
+            let controls = (<FormGroup>concessionFormItem).controls;
+
+            for (const fieldname in controls) { // 'field' is a string
+
+                const abstractControl = controls[fieldname];
+                if (abstractControl.dirty) {
+
+                    changedProperties.push({ rowIndex, fieldname });
+                }
+            }
+            rowIndex++;
+        }
+        return JSON.stringify(changedProperties);
+    }
+
+    changearray: any[];
+    checkforchanges: boolean;
+    bcmhochanged(index: number, controlname: string) {
+
+        if (this.changearray) {
+
+            let found = this.changearray.find(f => f.rowIndex == index && f.fieldname == controlname);
+            if (found) {
+                return true;
+            }
+        }
+        return false;
     }
 
     pcmDeclineConcession() {
@@ -790,6 +1036,27 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
+    disableRows() {
+
+        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        for (let concessionFormItem of concessions.controls) {
+
+            concessionFormItem.disable();
+        }
+    }
+
+    loopRows() {
+        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        let rowIndex = 0;
+        for (let concessionFormItem of concessions.controls) {
+
+            this.productTypeChanged(rowIndex);
+
+            rowIndex++;
+        } 
+
+    }
+
     editConcession(editType: string) {
         this.canBcmApprove = false;
         this.motivationEnabled = true;
@@ -804,6 +1071,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.canResubmit = false;
 		this.canUpdate = false;
 		this.canArchive = false;
+
+      
 
         this.lendingConcessionForm.controls['motivation'].setValue('');
     }
@@ -842,7 +1111,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         this.errorMessage = null;
 
-        this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
+        this.userConcessionsService.recallConcession(this.concessionReferenceId).subscribe(entity => {
 			this.warningMessage = "Concession recalled, please make the required changes and save the concession or it will be lost";
             this.isRecalling = true;
             this.isLoading = false;
@@ -951,15 +1220,36 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         } else {
             this.isLoading = false;
         }
-	}
+    }
+
+    archiveConcessiondetail(concessionDetailId: number) {
+
+        if (confirm("Are you sure you want to delete the concession item ?")) {
+            this.isLoading = true;
+            this.errorMessage = null;
+
+            this.userConcessionsService.deactivateConcessionDetailed(concessionDetailId).subscribe(entity => {
+
+                this.warningMessage = "Concession item has been deleted";
+
+                this.isLoading = false;
+
+                this.ngOnInit();
+
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        }
+    }
 
 	archiveConcession() {
-		if (confirm("Are you sure you want to archive this concession?")) {
-			this.isLoading = true;
-			this.errorMessage = null;
+        if (confirm("Are you sure you want to delete this concession ?")) {
+            this.isLoading = true;
+            this.errorMessage = null;
 
-			this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
-				this.warningMessage = "Concession has been archived.";
+            this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
+                this.warningMessage = "Concession has been deleted";
 
 				this.isLoading = false;
 				this.canBcmApprove = false;

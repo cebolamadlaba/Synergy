@@ -74,6 +74,121 @@ namespace StandardBank.ConcessionManagement.Repository
             }
         }
 
+
+        public BOLChargeCode CreateUpdate(BOLChargeCode model)
+        {
+            try
+            {
+
+                //Update or Insert
+                if (model.IsActive)
+                {
+                    if (model.pkChargeCodeId == 0)
+                    {
+                        const string sql =
+                        @"INSERT [dbo].[rtblBOLChargeCode] ([Description], [ChargeCode], [Length], [fkChargeCodeTypeId],[IsActive]) 
+                        VALUES (@Description, @ChargeCode, @Length, @fkChargeCodeTypeId,@IsActive) 
+                        SELECT CAST(SCOPE_IDENTITY() as int)";
+
+                        using (var db = _dbConnectionFactory.Connection())
+                        {
+                            model.pkChargeCodeId = db.Query<int>(sql,
+                                new
+                                {
+                                    Description = model.Description,
+                                    ChargeCode = model.ChargeCode,
+                                    Length = model.length,
+                                    fkChargeCodeTypeId = model.fkChargeCodeTypeId,
+                                    IsActive = true
+
+                                }).Single();
+                        }
+
+
+                    }
+                    else
+                    {
+                        const string sql =
+                       @"Update [dbo].[rtblBOLChargeCode] set [Description] = @Description , [ChargeCode] =  @ChargeCode, [Length] = @Length , [fkChargeCodeTypeId] = @fkChargeCodeTypeId, [IsActive] = @IsActive where pkChargeCodeId = @pkChargeCodeId";
+
+                        using (var db = _dbConnectionFactory.Connection())
+                        {
+                            db.Execute(sql,
+                               new
+                               {
+                                   pkChargeCodeId = model.pkChargeCodeId,
+                                   Description = model.Description,
+                                   ChargeCode = model.ChargeCode,
+                                   Length = model.length,
+                                   fkChargeCodeTypeId = model.fkChargeCodeTypeId,
+                                   IsActive = true
+                               });
+                        }
+                    }
+                }
+                //delete
+                else
+                {
+
+                    const string sql =
+                       @"Update [dbo].[rtblBOLChargeCode] set [Description] = @Description , [ChargeCode] =  @ChargeCode, [Length] = @Length , [fkChargeCodeTypeId] = @fkChargeCodeTypeId, [IsActive] = @IsActive where pkChargeCodeId = @pkChargeCodeId";
+
+                    using (var db = _dbConnectionFactory.Connection())
+                    {
+                        db.Execute(sql,
+                           new
+                           {
+                               pkChargeCodeId = model.pkChargeCodeId,
+                               Description = model.Description,
+                               ChargeCode = model.ChargeCode,
+                               Length = model.length,
+                               fkChargeCodeTypeId = model.fkChargeCodeTypeId,
+                               IsActive = false
+                           });
+                    }
+
+                }
+
+
+                return model;
+            }
+            catch (System.Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public BOLChargeCodeType Create(BOLChargeCodeType model)
+        {
+            try
+            {
+
+                const string sql =
+                    @"INSERT [dbo].[rtblBOLChargeCodeType] ([Description]) 
+                VALUES (@Description) 
+                SELECT CAST(SCOPE_IDENTITY() as int)";
+
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    model.pkChargeCodeTypeId = db.Query<int>(sql,
+                        new
+                        {
+                            Description = model.Description
+
+                        }).Single();
+                }
+
+                return model;
+            }
+            catch (System.Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
         /// <summary>
         /// Reads the by identifier.
         /// </summary>
@@ -88,7 +203,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     FROM [dbo].[tblConcessionBol] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
                     WHERE [pkConcessionBolId] = @Id",
-                    new {id}).SingleOrDefault();
+                    new { id }).SingleOrDefault();
             }
         }
 
@@ -152,7 +267,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[tblConcessionBol] WHERE [pkConcessionBolId] = @Id",
-                    new {model.Id});
+                    new { model.Id });
             }
 
             _concessionDetailRepository.Delete(model);

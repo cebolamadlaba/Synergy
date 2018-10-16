@@ -128,8 +128,8 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 	        this.lookupDataService.getPeriodTypes(),
 	        this.lookupDataService.getConditionTypes(),
 	        this.lookupDataService.getTransactionTypes(ConcessionTypes.Transactional),
-	        this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-	        this.lookupDataService.getClientAccounts(this.riskGroupNumber),
+            this.lookupDataService.getRiskGroup(this.riskGroupNumber),
+            this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Transactional),
 	        this.transactionalConcessionService.getTransactionalFinancial(this.riskGroupNumber)
 	    ]).subscribe(results => {
 	            this.periods = <any>results[0];
@@ -281,8 +281,12 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
 					this.selectedConditionTypes[rowIndex] = selectedConditionType[0];
 
-					let selectedConditionProduct = selectedConditionType[0].conditionProducts.filter(_ => _.id == concessionCondition.conditionProductId);
-					currentCondition.get('conditionProduct').setValue(selectedConditionProduct[0]);
+                    let selectedConditionProduct = selectedConditionType[0].conditionProducts.filter(_ => _.id == concessionCondition.conditionProductId);
+                    if (selectedConditionProduct != null && selectedConditionProduct.length > 0) {
+
+                        currentCondition.get('conditionProduct').setValue(selectedConditionProduct[0]);
+                    }
+					
 
 					currentCondition.get('interestRate').setValue(concessionCondition.interestRate);
 					currentCondition.get('volume').setValue(concessionCondition.conditionVolume);
@@ -296,7 +300,9 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 					currentCondition.get('period').setValue(selectedPeriod[0]);
 
 					rowIndex++;
-				}
+                }
+
+                this.changearray = this.lookupDataService.checkforLC(this.transactionalConcession.concession.status, this.transactionalConcession.concession.subStatus, transactionalConcession.concession.concessionComments);
 
 				this.isLoading = false;
 			}, error => {
@@ -379,6 +385,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
         let currentCondition = control.controls[rowIndex];
 
+        currentCondition.get('conditionProduct').setValue(null);
 		currentCondition.get('interestRate').setValue(null);
 		currentCondition.get('volume').setValue(null);
 		currentCondition.get('value').setValue(null);
@@ -414,22 +421,18 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		transactionalConcession.concession = new Concession();
 		transactionalConcession.concession.concessionType = ConcessionTypes.Transactional;
 		transactionalConcession.concession.riskGroupId = this.riskGroup.id;
-		transactionalConcession.concession.referenceNumber = this.concessionReferenceId;
-
-		//if (this.transactionalConcessionForm.controls['mrsCrs'].value)
-		//	transactionalConcession.concession.mrsCrs = this.transactionalConcessionForm.controls['mrsCrs'].value;
-		//else
-		//	this.addValidationError("MRS/CRS not captured");
+		transactionalConcession.concession.referenceNumber = this.concessionReferenceId;		
 
 		if (this.transactionalConcessionForm.controls['smtDealNumber'].value)
 			transactionalConcession.concession.smtDealNumber = this.transactionalConcessionForm.controls['smtDealNumber'].value;
 		else
-			this.addValidationError("SMT Deal Number not captured");
+            this.addValidationError("SMT Deal Number not captured");
 
-		if (this.transactionalConcessionForm.controls['motivation'].value)
-			transactionalConcession.concession.motivation = this.transactionalConcessionForm.controls['motivation'].value;
-		else
-			this.addValidationError("Motivation not captured");
+
+        if (this.transactionalConcessionForm.controls['motivation'].value)
+            transactionalConcession.concession.motivation = this.transactionalConcessionForm.controls['motivation'].value;
+        else
+            transactionalConcession.concession.motivation = '.';
 
 		if (this.transactionalConcessionForm.controls['comments'].value)
 			transactionalConcession.concession.comments = this.transactionalConcessionForm.controls['comments'].value;
@@ -642,7 +645,10 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
 			if (!transactionalConcession.concession.comments) {
 				transactionalConcession.concession.comments = ConcessionStatus.ApprovedWithChanges;
-			}
+            }
+
+            transactionalConcession.concession.concessionComments = this.GetChanges(transactionalConcession.concession.id);
+
 		} else {
 			transactionalConcession.concession.status = ConcessionStatus.Approved;
 
@@ -674,7 +680,58 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		} else {
 			this.isLoading = false;
 		}
-	}
+    }
+
+    private GetChanges(concessionid: number): any[] {
+        let comments = this.getChangedProperties();
+
+        let commentarray = [];
+        let comment = new ConcessionComment();
+        comment.concessionId = concessionid;
+        comment.comment = comments;
+        comment.userDescription = "LogChanges";
+        commentarray.push(comment);
+        return commentarray;
+    }
+
+    private getChangedProperties(): string {
+
+        let changedProperties = [];
+        let rowIndex = 0;
+
+        const concessions = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+
+        //this is detailed line items,  but not yet the controls
+        for (let concessionFormItem of concessions.controls) {
+
+            let controls = (<FormGroup>concessionFormItem).controls;
+
+            for (const fieldname in controls) { // 'field' is a string
+
+                const abstractControl = controls[fieldname];
+                if (abstractControl.dirty) {
+
+                    changedProperties.push({ rowIndex, fieldname });
+                }
+            }
+            rowIndex++;
+        }
+        return JSON.stringify(changedProperties);
+    }
+
+    changearray: any[];
+    checkforchanges: boolean;
+    bcmhochanged(index: number, controlname: string) {
+
+        if (this.changearray) {
+
+            let found = this.changearray.find(f => f.rowIndex == index && f.fieldname == controlname);
+            if (found) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 	pcmDeclineConcession() {
 		this.isLoading = true;
@@ -792,7 +849,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		this.isLoading = true;
 		this.errorMessage = null;
 
-		this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
+        this.userConcessionsService.recallConcession(this.concessionReferenceId).subscribe(entity => {
 			this.warningMessage = "Concession recalled, please make the required changes and save the concession or it will be lost";
 			this.isRecalling = true;
 			this.isLoading = false;
@@ -897,15 +954,36 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		} else {
 			this.isLoading = false;
 		}
-	}
+    }
+
+    archiveConcessiondetail(concessionDetailId: number) {
+
+        if (confirm("Please note that the account will be put back to standard pricing. Are you sure you want to delete the concession item ?")) {
+            this.isLoading = true;
+            this.errorMessage = null;
+
+            this.userConcessionsService.deactivateConcessionDetailed(concessionDetailId).subscribe(entity => {
+
+                this.warningMessage = "Concession item has been deleted, and account put back to standard pricing.";
+
+                this.isLoading = false;
+
+                this.ngOnInit();
+
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        }
+    }    
 
 	archiveConcession() {
-		if (confirm("Are you sure you want to archive this concession?")) {
-			this.isLoading = true;
-			this.errorMessage = null;
+        if (confirm("Please note that the account will be put back to standard pricing. Are you sure you want to delete this concession ?")) {
+            this.isLoading = true;
+            this.errorMessage = null;
 
-			this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
-				this.warningMessage = "Concession has been archived.";
+            this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
+                this.warningMessage = "Concession has been deleted, and account put back to standard pricing.";
 
 				this.isLoading = false;
 				this.canBcmApprove = false;

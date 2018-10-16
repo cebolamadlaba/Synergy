@@ -123,12 +123,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
             var lendingConcessionDetails = _miscPerformanceRepository.GetLendingConcessionDetails(concession.Id);
+
             var primerate = _primeRateRepository.PrimeRate(concession.DateOpened);
 
             //we are only allowed to extend or renew overdraft products
             if (concession.CanExtend || concession.CanRenew)
             {
-                if (!lendingConcessionDetails.Any(_ => _.ProductType == Constants.Lending.ProductType.Overdraft || _.ProductType == Constants.Lending.ProductType.TempOverdraft))
+                if (!lendingConcessionDetails.Any(_ => _.ProductType == Constants.Lending.ProductType.Overdraft || _.ProductType == Constants.Lending.ProductType.TempOverdraft || _.ProductType.StartsWith("VAF")))
                 {
                     concession.CanExtend = false;
                     concession.CanRenew = false;
@@ -280,15 +281,50 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             var lendingProducts = GetLendingProducts(riskGroup.Id, riskGroup.Name);
+
             var lendingFinancial = _mapper.Map<LendingFinancial>(
                 _financialLendingRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
                 new FinancialLending());
 
+
+
+            //grouping of products
+            var groupedinfo = new List<LendingProductGroup>();
+            if (lendingProducts != null)
+            {
+                foreach (var product in lendingProducts)
+                {
+                    var productgrouping = groupedinfo.Where(g => g.CustomerName == product.CustomerName).FirstOrDefault();
+                    if (productgrouping == null)
+                    {
+                        LendingProductGroup newgroup = new LendingProductGroup();
+                        newgroup.CustomerName = product.CustomerName;
+                        newgroup.RiskGroupName = product.RiskGroupName;
+                        newgroup.LendingProducts = new List<LendingProduct>();
+                        newgroup.LendingProducts.Add(product);
+
+                        groupedinfo.Add(newgroup);
+                    }
+                    else
+                    {
+                        productgrouping.LendingProducts.Add(product);
+                    }
+
+                }
+                //sort
+                foreach (var productgrouping in groupedinfo)
+                {
+                    if (productgrouping != null && productgrouping.LendingProducts != null)
+                        productgrouping.LendingProducts = productgrouping.LendingProducts.OrderBy(o => o.AccountNumber).ThenBy(o => o.Product).ToList();
+                    
+                }
+            }
+
             return new LendingView
             {
                 RiskGroup = riskGroup,
-                LendingConcessions = lendingConcessions.OrderByDescending(_ => _.Concession.DateOpened),
-                LendingProducts = lendingProducts,
+                LendingConcessions = lendingConcessions.OrderBy(_ => _.Concession.AccountNumber),
+                LendingProductGroups = groupedinfo.OrderBy(m => m.CustomerName),
                 LendingFinancial = lendingFinancial
             };
         }

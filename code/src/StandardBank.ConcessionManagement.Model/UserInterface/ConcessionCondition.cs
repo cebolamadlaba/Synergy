@@ -143,5 +143,9 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// The ConditionMet.
         /// </value>
         public bool? ConditionMet { get; set; }
+
+        public string ActualVolume { get; set; }
+        public string ActualValue { get; set; }
+        public string ActualTurnover { get; set; }
     }
 }

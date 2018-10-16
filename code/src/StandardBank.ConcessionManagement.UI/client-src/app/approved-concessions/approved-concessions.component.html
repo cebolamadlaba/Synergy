@@ -29,12 +29,16 @@
 <div class="col-md-12 search-and-results-container" *ngIf="!isLoading">
     <!-- Search bar -->
     <div class="input-group add-on">
-        <input class="form-control" placeholder="Search Customer Name or Risk Group Number" [(ngModel)]="customerNameOrRiskGroupNumber" type="text">
+        <input class="form-control" placeholder="Search Customer Name or Risk Group Number" [(ngModel)]="concessionIdOrRiskGroupNumber" type="text">
     </div>
+
+
+  
+   
 
     <div class="section table-hover-highlight" *ngFor="let approvedConcession of approvedConcessions | approvedConcessionFilter : concessionIdOrRiskGroupNumber; trackBy: index;">
         <div class="col-md-12 section-header">
-            <div class="concessionID-section" >
+            <div class="concessionID-section">
                 <div class="col-md-3">
                     <div class="col-md-10">
                         <div class="concession-name">{{approvedConcession.riskGroupName}}</div>
@@ -55,28 +59,58 @@
             <div class="table-container">
                 <table class="table table-bordered table-hover header-fixed table-striped">
                     <thead>
-                    <tr>
-                        <th>&nbsp;</th>
-                        <th>Concession ID</th>
-                        <th>Type</th>
-                        <th>Status</th>
-                        <th>Date Opened</th>
-                        <th>Date Sent For Approval</th>
-                        <th>Expiry Date</th>
-                        <th>Date Approved</th>
-                    </tr>
+                        <tr>
+                            <th>&nbsp;</th>
+                            <th>Concession ID</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Date Opened</th>
+                            <th>Date Sent For Approval</th>
+                            <th>Expiry Date</th>
+                            <th>Date Approved</th>
+                            <th>Upload/ Download</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr *ngFor="let approvedConcessionDetail of approvedConcession.approvedConcessionDetails">
-                        <td><input type="checkbox" [(ngModel)]="approvedConcessionDetail.isSelected" /></td>
-                        <td (click)="openConcessionView(approvedConcession, approvedConcessionDetail)"> {{approvedConcessionDetail.referenceNumber}} </td>
-                        <td (click)="openConcessionView(approvedConcession, approvedConcessionDetail)"> {{approvedConcessionDetail.concessionType}} </td>
-                        <td (click)="openConcessionView(approvedConcession, approvedConcessionDetail)"> {{approvedConcessionDetail.status}} </td>
-                        <td (click)="openConcessionView(approvedConcession, approvedConcessionDetail)"> {{approvedConcessionDetail.dateOpened | date: 'yyyy/MM/dd'}} </td>
-                        <td (click)="openConcessionView(approvedConcession, approvedConcessionDetail)"> {{approvedConcessionDetail.dateSentForApproval | date: 'yyyy/MM/dd'}} </td>
-                        <td (click)="openConcessionView(approvedConcession, approvedConcessionDetail)"> {{approvedConcessionDetail.expiryDate | date: 'yyyy/MM/dd'}} </td>
-                        <td (click)="openConcessionView(approvedConcession, approvedConcessionDetail)"> {{approvedConcessionDetail.dateApproved | date: 'yyyy/MM/dd'}} </td>
-                    </tr>
+
+                      
+                        <tr *ngFor="let approvedConcessionDetail of approvedConcession.approvedConcessionDetails; let i=index">
+
+                            <td><input type="checkbox" [(ngModel)]="approvedConcessionDetail.isSelected" /></td>
+
+                            <td (click)="openConcessionView(approvedConcession, approvedConcessionDetail)"> {{approvedConcessionDetail.referenceNumber}} </td>
+                            <td (click)="openConcessionView(approvedConcession, approvedConcessionDetail)"> {{approvedConcessionDetail.concessionType}} </td>
+                            <td (click)="openConcessionView(approvedConcession, approvedConcessionDetail)"> {{approvedConcessionDetail.status}} </td>
+                            <td (click)="openConcessionView(approvedConcession, approvedConcessionDetail)"> {{approvedConcessionDetail.dateOpened | date: 'yyyy/MM/dd'}} </td>
+                            <td (click)="openConcessionView(approvedConcession, approvedConcessionDetail)"> {{approvedConcessionDetail.dateSentForApproval | date: 'yyyy/MM/dd'}} </td>
+                            <td (click)="openConcessionView(approvedConcession, approvedConcessionDetail)"> {{approvedConcessionDetail.expiryDate | date: 'yyyy/MM/dd'}} </td>
+                            <td (click)="openConcessionView(approvedConcession, approvedConcessionDetail)"> {{approvedConcessionDetail.dateApproved | date: 'yyyy/MM/dd'}} </td>
+                            <td class="downloadtd">
+
+                             
+                                <div class="image-upload">
+                                    <label for="fileinput_ {{approvedConcession.riskGroupNumber}}_{{i}}">
+                                        <img src="../../content/img/upload.png" />
+                                    
+                                    </label>
+
+                                    <input id="fileinput_ {{approvedConcession.riskGroupNumber}}_{{i}}" type="file" (change)="upload($event, approvedConcessionDetail.concessionId)" accept="application/pdf" />
+
+                                </div>
+
+                                <div class="image-download" *ngIf="approvedConcessionDetail.concessionLetterURL != null">
+
+                                    <a href="/api/Concession/DownloadLetter/ {{approvedConcessionDetail.concessionId}}">
+
+                                        <img src="../../content/img/download.png" />
+
+                                    </a>
+
+                                </div>
+
+
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

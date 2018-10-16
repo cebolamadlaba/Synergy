@@ -5,35 +5,39 @@
             Synergy system Notification
         </div>
 
+
+
         <p>Dear @Model.RequestorName,</p>
         <p>
             Please be advised that the following concessions are expiring in 3 months :
-            <br /><br />
-            <table style=" border-collapse: collapse; border: 1px solid #7a7a7a; padding: 2px;">
-                <tr>
-                    <th style="border: 1px solid #7a7a7a;">Concession Reference</th>
-                    <th style="border: 1px solid #7a7a7a;">Concession Type</th>
-                    <th style="border: 1px solid #7a7a7a;">Risk Group Number</th>
-                    <th style="border: 1px solid #7a7a7a;">Risk Group Name</th>
-                    <th style="border: 1px solid #7a7a7a;">Customer Name</th>
-                    <th style="border: 1px solid #7a7a7a;">Expiry Date</th>
-                    <th style="border: 1px solid #7a7a7a;">Date Approved</th>
-                </tr>
+            <br />
+            <br />
+        <p><a href="@Model.ServerURL">@Model.ServerURL</a></p>
+        <table style=" border-collapse: collapse; border: 1px solid #7a7a7a; padding: 2px;">
+            <tr>
+                <th style="border: 1px solid #7a7a7a;">Concession Reference</th>
+                <th style="border: 1px solid #7a7a7a;">Concession Type</th>
+                <th style="border: 1px solid #7a7a7a;">Risk Group Number</th>
+                <th style="border: 1px solid #7a7a7a;">Risk Group Name</th>
+                <th style="border: 1px solid #7a7a7a;">Customer Name</th>
+                <th style="border: 1px solid #7a7a7a;">Expiry Date</th>
+                <th style="border: 1px solid #7a7a7a;">Date Approved</th>
+            </tr>
 
-                @foreach (var item in Model.ExpiringConcessionDetails)
-            {
-                <tr>
-                    <td style="border: 1px solid #7a7a7a;">@item.ConcessionRef</td>
-                    <td style="border: 1px solid #7a7a7a;">@item.ConcessionType</td>
-                    <td style="border: 1px solid #7a7a7a;">@item.RiskGroupNumber</td>
-                    <td style="border: 1px solid #7a7a7a;">@item.RiskGroupName</td>
-                    <td style="border: 1px solid #7a7a7a;">@item.CustomerName</td>
-                    <td style="border: 1px solid #7a7a7a;">@item.ExpiryDate</td>
-                    <td style="border: 1px solid #7a7a7a;">@item.DateApproved</td>
-                </tr>
-        }
+            @foreach (var item in Model.ExpiringConcessionDetails)
+        {
+            <tr>
+                <td style="border: 1px solid #7a7a7a;">@item.ConcessionRef</td>
+                <td style="border: 1px solid #7a7a7a;">@item.ConcessionType</td>
+                <td style="border: 1px solid #7a7a7a;">@item.RiskGroupNumber</td>
+                <td style="border: 1px solid #7a7a7a;">@item.RiskGroupName</td>
+                <td style="border: 1px solid #7a7a7a;">@item.CustomerName</td>
+                <td style="border: 1px solid #7a7a7a;">@item.ExpiryDate</td>
+                <td style="border: 1px solid #7a7a7a;">@item.DateApproved</td>
+            </tr>
+    }
 
-            </table>
+        </table>
 
         <p>Regards,</p>
         <p>Synergy system</p>

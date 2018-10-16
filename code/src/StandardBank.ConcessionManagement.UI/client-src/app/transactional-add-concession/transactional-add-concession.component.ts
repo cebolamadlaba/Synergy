@@ -89,7 +89,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 	        this.lookupDataService.getConditionTypes(),
 	        this.lookupDataService.getTransactionTypes(ConcessionTypes.Transactional),
 	        this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-	        this.lookupDataService.getClientAccounts(this.riskGroupNumber),
+            this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Transactional),
 	        this.transactionalConcessionService.getlatestCrsOrMrs(this.riskGroupNumber)
 	    ]).subscribe(results => {
 	            this.periods = <any>results[0];
@@ -98,7 +98,26 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 	            this.transactionTypes = <any>results[3];
 	            this.riskGroup = <any>results[4];
 	            this.clientAccounts = <any>results[5];
-	            this.latestCrsOrMrs = <any>results[6];
+                this.latestCrsOrMrs = <any>results[6];
+
+
+                const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+
+                if (this.transactionTypes)
+                    control.controls[0].get('transactionType').setValue(this.transactionTypes[0]);
+
+                if (this.clientAccounts)
+                    control.controls[0].get('accountNumber').setValue(this.clientAccounts[0]);            
+              
+                this.selectedTransactionTypes[0] = this.transactionTypes[0];
+                let currentTransactionType = control.controls[0];
+                currentTransactionType.get('adValorem').setValue(null);
+                currentTransactionType.get('flatFeeOrRate').setValue(null);
+
+               if (this.selectedTransactionTypes[0].transactionTableNumbers)
+                   control.controls[0].get('transactionTableNumber').setValue(this.selectedTransactionTypes[0].transactionTableNumbers[0]);           
+
+               this.transactionTableNumberChanged(0);
 
 	            this.isLoading = false;
 	        },
@@ -137,8 +156,26 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 	}
 
 	addNewConcessionRow() {
-		const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
-		control.push(this.initConcessionItemRows());
+        const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+
+        var newRow = this.initConcessionItemRows();
+
+        var length = control.controls.length;
+
+        if (this.transactionTypes)
+            newRow.controls['transactionType'].setValue(this.transactionTypes[0]);
+
+        if (this.clientAccounts)
+            newRow.controls['accountNumber'].setValue(this.clientAccounts[0]);   
+
+        this.selectedTransactionTypes[length] = this.transactionTypes[0];
+
+        if (this.transactionTypes && this.transactionTypes[0].transactionTableNumbers)
+            newRow.controls['transactionTableNumber'].setValue(this.transactionTypes[0].transactionTableNumbers[0]);      
+
+        control.push(newRow);
+
+        this.transactionTableNumberChanged(length);
 	}
 
 	addNewConditionRow() {
@@ -174,6 +211,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 
         let currentCondition = control.controls[rowIndex];
 
+        currentCondition.get('conditionProduct').setValue(null);
 		currentCondition.get('interestRate').setValue(null);
 		currentCondition.get('volume').setValue(null);
 		currentCondition.get('value').setValue(null);
@@ -185,9 +223,10 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 		this.selectedTransactionTypes[rowIndex] = control.controls[rowIndex].get('transactionType').value;
 
         let currentTransactionType = control.controls[rowIndex];
-
 		currentTransactionType.get('adValorem').setValue(null);
-		currentTransactionType.get('flatFeeOrRate').setValue(null);
+        currentTransactionType.get('flatFeeOrRate').setValue(null);
+
+        control.controls[rowIndex].get('transactionTableNumber').setValue(this.selectedTransactionTypes[rowIndex].transactionTableNumbers[0]);      
 	}
 
 	transactionTableNumberChanged(rowIndex) {
@@ -207,22 +246,17 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 	getTransactionalConcession(): TransactionalConcession {
 		var transactionalConcession = new TransactionalConcession();
 		transactionalConcession.concession = new Concession();
-		transactionalConcession.concession.riskGroupId = this.riskGroup.id;
-
-		//if (this.transactionalConcessionForm.controls['mrsCrs'].value)
-		//	transactionalConcession.concession.mrsCrs = this.transactionalConcessionForm.controls['mrsCrs'].value;
-		//else
-		//	this.addValidationError("MRS/CRS not captured");
+		transactionalConcession.concession.riskGroupId = this.riskGroup.id;	
 
 		if (this.transactionalConcessionForm.controls['smtDealNumber'].value)
 			transactionalConcession.concession.smtDealNumber = this.transactionalConcessionForm.controls['smtDealNumber'].value;
 		else
-			this.addValidationError("SMT Deal Number not captured");
+            this.addValidationError("SMT Deal Number not captured");
 
-		if (this.transactionalConcessionForm.controls['motivation'].value)
-			transactionalConcession.concession.motivation = this.transactionalConcessionForm.controls['motivation'].value;
-		else
-			this.addValidationError("Motivation not captured");
+        if (this.transactionalConcessionForm.controls['motivation'].value)
+            transactionalConcession.concession.motivation = this.transactionalConcessionForm.controls['motivation'].value;
+        else
+            transactionalConcession.concession.motivation = '.';
 
 		const concessions = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
 
@@ -255,9 +289,13 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 			} else {
 				this.addValidationError("Table Number not selected");
 			}
-
-			if (concessionFormItem.get('expiryDate').value)
-				transactionalConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+            
+            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
+                transactionalConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+            }
+            else {
+                this.addValidationError("Expiry date not selected");
+            }
 
 			transactionalConcession.transactionalConcessionDetails.push(transactionalConcessionDetail);
 		}
@@ -319,7 +357,8 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 		var transactionalConcession = this.getTransactionalConcession();
 
 		transactionalConcession.concession.concessionType = ConcessionTypes.Transactional;
-		transactionalConcession.concession.type = "New";
+        transactionalConcession.concession.type = "New";
+        transactionalConcession.concession.comments = "Created";
 
 		if (!this.validationError) {
 			this.transactionalConcessionService.postNewTransactionalData(transactionalConcession).subscribe(entity => {

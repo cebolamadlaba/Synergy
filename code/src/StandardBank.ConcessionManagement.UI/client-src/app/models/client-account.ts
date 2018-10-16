@@ -1,7 +1,8 @@
-﻿export class ClientAccount {
+export class ClientAccount {
     legalEntityId: number;
     legalEntityAccountId: number;
     riskGroupId: number;
     accountNumber: string;
     customerName: string;
+    accountType: string;
 }

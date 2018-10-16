@@ -1,3 +1,4 @@
+using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
 
 namespace StandardBank.ConcessionManagement.Model.UserInterface
@@ -165,6 +166,10 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// </value>
         public User AccountExecutive { get; set; }
 
+        public List<AccountExecutiveAssistant> AccountAssistants { get; set; }
+
+        public List<AccountExecutiveAssistant> AccountExecutives { get; set; }
+
         /// <summary>
         /// Gets or sets the account executive user identifier.
         /// </summary>
@@ -180,5 +185,9 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         ///   <c>true</c> if this instance can approve; otherwise, <c>false</c>.
         /// </value>
         public bool CanApprove { get; set; }
+
+        public bool Validated { get; set; }
+
+        public string ErrorMessage { get; set; }
     }
 }

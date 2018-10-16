@@ -851,7 +851,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static int GetBolUserId()
         {
             //read all and return the first one
-            var models = InstantiatedDependencies.BolUserRepository.GetLegalEntityBOLUsers();
+            var models = InstantiatedDependencies.BolUserRepository.GetLegalEntityBOLUsers(0);
 
             if (models != null && models.Any())
                 return models.First().pkLegalEntityBOLUserId;
@@ -887,7 +887,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 return GetBolUserId();
 
             //read all and return the first one
-            var models = InstantiatedDependencies.BolUserRepository.GetLegalEntityBOLUsers();
+            var models = InstantiatedDependencies.BolUserRepository.GetLegalEntityBOLUsers(0);
 
             if (models != null && models.Any(_ => _.pkLegalEntityBOLUserId != model.Value))
                 return models.First(_ => _.pkLegalEntityBOLUserId != model.Value).pkLegalEntityBOLUserId;
@@ -1584,8 +1584,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 ConcessionId = GetConcessionId(),
                 ProductTypeId = GetProductId(),
                 Balance = 163,
-                Term = 3,
-                InterestToCustomer = 2110
+                Term = 3
+               
             };
 
             InstantiatedDependencies.ConcessionInvestmentRepository.Create(model);
@@ -1750,14 +1750,14 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         {
             var model = new ConcessionTrade
             {
-                ConcessionId = GetConcessionId(),
-                TransactionTypeId = GetTransactionTypeId(),
-                ChannelTypeId = GetChannelTypeId(),
-                TableNumber = 2,
-                TransactionVolume = 6,
-                TransactionValue = 9451,
-                BaseRateId = GetBaseRateId(),
-                AdValorem = 4407
+                //ConcessionId = GetConcessionId(),
+                //TransactionTypeId = GetTransactionTypeId(),
+                //ChannelTypeId = GetChannelTypeId(),
+                //TableNumber = 2,
+                //TransactionVolume = 6,
+                //TransactionValue = 9451,
+                //BaseRateId = GetBaseRateId(),
+                //AdValorem = 4407
             };
 
             InstantiatedDependencies.ConcessionTradeRepository.Create(model);

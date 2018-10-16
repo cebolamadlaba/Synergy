@@ -6,4 +6,5 @@ export class BolChargeCode {
     length: number;
     pkChargeCodeId: number;
     fkChargeCodeTypeId: number;
+    isActive: boolean;
 }

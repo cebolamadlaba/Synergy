@@ -37,11 +37,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
             if (string.IsNullOrWhiteSpace(message.ConcessionReferenceNumber))
                 throw new ArgumentNullException(nameof(message.ConcessionReferenceNumber));
 
-            var result = _concessionManager.DeactivateConcession(message.ConcessionReferenceNumber, message.User);
+            var result = _concessionManager.DeactivateConcession(message.ConcessionReferenceNumber, message.IsRecall, message.User);
 
             message.AuditRecord = new AuditRecord(result, message.User, AuditType.Update);
 
             return message.ConcessionReferenceNumber;
         }
+
     }
 }

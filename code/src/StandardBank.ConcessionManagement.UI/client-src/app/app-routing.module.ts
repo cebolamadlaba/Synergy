@@ -22,7 +22,9 @@ import { LendingAddConcessionComponent } from "./lending-add-concession/lending-
 import { MismatchedInboxComponent } from "./mismatched-inbox/mismatched-inbox.component";
 import { LendingViewConcessionComponent } from "./lending-view-concession/lending-view-concession.component";
 import { CashViewConcessionComponent } from "./cash-view-concession/cash-view-concession.component";
-import { InvestmentsAddConcessionComponent } from "./investments-add-concession/investments-add-concession.component";
+
+import { InvestmentAddConcessionComponent } from "./investments-add-concession/investments-add-concession.component";
+import { InvestmentsViewConcessionComponent} from "./investments-view-concession/investments-view-concession.component";
 
 import { BolAddConcessionComponent } from "./bol-add-concession/bol-add-concession.component";
 import { BolViewConcessionComponent } from "./bol-view-concession/bol-view-concession.component";
@@ -30,6 +32,8 @@ import { BolViewConcessionComponent } from "./bol-view-concession/bol-view-conce
 import { MasAddConcessionComponent } from "./mas-add-concession/mas-add-concession.component";
 import { TransactionalViewConcessionComponent } from "./transactional-view-concession/transactional-view-concession.component";
 import { TradeAddConcessionComponent } from "./trade-add-concession/trade-add-concession.component";
+import { TradeViewConcessionComponent } from "./trade-view-concession/trade-view-concession.component";
+
 import { CashmanAddConcessionComponent } from "./cashman-add-concession/cashman-add-concession.component";
 import { AdminMenuComponent } from "./admin/admin-menu/admin-menu.component";
 import { BusinessCentreComponent } from "./admin/business-centre/business-centre.component";
@@ -41,6 +45,12 @@ import { PcmManagementComponent } from './admin/pcm-management/pcm-management.co
 import { BcmManagementComponent } from './admin/bcm-management/bcm-management.component';
 import { AeManagementComponent } from './admin/ae-management/ae-management.component';
 import { AaManagementComponent } from './admin/aa-management/aa-management.component';
+
+import { BOLCHManagementComponent } from './admin/bol-chargecodes/bol-chargecodes.component';
+import { TransactionTypesManagementComponent } from './admin/transaction-types/transaction-types.component';
+import { ChannelTypesManagementComponent } from './admin/channel-types/channel-types.component';
+
+
 
 const routes: Routes = [
     { path: '', redirectTo: '/pending-inbox', pathMatch: 'full' },
@@ -58,9 +68,9 @@ const routes: Routes = [
     { path: 'pricing-lending/:riskGroupNumber', component: PricingLendingComponent },
     { path: 'pricing-cash/:riskGroupNumber', component: PricingCashComponent },
     { path: 'pricing-transactional/:riskGroupNumber', component: PricingTransactionalComponent },
-    { path: 'pricing-investments', component: PricingInvestmentsComponent },
+    { path: 'pricing-investments/:riskGroupNumber', component: PricingInvestmentsComponent },
     { path: 'pricing-bol/:riskGroupNumber', component: PricingBolComponent },
-    { path: 'pricing-trade', component: PricingTradeComponent },
+    { path: 'pricing-trade/:riskGroupNumber', component: PricingTradeComponent },
     { path: 'pricing-mas', component: PricingMasComponent },
     { path: 'pricing-cashman', component: PricingCashmanComponent },
     { path: 'transactional-add-concession/:riskGroupNumber', component: TransactionalAddConcessionComponent },
@@ -69,14 +79,17 @@ const routes: Routes = [
     { path: 'cash-view-concession/:riskGroupNumber/:concessionReferenceId', component: CashViewConcessionComponent },
     { path: 'lending-add-concession/:riskGroupNumber', component: LendingAddConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
-    { path: 'investments-add-concession', component: InvestmentsAddConcessionComponent },   
+    { path: 'investments-add-concession/:riskGroupNumber', component: InvestmentAddConcessionComponent },
+    { path: 'investments-view-concession/:riskGroupNumber/:concessionReferenceId', component: InvestmentsViewConcessionComponent },
 
     { path: 'bol-add-concession/:riskGroupNumber', component: BolAddConcessionComponent },
     { path: 'bol-view-concession/:riskGroupNumber/:concessionReferenceId', component: BolViewConcessionComponent },
 
     { path: 'mas-add-concession', component: MasAddConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
-    { path: 'trade-add-concession', component: TradeAddConcessionComponent },
+    { path: 'trade-add-concession/:riskGroupNumber', component: TradeAddConcessionComponent },
+    { path: 'trade-view-concession/:riskGroupNumber/:concessionReferenceId', component: TradeViewConcessionComponent },
+
     { path: 'cashman-add-concession', component: CashmanAddConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
     { path: 'admin', component: AdminMenuComponent },
@@ -87,7 +100,13 @@ const routes: Routes = [
     { path: 'admin/pcm-management', component: PcmManagementComponent },
     { path: 'admin/bcm-management', component: BcmManagementComponent },
     { path: 'admin/ae-management', component: AeManagementComponent },
-    { path: 'admin/aa-management', component: AaManagementComponent }
+    { path: 'admin/aa-management', component: AaManagementComponent },
+
+    { path: 'admin/bol-chargecodes', component: BOLCHManagementComponent },
+    { path: 'admin/transaction-types', component: TransactionTypesManagementComponent },
+    { path: 'admin/channel-types', component: ChannelTypesManagementComponent }
+
+
 ];
 
 @NgModule({

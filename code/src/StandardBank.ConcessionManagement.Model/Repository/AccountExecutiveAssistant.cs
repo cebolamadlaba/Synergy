@@ -29,6 +29,8 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// </value>
         public int AccountExecutiveUserId { get; set; }
 
+        public string AccountExecutiveDisplayName { get; set; }
+
         /// <summary>
         /// Gets or sets the IsActive.
         /// </summary>

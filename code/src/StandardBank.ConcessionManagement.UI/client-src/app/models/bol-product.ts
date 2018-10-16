@@ -1,6 +1,7 @@
 export class BolProduct {
 
     bolProductId: number;
+    bolProductType: string;
     riskGroupName: string;
     legalEntity: string;
     bOLUserId: string; 

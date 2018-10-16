@@ -44,5 +44,7 @@
         /// The name of the customer.
         /// </value>
         public string CustomerName { get; set; }
+
+        public string AccountType { get; set; }
     }
 }

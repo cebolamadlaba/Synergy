@@ -56,6 +56,7 @@
 
         public static class ConcessionSubStatus
         {
+            public const string NewSubmission = "New submission";
             public const string BcmPending = "BCM Pending";
             public const string BcmApproved = "BCM Approved";
             public const string BcmDeclined = "BCM Declined";
@@ -90,6 +91,7 @@
             public const string FullTransactionalBanking = "Full Transactional Banking";
             public const string MininumAverageCreditBalance = "Mininum Average Credit Balance";
             public const string MininumTurnover = "Mininum Turnover";
+            public const string CreditFacility  = "Credit Facility";
         }
 
         public static class RagStatusResult
@@ -113,6 +115,7 @@
             {
                 public const string Overdraft = "Overdraft";
                 public const string TempOverdraft = "Temporary Overdraft";
+                public const string VAF = "VAF";
             }
         }
 

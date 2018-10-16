@@ -1,7 +1,21 @@
 <div class="header">
     <div class="logo-mark"></div>
-    <div class="logo-text">Concession Management</div>
+    <div class="logo-text">Synergy Concessions </div>
 </div>
+
+
+<div class="row">
+    <!-- Error message -->
+    <div class="col-md-12" *ngIf="usererrorMessage">
+        <div class="form-feedback-container" style="margin:0px;">
+            <div class="alert-warning">
+                <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
+                <p>{{usererrorMessage}}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="col-md-12 nav-pills-container">
     <ul class="nav nav-pills">
         <li routerLinkActive="selected-nav-item">
@@ -36,6 +50,22 @@
             <a routerLink="/admin/business-centre" style="display: none;">Administration</a>
             <a routerLink="/admin/users/edit-user" style="display: none;">Administration</a>
         </li>
+        <li>
+            <a href="/assets/documents/userguide.pdf" target="_blank">User Guide</a>
+        </li>
+     
+
+        <li class="dropdown" dropdown *ngIf="user?.isAdminAssistant">
+            <a dropdownToggle role="button">
+                AE: {{currentExecutiveUser}}<span class="caret"></span>
+            </a>
+            <ul *dropdownMenu class="dropdown-menu">
+                <li *ngFor="let accountExecutive of user.accountExecutives" (click)="aESelected(accountExecutive)">
+                    <a>{{accountExecutive?.accountExecutiveDisplayName}}</a>
+                </li>
+            </ul>
+        </li>
         <li class="logout-li"><a href="#">{{user?.firstName}} {{user?.surname}}</a></li>
-    </ul>
-</div> 
+    </ul> 
+
+</div>

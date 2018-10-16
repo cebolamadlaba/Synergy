@@ -25,16 +25,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         private readonly IConcessionManager _concessionManager;
 
-     
+
         private readonly IConcessionBolRepository _concessionBolRepository;
-    
+
         private readonly IMapper _mapper;
-     
+
         private readonly IFinancialBolRepository _financialBolRepository;
 
-     
+
         private readonly ILookupTableManager _lookupTableManager;
-      
+
         private readonly IRuleManager _ruleManager;
         /// <summary>
         /// The misc performance repository
@@ -57,18 +57,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _miscPerformanceRepository = miscPerformanceRepository;
             _mediator = mediator;
 
-           
+
         }
-              
+
         public ConcessionBol CreateConcessionBol(BolConcessionDetail bolConcessionDetail, Concession concession)
         {
             var concessionBol = _mapper.Map<ConcessionBol>(bolConcessionDetail);
             concessionBol.ConcessionId = concession.Id;
             return _concessionBolRepository.Create(concessionBol);
-          
+
         }
 
-       
+
         public BolConcession GetBolConcession(string concessionReferenceId, User user)
         {
             var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
@@ -82,7 +82,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 ConcessionConditions = _concessionManager.GetConcessionConditions(concession.Id),
                 CurrentUser = user
             };
-          
+
         }
 
         public ConcessionBol DeleteConcessionBol(BolConcessionDetail cashConcessionDetail)
@@ -92,9 +92,28 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionBolRepository.Delete(concessionBol);
 
             return concessionBol;
-           
+
         }
 
+        public Model.UserInterface.Bol.BOLChargeCode CreateUpdateBOLChargeCode(Model.UserInterface.Bol.BOLChargeCode bolchargecode)
+        {
+            var mappedbol = _mapper.Map<Model.Repository.BOLChargeCode>(bolchargecode);
+            var returned = _concessionBolRepository.CreateUpdate(mappedbol);
+
+            bolchargecode.pkChargeCodeId = returned.pkChargeCodeId;
+            return bolchargecode;
+
+        }
+
+        public Model.UserInterface.Bol.BOLChargeCodeType CreateBOLChargeCodeType(Model.UserInterface.Bol.BOLChargeCodeType bolchargecodetype)
+        {
+            var mappedboltype = _mapper.Map<Model.Repository.BOLChargeCodeType>(bolchargecodetype);
+            var returned = _concessionBolRepository.Create(mappedboltype);
+
+            bolchargecodetype.pkChargeCodeTypeId = returned.pkChargeCodeTypeId;
+            return bolchargecodetype;
+
+        }
 
         public ConcessionBol UpdateConcessionBol(BolConcessionDetail bolConcessionDetail, Concession concession)
         {
@@ -120,11 +139,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             _concessionBolRepository.Update(mappedConcessionBol);
 
-            return mappedConcessionBol;          
+            return mappedConcessionBol;
         }
 
 
-      
+
         public BolView GetBolViewData(int riskGroupNumber)
         {
             var bolConcessions = new List<BolConcession>();
@@ -135,7 +154,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 bolConcessions.Add(new BolConcession
                 {
-                    BolConcessionDetails = _miscPerformanceRepository.GetBolConcessionDetails(concession.Id),
+                    BolConcessionDetails = _miscPerformanceRepository.GetBolConcessionDetails(concession.Id).OrderBy(o => o.BolUserID),
                     Concession = concession
                 });
             }
@@ -144,14 +163,46 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 _mapper.Map<BolFinancial>(_financialBolRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
                                            new FinancialBol());
 
-            var bolProducts = GetBolProducts(riskGroup);
+            var bolProducts = GetBolProducts(riskGroup).OrderBy(o => o.BOLUserId);
+
+            //grouping of products
+            var groupedinfo = new List<BolProductGroup>();
+            if (bolProducts != null)
+            {
+                foreach (var product in bolProducts)
+                {
+                    var productgrouping = groupedinfo.Where(g => g.LegalEntity == product.LegalEntity).FirstOrDefault();
+                    if (productgrouping == null)
+                    {
+                        BolProductGroup newgroup = new BolProductGroup();
+                        newgroup.LegalEntity = product.LegalEntity;
+                        newgroup.RiskGroupName = product.RiskGroupName;
+                        newgroup.BolProducts = new List<BolProduct>();
+                        newgroup.BolProducts.Add(product);
+
+                        groupedinfo.Add(newgroup);
+                    }
+                    else
+                    {
+                        productgrouping.BolProducts.Add(product);
+                    }
+                }
+                //sort
+                foreach (var productgrouping in groupedinfo)
+                {
+                    if (productgrouping != null && productgrouping.BolProducts != null)
+                        productgrouping.BolProducts = productgrouping.BolProducts.OrderBy(o => o.BOLUserId).ThenBy(o => o.BolProductType).ToList();
+
+
+                }
+            }
 
             return new BolView
             {
                 RiskGroup = riskGroup,
-                BolConcessions = bolConcessions.OrderByDescending(_ => _.Concession.DateOpened),
+                BolConcessions = bolConcessions, //.OrderBy(_ => _.Concession.AccountNumber),
                 BolFinancial = bolFinancial,
-                BolProducts = bolProducts
+                BolProductGroups = groupedinfo.OrderBy(o => o.LegalEntity)
             };
         }
 
@@ -162,7 +213,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
 
-       
+
         public BolFinancial GetBolFinancialForRiskGroupNumber(int riskGroupNumber)
         {
             var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);

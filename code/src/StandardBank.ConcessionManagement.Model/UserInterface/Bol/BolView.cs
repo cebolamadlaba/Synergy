@@ -36,7 +36,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Bol
         /// <value>
         /// The cash products.
         /// </value>
-        public IEnumerable<BolProduct> BolProducts { get; set; }
+        public IEnumerable<BolProductGroup> BolProductGroups { get; set; }
 
     }
 }

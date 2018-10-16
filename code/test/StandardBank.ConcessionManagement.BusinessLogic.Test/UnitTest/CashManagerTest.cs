@@ -28,7 +28,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             _cashManager = new CashManager(MockConcessionManager.Object, MockConcessionCashRepository.Object,
                 InstantiatedDependencies.Mapper, MockFinancialCashRepository.Object, MockLookupTableManager.Object,
-                MockLoadedPriceCashRepository.Object, MockRuleManager.Object, MockMiscPerformanceRepository.Object, null);
+                MockLoadedPriceCashRepository.Object, MockRuleManager.Object, MockMiscPerformanceRepository.Object, null,null);
         }
 
         /// <summary>

@@ -23,6 +23,8 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <returns></returns>
         TransactionType ReadById(int id);
 
+        IEnumerable<TransactionType> ReadAll(bool isActive);
+
         /// <summary>
         /// Reads the by concession type identifier is active.
         /// </summary>

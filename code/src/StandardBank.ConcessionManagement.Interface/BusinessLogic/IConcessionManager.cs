@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Inbox;
 using Concession = StandardBank.ConcessionManagement.Model.Repository.Concession;
@@ -77,7 +78,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <param name="user">The user.</param>
         /// <returns></returns>
-        IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, User user);
+        IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, User user, string concessiontype);
 
         /// <summary>
         /// Searches the client accounts.
@@ -85,7 +86,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <param name="accountNumber">The account number.</param>
         /// <returns></returns>
-        IEnumerable<ClientAccount> SearchClientAccounts(int riskGroupNumber, string accountNumber);
+        //IEnumerable<ClientAccount> SearchClientAccounts(int riskGroupNumber, string accountNumber);
 
         IEnumerable<string> PrimeRate(DateTime datefilter);
 
@@ -174,7 +175,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="concessionReferenceNumber">The concession reference number.</param>
         /// <param name="user">The user.</param>
         /// <returns></returns>
-        Concession DeactivateConcession(string concessionReferenceNumber, User user);
+        Concession DeactivateConcession(string concessionReferenceNumber, bool isRecall, User user);
 
         /// <summary>
         /// Creates the concession condition.
@@ -225,5 +226,9 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="dateApproved">The date approved.</param>
         /// <returns></returns>
         string GetRagStatus(string period, DateTime dateApproved);
+
+        ConcessionLetter CreateConcessionLetter(ConcessionLetter model);
+
+        ConcessionDetail DeactivateConcessionDetailed(int ConcessionDetailId, User user);
     }
 }
