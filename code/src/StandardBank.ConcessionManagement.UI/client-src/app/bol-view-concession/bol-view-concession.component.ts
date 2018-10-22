@@ -925,7 +925,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         this.errorMessage = null;
         this.validationError = null;
 
-        var bolConcession = this.getBolConcession(true);
+        var bolConcession = this.getBolConcession(false);
 
         bolConcession.concession.status = ConcessionStatus.Pending;
         bolConcession.concession.subStatus = ConcessionSubStatus.BCMPending;

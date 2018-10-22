@@ -422,7 +422,10 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                 }
             }
 
+            let advaloremfound = false;
+
             if (concessionFormItem.get('advalorem').value) {
+                advaloremfound = true;
                 tradeConcessionDetail.adValorem = concessionFormItem.get('advalorem').value;
             } else {
                 if (!tradeConcessionDetail.disablecontrolset) {
@@ -430,18 +433,18 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                 }
             }
 
-            if (concessionFormItem.get('min').value) {
+            if (concessionFormItem.get('min').value && advaloremfound) {
                 tradeConcessionDetail.min = concessionFormItem.get('min').value;
             } else {
-                if (!tradeConcessionDetail.disablecontrolset) {
+                if (!tradeConcessionDetail.disablecontrolset && advaloremfound) {
                     this.addValidationError("Min value not entered");
                 }
             }
 
-            if (concessionFormItem.get('max').value) {
+            if (concessionFormItem.get('max').value && advaloremfound) {
                 tradeConcessionDetail.max = concessionFormItem.get('max').value;
             } else {
-                if (!tradeConcessionDetail.disablecontrolset) {
+                if (!tradeConcessionDetail.disablecontrolset && advaloremfound) {
                     this.addValidationError("Max value not entered");
                 }
             }
@@ -453,12 +456,21 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                     this.addValidationError("Communication not entered");
                 }
             }
+
+            let flatfeefound = false;
+
             if (concessionFormItem.get('flatfee').value) {
+                flatfeefound = true;
                 tradeConcessionDetail.flatFee = concessionFormItem.get('flatfee').value;
             } else {
-                if (!tradeConcessionDetail.disablecontrolset) {
+                if (!tradeConcessionDetail.disablecontrolset && !advaloremfound) {
                     this.addValidationError("Flat fee not entered");
                 }
+            }
+
+            if ((flatfeefound == false) && (advaloremfound == false)) {
+
+                this.addValidationError("Either AdValorem or Flat fee must be entered");
             }
 
             if (concessionFormItem.get('currency').value) {

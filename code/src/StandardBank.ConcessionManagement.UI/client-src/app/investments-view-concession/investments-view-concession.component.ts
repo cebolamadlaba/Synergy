@@ -331,7 +331,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                     }
 
                     if (investmentConcessionDetail.balance)
-                        currentConcession.get('balance').setValue(investmentConcessionDetail.balance);
+                        currentConcession.get('balance').setValue(this.formatDecimal(investmentConcessionDetail.balance));
 
                     if (investmentConcessionDetail.approvedRate)
                         currentConcession.get('approvedRate').setValue(investmentConcessionDetail.approvedRate);
@@ -564,8 +564,16 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                 investmentConcessionDetail.concessionDetailId = concessionFormItem.get('concessionDetailId').value;
 
 
-            if (concessionFormItem.get('productType').value)
+            let applyexpirydate = false;
+
+            if (concessionFormItem.get('productType').value) {
+
+                if (concessionFormItem.get('productType').value.description == 'Notice deposit (BND)') {
+                    applyexpirydate = true;
+                }
                 investmentConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;
+
+            }
             else
                 this.addValidationError("Product not selected");
 
@@ -591,8 +599,10 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                 investmentConcessionDetail.term = concessionFormItem.get('noticeperiod').value;
             } else {
 
-                this.addValidationError("Notice period value not entered");
+                if (applyexpirydate) {
 
+                    this.addValidationError("Notice period value not entered");
+                }
             }
 
             if (concessionFormItem.get('loadedRate').value) {
@@ -601,6 +611,15 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
                 this.addValidationError("Rate value not entered");
 
+            }
+
+            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
+                investmentConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+            }
+            else {
+                if (applyexpirydate) {
+                    this.addValidationError("Expiry date not selected");
+                }
             }
 
             investmentConcession.investmentConcessionDetails.push(investmentConcessionDetail);

@@ -492,34 +492,42 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<ConditionType> GetConditionTypes()
         {
-            var mappedConditionTypes = new List<ConditionType>();
-            var conditionTypes = _conditionTypeRepository.ReadAll();
-            var conditionProducts = _conditionProductRepository.ReadAll().Where(_ => _.IsActive);
-            var conditionTypeProducts = _conditionTypeProductRepository.ReadAll().Where(_ => _.IsActive);
-
-            foreach (var conditionType in conditionTypes.Where(_ => _.IsActive))
+            try
             {
-                var mappedConditionType = _mapper.Map<ConditionType>(conditionType);
+                var mappedConditionTypes = new List<ConditionType>();
+                var conditionTypes = _conditionTypeRepository.ReadAll();
+                var conditionProducts = _conditionProductRepository.ReadAll().Where(_ => _.IsActive);
+                var conditionTypeProducts = _conditionTypeProductRepository.ReadAll().Where(_ => _.IsActive);
 
-                mappedConditionType.EnableInterestRate =
-                    ((mappedConditionType.Description == Constants.ConditionType.MininumAverageCreditBalance) | (mappedConditionType.Description == Constants.ConditionType.CreditFacility));
+                foreach (var conditionType in conditionTypes.Where(_ => _.IsActive))
+                {
+                    var mappedConditionType = _mapper.Map<ConditionType>(conditionType);
 
-                mappedConditionType.EnableConditionValue =
-                    mappedConditionType.Description != Constants.ConditionType.FullTransactionalBanking;
+                    mappedConditionType.EnableInterestRate =
+                        ((mappedConditionType.Description == Constants.ConditionType.MininumAverageCreditBalance) | (mappedConditionType.Description == Constants.ConditionType.CreditFacility));
 
-                mappedConditionType.EnableConditionVolume =
-                    mappedConditionType.Description == Constants.ConditionType.MininumTurnover;
+                    mappedConditionType.EnableConditionValue =
+                        mappedConditionType.Description != Constants.ConditionType.FullTransactionalBanking;
 
-                mappedConditionType.EnableExpectedTurnoverValue =
-                    mappedConditionType.Description == Constants.ConditionType.FullTransactionalBanking;
+                    mappedConditionType.EnableConditionVolume =
+                        mappedConditionType.Description == Constants.ConditionType.MininumTurnover;
 
-                mappedConditionType.ConditionProducts =
-                    GetConditionProducts(conditionType.Id, conditionProducts, conditionTypeProducts);
+                    mappedConditionType.EnableExpectedTurnoverValue =
+                        mappedConditionType.Description == Constants.ConditionType.FullTransactionalBanking;
 
-                mappedConditionTypes.Add(mappedConditionType);
+                    mappedConditionType.ConditionProducts =
+                        GetConditionProducts(conditionType.Id, conditionProducts, conditionTypeProducts);
+
+                    mappedConditionTypes.Add(mappedConditionType);
+                }
+
+                return mappedConditionTypes;
             }
+            catch (Exception)
+            {
 
-            return mappedConditionTypes;
+                throw;
+            }
         }
 
         /// <summary>

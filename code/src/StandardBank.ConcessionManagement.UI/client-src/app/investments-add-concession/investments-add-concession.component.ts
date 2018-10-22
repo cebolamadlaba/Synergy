@@ -302,7 +302,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
             }
         }
 
-        if (productType.description == 'Notice Deposits') {
+        if (productType.description == 'Notice deposit (BND)') {
 
             this.selectedInvestmentConcession[rowIndex] = false;
             currentRow.get('noticeperiod').setValue(null);
@@ -351,7 +351,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
 
             if (concessionFormItem.get('productType').value) {
 
-                if (concessionFormItem.get('productType').value.description == 'Notice Deposits') {
+                if (concessionFormItem.get('productType').value.description == 'Notice deposit (BND)') {
                     applyexpirydate = true;
                 }
                 investmentConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;
@@ -382,7 +382,10 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
                 investmentConcessionDetail.term = concessionFormItem.get('noticeperiod').value;
             } else {
 
-                this.addValidationError("Notice period value not entered");
+                if (applyexpirydate) {
+
+                    this.addValidationError("Notice period value not entered");
+                }
             }
 
             if (concessionFormItem.get('rate').value) {
