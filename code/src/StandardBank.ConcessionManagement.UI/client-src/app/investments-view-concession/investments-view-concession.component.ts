@@ -420,7 +420,8 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             expiryDate: [''],
             dateApproved: [{ value: '', disabled: true }],
             isExpired: [''],
-            isExpiring: ['']
+            isExpiring: [''],
+            show_uffFee: true
         });
     }
 

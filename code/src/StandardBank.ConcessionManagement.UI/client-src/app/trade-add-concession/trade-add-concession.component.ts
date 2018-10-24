@@ -108,6 +108,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
         this.tradeView.riskGroup = new RiskGroup();
         this.tradeView.tradeConcessions = [new TradeConcession()];
         this.tradeView.tradeConcessions[0].concession = new Concession();
+       
     }
 
     ngOnInit() {
@@ -428,9 +429,9 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                 advaloremfound = true;
                 tradeConcessionDetail.adValorem = concessionFormItem.get('advalorem').value;
             } else {
-                if (!tradeConcessionDetail.disablecontrolset) {
-                    this.addValidationError("AdValorem value not entered");
-                }
+                //if (!tradeConcessionDetail.disablecontrolset) {
+                //    this.addValidationError("AdValorem value not entered");
+                //}
             }
 
             if (concessionFormItem.get('min').value && advaloremfound) {
@@ -466,11 +467,13 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                 if (!tradeConcessionDetail.disablecontrolset && !advaloremfound) {
                     this.addValidationError("Flat fee not entered");
                 }
-            }
+            }           
 
             if ((flatfeefound == false) && (advaloremfound == false)) {
 
-                this.addValidationError("Either AdValorem or Flat fee must be entered");
+                if (applyexpirydate) {
+                    this.addValidationError("Either AdValorem or Flat fee must be entered");
+                }
             }
 
             if (concessionFormItem.get('currency').value) {
