@@ -465,7 +465,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                 tradeConcessionDetail.flatFee = concessionFormItem.get('flatfee').value;
             } else {
                 if (!tradeConcessionDetail.disablecontrolset && !advaloremfound) {
-                    this.addValidationError("Flat fee not entered");
+                    //this.addValidationError("Flat fee not entered");
                 }
             }           
 

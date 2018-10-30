@@ -495,6 +495,9 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         else
             bolConcession.concession.motivation = '.';
 
+        if (this.bolConcessionForm.controls['comments'].value)
+            bolConcession.concession.comments = this.bolConcessionForm.controls['comments'].value;
+
 
        const concessions = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
 
@@ -526,7 +529,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             if (concessionFormItem.get('unitcharge').value) {
                 bolConcessionDetail.loadedRate = concessionFormItem.get('unitcharge').value;
             } else {
-                this.addValidationError("Charge rate not entered");
+                //this.addValidationError("Charge rate not entered");
             }
 
             if (concessionFormItem.get('userid').value) {
@@ -773,6 +776,25 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             }
             rowIndex++;
         }
+
+        const conditions = <FormArray>this.bolConcessionForm.controls['conditionItemsRows'];
+        //this is detailed line items,  but not yet the controls
+        //for (let conditionFormItem of conditions.controls) {
+
+        //    let controls = (<FormGroup>conditionFormItem).controls;
+
+        //    for (const fieldname in controls) { // 'field' is a string
+
+        //        const abstractControl = controls[fieldname];
+        //        if (abstractControl.dirty) {
+
+        //            changedProperties.push({ rowIndex, fieldname });
+        //        }
+        //    }
+        //    rowIndex++;
+        //}
+
+
         return JSON.stringify(changedProperties);
     }
 
