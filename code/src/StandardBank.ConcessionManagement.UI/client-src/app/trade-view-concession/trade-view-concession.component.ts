@@ -299,7 +299,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                 for (let tradeConcessionDetail of this.tradeConcession.tradeConcessionDetails) {
 
                     if (rowIndex != 0) {
-                        this.addNewConcessionRow();
+                        this.addNewConcessionRow(false);
                     }
 
                     const concessions = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
@@ -349,10 +349,13 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
                     if (tradeConcessionDetail.communication) {
                         currentConcession.get('communication').setValue(tradeConcessionDetail.communication);
-                     
-                        tradeConcessionDetail.show_communication = true;
-                       
 
+                        tradeConcessionDetail.show_communication = true;
+
+                    }
+                    else {
+
+                        tradeConcessionDetail.show_communication = true;
                     }
 
                     if (tradeConcessionDetail.flatFee) {
@@ -485,8 +488,8 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
             expiryDate: [''],
             dateApproved: [{ value: '', disabled: true }],
             isExpired: [''],
-            isExpiring: [''],
-            show_term: [{ value: false, disabled: true }],
+            isExpiring: ['']
+          
         });
     }
 
@@ -506,12 +509,23 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
         });
     }
 
-    addNewConcessionRow() {
+    addNewConcessionRow(add: boolean) {
         const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
         var newRow = this.initConcessionItemRows();
         control.push(newRow);
 
-        this.tradeConcession.tradeConcessionDetails.push(new TradeConcessionDetail());
+        if (add == true) {
+
+            let newconcession = new TradeConcessionDetail();
+            newconcession.show_advalorem = true;
+            newconcession.show_communication = true;
+            newconcession.show_max = true;
+            newconcession.show_flatfee = true;
+            newconcession.show_min = true;
+            newconcession.show_term = true;
+
+            this.tradeConcession.tradeConcessionDetails.push(newconcession);
+        }
     }
 
     addNewConditionRow() {
@@ -573,7 +587,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
             this.selectedTradeConcession[rowIndex] = true;
 
             currentProduct.get('disablecontrolset').setValue(true);
-            
+            currentProduct.get('accountNumber').setValue(null);
             currentProduct.get('advalorem').setValue(null);
             currentProduct.get('min').setValue(null);
             currentProduct.get('max').setValue(null);
@@ -581,13 +595,14 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
             currentProduct.get('communication').setValue(null);
             currentProduct.get('flatfee').setValue(null);
             currentProduct.get('currency').setValue(null);
+            currentProduct.get('expiryDate').setValue('');  
 
             this.tradeConcession.tradeConcessionDetails[rowIndex].show_advalorem = false;
             this.tradeConcession.tradeConcessionDetails[rowIndex].show_min = false;
             this.tradeConcession.tradeConcessionDetails[rowIndex].show_max = false;
 
 
-            this.tradeConcession.tradeConcessionDetails[rowIndex].show_communication= false;
+            this.tradeConcession.tradeConcessionDetails[rowIndex].show_communication = false;
             this.tradeConcession.tradeConcessionDetails[rowIndex].show_flatfee = false;
             this.tradeConcession.tradeConcessionDetails[rowIndex].show_term = true;
 
@@ -596,10 +611,9 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
         else {
 
             this.selectedTradeConcession[rowIndex] = false;
-
             currentProduct.get('disablecontrolset').setValue(false);
-
             currentProduct.get('gbbnumber').setValue(null);
+
             currentProduct.get('term').setValue(null);
             currentProduct.get('estfee').setValue(null);
             currentProduct.get('loadedRate').setValue(null);
@@ -737,7 +751,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                 }
             }
             ///---
-            if (concessionFormItem.get('communication').value) {
+            if (concessionFormItem.get('communication').value || concessionFormItem.get('communication').value == 0) {
                 tradeConcessionDetail.communication = concessionFormItem.get('communication').value;
             } else {
                 if (!tradeConcessionDetail.disablecontrolset) {
@@ -751,7 +765,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                 tradeConcessionDetail.flatFee = concessionFormItem.get('flatfee').value;
             } else {
                 if (!tradeConcessionDetail.disablecontrolset && !advaloremfound) {
-                    this.addValidationError("Flat fee not entered");
+                   // this.addValidationError("Flat fee not entered");
                 }
             }
 

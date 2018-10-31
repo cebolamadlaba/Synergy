@@ -9,6 +9,8 @@ import { Period } from "../models/period";
 import { PeriodType } from "../models/period-type";
 import { ConditionType } from "../models/condition-type";
 import { ClientAccount } from "../models/client-account";
+import { ClientAccountArray } from "../models/client-account-array";
+
 import { AccrualType } from "../models/accrual-type";
 import { ChannelType } from "../models/channel-type";
 import { LookupDataService } from "../services/lookup-data.service";
@@ -113,6 +115,9 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     observableInvestmentConcession: Observable<InvestmentConcession>;
     investmentConcession: InvestmentConcession;
 
+    selectedProductTypes: ProductType[];
+    selectedAccountNumbers: ClientAccountArray[];
+
 
     constructor(private route: ActivatedRoute,
         private formBuilder: FormBuilder,
@@ -148,6 +153,9 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.investmentConcession.concession = new Concession();
         this.investmentConcession.concession.concessionComments = [new ConcessionComment()];
 
+        this.selectedProductTypes = [new ProductType()];
+        this.selectedAccountNumbers = [new ClientAccountArray()];
+
     }
 
     ngOnInit() {
@@ -178,16 +186,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                 this.errorMessage = <any>error;
                 this.isLoading = false;
             });
-        }
-
-        //if (this.riskGroupNumber) {
-        //    this.observableInvestmentView = this.investmentConcessionService.getInvestmentViewData(this.riskGroupNumber);
-        //    this.observableInvestmentView.subscribe(investmentView => {
-        //        this.investmentView = investmentView;
-        //    }, error => {
-        //        this.errorMessage = <any>error;
-        //    });
-        //}
+        }     
 
         this.investmentConcessionForm = this.formBuilder.group({
             concessionItemRows: this.formBuilder.array([this.initConcessionItemRows()]),
@@ -216,14 +215,6 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             this.riskGroup = <any>results[4];
             this.clientAccounts = <any>results[5];
             this.primeRate = <string>results[6];
-
-            //this.conditionTypes = <any>results[0];
-            //this.productTypes = <any>results[1];
-            //this.investmentproducts = <any>results[2];
-
-            //this.periods = <any>results[3];
-            //this.periodTypes = <any>results[4];
-            //this.legalentitygbbnumbers = <any>results[5];
 
             this.populateForm();
         },
@@ -327,7 +318,20 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                     if (this.productTypes) {                                           
 
                         let selectedProductType = this.productTypes.filter(_ => _.id === investmentConcessionDetail.productTypeId);
-                        currentConcession.get('productType').setValue(selectedProductType[0]);                      
+                        currentConcession.get('productType').setValue(selectedProductType[0]);
+
+
+                        if (selectedProductType[0].description == 'Notice deposit (BND)') {
+
+                            this.selectedInvestmentConcession[rowIndex] = false;
+                           
+                        }
+                        else {
+
+                            this.selectedInvestmentConcession[rowIndex] = true;
+
+                        }
+
                     }
 
                     if (investmentConcessionDetail.balance)
@@ -402,6 +406,9 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         
 
     initConcessionItemRows() {
+
+        this.selectedProductTypes.push(new ProductType());
+        this.selectedAccountNumbers.push(new ClientAccountArray());
      
         this.selectedInvestmentConcession.push(false)
 
@@ -464,6 +471,9 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             control.removeAt(index);
         
             this.selectedInvestmentConcession.splice(index, 1);
+
+            this.selectedProductTypes.splice(index, 1);
+            this.selectedInvestmentConcession.splice(index, 1);
         }
     }
 
@@ -487,12 +497,12 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         currentCondition.get('expectedTurnoverValue').setValue(null);
     }
 
-    productTypeChanged(rowIndex) {
+   // productTypeChanged(rowIndex) {
 
-        const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];      
+      //  const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];      
 
-        let currentProduct = control.controls[rowIndex];
-        var selectedproducttype = currentProduct.get('producttype').value;
+       // let currentProduct = control.controls[rowIndex];
+       // var selectedproducttype = currentProduct.get('producttype').value;
 
         //this.selectedProductTypes[rowIndex].products = this.investmentproducts.filter(re => re.investmentProductTypeId == selectedproducttype.investmentProductTypeID);
 
@@ -524,7 +534,46 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         //    currentProduct.get('estfee').setValue(null);
         //    currentProduct.get('loadedRate').setValue(null);
         //}
+   // }
+
+
+
+    productTypeChanged(rowIndex) {
+
+        const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
+
+        let currentRow = control.controls[rowIndex];
+        var productType = currentRow.get('productType').value;
+
+        this.selectedProductTypes[rowIndex] = productType;
+
+        if (this.clientAccounts && this.clientAccounts.length > 0) {
+            this.selectedAccountNumbers[rowIndex].clientaccounts = this.clientAccounts.filter(re => re.accountType == productType.description);
+
+            if (this.selectedAccountNumbers[rowIndex].clientaccounts.length == 0) {
+                currentRow.get('accountNumber').setValue(null);
+            }
+            else {
+
+                currentRow.get('accountNumber').setValue(this.selectedAccountNumbers[rowIndex].clientaccounts[0]);
+            }
+        }
+
+        if (productType.description == 'Notice deposit (BND)') {
+
+            this.selectedInvestmentConcession[rowIndex] = false;
+            currentRow.get('noticeperiod').setValue(null);
+            currentRow.get('expiryDate').setValue('');
+        }
+        else {
+
+            this.selectedInvestmentConcession[rowIndex] = true;
+
+        }
     }
+
+
+
 
     addValidationError(validationDetail) {
         if (!this.validationError)
@@ -539,6 +588,14 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         investmentConcession.concession.riskGroupId = this.riskGroup.id;
         investmentConcession.concession.referenceNumber = this.concessionReferenceId;
         investmentConcession.concession.concessionType = ConcessionTypes.Investment;     
+
+        if (this.investmentConcessionForm.controls['smtDealNumber'].value) {
+            investmentConcession.concession.smtDealNumber = this.investmentConcessionForm.controls['smtDealNumber'].value;
+        }
+
+        else
+            this.addValidationError("SMT Deal Number not captured");
+
 
         if (this.investmentConcessionForm.controls['comments'].value)
             investmentConcession.concession.comments = this.investmentConcessionForm.controls['comments'].value;
