@@ -173,8 +173,8 @@
 
                 <td class="length-short"><input type="number" class="form-control" formControlName="term" [attr.disabled]="(!selectedTradeConcession[i]) || saveMessage ? '' : null" /></td>
                 <td class="length-short"><input type="number" class="form-control" formControlName="advalorem" [attr.disabled]="(selectedTradeConcession[i]) || saveMessage ? '' : null" (change)="setadvalorem($event, i,'advalorem')"/></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="min" [attr.disabled]="(selectedTradeConcession[i]) || saveMessage ? '' : null" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="max" [attr.disabled]="(selectedTradeConcession[i]) || saveMessage ? '' : null" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="min" [attr.disabled]="(selectedTradeConcession[i]) || saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="max" [attr.disabled]="(selectedTradeConcession[i]) || saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
                 <td class="length-short"><input type="number" class="form-control" formControlName="communication" [attr.disabled]="(selectedTradeConcession[i]) || saveMessage ? '' : null" /></td>
                 <td class="length-short"><input type="number" class="form-control" formControlName="flatfee" [attr.disabled]="(selectedTradeConcession[i]) || saveMessage ? '' : null" (change)="setadvalorem($event, i,'flatfee')" /></td>
                 <td class="length-short">

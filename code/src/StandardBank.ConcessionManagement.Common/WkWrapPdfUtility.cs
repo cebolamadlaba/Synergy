@@ -32,8 +32,13 @@ namespace StandardBank.ConcessionManagement.Common
         public byte[] GeneratePdfFromHtml(string html)
         {
             var wkhtmltopdf = new FileInfo(_configurationData.WKhtmlToPDFExecutable);
+          
             var converter = new HtmlToPdfConverter(wkhtmltopdf);
-            return converter.ConvertToPdf(html);
+            return converter.ConvertToPdf(html);          
+
+            
+
+
         }
     }
 }

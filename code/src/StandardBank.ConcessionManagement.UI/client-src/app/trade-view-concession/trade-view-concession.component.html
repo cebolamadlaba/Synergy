@@ -223,8 +223,8 @@
                 </td>
 
                 <td class="length-short"><input type="number" class="form-control" formControlName="advalorem" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_advalorem && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'advalorem')" (change)="setadvalorem($event, i,'advalorem')" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="min" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_min && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'min')" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="max" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_max && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'max')" /></td>
+                <td class="length-short"><input type="text" class="form-control" formControlName="min" numbersOnly="true" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_min && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'min')" (change)="setTwoNumberDecimal($event)"/></td>
+                <td class="length-short"><input type="text" class="form-control" formControlName="max" numbersOnly="true" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_max && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'max')" (change)="setTwoNumberDecimal($event)" /></td>
                 <td class="length-short"><input type="number" class="form-control" formControlName="communication" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_communication && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'communication')" /></td>
                 <td class="length-short"><input type="number" class="form-control" formControlName="flatfee" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_flatfee && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'flatfee')" (change)="setadvalorem($event, i,'flatfee')" /></td>
                 <td class="length-short">

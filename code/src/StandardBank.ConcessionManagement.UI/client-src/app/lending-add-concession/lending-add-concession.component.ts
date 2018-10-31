@@ -275,7 +275,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
         if (productType.description === "Overdraft") {
 
-            currentRow.get('term').disable();
+            currentRow.get('term').enable();
             currentRow.get('term').setValue('12');
 
             currentRow.get('reviewFeeType').enable();
