@@ -337,10 +337,10 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
             }
 
 
-            if (concessionFormItem.get('unitcharge').value) {
+            if (concessionFormItem.get('unitcharge').value || concessionFormItem.get('unitcharge').value == 0) {
                 bolConcessionDetail.loadedRate = concessionFormItem.get('unitcharge').value;
             } else {
-                //this.addValidationError("Charge rate not entered");
+                this.addValidationError("Rate not entered");
             }
 
             if (concessionFormItem.get('userid').value) {

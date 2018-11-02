@@ -492,7 +492,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                 }
             }
 
-            if (concessionFormItem.get('rate').value) {
+            if (concessionFormItem.get('rate').value || concessionFormItem.get('rate').value == 0)  {
                 tradeConcessionDetail.loadedRate = concessionFormItem.get('rate').value;
             } else {
                 if (tradeConcessionDetail.disablecontrolset) {

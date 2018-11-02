@@ -37,6 +37,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
+               
+
                 return db.Query<ConcessionConditionView>(
                     @"SELECT [ConcessionConditionId], [ConcessionId], [RequestorId], [ReferenceNumber], [ConcessionTypeId], [ConcessionType], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [ConditionTypeId], [ConditionType], [ConditionProductId], [ConditionProduct], [PeriodTypeId], [PeriodType], [PeriodId], [Period], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [DateApproved], [ExpiryDate], [IsActive],
                     isnull(cast([ActualVolume] as varchar),'Unavailable') 'ActualVolume', isnull(cast([ActualValue] as varchar),'Unavailable') 'ActualValue', isnull(cast([ActualTurnover] as varchar),'Unavailable') 'ActualTurnover'
@@ -44,8 +46,8 @@ namespace StandardBank.ConcessionManagement.Repository
                     WHERE [ConditionMet] IS NULL
                     AND [PeriodId] = @periodId
                     AND [PeriodTypeId] = @periodTypeId
-                    AND [RequestorId] = @RequestorId",
-                    new { periodId, periodTypeId, requestorId });
+                    AND [RequestorId] = @RequestorId and ExpiryDate <= @ExpiryDate",
+                    new { periodId, periodTypeId, requestorId, ExpiryDate = System.DateTime.Today.AddDays(30) });
             }
         }
 
