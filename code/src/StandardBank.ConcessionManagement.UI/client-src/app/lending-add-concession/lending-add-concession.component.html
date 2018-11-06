@@ -165,11 +165,11 @@
                 </td>
 
                 <!-- Initiation fee -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="initiationFee" class="form-control" (change)="setTwoNumberDecimal($event)" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="initiationFee" class="form-control" (change)="setThreeNumberDecimal($event)" /></td>
 
                 <!-- Service fee -->
 
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="serviceFee" class="form-control" (change)="setTwoNumberDecimal($event)" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="serviceFee" class="form-control" (change)="setThreeNumberDecimal($event)" /></td>
 
                 <!-- Review fee type -->
                 <td class="length-short">
@@ -178,9 +178,9 @@
                     </select>
                 </td>
                 <!-- Review fee -->
-                <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="reviewFee" (change)="setTwoNumberDecimal($event)" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="reviewFee" (change)="setThreeNumberDecimal($event)" /></td>
                 <!-- UFF fee -->
-                <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="uffFee" (change)="setTwoNumberDecimal($event)" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="uffFee" (change)="setThreeNumberDecimal($event)" /></td>
                 <td><button *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
         </tbody>

@@ -481,7 +481,17 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         }
         else {
 
-            $event.target.value = this.formatDecimal($event.target.value);
+            $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
+        }
+    }
+
+    setThreeNumberDecimal($event) {
+        if ($event.target.value) {
+            $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
+        }
+        else {
+
+            $event.target.value = null;
         }
     }
 

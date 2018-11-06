@@ -335,7 +335,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                     }
 
                     if (investmentConcessionDetail.balance)
-                        currentConcession.get('balance').setValue(this.formatDecimal(investmentConcessionDetail.balance));
+                        currentConcession.get('balance').setValue(new DecimalPipe('en-US').transform(investmentConcessionDetail.balance, '1.0-0'));
 
                     if (investmentConcessionDetail.approvedRate)
                         currentConcession.get('approvedRate').setValue(investmentConcessionDetail.approvedRate);
@@ -589,12 +589,12 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         investmentConcession.concession.referenceNumber = this.concessionReferenceId;
         investmentConcession.concession.concessionType = ConcessionTypes.Investment;     
 
-        if (this.investmentConcessionForm.controls['smtDealNumber'].value) {
-            investmentConcession.concession.smtDealNumber = this.investmentConcessionForm.controls['smtDealNumber'].value;
-        }
+        //if (this.investmentConcessionForm.controls['smtDealNumber'].value) {
+        //    investmentConcession.concession.smtDealNumber = this.investmentConcessionForm.controls['smtDealNumber'].value;
+        //}
 
-        else
-            this.addValidationError("SMT Deal Number not captured");
+        //else
+        //    this.addValidationError("SMT Deal Number not captured");
 
 
         if (this.investmentConcessionForm.controls['comments'].value)
@@ -1209,6 +1209,28 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.formatDecimal($event.target.value);
+    }
+
+    setZeroNumberDecimal($event) {
+
+        if ($event.target.value) {
+            $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.0-0');
+        }
+        else {
+
+            $event.target.value = null;
+        }
+    }
+
+
+    setThreeNumberDecimal($event) {
+        if ($event.target.value) {
+            $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
+        }
+        else {
+
+            $event.target.value = null;
+        }
     }
 
     formatDecimal(itemValue: number) {

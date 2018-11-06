@@ -1383,6 +1383,17 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
         $event.target.value = this.formatDecimal($event.target.value);
     }
 
+    setThreeNumberDecimal($event) {
+
+        if ($event.target.value) {
+            $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
+        }
+        else {
+
+            $event.target.value = null;
+        }
+    }
+
     formatDecimal(itemValue: number) {
         if (itemValue) {
             return new DecimalPipe('en-US').transform(itemValue, '1.2-2');

@@ -173,7 +173,7 @@
                         <option value="6">180 days</option>
                     </select>
                 </td>
-                <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="rate" [attr.disabled]="saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="rate" [attr.disabled]="saveMessage ? '' : null" (change)="setThreeNumberDecimal($event)" /></td>
 
                 <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="(selectedInvestmentConcession[i]) && !saveMessage ? '' : null" /></td>
 

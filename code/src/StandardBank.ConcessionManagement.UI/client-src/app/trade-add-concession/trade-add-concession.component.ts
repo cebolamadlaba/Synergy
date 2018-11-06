@@ -591,6 +591,17 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
     }
 
 
+    setThreeNumberDecimal($event) {
+
+        if ($event.target.value) {
+            $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
+        }
+        else {
+
+            $event.target.value = null;
+        }
+    }
+
     setadvalorem($event, rowIndex, controlname) {
 
         if (event.target != null && $event.target.value != "") {

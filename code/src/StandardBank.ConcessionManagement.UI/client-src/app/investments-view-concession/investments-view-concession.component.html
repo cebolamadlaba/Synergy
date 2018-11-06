@@ -212,7 +212,7 @@
 
 
 
-                <td class="length-long"><input type="number" class="form-control" [class.markred]="bcmhochanged(i,'balance')" formControlName="balance" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-long"><input type="text" class="form-control" [class.markred]="bcmhochanged(i,'balance')" formControlName="balance" [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimal($event)"/></td>
 
                 <td class="length-long">
                     <select formControlName="noticeperiod" class="form-control" [attr.disabled]="!selectedInvestmentConcession[i]  && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'noticeperiod')">
@@ -227,7 +227,7 @@
 
                 <td class="length-long">
 
-                    <input type="text" formControlName="loadedRate" [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimal($event)" class="form-control" [class.markred]="bcmhochanged(i,'loadedRate')" />
+                    <input type="text" formControlName="loadedRate" [attr.disabled]="canEdit ? null : ''" (change)="setThreeNumberDecimal($event)" class="form-control" [class.markred]="bcmhochanged(i,'loadedRate')" />
 
                 </td>
                 <td class="length-long" *ngIf="isApproved">

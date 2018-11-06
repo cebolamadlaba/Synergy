@@ -176,7 +176,7 @@
                 <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="min" [attr.disabled]="(selectedTradeConcession[i]) || saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
                 <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="max" [attr.disabled]="(selectedTradeConcession[i]) || saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
                 <td class="length-short"><input type="number" class="form-control" formControlName="communication" [attr.disabled]="(selectedTradeConcession[i]) || saveMessage ? '' : null" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="flatfee" [attr.disabled]="(selectedTradeConcession[i]) || saveMessage ? '' : null" (change)="setadvalorem($event, i,'flatfee')" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="flatfee" [attr.disabled]="(selectedTradeConcession[i]) || saveMessage ? '' : null" /></td>
                 <td class="length-short">
                     <select formControlName="currency" class="form-control" [attr.disabled]="(selectedTradeConcession[i]) || saveMessage ? '' : null">
                         <option>EUR</option>
@@ -185,8 +185,8 @@
                         <option>USD</option>
                     </select>
                 </td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="estfee" [attr.disabled]="(!selectedTradeConcession[i]) || saveMessage ? '' : null" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="rate" [attr.disabled]="(!selectedTradeConcession[i]) || saveMessage ? '' : null" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="estfee" [attr.disabled]="(!selectedTradeConcession[i]) || saveMessage ? '' : null" (change)="setThreeNumberDecimal($event)"  /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="rate" [attr.disabled]="(!selectedTradeConcession[i]) || saveMessage ? '' : null" (change)="setThreeNumberDecimal($event)" /></td>
                 <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="(selectedTradeConcession[i]) || saveMessage ? '' : null" /></td>
                 <td class="delete"><button *ngIf="tradeConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>

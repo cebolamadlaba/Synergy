@@ -236,11 +236,11 @@
                     <!-- Initiation fee -->
                     <td class="length-short">                       
 
-                        <input type="text" numbersOnly="true" formControlName="initiationFee" class="form-control" [attr.disabled]="canEdit ? null :''" (change)="setTwoNumberDecimal($event)" [class.markred]="bcmhochanged(i,'initiationFee')" />
+                        <input type="text" numbersOnly="true" formControlName="initiationFee" class="form-control" [attr.disabled]="canEdit ? null :''" (change)="setThreeNumberDecimal($event)" [class.markred]="bcmhochanged(i,'initiationFee')" />
                     </td>
 
                     <!-- Service fee -->
-                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="serviceFee" class="form-control" [attr.disabled]="this.lendingConcession.lendingConcessionDetails[i].show_serviceFee && canEdit ? null :''" (change)="setTwoNumberDecimal($event)" [class.markred]="bcmhochanged(i,'serviceFee')" /></td>
+                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="serviceFee" class="form-control" [attr.disabled]="this.lendingConcession.lendingConcessionDetails[i].show_serviceFee && canEdit ? null :''" (change)="setThreeNumberDecimal($event)" [class.markred]="bcmhochanged(i,'serviceFee')" /></td>
 
 
                     <td class="length-short">
@@ -250,9 +250,9 @@
                         </select>
                     </td>
                     <!-- Review fee -->
-                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="reviewFee" class="form-control" [attr.disabled]="this.lendingConcession.lendingConcessionDetails[i].show_reviewFee && canEdit ? null : ''" (change)="setTwoNumberDecimal($event)" [class.markred]="bcmhochanged(i,'reviewFee')" /></td>
+                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="reviewFee" class="form-control" [attr.disabled]="this.lendingConcession.lendingConcessionDetails[i].show_reviewFee && canEdit ? null : ''" (change)="setThreeNumberDecimal($event)" [class.markred]="bcmhochanged(i,'reviewFee')" /></td>
                     <!-- uffFee -->
-                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="uffFee" class="form-control" [attr.disabled]="this.lendingConcession.lendingConcessionDetails[i].show_uffFee && canEdit ? null : ''" (change)="setTwoNumberDecimal($event)" [class.markred]="bcmhochanged(i,'uffFee')" /></td>
+                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="uffFee" class="form-control" [attr.disabled]="this.lendingConcession.lendingConcessionDetails[i].show_uffFee && canEdit ? null : ''" (change)="setThreeNumberDecimal($event)" [class.markred]="bcmhochanged(i,'uffFee')" /></td>
 
                     <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="expiryDate" class="form-control" [style.background-color]="getBackgroundColour(i)" [class.markred]="bcmhochanged(i,'expiryDate')" /></td>
                     <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>

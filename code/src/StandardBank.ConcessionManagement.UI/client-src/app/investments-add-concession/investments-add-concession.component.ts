@@ -329,12 +329,12 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
 
 
 
-        if (this.investmentConcessionForm.controls['smtDealNumber'].value) {
-            investmentConcession.concession.smtDealNumber = this.investmentConcessionForm.controls['smtDealNumber'].value;
-        }
+        //if (this.investmentConcessionForm.controls['smtDealNumber'].value) {
+        //    investmentConcession.concession.smtDealNumber = this.investmentConcessionForm.controls['smtDealNumber'].value;
+        //}
 
-        else
-            this.addValidationError("SMT Deal Number not captured");
+        //else
+        //    this.addValidationError("SMT Deal Number not captured");
 
 
 
@@ -500,6 +500,28 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.formatDecimal($event.target.value);
+    }
+
+    setThreeNumberDecimal($event) {
+
+        if ($event.target.value) {
+            $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
+        }
+        else {
+
+            $event.target.value = null;
+        }
+    }
+
+    setZeroNumberDecimal($event) {
+
+        if ($event.target.value) {
+            $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.0-0');
+        }
+        else {
+
+            $event.target.value = null;
+        }
     }
 
     formatDecimal(itemValue: number) {

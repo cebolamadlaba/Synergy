@@ -322,17 +322,17 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
                     currentConcession.get('limit').setValue(this.formatDecimal(lendingConcessionDetail.limit));
                     currentConcession.get('term').setValue(lendingConcessionDetail.term);
-                    currentConcession.get('marginAgainstPrime').setValue(this.formatDecimal(lendingConcessionDetail.marginAgainstPrime));
-                    currentConcession.get('approvedMarginAgainstPrime').setValue(this.formatDecimal(lendingConcessionDetail.approvedMap));
-                    currentConcession.get('initiationFee').setValue(this.formatDecimal(lendingConcessionDetail.initiationFee));
+                    currentConcession.get('marginAgainstPrime').setValue(this.formatDecimal3(lendingConcessionDetail.marginAgainstPrime));
+                    currentConcession.get('approvedMarginAgainstPrime').setValue(this.formatDecimal3(lendingConcessionDetail.approvedMap));
+                    currentConcession.get('initiationFee').setValue(this.formatDecimal3(lendingConcessionDetail.initiationFee));
 
                     let selectedReviewFeeType = this.reviewFeeTypes.filter(_ => _.id == lendingConcessionDetail.reviewFeeTypeId);
                     currentConcession.get('reviewFeeType').setValue(selectedReviewFeeType[0]);
-                    currentConcession.get('reviewFee').setValue(this.formatDecimal(lendingConcessionDetail.reviewFee));
-                    currentConcession.get('uffFee').setValue(this.formatDecimal(lendingConcessionDetail.uffFee));
+                    currentConcession.get('reviewFee').setValue(this.formatDecimal3(lendingConcessionDetail.reviewFee));
+                    currentConcession.get('uffFee').setValue(this.formatDecimal3(lendingConcessionDetail.uffFee));
 
 
-                    currentConcession.get('serviceFee').setValue(this.formatDecimal(lendingConcessionDetail.serviceFee));
+                    currentConcession.get('serviceFee').setValue(this.formatDecimal3(lendingConcessionDetail.serviceFee));
                     currentConcession.get('frequency').setValue(lendingConcessionDetail.frequency);
 
                     if (lendingConcessionDetail.expiryDate) {
@@ -1288,7 +1288,17 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         }
         else {
 
-            $event.target.value = this.formatDecimal($event.target.value);
+            $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
+        }
+    }
+
+    setThreeNumberDecimal($event) {
+        if ($event.target.value) {
+            $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
+        }
+        else {
+
+            $event.target.value = null;
         }
     }
 
@@ -1296,6 +1306,15 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         if (itemValue) {
 
             return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
+        }
+
+        return null;
+    }
+
+    formatDecimal3(itemValue: number) {
+        if (itemValue) {
+
+            return new DecimalPipe('en-US').transform(itemValue, '1.3-4');
         }
 
         return null;
