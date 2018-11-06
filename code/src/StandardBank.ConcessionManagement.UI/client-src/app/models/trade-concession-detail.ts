@@ -25,5 +25,12 @@ export class TradeConcessionDetail extends BaseConcessionDetail {
     adValorem: number;
     currency: number;
 
+    show_term: boolean;
+    show_advalorem: boolean;
+    show_min: boolean;
+    show_max: boolean;
+    show_communication: boolean;
+    show_flatfee: boolean;
+
     disablecontrolset: boolean;
 }

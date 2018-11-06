@@ -22,7 +22,7 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                 case "Verbose":
                     Log.Logger = new LoggerConfiguration()
                         .MinimumLevel.Verbose()
-                        .WriteTo.RollingFile(logFilePath)
+                        .WriteTo.RollingFile(logFilePath)                          
                         .CreateLogger();
                     break;
                 case "Debug":

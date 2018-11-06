@@ -43,5 +43,13 @@
 
 
         public string RatePercentage { get; set; }
+
+        public string Communication { get; set; }
+        public string AdValorem { get; set; }
+        public string Min { get; set; }
+        public string Max { get; set; }
+        public string FlatFee { get; set; }
+
+
     }
 }

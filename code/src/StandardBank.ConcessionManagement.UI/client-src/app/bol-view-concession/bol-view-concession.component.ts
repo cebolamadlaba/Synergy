@@ -283,9 +283,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
                     let selectedBOLUser = this.legalentitybolusers.filter(_ => _.pkLegalEntityBOLUserId == bolConcessionDetail.fkLegalEntityBOLUserId);
                     currentConcession.get('userid').setValue(selectedBOLUser[0]);
-
-                    //let selectedChargeCode = this.bolchargecodes.filter(_ => _.pkChargeCodeId == bolConcessionDetail.fkChargeCodeId);
-                    //currentConcession.get('chargecode').setValue(selectedChargeCode[0]);
+                 
 
                     let selectedChargeCode = this.bolchargecodes.filter(_ => _.pkChargeCodeId == bolConcessionDetail.fkChargeCodeId);
                     let chargecodetypeid = selectedChargeCode[0].fkChargeCodeTypeId.valueOf();
@@ -293,18 +291,12 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                     let selectedChargeCodeType = this.bolchargecodetypes.filter(_ => _.pkChargeCodeTypeId == chargecodetypeid);
                     currentConcession.get('product').setValue(selectedChargeCodeType[0]);
 
-                    //---------
-                    //let currentProduct = control.controls[rowIndex];
                     var selectedproduct = currentConcession.get('product').value;
                     let chargecodes = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedChargeCodeType[0].pkChargeCodeTypeId);
                     this.selectedProducts[rowIndex].bolchargecodes = chargecodes;
                 
                     currentConcession.get('chargecode').setValue(selectedChargeCode[0]);   
-                    //------------
-
-
-
-
+                  
                     if (bolConcessionDetail.expiryDate) {
                         var formattedExpiryDate = this.datepipe.transform(bolConcessionDetail.expiryDate, 'yyyy-MM-dd');
                         currentConcession.get('expiryDate').setValue(formattedExpiryDate);
@@ -495,6 +487,9 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         else
             bolConcession.concession.motivation = '.';
 
+        if (this.bolConcessionForm.controls['comments'].value)
+            bolConcession.concession.comments = this.bolConcessionForm.controls['comments'].value;
+
 
        const concessions = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
 
@@ -523,10 +518,10 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                 this.addValidationError("Charge code not selected");
             }
 
-            if (concessionFormItem.get('unitcharge').value) {
+            if (concessionFormItem.get('unitcharge').value || concessionFormItem.get('unitcharge').value == 0)  {
                 bolConcessionDetail.loadedRate = concessionFormItem.get('unitcharge').value;
             } else {
-                this.addValidationError("Charge rate not entered");
+                this.addValidationError("Rate not entered");
             }
 
             if (concessionFormItem.get('userid').value) {
@@ -773,6 +768,25 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             }
             rowIndex++;
         }
+
+        const conditions = <FormArray>this.bolConcessionForm.controls['conditionItemsRows'];
+        //this is detailed line items,  but not yet the controls
+        //for (let conditionFormItem of conditions.controls) {
+
+        //    let controls = (<FormGroup>conditionFormItem).controls;
+
+        //    for (const fieldname in controls) { // 'field' is a string
+
+        //        const abstractControl = controls[fieldname];
+        //        if (abstractControl.dirty) {
+
+        //            changedProperties.push({ rowIndex, fieldname });
+        //        }
+        //    }
+        //    rowIndex++;
+        //}
+
+
         return JSON.stringify(changedProperties);
     }
 
@@ -925,7 +939,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         this.errorMessage = null;
         this.validationError = null;
 
-        var bolConcession = this.getBolConcession(true);
+        var bolConcession = this.getBolConcession(false);
 
         bolConcession.concession.status = ConcessionStatus.Pending;
         bolConcession.concession.subStatus = ConcessionSubStatus.BCMPending;

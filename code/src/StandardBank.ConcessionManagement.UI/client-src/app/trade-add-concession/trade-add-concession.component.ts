@@ -108,6 +108,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
         this.tradeView.riskGroup = new RiskGroup();
         this.tradeView.tradeConcessions = [new TradeConcession()];
         this.tradeView.tradeConcessions[0].concession = new Concession();
+       
     }
 
     ngOnInit() {
@@ -422,26 +423,29 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                 }
             }
 
+            let advaloremfound = false;
+
             if (concessionFormItem.get('advalorem').value) {
+                advaloremfound = true;
                 tradeConcessionDetail.adValorem = concessionFormItem.get('advalorem').value;
             } else {
-                if (!tradeConcessionDetail.disablecontrolset) {
-                    this.addValidationError("AdValorem value not entered");
-                }
+                //if (!tradeConcessionDetail.disablecontrolset) {
+                //    this.addValidationError("AdValorem value not entered");
+                //}
             }
 
-            if (concessionFormItem.get('min').value) {
+            if (concessionFormItem.get('min').value && advaloremfound) {
                 tradeConcessionDetail.min = concessionFormItem.get('min').value;
             } else {
-                if (!tradeConcessionDetail.disablecontrolset) {
+                if (!tradeConcessionDetail.disablecontrolset && advaloremfound) {
                     this.addValidationError("Min value not entered");
                 }
             }
 
-            if (concessionFormItem.get('max').value) {
+            if (concessionFormItem.get('max').value && advaloremfound) {
                 tradeConcessionDetail.max = concessionFormItem.get('max').value;
             } else {
-                if (!tradeConcessionDetail.disablecontrolset) {
+                if (!tradeConcessionDetail.disablecontrolset && advaloremfound) {
                     this.addValidationError("Max value not entered");
                 }
             }
@@ -453,11 +457,22 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                     this.addValidationError("Communication not entered");
                 }
             }
+
+            let flatfeefound = false;
+
             if (concessionFormItem.get('flatfee').value) {
+                flatfeefound = true;
                 tradeConcessionDetail.flatFee = concessionFormItem.get('flatfee').value;
             } else {
-                if (!tradeConcessionDetail.disablecontrolset) {
-                    this.addValidationError("Flat fee not entered");
+                if (!tradeConcessionDetail.disablecontrolset && !advaloremfound) {
+                    //this.addValidationError("Flat fee not entered");
+                }
+            }           
+
+            if ((flatfeefound == false) && (advaloremfound == false)) {
+
+                if (applyexpirydate) {
+                    this.addValidationError("Either AdValorem or Flat fee must be entered");
                 }
             }
 
@@ -477,7 +492,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                 }
             }
 
-            if (concessionFormItem.get('rate').value) {
+            if (concessionFormItem.get('rate').value || concessionFormItem.get('rate').value == 0)  {
                 tradeConcessionDetail.loadedRate = concessionFormItem.get('rate').value;
             } else {
                 if (tradeConcessionDetail.disablecontrolset) {
@@ -575,6 +590,17 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
         $event.target.value = this.formatDecimal($event.target.value);
     }
 
+
+    setThreeNumberDecimal($event) {
+
+        if ($event.target.value) {
+            $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
+        }
+        else {
+
+            $event.target.value = null;
+        }
+    }
 
     setadvalorem($event, rowIndex, controlname) {
 

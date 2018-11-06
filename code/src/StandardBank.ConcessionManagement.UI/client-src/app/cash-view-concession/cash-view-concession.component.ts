@@ -111,7 +111,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 		this.cashConcession = new CashConcession();
 		this.cashConcession.concession = new Concession();
 		this.cashConcession.concession.concessionComments = [new ConcessionComment()];
-	}
+    }  
 
 	ngOnInit() {
 		this.sub = this.route.params.subscribe(params => {
@@ -127,10 +127,10 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 			comments: new FormControl()
 		});
 
-	    Observable.forkJoin([
-	        this.lookupDataService.getChannelTypes(),
-	        this.lookupDataService.getPeriods(),
-	        this.lookupDataService.getPeriodTypes(),
+        Observable.forkJoin([
+            this.lookupDataService.getChannelTypes(),
+            this.lookupDataService.getPeriods(),
+            this.lookupDataService.getPeriodTypes(),          
 	        this.lookupDataService.getConditionTypes(),
 	        this.lookupDataService.getAccrualTypes(),
 	        this.lookupDataService.getTableNumbers(ConcessionTypes.Cash),
@@ -141,7 +141,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 	            this.channelTypes = <any>results[0];
 	            this.periods = <any>results[1];
 	            this.periodTypes = <any>results[2];
-	            this.conditionTypes = <any>results[3];
+                this.conditionTypes = <any>results[3];
 	            this.accrualTypes = <any>results[4];
 	            this.tableNumbers = <any>results[5];
 	            this.riskGroup = <any>results[6];
@@ -644,6 +644,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             }
 
             cashConcession.concession.concessionComments = this.GetChanges(cashConcession.concession.id);
+
+
 
 		} else {
 			cashConcession.concession.status = ConcessionStatus.Approved;

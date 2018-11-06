@@ -158,8 +158,7 @@
             <h3 class="table-title">Concessions</h3>
             <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" *ngIf="canPcmApprove || isEditing || isRecalling" style="margin-top: 15px;">New Concession</button>
 
-            <button type="button" class="btn btn-primary btn-concession" (click)="GetChanges()" *ngIf="canPcmApprove || isEditing || isRecalling" style="margin-top: 15px;">Get Changes</button>
-            
+        
         </div>
     </div>
 
@@ -195,25 +194,28 @@
                     <input formControlName="isExpiring" style="display: none;" />
 
                     <!-- Product type -->
-                    <select formControlName="productType" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="productTypeChanged(i)"  [class.markred]="bcmhochanged(i,'productType')">
+                    <select formControlName="productType" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="productTypeChanged(i)" [class.markred]="bcmhochanged(i,'productType')">
                         <option *ngFor="let productTypeOption of productTypes" [ngValue]="productTypeOption">{{productTypeOption.description}}</option>
                     </select>
                 </td>
 
 
                 <td class="length-long">
-              
+
                     <!-- Account number -->
-                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit ? null : ''"  [class.markred]="bcmhochanged(i,'accountNumber')">
+                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit ? null : ''" [class.markred]="bcmhochanged(i,'accountNumber')">
                         <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
                 </td>
 
+              
 
-                <td class="length-long"><input type="number" class="form-control" [class.markred]="bcmhochanged(i,'balance')" formControlName="balance" [attr.disabled]="canEdit ? null : ''" /></td>
+
+
+                <td class="length-long"><input type="text" class="form-control" [class.markred]="bcmhochanged(i,'balance')" formControlName="balance" [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimal($event)"/></td>
 
                 <td class="length-long">
-                    <select formControlName="noticeperiod" class="form-control" [attr.disabled]="canEdit ? null : ''"  [class.markred]="bcmhochanged(i,'noticeperiod')" >
+                    <select formControlName="noticeperiod" class="form-control" [attr.disabled]="!selectedInvestmentConcession[i]  && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'noticeperiod')">
                         <option value="1">33 days</option>
                         <option value="2">60 days</option>
                         <option value="3">90 days</option>
@@ -225,19 +227,29 @@
 
                 <td class="length-long">
 
-                    <input type="text" formControlName="loadedRate" [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimal($event)" class="form-control" [class.markred]="bcmhochanged(i,'loadedRate')" />
+                    <input type="text" formControlName="loadedRate" [attr.disabled]="canEdit ? null : ''" (change)="setThreeNumberDecimal($event)" class="form-control" [class.markred]="bcmhochanged(i,'loadedRate')" />
 
                 </td>
-                <td class="length-long" *ngIf="isApproved"><input type="text" numbersOnly="true" formControlName="approvedRate" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-long" *ngIf="isApproved">
+              
+                <input type="text" numbersOnly="true" formControlName="approvedRate" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
 
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)"  [class.markred]="bcmhochanged(i,'expiryDate')" /></td>
-                <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>
+                <td class="length-short">
+              
+                <input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" [class.markred]="bcmhochanged(i,'expiryDate')" /></td>
 
+                <td class="length-short" *ngIf="isApproved">
                
+                <input type="date" formControlName="dateApproved" class="form-control" /></td>
+
+
                 <td *ngIf="canArchive" class="delete">
+                  
                     <button *ngIf="investmentConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="archiveConcessiondetail(itemrow.get('concessionDetailId').value)" class="btn-delete" title="Remove"><i class="fa fa-trash" aria-hidden="true" style="color:#920000"></i></button>
                 </td>
-                <td *ngIf="canBcmApprove || canPcmApprove || isEditing || isRecalling"><button type="button" *ngIf="investmentConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                <td class="length-short" *ngIf="(canBcmApprove || canPcmApprove || isEditing || isRecalling ) && investmentConcessionForm.controls.concessionItemRows.controls.length > 1">
+                1
+                <button type="button" *ngIf="investmentConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
         </tbody>
 

@@ -428,6 +428,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             else if (user.CanRequest && !user.IsAdminAssistant)
                 userId = user.Id;
 
+            if(user.IsPCM || user.IsHO || user.IsBCM)
+            {
+                //only work ons risk group not user..
+                userId = null;
+
+            }
+
             return _miscPerformanceRepository.GetClientAccounts(riskGroupNumber, userId, concessiontype);
         }
 

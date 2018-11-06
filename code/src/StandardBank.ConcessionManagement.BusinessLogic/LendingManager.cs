@@ -192,7 +192,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     var productType = _lookupTableManager.GetProductTypeName(concessionLending.ProductTypeId);
 
                     if (productType == Constants.Lending.ProductType.Overdraft)
-                        concessionLending.ExpiryDate = DateTime.Now.AddMonths(12);
+                        concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
 
                     else if (productType == Constants.Lending.ProductType.TempOverdraft)
                         concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);

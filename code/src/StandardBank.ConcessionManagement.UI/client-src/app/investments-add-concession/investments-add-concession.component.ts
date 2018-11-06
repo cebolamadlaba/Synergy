@@ -302,7 +302,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
             }
         }
 
-        if (productType.description == 'Notice Deposits') {
+        if (productType.description == 'Notice deposit (BND)') {
 
             this.selectedInvestmentConcession[rowIndex] = false;
             currentRow.get('noticeperiod').setValue(null);
@@ -325,10 +325,17 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
     getInvestmentConcession(): InvestmentConcession {
         var investmentConcession = new InvestmentConcession();
         investmentConcession.concession = new Concession();
-        investmentConcession.concession.riskGroupId = this.riskGroup.id;
+        investmentConcession.concession.riskGroupId = this.riskGroup.id;       
 
-        if (this.investmentConcessionForm.controls['smtDealNumber'].value)
-            investmentConcession.concession.smtDealNumber = this.investmentConcessionForm.controls['smtDealNumber'].value;
+
+
+        //if (this.investmentConcessionForm.controls['smtDealNumber'].value) {
+        //    investmentConcession.concession.smtDealNumber = this.investmentConcessionForm.controls['smtDealNumber'].value;
+        //}
+
+        //else
+        //    this.addValidationError("SMT Deal Number not captured");
+
 
 
         if (this.investmentConcessionForm.controls['motivation'].value)
@@ -351,7 +358,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
 
             if (concessionFormItem.get('productType').value) {
 
-                if (concessionFormItem.get('productType').value.description == 'Notice Deposits') {
+                if (concessionFormItem.get('productType').value.description == 'Notice deposit (BND)') {
                     applyexpirydate = true;
                 }
                 investmentConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;
@@ -382,7 +389,10 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
                 investmentConcessionDetail.term = concessionFormItem.get('noticeperiod').value;
             } else {
 
-                this.addValidationError("Notice period value not entered");
+                if (applyexpirydate) {
+
+                    this.addValidationError("Notice period value not entered");
+                }
             }
 
             if (concessionFormItem.get('rate').value) {
@@ -490,6 +500,28 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.formatDecimal($event.target.value);
+    }
+
+    setThreeNumberDecimal($event) {
+
+        if ($event.target.value) {
+            $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
+        }
+        else {
+
+            $event.target.value = null;
+        }
+    }
+
+    setZeroNumberDecimal($event) {
+
+        if ($event.target.value) {
+            $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.0-0');
+        }
+        else {
+
+            $event.target.value = null;
+        }
     }
 
     formatDecimal(itemValue: number) {

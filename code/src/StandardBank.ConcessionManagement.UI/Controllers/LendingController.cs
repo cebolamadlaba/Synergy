@@ -175,7 +175,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 await _mediator.Send(new AddConcessionComment(concession.Id, databaseLendingConcession.Concession.SubStatusId,
                     lendingConcession.Concession.Comments, user));
 
-            if (lendingConcession.Concession.Comments == "Approved With Changes" && lendingConcession.Concession.ConcessionComments != null)
+            if ((lendingConcession.Concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges || lendingConcession.Concession.SubStatus == Constants.ConcessionSubStatus.HoApprovedWithChanges) && lendingConcession.Concession.ConcessionComments != null)
             {
                 if (lendingConcession.Concession.ConcessionComments.Count() > 0 && lendingConcession.Concession.ConcessionComments.First().UserDescription == "LogChanges")
                 {

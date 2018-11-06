@@ -92,7 +92,7 @@
             <thead>
                 <tr>
                     <th colspan="9"></th>
-                    <th colspan="3" style="border: 1px solid #ddd; background-color:#387cad">Actuals </th>
+                    <th colspan="2" style="border: 1px solid #ddd; background-color:#387cad">Actuals </th>
                    <th></th>
                 </tr>
 
@@ -108,17 +108,17 @@
                     <th>Expected Turnover Value</th>
 
                     <th style="border: 1px solid #ddd; background-color:#387cad">Volume</th>
-                    <th style="background-color:#387cad">Value</th>
-                    <th style="border: 1px solid #ddd; background-color:#387cad">Turnover</th>
+                    <th style="border: 1px solid #ddd; background-color:#387cad">Value</th>
+                    <!--<th style="border: 1px solid #ddd; background-color:#387cad">Turnover</th>-->
 
                     <th rowspan="2">Condition Met</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor='let condition of observableConditions | conditionsFilter: concessionIdOrRiskGroupNumber; trackBy: index;' class="status-{{condition.ragStatus}}">
+                <tr *ngFor='let condition of observableConditions | conditionsFilter: concessionIdOrRiskGroupNumber; trackBy: index;'>
                     <td (click)="openConcessionView(condition)">
-                        <p class="riskGroupName">{{condition.riskGroupName}}</p>
-                        <p class="riskGroupNumber">{{condition.riskGroupNumber}}</p>
+                        <p>{{condition.riskGroupName}}</p>
+                        <p>{{condition.riskGroupNumber}}</p>
                     </td>
                     <td (click)="openConcessionView(condition)">{{condition.concessionReferenceNumber}}</td>
                     <td (click)="openConcessionView(condition)">{{condition.conditionType }}</td>
@@ -131,7 +131,7 @@
 
                     <td (click)="openConcessionView(condition)">{{condition.actualVolume}}</td>
                     <td (click)="openConcessionView(condition)">{{condition.actualValue}}</td>
-                    <td (click)="openConcessionView(condition)">{{condition.actualTurnover}}</td>
+                    <!--<td (click)="openConcessionView(condition)">{{condition.actualTurnover}}</td>-->
 
                     <td>
                         <button type="button" class="btn btn-no" (click)="conditionNotMet(condition)">No</button>

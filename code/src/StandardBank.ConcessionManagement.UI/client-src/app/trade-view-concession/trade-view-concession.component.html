@@ -150,7 +150,7 @@
     <div class="col-md-12" style="border-bottom: 1px solid gray; margin-bottom: 15px;">
         <div class="row">
             <h3 class="table-title">Concessions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" *ngIf="canPcmApprove || isEditing || isRecalling" style="margin-top: 15px;">New Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow(true)" *ngIf="canPcmApprove || isEditing || isRecalling" style="margin-top: 15px;">New Concession</button>
 
        
 
@@ -184,7 +184,7 @@
         <tbody class="form-concessions-table-content">
 
             <tr *ngFor="let itemrow of tradeConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
-               
+
 
                 <td class="length-short">
                     <input formControlName="tradeConcessionDetailId" style="display: none;" />
@@ -212,18 +212,21 @@
                 </td>
 
                 <td class="length-short">
-                    <select formControlName="gbbnumber" class="form-control" [attr.disabled]="(selectedTradeConcession[i]) && canEdit ? null : ''" (change)="gbbNumberChanged(i)" [class.markred]="bcmhochanged(i,'gbbnumber')">
+                    <select formControlName="gbbnumber" class="form-control" [attr.disabled]="(selectedTradeConcession[i]) && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'gbbnumber')">
                         <option *ngFor="let clientGBBOption of legalentitygbbnumbers" [ngValue]="clientGBBOption">{{clientGBBOption.gbbNumber}}</option>
                     </select>
                 </td>
 
-                <td class="length-short"><input type="number" class="form-control" formControlName="term" [attr.disabled]="(selectedTradeConcession[i]) && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'term')" /></td>
+                <td class="length-short">
 
-                <td class="length-short"><input type="number" class="form-control" formControlName="advalorem" [attr.disabled]="(!selectedTradeConcession[i]) && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'advalorem')" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="min" [attr.disabled]="(!selectedTradeConcession[i]) && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'min')" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="max" [attr.disabled]="(!selectedTradeConcession[i]) && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'max')" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="communication" [attr.disabled]="(!selectedTradeConcession[i]) && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'communication')" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="flatfee" [attr.disabled]="(!selectedTradeConcession[i]) && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'flatfee')" /></td>
+                    <input type="number" class="form-control" formControlName="term" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_term && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'term')" />
+                </td>
+
+                <td class="length-short"><input type="number" class="form-control" formControlName="advalorem" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_advalorem && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'advalorem')" (change)="setadvalorem($event, i,'advalorem')" /></td>
+                <td class="length-short"><input type="text" class="form-control" formControlName="min" numbersOnly="true" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_min && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'min')" (change)="setTwoNumberDecimal($event)"/></td>
+                <td class="length-short"><input type="text" class="form-control" formControlName="max" numbersOnly="true" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_max && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'max')" (change)="setTwoNumberDecimal($event)" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="communication" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_communication && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'communication')" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="flatfee" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_flatfee && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'flatfee')" (change)="setadvalorem($event, i,'flatfee')" /></td>
                 <td class="length-short">
                     <select formControlName="currency" class="form-control" [attr.disabled]="(!selectedTradeConcession[i]) && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'currency')">
                         <option>EUR</option>
@@ -232,12 +235,12 @@
                         <option>USD</option>
                     </select>
                 </td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="estfee" [attr.disabled]="(selectedTradeConcession[i]) && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'estfee')" /></td>
-                <td class="length-short" *ngIf="isApproved"><input type="number" class="form-control" formControlName="approvedRate" [attr.disabled]="canEdit ? null : ''" [class.markred]="bcmhochanged(i,'approvedRate')"/></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="estfee" [attr.disabled]="(selectedTradeConcession[i]) && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'estfee')" (change)="setThreeNumberDecimal($event)" /></td>
+                <td class="length-short" *ngIf="isApproved"><input type="number" class="form-control" formControlName="approvedRate" [attr.disabled]="canEdit ? null : ''" [class.markred]="bcmhochanged(i,'approvedRate')" (change)="setThreeNumberDecimal($event)" /></td>
 
-                <td class="length-short"><input type="number" class="form-control" formControlName="loadedRate" [attr.disabled]="(selectedTradeConcession[i]) && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'loadedRate')" /></td>
-
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" [class.markred]="bcmhochanged(i,'expiryDate')" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="loadedRate" [attr.disabled]="(selectedTradeConcession[i]) && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'loadedRate')" (change)="setThreeNumberDecimal($event)" /></td>
+                
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="(!selectedTradeConcession[i]) && canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" [class.markred]="bcmhochanged(i,'expiryDate')" /></td>
                 <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>
                 <td *ngIf="canArchive" class="delete">
                     <button *ngIf="tradeConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="archiveConcessiondetail(itemrow.get('concessionDetailId').value)" class="btn-delete" title="Remove"><i class="fa fa-trash" aria-hidden="true" style="color:#920000"></i></button>
