@@ -1,0 +1,27 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": true,
+    "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://localhost/StandardBank.ConcessionManagement.UI",
+      "sslPort": 0
+    },
+    "iisExpress": {
+      "applicationUrl": "http://localhost:19999",
+      "sslPort": 0
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Local"
+      }
+    },
+    "StandardBank.ConcessionManagement.UI": {
+      "commandName": "IISExpress",
+      "workingDirectory": "C:\\Zymention-Development\\Kohde\\STB007_CMS\\code\\src\\StandardBank.ConcessionManagement.UI\\wwwroot",
+      "launchUrl": "http://localhost/StandardBank.ConcessionManagement.UI"
+    }
+  }
+}
