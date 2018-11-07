@@ -96,8 +96,6 @@
     <Build Include="dbo\Tables\tblCentreUser.sql" />
     <Build Include="dbo\Tables\tblCentreBusinessManager.sql" />
     <Build Include="dbo\Tables\tblCentre.sql" />
-    <Build Include="dbo\Tables\tblBusinesOnlineTransactionType.sql" />
-    <Build Include="dbo\Tables\tblBolUser.sql" />
     <Build Include="dbo\Tables\rtblType.sql" />
     <Build Include="dbo\Tables\rtblTransactionType.sql" />
     <Build Include="dbo\Tables\rtblTransactionGroup.sql" />
@@ -243,6 +241,21 @@
     <Build Include="dbo\Stored Procedures\DeleteConcessionData.sql" />
     <Build Include="dbo\Tables\tblAccountExecutiveAssistant.sql" />
     <Build Include="Audit\Tables\tblAccountExecutiveAssistant.sql" />
+    <Build Include="dbo\Tables\tblProductTrade.sql" />
+    <Build Include="dbo\Tables\tblProductBOL.sql" />
+    <Build Include="dbo\Tables\tblLegalEntityGBBNumber.sql" />
+    <Build Include="dbo\Tables\tblLegalEntityBOLUser.sql" />
+    <Build Include="dbo\Tables\tblFinancialTrade.sql" />
+    <Build Include="dbo\Tables\tblFinancialBol.sql" />
+    <Build Include="dbo\Tables\tblConcessionLetter.sql" />
+    <Build Include="dbo\Tables\rtblTradeProductType.sql" />
+    <Build Include="dbo\Tables\rtblTradeProductImport.sql" />
+    <Build Include="dbo\Tables\rtblTradeProduct.sql" />
+    <Build Include="dbo\Tables\rtblPrimeRate.sql" />
+    <Build Include="dbo\Tables\rtblBOLChargeCodeType.sql" />
+    <Build Include="dbo\Tables\rtblBOLChargeCode.sql" />
+    <Build Include="Audit\Tables\tblConcessionDetail.sql" />
+    <Build Include="dbo\Views\View_1.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Change Scripts\09_create_rtblPeriod.sql" />

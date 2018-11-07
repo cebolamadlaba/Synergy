@@ -12,7 +12,8 @@
 
 
 
+
+
 GO
-CREATE NONCLUSTERED INDEX [IX_tblFinancialInvestment]
-    ON [dbo].[tblFinancialInvestment]([fkRiskGroupId] ASC);
+
 
