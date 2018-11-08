@@ -306,7 +306,8 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
 
             this.selectedInvestmentConcession[rowIndex] = false;
             currentRow.get('noticeperiod').setValue(null);
-            currentRow.get('expiryDate').setValue('');  
+            currentRow.get('expiryDate').setValue('');
+            currentRow.get('expiryDate').disable();
         }
         else{
 
@@ -359,7 +360,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
             if (concessionFormItem.get('productType').value) {
 
                 if (concessionFormItem.get('productType').value.description == 'Notice deposit (BND)') {
-                    applyexpirydate = true;
+                   // applyexpirydate = true;
                 }
                 investmentConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;
                 
