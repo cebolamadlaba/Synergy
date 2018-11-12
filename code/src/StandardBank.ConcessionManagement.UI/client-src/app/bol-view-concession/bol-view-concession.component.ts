@@ -85,6 +85,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
+    periodsSource: Period[];
 
     observablePeriodTypes: Observable<PeriodType[]>;
     periodTypes: PeriodType[];
@@ -93,7 +94,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     bolchargecodetypes: BolChargeCodeType[];
 
     observableBolChargeCodes: Observable<BolChargeCode[]>;
-    bolchargecodes: BolChargeCode[]; 
+    bolchargecodes: BolChargeCode[];
 
     observableLegalEntityBOLUsers: Observable<LegalEntityBOLUser[]>;
     legalentitybolusers: LegalEntityBOLUser[];
@@ -107,7 +108,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     observableBolConcession: Observable<BolConcession>;
     bolConcession: BolConcession;
 
-    selectedProducts: BolChargeCodeType[];   
+    selectedProducts: BolChargeCodeType[];
 
     constructor(private route: ActivatedRoute,
         private formBuilder: FormBuilder,
@@ -182,11 +183,12 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
             this.conditionTypes = <any>results[0];
             this.bolchargecodetypes = <any>results[1];
-            this.bolchargecodes = <any>results[2];       
+            this.bolchargecodes = <any>results[2];
 
             this.legalentitybolusers = <any>results[3];
 
-            this.periods = <any>results[4];
+            this.periodsSource = <any>results[4];
+            this.periods = this.periodsSource;
             this.periodTypes = <any>results[5];
 
             this.populateForm();
@@ -283,7 +285,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
                     let selectedBOLUser = this.legalentitybolusers.filter(_ => _.pkLegalEntityBOLUserId == bolConcessionDetail.fkLegalEntityBOLUserId);
                     currentConcession.get('userid').setValue(selectedBOLUser[0]);
-                 
+
 
                     let selectedChargeCode = this.bolchargecodes.filter(_ => _.pkChargeCodeId == bolConcessionDetail.fkChargeCodeId);
                     let chargecodetypeid = selectedChargeCode[0].fkChargeCodeTypeId.valueOf();
@@ -294,9 +296,9 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                     var selectedproduct = currentConcession.get('product').value;
                     let chargecodes = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedChargeCodeType[0].pkChargeCodeTypeId);
                     this.selectedProducts[rowIndex].bolchargecodes = chargecodes;
-                
-                    currentConcession.get('chargecode').setValue(selectedChargeCode[0]);   
-                  
+
+                    currentConcession.get('chargecode').setValue(selectedChargeCode[0]);
+
                     if (bolConcessionDetail.expiryDate) {
                         var formattedExpiryDate = this.datepipe.transform(bolConcessionDetail.expiryDate, 'yyyy-MM-dd');
                         currentConcession.get('expiryDate').setValue(formattedExpiryDate);
@@ -338,6 +340,10 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
                     let selectedPeriodType = this.periodTypes.filter(_ => _.id == concessionCondition.periodTypeId);
                     currentCondition.get('periodType').setValue(selectedPeriodType[0]);
+
+                    if (selectedPeriodType[0] != null) {
+                        this.setRelatedPeriods(null, selectedPeriodType[0].description);
+                    }
 
                     let selectedPeriod = this.periods.filter(_ => _.id == concessionCondition.periodId);
                     currentCondition.get('period').setValue(selectedPeriod[0]);
@@ -404,7 +410,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             newRow.controls['userid'].setValue(this.legalentitybolusers[0]);
 
         control.push(newRow);
-        this.productTypeChanged(length);      
+        this.productTypeChanged(length);
 
     }
 
@@ -452,7 +458,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
     productTypeChanged(rowIndex) {
 
-        const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];     
+        const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
 
         let currentProduct = control.controls[rowIndex];
         var selectedproduct = currentProduct.get('product').value;
@@ -491,7 +497,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             bolConcession.concession.comments = this.bolConcessionForm.controls['comments'].value;
 
 
-       const concessions = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+        const concessions = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
 
         for (let concessionFormItem of concessions.controls) {
             if (!bolConcession.bolConcessionDetails)
@@ -518,7 +524,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                 this.addValidationError("Charge code not selected");
             }
 
-            if (concessionFormItem.get('unitcharge').value || concessionFormItem.get('unitcharge').value == 0)  {
+            if (concessionFormItem.get('unitcharge').value || concessionFormItem.get('unitcharge').value == 0) {
                 bolConcessionDetail.loadedRate = concessionFormItem.get('unitcharge').value;
             } else {
                 this.addValidationError("Rate not entered");
@@ -802,6 +808,22 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             }
         }
         return false;
+    }
+
+    setRelatedPeriods(event: Event, periodTypeName: string = null) {
+        let selectElementText;
+        if (periodTypeName == null) {
+            selectElementText = event.target['options']
+            [event.target['options'].selectedIndex].text;
+        }
+        else {
+            selectElementText = periodTypeName;
+        }
+
+        // Reset
+        this.periods = this.periodsSource.filter((period) => {
+            return period.periodType == null || period.periodType == selectElementText;
+        });
     }
 
     pcmDeclineConcession() {

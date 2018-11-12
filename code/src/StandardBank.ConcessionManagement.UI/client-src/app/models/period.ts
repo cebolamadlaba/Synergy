@@ -1,4 +1,5 @@
-﻿export class Period {
+export class Period {
     id: number;
     description: string;
+    periodType: string;
 }

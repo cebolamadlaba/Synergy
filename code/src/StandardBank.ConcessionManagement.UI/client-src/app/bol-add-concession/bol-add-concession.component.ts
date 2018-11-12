@@ -40,7 +40,7 @@ import { UserService } from "../services/user.service";
 })
 export class BolAddConcessionComponent implements OnInit, OnDestroy {
     private sub: any;
-   
+
     errorMessage: String;
     validationError: String[];
     saveMessage: String;
@@ -53,27 +53,28 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
     bolView: BolView = new BolView();
 
     public bolConcessionForm: FormGroup;
-   
+
     isLoading = true;
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
+    periodsSource: Period[];
 
     observablePeriodTypes: Observable<PeriodType[]>;
     periodTypes: PeriodType[];
-  
+
     observable: Observable<BolChargeCodeType[]>;
     bolchargecodetypes: BolChargeCodeType[];
 
     observableBolChargeCodes: Observable<BolChargeCode[]>;
-    bolchargecodes: BolChargeCode[];   
+    bolchargecodes: BolChargeCode[];
 
     observableLegalEntityBOLUsers: Observable<LegalEntityBOLUser[]>;
     legalentitybolusers: LegalEntityBOLUser[];
 
     selectedConditionTypes: ConditionType[];
 
-    selectedProducts: BolChargeCodeType[];   
+    selectedProducts: BolChargeCodeType[];
 
     observableConditionTypes: Observable<ConditionType[]>;
     conditionTypes: ConditionType[];
@@ -83,7 +84,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
 
     constructor(private route: ActivatedRoute,
-        private router: Router,      
+        private router: Router,
         private formBuilder: FormBuilder,
         private location: Location,
         @Inject(LookupDataService) private lookupDataService,
@@ -115,8 +116,8 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
                 this.observableRiskGroup = this.lookupDataService.getRiskGroup(this.riskGroupNumber);
                 this.observableRiskGroup.subscribe(riskGroup => this.riskGroup = riskGroup, error => this.errorMessage = <any>error);
 
-               // this.observableClientAccounts = this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.BOL);
-               // this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
+                // this.observableClientAccounts = this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.BOL);
+                // this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
 
             }
 
@@ -124,7 +125,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
                 this.observableBolView = this.bolConcessionService.getBolViewData(this.riskGroupNumber);
                 this.observableBolView.subscribe(bolView => {
                     this.bolView = bolView;
-                 
+
                     this.isLoading = false;
                 }, error => {
                     this.errorMessage = <any>error;
@@ -143,22 +144,23 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
         Observable.forkJoin([
 
-            this.lookupDataService.getConditionTypes(),                  
+            this.lookupDataService.getConditionTypes(),
             this.lookupDataService.getBOLChargeCodeTypes(),
-            this.lookupDataService.getBOLChargeCodes(), 
+            this.lookupDataService.getBOLChargeCodes(),
             this.lookupDataService.getLegalEntityBOLUsers(this.riskGroupNumber),
             this.lookupDataService.getPeriods(),
-            this.lookupDataService.getPeriodTypes()               
-           
+            this.lookupDataService.getPeriodTypes()
+
         ]).subscribe(results => {
-          
+
             this.conditionTypes = <any>results[0];
             this.bolchargecodetypes = <any>results[1];
-            this.bolchargecodes = <any>results[2];         
+            this.bolchargecodes = <any>results[2];
 
             this.legalentitybolusers = <any>results[3];
 
-            this.periods = <any>results[4];
+            this.periodsSource = <any>results[4];
+            this.periods = this.periodsSource;
             this.periodTypes = <any>results[5];
 
             const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
@@ -173,7 +175,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
             if (this.selectedProducts && this.selectedProducts[0].bolchargecodes)
                 control.controls[0].get('chargecode').setValue(this.selectedProducts[0].bolchargecodes[0]);
-         
+
             this.productTypeChanged(0);
 
             this.isLoading = false;
@@ -191,7 +193,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         return this.formBuilder.group({
             product: [''],
             chargecode: [''],
-            unitcharge: [''],          
+            unitcharge: [''],
             userid: [''],
             expiryDate: ['']
         });
@@ -227,8 +229,8 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         this.selectedProducts[length] = this.bolchargecodetypes[0];
 
         if (this.selectedProducts && this.selectedProducts[0].bolchargecodes)
-            newRow.controls['chargecode'].setValue(this.selectedProducts[0].bolchargecodes[0]);   
-      
+            newRow.controls['chargecode'].setValue(this.selectedProducts[0].bolchargecodes[0]);
+
         control.push(newRow);
 
         this.productTypeChanged(length);
@@ -260,7 +262,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         control.removeAt(index);
 
         this.selectedConditionTypes.splice(index, 1);
-       
+
     }
 
     conditionTypeChanged(rowIndex) {
@@ -284,12 +286,27 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         let currentProduct = control.controls[rowIndex];
         var selectedproduct = currentProduct.get('product').value;
 
-        this.selectedProducts[rowIndex].bolchargecodes = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId);            
+        this.selectedProducts[rowIndex].bolchargecodes = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId);
 
-        currentProduct.get('chargecode').setValue(this.selectedProducts[rowIndex].bolchargecodes[0]);     
-        
+        currentProduct.get('chargecode').setValue(this.selectedProducts[rowIndex].bolchargecodes[0]);
+
     }
 
+    setRelatedPeriods(event: Event, periodTypeName: string = null) {
+        let selectElementText;
+        if (periodTypeName == null) {
+            selectElementText = event.target['options']
+            [event.target['options'].selectedIndex].text;
+        }
+        else {
+            selectElementText = periodTypeName;
+        }
+
+        // Reset
+        this.periods = this.periodsSource.filter((period) => {
+            return period.periodType == null || period.periodType == selectElementText;
+        });
+    }
 
     addValidationError(validationDetail) {
         if (!this.validationError)
@@ -323,15 +340,15 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
             let bolConcessionDetail = new BolConcessionDetail();
 
             if (concessionFormItem.get('product').value) {
-             
+
             } else {
                 this.addValidationError("Product not selected");
             }
-                      
+
 
             if (concessionFormItem.get('chargecode').value) {
                 bolConcessionDetail.fkChargeCodeId = concessionFormItem.get('chargecode').value.pkChargeCodeId;
-              
+
             } else {
                 this.addValidationError("Charge code not selected");
             }
@@ -349,7 +366,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
                 bolConcessionDetail.legalEntityAccountId = concessionFormItem.get('userid').value.legalEntityAccountId;
             } else {
                 this.addValidationError("User ID not selected");
-            }           
+            }
 
 
             if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {

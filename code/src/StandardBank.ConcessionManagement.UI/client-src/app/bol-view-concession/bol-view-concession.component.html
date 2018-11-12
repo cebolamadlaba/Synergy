@@ -317,7 +317,7 @@
                              
                                 <td class="length-medium">
 
-                                    <select formControlName="periodType">
+                                    <select formControlName="periodType" (change)="setRelatedPeriods($event)">
                                         <option *ngFor="let periodTypeOption of periodTypes" [ngValue]="periodTypeOption">{{periodTypeOption?.description}}</option>
                                     </select>
                                 </td>
