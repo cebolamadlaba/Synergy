@@ -43,7 +43,6 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
-    periodsSource: Period[];
 
     observablePeriodTypes: Observable<PeriodType[]>;
     periodTypes: PeriodType[];
@@ -111,8 +110,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             this.cashConcessionService.getlatestCrsOrMrs(this.riskGroupNumber)
         ]).subscribe(results => {
             this.channelTypes = <any>results[0];
-            this.periodsSource = <any>results[1];
-            this.periods = this.periodsSource;
+            this.periods = <any>results[1];
             this.periodTypes = <any>results[2];
             this.conditionTypes = <any>results[3];
             this.accrualTypes = <any>results[4];
@@ -406,6 +404,10 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
                 this.addValidationError("Period not selected");
             }
 
+            if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
+                this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+            }
+
             cashConcession.concessionConditions.push(concessionCondition);
         }
 
@@ -439,22 +441,6 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
-    setRelatedPeriods(event: Event, periodTypeName: string = null) {
-        let selectElementText;
-        if (periodTypeName == null) {
-            selectElementText = event.target['options']
-            [event.target['options'].selectedIndex].text;
-        }
-        else {
-            selectElementText = periodTypeName;
-        }
-
-        // Reset
-        this.periods = this.periodsSource.filter((period) => {
-            return period.periodType == null || period.periodType == selectElementText;
-        });
-    }
-
     setTwoNumberDecimal($event) {
         $event.target.value = this.formatDecimal($event.target.value);
     }
@@ -473,5 +459,17 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.sub.unsubscribe();
+    }
+
+    validatePeriod(itemrow) {
+        this.validationError = null;
+
+        let selectedPeriodType = itemrow.controls.periodType.value.description;
+
+        let selectedPeriod = itemrow.controls.period.value.description;
+
+        if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
+            this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+        }
     }
 }

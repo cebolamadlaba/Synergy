@@ -728,6 +728,10 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                 this.addValidationError("Period not selected");
             }
 
+            if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
+                this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+            }
+
             investmentConcession.concessionConditions.push(concessionCondition);
         }
 
@@ -1239,5 +1243,17 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         }
 
         return null;
+    }
+
+    validatePeriod(itemrow) {
+        this.validationError = null;
+
+        let selectedPeriodType = itemrow.controls.periodType.value.description;
+
+        let selectedPeriod = itemrow.controls.period.value.description;
+
+        if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
+            this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+        }
     }
 }

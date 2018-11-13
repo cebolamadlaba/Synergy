@@ -362,13 +362,13 @@
                                     <td class="length-medium"><input type="text" numbersOnly="true" formControlName="expectedTurnoverValue" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableExpectedTurnoverValue ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
                                     <!-- Period type -->
                                     <td class="length-short">
-                                        <select formControlName="periodType">
+                                        <select formControlName="periodType" (change)="validatePeriod(itemrow)">
                                             <option *ngFor="let periodTypeOption of periodTypes" [ngValue]="periodTypeOption">{{periodTypeOption?.description}}</option>
                                         </select>
                                     </td>
                                     <!-- Period -->
                                     <td class="length-long">
-                                        <select formControlName="period">
+                                        <select formControlName="period" (change)="validatePeriod(itemrow)">
                                             <option *ngFor="let periodOption of periods" [ngValue]="periodOption">{{periodOption?.description}}</option>
                                         </select>
                                     </td>

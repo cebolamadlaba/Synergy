@@ -17,9 +17,10 @@ import { ConcessionTypes } from '../constants/concession-types';
 export class ConditionsComponent implements OnInit {
     observableConditions: ConcessionCondition[];
     periods: Period[];
+    periodSource: Period[];
 
-	observableCondition: Observable<ConcessionCondition>;
-	condition: ConcessionCondition;
+    observableCondition: Observable<ConcessionCondition>;
+    condition: ConcessionCondition;
 
     observableConditionCounts: Observable<ConditionCounts>;
     conditionCounts: ConditionCounts;
@@ -31,7 +32,7 @@ export class ConditionsComponent implements OnInit {
     isLoading = true;
 
     periodType: string = "Once-off";
-	period: Period;
+    period: Period;
 
     standardClass: string = "activeWidget";
     ongoingClass: string = "";
@@ -42,26 +43,27 @@ export class ConditionsComponent implements OnInit {
         private router: Router) { }
 
     ngOnInit() {
-		this.lookupDataService.getPeriods().subscribe(data => {
-			this.periods = data;
-			this.period = this.periods[0];
+        this.lookupDataService.getPeriods().subscribe(data => {
+            this.periodSource = data;
+            this.periods = this.periodSource;
+            this.period = this.periods[0];
 
-			this.loadAll();
-		}, err => this.errorMessage = err);
+            this.loadAll();
+        }, err => this.errorMessage = err);
     }
 
     loadAll() {
         this.observableConditionCounts = this.conditionService.getConditionCounts();
         this.observableConditionCounts.subscribe(conditionCounts => this.conditionCounts = conditionCounts, error => this.errorMessage = <any>error);
 
-		if (this.period) {
-			this.getConditions();
-		}
+        if (this.period) {
+            this.getConditions();
+        }
     }
 
     periodFilter(value: string) {
-		//this.period = value;
-		//this.selectedPeriod = value;
+        //this.period = value;
+        //this.selectedPeriod = value;
         this.getConditions();
     }
 
@@ -77,6 +79,8 @@ export class ConditionsComponent implements OnInit {
         this.ongoingClass = "";
         this.periodType = "Once-off";
 
+        this.setPeriodDropdown();
+
         this.getConditions();
     }
 
@@ -85,40 +89,42 @@ export class ConditionsComponent implements OnInit {
         this.ongoingClass = "activeWidget";
         this.periodType = "Ongoing";
 
+        this.setPeriodDropdown();
+
         this.getConditions();
     }
 
-	conditionNotMet(concessionCondition: ConcessionCondition) {
-		if (confirm("Are you sure this condition has not been met?")) {
-			this.isLoading = true;
-			concessionCondition.conditionMet = false;
+    conditionNotMet(concessionCondition: ConcessionCondition) {
+        if (confirm("Are you sure this condition has not been met?")) {
+            this.isLoading = true;
+            concessionCondition.conditionMet = false;
 
-			this.observableCondition = this.conditionService.updateCondition(concessionCondition);
-			this.observableCondition.subscribe(
-				condition => {
-					this.condition = condition;
+            this.observableCondition = this.conditionService.updateCondition(concessionCondition);
+            this.observableCondition.subscribe(
+                condition => {
+                    this.condition = condition;
 
-					//open the concession
-					this.openConcessionView(concessionCondition);
-				},
-				error => this.errorMessage = <any>error);
+                    //open the concession
+                    this.openConcessionView(concessionCondition);
+                },
+                error => this.errorMessage = <any>error);
         }
     }
 
-	conditionMet(concessionCondition: ConcessionCondition) {
-		if (confirm("Are you sure this condition has been met?")) {
-			this.isLoading = true;
+    conditionMet(concessionCondition: ConcessionCondition) {
+        if (confirm("Are you sure this condition has been met?")) {
+            this.isLoading = true;
 
             //update the condition in the database
-			concessionCondition.conditionMet = true;
+            concessionCondition.conditionMet = true;
 
-			this.observableCondition = this.conditionService.updateCondition(concessionCondition);
-			this.observableCondition.subscribe(
-				condition => {
-					this.condition = condition;
-					this.loadAll();
-				},
-				error => this.errorMessage = <any>error);
+            this.observableCondition = this.conditionService.updateCondition(concessionCondition);
+            this.observableCondition.subscribe(
+                condition => {
+                    this.condition = condition;
+                    this.loadAll();
+                },
+                error => this.errorMessage = <any>error);
         }
     }
 
@@ -143,5 +149,18 @@ export class ConditionsComponent implements OnInit {
                 this.router.navigate(['/investments-view-concession', concessionCondition.riskGroupNumber, concessionCondition.concessionReferenceNumber]);
                 break;
         }
+    }
+
+    setPeriodDropdown() {
+        if (this.periodType == "Once-off") {
+            this.periods = this.periodSource.filter((period) => {
+                return period.periodType != "Ongoing";
+            });
+            this.period = this.periods[0];
+        }
+        else {
+            this.periods = this.periodSource;
+        }
+
     }
 }

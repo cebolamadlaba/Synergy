@@ -85,7 +85,6 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
-    periodsSource: Period[];
 
     observablePeriodTypes: Observable<PeriodType[]>;
     periodTypes: PeriodType[];
@@ -187,8 +186,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
             this.legalentitybolusers = <any>results[3];
 
-            this.periodsSource = <any>results[4];
-            this.periods = this.periodsSource;
+            this.periods = <any>results[4];
             this.periodTypes = <any>results[5];
 
             this.populateForm();
@@ -340,10 +338,6 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
                     let selectedPeriodType = this.periodTypes.filter(_ => _.id == concessionCondition.periodTypeId);
                     currentCondition.get('periodType').setValue(selectedPeriodType[0]);
-
-                    if (selectedPeriodType[0] != null) {
-                        this.setRelatedPeriods(null, selectedPeriodType[0].description);
-                    }
 
                     let selectedPeriod = this.periods.filter(_ => _.id == concessionCondition.periodId);
                     currentCondition.get('period').setValue(selectedPeriod[0]);
@@ -591,6 +585,10 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                 this.addValidationError("Period not selected");
             }
 
+            if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
+                this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+            }
+
             bolConcession.concessionConditions.push(concessionCondition);
         }
 
@@ -808,22 +806,6 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             }
         }
         return false;
-    }
-
-    setRelatedPeriods(event: Event, periodTypeName: string = null) {
-        let selectElementText;
-        if (periodTypeName == null) {
-            selectElementText = event.target['options']
-            [event.target['options'].selectedIndex].text;
-        }
-        else {
-            selectElementText = periodTypeName;
-        }
-
-        // Reset
-        this.periods = this.periodsSource.filter((period) => {
-            return period.periodType == null || period.periodType == selectElementText;
-        });
     }
 
     pcmDeclineConcession() {
@@ -1110,5 +1092,17 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         }
 
         return null;
+    }
+
+    validatePeriod(itemrow) {
+        this.validationError = null;
+
+        let selectedPeriodType = itemrow.controls.periodType.value.description;
+
+        let selectedPeriod = itemrow.controls.period.value.description;
+
+        if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
+            this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+        }
     }
 }
