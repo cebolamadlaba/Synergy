@@ -131,5 +131,15 @@
         {
             public const string PricepointId = "PricepointId";
         }
+
+        public static class Investment
+        {
+            public static class ProductType
+            {
+                public const string CallDeposit = "Tiered rate call deposit (BCB) ";
+                public const string NoticeDeposit = "Notice deposit (BND)";
+                public const string RetailCallDeposit = "Retail wholesale call deposit (BCL) ";
+            }
+        }
     }
 }

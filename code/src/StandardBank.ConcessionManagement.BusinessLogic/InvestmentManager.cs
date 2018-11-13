@@ -102,6 +102,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 mappedConcessionInvestment.ApprovedRate = mappedConcessionInvestment.LoadedRate;
 
                 _ruleManager.UpdateBaseFieldsOnApproval(mappedConcessionInvestment);
+
+                if (!investmentConcessionDetail.ExpiryDate.HasValue)
+                {
+                    var productType = _lookupTableManager.GetProductTypeName(investmentConcessionDetail.ProductTypeId.Value);
+
+                    if (productType == Constants.Investment.ProductType.NoticeDeposit)
+                        mappedConcessionInvestment.ExpiryDate = System.DateTime.Now.AddMonths(investmentConcessionDetail.Term);
+
+                }
             }
             else if (concession.Status == Constants.ConcessionStatus.Pending &&
                      concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges)
@@ -109,6 +118,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 //Loaded rate becomes approved rate
                 mappedConcessionInvestment.ApprovedRate = mappedConcessionInvestment.LoadedRate;
+
+
+                if (!investmentConcessionDetail.ExpiryDate.HasValue)
+                {
+                    var productType = _lookupTableManager.GetProductTypeName(investmentConcessionDetail.ProductTypeId.Value);
+
+                    if (productType == Constants.Investment.ProductType.NoticeDeposit)
+                        mappedConcessionInvestment.ExpiryDate = System.DateTime.Now.AddMonths(investmentConcessionDetail.Term);
+
+                }
             }
 
             _concessionInvestmentRpository.Update(mappedConcessionInvestment);

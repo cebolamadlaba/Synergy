@@ -114,6 +114,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
         this.investmentView.riskGroup = new RiskGroup();
         this.investmentView.investmentConcessions = [new InvestmentConcession()];
         this.investmentView.investmentConcessions[0].concession = new Concession();
+       
     }
 
     ngOnInit() {

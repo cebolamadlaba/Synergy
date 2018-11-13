@@ -627,7 +627,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             if (concessionFormItem.get('productType').value) {
 
                 if (concessionFormItem.get('productType').value.description == 'Notice deposit (BND)') {
-                    applyexpirydate = true;
+                    //applyexpirydate = true;
                 }
                 investmentConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;
 

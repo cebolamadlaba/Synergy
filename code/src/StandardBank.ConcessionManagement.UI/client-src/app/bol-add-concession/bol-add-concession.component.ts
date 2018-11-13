@@ -304,10 +304,10 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         bolConcession.concession.riskGroupId = this.riskGroup.id;
 
 
-        if (this.bolConcessionForm.controls['smtDealNumber'].value)
-            bolConcession.concession.smtDealNumber = this.bolConcessionForm.controls['smtDealNumber'].value;
-        else
-            this.addValidationError("SMT Deal Number not captured");
+        //if (this.bolConcessionForm.controls['smtDealNumber'].value)
+        //    bolConcession.concession.smtDealNumber = this.bolConcessionForm.controls['smtDealNumber'].value;
+        //else
+        //    this.addValidationError("SMT Deal Number not captured");
 
         if (this.bolConcessionForm.controls['motivation'].value)
             bolConcession.concession.motivation = this.bolConcessionForm.controls['motivation'].value;
