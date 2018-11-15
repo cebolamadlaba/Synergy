@@ -21,6 +21,8 @@ import { TableNumber } from "../models/table-number";
 import { DecimalPipe } from '@angular/common';
 import { ConcessionTypes } from '../constants/concession-types';
 
+import { BaseComponentService } from '../services/base-component.service';
+
 @Component({
     selector: 'app-cash-add-concession',
     templateUrl: './cash-add-concession.component.html',
@@ -66,7 +68,8 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         private formBuilder: FormBuilder,
         private location: Location,
         @Inject(LookupDataService) private lookupDataService,
-        @Inject(CashConcessionService) private cashConcessionService) {
+        @Inject(CashConcessionService) private cashConcessionService,
+        private baseComponentService: BaseComponentService) {
         this.riskGroup = new RiskGroup();
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
@@ -360,6 +363,18 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             }
 
             cashConcession.cashConcessionDetails.push(cashConcessionDetail);
+
+            let hasDuplicates = this.baseComponentService.HasDuplicateConcessionAccountProduct(
+                cashConcession.cashConcessionDetails,
+                concessionFormItem.get('channelType').value.id,
+                concessionFormItem.get('accountNumber').value.legalEntityId,
+                concessionFormItem.get('accountNumber').value.legalEntityAccountId);
+
+            if (hasDuplicates) {
+                this.addValidationError("Duplicate Account / Product pricing found. Please select different account.");
+
+                break;
+            }
         }
 
         const conditions = <FormArray>this.cashConcessionForm.controls['conditionItemsRows'];

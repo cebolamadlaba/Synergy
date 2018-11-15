@@ -22,6 +22,8 @@ import { LendingService } from "../services/lending.service";
 import { DecimalPipe } from '@angular/common';
 import { ConcessionTypes } from '../constants/concession-types';
 
+import { BaseComponentService } from '../services/base-component.service';
+
 @Component({
     selector: 'app-lending-add-concession',
     templateUrl: './lending-add-concession.component.html',
@@ -71,7 +73,8 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         private formBuilder: FormBuilder,
         private location: Location,
         @Inject(LookupDataService) private lookupDataService,
-        @Inject(LendingService) private lendingService) {
+        @Inject(LendingService) private lendingService,
+        private baseComponentService: BaseComponentService) {
         this.riskGroup = new RiskGroup();
         this.reviewFeeTypes = [new ReviewFeeType()];
         this.productTypes = [new ProductType()];
@@ -85,7 +88,6 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-
         this.today = new Date().toISOString().split('T')[0];
 
         this.sub = this.route.params.subscribe(params => {
@@ -176,7 +178,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             period: ['']
         });
     }
-  
+
 
     addNewConcessionRow() {
         const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
@@ -239,7 +241,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         currentCondition.get('expectedTurnoverValue').setValue(null);
     }
 
-    disableRows() { 
+    disableRows() {
 
         const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
         for (let concessionFormItem of concessions.controls) {
@@ -283,7 +285,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             currentRow.get('uffFee').enable();
 
             currentRow.get('frequency').disable();
-            currentRow.get('serviceFee').disable();           
+            currentRow.get('serviceFee').disable();
 
         }
         else if (productType.description === "Temporary Overdraft") {
@@ -292,10 +294,10 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
             currentRow.get('reviewFeeType').enable();
             currentRow.get('reviewFee').enable();
-            currentRow.get('uffFee').enable();          
+            currentRow.get('uffFee').enable();
 
             currentRow.get('frequency').disable();
-            currentRow.get('serviceFee').disable();          
+            currentRow.get('serviceFee').disable();
 
         }
         else if (productType.description.indexOf("VAF") == 0) {
@@ -315,7 +317,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
             currentRow.get('reviewFeeType').disable();
             currentRow.get('reviewFee').disable();
-            currentRow.get('uffFee').disable();          
+            currentRow.get('uffFee').disable();
 
             currentRow.get('frequency').disable();
             currentRow.get('serviceFee').disable();
@@ -338,7 +340,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
         if (this.lendingConcessionForm.controls['smtDealNumber'].value)
             lendingConcession.concession.smtDealNumber = this.lendingConcessionForm.controls['smtDealNumber'].value;
-       
+
 
         if (this.lendingConcessionForm.controls['motivation'].value)
             lendingConcession.concession.motivation = this.lendingConcessionForm.controls['motivation'].value;
@@ -398,6 +400,18 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
                 lendingConcessionDetail.frequency = concessionFormItem.get('frequency').value;
 
             lendingConcession.lendingConcessionDetails.push(lendingConcessionDetail);
+
+            let hasDuplicates = this.baseComponentService.HasDuplicateConcessionAccountProduct(
+                lendingConcession.lendingConcessionDetails,
+                concessionFormItem.get('productType').value.id,
+                concessionFormItem.get('accountNumber').value.legalEntityId,
+                concessionFormItem.get('accountNumber').value.legalEntityAccountId);
+
+            if (hasDuplicates) {
+                this.addValidationError("Duplicate Account / Product pricing found. Please select different account.");
+
+                break;
+            }
         }
 
         const conditions = <FormArray>this.lendingConcessionForm.controls['conditionItemsRows'];
