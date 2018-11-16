@@ -32,6 +32,7 @@ import { BolView } from "../models/bol-view";
 import { Concession } from "../models/concession";
 import { UserService } from "../services/user.service";
 
+import { BaseComponentService } from '../services/base-component.service';
 
 @Component({
     selector: 'app-bol-add-concession',
@@ -87,7 +88,8 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         private formBuilder: FormBuilder,
         private location: Location,
         @Inject(LookupDataService) private lookupDataService,
-        @Inject(BolConcessionService) private bolConcessionService) {
+        @Inject(BolConcessionService) private bolConcessionService,
+        private baseComponentService: BaseComponentService) {
         this.riskGroup = new RiskGroup();
 
         this.bolchargecodetypes = [new BolChargeCodeType()];
@@ -316,6 +318,10 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
         const concessions = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
 
+        let hasTypeId: boolean = false;
+        let hasLegalEntityId: boolean = false;
+        let hasLegalEntityAccountId: boolean = false;
+
         for (let concessionFormItem of concessions.controls) {
             if (!bolConcession.bolConcessionDetails)
                 bolConcession.bolConcessionDetails = [];
@@ -331,7 +337,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
             if (concessionFormItem.get('chargecode').value) {
                 bolConcessionDetail.fkChargeCodeId = concessionFormItem.get('chargecode').value.pkChargeCodeId;
-
+                hasTypeId = true;
             } else {
                 this.addValidationError("Charge code not selected");
             }
@@ -347,6 +353,8 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
                 bolConcessionDetail.fkLegalEntityBOLUserId = concessionFormItem.get('userid').value.pkLegalEntityBOLUserId;
                 bolConcessionDetail.legalEntityId = concessionFormItem.get('userid').value.legalEntityId;
                 bolConcessionDetail.legalEntityAccountId = concessionFormItem.get('userid').value.legalEntityAccountId;
+                hasLegalEntityId = true;
+                hasLegalEntityAccountId = true;
             } else {
                 this.addValidationError("User ID not selected");
             }
@@ -360,6 +368,20 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
             }
 
             bolConcession.bolConcessionDetails.push(bolConcessionDetail);
+
+            if (hasTypeId && hasLegalEntityId && hasLegalEntityAccountId) {
+                let hasDuplicates = this.baseComponentService.HasDuplicateConcessionAccountChargeCode(
+                    bolConcession.bolConcessionDetails,
+                    concessionFormItem.get('chargecode').value.pkChargeCodeId,
+                    concessionFormItem.get('userid').value.legalEntityId,
+                    concessionFormItem.get('userid').value.legalEntityAccountId);
+
+                if (hasDuplicates) {
+                    this.addValidationError("Duplicate Account / Product pricing found. Please select different account.");
+
+                    break;
+                }
+            }
         }
 
         const conditions = <FormArray>this.bolConcessionForm.controls['conditionItemsRows'];

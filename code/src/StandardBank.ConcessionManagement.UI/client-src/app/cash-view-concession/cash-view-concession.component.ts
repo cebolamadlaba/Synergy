@@ -25,6 +25,7 @@ import { DecimalPipe } from '@angular/common';
 import { ConcessionTypes } from '../constants/concession-types';
 import { ConcessionStatus } from '../constants/concession-status';
 import { ConcessionSubStatus } from '../constants/concession-sub-status';
+import { BaseComponentService } from '../services/base-component.service';
 
 @Component({
     selector: 'app-cash-view-concession',
@@ -100,7 +101,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         private datepipe: DatePipe,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(CashConcessionService) private cashConcessionService,
-        @Inject(UserConcessionsService) private userConcessionsService) {
+        @Inject(UserConcessionsService) private userConcessionsService,
+        private baseComponentService: BaseComponentService) {
         this.riskGroup = new RiskGroup();
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
@@ -436,6 +438,10 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
         const concessions = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
 
+        let hasChannelType: boolean = false;
+        let hasLegalEntityId: boolean = false;
+        let hasLegalEntityAccountId: boolean = false;
+
         for (let concessionFormItem of concessions.controls) {
             if (!cashConcession.cashConcessionDetails)
                 cashConcession.cashConcessionDetails = [];
@@ -450,6 +456,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
             if (concessionFormItem.get('channelType').value) {
                 cashConcessionDetail.channelTypeId = concessionFormItem.get('channelType').value.id;
+                hasChannelType = true;
             } else {
                 this.addValidationError("Channel type not selected");
             }
@@ -457,6 +464,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             if (concessionFormItem.get('accountNumber').value) {
                 cashConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
                 cashConcessionDetail.legalEntityAccountId = concessionFormItem.get('accountNumber').value.legalEntityAccountId;
+                hasLegalEntityId = true;
+                hasLegalEntityAccountId = true;
             } else {
                 this.addValidationError("Client account not selected");
             }
@@ -481,8 +490,21 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                 cashConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
 
-
             cashConcession.cashConcessionDetails.push(cashConcessionDetail);
+
+            if (hasChannelType && hasLegalEntityId && hasLegalEntityAccountId) {
+                let hasDuplicates = this.baseComponentService.HasDuplicateConcessionAccountChannel(
+                    cashConcession.cashConcessionDetails,
+                    concessionFormItem.get('channelType').value.id,
+                    concessionFormItem.get('accountNumber').value.legalEntityId,
+                    concessionFormItem.get('accountNumber').value.legalEntityAccountId);
+
+                if (hasDuplicates) {
+                    this.addValidationError("Duplicate Account / Channel pricing found. Please select different account.");
+
+                    break;
+                }
+            }
         }
 
         const conditions = <FormArray>this.cashConcessionForm.controls['conditionItemsRows'];

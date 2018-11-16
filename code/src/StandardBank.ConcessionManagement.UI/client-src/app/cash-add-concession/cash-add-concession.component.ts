@@ -364,14 +364,14 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
             cashConcession.cashConcessionDetails.push(cashConcessionDetail);
 
-            let hasDuplicates = this.baseComponentService.HasDuplicateConcessionAccountProduct(
+            let hasDuplicates = this.baseComponentService.HasDuplicateConcessionAccountChannel(
                 cashConcession.cashConcessionDetails,
                 concessionFormItem.get('channelType').value.id,
                 concessionFormItem.get('accountNumber').value.legalEntityId,
                 concessionFormItem.get('accountNumber').value.legalEntityAccountId);
 
             if (hasDuplicates) {
-                this.addValidationError("Duplicate Account / Product pricing found. Please select different account.");
+                this.addValidationError("Duplicate Account / Channel pricing found. Please select different account.");
 
                 break;
             }

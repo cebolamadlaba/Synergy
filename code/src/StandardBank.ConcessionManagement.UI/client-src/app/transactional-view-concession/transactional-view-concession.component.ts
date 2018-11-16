@@ -24,6 +24,7 @@ import { DecimalPipe } from '@angular/common';
 import { ConcessionTypes } from '../constants/concession-types';
 import { ConcessionStatus } from '../constants/concession-status';
 import { ConcessionSubStatus } from '../constants/concession-sub-status';
+import { BaseComponentService } from '../services/base-component.service';
 
 @Component({
 	selector: 'app-transactional-view-concession',
@@ -94,7 +95,8 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		private datepipe: DatePipe,
 		@Inject(LookupDataService) private lookupDataService,
 		@Inject(TransactionalConcessionService) private transactionalConcessionService,
-		@Inject(UserConcessionsService) private userConcessionsService) {
+        @Inject(UserConcessionsService) private userConcessionsService,
+        private baseComponentService: BaseComponentService) {
 		this.riskGroup = new RiskGroup();
 		this.periods = [new Period()];
 		this.periodTypes = [new PeriodType()];
@@ -439,6 +441,10 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
 		const concessions = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
 
+        let hasTypeId: boolean = false;
+        let hasLegalEntityId: boolean = false;
+        let hasLegalEntityAccountId: boolean = false;
+
 		for (let concessionFormItem of concessions.controls) {
 			if (!transactionalConcession.transactionalConcessionDetails)
 				transactionalConcession.transactionalConcessionDetails = [];
@@ -451,14 +457,18 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 			if (!isNew && concessionFormItem.get('concessionDetailId').value)
 				transactionalConcessionDetail.concessionDetailId = concessionFormItem.get('concessionDetailId').value;
 
-			if (concessionFormItem.get('transactionType').value)
-				transactionalConcessionDetail.transactionTypeId = concessionFormItem.get('transactionType').value.id;
+            if (concessionFormItem.get('transactionType').value) {
+                transactionalConcessionDetail.transactionTypeId = concessionFormItem.get('transactionType').value.id;
+                hasTypeId = true;
+            }				
 			else
 				this.addValidationError("Transaction type not selected");
 
 			if (concessionFormItem.get('accountNumber').value) {
 				transactionalConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
-				transactionalConcessionDetail.legalEntityAccountId = concessionFormItem.get('accountNumber').value.legalEntityAccountId;
+                transactionalConcessionDetail.legalEntityAccountId = concessionFormItem.get('accountNumber').value.legalEntityAccountId;
+                hasLegalEntityId = true;
+                hasLegalEntityAccountId = true;
 			} else {
 				this.addValidationError("Client account not selected");
 			}
@@ -478,7 +488,21 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 			if (concessionFormItem.get('expiryDate').value)
 				transactionalConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
-			transactionalConcession.transactionalConcessionDetails.push(transactionalConcessionDetail);
+            transactionalConcession.transactionalConcessionDetails.push(transactionalConcessionDetail);
+
+            if (hasTypeId && hasLegalEntityId && hasLegalEntityAccountId) {
+                let hasDuplicates = this.baseComponentService.HasDuplicateConcessionAccountTransaction(
+                    transactionalConcession.transactionalConcessionDetails,
+                    concessionFormItem.get('transactionType').value.id,
+                    concessionFormItem.get('accountNumber').value.legalEntityId,
+                    concessionFormItem.get('accountNumber').value.legalEntityAccountId);
+
+                if (hasDuplicates) {
+                    this.addValidationError("Duplicate Account / Product pricing found. Please select different account.");
+
+                    break;
+                }
+            }
 		}
 
 		const conditions = <FormArray>this.transactionalConcessionForm.controls['conditionItemsRows'];

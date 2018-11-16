@@ -682,6 +682,10 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
         const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
 
+        let hasProductType: boolean = false;
+        let hasLegalEntityId: boolean = false;
+        let hasLegalEntityAccountId: boolean = false;
+
         for (let concessionFormItem of concessions.controls) {
             if (!lendingConcession.lendingConcessionDetails)
                 lendingConcession.lendingConcessionDetails = [];
@@ -694,14 +698,18 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             if (!isNew && concessionFormItem.get('concessionDetailId').value)
                 lendingConcessionDetail.concessionDetailId = concessionFormItem.get('concessionDetailId').value;
 
-            if (concessionFormItem.get('productType').value)
+            if (concessionFormItem.get('productType').value) {
                 lendingConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;
+                hasProductType = true;
+            }                
             else
                 this.addValidationError("Product type not selected");
 
             if (concessionFormItem.get('accountNumber').value) {
                 lendingConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
                 lendingConcessionDetail.legalEntityAccountId = concessionFormItem.get('accountNumber').value.legalEntityAccountId;
+                hasLegalEntityId = true;
+                hasLegalEntityAccountId = true;
             } else {
                 this.addValidationError("Client account not selected");
             }
@@ -738,16 +746,18 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
             lendingConcession.lendingConcessionDetails.push(lendingConcessionDetail);
 
-            let hasDuplicates = this.baseComponentService.HasDuplicateConcessionAccountProduct(
-                lendingConcession.lendingConcessionDetails,
-                concessionFormItem.get('productType').value.id,
-                concessionFormItem.get('accountNumber').value.legalEntityId,
-                concessionFormItem.get('accountNumber').value.legalEntityAccountId);
+            if (hasProductType && hasLegalEntityId && hasLegalEntityAccountId) {
+                let hasDuplicates = this.baseComponentService.HasDuplicateConcessionAccountProduct(
+                    lendingConcession.lendingConcessionDetails,
+                    concessionFormItem.get('productType').value.id,
+                    concessionFormItem.get('accountNumber').value.legalEntityId,
+                    concessionFormItem.get('accountNumber').value.legalEntityAccountId);
 
-            if (hasDuplicates) {
-                this.addValidationError("Duplicate Account / Product pricing found. Please select different account.");
+                if (hasDuplicates) {
+                    this.addValidationError("Duplicate Account / Product pricing found. Please select different account.");
 
-                break;
+                    break;
+                }
             }
         }
 
