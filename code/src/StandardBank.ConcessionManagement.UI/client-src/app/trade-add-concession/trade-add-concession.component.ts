@@ -32,6 +32,8 @@ import { TradeView } from "../models/trade-view";
 import { Concession } from "../models/concession";
 import { UserService } from "../services/user.service";
 
+import { BaseComponentService } from '../services/base-component.service';
+
 
 @Component({
     selector: 'app-trade-add-concession',
@@ -54,7 +56,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
     tradeConcessionForm: FormGroup;
 
-    isLoading = true;   
+    isLoading = true;
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
@@ -70,7 +72,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
     observableLegalEntityGBbNumbers: Observable<LegalEntityGBBNumber[]>;
     legalentitygbbnumbers: LegalEntityGBBNumber[];
- 
+
     selectedConditionTypes: ConditionType[];
     selectedProductTypes: TradeProductType[];
     selectedTradeConcession: boolean[];
@@ -87,7 +89,8 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
         private formBuilder: FormBuilder,
         private location: Location,
         @Inject(LookupDataService) private lookupDataService,
-        @Inject(TradeConcessionService) private tradeConcessionService) {
+        @Inject(TradeConcessionService) private tradeConcessionService,
+        private baseComponentService: BaseComponentService) {
         this.riskGroup = new RiskGroup();
 
         this.tradeproducttypes = [new TradeProductType()];
@@ -108,7 +111,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
         this.tradeView.riskGroup = new RiskGroup();
         this.tradeView.tradeConcessions = [new TradeConcession()];
         this.tradeView.tradeConcessions[0].concession = new Concession();
-       
+
     }
 
     ngOnInit() {
@@ -151,7 +154,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
             this.lookupDataService.getTradeProductTypes(),
             this.lookupDataService.getTradeProducts(),
-       
+
             this.lookupDataService.getPeriods(),
             this.lookupDataService.getPeriodTypes(),
             this.lookupDataService.getLegalEntityGBBNumbers(this.riskGroupNumber),
@@ -160,7 +163,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
             this.conditionTypes = <any>results[0];
             this.tradeproducttypes = <any>results[1];
-            this.tradeproducts = <any>results[2];          
+            this.tradeproducts = <any>results[2];
 
             this.periods = <any>results[3];
             this.periodTypes = <any>results[4];
@@ -298,7 +301,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
         currentCondition.get('volume').setValue(null);
         currentCondition.get('value').setValue(null);
         currentCondition.get('expectedTurnoverValue').setValue(null);
-    }   
+    }
 
     productTypeChanged(rowIndex) {
 
@@ -326,14 +329,14 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
             currentProduct.get('communication').setValue(null);
             currentProduct.get('flatfee').setValue(null);
             currentProduct.get('currency').setValue(null);
-            currentProduct.get('expiryDate').setValue('');    
+            currentProduct.get('expiryDate').setValue('');
 
         }
         else {
 
             this.selectedTradeConcession[rowIndex] = false;
             currentProduct.get('disablecontrolset').setValue(false);
-            currentProduct.get('gbbnumber').setValue(null);          
+            currentProduct.get('gbbnumber').setValue(null);
 
             currentProduct.get('term').setValue(null);
             currentProduct.get('estfee').setValue(null);
@@ -349,7 +352,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
         this.validationError.push(validationDetail);
     }
-  
+
 
     getTradeConcession(): TradeConcession {
         var tradeConcession = new TradeConcession();
@@ -363,6 +366,10 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
 
         const concessions = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+
+        let hasTypeId: boolean = false;
+        let hasLegalEntityId: boolean = false;
+        let hasLegalEntityAccountId: boolean = false;
 
         for (let concessionFormItem of concessions.controls) {
             if (!tradeConcession.tradeConcessionDetails)
@@ -386,7 +393,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                 if (concessionFormItem.get('producttype').value.tradeProductType == "Local guarantee") {
                     applyexpirydate = false;
                 }
-
+                hasTypeId = true;
             } else {
                 this.addValidationError("Product Type code not selected");
             }
@@ -394,6 +401,8 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
             if ((concessionFormItem.get('accountNumber').value && concessionFormItem.get('accountNumber').value.legalEntityId)) {
                 tradeConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
                 tradeConcessionDetail.legalEntityAccountId = concessionFormItem.get('accountNumber').value.legalEntityAccountId;
+                hasLegalEntityId = true;
+                hasLegalEntityAccountId = true;
             } else {
 
                 if (!tradeConcessionDetail.disablecontrolset) {
@@ -402,7 +411,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
             }
 
             if (concessionFormItem.get('gbbnumber').value) {
-               
+
                 var gbbnumber = concessionFormItem.get('gbbnumber').value;
                 tradeConcessionDetail.legalEntityId = gbbnumber.legalEntityId;
                 tradeConcessionDetail.legalEntityAccountId = gbbnumber.legalEntityAccountId;
@@ -449,7 +458,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                     this.addValidationError("Max value not entered");
                 }
             }
-           
+
             if (concessionFormItem.get('communication').value || concessionFormItem.get('communication').value == 0) {
                 tradeConcessionDetail.communication = concessionFormItem.get('communication').value;
             } else {
@@ -467,7 +476,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                 if (!tradeConcessionDetail.disablecontrolset && !advaloremfound) {
                     //this.addValidationError("Flat fee not entered");
                 }
-            }           
+            }
 
             if ((flatfeefound == false) && (advaloremfound == false)) {
 
@@ -492,13 +501,13 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                 }
             }
 
-            if (concessionFormItem.get('rate').value || concessionFormItem.get('rate').value == 0)  {
+            if (concessionFormItem.get('rate').value || concessionFormItem.get('rate').value == 0) {
                 tradeConcessionDetail.loadedRate = concessionFormItem.get('rate').value;
             } else {
                 if (tradeConcessionDetail.disablecontrolset) {
                     this.addValidationError("Rate not entered");
                 }
-            } 
+            }
 
             if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
                 tradeConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
@@ -510,6 +519,20 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
             }
 
             tradeConcession.tradeConcessionDetails.push(tradeConcessionDetail);
+
+            if (hasTypeId && hasLegalEntityId && hasLegalEntityAccountId) {
+                let hasDuplicates = this.baseComponentService.HasDuplicateConcessionAccountTradeProduct(
+                    tradeConcession.tradeConcessionDetails,
+                    concessionFormItem.get('producttype').value.tradeProductTypeID,
+                    concessionFormItem.get('accountNumber').value.legalEntityId,
+                    concessionFormItem.get('accountNumber').value.legalEntityAccountId);
+
+                if (hasDuplicates) {
+                    this.addValidationError("Duplicate Account / Trade Product pricing found. Please select different account.");
+
+                    break;
+                }
+            }
         }
 
         const conditions = <FormArray>this.tradeConcessionForm.controls['conditionItemsRows'];

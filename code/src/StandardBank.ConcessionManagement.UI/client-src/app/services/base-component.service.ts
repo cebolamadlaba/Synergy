@@ -44,4 +44,14 @@ export class BaseComponentService {
 
         return duplicates.length > 1;
     }
+
+    public HasDuplicateConcessionAccountTradeProduct(concessionDetails: any[], tradeProductTypeID: number, legalEntityId: number, legalEntityAccountId: number): boolean {
+        let duplicates = concessionDetails.filter((item) => {
+            return item.fkTradeProductId == tradeProductTypeID
+                && item.legalEntityId == legalEntityId
+                && item.legalEntityAccountId == legalEntityAccountId;
+        });
+
+        return duplicates.length > 1;
+    }
 }
