@@ -33,8 +33,8 @@
     </div>
 
 
-  
-   
+
+
 
     <div class="section table-hover-highlight" *ngFor="let approvedConcession of approvedConcessions | approvedConcessionFilter : concessionIdOrRiskGroupNumber; trackBy: index;">
         <div class="col-md-12 section-header">
@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 <div class="col-md-9">
-                    <div class="single-print" (click)="printConcession(approvedConcession.legalEntityId)"><i class="fa fa-print" aria-hidden="true"></i></div>
+                    <div class="single-print" (click)="openCustomerDetailModal(approvedConcession.legalEntityId)"><i class="fa fa-print" aria-hidden="true"></i></div>
                 </div>
                 <div class="col-md-9 no-padding-left">
                     <div class="col-md-6 no-padding-left">
@@ -73,7 +73,7 @@
                     </thead>
                     <tbody>
 
-                      
+
                         <tr *ngFor="let approvedConcessionDetail of approvedConcession.approvedConcessionDetails; let i=index">
 
                             <td><input type="checkbox" [(ngModel)]="approvedConcessionDetail.isSelected" /></td>
@@ -87,11 +87,11 @@
                             <td (click)="openConcessionView(approvedConcession, approvedConcessionDetail)"> {{approvedConcessionDetail.dateApproved | date: 'yyyy/MM/dd'}} </td>
                             <td class="downloadtd">
 
-                             
+
                                 <div class="image-upload">
                                     <label for="fileinput_ {{approvedConcession.riskGroupNumber}}_{{i}}">
                                         <img src="../../content/img/upload.png" />
-                                    
+
                                     </label>
 
                                     <input id="fileinput_ {{approvedConcession.riskGroupNumber}}_{{i}}" type="file" (change)="upload($event, approvedConcessionDetail.concessionId)" accept="application/pdf" />
@@ -124,4 +124,75 @@
     </div>
 
 
+</div>
+
+
+
+<!-- The Modal -->
+<div bsModal #lgModal="bs-modal" class="modal" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Customer Details</h4>
+                <button type="button" class="close" (click)="lgModal.hide()">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-4">
+                                Client Contact Person:
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" placeholder="Client Contact Person" [(ngModel)]="clientContactPerson" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                Client Name:
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" placeholder="Client Name" [(ngModel)]="clientName" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                Client Postal Address:
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" placeholder="Client Postal Address" [(ngModel)]="clientPostalAddress" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                Client City:
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" placeholder="Client City" [(ngModel)]="clientCity" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                Client Postal Code:
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" placeholder="Client Postal Code" [(ngModel)]="clientPostalCode" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="lgModal.hide()">Cancel</button>
+                <button type="button" class="btn btn-print" (click)="printConcession()">Print</button>
+            </div>
+
+        </div>
+    </div>
 </div>

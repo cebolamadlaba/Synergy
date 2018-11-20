@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { HttpClient, HttpRequest, HttpEventType, HttpResponse } from '@angular/common/http';
 
 import { Observable } from "rxjs";
@@ -17,9 +17,19 @@ import { ConcessionTypes } from '../constants/concession-types';
     styleUrls: ['./approved-concessions.component.css']
 })
 export class ApprovedConcessionsComponent implements OnInit {
+
+    @ViewChild('lgModal') modal;
+
     errorMessage: String;
     saveMessage: String;
     isLoading = true;
+
+    legalEntityId: number;
+    clientContactPerson: string;
+    clientName: string;
+    clientPostalAddress: string;
+    clientCity: string;
+    clientPostalCode: string;
 
     public uploadProgress: number;
 
@@ -61,10 +71,36 @@ export class ApprovedConcessionsComponent implements OnInit {
                 this.router.navigate(['/investments-view-concession', approvedConcession.riskGroupNumber, approvedConcessionDetail.referenceNumber]);
                 break;
         }
-    } 
+    }
 
-    printConcession(legalEntityId: number) {
-        var selectedConcessions = this.approvedConcessions.filter(items => items.legalEntityId == legalEntityId);
+    openCustomerDetailModal(legalEntityId: number) {
+        this.legalEntityId = legalEntityId;
+
+        this.clientContactPerson = "";
+        this.clientName = "";
+        this.clientPostalAddress = "";
+        this.clientCity = "";
+        this.clientPostalCode = "";
+
+        this.modal.show();
+    }
+
+    closeCustomerDetailModal() {
+        this.modal.hide();
+    }
+
+    //printConcession(legalEntityId: number) {
+    printConcession() {
+
+        let data = {
+            "ClientContactPerson": this.clientContactPerson,
+            "ClientName": this.clientName,
+            "ClientPostalAddress": this.clientPostalAddress,
+            "ClientCity": this.clientCity,
+            "ClientPostalCode": this.clientPostalCode
+        };
+
+        var selectedConcessions = this.approvedConcessions.filter(items => items.legalEntityId == this.legalEntityId);
         var concessionIds = "";
 
         //if there are selected concessions we need to get the concession detail id's and use those to
@@ -90,8 +126,10 @@ export class ApprovedConcessionsComponent implements OnInit {
         if (concessionIds != null && concessionIds.length > 0) {
             window.open("/api/Concession/GenerateConcessionLetterForConcessions/" + concessionIds);
         } else {
-            window.open("/api/Concession/GenerateConcessionLetterForLegalEntity/" + legalEntityId);
+            window.open("/api/Concession/GenerateConcessionLetterForLegalEntity/" + this.legalEntityId);
         }
+
+        this.modal.hide();
     }
 
     upload(event, concessionDetailId) {
@@ -102,9 +140,9 @@ export class ApprovedConcessionsComponent implements OnInit {
             const formData = new FormData();
             formData.append("ConcessionDetailedId", concessionDetailId);
             formData.append("file", file);
-      
 
-            const req = new HttpRequest('POST', 'api/Concession/UploadLetter' , formData, {
+
+            const req = new HttpRequest('POST', 'api/Concession/UploadLetter', formData, {
                 reportProgress: true,
             });
 
@@ -123,7 +161,7 @@ export class ApprovedConcessionsComponent implements OnInit {
                     this.isLoading = false;
                     this.isLoading = false;
                 });
-            });           
+            });
         }
     }
 }
