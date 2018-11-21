@@ -129,7 +129,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
 
-            return Ok(_concessionManager.GetClientAccounts(riskGroupNumber, user,""));
+            return Ok(_concessionManager.GetClientAccounts(riskGroupNumber, user, ""));
         }
 
         [Route("ClientAccountsConcessionType/{riskGroupNumber}/{concessiontype}")]
@@ -156,7 +156,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult PrimeRate(DateTime datefilter)
         {
             return Ok(_concessionManager.PrimeRate(datefilter));
-        } 
+        }
 
 
         [Route("SearchConsessions")]
@@ -167,10 +167,10 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         }
 
         [Route("SearchConsessions/{region}/{centre}/{status}/{datefilter}")]
-        public IActionResult SearchConsessions(int region,int centre,string status, DateTime datefilter)
+        public IActionResult SearchConsessions(int region, int centre, string status, DateTime datefilter)
         {
             var userId = _siteHelper.GetUserIdForFiltering(this);
-            return Ok(_concessionManager.SearchConsessions(region,centre,status,datefilter, userId));
+            return Ok(_concessionManager.SearchConsessions(region, centre, status, datefilter, userId));
         }
 
         /// <summary>
@@ -199,7 +199,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult GetTransactionTypes(bool isActive)
         {
             return Ok(_lookupTableManager.GetTransactionalTransactionTypes(isActive));
-        }     
+        }
 
         [Route("ConcessionTypes/{isActive}")]
         public IActionResult GetConcessionTypes(bool isActive)
@@ -265,23 +265,33 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             await _mediator.Send(new DeactivateConcessionDetailed(concessionReferenceDetailedId, user));
 
             return Ok(true);
-        } 
-      
+        }
+
+        public class LegalEntityConcessionLetterModel
+        {
+            public int LegalEntityId { get; set; }
+            public string ClientContactPerson { get; set; }
+            public string ClientName { get; set; }
+            public string ClientPostalAddress { get; set; }
+            public string ClientCity { get; set; }
+            public string ClientPostalCode { get; set; }
+        }
+
         /// <summary>
         /// Generates the concession letter for legal entity. --used
         /// </summary>
         /// <param name="legalEntityId">The legal entity identifier.</param>
         /// <returns></returns>
-        [Route("GenerateConcessionLetterForLegalEntity/{legalEntityId}")]
-        public FileResult GenerateConcessionLetterForLegalEntity(int legalEntityId)
+        [Route("GenerateConcessionLetterForLegalEntity")]
+        public FileResult GenerateConcessionLetterForLegalEntity([FromBody] LegalEntityConcessionLetterModel legalEntityConcessionLetter)
         {
             var userId = _siteHelper.GetUserIdForFiltering(this);
             HttpContext.Response.ContentType = "application/pdf";
 
-            var result = new FileContentResult(_letterGeneratorManager.GenerateLettersForLegalEntity(legalEntityId, userId),
+            var result = new FileContentResult(_letterGeneratorManager.GenerateLettersForLegalEntity(legalEntityConcessionLetter.LegalEntityId, userId),
                 "application/pdf")
             {
-                FileDownloadName = $"ConcessionLetter_{legalEntityId}.pdf"
+                FileDownloadName = $"ConcessionLetter_{legalEntityConcessionLetter.LegalEntityId}.pdf"
             };
 
             return result;
@@ -304,11 +314,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                     using (var fileStream = new FileStream(FQDNLocation, FileMode.Create))
                     {
                         await f.CopyToAsync(fileStream);
-                    }                   
+                    }
 
                     //save the entry to the db
                     _concessionManager.CreateConcessionLetter(new Model.Repository.ConcessionLetter { fkConcessionDetailId = int.Parse(ConcessionDetailedId), Location = FQDNLocation });
-                   
+
 
                 }
             }
@@ -356,7 +366,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             HttpContext.Response.ContentType = "application/pdf";
 
             var convertedConcessionDetailIds = from concessionDetailId in concessionDetailIds.Split(',')
-                select Convert.ToInt32(concessionDetailId);
+                                               select Convert.ToInt32(concessionDetailId);
 
             var result = new FileContentResult(
                 _letterGeneratorManager.GenerateLettersForConcessionDetails(convertedConcessionDetailIds, userId),
@@ -375,7 +385,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             HttpContext.Response.ContentType = "application/pdf";
 
             var convertedConcessionIds = from concessionDetailId in concessionIds.Split(',')
-                                               select Convert.ToInt32(concessionDetailId);
+                                         select Convert.ToInt32(concessionDetailId);
 
             var result = new FileContentResult(
                 _letterGeneratorManager.GenerateLettersForConcessions(convertedConcessionIds, userId),

@@ -2,12 +2,15 @@ import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { HttpClient, HttpRequest, HttpEventType, HttpResponse } from '@angular/common/http';
 
 import { Observable } from "rxjs";
-import { UserConcessionsService } from "../services/user-concessions.service";
 import { Router, RouterModule } from '@angular/router';
+
 import { ApprovedConcession } from "../models/approved-concession";
 import { ApprovedConcessionDetail } from "../models/approved-concession-detail";
+import { LegalEntityConcessionLetterModel } from '../models/legal-entity-concession-letter';
 import { ConcessionTypes } from '../constants/concession-types';
 
+import { UserConcessionsService } from "../services/user-concessions.service";
+import { ConcessionLetterService } from "../services/concession-letter.service";
 
 
 
@@ -25,20 +28,25 @@ export class ApprovedConcessionsComponent implements OnInit {
     isLoading = true;
 
     legalEntityId: number;
-    clientContactPerson: string;
-    clientName: string;
-    clientPostalAddress: string;
-    clientCity: string;
-    clientPostalCode: string;
+    //clientContactPerson: string;
+    //clientName: string;
+    //clientPostalAddress: string;
+    //clientCity: string;
+    //clientPostalCode: string;
+    legalEntityConcessionLetterModel: LegalEntityConcessionLetterModel;
 
     public uploadProgress: number;
 
     observableApprovedConcessions: Observable<ApprovedConcession[]>;
     approvedConcessions: ApprovedConcession[];
 
-    constructor( @Inject(UserConcessionsService) private userConcessionsService, private router: Router, private http: HttpClient) { }
+    constructor( @Inject(UserConcessionsService) private userConcessionsService,
+        private router: Router,
+        private http: HttpClient,
+        private concessionLetterService: ConcessionLetterService) { }
 
     ngOnInit() {
+        this.initLegalEntityConcessionLetter();
         this.observableApprovedConcessions = this.userConcessionsService.getApprovedConcessions();
         this.observableApprovedConcessions.subscribe(approvedConcession => {
             this.approvedConcessions = approvedConcession;
@@ -73,14 +81,19 @@ export class ApprovedConcessionsComponent implements OnInit {
         }
     }
 
+    initLegalEntityConcessionLetter() {
+        this.legalEntityConcessionLetterModel = new LegalEntityConcessionLetterModel();
+        this.legalEntityConcessionLetterModel.clientContactPerson = "";
+        this.legalEntityConcessionLetterModel.clientName = "";
+        this.legalEntityConcessionLetterModel.clientPostalAddress = "";
+        this.legalEntityConcessionLetterModel.clientCity = "";
+        this.legalEntityConcessionLetterModel.clientPostalCode = "";
+    }
+
     openCustomerDetailModal(legalEntityId: number) {
         this.legalEntityId = legalEntityId;
 
-        this.clientContactPerson = "";
-        this.clientName = "";
-        this.clientPostalAddress = "";
-        this.clientCity = "";
-        this.clientPostalCode = "";
+        this.initLegalEntityConcessionLetter();
 
         this.modal.show();
     }
@@ -91,14 +104,6 @@ export class ApprovedConcessionsComponent implements OnInit {
 
     //printConcession(legalEntityId: number) {
     printConcession() {
-
-        let data = {
-            "ClientContactPerson": this.clientContactPerson,
-            "ClientName": this.clientName,
-            "ClientPostalAddress": this.clientPostalAddress,
-            "ClientCity": this.clientCity,
-            "ClientPostalCode": this.clientPostalCode
-        };
 
         var selectedConcessions = this.approvedConcessions.filter(items => items.legalEntityId == this.legalEntityId);
         var concessionIds = "";
@@ -124,9 +129,12 @@ export class ApprovedConcessionsComponent implements OnInit {
         }
 
         if (concessionIds != null && concessionIds.length > 0) {
-            window.open("/api/Concession/GenerateConcessionLetterForConcessions/" + concessionIds);
+            this.concessionLetterService.generateConcessionLetterForConcessionsByConcessionIds(concessionIds, this.legalEntityConcessionLetterModel);
+            //window.open("/api/Concession/GenerateConcessionLetterForConcessions/" + concessionIds);
         } else {
-            window.open("/api/Concession/GenerateConcessionLetterForLegalEntity/" + this.legalEntityId);
+            this.legalEntityConcessionLetterModel.legalEntityId = this.legalEntityId;
+            this.concessionLetterService.generateConcessionLetterForConcessionsByLegalEntityId(this.legalEntityConcessionLetterModel);
+            //window.open("/api/Concession/GenerateConcessionLetterForLegalEntity/" + this.legalEntityId);
         }
 
         this.modal.hide();
