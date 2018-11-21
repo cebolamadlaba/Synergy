@@ -133,7 +133,10 @@ export class ApprovedConcessionsComponent implements OnInit {
             //window.open("/api/Concession/GenerateConcessionLetterForConcessions/" + concessionIds);
         } else {
             this.legalEntityConcessionLetterModel.legalEntityId = this.legalEntityId;
-            this.concessionLetterService.generateConcessionLetterForConcessionsByLegalEntityId(this.legalEntityConcessionLetterModel);
+            this.concessionLetterService.generateConcessionLetterForConcessionsByLegalEntityId(this.legalEntityConcessionLetterModel)
+                .subscribe(result => {
+                    window.open(result);
+                });
             //window.open("/api/Concession/GenerateConcessionLetterForLegalEntity/" + this.legalEntityId);
         }
 

@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+using StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 
@@ -267,31 +268,21 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(true);
         }
 
-        public class LegalEntityConcessionLetterModel
-        {
-            public int LegalEntityId { get; set; }
-            public string ClientContactPerson { get; set; }
-            public string ClientName { get; set; }
-            public string ClientPostalAddress { get; set; }
-            public string ClientCity { get; set; }
-            public string ClientPostalCode { get; set; }
-        }
-
         /// <summary>
         /// Generates the concession letter for legal entity. --used
         /// </summary>
         /// <param name="legalEntityId">The legal entity identifier.</param>
         /// <returns></returns>
-        [Route("GenerateConcessionLetterForLegalEntity")]
-        public FileResult GenerateConcessionLetterForLegalEntity([FromBody] LegalEntityConcessionLetterModel legalEntityConcessionLetter)
+        [Route("GenerateConcessionLetterForLegalEntity/{legalEntityId}")]
+        public FileResult GenerateConcessionLetterForLegalEntity(int legalEntityId, [FromBody] LegalEntityConcessionLetter legalEntityConcessionLetter)
         {
             var userId = _siteHelper.GetUserIdForFiltering(this);
             HttpContext.Response.ContentType = "application/pdf";
 
-            var result = new FileContentResult(_letterGeneratorManager.GenerateLettersForLegalEntity(legalEntityConcessionLetter.LegalEntityId, userId),
+            var result = new FileContentResult(_letterGeneratorManager.GenerateLettersForLegalEntity(legalEntityId, userId),
                 "application/pdf")
             {
-                FileDownloadName = $"ConcessionLetter_{legalEntityConcessionLetter.LegalEntityId}.pdf"
+                FileDownloadName = $"ConcessionLetter_{legalEntityId}.pdf"
             };
 
             return result;

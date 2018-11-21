@@ -11,10 +11,10 @@ export class ConcessionLetterService {
     constructor(private http: Http) {
     }
 
-    generateConcessionLetterForConcessionsByLegalEntityId(legalEntityConcessionLetter: LegalEntityConcessionLetterModel) {
+    generateConcessionLetterForConcessionsByLegalEntityId(legalEntityConcessionLetter: LegalEntityConcessionLetterModel): Observable<any> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        const url = "/api/Concession/GenerateConcessionLetterForConcessions/";
+        const url = "/api/Concession/GenerateConcessionLetterForLegalEntity/" + legalEntityConcessionLetter.legalEntityId;
         return this.http.post(url, legalEntityConcessionLetter, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
