@@ -274,18 +274,20 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="legalEntityId">The legal entity identifier.</param>
         /// <returns></returns>
         [Route("GenerateConcessionLetterForLegalEntity/{legalEntityId}")]
-        public FileResult GenerateConcessionLetterForLegalEntity(int legalEntityId, [FromBody] LegalEntityConcessionLetter legalEntityConcessionLetter)
+        public IActionResult GenerateConcessionLetterForLegalEntity(int legalEntityId, [FromBody] LegalEntityConcessionLetter legalEntityConcessionLetter)
         {
             var userId = _siteHelper.GetUserIdForFiltering(this);
-            HttpContext.Response.ContentType = "application/pdf";
 
-            var result = new FileContentResult(_letterGeneratorManager.GenerateLettersForLegalEntity(legalEntityId, userId),
-                "application/pdf")
+            byte[] bytes = _letterGeneratorManager.GenerateLettersForLegalEntity(legalEntityId, userId, legalEntityConcessionLetter);
+
+            var file = new
             {
-                FileDownloadName = $"ConcessionLetter_{legalEntityId}.pdf"
+                contentType = "application/pdf",
+                bytes = bytes,
+                filename = $"ConcessionLetter_{legalEntityId}.pdf"
             };
 
-            return result;
+            return Ok(file);
         }
 
         [HttpPost, Route("UploadLetter")]
@@ -370,22 +372,38 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         }
 
         [Route("GenerateConcessionLetterForConcessions/{concessionIds}")]
-        public FileResult GenerateLettersForConcessions(string concessionIds)
+        public IActionResult GenerateLettersForConcessions(string concessionIds, [FromBody] LegalEntityConcessionLetter legalEntityConcessionLetter)
         {
             var userId = _siteHelper.GetUserIdForFiltering(this);
-            HttpContext.Response.ContentType = "application/pdf";
 
             var convertedConcessionIds = from concessionDetailId in concessionIds.Split(',')
                                          select Convert.ToInt32(concessionDetailId);
 
-            var result = new FileContentResult(
-                _letterGeneratorManager.GenerateLettersForConcessions(convertedConcessionIds, userId),
-                "application/pdf")
+            byte[] bytes = _letterGeneratorManager.GenerateLettersForConcessions(convertedConcessionIds, userId, legalEntityConcessionLetter);
+
+            var file = new
             {
-                FileDownloadName = $"ConcessionLetter_{concessionIds.Replace(",", "_")}.pdf"
+                contentType = "application/pdf",
+                bytes = bytes,
+                filename = $"ConcessionLetter_{concessionIds.Replace(",", "_")}.pdf"
             };
 
-            return result;
+            return Ok(file);
+
+            //var userId = _siteHelper.GetUserIdForFiltering(this);
+            //HttpContext.Response.ContentType = "application/pdf";
+
+            //var convertedConcessionIds = from concessionDetailId in concessionIds.Split(',')
+            //                             select Convert.ToInt32(concessionDetailId);
+
+            //var result = new FileContentResult(
+            //    _letterGeneratorManager.GenerateLettersForConcessions(convertedConcessionIds, userId),
+            //    "application/pdf")
+            //{
+            //    FileDownloadName = $"ConcessionLetter_{concessionIds.Replace(",", "_")}.pdf"
+            //};
+
+            //return result;
         }
     }
 }

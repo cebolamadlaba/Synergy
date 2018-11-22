@@ -12,7 +12,7 @@ import { ConcessionTypes } from '../constants/concession-types';
 import { UserConcessionsService } from "../services/user-concessions.service";
 import { ConcessionLetterService } from "../services/concession-letter.service";
 
-
+import saveAs from 'file-saver';
 
 @Component({
     selector: 'app-approved-concessions',
@@ -104,7 +104,7 @@ export class ApprovedConcessionsComponent implements OnInit {
 
     //printConcession(legalEntityId: number) {
     printConcession() {
-
+        this.isLoading = true;
         var selectedConcessions = this.approvedConcessions.filter(items => items.legalEntityId == this.legalEntityId);
         var concessionIds = "";
 
@@ -128,17 +128,29 @@ export class ApprovedConcessionsComponent implements OnInit {
             }
         }
 
+        let observable;
         if (concessionIds != null && concessionIds.length > 0) {
-            this.concessionLetterService.generateConcessionLetterForConcessionsByConcessionIds(concessionIds, this.legalEntityConcessionLetterModel);
-            //window.open("/api/Concession/GenerateConcessionLetterForConcessions/" + concessionIds);
+            observable = this.concessionLetterService.generateConcessionLetterForConcessionsByConcessionIds(concessionIds, this.legalEntityConcessionLetterModel);
         } else {
             this.legalEntityConcessionLetterModel.legalEntityId = this.legalEntityId;
-            this.concessionLetterService.generateConcessionLetterForConcessionsByLegalEntityId(this.legalEntityConcessionLetterModel)
-                .subscribe(result => {
-                    window.open(result);
-                });
-            //window.open("/api/Concession/GenerateConcessionLetterForLegalEntity/" + this.legalEntityId);
+            observable = this.concessionLetterService.generateConcessionLetterForConcessionsByLegalEntityId(this.legalEntityConcessionLetterModel);
         }
+
+        observable.subscribe(result => {
+            var byteCharacters = atob(result.bytes);
+            var byteNumbers = new Array(byteCharacters.length);
+            for (var i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            var byteArray = new Uint8Array(byteNumbers);
+
+            var blob = new Blob([byteArray], { type: result.contentType });
+            saveAs(blob, result.filename);
+            this.isLoading = false;
+        }, error => {
+            this.errorMessage = "Could not generate Concession Letter for the selected item";
+            this.isLoading = false;
+        });
 
         this.modal.hide();
     }

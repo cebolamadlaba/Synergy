@@ -18,7 +18,7 @@ export class ConcessionLetterService {
         return this.http.post(url, legalEntityConcessionLetter, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    generateConcessionLetterForConcessionsByConcessionIds(concessionIds: string, legalEntityConcessionLetter: LegalEntityConcessionLetterModel) {
+    generateConcessionLetterForConcessionsByConcessionIds(concessionIds: string, legalEntityConcessionLetter: LegalEntityConcessionLetterModel): Observable<any> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
         const url = "/api/Concession/GenerateConcessionLetterForConcessions/" + concessionIds;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator;
+using System.Collections.Generic;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 {
@@ -20,7 +21,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="legalEntityId">The legal entity identifier.</param>
         /// <param name="requestorId">The requestor identifier.</param>
         /// <returns></returns>
-        byte[] GenerateLettersForLegalEntity(int legalEntityId, int requestorId);
+        byte[] GenerateLettersForLegalEntity(int legalEntityId, int requestorId, LegalEntityConcessionLetter userProvidedInfo);
 
         /// <summary>
         /// Generates the letters for concession details.
@@ -30,7 +31,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <returns></returns>
         byte[] GenerateLettersForConcessionDetails(IEnumerable<int> concessionDetailIds, int requestorId);
 
-        byte[] GenerateLettersForConcessions(IEnumerable<int> concessionIds, int requestorId);
+        byte[] GenerateLettersForConcessions(IEnumerable<int> concessionIds, int requestorId, LegalEntityConcessionLetter userProvidedInfo);
 
         byte[] DownloadLetterForConcessionDetail(int concessionDetailId, int requestorId);
     }
