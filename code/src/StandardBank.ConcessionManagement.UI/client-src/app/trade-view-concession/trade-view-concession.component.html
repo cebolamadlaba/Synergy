@@ -99,6 +99,16 @@
     </div>
 </div>
 
+<!-- Notification message -->
+<div class="col-md-12" *ngIf="(notificationMessage) && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-warning">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Notifications.</p>
+            <p>{{notificationMessage}}</p>
+        </div>
+    </div>
+</div>
+
 <!-- Success message -->
 <div class="col-md-12" *ngIf="saveMessage && !isLoading">
     <div class="form-feedback-container">
@@ -152,7 +162,7 @@
             <h3 class="table-title">Concessions</h3>
             <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow(true)" *ngIf="canPcmApprove || isEditing || isRecalling" style="margin-top: 15px;">New Concession</button>
 
-       
+
 
         </div>
     </div>
@@ -223,7 +233,7 @@
                 </td>
 
                 <td class="length-short"><input type="number" class="form-control" formControlName="advalorem" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_advalorem && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'advalorem')" (change)="setadvalorem($event, i,'advalorem')" /></td>
-                <td class="length-short"><input type="text" class="form-control" formControlName="min" numbersOnly="true" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_min && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'min')" (change)="setTwoNumberDecimal($event)"/></td>
+                <td class="length-short"><input type="text" class="form-control" formControlName="min" numbersOnly="true" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_min && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'min')" (change)="setTwoNumberDecimal($event)" /></td>
                 <td class="length-short"><input type="text" class="form-control" formControlName="max" numbersOnly="true" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_max && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'max')" (change)="setTwoNumberDecimal($event)" /></td>
                 <td class="length-short"><input type="number" class="form-control" formControlName="communication" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_communication && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'communication')" /></td>
                 <td class="length-short"><input type="number" class="form-control" formControlName="flatfee" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_flatfee && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'flatfee')" (change)="setadvalorem($event, i,'flatfee')" /></td>
@@ -239,7 +249,7 @@
                 <td class="length-short" *ngIf="isApproved"><input type="number" class="form-control" formControlName="approvedRate" [attr.disabled]="canEdit ? null : ''" [class.markred]="bcmhochanged(i,'approvedRate')" (change)="setThreeNumberDecimal($event)" /></td>
 
                 <td class="length-short"><input type="number" class="form-control" formControlName="loadedRate" [attr.disabled]="(selectedTradeConcession[i]) && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'loadedRate')" (change)="setThreeNumberDecimal($event)" /></td>
-                
+
                 <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="(!selectedTradeConcession[i]) && canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" [class.markred]="bcmhochanged(i,'expiryDate')" /></td>
                 <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>
                 <td *ngIf="canArchive" class="delete">
@@ -275,16 +285,19 @@
                             </td>
                         </tr>
                         <tr *ngFor="let itemrow of tradeConcessionForm.controls.conditionItemsRows.controls; let i=index">
-                            <td># {{i + 1
-                }}</td>
-                <td>{{itemrow.get('conditionType').value?.description}}</td>
-                <td>{{itemrow.get('conditionProduct').value?.description}}</td>
-                <td><span *ngIf="itemrow.get('interestRate').value">{{itemrow.get('interestRate').value | number:'1.2-2'}}</span></td>
-                <td>{{itemrow.get('volume').value}}</td>
-                <td><span *ngIf="itemrow.get('value').value">{{itemrow.get('value').value | number:'1.2-2'}}</span></td>
-                <td><span *ngIf="itemrow.get('expectedTurnoverValue').value">{{itemrow.get('expectedTurnoverValue').value | number:'1.2-2'}}</span></td>
-                <td>{{itemrow.get('periodType').value?.description}} {{itemrow.get('period').value?.description}}</td>
-            </tr>
+                            <td>
+                                # {{
+i + 1
+                                }}
+                            </td>
+                            <td>{{itemrow.get('conditionType').value?.description}}</td>
+                            <td>{{itemrow.get('conditionProduct').value?.description}}</td>
+                            <td><span *ngIf="itemrow.get('interestRate').value">{{itemrow.get('interestRate').value | number:'1.2-2'}}</span></td>
+                            <td>{{itemrow.get('volume').value}}</td>
+                            <td><span *ngIf="itemrow.get('value').value">{{itemrow.get('value').value | number:'1.2-2'}}</span></td>
+                            <td><span *ngIf="itemrow.get('expectedTurnoverValue').value">{{itemrow.get('expectedTurnoverValue').value | number:'1.2-2'}}</span></td>
+                            <td>{{itemrow.get('periodType').value?.description}} {{itemrow.get('period').value?.description}}</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -316,7 +329,7 @@
                                 <th>Expected Turnover Value</th>
                                 <th>Period Type</th>
                                 <th>Period</th>
-                             
+
                                 <th></th>
                             </tr>
                         </thead>
@@ -362,7 +375,7 @@
                                         <option *ngFor="let periodOption of periods" [ngValue]="periodOption">{{periodOption?.description}}</option>
                                     </select>
                                 </td>
-                              
+
                                 <td><button type="button" (click)="deleteConditionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
                             </tr>
                         </tbody>
