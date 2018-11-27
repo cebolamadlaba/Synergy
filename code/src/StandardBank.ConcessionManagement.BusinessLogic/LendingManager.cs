@@ -243,9 +243,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             concessionLending.IsMismatched = false;
 
+            // Bernard Cronje - 2018-11-26 - LegalEntityAccountId is now nullable as per client request.
+            if (!concessionLending.LegalEntityAccountId.HasValue)
+            {
+                concessionLending.IsMismatched = true;
+                return;
+            }
+
             var loadedPriceLending =
                 _loadedPriceLendingRepository.ReadByProductTypeIdLegalEntityAccountId(
-                    concessionLending.ProductTypeId, concessionLending.LegalEntityAccountId);
+                    concessionLending.ProductTypeId, concessionLending.LegalEntityAccountId.Value);
 
             if (loadedPriceLending != null)
             {

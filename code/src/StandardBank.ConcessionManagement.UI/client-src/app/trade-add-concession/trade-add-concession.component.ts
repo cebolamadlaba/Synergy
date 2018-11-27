@@ -429,7 +429,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                     tradeConcessionDetail.fkLegalEntityGBBNumber = gbbnumber.pkLegalEntityGBBNumber;
                 }
                 else {
-                    tradeConcessionDetail.fkLegalEntityGBBNumber = concessionFormItem.get('gbbnumberText').value;
+                    tradeConcessionDetail.gbbNumber = concessionFormItem.get('gbbnumberText').value;
                 }
 
 

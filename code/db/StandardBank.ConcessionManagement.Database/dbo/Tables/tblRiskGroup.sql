@@ -17,7 +17,8 @@
 
 
 
+
+
 GO
-CREATE NONCLUSTERED INDEX [IX_tblRiskGroup]
-    ON [dbo].[tblRiskGroup]([RiskGroupNumber] ASC);
+
 

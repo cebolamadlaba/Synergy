@@ -12,7 +12,8 @@
 
 
 
+
+
 GO
-CREATE NONCLUSTERED INDEX [IX_tblLegalEntityAccount]
-    ON [dbo].[tblLegalEntityAccount]([AccountNumber] ASC);
+
 
