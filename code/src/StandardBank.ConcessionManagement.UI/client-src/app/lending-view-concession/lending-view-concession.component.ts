@@ -12,6 +12,7 @@ import { PeriodType } from "../models/period-type";
 import { ConditionType } from "../models/condition-type";
 import { ConditionProduct } from "../models/condition-product";
 import { ClientAccount } from "../models/client-account";
+import { ClientAccountArray } from "../models/client-account-array";
 import { LendingConcession } from "../models/lending-concession";
 import { Concession } from "../models/concession";
 import { LendingConcessionDetail } from "../models/lending-concession-detail";
@@ -61,6 +62,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     isEditing = false;
     motivationEnabled = false;
     canEdit = false;
+    selectedAccountNumbers: ClientAccountArray[];
 
     capturedComments: string;
     canApproveChanges: boolean;
@@ -124,6 +126,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.lendingConcession = new LendingConcession();
         this.lendingConcession.concession = new Concession();
         this.lendingConcession.concession.concessionComments = [new ConcessionComment()];
+        this.selectedAccountNumbers = [new ClientAccountArray()];
 
 
     }
@@ -395,7 +398,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
     initConcessionItemRows() {
         this.selectedProductTypes.push(new ProductType());
-
+        this.selectedAccountNumbers.push(new ClientAccountArray());
         return this.formBuilder.group({
             lendingConcessionDetailId: [''],
             concessionDetailId: [''],
@@ -491,7 +494,17 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.selectedProductTypes[rowIndex] = productType;
 
         if (this.clientAccounts && this.clientAccounts.length > 0) {
-            //this.selectedAccountNumbers[rowIndex].clientaccounts = this.clientAccounts.filter(re => re.accountType == productType.description);
+            this.selectedAccountNumbers[rowIndex].clientaccounts = this.clientAccounts.filter(re => re.accountType == productType.description);
+
+            if (this.selectedAccountNumbers[rowIndex].clientaccounts.length == 0) {
+                control.controls[rowIndex].get('accountNumber').setValue(null);
+            }
+            else {
+
+                control.controls[rowIndex].get('accountNumber').setValue(this.selectedAccountNumbers[rowIndex].clientaccounts[0]);
+
+            }
+
         }
 
         if (productType.description === "Overdraft") {
