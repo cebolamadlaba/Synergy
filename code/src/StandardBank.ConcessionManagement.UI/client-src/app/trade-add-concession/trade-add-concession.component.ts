@@ -365,6 +365,10 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
         this.validationError.push(validationDetail);
     }
 
+    showGbbDeclaimer() {
+        this.notificationMessage = "For New GBB, insert C/A number and update once the M-number is issued. For existing GBB use existing M- number.";
+    }
+
     disableCommunicationFee(selectedTradeConcession) {
         if (this.isNotProductOutwardTT != null && this.isNotProductOutwardTT == true) {
             return '';
