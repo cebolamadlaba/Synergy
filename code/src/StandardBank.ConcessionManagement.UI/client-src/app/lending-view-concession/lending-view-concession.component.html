@@ -208,7 +208,7 @@
                 <td class="length-short">
                     <!-- Account number -->
                     <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit ? null : ''" [class.markred]="bcmhochanged(i,'accountNumber')">
-                        <option *ngFor="let clientAccountOption of selectedAccountNumbers[i].clientaccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
+                        <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
                 </td>
                 <!-- Limit -->
