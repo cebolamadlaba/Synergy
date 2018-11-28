@@ -65,6 +65,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
     isLoading = true;
     isProductLocalGuarantee: boolean;
+    isNotProductOutwardTT: boolean;
     canBcmApprove = false;
     canPcmApprove = false;
     hasChanges = false;
@@ -328,18 +329,46 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
                             currentConcession.get('producttype').setValue(selectedproducttype[0]);
 
-                            if (selectedproducttype[0].tradeProductType == "Local guarantee") {
-
-                                this.isProductLocalGuarantee = true;
-                                this.selectedTradeConcession[rowIndex] = true;
-                                currentConcession.get('disablecontrolset').setValue(true);
-
+                            switch (selectedproducttype[0].tradeProductType) {
+                                case "Local guarantee":
+                                    this.isProductLocalGuarantee = true;
+                                    this.isNotProductOutwardTT = true;
+                                    this.selectedTradeConcession[rowIndex] = true;
+                                    currentConcession.get('disablecontrolset').setValue(true);
+                                    break;
+                                case "Outward TT":
+                                    this.isProductLocalGuarantee = false;
+                                    this.isNotProductOutwardTT = false;
+                                    this.selectedTradeConcession[rowIndex] = false;
+                                    currentConcession.get('disablecontrolset').setValue(false);
+                                    break;
+                                default:
+                                    this.isProductLocalGuarantee = false;
+                                    this.isNotProductOutwardTT = true;
+                                    this.selectedTradeConcession[rowIndex] = false;
+                                    currentConcession.get('disablecontrolset').setValue(false);
+                                    break;
                             }
-                            else {
-                                this.isProductLocalGuarantee = false;
-                                this.selectedTradeConcession[rowIndex] = false;
-                                currentConcession.get('disablecontrolset').setValue(false);
-                            }
+
+                            //if (selectedproducttype[0].tradeProductType == "Local guarantee") {
+
+                            //    this.isProductLocalGuarantee = true;
+                            //    this.selectedTradeConcession[rowIndex] = true;
+                            //    currentConcession.get('disablecontrolset').setValue(true);
+
+                            //}
+                            //else {
+                            //    this.isProductLocalGuarantee = false;
+                            //    this.selectedTradeConcession[rowIndex] = false;
+                            //    currentConcession.get('disablecontrolset').setValue(false);
+                            //}
+
+                            //if (selectedproducttype[0].tradeProductType == "Outward TT") {
+                            //    this.isNotProductOutwardTT = false;
+                            //}
+                            //else {
+                            //    this.isNotProductOutwardTT = true;
+                            //}
                         }
                     }
 
@@ -638,6 +667,14 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
             this.tradeConcession.tradeConcessionDetails[rowIndex].show_term = false;
 
         }
+
+        if (selectedproducttype.tradeProductType == "Outward TT") {
+            this.isNotProductOutwardTT = false;
+        }
+        else {
+            this.isNotProductOutwardTT = true;
+            currentProduct.get('communication').setValue(null);
+        }
     }
 
     addValidationError(validationDetail) {
@@ -647,11 +684,29 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
         this.validationError.push(validationDetail);
     }
 
+    showGbbDeclaimer() {
+        this.notificationMessage = "For New GBB, insert C/A number and update once the M-number is issued. For existing GBB use existing M- number.";
+    }
+
     clearMessages() {
         this.errorMessage = null;
         this.validationError = null;
         this.notificationMessage = null;
         this.saveMessage = null;
+    }
+
+    disableCommunicationFee(selectedTradeConcession) {
+        if (this.isNotProductOutwardTT != null && this.isNotProductOutwardTT == true) {
+            return '';
+        }
+        else {
+            if (selectedTradeConcession || selectedTradeConcession.show_communication) {
+                return (this.canEdit) ? null : '';
+            }
+            else {
+                return (selectedTradeConcession.show_communication || this.canEdit) ? null : '';
+            }
+        }
     }
 
     getTradeConcession(isNew: boolean): TradeConcession {
@@ -774,13 +829,17 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                 }
             }
             ///---
-            if (concessionFormItem.get('communication').value || concessionFormItem.get('communication').value == 0) {
-                tradeConcessionDetail.communication = concessionFormItem.get('communication').value;
-            } else {
-                if (!tradeConcessionDetail.disablecontrolset) {
-                    this.addValidationError("Communication not entered");
+            if (!this.isNotProductOutwardTT) {
+                let communicationVal = concessionFormItem.get('communication').value;
+                if (communicationVal != null || communicationVal == 0) {
+                    tradeConcessionDetail.communication = communicationVal;
+                } else {
+                    if (!tradeConcessionDetail.disablecontrolset) {
+                        this.addValidationError("Communication not entered");
+                    }
                 }
             }
+
 
             let flatfeefound = false;
             if (concessionFormItem.get('flatfee').value) {

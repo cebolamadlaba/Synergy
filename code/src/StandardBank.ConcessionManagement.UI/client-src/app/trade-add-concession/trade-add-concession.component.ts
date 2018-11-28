@@ -58,6 +58,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
     isLoading = true;
     isProductLocalGuarantee: boolean;
+    isNotProductOutwardTT: boolean;
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
@@ -213,7 +214,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
             advalorem: [''],
             min: [''],
             max: [''],
-            communication: [''],
+            communication: [null],
             flatfee: [''],
             currency: [''],
             estfee: [''],
@@ -349,7 +350,12 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
             currentProduct.get('rate').setValue(null);
         }
 
-
+        if (selectedproducttype.tradeProductType == "Outward TT") {
+            this.isNotProductOutwardTT = false;
+        }
+        else {
+            this.isNotProductOutwardTT = true;
+        }
     }
 
     addValidationError(validationDetail) {
@@ -359,13 +365,21 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
         this.validationError.push(validationDetail);
     }
 
+    disableCommunicationFee(selectedTradeConcession) {
+        if (this.isNotProductOutwardTT != null && this.isNotProductOutwardTT == true) {
+            return '';
+        }
+        else {
+            return (selectedTradeConcession || this.saveMessage) ? '' : null;
+        }
+    }
+
     clearMessages() {
         this.errorMessage = null;
         this.notificationMessage = null;
         this.saveMessage = null;
         this.validationError = null;
     }
-
 
     getTradeConcession(): TradeConcession {
         var tradeConcession = new TradeConcession();
@@ -475,13 +489,17 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                 }
             }
 
-            if (concessionFormItem.get('communication').value || concessionFormItem.get('communication').value == 0) {
-                tradeConcessionDetail.communication = concessionFormItem.get('communication').value;
-            } else {
-                if (!tradeConcessionDetail.disablecontrolset) {
-                    this.addValidationError("Communication not entered");
+            if (!this.isNotProductOutwardTT) {
+                let communicationVal = concessionFormItem.get('communication').value;
+                if (communicationVal != null || communicationVal == 0) {
+                    tradeConcessionDetail.communication = communicationVal;
+                } else {
+                    if (!tradeConcessionDetail.disablecontrolset) {
+                        this.addValidationError("Communication not entered");
+                    }
                 }
             }
+
 
             let flatfeefound = false;
 
