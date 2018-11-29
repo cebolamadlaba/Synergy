@@ -51,7 +51,7 @@ namespace StandardBank.ConcessionManagement.Repository
                            [ConditionMet] IS NULL
                             AND [PeriodId] = @periodId
                             AND [PeriodTypeId] = @periodTypeId
-                            AND [RequestorId] = @RequestorId and cd.ExpiryDate <= @ExpiryDate",
+                            AND [RequestorId] = @RequestorId and cv.ExpiryDate <= @ExpiryDate",
                     new { periodId, periodTypeId, requestorId, ExpiryDate = System.DateTime.Today.AddMonths(1) });
             }
         }
