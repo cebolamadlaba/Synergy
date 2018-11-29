@@ -175,11 +175,11 @@
                 </td>
 
                 <td class="length-short">
-                    <select formControlName="gbbnumber" class="form-control" [attr.disabled]="(!selectedTradeConcession[i]) || saveMessage ? '' : null" *ngIf="!isProductLocalGuarantee">
+                    <!--<select formControlName="gbbnumber" class="form-control" [attr.disabled]="(!selectedTradeConcession[i]) || saveMessage ? '' : null" *ngIf="!isProductLocalGuarantee">
                         <option *ngFor="let clientGBBOption of legalentitygbbnumbers" [ngValue]="clientGBBOption">{{clientGBBOption.gbbNumber}}</option>
-                    </select>
+                    </select>-->
                     <input type="text" class="form-control" formControlName="gbbnumberText" [attr.disabled]="(!selectedTradeConcession[i]) || saveMessage ? '' : null"
-                           *ngIf="isProductLocalGuarantee" (click)="showGbbDeclaimer()"/>
+                           (click)="showGbbDeclaimer()"/>
                 </td>
 
 

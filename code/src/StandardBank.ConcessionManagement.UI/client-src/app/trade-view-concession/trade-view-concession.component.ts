@@ -331,19 +331,16 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
                             switch (selectedproducttype[0].tradeProductType) {
                                 case "Local guarantee":
-                                    this.isProductLocalGuarantee = true;
                                     this.isNotProductOutwardTT = true;
                                     this.selectedTradeConcession[rowIndex] = true;
                                     currentConcession.get('disablecontrolset').setValue(true);
                                     break;
                                 case "Outward TT":
-                                    this.isProductLocalGuarantee = false;
                                     this.isNotProductOutwardTT = false;
                                     this.selectedTradeConcession[rowIndex] = false;
                                     currentConcession.get('disablecontrolset').setValue(false);
                                     break;
                                 default:
-                                    this.isProductLocalGuarantee = false;
                                     this.isNotProductOutwardTT = true;
                                     this.selectedTradeConcession[rowIndex] = false;
                                     currentConcession.get('disablecontrolset').setValue(false);
@@ -604,7 +601,6 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
     productTypeChanged(rowIndex) {
         this.notificationMessage = null;
-        this.isProductLocalGuarantee = false;
 
         const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
 
@@ -619,7 +615,6 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
         if (selectedproducttype.tradeProductType == "Local guarantee") {
             this.notificationMessage = "Please note there is no system integration for GBBs, therefore collateral Centres need to load fees/ rates.";
-            this.isProductLocalGuarantee = true;
 
             this.selectedTradeConcession[rowIndex] = true;
 
@@ -772,21 +767,11 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                 }
             }
 
-            let hasValueGbbNumber = (!this.isProductLocalGuarantee && concessionFormItem.get('gbbnumber').value) || (this.isProductLocalGuarantee && concessionFormItem.get('gbbnumberText').value);
+            let hasValueGbbNumber = (concessionFormItem.get('gbbnumberText').value);
 
             //if (concessionFormItem.get('gbbnumber').value) {
             if (hasValueGbbNumber) {
-
-                if (!this.isProductLocalGuarantee) {
-                    var gbbnumber = concessionFormItem.get('gbbnumber').value;
-                    tradeConcessionDetail.legalEntityId = gbbnumber.legalEntityId;
-                    tradeConcessionDetail.legalEntityAccountId = gbbnumber.legalEntityAccountId;
-                    tradeConcessionDetail.fkLegalEntityGBBNumber = gbbnumber.pkLegalEntityGBBNumber;
-                }
-                else {
-                    tradeConcessionDetail.gbbNumber = concessionFormItem.get('gbbnumberText').value;
-                }
-
+                tradeConcessionDetail.gbbNumber = concessionFormItem.get('gbbnumberText').value;
             } else {
                 if (tradeConcessionDetail.disablecontrolset) {
                     this.addValidationError("GBB Number not entered");

@@ -57,7 +57,6 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
     tradeConcessionForm: FormGroup;
 
     isLoading = true;
-    isProductLocalGuarantee: boolean;
     isNotProductOutwardTT: boolean;
 
     observablePeriods: Observable<Period[]>;
@@ -307,7 +306,6 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
     productTypeChanged(rowIndex) {
         this.notificationMessage = null;
-        this.isProductLocalGuarantee = false;
 
         const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
 
@@ -323,7 +321,6 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
         if (selectedproducttype.tradeProductType == "Local guarantee") {
 
             this.notificationMessage = "Please note there is no system integration for GBBs, therefore collateral Centres need to load fees/ rates.";
-            this.isProductLocalGuarantee = true;
 
             this.selectedTradeConcession[rowIndex] = true;
 
@@ -435,22 +432,11 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                 }
             }
 
-            let hasValueGbbNumber = (!this.isProductLocalGuarantee && concessionFormItem.get('gbbnumber').value) || (this.isProductLocalGuarantee && concessionFormItem.get('gbbnumberText').value);
+            let hasValueGbbNumber = (concessionFormItem.get('gbbnumberText').value);
 
             //if (concessionFormItem.get('gbbnumber').value) {
             if (hasValueGbbNumber) {
-
-                if (!this.isProductLocalGuarantee) {
-                    var gbbnumber = concessionFormItem.get('gbbnumber').value;
-                    tradeConcessionDetail.legalEntityId = gbbnumber.legalEntityId;
-                    tradeConcessionDetail.legalEntityAccountId = gbbnumber.legalEntityAccountId;
-                    tradeConcessionDetail.fkLegalEntityGBBNumber = gbbnumber.pkLegalEntityGBBNumber;
-                }
-                else {
-                    tradeConcessionDetail.gbbNumber = concessionFormItem.get('gbbnumberText').value;
-                }
-
-
+                tradeConcessionDetail.gbbNumber = concessionFormItem.get('gbbnumberText').value;
             } else {
                 if (tradeConcessionDetail.disablecontrolset) {
                     this.addValidationError("GBB Number not entered");

@@ -222,11 +222,11 @@
                 </td>
 
                 <td class="length-short">
-                    <select formControlName="gbbnumber" class="form-control" [attr.disabled]="(selectedTradeConcession[i]) && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'gbbnumber')" *ngIf="!isProductLocalGuarantee">
+                    <!--<select formControlName="gbbnumber" class="form-control" [attr.disabled]="(selectedTradeConcession[i]) && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'gbbnumber')" *ngIf="!isProductLocalGuarantee">
                         <option *ngFor="let clientGBBOption of legalentitygbbnumbers" [ngValue]="clientGBBOption">{{clientGBBOption.gbbNumber}}</option>
-                    </select>
+                    </select>-->
                     <input type="text" class="form-control" formControlName="gbbnumberText" [attr.disabled]="(selectedTradeConcession[i]) && canEdit ? null : ''"
-                           *ngIf="isProductLocalGuarantee" (click)="showGbbDeclaimer()"/>
+                           (click)="showGbbDeclaimer()"/>
                 </td>
 
                 <td class="length-short">
