@@ -310,7 +310,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
         const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
 
         this.selectedProductTypes[rowIndex] = control.controls[rowIndex].get('producttype').value;
-
+        let currentrow = control.controls[rowIndex];
         let currentProduct = control.controls[rowIndex];
         var selectedproducttype = currentProduct.get('producttype').value;
 
@@ -348,7 +348,10 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
         }
 
         if (selectedproducttype.tradeProductType == "Outward TT") {
-            this.isNotProductOutwardTT = false;
+          this.isNotProductOutwardTT = false;
+            currentrow.get('communication').disable();
+            currentrow.get('communication').setValue(null);
+           // currentrow.get('disablecontrolset').setValue(true);
         }
         else {
             this.isNotProductOutwardTT = true;
@@ -368,10 +371,10 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
     disableCommunicationFee(selectedTradeConcession) {
         if (this.isNotProductOutwardTT != null && this.isNotProductOutwardTT == true) {
-            return '';
+           // return '';
         }
         else {
-            return (selectedTradeConcession || this.saveMessage) ? '' : null;
+           // return (selectedTradeConcession || this.saveMessage) ? '' : null;
         }
     }
 
@@ -680,6 +683,56 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
         //$event.target.value = this.formatDecimal($event.target.value);
     }
+
+    setFlatFee($event, rowIndex, controlname) {
+
+        if (event.target != null && $event.target.value != "") {
+
+            const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+            let currentrow = control.controls[rowIndex];
+
+            if (controlname == "flatfee") {
+
+                currentrow.get('advalorem').disable();
+                currentrow.get('advalorem').setValue(null);            
+                currentrow.get('min').disable();
+                currentrow.get('max').disable();
+                currentrow.get('min').setValue(null);
+                currentrow.get('max').setValue(null);
+
+            }
+            else {
+                currentrow.get('advalorem').enable();
+                currentrow.get('min').enable();
+                currentrow.get('max').enable();
+
+                currentrow.get('advalorem').setValue(null);
+                currentrow.get('min').setValue(null);
+                currentrow.get('max').setValue(null);
+
+            }
+        }
+        //else {
+        //    const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+        //    let currentrow = control.controls[rowIndex];
+
+        //    if (controlname == "flatfee") {
+
+        //        currentrow.get('advalorem').enable();
+        //    }
+        //    else {
+
+        //        currentrow.get('advalorem').enable();
+        //        currentrow.get('min').enable();
+        //        currentrow.get('max').enable();
+
+
+        //    }
+        //}     
+    }
+
+
+
 
     formatDecimal(itemValue: number) {
         if (itemValue) {
