@@ -57,7 +57,6 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
     tradeConcessionForm: FormGroup;
 
     isLoading = true;
-    isNotProductOutwardTT: boolean;
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
@@ -310,7 +309,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
         const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
 
         this.selectedProductTypes[rowIndex] = control.controls[rowIndex].get('producttype').value;
-        let currentrow = control.controls[rowIndex];
+
         let currentProduct = control.controls[rowIndex];
         var selectedproducttype = currentProduct.get('producttype').value;
 
@@ -347,15 +346,6 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
             currentProduct.get('rate').setValue(null);
         }
 
-        if (selectedproducttype.tradeProductType == "Outward TT") {
-          this.isNotProductOutwardTT = false;
-            currentrow.get('communication').disable();
-            currentrow.get('communication').setValue(null);
-           // currentrow.get('disablecontrolset').setValue(true);
-        }
-        else {
-            this.isNotProductOutwardTT = true;
-        }
     }
 
     addValidationError(validationDetail) {
@@ -369,12 +359,19 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
         this.notificationMessage = "For New GBB, insert C/A number and update once the M-number is issued. For existing GBB use existing M- number.";
     }
 
-    disableCommunicationFee(selectedTradeConcession) {
-        if (this.isNotProductOutwardTT != null && this.isNotProductOutwardTT == true) {
-           // return '';
+    disableCommunicationFee(rowIndex) {
+
+        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+        let currentrow = control.controls[rowIndex];
+
+        let productype = currentrow.get('producttype').value;
+
+        if (productype != null && productype.tradeProductType != "" && productype.tradeProductType != "Outward TT") {
+            currentrow.get('communication').disable();
+            currentrow.get('communication').setValue(null);
         }
         else {
-           // return (selectedTradeConcession || this.saveMessage) ? '' : null;
+            currentrow.get('communication').enable();
         }
     }
 
@@ -482,7 +479,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                 }
             }
 
-            if (!this.isNotProductOutwardTT) {
+            if (!concessionFormItem.get('communication').disabled) {
                 let communicationVal = concessionFormItem.get('communication').value;
                 if (communicationVal != null || communicationVal == 0) {
                     tradeConcessionDetail.communication = communicationVal;
@@ -686,49 +683,28 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
     setFlatFee($event, rowIndex, controlname) {
 
+        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+        let currentrow = control.controls[rowIndex];
+
         if (event.target != null && $event.target.value != "") {
 
-            const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
-            let currentrow = control.controls[rowIndex];
-
             if (controlname == "flatfee") {
-
                 currentrow.get('advalorem').disable();
-                currentrow.get('advalorem').setValue(null);            
+                currentrow.get('advalorem').setValue(null);
                 currentrow.get('min').disable();
                 currentrow.get('max').disable();
                 currentrow.get('min').setValue(null);
                 currentrow.get('max').setValue(null);
-
-            }
-            else {
-                currentrow.get('advalorem').enable();
-                currentrow.get('min').enable();
-                currentrow.get('max').enable();
-
-                currentrow.get('advalorem').setValue(null);
-                currentrow.get('min').setValue(null);
-                currentrow.get('max').setValue(null);
-
             }
         }
-        //else {
-        //    const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
-        //    let currentrow = control.controls[rowIndex];
-
-        //    if (controlname == "flatfee") {
-
-        //        currentrow.get('advalorem').enable();
-        //    }
-        //    else {
-
-        //        currentrow.get('advalorem').enable();
-        //        currentrow.get('min').enable();
-        //        currentrow.get('max').enable();
-
-
-        //    }
-        //}     
+        else {
+            currentrow.get('advalorem').enable();
+            currentrow.get('min').enable();
+            currentrow.get('max').enable();
+            currentrow.get('advalorem').setValue(null);
+            currentrow.get('min').setValue(null);
+            currentrow.get('max').setValue(null);
+        }
     }
 
 

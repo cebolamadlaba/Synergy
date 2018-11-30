@@ -65,7 +65,6 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
     isLoading = true;
     isProductLocalGuarantee: boolean;
-    isNotProductOutwardTT: boolean;
     canBcmApprove = false;
     canPcmApprove = false;
     hasChanges = false;
@@ -331,17 +330,10 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
                             switch (selectedproducttype[0].tradeProductType) {
                                 case "Local guarantee":
-                                    this.isNotProductOutwardTT = true;
                                     this.selectedTradeConcession[rowIndex] = true;
                                     currentConcession.get('disablecontrolset').setValue(true);
                                     break;
-                                case "Outward TT":
-                                    this.isNotProductOutwardTT = false;
-                                    this.selectedTradeConcession[rowIndex] = false;
-                                    currentConcession.get('disablecontrolset').setValue(false);
-                                    break;
                                 default:
-                                    this.isNotProductOutwardTT = true;
                                     this.selectedTradeConcession[rowIndex] = false;
                                     currentConcession.get('disablecontrolset').setValue(false);
                                     break;
@@ -663,11 +655,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
         }
 
-        if (selectedproducttype.tradeProductType == "Outward TT") {
-            this.isNotProductOutwardTT = false;
-        }
-        else {
-            this.isNotProductOutwardTT = true;
+        if (selectedproducttype.tradeProductType != "Outward TT") {
             currentProduct.get('communication').setValue(null);
         }
     }
@@ -690,16 +678,22 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
         this.saveMessage = null;
     }
 
-    disableCommunicationFee(selectedTradeConcession) {
-        if (this.isNotProductOutwardTT != null && this.isNotProductOutwardTT == true) {
-            return '';
+    disableCommunicationFee(rowIndex) {
+        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+        let currentrow = control.controls[rowIndex];
+
+        let productype = currentrow.get('producttype').value;
+
+        if (productype != null && productype.tradeProductType != "" && productype.tradeProductType != "Outward TT") {
+            currentrow.get('communication').disable();
+            currentrow.get('communication').setValue(null);
         }
         else {
-            if (selectedTradeConcession || selectedTradeConcession.show_communication) {
-                return (this.canEdit) ? null : '';
+            if (this.canEdit) {
+                currentrow.get('communication').enable()
             }
             else {
-                return (selectedTradeConcession.show_communication || this.canEdit) ? null : '';
+                currentrow.get('communication').disable();
             }
         }
     }
@@ -814,7 +808,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                 }
             }
             ///---
-            if (!this.isNotProductOutwardTT) {
+            if (!concessionFormItem.get('communication').disabled) {
                 let communicationVal = concessionFormItem.get('communication').value;
                 if (communicationVal != null || communicationVal == 0) {
                     tradeConcessionDetail.communication = communicationVal;
@@ -1458,6 +1452,32 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
         else {
 
             $event.target.value = null;
+        }
+    }
+
+    setFlatFee($event, rowIndex, controlname) {
+
+        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+        let currentrow = control.controls[rowIndex];
+
+        if (event.target != null && $event.target.value != "") {
+
+            if (controlname == "flatfee") {
+                currentrow.get('advalorem').disable();
+                currentrow.get('advalorem').setValue(null);
+                currentrow.get('min').disable();
+                currentrow.get('max').disable();
+                currentrow.get('min').setValue(null);
+                currentrow.get('max').setValue(null);
+            }
+        }
+        else {
+            currentrow.get('advalorem').enable();
+            currentrow.get('min').enable();
+            currentrow.get('max').enable();
+            currentrow.get('advalorem').setValue(null);
+            currentrow.get('min').setValue(null);
+            currentrow.get('max').setValue(null);
         }
     }
 
