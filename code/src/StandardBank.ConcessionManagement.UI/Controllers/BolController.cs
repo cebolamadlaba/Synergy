@@ -170,7 +170,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                     bolConcession.Concession.Comments, user));
 
 
-            if (bolConcession.Concession.Comments == "Approved With Changes" && bolConcession.Concession.ConcessionComments != null)
+            if ((bolConcession.Concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges || bolConcession.Concession.SubStatus == Constants.ConcessionSubStatus.HoApprovedWithChanges) && bolConcession.Concession.ConcessionComments != null)
             {
                 if (bolConcession.Concession.ConcessionComments.Count() > 0 && bolConcession.Concession.ConcessionComments.First().UserDescription == "LogChanges")
                 {

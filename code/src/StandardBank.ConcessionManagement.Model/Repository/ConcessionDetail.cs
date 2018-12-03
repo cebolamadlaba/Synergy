@@ -29,7 +29,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// <value>
         /// The LegalEntityId.
         /// </value>
-        public int LegalEntityId { get; set; }
+        public int? LegalEntityId { get; set; }
 
         /// <summary>
         /// Gets or sets the LegalEntityAccountId.
@@ -37,7 +37,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// <value>
         /// The LegalEntityAccountId.
         /// </value>
-        public int LegalEntityAccountId { get; set; }
+        public int? LegalEntityAccountId { get; set; }
 
         /// <summary>
         /// Gets or sets the ExpiryDate.

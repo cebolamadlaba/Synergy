@@ -192,7 +192,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     var productType = _lookupTableManager.GetProductTypeName(concessionLending.ProductTypeId);
 
                     if (productType == Constants.Lending.ProductType.Overdraft)
-                        concessionLending.ExpiryDate = DateTime.Now.AddMonths(12);
+                        concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
 
                     else if (productType == Constants.Lending.ProductType.TempOverdraft)
                         concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
@@ -243,9 +243,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             concessionLending.IsMismatched = false;
 
+            // Bernard Cronje - 2018-11-26 - LegalEntityAccountId is now nullable as per client request.
+            if (!concessionLending.LegalEntityAccountId.HasValue)
+            {
+                concessionLending.IsMismatched = true;
+                return;
+            }
+
             var loadedPriceLending =
                 _loadedPriceLendingRepository.ReadByProductTypeIdLegalEntityAccountId(
-                    concessionLending.ProductTypeId, concessionLending.LegalEntityAccountId);
+                    concessionLending.ProductTypeId, concessionLending.LegalEntityAccountId.Value);
 
             if (loadedPriceLending != null)
             {

@@ -304,10 +304,10 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         bolConcession.concession.riskGroupId = this.riskGroup.id;
 
 
-        if (this.bolConcessionForm.controls['smtDealNumber'].value)
-            bolConcession.concession.smtDealNumber = this.bolConcessionForm.controls['smtDealNumber'].value;
-        else
-            this.addValidationError("SMT Deal Number not captured");
+        //if (this.bolConcessionForm.controls['smtDealNumber'].value)
+        //    bolConcession.concession.smtDealNumber = this.bolConcessionForm.controls['smtDealNumber'].value;
+        //else
+        //    this.addValidationError("SMT Deal Number not captured");
 
         if (this.bolConcessionForm.controls['motivation'].value)
             bolConcession.concession.motivation = this.bolConcessionForm.controls['motivation'].value;
@@ -337,10 +337,10 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
             }
 
 
-            if (concessionFormItem.get('unitcharge').value) {
+            if (concessionFormItem.get('unitcharge').value || concessionFormItem.get('unitcharge').value == 0) {
                 bolConcessionDetail.loadedRate = concessionFormItem.get('unitcharge').value;
             } else {
-                this.addValidationError("Charge rate not entered");
+                this.addValidationError("Rate not entered");
             }
 
             if (concessionFormItem.get('userid').value) {

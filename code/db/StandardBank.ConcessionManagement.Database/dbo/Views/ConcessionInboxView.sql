@@ -4,7 +4,7 @@ SELECT        c.pkConcessionId AS ConcessionId, rg.pkRiskGroupId AS RiskGroupId,
                          lea.AccountNumber, ct.pkConcessionTypeId AS ConcessionTypeId, ct.Description AS ConcessionType, c.ConcessionDate, s.pkStatusId AS StatusId, s.Description AS Status, ss.pkSubStatusId AS SubStatusId, 
                          ss.Description AS SubStatus, c.ConcessionRef, ms.pkMarketSegmentId AS MarketSegmentId, ms.Description AS Segment, c.DatesentForApproval, cd.pkConcessionDetailId AS ConcessionDetailId, cd.ExpiryDate, 
                          cd.DateApproved, c.fkAAUserId AS AAUserId, c.fkRequestorId AS RequestorId, c.fkBCMUserId AS BCMUserId, c.fkPCMUserId AS PCMUserId, c.fkHOUserId AS HOUserId, ce.pkCentreId AS CentreId, ce.CentreName, 
-                         r.pkRegionId AS RegionId, r.Description AS Region, cd.IsMismatched, c.IsActive, c.IsCurrent, cd.PriceExported, cd.PriceExportedDate
+                         r.pkRegionId AS RegionId, r.Description AS Region, cd.IsMismatched, c.IsActive, c.IsCurrent, cd.PriceExported, cd.PriceExportedDate, c.Archived
 FROM            dbo.tblConcession AS c INNER JOIN
                          dbo.tblRiskGroup AS rg ON rg.pkRiskGroupId = c.fkRiskGroupId INNER JOIN
                          dbo.rtblConcessionType AS ct ON ct.pkConcessionTypeId = c.fkConcessionTypeId INNER JOIN
@@ -21,7 +21,7 @@ EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 2, @leve
 
 
 GO
-EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane2', @value = N'
+EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane2', @value = N'd
          Begin Table = "ss"
             Begin Extent = 
                Top = 138
@@ -52,12 +52,12 @@ EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane2', @value = N'
             DisplayFlags = 280
             TopColumn = 0
          End
-         Begin Table = "p"
+         Begin Table = "r"
             Begin Extent = 
-               Top = 252
-               Left = 477
-               Bottom = 365
-               Right = 647
+               Top = 384
+               Left = 291
+               Bottom = 497
+               Right = 461
             End
             DisplayFlags = 280
             TopColumn = 0
@@ -100,6 +100,8 @@ EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane2', @value = N'
    End
 End
 ', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'ConcessionInboxView';
+
+
 
 
 
@@ -194,7 +196,7 @@ Begin DesignProperties =
                Right = 238
             End
             DisplayFlags = 280
-            TopColumn = 0
+            TopColumn = 21
          End
          Begin Table = "rg"
             Begin Extent = 
@@ -255,7 +257,9 @@ Begin DesignProperties =
             End
             DisplayFlags = 280
             TopColumn = 0
-         End', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'ConcessionInboxView';
+         En', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'ConcessionInboxView';
+
+
 
 
 

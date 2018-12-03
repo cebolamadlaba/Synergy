@@ -10,6 +10,7 @@
     <p style="margin:0;">@Model.ClientPostalAddress</p>
     <p style="margin:0;">@Model.ClientCity</p>
     <p style="margin:0;">@Model.ClientPostalCode</p>
+
 </div>
 <!--client information -->
 <div style="padding-bottom:10px">
@@ -364,8 +365,17 @@
                     <td style="padding: 5px; width: 21%;">Product</td>
                     <td style="padding: 5px; width: 21%;">Type</td>
 
+                    <td style="padding: 5px; width: 21%;">Communication</td>
+
 
                     <td style="padding: 5px; width: 21%;">Est. Fee<br /></td>
+
+                    <td style="padding: 5px; width: 21%;">Advalorem</td>
+                    <td style="padding: 5px; width: 21%;">Min</td>
+                    <td style="padding: 5px; width: 21%;">Max</td>
+                    <td style="padding: 5px; width: 21%;">Flat Fee</td>
+
+
                     <td style="padding: 5px; width: 21%;">Rate %<br /></td>
 
                     <td style="padding: 5px; width: 14%;">Concession Start Date</td>
@@ -373,21 +383,31 @@
                 </tr>
                 @foreach (var tradeConcessionLetter in legalEntityConcession.TradeConcessionLetters)
                 {
-                    <tr>
+                <tr>
 
 
-                        <td>@tradeConcessionLetter.ProductType</td>
-                        <td>@tradeConcessionLetter.Product</td>
+                    <td>@tradeConcessionLetter.ProductType</td>
+                    <td>@tradeConcessionLetter.Product</td>
+
+                    <td>@tradeConcessionLetter.Communication</td>
 
 
-                        <td>@tradeConcessionLetter.EstFee</td>
-                        <td>@tradeConcessionLetter.RatePercentage</td>
+                    <td>@tradeConcessionLetter.EstFee</td>
+
+
+                    <td>@tradeConcessionLetter.AdValorem</td>
+                    <td>@tradeConcessionLetter.Min</td>
+                    <td>@tradeConcessionLetter.Max</td>
+                    <td>@tradeConcessionLetter.FlatFee</td>
+
+
+                    <td>@tradeConcessionLetter.RatePercentage</td>
 
 
 
-                        <td>@tradeConcessionLetter.ConcessionStartDate</td>
-                        <td>@tradeConcessionLetter.ConcessionEndDate</td>
-                    </tr>
+                    <td>@tradeConcessionLetter.ConcessionStartDate</td>
+                    <td>@tradeConcessionLetter.ConcessionEndDate</td>
+                </tr>
                 }
             </table>
         }

@@ -705,7 +705,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                   ? tradeConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
                   : string.Empty,
                     EstFee = tradeConcessionDetail.EstablishmentFee.ToString(), 
-                    RatePercentage = tradeConcessionDetail.ApprovedRate.ToString()                   
+                    RatePercentage = tradeConcessionDetail.ApprovedRate.ToString() ,
+
+                    Communication = "NA",
+                    AdValorem = "NA",
+                    Min = "NA",
+                    Max = "NA",
+                    FlatFee = "NA",
+
                 };
 
             }
@@ -724,7 +731,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                   ? tradeConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
                   : string.Empty,
                     EstFee = "NA",
-                    RatePercentage = "NA"                   
+                    RatePercentage = "NA",
+
+
+                    Communication = tradeConcessionDetail.Communication,
+                    AdValorem = tradeConcessionDetail.AdValorem.ToString(),
+                    Min = tradeConcessionDetail.min.ToString(),
+                    Max = tradeConcessionDetail.max.ToString(),
+
+                    FlatFee = tradeConcessionDetail.FlatFee.ToString()
+
                 };
             }          
         }

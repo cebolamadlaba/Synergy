@@ -97,6 +97,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 mappedConcessionTrade.ApprovedRate = mappedConcessionTrade.LoadedRate;
 
                 _ruleManager.UpdateBaseFieldsOnApproval(mappedConcessionTrade);
+
+              
             }
             else if (concession.Status == Constants.ConcessionStatus.Pending &&
                      concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges)
@@ -104,6 +106,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 //Loaded rate becomes approved rate
                 mappedConcessionTrade.ApprovedRate = mappedConcessionTrade.LoadedRate;
+
             }
 
             _concessionTradeRpository.Update(mappedConcessionTrade);
