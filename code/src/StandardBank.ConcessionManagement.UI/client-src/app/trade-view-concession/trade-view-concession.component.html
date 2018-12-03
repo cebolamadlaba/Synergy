@@ -366,14 +366,14 @@ i + 1
 
                                 <td class="length-medium">
 
-                                    <select formControlName="periodType">
+                                    <select formControlName="periodType" (change)="validatePeriod(itemrow)">
                                         <option *ngFor="let periodTypeOption of periodTypes" [ngValue]="periodTypeOption">{{periodTypeOption?.description}}</option>
                                     </select>
                                 </td>
 
                                 <td class="length-long">
 
-                                    <select formControlName="period">
+                                    <select formControlName="period" (change)="validatePeriod(itemrow)">
                                         <option *ngFor="let periodOption of periods" [ngValue]="periodOption">{{periodOption?.description}}</option>
                                     </select>
                                 </td>

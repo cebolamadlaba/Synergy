@@ -27,6 +27,8 @@ import { ConcessionTypes } from '../constants/concession-types';
 import { ConcessionStatus } from '../constants/concession-status';
 import { ConcessionSubStatus } from '../constants/concession-sub-status';
 
+import { BaseComponentService } from '../services/base-component.service';
+
 @Component({
     selector: 'app-lending-view-concession',
     templateUrl: './lending-view-concession.component.html',
@@ -110,7 +112,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         private datepipe: DatePipe,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(LendingService) private lendingService,
-        @Inject(UserConcessionsService) private userConcessionsService) {
+        @Inject(UserConcessionsService) private userConcessionsService,
+        private baseComponentService: BaseComponentService) {
         this.riskGroup = new RiskGroup();
         this.reviewFeeTypes = [new ReviewFeeType()];
         this.productTypes = [new ProductType()];
@@ -679,6 +682,10 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
         const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
 
+        let hasProductType: boolean = false;
+        let hasLegalEntityId: boolean = false;
+        let hasLegalEntityAccountId: boolean = false;
+
         for (let concessionFormItem of concessions.controls) {
             if (!lendingConcession.lendingConcessionDetails)
                 lendingConcession.lendingConcessionDetails = [];
@@ -691,14 +698,18 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             if (!isNew && concessionFormItem.get('concessionDetailId').value)
                 lendingConcessionDetail.concessionDetailId = concessionFormItem.get('concessionDetailId').value;
 
-            if (concessionFormItem.get('productType').value)
+            if (concessionFormItem.get('productType').value) {
                 lendingConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;
+                hasProductType = true;
+            }                
             else
                 this.addValidationError("Product type not selected");
 
             if (concessionFormItem.get('accountNumber').value) {
                 lendingConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
                 lendingConcessionDetail.legalEntityAccountId = concessionFormItem.get('accountNumber').value.legalEntityAccountId;
+                hasLegalEntityId = true;
+                hasLegalEntityAccountId = true;
             } else {
                 this.addValidationError("Client account not selected");
             }
@@ -734,6 +745,20 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 lendingConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
             lendingConcession.lendingConcessionDetails.push(lendingConcessionDetail);
+
+            if (hasProductType && hasLegalEntityId && hasLegalEntityAccountId) {
+                let hasDuplicates = this.baseComponentService.HasDuplicateConcessionAccountProduct(
+                    lendingConcession.lendingConcessionDetails,
+                    concessionFormItem.get('productType').value.id,
+                    concessionFormItem.get('accountNumber').value.legalEntityId,
+                    concessionFormItem.get('accountNumber').value.legalEntityAccountId);
+
+                if (hasDuplicates) {
+                    this.addValidationError("Duplicate Account / Product pricing found. Please select different account.");
+
+                    break;
+                }
+            }
         }
 
         const conditions = <FormArray>this.lendingConcessionForm.controls['conditionItemsRows'];
@@ -779,6 +804,10 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 concessionCondition.periodId = conditionFormItem.get('period').value.id;
             } else {
                 this.addValidationError("Period not selected");
+            }
+
+            if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
+                this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
             }
 
             lendingConcession.concessionConditions.push(concessionCondition);
@@ -1342,5 +1371,17 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             }
         }
 
+    }
+
+    validatePeriod(itemrow) {
+        this.validationError = null;
+
+        let selectedPeriodType = itemrow.controls.periodType.value.description;
+
+        let selectedPeriod = itemrow.controls.period.value.description;
+
+        if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
+            this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+        }
     }
 }

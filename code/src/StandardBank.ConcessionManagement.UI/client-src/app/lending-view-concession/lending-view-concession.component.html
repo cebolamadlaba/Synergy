@@ -305,86 +305,86 @@
         </div>
     </div>
 
-    <!-- modal content -->
-    <div bsModal #manageConditionsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="manageConditionsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="col-md-12 modal-header">
-                    <h4>Manage Conditions</h4>
-                </div>
-                <div class="col-md-12 modal-body">
-                    <div class="row" *ngIf="canBcmApprove || canPcmApprove || isEditing || isRecalling">
-                        <div class="col-md-12 modal-title">
-                            <button type="button" class="btn btn-primary" (click)="addNewConditionRow()">Add Condition</button>
-                        </div>
+        <!-- modal content -->
+        <div bsModal #manageConditionsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="manageConditionsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="col-md-12 modal-header">
+                        <h4>Manage Conditions</h4>
                     </div>
-                    <table class="form-concessions-table" formArrayName="conditionItemsRows" style="width:100%;">
-                        <thead class="form-concessions-table-headings">
-                            <tr *ngIf="lendingConcessionForm.controls.conditionItemsRows.controls.length > 0">
-                                <th>Condition Type</th>
-                                <th>Product Type</th>
-                                <th>Interest Rate</th>
-                                <th>Volume</th>
-                                <th>Value</th>
-                                <th>Expected Turnover Value</th>
-                                <th>Period Type</th>
-                                <th>Period</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody class="form-concessions-table-content">
-                            <tr *ngIf="lendingConcessionForm.controls.conditionItemsRows.controls.length == 0">
-                                <td colspan="8" class="searchEmptyState">
-                                    No conditions added
-                                </td>
-                            </tr>
-                            <tr *ngFor="let itemrow of lendingConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
-                                <td class="length-long">
-                                    <input formControlName="concessionConditionId" style="display: none;" />
-                                    <!-- Condition type -->
-                                    <select formControlName="conditionType" (change)="conditionTypeChanged(i)">
-                                        <option *ngFor="let conditionTypeOption of conditionTypes" [ngValue]="conditionTypeOption">{{conditionTypeOption?.description}}</option>
-                                    </select>
-                                </td>
-                                <td class="length-long">
-                                    <!-- Product type -->
-                                    <select formControlName="conditionProduct" *ngIf="selectedConditionTypes[i] != null">
-                                        <option *ngFor="let conditionProductOption of selectedConditionTypes[i].conditionProducts" [ngValue]="conditionProductOption">{{conditionProductOption?.description}}</option>
-                                    </select>
-                                </td>
-                                <!-- Interest rate -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="interestRate" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableInterestRate ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
-                                <!-- Volume -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionVolume ? null : ''" /></td>
-                                <!-- Value rate -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionValue ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
-                                <!-- Turnover -->
-                                <td class="length-medium"><input type="text" numbersOnly="true" formControlName="expectedTurnoverValue" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableExpectedTurnoverValue ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
-                                <!-- Period type -->
-                                <td class="length-short">
-                                    <select formControlName="periodType">
-                                        <option *ngFor="let periodTypeOption of periodTypes" [ngValue]="periodTypeOption">{{periodTypeOption?.description}}</option>
-                                    </select>
-                                </td>
-                                <!-- Period -->
-                                <td class="length-long">
-                                    <select formControlName="period">
-                                        <option *ngFor="let periodOption of periods" [ngValue]="periodOption">{{periodOption?.description}}</option>
-                                    </select>
-                                </td>
-                                <td><button type="button" (click)="deleteConditionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <div class="float-right">
-                        <button type="button" class="btn btn-primary" (click)="manageConditionsModal.hide()">Done</button>
+                    <div class="col-md-12 modal-body">
+                        <div class="row" *ngIf="canBcmApprove || canPcmApprove || isEditing || isRecalling">
+                            <div class="col-md-12 modal-title">
+                                <button type="button" class="btn btn-primary" (click)="addNewConditionRow()">Add Condition</button>
+                            </div>
+                        </div>
+                        <table class="form-concessions-table" formArrayName="conditionItemsRows" style="width:100%;">
+                            <thead class="form-concessions-table-headings">
+                                <tr *ngIf="lendingConcessionForm.controls.conditionItemsRows.controls.length > 0">
+                                    <th>Condition Type</th>
+                                    <th>Product Type</th>
+                                    <th>Interest Rate</th>
+                                    <th>Volume</th>
+                                    <th>Value</th>
+                                    <th>Expected Turnover Value</th>
+                                    <th>Period Type</th>
+                                    <th>Period</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody class="form-concessions-table-content">
+                                <tr *ngIf="lendingConcessionForm.controls.conditionItemsRows.controls.length == 0">
+                                    <td colspan="8" class="searchEmptyState">
+                                        No conditions added
+                                    </td>
+                                </tr>
+                                <tr *ngFor="let itemrow of lendingConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
+                                    <td class="length-long">
+                                        <input formControlName="concessionConditionId" style="display: none;" />
+                                        <!-- Condition type -->
+                                        <select formControlName="conditionType" (change)="conditionTypeChanged(i)">
+                                            <option *ngFor="let conditionTypeOption of conditionTypes" [ngValue]="conditionTypeOption">{{conditionTypeOption?.description}}</option>
+                                        </select>
+                                    </td>
+                                    <td class="length-long">
+                                        <!-- Product type -->
+                                        <select formControlName="conditionProduct" *ngIf="selectedConditionTypes[i] != null">
+                                            <option *ngFor="let conditionProductOption of selectedConditionTypes[i].conditionProducts" [ngValue]="conditionProductOption">{{conditionProductOption?.description}}</option>
+                                        </select>
+                                    </td>
+                                    <!-- Interest rate -->
+                                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="interestRate" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableInterestRate ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
+                                    <!-- Volume -->
+                                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionVolume ? null : ''" /></td>
+                                    <!-- Value rate -->
+                                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionValue ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
+                                    <!-- Turnover -->
+                                    <td class="length-medium"><input type="text" numbersOnly="true" formControlName="expectedTurnoverValue" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableExpectedTurnoverValue ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
+                                    <!-- Period type -->
+                                    <td class="length-short">
+                                        <select formControlName="periodType" (change)="validatePeriod(itemrow)">
+                                            <option *ngFor="let periodTypeOption of periodTypes" [ngValue]="periodTypeOption">{{periodTypeOption?.description}}</option>
+                                        </select>
+                                    </td>
+                                    <!-- Period -->
+                                    <td class="length-long">
+                                        <select formControlName="period" (change)="validatePeriod(itemrow)">
+                                            <option *ngFor="let periodOption of periods" [ngValue]="periodOption">{{periodOption?.description}}</option>
+                                        </select>
+                                    </td>
+                                    <td><button type="button" (click)="deleteConditionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="float-right">
+                            <button type="button" class="btn btn-primary" (click)="manageConditionsModal.hide()">Done</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
     <div class="row">
         <div class="col-md-4">

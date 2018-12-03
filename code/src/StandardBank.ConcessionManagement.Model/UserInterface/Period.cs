@@ -20,5 +20,7 @@
         /// The description.
         /// </value>
         public string Description { get; set; }
+
+        public string PeriodType { get; set; }
     }
 }

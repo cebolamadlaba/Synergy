@@ -39,6 +39,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardBank.ConcessionMana
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StandardBank.ConcessionManagement.OnceOffDataImport", "src\StandardBank.ConcessionManagement.OnceOffDataImport\StandardBank.ConcessionManagement.OnceOffDataImport.csproj", "{D925B283-C350-49FB-A400-2527883A0DF9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{A04D5A24-C260-49D9-9B47-1A5CE00437E6}"
+	ProjectSection(SolutionItems) = preProject
+		src\Build\build.cake = src\Build\build.cake
+		src\Build\build.ps1 = src\Build\build.ps1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -123,6 +129,7 @@ Global
 		{10EE6CA7-BAB8-4C7D-B5A6-694AEA858689} = {869CE2B9-6B12-4BF1-945F-763BC9FD9015}
 		{ED98F824-FE92-4E03-8F93-7572EBD11999} = {AB117191-71F0-485F-B515-1809D2768EDA}
 		{D925B283-C350-49FB-A400-2527883A0DF9} = {869CE2B9-6B12-4BF1-945F-763BC9FD9015}
+		{A04D5A24-C260-49D9-9B47-1A5CE00437E6} = {869CE2B9-6B12-4BF1-945F-763BC9FD9015}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {14EAB354-80E6-48A8-9F90-8D4138BEEDD9}

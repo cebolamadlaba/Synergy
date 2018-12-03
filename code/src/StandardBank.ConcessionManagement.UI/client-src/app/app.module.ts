@@ -47,6 +47,8 @@ import { PcmManagementService } from './services/pcm-management.service';
 import { BcmManagementService } from './services/bcm-management.service';
 import { AeManagementService } from './services/ae-management.service';
 import { AaManagementService } from './services/aa-management.service';
+import { BaseComponentService } from './services/base-component.service';
+import { ConcessionLetterService } from './services/concession-letter.service';
 
 import { AdminTransactionTablesService } from './services/admin-transaction-tables.service';
 
@@ -147,7 +149,7 @@ import { ChannelTypesManagementComponent } from './admin/channel-types/channel-t
         BOLCHManagementComponent,
         TransactionTypesManagementComponent,
         ChannelTypesManagementComponent
-       
+
     ],
     imports: [
         BrowserModule,
@@ -159,7 +161,7 @@ import { ChannelTypesManagementComponent } from './admin/channel-types/channel-t
         DataTablesModule,
         ReactiveFormsModule,
         BsDropdownModule.forRoot(),
-        MyDatePickerModule 
+        MyDatePickerModule
     ],
     providers: [
         LookupDataService,
@@ -179,8 +181,10 @@ import { ChannelTypesManagementComponent } from './admin/channel-types/channel-t
         AeManagementService,
         AaManagementService,
         BolConcessionService,
-        TradeConcessionService,     
-        InvestmentConcessionService
+        TradeConcessionService,
+        InvestmentConcessionService,
+        BaseComponentService,
+        ConcessionLetterService
     ],
     bootstrap: [AppComponent]
 })

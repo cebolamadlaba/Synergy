@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body style="font-family:Arial; margin: 0; background: #eeeeee;">
+    <div style="width: 70%; margin: 50px auto 0 auto; border-radius: 15px; border-left: 1px solid #d3d3d3;border-right: 1px solid #d3d3d3;border-bottom: 1px solid #d3d3d3; border-top: 5px solid #18326f; background: #fff; padding: 30px;">
+        <div style="color: #18326f; font-weight: bold; font-size: 24px;">
+            Synergy system Notification
+        </div>
+
+
+
+        <p>Dear @Model.Name,</p>
+        <p>Please be advised that a new concession has been assigned to you. Please view your pending concessions.</p>
+        <p><a href="@Model.ServerURL">@Model.ServerURL</a></p>
+
+        <div style="background: #18326f; height: 1px; margin-bottom: 15px;"></div>
+        <table>
+            <tr>
+                <td>Date of request:</td>
+                <td>@Model.DateOfRequest</td>
+            </tr>
+            <tr>
+                <td>Risk group name:</td>
+                <td>@Model.RiskGroupName</td>
+            </tr>
+            <tr>
+                <td>Concession ID:</td>
+                <td>@Model.ConcessionId</td>
+            </tr>
+            <tr>
+                <td>Product:</td>
+                <td>@Model.Product</td>
+            </tr>
+        </table>
+
+        <p>Regards,</p>
+        <p>Synergy system</p>
+
+        <p style="font-style: italic; color: #7a7a7a;">Please do not reply to this email.</p>
+    </div>
+
+</body>
+</html>

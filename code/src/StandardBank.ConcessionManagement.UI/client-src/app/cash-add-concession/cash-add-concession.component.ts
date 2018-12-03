@@ -21,6 +21,8 @@ import { TableNumber } from "../models/table-number";
 import { DecimalPipe } from '@angular/common';
 import { ConcessionTypes } from '../constants/concession-types';
 
+import { BaseComponentService } from '../services/base-component.service';
+
 @Component({
     selector: 'app-cash-add-concession',
     templateUrl: './cash-add-concession.component.html',
@@ -66,7 +68,8 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         private formBuilder: FormBuilder,
         private location: Location,
         @Inject(LookupDataService) private lookupDataService,
-        @Inject(CashConcessionService) private cashConcessionService) {
+        @Inject(CashConcessionService) private cashConcessionService,
+        private baseComponentService: BaseComponentService) {
         this.riskGroup = new RiskGroup();
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
@@ -109,39 +112,39 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Cash),
             this.cashConcessionService.getlatestCrsOrMrs(this.riskGroupNumber)
         ]).subscribe(results => {
-                this.channelTypes = <any>results[0];
-                this.periods = <any>results[1];
-                this.periodTypes = <any>results[2];
-                this.conditionTypes = <any>results[3];
-                this.accrualTypes = <any>results[4];
-                this.tableNumbers = <any>results[5];
-                this.riskGroup = <any>results[6];
-                this.clientAccounts = <any>results[7];
-                this.latestCrsOrMrs = <any>results[8];
+            this.channelTypes = <any>results[0];
+            this.periods = <any>results[1];
+            this.periodTypes = <any>results[2];
+            this.conditionTypes = <any>results[3];
+            this.accrualTypes = <any>results[4];
+            this.tableNumbers = <any>results[5];
+            this.riskGroup = <any>results[6];
+            this.clientAccounts = <any>results[7];
+            this.latestCrsOrMrs = <any>results[8];
 
-                const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];             
+            const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
 
-                if (this.channelTypes)
-                    control.controls[0].get('channelType').setValue(this.channelTypes[0]);
-
-               
-                if (this.clientAccounts)
-                    control.controls[0].get('accountNumber').setValue(this.clientAccounts[0]);
-
-                if (this.accrualTypes)
-                    control.controls[0].get('accrualType').setValue(this.accrualTypes[0]);
-
-                if (this.tableNumbers) {
-                    control.controls[0].get('tableNumber').setValue(this.tableNumbers[0]);
-
-                    this.tableNumberChanged(0);
-
-                }
+            if (this.channelTypes)
+                control.controls[0].get('channelType').setValue(this.channelTypes[0]);
 
 
+            if (this.clientAccounts)
+                control.controls[0].get('accountNumber').setValue(this.clientAccounts[0]);
 
-                this.isLoading = false;
-            },
+            if (this.accrualTypes)
+                control.controls[0].get('accrualType').setValue(this.accrualTypes[0]);
+
+            if (this.tableNumbers) {
+                control.controls[0].get('tableNumber').setValue(this.tableNumbers[0]);
+
+                this.tableNumberChanged(0);
+
+            }
+
+
+
+            this.isLoading = false;
+        },
             error => {
                 this.errorMessage = <any>error;
                 this.isLoading = false;
@@ -177,7 +180,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
     addNewConcessionRow() {
         const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
-        var newRow = this.initConcessionItemRows();      
+        var newRow = this.initConcessionItemRows();
 
         if (this.channelTypes)
             newRow.controls['channelType'].setValue(this.channelTypes[0]);
@@ -208,7 +211,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
     copyConcessionRow(index: number) {
 
-        const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];              
+        const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
 
         var newRow = this.initConcessionItemRows();
 
@@ -239,15 +242,15 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
         if (control.controls[index].get('tableNumber').value.baseRate)
             newRow.controls['baseRate'].setValue(control.controls[index].get('tableNumber').value.baseRate.toFixed(2));
-      
+
         if (control.controls[index].get('tableNumber').value.adValorem)
             newRow.controls['adValorem'].setValue(control.controls[index].get('tableNumber').value.adValorem.toFixed(3));
-      
+
         if (control.controls[index].get('expiryDate').value)
             newRow.controls['expiryDate'].setValue(control.controls[index].get('expiryDate').value);
 
         control.insert(index + 1, newRow);
-       
+
     }
 
     deleteConcessionRow(index: number) {
@@ -301,7 +304,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     getCashConcession(): CashConcession {
         var cashConcession = new CashConcession();
         cashConcession.concession = new Concession();
-        cashConcession.concession.riskGroupId = this.riskGroup.id;     
+        cashConcession.concession.riskGroupId = this.riskGroup.id;
 
         if (this.cashConcessionForm.controls['smtDealNumber'].value)
             cashConcession.concession.smtDealNumber = this.cashConcessionForm.controls['smtDealNumber'].value;
@@ -327,7 +330,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
                 this.addValidationError("Channel type not selected");
             }
 
-         
+
 
             if (concessionFormItem.get('accountNumber').value && concessionFormItem.get('accountNumber').value.legalEntityId) {
                 cashConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
@@ -350,7 +353,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
                 cashConcessionDetail.accrualTypeId = concessionFormItem.get('accrualType').value.id;
             } else {
                 this.addValidationError("Accrual type not selected");
-            }          
+            }
 
             if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
                 cashConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
@@ -360,6 +363,18 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             }
 
             cashConcession.cashConcessionDetails.push(cashConcessionDetail);
+
+            let hasDuplicates = this.baseComponentService.HasDuplicateConcessionAccountChannel(
+                cashConcession.cashConcessionDetails,
+                concessionFormItem.get('channelType').value.id,
+                concessionFormItem.get('accountNumber').value.legalEntityId,
+                concessionFormItem.get('accountNumber').value.legalEntityAccountId);
+
+            if (hasDuplicates) {
+                this.addValidationError("Duplicate Account / Channel pricing found. Please select different account.");
+
+                break;
+            }
         }
 
         const conditions = <FormArray>this.cashConcessionForm.controls['conditionItemsRows'];
@@ -404,6 +419,10 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
                 this.addValidationError("Period not selected");
             }
 
+            if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
+                this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+            }
+
             cashConcession.concessionConditions.push(concessionCondition);
         }
 
@@ -415,10 +434,10 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
-      
+
 
         var cashConcession = this.getCashConcession();
-        
+
         cashConcession.concession.concessionType = ConcessionTypes.Cash;
         cashConcession.concession.type = "New";
         cashConcession.concession.comments = "Created";
@@ -455,5 +474,17 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.sub.unsubscribe();
+    }
+
+    validatePeriod(itemrow) {
+        this.validationError = null;
+
+        let selectedPeriodType = itemrow.controls.periodType.value.description;
+
+        let selectedPeriod = itemrow.controls.period.value.description;
+
+        if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
+            this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+        }
     }
 }

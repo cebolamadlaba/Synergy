@@ -37,6 +37,8 @@ import { TradeConcessionService } from "../services/trade-concession.service";
 
 import { TradeView } from "../models/trade-view";
 
+import { BaseComponentService } from '../services/base-component.service';
+
 @Component({
     selector: 'app-trade-view-concession',
     templateUrl: './trade-view-concession.component.html',
@@ -121,7 +123,8 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
         private datepipe: DatePipe,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(UserConcessionsService) private userConcessionsService,
-        @Inject(TradeConcessionService) private tradeConcessionService) {
+        @Inject(TradeConcessionService) private tradeConcessionService,
+        private baseComponentService: BaseComponentService) {
 
         this.riskGroup = new RiskGroup();
         this.tradeproducttypes = [new TradeProductType()];
@@ -715,6 +718,10 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
         const concessions = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
 
+        let hasTypeId: boolean = false;
+        let hasLegalEntityId: boolean = false;
+        let hasLegalEntityAccountId: boolean = false;
+
         for (let concessionFormItem of concessions.controls) {
             if (!tradeConcession.tradeConcessionDetails)
                 tradeConcession.tradeConcessionDetails = [];
@@ -744,7 +751,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                 if (concessionFormItem.get('producttype').value.tradeProductType == "Local guarantee") {
                     applyexpirydate = false;
                 }
-
+                hasTypeId = true;
             } else {
                 this.addValidationError("Product Type code not selected");
             }
@@ -753,6 +760,8 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
             if ((concessionFormItem.get('accountNumber').value && concessionFormItem.get('accountNumber').value.legalEntityId)) {
                 tradeConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
                 tradeConcessionDetail.legalEntityAccountId = concessionFormItem.get('accountNumber').value.legalEntityAccountId;
+                hasLegalEntityId = true;
+                hasLegalEntityAccountId = true;
             } else {
 
                 if (!tradeConcessionDetail.disablecontrolset) {
@@ -871,6 +880,20 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
             }
 
             tradeConcession.tradeConcessionDetails.push(tradeConcessionDetail);
+
+            if (hasTypeId && hasLegalEntityId && hasLegalEntityAccountId) {
+                let hasDuplicates = this.baseComponentService.HasDuplicateConcessionAccountTradeProduct(
+                    tradeConcession.tradeConcessionDetails,
+                    concessionFormItem.get('producttype').value.tradeProductTypeID,
+                    concessionFormItem.get('accountNumber').value.legalEntityId,
+                    concessionFormItem.get('accountNumber').value.legalEntityAccountId);
+
+                if (hasDuplicates) {
+                    this.addValidationError("Duplicate Account / Trade Product pricing found. Please select different account.");
+
+                    break;
+                }
+            }
         }
 
         const conditions = <FormArray>this.tradeConcessionForm.controls['conditionItemsRows'];
@@ -916,6 +939,10 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                 concessionCondition.periodId = conditionFormItem.get('period').value.id;
             } else {
                 this.addValidationError("Period not selected");
+            }
+
+            if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
+                this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
             }
 
             tradeConcession.concessionConditions.push(concessionCondition);
@@ -1487,5 +1514,17 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
         }
 
         return null;
+    }
+
+    validatePeriod(itemrow) {
+        this.validationError = null;
+
+        let selectedPeriodType = itemrow.controls.periodType.value.description;
+
+        let selectedPeriod = itemrow.controls.period.value.description;
+
+        if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
+            this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+        }
     }
 }

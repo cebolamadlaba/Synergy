@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Microsoft.TestPlatform</id>
+    <version>15.9.0</version>
+    <title>Microsoft.TestPlatform</title>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>https://www.visualstudio.com/microsoft-visual-studio-test-platform</licenseUrl>
+    <projectUrl>https://github.com/microsoft/vstest/</projectUrl>
+    <iconUrl>http://go.microsoft.com/fwlink/?LinkID=288859</iconUrl>
+    <description>This package contains full set of binaries for the Visual Studio Test Platform (vstest). vstest provides a modern, cross platform testing engine that also powers the testing on .NET Core. Supports the following popular test frameworks - MSTest(v1 and v2), xUnit and Nunit with support for extensibility. Visit https://github.com/microsoft/vstest to know more about vstest platform.</description>
+    <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+    <tags>vstest visual-studio unittest testplatform mstest microsoft test testing</tags>
+  </metadata>
+</package>

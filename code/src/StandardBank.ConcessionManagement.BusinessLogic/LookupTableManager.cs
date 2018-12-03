@@ -430,7 +430,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public IEnumerable<Period> GetPeriods()
         {
             var periods = _periodRepository.ReadAll();
-            return _mapper.Map<IEnumerable<Period>>(periods.Where(_ => _.IsActive));
+
+            IEnumerable<Period> periodModels = _mapper.Map<IEnumerable<Period>>(periods.Where(_ => _.IsActive));
+
+            foreach (Period period in periodModels)
+            {
+                if (period.Description != "Monthly")
+                    continue;
+
+                period.PeriodType = "Ongoing";
+            }
+
+            return periodModels;
         }
 
         /// <summary>
@@ -476,7 +487,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         public IEnumerable<TradeProduct> GetTradeProducts()
         {
-            return _mapper.Map<IEnumerable<TradeProduct>>(_concessionTradeRepository.GetTradeProducts());           
+            return _mapper.Map<IEnumerable<TradeProduct>>(_concessionTradeRepository.GetTradeProducts());
         }
 
         public IEnumerable<TradeProductType> GetTradeProductTypes()
@@ -598,7 +609,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var concessionTypeId = GetConcessionTypeId(concessionType);
             var transactionTableNumbers =
                 _mapper.Map<IEnumerable<Model.UserInterface.Transactional.TransactionTableNumber>>(
-                    _transactionTableNumberRepository.ReadAll().Where((_ => _.IsActive == true)));          
+                    _transactionTableNumberRepository.ReadAll().Where((_ => _.IsActive == true)));
 
 
             foreach (var transactionType in _transactionTypeRepository.ReadByConcessionTypeIdIsActive(concessionTypeId,
@@ -621,10 +632,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var transactionTypes = _transactionTypeRepository.ReadAll(isActive);
 
-           return GetTransactionTypesForConcessionType(Constants.ConcessionType.Transactional);
+            return GetTransactionTypesForConcessionType(Constants.ConcessionType.Transactional);
 
-           //return _mapper.Map<IEnumerable<TransactionType>>(transactionTypes);
-          
+            //return _mapper.Map<IEnumerable<TransactionType>>(transactionTypes);
+
         }
 
         public IEnumerable<ConcessionType> GetConcessionTypes(bool isActive)
@@ -670,7 +681,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public IEnumerable<TableNumber> GetTableNumbers(string concessionType)
         {
             var concessionTypeId = GetConcessionTypeId(concessionType);
-            var tableNumbers = _tableNumberRepository.ReadAll(concessionType,concessionTypeId);
+            var tableNumbers = _tableNumberRepository.ReadAll(concessionType, concessionTypeId);
 
             return _mapper.Map<IEnumerable<TableNumber>>(tableNumbers
                 .Where(_ => _.IsActive && _.ConcessionTypeId == concessionTypeId).OrderBy(_ => _.TariffTable));
@@ -682,7 +693,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var tableNumbers = _tableNumberRepository.ReadAll();
 
             return _mapper.Map<IEnumerable<TableNumber>>(tableNumbers
-                .Where(_ =>  _.ConcessionTypeId == concessionTypeId).OrderBy(_ => _.TariffTable));
+                .Where(_ => _.ConcessionTypeId == concessionTypeId).OrderBy(_ => _.TariffTable));
         }
 
         /// <summary>
