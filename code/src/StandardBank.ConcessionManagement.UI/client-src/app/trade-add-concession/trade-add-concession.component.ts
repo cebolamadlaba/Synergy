@@ -372,6 +372,12 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
         }
         else {
             currentrow.get('communication').enable();
+            if (this.saveMessage) {
+                currentrow.get('communication').disable();
+            }
+            else {
+                currentrow.get('communication').enable();
+            }
         }
     }
 
@@ -708,7 +714,20 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
     }
 
 
+    //formatThousandSeparator(rowIndex, controlname) {
+    //    const concessionItemRows = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+    //    let currentrow = concessionItemRows.controls[rowIndex];
 
+    //    let control = currentrow.get(controlname);
+
+    //    control.setValue(this.numberWithCommas(control.value));
+
+    //}
+    //numberWithCommas(x) {
+    //    var parts = x.toString().split(".");
+    //    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    //    return parts[0];
+    //}
 
     formatDecimal(itemValue: number) {
         if (itemValue) {
