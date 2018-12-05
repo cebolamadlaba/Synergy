@@ -12,11 +12,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
     {
         private readonly IAENumberUserRepository _aeNumberUserRepository;
         private readonly IAccountExecutiveAssistantRepository _accountExecutiveAssistantRepository;
+        private readonly IUserRepository _userRepository;
 
-        public AENumberUserManager(IAENumberUserRepository aeNumberUserRepository, IAccountExecutiveAssistantRepository accountExecutiveAssistantRepository)
+        public AENumberUserManager(IAENumberUserRepository aeNumberUserRepository, IAccountExecutiveAssistantRepository accountExecutiveAssistantRepository,
+            IUserRepository userRepository)
         {
             this._aeNumberUserRepository = aeNumberUserRepository;
             this._accountExecutiveAssistantRepository = accountExecutiveAssistantRepository;
+            this._userRepository = userRepository;
         }
 
         public AENumberUser GetAENumberUser(int AENumberUserId)
@@ -50,6 +53,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 return accountAssistants.Select(a => (int?)a.AccountAssistantUserId).ToArray();
 
             return null;
+        }
+
+        public User GetAccountExecutiveUser(int accountExecutiveUserId)
+        {
+            return this._userRepository.ReadById(accountExecutiveUserId);
         }
     }
 }

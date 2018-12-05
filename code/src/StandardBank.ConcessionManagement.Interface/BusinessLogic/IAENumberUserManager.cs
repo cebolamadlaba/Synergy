@@ -12,5 +12,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         int? GetCurrentAccountExecutiveUserId(int? aeNumberUserId);
 
         int?[] GetAccountAssistantIds(int? aeNumberUserId);
+
+        User GetAccountExecutiveUser(int accountExecutiveUserId);
     }
 }

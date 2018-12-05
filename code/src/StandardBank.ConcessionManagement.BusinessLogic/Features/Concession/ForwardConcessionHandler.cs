@@ -19,7 +19,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
     /// <seealso cref="MediatR.IAsyncRequestHandler{UpdateConcessionCommand, Concession}" />
     public class ForwardConcessionHandler : IAsyncRequestHandler<ForwardConcession, Model.UserInterface.Concession>
     {
-       
+
 
         /// <summary>
         /// The concession manager
@@ -51,6 +51,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         /// </summary>
         private readonly IUserManager _userManager;
 
+        private readonly IAENumberUserManager _aeNumberUserManager;
+
         /// <summary>
         /// The risk group repository
         /// </summary>
@@ -74,7 +76,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         /// <param name="riskGroupRepository">The risk group repository.</param>
         public ForwardConcessionHandler(IConcessionManager concessionManager, IMediator mediator,
             ILogger<ForwardConcessionHandler> logger, IMapper mapper, ILookupTableManager lookupTableManager,
-            IEmailManager emailManager, IUserManager userManager, IRiskGroupRepository riskGroupRepository)
+            IEmailManager emailManager, IUserManager userManager, IRiskGroupRepository riskGroupRepository,
+            IAENumberUserManager aeNumberUserManager)
         {
             _concessionManager = concessionManager;
             _mediator = mediator;
@@ -83,7 +86,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
             _emailManager = emailManager;
             _userManager = userManager;
             _riskGroupRepository = riskGroupRepository;
-            _logger = logger;           
+            _logger = logger;
+            _aeNumberUserManager = aeNumberUserManager;
         }
 
         /// <summary>
@@ -91,12 +95,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-       
+
         public async Task<Model.UserInterface.Concession> Handle(ForwardConcession message)
-        {                 
+        {
 
             if (message.User.SelectedCentre?.Id > 0)
-            {               
+            {
 
                 if (message.Concession.IsInProgressForwarding)// && message.Concession.SubStatusId == _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.PcmPending))
                     SendForwardNotificationEmail(message);
@@ -109,25 +113,28 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
             return message.Concession;
         }
 
-        
+
 
         private void SendForwardNotificationEmail(ForwardConcession message)
         {
-            var requestor = message.Concession.Requestor ?? _userManager.GetUser(message.Concession.RequestorId);
+            int? aeUserId = this._aeNumberUserManager.GetCurrentAccountExecutiveUserId(message.Concession.AENumberUserId);
+            User user = this._aeNumberUserManager.GetAccountExecutiveUser(aeUserId.Value);
+
+            //var requestor = message.Concession.Requestor ?? _userManager.GetUser(message.Concession.RequestorId);
 
             BackgroundJob.Schedule(() =>
                 _emailManager.SendForwardedConcessionEmail(new ApprovedConcessionEmail
                 {
-                  
-                    EmailAddress = requestor.EmailAddress,
+
+                    EmailAddress = user.EmailAddress,
                     ConcessionId = message.Concession.ReferenceNumber,
-                    Name = requestor.FirstName,
+                    Name = user.FirstName,
                     DateOfRequest = message.Concession.DateOpened.ToString("yyyy-MM-dd"),
                     DateActioned = DateTime.Now.ToString("yyyy-MM-dd"),
                     RiskGroupName = message.Concession.RiskGroupName,
                     Product = message.Concession.ConcessionType
                 }), DateTime.Now);
         }
-        
+
     }
 }

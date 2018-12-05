@@ -73,16 +73,16 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 return db.Query<ConcessionInboxView>(
                     @"SELECT distinct [ConcessionId],LegalEntityId, [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [CustomerName], [ConcessionTypeId], [ConcessionType], max([ConcessionDate]) ConcessionDate, [StatusId], [Status], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment], max([DatesentForApproval]) DatesentForApproval, 
-                    min([ExpiryDate]) ExpiryDate, max([DateApproved]) DateApproved, [CentreId], [CentreName], [RegionId], [Region],[Location] 'ConcessionLetterURL'
+                    min([ExpiryDate]) ExpiryDate, max([DateApproved]) DateApproved, [CentreId], [CentreName], [RegionId], [Region],[Location] 'ConcessionLetterURL', CurrentAeUserId, CurrentAAUserId
                     FROM [dbo].[ConcessionInboxView]					
 					left join tblConcessionLetter on [ConcessionInboxView].ConcessionId = tblConcessionLetter.fkConcessionDetailId  
 
-                    WHERE [RequestorId] = @requestorId
+                    WHERE (CurrentAeUserId = @requestorId OR CurrentAAUserId = @requestorId)
                     AND [StatusId] in @statusIds
                     AND [IsActive] = @isActive
 
                     group by [ConcessionId],LegalEntityId, [RiskGroupId], [RiskGroupNumber], [RiskGroupName],[CustomerName], [ConcessionTypeId], [ConcessionType],[StatusId], [Status],[SubStatus], [ConcessionRef], [MarketSegmentId], [Segment],
-                    [CentreId], [CentreName], [RegionId], [Region], [Location]"
+                    [CentreId], [CentreName], [RegionId], [Region], [Location], CurrentAeUserId, CurrentAAUserId"
 
                     ,
                     new { requestorId, statusIds, isActive });
