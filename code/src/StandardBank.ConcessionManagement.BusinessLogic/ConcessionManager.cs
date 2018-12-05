@@ -67,6 +67,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         private readonly IUserManager _userManager;
 
+        private readonly IAENumberUserManager _aeNumberUserManager;
+
         /// <summary>
         /// The concession inbox view repository
         /// </summary>
@@ -120,7 +122,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IUserManager userManager, IConcessionInboxViewRepository concessionInboxViewRepository,
             IConcessionDetailRepository concessionDetailRepository,
             IConcessionConditionViewRepository concessionConditionViewRepository,
-            IMiscPerformanceRepository miscPerformanceRepository, ICentreRepository centreRepository, IPrimeRateRepository primeRateRepository, IConcessionLetterRepository concessionLetterRepository)
+            IMiscPerformanceRepository miscPerformanceRepository, ICentreRepository centreRepository, IPrimeRateRepository primeRateRepository, IConcessionLetterRepository concessionLetterRepository,
+            IAENumberUserManager aeNumberUserManager)
         {
             _concessionRepository = concessionRepository;
             _lookupTableManager = lookupTableManager;
@@ -138,6 +141,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _centreRepository = centreRepository;
             _primeRateRepository = primeRateRepository;
             _concessionLetterRepository = concessionLetterRepository;
+            _aeNumberUserManager = aeNumberUserManager;
         }
 
         /// <summary>
@@ -207,7 +211,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
 
-       public ConcessionLetter CreateConcessionLetter(ConcessionLetter model)
+        public ConcessionLetter CreateConcessionLetter(ConcessionLetter model)
         {
 
             return _concessionLetterRepository.Create(model);
@@ -368,7 +372,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     userConcessions.ShowActionedConcessions = true;
                 }
 
-                if(user.IsHO || user.IsPCM)
+                if (user.IsHO || user.IsPCM)
                 {
                     userConcessions.IsElevatedUser = true;
 
@@ -419,7 +423,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <param name="user">The user.</param>
         /// <returns></returns>
-        public IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, User user,  string concessiontype)
+        public IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, User user, string concessiontype)
         {
             int? userId = null;
 
@@ -428,7 +432,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             else if (user.CanRequest && !user.IsAdminAssistant)
                 userId = user.Id;
 
-            if(user.IsPCM || user.IsHO || user.IsBCM)
+            if (user.IsPCM || user.IsHO || user.IsBCM)
             {
                 //only work ons risk group not user..
                 userId = null;
@@ -828,7 +832,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public ConcessionDetail DeactivateConcessionDetailed(int ConcessionDetailId, User user)
         {
             var concession = _concessionDetailRepository.ReadById(ConcessionDetailId);
-         
+
             concession.Archived = DateTime.Now;
 
             _concessionDetailRepository.Update(concession);
@@ -881,12 +885,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="concessionType">Type of the concession.</param>
         /// <returns></returns>
         public IEnumerable<Model.UserInterface.Concession> GetConcessionsForRiskGroup(int riskGroupId,
-            string concessionType)
+            string concessionType, User currentUser)
         {
             var concessionTypeId = _lookupTableManager.GetConcessionTypeId(concessionType);
 
             return Map(_concessionRepository.ReadByRiskGroupIdConcessionTypeIdIsActive(riskGroupId, concessionTypeId,
-                true), false);
+                true), false, currentUser);
         }
 
         /// <summary>
@@ -896,13 +900,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="concessionType">Type of the concession.</param>
         /// <returns></returns>
         public IEnumerable<Model.UserInterface.Concession> GetApprovedConcessionsForRiskGroup(int riskGroupId,
-            string concessionType)
+            string concessionType, User currentUser)
         {
             var concessionTypeId = _lookupTableManager.GetConcessionTypeId(concessionType);
 
             return Map(_concessionRepository.ReadByRiskGroupIdConcessionTypeIdIsActiveApproved(riskGroupId,
                 concessionTypeId,
-                true), false);
+                true), false, currentUser);
         }
 
         /// <summary>
@@ -911,7 +915,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="concessionReferenceId">The concession reference identifier.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public Model.UserInterface.Concession GetConcessionForConcessionReferenceId(string concessionReferenceId)
+        public Model.UserInterface.Concession GetConcessionForConcessionReferenceId(string concessionReferenceId, User currentUser)
         {
             var concessions = _concessionRepository.ReadByConcessionRefIsActive(concessionReferenceId, true);
 
@@ -921,7 +925,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             //if there is more than one record returned then there is something wrong,
             //there shouldn't be two active concessions with the same concession reference number
-            var concession = Map(concessions, true).Single();
+            var concession = Map(concessions, true, currentUser).Single();
 
             return concession;
         }
@@ -955,9 +959,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="repositoryConcessions">The repository concessions.</param>
         /// <param name="mapAll">if set to <c>true</c> [map all].</param>
         /// <returns></returns>
-        private IEnumerable<Model.UserInterface.Concession> Map(IEnumerable<Concession> repositoryConcessions,
-            bool mapAll)
+        private IEnumerable<Model.UserInterface.Concession> Map(IEnumerable<Concession> repositoryConcessions, bool mapAll, User currentUser)
         {
+            bool isAccountExecutiveOrAssistant = false;
+
             var concessions = new List<Model.UserInterface.Concession>();
 
             foreach (var concession in repositoryConcessions)
@@ -975,6 +980,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 mappedConcession.Status = _lookupTableManager.GetStatusDescription(concession.StatusId);
                 mappedConcession.SubStatus = _lookupTableManager.GetSubStatusDescription(concession.SubStatusId);
 
+                mappedConcession.CurrentAEUserId = this._aeNumberUserManager.GetCurrentAccountExecutiveUserId(concession.AENumberUserId);
+                mappedConcession.CurrentAAList = this._aeNumberUserManager.GetAccountAssistantIds(concession.AENumberUserId);
+
+                isAccountExecutiveOrAssistant = false;
+
+                if (currentUser != null)
+                    if (mappedConcession.CurrentAEUserId.HasValue && mappedConcession.CurrentAEUserId.Value == currentUser.Id)
+                        isAccountExecutiveOrAssistant = true;
+                    else if (mappedConcession.CurrentAAList != null && mappedConcession.CurrentAAList.Any(a => a.Value == currentUser.Id))
+                        isAccountExecutiveOrAssistant = true;
+
                 if (mapAll)
                 {
                     SetIsInProgressExtensionOrRenewal(mappedConcession);
@@ -989,7 +1005,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         mappedConcession.CanRenew = CalculateIfCanRenew(concession, mappedConcession.Status);
                         mappedConcession.CanExtend = CalculateIfCanExtend(concession, mappedConcession.CanRenew);
                         mappedConcession.CanResubmit = CalculateIfCanResubmit(concession, mappedConcession.Status);
-                        mappedConcession.CanUpdate = isApproved;
+                        mappedConcession.CanUpdate = isApproved && isAccountExecutiveOrAssistant;
                         mappedConcession.CanArchive = isApproved;
                     }
                     else

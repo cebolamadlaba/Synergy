@@ -56,7 +56,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
             foreach (var expiringOngoingCondition in expiringOngoingConditions)
             {
                 var concession =
-                    _concessionManager.GetConcessionForConcessionReferenceId(expiringOngoingCondition.ReferenceNumber);
+                    _concessionManager.GetConcessionForConcessionReferenceId(expiringOngoingCondition.ReferenceNumber, null);
 
                 var concessionConditions = _concessionManager.GetConcessionConditions(concession.Id);
 
@@ -70,7 +70,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                 expiringConcessionCondition.ConditionMet = null;
 
                 await _mediator.Send(new AddOrUpdateConcessionCondition(expiringConcessionCondition,
-                    new User {ANumber = "SYSTEM"}, concession));
+                    new User { ANumber = "SYSTEM" }, concession));
             }
         }
 

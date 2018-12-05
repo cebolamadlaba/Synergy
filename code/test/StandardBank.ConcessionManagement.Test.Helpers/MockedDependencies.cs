@@ -503,5 +503,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The mock region manager
         /// </summary>
         public static Mock<IRegionManager> MockRegionManager = new Mock<IRegionManager>();
+
+        public static Mock<IAENumberUserManager> MockAENumberUserManager = new Mock<IAENumberUserManager>();
     }
 }

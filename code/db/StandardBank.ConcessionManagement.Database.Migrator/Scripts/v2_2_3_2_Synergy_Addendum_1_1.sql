@@ -1,4 +1,7 @@
 ﻿
+INSERT INTO [dbo].[rtblPeriod]([Description],[IsActive])
+VALUES('Monthly',1)
+GO
 
 Create Table tblAENumberUser
 (
@@ -16,6 +19,11 @@ Begin Transaction
 	Set			c.fkAENumberUserId	=	au.pkAENumberUserId
 	From		tblConcession c
 	Inner Join	tblAENumberUser au	On	au.fkUserId = c.fkRequestorId
+
+	Select		*
+	From		tblConcession c
+	Inner Join	tblAENumberUser au	On	au.fkUserId = c.fkRequestorId
+
 Rollback
 Commit
 

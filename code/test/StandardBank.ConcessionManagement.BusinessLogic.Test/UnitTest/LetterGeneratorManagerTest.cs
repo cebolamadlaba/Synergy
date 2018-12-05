@@ -53,7 +53,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 RiskGroupNumber = 123456
             };
 
-            concessionManager.Setup(_ => _.GetConcessionForConcessionReferenceId(It.IsAny<string>()))
+            concessionManager.Setup(_ => _.GetConcessionForConcessionReferenceId(It.IsAny<string>(), null))
                 .Returns(concession);
 
             userManager.Setup(_ => _.GetUser(It.IsAny<int?>())).Returns(new User());
@@ -141,7 +141,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 RiskGroupNumber = 123456
             };
 
-            concessionManager.Setup(_ => _.GetConcessionForConcessionReferenceId(It.IsAny<string>()))
+            concessionManager.Setup(_ => _.GetConcessionForConcessionReferenceId(It.IsAny<string>(), null))
                 .Returns(concession);
 
             userManager.Setup(_ => _.GetUser(It.IsAny<int?>())).Returns(new User());
@@ -217,7 +217,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 RiskGroupNumber = 123456
             };
 
-            concessionManager.Setup(_ => _.GetConcessionForConcessionReferenceId(It.IsAny<string>()))
+            concessionManager.Setup(_ => _.GetConcessionForConcessionReferenceId(It.IsAny<string>(), null))
                 .Returns(concession);
 
             userManager.Setup(_ => _.GetUser(It.IsAny<int?>())).Returns(new User());

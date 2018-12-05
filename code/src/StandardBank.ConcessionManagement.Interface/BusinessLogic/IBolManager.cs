@@ -20,7 +20,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 
         ConcessionBol UpdateConcessionBol(BolConcessionDetail cashConcessionDetail, Concession concession);
 
-        BolView GetBolViewData(int riskGroupNumber);
+        BolView GetBolViewData(int riskGroupNumber, User currentUser);
 
         BolFinancial GetBolFinancialForRiskGroupNumber(int riskGroupNumber);
 

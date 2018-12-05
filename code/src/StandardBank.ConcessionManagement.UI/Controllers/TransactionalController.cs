@@ -66,9 +66,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("TransactionalView/{riskGroupNumber}")]
         public IActionResult TransactionalView(int riskGroupNumber)
         {
-            return Ok(_transactionalManager.GetTransactionalViewData(riskGroupNumber));
+            var user = _siteHelper.LoggedInUser(this);
 
-
+            return Ok(_transactionalManager.GetTransactionalViewData(riskGroupNumber, user));
         }
 
         /// <summary>

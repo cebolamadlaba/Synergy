@@ -61,7 +61,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("LendingView/{riskGroupNumber}")]
         public IActionResult LendingView(int riskGroupNumber)
         {
-            return Ok(_lendingManager.GetLendingViewData(riskGroupNumber));
+            var user = _siteHelper.LoggedInUser(this);
+
+            return Ok(_lendingManager.GetLendingViewData(riskGroupNumber, user));
         }
 
         /// <summary>
@@ -131,7 +133,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public async Task<IActionResult> UpdateLending([FromBody] LendingConcession lendingConcession)
         {
             var user = _siteHelper.LoggedInUser(this);
-            
+
             await UpdateLendingConcession(lendingConcession, user);
 
             return Ok(_lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber, user));
@@ -240,7 +242,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
                 if (relationshipType != Constants.RelationshipType.Extension)
                     lendingConcessionDetail.ExpiryDate = null;
-                
+
                 lendingConcessionDetail.LendingConcessionDetailId = 0;
                 await _mediator.Send(new AddOrUpdateLendingConcessionDetail(lendingConcessionDetail, user, concession));
             }

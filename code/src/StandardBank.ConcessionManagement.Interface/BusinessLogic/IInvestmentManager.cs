@@ -21,7 +21,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 
         ConcessionInvestment UpdateConcessionInvestment(InvestmentConcessionDetail investmentConcessionDetail, Concession concession);
 
-        InvestmentView GetInvestmentViewData(int riskGroupNumber); 
+        InvestmentView GetInvestmentViewData(int riskGroupNumber, User currentUser); 
 
         Task ForwardInvestmentConcession(InvestmentConcession bolConcession, User user);
 

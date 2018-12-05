@@ -15,22 +15,23 @@ using StandardBank.ConcessionManagement.UI.Validation;
 
 namespace StandardBank.ConcessionManagement.UI.Controllers
 {
- 
+
     [Produces("application/json")]
     [Route("api/Investment")]
-    public class InvestmentController : Controller    {
-      
+    public class InvestmentController : Controller
+    {
+
         private readonly ISiteHelper _siteHelper;
-      
+
         private readonly IInvestmentManager _investmentManager;
-      
+
         private readonly IMediator _mediator;
 
         private readonly IBusinessCentreManager _bcmManager;
 
         private readonly ILookupTableManager _lookupTableManager;
 
-        public InvestmentController(ISiteHelper siteHelper, IInvestmentManager investmentManager, IMediator mediator,  IBusinessCentreManager businessCentreManager, ILookupTableManager lookupTableManager)
+        public InvestmentController(ISiteHelper siteHelper, IInvestmentManager investmentManager, IMediator mediator, IBusinessCentreManager businessCentreManager, ILookupTableManager lookupTableManager)
         {
             _siteHelper = siteHelper;
             _investmentManager = investmentManager;
@@ -38,12 +39,14 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             _bcmManager = businessCentreManager;
             _lookupTableManager = lookupTableManager;
         }
-     
+
         /// <returns></returns>
         [Route("InvestmentView/{riskGroupNumber}")]
         public IActionResult InvestmentView(int riskGroupNumber)
         {
-            return Ok(_investmentManager.GetInvestmentViewData(riskGroupNumber));
+            var user = _siteHelper.LoggedInUser(this);
+
+            return Ok(_investmentManager.GetInvestmentViewData(riskGroupNumber, user));
         }
 
 
@@ -82,7 +85,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var user = _siteHelper.LoggedInUser(this);
 
             await UpdateInvestmentConcession(investmentConcession, user);
-       
+
             return Ok(_investmentManager.GetInvestmentConcession(investmentConcession.Concession.ReferenceNumber, user));
         }
 
@@ -123,7 +126,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             {
                 await _mediator.Send(new AddConcessionComment(concession.Id, databaseInvestmentConcession.Concession.SubStatusId,
                     investmentConcession.Concession.Comments, user));
-                             
+
             }
 
             if ((investmentConcession.Concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges || investmentConcession.Concession.SubStatus == Constants.ConcessionSubStatus.HoApprovedWithChanges) && investmentConcession.Concession.ConcessionComments != null)

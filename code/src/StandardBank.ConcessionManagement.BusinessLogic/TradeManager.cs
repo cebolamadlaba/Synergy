@@ -62,7 +62,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         public TradeConcession GetTradeConcession(string concessionReferenceId, User user)
         {
-            var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
+            var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId, user);
             var tradeConcessionDetails = _miscPerformanceRepository.GetTradeConcessionDetails(concession.Id);
 
             return new TradeConcession
@@ -116,12 +116,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
 
-        public TradeView GetTradeViewData(int riskGroupNumber)
+        public TradeView GetTradeViewData(int riskGroupNumber, User currentUser)
         {
             var tradeConcessions = new List<TradeConcession>();
             var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
 
-            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.Trade);
+            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.Trade, currentUser);
 
             foreach (var concession in concessions)
             {

@@ -44,7 +44,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("TradeView/{riskGroupNumber}")]
         public IActionResult TradeView(int riskGroupNumber)
         {
-            return Ok(_tradeManager.GetTradeViewData(riskGroupNumber));
+            var user = _siteHelper.LoggedInUser(this);
+
+            return Ok(_tradeManager.GetTradeViewData(riskGroupNumber, user));
         }
 
 

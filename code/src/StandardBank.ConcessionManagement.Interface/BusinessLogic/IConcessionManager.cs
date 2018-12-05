@@ -201,7 +201,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="riskGroupId">The risk group identifier.</param>
         /// <param name="concessionType">Type of the concession.</param>
         /// <returns></returns>
-        IEnumerable<Model.UserInterface.Concession> GetConcessionsForRiskGroup(int riskGroupId, string concessionType);
+        IEnumerable<Model.UserInterface.Concession> GetConcessionsForRiskGroup(int riskGroupId, string concessionType, User currentUser);
 
         /// <summary>
         /// Gets the approved concessions for risk group.
@@ -210,14 +210,14 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="concessionType">Type of the concession.</param>
         /// <returns></returns>
         IEnumerable<Model.UserInterface.Concession> GetApprovedConcessionsForRiskGroup(int riskGroupId,
-            string concessionType);
+            string concessionType, User currentUser);
 
         /// <summary>
         /// Gets the concession for concession reference identifier.
         /// </summary>
         /// <param name="concessionReferenceId">The concession reference identifier.</param>
         /// <returns></returns>
-        Model.UserInterface.Concession GetConcessionForConcessionReferenceId(string concessionReferenceId);
+        Model.UserInterface.Concession GetConcessionForConcessionReferenceId(string concessionReferenceId, User currentUser);
 
         /// <summary>
         /// Gets the rag status.

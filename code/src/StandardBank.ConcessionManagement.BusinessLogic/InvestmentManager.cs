@@ -65,7 +65,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         public InvestmentConcession GetInvestmentConcession(string concessionReferenceId, User user)
         {
-            var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
+            var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId, user);
             var investmentConcessionDetails = _miscPerformanceRepository.GetInvestmentConcessionDetails(concession.Id);
 
             var primerate = _primeRateRepository.PrimeRate(concession.DateOpened);
@@ -137,12 +137,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
 
-        public InvestmentView GetInvestmentViewData(int riskGroupNumber)
+        public InvestmentView GetInvestmentViewData(int riskGroupNumber, User currentUser)
         {
             var investmentConcessions = new List<InvestmentConcession>();
             var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
 
-            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.Investment);
+            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.Investment, currentUser);
 
             foreach (var concession in concessions)
             {

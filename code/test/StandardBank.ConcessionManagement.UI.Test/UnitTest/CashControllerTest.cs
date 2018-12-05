@@ -39,7 +39,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         {
             var riskGroup = new RiskGroup { Id = 1, Name = "Unit Test Risk Group", Number = 1 };
 
-            MockCashManager.Setup(_ => _.GetCashViewData(It.IsAny<int>()))
+            MockCashManager.Setup(_ => _.GetCashViewData(It.IsAny<int>(), null))
                 .Returns(new CashView {RiskGroup = riskGroup});
 
             var result = _cashController.CashView(1);

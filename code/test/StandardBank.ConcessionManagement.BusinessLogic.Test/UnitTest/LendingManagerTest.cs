@@ -51,7 +51,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         [Fact]
         public void GetLendingConcession_Executes_Positive()
         {
-            MockConcessionManager.Setup(_ => _.GetConcessionForConcessionReferenceId(It.IsAny<string>()))
+            MockConcessionManager.Setup(_ => _.GetConcessionForConcessionReferenceId(It.IsAny<string>(), null))
                 .Returns(new Model.UserInterface.Concession());
 
             MockConcessionLendingRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
@@ -76,7 +76,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockLookupTableManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
                 .Returns(new RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
 
-            MockConcessionManager.Setup(_ => _.GetApprovedConcessionsForRiskGroup(It.IsAny<int>(), It.IsAny<string>()))
+            MockConcessionManager.Setup(_ => _.GetApprovedConcessionsForRiskGroup(It.IsAny<int>(), It.IsAny<string>(), null))
                 .Returns(new[] { new Model.UserInterface.Concession() });
 
             MockMiscPerformanceRepository.Setup(_ => _.GetLendingConcessionDetails(It.IsAny<int>()))
@@ -88,7 +88,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockFinancialLendingRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
                 .Returns(new[] {new FinancialLending {TotalExposure = 100}});
 
-            var result = _lendingManager.GetLendingViewData(1);
+            var result = _lendingManager.GetLendingViewData(1, null);
 
             Assert.NotNull(result);
             Assert.NotEmpty(result.LendingConcessions);

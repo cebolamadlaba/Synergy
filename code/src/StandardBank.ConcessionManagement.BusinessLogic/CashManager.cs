@@ -116,7 +116,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public CashConcession GetCashConcession(string concessionReferenceId, User user)
         {
-            var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
+            var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId, user);
 
             var cashConcessionDetails = _miscPerformanceRepository.GetCashConcessionDetails(concession.Id);
 
@@ -233,11 +233,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <returns></returns>
-        public CashView GetCashViewData(int riskGroupNumber)
+        public CashView GetCashViewData(int riskGroupNumber, User currentUser)
         {
             var cashConcessions = new List<CashConcession>();
             var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
-            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.Cash);
+            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.Cash, currentUser);
 
             foreach (var concession in concessions)
             {
