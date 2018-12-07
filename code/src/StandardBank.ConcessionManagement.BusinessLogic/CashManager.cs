@@ -204,9 +204,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             mappedConcessionCash.IsMismatched = false;
 
+            // Bernard Cronje - 2018-11-26 - LegalEntityAccountId is now nullable as per client request.
+            if (!mappedConcessionCash.LegalEntityAccountId.HasValue)
+            {
+                mappedConcessionCash.IsMismatched = true;
+                return;
+            }
+
             var loadedPriceCash =
                 _loadedPriceCashRepository.ReadByChannelTypeIdLegalEntityAccountId(
-                    mappedConcessionCash.ChannelTypeId, mappedConcessionCash.LegalEntityAccountId);
+                    mappedConcessionCash.ChannelTypeId, mappedConcessionCash.LegalEntityAccountId.Value);
 
             if (loadedPriceCash != null)
             {
@@ -269,14 +276,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         productgrouping.CashProducts.Add(product);
                     }
 
-                  
+
                 }
                 //sort
-                foreach(var productgrouping in groupedinfo)
+                foreach (var productgrouping in groupedinfo)
                 {
                     if (productgrouping != null && productgrouping.CashProducts != null)
                         productgrouping.CashProducts = productgrouping.CashProducts.OrderBy(o => o.AccountNumber).ThenBy(o => o.Channel).ToList();
-                                                       }
+                }
             }
 
             return new CashView
@@ -355,7 +362,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (!string.IsNullOrWhiteSpace(cashConcession.Concession.Comments))
                 await _mediator.Send(new AddConcessionComment(concession.Id, databaseCashConcession.Concession.SubStatusId,
-                    cashConcession.Concession.Comments, user));          
+                    cashConcession.Concession.Comments, user));
 
             //send the notification email
             await _mediator.Send(new ForwardConcession(cashConcession.Concession, user));
@@ -374,16 +381,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (cashTableNumber.Id == 0)
             {
-            
+
                 return _tableNumberRepository.Create(_mapper.Map<Model.Repository.TableNumber>(cashTableNumber));
             }
             else
             {
-                 _tableNumberRepository.Update(_mapper.Map<Model.Repository.TableNumber>(cashTableNumber));
+                _tableNumberRepository.Update(_mapper.Map<Model.Repository.TableNumber>(cashTableNumber));
 
                 return _mapper.Map<Model.Repository.TableNumber>(cashTableNumber);
 
-            }           
+            }
 
         }
     }

@@ -223,12 +223,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             mappedConcessionTransactional.IsMismatched = false;
 
+            // Bernard Cronje - 2018-11-26 - LegalEntityAccountId is now nullable as per client request.
+            if (!mappedConcessionTransactional.LegalEntityAccountId.HasValue)
+            {
+                mappedConcessionTransactional.IsMismatched = true;
+                return;
+            }
+
             if (mappedConcessionTransactional.TransactionTypeId.HasValue)
             {
                 var loadedPriceTransactional =
                     _loadedPriceTransactionalRepository.ReadByTransactionTypeIdLegalEntityAccountId(
                         mappedConcessionTransactional.TransactionTypeId.Value,
-                        mappedConcessionTransactional.LegalEntityAccountId);
+                        mappedConcessionTransactional.LegalEntityAccountId.Value);
 
                 if (loadedPriceTransactional != null)
                 {

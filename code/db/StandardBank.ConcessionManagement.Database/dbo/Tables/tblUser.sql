@@ -17,7 +17,8 @@
 
 
 
+
+
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [IX_tblUser]
-    ON [dbo].[tblUser]([ANumber] ASC);
+
 

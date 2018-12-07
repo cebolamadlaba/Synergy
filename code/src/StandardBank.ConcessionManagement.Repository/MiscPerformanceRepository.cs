@@ -739,7 +739,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     tr.Communication,
 					tr.EstablishmentFee,
 					tr.FlatFee,
-					gb.GBBNumber,
+					IsNull(gb.GBBNumber,tr.GBBNumber) [GBBNumber],
 					tr.[Max],
 					tr.[Min],
 					tr.[Term],
