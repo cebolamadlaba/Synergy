@@ -227,12 +227,12 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
                 //if it's still pending and the user is a requestor then they can recall it
                 if (lendingConcession.concession.status == ConcessionStatus.Pending && lendingConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
-                    this.canRecall = lendingConcession.currentUser.canRequest;
+                    this.canRecall = lendingConcession.currentUser.canRequest && lendingConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
                 }
 
                 if (lendingConcession.concession.status == ConcessionStatus.Pending &&
                     (lendingConcession.concession.subStatus == ConcessionSubStatus.PCMApprovedWithChanges || lendingConcession.concession.subStatus == ConcessionSubStatus.HOApprovedWithChanges)) {
-                    this.canApproveChanges = lendingConcession.currentUser.canRequest;
+                    this.canApproveChanges = lendingConcession.currentUser.canRequest && lendingConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
                 }
 
                 if (lendingConcession.concession.status === ConcessionStatus.Approved ||
@@ -701,7 +701,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             if (concessionFormItem.get('productType').value) {
                 lendingConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;
                 hasProductType = true;
-            }                
+            }
             else
                 this.addValidationError("Product type not selected");
 

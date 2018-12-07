@@ -238,5 +238,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public int? CurrentAEUserId { get; set; }
 
         public int?[] CurrentAAList { get; set; }
+
+        public bool IsAENumberLinkedAccountExecutiveOrAssistant { get; set; }
     }
 }

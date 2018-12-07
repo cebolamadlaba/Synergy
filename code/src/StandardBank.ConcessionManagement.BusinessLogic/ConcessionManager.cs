@@ -998,15 +998,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     var isApproved = mappedConcession.Status == Constants.ConcessionStatus.Approved ||
                                      mappedConcession.Status == Constants.ConcessionStatus.ApprovedWithChanges;
 
-                    if (!HasPendingChild(concession.Id))
+                    if (!HasPendingChild(concession.Id) && isAccountExecutiveOrAssistant)
                     {
                         //this concession can be extended or renewed if there is an expiry date which is within the next three months and the concession
                         //is currently in the approved state
                         mappedConcession.CanRenew = CalculateIfCanRenew(concession, mappedConcession.Status);
                         mappedConcession.CanExtend = CalculateIfCanExtend(concession, mappedConcession.CanRenew);
                         mappedConcession.CanResubmit = CalculateIfCanResubmit(concession, mappedConcession.Status);
-                        mappedConcession.CanUpdate = isApproved && isAccountExecutiveOrAssistant;
+                        mappedConcession.CanUpdate = isApproved;// && isAccountExecutiveOrAssistant;
                         mappedConcession.CanArchive = isApproved;
+                        mappedConcession.IsAENumberLinkedAccountExecutiveOrAssistant = isAccountExecutiveOrAssistant;
                     }
                     else
                     {
@@ -1015,6 +1016,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         mappedConcession.CanResubmit = false;
                         mappedConcession.CanUpdate = false;
                         mappedConcession.CanArchive = false;
+                        mappedConcession.IsAENumberLinkedAccountExecutiveOrAssistant = false;
                     }
 
                     mappedConcession.ConcessionComments = GetConcessionComments(concession.Id);

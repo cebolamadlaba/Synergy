@@ -234,12 +234,12 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
                 //if it's still pending and the user is a requestor then they can recall it
                 if (bolConcession.concession.status == ConcessionStatus.Pending && bolConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
-                    this.canRecall = bolConcession.currentUser.canRequest;
+                    this.canRecall = bolConcession.currentUser.canRequest && bolConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
                 }
 
                 if (bolConcession.concession.status == ConcessionStatus.Pending &&
                     (bolConcession.concession.subStatus == ConcessionSubStatus.PCMApprovedWithChanges || bolConcession.concession.subStatus == ConcessionSubStatus.HOApprovedWithChanges)) {
-                    this.canApproveChanges = bolConcession.currentUser.canRequest;
+                    this.canApproveChanges = bolConcession.currentUser.canRequest && bolConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
                 }
 
                 if (bolConcession.concession.status === ConcessionStatus.Approved ||

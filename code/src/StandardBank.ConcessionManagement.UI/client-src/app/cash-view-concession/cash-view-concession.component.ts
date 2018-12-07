@@ -194,12 +194,12 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
                 //if it's still pending and the user is a requestor then they can recall it
                 if (cashConcession.concession.status == ConcessionStatus.Pending && cashConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
-                    this.canRecall = cashConcession.currentUser.canRequest;
+                    this.canRecall = cashConcession.currentUser.canRequest && cashConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
                 }
 
                 if (cashConcession.concession.status == ConcessionStatus.Pending &&
                     (cashConcession.concession.subStatus == ConcessionSubStatus.PCMApprovedWithChanges || cashConcession.concession.subStatus == ConcessionSubStatus.HOApprovedWithChanges)) {
-                    this.canApproveChanges = cashConcession.currentUser.canRequest;
+                    this.canApproveChanges = cashConcession.currentUser.canRequest && cashConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
                 }
 
                 if (cashConcession.concession.status === ConcessionStatus.Approved ||

@@ -187,12 +187,12 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
 				//if it's still pending and the user is a requestor then they can recall it
 				if (transactionalConcession.concession.status == ConcessionStatus.Pending && transactionalConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
-					this.canRecall = transactionalConcession.currentUser.canRequest;
+                    this.canRecall = transactionalConcession.currentUser.canRequest && transactionalConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
 				}
 
 				if (transactionalConcession.concession.status == ConcessionStatus.Pending &&
 					(transactionalConcession.concession.subStatus == ConcessionSubStatus.PCMApprovedWithChanges || transactionalConcession.concession.subStatus == ConcessionSubStatus.HOApprovedWithChanges)) {
-					this.canApproveChanges = transactionalConcession.currentUser.canRequest;
+                    this.canApproveChanges = transactionalConcession.currentUser.canRequest && transactionalConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
 				}
 
                 if (transactionalConcession.concession.status === ConcessionStatus.Approved ||

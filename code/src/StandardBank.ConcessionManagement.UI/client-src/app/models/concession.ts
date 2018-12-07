@@ -35,7 +35,8 @@ export class Concession {
     statusDescription: string;
     canResubmit: boolean;
     canUpdate: boolean;
-	canArchive: boolean;
-	isInProgressExtension: boolean;
-	isInProgressRenewal: boolean;
+    canArchive: boolean;
+    isInProgressExtension: boolean;
+    isInProgressRenewal: boolean;
+    isAENumberLinkedAccountExecutiveOrAssistant: boolean;
 }

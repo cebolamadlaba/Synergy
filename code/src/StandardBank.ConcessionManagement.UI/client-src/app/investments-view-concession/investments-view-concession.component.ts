@@ -268,12 +268,12 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
                 //if it's still pending and the user is a requestor then they can recall it
                 if (investmentConcession.concession.status == ConcessionStatus.Pending && investmentConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
-                    this.canRecall = investmentConcession.currentUser.canRequest;
+                    this.canRecall = investmentConcession.currentUser.canRequest && investmentConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
                 }
 
                 if (investmentConcession.concession.status == ConcessionStatus.Pending &&
                     (investmentConcession.concession.subStatus == ConcessionSubStatus.PCMApprovedWithChanges || investmentConcession.concession.subStatus == ConcessionSubStatus.HOApprovedWithChanges)) {
-                    this.canApproveChanges = investmentConcession.currentUser.canRequest;
+                    this.canApproveChanges = investmentConcession.currentUser.canRequest && investmentConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
                 }
 
                 if (investmentConcession.concession.status === ConcessionStatus.Approved ||

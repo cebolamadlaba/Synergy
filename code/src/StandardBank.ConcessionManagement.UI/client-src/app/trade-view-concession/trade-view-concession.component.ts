@@ -272,12 +272,12 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
                 //if it's still pending and the user is a requestor then they can recall it
                 if (tradeConcession.concession.status == ConcessionStatus.Pending && tradeConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
-                    this.canRecall = tradeConcession.currentUser.canRequest;
+                    this.canRecall = tradeConcession.currentUser.canRequest && tradeConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
                 }
 
                 if (tradeConcession.concession.status == ConcessionStatus.Pending &&
                     (tradeConcession.concession.subStatus == ConcessionSubStatus.PCMApprovedWithChanges || tradeConcession.concession.subStatus == ConcessionSubStatus.HOApprovedWithChanges)) {
-                    this.canApproveChanges = tradeConcession.currentUser.canRequest;
+                    this.canApproveChanges = tradeConcession.currentUser.canRequest && tradeConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
                 }
 
                 if (tradeConcession.concession.status === ConcessionStatus.Approved ||
