@@ -27,6 +27,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return this._aeNumberUserRepository.ReadById(AENumberUserId);
         }
 
+        public AENumberUser GetAENumberUserByAccountExecutiveUserId(int accountExecutiveUserId)
+        {
+            return this._aeNumberUserRepository.ReadByAccountExecutiveUserId(accountExecutiveUserId);
+        }
+
         public int? GetCurrentAccountExecutiveUserId(int? aeNumberUserId)
         {
             if (aeNumberUserId == null)

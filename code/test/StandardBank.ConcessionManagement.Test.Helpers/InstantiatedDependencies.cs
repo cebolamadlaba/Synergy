@@ -541,6 +541,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
 
         public static IAENumberUserRepository AENumberUserRepository = new AENumberUserRepository(DbConnection);
 
-        public static IAENumberUserManager AENumberUserManager = new AENumberUserManager(AENumberUserRepository, AccountExecutiveAssistantRepository);
+        public static IAENumberUserManager AENumberUserManager = new AENumberUserManager(AENumberUserRepository, AccountExecutiveAssistantRepository, UserRepository);
     }
 }

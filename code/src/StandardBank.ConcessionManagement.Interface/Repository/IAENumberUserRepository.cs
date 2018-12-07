@@ -9,5 +9,7 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
     public interface IAENumberUserRepository
     {
         AENumberUser ReadById(int id);
+
+        AENumberUser ReadByAccountExecutiveUserId(int accountExecutiveUserId);
     }
 }

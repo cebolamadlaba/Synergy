@@ -9,6 +9,8 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
     {
         AENumberUser GetAENumberUser(int AENumberUserId);
 
+        AENumberUser GetAENumberUserByAccountExecutiveUserId(int accountExecutiveUserId);
+
         int? GetCurrentAccountExecutiveUserId(int? aeNumberUserId);
 
         int?[] GetAccountAssistantIds(int? aeNumberUserId);

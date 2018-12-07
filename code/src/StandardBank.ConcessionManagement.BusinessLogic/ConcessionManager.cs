@@ -760,6 +760,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedConcession.IsActive = true;
             mappedConcession.DatesentForApproval = DateTime.Now;
 
+            AENumberUser aeNumberUser = this._aeNumberUserManager.GetAENumberUserByAccountExecutiveUserId(mappedConcession.RequestorId);
+            if (aeNumberUser != null)
+                mappedConcession.AENumberUserId = aeNumberUser.AENumberUserId;
+
             var result = _concessionRepository.Create(mappedConcession);
 
             //need to generate the concession reference based on the id returned

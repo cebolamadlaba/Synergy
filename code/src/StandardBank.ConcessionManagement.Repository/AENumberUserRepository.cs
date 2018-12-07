@@ -28,5 +28,15 @@ namespace StandardBank.ConcessionManagement.Repository
             }
         }
 
+        public AENumberUser ReadByAccountExecutiveUserId(int accountExecutiveUserId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<AENumberUser>(
+                    "SELECT [pkAENumberUserId] [AENumberUserId], [AENumber], [fkUserId] [UserId], [IsActive] FROM[dbo].[tblAENumberUser] WHERE [fkUserId] = @accountExecutiveUserId",
+                    new { accountExecutiveUserId }).FirstOrDefault();
+            }
+        }
+
     }
 }
