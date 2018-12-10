@@ -40,14 +40,18 @@ namespace StandardBank.ConcessionManagement.Repository
                
 
                 return db.Query<ConcessionConditionView>(
-                    @"SELECT [ConcessionConditionId], [ConcessionId], [RequestorId], [ReferenceNumber], [ConcessionTypeId], [ConcessionType], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [ConditionTypeId], [ConditionType], [ConditionProductId], [ConditionProduct], [PeriodTypeId], [PeriodType], [PeriodId], [Period], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], cd.[DateApproved], cd.[ExpiryDate], [IsActive],
-                    isnull(cast([ActualVolume] as varchar),'Unavailable') 'ActualVolume', isnull(cast([ActualValue] as varchar),'Unavailable') 'ActualValue', isnull(cast([ActualTurnover] as varchar),'Unavailable') 'ActualTurnover'
-                    FROM [dbo].[ConcessionConditionView] cv
-					join tblConcessionDetail cd on cv.ConcessionId = cd.fkConcessionId
-                    WHERE [ConditionMet] IS NULL
-                    AND [PeriodId] = @periodId
-                    AND [PeriodTypeId] = @periodTypeId
-                    AND [RequestorId] = @RequestorId and cd.ExpiryDate <= @ExpiryDate",
+                    @"SELECT [ConcessionConditionId], [ConcessionId], [RequestorId], [ReferenceNumber], [ConcessionTypeId], [ConcessionType], [RiskGroupId], [RiskGroupNumber], [RiskGroupName],
+                             [ConditionTypeId], [ConditionType], [ConditionProductId], [ConditionProduct], [PeriodTypeId], [PeriodType], [PeriodId], [Period], [InterestRate], [Volume], [Value], 
+                             [ConditionMet], [ExpectedTurnoverValue], cd.[DateApproved], cv.[ExpiryDate], [IsActive],
+                             isnull(cast([ActualVolume] as varchar),'Unavailable') 'ActualVolume', isnull(cast([ActualValue] as varchar),'Unavailable') 'ActualValue', isnull(cast([ActualTurnover] as varchar),'Unavailable') 'ActualTurnover'
+                    FROM 
+                           [dbo].[ConcessionConditionView] cv
+					       join tblConcessionDetail cd on cv.ConcessionId = cd.fkConcessionId
+                    WHERE 
+                           [ConditionMet] IS NULL
+                            AND [PeriodId] = @periodId
+                            AND [PeriodTypeId] = @periodTypeId
+                            AND [RequestorId] = @RequestorId and cv.ExpiryDate <= @ExpiryDate",
                     new { periodId, periodTypeId, requestorId, ExpiryDate = System.DateTime.Today.AddMonths(1) });
             }
         }

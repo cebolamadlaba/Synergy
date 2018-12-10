@@ -56,10 +56,13 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 IEnumerable<ClientAccount> Function()
                 {
+                   
                     using (var db = _dbConnectionFactory.Connection())
                     {
+
                         if (userId.HasValue)
                         {
+
                             string sql = "";
 
                             if (concessiontype == Model.BusinessLogic.Constants.ConcessionType.Lending)

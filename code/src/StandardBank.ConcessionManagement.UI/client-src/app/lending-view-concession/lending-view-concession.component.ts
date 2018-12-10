@@ -12,6 +12,7 @@ import { PeriodType } from "../models/period-type";
 import { ConditionType } from "../models/condition-type";
 import { ConditionProduct } from "../models/condition-product";
 import { ClientAccount } from "../models/client-account";
+import { ClientAccountArray } from "../models/client-account-array";
 import { LendingConcession } from "../models/lending-concession";
 import { Concession } from "../models/concession";
 import { LendingConcessionDetail } from "../models/lending-concession-detail";
@@ -63,6 +64,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     isEditing = false;
     motivationEnabled = false;
     canEdit = false;
+    selectedAccountNumbers: ClientAccountArray[];
 
     capturedComments: string;
     canApproveChanges: boolean;
@@ -100,6 +102,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
     observableClientAccounts: Observable<ClientAccount[]>;
     clientAccounts: ClientAccount[];
+    clientAccountsCopy: ClientAccount[];
 
     observableLendingFinancial: Observable<LendingFinancial>;
     lendingFinancial: LendingFinancial;
@@ -123,10 +126,12 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.selectedConditionTypes = [new ConditionType()];
         this.selectedProductTypes = [new ProductType()];
         this.clientAccounts = [new ClientAccount()];
+        this.clientAccountsCopy = [new ClientAccount()];
         this.lendingFinancial = new LendingFinancial();
         this.lendingConcession = new LendingConcession();
         this.lendingConcession.concession = new Concession();
         this.lendingConcession.concession.concessionComments = [new ConcessionComment()];
+        this.selectedAccountNumbers = [new ClientAccountArray()];
 
 
     }
@@ -168,6 +173,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             this.conditionTypes = <any>results[4];
             this.riskGroup = <any>results[5];
             this.clientAccounts = <any>results[6];
+            this.clientAccountsCopy = <any>results[6]
             this.lendingFinancial = <any>results[7];
 
             this.populateForm();
@@ -398,7 +404,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
     initConcessionItemRows() {
         this.selectedProductTypes.push(new ProductType());
-
+        this.selectedAccountNumbers.push(new ClientAccountArray());
         return this.formBuilder.group({
             lendingConcessionDetailId: [''],
             concessionDetailId: [''],
@@ -484,8 +490,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
     productTypeChanged(rowIndex: number) {
 
-        console.log('Row:' + rowIndex);
-
+        
+        //console.log('Row:' + rowIndex);
+        this.clientAccounts = this.clientAccountsCopy;
         const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
 
         let currentRow = control.controls[rowIndex];
@@ -494,7 +501,17 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.selectedProductTypes[rowIndex] = productType;
 
         if (this.clientAccounts && this.clientAccounts.length > 0) {
-            //this.selectedAccountNumbers[rowIndex].clientaccounts = this.clientAccounts.filter(re => re.accountType == productType.description);
+            this.clientAccounts = this.clientAccounts.filter(re => re.accountType == productType.description);
+
+            if (this.selectedAccountNumbers[rowIndex].clientaccounts.length == 0) {
+                control.controls[rowIndex].get('accountNumber').setValue(null);
+            }
+            else {
+
+                control.controls[rowIndex].get('accountNumber').setValue(this.clientAccounts);
+
+            }
+
         }
 
         if (productType.description === "Overdraft") {
