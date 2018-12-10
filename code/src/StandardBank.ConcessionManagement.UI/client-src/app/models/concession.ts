@@ -39,4 +39,5 @@ export class Concession {
     isInProgressExtension: boolean;
     isInProgressRenewal: boolean;
     isAENumberLinkedAccountExecutiveOrAssistant: boolean;
+    aeNumberUserId: number;
 }

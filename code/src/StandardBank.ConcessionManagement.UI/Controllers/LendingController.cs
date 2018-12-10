@@ -162,6 +162,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                                                                             .LendingConcessionDetailId))
                     await _mediator.Send(new DeleteLendingConcessionDetail(lendingConcessionDetail, user));
 
+            if (!lendingConcession.Concession.AENumberUserId.HasValue)
+                lendingConcession.Concession.AENumberUserId = databaseLendingConcession.Concession.AENumberUserId;
+
             //update the concession
             var concession = await _mediator.Send(new UpdateConcession(lendingConcession.Concession, user));
 

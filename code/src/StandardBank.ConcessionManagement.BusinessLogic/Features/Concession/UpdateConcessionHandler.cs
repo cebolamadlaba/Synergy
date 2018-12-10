@@ -53,6 +53,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         /// </summary>
         private readonly IRiskGroupRepository _riskGroupRepository;
 
+        private readonly IAENumberUserRepository _aeNumberUserRepository;
+
         /// <summary>
         /// The logger
         /// </summary>
@@ -71,7 +73,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         /// <param name="riskGroupRepository">The risk group repository.</param>
         public UpdateConcessionHandler(IConcessionManager concessionManager, IMediator mediator,
             ILogger<UpdateConcessionHandler> logger, IMapper mapper, ILookupTableManager lookupTableManager,
-            IEmailManager emailManager, IUserManager userManager, IRiskGroupRepository riskGroupRepository)
+            IEmailManager emailManager, IUserManager userManager, IRiskGroupRepository riskGroupRepository,
+            IAENumberUserRepository aeNumberUserRepository)
         {
             _concessionManager = concessionManager;
             _mediator = mediator;
@@ -81,6 +84,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
             _userManager = userManager;
             _riskGroupRepository = riskGroupRepository;
             _logger = logger;
+            _aeNumberUserRepository = aeNumberUserRepository;
         }
 
         /// <summary>
@@ -130,7 +134,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         /// <param name="message">The message.</param>
         private void SendDeclinedNotificationEmail(UpdateConcession message)
         {
-            var requestor = message.Concession.Requestor ?? _userManager.GetUser(message.Concession.RequestorId);
+            AENumberUser aeNumberUser = _aeNumberUserRepository.ReadById(message.Concession.AENumberUserId.Value);
+
+            var requestor = _userManager.GetUser(aeNumberUser.UserId);
 
             //send notifcation to Account executive, if it is an assitant
             if (requestor.IsAdminAssistant && requestor.AccountExecutiveUserId != null)
@@ -222,7 +228,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         /// <param name="message">The message.</param>
         private void SendApprovedWithChangesNotificationEmail(UpdateConcession message)
         {
-            var requestor = message.Concession.Requestor ?? _userManager.GetUser(message.Concession.RequestorId);
+            AENumberUser aeNumberUser = _aeNumberUserRepository.ReadById(message.Concession.AENumberUserId.Value);
+
+            var requestor = _userManager.GetUser(aeNumberUser.UserId);
 
             //send notifcation to Account executive, if it is an assitant
             if (requestor.IsAdminAssistant && requestor.AccountExecutiveUserId != null)
@@ -281,7 +289,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         /// <param name="message">The message.</param>
         private void SendApprovedNotificationEmail(UpdateConcession message)
         {
-            var requestor = message.Concession.Requestor ?? _userManager.GetUser(message.Concession.RequestorId);
+            AENumberUser aeNumberUser = _aeNumberUserRepository.ReadById(message.Concession.AENumberUserId.Value);
+
+            var requestor = _userManager.GetUser(aeNumberUser.UserId);
 
             //send notifcation to Account executive, if it is an assitant
             if (requestor.IsAdminAssistant && requestor.AccountExecutiveUserId != null)
@@ -298,7 +308,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
                    Product = message.Concession.ConcessionType
                }), DateTime.Now);
 
-            }         
+            }
             //send notifcation to all assitants, if it is an Account Executive
             else if (requestor.AccountAssistants != null && requestor.AccountAssistants.Count > 0)
             {

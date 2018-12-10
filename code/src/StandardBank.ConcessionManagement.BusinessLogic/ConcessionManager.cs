@@ -995,6 +995,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     else if (mappedConcession.CurrentAAList != null && mappedConcession.CurrentAAList.Any(a => a.Value == currentUser.Id))
                         isAccountExecutiveOrAssistant = true;
 
+                mappedConcession.AENumberUserId = concession.AENumberUserId;
+
                 if (mapAll)
                 {
                     SetIsInProgressExtensionOrRenewal(mappedConcession);
