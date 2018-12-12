@@ -441,7 +441,8 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                 hasLegalEntityId = true;
                 hasLegalEntityAccountId = true;
             } else {
-
+                hasLegalEntityId = false;
+                hasLegalEntityAccountId = false;
                 if (!tradeConcessionDetail.disablecontrolset) {
                     this.addValidationError("Client account not selected");
                 }
