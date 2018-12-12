@@ -77,6 +77,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
 
             foreach (var concession in concessions)
             {
+                if (!this.IsIntervalOfMonthBeforeExpiryDate(concession))
+                    continue;
+
                 var expiringConcession =
                     expiringConcessions.FirstOrDefault(_ => _.RequestorId == concession.RequestorId.Value);
 
@@ -112,6 +115,28 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                 expiringConcession.ExpiringConcessionDetails = expiringConcessionDetails;
             }
             return expiringConcessions;
+        }
+
+        private bool IsIntervalOfMonthBeforeExpiryDate(ConcessionInboxView concessionInboxView)
+        {
+            // Is todays date 3 months before expiry date?
+            // Is todays date 2 months before expiry date?
+            // Is todays date 1 months before expiry date?
+
+            if (!concessionInboxView.ExpiryDate.HasValue)
+                return false;
+
+            DateTime monthValue;
+
+            for (int i = 3; i > 0; i--)
+            {
+                monthValue = concessionInboxView.ExpiryDate.Value.Date.AddMonths(-Math.Abs(i));
+                if (DateTime.Today.Date == monthValue)
+                    return true;
+
+            }
+
+            return false;
         }
 
         /// <summary>
