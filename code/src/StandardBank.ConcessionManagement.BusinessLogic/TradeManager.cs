@@ -14,6 +14,7 @@ using StandardBank.ConcessionManagement.Model.UserInterface.Trade;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 using RiskGroup = StandardBank.ConcessionManagement.Model.UserInterface.RiskGroup;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
+using System;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -34,11 +35,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ILookupTableManager _lookupTableManager;
 
         private readonly IRuleManager _ruleManager;
-      
+
         private readonly IMiscPerformanceRepository _miscPerformanceRepository;
 
         private readonly IMediator _mediator;
-             
+
         public TradeManager(IConcessionManager concessionManager, IConcessionTradeRepository concessionTradeRpository,
             IMapper mapper, IFinancialTradeRepository financialTradeRepository, ILookupTableManager lookupTableManager, IRuleManager ruleManager,
             IMiscPerformanceRepository miscPerformanceRepository, IMediator mediator)
@@ -98,7 +99,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 _ruleManager.UpdateBaseFieldsOnApproval(mappedConcessionTrade);
 
-              
+                var productType = _lookupTableManager.GetTradeProducTypeName(tradeConcessionDetail.fkTradeProductId.Value);
+                // Set Expiry Date for Local Guarantee.
+
+                if (productType == Constants.Trade.TradeProductType.LocalGuarantee)
+                    mappedConcessionTrade.ExpiryDate = DateTime.Now.AddMonths(mappedConcessionTrade.term.Value);
             }
             else if (concession.Status == Constants.ConcessionStatus.Pending &&
                      concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges)
@@ -112,7 +117,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionTradeRpository.Update(mappedConcessionTrade);
 
             return mappedConcessionTrade;
-         
+
         }
 
 
@@ -132,7 +137,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 });
             }
 
-            var tradeFinancial = _mapper.Map<TradeFinancial>(_financialTradeRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialTrade());                      
+            var tradeFinancial = _mapper.Map<TradeFinancial>(_financialTradeRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialTrade());
 
             var tradeProducts = GetTradeProducts(riskGroup);
 
@@ -158,7 +163,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     {
                         productgrouping.TradeProducts.Add(product);
                     }
-                 
+
                 }
                 //sort
                 foreach (var productgrouping in groupedinfo)
@@ -186,7 +191,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private IEnumerable<Model.UserInterface.Trade.TradeProduct> GetTradeProducts(RiskGroup riskGroup)
         {
             return _miscPerformanceRepository.GetTradeProducts(riskGroup.Id, riskGroup.Name);
-        }   
+        }
 
         public async Task ForwardTradeConcession(TradeConcession tradeConcession, User user)
         {

@@ -157,6 +157,8 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 
         IEnumerable<TradeProductType> GetTradeProductTypes();
 
+        string GetTradeProducTypeName(int tradeProductTypeId);
+
         IEnumerable<TradeProduct> GetTradeProducts();
 
         IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsers(int riskGroupNumber);

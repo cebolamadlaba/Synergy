@@ -180,6 +180,16 @@ namespace StandardBank.ConcessionManagement.Repository
             }
         }
 
+        public TradeProductType GetTradeProductTypeByTradeProductId(int tradeProductId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<TradeProductType>(
+                    @"SELECT Distinct tpt.pkTradeProductTypeId [tradeProductTypeID], tpt.[description] [tradeProductType] From rtblTradeProductType tpt Inner Join rtblTradeProduct tp On tp.fkTradeProductTypeId = tpt.pkTradeProductTypeId Where tp.pkTradeProductId = @tradeProductId",
+                    new { tradeProductId }).FirstOrDefault();
+            }
+        }
+
         public IEnumerable<LegalEntityGBBNumber> GetLegalEntityGBBNumbers(int riskGroupNumber)
         {
             using (var db = _dbConnectionFactory.Connection())

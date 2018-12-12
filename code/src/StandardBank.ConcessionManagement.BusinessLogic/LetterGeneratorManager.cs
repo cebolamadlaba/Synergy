@@ -517,14 +517,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     RequestorEmailAddress = requestor?.EmailAddress,
                     RequestorName = requestor?.FullName,
                     RequestorContactNumber = requestor?.ContactNumber,
-                    ClientName = GetValueOrDashes(legalEntity.CustomerName),
-                    ClientNumber = GetValueOrDashes(legalEntity.CustomerNumber),
-                    ClientPostalAddress = GetValueOrDashes(legalEntity.PostalAddress),
-                    ClientCity = GetValueOrDashes(legalEntity.City),
-                    ClientContactPerson = GetValueOrDashes(legalEntity.ContactPerson),
-                    ClientPostalCode = GetValueOrDashes(legalEntity.PostalCode),
-                    RequestorRoleName = legalEntity.RequestorRoleName,
-                    BCMRoleName = legalEntity.BCMRoleName
+                    ClientName = legalEntity != null ? GetValueOrDashes(legalEntity.CustomerName) : "",
+                    ClientNumber = legalEntity != null ? GetValueOrDashes(legalEntity.CustomerNumber) : "",
+                    ClientPostalAddress = legalEntity != null ? GetValueOrDashes(legalEntity.PostalAddress) : "",
+                    ClientCity = legalEntity != null ? GetValueOrDashes(legalEntity.City) : "",
+                    ClientContactPerson = legalEntity != null ? GetValueOrDashes(legalEntity.ContactPerson) : "",
+                    ClientPostalCode = legalEntity != null ? GetValueOrDashes(legalEntity.PostalCode) : "",
+                    RequestorRoleName = legalEntity != null ? legalEntity.RequestorRoleName : "",
+                    BCMRoleName = legalEntity != null ? legalEntity.BCMRoleName : ""
                 };
 
             return legalEntityConcessionLetter;

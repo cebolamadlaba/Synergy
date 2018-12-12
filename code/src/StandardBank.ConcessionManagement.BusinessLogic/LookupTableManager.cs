@@ -495,6 +495,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return _mapper.Map<IEnumerable<TradeProductType>>(_concessionTradeRepository.GetTradeProductTypes());
         }
 
+        public string GetTradeProducTypeName(int tradeProductId)
+        {
+            Model.Repository.TradeProductType tradeProductType = this._concessionTradeRepository.GetTradeProductTypeByTradeProductId(tradeProductId);
+
+            return tradeProductType.tradeProductType;
+        }
 
 
         /// <summary>

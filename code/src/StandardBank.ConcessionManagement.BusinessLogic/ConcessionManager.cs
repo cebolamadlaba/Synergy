@@ -541,12 +541,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<ApprovedConcession> GetApprovedConcessionsForUser(int userId)
         {
+            User loggedInUser = this._userManager.GetUser(userId);
+
+            int requestorId = userId;
+            if (loggedInUser != null && loggedInUser.IsAdminAssistant && loggedInUser.AccountExecutiveUserId.HasValue)
+                requestorId = loggedInUser.AccountExecutiveUserId.Value;
+
             var approvedStatusId = _lookupTableManager.GetStatusId(Constants.ConcessionStatus.Approved);
             var approvedWithChangesStatusId =
                 _lookupTableManager.GetStatusId(Constants.ConcessionStatus.ApprovedWithChanges);
 
             var concessions =
-                _concessionInboxViewRepository.GetapporvedView(userId, new[] { approvedStatusId, approvedWithChangesStatusId }, true);
+                _concessionInboxViewRepository.GetapporvedView(requestorId, new[] { approvedStatusId, approvedWithChangesStatusId }, true);
 
             var approvedConcessions = new List<ApprovedConcession>();
 

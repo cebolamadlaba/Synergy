@@ -73,16 +73,16 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 return db.Query<ConcessionInboxView>(
                     @"SELECT distinct [ConcessionId],LegalEntityId, [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [CustomerName], [ConcessionTypeId], [ConcessionType], max([ConcessionDate]) ConcessionDate, [StatusId], [Status], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment], max([DatesentForApproval]) DatesentForApproval, 
-                    min([ExpiryDate]) ExpiryDate, max([DateApproved]) DateApproved, [CentreId], [CentreName], [RegionId], [Region],[Location] 'ConcessionLetterURL', CurrentAeUserId, CurrentAAUserId
+                    min([ExpiryDate]) ExpiryDate, max([DateApproved]) DateApproved, [CentreId], [CentreName], [RegionId], [Region],[Location] 'ConcessionLetterURL', CurrentAeUserId
                     FROM [dbo].[ConcessionInboxView]					
 					left join tblConcessionLetter on [ConcessionInboxView].ConcessionId = tblConcessionLetter.fkConcessionDetailId  
 
-                    WHERE (CurrentAeUserId = @requestorId OR CurrentAAUserId = @requestorId)
+                    WHERE (CurrentAeUserId = @requestorId)
                     AND [StatusId] in @statusIds
                     AND [IsActive] = @isActive
 
                     group by [ConcessionId],LegalEntityId, [RiskGroupId], [RiskGroupNumber], [RiskGroupName],[CustomerName], [ConcessionTypeId], [ConcessionType],[StatusId], [Status],[SubStatus], [ConcessionRef], [MarketSegmentId], [Segment],
-                    [CentreId], [CentreName], [RegionId], [Region], [Location], CurrentAeUserId, CurrentAAUserId"
+                    [CentreId], [CentreName], [RegionId], [Region], [Location], CurrentAeUserId"
 
                     ,
                     new { requestorId, statusIds, isActive });
@@ -114,7 +114,7 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
 
-        public IEnumerable<ConcessionInboxView> ReadbyPCMPending(int? regionId, int? centreId, DateTime? datesentForApproval, IEnumerable<int> statusIds)     
+        public IEnumerable<ConcessionInboxView> ReadbyPCMPending(int? regionId, int? centreId, DateTime? datesentForApproval, IEnumerable<int> statusIds)
         {
             using (var db = _dbConnectionFactory.Connection())
             {
@@ -126,11 +126,11 @@ namespace StandardBank.ConcessionManagement.Repository
                     AND [Archived] is null
                     AND [SubStatusId] in @statusIds";
 
-                sql += (regionId == null || regionId == 0 ) ? "" : " AND [RegionId] = @regionId";
+                sql += (regionId == null || regionId == 0) ? "" : " AND [RegionId] = @regionId";
                 sql += (centreId == null || centreId == 0) ? "" : " AND [CentreId] = @centreId";
                 sql += (datesentForApproval == null || datesentForApproval.Value.Year == 1) ? "" : " AND datediff(day, [DatesentForApproval],@datesentForApproval ) = 0";
 
-                return db.Query<ConcessionInboxView>(sql,new { statusIds, regionId, centreId, datesentForApproval });
+                return db.Query<ConcessionInboxView>(sql, new { statusIds, regionId, centreId, datesentForApproval });
             }
         }
 
@@ -322,7 +322,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     AND [DatesentForApproval] <= @DateToCheck
                     AND [IsActive] = 1
                     AND [Archived] is null";
-                return db.Query<ConcessionInboxView>(sql, new { statusIds = statusIdlist, DateToCheck = DateTime.Now.AddDays(-3)});
+                return db.Query<ConcessionInboxView>(sql, new { statusIds = statusIdlist, DateToCheck = DateTime.Now.AddDays(-3) });
             }
         }
 
