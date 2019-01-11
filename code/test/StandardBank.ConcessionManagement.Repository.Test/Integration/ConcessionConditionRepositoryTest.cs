@@ -28,7 +28,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 IsActive = false,
                 PeriodTypeId = DataHelper.GetPeriodTypeId(),
                 PeriodId = DataHelper.GetPeriodId(),
-                //ExpectedTurnoverValue = 100,
                 ExpiryDate = DateTime.Now.AddDays(100),
                 DateApproved = DateTime.Now.AddDays(-100)
             };
@@ -140,7 +139,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 IsActive = false,
                 PeriodTypeId = DataHelper.GetPeriodTypeId(),
                 PeriodId = DataHelper.GetPeriodId(),
-                //ExpectedTurnoverValue = 100,
                 ExpiryDate = DateTime.Now.AddDays(100),
                 DateApproved = DateTime.Now.AddDays(-100)
             };

@@ -173,7 +173,6 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             interestRate: [''],
             volume: [''],
             value: [''],
-            expectedTurnoverValue: [''],
             periodType: [''],
             period: ['']
         });
@@ -238,7 +237,6 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         currentCondition.get('interestRate').setValue(null);
         currentCondition.get('volume').setValue(null);
         currentCondition.get('value').setValue(null);
-        currentCondition.get('expectedTurnoverValue').setValue(null);
     }
 
     disableRows() {

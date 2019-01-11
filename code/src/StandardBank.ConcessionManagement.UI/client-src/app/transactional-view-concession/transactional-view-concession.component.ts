@@ -342,7 +342,6 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 			interestRate: [''],
 			volume: [''],
 			value: [''],
-			expectedTurnoverValue: [''],
 			periodType: [''],
 			period: ['']
 		});
@@ -390,7 +389,6 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 		currentCondition.get('interestRate').setValue(null);
 		currentCondition.get('volume').setValue(null);
 		currentCondition.get('value').setValue(null);
-		currentCondition.get('expectedTurnoverValue').setValue(null);
 	}
 
 	transactionTypeChanged(rowIndex) {

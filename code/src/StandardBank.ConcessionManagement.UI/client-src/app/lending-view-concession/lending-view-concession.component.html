@@ -279,7 +279,6 @@
                             <th>Interest Rate</th>
                             <th>Volume</th>
                             <th>Value</th>
-                            <th>Expected Turnover Value</th>
                             <th>Period</th>
                         </tr>
                     </thead>
@@ -296,7 +295,6 @@
                             <td><span *ngIf="itemrow.get('interestRate').value">{{itemrow.get('interestRate').value | number:'1.2-2'}}</span></td>
                             <td>{{itemrow.get('volume').value}}</td>
                             <td><span *ngIf="itemrow.get('value').value">{{itemrow.get('value').value | number:'1.2-2'}}</span></td>
-                            <td><span *ngIf="itemrow.get('expectedTurnoverValue').value">{{itemrow.get('expectedTurnoverValue').value | number:'1.2-2'}}</span></td>
                             <td>{{itemrow.get('periodType').value?.description}} {{itemrow.get('period').value?.description}}</td>
                         </tr>
                     </tbody>
@@ -326,7 +324,6 @@
                                     <th>Interest Rate</th>
                                     <th>Volume</th>
                                     <th>Value</th>
-                                    <th>Expected Turnover Value</th>
                                     <th>Period Type</th>
                                     <th>Period</th>
                                     <th></th>
@@ -358,8 +355,6 @@
                                     <td class="length-short"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionVolume ? null : ''" /></td>
                                     <!-- Value rate -->
                                     <td class="length-short"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionValue ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
-                                    <!-- Turnover -->
-                                    <td class="length-medium"><input type="text" numbersOnly="true" formControlName="expectedTurnoverValue" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableExpectedTurnoverValue ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
                                     <!-- Period type -->
                                     <td class="length-short">
                                         <select formControlName="periodType" (change)="validatePeriod(itemrow)">

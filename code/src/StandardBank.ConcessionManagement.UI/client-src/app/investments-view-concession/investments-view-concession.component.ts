@@ -494,7 +494,6 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         currentCondition.get('interestRate').setValue(null);
         currentCondition.get('volume').setValue(null);
         currentCondition.get('value').setValue(null);
-        currentCondition.get('expectedTurnoverValue').setValue(null);
     }
 
    // productTypeChanged(rowIndex) {

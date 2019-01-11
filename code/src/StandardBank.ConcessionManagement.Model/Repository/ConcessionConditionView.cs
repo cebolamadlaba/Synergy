@@ -168,14 +168,6 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public bool? ConditionMet { get; set; }
 
         /// <summary>
-        /// Gets or sets the expected turnover value.
-        /// </summary>
-        /// <value>
-        /// The expected turnover value.
-        /// </value>
-        public decimal? ExpectedTurnoverValue { get; set; }
-
-        /// <summary>
         /// Gets or sets the date approved.
         /// </summary>
         /// <value>

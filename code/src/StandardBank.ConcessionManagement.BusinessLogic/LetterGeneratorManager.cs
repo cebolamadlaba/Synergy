@@ -1000,7 +1000,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 conditions.Add(new ConditionConcessionLetter
                 {
                     Value =
-                        $"R {concessionCondition.ExpectedTurnoverValue.GetValueOrDefault(0).ToString("N2", CultureInfo.InvariantCulture)}",
+                        $"R {concessionCondition.ConditionValue.GetValueOrDefault(0).ToString("N2", CultureInfo.InvariantCulture)}",
                     ConditionProduct = concessionCondition.ProductType,
                     ConditionMeasure = concessionCondition.ConditionType,
                     Deadline = concessionCondition.ExpiryDate.HasValue
