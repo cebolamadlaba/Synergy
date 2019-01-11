@@ -1530,7 +1530,6 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 IsActive = false,
                 PeriodTypeId =  GetPeriodTypeId(),
                 PeriodId = GetPeriodId(),
-                ExpectedTurnoverValue = 100,
                 ExpiryDate = DateTime.Now.AddDays(100)
             };
 

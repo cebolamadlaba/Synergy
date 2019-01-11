@@ -105,7 +105,6 @@
                     <th>Interest</th>
                     <th>Volume</th>
                     <th>Value</th>
-                    <th>Expected Turnover Value</th>
 
                     <th style="border: 1px solid #ddd; background-color:#387cad">Volume</th>
                     <th style="border: 1px solid #ddd; background-color:#387cad">Value</th>
@@ -127,8 +126,6 @@
                     <td (click)="openConcessionView(condition)"><span *ngIf="condition.interestRate">{{condition.interestRate | number:'1.2-2'}}</span></td>
                     <td (click)="openConcessionView(condition)">{{condition.conditionVolume}}</td>
                     <td (click)="openConcessionView(condition)"><span *ngIf="condition.conditionValue">{{condition.conditionValue | number:'1.2-2'}}</span></td>
-                    <td (click)="openConcessionView(condition)"><span *ngIf="condition.expectedTurnoverValue">{{condition.expectedTurnoverValue | number:'1.2-2'}}</span></td>
-
                     <td (click)="openConcessionView(condition)">{{condition.actualVolume}}</td>
                     <td (click)="openConcessionView(condition)">{{condition.actualValue}}</td>
                     <!--<td (click)="openConcessionView(condition)">{{condition.actualTurnover}}</td>-->
