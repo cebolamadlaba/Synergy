@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator;
+using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 
@@ -28,6 +29,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// The lookup table manager
         /// </summary>
         private readonly ILookupTableManager _lookupTableManager;
+        
+        private readonly ILegalEntityAddressManager _legalEntityAddressManager;
 
         /// <summary>
         /// The site helper
@@ -52,11 +55,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="siteHelper">The site helper.</param>
         /// <param name="letterGeneratorManager">The letter generator manager.</param>
         /// <param name="mediator">The mediator.</param>
-        public ConcessionController(IConcessionManager concessionManager, ILookupTableManager lookupTableManager,
+        public ConcessionController(IConcessionManager concessionManager, ILookupTableManager lookupTableManager, ILegalEntityAddressManager legalEntityAddressManager,
             ISiteHelper siteHelper, ILetterGeneratorManager letterGeneratorManager, IMediator mediator)
         {
             _concessionManager = concessionManager;
             _lookupTableManager = lookupTableManager;
+            _legalEntityAddressManager = legalEntityAddressManager;
             _siteHelper = siteHelper;
             _letterGeneratorManager = letterGeneratorManager;
             _mediator = mediator;
@@ -174,6 +178,20 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(_concessionManager.SearchConsessions(region, centre, status, datefilter, userId));
         }
 
+        [Route("GetLegalEntityAddress/{legalEntityId}")]
+        public IActionResult GetLegalEntityAddress(int legalEntityId)
+        {
+            if (legalEntityId < 1)
+                return NoContent();
+
+            LegalEntityAddress legalEntityAddress = this._legalEntityAddressManager.GetLegalEntityAddressByLegalEntityId(legalEntityId);
+
+            if (legalEntityAddress == null)
+                legalEntityAddress = this._legalEntityAddressManager.GetLegalEntityAddressFromLegalEntityRepository(legalEntityId);
+
+            return Ok(legalEntityAddress);
+        }
+
         /// <summary>
         /// Gets the users approved concessions
         /// </summary>
@@ -277,6 +295,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult GenerateConcessionLetterForLegalEntity(int legalEntityId, [FromBody] LegalEntityConcessionLetter legalEntityConcessionLetter)
         {
             var userId = _siteHelper.GetUserIdForFiltering(this);
+
+            this.SetLegalEntityAddress(legalEntityId, legalEntityConcessionLetter);
 
             byte[] bytes = _letterGeneratorManager.GenerateLettersForLegalEntity(legalEntityId, userId, legalEntityConcessionLetter);
 
@@ -404,6 +424,21 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             //};
 
             //return result;
+        }
+
+
+        private void SetLegalEntityAddress(int legalEntityId, LegalEntityConcessionLetter legalEntityConcessionLetter)
+        {
+            this._legalEntityAddressManager.UpdateLegalEntityAddress(
+                new LegalEntityAddress()
+                {
+                    LegalEntityId = legalEntityId,
+                    ContactPerson = legalEntityConcessionLetter.ClientContactPerson,
+                    CustomerName = legalEntityConcessionLetter.ClientName,
+                    PostalAddress = legalEntityConcessionLetter.ClientPostalAddress,
+                    City = legalEntityConcessionLetter.ClientCity,
+                    PostalCode = legalEntityConcessionLetter.ClientPostalCode,
+                });
         }
     }
 }

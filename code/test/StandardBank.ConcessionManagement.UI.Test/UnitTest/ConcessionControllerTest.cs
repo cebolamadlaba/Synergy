@@ -27,7 +27,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         public ConcessionControllerTest()
         {
             _concessionController = new ConcessionController(MockConcessionManager.Object,
-                MockLookupTableManager.Object, new FakeSiteHelper(), MockLetterGeneratorManager.Object, MockMediator.Object);
+                MockLookupTableManager.Object, MockLegalEntityAddressManager.Object, new FakeSiteHelper(), MockLetterGeneratorManager.Object, MockMediator.Object);
         }
 
         /// <summary>
@@ -113,8 +113,8 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         [Fact]
         public void ClientAccounts_Executes_Positive()
         {
-            MockConcessionManager.Setup(_ => _.GetClientAccounts(It.IsAny<int>(), It.IsAny<User>(),""))
-                .Returns(new[] {new ClientAccount()});
+            MockConcessionManager.Setup(_ => _.GetClientAccounts(It.IsAny<int>(), It.IsAny<User>(), ""))
+                .Returns(new[] { new ClientAccount() });
 
             var result = _concessionController.ClientAccounts(1);
             var apiResult = Assert.IsType<OkObjectResult>(result);
@@ -130,7 +130,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         public void UserApprovedConcessions_Executes_Positive()
         {
             MockConcessionManager.Setup(_ => _.GetApprovedConcessionsForUser(It.IsAny<int>()))
-                .Returns(new[] {new ApprovedConcession()});
+                .Returns(new[] { new ApprovedConcession() });
 
             var result = _concessionController.UserApprovedConcessions();
             var apiResult = Assert.IsType<OkObjectResult>(result);
@@ -146,7 +146,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         public void TransactionTypes_Executes_Positive()
         {
             MockLookupTableManager.Setup(_ => _.GetTransactionTypesForConcessionType(It.IsAny<string>()))
-                .Returns(new[] {new TransactionType()});
+                .Returns(new[] { new TransactionType() });
 
             var result = _concessionController.TransactionTypes("Test");
             var apiResult = Assert.IsType<OkObjectResult>(result);

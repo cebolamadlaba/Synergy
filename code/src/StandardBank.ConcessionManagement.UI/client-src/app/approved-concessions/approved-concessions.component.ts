@@ -11,6 +11,7 @@ import { ConcessionTypes } from '../constants/concession-types';
 
 import { UserConcessionsService } from "../services/user-concessions.service";
 import { ConcessionLetterService } from "../services/concession-letter.service";
+import { LegalEntityAddressService } from "../services/legal-entity-address.service";
 
 import saveAs from 'file-saver';
 
@@ -43,7 +44,8 @@ export class ApprovedConcessionsComponent implements OnInit {
     constructor( @Inject(UserConcessionsService) private userConcessionsService,
         private router: Router,
         private http: HttpClient,
-        private concessionLetterService: ConcessionLetterService) { }
+        private concessionLetterService: ConcessionLetterService,
+        private legalEntityAddressService: LegalEntityAddressService) { }
 
     ngOnInit() {
         this.initLegalEntityConcessionLetter();
@@ -88,6 +90,18 @@ export class ApprovedConcessionsComponent implements OnInit {
         this.legalEntityConcessionLetterModel.clientPostalAddress = "";
         this.legalEntityConcessionLetterModel.clientCity = "";
         this.legalEntityConcessionLetterModel.clientPostalCode = "";
+
+        if (this.legalEntityId != null && this.legalEntityId > 0) {
+            // Get LegalEntityAddress.
+            this.legalEntityAddressService.getLegalEntityAddress(this.legalEntityId).subscribe(result => {
+                this.legalEntityConcessionLetterModel.clientContactPerson = result.contactPerson;
+                this.legalEntityConcessionLetterModel.clientName = result.customerName;
+                this.legalEntityConcessionLetterModel.clientPostalAddress = result.postalAddress;
+                this.legalEntityConcessionLetterModel.clientCity = result.city;
+                this.legalEntityConcessionLetterModel.clientPostalCode = result.postalCode;
+            }, error => { alert('Failed to retrieve Legal Entity Address'); });
+        }
+
     }
 
     openCustomerDetailModal(legalEntityId: number) {
