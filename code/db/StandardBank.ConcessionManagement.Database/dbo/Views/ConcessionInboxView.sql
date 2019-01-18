@@ -2,6 +2,7 @@
 
 
 
+
 CREATE VIEW [dbo].[ConcessionInboxView]
 AS
 SELECT        Distinct c.pkConcessionId AS ConcessionId, rg.pkRiskGroupId AS RiskGroupId, rg.RiskGroupNumber, rg.RiskGroupName, le.pkLegalEntityId AS LegalEntityId, le.CustomerName, lea.pkLegalEntityAccountId AS LegalEntityAccountId, 
@@ -13,8 +14,8 @@ SELECT        Distinct c.pkConcessionId AS ConcessionId, rg.pkRiskGroupId AS Ris
 FROM            dbo.tblConcession AS c INNER JOIN
                         dbo.tblRiskGroup AS rg ON rg.pkRiskGroupId = c.fkRiskGroupId INNER JOIN
                         dbo.rtblConcessionType AS ct ON ct.pkConcessionTypeId = c.fkConcessionTypeId INNER JOIN
-                        dbo.tblConcessionDetail AS cd ON cd.fkConcessionId = c.pkConcessionId Left JOIN
-                        dbo.tblLegalEntity AS le ON le.pkLegalEntityId = cd.fkLegalEntityId Left JOIN
+                        dbo.tblConcessionDetail AS cd ON cd.fkConcessionId = c.pkConcessionId Inner JOIN
+                        dbo.tblLegalEntity AS le ON le.pkLegalEntityId = cd.fkLegalEntityId Inner JOIN
                         dbo.tblLegalEntityAccount AS lea ON lea.pkLegalEntityAccountId = cd.fkLegalEntityAccountId INNER JOIN
                         dbo.rtblStatus AS s ON s.pkStatusId = c.fkStatusId INNER JOIN
                         dbo.rtblSubStatus AS ss ON ss.pkSubStatusId = c.fkSubStatusId INNER JOIN

@@ -257,6 +257,7 @@
     <Build Include="Audit\Tables\tblConcessionDetail.sql" />
     <Build Include="dbo\Views\View_1.sql" />
     <Build Include="dbo\Tables\tblAENumberUser.sql" />
+    <Build Include="dbo\Tables\tblLegalEntityAddress.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Change Scripts\09_create_rtblPeriod.sql" />
