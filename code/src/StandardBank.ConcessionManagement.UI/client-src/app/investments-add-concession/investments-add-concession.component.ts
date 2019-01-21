@@ -116,7 +116,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
         this.investmentView.riskGroup = new RiskGroup();
         this.investmentView.investmentConcessions = [new InvestmentConcession()];
         this.investmentView.investmentConcessions[0].concession = new Concession();
-       
+
     }
 
     ngOnInit() {
@@ -186,7 +186,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
 
                 this.selectedProductTypes[0] = this.productTypes[0];
                 this.productTypeChanged(0);
-            } 
+            }
 
         }, error => {
             this.errorMessage = <any>error;
@@ -310,7 +310,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
             currentRow.get('expiryDate').setValue('');
             currentRow.get('expiryDate').disable();
         }
-        else{
+        else {
 
             this.selectedInvestmentConcession[rowIndex] = true;
 
@@ -327,7 +327,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
     getInvestmentConcession(): InvestmentConcession {
         var investmentConcession = new InvestmentConcession();
         investmentConcession.concession = new Concession();
-        investmentConcession.concession.riskGroupId = this.riskGroup.id;       
+        investmentConcession.concession.riskGroupId = this.riskGroup.id;
 
 
 
@@ -365,7 +365,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
             if (concessionFormItem.get('productType').value) {
 
                 if (concessionFormItem.get('productType').value.description == 'Notice deposit (BND)') {
-                   // applyexpirydate = true;
+                    // applyexpirydate = true;
                 }
                 investmentConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;
                 hasTypeId = true;
@@ -460,7 +460,12 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
             if (conditionFormItem.get('volume').value)
                 concessionCondition.conditionVolume = conditionFormItem.get('volume').value;
 
-            if (conditionFormItem.get('value').value)
+            if (conditionFormItem.get('value').value == null || (<string>conditionFormItem.get('value').value).length < 1) {
+                var value = conditionFormItem.get('conditionType').value;
+                if (value != null && value.enableConditionValue == true)
+                    this.addValidationError("Conditions: 'Value' is a mandatory field");
+            }
+            else if (conditionFormItem.get('value').value)
                 concessionCondition.conditionValue = conditionFormItem.get('value').value;
 
             if (conditionFormItem.get('periodType').value) {
