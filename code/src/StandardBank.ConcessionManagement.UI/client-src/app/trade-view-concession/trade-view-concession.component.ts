@@ -372,7 +372,8 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                     }
 
                     if (tradeConcessionDetail.communication) {
-                        currentConcession.get('communication').setValue(tradeConcessionDetail.communication);
+                        let communication = this.baseComponentService.formatDecimal(+tradeConcessionDetail.communication);
+                        currentConcession.get('communication').setValue(communication);
 
                         tradeConcessionDetail.show_communication = true;
 
@@ -415,12 +416,14 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                         currentConcession.get('loadedRate').setValue(tradeConcessionDetail.loadedRate);
 
                     if (tradeConcessionDetail.min) {
-                        currentConcession.get('min').setValue(tradeConcessionDetail.min);
+                        let min = this.baseComponentService.formatDecimal(+tradeConcessionDetail.min);
+                        currentConcession.get('min').setValue(min);
                         tradeConcessionDetail.show_min = true;
                     }
 
                     if (tradeConcessionDetail.max) {
-                        currentConcession.get('max').setValue(tradeConcessionDetail.max);
+                        let max = this.baseComponentService.formatDecimal(+tradeConcessionDetail.max);
+                        currentConcession.get('max').setValue(max);
                         tradeConcessionDetail.show_max = true;
                     }
 
@@ -687,13 +690,16 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
         if (productype != null && productype.tradeProductType != "" && productype.tradeProductType != "Outward TT") {
             currentrow.get('communication').disable();
             currentrow.get('communication').setValue(null);
+            return true;
         }
         else {
             if (this.canEdit) {
-                currentrow.get('communication').enable()
+                currentrow.get('communication').enable();
+                return false;
             }
             else {
                 currentrow.get('communication').disable();
+                return true;
             }
         }
     }
@@ -816,7 +822,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
             }
             ///---
             if (!concessionFormItem.get('communication').disabled) {
-                let communicationVal = concessionFormItem.get('communication').value;
+                let communicationVal = this.baseComponentService.unformat(concessionFormItem.get('communication').value);
                 if (communicationVal != null || communicationVal == 0) {
                     tradeConcessionDetail.communication = communicationVal;
                 } else {
