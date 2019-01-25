@@ -54,7 +54,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     errorMessage: String;
     validationError: String[];
     saveMessage: String;
-    warningMessage: String;  
+    warningMessage: String;
 
     observableRiskGroup: Observable<RiskGroup>;
     observableInvestmentView: Observable<InvestmentView>;
@@ -64,10 +64,10 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
 
     primeRate = "0.00";
-    today: string;   
+    today: string;
 
-    public investmentConcessionForm: FormGroup;   
-   
+    public investmentConcessionForm: FormGroup;
+
     isLoading = true;
     canBcmApprove = false;
     canPcmApprove = false;
@@ -96,7 +96,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     observablePeriodTypes: Observable<PeriodType[]>;
     periodTypes: PeriodType[];
 
-    productTypes: ProductType[];   
+    productTypes: ProductType[];
 
     observableInvestmentProducts: Observable<InvestmentProduct[]>;
     investmentproducts: InvestmentProduct[];
@@ -104,7 +104,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     observableLegalEntityGBbNumbers: Observable<LegalEntityGBBNumber[]>;
     legalentitygbbnumbers: LegalEntityGBBNumber[];
 
-    selectedConditionTypes: ConditionType[];  
+    selectedConditionTypes: ConditionType[];
     selectedInvestmentConcession: boolean[];
 
     observableConditionTypes: Observable<ConditionType[]>;
@@ -188,7 +188,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                 this.errorMessage = <any>error;
                 this.isLoading = false;
             });
-        }     
+        }
 
         this.investmentConcessionForm = this.formBuilder.group({
             concessionItemRows: this.formBuilder.array([this.initConcessionItemRows()]),
@@ -236,7 +236,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                 this.capturedComments = value.comments;
             }
         });
-    }    
+    }
 
     populateForm() {
         if (this.concessionReferenceId) {
@@ -292,8 +292,8 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                 this.canArchive = investmentConcession.concession.canArchive && investmentConcession.currentUser.canRequest;
                 this.isInProgressExtension = investmentConcession.concession.isInProgressExtension;
                 this.isInProgressRenewal = investmentConcession.concession.isInProgressRenewal;
-              
-                this.investmentConcessionForm.controls['motivation'].setValue(this.investmentConcession.concession.motivation);               
+
+                this.investmentConcessionForm.controls['motivation'].setValue(this.investmentConcession.concession.motivation);
                 this.investmentConcessionForm.controls['smtDealNumber'].setValue(this.investmentConcession.concession.smtDealNumber);
 
                 let rowIndex = 0;
@@ -310,14 +310,14 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                     currentConcession.get('investmentConcessionDetailId').setValue(investmentConcessionDetail.investmentConcessionDetailId);
                     currentConcession.get('concessionDetailId').setValue(investmentConcessionDetail.concessionDetailId);
 
-                 
+
                     if (this.clientAccounts) {
                         let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == investmentConcessionDetail.legalEntityAccountId);
                         currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
                     }
 
 
-                    if (this.productTypes) {                                           
+                    if (this.productTypes) {
 
                         let selectedProductType = this.productTypes.filter(_ => _.id === investmentConcessionDetail.productTypeId);
                         currentConcession.get('productType').setValue(selectedProductType[0]);
@@ -326,7 +326,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                         if (selectedProductType[0].description == 'Notice deposit (BND)') {
 
                             this.selectedInvestmentConcession[rowIndex] = false;
-                           
+
                         }
                         else {
 
@@ -346,7 +346,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                         currentConcession.get('loadedRate').setValue(investmentConcessionDetail.loadedRate);
 
                     if (investmentConcessionDetail.term)
-                        currentConcession.get('noticeperiod').setValue(investmentConcessionDetail.term);                                
+                        currentConcession.get('noticeperiod').setValue(investmentConcessionDetail.term);
 
                     if (investmentConcessionDetail.expiryDate) {
                         var formattedExpiryDate = this.datepipe.transform(investmentConcessionDetail.expiryDate, 'yyyy-MM-dd');
@@ -356,7 +356,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                     if (investmentConcessionDetail.dateApproved) {
                         var formattedDateApproved = this.datepipe.transform(investmentConcessionDetail.dateApproved, 'yyyy-MM-dd');
                         currentConcession.get('dateApproved').setValue(formattedDateApproved);
-                    }                  
+                    }
 
                     currentConcession.get('isExpired').setValue(investmentConcessionDetail.isExpired);
                     currentConcession.get('isExpiring').setValue(investmentConcessionDetail.isExpiring);
@@ -403,18 +403,18 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                 this.errorMessage = <any>error;
             });
         }
-    }  
-        
+    }
+
 
     initConcessionItemRows() {
 
         this.selectedProductTypes.push(new ProductType());
         this.selectedAccountNumbers.push(new ClientAccountArray());
-     
+
         this.selectedInvestmentConcession.push(false)
 
         return this.formBuilder.group({
-           
+
             disablecontrolset: [''],
             investmentConcessionDetailId: [''],
             concessionDetailId: [''],
@@ -422,9 +422,9 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             productType: [''],
             accountNumber: [''],
             balance: [''],
-            noticeperiod: [''],          
+            noticeperiod: [''],
             approvedRate: [''],
-            loadedRate: [''],        
+            loadedRate: [''],
             expiryDate: [''],
             dateApproved: [{ value: '', disabled: true }],
             isExpired: [''],
@@ -469,7 +469,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         if (confirm("Are you sure you want to remove this row?")) {
             const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
             control.removeAt(index);
-        
+
             this.selectedInvestmentConcession.splice(index, 1);
 
             this.selectedProductTypes.splice(index, 1);
@@ -496,44 +496,44 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         currentCondition.get('value').setValue(null);
     }
 
-   // productTypeChanged(rowIndex) {
+    // productTypeChanged(rowIndex) {
 
-      //  const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];      
+    //  const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];      
 
-       // let currentProduct = control.controls[rowIndex];
-       // var selectedproducttype = currentProduct.get('producttype').value;
+    // let currentProduct = control.controls[rowIndex];
+    // var selectedproducttype = currentProduct.get('producttype').value;
 
-        //this.selectedProductTypes[rowIndex].products = this.investmentproducts.filter(re => re.investmentProductTypeId == selectedproducttype.investmentProductTypeID);
+    //this.selectedProductTypes[rowIndex].products = this.investmentproducts.filter(re => re.investmentProductTypeId == selectedproducttype.investmentProductTypeID);
 
-       // currentProduct.get('product').setValue(this.selectedProductTypes[rowIndex].products[0]);
+    // currentProduct.get('product').setValue(this.selectedProductTypes[rowIndex].products[0]);
 
-        //if (selectedproducttype.investmentProductType == "Local guarantee") {
+    //if (selectedproducttype.investmentProductType == "Local guarantee") {
 
-        //    this.selectedInvestmentConcession[rowIndex] = true;
+    //    this.selectedInvestmentConcession[rowIndex] = true;
 
-        //    currentProduct.get('disablecontrolset').setValue(true);
-            
-        //    currentProduct.get('advalorem').setValue(null);
-        //    currentProduct.get('min').setValue(null);
-        //    currentProduct.get('max').setValue(null);
+    //    currentProduct.get('disablecontrolset').setValue(true);
 
-        //    currentProduct.get('communication').setValue(null);
-        //    currentProduct.get('flatfee').setValue(null);
-        //    currentProduct.get('currency').setValue(null);
+    //    currentProduct.get('advalorem').setValue(null);
+    //    currentProduct.get('min').setValue(null);
+    //    currentProduct.get('max').setValue(null);
 
-        //}
-        //else {
+    //    currentProduct.get('communication').setValue(null);
+    //    currentProduct.get('flatfee').setValue(null);
+    //    currentProduct.get('currency').setValue(null);
 
-        //    this.selectedInvestmentConcession[rowIndex] = false;
+    //}
+    //else {
 
-        //    currentProduct.get('disablecontrolset').setValue(false);
+    //    this.selectedInvestmentConcession[rowIndex] = false;
 
-        //    currentProduct.get('gbbnumber').setValue(null);
-        //    currentProduct.get('term').setValue(null);
-        //    currentProduct.get('estfee').setValue(null);
-        //    currentProduct.get('loadedRate').setValue(null);
-        //}
-   // }
+    //    currentProduct.get('disablecontrolset').setValue(false);
+
+    //    currentProduct.get('gbbnumber').setValue(null);
+    //    currentProduct.get('term').setValue(null);
+    //    currentProduct.get('estfee').setValue(null);
+    //    currentProduct.get('loadedRate').setValue(null);
+    //}
+    // }
 
 
 
@@ -579,14 +579,14 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             this.validationError = [];
 
         this.validationError.push(validationDetail);
-    }  
-  
+    }
+
     getInvestmentConcession(isNew: boolean): InvestmentConcession {
         var investmentConcession = new InvestmentConcession();
-        investmentConcession.concession = new Concession();      
+        investmentConcession.concession = new Concession();
         investmentConcession.concession.riskGroupId = this.riskGroup.id;
         investmentConcession.concession.referenceNumber = this.concessionReferenceId;
-        investmentConcession.concession.concessionType = ConcessionTypes.Investment;     
+        investmentConcession.concession.concessionType = ConcessionTypes.Investment;
 
         //if (this.investmentConcessionForm.controls['smtDealNumber'].value) {
         //    investmentConcession.concession.smtDealNumber = this.investmentConcessionForm.controls['smtDealNumber'].value;
@@ -700,7 +700,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                     break;
                 }
             }
-        }      
+        }
 
         const conditions = <FormArray>this.investmentConcessionForm.controls['conditionItemsRows'];
 
@@ -758,7 +758,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
         return investmentConcession;
     }
-    
+
 
     getBackgroundColour(rowIndex: number) {
         const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
@@ -844,7 +844,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
-    
+
 
     pcmApproveConcession() {
         this.isLoading = true;
@@ -868,8 +868,8 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
             if (!investmentConcession.concession.comments) {
                 investmentConcession.concession.comments = ConcessionStatus.ApprovedWithChanges;
-            }          
-           
+            }
+
             investmentConcession.concession.concessionComments = this.GetChanges(investmentConcession.concession.id);
 
         } else {
@@ -1153,7 +1153,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.errorMessage = null;
         this.validationError = null;
 
-      
+
         var investmentConcession = this.getInvestmentConcession(false);
         investmentConcession.concession.status = ConcessionStatus.Declined;
         investmentConcession.concession.subStatus = ConcessionSubStatus.RequestorDeclinedChanges;
@@ -1191,8 +1191,8 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                 this.warningMessage = "Concession item has been deleted";
 
                 this.isLoading = false;
-               
-                this.ngOnInit();          
+
+                this.ngOnInit();
 
             }, error => {
                 this.errorMessage = <any>error;
@@ -1233,7 +1233,8 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     setTwoNumberDecimal($event) {
-        $event.target.value = this.formatDecimal($event.target.value);
+        $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
+        //$event.target.value = this.formatDecimal($event.target.value);
     }
 
     setZeroNumberDecimal($event) {
@@ -1250,7 +1251,8 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
     setThreeNumberDecimal($event) {
         if ($event.target.value) {
-            $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
+            $event.target.value = this.baseComponentService.formatDecimalThree($event.target.value);
+            //$event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
         }
         else {
 
@@ -1258,13 +1260,13 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
-    formatDecimal(itemValue: number) {
-        if (itemValue) {
-            return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-        }
+    //formatDecimal(itemValue: number) {
+    //    if (itemValue) {
+    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
+    //    }
 
-        return null;
-    }
+    //    return null;
+    //}
 
     validatePeriod(itemrow) {
         this.validationError = null;

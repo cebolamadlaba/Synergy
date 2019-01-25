@@ -292,7 +292,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                     let selectedConditionProduct = selectedConditionType[0].conditionProducts.filter(_ => _.id == concessionCondition.conditionProductId);
                     currentCondition.get('conditionProduct').setValue(selectedConditionProduct[0]);
 
-                    currentCondition.get('interestRate').setValue(concessionCondition.interestRate);
+                    currentCondition.get('interestRate').setValue(this.baseComponentService.formatDecimal(concessionCondition.interestRate));
                     currentCondition.get('volume').setValue(concessionCondition.conditionVolume);
                     currentCondition.get('value').setValue(concessionCondition.conditionValue);
 
@@ -1031,16 +1031,17 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     setTwoNumberDecimal($event) {
-        $event.target.value = this.formatDecimal($event.target.value);
+        $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
+        //$event.target.value = this.formatDecimal($event.target.value);
     }
 
-    formatDecimal(itemValue: number) {
-        if (itemValue) {
-            return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-        }
+    //formatDecimal(itemValue: number) {
+    //    if (itemValue) {
+    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
+    //    }
 
-        return null;
-    }
+    //    return null;
+    //}
 
     validatePeriod(itemrow) {
         this.validationError = null;

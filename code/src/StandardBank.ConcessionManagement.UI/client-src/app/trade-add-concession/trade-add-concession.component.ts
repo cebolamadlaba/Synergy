@@ -34,7 +34,6 @@ import { UserService } from "../services/user.service";
 
 import { BaseComponentService } from '../services/base-component.service';
 
-
 @Component({
     selector: 'app-trade-add-concession',
     templateUrl: './trade-add-concession.component.html',
@@ -655,7 +654,9 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     setTwoNumberDecimal($event) {
-        $event.target.value = this.formatDecimal($event.target.value);
+
+        $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
+        //$event.target.value = this.formatDecimal($event.target.value);
     }
 
 
@@ -757,13 +758,14 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
     //    return parts[0];
     //}
 
-    formatDecimal(itemValue: number) {
-        if (itemValue) {
-            return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-        }
+    //formatDecimal(itemValue: number) {
 
-        return null;
-    }
+    //    if (itemValue) {
+    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
+    //    }
+
+    //    return null;
+    //}
 
     goBack() {
         this.router.navigate(['/pricing', this.riskGroupNumber]);

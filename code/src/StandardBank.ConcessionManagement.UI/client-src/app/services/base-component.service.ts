@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
 
+import { DecimalPipe } from '@angular/common';
+
+declare var accounting: any;
+
 @Injectable()
 export class BaseComponentService {
 
@@ -53,5 +57,29 @@ export class BaseComponentService {
         });
 
         return duplicates.length > 1;
+    }
+
+    public unformat(itemValue: number) {
+        return accounting.unformat(itemValue);
+    }
+
+    public formatDecimal(itemValue: number) {
+
+        if (itemValue) {
+            itemValue = this.unformat(itemValue);
+            return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
+        }
+
+        return null;
+    }
+
+    public formatDecimalThree(itemValue: number) {
+
+        if (itemValue) {
+            itemValue = this.unformat(itemValue);
+            return new DecimalPipe('en-US').transform(itemValue, '1.3-3');
+        }
+
+        return null;
     }
 }

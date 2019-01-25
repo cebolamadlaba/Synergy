@@ -524,13 +524,15 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     setTwoNumberDecimal($event) {
-        $event.target.value = this.formatDecimal($event.target.value);
+        $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
+        //$event.target.value = this.formatDecimal($event.target.value);
     }
 
     setThreeNumberDecimal($event) {
 
         if ($event.target.value) {
-            $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
+            $event.target.value = this.baseComponentService.formatDecimalThree($event.target.value);
+            //$event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
         }
         else {
 
@@ -549,13 +551,13 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
-    formatDecimal(itemValue: number) {
-        if (itemValue) {
-            return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-        }
+    //formatDecimal(itemValue: number) {
+    //    if (itemValue) {
+    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
+    //    }
 
-        return null;
-    }
+    //    return null;
+    //}
 
     goBack() {
         this.router.navigate(['/pricing', this.riskGroupNumber]);
