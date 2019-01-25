@@ -535,7 +535,21 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     //}
     // }
 
+    isEnabledExpiryDate(rowIndex: number) {
+        const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
 
+        let currentRow = control.controls[rowIndex];
+        var productType = currentRow.get('productType').value;
+
+        if (productType.description == 'Notice deposit (BND)') {
+            //currentRow.get('expiryDate').disable();
+            return false;
+        }
+        else {
+            //currentRow.get('expiryDate').enable();
+            return true;
+        }
+    }
 
     productTypeChanged(rowIndex) {
 
@@ -563,9 +577,10 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             this.selectedInvestmentConcession[rowIndex] = false;
             currentRow.get('noticeperiod').setValue(null);
             currentRow.get('expiryDate').setValue('');
+            currentRow.get('expiryDate').disable();
         }
         else {
-
+            currentRow.get('expiryDate').enable();
             this.selectedInvestmentConcession[rowIndex] = true;
 
         }
@@ -630,7 +645,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             if (concessionFormItem.get('productType').value) {
 
                 if (concessionFormItem.get('productType').value.description == 'Notice deposit (BND)') {
-                    //applyexpirydate = true;
+                    applyexpirydate = true;
                 }
                 investmentConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;
                 hasTypeId = true;
@@ -680,7 +695,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                 investmentConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
             else {
-                if (applyexpirydate) {
+                if (!applyexpirydate) {
                     this.addValidationError("Expiry date not selected");
                 }
             }
