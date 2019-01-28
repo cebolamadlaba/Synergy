@@ -467,7 +467,8 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
             let advaloremfound = false;
 
-            if (concessionFormItem.get('advalorem').value) {
+            if ((concessionFormItem.get('advalorem').value != null && concessionFormItem.get('advalorem').value != "") ||
+                concessionFormItem.get('advalorem').value === 0) {
                 advaloremfound = true;
                 tradeConcessionDetail.adValorem = concessionFormItem.get('advalorem').value;
             } else {
@@ -506,7 +507,8 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
             let flatfeefound = false;
 
-            if (concessionFormItem.get('flatfee').value) {
+            if ((concessionFormItem.get('flatfee').value != null && concessionFormItem.get('flatfee').value != "") ||
+                concessionFormItem.get('flatfee').value === 0) {
                 flatfeefound = true;
                 tradeConcessionDetail.flatFee = concessionFormItem.get('flatfee').value;
             } else {
