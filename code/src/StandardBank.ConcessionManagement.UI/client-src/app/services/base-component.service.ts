@@ -65,7 +65,7 @@ export class BaseComponentService {
 
     public formatDecimal(itemValue: number) {
 
-        if (itemValue) {
+        if (itemValue != null) {
             itemValue = this.unformat(itemValue);
             return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
         }
@@ -75,7 +75,7 @@ export class BaseComponentService {
 
     public formatDecimalThree(itemValue: number) {
 
-        if (itemValue) {
+        if (itemValue != null) {
             itemValue = this.unformat(itemValue);
             return new DecimalPipe('en-US').transform(itemValue, '1.3-3');
         }

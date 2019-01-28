@@ -821,7 +821,8 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                 }
             }
             ///---
-            if (!concessionFormItem.get('communication').disabled) {
+            //if (!concessionFormItem.get('communication').disabled) {
+            if (concessionFormItem.get('communication').value != null && concessionFormItem.get('communication').value > -1) {
                 let communicationVal = this.baseComponentService.unformat(concessionFormItem.get('communication').value);
                 if (communicationVal != null || communicationVal == 0) {
                     tradeConcessionDetail.communication = communicationVal;

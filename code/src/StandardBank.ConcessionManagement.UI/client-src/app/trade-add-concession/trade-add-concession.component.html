@@ -113,7 +113,7 @@
 
         <div class="row">
             <label>Motivation</label>
-            <textarea class="form-control large-input" maxlength="800" formControlName="motivation"></textarea>
+            <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="saveMessage ? '' : null"></textarea>
         </div>
 
     </div>
