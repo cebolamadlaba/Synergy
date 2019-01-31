@@ -144,6 +144,7 @@ export class ApprovedConcessionsComponent implements OnInit {
 
         let observable;
         if (concessionIds != null && concessionIds.length > 0) {
+            this.legalEntityConcessionLetterModel.legalEntityId = this.legalEntityId;
             observable = this.concessionLetterService.generateConcessionLetterForConcessionsByConcessionIds(concessionIds, this.legalEntityConcessionLetterModel);
         } else {
             this.legalEntityConcessionLetterModel.legalEntityId = this.legalEntityId;

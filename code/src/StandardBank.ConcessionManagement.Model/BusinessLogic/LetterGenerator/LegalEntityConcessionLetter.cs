@@ -8,6 +8,7 @@ namespace StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator
     /// </summary>
     public class LegalEntityConcessionLetter
     {
+        public int LegalEntityId { get; set; }
         /// <summary>
         /// Gets or sets the client contact person.
         /// </summary>
@@ -80,7 +81,7 @@ namespace StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator
         /// </value>
         public string RequestorName { get; set; }
 
-       
+
 
         /// <summary>
         /// Gets or sets the requestor contact number.

@@ -29,7 +29,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// The lookup table manager
         /// </summary>
         private readonly ILookupTableManager _lookupTableManager;
-        
+
         private readonly ILegalEntityAddressManager _legalEntityAddressManager;
 
         /// <summary>
@@ -395,6 +395,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult GenerateLettersForConcessions(string concessionIds, [FromBody] LegalEntityConcessionLetter legalEntityConcessionLetter)
         {
             var userId = _siteHelper.GetUserIdForFiltering(this);
+
+            this.SetLegalEntityAddress(legalEntityConcessionLetter.LegalEntityId, legalEntityConcessionLetter);
 
             var convertedConcessionIds = from concessionDetailId in concessionIds.Split(',')
                                          select Convert.ToInt32(concessionDetailId);
