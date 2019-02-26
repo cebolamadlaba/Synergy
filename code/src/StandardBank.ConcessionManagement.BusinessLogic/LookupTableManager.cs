@@ -524,10 +524,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         ((mappedConditionType.Description == Constants.ConditionType.MininumAverageCreditBalance) | (mappedConditionType.Description == Constants.ConditionType.CreditFacility));
 
                     mappedConditionType.EnableConditionValue =
-                        mappedConditionType.Description != Constants.ConditionType.FullTransactionalBanking;
+                        mappedConditionType.Description == Constants.ConditionType.FullTransactionalBanking |
+                        mappedConditionType.Description == Constants.ConditionType.MininumTurnover |
+                        mappedConditionType.Description == Constants.ConditionType.MininumAverageCreditBalance;
 
                     mappedConditionType.EnableConditionVolume =
-                        mappedConditionType.Description == Constants.ConditionType.MininumTurnover;
+                        mappedConditionType.Description == Constants.ConditionType.MininumTurnover |
+                        mappedConditionType.Description == Constants.ConditionType.FullTransactionalBanking;
 
                     mappedConditionType.EnableExpectedTurnoverValue =
                         mappedConditionType.Description == Constants.ConditionType.FullTransactionalBanking;

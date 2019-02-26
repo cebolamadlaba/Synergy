@@ -276,8 +276,10 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                     currentConcession.get('bolConcessionDetailId').setValue(bolConcessionDetail.bolConcessionDetailId);
                     currentConcession.get('concessionDetailId').setValue(bolConcessionDetail.concessionDetailId);
 
-                    if (bolConcessionDetail.loadedRate)
+                    if (bolConcessionDetail.loadedRate) {
+                        bolConcessionDetail.loadedRate = this.baseComponentService.formatDecimalThree(Number(bolConcessionDetail.loadedRate));
                         currentConcession.get('unitcharge').setValue(bolConcessionDetail.loadedRate);
+                    }
 
                     if (bolConcessionDetail.approvedRate)
                         currentConcession.get('unitchargeApproved').setValue(bolConcessionDetail.approvedRate);

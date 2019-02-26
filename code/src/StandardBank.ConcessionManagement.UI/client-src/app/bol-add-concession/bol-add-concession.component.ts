@@ -340,8 +340,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
                 this.addValidationError("Charge code not selected");
             }
 
-
-            if (concessionFormItem.get('unitcharge').value || concessionFormItem.get('unitcharge').value == 0) {
+            if (concessionFormItem.get('unitcharge').value || concessionFormItem.get('unitcharge').value === 0) {
                 bolConcessionDetail.loadedRate = concessionFormItem.get('unitcharge').value;
             } else {
                 this.addValidationError("Rate not entered");

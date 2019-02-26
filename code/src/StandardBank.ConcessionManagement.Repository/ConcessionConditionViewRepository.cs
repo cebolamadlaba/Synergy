@@ -51,7 +51,7 @@ namespace StandardBank.ConcessionManagement.Repository
                            [ConditionMet] IS NULL
                             AND [PeriodId] = @periodId
                             AND [PeriodTypeId] = @periodTypeId
-                            AND [RequestorId] = @RequestorId and cv.ExpiryDate <= @ExpiryDate",
+                            AND [CurrentAEUserId] = @RequestorId and cv.ExpiryDate <= @ExpiryDate",
                     new { periodId, periodTypeId, requestorId, ExpiryDate = System.DateTime.Today.AddMonths(1) });
             }
         }
@@ -69,7 +69,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     @"SELECT [PeriodType], COUNT(*) [RecordCount] FROM [dbo].[ConcessionConditionView] cv
                   	join tblConcessionDetail cd on cv.ConcessionId = cd.fkConcessionId
                     WHERE [ConditionMet] IS NULL
-                    AND [RequestorId] = @RequestorId  and cd.ExpiryDate <= @ExpiryDate
+                    AND [CurrentAEUserId] = @RequestorId  and cv.ExpiryDate <= @ExpiryDate
                     GROUP BY [PeriodType]", new { requestorId, ExpiryDate = System.DateTime.Today.AddMonths(1) });
             }
         }

@@ -54,7 +54,8 @@ namespace StandardBank.ConcessionManagement.Repository
                     FROM [dbo].[ConcessionInboxView]					
 					left join tblConcessionLetter on [ConcessionInboxView].ConcessionId = tblConcessionLetter.fkConcessionDetailId 
 
-                    WHERE [RequestorId] = @requestorId
+                    --WHERE [RequestorId] = @requestorId
+                    WHERE [CurrentAEUserId] = @requestorId
                     AND [StatusId] in @statusIds
                     AND [IsActive] = @isActive
 
@@ -77,7 +78,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     FROM [dbo].[ConcessionInboxView]					
 					left join tblConcessionLetter on [ConcessionInboxView].ConcessionId = tblConcessionLetter.fkConcessionDetailId  
 
-                    WHERE (CurrentAeUserId = @requestorId)
+                    WHERE ([CurrentAEUserId] = @requestorId)
                     AND [StatusId] in @statusIds
                     AND [IsActive] = @isActive
 
@@ -202,7 +203,7 @@ namespace StandardBank.ConcessionManagement.Repository
                 return db.Query<ConcessionInboxView>(
                     @"SELECT [ConcessionId], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [LegalEntityId], [CustomerName], [LegalEntityAccountId], [AccountNumber], [ConcessionTypeId], [ConcessionType], [ConcessionDate], [StatusId], [Status], [SubStatusId], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment], [DatesentForApproval], [ConcessionDetailId], [ExpiryDate], [DateApproved], [AAUserId], [RequestorId], [BCMUserId], [PCMUserId], [HOUserId], [CentreId], [CentreName], [RegionId], [Region], [IsMismatched], [IsActive], [IsCurrent], [PriceExported], [PriceExportedDate]
                     FROM [dbo].[ConcessionInboxView]
-                    WHERE [RequestorId] = @requestorId
+                    WHERE [CurrentAEUserId] = @requestorId
                     AND ([ExpiryDate] BETWEEN @startExpiryDate AND @endExpiryDate)
                     AND [StatusId] in @statusIds
                     AND [IsActive] = @isActive",
@@ -226,7 +227,7 @@ namespace StandardBank.ConcessionManagement.Repository
                 return db.Query<ConcessionInboxView>(
                     @"SELECT [ConcessionId], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [LegalEntityId], [CustomerName], [LegalEntityAccountId], [AccountNumber], [ConcessionTypeId], [ConcessionType], [ConcessionDate], [StatusId], [Status], [SubStatusId], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment], [DatesentForApproval], [ConcessionDetailId], [ExpiryDate], [DateApproved], [AAUserId], [RequestorId], [BCMUserId], [PCMUserId], [HOUserId], [CentreId], [CentreName], [RegionId], [Region], [IsMismatched], [IsActive], [IsCurrent], [PriceExported], [PriceExportedDate]
                     FROM [dbo].[ConcessionInboxView]
-                    WHERE [RequestorId] = @requestorId
+                    WHERE [CurrentAEUserId] = @requestorId
                     AND [StatusId] in @statusIds
                     AND [IsMismatched] = @isMismatched
                     AND [IsActive] = @isActive",
@@ -363,7 +364,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     @"SELECT [ConcessionId], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [LegalEntityId], [CustomerName], [LegalEntityAccountId], [AccountNumber], [ConcessionTypeId], [ConcessionType], [ConcessionDate], [StatusId], [Status], [SubStatusId], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment], [DatesentForApproval], [ConcessionDetailId], [ExpiryDate], [DateApproved], [AAUserId], [RequestorId], [BCMUserId], [PCMUserId], [HOUserId], [CentreId], [CentreName], [RegionId], [Region], [IsMismatched], [IsActive], [IsCurrent], [PriceExported], [PriceExportedDate]
                     FROM [dbo].[ConcessionInboxView]
                     WHERE [LegalEntityId] = @LegalEntityId
-                    AND [RequestorId] = @RequestorId
+                    AND [CurrentAEUserId] = @RequestorId
                     AND [StatusId] IN @StatusIds
                     AND [IsActive] = @IsActive
                     AND ([ExpiryDate] IS NULL OR [ExpiryDate] > GETDATE())",
