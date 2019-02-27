@@ -744,7 +744,8 @@ namespace StandardBank.ConcessionManagement.Repository
 					tr.[Min],
 					tr.[Term],
                     tr.fkLegalEntityGBBNumber,
-					tr.fkLegalEntityAccountId
+					tr.fkLegalEntityAccountId,
+                    tr.[Rate]
                     FROM [dbo].[tblConcessionDetail] cd
                     left join [dbo].[tblConcessionTrade] tr on cd.pkConcessionDetailId = tr.fkConcessionDetailId
                     left JOIN [dbo].tblLegalEntityAccount lea on tr.fkLegalEntityAccountId = lea.pkLegalEntityAccountId                  

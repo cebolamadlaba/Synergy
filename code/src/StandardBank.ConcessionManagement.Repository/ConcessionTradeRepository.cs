@@ -52,8 +52,8 @@ namespace StandardBank.ConcessionManagement.Repository
 
                 const string sql =
                     @"INSERT [dbo].[tblConcessionTrade] ([fkConcessionId], [fkConcessionDetailId],[fkTradeProductId], [fkLegalEntityAccountId],[fkLegalEntityId],[fkLegalEntityGBBNumber],
-                                                    [LoadedRate], [ApprovedRate], [GBBNumber], [Term],[Min],[Max],[Communication],[FlatFee],[EstablishmentFee],[AdValorem],[Currency]) 
-                VALUES (@fkConcessionId, @fkConcessionDetailId, @fkTradeProductId, @fkLegalEntityAccountId,@fkLegalEntityId,@fkLegalEntityGBBNumber, @LoadedRate, @ApprovedRate, @GBBNumber, @Term, @Min,@Max,@Communication,@FlatFee,@EstablishmentFee,@AdValorem,@Currency) 
+                                                    [LoadedRate], [ApprovedRate], [GBBNumber], [Term],[Min],[Max],[Communication],[FlatFee],[EstablishmentFee],[AdValorem],[Currency], [Rate]) 
+                VALUES (@fkConcessionId, @fkConcessionDetailId, @fkTradeProductId, @fkLegalEntityAccountId,@fkLegalEntityId,@fkLegalEntityGBBNumber, @LoadedRate, @ApprovedRate, @GBBNumber, @Term, @Min,@Max,@Communication,@FlatFee,@EstablishmentFee,@AdValorem,@Currency,@Rate) 
                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
                 if (model.LegalEntityAccountId == 0)
@@ -79,7 +79,8 @@ namespace StandardBank.ConcessionManagement.Repository
                                 FlatFee = model.FlatFee,
                                 EstablishmentFee = model.EstablishmentFee,
                                 AdValorem = model.AdValorem,
-                                Currency = model.Currency
+                                Currency = model.Currency,
+                                model.Rate
 
                             }).Single();
                     }
@@ -108,7 +109,8 @@ namespace StandardBank.ConcessionManagement.Repository
                                 FlatFee = model.FlatFee,
                                 EstablishmentFee = model.EstablishmentFee,
                                 AdValorem = model.AdValorem,
-                                Currency = model.Currency
+                                Currency = model.Currency,
+                                model.Rate
 
                             }).Single();
                     }
@@ -135,7 +137,7 @@ namespace StandardBank.ConcessionManagement.Repository
 
                 return db.Query<ConcessionTrade>(
                     @"SELECT [pkConcessionTradeId] [Id], t.[fkConcessionId] [ConcessionId],d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate], [fkConcessionDetailId],[fkTradeProductId],
-                                                    [LoadedRate], [ApprovedRate], [GBBNumber], [Term],[Min],[Max],[Communication],[FlatFee],[EstablishmentFee],[AdValorem],[Currency] 
+                                                    [LoadedRate], [ApprovedRate], [GBBNumber], [Term],[Min],[Max],[Communication],[FlatFee],[EstablishmentFee],[AdValorem],[Currency], [Rate] 
                     FROM [dbo].[tblConcessionTrade] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
                     WHERE [pkConcessionTradeId] = @Id",
@@ -153,7 +155,7 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 return db.Query<ConcessionTrade>(
                     @"SELECT[pkConcessionTradeId] [Id], t.[fkConcessionId] [ConcessionId],d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate], [fkConcessionDetailId],[fkTradeProductId],
-                                                    [LoadedRate], [ApprovedRate], [GBBNumber], [Term],[Min],[Max],[Communication],[FlatFee],[EstablishmentFee],[AdValorem],[Currency] 
+                                                    [LoadedRate], [ApprovedRate], [GBBNumber], [Term],[Min],[Max],[Communication],[FlatFee],[EstablishmentFee],[AdValorem],[Currency], [Rate]
                     FROM [dbo].[tblConcessionTrade] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]");
             }
@@ -214,8 +216,9 @@ namespace StandardBank.ConcessionManagement.Repository
                 {
                     const string sql =
            @"UPDATE [dbo].[tblConcessionTrade] set [fkConcessionId] = @fkConcessionId, [fkConcessionDetailId] = @fkConcessionDetailId,[fkTradeProductId] = @fkTradeProductId, [fkLegalEntityAccountId] = @fkLegalEntityAccountId,
-                                                    [LoadedRate] = @LoadedRate, [ApprovedRate] = @ApprovedRate, [GBBNumber] = @GBBNumber, [Term] = @Term,[Min] = @Min,[Max] = @Max,[Communication] = @Communication,[FlatFee] = @FlatFee,[EstablishmentFee] = @EstablishmentFee,[AdValorem] = @AdValorem,[Currency] = @Currency where
-                pkConcessionTradeId =  @Id
+                                                    [LoadedRate] = @LoadedRate, [ApprovedRate] = @ApprovedRate, [GBBNumber] = @GBBNumber, [Term] = @Term,[Min] = @Min,[Max] = @Max,[Communication] = @Communication,[FlatFee] = @FlatFee,
+                                                    [EstablishmentFee] = @EstablishmentFee,[AdValorem] = @AdValorem,[Currency] = @Currency,  [Rate] = @Rate
+                where pkConcessionTradeId =  @Id
                ";
 
                     db.Execute(sql, new
@@ -235,7 +238,8 @@ namespace StandardBank.ConcessionManagement.Repository
                         FlatFee = model.FlatFee,
                         EstablishmentFee = model.EstablishmentFee,
                         AdValorem = model.AdValorem,
-                        Currency = model.Currency
+                        Currency = model.Currency,
+                        model.Rate
 
                     });
                 }

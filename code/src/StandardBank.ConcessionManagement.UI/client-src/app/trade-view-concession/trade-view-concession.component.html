@@ -250,7 +250,7 @@
                 <td class="length-short"><input type="number" class="form-control" formControlName="estfee" [attr.disabled]="(selectedTradeConcession[i]) && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'estfee')" /></td>
                 <td class="length-short" *ngIf="isApproved"><input type="number" class="form-control" formControlName="approvedRate" [attr.disabled]="canEdit ? null : ''" [class.markred]="bcmhochanged(i,'approvedRate')" (change)="setThreeNumberDecimal($event)" /></td>
 
-                <td class="length-short"><input type="number" class="form-control" formControlName="loadedRate" [attr.disabled]="(selectedTradeConcession[i]) && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'loadedRate')" (change)="setThreeNumberDecimal($event)" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="rate" [attr.disabled]="(selectedTradeConcession[i]) && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'rate')" (change)="setThreeNumberDecimal($event)" /></td>
 
                 <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="(!selectedTradeConcession[i]) && canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" [class.markred]="bcmhochanged(i,'expiryDate')" /></td>
                 <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>

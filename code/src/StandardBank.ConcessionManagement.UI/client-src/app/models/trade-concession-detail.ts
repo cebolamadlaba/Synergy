@@ -9,6 +9,7 @@ export class TradeConcessionDetail extends BaseConcessionDetail {
     tradeProductType: string;
     approvedRate: number;
     loadedRate :number;
+    rate :number;
     communication: string;
     establishmentFee: number;
     flatFee: number;

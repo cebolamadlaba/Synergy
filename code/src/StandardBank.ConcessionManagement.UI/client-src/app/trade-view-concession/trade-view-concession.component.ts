@@ -412,8 +412,8 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                     if (tradeConcessionDetail.approvedRate)
                         currentConcession.get('approvedRate').setValue(tradeConcessionDetail.approvedRate);
 
-                    if (tradeConcessionDetail.loadedRate)
-                        currentConcession.get('loadedRate').setValue(tradeConcessionDetail.loadedRate);
+                    if (tradeConcessionDetail.rate)
+                        currentConcession.get('rate').setValue(tradeConcessionDetail.rate);
 
                     if (tradeConcessionDetail.min) {
                         let min = this.baseComponentService.formatDecimal(+tradeConcessionDetail.min);
@@ -510,7 +510,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
             currency: [''],
             estfee: [''],
             approvedRate: [''],
-            loadedRate: [''],
+            rate: [''],
             userid: [{ value: '', disabled: true }],
             expiryDate: [''],
             dateApproved: [{ value: '', disabled: true }],
@@ -643,7 +643,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
             currentProduct.get('term').setValue(null);
             currentProduct.get('estfee').setValue(null);
-            currentProduct.get('loadedRate').setValue(null);
+            currentProduct.get('rate').setValue(null);
 
 
             this.tradeConcession.tradeConcessionDetails[rowIndex].show_advalorem = true;
@@ -870,8 +870,8 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                 }
             }
 
-            if (concessionFormItem.get('loadedRate').value) {
-                tradeConcessionDetail.loadedRate = concessionFormItem.get('loadedRate').value;
+            if (concessionFormItem.get('rate').value) {
+                tradeConcessionDetail.rate = concessionFormItem.get('rate').value;
             } else {
                 if (tradeConcessionDetail.disablecontrolset) {
                     this.addValidationError("Rate not entered");

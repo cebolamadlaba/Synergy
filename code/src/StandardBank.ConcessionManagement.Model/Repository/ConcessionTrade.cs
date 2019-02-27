@@ -29,6 +29,8 @@ namespace StandardBank.ConcessionManagement.Model.Repository
       
         public decimal? LoadedRate { get; set; }
 
+        public decimal? Rate { get; set; }
+
         public decimal? ApprovedRate { get; set; }
 
         public string GBBNumber { get; set; }
