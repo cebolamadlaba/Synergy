@@ -3,10 +3,10 @@
 
 
 Alter Table tblConcessionTrade
-Add Rate Int Null
+Add Rate Decimal(18,5) Null
 
 Update	tblConcessionTrade
-Set		Rate = LoadedRate
+Set		Rate = LoadRate
 
 Select	LoadedRate, Rate
 From	tblConcessionTrade
