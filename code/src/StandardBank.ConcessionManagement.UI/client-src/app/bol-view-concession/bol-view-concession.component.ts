@@ -477,8 +477,8 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         bolConcession.concession.referenceNumber = this.concessionReferenceId;
         bolConcession.concession.concessionType = ConcessionTypes.BOL;
 
-        //if (this.bolConcessionForm.controls['smtDealNumber'].value)
-        //    bolConcession.concession.smtDealNumber = this.bolConcessionForm.controls['smtDealNumber'].value;
+        if (this.bolConcessionForm.controls['smtDealNumber'].value)
+            bolConcession.concession.smtDealNumber = this.bolConcessionForm.controls['smtDealNumber'].value;
         //else
         //    this.addValidationError("SMT Deal Number not captured");
 

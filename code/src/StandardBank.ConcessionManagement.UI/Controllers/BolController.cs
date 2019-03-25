@@ -133,6 +133,17 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(returnConcession);
         }
 
+        [Route("ResubmitBol")]
+        [ValidateModel]
+        public async Task<IActionResult> ResubmitBol([FromBody] BolConcession bolConcession)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            var returnConcession = await CreateChildConcession(bolConcession, user, Constants.RelationshipType.Resubmit);
+
+            return Ok(returnConcession);
+        }
+
         [Route("BolConcessionData/{concessionReferenceId}")]
         public IActionResult BolConcessionData(string concessionReferenceId)
         {
