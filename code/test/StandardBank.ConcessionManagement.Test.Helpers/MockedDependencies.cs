@@ -507,5 +507,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static Mock<IAENumberUserManager> MockAENumberUserManager = new Mock<IAENumberUserManager>();
 
         public static Mock<ILegalEntityAddressManager> MockLegalEntityAddressManager = new Mock<ILegalEntityAddressManager>();
+
+        public static Mock<IConfigurationData> MockConfigurationData = new Mock<IConfigurationData>();
     }
 }

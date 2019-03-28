@@ -35,6 +35,7 @@
     <None Remove="client-src\app\models\legal-entity-address.ts" />
     <None Remove="client-src\app\models\legal-entity-bol-user.ts" />
     <None Remove="client-src\app\models\legal-entity-gbb-number.ts" />
+    <None Remove="client-src\app\models\pricing-product-enum.ts" />
     <None Remove="client-src\app\models\search-concession-detail.ts" />
     <None Remove="client-src\app\models\Static-Class.ts" />
     <None Remove="client-src\content\img\sblogo.jpg" />
@@ -109,6 +110,7 @@
     <TypeScriptCompile Include="client-src\app\models\bol-chargecode.ts" />
     <TypeScriptCompile Include="client-src\app\models\bol-chargecodetype.ts" />
     <TypeScriptCompile Include="client-src\app\models\bol-view.ts" />
+    <TypeScriptCompile Include="client-src\app\models\pricing-product-enum.ts" />
     <TypeScriptCompile Include="client-src\app\models\search-concession-detail.ts" />
     <TypeScriptCompile Include="client-src\app\models\static-class.ts" />
   </ItemGroup>

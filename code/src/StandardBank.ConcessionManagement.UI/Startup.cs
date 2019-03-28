@@ -82,7 +82,7 @@ namespace StandardBank.ConcessionManagement.UI
             return container.GetInstance<IServiceProvider>();
 
 
-            
+
         }
 
         /// <summary>
@@ -98,6 +98,7 @@ namespace StandardBank.ConcessionManagement.UI
             };
 
             Configuration.Bind(config);
+
             return config;
         }
 
@@ -129,14 +130,14 @@ namespace StandardBank.ConcessionManagement.UI
             app.UseHangfireServer();
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
             {
-                Authorization = new[] {new HangfireDashboardAuthorizationFilter()}
+                Authorization = new[] { new HangfireDashboardAuthorizationFilter() }
             });
 
-            if(Configuration["LoadHangfireJobs"] == "true")
+            if (Configuration["LoadHangfireJobs"] == "true")
             {
                 ScheduleJobs(app);
             }
-          
+
         }
 
         /// <summary>

@@ -75,7 +75,7 @@ export class LookupDataService {
 
     searchConsessionsFiltered(region, centre, status, datefilter): Observable<ApprovedConcessionDetail[]> {
 
-        const url = "/api/Concession/SearchConsessions/"+ region + "/" + centre + "/" + status + "/" + datefilter;
+        const url = "/api/Concession/SearchConsessions/" + region + "/" + centre + "/" + status + "/" + datefilter;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
@@ -110,7 +110,7 @@ export class LookupDataService {
         const url = "/api/Condition/LegalEntityGBBNumbers/" + riskGroupNumber;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
-    
+
 
     getTradeProductTypes(): Observable<TradeProductType[]> {
         const url = "/api/Condition/TradeProductTypes";
@@ -121,7 +121,7 @@ export class LookupDataService {
         const url = "/api/Condition/TradeProducts";
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
-   
+
 
     getPeriods(): Observable<Period[]> {
         const url = "/api/Condition/Periods";
@@ -148,6 +148,11 @@ export class LookupDataService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    getActivePricingProducts(): Observable<number[]> {
+        const url = "/api/Pricing/GetActivePricingProducts/";
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
     getTransactionTypes(concessionType): Observable<TransactionType[]> {
         const url = "/api/Concession/TransactionTypes/" + concessionType;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
@@ -163,12 +168,12 @@ export class LookupDataService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    getPrimeRate(datefilter):Observable<string> {
+    getPrimeRate(datefilter): Observable<string> {
         const url = "/api/Concession/PrimeRate/" + datefilter;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    checkforLC(status: ConcessionStatus, subStatus: ConcessionSubStatus, concessionComments):any[] {
+    checkforLC(status: ConcessionStatus, subStatus: ConcessionSubStatus, concessionComments): any[] {
 
         if (status == ConcessionStatus.Pending) {
 
@@ -179,7 +184,7 @@ export class LookupDataService {
                 if (arrLen > 0) {
                     let lastComment = concessionComments[arrLen - 1];
                     if (lastComment.comment && lastComment.comment.startsWith('LogChanges:[')) {
-                      
+
                         return JSON.parse(lastComment.comment.replace('LogChanges:', ''));
                     }
                 }

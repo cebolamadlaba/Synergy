@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+using StandardBank.ConcessionManagement.Interface.Common;
 
 namespace StandardBank.ConcessionManagement.UI.Controllers
 {
@@ -15,13 +16,16 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// </summary>
         private readonly ILookupTableManager _lookupTableManager;
 
+        private readonly IConfigurationData _configurationData;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PricingController"/> class.
         /// </summary>
         /// <param name="lookupTableManager">The lookup table manager.</param>
-        public PricingController(ILookupTableManager lookupTableManager)
+        public PricingController(ILookupTableManager lookupTableManager, IConfigurationData configurationData)
         {
             _lookupTableManager = lookupTableManager;
+            _configurationData = configurationData;
         }
 
         /// <summary>
@@ -33,8 +37,16 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult RiskGroup(int riskGroupNumber)
         {
             var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
-            
+
             return Ok(riskGroup);
+        }
+
+        [Route("GetActivePricingProducts")]
+        public IActionResult GetActivePricingProducts()
+        {
+            int[] activePricingProducts = _configurationData.GetVisiblePricingProducts;
+
+            return Ok(activePricingProducts);
         }
     }
 }
