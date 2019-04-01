@@ -65,7 +65,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("CashView/{riskGroupNumber}")]
         public IActionResult CashView(int riskGroupNumber)
         {
-            return Ok(_cashManager.GetCashViewData(riskGroupNumber));
+            var user = _siteHelper.LoggedInUser(this);
+
+            return Ok(_cashManager.GetCashViewData(riskGroupNumber, user));
         }
 
         /// <summary>
@@ -122,7 +124,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public async Task<IActionResult> UpdateCash([FromBody] CashConcession cashConcession)
         {
             var user = _siteHelper.LoggedInUser(this);
-            
+
             await UpdateCashConcession(cashConcession, user);
 
             return Ok(_cashManager.GetCashConcession(cashConcession.Concession.ReferenceNumber, user));
@@ -139,7 +141,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
 
-            var cashconsession =_cashManager.GetCashConcession(detail.ReferenceNumber, user);
+            var cashconsession = _cashManager.GetCashConcession(detail.ReferenceNumber, user);
 
             cashconsession.Concession.SubStatus = Constants.ConcessionSubStatus.PcmPending;
             cashconsession.Concession.BcmUserId = _bcmManager.GetBusinessCentreManager(cashconsession.Concession.CentreId).BusinessCentreManagerId;
@@ -149,7 +151,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             await _cashManager.ForwardCashConcession(cashconsession, user);
 
             return Ok(_cashManager.GetCashConcession(detail.ReferenceNumber, user));
-        }     
+        }
 
 
         /// <summary>
@@ -174,6 +176,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                                                                   cashConcessionDetail.CashConcessionDetailId))
                     await _mediator.Send(new DeleteCashConcessionDetail(cashConcessionDetail, user));
 
+            if (!cashConcession.Concession.AENumberUserId.HasValue)
+                cashConcession.Concession.AENumberUserId = databaseCashConcession.Concession.AENumberUserId;
+
             //update the concession
             var concession = await _mediator.Send(new UpdateConcession(cashConcession.Concession, user));
 
@@ -190,7 +195,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                     cashConcession.Concession.Comments, user));
 
 
-            
+
 
             if ((cashConcession.Concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges || cashConcession.Concession.SubStatus == Constants.ConcessionSubStatus.HoApprovedWithChanges) && cashConcession.Concession.ConcessionComments != null)
             {

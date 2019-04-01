@@ -66,7 +66,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// Gets or sets the mrs crs
         /// </summary>
         public decimal MrsCrs { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the type
         /// </summary>
@@ -76,12 +76,12 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// Gets or sets the date opened
         /// </summary>
         public DateTime DateOpened { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the segment
         /// </summary>
         public string Seqment { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the date sent for approval
         /// </summary>
@@ -232,5 +232,13 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public bool IsInProgressRenewal { get; set; }
 
         public bool IsInProgressForwarding { get; set; }
+
+        public int? AENumberUserId { get; set; }
+
+        public int? CurrentAEUserId { get; set; }
+
+        public int?[] CurrentAAList { get; set; }
+
+        public bool IsAENumberLinkedAccountExecutiveOrAssistant { get; set; }
     }
 }

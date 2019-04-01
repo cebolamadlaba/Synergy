@@ -73,14 +73,6 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public int? PeriodId { get; set; }
 
         /// <summary>
-        /// Gets or sets the expected turnover value.
-        /// </summary>
-        /// <value>
-        /// The expected turnover value.
-        /// </value>
-        public decimal? ExpectedTurnoverValue { get; set; }
-
-        /// <summary>
         /// Gets or sets the expiry date.
         /// </summary>
         /// <value>

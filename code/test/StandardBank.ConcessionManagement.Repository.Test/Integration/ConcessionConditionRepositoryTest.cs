@@ -28,7 +28,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 IsActive = false,
                 PeriodTypeId = DataHelper.GetPeriodTypeId(),
                 PeriodId = DataHelper.GetPeriodId(),
-                ExpectedTurnoverValue = 100,
                 ExpiryDate = DateTime.Now.AddDays(100),
                 DateApproved = DateTime.Now.AddDays(-100)
             };
@@ -101,7 +100,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             model.IsActive = !model.IsActive;
             model.PeriodTypeId = DataHelper.GetAlternatePeriodTypeId(model.PeriodTypeId);
             model.PeriodId = DataHelper.GetAlternatePeriodId(model.PeriodId);
-            model.ExpectedTurnoverValue = model.ExpectedTurnoverValue.GetValueOrDefault(0) + 100;
             model.ExpiryDate = DataHelper.ChangeDate(model.ExpiryDate);
             model.DateApproved = DataHelper.ChangeDate(model.DateApproved);
 
@@ -120,7 +118,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             Assert.Equal(updatedModel.IsActive, model.IsActive);
             Assert.Equal(updatedModel.PeriodTypeId, model.PeriodTypeId);
             Assert.Equal(updatedModel.PeriodId, model.PeriodId);
-            Assert.Equal(updatedModel.ExpectedTurnoverValue, model.ExpectedTurnoverValue);
             Assert.Equal(updatedModel.ExpiryDate.Value.Date, model.ExpiryDate.Value.Date);
             Assert.Equal(updatedModel.DateApproved.Value.Date, model.DateApproved.Value.Date);
         }
@@ -142,7 +139,6 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
                 IsActive = false,
                 PeriodTypeId = DataHelper.GetPeriodTypeId(),
                 PeriodId = DataHelper.GetPeriodId(),
-                ExpectedTurnoverValue = 100,
                 ExpiryDate = DateTime.Now.AddDays(100),
                 DateApproved = DateTime.Now.AddDays(-100)
             };

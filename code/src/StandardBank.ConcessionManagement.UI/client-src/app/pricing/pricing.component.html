@@ -110,7 +110,7 @@
                 <!-- Products -->
                 <div class="col-md-8 col-md-offset-2" style="margin-top: 20px">
                     <!-- Lending -->
-                    <div class="col-md-3">
+                    <div class="col-md-3" *ngIf="isVisiblePricingProduct(1)">
                         <div class="product-item" [routerLink]="['/pricing-lending', riskGroup.number]">
                             <div class="product-heading">Lending</div>
                             <div class="container-item-icon">
@@ -119,7 +119,7 @@
                         </div>
                     </div>
                     <!-- Cash -->
-                    <div class="col-md-3">
+                    <div class="col-md-3" *ngIf="isVisiblePricingProduct(2)">
                         <div class="product-item" [routerLink]="['/pricing-cash', riskGroup.number]">
                             <div class="product-heading">Cash</div>
                             <div class="container-item-icon">
@@ -128,7 +128,7 @@
                         </div>
                     </div>
                     <!-- Transactional -->
-                    <div class="col-md-3">
+                    <div class="col-md-3" *ngIf="isVisiblePricingProduct(3)">
                         <div class="product-item" [routerLink]="['/pricing-transactional', riskGroup.number]">
                             <div class="product-heading">Transactional</div>
                             <div class="container-item-icon">
@@ -138,7 +138,7 @@
                     </div>
 
                     <!-- BOL -->
-                    <div class="col-md-3">
+                    <div class="col-md-3" *ngIf="isVisiblePricingProduct(4)">
                         <div class="product-item" [routerLink]="['/pricing-bol', riskGroup.number]">
                             <div class="product-heading">Business Online</div>
                             <div class="container-item-icon">
@@ -148,7 +148,6 @@
                     </div>
                 </div>
                 <div class="col-md-8 col-md-offset-2" style="margin-top: 20px">
-
                     <!-- MAS -->
                     <!--<div class="col-md-3">
                         <div class="product-item" [routerLink]="['/pricing-mas']">
@@ -159,7 +158,7 @@
                         </div>
                     </div>-->
                     <!-- Trade -->
-                    <div class="col-md-3">
+                    <div class="col-md-3" *ngIf="isVisiblePricingProduct(5)">
                         <div class="product-item" [routerLink]="['/pricing-trade',riskGroup.number]">
                             <div class="product-heading">Trade</div>
                             <div class="container-item-icon">
@@ -168,14 +167,14 @@
                         </div>
                     </div>
                     <!-- Investments -->
-                    <!--<div class="col-md-3">
+                    <div class="col-md-3" *ngIf="isVisiblePricingProduct(6)">
                         <div class="product-item" [routerLink]="['/pricing-investments',riskGroup.number]">
                             <div class="product-heading">Investments</div>
                             <div class="container-item-icon">
                                 <i class="fa fa-bar-chart" aria-hidden="true"></i>
                             </div>
                         </div>
-                    </div>-->
+                    </div>
                     <!-- Cashman -->
                     <!--<div class="col-md-3">
                         <div class="product-item" [routerLink]="['/pricing-cashman']">

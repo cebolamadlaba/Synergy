@@ -88,14 +88,6 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public bool? ConditionMet { get; set; }
 
         /// <summary>
-        /// Gets or sets the ExpectedTurnoverValue.
-        /// </summary>
-        /// <value>
-        /// The ExpectedTurnoverValue.
-        /// </value>
-        public decimal? ExpectedTurnoverValue { get; set; }
-
-        /// <summary>
         /// Gets or sets the ExpiryDate.
         /// </summary>
         /// <value>

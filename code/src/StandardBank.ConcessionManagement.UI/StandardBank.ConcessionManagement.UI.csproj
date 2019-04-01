@@ -32,8 +32,10 @@
     <None Remove="client-src\app\models\bol-chargecode.ts" />
     <None Remove="client-src\app\models\bol-chargecodetype.ts" />
     <None Remove="client-src\app\models\bol-view.ts" />
+    <None Remove="client-src\app\models\legal-entity-address.ts" />
     <None Remove="client-src\app\models\legal-entity-bol-user.ts" />
     <None Remove="client-src\app\models\legal-entity-gbb-number.ts" />
+    <None Remove="client-src\app\models\pricing-product-enum.ts" />
     <None Remove="client-src\app\models\search-concession-detail.ts" />
     <None Remove="client-src\app\models\Static-Class.ts" />
     <None Remove="client-src\content\img\sblogo.jpg" />
@@ -63,6 +65,7 @@
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.2" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="1.1.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.2" />
+    <PackageReference Include="MSBuild.Microsoft.VisualStudio.Web.targets" Version="14.0.0.3" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.0" />
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
     <PackageReference Include="StructureMap.Microsoft.DependencyInjection" Version="1.3.1" />
@@ -101,11 +104,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="client-src\app\models\legal-entity-address.ts" />
     <TypeScriptCompile Include="client-src\app\models\legal-entity-gbb-number.ts" />
     <TypeScriptCompile Include="client-src\app\models\legal-entity-bol-user.ts" />
     <TypeScriptCompile Include="client-src\app\models\bol-chargecode.ts" />
     <TypeScriptCompile Include="client-src\app\models\bol-chargecodetype.ts" />
     <TypeScriptCompile Include="client-src\app\models\bol-view.ts" />
+    <TypeScriptCompile Include="client-src\app\models\pricing-product-enum.ts" />
     <TypeScriptCompile Include="client-src\app\models\search-concession-detail.ts" />
     <TypeScriptCompile Include="client-src\app\models\static-class.ts" />
   </ItemGroup>

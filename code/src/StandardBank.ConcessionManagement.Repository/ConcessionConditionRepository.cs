@@ -35,8 +35,8 @@ namespace StandardBank.ConcessionManagement.Repository
         public ConcessionCondition Create(ConcessionCondition model)
         {
             const string sql =
-                @"INSERT [dbo].[tblConcessionCondition] ([fkConcessionId], [fkConditionTypeId], [fkConditionProductId], [fkPeriodTypeId], [fkPeriodId], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [ExpiryDate], [DateApproved], [IsActive]) 
-                VALUES (@ConcessionId, @ConditionTypeId, @ConditionProductId, @PeriodTypeId, @PeriodId, @InterestRate, @Volume, @Value, @ConditionMet, @ExpectedTurnoverValue, @ExpiryDate, @DateApproved, @IsActive) 
+                @"INSERT [dbo].[tblConcessionCondition] ([fkConcessionId], [fkConditionTypeId], [fkConditionProductId], [fkPeriodTypeId], [fkPeriodId], [InterestRate], [Volume], [Value], [ConditionMet], [ExpiryDate], [DateApproved], [IsActive]) 
+                VALUES (@ConcessionId, @ConditionTypeId, @ConditionProductId, @PeriodTypeId, @PeriodId, @InterestRate, @Volume, @Value, @ConditionMet, @ExpiryDate, @DateApproved, @IsActive) 
                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
@@ -53,7 +53,6 @@ namespace StandardBank.ConcessionManagement.Repository
                         Volume = model.Volume,
                         Value = model.Value,
                         ConditionMet = model.ConditionMet,
-                        ExpectedTurnoverValue = model.ExpectedTurnoverValue,
                         ExpiryDate = model.ExpiryDate,
                         DateApproved = model.DateApproved,
                         IsActive = model.IsActive
@@ -73,7 +72,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionCondition>(
-                    "SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [ExpiryDate], [DateApproved], [IsActive] FROM [dbo].[tblConcessionCondition] WHERE [pkConcessionConditionId] = @Id",
+                    "SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId], [InterestRate], [Volume], [Value], [ConditionMet], [ExpiryDate], [DateApproved], [IsActive] FROM [dbo].[tblConcessionCondition] WHERE [pkConcessionConditionId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -88,7 +87,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionCondition>(
-                    @"SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [ExpiryDate], [DateApproved], [IsActive] 
+                    @"SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId], [InterestRate], [Volume], [Value], [ConditionMet], [ExpiryDate], [DateApproved], [IsActive] 
                     FROM [dbo].[tblConcessionCondition] 
                     WHERE [fkConcessionId] = @concessionId",
                     new {concessionId});
@@ -104,7 +103,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionCondition>(
-                    "SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId], [InterestRate], [Volume], [Value], [ConditionMet], [ExpectedTurnoverValue], [ExpiryDate], [DateApproved], [IsActive] FROM [dbo].[tblConcessionCondition]");
+                    "SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId], [InterestRate], [Volume], [Value], [ConditionMet], [ExpiryDate], [DateApproved], [IsActive] FROM [dbo].[tblConcessionCondition]");
             }
         }
 
@@ -117,7 +116,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblConcessionCondition]
-                            SET [fkConcessionId] = @ConcessionId, [fkConditionTypeId] = @ConditionTypeId, [fkConditionProductId] = @ConditionProductId, [fkPeriodTypeId] = @PeriodTypeId, [fkPeriodId] = @PeriodId, [InterestRate] = @InterestRate, [Volume] = @Volume, [Value] = @Value, [ConditionMet] = @ConditionMet, [ExpectedTurnoverValue] = @ExpectedTurnoverValue, [ExpiryDate] = @ExpiryDate, [DateApproved] = @DateApproved, [IsActive] = @IsActive
+                            SET [fkConcessionId] = @ConcessionId, [fkConditionTypeId] = @ConditionTypeId, [fkConditionProductId] = @ConditionProductId, [fkPeriodTypeId] = @PeriodTypeId, [fkPeriodId] = @PeriodId, [InterestRate] = @InterestRate, [Volume] = @Volume, [Value] = @Value, [ConditionMet] = @ConditionMet, [ExpiryDate] = @ExpiryDate, [DateApproved] = @DateApproved, [IsActive] = @IsActive
                             WHERE [pkConcessionConditionId] = @Id",
                     new
                     {
@@ -131,7 +130,6 @@ namespace StandardBank.ConcessionManagement.Repository
                         Volume = model.Volume,
                         Value = model.Value,
                         ConditionMet = model.ConditionMet,
-                        ExpectedTurnoverValue = model.ExpectedTurnoverValue,
                         ExpiryDate = model.ExpiryDate,
                         DateApproved = model.DateApproved,
                         IsActive = model.IsActive

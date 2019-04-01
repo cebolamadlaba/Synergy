@@ -32,6 +32,8 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
 
         IEnumerable<TradeProductType> GetTradeProductTypes();
 
+        TradeProductType GetTradeProductTypeByTradeProductId(int tradeProductId);
+
         /// <summary>
         /// Updates the specified model.
         /// </summary>

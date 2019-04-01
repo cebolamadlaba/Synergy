@@ -165,7 +165,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
             var concession =
-                _concessionManager.GetConcessionForConcessionReferenceId(concessionCondition.ConcessionReferenceNumber);
+                _concessionManager.GetConcessionForConcessionReferenceId(concessionCondition.ConcessionReferenceNumber, user);
 
             var result = await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
 

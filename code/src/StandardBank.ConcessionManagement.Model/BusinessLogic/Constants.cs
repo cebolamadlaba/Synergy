@@ -141,5 +141,15 @@
                 public const string RetailCallDeposit = "Retail wholesale call deposit (BCL) ";
             }
         }
+
+        public static class Trade
+        {
+            public static class TradeProductType
+            {
+                public const string InwardTT = "Inward TT";
+                public const string LocalGuarantee = "Local guarantee";
+                public const string OutwardTT = "Outward TT";
+            }
+        }
     }
 }

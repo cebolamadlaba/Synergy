@@ -28,7 +28,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 MockConcessionTransactionalRepository.Object, InstantiatedDependencies.Mapper,
                 MockLookupTableManager.Object, MockFinancialTransactionalRepository.Object,
                 MockLoadedPriceTransactionalRepository.Object, MockRuleManager.Object,
-                MockMiscPerformanceRepository.Object,null, null);
+                MockMiscPerformanceRepository.Object, null, null);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         [Fact]
         public void GetTransactionalConcession_Executes_Positive()
         {
-            MockConcessionManager.Setup(_ => _.GetConcessionForConcessionReferenceId(It.IsAny<string>()))
+            MockConcessionManager.Setup(_ => _.GetConcessionForConcessionReferenceId(It.IsAny<string>(), null))
                 .Returns(new Model.UserInterface.Concession());
 
             MockConcessionCashRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
@@ -92,19 +92,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockLookupTableManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
                 .Returns(new RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
 
-            MockConcessionManager.Setup(_ => _.GetApprovedConcessionsForRiskGroup(It.IsAny<int>(), It.IsAny<string>()))
+            MockConcessionManager.Setup(_ => _.GetApprovedConcessionsForRiskGroup(It.IsAny<int>(), It.IsAny<string>(), null))
                 .Returns(new[] { new Model.UserInterface.Concession() });
 
             MockMiscPerformanceRepository.Setup(_ => _.GetTransactionalConcessionDetails(It.IsAny<int>()))
                 .Returns(new[] { new TransactionalConcessionDetail() });
 
             MockFinancialTransactionalRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
-                .Returns(new[] {new FinancialTransactional()});
+                .Returns(new[] { new FinancialTransactional() });
 
             MockMiscPerformanceRepository.Setup(_ => _.GetTransactionalProducts(It.IsAny<int>(), It.IsAny<string>()))
-                .Returns(new[] {new TransactionalProduct()});
+                .Returns(new[] { new TransactionalProduct() });
 
-            var result = _transactionalManager.GetTransactionalViewData(1);
+            var result = _transactionalManager.GetTransactionalViewData(1, null);
 
             Assert.NotNull(result);
             Assert.NotNull(result.RiskGroup);
@@ -112,7 +112,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             Assert.NotEmpty(result.TransactionalConcessions);
             Assert.NotNull(result.TransactionalFinancial);
             Assert.NotNull(result.TransactionalProductGroups);
-           
+
         }
 
         /// <summary>

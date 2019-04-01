@@ -32,6 +32,7 @@ import { BolView } from "../models/bol-view";
 import { Concession } from "../models/concession";
 import { UserService } from "../services/user.service";
 
+import { BaseComponentService } from '../services/base-component.service';
 
 @Component({
     selector: 'app-bol-add-concession',
@@ -40,7 +41,7 @@ import { UserService } from "../services/user.service";
 })
 export class BolAddConcessionComponent implements OnInit, OnDestroy {
     private sub: any;
-   
+
     errorMessage: String;
     validationError: String[];
     saveMessage: String;
@@ -53,7 +54,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
     bolView: BolView = new BolView();
 
     public bolConcessionForm: FormGroup;
-   
+
     isLoading = true;
 
     observablePeriods: Observable<Period[]>;
@@ -61,19 +62,19 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
     observablePeriodTypes: Observable<PeriodType[]>;
     periodTypes: PeriodType[];
-  
+
     observable: Observable<BolChargeCodeType[]>;
     bolchargecodetypes: BolChargeCodeType[];
 
     observableBolChargeCodes: Observable<BolChargeCode[]>;
-    bolchargecodes: BolChargeCode[];   
+    bolchargecodes: BolChargeCode[];
 
     observableLegalEntityBOLUsers: Observable<LegalEntityBOLUser[]>;
     legalentitybolusers: LegalEntityBOLUser[];
 
     selectedConditionTypes: ConditionType[];
 
-    selectedProducts: BolChargeCodeType[];   
+    selectedProducts: BolChargeCodeType[];
 
     observableConditionTypes: Observable<ConditionType[]>;
     conditionTypes: ConditionType[];
@@ -83,11 +84,12 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
 
     constructor(private route: ActivatedRoute,
-        private router: Router,      
+        private router: Router,
         private formBuilder: FormBuilder,
         private location: Location,
         @Inject(LookupDataService) private lookupDataService,
-        @Inject(BolConcessionService) private bolConcessionService) {
+        @Inject(BolConcessionService) private bolConcessionService,
+        private baseComponentService: BaseComponentService) {
         this.riskGroup = new RiskGroup();
 
         this.bolchargecodetypes = [new BolChargeCodeType()];
@@ -115,8 +117,8 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
                 this.observableRiskGroup = this.lookupDataService.getRiskGroup(this.riskGroupNumber);
                 this.observableRiskGroup.subscribe(riskGroup => this.riskGroup = riskGroup, error => this.errorMessage = <any>error);
 
-               // this.observableClientAccounts = this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.BOL);
-               // this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
+                // this.observableClientAccounts = this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.BOL);
+                // this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
 
             }
 
@@ -124,7 +126,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
                 this.observableBolView = this.bolConcessionService.getBolViewData(this.riskGroupNumber);
                 this.observableBolView.subscribe(bolView => {
                     this.bolView = bolView;
-                 
+
                     this.isLoading = false;
                 }, error => {
                     this.errorMessage = <any>error;
@@ -143,18 +145,18 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
         Observable.forkJoin([
 
-            this.lookupDataService.getConditionTypes(),                  
+            this.lookupDataService.getConditionTypes(),
             this.lookupDataService.getBOLChargeCodeTypes(),
-            this.lookupDataService.getBOLChargeCodes(), 
+            this.lookupDataService.getBOLChargeCodes(),
             this.lookupDataService.getLegalEntityBOLUsers(this.riskGroupNumber),
             this.lookupDataService.getPeriods(),
-            this.lookupDataService.getPeriodTypes()               
-           
+            this.lookupDataService.getPeriodTypes()
+
         ]).subscribe(results => {
-          
+
             this.conditionTypes = <any>results[0];
             this.bolchargecodetypes = <any>results[1];
-            this.bolchargecodes = <any>results[2];         
+            this.bolchargecodes = <any>results[2];
 
             this.legalentitybolusers = <any>results[3];
 
@@ -173,7 +175,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
             if (this.selectedProducts && this.selectedProducts[0].bolchargecodes)
                 control.controls[0].get('chargecode').setValue(this.selectedProducts[0].bolchargecodes[0]);
-         
+
             this.productTypeChanged(0);
 
             this.isLoading = false;
@@ -191,7 +193,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         return this.formBuilder.group({
             product: [''],
             chargecode: [''],
-            unitcharge: [''],          
+            unitcharge: [''],
             userid: [''],
             expiryDate: ['']
         });
@@ -206,7 +208,6 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
             interestRate: [''],
             volume: [''],
             value: [''],
-            expectedTurnoverValue: [''],
             periodType: [''],
             period: ['']
         });
@@ -227,8 +228,8 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         this.selectedProducts[length] = this.bolchargecodetypes[0];
 
         if (this.selectedProducts && this.selectedProducts[0].bolchargecodes)
-            newRow.controls['chargecode'].setValue(this.selectedProducts[0].bolchargecodes[0]);   
-      
+            newRow.controls['chargecode'].setValue(this.selectedProducts[0].bolchargecodes[0]);
+
         control.push(newRow);
 
         this.productTypeChanged(length);
@@ -260,7 +261,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         control.removeAt(index);
 
         this.selectedConditionTypes.splice(index, 1);
-       
+
     }
 
     conditionTypeChanged(rowIndex) {
@@ -273,7 +274,6 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         currentCondition.get('interestRate').setValue(null);
         currentCondition.get('volume').setValue(null);
         currentCondition.get('value').setValue(null);
-        currentCondition.get('expectedTurnoverValue').setValue(null);
     }
 
     productTypeChanged(rowIndex) {
@@ -284,10 +284,10 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         let currentProduct = control.controls[rowIndex];
         var selectedproduct = currentProduct.get('product').value;
 
-        this.selectedProducts[rowIndex].bolchargecodes = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId);            
+        this.selectedProducts[rowIndex].bolchargecodes = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId);
 
-        currentProduct.get('chargecode').setValue(this.selectedProducts[rowIndex].bolchargecodes[0]);     
-        
+        currentProduct.get('chargecode').setValue(this.selectedProducts[rowIndex].bolchargecodes[0]);
+
     }
 
 
@@ -304,8 +304,8 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         bolConcession.concession.riskGroupId = this.riskGroup.id;
 
 
-        //if (this.bolConcessionForm.controls['smtDealNumber'].value)
-        //    bolConcession.concession.smtDealNumber = this.bolConcessionForm.controls['smtDealNumber'].value;
+        if (this.bolConcessionForm.controls['smtDealNumber'].value)
+            bolConcession.concession.smtDealNumber = this.bolConcessionForm.controls['smtDealNumber'].value;
         //else
         //    this.addValidationError("SMT Deal Number not captured");
 
@@ -316,6 +316,10 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
         const concessions = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
 
+        let hasTypeId: boolean = false;
+        let hasLegalEntityId: boolean = false;
+        let hasLegalEntityAccountId: boolean = false;
+
         for (let concessionFormItem of concessions.controls) {
             if (!bolConcession.bolConcessionDetails)
                 bolConcession.bolConcessionDetails = [];
@@ -323,21 +327,20 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
             let bolConcessionDetail = new BolConcessionDetail();
 
             if (concessionFormItem.get('product').value) {
-             
+
             } else {
                 this.addValidationError("Product not selected");
             }
-                      
+
 
             if (concessionFormItem.get('chargecode').value) {
                 bolConcessionDetail.fkChargeCodeId = concessionFormItem.get('chargecode').value.pkChargeCodeId;
-              
+                hasTypeId = true;
             } else {
                 this.addValidationError("Charge code not selected");
             }
 
-
-            if (concessionFormItem.get('unitcharge').value || concessionFormItem.get('unitcharge').value == 0) {
+            if (concessionFormItem.get('unitcharge').value || concessionFormItem.get('unitcharge').value === 0) {
                 bolConcessionDetail.loadedRate = concessionFormItem.get('unitcharge').value;
             } else {
                 this.addValidationError("Rate not entered");
@@ -347,9 +350,11 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
                 bolConcessionDetail.fkLegalEntityBOLUserId = concessionFormItem.get('userid').value.pkLegalEntityBOLUserId;
                 bolConcessionDetail.legalEntityId = concessionFormItem.get('userid').value.legalEntityId;
                 bolConcessionDetail.legalEntityAccountId = concessionFormItem.get('userid').value.legalEntityAccountId;
+                hasLegalEntityId = true;
+                hasLegalEntityAccountId = true;
             } else {
                 this.addValidationError("User ID not selected");
-            }           
+            }
 
 
             if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
@@ -360,6 +365,20 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
             }
 
             bolConcession.bolConcessionDetails.push(bolConcessionDetail);
+
+            if (hasTypeId && hasLegalEntityId && hasLegalEntityAccountId) {
+                let hasDuplicates = this.baseComponentService.HasDuplicateConcessionAccountChargeCode(
+                    bolConcession.bolConcessionDetails,
+                    concessionFormItem.get('chargecode').value.pkChargeCodeId,
+                    concessionFormItem.get('userid').value.legalEntityId,
+                    concessionFormItem.get('userid').value.legalEntityAccountId);
+
+                if (hasDuplicates) {
+                    this.addValidationError("Duplicate Account / Product pricing found. Please select different account.");
+
+                    break;
+                }
+            }
         }
 
         const conditions = <FormArray>this.bolConcessionForm.controls['conditionItemsRows'];
@@ -386,11 +405,13 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
             if (conditionFormItem.get('volume').value)
                 concessionCondition.conditionVolume = conditionFormItem.get('volume').value;
 
-            if (conditionFormItem.get('value').value)
+            if (conditionFormItem.get('value').value == null || (<string>conditionFormItem.get('value').value).length < 1) {
+                var v = conditionFormItem.get('conditionType').value;
+                if (v != null && v.enableConditionValue == true)
+                    this.addValidationError("Conditions: 'Value' is a mandatory field");
+            }
+            else if (conditionFormItem.get('value').value)
                 concessionCondition.conditionValue = conditionFormItem.get('value').value;
-
-            if (conditionFormItem.get('expectedTurnoverValue').value)
-                concessionCondition.expectedTurnoverValue = conditionFormItem.get('expectedTurnoverValue').value;
 
             if (conditionFormItem.get('periodType').value) {
                 concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
@@ -404,10 +425,26 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
                 this.addValidationError("Period not selected");
             }
 
+            if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
+                this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+            }
+
             bolConcession.concessionConditions.push(concessionCondition);
         }
 
         return bolConcession;
+    }
+
+    validatePeriod(itemrow) {
+        this.validationError = null;
+
+        let selectedPeriodType = itemrow.controls.periodType.value.description;
+
+        let selectedPeriod = itemrow.controls.period.value.description;
+
+        if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
+            this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+        }
     }
 
     onSubmit() {
@@ -437,16 +474,17 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     setTwoNumberDecimal($event) {
-        $event.target.value = this.formatDecimal($event.target.value);
+        $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
+        //$event.target.value = this.formatDecimal($event.target.value);
     }
 
-    formatDecimal(itemValue: number) {
-        if (itemValue) {
-            return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-        }
+    //formatDecimal(itemValue: number) {
+    //    if (itemValue) {
+    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
+    //    }
 
-        return null;
-    }
+    //    return null;
+    //}
 
     goBack() {
         this.router.navigate(['/pricing', this.riskGroupNumber]);

@@ -32,6 +32,7 @@ import { TradeView } from "../models/trade-view";
 import { Concession } from "../models/concession";
 import { UserService } from "../services/user.service";
 
+import { BaseComponentService } from '../services/base-component.service';
 
 @Component({
     selector: 'app-trade-add-concession',
@@ -89,7 +90,8 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
         private formBuilder: FormBuilder,
         private location: Location,
         @Inject(LookupDataService) private lookupDataService,
-        @Inject(TradeConcessionService) private tradeConcessionService) {
+        @Inject(TradeConcessionService) private tradeConcessionService,
+        private baseComponentService: BaseComponentService) {
         this.riskGroup = new RiskGroup();
 
         this.tradeproducttypes = [new TradeProductType()];
@@ -229,7 +231,6 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
             interestRate: [''],
             volume: [''],
             value: [''],
-            expectedTurnoverValue: [''],
             periodType: [''],
             period: ['']
         });
@@ -300,7 +301,6 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
         currentCondition.get('interestRate').setValue(null);
         currentCondition.get('volume').setValue(null);
         currentCondition.get('value').setValue(null);
-        currentCondition.get('expectedTurnoverValue').setValue(null);
     }
 
     productTypeChanged(rowIndex) {
@@ -401,6 +401,10 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
         const concessions = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
 
+        let hasTypeId: boolean = false;
+        let hasLegalEntityId: boolean = false;
+        let hasLegalEntityAccountId: boolean = false;
+
         for (let concessionFormItem of concessions.controls) {
             if (!tradeConcession.tradeConcessionDetails)
                 tradeConcession.tradeConcessionDetails = [];
@@ -423,7 +427,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                 if (concessionFormItem.get('producttype').value.tradeProductType == "Local guarantee") {
                     applyexpirydate = false;
                 }
-
+                hasTypeId = true;
             } else {
                 this.addValidationError("Product Type code not selected");
             }
@@ -431,8 +435,11 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
             if ((concessionFormItem.get('accountNumber').value && concessionFormItem.get('accountNumber').value.legalEntityId)) {
                 tradeConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
                 tradeConcessionDetail.legalEntityAccountId = concessionFormItem.get('accountNumber').value.legalEntityAccountId;
+                hasLegalEntityId = true;
+                hasLegalEntityAccountId = true;
             } else {
-
+                hasLegalEntityId = false;
+                hasLegalEntityAccountId = false;
                 if (!tradeConcessionDetail.disablecontrolset) {
                     this.addValidationError("Client account not selected");
                 }
@@ -460,7 +467,8 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
             let advaloremfound = false;
 
-            if (concessionFormItem.get('advalorem').value) {
+            if ((concessionFormItem.get('advalorem').value != null && concessionFormItem.get('advalorem').value != "") ||
+                concessionFormItem.get('advalorem').value === 0) {
                 advaloremfound = true;
                 tradeConcessionDetail.adValorem = concessionFormItem.get('advalorem').value;
             } else {
@@ -499,7 +507,8 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
             let flatfeefound = false;
 
-            if (concessionFormItem.get('flatfee').value) {
+            if ((concessionFormItem.get('flatfee').value != null && concessionFormItem.get('flatfee').value != "") ||
+                concessionFormItem.get('flatfee').value === 0) {
                 flatfeefound = true;
                 tradeConcessionDetail.flatFee = concessionFormItem.get('flatfee').value;
             } else {
@@ -532,7 +541,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
             }
 
             if (concessionFormItem.get('rate').value || concessionFormItem.get('rate').value == 0) {
-                tradeConcessionDetail.loadedRate = concessionFormItem.get('rate').value;
+                tradeConcessionDetail.rate = concessionFormItem.get('rate').value;
             } else {
                 if (tradeConcessionDetail.disablecontrolset) {
                     this.addValidationError("Rate not entered");
@@ -549,6 +558,20 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
             }
 
             tradeConcession.tradeConcessionDetails.push(tradeConcessionDetail);
+
+            if (hasTypeId && hasLegalEntityId && hasLegalEntityAccountId) {
+                let hasDuplicates = this.baseComponentService.HasDuplicateConcessionAccountTradeProduct(
+                    tradeConcession.tradeConcessionDetails,
+                    concessionFormItem.get('producttype').value.tradeProductTypeID,
+                    concessionFormItem.get('accountNumber').value.legalEntityId,
+                    concessionFormItem.get('accountNumber').value.legalEntityAccountId);
+
+                if (hasDuplicates) {
+                    this.addValidationError("Duplicate Account / Trade Product pricing found. Please select different account.");
+
+                    break;
+                }
+            }
         }
 
         const conditions = <FormArray>this.tradeConcessionForm.controls['conditionItemsRows'];
@@ -575,11 +598,13 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
             if (conditionFormItem.get('volume').value)
                 concessionCondition.conditionVolume = conditionFormItem.get('volume').value;
 
-            if (conditionFormItem.get('value').value)
+            if (conditionFormItem.get('value').value == null || (<string>conditionFormItem.get('value').value).length < 1) {
+                var value = conditionFormItem.get('conditionType').value;
+                if (value != null && value.enableConditionValue == true)
+                    this.addValidationError("Conditions: 'Value' is a mandatory field");
+            }
+            else if (conditionFormItem.get('value').value)
                 concessionCondition.conditionValue = conditionFormItem.get('value').value;
-
-            if (conditionFormItem.get('expectedTurnoverValue').value)
-                concessionCondition.expectedTurnoverValue = conditionFormItem.get('expectedTurnoverValue').value;
 
             if (conditionFormItem.get('periodType').value) {
                 concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
@@ -591,6 +616,10 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                 concessionCondition.periodId = conditionFormItem.get('period').value.id;
             } else {
                 this.addValidationError("Period not selected");
+            }
+
+            if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
+                this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
             }
 
             tradeConcession.concessionConditions.push(concessionCondition);
@@ -627,7 +656,9 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     setTwoNumberDecimal($event) {
-        $event.target.value = this.formatDecimal($event.target.value);
+
+        $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
+        //$event.target.value = this.formatDecimal($event.target.value);
     }
 
 
@@ -729,13 +760,14 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
     //    return parts[0];
     //}
 
-    formatDecimal(itemValue: number) {
-        if (itemValue) {
-            return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-        }
+    //formatDecimal(itemValue: number) {
 
-        return null;
-    }
+    //    if (itemValue) {
+    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
+    //    }
+
+    //    return null;
+    //}
 
     goBack() {
         this.router.navigate(['/pricing', this.riskGroupNumber]);
@@ -743,5 +775,17 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.sub.unsubscribe();
+    }
+
+    validatePeriod(itemrow) {
+        this.validationError = null;
+
+        let selectedPeriodType = itemrow.controls.periodType.value.description;
+
+        let selectedPeriod = itemrow.controls.period.value.description;
+
+        if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
+            this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+        }
     }
 }

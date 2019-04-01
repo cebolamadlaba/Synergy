@@ -15,7 +15,7 @@ using StandardBank.ConcessionManagement.UI.Validation;
 
 namespace StandardBank.ConcessionManagement.UI.Controllers
 {
- 
+
     [Produces("application/json")]
     [Route("api/Bol")]
     public class BolController : Controller
@@ -38,8 +38,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         private readonly IBusinessCentreManager _bcmManager;
         private readonly ILookupTableManager _lookupTableManager;
 
-     
-        public BolController(ISiteHelper siteHelper, IBolManager bolManager, IMediator mediator,  IBusinessCentreManager businessCentreManager, ILookupTableManager lookupTableManager)
+
+        public BolController(ISiteHelper siteHelper, IBolManager bolManager, IMediator mediator, IBusinessCentreManager businessCentreManager, ILookupTableManager lookupTableManager)
         {
             _siteHelper = siteHelper;
             _bolManager = bolManager;
@@ -47,15 +47,17 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             _bcmManager = businessCentreManager;
             _lookupTableManager = lookupTableManager;
         }
-     
+
         /// <returns></returns>
         [Route("BolView/{riskGroupNumber}")]
         public IActionResult BolView(int riskGroupNumber)
         {
-            return Ok(_bolManager.GetBolViewData(riskGroupNumber));
+            var user = _siteHelper.LoggedInUser(this);
+
+            return Ok(_bolManager.GetBolViewData(riskGroupNumber, user));
         }
 
-     
+
         [Route("NewBol")]
         [ValidateModel]
         public async Task<IActionResult> NewBol([FromBody] BolConcession bolConcession)
@@ -92,7 +94,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
 
-            var returned =_bolManager.CreateUpdateBOLChargeCode(bolChargecode);        
+            var returned = _bolManager.CreateUpdateBOLChargeCode(bolChargecode);
 
             return Ok(returned);
         }
@@ -131,6 +133,17 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(returnConcession);
         }
 
+        [Route("ResubmitBol")]
+        [ValidateModel]
+        public async Task<IActionResult> ResubmitBol([FromBody] BolConcession bolConcession)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            var returnConcession = await CreateChildConcession(bolConcession, user, Constants.RelationshipType.Resubmit);
+
+            return Ok(returnConcession);
+        }
+
         [Route("BolConcessionData/{concessionReferenceId}")]
         public IActionResult BolConcessionData(string concessionReferenceId)
         {
@@ -153,6 +166,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 if (bolConcession.BolConcessionDetails.All(_ => _.BolConcessionDetailId !=
                                                                   bolConcessionDetail.BolConcessionDetailId))
                     await _mediator.Send(new DeleteBolConcessionDetail(bolConcessionDetail, user));
+
+            if (!bolConcession.Concession.AENumberUserId.HasValue)
+                bolConcession.Concession.AENumberUserId = databaseBolConcession.Concession.AENumberUserId;
 
             //update the concession
             var concession = await _mediator.Send(new UpdateConcession(bolConcession.Concession, user));
@@ -257,9 +273,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var returnConcession = _bolManager.GetBolConcession(concessionReferenceId, user);
             returnConcession.Concession.ChildReferenceNumber = concession.ReferenceNumber;
             return Ok(returnConcession);
-        } 
-     
-    
+        }
+
+
         private async Task<BolConcession> CreateChildConcession(BolConcession bolConcession, User user, string relationship)
         {
             //get the parent bol concession details
@@ -311,12 +327,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             bolconsession.Concession.Comments = "Manually forwarded by PCM";
             bolconsession.Concession.IsInProgressForwarding = true;
 
-           await _bolManager.ForwardBolConcession(bolconsession, user);
+            await _bolManager.ForwardBolConcession(bolconsession, user);
 
             return Ok(_bolManager.GetBolConcession(detail.ReferenceNumber, user));
         }
 
-    
+
 
 
     }

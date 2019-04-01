@@ -34,7 +34,7 @@ import { BolChargeCodeType } from "../models/bol-chargecodetype";
 import { BolChargeCode } from "../models/bol-chargecode";
 import { LegalEntityBOLUser } from "../models/legal-entity-bol-user";
 
-
+import { BaseComponentService } from '../services/base-component.service';
 
 @Component({
     selector: 'app-bol-view-concession',
@@ -93,7 +93,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     bolchargecodetypes: BolChargeCodeType[];
 
     observableBolChargeCodes: Observable<BolChargeCode[]>;
-    bolchargecodes: BolChargeCode[]; 
+    bolchargecodes: BolChargeCode[];
 
     observableLegalEntityBOLUsers: Observable<LegalEntityBOLUser[]>;
     legalentitybolusers: LegalEntityBOLUser[];
@@ -107,7 +107,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     observableBolConcession: Observable<BolConcession>;
     bolConcession: BolConcession;
 
-    selectedProducts: BolChargeCodeType[];   
+    selectedProducts: BolChargeCodeType[];
 
     constructor(private route: ActivatedRoute,
         private formBuilder: FormBuilder,
@@ -115,7 +115,8 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         private datepipe: DatePipe,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(UserConcessionsService) private userConcessionsService,
-        @Inject(BolConcessionService) private bolConcessionService) {
+        @Inject(BolConcessionService) private bolConcessionService,
+        private baseComponentService: BaseComponentService) {
 
         this.riskGroup = new RiskGroup();
         this.bolchargecodetypes = [new BolChargeCodeType()];
@@ -182,7 +183,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
             this.conditionTypes = <any>results[0];
             this.bolchargecodetypes = <any>results[1];
-            this.bolchargecodes = <any>results[2];       
+            this.bolchargecodes = <any>results[2];
 
             this.legalentitybolusers = <any>results[3];
 
@@ -233,12 +234,12 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
                 //if it's still pending and the user is a requestor then they can recall it
                 if (bolConcession.concession.status == ConcessionStatus.Pending && bolConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
-                    this.canRecall = bolConcession.currentUser.canRequest;
+                    this.canRecall = bolConcession.currentUser.canRequest && bolConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
                 }
 
                 if (bolConcession.concession.status == ConcessionStatus.Pending &&
                     (bolConcession.concession.subStatus == ConcessionSubStatus.PCMApprovedWithChanges || bolConcession.concession.subStatus == ConcessionSubStatus.HOApprovedWithChanges)) {
-                    this.canApproveChanges = bolConcession.currentUser.canRequest;
+                    this.canApproveChanges = bolConcession.currentUser.canRequest && bolConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
                 }
 
                 if (bolConcession.concession.status === ConcessionStatus.Approved ||
@@ -275,15 +276,17 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                     currentConcession.get('bolConcessionDetailId').setValue(bolConcessionDetail.bolConcessionDetailId);
                     currentConcession.get('concessionDetailId').setValue(bolConcessionDetail.concessionDetailId);
 
-                    if (bolConcessionDetail.loadedRate)
+                    if (bolConcessionDetail.loadedRate) {
+                        bolConcessionDetail.loadedRate = this.baseComponentService.formatDecimalThree(Number(bolConcessionDetail.loadedRate));
                         currentConcession.get('unitcharge').setValue(bolConcessionDetail.loadedRate);
+                    }
 
                     if (bolConcessionDetail.approvedRate)
                         currentConcession.get('unitchargeApproved').setValue(bolConcessionDetail.approvedRate);
 
                     let selectedBOLUser = this.legalentitybolusers.filter(_ => _.pkLegalEntityBOLUserId == bolConcessionDetail.fkLegalEntityBOLUserId);
                     currentConcession.get('userid').setValue(selectedBOLUser[0]);
-                 
+
 
                     let selectedChargeCode = this.bolchargecodes.filter(_ => _.pkChargeCodeId == bolConcessionDetail.fkChargeCodeId);
                     let chargecodetypeid = selectedChargeCode[0].fkChargeCodeTypeId.valueOf();
@@ -294,9 +297,9 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                     var selectedproduct = currentConcession.get('product').value;
                     let chargecodes = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedChargeCodeType[0].pkChargeCodeTypeId);
                     this.selectedProducts[rowIndex].bolchargecodes = chargecodes;
-                
-                    currentConcession.get('chargecode').setValue(selectedChargeCode[0]);   
-                  
+
+                    currentConcession.get('chargecode').setValue(selectedChargeCode[0]);
+
                     if (bolConcessionDetail.expiryDate) {
                         var formattedExpiryDate = this.datepipe.transform(bolConcessionDetail.expiryDate, 'yyyy-MM-dd');
                         currentConcession.get('expiryDate').setValue(formattedExpiryDate);
@@ -334,7 +337,6 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                     currentCondition.get('interestRate').setValue(concessionCondition.interestRate);
                     currentCondition.get('volume').setValue(concessionCondition.conditionVolume);
                     currentCondition.get('value').setValue(concessionCondition.conditionValue);
-                    currentCondition.get('expectedTurnoverValue').setValue(concessionCondition.expectedTurnoverValue);
 
                     let selectedPeriodType = this.periodTypes.filter(_ => _.id == concessionCondition.periodTypeId);
                     currentCondition.get('periodType').setValue(selectedPeriodType[0]);
@@ -384,7 +386,6 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             interestRate: [''],
             volume: [''],
             value: [''],
-            expectedTurnoverValue: [''],
             periodType: [''],
             period: ['']
         });
@@ -404,7 +405,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             newRow.controls['userid'].setValue(this.legalentitybolusers[0]);
 
         control.push(newRow);
-        this.productTypeChanged(length);      
+        this.productTypeChanged(length);
 
     }
 
@@ -447,12 +448,11 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         currentCondition.get('interestRate').setValue(null);
         currentCondition.get('volume').setValue(null);
         currentCondition.get('value').setValue(null);
-        currentCondition.get('expectedTurnoverValue').setValue(null);
     }
 
     productTypeChanged(rowIndex) {
 
-        const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];     
+        const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
 
         let currentProduct = control.controls[rowIndex];
         var selectedproduct = currentProduct.get('product').value;
@@ -477,8 +477,8 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         bolConcession.concession.referenceNumber = this.concessionReferenceId;
         bolConcession.concession.concessionType = ConcessionTypes.BOL;
 
-        //if (this.bolConcessionForm.controls['smtDealNumber'].value)
-        //    bolConcession.concession.smtDealNumber = this.bolConcessionForm.controls['smtDealNumber'].value;
+        if (this.bolConcessionForm.controls['smtDealNumber'].value)
+            bolConcession.concession.smtDealNumber = this.bolConcessionForm.controls['smtDealNumber'].value;
         //else
         //    this.addValidationError("SMT Deal Number not captured");
 
@@ -491,7 +491,11 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             bolConcession.concession.comments = this.bolConcessionForm.controls['comments'].value;
 
 
-       const concessions = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+        const concessions = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+
+        let hasTypeId: boolean = false;
+        let hasLegalEntityId: boolean = false;
+        let hasLegalEntityAccountId: boolean = false;
 
         for (let concessionFormItem of concessions.controls) {
             if (!bolConcession.bolConcessionDetails)
@@ -513,12 +517,12 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
             if (concessionFormItem.get('chargecode').value) {
                 bolConcessionDetail.fkChargeCodeId = concessionFormItem.get('chargecode').value.pkChargeCodeId;
-
+                hasTypeId = true;
             } else {
                 this.addValidationError("Charge code not selected");
             }
 
-            if (concessionFormItem.get('unitcharge').value || concessionFormItem.get('unitcharge').value == 0)  {
+            if (concessionFormItem.get('unitcharge').value || concessionFormItem.get('unitcharge').value == 0) {
                 bolConcessionDetail.loadedRate = concessionFormItem.get('unitcharge').value;
             } else {
                 this.addValidationError("Rate not entered");
@@ -528,6 +532,8 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                 bolConcessionDetail.fkLegalEntityBOLUserId = concessionFormItem.get('userid').value.pkLegalEntityBOLUserId;
                 bolConcessionDetail.legalEntityId = concessionFormItem.get('userid').value.legalEntityId;
                 bolConcessionDetail.legalEntityAccountId = concessionFormItem.get('userid').value.legalEntityAccountId;
+                hasLegalEntityId = true;
+                hasLegalEntityAccountId = true;
             } else {
                 this.addValidationError("User ID not selected");
             }
@@ -536,6 +542,20 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                 bolConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
             bolConcession.bolConcessionDetails.push(bolConcessionDetail);
+
+            if (hasTypeId && hasLegalEntityId && hasLegalEntityAccountId) {
+                let hasDuplicates = this.baseComponentService.HasDuplicateConcessionAccountChargeCode(
+                    bolConcession.bolConcessionDetails,
+                    concessionFormItem.get('chargecode').value.pkChargeCodeId,
+                    concessionFormItem.get('userid').value.legalEntityId,
+                    concessionFormItem.get('userid').value.legalEntityAccountId);
+
+                if (hasDuplicates) {
+                    this.addValidationError("Duplicate Account / Product pricing found. Please select different account.");
+
+                    break;
+                }
+            }
         }
 
         const conditions = <FormArray>this.bolConcessionForm.controls['conditionItemsRows'];
@@ -567,11 +587,13 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             if (conditionFormItem.get('volume').value)
                 concessionCondition.conditionVolume = conditionFormItem.get('volume').value;
 
-            if (conditionFormItem.get('value').value)
+            if (conditionFormItem.get('value').value == null || (<string>conditionFormItem.get('value').value).length < 1) {
+                var value = conditionFormItem.get('conditionType').value;
+                if (value != null && value.enableConditionValue == true)
+                    this.addValidationError("Conditions: 'Value' is a mandatory field");
+            }
+            else if (conditionFormItem.get('value').value)
                 concessionCondition.conditionValue = conditionFormItem.get('value').value;
-
-            if (conditionFormItem.get('expectedTurnoverValue').value)
-                concessionCondition.expectedTurnoverValue = conditionFormItem.get('expectedTurnoverValue').value;
 
             if (conditionFormItem.get('periodType').value) {
                 concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
@@ -583,6 +605,10 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                 concessionCondition.periodId = conditionFormItem.get('period').value.id;
             } else {
                 this.addValidationError("Period not selected");
+            }
+
+            if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
+                this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
             }
 
             bolConcession.concessionConditions.push(concessionCondition);
@@ -1079,14 +1105,27 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     setTwoNumberDecimal($event) {
-        $event.target.value = this.formatDecimal($event.target.value);
+        $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
+        //$event.target.value = this.formatDecimal($event.target.value);
     }
 
-    formatDecimal(itemValue: number) {
-        if (itemValue) {
-            return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-        }
+    //formatDecimal(itemValue: number) {
+    //    if (itemValue) {
+    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
+    //    }
 
-        return null;
+    //    return null;
+    //}
+
+    validatePeriod(itemrow) {
+        this.validationError = null;
+
+        let selectedPeriodType = itemrow.controls.periodType.value.description;
+
+        let selectedPeriod = itemrow.controls.period.value.description;
+
+        if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
+            this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+        }
     }
 }

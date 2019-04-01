@@ -128,6 +128,13 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
 
         IEnumerable<ConcessionInboxView> ReadDueFor72HourEscaltion(IEnumerable<int> statusIdlist);
 
+        /// <summary>
+        /// Get the approved concession list by RequestorId aka CurrentAeUserId
+        /// </summary>
+        /// <param name="requestorId"></param>
+        /// <param name="statusIds"></param>
+        /// <param name="isActive"></param>
+        /// <returns></returns>
         IEnumerable<ConcessionInboxView> GetapporvedView(int requestorId, IEnumerable<int> statusIds, bool isActive);
     }
 }

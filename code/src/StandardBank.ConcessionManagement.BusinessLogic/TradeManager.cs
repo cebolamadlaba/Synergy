@@ -14,6 +14,7 @@ using StandardBank.ConcessionManagement.Model.UserInterface.Trade;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 using RiskGroup = StandardBank.ConcessionManagement.Model.UserInterface.RiskGroup;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
+using System;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -34,11 +35,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ILookupTableManager _lookupTableManager;
 
         private readonly IRuleManager _ruleManager;
-      
+
         private readonly IMiscPerformanceRepository _miscPerformanceRepository;
 
         private readonly IMediator _mediator;
-             
+
         public TradeManager(IConcessionManager concessionManager, IConcessionTradeRepository concessionTradeRpository,
             IMapper mapper, IFinancialTradeRepository financialTradeRepository, ILookupTableManager lookupTableManager, IRuleManager ruleManager,
             IMiscPerformanceRepository miscPerformanceRepository, IMediator mediator)
@@ -62,7 +63,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         public TradeConcession GetTradeConcession(string concessionReferenceId, User user)
         {
-            var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
+            var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId, user);
             var tradeConcessionDetails = _miscPerformanceRepository.GetTradeConcessionDetails(concession.Id);
 
             return new TradeConcession
@@ -93,35 +94,53 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             if (concession.Status == Constants.ConcessionStatus.Approved ||
                 concession.Status == Constants.ConcessionStatus.ApprovedWithChanges)
             {
-                //Loaded rate becomes approved rate
-                mappedConcessionTrade.ApprovedRate = mappedConcessionTrade.LoadedRate;
+                //Rate becomes approved rate
+                mappedConcessionTrade.ApprovedRate = mappedConcessionTrade.Rate;
 
                 _ruleManager.UpdateBaseFieldsOnApproval(mappedConcessionTrade);
 
-              
+                var productType = _lookupTableManager.GetTradeProducTypeName(tradeConcessionDetail.fkTradeProductId.Value);
+                // Set Expiry Date for Local Guarantee.
+
+                switch (productType)
+                {
+                    case Constants.Trade.TradeProductType.LocalGuarantee:
+                        mappedConcessionTrade.ExpiryDate = DateTime.Now.AddMonths(mappedConcessionTrade.term.Value);
+                        break;
+
+                    case Constants.Trade.TradeProductType.InwardTT:
+                    case Constants.Trade.TradeProductType.OutwardTT:
+                        if (mappedConcessionTrade.AdValorem.HasValue)
+                            mappedConcessionTrade.ApprovedRate = mappedConcessionTrade.AdValorem.Value;
+                        else if (mappedConcessionTrade.FlatFee.HasValue)
+                            mappedConcessionTrade.ApprovedRate = mappedConcessionTrade.FlatFee.Value;
+                        break;
+                }
+
+
             }
             else if (concession.Status == Constants.ConcessionStatus.Pending &&
                      concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges)
             {
 
-                //Loaded rate becomes approved rate
-                mappedConcessionTrade.ApprovedRate = mappedConcessionTrade.LoadedRate;
+                //Rate becomes approved rate
+                mappedConcessionTrade.ApprovedRate = mappedConcessionTrade.Rate;
 
             }
 
             _concessionTradeRpository.Update(mappedConcessionTrade);
 
             return mappedConcessionTrade;
-         
+
         }
 
 
-        public TradeView GetTradeViewData(int riskGroupNumber)
+        public TradeView GetTradeViewData(int riskGroupNumber, User currentUser)
         {
             var tradeConcessions = new List<TradeConcession>();
             var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
 
-            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.Trade);
+            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.Trade, currentUser);
 
             foreach (var concession in concessions)
             {
@@ -132,7 +151,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 });
             }
 
-            var tradeFinancial = _mapper.Map<TradeFinancial>(_financialTradeRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialTrade());                      
+            var tradeFinancial = _mapper.Map<TradeFinancial>(_financialTradeRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialTrade());
 
             var tradeProducts = GetTradeProducts(riskGroup);
 
@@ -158,7 +177,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     {
                         productgrouping.TradeProducts.Add(product);
                     }
-                 
+
                 }
                 //sort
                 foreach (var productgrouping in groupedinfo)
@@ -186,7 +205,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private IEnumerable<Model.UserInterface.Trade.TradeProduct> GetTradeProducts(RiskGroup riskGroup)
         {
             return _miscPerformanceRepository.GetTradeProducts(riskGroup.Id, riskGroup.Name);
-        }   
+        }
 
         public async Task ForwardTradeConcession(TradeConcession tradeConcession, User user)
         {

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Model.Common;
 
@@ -54,39 +56,39 @@ namespace StandardBank.ConcessionManagement.Common
         /// <value>
         /// The connection string.
         /// </value>
-        public string ConnectionString  { get; set; }
+        public string ConnectionString { get; set; }
 
         /// <summary>
         /// Gets the database type
         /// </summary>
-        public DatabaseType DatabaseType  { get; set; }
+        public DatabaseType DatabaseType { get; set; }
 
         /// <summary>
         /// Gets the override logged in user
         /// </summary>
-        public string OverrideLoggedInUser  { get; set; }
+        public string OverrideLoggedInUser { get; set; }
         /// <summary>
         /// Get the stmp server
         /// </summary>
-        public string SmtpServer  { get; set; }
+        public string SmtpServer { get; set; }
 
         /// <summary>
         /// Gets the stmp user 
         /// </summary>
-        public string SmtpServerUserName  { get; set; }
+        public string SmtpServerUserName { get; set; }
         /// <summary>
         /// Gets the smtp password
         /// </summary>
-        public string SmtpServerPassword  { get; set; }
+        public string SmtpServerPassword { get; set; }
 
         /// <summary>
         /// Get the default email address to use when sending emails
         /// </summary>
-        public string DefaultEmail  { get; set; }
+        public string DefaultEmail { get; set; }
 
-        public int SmtpPort  { get; set; }
+        public int SmtpPort { get; set; }
 
-        public string EmailTemplatePath  { get; set; }
+        public string EmailTemplatePath { get; set; }
 
         /// <summary>
         /// Gets or sets the letter template path.
@@ -104,10 +106,44 @@ namespace StandardBank.ConcessionManagement.Common
         /// </value>
         public string WKhtmlToPDFExecutable { get; set; }
 
-        public string DateDatabaseConnection { get ; set ; }
+        public string DateDatabaseConnection { get; set; }
 
         public string EnforceMyAccess { get; set; }
 
-        public  string ServerURL { get; set; }
+        public string ServerURL { get; set; }
+
+        public string VisiblePricingProducts { get; set; }
+
+
+        public int[] GetVisiblePricingProducts
+        {
+            get
+            {
+                string[] visibleProductsStrArray = null;
+                List<int> visibleProductIntList = new List<int>();
+
+                if (string.IsNullOrEmpty(this.VisiblePricingProducts))
+                    return null;
+
+                try
+                {
+                    visibleProductsStrArray = this.VisiblePricingProducts.Split(',');
+
+                    int pricingProductNumber;
+
+                    foreach (string str in visibleProductsStrArray)
+                    {
+                        if (int.TryParse(str, out pricingProductNumber))
+                            visibleProductIntList.Add(pricingProductNumber);
+                    }
+                }
+                catch
+                {
+                    return null;
+                }
+
+                return visibleProductIntList.ToArray();
+            }
+        }
     }
 }

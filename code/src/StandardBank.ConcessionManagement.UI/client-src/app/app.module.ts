@@ -47,8 +47,11 @@ import { PcmManagementService } from './services/pcm-management.service';
 import { BcmManagementService } from './services/bcm-management.service';
 import { AeManagementService } from './services/ae-management.service';
 import { AaManagementService } from './services/aa-management.service';
+import { BaseComponentService } from './services/base-component.service';
+import { ConcessionLetterService } from './services/concession-letter.service';
 
 import { AdminTransactionTablesService } from './services/admin-transaction-tables.service';
+import { LegalEntityAddressService } from './services/legal-entity-address.service';
 
 import { ApprovedConcessionFilterPipe } from './filters/approved-concession-filter.pipe';
 import { CashViewConcessionComponent } from './cash-view-concession/cash-view-concession.component';
@@ -90,6 +93,7 @@ import { AaManagementComponent } from './admin/aa-management/aa-management.compo
 import { BOLCHManagementComponent } from './admin/bol-chargecodes/bol-chargecodes.component';
 import { TransactionTypesManagementComponent } from './admin/transaction-types/transaction-types.component';
 import { ChannelTypesManagementComponent } from './admin/channel-types/channel-types.component';
+
 
 @NgModule({
     declarations: [
@@ -147,7 +151,7 @@ import { ChannelTypesManagementComponent } from './admin/channel-types/channel-t
         BOLCHManagementComponent,
         TransactionTypesManagementComponent,
         ChannelTypesManagementComponent
-       
+
     ],
     imports: [
         BrowserModule,
@@ -159,7 +163,7 @@ import { ChannelTypesManagementComponent } from './admin/channel-types/channel-t
         DataTablesModule,
         ReactiveFormsModule,
         BsDropdownModule.forRoot(),
-        MyDatePickerModule 
+        MyDatePickerModule
     ],
     providers: [
         LookupDataService,
@@ -179,8 +183,11 @@ import { ChannelTypesManagementComponent } from './admin/channel-types/channel-t
         AeManagementService,
         AaManagementService,
         BolConcessionService,
-        TradeConcessionService,     
-        InvestmentConcessionService
+        TradeConcessionService,
+        InvestmentConcessionService,
+        BaseComponentService,
+        ConcessionLetterService,
+        LegalEntityAddressService
     ],
     bootstrap: [AppComponent]
 })

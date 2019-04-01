@@ -121,7 +121,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public LendingConcession GetLendingConcession(string concessionReferenceId, User currentUser)
         {
-            var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
+            var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId, currentUser);
             var lendingConcessionDetails = _miscPerformanceRepository.GetLendingConcessionDetails(concession.Id);
 
             var primerate = _primeRateRepository.PrimeRate(concession.DateOpened);
@@ -272,11 +272,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <returns></returns>
-        public LendingView GetLendingViewData(int riskGroupNumber)
+        public LendingView GetLendingViewData(int riskGroupNumber, User currentUser)
         {
             var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
             var lendingConcessions = new List<LendingConcession>();
-            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.Lending);
+            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.Lending, currentUser);
 
             foreach (var concession in concessions)
             {

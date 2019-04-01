@@ -167,7 +167,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static IBolUserRepository BolUserRepository = new BolUserRepository(DbConnection);
 
-    
+
 
         /// <summary>
         /// The BusinesOnlineTransactionType repository
@@ -261,7 +261,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static IConcessionTradeRepository ConcessionTradeRepository =
             new ConcessionTradeRepository(DbConnection, ConcessionDetailRepository);
-       
+
 
         /// <summary>
         /// The ConcessionTransactional repository
@@ -432,7 +432,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static ITransactionTableNumberRepository TransactionTableNumberRepository =
             new TransactionTableNumberRepository(DbConnection, CacheManager);
 
-      
+
         /// <summary>
         /// The SapDataImport repository
         /// </summary>
@@ -488,7 +488,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             PeriodTypeRepository, ConditionTypeRepository, Mapper, ConditionProductRepository,
             ConditionTypeProductRepository, AccrualTypeRepository, ChannelTypeRepository, TransactionTypeRepository,
             TableNumberRepository, RelationshipRepository, RoleRepository, CentreRepository,
-            RiskGroupRepository, TransactionTableNumberRepository, BolUserRepository,ConcessionTradeRepository, ConcessionInvestmentRepository);
+            RiskGroupRepository, TransactionTableNumberRepository, BolUserRepository, ConcessionTradeRepository, ConcessionInvestmentRepository);
 
         /// <summary>
         /// The region manager
@@ -509,7 +509,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             new ConcessionManager(ConcessionRepository, LookupTableManager, RiskGroupRepository,
                 Mapper, ConcessionConditionRepository, ConcessionCommentRepository,
                 ConcessionRelationshipRepository, AuditRepository, UserManager, ConcessionInboxViewRepository,
-                ConcessionDetailRepository, ConcessionConditionViewRepository, MiscPerformanceRepository, CentreRepository, PrimeRateRepository,null);
+                ConcessionDetailRepository, ConcessionConditionViewRepository, MiscPerformanceRepository, CentreRepository, PrimeRateRepository, null
+                , AENumberUserManager);
 
         /// <summary>
         /// The rule manager
@@ -521,7 +522,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static ILendingManager LendingManager = new LendingManager(ConcessionManager,
             ConcessionLendingRepository, Mapper, FinancialLendingRepository, LookupTableManager,
-            LoadedPriceLendingRepository, RuleManager, MiscPerformanceRepository,null,null);
+            LoadedPriceLendingRepository, RuleManager, MiscPerformanceRepository, null, null);
 
         /// <summary>
         /// The transactional manager
@@ -536,6 +537,10 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// </summary>
         public static ICashManager CashManager = new CashManager(ConcessionManager, ConcessionCashRepository, Mapper,
             FinancialCashRepository, LookupTableManager, LoadedPriceCashRepository, RuleManager,
-            MiscPerformanceRepository, null,null);
+            MiscPerformanceRepository, null, null);
+
+        public static IAENumberUserRepository AENumberUserRepository = new AENumberUserRepository(DbConnection);
+
+        public static IAENumberUserManager AENumberUserManager = new AENumberUserManager(AENumberUserRepository, AccountExecutiveAssistantRepository, UserRepository);
     }
 }

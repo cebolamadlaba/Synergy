@@ -193,6 +193,8 @@ namespace StandardBank.ConcessionManagement.Model.Repository
 
         public DateTime? Archived { get; set; }
 
+        public int? AENumberUserId { get; set; }
+
         /// <summary>
         /// Gets or sets the IsActive.
         /// </summary>

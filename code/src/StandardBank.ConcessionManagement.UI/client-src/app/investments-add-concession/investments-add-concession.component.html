@@ -177,7 +177,7 @@
                 </td>
                 <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="rate" [attr.disabled]="saveMessage ? '' : null" (change)="setThreeNumberDecimal($event)" /></td>
 
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="(!saveMessage || saveMessage) ? '' : null" /></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="(saveMessage) ? '' : null" /></td>
 
 
                 <td class="delete"><button *ngIf="investmentConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
@@ -204,7 +204,6 @@
                             <th>Interest Rate</th>
                             <th>Volume</th>
                             <th>Value</th>
-                            <th>Expected Turnover Value</th>
                             <th>Period</th>
                         </tr>
                     </thead>
@@ -221,7 +220,6 @@
                             <td><span *ngIf="itemrow.get('interestRate').value">{{itemrow.get('interestRate').value | number:'1.2-2'}}</span></td>
                             <td>{{itemrow.get('volume').value}}</td>
                             <td><span *ngIf="itemrow.get('value').value">{{itemrow.get('value').value | number:'1.2-2'}}</span></td>
-                            <td><span *ngIf="itemrow.get('expectedTurnoverValue').value">{{itemrow.get('expectedTurnoverValue').value | number:'1.2-2'}}</span></td>
                             <td>{{itemrow.get('periodType').value.description}} {{itemrow.get('period').value.description}}</td>
                         </tr>
                     </tbody>
@@ -252,7 +250,6 @@
                                 <th>Interest Rate</th>
                                 <th>Volume</th>
                                 <th>Value</th>
-                                <th>Expected Turnover Value</th>
                                 <th>Period Type</th>
                                 <th>Period</th>
                                 <th></th>
@@ -283,18 +280,16 @@
                                 <td class="length-short"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionVolume ? null : ''" /></td>
                                 <!-- Value -->
                                 <td class="length-short"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionValue ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
-                                <!-- Turnover -->
-                                <td class="length-medium"><input type="text" numbersOnly="true" formControlName="expectedTurnoverValue" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableExpectedTurnoverValue ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
                                 <!-- Period type -->
                                 <td class="length-medium">
-                                    <select formControlName="periodType">
-                                        <option *ngFor="let periodTypeOption of periodTypes" [ngValue]="periodTypeOption">{{periodTypeOption.description}}</option>
+                                    <select formControlName="periodType" (change)="validatePeriod(itemrow)">
+                                        <option *ngFor="let periodTypeOption of periodTypes" [ngValue]="periodTypeOption">{{periodTypeOption?.description}}</option>
                                     </select>
                                 </td>
                                 <!-- Period -->
                                 <td class="length-long">
-                                    <select formControlName="period">
-                                        <option *ngFor="let periodOption of periods" [ngValue]="periodOption">{{periodOption.description}}</option>
+                                    <select formControlName="period" (change)="validatePeriod(itemrow)">
+                                        <option *ngFor="let periodOption of periods" [ngValue]="periodOption">{{periodOption?.description}}</option>
                                     </select>
                                 </td>
                                 <td><button class="btn-delete" type="button" (click)="deleteConditionRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>

@@ -29,7 +29,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <summary>
         /// The template path
         /// </summary>
-        private readonly string _templatePath;     
+        private readonly string _templatePath;
 
         /// <summary>
         /// The file utiltity
@@ -113,7 +113,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IConcessionManager concessionManager, IPdfUtility pdfUtility, IUserManager userManager,
             ILendingManager lendingManager, ILegalEntityRepository legalEntityRepository, ICashManager cashManager,
             IRazorRenderer razorRenderer, ITransactionalManager transactionalManager,
-            IConcessionInboxViewRepository concessionInboxViewRepository, ILookupTableManager lookupTableManager,  IBolManager bolManager, IBusinessCentreManager businessCentreManager, ITradeManager tradeManager, IInvestmentManager investmentManager)
+            IConcessionInboxViewRepository concessionInboxViewRepository, ILookupTableManager lookupTableManager, IBolManager bolManager, IBusinessCentreManager businessCentreManager, ITradeManager tradeManager, IInvestmentManager investmentManager)
         {
             _templatePath = configurationData.LetterTemplatePath;
             _fileUtiltity = fileUtiltity;
@@ -181,7 +181,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="legalEntityId">The legal entity identifier.</param>
         /// <param name="requestorId">The requestor identifier.</param>
         /// <returns></returns>
-        public byte[] GenerateLettersForLegalEntity(int legalEntityId, int requestorId)
+        public byte[] GenerateLettersForLegalEntity(int legalEntityId, int requestorId, LegalEntityConcessionLetter userProvidedInfo)
         {
             var approvedStatusId = _lookupTableManager.GetStatusId(Constants.ConcessionStatus.Approved);
             var approvedWithChangesStatusId =
@@ -189,11 +189,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var concessionInboxViews =
                 _concessionInboxViewRepository.ReadByLegalEntityIdRequestorIdStatusIdsIsActive(legalEntityId,
-                    requestorId, new[] {approvedStatusId, approvedWithChangesStatusId}, true);
+                    requestorId, new[] { approvedStatusId, approvedWithChangesStatusId }, true);
 
             var requestor = _userManager.GetUser(requestorId);
 
             var legalEntityConcessionLetter = GetLegalEntityConcessionLetter(concessionInboxViews, requestor);
+
+            legalEntityConcessionLetter = this.AddUserProvidedInfoToConcessionLetter(legalEntityConcessionLetter, userProvidedInfo);
 
             return GenerateLegalEntityConcessionLetterPdf(legalEntityConcessionLetter);
         }
@@ -400,7 +402,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                         investmentConcessionLetters.Add(
                             PopulateInvestmentConcessionLetter(investmentConcessionDetail));
-                        legalEntityConcession.InvestmentConcessionLetters =investmentConcessionLetters;
+                        legalEntityConcession.InvestmentConcessionLetters = investmentConcessionLetters;
                     }
                 }
             }
@@ -500,8 +502,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var bcm = _userManager.GetUser(_businessCentreManager.GetBusinessCentreManager(requestor.CentreId).BusinessCentreManagerId); //_userManager.GetUser(concessionInboxView.BCMUserId); 
             var legalEntityId = concessionInboxView.LegalEntityId;
 
-            var legalEntity = _legalEntityRepository.ReadById(legalEntityId);  
-            
+            var legalEntity = _legalEntityRepository.ReadById(legalEntityId);
+
 
             var legalEntityConcessionLetter =
                 new LegalEntityConcessionLetter
@@ -509,20 +511,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     CurrentDate = DateTime.Now.ToString("dd/MM/yyyy"),
                     TemplatePath = _templatePath,
                     RiskGroupNumber = Convert.ToString(riskGroupNumber),
-                    BCMEmailAddress = bcm != null ? bcm.EmailAddress :"N/A",
-                    BCMContactNumber = bcm != null ? bcm.ContactNumber : "N/A",                 
+                    BCMEmailAddress = bcm != null ? bcm.EmailAddress : "N/A",
+                    BCMContactNumber = bcm != null ? bcm.ContactNumber : "N/A",
                     BCMName = bcm != null ? bcm.FullName : "Name N/A",
                     RequestorEmailAddress = requestor?.EmailAddress,
                     RequestorName = requestor?.FullName,
                     RequestorContactNumber = requestor?.ContactNumber,
-                    ClientName = GetValueOrDashes(legalEntity.CustomerName),
-                    ClientNumber = GetValueOrDashes(legalEntity.CustomerNumber),
-                    ClientPostalAddress = GetValueOrDashes(legalEntity.PostalAddress),
-                    ClientCity = GetValueOrDashes(legalEntity.City),
-                    ClientContactPerson = GetValueOrDashes(legalEntity.ContactPerson),
-                    ClientPostalCode = GetValueOrDashes(legalEntity.PostalCode),
-                    RequestorRoleName = legalEntity.RequestorRoleName,
-                    BCMRoleName = legalEntity.BCMRoleName
+                    ClientName = legalEntity != null ? GetValueOrDashes(legalEntity.CustomerName) : "",
+                    ClientNumber = legalEntity != null ? GetValueOrDashes(legalEntity.CustomerNumber) : "",
+                    ClientPostalAddress = legalEntity != null ? GetValueOrDashes(legalEntity.PostalAddress) : "",
+                    ClientCity = legalEntity != null ? GetValueOrDashes(legalEntity.City) : "",
+                    ClientContactPerson = legalEntity != null ? GetValueOrDashes(legalEntity.ContactPerson) : "",
+                    ClientPostalCode = legalEntity != null ? GetValueOrDashes(legalEntity.PostalCode) : "",
+                    RequestorRoleName = legalEntity != null ? legalEntity.RequestorRoleName : "",
+                    BCMRoleName = legalEntity != null ? legalEntity.BCMRoleName : ""
                 };
 
             return legalEntityConcessionLetter;
@@ -545,7 +547,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return GenerateLegalEntityConcessionLetterPdf(legalEntityConcessionLetter);
         }
 
-        public byte[] GenerateLettersForConcessions(IEnumerable<int> concessionIds, int requestorId)
+        public byte[] GenerateLettersForConcessions(IEnumerable<int> concessionIds, int requestorId, LegalEntityConcessionLetter userProvidedInfo)
         {
             var concessionInboxViews = _concessionInboxViewRepository.ReadByConcessionIds(concessionIds);
 
@@ -553,24 +555,26 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var legalEntityConcessionLetter = GetLegalEntityConcessionLetter(concessionInboxViews, requestor);
 
+            legalEntityConcessionLetter = this.AddUserProvidedInfoToConcessionLetter(legalEntityConcessionLetter, userProvidedInfo);
+
             return GenerateLegalEntityConcessionLetterPdf(legalEntityConcessionLetter);
         }
 
 
-        
+
 
 
         public byte[] DownloadLetterForConcessionDetail(int concessionDetailId, int requestorId)
         {
             var concessionInboxViews = _concessionInboxViewRepository.ReadByConcessionDetailIds(new int[] { concessionDetailId });
 
-            if(concessionInboxViews != null && concessionInboxViews.FirstOrDefault() != null)
+            if (concessionInboxViews != null && concessionInboxViews.FirstOrDefault() != null)
             {
-               string url = concessionInboxViews.FirstOrDefault().ConcessionLetterURL;
+                string url = concessionInboxViews.FirstOrDefault().ConcessionLetterURL;
 
-                if(System.IO.File.Exists(url))
+                if (System.IO.File.Exists(url))
                 {
-                   return System.IO.File.ReadAllBytes(url);
+                    return System.IO.File.ReadAllBytes(url);
 
                 }
             }
@@ -676,7 +680,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             return new BusinessOnlineConcessionLetter
             {
-                
+
                 BOLuserID = bolConcessionDetail.BolUserID,
                 UnitRate = bolConcessionDetail.ApprovedRate,
                 TransactionType = bolConcessionDetail.ChargeCodeType,
@@ -704,8 +708,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     ConcessionEndDate = tradeConcessionDetail.ExpiryDate.HasValue
                   ? tradeConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
                   : string.Empty,
-                    EstFee = tradeConcessionDetail.EstablishmentFee.ToString(), 
-                    RatePercentage = tradeConcessionDetail.ApprovedRate.ToString() ,
+                    EstFee = tradeConcessionDetail.EstablishmentFee.ToString(),
+                    RatePercentage = tradeConcessionDetail.ApprovedRate.ToString(),
 
                     Communication = "NA",
                     AdValorem = "NA",
@@ -742,18 +746,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     FlatFee = tradeConcessionDetail.FlatFee.ToString()
 
                 };
-            }          
+            }
         }
 
         Dictionary<int, string> Termdictionary = new Dictionary<int, string>() {
               {1, "33 Days" },
               {2, "60 Days"},
-              {3, "90 Days"},                                  
+              {3, "90 Days"},
               {4, "120 Days"},
               {5, "150 Days"},
               {6, "180 Days"}
-        } ;
-        
+        };
+
 
 
         private InvestmentConcessionLetter PopulateInvestmentConcessionLetter(
@@ -764,10 +768,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 Product = investmentConcessionDetail.InvestmentProduct,
                 AccountNumber = investmentConcessionDetail.AccountNumber,
-                Balance = investmentConcessionDetail.Balance.Value, 
+                Balance = investmentConcessionDetail.Balance.Value,
                 NoticePeriod = Termdictionary[investmentConcessionDetail.Term],
-               
-                Rate = investmentConcessionDetail.ApprovedRate, 
+
+                Rate = investmentConcessionDetail.ApprovedRate,
                 ConcessionStartDate = investmentConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
                 ConcessionEndDate = investmentConcessionDetail.ExpiryDate.HasValue
                     ? investmentConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
@@ -996,14 +1000,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 conditions.Add(new ConditionConcessionLetter
                 {
                     Value =
-                        $"R {concessionCondition.ExpectedTurnoverValue.GetValueOrDefault(0).ToString("N2", CultureInfo.InvariantCulture)}",
+                        $"R {concessionCondition.ConditionValue.GetValueOrDefault(0).ToString("N2", CultureInfo.InvariantCulture)}",
                     ConditionProduct = concessionCondition.ProductType,
                     ConditionMeasure = concessionCondition.ConditionType,
                     Deadline = concessionCondition.ExpiryDate.HasValue
                         ? concessionCondition.ExpiryDate.Value.ToString("dd/MM/yyyy")
                         : $"{concessionCondition.Period} - {concessionCondition.PeriodType}",
                     ConditionPeriod = concessionCondition.PeriodType
-                    });
+                });
             }
 
             return conditions;
@@ -1064,8 +1068,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 ClientPostalAddress = GetValueOrDashes(legalEntity.PostalAddress),
                 ClientCity = GetValueOrDashes(legalEntity.City),
                 ClientContactPerson = GetValueOrDashes(legalEntity.ContactPerson),
-                ClientPostalCode = GetValueOrDashes(legalEntity.PostalCode)             
-               
+                ClientPostalCode = GetValueOrDashes(legalEntity.PostalCode)
+
             };
 
             return concessionLetter;
@@ -1138,6 +1142,26 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             //generate a pdf from the html
             return _pdfUtility.GeneratePdfFromHtml(html.ToString());
+        }
+
+        private LegalEntityConcessionLetter AddUserProvidedInfoToConcessionLetter(LegalEntityConcessionLetter legalEntityConcessionLetter, LegalEntityConcessionLetter userProvidedInfo)
+        {
+            if (!string.IsNullOrEmpty(userProvidedInfo.ClientContactPerson))
+                legalEntityConcessionLetter.ClientContactPerson = userProvidedInfo.ClientContactPerson;
+
+            if (!string.IsNullOrEmpty(userProvidedInfo.ClientName))
+                legalEntityConcessionLetter.ClientName = userProvidedInfo.ClientName;
+
+            if (!string.IsNullOrEmpty(userProvidedInfo.ClientPostalAddress))
+                legalEntityConcessionLetter.ClientPostalAddress = userProvidedInfo.ClientPostalAddress;
+
+            if (!string.IsNullOrEmpty(userProvidedInfo.ClientCity))
+                legalEntityConcessionLetter.ClientCity = userProvidedInfo.ClientCity;
+
+            if (!string.IsNullOrEmpty(userProvidedInfo.ClientPostalCode))
+                legalEntityConcessionLetter.ClientPostalCode = userProvidedInfo.ClientPostalCode;
+
+            return legalEntityConcessionLetter;
         }
     }
 }

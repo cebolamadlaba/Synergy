@@ -4,8 +4,8 @@
     [fkConcessionDetailId]   INT             NOT NULL,
     [fkTradeProductId]       INT             NULL,
     [fkLegalEntityAccountId] INT             NULL,
-    [LoadedRate]             INT             NULL,
-    [ApprovedRate]           INT             NULL,
+    [LoadedRate]             DECIMAL (18, 2) NULL,
+    [ApprovedRate]           DECIMAL (18, 2) NULL,
     [GBBNumber]              VARCHAR (250)   NULL,
     [Term]                   INT             NULL,
     [Min]                    DECIMAL (18, 2) NULL,
@@ -17,10 +17,13 @@
     [Currency]               VARCHAR (5)     NULL,
     [fkLegalEntityGBBNumber] INT             NULL,
     [fkLegalEntityId]        INT             NULL,
+    [Rate]                   DECIMAL (18, 2) NULL,
     CONSTRAINT [PK_tblConcessionTrade] PRIMARY KEY CLUSTERED ([pkConcessionTradeId] ASC),
     CONSTRAINT [FK_tblConcessionTrade_tblConcession] FOREIGN KEY ([fkConcessionId]) REFERENCES [dbo].[tblConcession] ([pkConcessionId]),
     CONSTRAINT [FK_tblConcessionTrade_tblConcessionDetail] FOREIGN KEY ([fkConcessionDetailId]) REFERENCES [dbo].[tblConcessionDetail] ([pkConcessionDetailId])
 );
+
+
 
 
 

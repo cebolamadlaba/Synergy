@@ -9,7 +9,6 @@
     [Volume]                  INT             NULL,
     [Value]                   DECIMAL (18, 2) NULL,
     [ConditionMet]            BIT             NULL,
-    [ExpectedTurnoverValue]   DECIMAL (18, 2) NULL,
     [DateApproved]            DATETIME        NULL,
     [ExpiryDate]              DATETIME        NULL,
     [IsActive]                BIT             NOT NULL,
@@ -23,6 +22,8 @@
     CONSTRAINT [FK_tblConcessionCondition_rtblPeriodType] FOREIGN KEY ([fkPeriodTypeId]) REFERENCES [dbo].[rtblPeriodType] ([pkPeriodTypeId]),
     CONSTRAINT [FK_tblConcessionCondition_tblConcession] FOREIGN KEY ([fkConcessionId]) REFERENCES [dbo].[tblConcession] ([pkConcessionId])
 );
+
+
 
 
 

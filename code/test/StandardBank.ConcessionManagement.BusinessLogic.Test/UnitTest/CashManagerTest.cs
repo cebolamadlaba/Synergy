@@ -28,7 +28,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         {
             _cashManager = new CashManager(MockConcessionManager.Object, MockConcessionCashRepository.Object,
                 InstantiatedDependencies.Mapper, MockFinancialCashRepository.Object, MockLookupTableManager.Object,
-                MockLoadedPriceCashRepository.Object, MockRuleManager.Object, MockMiscPerformanceRepository.Object, null,null);
+                MockLoadedPriceCashRepository.Object, MockRuleManager.Object, MockMiscPerformanceRepository.Object, null, null);
         }
 
         /// <summary>
@@ -50,11 +50,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         [Fact]
         public void GetCashConcession_Executes_Positive()
         {
-            MockConcessionManager.Setup(_ => _.GetConcessionForConcessionReferenceId(It.IsAny<string>()))
+            MockConcessionManager.Setup(_ => _.GetConcessionForConcessionReferenceId(It.IsAny<string>(), null))
                 .Returns(new Concession());
 
             MockConcessionCashRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
-                .Returns(new[] {new ConcessionCash()});
+                .Returns(new[] { new ConcessionCash() });
 
             MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
                 .Returns(new LegalEntity { IsActive = true });
@@ -100,19 +100,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockLookupTableManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
                 .Returns(new RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
 
-            MockConcessionManager.Setup(_ => _.GetApprovedConcessionsForRiskGroup(It.IsAny<int>(), It.IsAny<string>()))
+            MockConcessionManager.Setup(_ => _.GetApprovedConcessionsForRiskGroup(It.IsAny<int>(), It.IsAny<string>(), null))
                 .Returns(new[] { new Concession() });
 
             MockMiscPerformanceRepository.Setup(_ => _.GetCashConcessionDetails(It.IsAny<int>()))
                 .Returns(new[] { new CashConcessionDetail() });
 
             MockFinancialCashRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
-                .Returns(new[] {new FinancialCash()});
+                .Returns(new[] { new FinancialCash() });
 
             MockMiscPerformanceRepository.Setup(_ => _.GetCashProducts(It.IsAny<int>(), It.IsAny<string>()))
-                .Returns(new[] {new CashProduct()});
+                .Returns(new[] { new CashProduct() });
 
-            var result = _cashManager.GetCashViewData(1);
+            var result = _cashManager.GetCashViewData(1, null);
 
             Assert.NotNull(result);
             Assert.NotNull(result.RiskGroup);
@@ -127,10 +127,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
         public void GetCashFinancialForRiskGroupNumber_Executes_Positive()
         {
             MockLookupTableManager.Setup(_ => _.GetRiskGroupForRiskGroupNumber(It.IsAny<int>()))
-                .Returns(new RiskGroup {Id = 1, Name = "Test Risk Group", Number = 1000});
+                .Returns(new RiskGroup { Id = 1, Name = "Test Risk Group", Number = 1000 });
 
             MockFinancialCashRepository.Setup(_ => _.ReadByRiskGroupId(It.IsAny<int>()))
-                .Returns(new[] {new FinancialCash {LatestCrsOrMrs = 123321}});
+                .Returns(new[] { new FinancialCash { LatestCrsOrMrs = 123321 } });
 
             var result = _cashManager.GetCashFinancialForRiskGroupNumber(1);
 

@@ -44,7 +44,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("TradeView/{riskGroupNumber}")]
         public IActionResult TradeView(int riskGroupNumber)
         {
-            return Ok(_tradeManager.GetTradeViewData(riskGroupNumber));
+            var user = _siteHelper.LoggedInUser(this);
+
+            return Ok(_tradeManager.GetTradeViewData(riskGroupNumber, user));
         }
 
 
@@ -108,6 +110,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 if (tradeConcession.TradeConcessionDetails.All(_ => _.TradeConcessionDetailId !=
                                                                   tradeConcessionDetail.TradeConcessionDetailId))
                     await _mediator.Send(new DeleteTradeConcessionDetail(tradeConcessionDetail, user));
+
+            if (!tradeConcession.Concession.AENumberUserId.HasValue)
+                tradeConcession.Concession.AENumberUserId = databaseTradeConcession.Concession.AENumberUserId;
 
             //update the concession
             var concession = await _mediator.Send(new UpdateConcession(tradeConcession.Concession, user));

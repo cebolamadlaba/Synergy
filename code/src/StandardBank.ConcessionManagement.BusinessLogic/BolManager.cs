@@ -71,7 +71,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         public BolConcession GetBolConcession(string concessionReferenceId, User user)
         {
-            var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId);
+            var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId, user);
 
             var bolConcessionDetails = _miscPerformanceRepository.GetBolConcessionDetails(concession.Id);
 
@@ -144,11 +144,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
 
 
-        public BolView GetBolViewData(int riskGroupNumber)
+        public BolView GetBolViewData(int riskGroupNumber, User currentUser)
         {
             var bolConcessions = new List<BolConcession>();
             var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
-            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.BusinessOnline);
+            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.BusinessOnline, currentUser);
 
             foreach (var concession in concessions)
             {

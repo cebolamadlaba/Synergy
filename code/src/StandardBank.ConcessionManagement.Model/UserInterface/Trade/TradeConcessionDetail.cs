@@ -11,6 +11,7 @@
         public string TradeProductType { get; set; } 
         public string ApprovedRate { get; set; }
         public string LoadedRate { get; set; }
+        public string Rate { get; set; }
         public int? fkConcessionId { get; set; }       
         public int? fkConcessionDetailId { get; set; }
         public string Communication { get; set; }

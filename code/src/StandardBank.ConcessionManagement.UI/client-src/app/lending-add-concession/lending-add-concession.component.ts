@@ -22,6 +22,8 @@ import { LendingService } from "../services/lending.service";
 import { DecimalPipe } from '@angular/common';
 import { ConcessionTypes } from '../constants/concession-types';
 
+import { BaseComponentService } from '../services/base-component.service';
+
 @Component({
     selector: 'app-lending-add-concession',
     templateUrl: './lending-add-concession.component.html',
@@ -71,7 +73,8 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         private formBuilder: FormBuilder,
         private location: Location,
         @Inject(LookupDataService) private lookupDataService,
-        @Inject(LendingService) private lendingService) {
+        @Inject(LendingService) private lendingService,
+        private baseComponentService: BaseComponentService) {
         this.riskGroup = new RiskGroup();
         this.reviewFeeTypes = [new ReviewFeeType()];
         this.productTypes = [new ProductType()];
@@ -85,7 +88,6 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-
         this.today = new Date().toISOString().split('T')[0];
 
         this.sub = this.route.params.subscribe(params => {
@@ -171,12 +173,11 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             interestRate: [''],
             volume: [''],
             value: [''],
-            expectedTurnoverValue: [''],
             periodType: [''],
             period: ['']
         });
     }
-  
+
 
     addNewConcessionRow() {
         const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
@@ -236,10 +237,9 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         currentCondition.get('interestRate').setValue(null);
         currentCondition.get('volume').setValue(null);
         currentCondition.get('value').setValue(null);
-        currentCondition.get('expectedTurnoverValue').setValue(null);
     }
 
-    disableRows() { 
+    disableRows() {
 
         const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
         for (let concessionFormItem of concessions.controls) {
@@ -283,7 +283,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             currentRow.get('uffFee').enable();
 
             currentRow.get('frequency').disable();
-            currentRow.get('serviceFee').disable();           
+            currentRow.get('serviceFee').disable();
 
         }
         else if (productType.description === "Temporary Overdraft") {
@@ -292,10 +292,10 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
             currentRow.get('reviewFeeType').enable();
             currentRow.get('reviewFee').enable();
-            currentRow.get('uffFee').enable();          
+            currentRow.get('uffFee').enable();
 
             currentRow.get('frequency').disable();
-            currentRow.get('serviceFee').disable();          
+            currentRow.get('serviceFee').disable();
 
         }
         else if (productType.description.indexOf("VAF") == 0) {
@@ -315,7 +315,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
             currentRow.get('reviewFeeType').disable();
             currentRow.get('reviewFee').disable();
-            currentRow.get('uffFee').disable();          
+            currentRow.get('uffFee').disable();
 
             currentRow.get('frequency').disable();
             currentRow.get('serviceFee').disable();
@@ -338,7 +338,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
         if (this.lendingConcessionForm.controls['smtDealNumber'].value)
             lendingConcession.concession.smtDealNumber = this.lendingConcessionForm.controls['smtDealNumber'].value;
-       
+
 
         if (this.lendingConcessionForm.controls['motivation'].value)
             lendingConcession.concession.motivation = this.lendingConcessionForm.controls['motivation'].value;
@@ -352,20 +352,28 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
         const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
 
+        let hasProductType: boolean = false;
+        let hasLegalEntityId: boolean = false;
+        let hasLegalEntityAccountId: boolean = false;
+
         for (let concessionFormItem of concessions.controls) {
             if (!lendingConcession.lendingConcessionDetails)
                 lendingConcession.lendingConcessionDetails = [];
 
             let lendingConcessionDetail = new LendingConcessionDetail();
 
-            if (concessionFormItem.get('productType').value)
+            if (concessionFormItem.get('productType').value) {
                 lendingConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;
+                hasProductType = true;
+            }
             else
                 this.addValidationError("Product type not selected");
 
             if (concessionFormItem.get('accountNumber').value) {
                 lendingConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
                 lendingConcessionDetail.legalEntityAccountId = concessionFormItem.get('accountNumber').value.legalEntityAccountId;
+                hasLegalEntityId = true;
+                hasLegalEntityAccountId = true;
             } else {
                 this.addValidationError("Client account not selected");
             }
@@ -398,6 +406,21 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
                 lendingConcessionDetail.frequency = concessionFormItem.get('frequency').value;
 
             lendingConcession.lendingConcessionDetails.push(lendingConcessionDetail);
+
+            if (hasProductType && hasLegalEntityId && hasLegalEntityAccountId) {
+                let hasDuplicates = this.baseComponentService.HasDuplicateConcessionAccountProduct(
+                    lendingConcession.lendingConcessionDetails,
+                    concessionFormItem.get('productType').value.id,
+                    concessionFormItem.get('accountNumber').value.legalEntityId,
+                    concessionFormItem.get('accountNumber').value.legalEntityAccountId);
+
+                if (hasDuplicates) {
+                    this.addValidationError("Duplicate Account / Product pricing found. Please select different account.");
+
+                    break;
+                }
+            }
+
         }
 
         const conditions = <FormArray>this.lendingConcessionForm.controls['conditionItemsRows'];
@@ -424,11 +447,13 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             if (conditionFormItem.get('volume').value)
                 concessionCondition.conditionVolume = conditionFormItem.get('volume').value;
 
-            if (conditionFormItem.get('value').value)
+            if (conditionFormItem.get('value').value == null || (<string>conditionFormItem.get('value').value).length < 1) {
+                var value = conditionFormItem.get('conditionType').value;
+                if (value != null && value.enableConditionValue == true)
+                    this.addValidationError("Conditions: 'Value' is a mandatory field");
+            }
+            else if (conditionFormItem.get('value').value)
                 concessionCondition.conditionValue = conditionFormItem.get('value').value;
-
-            if (conditionFormItem.get('expectedTurnoverValue').value)
-                concessionCondition.expectedTurnoverValue = conditionFormItem.get('expectedTurnoverValue').value;
 
             if (conditionFormItem.get('periodType').value) {
                 concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
@@ -440,6 +465,10 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
                 concessionCondition.periodId = conditionFormItem.get('period').value.id;
             } else {
                 this.addValidationError("Period not selected");
+            }
+
+            if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
+                this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
             }
 
             lendingConcession.concessionConditions.push(concessionCondition);
@@ -468,7 +497,8 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     setTwoNumberDecimal($event) {
-        $event.target.value = this.formatDecimal($event.target.value);
+        $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
+        //$event.target.value = this.formatDecimal($event.target.value);
     }
 
     setTwoNumberDecimalMAP($event) {
@@ -495,13 +525,13 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
-    formatDecimal(itemValue: number) {
-        if (itemValue) {
-            return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-        }
+    //formatDecimal(itemValue: number) {
+    //    if (itemValue) {
+    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
+    //    }
 
-        return null;
-    }
+    //    return null;
+    //}
 
     goBack() {
         this.location.back();
@@ -509,5 +539,17 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.sub.unsubscribe();
+    }
+
+    validatePeriod(itemrow) {
+        this.validationError = null;
+
+        let selectedPeriodType = itemrow.controls.periodType.value.description;
+
+        let selectedPeriod = itemrow.controls.period.value.description;
+
+        if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
+            this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+        }
     }
 }

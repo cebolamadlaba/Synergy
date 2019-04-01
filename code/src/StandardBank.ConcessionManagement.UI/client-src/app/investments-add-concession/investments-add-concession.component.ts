@@ -33,6 +33,7 @@ import { InvestmentView } from "../models/investment-view";
 import { Concession } from "../models/concession";
 import { UserService } from "../services/user.service";
 
+import { BaseComponentService } from '../services/base-component.service';
 
 @Component({
     selector: 'app-investments-add-concession',
@@ -92,7 +93,8 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
         private formBuilder: FormBuilder,
         private location: Location,
         @Inject(LookupDataService) private lookupDataService,
-        @Inject(InvestmentConcessionService) private investmentConcessionService) {
+        @Inject(InvestmentConcessionService) private investmentConcessionService,
+        private baseComponentService: BaseComponentService) {
         this.riskGroup = new RiskGroup();
 
         this.productTypes = [new ProductType()];
@@ -114,7 +116,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
         this.investmentView.riskGroup = new RiskGroup();
         this.investmentView.investmentConcessions = [new InvestmentConcession()];
         this.investmentView.investmentConcessions[0].concession = new Concession();
-       
+
     }
 
     ngOnInit() {
@@ -184,7 +186,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
 
                 this.selectedProductTypes[0] = this.productTypes[0];
                 this.productTypeChanged(0);
-            } 
+            }
 
         }, error => {
             this.errorMessage = <any>error;
@@ -217,7 +219,6 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
             interestRate: [''],
             volume: [''],
             value: [''],
-            expectedTurnoverValue: [''],
             periodType: [''],
             period: ['']
         });
@@ -279,7 +280,6 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
         currentCondition.get('interestRate').setValue(null);
         currentCondition.get('volume').setValue(null);
         currentCondition.get('value').setValue(null);
-        currentCondition.get('expectedTurnoverValue').setValue(null);
     }
 
     productTypeChanged(rowIndex) {
@@ -310,8 +310,8 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
             currentRow.get('expiryDate').setValue('');
             currentRow.get('expiryDate').disable();
         }
-        else{
-
+        else {
+            currentRow.get('expiryDate').enable();
             this.selectedInvestmentConcession[rowIndex] = true;
 
         }
@@ -327,7 +327,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
     getInvestmentConcession(): InvestmentConcession {
         var investmentConcession = new InvestmentConcession();
         investmentConcession.concession = new Concession();
-        investmentConcession.concession.riskGroupId = this.riskGroup.id;       
+        investmentConcession.concession.riskGroupId = this.riskGroup.id;
 
 
 
@@ -348,6 +348,10 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
 
         const concessions = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
 
+        let hasTypeId: boolean = false;
+        let hasLegalEntityId: boolean = false;
+        let hasLegalEntityAccountId: boolean = false;
+
         for (let concessionFormItem of concessions.controls) {
             if (!investmentConcession.investmentConcessionDetails)
                 investmentConcession.investmentConcessionDetails = [];
@@ -361,10 +365,10 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
             if (concessionFormItem.get('productType').value) {
 
                 if (concessionFormItem.get('productType').value.description == 'Notice deposit (BND)') {
-                   // applyexpirydate = true;
+                    applyexpirydate = true;
                 }
                 investmentConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;
-                
+                hasTypeId = true;
             }
             else
                 this.addValidationError("Product not selected");
@@ -373,6 +377,8 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
             if ((concessionFormItem.get('accountNumber').value && concessionFormItem.get('accountNumber').value.legalEntityId)) {
                 investmentConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
                 investmentConcessionDetail.legalEntityAccountId = concessionFormItem.get('accountNumber').value.legalEntityAccountId;
+                hasLegalEntityId = true;
+                hasLegalEntityAccountId = true;
             } else {
 
                 this.addValidationError("Client account not selected");
@@ -408,13 +414,26 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
                 investmentConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
             else {
-                if (applyexpirydate) {
+                if (!applyexpirydate) {
                     this.addValidationError("Expiry date not selected");
                 }
             }
 
-
             investmentConcession.investmentConcessionDetails.push(investmentConcessionDetail);
+
+            if (hasTypeId && hasLegalEntityId && hasLegalEntityAccountId) {
+                let hasDuplicates = this.baseComponentService.HasDuplicateConcessionAccountProduct(
+                    investmentConcession.investmentConcessionDetails,
+                    concessionFormItem.get('productType').value.id,
+                    concessionFormItem.get('accountNumber').value.legalEntityId,
+                    concessionFormItem.get('accountNumber').value.legalEntityAccountId);
+
+                if (hasDuplicates) {
+                    this.addValidationError("Duplicate Account / Product pricing found. Please select different account.");
+
+                    break;
+                }
+            }
         }
 
         const conditions = <FormArray>this.investmentConcessionForm.controls['conditionItemsRows'];
@@ -441,11 +460,13 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
             if (conditionFormItem.get('volume').value)
                 concessionCondition.conditionVolume = conditionFormItem.get('volume').value;
 
-            if (conditionFormItem.get('value').value)
+            if (conditionFormItem.get('value').value == null || (<string>conditionFormItem.get('value').value).length < 1) {
+                var value = conditionFormItem.get('conditionType').value;
+                if (value != null && value.enableConditionValue == true)
+                    this.addValidationError("Conditions: 'Value' is a mandatory field");
+            }
+            else if (conditionFormItem.get('value').value)
                 concessionCondition.conditionValue = conditionFormItem.get('value').value;
-
-            if (conditionFormItem.get('expectedTurnoverValue').value)
-                concessionCondition.expectedTurnoverValue = conditionFormItem.get('expectedTurnoverValue').value;
 
             if (conditionFormItem.get('periodType').value) {
                 concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
@@ -465,7 +486,9 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
                 this.addValidationError("Period not selected");
             }
 
-
+            if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
+                this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+            }
 
             investmentConcession.concessionConditions.push(concessionCondition);
         }
@@ -501,13 +524,15 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     setTwoNumberDecimal($event) {
-        $event.target.value = this.formatDecimal($event.target.value);
+        $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
+        //$event.target.value = this.formatDecimal($event.target.value);
     }
 
     setThreeNumberDecimal($event) {
 
         if ($event.target.value) {
-            $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
+            $event.target.value = this.baseComponentService.formatDecimalThree($event.target.value);
+            //$event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
         }
         else {
 
@@ -526,13 +551,13 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
-    formatDecimal(itemValue: number) {
-        if (itemValue) {
-            return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-        }
+    //formatDecimal(itemValue: number) {
+    //    if (itemValue) {
+    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
+    //    }
 
-        return null;
-    }
+    //    return null;
+    //}
 
     goBack() {
         this.router.navigate(['/pricing', this.riskGroupNumber]);
@@ -540,5 +565,17 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.sub.unsubscribe();
+    }
+
+    validatePeriod(itemrow) {
+        this.validationError = null;
+
+        let selectedPeriodType = itemrow.controls.periodType.value.description;
+
+        let selectedPeriod = itemrow.controls.period.value.description;
+
+        if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
+            this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+        }
     }
 }

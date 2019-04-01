@@ -39,7 +39,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         public void LendingView_Executes_Positive()
         {
             var riskGroup = new RiskGroup { Id = 1, Name = "Unit Test Risk Group", Number = 1 };
-            MockLendingManager.Setup(_ => _.GetLendingViewData(It.IsAny<int>())).Returns(new LendingView
+            MockLendingManager.Setup(_ => _.GetLendingViewData(It.IsAny<int>(), null)).Returns(new LendingView
             {
                 RiskGroup = riskGroup,
                 LendingConcessions = new[] {new LendingConcession()},

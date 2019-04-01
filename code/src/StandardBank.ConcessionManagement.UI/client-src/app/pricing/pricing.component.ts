@@ -20,6 +20,7 @@ export class PricingComponent implements OnInit, OnDestroy {
     riskGroup: RiskGroup;
     riskGroupNumber: number;
     foundRiskGroup = false;
+    activePricingProducts: number[] = [];
     isLoading = false;
 
     constructor(private route: ActivatedRoute,
@@ -41,15 +42,27 @@ export class PricingComponent implements OnInit, OnDestroy {
     }
 
     searchRiskGroupNumber(riskGroupNumber: number) {
+        this.errorMessage = null;
         this.isLoading = true;
         this.foundRiskGroup = false;
         this.riskGroupNumber = riskGroupNumber;
         this.observableRiskGroup = this.lookupDataService.getRiskGroup(riskGroupNumber);
         this.observableRiskGroup.subscribe(riskGroup => {
-                this.riskGroup = riskGroup;
-                this.foundRiskGroup = true;
-                this.isLoading = false;
-            },
+            this.riskGroup = riskGroup;
+
+            this.lookupDataService.getActivePricingProducts().subscribe(activePricingProducts => {
+
+                if (activePricingProducts === null) {
+                    this.errorMessage = "No Pricing Products have been set active. Please contact the administrator.";
+                }
+                else {
+                    this.activePricingProducts = activePricingProducts;
+                }
+            });
+
+            this.foundRiskGroup = true;
+            this.isLoading = false;
+        },
             error => {
                 this.errorMessage = <any>error;
                 this.isLoading = false;
@@ -58,5 +71,23 @@ export class PricingComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.sub.unsubscribe();
+    }
+
+    isVisiblePricingProduct(pricingProductNumber: number) {
+        if (this.activePricingProducts === null) {
+            this.errorMessage = "No Pricing Products have been set active. Please contact the administrator.";
+        }
+        else {
+            let results = this.activePricingProducts.filter(item => {
+                return item === pricingProductNumber;
+            });
+
+            if (results === null || results.length === 0) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
     }
 }

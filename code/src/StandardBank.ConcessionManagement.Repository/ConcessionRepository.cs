@@ -35,8 +35,8 @@ namespace StandardBank.ConcessionManagement.Repository
         public Concession Create(Concession model)
         {
             const string sql =
-                @"INSERT [dbo].[tblConcession] ([fkTypeId], [fkConcessionTypeId], [fkStatusId], [fkSubStatusId], [fkAAUserId], [fkRequestorId], [fkBCMUserId], [fkPCMUserId], [fkHOUserId], [fkRiskGroupId], [fkRegionId], [fkCentreId], [ConcessionRef], [SMTDealNumber], [ConcessionDate], [DatesentForApproval], [Motivation], [DateActionedByBCM], [DateActionedByPCM], [DateActionedByHO], [MRS_CRS], [IsCurrent], [IsActive]) 
-                VALUES (@TypeId, @ConcessionTypeId, @StatusId, @SubStatusId, @AAUserId, @RequestorId, @BCMUserId, @PCMUserId, @HOUserId, @RiskGroupId, @RegionId, @CentreId, @ConcessionRef, @SMTDealNumber, @ConcessionDate, @DatesentForApproval, @Motivation, @DateActionedByBCM, @DateActionedByPCM, @DateActionedByHO, @MRS_CRS, @IsCurrent, @IsActive) 
+                @"INSERT [dbo].[tblConcession] ([fkTypeId], [fkConcessionTypeId], [fkStatusId], [fkSubStatusId], [fkAAUserId], [fkRequestorId], [fkBCMUserId], [fkPCMUserId], [fkHOUserId], [fkRiskGroupId], [fkRegionId], [fkCentreId], [ConcessionRef], [SMTDealNumber], [ConcessionDate], [DatesentForApproval], [Motivation], [DateActionedByBCM], [DateActionedByPCM], [DateActionedByHO], [MRS_CRS], [IsCurrent], [IsActive], [Archived], [fkAENumberUserId]) 
+                VALUES (@TypeId, @ConcessionTypeId, @StatusId, @SubStatusId, @AAUserId, @RequestorId, @BCMUserId, @PCMUserId, @HOUserId, @RiskGroupId, @RegionId, @CentreId, @ConcessionRef, @SMTDealNumber, @ConcessionDate, @DatesentForApproval, @Motivation, @DateActionedByBCM, @DateActionedByPCM, @DateActionedByHO, @MRS_CRS, @IsCurrent, @IsActive, @Archived, @AENumberUserId) 
                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
@@ -66,7 +66,9 @@ namespace StandardBank.ConcessionManagement.Repository
                         DateActionedByHO = model.DateActionedByHO,
                         MRS_CRS = model.MRS_CRS,
                         IsCurrent = model.IsCurrent,
-                        IsActive = model.IsActive
+                        IsActive = model.IsActive,
+                        Archived = model.Archived,
+                        AENumberUserId = model.AENumberUserId
                     }).Single();
             }
 
@@ -83,10 +85,10 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<Concession>(
-                    @"SELECT [pkConcessionId] [Id], [fkTypeId] [TypeId], [fkConcessionTypeId] [ConcessionTypeId], [fkStatusId] [StatusId], [fkSubStatusId] [SubStatusId], [fkAAUserId] [AAUserId], [fkRequestorId] [RequestorId], [fkBCMUserId] [BCMUserId], [fkPCMUserId] [PCMUserId], [fkHOUserId] [HOUserId], [fkRiskGroupId] [RiskGroupId], [fkRegionId] [RegionId], [fkCentreId] [CentreId], [ConcessionRef], [SMTDealNumber], [ConcessionDate], [DatesentForApproval], [Motivation], [DateActionedByBCM], [DateActionedByPCM], [DateActionedByHO], [MRS_CRS], [IsCurrent], [IsActive] 
+                    @"SELECT [pkConcessionId] [Id], [fkTypeId] [TypeId], [fkConcessionTypeId] [ConcessionTypeId], [fkStatusId] [StatusId], [fkSubStatusId] [SubStatusId], [fkAAUserId] [AAUserId], [fkRequestorId] [RequestorId], [fkBCMUserId] [BCMUserId], [fkPCMUserId] [PCMUserId], [fkHOUserId] [HOUserId], [fkRiskGroupId] [RiskGroupId], [fkRegionId] [RegionId], [fkCentreId] [CentreId], [ConcessionRef], [SMTDealNumber], [ConcessionDate], [DatesentForApproval], [Motivation], [DateActionedByBCM], [DateActionedByPCM], [DateActionedByHO], [MRS_CRS], [IsCurrent], [IsActive], [Archived], [fkAENumberUserId] [AENumberUserId]
                     FROM [dbo].[tblConcession] 
                     WHERE [pkConcessionId] = @Id",
-                    new {id}).SingleOrDefault();
+                    new { id }).SingleOrDefault();
             }
         }
 
@@ -101,7 +103,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<Concession>(
-                    @"SELECT [pkConcessionId] [Id], [fkTypeId] [TypeId], [fkConcessionTypeId] [ConcessionTypeId], [fkStatusId] [StatusId], [fkSubStatusId] [SubStatusId], [fkAAUserId] [AAUserId], [fkRequestorId] [RequestorId], [fkBCMUserId] [BCMUserId], [fkPCMUserId] [PCMUserId], [fkHOUserId] [HOUserId], [fkRiskGroupId] [RiskGroupId], [fkRegionId] [RegionId], [fkCentreId] [CentreId], [ConcessionRef], [SMTDealNumber], [ConcessionDate], [DatesentForApproval], [Motivation], [DateActionedByBCM], [DateActionedByPCM], [DateActionedByHO], [MRS_CRS], [IsCurrent], [IsActive] 
+                    @"SELECT [pkConcessionId] [Id], [fkTypeId] [TypeId], [fkConcessionTypeId] [ConcessionTypeId], [fkStatusId] [StatusId], [fkSubStatusId] [SubStatusId], [fkAAUserId] [AAUserId], [fkRequestorId] [RequestorId], [fkBCMUserId] [BCMUserId], [fkPCMUserId] [PCMUserId], [fkHOUserId] [HOUserId], [fkRiskGroupId] [RiskGroupId], [fkRegionId] [RegionId], [fkCentreId] [CentreId], [ConcessionRef], [SMTDealNumber], [ConcessionDate], [DatesentForApproval], [Motivation], [DateActionedByBCM], [DateActionedByPCM], [DateActionedByHO], [MRS_CRS], [IsCurrent], [IsActive], [Archived], [fkAENumberUserId] [AENumberUserId]
                     FROM [dbo].[tblConcession] 
                     WHERE [ConcessionRef] = @concessionReferenceNumber
                     AND [IsActive] = @isActive",
@@ -121,7 +123,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<Concession>(
-                    @"SELECT [pkConcessionId] [Id], [fkTypeId] [TypeId], [fkConcessionTypeId] [ConcessionTypeId], [fkStatusId] [StatusId], [fkSubStatusId] [SubStatusId], [fkAAUserId] [AAUserId], [fkRequestorId] [RequestorId], [fkBCMUserId] [BCMUserId], [fkPCMUserId] [PCMUserId], [fkHOUserId] [HOUserId], [fkRiskGroupId] [RiskGroupId], [fkRegionId] [RegionId], [fkCentreId] [CentreId], [ConcessionRef], [SMTDealNumber], [ConcessionDate], [DatesentForApproval], [Motivation], [DateActionedByBCM], [DateActionedByPCM], [DateActionedByHO], [MRS_CRS], [IsCurrent], [IsActive] 
+                    @"SELECT [pkConcessionId] [Id], [fkTypeId] [TypeId], [fkConcessionTypeId] [ConcessionTypeId], [fkStatusId] [StatusId], [fkSubStatusId] [SubStatusId], [fkAAUserId] [AAUserId], [fkRequestorId] [RequestorId], [fkBCMUserId] [BCMUserId], [fkPCMUserId] [PCMUserId], [fkHOUserId] [HOUserId], [fkRiskGroupId] [RiskGroupId], [fkRegionId] [RegionId], [fkCentreId] [CentreId], [ConcessionRef], [SMTDealNumber], [ConcessionDate], [DatesentForApproval], [Motivation], [DateActionedByBCM], [DateActionedByPCM], [DateActionedByHO], [MRS_CRS], [IsCurrent], [IsActive], [Archived], [fkAENumberUserId] [AENumberUserId] 
                     FROM [dbo].[tblConcession] 
                     WHERE [fkRiskGroupId] = @riskGroupId
                     AND [fkConcessionTypeId] = @concessionTypeId
@@ -143,13 +145,13 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<Concession>(
-                    @"SELECT [pkConcessionId] [Id], [fkTypeId] [TypeId], [fkConcessionTypeId] [ConcessionTypeId], [fkStatusId] [StatusId], [fkSubStatusId] [SubStatusId], [fkAAUserId] [AAUserId], [fkRequestorId] [RequestorId], [fkBCMUserId] [BCMUserId], [fkPCMUserId] [PCMUserId], [fkHOUserId] [HOUserId], [fkRiskGroupId] [RiskGroupId], [fkRegionId] [RegionId], [fkCentreId] [CentreId], [ConcessionRef], [SMTDealNumber], [ConcessionDate], [DatesentForApproval], [Motivation], [DateActionedByBCM], [DateActionedByPCM], [DateActionedByHO], [MRS_CRS], [IsCurrent], [IsActive] 
+                    @"SELECT [pkConcessionId] [Id], [fkTypeId] [TypeId], [fkConcessionTypeId] [ConcessionTypeId], [fkStatusId] [StatusId], [fkSubStatusId] [SubStatusId], [fkAAUserId] [AAUserId], [fkRequestorId] [RequestorId], [fkBCMUserId] [BCMUserId], [fkPCMUserId] [PCMUserId], [fkHOUserId] [HOUserId], [fkRiskGroupId] [RiskGroupId], [fkRegionId] [RegionId], [fkCentreId] [CentreId], [ConcessionRef], [SMTDealNumber], [ConcessionDate], [DatesentForApproval], [Motivation], [DateActionedByBCM], [DateActionedByPCM], [DateActionedByHO], [MRS_CRS], [IsCurrent], [IsActive], [Archived], [fkAENumberUserId] [AENumberUserId] 
                     FROM [dbo].[tblConcession] 
                     WHERE [fkRiskGroupId] = @riskGroupId
                     AND [fkConcessionTypeId] = @concessionTypeId
                     AND [IsActive] = @isActive
                     AND [fkStatusId] IN (2, 3)",
-                    new {riskGroupId, concessionTypeId, isActive});
+                    new { riskGroupId, concessionTypeId, isActive });
             }
         }
 
@@ -162,7 +164,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<Concession>(
-                    "SELECT [pkConcessionId] [Id], [fkTypeId] [TypeId], [fkConcessionTypeId] [ConcessionTypeId], [fkStatusId] [StatusId], [fkSubStatusId] [SubStatusId], [fkAAUserId] [AAUserId], [fkRequestorId] [RequestorId], [fkBCMUserId] [BCMUserId], [fkPCMUserId] [PCMUserId], [fkHOUserId] [HOUserId], [fkRiskGroupId] [RiskGroupId], [fkRegionId] [RegionId], [fkCentreId] [CentreId], [ConcessionRef], [SMTDealNumber], [ConcessionDate], [DatesentForApproval], [Motivation], [DateActionedByBCM], [DateActionedByPCM], [DateActionedByHO], [MRS_CRS], [IsCurrent], [IsActive] FROM [dbo].[tblConcession]");
+                    "SELECT [pkConcessionId] [Id], [fkTypeId] [TypeId], [fkConcessionTypeId] [ConcessionTypeId], [fkStatusId] [StatusId], [fkSubStatusId] [SubStatusId], [fkAAUserId] [AAUserId], [fkRequestorId] [RequestorId], [fkBCMUserId] [BCMUserId], [fkPCMUserId] [PCMUserId], [fkHOUserId] [HOUserId], [fkRiskGroupId] [RiskGroupId], [fkRegionId] [RegionId], [fkCentreId] [CentreId], [ConcessionRef], [SMTDealNumber], [ConcessionDate], [DatesentForApproval], [Motivation], [DateActionedByBCM], [DateActionedByPCM], [DateActionedByHO], [MRS_CRS], [IsCurrent], [IsActive], [Archived], [fkAENumberUserId] [AENumberUserId] FROM [dbo].[tblConcession]");
             }
         }
 
@@ -178,7 +180,7 @@ namespace StandardBank.ConcessionManagement.Repository
                 {
                     db.Execute(@"UPDATE [dbo].[tblConcessionDetail] set [Archived] = @Archived  WHERE [fkConcessionId] = @Id; 
                             UPDATE [dbo].[tblConcession]
-                            SET [fkTypeId] = @TypeId, [fkConcessionTypeId] = @ConcessionTypeId, [fkStatusId] = @StatusId, [fkSubStatusId] = @SubStatusId, [fkAAUserId] = @AAUserId, [fkRequestorId] = @RequestorId, [fkBCMUserId] = @BCMUserId, [fkPCMUserId] = @PCMUserId, [fkHOUserId] = @HOUserId, [fkRiskGroupId] = @RiskGroupId, [fkRegionId] = @RegionId, [fkCentreId] = @CentreId, [ConcessionRef] = @ConcessionRef, [SMTDealNumber] = @SMTDealNumber, [ConcessionDate] = @ConcessionDate, [DatesentForApproval] = @DatesentForApproval, [Motivation] = @Motivation, [DateActionedByBCM] = @DateActionedByBCM, [DateActionedByPCM] = @DateActionedByPCM, [DateActionedByHO] = @DateActionedByHO, [MRS_CRS] = @MRS_CRS, [IsCurrent] = @IsCurrent, [IsActive] = @IsActive, [Archived] = @Archived
+                            SET [fkTypeId] = @TypeId, [fkConcessionTypeId] = @ConcessionTypeId, [fkStatusId] = @StatusId, [fkSubStatusId] = @SubStatusId, [fkAAUserId] = @AAUserId, [fkRequestorId] = @RequestorId, [fkBCMUserId] = @BCMUserId, [fkPCMUserId] = @PCMUserId, [fkHOUserId] = @HOUserId, [fkRiskGroupId] = @RiskGroupId, [fkRegionId] = @RegionId, [fkCentreId] = @CentreId, [ConcessionRef] = @ConcessionRef, [SMTDealNumber] = @SMTDealNumber, [ConcessionDate] = @ConcessionDate, [DatesentForApproval] = @DatesentForApproval, [Motivation] = @Motivation, [DateActionedByBCM] = @DateActionedByBCM, [DateActionedByPCM] = @DateActionedByPCM, [DateActionedByHO] = @DateActionedByHO, [MRS_CRS] = @MRS_CRS, [IsCurrent] = @IsCurrent, [IsActive] = @IsActive, [Archived] = @Archived, [fkAENumberUserId] = @AENumberUserId
                             WHERE [pkConcessionId] = @Id",
                         new
                         {
@@ -206,7 +208,8 @@ namespace StandardBank.ConcessionManagement.Repository
                             MRS_CRS = model.MRS_CRS,
                             IsCurrent = model.IsCurrent,
                             IsActive = model.IsActive,
-                            Archived = model.Archived
+                            Archived = model.Archived,
+                            AENumberUserId = model.AENumberUserId
                         });
                 }
             }
@@ -224,7 +227,7 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     db.Execute(@"UPDATE [dbo].[tblConcession]
-                            SET [fkTypeId] = @TypeId, [fkConcessionTypeId] = @ConcessionTypeId, [fkStatusId] = @StatusId, [fkSubStatusId] = @SubStatusId, [fkAAUserId] = @AAUserId, [fkRequestorId] = @RequestorId, [fkBCMUserId] = @BCMUserId, [fkPCMUserId] = @PCMUserId, [fkHOUserId] = @HOUserId, [fkRiskGroupId] = @RiskGroupId, [fkRegionId] = @RegionId, [fkCentreId] = @CentreId, [ConcessionRef] = @ConcessionRef, [SMTDealNumber] = @SMTDealNumber, [ConcessionDate] = @ConcessionDate, [DatesentForApproval] = @DatesentForApproval, [Motivation] = @Motivation, [DateActionedByBCM] = @DateActionedByBCM, [DateActionedByPCM] = @DateActionedByPCM, [DateActionedByHO] = @DateActionedByHO, [MRS_CRS] = @MRS_CRS, [IsCurrent] = @IsCurrent, [IsActive] = @IsActive, [Archived] = @Archived
+                            SET [fkTypeId] = @TypeId, [fkConcessionTypeId] = @ConcessionTypeId, [fkStatusId] = @StatusId, [fkSubStatusId] = @SubStatusId, [fkAAUserId] = @AAUserId, [fkRequestorId] = @RequestorId, [fkBCMUserId] = @BCMUserId, [fkPCMUserId] = @PCMUserId, [fkHOUserId] = @HOUserId, [fkRiskGroupId] = @RiskGroupId, [fkRegionId] = @RegionId, [fkCentreId] = @CentreId, [ConcessionRef] = @ConcessionRef, [SMTDealNumber] = @SMTDealNumber, [ConcessionDate] = @ConcessionDate, [DatesentForApproval] = @DatesentForApproval, [Motivation] = @Motivation, [DateActionedByBCM] = @DateActionedByBCM, [DateActionedByPCM] = @DateActionedByPCM, [DateActionedByHO] = @DateActionedByHO, [MRS_CRS] = @MRS_CRS, [IsCurrent] = @IsCurrent, [IsActive] = @IsActive, [Archived] = @Archived, [fkAENumberUserId] = @AENumberUserId
                             WHERE [pkConcessionId] = @Id",
                         new
                         {
@@ -252,7 +255,8 @@ namespace StandardBank.ConcessionManagement.Repository
                             MRS_CRS = model.MRS_CRS,
                             IsCurrent = model.IsCurrent,
                             IsActive = model.IsActive,
-                            Archived = model.Archived
+                            Archived = model.Archived,
+                            AENumberUserId = model.AENumberUserId
                         });
                 }
             }
@@ -272,7 +276,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[tblConcession] WHERE [pkConcessionId] = @Id",
-                    new {model.Id});
+                    new { model.Id });
             }
         }
     }

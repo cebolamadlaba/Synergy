@@ -43,7 +43,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// </summary>
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <returns></returns>
-        TransactionalView GetTransactionalViewData(int riskGroupNumber);
+        TransactionalView GetTransactionalViewData(int riskGroupNumber, User currentUser);
 
         /// <summary>
         /// Gets the latest CRS or MRS.
