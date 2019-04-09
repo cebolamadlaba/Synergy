@@ -57,7 +57,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _miscPerformanceRepository = miscPerformanceRepository;
             _mediator = mediator;
 
-
         }
 
         public ConcessionBol CreateConcessionBol(BolConcessionDetail bolConcessionDetail, Concession concession)
