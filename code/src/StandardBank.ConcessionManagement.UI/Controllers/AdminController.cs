@@ -27,7 +27,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// The mediator
         /// </summary>
         private readonly IMediator _mediator;
-
+  
         /// <summary>
         /// The user manager
         /// </summary>
@@ -71,7 +71,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var model = new UserAdminLookupModel
             {
                 Centres = _lookupTableManager.GetCentres(),
-                Roles = _lookupTableManager.GetRoles()
+                Roles = _lookupTableManager.GetRoles(),
+                UserSubRole = _userManager.GetUserSubRole()
             };
             return Ok(model);
         }

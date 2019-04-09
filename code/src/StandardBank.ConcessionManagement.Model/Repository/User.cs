@@ -71,6 +71,16 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// </value>
         public int RoleId { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets the role identifier.
+        /// </summary>
+        /// <value>
+        /// The SubRole identifier.
+        /// </value>
+        public int? SubRoleId { get; set; }
+
+
         /// <summary>
         /// Gets or sets a value indicating whether this instance can approve.
         /// </summary>

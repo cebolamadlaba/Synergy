@@ -308,6 +308,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static IUserRoleRepository UserRoleRepository = new UserRoleRepository(DbConnection);
 
         /// <summary>
+        /// The UserSubRole repository
+        /// </summary>
+        public static IUserSubRoleRepository UserSubRoleRepository = new UserSubRoleRepository(DbConnection);
+
+        /// <summary>
         /// The Period repository
         /// </summary>
         public static IPeriodRepository PeriodRepository = new PeriodRepository(DbConnection, CacheManager);
@@ -499,7 +504,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The user manager
         /// </summary>
         public static IUserManager UserManager = new UserManager(CacheManager, UserRepository, UserRoleRepository,
-            RoleRepository, CentreRepository, CentreUserRepository, Mapper, AccountExecutiveAssistantRepository,
+            RoleRepository, CentreRepository, CentreUserRepository, Mapper, UserSubRoleRepository, AccountExecutiveAssistantRepository,
             RegionManager, null);
 
         /// <summary>

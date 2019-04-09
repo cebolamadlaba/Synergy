@@ -5,6 +5,7 @@ import { Region } from '../../models/region';
 import { Centre } from '../../models/centre';
 import { Role } from '../../models/role';
 import { User } from "../../models/user";
+import { UserSubRole } from "../../models/userSubRole";
 
 @Component({
     selector: 'app-users',
@@ -15,6 +16,7 @@ export class UsersComponent implements OnInit {
     Centres: Centre[];
     Roles: Role[];
     user: User;
+    userSubRole: UserSubRole[];
     users: User[];
 
     constructor(private location: Location, private adminService: AdminService) { }
@@ -23,6 +25,7 @@ export class UsersComponent implements OnInit {
         this.adminService.GetUserLookupData().subscribe(result => {
             this.Centres = result.centres as Centre[];
             this.Roles = result.roles as Role[];
+            this.userSubRole = result.userSubRole as UserSubRole[];
         });
         this.adminService.GetUsers().subscribe(r => {
             this.users = r as User[];

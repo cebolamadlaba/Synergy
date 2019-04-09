@@ -22,5 +22,13 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Administration
         /// The centres.
         /// </value>
         public IEnumerable<Centre> Centres { get; set; }
+
+        /// <summary>
+        /// Gets or sets the userSubRole.
+        /// </summary>
+        /// <value>
+        /// The centres.
+        /// </value>
+        public IEnumerable<UserSubRole> UserSubRole { get; set; }
     }
 }
