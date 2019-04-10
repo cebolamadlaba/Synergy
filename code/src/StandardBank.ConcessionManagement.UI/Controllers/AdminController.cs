@@ -72,7 +72,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             {
                 Centres = _lookupTableManager.GetCentres(),
                 Roles = _lookupTableManager.GetRoles(),
-                UserSubRole = _userManager.GetUserSubRole()
+                RoleSubRole = _userManager.GetRoleSubRole()
             };
             return Ok(model);
         }

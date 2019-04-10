@@ -78,7 +78,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// <value>
         /// The user sub roles.
         /// </value>
-        public UserSubRole UserSubRole { get; set; }
+        public RoleSubRole RoleSubRole { get; set; }
 
         /// <summary>
         /// Gets or sets the user centres

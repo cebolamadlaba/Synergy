@@ -3,9 +3,9 @@ using System;
 namespace StandardBank.ConcessionManagement.Model.UserInterface
 {
     /// <summary>
-    /// UserSubRole entity
+    /// RoleSubRole entity
     /// </summary>
-    public class UserSubRole
+    public class RoleSubRole
     {
         /// <summary>
         /// Gets or sets the SubRoleId.

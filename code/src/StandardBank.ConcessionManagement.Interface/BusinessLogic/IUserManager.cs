@@ -82,7 +82,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// Gets the users sub role
         /// </summary>
         /// <returns></returns>
-        IEnumerable<UserSubRole> GetUserSubRole();
+        IEnumerable<RoleSubRole> GetRoleSubRole();
 
         /// <summary>
         /// Validates the user.

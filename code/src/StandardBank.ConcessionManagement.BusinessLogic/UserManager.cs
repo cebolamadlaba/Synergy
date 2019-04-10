@@ -36,7 +36,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <summary>
         /// The user sub role repository
         /// </summary>
-        private readonly IUserSubRoleRepository _userSubRoleRepository;
+        private readonly IRoleSubRoleRepository _RoleSubRoleRepository;
 
         /// <summary>
         /// The role repository
@@ -76,7 +76,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="cacheManager">The cache manager.</param>
         /// <param name="userRepository">The user repository.</param>
         /// <param name="userRoleRepository">The user role repository.</param>
-        /// /// <param name="userSubRoleRepository">The user sub role repository.</param>
+        /// /// <param name="RoleSubRoleRepository">The user sub role repository.</param>
         /// <param name="roleRepository">The role repository.</param>
         /// <param name="centreRepository">The centre repository.</param>
         /// <param name="centreUserRepository">The centre user repository.</param>
@@ -85,13 +85,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="regionManager">The region manager.</param>
         public UserManager(ICacheManager cacheManager, IUserRepository userRepository,
             IUserRoleRepository userRoleRepository, IRoleRepository roleRepository, ICentreRepository centreRepository,
-            ICentreUserRepository centreUserRepository, IMapper mapper,IUserSubRoleRepository userSubRoleRepository,
+            ICentreUserRepository centreUserRepository, IMapper mapper,IRoleSubRoleRepository RoleSubRoleRepository,
             IAccountExecutiveAssistantRepository accountExecutiveAssistantRepository, IRegionManager regionManager, IMemoryCache memoryCache)
         {
             _cacheManager = cacheManager;
             _userRepository = userRepository;
             _userRoleRepository = userRoleRepository;
-            _userSubRoleRepository = userSubRoleRepository;
+            _RoleSubRoleRepository = RoleSubRoleRepository;
             _roleRepository = roleRepository;
             _centreRepository = centreRepository;
             _centreUserRepository = centreUserRepository;
@@ -119,6 +119,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             };
 
             var usr = _cacheManager.ReturnFromCache(function, 1440, CacheKey.UserInterface.SiteHelper.LoggedInUser, new CacheKeyParameter(nameof(aNumber), aNumber));
+            var RoleSubRole = _userRoleRepository.ReadByUserId(usr.Id).Select(x => x.SubRoleId);
+            foreach (var subRole in RoleSubRole)
+            {
+                if (subRole.HasValue)
+                {
+                    usr.SubRoleId = subRole;
+                }
+            }
 
             //If an accountExecitive was set from UI side, re-populate it.
             if (usr != null)
@@ -135,7 +143,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     }
                 }
             }
-
             return usr;
         }
 
@@ -151,8 +158,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedUser.UserRoles = GetUserRoles(user.Id);
             if (mappedUser.UserRoles.Count() > 0)
                 mappedUser.RoleId = mappedUser.UserRoles.FirstOrDefault().Id;
-                var userSubRole = _userRoleRepository.ReadByUserId(mappedUser.Id).Select(x=>x.SubRoleId);
-                foreach (var subRole in userSubRole)
+                var RoleSubRole = _userRoleRepository.ReadByUserId(mappedUser.Id).Select(x=>x.SubRoleId);
+                foreach (var subRole in RoleSubRole)
                 {
                    if(subRole.HasValue){
                      mappedUser.SubRoleId = subRole;
@@ -261,9 +268,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// Gets the user sub role.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<UserSubRole> GetUserSubRole()
+        public IEnumerable<RoleSubRole> GetRoleSubRole()
         {
-            return _mapper.Map<IEnumerable<UserSubRole>>(_userSubRoleRepository.ReadAll());
+            return _mapper.Map<IEnumerable<RoleSubRole>>(_RoleSubRoleRepository.ReadAll());
         }
 
         /// <summary>

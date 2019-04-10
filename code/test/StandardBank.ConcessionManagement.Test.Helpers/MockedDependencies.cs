@@ -84,7 +84,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// <summary>
         /// The mock User sub role repository
         /// </summary>
-        public static Mock<IUserSubRoleRepository> MockSUbRoleRepository = new Mock<IUserSubRoleRepository>();
+        public static Mock<IRoleSubRoleRepository> MockSUbRoleRepository = new Mock<IRoleSubRoleRepository>();
 
         /// <summary>
         /// The mock Status repository

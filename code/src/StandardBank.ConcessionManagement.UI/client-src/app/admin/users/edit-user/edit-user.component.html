@@ -81,7 +81,7 @@
                     <label class="control-label col-sm-3" for="email">Sub Role</label>
                     <div class="col-sm-8">
                         <select [(ngModel)]="user.subRoleId" name="3" class="form-control">
-                            <option *ngFor="let p of userSubRole"
+                            <option *ngFor="let p of RoleSubRole"
                                     [ngValue]="p.subRoleId">
                                 {{p.name}}
                             </option>
