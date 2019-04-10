@@ -28,6 +28,12 @@
             RequestorApproval
         }
 
+        public enum RoleSubRole
+        {
+            BolUser=1,           
+            TradeUser= 2
+        }
+
         public static class ConcessionType
         {
             public const string Lending = "Lending";

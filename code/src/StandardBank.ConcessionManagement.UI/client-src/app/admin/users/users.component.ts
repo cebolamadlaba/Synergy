@@ -25,7 +25,7 @@ export class UsersComponent implements OnInit {
         this.adminService.GetUserLookupData().subscribe(result => {
             this.Centres = result.centres as Centre[];
             this.Roles = result.roles as Role[];
-            this.RoleSubRole = result.RoleSubRole as RoleSubRole[];
+            this.RoleSubRole = result.roleSubRole as RoleSubRole[];
         });
         this.adminService.GetUsers().subscribe(r => {
             this.users = r as User[];
