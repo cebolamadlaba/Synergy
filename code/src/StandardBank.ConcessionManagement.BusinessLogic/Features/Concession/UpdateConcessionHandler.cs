@@ -341,7 +341,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
                         {
                             SendNotificationBasedOnSubRole(aauser,message);
                         }
-                        else
+                        else if(aauser.SubRoleId == (int)Constants.RoleSubRole.TradeUser
+                                 && message.Concession.ConcessionType == Constants.RoleSubRoleType.Trade)
                         {
                             SendNotificationBasedOnSubRole(aauser, message);
                         }
