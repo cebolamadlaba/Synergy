@@ -98,6 +98,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// The centre repository
         /// </summary>
         private readonly ICentreRepository _centreRepository;
+
         private readonly IPrimeRateRepository _primeRateRepository;
 
         private readonly IConcessionLetterRepository _concessionLetterRepository;
@@ -238,7 +239,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return inboxConcessions.GroupBy(_ => _.ReferenceNumber).Select(_ => _.First()).ToList();
         }
 
-
         public ConcessionLetter CreateConcessionLetter(ConcessionLetter model)
         {
 
@@ -259,9 +259,30 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var userId = _userManager.GetUserIdForFiltering(user);
 
-            return _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
-                .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(userId, DateTime.Now,
-                    DateTime.Now.AddMonths(3), new[] { approvedStatusId, approvedWithChangesStatusId }, true));
+            if (user.SubRoleId.HasValue)
+            {
+                var consType = string.Empty;
+                if (user.SubRoleId == (int)Constants.RoleSubRole.BolUser)
+                {
+                    consType = Constants.RoleSubRoleType.Bol;
+                }
+                else
+                {
+                    consType = Constants.ConcessionType.Trade;
+                }
+
+                return _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
+                         .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(userId, DateTime.Now,
+                             DateTime.Now.AddMonths(3), new[] { approvedStatusId, approvedWithChangesStatusId }, true).Where(x => x.ConcessionType == consType));
+            }
+            else
+            {
+                return _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
+                          .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(userId, DateTime.Now,
+                              DateTime.Now.AddMonths(3), new[] { approvedStatusId, approvedWithChangesStatusId }, true));
+            }
+
+         
         }
 
         /// <summary>
@@ -282,7 +303,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 var consType = string.Empty;
                 if (user.SubRoleId == (int)Constants.RoleSubRole.BolUser)
                 {
-                    consType = "Business Online";
+                    consType = Constants.RoleSubRoleType.Bol;
                 }
                 else
                 {
@@ -315,9 +336,29 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var userId = _userManager.GetUserIdForFiltering(user);
 
-            return _mapper.Map<IEnumerable<InboxConcession>>(
-                _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsMismatchedIsActive(userId,
-                    new[] { approvedStatusId, approvedWithChangesStatusId }, true, true));
+            if (user.SubRoleId.HasValue)
+            {
+                var consType = string.Empty;
+                if (user.SubRoleId == (int)Constants.RoleSubRole.BolUser)
+                {
+                    consType = Constants.RoleSubRoleType.Bol;
+                }
+                else
+                {
+                    consType = Constants.ConcessionType.Trade;
+                }
+                return _mapper.Map<IEnumerable<InboxConcession>>(
+                       _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsMismatchedIsActive(userId,
+                           new[] { approvedStatusId, approvedWithChangesStatusId }, true, true).Where(x => x.ConcessionType == consType));
+               
+            }
+            else
+            {
+                return _mapper.Map<IEnumerable<InboxConcession>>(
+                        _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsMismatchedIsActive(userId,
+                            new[] { approvedStatusId, approvedWithChangesStatusId }, true, true));
+            }
+           
         }
 
         /// <summary>
@@ -331,12 +372,29 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var userId = _userManager.GetUserIdForFiltering(user);
 
-
-            return _mapper.Map<IEnumerable<InboxConcession>>(
-                _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsActive(userId, new[] { declinedStatusId },
-                    true));
+            if (user.SubRoleId.HasValue)
+            {
+                var consType = string.Empty;
+                if (user.SubRoleId == (int)Constants.RoleSubRole.BolUser)
+                {
+                    consType = Constants.RoleSubRoleType.Bol;
+                }
+                else
+                {
+                    consType = Constants.ConcessionType.Trade;
+                }
+                return _mapper.Map<IEnumerable<InboxConcession>>(
+                        _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsActive(userId, new[] { declinedStatusId },
+                            true).Where(x => x.ConcessionType == consType));
+            }
+            else
+            {
+                return _mapper.Map<IEnumerable<InboxConcession>>(
+                         _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsActive(userId, new[] { declinedStatusId },
+                             true));
+            }
+        
         }
-
         /// <summary>
         /// Gets the actioned concessions for user.
         /// </summary>
@@ -694,8 +752,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return results;
         }
-
-
 
 
         /// <summary>

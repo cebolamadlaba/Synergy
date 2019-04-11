@@ -236,16 +236,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
             if (requestor.IsAdminAssistant && requestor.AccountExecutiveUserId != null)
             {
                 BackgroundJob.Schedule(() =>
-               _emailManager.SendApprovedWithChangesConcessionEmail(new ApprovedConcessionEmail
-               {
-                   EmailAddress = requestor.AccountExecutive.EmailAddress,
-                   ConcessionId = message.Concession.ReferenceNumber,
-                   Name = requestor.AccountExecutive.FirstName,
-                   DateOfRequest = message.Concession.DateOpened.ToString("yyyy-MM-dd"),
-                   DateActioned = DateTime.Now.ToString("yyyy-MM-dd"),
-                   RiskGroupName = message.Concession.RiskGroupName,
-                   Product = message.Concession.ConcessionType
-               }), DateTime.Now);
+                   _emailManager.SendApprovedWithChangesConcessionEmail(new ApprovedConcessionEmail
+                   {
+                       EmailAddress = requestor.AccountExecutive.EmailAddress,
+                       ConcessionId = message.Concession.ReferenceNumber,
+                       Name = requestor.AccountExecutive.FirstName,
+                       DateOfRequest = message.Concession.DateOpened.ToString("yyyy-MM-dd"),
+                       DateActioned = DateTime.Now.ToString("yyyy-MM-dd"),
+                       RiskGroupName = message.Concession.RiskGroupName,
+                       Product = message.Concession.ConcessionType
+                   }), DateTime.Now);
 
             }
             //send notifcation to all assitants, if it is an Account Executive
@@ -255,17 +255,34 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
                 {
                     var aauser = _userManager.GetUser(aa.AccountAssistantUserId);
 
-                    BackgroundJob.Schedule(() =>
-                      _emailManager.SendApprovedWithChangesConcessionEmail(new ApprovedConcessionEmail
-                      {
-                          EmailAddress = aauser.EmailAddress,
-                          ConcessionId = message.Concession.ReferenceNumber,
-                          Name = aauser.FirstName,
-                          DateOfRequest = message.Concession.DateOpened.ToString("yyyy-MM-dd"),
-                          DateActioned = DateTime.Now.ToString("yyyy-MM-dd"),
-                          RiskGroupName = message.Concession.RiskGroupName,
-                          Product = message.Concession.ConcessionType
-                      }), DateTime.Now);
+                    //check if AA is Trade or Bol, filter based on sub role
+                    if (aauser.SubRoleId.HasValue)
+                    {
+                        if(aauser.SubRoleId == (int)Constants.RoleSubRole.BolUser
+                                && message.Concession.ConcessionType == Constants.RoleSubRoleType.Bol)
+                        {
+                            SendNotificationBasedOnSubRole(aauser, message);
+                        }
+                        else
+                        {
+                            SendNotificationBasedOnSubRole(aauser, message);
+                        }
+                    }
+                    else
+                    {
+
+                        BackgroundJob.Schedule(() =>
+                          _emailManager.SendApprovedWithChangesConcessionEmail(new ApprovedConcessionEmail
+                          {
+                              EmailAddress = aauser.EmailAddress,
+                              ConcessionId = message.Concession.ReferenceNumber,
+                              Name = aauser.FirstName,
+                              DateOfRequest = message.Concession.DateOpened.ToString("yyyy-MM-dd"),
+                              DateActioned = DateTime.Now.ToString("yyyy-MM-dd"),
+                              RiskGroupName = message.Concession.RiskGroupName,
+                              Product = message.Concession.ConcessionType
+                          }), DateTime.Now);
+                    }
                 }
             }
 
@@ -316,17 +333,34 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
                 {
                     var aauser = _userManager.GetUser(aa.AccountAssistantUserId);
 
-                    BackgroundJob.Schedule(() =>
-                      _emailManager.SendApprovedConcessionEmail(new ApprovedConcessionEmail
-                      {
-                          EmailAddress = aauser.EmailAddress,
-                          ConcessionId = message.Concession.ReferenceNumber,
-                          Name = aauser.FirstName,
-                          DateOfRequest = message.Concession.DateOpened.ToString("yyyy-MM-dd"),
-                          DateActioned = DateTime.Now.ToString("yyyy-MM-dd"),
-                          RiskGroupName = message.Concession.RiskGroupName,
-                          Product = message.Concession.ConcessionType
-                      }), DateTime.Now);
+                    //check if AA is Trade or Bol, filter based on sub role
+                    if(aauser.SubRoleId.HasValue)
+                    {                       
+                        if (aauser.SubRoleId==(int)Constants.RoleSubRole.BolUser
+                            && message.Concession.ConcessionType==Constants.RoleSubRoleType.Bol)
+                        {
+                            SendNotificationBasedOnSubRole(aauser,message);
+                        }
+                        else
+                        {
+                            SendNotificationBasedOnSubRole(aauser, message);
+                        }
+
+                    }
+                    else
+                    {
+                        BackgroundJob.Schedule(() =>
+                        _emailManager.SendApprovedConcessionEmail(new ApprovedConcessionEmail
+                        {
+                            EmailAddress = aauser.EmailAddress,
+                            ConcessionId = message.Concession.ReferenceNumber,
+                            Name = aauser.FirstName,
+                            DateOfRequest = message.Concession.DateOpened.ToString("yyyy-MM-dd"),
+                            DateActioned = DateTime.Now.ToString("yyyy-MM-dd"),
+                            RiskGroupName = message.Concession.RiskGroupName,
+                            Product = message.Concession.ConcessionType
+                        }), DateTime.Now);
+                    }                
                 }
             }
 
@@ -363,6 +397,26 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
                 Product = message.Concession.ConcessionType,
                 DateOfRequest = message.Concession.DateOpened.ToString("yyyy-MM-dd")
             });
+        }
+
+        /// <summary>
+        /// Sends the approved notification email.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        private void SendNotificationBasedOnSubRole(Model.UserInterface.User usr, UpdateConcession message)
+        {
+            BackgroundJob.Schedule(() =>
+                _emailManager.SendApprovedConcessionEmail(new ApprovedConcessionEmail
+                {
+                    EmailAddress = usr.EmailAddress,
+                    ConcessionId = message.Concession.ReferenceNumber,
+                    Name = usr.FirstName,
+                    DateOfRequest = message.Concession.DateOpened.ToString("yyyy-MM-dd"),
+                    DateActioned = DateTime.Now.ToString("yyyy-MM-dd"),
+                    RiskGroupName = message.Concession.RiskGroupName,
+                    Product = message.Concession.ConcessionType
+                }), DateTime.Now);
+
         }
     }
 }

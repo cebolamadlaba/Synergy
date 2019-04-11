@@ -119,15 +119,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             };
 
             var usr = _cacheManager.ReturnFromCache(function, 1440, CacheKey.UserInterface.SiteHelper.LoggedInUser, new CacheKeyParameter(nameof(aNumber), aNumber));
-            var RoleSubRole = _userRoleRepository.ReadByUserId(usr.Id).Select(x => x.SubRoleId);
-            foreach (var subRole in RoleSubRole)
+
+            if (usr != null)
             {
-                if (subRole.HasValue)
+                var RoleSubRole = _userRoleRepository.ReadByUserId(usr.Id).Select(x => x.SubRoleId);
+            
+                foreach (var subRole in RoleSubRole)
                 {
-                    usr.SubRoleId = subRole;
+                    if (subRole.HasValue)
+                    {
+                        usr.SubRoleId = subRole;
+                    }
                 }
             }
-
+           
             //If an accountExecitive was set from UI side, re-populate it.
             if (usr != null)
             {

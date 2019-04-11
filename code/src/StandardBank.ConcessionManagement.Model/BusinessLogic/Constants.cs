@@ -43,7 +43,16 @@
             public const string Transactional = "Transactional";
             public const string BusinessOnline = "Bol";
             public const string Cash = "Cash";
+
         }
+
+        public static class RoleSubRoleType
+        {    
+            public const string Trade = "Trade";
+            public const string Bol= "Business Online";
+        }
+
+
 
         public static class ReferenceType
         {

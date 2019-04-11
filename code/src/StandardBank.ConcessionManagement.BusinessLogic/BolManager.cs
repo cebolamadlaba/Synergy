@@ -32,7 +32,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         private readonly IFinancialBolRepository _financialBolRepository;
 
-
         private readonly ILookupTableManager _lookupTableManager;
 
         private readonly IRuleManager _ruleManager;
@@ -42,7 +41,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IMiscPerformanceRepository _miscPerformanceRepository;
 
         private readonly IMediator _mediator;
-
 
         public BolManager(IConcessionManager concessionManager, IConcessionBolRepository concessionBolRepository,
             IMapper mapper, IFinancialBolRepository financialBolRepository, ILookupTableManager lookupTableManager, IRuleManager ruleManager,
@@ -140,8 +138,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return mappedConcessionBol;
         }
-
-
 
         public BolView GetBolViewData(int riskGroupNumber, User currentUser)
         {
