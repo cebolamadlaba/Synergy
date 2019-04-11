@@ -261,15 +261,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (user.SubRoleId.HasValue)
             {
-                var consType = string.Empty;
-                if (user.SubRoleId == (int)Constants.RoleSubRole.BolUser)
-                {
-                    consType = Constants.RoleSubRoleType.Bol;
-                }
-                else
-                {
-                    consType = Constants.ConcessionType.Trade;
-                }
+                var consType = GetSubRoleAndType(user.SubRoleId);
 
                 return _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
                          .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(userId, DateTime.Now,
@@ -281,7 +273,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                           .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(userId, DateTime.Now,
                               DateTime.Now.AddMonths(3), new[] { approvedStatusId, approvedWithChangesStatusId }, true));
             }
-
          
         }
 
@@ -300,15 +291,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (user.SubRoleId.HasValue)
             {
-                var consType = string.Empty;
-                if (user.SubRoleId == (int)Constants.RoleSubRole.BolUser)
-                {
-                    consType = Constants.RoleSubRoleType.Bol;
-                }
-                else
-                {
-                    consType = Constants.ConcessionType.Trade;
-                }
+                var consType = GetSubRoleAndType(user.SubRoleId);
 
                 return _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
                    .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(userId, DateTime.MinValue,
@@ -338,15 +321,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (user.SubRoleId.HasValue)
             {
-                var consType = string.Empty;
-                if (user.SubRoleId == (int)Constants.RoleSubRole.BolUser)
-                {
-                    consType = Constants.RoleSubRoleType.Bol;
-                }
-                else
-                {
-                    consType = Constants.ConcessionType.Trade;
-                }
+                var consType = GetSubRoleAndType(user.SubRoleId);              
                 return _mapper.Map<IEnumerable<InboxConcession>>(
                        _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsMismatchedIsActive(userId,
                            new[] { approvedStatusId, approvedWithChangesStatusId }, true, true).Where(x => x.ConcessionType == consType));
@@ -374,15 +349,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (user.SubRoleId.HasValue)
             {
-                var consType = string.Empty;
-                if (user.SubRoleId == (int)Constants.RoleSubRole.BolUser)
-                {
-                    consType = Constants.RoleSubRoleType.Bol;
-                }
-                else
-                {
-                    consType = Constants.ConcessionType.Trade;
-                }
+                var consType = GetSubRoleAndType(user.SubRoleId);
                 return _mapper.Map<IEnumerable<InboxConcession>>(
                         _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsActive(userId, new[] { declinedStatusId },
                             true).Where(x => x.ConcessionType == consType));
@@ -395,6 +362,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
         
         }
+
+        private string GetSubRoleAndType(int? subRoleId)
+        {            
+            if (subRoleId == (int)Constants.RoleSubRole.BolUser)
+            {
+                return Constants.RoleSubRoleType.BusinessOnline;
+            }
+            else
+            {
+               return Constants.ConcessionType.Trade;
+            }
+        }
+
         /// <summary>
         /// Gets the actioned concessions for user.
         /// </summary>
@@ -1479,5 +1459,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 }
             }
         }
+
+       
     }
 }

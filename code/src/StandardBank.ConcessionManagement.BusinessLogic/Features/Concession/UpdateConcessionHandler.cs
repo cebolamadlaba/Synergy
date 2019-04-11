@@ -259,11 +259,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
                     if (aauser.SubRoleId.HasValue)
                     {
                         if(aauser.SubRoleId == (int)Constants.RoleSubRole.BolUser
-                                && message.Concession.ConcessionType == Constants.RoleSubRoleType.Bol)
+                                && message.Concession.ConcessionType == Constants.RoleSubRoleType.BusinessOnline)
                         {
                             SendNotificationBasedOnSubRole(aauser, message);
                         }
-                        else
+                        else if (aauser.SubRoleId == (int)Constants.RoleSubRole.TradeUser
+                                && message.Concession.ConcessionType == Constants.RoleSubRoleType.Trade)
                         {
                             SendNotificationBasedOnSubRole(aauser, message);
                         }
@@ -337,7 +338,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
                     if(aauser.SubRoleId.HasValue)
                     {                       
                         if (aauser.SubRoleId==(int)Constants.RoleSubRole.BolUser
-                            && message.Concession.ConcessionType==Constants.RoleSubRoleType.Bol)
+                            && message.Concession.ConcessionType==Constants.RoleSubRoleType.BusinessOnline)
                         {
                             SendNotificationBasedOnSubRole(aauser,message);
                         }

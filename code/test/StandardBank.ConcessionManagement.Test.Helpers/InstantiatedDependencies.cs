@@ -515,7 +515,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 Mapper, ConcessionConditionRepository, ConcessionCommentRepository,
                 ConcessionRelationshipRepository, AuditRepository, UserManager, ConcessionInboxViewRepository,
                 ConcessionDetailRepository, ConcessionConditionViewRepository, MiscPerformanceRepository, CentreRepository, PrimeRateRepository, null
-                , AENumberUserManager);
+                , AENumberUserManager,RoleSubRoleRepository);
 
         /// <summary>
         /// The rule manager

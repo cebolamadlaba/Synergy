@@ -49,7 +49,7 @@
         public static class RoleSubRoleType
         {    
             public const string Trade = "Trade";
-            public const string Bol= "Business Online";
+            public const string BusinessOnline = "Business Online";
         }
 
 
