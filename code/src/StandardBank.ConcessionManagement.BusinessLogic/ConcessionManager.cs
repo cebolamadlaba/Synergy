@@ -169,22 +169,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
            
             foreach (var userRole in user.UserRoles)
                 {
+
                     switch (userRole.Name.Trim())
                     {
                         case Constants.Roles.AA:
                         if(user.SubRoleId.HasValue)
                         {
-                            var consType = string.Empty;
-                            if (user.SubRoleId == (int)Constants.RoleSubRole.BolUser)
-                            {
-                                consType = "Business Online";
-                            }
-                            else
-                            {
-                                consType = Constants.ConcessionType.Trade;
-                            }
 
-                            inboxConcessions.AddRange(
+                                var consType = GetSubRoleAndType(user.SubRoleId);                         
+
+                                inboxConcessions.AddRange(
                                 _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
                                     .ReadByRequestorIdStatusIdsIsActive(_userManager.GetUserIdForFiltering(user), new[] { pendingStatusId },
                                         true).Where(x=>x.ConcessionType== consType)));
@@ -364,15 +358,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         private string GetSubRoleAndType(int? subRoleId)
-        {            
-            if (subRoleId == (int)Constants.RoleSubRole.BolUser)
-            {
-                return Constants.RoleSubRoleType.BusinessOnline;
-            }
-            else
-            {
-               return Constants.ConcessionType.Trade;
-            }
+        {
+            //if (subRoleId == (int)Constants.RoleSubRole.BolUser)
+            //{
+            //    return Constants.ConcessionType.BusinessOnlineDesc;
+            //}
+            //else
+            //{
+            //   return Constants.ConcessionType.Trade;
+            //}
+
+            return Constants.ConcessionType.Trade;
         }
 
         /// <summary>

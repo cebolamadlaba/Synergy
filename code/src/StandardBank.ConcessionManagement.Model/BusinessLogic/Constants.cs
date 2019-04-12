@@ -42,14 +42,15 @@
             public const string Trade = "Trade";
             public const string Transactional = "Transactional";
             public const string BusinessOnline = "Bol";
+            public const string BusinessOnlineDesc = "Business Online";
             public const string Cash = "Cash";
 
         }
 
-        public static class RoleSubRoleType
+        public static class SubRoleType
         {    
-            public const string Trade = "Trade";
-            public const string BusinessOnline = "Business Online";
+            public const string TradeBanker = "Trade Banker";
+            public const string BOLConsultant = "BOL Consultant";
         }
 
 

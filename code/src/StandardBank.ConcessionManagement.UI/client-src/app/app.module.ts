@@ -93,6 +93,7 @@ import { AaManagementComponent } from './admin/aa-management/aa-management.compo
 import { BOLCHManagementComponent } from './admin/bol-chargecodes/bol-chargecodes.component';
 import { TransactionTypesManagementComponent } from './admin/transaction-types/transaction-types.component';
 import { ChannelTypesManagementComponent } from './admin/channel-types/channel-types.component';
+import { BolTradeManagementComponent } from './admin/bol-trade-management/bol-trade-management.component';
 
 
 @NgModule({
@@ -150,7 +151,8 @@ import { ChannelTypesManagementComponent } from './admin/channel-types/channel-t
         SearchComponent,
         BOLCHManagementComponent,
         TransactionTypesManagementComponent,
-        ChannelTypesManagementComponent
+        ChannelTypesManagementComponent,
+        BolTradeManagementComponent
 
     ],
     imports: [

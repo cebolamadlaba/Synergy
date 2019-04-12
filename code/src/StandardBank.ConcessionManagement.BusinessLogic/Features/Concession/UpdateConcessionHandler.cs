@@ -57,7 +57,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
 
         /// <summary>
         /// The logger
-        /// </summary>
+        /// </summary> 
         private readonly ILogger<UpdateConcessionHandler> _logger;
 
         /// <summary>
@@ -258,13 +258,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
                     //check if AA is Trade or Bol, filter based on sub role
                     if (aauser.SubRoleId.HasValue)
                     {
-                        if(aauser.SubRoleId == (int)Constants.RoleSubRole.BolUser
-                                && message.Concession.ConcessionType == Constants.RoleSubRoleType.BusinessOnline)
+                        if (aauser.SubRoleId == (int)Constants.RoleSubRole.BolUser
+                                && message.Concession.ConcessionType == Constants.ConcessionType.BusinessOnline)
                         {
                             SendNotificationBasedOnSubRole(aauser, message);
                         }
                         else if (aauser.SubRoleId == (int)Constants.RoleSubRole.TradeUser
-                                && message.Concession.ConcessionType == Constants.RoleSubRoleType.Trade)
+                                && message.Concession.ConcessionType == Constants.ConcessionType.Trade)
                         {
                             SendNotificationBasedOnSubRole(aauser, message);
                         }
@@ -335,15 +335,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
                     var aauser = _userManager.GetUser(aa.AccountAssistantUserId);
 
                     //check if AA is Trade or Bol, filter based on sub role
-                    if(aauser.SubRoleId.HasValue)
-                    {                       
-                        if (aauser.SubRoleId==(int)Constants.RoleSubRole.BolUser
-                            && message.Concession.ConcessionType==Constants.RoleSubRoleType.BusinessOnline)
+                    if (aauser.SubRoleId.HasValue)
+                    {
+                        if (aauser.SubRoleId == (int)Constants.RoleSubRole.BolUser
+                            && message.Concession.ConcessionType == Constants.ConcessionType.BusinessOnline)
                         {
-                            SendNotificationBasedOnSubRole(aauser,message);
+                            SendNotificationBasedOnSubRole(aauser, message);
                         }
-                        else if(aauser.SubRoleId == (int)Constants.RoleSubRole.TradeUser
-                                 && message.Concession.ConcessionType == Constants.RoleSubRoleType.Trade)
+                        else if (aauser.SubRoleId == (int)Constants.RoleSubRole.TradeUser
+                                 && message.Concession.ConcessionType == Constants.ConcessionType.Trade)
                         {
                             SendNotificationBasedOnSubRole(aauser, message);
                         }
@@ -362,7 +362,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
                             RiskGroupName = message.Concession.RiskGroupName,
                             Product = message.Concession.ConcessionType
                         }), DateTime.Now);
-                    }                
+                    }
                 }
             }
 
