@@ -359,16 +359,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         private string GetSubRoleAndType(int? subRoleId)
         {
-            //if (subRoleId == (int)Constants.RoleSubRole.BolUser)
-            //{
-            //    return Constants.ConcessionType.BusinessOnlineDesc;
-            //}
-            //else
-            //{
-            //   return Constants.ConcessionType.Trade;
-            //}
-
-            return Constants.ConcessionType.Trade;
+            if (subRoleId == (int)Constants.RoleSubRole.BolUser)
+            {
+                return Constants.ConcessionType.BusinessOnlineDesc;
+            }
+            else
+            {
+                return Constants.ConcessionType.Trade;
+            }
+      
         }
 
         /// <summary>
