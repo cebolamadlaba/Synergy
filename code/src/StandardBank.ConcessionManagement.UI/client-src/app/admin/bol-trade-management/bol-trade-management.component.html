@@ -1,3 +1,190 @@
-<p>
-  bol-trade-management works!
-</p>
+<div class="col-md-2" style="margin-top: 15px;">
+    <i class="fa fa-chevron-circle-left" aria-hidden="true" style="font-size: 1.1em;"></i>
+    <span class="back-button-text" style="font-size: 1.1em;" (click)="goBack()">Administration</span>
+</div>
+
+<div class="col-md-12">
+    <h3> Bol/Trade Management</h3>
+</div>
+
+<!-- Success message -->
+<div class="col-md-12" *ngIf="saveMessage && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-success">
+            <p class="message-heading"><i class="fa fa-check-circle" aria-hidden="true"></i>{{saveMessage}}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Loading message -->
+<div class="col-md-12" *ngIf="isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-info">
+            <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Loading</p>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12 search-and-results-container" *ngIf="!isLoading">
+    <!-- Input form -->
+    <div class="form-inline">
+        <button class="btn btn-primary col-sm-1" type="button" (click)="addBolTrade()">Add Bol/ Trade</button>
+        <div id="filter"><label for="sort" class="col-sm-1 control-label">Region</label></div>
+        <div class="col-sm-3">
+            <select (change)="periodFilter($event.target.value)" class="form-control" [(ngModel)]="region">
+                <option [value]="selectUndefinedOptionValue">- Role -</option>
+                <option *ngFor="let reg of roleSubRole" [ngValue]="reg">{{reg.name}}</option>
+            </select>
+        </div>
+
+    </div>
+
+    <!-- Results table -->
+    <div class="table-container">
+        <table class="table table-bordered table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>A Number</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor='let bolTradeUser of bolTradeUsers; trackBy: index' (click)="editBolTrade(bolTradeUser)">
+                    <td>{{bolTradeUser.id}}</td>
+                    <td>{{bolTradeUser.fullName}}</td>
+                    <td>{{bolTradeUser.aNumber}}</td>
+                    <td>{{bolTradeUser.emailAddress}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div bsModal #addBolTradeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addAAModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="col-md-12 modal-header">
+                    <h4>
+                        {{actionType}} Bol/Trade
+                    </h4>
+                </div>
+
+                <div class="row">
+                    <!-- Error message -->
+                    <div class="col-md-12" *ngIf="(errorMessage || validationError) && !isSaving">
+                        <div class="form-feedback-container">
+                            <div class="alert-danger">
+                                <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
+                                <p>{{errorMessage}}</p>
+
+                                <ul *ngIf="validationError">
+                                    <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Loading message -->
+                    <div class="col-md-12" *ngIf="isSaving">
+                        <div class="form-feedback-container">
+                            <div class="alert-info">
+                                <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Saving</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="!isSaving">
+
+                    <!-- Left side -->
+                    <div class="col-md-6 modal-body">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="email">A Number</label>
+                            <div class="col-sm-8">
+                                <input type="text" required class="form-control" name="7" [(ngModel)]="addBolTradeUserModel.aNumber">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="email">Name</label>
+                            <div class="col-sm-8">
+                                <input type="text" required class="form-control" name="6" [(ngModel)]="addBolTradeUserModel.firstName">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="email">Surname</label>
+                            <div class="col-sm-8">
+                                <input type="text" required class="form-control" name="5" [(ngModel)]="addBolTradeUserModel.surname">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="email">Email</label>
+                            <div class="col-sm-8">
+                                <input type="email" required class="form-control" name="4" [(ngModel)]="addBolTradeUserModel.emailAddress">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right side -->
+                    <div class="col-md-6 modal-body">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="email">Contact Number</label>
+                            <div class="col-sm-8">
+                                <input type="tel" required class="form-control" name="8" [(ngModel)]="addBolTradeUserModel.contactNumber">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="email">Business Centre</label>
+                            <div class="col-sm-8">
+                                <select [(ngModel)]="addBolTradeUserModel.centreId" name="2" class="form-control">
+                                    <option *ngFor="let p of centres"
+                                            [ngValue]="p.id">
+                                        {{p.name}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="email">Sub Role</label>
+                            <div class="col-sm-8">
+                                <select [(ngModel)]="addBolTradeUserModel.subRoleId" name="2" class="form-control">
+                                    <option *ngFor="let p of roleSubRole"
+                                            [ngValue]="p.subRoleId">
+                                        {{p.name}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="email">Is Active</label>
+                            <div class="col-sm-8">
+                                <input type="checkbox" class="form-control" name="8" [(ngModel)]="addBolTradeUserModel.isActive">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="email">Account Executive</label>
+                            <div class="col-sm-8">
+                                <select [(ngModel)]="addBolTradeUserModel.accountExecutiveUserId" name="2" class="form-control">
+                                    <option *ngFor="let p of accountExecutives"
+                                            [ngValue]="p.id">
+                                        {{p.fullName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer" *ngIf="!isSaving">
+                    <div class="float-right">
+                        <button type="button" class="btn btn-cancel" (click)="addBolTradeModal.hide()">Close</button>
+                        <button type="button" class="btn btn-primary" (click)="saveBolOrTradeUser()">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

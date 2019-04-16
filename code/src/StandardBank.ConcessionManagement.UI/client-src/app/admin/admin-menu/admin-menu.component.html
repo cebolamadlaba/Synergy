@@ -8,6 +8,7 @@
         <li *ngIf="user?.isHO || user?.isRequestor"><a routerLink="/admin/aa-management">AA/ PM Management</a></li>
         <li *ngIf="user?.isHO || user?.isBCM || user?.isRequestor"><a routerLink="/admin/ae-management">RM / AE / BM Management</a></li>
         <li *ngIf="user?.isHO || user?.isPCM"><a routerLink="/admin/bcm-management">Suite Head / BCM / Area Manager Management</a></li>
+        <li ><a routerLink="/admin/bol-trade-management">BOL / TRADE Management</a></li>
         <li *ngIf="user?.isHO"><a routerLink="/admin/pcm-management">PCM Management</a></li>
     </ul>
     

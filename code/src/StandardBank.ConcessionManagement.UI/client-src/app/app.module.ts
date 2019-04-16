@@ -45,11 +45,12 @@ import { RegionService } from './services/region.service';
 import { BusinessCentreService } from './services/business-centre.service';
 import { PcmManagementService } from './services/pcm-management.service';
 import { BcmManagementService } from './services/bcm-management.service';
-import { AeManagementService } from './services/ae-management.service';
+import { AeManagementService } from './services/ae-management.service'; 
 import { AaManagementService } from './services/aa-management.service';
 import { BaseComponentService } from './services/base-component.service';
 import { ConcessionLetterService } from './services/concession-letter.service';
-
+import { BolTradeManagementService} from './services/bol-trade-management.service'
+ 
 import { AdminTransactionTablesService } from './services/admin-transaction-tables.service';
 import { LegalEntityAddressService } from './services/legal-entity-address.service';
 
@@ -189,7 +190,8 @@ import { BolTradeManagementComponent } from './admin/bol-trade-management/bol-tr
         InvestmentConcessionService,
         BaseComponentService,
         ConcessionLetterService,
-        LegalEntityAddressService
+        LegalEntityAddressService,
+        BolTradeManagementService
     ],
     bootstrap: [AppComponent]
 })
