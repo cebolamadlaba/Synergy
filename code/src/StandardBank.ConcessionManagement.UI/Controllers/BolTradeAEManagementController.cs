@@ -12,11 +12,11 @@ using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 namespace StandardBank.ConcessionManagement.UI.Controllers
 {
     /// <summary>
-    /// AA Management Controller
+    /// AE Management Controller
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
     [Route("api/[controller]")]
-    public class AAManagementController : Controller
+    public class BolTradeAEManagementController : Controller
     {
         /// <summary>
         /// The user manager
@@ -39,33 +39,18 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         private readonly IMediator _mediator;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AAManagementController"/> class.
+        /// Initializes a new instance of the <see cref="BolTradeAEManagementController"/> class.
         /// </summary>
         /// <param name="userManager">The user manager.</param>
         /// <param name="siteHelper">The site helper.</param>
         /// <param name="lookupTableManager">The lookup table manager.</param>
         /// <param name="mediator">The mediator.</param>
-        public AAManagementController(IUserManager userManager, ISiteHelper siteHelper, ILookupTableManager lookupTableManager, IMediator mediator)
+        public BolTradeAEManagementController(IUserManager userManager, ISiteHelper siteHelper, ILookupTableManager lookupTableManager, IMediator mediator)
         {
             _userManager = userManager;
             _siteHelper = siteHelper;
             _lookupTableManager = lookupTableManager;
             _mediator = mediator;
-        }
-
-        /// <summary>
-        /// Gets the AA users.
-        /// </summary>
-        /// <returns></returns>
-        [Route("AAUsers")]
-        public IActionResult AAUsers()
-        {
-            var user = _siteHelper.LoggedInUser(this);
-
-            if (user.IsRequestor)
-                return Ok(_userManager.GetAccountAssistantsForAccountExecutive(user.Id));
-
-            return Ok(_userManager.GetUsersByRole(Constants.Roles.AA).Where(x => x.SubRoleId == null));
         }
 
         /// <summary>
@@ -78,39 +63,50 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var user = _siteHelper.LoggedInUser(this);
 
             if (user.IsRequestor)
-                return Ok(new[] { user });
+                return Ok(new[] {user});
 
-            return Ok(_userManager.GetUsersByRole(Constants.Roles.Requestor).Where(x => x.SubRoleId == null));
+            return Ok(_userManager.GetUsersByRole(Constants.Roles.Requestor).Where(x => x.SubRoleId != null));
         }
 
         /// <summary>
-        /// Saves the AA user.
+        /// Gets the bol or trade users.
         /// </summary>
-        /// <param name="aaUser">The AA user.</param>
         /// <returns></returns>
-        [Route("SaveAaUser")]
-        public async Task<IActionResult> SaveAaUser([FromBody] User aaUser)
+        [Route("BolOrTradeAAUsers")]
+        public IActionResult BolOrTradeAAUsers()
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            if (user.IsRequestor)
+                return Ok(_userManager.GetAccountAssistantsForAccountExecutive(user.Id).Where(x => x.SubRoleId != null));
+
+            return Ok(_userManager.GetUsersByRole(Constants.Roles.AA).Where(x => x.SubRoleId != null));
+        }
+
+        /// <summary>
+        /// Saves the account executive.
+        /// </summary>
+        /// <param name="accountExecutive">The account executive.</param>
+        /// <returns></returns>
+        [Route("SaveAccountExecutive")]
+        public async Task<IActionResult> SaveAccountExecutive([FromBody] AccountExecutive accountExecutive)
         {
             var user = _siteHelper.LoggedInUser(this);
             var roles = _lookupTableManager.GetRoles();
 
-            aaUser.RoleId = roles.First(_ => _.Name == Constants.Roles.AA).Id;
+            accountExecutive.User.RoleId = roles.First(_ => _.Name == Constants.Roles.Requestor).Id;
 
-            if (aaUser.Id > 0)
-                await _mediator.Send(new UpdateUser(aaUser, user));
-            else
-                aaUser.Id = await _mediator.Send(new CreateUser(aaUser, user));
-
-            if (aaUser.AccountExecutiveUserId.HasValue && aaUser.AccountExecutiveUserId.Value > 0)
+            if (accountExecutive.User.Id > 0)
             {
-                var accountExecutive = new AccountExecutive
-                {
-                    User = _userManager.GetUser(aaUser.AccountExecutiveUserId.Value),
-                    AccountAssistants = new [] { aaUser }
-                };
-
-                await _mediator.Send(new CreateOrUpdateAccountExecutives(accountExecutive, user));
+                await _mediator.Send(new UpdateUser(accountExecutive.User, user));
             }
+            else
+            {
+                var userId = await _mediator.Send(new CreateUser(accountExecutive.User, user));
+                accountExecutive.User.Id = userId;
+            }
+
+            await _mediator.Send(new CreateOrUpdateAccountExecutives(accountExecutive, user));
 
             return Ok(true);
         }
@@ -123,7 +119,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("ValidateUser")]
         public IActionResult ValidateUser([FromBody] User model)
         {
-            return Ok(_userManager.ValidateUser(model, Constants.Roles.AA));
+            return Ok(_userManager.ValidateUser(model, Constants.Roles.Requestor));
         }
 
         /// <summary>
@@ -135,5 +131,27 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             return Ok(_lookupTableManager.GetCentres());
         }
+
+        /// <summary>
+        /// Gets the ae aa users.
+        /// </summary>
+        /// <param name="aeUserId">The ae user identifier.</param>
+        /// <returns></returns>
+        [Route("BolTradeAEAAUsers/{aeUserId}")]
+        public IActionResult BolTradeAEAAUsers(int aeUserId)
+        {
+            return Ok(_userManager.GetAccountAssistantsForAccountExecutive(aeUserId));
+        }
+
+        /// <summary>
+        /// Gets the roleSubRoles.
+        /// </summary>
+        /// <returns></returns>
+        [Route("RoleSubRoles")]
+        public IActionResult RoleSubRoles()
+        {
+            return Ok(_userManager.GetRoleSubRole());
+        }
+
     }
 }

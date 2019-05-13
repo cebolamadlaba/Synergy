@@ -73,7 +73,7 @@ export class BolConcessionService {
         return this.http.post(url, bolConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    createupdateBOLChargeCode(bolChargecode: BolChargeCode): Observable<BolChargeCode> {
+    createupdateBOLChargeCode(bolChargecode: BolChargeCode, selectedRiskGroups: number[]): Observable<BolChargeCode> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
         const url = "/api/Bol/createupdateBOLChargeCode";
@@ -84,6 +84,11 @@ export class BolConcessionService {
         let options = new RequestOptions({ headers: headers });
         const url = "/api/Bol/NewBolChargeCodeType";
         return this.http.post(url, bolChargecodeType, options).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    getRiskGroup(): Observable<RiskGroup[]> {
+        const url = "/api/Bol/GetRiskGroups/";
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
     private extractData(response: Response) {

@@ -49,7 +49,8 @@ import { AeManagementService } from './services/ae-management.service';
 import { AaManagementService } from './services/aa-management.service';
 import { BaseComponentService } from './services/base-component.service';
 import { ConcessionLetterService } from './services/concession-letter.service';
-import { BolTradeManagementService} from './services/bol-trade-management.service'
+import { BolTradeManagementService } from './services/bol-trade-management.service'
+import { BolTradeAeManagementService } from './services/bol-trade-ae-management.service';
  
 import { AdminTransactionTablesService } from './services/admin-transaction-tables.service';
 import { LegalEntityAddressService } from './services/legal-entity-address.service';
@@ -95,6 +96,7 @@ import { BOLCHManagementComponent } from './admin/bol-chargecodes/bol-chargecode
 import { TransactionTypesManagementComponent } from './admin/transaction-types/transaction-types.component';
 import { ChannelTypesManagementComponent } from './admin/channel-types/channel-types.component';
 import { BolTradeManagementComponent } from './admin/bol-trade-management/bol-trade-management.component';
+import { BolTradeAeManagementComponent } from './admin/bol-trade-ae-management/bol-trade-ae-management.component';
 
 
 @NgModule({
@@ -153,7 +155,8 @@ import { BolTradeManagementComponent } from './admin/bol-trade-management/bol-tr
         BOLCHManagementComponent,
         TransactionTypesManagementComponent,
         ChannelTypesManagementComponent,
-        BolTradeManagementComponent
+        BolTradeManagementComponent,
+        BolTradeAeManagementComponent
 
     ],
     imports: [
@@ -167,6 +170,7 @@ import { BolTradeManagementComponent } from './admin/bol-trade-management/bol-tr
         ReactiveFormsModule,
         BsDropdownModule.forRoot(),
         MyDatePickerModule
+       
     ],
     providers: [
         LookupDataService,
@@ -191,7 +195,8 @@ import { BolTradeManagementComponent } from './admin/bol-trade-management/bol-tr
         BaseComponentService,
         ConcessionLetterService,
         LegalEntityAddressService,
-        BolTradeManagementService
+        BolTradeManagementService,
+        BolTradeAeManagementService
     ],
     bootstrap: [AppComponent]
 })

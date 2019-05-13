@@ -8,6 +8,7 @@ import { BolConcessionService } from "../../services/bol-concession.service";
 import { BolChargeCodeType } from "../../models/bol-chargecodetype";
 import { BolChargeCode } from "../../models/bol-chargecode";
 import { LookupDataService } from "../../services/lookup-data.service";
+import { RiskGroup } from '../../models/risk-group';
 
 @Component({
     selector: 'app-business-centre',
@@ -30,6 +31,9 @@ export class BOLCHManagementComponent implements OnInit {
     bolchargecodes: BolChargeCode[];
     bolchargecodesFiltered: BolChargeCode[];
 
+    riskGroups: RiskGroup[];
+    selectedRiskGroups: Array<RiskGroup> = [];
+
     addBolChargeCodeModel: BolChargeCode;
     addBolChargeCodeTypeModel: BolChargeCodeType;
 
@@ -43,6 +47,7 @@ export class BOLCHManagementComponent implements OnInit {
     isBcmAEsLoading = false;
     canAdd = true;
 
+ 
     constructor(private location: Location, @Inject(LookupDataService) private lookupDataService, @Inject(BolConcessionService) private bolConcessionService) {
         this.addBolChargeCodeModel = new BolChargeCode();
         this.addBolChargeCodeModel.isActive = true;
@@ -63,12 +68,14 @@ export class BOLCHManagementComponent implements OnInit {
 
         Observable.forkJoin([
             this.lookupDataService.getBOLChargeCodeTypes(),
-            this.lookupDataService.getBOLChargeCodesAll()
+            this.lookupDataService.getBOLChargeCodesAll(),
+            this.bolConcessionService.getRiskGroup()
         ]).subscribe(results => {
 
             this.bolchargecodetypes = <any>results[0];
             this.bolchargecodes = <any>results[1];
             this.bolchargecodesFiltered = this.bolchargecodes;
+             this.riskGroups = <any>results[2];
 
             if (this.bolchargecodetypes.length > 0) {
 
@@ -84,6 +91,7 @@ export class BOLCHManagementComponent implements OnInit {
 
             }
 
+           
             this.isLoading = false;
         },
             error => {
@@ -91,6 +99,7 @@ export class BOLCHManagementComponent implements OnInit {
                 this.isLoading = false;
             });
     }
+
 
     FilterBOLProducts(selection: BolChargeCodeType) {
 
@@ -111,7 +120,10 @@ export class BOLCHManagementComponent implements OnInit {
 
             this.addBolChargeCodeModel.fkChargeCodeTypeId = this.selectedProduct.pkChargeCodeTypeId;
             this.addBolChargeCodeModel.isActive = true;
-
+            this.addBolChargeCodeModel.riskGroups = this.selectedRiskGroups;
+            if (this.addBolChargeCodeModel.riskGroups != null) {
+                this.addBolChargeCodeModel.IsNonUniversal = true;
+            }
 
             this.bolConcessionService.createupdateBOLChargeCode(this.addBolChargeCodeModel).subscribe(entity => {
                 console.log("data saved");
@@ -137,12 +149,8 @@ export class BOLCHManagementComponent implements OnInit {
 
         } else {
             this.isLoading = false;
-        }
-
-        //return false;
-
+        }  
     }
-
 
     createBOLChargeCodeType() {
 
@@ -278,4 +286,33 @@ export class BOLCHManagementComponent implements OnInit {
     goBack() {
         this.location.back();
     }
+
+
+    setRiskGroupSelected(id) {
+        let removeRole = false;
+
+    
+        if (removeRole) {
+            this.selectedRiskGroups =
+                this.selectedRiskGroups.filter((item) => {
+                    return item != id;
+                });
+        }
+        else {
+            this.selectedRiskGroups.push(id);
+        }
+    }
+
+    isSelectedRiskGroup(id) {
+        let isSelected = this.riskGroups.indexOf(id) > -1;
+
+        if (!isSelected) {
+            return "list-group-item listGrpItemOverride";
+        }
+        else {
+            return "list-group-item listGrpItemOverride active";
+        }
+    }
+
+
 }

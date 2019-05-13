@@ -5,6 +5,7 @@ import { Location } from '@angular/common';
 import { Centre } from '../../models/centre';
 import { BolTradeManagementService } from '../../services/bol-trade-management.service';
 import { RoleSubRole } from "../../models/RoleSubRole";
+import { RouteConfigLoadEnd } from '@angular/router';
 
 @Component({
   selector: 'app-bol-trade-management',
@@ -27,23 +28,23 @@ export class BolTradeManagementComponent implements OnInit {
     bolTradeUsers: User[];
     addBolTradeUserModel: User;
     roleSubRole: RoleSubRole[];
+    bolTradeUsersFiltered: User[];
 
     observableSave: Observable<boolean>;
     observableErrors: Observable<string[]>;
 
     accountExecutives: User[];
-
+    selectedRoleSubRole: RoleSubRole;
 
     constructor(private location: Location, private bolTradeManagementService: BolTradeManagementService) {
         this.addBolTradeUserModel = new User();
     }
 
     ngOnInit() {
-        this.loadData();
+        this.loadData(null);
     }
 
-
-    loadData() {
+    loadData(subRole: RoleSubRole) {
         this.isLoading = true;
 
         Observable.forkJoin([
@@ -56,13 +57,32 @@ export class BolTradeManagementComponent implements OnInit {
             this.centres = <any>results[1];
             this.accountExecutives = <any>results[2];
             this.roleSubRole = <any>results[3];
+            this.bolTradeUsersFiltered = this.bolTradeUsers;
             this.isLoading = false;
+
+            if (this.roleSubRole.length > 0) {
+
+                if (subRole == null) {
+                    this.selectedRoleSubRole = this.roleSubRole[0];
+                }
+                else {
+                    this.selectedRoleSubRole = this.roleSubRole.filter(c => c.subRoleId == subRole.subRoleId)[0];
+                }
+                this.bolTradeUsersFiltered = this.bolTradeUsers.filter(re => re.subRoleId == this.selectedRoleSubRole.subRoleId);
+            }
         },
             error => {
                 this.errorMessage = <any>error;
                 this.isLoading = false;
             });
-     }
+    }
+
+
+    filterBolTradeUsers(selection: RoleSubRole) {
+
+        this.selectedRoleSubRole = selection;
+        this.bolTradeUsersFiltered = this.bolTradeUsers.filter(re => re.subRoleId == selection.subRoleId);
+    }
 
     addBolTrade() {
         this.addBolTradeUserModel = new User();
@@ -105,7 +125,7 @@ export class BolTradeManagementComponent implements OnInit {
                     this.isSaving = false;
 
                     //after saving reload the data
-                    this.loadData();
+                    this.loadData(null);
                 }, error => {
                     this.isSaving = false;
                     this.errorMessage = <any>error;

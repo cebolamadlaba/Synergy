@@ -46,6 +46,7 @@ import { BcmManagementComponent } from './admin/bcm-management/bcm-management.co
 import { AeManagementComponent } from './admin/ae-management/ae-management.component';
 import { AaManagementComponent } from './admin/aa-management/aa-management.component';
 import { BolTradeManagementComponent } from './admin/bol-trade-management/bol-trade-management.component';
+import { BolTradeAeManagementComponent } from './admin/bol-trade-ae-management/bol-trade-ae-management.component';
 
 import { BOLCHManagementComponent } from './admin/bol-chargecodes/bol-chargecodes.component';
 import { TransactionTypesManagementComponent } from './admin/transaction-types/transaction-types.component';
@@ -103,12 +104,11 @@ const routes: Routes = [
     { path: 'admin/ae-management', component: AeManagementComponent },
     { path: 'admin/aa-management', component: AaManagementComponent },
     { path: 'admin/bol-trade-management', component: BolTradeManagementComponent },
+    { path: 'admin/bol-trade-ae-management', component: BolTradeAeManagementComponent },
 
     { path: 'admin/bol-chargecodes', component: BOLCHManagementComponent },
     { path: 'admin/transaction-types', component: TransactionTypesManagementComponent },
     { path: 'admin/channel-types', component: ChannelTypesManagementComponent }
-
-
 
 
 ];

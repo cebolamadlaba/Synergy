@@ -1266,6 +1266,37 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
+
+    saveUpdatedConcession() {
+        this.isLoading = true;
+
+        this.clearMessages();
+
+        var tradeConcession = this.getTradeConcession(true);
+
+        tradeConcession.concession.type = "Existing";
+        tradeConcession.concession.referenceNumber = this.concessionReferenceId;
+
+        if (!this.validationError) {
+            this.tradeConcessionService.postUpdateTradeData(tradeConcession, this.editType).subscribe(entity => {
+                console.log("data saved");
+                this.isEditing = false;
+                this.saveMessage = entity.concession.childReferenceNumber;
+                this.tradeConcession = entity;
+                this.isLoading = false;
+                this.canEdit = false;
+                this.motivationEnabled = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+
+
     recallConcession() {
         this.isLoading = true;
         this.errorMessage = null;
@@ -1401,7 +1432,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
 
     archiveConcession() {
-        if (confirm("Are you sure you want to delete this concession ?")) {
+        if (confirm("Please note that the account will be put back to standard pricing. Are you sure you want to delete this concession ?")) {
             this.isLoading = true;
             this.errorMessage = null;
 

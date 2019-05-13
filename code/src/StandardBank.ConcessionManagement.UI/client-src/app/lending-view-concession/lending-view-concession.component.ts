@@ -331,9 +331,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
                     currentConcession.get('limit').setValue(this.formatDecimal(lendingConcessionDetail.limit));
                     currentConcession.get('term').setValue(lendingConcessionDetail.term);
-                    currentConcession.get('marginAgainstPrime').setValue(this.formatDecimal3(lendingConcessionDetail.marginAgainstPrime));
-                    currentConcession.get('approvedMarginAgainstPrime').setValue(this.formatDecimal3(lendingConcessionDetail.approvedMap));
-                    currentConcession.get('initiationFee').setValue(this.formatDecimal3(lendingConcessionDetail.initiationFee));
+                    currentConcession.get('marginAgainstPrime').setValue(this.formatDecimal4(lendingConcessionDetail.marginAgainstPrime));
+                    currentConcession.get('approvedMarginAgainstPrime').setValue(this.formatDecimal4(lendingConcessionDetail.approvedMap));
+                    currentConcession.get('initiationFee').setValue(this.formatDecimal4(lendingConcessionDetail.initiationFee));
 
                     let selectedReviewFeeType = this.reviewFeeTypes.filter(_ => _.id == lendingConcessionDetail.reviewFeeTypeId);
                     currentConcession.get('reviewFeeType').setValue(selectedReviewFeeType[0]);
@@ -1152,6 +1152,34 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
+    saveUpdatedConcession() {
+        this.isLoading = true;
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var lendingConcession = this.getLendingConcession(true);
+       
+        lendingConcession.concession.type = "Existing";
+        lendingConcession.concession.referenceNumber = this.concessionReferenceId;
+
+        if (!this.validationError) {
+            this.lendingService.postUpdateLendingData(lendingConcession, this.editType).subscribe(entity => {
+                console.log("data saved");
+                this.isEditing = false;
+                this.saveMessage = entity.concession.childReferenceNumber;
+                this.lendingConcession = entity;
+                this.canEdit = false;
+                this.motivationEnabled = false;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
     recallConcession() {
         this.isLoading = true;
         this.errorMessage = null;
@@ -1269,7 +1297,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
     archiveConcessiondetail(concessionDetailId: number) {
 
-        if (confirm("Are you sure you want to delete the concession item ?")) {
+        if (confirm("Please note that the account will be put back to standard pricing. Are you sure you want to delete this concession ?")) {
             this.isLoading = true;
             this.errorMessage = null;
 
@@ -1289,7 +1317,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     archiveConcession() {
-        if (confirm("Are you sure you want to delete this concession ?")) {
+        if (confirm("Please note that the account will be put back to standard pricing. Are you sure you want to delete this concession ?")) {
             this.isLoading = true;
             this.errorMessage = null;
 
@@ -1343,7 +1371,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         }
         else {
 
-            $event.target.value = null;
+            $event.target.value = 0;
         }
     }
 
@@ -1353,7 +1381,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
         }
 
-        return null;
+        return 0;
     }
 
     formatDecimal3(itemValue: number) {
@@ -1362,9 +1390,18 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             return new DecimalPipe('en-US').transform(itemValue, '1.3-4');
         }
 
-        return null;
+        return 0;
     }
 
+
+    formatDecimal4(itemValue: number) {
+        if (itemValue) {
+
+            return new DecimalPipe('en-US').transform(itemValue, '1.3-4');
+        }
+
+        return 0.00;
+    }
 
     getlendingConcessionDetail(index: number, type: string) {
         if (!this.lendingConcession.lendingConcessionDetails[index]) {

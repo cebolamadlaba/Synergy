@@ -23,6 +23,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Bol
 
         public bool IsActive { get; set; }
 
+        public List<RiskGroup> RiskGroups { get; set; }
 
     }
 }

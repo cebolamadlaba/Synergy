@@ -71,7 +71,7 @@ export class ApprovedConcessionsComponent implements OnInit {
             case ConcessionTypes.Transactional:
                 this.router.navigate(['/transactional-view-concession', approvedConcession.riskGroupNumber, approvedConcessionDetail.referenceNumber]);
                 break;
-            case ConcessionTypes.BOL:
+            case ConcessionTypes.BOLDesc:
                 this.router.navigate(['/bol-view-concession', approvedConcession.riskGroupNumber, approvedConcessionDetail.referenceNumber]);
                 break;
             case ConcessionTypes.Trade:
@@ -122,16 +122,24 @@ export class ApprovedConcessionsComponent implements OnInit {
         var selectedConcessions = this.approvedConcessions.filter(items => items.legalEntityId == this.legalEntityId);
         var concessionIds = "";
 
+     
         //if there are selected concessions we need to get the concession detail id's and use those to
         //generate the concession letter, otherwise it means the user is choosing to generate the
         //concession letter for all the concessions for the legal entity so we use that instead
         if (selectedConcessions != null && selectedConcessions.length > 0) {
 
+
             for (var i = 0; i < selectedConcessions.length; i++) {
+
                 var selectedConcessionDetails = selectedConcessions[i].approvedConcessionDetails.filter(item => item.isSelected);
 
                 if (selectedConcessionDetails != null && selectedConcessionDetails.length > 0) {
                     for (var j = 0; j < selectedConcessionDetails.length; j++) {
+
+                        if (selectedConcessionDetails[j].concessionType == ConcessionTypes.BOLDesc) {
+                            selectedConcessionDetails[j].concessionType = ConcessionTypes.BOL;
+                        }
+
                         if (concessionIds.length == 0) {
                             concessionIds = String(selectedConcessionDetails[j].concessionId);
                         } else {

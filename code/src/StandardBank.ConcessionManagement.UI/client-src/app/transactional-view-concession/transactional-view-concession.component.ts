@@ -872,6 +872,33 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
+    saveUpdatedConcession() {
+        this.isLoading = true;
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var transactionalConcession = this.getTransactionalConcession(true);
+        transactionalConcession.concession.type = "Existing";
+        transactionalConcession.concession.referenceNumber = this.concessionReferenceId;
+
+        if (!this.validationError) {
+            this.transactionalConcessionService.postUpdateTransactionalData(transactionalConcession, this.editType).subscribe(entity => {
+                console.log("data saved");
+                this.isEditing = false;
+                this.saveMessage = entity.concession.childReferenceNumber;
+                this.transactionalConcession = entity;
+                this.isLoading = false;
+                this.canEdit = false;
+                this.motivationEnabled = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
     recallConcession() {
         this.isLoading = true;
         this.errorMessage = null;

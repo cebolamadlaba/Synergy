@@ -4,7 +4,7 @@
 </div>
 
 <div class="col-md-12">
-    <h3> Bol/Trade Management</h3>
+    <h3>Bol / Trade / AE Management</h3>
 </div>
 
 <!-- Success message -->
@@ -26,18 +26,19 @@
 </div>
 
 <div class="col-md-12 search-and-results-container" *ngIf="!isLoading">
+   
     <!-- Input form -->
     <div class="row">
         <div class="col-md-6">
             <div class="row" style="padding: 8px 0px 8px 0px">
                 <div class="col-sm-6">
-                    <button class="btn btn-primary col-sm-10" type="button" (click)="addBolTrade()">Add Bol/ Trade</button>
+                    <button class="btn btn-primary col-sm-6" type="button" (click)="addBolTradeAE()">Add Bol/ Trade /AE </button>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-sm-6">
-                    <select [(ngModel)]="selectedSubRole" class="form-control" (change)=" filterBolTradeUsers(selectedSubRole)">
+                    <select [(ngModel)]="selectedSubRole" class="form-control" (change)=" filterBolTradeAeUsers(selectedSubRole)">
                         <option *ngFor="let subRole of roleSubRole" [ngValue]="subRole">{{subRole.name}}</option>
                     </select>
                 </div>
@@ -45,6 +46,8 @@
             </div>
         </div>
     </div>
+
+
 
     <!-- Results table -->
     <div class="table-container">
@@ -58,22 +61,22 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor='let bolTradeUser of bolTradeUsersFiltered; trackBy: index' (click)="editBolTrade(bolTradeUser)">
-                    <td>{{bolTradeUser.id}}</td>
-                    <td>{{bolTradeUser.fullName}}</td>
-                    <td>{{bolTradeUser.aNumber}}</td>
-                    <td>{{bolTradeUser.emailAddress}}</td>
+                <tr *ngFor='let aeUser of bolTradeAeUsersFiltered; trackBy: index' (click)="editBolTradeAe(aeUser)">
+                    <td>{{aeUser.id}}</td>
+                    <td>{{aeUser.fullName}}</td>
+                    <td>{{aeUser.aNumber}}</td>
+                    <td>{{aeUser.emailAddress}}</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    <div bsModal #addBolTradeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addAAModalLabel" aria-hidden="true">
+    <div bsModal #addBolTradeAEModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addBolTradeAEModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="col-md-12 modal-header">
                     <h4>
-                        {{actionType}} Bol/Trade
+                        {{actionType}} Bol / Trade / AE Management
                     </h4>
                 </div>
 
@@ -102,32 +105,26 @@
                     </div>
                 </div>
 
-                <div class="row" *ngIf="!isSaving">
+                <div class="row" *ngIf="!isSaving && canAdd">
 
                     <!-- Left side -->
                     <div class="col-md-6 modal-body">
                         <div class="form-group">
                             <label class="control-label col-sm-4" for="email">A Number</label>
                             <div class="col-sm-8">
-                                <input type="text" required class="form-control" name="7" [(ngModel)]="addBolTradeUserModel.aNumber">
+                                <input type="text" required class="form-control" name="7" [(ngModel)]="addBolTradeAeUserModel.aNumber">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-4" for="email">Name</label>
                             <div class="col-sm-8">
-                                <input type="text" required class="form-control" name="6" [(ngModel)]="addBolTradeUserModel.firstName">
+                                <input type="text" required class="form-control" name="6" [(ngModel)]="addBolTradeAeUserModel.firstName">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-4" for="email">Surname</label>
                             <div class="col-sm-8">
-                                <input type="text" required class="form-control" name="5" [(ngModel)]="addBolTradeUserModel.surname">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-4" for="email">Email</label>
-                            <div class="col-sm-8">
-                                <input type="email" required class="form-control" name="4" [(ngModel)]="addBolTradeUserModel.emailAddress">
+                                <input type="text" required class="form-control" name="5" [(ngModel)]="addBolTradeAeUserModel.surname">
                             </div>
                         </div>
                     </div>
@@ -135,15 +132,21 @@
                     <!-- Right side -->
                     <div class="col-md-6 modal-body">
                         <div class="form-group">
+                            <label class="control-label col-sm-4" for="email">Email</label>
+                            <div class="col-sm-8">
+                                <input type="email" required class="form-control" name="4" [(ngModel)]="addBolTradeAeUserModel.emailAddress">
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="control-label col-sm-4" for="email">Contact Number</label>
                             <div class="col-sm-8">
-                                <input type="tel" required class="form-control" name="8" [(ngModel)]="addBolTradeUserModel.contactNumber">
+                                <input type="tel" required class="form-control" name="8" [(ngModel)]="addBolTradeAeUserModel.contactNumber">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-4" for="email">Business Centre</label>
                             <div class="col-sm-8">
-                                <select [(ngModel)]="addBolTradeUserModel.centreId" name="2" class="form-control">
+                                <select [(ngModel)]="addBolTradeAeUserModel.centreId" name="2" class="form-control">
                                     <option *ngFor="let p of centres"
                                             [ngValue]="p.id">
                                         {{p.name}}
@@ -154,7 +157,7 @@
                         <div class="form-group">
                             <label class="control-label col-sm-4" for="email">Sub Role</label>
                             <div class="col-sm-8">
-                                <select [(ngModel)]="addBolTradeUserModel.subRoleId" name="2" class="form-control">
+                                <select [(ngModel)]="addBolTradeAeUserModel.subRoleId" name="2" class="form-control">
                                     <option *ngFor="let p of roleSubRole"
                                             [ngValue]="p.subRoleId">
                                         {{p.name}}
@@ -165,29 +168,64 @@
                         <div class="form-group">
                             <label class="control-label col-md-3" for="email">Is Active</label>
                             <div class="col-sm-8">
-                                <input type="checkbox" class="form-control" name="8" [(ngModel)]="addBolTradeUserModel.isActive">
+                                <input type="checkbox" class="form-control" name="8" [(ngModel)]="addBolTradeAeUserModel.isActive">
                             </div>
                         </div>
+                    </div>
+                </div>
 
+                <div class="row" *ngIf="!isSaving">
+                    <div class="col-md-6 modal-body">
                         <div class="form-group">
-                            <label class="control-label col-sm-4" for="email">Account Executive</label>
+                            <label class="control-label col-sm-4">Account Assistant</label>
                             <div class="col-sm-8">
-                                <select [(ngModel)]="addBolTradeUserModel.accountExecutiveUserId" name="2" class="form-control">
-                                    <option *ngFor="let p of accountExecutives"
-                                            [ngValue]="p.id">
-                                        {{p.fullName}}
+                                <select [(ngModel)]="selectedAccountAssistant" name="3" class="form-control">
+                                    <option *ngFor="let accountAssistant of accountAssistants" [ngValue]="accountAssistant">
+                                        {{accountAssistant.fullName}}
                                     </option>
                                 </select>
                             </div>
                         </div>
+                    </div>
 
+                    <div class="col-md-6 modal-body">
+                        <button class="btn btn-primary" (click)="addAccountAssistant()">Add</button>
+                    </div>
+                </div>
+                <div class="row" *ngIf="!isSaving">
+                    <div class="col-md-12 modal-body">
+                        <div class="form-group">
+                            <div class="table-container">
+                                <table class="table table-bordered table-hover table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>A Number</th>
+                                            <th>Email</th>
+                                            <th>&nbsp;</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngIf="isAeAAsLoading">
+                                            <td colspan="4">Loading...</td>
+                                        </tr>
+                                        <tr *ngFor='let accountAssistant of selectedAccountAssistants; trackBy: index; let i=index'>
+                                            <td>{{accountAssistant.fullName}}</td>
+                                            <td>{{accountAssistant.aNumber}}</td>
+                                            <td>{{accountAssistant.emailAddress}}</td>
+                                            <td><button class="btn-delete" type="button" (click)="removeAccountAssistant(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="modal-footer" *ngIf="!isSaving">
                     <div class="float-right">
-                        <button type="button" class="btn btn-cancel" (click)="addBolTradeModal.hide()">Close</button>
-                        <button type="button" class="btn btn-primary" (click)="saveBolOrTradeUser()">Save</button>
+                        <button type="button" class="btn btn-cancel" (click)="addBolTradeAEModal.hide()">Close</button>
+                        <button type="button" class="btn btn-primary" (click)="saveAE()">Save</button>
                     </div>
                 </div>
             </div>
