@@ -12,6 +12,7 @@ using StandardBank.ConcessionManagement.Model.UserInterface.Bol;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.UI.Validation;
+using System.Collections.Generic;
 
 namespace StandardBank.ConcessionManagement.UI.Controllers
 {
@@ -86,15 +87,16 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(bolConcession);
         }
 
-
-
         [Route("createupdateBOLChargeCode")]
         [ValidateModel]
-        public async Task<IActionResult> CreateUpdateBOLChargeCode([FromBody]BOLChargeCode bolChargecode)
+        public IActionResult CreateUpdateBOLChargeCode([FromBody]BOLChargeCode bolChargecode)
         {
             var user = _siteHelper.LoggedInUser(this);
 
             var returned = _bolManager.CreateUpdateBOLChargeCode(bolChargecode);
+
+             List<RiskGroup> riskGroups = bolChargecode.RiskGroups;
+            _bolManager.CreateRiskGroupNonUniversalChargeCode(returned.pkChargeCodeId,riskGroups);
 
             return Ok(returned);
         }
@@ -331,9 +333,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             return Ok(_bolManager.GetBolConcession(detail.ReferenceNumber, user));
         }
-
-
-
+      
+        [Route("GetRiskGroups")]
+        public IEnumerable<RiskGroup> GetRiskGroups()
+        {
+            return _lookupTableManager.GetRiskGroups().OrderBy(x=>x.Name);
+        }
 
     }
 }

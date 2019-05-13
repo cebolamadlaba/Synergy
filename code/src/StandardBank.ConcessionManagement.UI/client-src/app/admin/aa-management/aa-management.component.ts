@@ -10,6 +10,7 @@ import { AaManagementService } from '../../services/aa-management.service';
     templateUrl: './aa-management.component.html',
     styleUrls: ['./aa-management.component.css']
 })
+
 export class AaManagementComponent implements OnInit {
 
     errorMessage: string;

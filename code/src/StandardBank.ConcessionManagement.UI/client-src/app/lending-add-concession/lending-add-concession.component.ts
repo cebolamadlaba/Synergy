@@ -378,6 +378,137 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
                 this.addValidationError("Client account not selected");
             }
 
+            if (concessionFormItem.get('productType').value.description === "Overdraft") {
+
+                if (concessionFormItem.get('term').value == "") {
+                    this.addValidationError("Term cannot be empty");
+                }
+
+                if (concessionFormItem.get('reviewFeeType').value == "") {
+                    this.addValidationError("Review Fee Type cannot be empty");
+                }
+
+                if (concessionFormItem.get('reviewFee').value == "") {
+                    this.addValidationError("Review Fee cannot be empty");
+                }
+
+                if (concessionFormItem.get('uffFee').value == "") {
+                    this.addValidationError("UffFee cannot be empty");
+                }
+
+                if (concessionFormItem.get('limit').value == "") {
+                    this.addValidationError("Limit cannot be empty");
+                }
+
+                if (concessionFormItem.get('initiationFee').value == "") {
+                    this.addValidationError("Initiation Fee cannot be empty");
+                }
+
+                if (concessionFormItem.get('marginAgainstPrime').value == "") {
+                    this.addValidationError("Prime fixed rate cannot be empty");
+                }
+            }
+            else if (concessionFormItem.get('productType').value.description === "Temporary Overdraft") {
+
+
+                if (concessionFormItem.get('term').value == "") {
+                    this.addValidationError("Term cannot be empty");
+                }
+
+                if (concessionFormItem.get('reviewFeeType').value == "") {
+                    this.addValidationError("Review Fee Type cannot be empty");
+                }
+
+                if (concessionFormItem.get('reviewFee').value == "") {
+                    this.addValidationError("Review Fee cannot be empty");
+                }
+
+                if (concessionFormItem.get('uffFee').value == "") {
+                    this.addValidationError("UffFee cannot be empty");
+                }
+
+                if (concessionFormItem.get('limit').value == "") {
+                    this.addValidationError("Limit cannot be empty");
+                }
+
+                if (concessionFormItem.get('initiationFee').value == "") {
+                    this.addValidationError("Initiation Fee cannot be empty");
+                }
+
+                if (concessionFormItem.get('marginAgainstPrime').value == "") {
+                    this.addValidationError("Prime fixed rate cannot be empty");
+                }
+                      
+            }
+            else if (concessionFormItem.get('productType').value.description === "MTL (Medium Term Loan)") {
+
+
+                if (concessionFormItem.get('term').value == "") {
+                    this.addValidationError("Term cannot be empty");
+                }
+
+                if (concessionFormItem.get('limit').value == "") {
+                    this.addValidationError("Limit cannot be empty");
+                }
+
+                if (concessionFormItem.get('initiationFee').value == "") {
+                    this.addValidationError("Initiation Fee cannot be empty");
+                }
+
+                if (concessionFormItem.get('marginAgainstPrime').value == "") {
+                    this.addValidationError("Prime fixed rate cannot be empty");
+                }
+
+            } else if (concessionFormItem.get('productType').value.description === "Agricultural Production Loan" ||
+                       concessionFormItem.get('productType').value.description === "Business RCP" ||
+                       concessionFormItem.get('productType').value.description === "BTL (Business Term Loan)") {
+
+                if (concessionFormItem.get('term').value == "") {
+                    this.addValidationError("Term cannot be empty");
+                }
+
+                if (concessionFormItem.get('limit').value == "") {
+                    this.addValidationError("Limit cannot be empty");
+                }
+
+                if (concessionFormItem.get('initiationFee').value == "") {
+                    this.addValidationError("Initiation Fee cannot be empty");
+                }
+
+                if (concessionFormItem.get('marginAgainstPrime').value == "") {
+                    this.addValidationError("Prime fixed rate cannot be empty");
+                }
+
+            } else if (concessionFormItem.get('productType').value.description === "VAF Installment sale" ||
+                       concessionFormItem.get('productType').value.description === "VAF Full Maintenance Lease" ||
+                     concessionFormItem.get('productType').value.description === "VAF operating rental") {
+
+                        if (concessionFormItem.get('term').value == "") {
+                            this.addValidationError("Term cannot be empty");
+                        }
+
+                        if (concessionFormItem.get('serviceFee').value == "") {
+                              this.addValidationError("Service Fee cannot be empty");
+                        }
+
+                       if (concessionFormItem.get('frequency').value == "") {
+                           this.addValidationError("Frequency cannot be empty");
+                        }
+
+                        if (concessionFormItem.get('limit').value == "") {
+                            this.addValidationError("Limit cannot be empty");
+                        }
+
+                        if (concessionFormItem.get('initiationFee').value == "") {
+                            this.addValidationError("Initiation Fee cannot be empty");
+                        }
+
+                        if (concessionFormItem.get('marginAgainstPrime').value == "") {
+                            this.addValidationError("Prime fixed rate cannot be empty");
+                      }
+            }
+     
+
             if (concessionFormItem.get('limit').value)
                 lendingConcessionDetail.limit = concessionFormItem.get('limit').value;
 

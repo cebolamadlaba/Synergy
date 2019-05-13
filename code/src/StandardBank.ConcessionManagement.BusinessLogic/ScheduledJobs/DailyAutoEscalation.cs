@@ -149,7 +149,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                         }
 
                     }
-                    else if (dueconcession.ConcessionType == "Business Online")
+                    else if (dueconcession.ConcessionType == Constants.ConcessionType.BusinessOnlineDesc)
                     {
                         BolConcession bolConcession = _bolManager.GetBolConcession(dueconcession.ConcessionRef, system);
 

@@ -221,7 +221,7 @@
                     <input type="text" formControlName="marginAgainstPrime" [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimalMAP($event)" class="form-control" [class.markred]="bcmhochanged(i,'marginAgainstPrime')" />
 
                 </td>
-                <td class="length-short" *ngIf="isApproved"><input type="text" numbersOnly="true" formControlName="approvedMarginAgainstPrime" class="form-control" /></td>
+                <td class="length-short" *ngIf="isApproved"><input type="text" numbersOnly="true"  formControlName="approvedMarginAgainstPrime" class="form-control" /></td>
 
                 <!-- Frequency -->
                 <td class="length-short">
@@ -469,7 +469,7 @@
             <button type="button" class="btn btn-success" (click)="editConcession('UpdateApproved')" *ngIf="canUpdate">Update</button>
             <button type="button" class="btn btn-warning" (click)="archiveConcession()" *ngIf="canArchive">Archive</button>
 
-            <button type="button" class="btn btn-primary" (click)="saveConcession()" *ngIf="isEditing">Save</button>
+            <button type="button" class="btn btn-primary" (click)="saveUpdatedConcession()" *ngIf="isEditing">Save</button>
 
             <button type="button" class="btn btn-success" (click)="recallConcession()" *ngIf="canRecall && !isRecalling">Recall</button>
             <button type="button" class="btn btn-primary" (click)="saveRecallConcession()" *ngIf="isRecalling">Save</button>

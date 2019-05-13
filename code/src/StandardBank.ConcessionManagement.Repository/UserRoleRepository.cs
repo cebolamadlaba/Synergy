@@ -72,7 +72,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<UserRole>(
-                    @"SELECT [pkUserRoleId] [Id], [fkUserId] [UserId], [fkRoleId] [RoleId], [IsActive] 
+                    @"SELECT [pkUserRoleId] [Id], [fkUserId] [UserId], [fkRoleId] [RoleId],[fkSubRoleId] [SubRoleId], [IsActive] 
                     FROM [dbo].[tblUserRole] 
                     WHERE [fkUserId] = @userId",
                     new { userId });

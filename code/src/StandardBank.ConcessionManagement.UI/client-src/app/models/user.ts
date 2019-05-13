@@ -1,5 +1,6 @@
 import { Role } from "./role";
 import { Centre } from "./centre";
+import { RoleSubRole } from "./RoleSubRole";
 import { Region } from "./region";
 
 import { AccountExecutiveAssistant } from "./account-executive-assistant";
@@ -14,8 +15,10 @@ export class User {
     isActive: boolean;
     userRoles: Role[];
     userCentres: Centre[];
+    RoleSubRole: RoleSubRole[];
     selectedCentre: Centre;
     centreId: number;
+    subRoleId: number;
     canRequest: boolean;
     canBcmApprove: boolean;
     canPcmApprove: boolean;

@@ -96,7 +96,7 @@ export class PendingInboxComponent implements OnInit {
             case ConcessionTypes.Transactional:
                 this.router.navigate(['/transactional-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
                 break;
-            case ConcessionTypes.BOL:
+            case ConcessionTypes.BOLDesc:
                 this.router.navigate(['/bol-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
                 break;
             case ConcessionTypes.Trade:

@@ -308,6 +308,11 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         public static IUserRoleRepository UserRoleRepository = new UserRoleRepository(DbConnection);
 
         /// <summary>
+        /// The RoleSubRole repository
+        /// </summary>
+        public static IRoleSubRoleRepository RoleSubRoleRepository = new RoleSubRoleRepository(DbConnection);
+
+        /// <summary>
         /// The Period repository
         /// </summary>
         public static IPeriodRepository PeriodRepository = new PeriodRepository(DbConnection, CacheManager);
@@ -499,7 +504,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         /// The user manager
         /// </summary>
         public static IUserManager UserManager = new UserManager(CacheManager, UserRepository, UserRoleRepository,
-            RoleRepository, CentreRepository, CentreUserRepository, Mapper, AccountExecutiveAssistantRepository,
+            RoleRepository, CentreRepository, CentreUserRepository, Mapper, RoleSubRoleRepository, AccountExecutiveAssistantRepository,
             RegionManager, null);
 
         /// <summary>
@@ -510,7 +515,7 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
                 Mapper, ConcessionConditionRepository, ConcessionCommentRepository,
                 ConcessionRelationshipRepository, AuditRepository, UserManager, ConcessionInboxViewRepository,
                 ConcessionDetailRepository, ConcessionConditionViewRepository, MiscPerformanceRepository, CentreRepository, PrimeRateRepository, null
-                , AENumberUserManager);
+                , AENumberUserManager,RoleSubRoleRepository);
 
         /// <summary>
         /// The rule manager

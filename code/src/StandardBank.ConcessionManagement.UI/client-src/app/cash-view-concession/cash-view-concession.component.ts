@@ -868,6 +868,35 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
+
+    saveUpdatedConcession() {
+        this.isLoading = true;
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var cashConcession = this.getCashConcession(true);
+        
+        cashConcession.concession.type = "Existing";
+        cashConcession.concession.referenceNumber = this.concessionReferenceId;
+
+        if (!this.validationError) {
+            this.cashConcessionService.postUpdateCashData(cashConcession).subscribe(entity => {
+                console.log("data saved");
+                this.isEditing = false;
+                this.saveMessage = entity.concession.childReferenceNumber;
+                this.cashConcession = entity;
+                this.isLoading = false;
+                this.canEdit = false;
+                this.motivationEnabled = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
     recallConcession() {
         this.isLoading = true;
         this.errorMessage = null;

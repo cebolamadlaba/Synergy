@@ -6,6 +6,7 @@ import { Centre } from '../../../models/centre';
 import { Role } from '../../../models/role';
 import { User } from "../../../models/user";
 import { Location } from '@angular/common';
+import { RoleSubRole } from "../../../models/RoleSubRole";
 
 @Component({
   selector: 'app-edit-user',
@@ -16,6 +17,7 @@ export class EditUserComponent implements OnInit {
     Regions: Region[];
     Centres: Centre[];
     Roles: Role[];
+    RoleSubRole: RoleSubRole[];
     user = {} as User;
     id: number;
     success: boolean;
@@ -31,21 +33,22 @@ export class EditUserComponent implements OnInit {
         this.adminService.GetUserLookupData().subscribe(result => {
             this.Centres = result.centres as Centre[];
             this.Roles = result.roles as Role[];
+            this.RoleSubRole = result.roleSubRole as RoleSubRole[];
         });
         this.route.params.subscribe(params => {
              this.id = +params['id'];
         });
         this.adminService.GetUser(this.id).subscribe(r => {
-            this.user = r as User;
-        });
-       
+            this.user = r as User;            
+        });     
     }
+
     save() {
         this.adminService.UpdateUser(this.user, this.id).subscribe(r =>
         {
             this.adminService.GetUser(this.id).subscribe(res => {
                 this.user = res as User;
-
+               
                 //location.reload();
             });
 

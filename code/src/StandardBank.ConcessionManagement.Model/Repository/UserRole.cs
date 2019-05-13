@@ -38,5 +38,14 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The IsActive.
         /// </value>
         public bool IsActive { get; set; }
+
+
+        /// <summary>
+        /// Gets or sets the SubRoleId.
+        /// </summary>
+        /// <value>
+        /// The IsActive.
+        /// </value>
+        public int? SubRoleId { get; set; }
     }
 }

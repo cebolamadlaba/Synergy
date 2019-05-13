@@ -229,8 +229,8 @@ namespace StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator
             get
             {
                 if (LegalEntityConcessions != null &&
-                    LegalEntityConcessions.Any(_ => _.ConcessionType == "Business Online" && _.HasBusinessOnlineLegalEntityConcessions))
-                    return LegalEntityConcessions.Where(_ => _.ConcessionType == "Business Online" && _.HasBusinessOnlineLegalEntityConcessions)
+                    LegalEntityConcessions.Any(_ => _.ConcessionType == Constants.ConcessionType.BusinessOnlineDesc && _.HasBusinessOnlineLegalEntityConcessions))
+                    return LegalEntityConcessions.Where(_ => _.ConcessionType == Constants.ConcessionType.BusinessOnlineDesc && _.HasBusinessOnlineLegalEntityConcessions)
                         .OrderBy(_ => _.ConcessionReferenceNumber);
 
                 return null;

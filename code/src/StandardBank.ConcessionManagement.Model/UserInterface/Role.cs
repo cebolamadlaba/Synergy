@@ -28,5 +28,13 @@
         /// The description.
         /// </value>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sub roles.
+        /// </summary>
+        /// <value>
+        /// The sub roles.
+        /// </value>
+        public RoleSubRole RoleSubRole { get; set; }
     }
 }

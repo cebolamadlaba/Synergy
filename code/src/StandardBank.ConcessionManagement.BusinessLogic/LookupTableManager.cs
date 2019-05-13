@@ -800,6 +800,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Gets the risk group 
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<RiskGroup> GetRiskGroups()
+        {
+            var riskGroups= _riskGroupRepository.ReadAll();
+            
+            //if (riskGroups != null)
+            //{
+            //    riskGroups.MarketSegment = GetMarketSegmentName(riskGroup.MarketSegmentId);
+            //}
+            return _mapper.Map<IEnumerable<RiskGroup>>(riskGroups);
+        }
+
+
+        /// <summary>
         /// Gets the transaction table numbers.
         /// </summary>
         /// <returns></returns>

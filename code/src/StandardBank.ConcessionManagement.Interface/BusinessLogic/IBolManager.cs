@@ -1,5 +1,6 @@
 ﻿using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Bol;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
@@ -29,5 +30,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         Model.UserInterface.Bol.BOLChargeCode CreateUpdateBOLChargeCode(Model.UserInterface.Bol.BOLChargeCode bolchargecode);
 
         Model.UserInterface.Bol.BOLChargeCodeType CreateBOLChargeCodeType(Model.UserInterface.Bol.BOLChargeCodeType bolchargecodetype);
+
+        void CreateRiskGroupNonUniversalChargeCode(int chargecodeId, List<Model.UserInterface.RiskGroup> riskGroups);
     }
 }

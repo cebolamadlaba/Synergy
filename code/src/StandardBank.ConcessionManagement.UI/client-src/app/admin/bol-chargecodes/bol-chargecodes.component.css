@@ -1,0 +1,14 @@
+.listGrpOverride {
+    height: 76px;
+    overflow: auto;
+}
+
+.listGrpItemOverride {
+    height: 38px;
+    padding: 5px 10px;
+}
+
+.listGrpItemOverride:hover {
+        background-color: #ff9b9b !important;
+        cursor: pointer;
+}
