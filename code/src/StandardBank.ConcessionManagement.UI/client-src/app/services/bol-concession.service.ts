@@ -86,8 +86,8 @@ export class BolConcessionService {
         return this.http.post(url, bolChargecodeType, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    getRiskGroup(): Observable<RiskGroup[]> {
-        const url = "/api/Bol/GetRiskGroups/";
+    getRiskGroup(searchGroup): Observable<RiskGroup[]> {
+        const url = "/api/Bol/GetRiskGroups?searchGroup=" + searchGroup;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 

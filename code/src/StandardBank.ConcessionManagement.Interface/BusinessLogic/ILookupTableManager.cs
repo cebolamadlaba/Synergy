@@ -271,7 +271,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// Gets risk groups.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<RiskGroup> GetRiskGroups();
+        IEnumerable<RiskGroup> GetRiskGroups(string searchGroup);
 
     }
 }

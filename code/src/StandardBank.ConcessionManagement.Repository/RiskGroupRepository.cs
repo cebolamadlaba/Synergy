@@ -149,6 +149,22 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// by search .
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<RiskGroup> SearchBy(string searchGroup)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<RiskGroup>(
+                    "SELECT [pkRiskGroupId] [Id], [fkMarketSegmentId] [MarketSegmentId], [RiskGroupNumber], [RiskGroupName], [IsActive] FROM [dbo].[tblRiskGroup] Where [RiskGroupName] like '%"+searchGroup+"%'");
+            }
+        }
+
+
+
+
+        /// <summary>
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>

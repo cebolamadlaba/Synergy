@@ -803,10 +803,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// Gets the risk group 
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<RiskGroup> GetRiskGroups()
+        public IEnumerable<RiskGroup> GetRiskGroups(string searchGroup)
         {
-            var riskGroups= _riskGroupRepository.ReadAll();
-            
+            var riskGroups = _riskGroupRepository.SearchBy(searchGroup);
+
             //if (riskGroups != null)
             //{
             //    riskGroups.MarketSegment = GetMarketSegmentName(riskGroup.MarketSegmentId);
