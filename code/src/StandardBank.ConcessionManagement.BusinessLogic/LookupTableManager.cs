@@ -820,10 +820,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var riskGroups = _riskGroupRepository.SearchBy(searchGroup);
 
-            //if (riskGroups != null)
-            //{
-            //    riskGroups.MarketSegment = GetMarketSegmentName(riskGroup.MarketSegmentId);
-            //}
             return _mapper.Map<IEnumerable<RiskGroup>>(riskGroups);
         }
 
