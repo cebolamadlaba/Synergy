@@ -254,6 +254,8 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <returns></returns>
         RiskGroup GetRiskGroupForRiskGroupNumber(int riskGroupNumber);
 
+        RiskGroup GetRiskGroupForSAPBPID(int sapbpid);
+
         /// <summary>
         /// Gets the transaction table numbers.
         /// </summary>

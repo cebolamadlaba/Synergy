@@ -36,7 +36,9 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <param name="riskGroupNumber"></param>
         /// <param name="isActive"></param>
         /// <returns></returns>
-        RiskGroup ReadByRiskGroupNumberIsActive(int riskGroupNumber, bool isActive); 
+        RiskGroup ReadByRiskGroupNumberIsActive(int riskGroupNumber, bool isActive);
+
+        RiskGroup ReadBySAPBPIDIsActive(int sapbpid, bool isActive);
 
         /// <summary>
         /// Reads all.

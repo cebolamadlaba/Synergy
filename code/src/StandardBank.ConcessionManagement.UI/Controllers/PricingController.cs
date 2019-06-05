@@ -41,6 +41,14 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(riskGroup);
         }
 
+        [Route("RiskGroupBySAPBPID/{sapbpid}")]
+        public IActionResult RiskGroupBySAPBPID(int sapbpid)
+        {
+            var riskGroup = _lookupTableManager.GetRiskGroupForSAPBPID(sapbpid);
+
+            return Ok(riskGroup);
+        }
+
         [Route("GetActivePricingProducts")]
         public IActionResult GetActivePricingProducts()
         {

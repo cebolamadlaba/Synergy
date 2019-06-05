@@ -799,6 +799,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return riskGroup;
         }
 
+        public RiskGroup GetRiskGroupForSAPBPID(int sapbpid)
+        {
+            var riskGroup =
+                _mapper.Map<RiskGroup>(_riskGroupRepository.ReadBySAPBPIDIsActive(sapbpid, true));
+
+            if (riskGroup != null)
+            {
+                riskGroup.MarketSegment = GetMarketSegmentName(riskGroup.MarketSegmentId);
+            }
+
+            return riskGroup;
+        }
+
         /// <summary>
         /// Gets the risk group 
         /// </summary>

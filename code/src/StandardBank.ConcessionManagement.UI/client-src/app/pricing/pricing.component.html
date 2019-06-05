@@ -58,27 +58,59 @@
 
 <div class="col-md-12" *ngIf="!isLoading">
 
-    <div class="col-md-12 search-and-results-container">
-        <!-- Search bar -->
-        <form (submit)="searchRiskGroupNumber(riskGroupNumber)">
-            <div class="input-group">
-                <input class="form-control" placeholder="Risk Group Number" [(ngModel)]="riskGroupNumber" type="number" name="riskGroupNumber">
-                <div class="input-group-btn">
-                    <!-- updated search bar button -->
-                    <button class="btn btn-default-search" type="submit">Search</button>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="search-and-results-container">
+                <!-- Search bar -->
+                <form (submit)="searchRiskGroupNumber(riskGroupNumber)">
+                    <div class="input-group">
+                        <input class="form-control" placeholder="Risk Group Number" [(ngModel)]="riskGroupNumber" type="number" name="riskGroupNumber">
+                        <div class="input-group-btn">
+                            <!-- updated search bar button -->
+                            <button class="btn btn-default-search" type="submit">Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Risk Group details -->
+            <div *ngIf="!foundRiskGroup">
+                <div class="searchEmptyState">
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                    <p>
+                        Enter risk group number to return customer products
+                    </p>
                 </div>
             </div>
-        </form>
+        </div>
+
+        <div class="col-md-6">
+            <div class="search-and-results-container">
+                <!-- Search bar -->
+                <form (submit)="searchSAPBPID(sapbpid)">
+                    <div class="input-group">
+                        <input class="form-control" placeholder="SAP BPID" [(ngModel)]="sapbpid" type="number" name="sapbpid">
+                        <div class="input-group-btn">
+                            <!-- updated search bar button -->
+                            <button class="btn btn-default-search" type="submit">Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- SAP BPID -->
+            <div *ngIf="!foundRiskGroup">
+                <div class="searchEmptyState">
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                    <p>
+                        Enter SAP BPID to return customer products
+                    </p>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- Risk Group details -->
-    <div class="col-md-12" *ngIf="!foundRiskGroup;else pricing_products">
-        <div class="searchEmptyState">
-            <i class="fa fa-info-circle" aria-hidden="true"></i>
-            <p>
-                Enter risk group number to return customer products
-            </p>
-        </div>
+    <div *ngIf="!foundRiskGroup;else pricing_products">
+
     </div>
 
     <ng-template #pricing_products>

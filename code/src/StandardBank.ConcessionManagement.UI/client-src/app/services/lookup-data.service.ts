@@ -148,6 +148,11 @@ export class LookupDataService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    getRiskGroupBySAPBPID(sapbpid): Observable<RiskGroup> {
+        const url = "/api/Pricing/RiskGroupBySAPBPID/" + sapbpid;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
     getActivePricingProducts(): Observable<number[]> {
         const url = "/api/Pricing/GetActivePricingProducts/";
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);

@@ -19,6 +19,7 @@ export class PricingComponent implements OnInit, OnDestroy {
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
+    sapbpid: number;
     foundRiskGroup = false;
     activePricingProducts: number[] = [];
     isLoading = false;
@@ -50,6 +51,26 @@ export class PricingComponent implements OnInit, OnDestroy {
         this.observableRiskGroup.subscribe(riskGroup => {
             this.riskGroup = riskGroup;
 
+            this.getActivePricingProducts();
+
+            this.foundRiskGroup = true;
+            this.isLoading = false;
+        },
+            error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+    }
+
+    searchSAPBPID(sapbpid: number) {
+        this.errorMessage = null;
+        this.isLoading = true;
+        this.foundRiskGroup = false;
+        this.riskGroupNumber = sapbpid;
+        this.observableRiskGroup = this.lookupDataService.getRiskGroupBySAPBPID(sapbpid);
+        this.observableRiskGroup.subscribe(riskGroup => {
+            this.riskGroup = riskGroup;
+            this.riskGroupNumber = this.riskGroup.number;
             this.lookupDataService.getActivePricingProducts().subscribe(activePricingProducts => {
 
                 if (activePricingProducts === null) {
@@ -67,6 +88,18 @@ export class PricingComponent implements OnInit, OnDestroy {
                 this.errorMessage = <any>error;
                 this.isLoading = false;
             });
+    }
+
+    private getActivePricingProducts() {
+        this.lookupDataService.getActivePricingProducts().subscribe(activePricingProducts => {
+
+            if (activePricingProducts === null) {
+                this.errorMessage = "No Pricing Products have been set active. Please contact the administrator.";
+            }
+            else {
+                this.activePricingProducts = activePricingProducts;
+            }
+        });
     }
 
     ngOnDestroy() {
