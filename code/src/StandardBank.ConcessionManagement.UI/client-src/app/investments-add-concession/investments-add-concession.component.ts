@@ -329,16 +329,11 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
         investmentConcession.concession = new Concession();
         investmentConcession.concession.riskGroupId = this.riskGroup.id;
 
-
-
-        //if (this.investmentConcessionForm.controls['smtDealNumber'].value) {
-        //    investmentConcession.concession.smtDealNumber = this.investmentConcessionForm.controls['smtDealNumber'].value;
-        //}
-
-        //else
-        //    this.addValidationError("SMT Deal Number not captured");
-
-
+        if (this.investmentConcessionForm.controls['smtDealNumber'].value) {
+            investmentConcession.concession.smtDealNumber = this.investmentConcessionForm.controls['smtDealNumber'].value;
+        }
+        else
+            this.addValidationError("SMT Deal Number not captured");
 
         if (this.investmentConcessionForm.controls['motivation'].value)
             investmentConcession.concession.motivation = this.investmentConcessionForm.controls['motivation'].value;

@@ -681,8 +681,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
         if (this.lendingConcessionForm.controls['smtDealNumber'].value)
             lendingConcession.concession.smtDealNumber = this.lendingConcessionForm.controls['smtDealNumber'].value;
-        //else
-        //    this.addValidationError("SMT Deal Number not captured");
+        else
+            this.addValidationError("SMT Deal Number not captured");
 
         if (this.lendingConcessionForm.controls['motivation'].value)
             lendingConcession.concession.motivation = this.lendingConcessionForm.controls['motivation'].value;
@@ -1158,7 +1158,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.validationError = null;
 
         var lendingConcession = this.getLendingConcession(true);
-       
+
         lendingConcession.concession.type = "Existing";
         lendingConcession.concession.referenceNumber = this.concessionReferenceId;
 

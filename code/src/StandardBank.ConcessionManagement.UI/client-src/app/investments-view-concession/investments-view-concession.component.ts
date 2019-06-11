@@ -603,13 +603,11 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         investmentConcession.concession.referenceNumber = this.concessionReferenceId;
         investmentConcession.concession.concessionType = ConcessionTypes.Investment;
 
-        //if (this.investmentConcessionForm.controls['smtDealNumber'].value) {
-        //    investmentConcession.concession.smtDealNumber = this.investmentConcessionForm.controls['smtDealNumber'].value;
-        //}
-
-        //else
-        //    this.addValidationError("SMT Deal Number not captured");
-
+        if (this.investmentConcessionForm.controls['smtDealNumber'].value) {
+            investmentConcession.concession.smtDealNumber = this.investmentConcessionForm.controls['smtDealNumber'].value;
+        }
+        else
+            this.addValidationError("SMT Deal Number not captured");
 
         if (this.investmentConcessionForm.controls['comments'].value)
             investmentConcession.concession.comments = this.investmentConcessionForm.controls['comments'].value;

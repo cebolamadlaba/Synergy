@@ -338,7 +338,8 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
         if (this.lendingConcessionForm.controls['smtDealNumber'].value)
             lendingConcession.concession.smtDealNumber = this.lendingConcessionForm.controls['smtDealNumber'].value;
-
+        else
+            this.addValidationError("SMT Deal Number not captured");
 
         if (this.lendingConcessionForm.controls['motivation'].value)
             lendingConcession.concession.motivation = this.lendingConcessionForm.controls['motivation'].value;
