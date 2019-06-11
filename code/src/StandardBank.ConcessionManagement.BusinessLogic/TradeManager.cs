@@ -64,9 +64,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public TradeConcession GetTradeConcession(string concessionReferenceId, User user)
         {
             var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId, user);
-            var tradeConcessionDetails = _miscPerformanceRepository.GetTradeConcessionDetails(concession.Id);
+            var tradeConcessionDetails = _miscPerformanceRepository.GetTradeConcessionDetails(concession.Id).Where(x=>x.TradeProductType != null);
 
-            return new TradeConcession
+           return new TradeConcession
             {
                 Concession = concession,
                 TradeConcessionDetails = tradeConcessionDetails,

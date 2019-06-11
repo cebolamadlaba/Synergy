@@ -35,11 +35,14 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
       
 
-        public IEnumerable<BOLChargeCode> GetBOLChargeCodes()
-        {
+        public IEnumerable<BOLChargeCode> GetBOLChargeCodes(int riskGroupNumber)
+        {           
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<BOLChargeCode>("SELECT * from rtblBOLChargeCode where isactive = 1");
+                return db.Query<BOLChargeCode>(string.Format(@"SELECT chargeCode.*  
+                                                             FROM rtblBOLChargeCode chargeCode 
+                                                             INNER JOIN tblRiskGroupNonUniversalChargeCode riskChargeCode ON riskChargeCode.ChargeCodeId = chargeCode.pkChargeCodeId
+                                                              WHERE riskChargeCode.RiskGroupId = {0}", riskGroupNumber));
             }
         }
 

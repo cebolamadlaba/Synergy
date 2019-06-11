@@ -147,7 +147,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
             this.lookupDataService.getConditionTypes(),
             this.lookupDataService.getBOLChargeCodeTypes(),
-            this.lookupDataService.getBOLChargeCodes(),
+            this.lookupDataService.getBOLChargeCodes(this.riskGroupNumber),
             this.lookupDataService.getLegalEntityBOLUsers(this.riskGroupNumber),
             this.lookupDataService.getPeriods(),
             this.lookupDataService.getPeriodTypes()

@@ -140,7 +140,7 @@ namespace StandardBank.ConcessionManagement.Repository
                                                     [LoadedRate], [ApprovedRate], [GBBNumber], [Term],[Min],[Max],[Communication],[FlatFee],[EstablishmentFee],[AdValorem],[Currency], [Rate] 
                     FROM [dbo].[tblConcessionTrade] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
-                    WHERE [pkConcessionTradeId] = @Id",
+                    WHERE [pkConcessionTradeId] = @Id AND fkTradeProductId IS NOT NULL",
                     new { id }).SingleOrDefault();
             }
         }
@@ -157,7 +157,8 @@ namespace StandardBank.ConcessionManagement.Repository
                     @"SELECT[pkConcessionTradeId] [Id], t.[fkConcessionId] [ConcessionId],d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate], [fkConcessionDetailId],[fkTradeProductId],
                                                     [LoadedRate], [ApprovedRate], [GBBNumber], [Term],[Min],[Max],[Communication],[FlatFee],[EstablishmentFee],[AdValorem],[Currency], [Rate]
                     FROM [dbo].[tblConcessionTrade] t
-                    JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]");
+                    JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
+                    WHERE fkTradeProductId IS NOT NULL");
             }
         }
 
