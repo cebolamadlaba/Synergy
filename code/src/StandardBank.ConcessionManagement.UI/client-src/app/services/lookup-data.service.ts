@@ -29,6 +29,7 @@ import { InvestmentProduct } from "../models/investment-product";
 import { LegalEntityBOLUser } from "../models/legal-entity-bol-user";
 import { ConcessionStatus } from '../constants/concession-status';
 import { ConcessionSubStatus } from '../constants/concession-sub-status';
+import { PricingView } from '../models/pricing-view';
 
 @Injectable()
 export class LookupDataService {
@@ -148,7 +149,7 @@ export class LookupDataService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    getRiskGroupBySAPBPID(sapbpid): Observable<RiskGroup> {
+    getRiskGroupBySAPBPID(sapbpid): Observable<PricingView> {
         const url = "/api/Pricing/RiskGroupBySAPBPID/" + sapbpid;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }

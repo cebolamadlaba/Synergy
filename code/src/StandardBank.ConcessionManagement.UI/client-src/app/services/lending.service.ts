@@ -29,6 +29,11 @@ export class LendingService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    getLendingViewDataBySAPBPID(sapbpid): Observable<LendingView> {
+        const url = "/api/Lending/LendingViewBySAPBPID/" + sapbpid;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
     postNewLendingData(lendingConcession: LendingConcession): Observable<LendingConcession> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });

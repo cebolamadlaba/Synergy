@@ -31,6 +31,7 @@ using TradeProduct = StandardBank.ConcessionManagement.Model.UserInterface.Trade
 using TradeProductType = StandardBank.ConcessionManagement.Model.UserInterface.Trade.TradeProductType;
 
 using InvestmentProduct = StandardBank.ConcessionManagement.Model.UserInterface.Investment.InvestmentProduct;
+using LegalEntity = StandardBank.ConcessionManagement.Model.UserInterface.LegalEntity;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -156,6 +157,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         private readonly ITransactionTableNumberRepository _transactionTableNumberRepository;
 
+        private readonly ILegalEntityRepository _legalEntityRepository;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LookupTableManager"/> class.
         /// </summary>
@@ -195,7 +198,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IRelationshipRepository relationshipRepository, IRoleRepository roleRepository,
             ICentreRepository centreRepository,
             IRiskGroupRepository riskGroupRepository,
-            ITransactionTableNumberRepository transactionTableNumberRepository, IBolUserRepository bolRepository, IConcessionTradeRepository concessionTradeRepository, IConcessionInvestmentRepository concessionInvestmentRepository)
+            ITransactionTableNumberRepository transactionTableNumberRepository,
+            IBolUserRepository bolRepository,
+            IConcessionTradeRepository concessionTradeRepository,
+            IConcessionInvestmentRepository concessionInvestmentRepository,
+            ILegalEntityRepository legalEntityRepository)
         {
             _statusRepository = statusRepository;
             _subStatusRepository = subStatusRepository;
@@ -222,6 +229,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _bolRepository = bolRepository;
             _concessionTradeRepository = concessionTradeRepository;
             _concessionInvestmentRepository = concessionInvestmentRepository;
+            _legalEntityRepository = legalEntityRepository;
         }
 
         /// <summary>
@@ -470,6 +478,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var chargecodetypes = _bolRepository.GetBOLChargeCodeTypes();
             return _mapper.Map<IEnumerable<BOLChargeCodeType>>(chargecodetypes);
+        }
+
+        public LegalEntity GetLegalEntity(int sapbpid)
+        {
+            var legalEntity = this._legalEntityRepository.ReadBySAPBPIDIsActive(sapbpid, true);
+            return _mapper.Map<LegalEntity>(legalEntity);
         }
 
         public IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsers(int riskGroupNumber)

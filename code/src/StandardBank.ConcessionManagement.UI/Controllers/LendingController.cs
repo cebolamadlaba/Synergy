@@ -66,6 +66,14 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(_lendingManager.GetLendingViewData(riskGroupNumber, user));
         }
 
+        [Route("LendingViewBySAPBPID/{sapbpid}")]
+        public IActionResult LendingViewBySAPBPID(int sapbpid)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            return Ok(_lendingManager.GetLendingViewDataBySAPBPID(sapbpid, user));
+        }
+
         /// <summary>
         /// Saves the new lending
         /// </summary>

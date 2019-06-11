@@ -46,7 +46,14 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var riskGroup = _lookupTableManager.GetRiskGroupForSAPBPID(sapbpid);
 
-            return Ok(riskGroup);
+            var legalEntity = _lookupTableManager.GetLegalEntity(sapbpid);
+
+
+            return Ok(new Model.UserInterface.PricingView
+            {
+                RiskGroup = riskGroup,
+                LegalEntity = legalEntity
+            });
         }
 
         [Route("GetActivePricingProducts")]

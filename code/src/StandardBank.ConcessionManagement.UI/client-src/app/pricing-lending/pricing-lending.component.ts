@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { LendingView } from "../models/lending-view";
@@ -9,7 +9,7 @@ import { Location } from '@angular/common';
 import { LendingService } from "../services/lending.service";
 import { Router, RouterModule } from '@angular/router';
 import { LendingFinancial } from "../models/lending-financial";
-import { UserService} from "../services/user.service";
+import { UserService } from "../services/user.service";
 @Component({
     selector: 'app-pricing-lending',
     templateUrl: './pricing-lending.component.html',
@@ -17,6 +17,7 @@ import { UserService} from "../services/user.service";
 })
 export class PricingLendingComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
+    sapbpid: number;
     private sub: any;
     observableLendingView: Observable<LendingView>;
     lendingView: LendingView = new LendingView();
@@ -41,10 +42,21 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
+            this.sapbpid = +params['sapbpid'];
 
-            if (this.riskGroupNumber) {
+            if (this.riskGroupNumber != null && this.riskGroupNumber != 0) {
                 this.observableLendingView = this.lendingService.getLendingViewData(this.riskGroupNumber);
-                this.observableLendingView.subscribe(lendingView => {                 
+                this.observableLendingView.subscribe(lendingView => {
+                    this.lendingView = lendingView;
+                    this.pageLoaded = true;
+                    this.isLoading = false;
+                }, error => {
+                    this.errorMessage = <any>error;
+                    this.isLoading = false;
+                });
+            } else if (this.sapbpid != null && this.sapbpid != 0) {
+                this.observableLendingView = this.lendingService.getLendingViewDataBySAPBPID(this.sapbpid);
+                this.observableLendingView.subscribe(lendingView => {
                     this.lendingView = lendingView;
                     this.pageLoaded = true;
                     this.isLoading = false;
@@ -53,6 +65,7 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
                     this.isLoading = false;
                 });
             }
+
             this.userService.getData().subscribe(user => {
                 this.canRequest = user.canRequest;
             });

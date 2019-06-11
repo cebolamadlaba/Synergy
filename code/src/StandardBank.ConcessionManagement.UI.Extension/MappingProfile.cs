@@ -38,8 +38,8 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                 .ForMember(target => target.Requestor, _ => _.Ignore())
                 .ForMember(target => target.SmtDealNumber, _ => _.MapFrom(source => source.SMTDealNumber))
                 .ForMember(target => target.MrsCrs, _ => _.MapFrom(source => source.MRS_CRS));
-                //.ForMember(target => target.CurrentAEUserId, _ => _.MapFrom(source => this.GetCurrentAccountExecutiveUserId(source.AENumberUserId)))
-                //.ForMember(target => target.CurrentAAList, _ => _.MapFrom(source => this.GetAccountAssistantIds(source.AENumberUserId)));
+            //.ForMember(target => target.CurrentAEUserId, _ => _.MapFrom(source => this.GetCurrentAccountExecutiveUserId(source.AENumberUserId)))
+            //.ForMember(target => target.CurrentAAList, _ => _.MapFrom(source => this.GetAccountAssistantIds(source.AENumberUserId)));
             CreateMap<Model.UserInterface.Concession, Model.Repository.Concession>()
                 .ForMember(target => target.ConcessionRef, _ => _.MapFrom(source => source.ReferenceNumber))
                 .ForMember(target => target.ConcessionDate, _ => _.MapFrom(source => source.DateOpened))
@@ -227,7 +227,8 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             CreateMap<Model.Repository.ConcessionInvestment, Model.UserInterface.Investment.InvestmentConcessionDetail>().ReverseMap();
             CreateMap<Model.Repository.LegalEntityGBBNumber, Model.UserInterface.Investment.LegalEntityGBBNumber>().ReverseMap();
 
-
+            //LegalEntity
+            CreateMap<Model.Repository.LegalEntity, Model.UserInterface.LegalEntity>().ReverseMap();
         }
 
 

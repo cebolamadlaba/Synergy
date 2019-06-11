@@ -4,6 +4,8 @@ import { UserService } from "../services/user.service";
 import { User } from "../models/user";
 import { ActivatedRoute } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
+import { LegalEntity } from "../models/legal-entity";
+import { PricingView } from "../models/pricing-view";
 import { LookupDataService } from "../services/lookup-data.service";
 
 @Component({
@@ -17,10 +19,13 @@ export class PricingComponent implements OnInit, OnDestroy {
     user: User;
     errorMessage: String;
     observableRiskGroup: Observable<RiskGroup>;
+    observablePricingView: Observable<PricingView>;
     riskGroup: RiskGroup;
+    legalEntity: LegalEntity;
     riskGroupNumber: number;
     sapbpid: number;
     foundRiskGroup = false;
+    foundSAPBPID = false;
     activePricingProducts: number[] = [];
     isLoading = false;
 
@@ -47,6 +52,7 @@ export class PricingComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         this.foundRiskGroup = false;
         this.riskGroupNumber = riskGroupNumber;
+        this.sapbpid = 0;
         this.observableRiskGroup = this.lookupDataService.getRiskGroup(riskGroupNumber);
         this.observableRiskGroup.subscribe(riskGroup => {
             this.riskGroup = riskGroup;
@@ -66,11 +72,23 @@ export class PricingComponent implements OnInit, OnDestroy {
         this.errorMessage = null;
         this.isLoading = true;
         this.foundRiskGroup = false;
-        this.riskGroupNumber = sapbpid;
-        this.observableRiskGroup = this.lookupDataService.getRiskGroupBySAPBPID(sapbpid);
-        this.observableRiskGroup.subscribe(riskGroup => {
-            this.riskGroup = riskGroup;
-            this.riskGroupNumber = this.riskGroup.number;
+        this.foundSAPBPID = false;
+        this.riskGroupNumber = 0;
+        this.sapbpid = sapbpid;
+        this.observablePricingView = this.lookupDataService.getRiskGroupBySAPBPID(sapbpid);
+        this.observablePricingView.subscribe(pricingview => {
+
+            this.riskGroup = pricingview.riskGroup;
+            this.legalEntity = pricingview.legalEntity
+
+            if (this.riskGroup != null) {
+                this.riskGroupNumber = this.riskGroup.number;
+                this.foundRiskGroup = true;
+            }
+            else if (this.legalEntity != null) {
+                this.foundSAPBPID = true;
+            }
+
             this.lookupDataService.getActivePricingProducts().subscribe(activePricingProducts => {
 
                 if (activePricingProducts === null) {
@@ -81,7 +99,7 @@ export class PricingComponent implements OnInit, OnDestroy {
                 }
             });
 
-            this.foundRiskGroup = true;
+
             this.isLoading = false;
         },
             error => {
