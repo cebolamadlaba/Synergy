@@ -70,7 +70,7 @@ export class BaseComponentService {
             return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
         }
 
-        return null;
+        return 0.00;
     }
 
     public formatDecimalThree(itemValue: number) {

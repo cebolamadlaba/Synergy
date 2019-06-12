@@ -462,9 +462,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return _mapper.Map<IEnumerable<PeriodType>>(periodTypes.Where(_ => _.IsActive));
         }
 
-        public IEnumerable<BOLChargeCode> GetBOLChargeCodes()
+        public IEnumerable<BOLChargeCode> GetBOLChargeCodes(int riskGroupNumber)
         {
-            var chargecodes = _bolRepository.GetBOLChargeCodes();
+            var chargecodes = _bolRepository.GetBOLChargeCodes(riskGroupNumber);
             return _mapper.Map<IEnumerable<BOLChargeCode>>(chargecodes);
         }
 
