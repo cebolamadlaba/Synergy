@@ -161,6 +161,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             uffFee: [''],
             frequency: [{ value: '', disabled: true }],
             serviceFee: [{ value: '', disabled: true }],
+            mrs_bri: [''],
         });
     }
 
@@ -439,7 +440,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
                 if (concessionFormItem.get('marginAgainstPrime').value == "") {
                     this.addValidationError("Prime fixed rate cannot be empty");
                 }
-                      
+
             }
             else if (concessionFormItem.get('productType').value.description === "MTL (Medium Term Loan)") {
 
@@ -461,8 +462,8 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
                 }
 
             } else if (concessionFormItem.get('productType').value.description === "Agricultural Production Loan" ||
-                       concessionFormItem.get('productType').value.description === "Business RCP" ||
-                       concessionFormItem.get('productType').value.description === "BTL (Business Term Loan)") {
+                concessionFormItem.get('productType').value.description === "Business RCP" ||
+                concessionFormItem.get('productType').value.description === "BTL (Business Term Loan)") {
 
                 if (concessionFormItem.get('term').value == "") {
                     this.addValidationError("Term cannot be empty");
@@ -481,34 +482,34 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
                 }
 
             } else if (concessionFormItem.get('productType').value.description === "VAF Installment sale" ||
-                       concessionFormItem.get('productType').value.description === "VAF Full Maintenance Lease" ||
-                     concessionFormItem.get('productType').value.description === "VAF operating rental") {
+                concessionFormItem.get('productType').value.description === "VAF Full Maintenance Lease" ||
+                concessionFormItem.get('productType').value.description === "VAF operating rental") {
 
-                        if (concessionFormItem.get('term').value == "") {
-                            this.addValidationError("Term cannot be empty");
-                        }
+                if (concessionFormItem.get('term').value == "") {
+                    this.addValidationError("Term cannot be empty");
+                }
 
-                        if (concessionFormItem.get('serviceFee').value == "") {
-                              this.addValidationError("Service Fee cannot be empty");
-                        }
+                if (concessionFormItem.get('serviceFee').value == "") {
+                    this.addValidationError("Service Fee cannot be empty");
+                }
 
-                       if (concessionFormItem.get('frequency').value == "") {
-                           this.addValidationError("Frequency cannot be empty");
-                        }
+                if (concessionFormItem.get('frequency').value == "") {
+                    this.addValidationError("Frequency cannot be empty");
+                }
 
-                        if (concessionFormItem.get('limit').value == "") {
-                            this.addValidationError("Limit cannot be empty");
-                        }
+                if (concessionFormItem.get('limit').value == "") {
+                    this.addValidationError("Limit cannot be empty");
+                }
 
-                        if (concessionFormItem.get('initiationFee').value == "") {
-                            this.addValidationError("Initiation Fee cannot be empty");
-                        }
+                if (concessionFormItem.get('initiationFee').value == "") {
+                    this.addValidationError("Initiation Fee cannot be empty");
+                }
 
-                        if (concessionFormItem.get('marginAgainstPrime').value == "") {
-                            this.addValidationError("Prime fixed rate cannot be empty");
-                      }
+                if (concessionFormItem.get('marginAgainstPrime').value == "") {
+                    this.addValidationError("Prime fixed rate cannot be empty");
+                }
             }
-     
+
 
             if (concessionFormItem.get('limit').value)
                 lendingConcessionDetail.limit = concessionFormItem.get('limit').value;

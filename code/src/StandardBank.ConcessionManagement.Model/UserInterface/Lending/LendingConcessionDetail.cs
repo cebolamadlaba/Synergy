@@ -103,6 +103,6 @@
 
         public string Frequency { get; set; }
 
-      
+        public int MRS_BRI { get; set; }
     }
 }

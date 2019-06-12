@@ -56,7 +56,7 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 IEnumerable<ClientAccount> Function()
                 {
-                   
+
                     using (var db = _dbConnectionFactory.Connection())
                     {
 
@@ -295,7 +295,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     return null;
                 }
 
-                if(_cacheManager.Exists(CacheKey.Repository.TransactionTableNumberRepository.ReadAll))
+                if (_cacheManager.Exists(CacheKey.Repository.TransactionTableNumberRepository.ReadAll))
                 {
                     return _cacheManager.ReturnFromCache(Function, 30,
                    CacheKey.Repository.MiscPerformanceRepository.GetClientAccounts,
@@ -319,7 +319,7 @@ namespace StandardBank.ConcessionManagement.Repository
 
                 }
 
-               
+
             }
             catch (Exception ex)
             {
@@ -658,7 +658,8 @@ namespace StandardBank.ConcessionManagement.Repository
                     [ReviewFee], 
                     [UffFee],
                     [Frequency],
-                    [ServiceFee]
+                    [ServiceFee],
+                    [MRS_BRI]
                     FROM [dbo].[tblConcessionDetail] cd
                     JOIN [dbo].[tblConcessionLending] cl on cl.[fkConcessionDetailId] = cd.[pkConcessionDetailId]
                     JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = cd.[fkLegalEntityId]

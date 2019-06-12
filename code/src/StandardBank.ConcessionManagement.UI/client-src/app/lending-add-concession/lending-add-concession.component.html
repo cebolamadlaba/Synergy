@@ -18,18 +18,18 @@
                     <div class="subHeading">{{riskGroup?.name}}</div>
                     <div class="date lightTitle hidden-element">{{riskGroup?.number}}</div>
                 </div>
-                <div class="col-md-2  hidden-element">
+                <!--<div class="col-md-2  hidden-element">
                     <div class="subHeading lightTitle"> Latest CRS / MRS</div>
                     <div class="score"><b>{{latestCrsOrMrs | number : '1.2-2'}}</b></div>
-                </div>             
+                </div>-->             
             </div>
-            <div class="col-md-1">
+            <!--<div class="col-md-1">
                 <div class="compress">
                     <div>
                         <i class="fa fa-compress" (click)="showHide = !showHide" aria-hidden="true" id="compress-icon"></i>
                     </div>
                 </div>
-            </div> 
+            </div>--> 
         </div>
         <!-- Dashboard Collapsed -->
         <div class="col-md-12 banner-container" *ngIf="!showHide">
@@ -87,10 +87,10 @@
 <!-- Form entries -->
 <form class="col-md-12 product-form" [formGroup]="lendingConcessionForm" *ngIf="!isLoading">
     <div class="col-md-4">
-        <div class="row">
+        <!--<div class="row">
             <label>MRS/CRS</label>
             <input type="text" numbersOnly="true" class="form-control" formControlName="mrsCrs" [attr.disabled]="saveMessage ? '' : null" />
-        </div>
+        </div>-->
         <div class="row">
             <label>SMT Deal Number</label>
             <input type="text" numbersOnly="true" class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="saveMessage ? '' : null" />
