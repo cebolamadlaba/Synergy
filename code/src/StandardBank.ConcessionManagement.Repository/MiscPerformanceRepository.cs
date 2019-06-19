@@ -659,7 +659,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     [UffFee],
                     [Frequency],
                     [ServiceFee],
-                    [MRS_BRI]
+                    [MRS_BRI] [MrsBri]
                     FROM [dbo].[tblConcessionDetail] cd
                     JOIN [dbo].[tblConcessionLending] cl on cl.[fkConcessionDetailId] = cd.[pkConcessionDetailId]
                     JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = cd.[fkLegalEntityId]

@@ -258,7 +258,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 this.isInProgressExtension = lendingConcession.concession.isInProgressExtension;
                 this.isInProgressRenewal = lendingConcession.concession.isInProgressRenewal;
 
-                this.lendingConcessionForm.controls['mrsCrs'].setValue(this.lendingConcession.concession.mrsCrs);
+                //this.lendingConcessionForm.controls['mrsCrs'].setValue(this.lendingConcession.concession.mrsCrs);
                 this.lendingConcessionForm.controls['smtDealNumber'].setValue(this.lendingConcession.concession.smtDealNumber);
                 this.lendingConcessionForm.controls['motivation'].setValue(this.lendingConcession.concession.motivation);
 
@@ -340,6 +340,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                     currentConcession.get('reviewFee').setValue(this.formatDecimal3(lendingConcessionDetail.reviewFee));
                     currentConcession.get('uffFee').setValue(this.formatDecimal3(lendingConcessionDetail.uffFee));
 
+                    currentConcession.get('mrsBri').setValue(lendingConcessionDetail.mrsBri);
 
                     currentConcession.get('serviceFee').setValue(this.formatDecimal3(lendingConcessionDetail.serviceFee));
                     currentConcession.get('frequency').setValue(lendingConcessionDetail.frequency);
@@ -423,6 +424,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             isExpiring: [''],
             frequency: [{ value: '', disabled: true }],
             serviceFee: [{ value: '', disabled: true }],
+            mrsBri: [''],
         });
     }
 
@@ -672,12 +674,12 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         lendingConcession.concession.concessionType = ConcessionTypes.Lending;
         lendingConcession.concession.referenceNumber = this.concessionReferenceId;
 
-        if (this.lendingConcessionForm.controls['mrsCrs'].value)
-            lendingConcession.concession.mrsCrs = this.lendingConcessionForm.controls['mrsCrs'].value;
-        else
-            if (this.lendingConcessionForm.controls['mrsCrs'].value != 0) {
-                this.addValidationError("MRS/CRS not captured");
-            }
+        //if (this.lendingConcessionForm.controls['mrsCrs'].value)
+        //    lendingConcession.concession.mrsCrs = this.lendingConcessionForm.controls['mrsCrs'].value;
+        //else
+        //    if (this.lendingConcessionForm.controls['mrsCrs'].value != 0) {
+        //        this.addValidationError("MRS/CRS not captured");
+        //    }
 
         if (this.lendingConcessionForm.controls['smtDealNumber'].value)
             lendingConcession.concession.smtDealNumber = this.lendingConcessionForm.controls['smtDealNumber'].value;
@@ -758,6 +760,14 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             if (concessionFormItem.get('expiryDate').value)
                 lendingConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
+            if (concessionFormItem.get('mrsBri').value == "" ||
+                (<string>concessionFormItem.get('mrsBri').value).trim() == "." ||
+                (<string>concessionFormItem.get('mrsBri').value).split(".").length > 1) {
+                this.addValidationError("MRS/BRI cannot be empty or a decimal");
+            }
+            else
+                lendingConcessionDetail.mrsBri = concessionFormItem.get('mrsBri').value;
+
             lendingConcession.lendingConcessionDetails.push(lendingConcessionDetail);
 
             if (hasProductType && hasLegalEntityId && hasLegalEntityAccountId) {
@@ -773,6 +783,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                     break;
                 }
             }
+
         }
 
         const conditions = <FormArray>this.lendingConcessionForm.controls['conditionItemsRows'];

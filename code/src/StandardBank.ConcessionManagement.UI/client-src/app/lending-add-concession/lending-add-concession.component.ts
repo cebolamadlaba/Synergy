@@ -161,7 +161,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             uffFee: [''],
             frequency: [{ value: '', disabled: true }],
             serviceFee: [{ value: '', disabled: true }],
-            mrs_bri: [''],
+            mrsBri: [''],
         });
     }
 
@@ -332,10 +332,10 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         var lendingConcession = new LendingConcession();
         lendingConcession.concession = new Concession();
 
-        if (this.lendingConcessionForm.controls['mrsCrs'].value)
-            lendingConcession.concession.mrsCrs = this.lendingConcessionForm.controls['mrsCrs'].value;
-        else
-            this.addValidationError("MRS/CRS not captured");
+        //if (this.lendingConcessionForm.controls['mrsCrs'].value)
+        //    lendingConcession.concession.mrsCrs = this.lendingConcessionForm.controls['mrsCrs'].value;
+        //else
+        //    this.addValidationError("MRS/CRS not captured");
 
         if (this.lendingConcessionForm.controls['smtDealNumber'].value)
             lendingConcession.concession.smtDealNumber = this.lendingConcessionForm.controls['smtDealNumber'].value;
@@ -397,18 +397,6 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
                 if (concessionFormItem.get('uffFee').value == "") {
                     this.addValidationError("UffFee cannot be empty");
                 }
-
-                if (concessionFormItem.get('limit').value == "") {
-                    this.addValidationError("Limit cannot be empty");
-                }
-
-                if (concessionFormItem.get('initiationFee').value == "") {
-                    this.addValidationError("Initiation Fee cannot be empty");
-                }
-
-                if (concessionFormItem.get('marginAgainstPrime').value == "") {
-                    this.addValidationError("Prime fixed rate cannot be empty");
-                }
             }
             else if (concessionFormItem.get('productType').value.description === "Temporary Overdraft") {
 
@@ -429,56 +417,15 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
                     this.addValidationError("UffFee cannot be empty");
                 }
 
-                if (concessionFormItem.get('limit').value == "") {
-                    this.addValidationError("Limit cannot be empty");
-                }
-
-                if (concessionFormItem.get('initiationFee').value == "") {
-                    this.addValidationError("Initiation Fee cannot be empty");
-                }
-
-                if (concessionFormItem.get('marginAgainstPrime').value == "") {
-                    this.addValidationError("Prime fixed rate cannot be empty");
-                }
-
             }
-            else if (concessionFormItem.get('productType').value.description === "MTL (Medium Term Loan)") {
-
-
-                if (concessionFormItem.get('term').value == "") {
-                    this.addValidationError("Term cannot be empty");
-                }
-
-                if (concessionFormItem.get('limit').value == "") {
-                    this.addValidationError("Limit cannot be empty");
-                }
-
-                if (concessionFormItem.get('initiationFee').value == "") {
-                    this.addValidationError("Initiation Fee cannot be empty");
-                }
-
-                if (concessionFormItem.get('marginAgainstPrime').value == "") {
-                    this.addValidationError("Prime fixed rate cannot be empty");
-                }
-
-            } else if (concessionFormItem.get('productType').value.description === "Agricultural Production Loan" ||
+            else if (
+                concessionFormItem.get('productType').value.description === "MTL (Medium Term Loan)" ||
+                concessionFormItem.get('productType').value.description === "Agricultural Production Loan" ||
                 concessionFormItem.get('productType').value.description === "Business RCP" ||
                 concessionFormItem.get('productType').value.description === "BTL (Business Term Loan)") {
 
                 if (concessionFormItem.get('term').value == "") {
                     this.addValidationError("Term cannot be empty");
-                }
-
-                if (concessionFormItem.get('limit').value == "") {
-                    this.addValidationError("Limit cannot be empty");
-                }
-
-                if (concessionFormItem.get('initiationFee').value == "") {
-                    this.addValidationError("Initiation Fee cannot be empty");
-                }
-
-                if (concessionFormItem.get('marginAgainstPrime').value == "") {
-                    this.addValidationError("Prime fixed rate cannot be empty");
                 }
 
             } else if (concessionFormItem.get('productType').value.description === "VAF Installment sale" ||
@@ -496,18 +443,25 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
                 if (concessionFormItem.get('frequency').value == "") {
                     this.addValidationError("Frequency cannot be empty");
                 }
+            }
 
-                if (concessionFormItem.get('limit').value == "") {
-                    this.addValidationError("Limit cannot be empty");
-                }
+            // validate for all.
+            if (concessionFormItem.get('limit').value == "") {
+                this.addValidationError("Limit cannot be empty");
+            }
 
-                if (concessionFormItem.get('initiationFee').value == "") {
-                    this.addValidationError("Initiation Fee cannot be empty");
-                }
+            if (concessionFormItem.get('initiationFee').value == "") {
+                this.addValidationError("Initiation Fee cannot be empty");
+            }
 
-                if (concessionFormItem.get('marginAgainstPrime').value == "") {
-                    this.addValidationError("Prime fixed rate cannot be empty");
-                }
+            if (concessionFormItem.get('marginAgainstPrime').value == "") {
+                this.addValidationError("Prime fixed rate cannot be empty");
+            }
+
+            if (concessionFormItem.get('mrsBri').value == "" ||
+                (<string>concessionFormItem.get('mrsBri').value).trim() == "." ||
+                (<string>concessionFormItem.get('mrsBri').value).split(".").length > 1) {
+                this.addValidationError("MRS/BRI cannot be empty or a decimal");
             }
 
 
@@ -537,6 +491,9 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
             if (concessionFormItem.get('frequency').value)
                 lendingConcessionDetail.frequency = concessionFormItem.get('frequency').value;
+
+            if (concessionFormItem.get('mrsBri').value)
+                lendingConcessionDetail.mrsBri = concessionFormItem.get('mrsBri').value;
 
             lendingConcession.lendingConcessionDetails.push(lendingConcessionDetail);
 
