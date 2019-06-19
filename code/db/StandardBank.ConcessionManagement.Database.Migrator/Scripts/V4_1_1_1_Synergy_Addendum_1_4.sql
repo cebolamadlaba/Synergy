@@ -2,6 +2,7 @@
 
 Alter Table tblLegalEntity
 Alter Column fkRiskGroupId Int Null
+Go
 
 -- Add tblConcessionLending.MRS_BRI and populate value from tblConcession.MRS_CRS
 Begin Transaction
@@ -26,3 +27,11 @@ Begin Transaction
 
 Rollback
 Commit
+
+Alter Table tblConcession
+Alter Column fkRiskGroupId Int Null
+Go
+
+Alter Table tblConcession
+Add fkLegalEntityId Int Null Foreign Key (fkLegalEntityId) References tblLegalEntity(pkLegalEntityId)
+Go

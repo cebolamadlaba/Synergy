@@ -39,6 +39,8 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
+    sapbpid: number;
+
     observableLatestCrsOrMrs: Observable<number>;
     latestCrsOrMrs: number;
     selectedConditionTypes: ConditionType[];
@@ -92,6 +94,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
+            this.sapbpid = +params['sapbpid'];
         });
 
         this.lendingConcessionForm = this.formBuilder.group({

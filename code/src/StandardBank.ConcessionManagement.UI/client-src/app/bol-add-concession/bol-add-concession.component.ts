@@ -49,6 +49,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
+    sapbpid: number;
 
     observableBolView: Observable<BolView>;
     bolView: BolView = new BolView();
@@ -111,6 +112,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
+            this.sapbpid = +params['sapbpid'];
 
             if (this.riskGroupNumber) {
 

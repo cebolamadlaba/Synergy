@@ -32,7 +32,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// <summary>
         /// Gets or sets the risk group id
         /// </summary>
-        public int RiskGroupId { get; set; }
+        public int? RiskGroupId { get; set; }
 
         public int CentreId { get; set; }
 
@@ -238,6 +238,8 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public int? CurrentAEUserId { get; set; }
 
         public int?[] CurrentAAList { get; set; }
+
+        public int? LegalEntityId { get; set; }
 
         public bool IsAENumberLinkedAccountExecutiveOrAssistant { get; set; }
     }

@@ -50,6 +50,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
+    sapbpid: number;
 
     primeRate = "0.00";
     today: string;
@@ -125,7 +126,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
 
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
-
+            this.sapbpid = +params['sapbpid'];
 
             if (this.riskGroupNumber) {
 
