@@ -166,32 +166,33 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             //loop through the user roles and get the concessions for the particular user
             if (user != null && user.UserRoles != null && user.UserRoles.Count() > 0)
-           
-            foreach (var userRole in user.UserRoles)
+
+                foreach (var userRole in user.UserRoles)
                 {
 
                     switch (userRole.Name.Trim())
                     {
                         case Constants.Roles.AA:
-                        if(user.SubRoleId.HasValue)
-                        {
+                            if (user.SubRoleId.HasValue)
+                            {
 
-                                var consType = GetSubRoleAndType(user.SubRoleId);                         
+                                var consType = GetSubRoleAndType(user.SubRoleId);
 
                                 inboxConcessions.AddRange(
                                 _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
                                     .ReadByRequestorIdStatusIdsIsActive(_userManager.GetUserIdForFiltering(user), new[] { pendingStatusId },
-                                        true).Where(x=>x.ConcessionType== consType)));
-                        }
-                        else {
+                                        true).Where(x => x.ConcessionType == consType)));
+                            }
+                            else
+                            {
 
-                            inboxConcessions.AddRange(
-                                _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
-                                    .ReadByRequestorIdStatusIdsIsActive(_userManager.GetUserIdForFiltering(user), new[] { pendingStatusId },
-                                        true)));
-                        }
+                                inboxConcessions.AddRange(
+                                    _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
+                                        .ReadByRequestorIdStatusIdsIsActive(_userManager.GetUserIdForFiltering(user), new[] { pendingStatusId },
+                                            true)));
+                            }
 
-                        break;
+                            break;
                         case Constants.Roles.Requestor:
                             inboxConcessions.AddRange(
                                 _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
@@ -267,7 +268,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                           .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(userId, DateTime.Now,
                               DateTime.Now.AddMonths(3), new[] { approvedStatusId, approvedWithChangesStatusId }, true));
             }
-         
+
         }
 
         /// <summary>
@@ -289,7 +290,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 return _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
                    .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(userId, DateTime.MinValue,
-                       DateTime.Now, new[] { approvedStatusId, approvedWithChangesStatusId }, true).Where(x=>x.ConcessionType== consType));
+                       DateTime.Now, new[] { approvedStatusId, approvedWithChangesStatusId }, true).Where(x => x.ConcessionType == consType));
             }
             else
             {
@@ -297,7 +298,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                                .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(userId, DateTime.MinValue,
                                    DateTime.Now, new[] { approvedStatusId, approvedWithChangesStatusId }, true));
             }
-           
+
         }
 
         /// <summary>
@@ -315,11 +316,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (user.SubRoleId.HasValue)
             {
-                var consType = GetSubRoleAndType(user.SubRoleId);              
+                var consType = GetSubRoleAndType(user.SubRoleId);
                 return _mapper.Map<IEnumerable<InboxConcession>>(
                        _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsMismatchedIsActive(userId,
                            new[] { approvedStatusId, approvedWithChangesStatusId }, true, true).Where(x => x.ConcessionType == consType));
-               
+
             }
             else
             {
@@ -327,7 +328,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsMismatchedIsActive(userId,
                             new[] { approvedStatusId, approvedWithChangesStatusId }, true, true));
             }
-           
+
         }
 
         /// <summary>
@@ -354,7 +355,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                          _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsActive(userId, new[] { declinedStatusId },
                              true));
             }
-        
+
         }
 
         private string GetSubRoleAndType(int? subRoleId)
@@ -367,7 +368,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 return Constants.ConcessionType.Trade;
             }
-      
+
         }
 
         /// <summary>
@@ -417,7 +418,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             if (user != null)
             {
 
-                 var pendingConcessions = GetDistinctInboxConcessions(GetPendingConcessionsForUser(user));
+                var pendingConcessions = GetDistinctInboxConcessions(GetPendingConcessionsForUser(user));
 
                 userConcessions.PendingConcessions = pendingConcessions;
                 userConcessions.PendingConcessionsCount = pendingConcessions?.Count() ?? 0;
@@ -1000,6 +1001,23 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// LegalEntityId is referenced as SAPBPID
+        /// </summary>
+        /// <param name="legalEntityId"></param>
+        /// <param name="concessionType"></param>
+        /// <param name="currentUser"></param>
+        /// <returns></returns>
+        public IEnumerable<Model.UserInterface.Concession> GetApprovedConcessionsForLegalEntityId(int legalEntityId,
+            string concessionType, User currentUser)
+        {
+            var concessionTypeId = _lookupTableManager.GetConcessionTypeId(concessionType);
+
+            return Map(_concessionRepository.ReadByLegalEntityIdConcessionTypeIdIsActiveApproved(legalEntityId,
+                concessionTypeId,
+                true), false, currentUser);
+        }
+
+        /// <summary>
         /// Gets the concession for concession reference identifier.
         /// </summary>
         /// <param name="concessionReferenceId">The concession reference identifier.</param>
@@ -1058,10 +1076,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             foreach (var concession in repositoryConcessions)
             {
                 var mappedConcession = _mapper.Map<Model.UserInterface.Concession>(concession);
-                var riskGroup = _riskGroupRepository.ReadById(concession.RiskGroupId);
 
-                mappedConcession.RiskGroupNumber = riskGroup.RiskGroupNumber;
-                mappedConcession.RiskGroupName = riskGroup.RiskGroupName;
+                if (concession.RiskGroupId.HasValue)
+                {
+                    var riskGroup = _riskGroupRepository.ReadById(concession.RiskGroupId.Value);
+
+                    mappedConcession.RiskGroupNumber = riskGroup.RiskGroupNumber;
+                    mappedConcession.RiskGroupName = riskGroup.RiskGroupName;
+                }
+
 
                 mappedConcession.Type = _lookupTableManager.GetReferenceTypeName(concession.TypeId);
                 mappedConcession.ConcessionType = _lookupTableManager.GetConcessionType(concession.ConcessionTypeId)
@@ -1455,6 +1478,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
         }
 
-       
+
     }
 }

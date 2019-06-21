@@ -104,8 +104,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
             message.Concession.ConcessionType =
                 _lookupTableManager.GetConcessionType(result.ConcessionTypeId).Description;
 
-            if (string.IsNullOrWhiteSpace(message.Concession.RiskGroupName))
-                message.Concession.RiskGroupName = _riskGroupRepository.ReadById(result.RiskGroupId).RiskGroupName;
+            if (string.IsNullOrWhiteSpace(message.Concession.RiskGroupName) && result.RiskGroupId.HasValue)
+                message.Concession.RiskGroupName = _riskGroupRepository.ReadById(result.RiskGroupId.Value).RiskGroupName;
 
             if (message.User.SelectedCentre?.Id > 0)
             {

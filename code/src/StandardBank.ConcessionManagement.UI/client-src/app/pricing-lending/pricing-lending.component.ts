@@ -27,6 +27,9 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
     canRequest = false;
     isLoading = true;
 
+    subHeading: string = "n/a";
+    title: number = 0;
+
     constructor(
         private router: Router,
         private route: ActivatedRoute,
@@ -70,6 +73,24 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
                 this.canRequest = user.canRequest;
             });
         });
+    }
+
+    getSubHeading(): string {
+        if (this.riskGroupNumber && this.riskGroupNumber != 0) {
+            return this.lendingView.riskGroup.name;
+        }
+        else if (this.sapbpid && this.sapbpid != 0) {
+            return "n/a";
+        }
+    }
+
+    getTitle(): number {
+        if (this.riskGroupNumber && this.riskGroupNumber != 0) {
+            return this.lendingView.riskGroup.number;
+        }
+        else if (this.sapbpid && this.sapbpid != 0) {
+            return 0;
+        }
     }
 
     goBack() {

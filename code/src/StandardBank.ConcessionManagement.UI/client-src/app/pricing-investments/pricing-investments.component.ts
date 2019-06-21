@@ -20,6 +20,7 @@ import { UserService } from "../services/user.service";
 })
 export class PricingInvestmentsComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
+    sapbpid: number;
     private sub: any;
 
     observableInvestmentView: Observable<InvestmentView>;
@@ -45,6 +46,7 @@ export class PricingInvestmentsComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
+            this.sapbpid = +params['sapbpid'];
 
             if (this.riskGroupNumber) {
                 this.observableInvestmentView = this.investmentConcessionService.getInvestmentViewData(this.riskGroupNumber);

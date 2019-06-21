@@ -36,6 +36,8 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <returns></returns>
         IEnumerable<LendingProduct> GetLendingProducts(int riskGroupId, string riskGroupName);
 
+        IEnumerable<LendingProduct> GetLendingProductsByLegalEntityId(int legalEntityId, string legalEntityName);
+
         /// <summary>
         /// Gets the cash products.
         /// </summary>
@@ -92,6 +94,6 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <returns></returns>
         IEnumerable<BusinessCentreManagementModel> GetBusinessCentreManagementModels();
 
-         BusinessCentreManagementModel GetBusinessCentreManager(int pkCentreId);
+        BusinessCentreManagementModel GetBusinessCentreManager(int pkCentreId);
     }
 }

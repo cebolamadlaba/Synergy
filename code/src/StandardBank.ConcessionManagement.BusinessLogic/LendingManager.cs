@@ -344,6 +344,25 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public LendingView GetLendingViewDataBySAPBPID(int sapbpid, User currentUser)
         {
+            var legalEntity = _lookupTableManager.GetLegalEntity(sapbpid);
+            var lendingConcessions = new List<LendingConcession>();
+            var concessions = _concessionManager.GetApprovedConcessionsForLegalEntityId(legalEntity.Id, Constants.ConcessionType.Lending, currentUser);
+
+            foreach (var concession in concessions)
+            {
+                lendingConcessions.Add(new LendingConcession
+                {
+                    Concession = concession,
+                    LendingConcessionDetails = _miscPerformanceRepository.GetLendingConcessionDetails(concession.Id)
+                });
+            }
+
+            var lendingProducts = GetLendingProductsByLegalEntityId(legalEntity.Id, legalEntity.CustomerName);
+
+            var lendingFinancial = _mapper.Map<LendingFinancial>(
+                _financialLendingRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
+                new FinancialLending());
+
             return new LendingView()
             {
                 LendingConcessions = null,
@@ -454,6 +473,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return _miscPerformanceRepository.GetLendingProducts(riskGroupId, riskGroupName);
         }
 
+        private IEnumerable<LendingProduct> GetLendingProductsByLegalEntityId(int legalEntityId, string legalEntityName)
+        {
+            return _miscPerformanceRepository.GetLendingProductsByLegalEntityId(legalEntityId, legalEntityName);
+        }
 
         public async Task ForwardLendingConcession(LendingConcession lendingConcession, User user)
         {

@@ -156,6 +156,22 @@ namespace StandardBank.ConcessionManagement.Repository
             }
         }
 
+        public IEnumerable<Concession> ReadByLegalEntityIdConcessionTypeIdIsActiveApproved(int legalEntityId,
+            int concessionTypeId, bool isActive)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<Concession>(
+                    @"SELECT [pkConcessionId] [Id], [fkTypeId] [TypeId], [fkConcessionTypeId] [ConcessionTypeId], [fkStatusId] [StatusId], [fkSubStatusId] [SubStatusId], [fkAAUserId] [AAUserId], [fkRequestorId] [RequestorId], [fkBCMUserId] [BCMUserId], [fkPCMUserId] [PCMUserId], [fkHOUserId] [HOUserId], [fkRiskGroupId] [RiskGroupId], [fkRegionId] [RegionId], [fkCentreId] [CentreId], [ConcessionRef], [SMTDealNumber], [ConcessionDate], [DatesentForApproval], [Motivation], [DateActionedByBCM], [DateActionedByPCM], [DateActionedByHO], [MRS_CRS], [IsCurrent], [IsActive], [Archived], [fkAENumberUserId] [AENumberUserId], [fkLegalEntityId] [LegalEntityId] 
+                    FROM [dbo].[tblConcession] 
+                    WHERE [fkLegalEntityId] = @legalEntityId
+                    AND [fkConcessionTypeId] = @concessionTypeId
+                    AND [IsActive] = @isActive
+                    AND [fkStatusId] IN (2, 3)",
+                    new { legalEntityId, concessionTypeId, isActive });
+            }
+        }
+
         /// <summary>
         /// Reads all.
         /// </summary>

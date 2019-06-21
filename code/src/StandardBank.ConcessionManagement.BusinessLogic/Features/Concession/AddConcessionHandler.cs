@@ -72,8 +72,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
             message.Concession.ReferenceNumber = result.ConcessionRef;
             message.Concession.Id = result.Id;
 
-            if (string.IsNullOrWhiteSpace(message.Concession.RiskGroupName))
-                message.Concession.RiskGroupName = _riskGroupRepository.ReadById(result.RiskGroupId).RiskGroupName;
+            if (string.IsNullOrWhiteSpace(message.Concession.RiskGroupName) && result.RiskGroupId.HasValue)
+                message.Concession.RiskGroupName = _riskGroupRepository.ReadById(result.RiskGroupId.Value).RiskGroupName;
 
             if (string.IsNullOrWhiteSpace(message.Concession.ConcessionType))
                 message.Concession.ConcessionType =

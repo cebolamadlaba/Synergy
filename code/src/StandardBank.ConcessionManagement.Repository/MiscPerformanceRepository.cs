@@ -414,6 +414,35 @@ namespace StandardBank.ConcessionManagement.Repository
                 new CacheKeyParameter(nameof(riskGroupName), riskGroupName));
         }
 
+        public IEnumerable<LendingProduct> GetLendingProductsByLegalEntityId(int legalEntityId, string legalEntityName)
+        {
+            IEnumerable<LendingProduct> Function()
+            {
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    var lendingProducts = db.Query<LendingProduct>(
+                        @"SELECT	pl.[pkProductLendingId] [LendingProductId], p.[Description] [Product], le.[CustomerName], lea.[AccountNumber], pl.[Limit], pl.[AverageBalance], pl.[LoadedMap], le.[CustomerName] [LegalEntityName]
+                            FROM [dbo].[tblProductLending] pl
+                            JOIN [dbo].[rtblProduct] p on p.[pkProductId] = pl.[fkProductId]
+                            JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = pl.[fkLegalEntityId]
+                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = pl.[fkLegalEntityAccountId]
+                        WHERE le.[pkLegalEntityId] = @legalEntityId
+                        AND p.showpricing = 1", new { legalEntityId, legalEntityName },
+                        commandTimeout: Int32.MaxValue);
+
+                    if (lendingProducts != null && lendingProducts.Any())
+                        return lendingProducts;
+                }
+
+                return null;
+            }
+
+            return _cacheManager.ReturnFromCache(Function, 300,
+                CacheKey.Repository.MiscPerformanceRepository.GetLendingProducts,
+                new CacheKeyParameter(nameof(legalEntityId), legalEntityId),
+                new CacheKeyParameter(nameof(legalEntityName), legalEntityName));
+        }
+
         /// <summary>
         /// Gets the cash products.
         /// </summary>
