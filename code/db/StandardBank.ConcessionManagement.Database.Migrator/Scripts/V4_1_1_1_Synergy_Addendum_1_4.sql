@@ -35,3 +35,13 @@ Go
 Alter Table tblConcession
 Add fkLegalEntityId Int Null Foreign Key (fkLegalEntityId) References tblLegalEntity(pkLegalEntityId)
 Go
+
+
+
+Alter Table tblProductLending
+Alter Column fkRiskGroupId Int Null
+Go
+
+Alter Table tblProductLending
+Alter Column fkLegalEntityId Int Null
+Go

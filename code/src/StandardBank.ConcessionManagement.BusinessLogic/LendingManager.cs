@@ -359,78 +359,51 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var lendingProducts = GetLendingProductsByLegalEntityId(legalEntity.Id, legalEntity.CustomerName);
 
-            var lendingFinancial = _mapper.Map<LendingFinancial>(
-                _financialLendingRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
-                new FinancialLending());
-
-            return new LendingView()
-            {
-                LendingConcessions = null,
-                LendingFinancial = null,
-                LendingProductGroups = null,
-                RiskGroup = null
-            };
-
-            //var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
-            //var lendingConcessions = new List<LendingConcession>();
-            //var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.Lending, currentUser);
-
-            //foreach (var concession in concessions)
-            //{
-            //    lendingConcessions.Add(new LendingConcession
-            //    {
-            //        Concession = concession,
-            //        LendingConcessionDetails = _miscPerformanceRepository.GetLendingConcessionDetails(concession.Id)
-            //    });
-            //}
-
-            //var lendingProducts = GetLendingProducts(riskGroup.Id, riskGroup.Name);
-
+            // tblFinancialLending does not carry fkLegalEntityId...
             //var lendingFinancial = _mapper.Map<LendingFinancial>(
             //    _financialLendingRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
             //    new FinancialLending());
 
+            //grouping of products
+            var groupedinfo = new List<LendingProductGroup>();
+            if (lendingProducts != null)
+            {
+                foreach (var product in lendingProducts)
+                {
+                    var productgrouping = groupedinfo.Where(g => g.CustomerName == product.CustomerName).FirstOrDefault();
+                    if (productgrouping == null)
+                    {
+                        LendingProductGroup newgroup = new LendingProductGroup();
+                        newgroup.CustomerName = product.CustomerName;
+                        newgroup.RiskGroupName = product.RiskGroupName;
+                        newgroup.LendingProducts = new List<LendingProduct>();
+                        newgroup.LendingProducts.Add(product);
 
+                        groupedinfo.Add(newgroup);
+                    }
+                    else
+                    {
+                        productgrouping.LendingProducts.Add(product);
+                    }
 
-            ////grouping of products
-            //var groupedinfo = new List<LendingProductGroup>();
-            //if (lendingProducts != null)
-            //{
-            //    foreach (var product in lendingProducts)
-            //    {
-            //        var productgrouping = groupedinfo.Where(g => g.CustomerName == product.CustomerName).FirstOrDefault();
-            //        if (productgrouping == null)
-            //        {
-            //            LendingProductGroup newgroup = new LendingProductGroup();
-            //            newgroup.CustomerName = product.CustomerName;
-            //            newgroup.RiskGroupName = product.RiskGroupName;
-            //            newgroup.LendingProducts = new List<LendingProduct>();
-            //            newgroup.LendingProducts.Add(product);
+                }
+                //sort
+                foreach (var productgrouping in groupedinfo)
+                {
+                    if (productgrouping != null && productgrouping.LendingProducts != null)
+                        productgrouping.LendingProducts = productgrouping.LendingProducts.OrderBy(o => o.AccountNumber).ThenBy(o => o.Product).ToList();
 
-            //            groupedinfo.Add(newgroup);
-            //        }
-            //        else
-            //        {
-            //            productgrouping.LendingProducts.Add(product);
-            //        }
+                }
+            }
 
-            //    }
-            //    //sort
-            //    foreach (var productgrouping in groupedinfo)
-            //    {
-            //        if (productgrouping != null && productgrouping.LendingProducts != null)
-            //            productgrouping.LendingProducts = productgrouping.LendingProducts.OrderBy(o => o.AccountNumber).ThenBy(o => o.Product).ToList();
+            return new LendingView()
+            {
+                LendingConcessions = lendingConcessions.OrderBy(_ => _.Concession.AccountNumber),
+                LendingFinancial = null,
+                LendingProductGroups = groupedinfo.OrderBy(m => m.CustomerName),
+                LegalEntity = legalEntity
+            };
 
-            //    }
-            //}
-
-            //return new LendingView
-            //{
-            //    RiskGroup = riskGroup,
-            //    LendingConcessions = lendingConcessions.OrderBy(_ => _.Concession.AccountNumber),
-            //    LendingProductGroups = groupedinfo.OrderBy(m => m.CustomerName),
-            //    LendingFinancial = lendingFinancial
-            //};
         }
 
         /// <summary>
