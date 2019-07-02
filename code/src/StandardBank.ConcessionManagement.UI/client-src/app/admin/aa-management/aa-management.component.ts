@@ -54,10 +54,7 @@ export class AaManagementComponent implements OnInit {
             this.aaUsers = <any>results[0];
             this.centres = <any>results[1];
             this.accountExecutives = <any>results[2];
-            this.loggedInUser = <User>results[3][0];
-
-            if (this.loggedInUser!.centreId)
-                this.addAaUserModel.centreId = this.loggedInUser.centreId;
+            this.loggedInUser = <any>results[3];
 
             this.isLoading = false;
         },
@@ -69,6 +66,10 @@ export class AaManagementComponent implements OnInit {
 
     addAA() {
         this.addAaUserModel = new User();
+
+        if (this.loggedInUser!.centreId)
+            this.addAaUserModel.centreId = this.loggedInUser.centreId;
+
         this.actionType = "Add";
         this.addAAModal.show();
     }
