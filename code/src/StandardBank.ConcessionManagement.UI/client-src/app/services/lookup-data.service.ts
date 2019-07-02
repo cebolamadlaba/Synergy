@@ -58,8 +58,8 @@ export class LookupDataService {
     }
 
 
-    getClientAccountsConcessionType(riskGroupNumber, concessiontype): Observable<ClientAccount[]> {
-        const url = "/api/Concession/ClientAccountsConcessionType/" + riskGroupNumber + "/" + concessiontype;
+    getClientAccountsConcessionType(riskGroupNumber, sapbpid, concessiontype): Observable<ClientAccount[]> {
+        const url = "/api/Concession/ClientAccountsConcessionType/" + riskGroupNumber + "/" + sapbpid + "/" + concessiontype;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
@@ -141,6 +141,11 @@ export class LookupDataService {
 
     getReviewFeeTypes(): Observable<ReviewFeeType[]> {
         const url = "/api/Concession/ReviewFeeTypes";
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    getLegalEntity(sapbpid): Observable<RiskGroup> {
+        const url = "/api/Pricing/LegalEntity/" + sapbpid;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 

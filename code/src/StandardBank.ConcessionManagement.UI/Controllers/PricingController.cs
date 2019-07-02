@@ -28,6 +28,14 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             _configurationData = configurationData;
         }
 
+        [Route("LegalEntity/{sapbpid}")]
+        public IActionResult LegalEntity(int sapbpid)
+        {
+            var legalEntity = _lookupTableManager.GetLegalEntity(sapbpid);
+
+            return Ok(legalEntity);
+        }
+
         /// <summary>
         /// Gets the risk group details for the risk group number specified
         /// </summary>

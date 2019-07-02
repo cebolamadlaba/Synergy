@@ -506,7 +506,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <param name="user">The user.</param>
         /// <returns></returns>
-        public IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, User user, string concessiontype)
+        public IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, User user, string concessiontype, int? sapbpid = null)
         {
             int? userId = null;
 
@@ -522,7 +522,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             }
 
-            return _miscPerformanceRepository.GetClientAccounts(riskGroupNumber, userId, concessiontype);
+            if (riskGroupNumber > 0)
+                return _miscPerformanceRepository.GetClientAccounts(riskGroupNumber, userId, concessiontype);
+            else if (sapbpid.HasValue && sapbpid.Value > 0)
+                return _miscPerformanceRepository.GetClientAccounts(riskGroupNumber, userId, concessiontype, legalEntityCustomerNumber: sapbpid.Value);
+
+            return null;
         }
 
         /// <summary>

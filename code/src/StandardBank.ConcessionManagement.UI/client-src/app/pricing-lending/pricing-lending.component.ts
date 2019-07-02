@@ -80,8 +80,10 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
             return this.lendingView.riskGroup.name;
         }
         else if (this.sapbpid && this.sapbpid != 0) {
-            return "n/a";
+            return this.lendingView.legalEntity.customerName;
         }
+
+        return "n/a";
     }
 
     getTitle(): number {
@@ -89,7 +91,7 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
             return this.lendingView.riskGroup.number;
         }
         else if (this.sapbpid && this.sapbpid != 0) {
-            return 0;
+            return Number(this.lendingView.legalEntity.customerNumber);
         }
     }
 

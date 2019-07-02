@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
+
 import { ReviewFeeType } from "../models/review-fee-type";
 import { ProductType } from "../models/product-type";
 import { Period } from "../models/period";
@@ -16,6 +17,8 @@ import { LendingConcession } from "../models/lending-concession";
 import { Concession } from "../models/concession";
 import { LendingConcessionDetail } from "../models/lending-concession-detail";
 import { ConcessionCondition } from "../models/concession-condition";
+import { LegalEntity } from '../models/legal-entity';
+
 import { Location } from '@angular/common';
 import { LookupDataService } from "../services/lookup-data.service";
 import { LendingService } from "../services/lending.service";
@@ -39,6 +42,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
+    legalEntity: LegalEntity;
     sapbpid: number;
 
     observableLatestCrsOrMrs: Observable<number>;
@@ -106,45 +110,47 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             prime: new FormControl()
         });
 
-        Observable.forkJoin([
-            this.lookupDataService.getReviewFeeTypes(),
-            this.lookupDataService.getProductTypes(ConcessionTypes.Lending),
-            this.lookupDataService.getPeriods(),
-            this.lookupDataService.getPeriodTypes(),
-            this.lookupDataService.getConditionTypes(),
-            this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-            this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Lending),
-            this.lendingService.getlatestCrsOrMrs(this.riskGroupNumber),
-            this.lookupDataService.getPrimeRate(this.today)
-        ]).subscribe(results => {
-            this.reviewFeeTypes = <any>results[0];
-            this.productTypes = <any>results[1];
-            this.periods = <any>results[2];
-            this.periodTypes = <any>results[3];
-            this.conditionTypes = <any>results[4];
-            this.riskGroup = <any>results[5];
-            this.clientAccounts = <any>results[6];
-            this.latestCrsOrMrs = <any>results[7];
-            this.primeRate = <string>results[8];
+        this.getInitialData();
 
-            this.isLoading = false;
+        //Observable.forkJoin([
+        //    this.lookupDataService.getReviewFeeTypes(),
+        //    this.lookupDataService.getProductTypes(ConcessionTypes.Lending),
+        //    this.lookupDataService.getPeriods(),
+        //    this.lookupDataService.getPeriodTypes(),
+        //    this.lookupDataService.getConditionTypes(),
+        //    this.lookupDataService.getRiskGroup(this.riskGroupNumber),
+        //    this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, this.sapbpid, ConcessionTypes.Lending),
+        //    this.lendingService.getlatestCrsOrMrs(this.riskGroupNumber),
+        //    this.lookupDataService.getPrimeRate(this.today)
+        //]).subscribe(results => {
+        //    this.reviewFeeTypes = <any>results[0];
+        //    this.productTypes = <any>results[1];
+        //    this.periods = <any>results[2];
+        //    this.periodTypes = <any>results[3];
+        //    this.conditionTypes = <any>results[4];
+        //    this.riskGroup = <any>results[5];
+        //    this.clientAccounts = <any>results[6];
+        //    this.latestCrsOrMrs = <any>results[7];
+        //    this.primeRate = <string>results[8];
 
-            const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
-            if (this.productTypes) {
-                control.controls[0].get('productType').setValue(this.productTypes[0]);
+        //    this.isLoading = false;
 
-                this.selectedProductTypes[0] = this.productTypes[0];
-                this.productTypeChanged(0);
-            }
+        //    const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        //    if (this.productTypes) {
+        //        control.controls[0].get('productType').setValue(this.productTypes[0]);
 
-            if (this.clientAccounts)
-                control.controls[0].get('accountNumber').setValue(this.clientAccounts[0]);
+        //        this.selectedProductTypes[0] = this.productTypes[0];
+        //        this.productTypeChanged(0);
+        //    }
+
+        //    if (this.clientAccounts)
+        //        control.controls[0].get('accountNumber').setValue(this.clientAccounts[0]);
 
 
-        }, error => {
-            this.errorMessage = <any>error;
-            this.isLoading = false;
-        });
+        //}, error => {
+        //    this.errorMessage = <any>error;
+        //    this.isLoading = false;
+        //});
     }
 
     initConcessionItemRows() {
@@ -182,6 +188,80 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         });
     }
 
+    getInitialData() {
+        if (this.riskGroupNumber != null && this.riskGroupNumber != 0) {
+            Observable.forkJoin([
+                this.lookupDataService.getReviewFeeTypes(),
+                this.lookupDataService.getProductTypes(ConcessionTypes.Lending),
+                this.lookupDataService.getPeriods(),
+                this.lookupDataService.getPeriodTypes(),
+                this.lookupDataService.getConditionTypes(),
+                this.lookupDataService.getRiskGroup(this.riskGroupNumber),
+                this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, this.sapbpid, ConcessionTypes.Lending),
+                this.lookupDataService.getPrimeRate(this.today),
+                this.lendingService.getlatestCrsOrMrs(this.riskGroupNumber)
+            ]).subscribe(results => {
+
+                this.setInitialData(results, true);
+
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        }
+        else if (this.sapbpid != null && this.sapbpid != 0) {
+            Observable.forkJoin([
+                this.lookupDataService.getReviewFeeTypes(),
+                this.lookupDataService.getProductTypes(ConcessionTypes.Lending),
+                this.lookupDataService.getPeriods(),
+                this.lookupDataService.getPeriodTypes(),
+                this.lookupDataService.getConditionTypes(),
+                this.lookupDataService.getLegalEntity(this.sapbpid),
+                this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, this.sapbpid, ConcessionTypes.Lending),
+                this.lookupDataService.getPrimeRate(this.today),
+                //this.lendingService.getlatestCrsOrMrs(this.riskGroupNumber)
+            ]).subscribe(results => {
+
+                this.setInitialData(results, false);
+
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+
+        }
+
+    }
+    setInitialData(results: {}[], isForRiskGroup: boolean) {
+        this.reviewFeeTypes = <any>results[0];
+        this.productTypes = <any>results[1];
+        this.periods = <any>results[2];
+        this.periodTypes = <any>results[3];
+        this.conditionTypes = <any>results[4];
+        if (isForRiskGroup) {
+            this.riskGroup = <any>results[5];
+            this.latestCrsOrMrs = <any>results[8];
+        }
+        else {
+            this.legalEntity = <any>results[5];
+        }
+        this.clientAccounts = <any>results[6];
+        this.primeRate = <string>results[7];
+
+
+        this.isLoading = false;
+
+        const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        if (this.productTypes) {
+            control.controls[0].get('productType').setValue(this.productTypes[0]);
+
+            this.selectedProductTypes[0] = this.productTypes[0];
+            this.productTypeChanged(0);
+        }
+
+        if (this.clientAccounts)
+            control.controls[0].get('accountNumber').setValue(this.clientAccounts[0]);
+    }
 
     addNewConcessionRow() {
         const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
@@ -350,7 +430,11 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         else
             lendingConcession.concession.motivation = '.';
 
-        lendingConcession.concession.riskGroupId = this.riskGroup.id;
+        if (this.legalEntity)
+            lendingConcession.concession.legalEntityId = this.legalEntity.id;
+        if (this.riskGroup)
+            lendingConcession.concession.riskGroupId = this.riskGroup.id;
+
         lendingConcession.concession.concessionType = ConcessionTypes.Lending;
         lendingConcession.concession.type = "New";
         lendingConcession.concession.comments = "Created";

@@ -36,8 +36,10 @@
         <div class="col-md-12 banner-container" *ngIf="showHide">
             <div class="col-md-11">
                 <div class="col-md-5">
-                    <div class="subHeading">{{lendingView.riskGroup.name}}</div>
-                    <div class="date lightTitle hidden-element">{{lendingView.riskGroup.number}}</div>
+                    <!--<div class="subHeading">{{lendingView.riskGroup.name}}</div>
+                    <div class="date lightTitle hidden-element">{{lendingView.riskGroup.number}}</div>-->
+                    <div class="subHeading">{{getSubHeading()}}</div>
+                    <div class="date lightTitle hidden-element">{{getTitle()}}</div>
                 </div>
                 <div class="col-md-2  hidden-element">
                     <div class="subHeading lightTitle">Total Exposure</div>
@@ -144,7 +146,7 @@
     <div class="col-md-6 search-and-results-container" id="lending-search-container">
         <h2 class="headings">
             Concessions
-            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/lending-add-concession', lendingView.riskGroup.number, sapbpid]" *ngIf="pageLoaded && canRequest">Add Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/lending-add-concession', riskGroupNumber, sapbpid]" *ngIf="pageLoaded && canRequest">Add Concession</button>
         </h2>
 
         <!-- Search bar -->
@@ -162,7 +164,7 @@
                 </div>
             </div>
             <div class="section-body">
-                <div class="table-container" [routerLink]="['/lending-view-concession', lendingView.riskGroup.number, lendingConcession.concession.referenceNumber]">
+                <div class="table-container" [routerLink]="['/lending-view-concession', riskGroupNumber, lendingConcession.concession.referenceNumber]">
                     <table class="table table-bordered table-hover header-fixed table-striped">
                         <thead>
                             <tr>

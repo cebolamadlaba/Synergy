@@ -360,6 +360,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var lendingProducts = GetLendingProductsByLegalEntityId(legalEntity.Id, legalEntity.CustomerName);
 
             // tblFinancialLending does not carry fkLegalEntityId...
+            LendingFinancial lendingFinancial = new LendingFinancial()
+            {
+                LatestCrsOrMrs = 0,
+                TotalExposure = 0,
+                WeightedAverageMap = 0,
+                WeightedCrsOrMrs = 0
+            };
             //var lendingFinancial = _mapper.Map<LendingFinancial>(
             //    _financialLendingRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
             //    new FinancialLending());
@@ -399,7 +406,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return new LendingView()
             {
                 LendingConcessions = lendingConcessions.OrderBy(_ => _.Concession.AccountNumber),
-                LendingFinancial = null,
+                LendingFinancial = lendingFinancial,
                 LendingProductGroups = groupedinfo.OrderBy(m => m.CustomerName),
                 LegalEntity = legalEntity
             };
