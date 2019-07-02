@@ -117,14 +117,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
             return expiringConcessions;
         }
 
-        private bool IsIntervalOfMonthBeforeExpiryDate(ConcessionInboxView concessionInboxView)
+        private int IsIntervalOfMonthBeforeExpiryDate(ConcessionInboxView concessionInboxView)
         {
             // Is todays date 3 months before expiry date?
             // Is todays date 2 months before expiry date?
             // Is todays date 1 months before expiry date?
 
             if (!concessionInboxView.ExpiryDate.HasValue)
-                return false;
+                return 0;
 
             DateTime monthValue;
 
@@ -132,11 +132,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
             {
                 monthValue = concessionInboxView.ExpiryDate.Value.Date.AddMonths(-Math.Abs(i));
                 if (DateTime.Today.Date == monthValue)
-                    return true;
+                    return i;
 
             }
 
-            return false;
+            return 0;
         }
 
         /// <summary>
