@@ -86,8 +86,8 @@ namespace StandardBank.ConcessionManagement.Repository
                     if (model.pkChargeCodeId == 0)
                     {
                         const string sql =
-                        @"INSERT [dbo].[rtblBOLChargeCode] ([Description], [ChargeCode], [Length], [fkChargeCodeTypeId],[IsActive]) 
-                        VALUES (@Description, @ChargeCode, @Length, @fkChargeCodeTypeId,@IsActive) 
+                        @"INSERT [dbo].[rtblBOLChargeCode] ([Description], [ChargeCode], [Length], [fkChargeCodeTypeId],[IsActive],[IsNonUniversal]) 
+                        VALUES (@Description, @ChargeCode, @Length, @fkChargeCodeTypeId,@IsActive,@IsNonUniversal) 
                         SELECT CAST(SCOPE_IDENTITY() as int)";
 
                         using (var db = _dbConnectionFactory.Connection())
@@ -99,7 +99,8 @@ namespace StandardBank.ConcessionManagement.Repository
                                     ChargeCode = model.ChargeCode,
                                     Length = model.length,
                                     fkChargeCodeTypeId = model.fkChargeCodeTypeId,
-                                    IsActive = true
+                                    IsActive = true,
+                                    IsNonUniversal=model.IsNonUniversal
 
                                 }).Single();
                         }
@@ -109,7 +110,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     else
                     {
                         const string sql =
-                       @"Update [dbo].[rtblBOLChargeCode] set [Description] = @Description , [ChargeCode] =  @ChargeCode, [Length] = @Length , [fkChargeCodeTypeId] = @fkChargeCodeTypeId, [IsActive] = @IsActive where pkChargeCodeId = @pkChargeCodeId";
+                       @"Update [dbo].[rtblBOLChargeCode] set [Description] = @Description , [ChargeCode] =  @ChargeCode, [Length] = @Length , [fkChargeCodeTypeId] = @fkChargeCodeTypeId, [IsActive] = @IsActive,[IsNonUniversal]=@IsNonUniversal where pkChargeCodeId = @pkChargeCodeId";
 
                         using (var db = _dbConnectionFactory.Connection())
                         {
@@ -121,7 +122,8 @@ namespace StandardBank.ConcessionManagement.Repository
                                    ChargeCode = model.ChargeCode,
                                    Length = model.length,
                                    fkChargeCodeTypeId = model.fkChargeCodeTypeId,
-                                   IsActive = true
+                                   IsActive = true,
+                                   IsNonUniversal = model.IsNonUniversal
                                });
                         }
                     }
@@ -131,7 +133,7 @@ namespace StandardBank.ConcessionManagement.Repository
                 {
 
                     const string sql =
-                       @"Update [dbo].[rtblBOLChargeCode] set [Description] = @Description , [ChargeCode] =  @ChargeCode, [Length] = @Length , [fkChargeCodeTypeId] = @fkChargeCodeTypeId, [IsActive] = @IsActive where pkChargeCodeId = @pkChargeCodeId";
+                       @"Update [dbo].[rtblBOLChargeCode] set [Description] = @Description , [ChargeCode] =  @ChargeCode, [Length] = @Length , [fkChargeCodeTypeId] = @fkChargeCodeTypeId, [IsActive],,[IsNonUniversal]=@IsNonUniversal = @IsActive where pkChargeCodeId = @pkChargeCodeId";
 
                     using (var db = _dbConnectionFactory.Connection())
                     {
@@ -143,7 +145,8 @@ namespace StandardBank.ConcessionManagement.Repository
                                ChargeCode = model.ChargeCode,
                                Length = model.length,
                                fkChargeCodeTypeId = model.fkChargeCodeTypeId,
-                               IsActive = false
+                               IsActive = false,
+                               IsNonUniversal = model.IsNonUniversal
                            });
                     }
 

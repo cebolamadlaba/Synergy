@@ -19,6 +19,7 @@ import { UserService } from "../services/user.service";
 })
 export class PricingBolComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
+    sapbpid: number;
     private sub: any;
   
     observableBolView: Observable<BolView>;
@@ -42,6 +43,7 @@ export class PricingBolComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
+            this.sapbpid = +params['sapbpid'];
 
             if (this.riskGroupNumber) {
                 this.observableBolView = this.bolConcessionService.getBolViewData(this.riskGroupNumber);

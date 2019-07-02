@@ -49,6 +49,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
+    sapbpid: number;
 
     observableBolView: Observable<BolView>;
     bolView: BolView = new BolView();
@@ -111,6 +112,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
+            this.sapbpid = +params['sapbpid'];
 
             if (this.riskGroupNumber) {
 
@@ -147,7 +149,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
             this.lookupDataService.getConditionTypes(),
             this.lookupDataService.getBOLChargeCodeTypes(),
-            this.lookupDataService.getBOLChargeCodes(),
+            this.lookupDataService.getBOLChargeCodes(this.riskGroupNumber),
             this.lookupDataService.getLegalEntityBOLUsers(this.riskGroupNumber),
             this.lookupDataService.getPeriods(),
             this.lookupDataService.getPeriodTypes()
@@ -306,8 +308,8 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
         if (this.bolConcessionForm.controls['smtDealNumber'].value)
             bolConcession.concession.smtDealNumber = this.bolConcessionForm.controls['smtDealNumber'].value;
-        //else
-        //    this.addValidationError("SMT Deal Number not captured");
+        else
+            this.addValidationError("SMT Deal Number not captured");
 
         if (this.bolConcessionForm.controls['motivation'].value)
             bolConcession.concession.motivation = this.bolConcessionForm.controls['motivation'].value;

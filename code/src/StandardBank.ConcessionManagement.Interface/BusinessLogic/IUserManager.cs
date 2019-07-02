@@ -79,6 +79,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         IEnumerable<User> GetUsersByCentreId(int centreId);
 
         /// <summary>
+        /// Gets the users sub role
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<RoleSubRole> GetRoleSubRole();
+
+        /// <summary>
         /// Validates the user.
         /// </summary>
         /// <param name="user">The user.</param>

@@ -29,6 +29,11 @@ export class LendingService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    getLendingViewDataBySAPBPID(sapbpid): Observable<LendingView> {
+        const url = "/api/Lending/LendingViewBySAPBPID/" + sapbpid;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
     postNewLendingData(lendingConcession: LendingConcession): Observable<LendingConcession> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
@@ -70,7 +75,7 @@ export class LendingService {
         const url = "/api/Lending/UpdateRecalledLending";
         return this.http.post(url, lendingConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
-
+    
     getlatestCrsOrMrs(riskGroupNumber): Observable<number> {
         const url = "/api/Lending/LatestCrsOrMrs/" + riskGroupNumber;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);

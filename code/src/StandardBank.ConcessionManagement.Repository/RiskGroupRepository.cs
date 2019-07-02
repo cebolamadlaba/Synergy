@@ -76,7 +76,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     return db.Query<RiskGroup>(
                             @"SELECT [pkRiskGroupId] [Id], [fkMarketSegmentId] [MarketSegmentId], [RiskGroupNumber], [RiskGroupName], [IsActive] 
                             FROM [dbo].[tblRiskGroup]
-                            WHERE [pkRiskGroupId] = @id", new {id})
+                            WHERE [pkRiskGroupId] = @id", new { id })
                         .FirstOrDefault();
                 }
             }
@@ -135,6 +135,27 @@ namespace StandardBank.ConcessionManagement.Repository
                 new CacheKeyParameter(nameof(isActive), isActive));
         }
 
+        public RiskGroup ReadBySAPBPIDIsActive(int sapbpid, bool isActive)
+        {
+            RiskGroup Function()
+            {
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    return db.Query<RiskGroup>(
+                        @"SELECT rg.[pkRiskGroupId] [Id], rg.[fkMarketSegmentId] [MarketSegmentId], rg.[RiskGroupNumber], rg.[RiskGroupName], rg.[IsActive] 
+                        FROM [dbo].[tblRiskGroup] rg
+                        Inner Join	[dbo].[tblLegalEntity] le On le.fkRiskGroupId = rg.pkRiskGroupId
+                        WHERE le.CustomerNumber = @sapbpid
+                        AND rg.[IsActive] = @isActive", new { sapbpid, isActive }).FirstOrDefault();
+                }
+            }
+
+            return _cacheManager.ReturnFromCache(Function, 30,
+                CacheKey.Repository.RiskGroupRepository.ReadByRiskGroupNumberIsActive,
+                new CacheKeyParameter(nameof(sapbpid), sapbpid),
+                new CacheKeyParameter(nameof(isActive), isActive));
+        }
+
         /// <summary>
         /// Reads all.
         /// </summary>
@@ -147,6 +168,22 @@ namespace StandardBank.ConcessionManagement.Repository
                     "SELECT [pkRiskGroupId] [Id], [fkMarketSegmentId] [MarketSegmentId], [RiskGroupNumber], [RiskGroupName], [IsActive] FROM [dbo].[tblRiskGroup]");
             }
         }
+
+        /// <summary>
+        /// by search .
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<RiskGroup> SearchBy(string searchGroup)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<RiskGroup>(
+                    "SELECT [pkRiskGroupId] [Id], [fkMarketSegmentId] [MarketSegmentId], [RiskGroupNumber], [RiskGroupName], [IsActive] FROM [dbo].[tblRiskGroup] Where [RiskGroupName] like '%" + searchGroup + "%'");
+            }
+        }
+
+
+
 
         /// <summary>
         /// Updates the specified model.

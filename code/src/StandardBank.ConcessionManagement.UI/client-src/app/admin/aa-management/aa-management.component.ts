@@ -11,6 +11,7 @@ import { UserService } from '../../services/user.service';
     templateUrl: './aa-management.component.html',
     styleUrls: ['./aa-management.component.css']
 })
+
 export class AaManagementComponent implements OnInit {
 
     errorMessage: string;

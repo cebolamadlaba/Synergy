@@ -1,9 +1,11 @@
-﻿CREATE PROCEDURE [dbo].[CreateUser]
+﻿
+CREATE PROCEDURE [dbo].[CreateUser]
 	@ANumber varchar(50),
 	@EmailAddress varchar(50),
 	@FirstName varchar(50),
 	@LastName varchar(50),
 	@RoleId int,
+	@SubRoleId int,
 	@ContactNumber varchar(50),
 	@IsActive bit,
 	@CanApprove bit
@@ -16,8 +18,8 @@ BEGIN
 	values(@ANumber,@EmailAddress,@FirstName,@LastName,@IsActive,@ContactNumber,@CanApprove)
 	set @userId = SCOPE_IDENTITY()
 
-	insert into [dbo].[tblUserRole] ([fkUserId],[fkRoleId],[IsActive])
-	values(@userId,@RoleId,1)
+	insert into [dbo].[tblUserRole] ([fkUserId],[fkRoleId],[fkSubRoleId],[IsActive])
+	values(@userId,@RoleId,@SubRoleId,1)
 
 	select @userId
 END

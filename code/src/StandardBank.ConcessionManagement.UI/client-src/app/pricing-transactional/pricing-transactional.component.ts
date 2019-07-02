@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -18,6 +18,7 @@ import { UserService } from "../services/user.service";
 export class PricingTransactionalComponent implements OnInit, OnDestroy {
     showHide = false;
     riskGroupNumber: number;
+    sapbpid: number;
     private sub: any;
     observableTransactionalView: Observable<TransactionalView>;
     transactionalView: TransactionalView = new TransactionalView();
@@ -25,7 +26,7 @@ export class PricingTransactionalComponent implements OnInit, OnDestroy {
     pageLoaded = false;
     canRequest = false;
     isLoading = true;
-    
+
     constructor(
         private router: Router,
         private route: ActivatedRoute,
@@ -40,6 +41,7 @@ export class PricingTransactionalComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
+            this.sapbpid = +params['sapbpid'];
 
             if (this.riskGroupNumber) {
                 this.observableTransactionalView = this.transactionalConcessionService.getTransactionalViewData(this.riskGroupNumber);

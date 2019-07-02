@@ -57,7 +57,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 .Returns(new[] { new ConcessionCash() });
 
             MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
-                .Returns(new LegalEntity { IsActive = true });
+                .Returns(new Model.Repository.LegalEntity { IsActive = true });
 
             MockLegalEntityAccountRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
                 .Returns(new LegalEntityAccount { IsActive = true });

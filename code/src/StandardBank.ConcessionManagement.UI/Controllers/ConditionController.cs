@@ -59,11 +59,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(_lookupTableManager.GetConditionTypes());
         }
 
-        [Route("BOLChargeCodes")]
-        public IActionResult GetBOLChargeCodes()
+        [Route("BOLChargeCodes/{riskGroupNumber}")]
+        public IActionResult GetBOLChargeCodes(int riskGroupNumber)
         {
 
-            var codes = _lookupTableManager.GetBOLChargeCodes();
+            var codes = _lookupTableManager.GetBOLChargeCodes(riskGroupNumber);
             return Ok(codes);
         }
 

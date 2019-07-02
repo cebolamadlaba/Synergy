@@ -261,7 +261,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     case Constants.ConcessionType.Transactional:
                         PopulateLegalEntityTransactionalConcessionLetter(concessionInboxViews, requestor, legalEntityConcession);
                         break;
-                    case "Business Online":
+                    case Constants.ConcessionType.BusinessOnlineDesc:
                         PopulateLegalEntityBOLConcessionLetter(concessionInboxViews, requestor, legalEntityConcession);
                         break;
                     case Constants.ConcessionType.Trade:

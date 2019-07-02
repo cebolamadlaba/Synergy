@@ -21,8 +21,9 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, int? userId, string concessiontype);
+        IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, int? userId, string concessiontype, int? legalEntityCustomerNumber = null);
 
+        IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, int? userId, string concessiontype);
 
         IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, int? userId);
 
@@ -35,6 +36,8 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <param name="riskGroupName">Name of the risk group.</param>
         /// <returns></returns>
         IEnumerable<LendingProduct> GetLendingProducts(int riskGroupId, string riskGroupName);
+
+        IEnumerable<LendingProduct> GetLendingProductsByLegalEntityId(int legalEntityId, string legalEntityName);
 
         /// <summary>
         /// Gets the cash products.
@@ -92,6 +95,6 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <returns></returns>
         IEnumerable<BusinessCentreManagementModel> GetBusinessCentreManagementModels();
 
-         BusinessCentreManagementModel GetBusinessCentreManager(int pkCentreId);
+        BusinessCentreManagementModel GetBusinessCentreManager(int pkCentreId);
     }
 }

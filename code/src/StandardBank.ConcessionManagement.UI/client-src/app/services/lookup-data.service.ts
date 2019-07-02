@@ -29,6 +29,7 @@ import { InvestmentProduct } from "../models/investment-product";
 import { LegalEntityBOLUser } from "../models/legal-entity-bol-user";
 import { ConcessionStatus } from '../constants/concession-status';
 import { ConcessionSubStatus } from '../constants/concession-sub-status';
+import { PricingView } from '../models/pricing-view';
 
 @Injectable()
 export class LookupDataService {
@@ -57,8 +58,8 @@ export class LookupDataService {
     }
 
 
-    getClientAccountsConcessionType(riskGroupNumber, concessiontype): Observable<ClientAccount[]> {
-        const url = "/api/Concession/ClientAccountsConcessionType/" + riskGroupNumber + "/" + concessiontype;
+    getClientAccountsConcessionType(riskGroupNumber, sapbpid, concessiontype): Observable<ClientAccount[]> {
+        const url = "/api/Concession/ClientAccountsConcessionType/" + riskGroupNumber + "/" + sapbpid + "/" + concessiontype;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
@@ -86,8 +87,8 @@ export class LookupDataService {
     }
 
 
-    getBOLChargeCodes(): Observable<BolChargeCode[]> {
-        const url = "/api/Condition/BOLChargeCodes";
+    getBOLChargeCodes(riskGroupNumber): Observable<BolChargeCode[]> {
+        const url = "/api/Condition/BOLChargeCodes/" + riskGroupNumber;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
@@ -143,8 +144,18 @@ export class LookupDataService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    getLegalEntity(sapbpid): Observable<RiskGroup> {
+        const url = "/api/Pricing/LegalEntity/" + sapbpid;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
     getRiskGroup(riskGroupNumber): Observable<RiskGroup> {
         const url = "/api/Pricing/RiskGroup/" + riskGroupNumber;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    getRiskGroupBySAPBPID(sapbpid): Observable<PricingView> {
+        const url = "/api/Pricing/RiskGroupBySAPBPID/" + sapbpid;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 

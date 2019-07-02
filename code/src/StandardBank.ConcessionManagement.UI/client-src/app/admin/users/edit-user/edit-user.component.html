@@ -65,12 +65,24 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-md-3" for="email">Role</label>                  
+                    <label class="control-label col-md-3" for="email">Role</label>
 
                     <div class="col-sm-8">
                         <select [(ngModel)]="user.roleId" name="3" class="form-control">
                             <option *ngFor="let p of Roles"
                                     [ngValue]="p.id">
+                                {{p.name}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+             
+                <div class="form-group" *ngIf="user.roleId===6 || user.roleId===1">
+                    <label class="control-label col-sm-3" for="email">Sub Role</label>
+                    <div class="col-sm-8">
+                        <select [(ngModel)]="user.subRoleId" name="3" class="form-control">
+                            <option *ngFor="let p of RoleSubRole"
+                                    [ngValue]="p.subRoleId">
                                 {{p.name}}
                             </option>
                         </select>

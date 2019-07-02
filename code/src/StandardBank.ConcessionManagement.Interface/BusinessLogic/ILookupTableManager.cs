@@ -126,10 +126,10 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         IEnumerable<ConcessionType> GetConcessionTypes(bool isActive);
 
 
-            /// <summary>
-            /// Gets the review fee types.
-            /// </summary>
-            /// <returns></returns>
+        /// <summary>
+        /// Gets the review fee types.
+        /// </summary>
+        /// <returns></returns>
         IEnumerable<ReviewFeeType> GetReviewFeeTypes();
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <returns></returns>
         IEnumerable<ConditionType> GetConditionTypes();
 
-        IEnumerable<BOLChargeCode> GetBOLChargeCodes();
+        IEnumerable<BOLChargeCode> GetBOLChargeCodes(int riskGroupNumber);
 
         IEnumerable<BOLChargeCode> GetBOLChargeCodesAll();
         IEnumerable<BOLChargeCodeType> GetBOLChargeCodeTypes();
@@ -160,6 +160,8 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         string GetTradeProducTypeName(int tradeProductTypeId);
 
         IEnumerable<TradeProduct> GetTradeProducts();
+
+        LegalEntity GetLegalEntity(int sapbpid);
 
         IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsers(int riskGroupNumber);
 
@@ -254,6 +256,8 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <returns></returns>
         RiskGroup GetRiskGroupForRiskGroupNumber(int riskGroupNumber);
 
+        RiskGroup GetRiskGroupForSAPBPID(int sapbpid);
+
         /// <summary>
         /// Gets the transaction table numbers.
         /// </summary>
@@ -266,5 +270,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="transactionTableNumberId">The transaction table number identifier.</param>
         /// <returns></returns>
         string GetTransactionTableNumberDescription(int transactionTableNumberId);
+
+        /// <summary>
+        /// Gets risk groups.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<RiskGroup> GetRiskGroups(string searchGroup);
+
     }
 }

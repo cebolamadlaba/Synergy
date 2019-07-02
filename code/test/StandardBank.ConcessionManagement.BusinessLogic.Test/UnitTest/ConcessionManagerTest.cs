@@ -38,7 +38,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 MockConcessionRelationshipRepository.Object, MockAuditRepository.Object, MockUserManager.Object,
                 MockConcessionInboxViewRepository.Object, MockConcessionDetailRepository.Object,
                 MockConcessionConditionViewRepository.Object, MockMiscPerformanceRepository.Object, MockCentreRepository.Object, null, null,
-                MockAENumberUserManager.Object);
+                MockAENumberUserManager.Object, MockSUbRoleRepository.Object);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockLookupTableManager.Setup(_ => _.GetStatusId(It.IsAny<string>())).Returns(1);
 
             MockLegalEntityRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new LegalEntity { IsActive = true });
+                .Returns(new Model.Repository.LegalEntity { IsActive = true });
 
             MockRiskGroupRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
                 .Returns(new Model.Repository.RiskGroup { IsActive = true });
@@ -160,7 +160,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockLookupTableManager.Setup(_ => _.GetStatusId(It.IsAny<string>())).Returns(1);
             MockLookupTableManager.Setup(_ => _.GetSubStatusId(It.IsAny<string>())).Returns(1);
             MockLegalEntityRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
-                .Returns(new LegalEntity { IsActive = true });
+                .Returns(new Model.Repository.LegalEntity { IsActive = true });
 
             MockRiskGroupRepository.Setup(_ => _.ReadByIdIsActive(It.IsAny<int>(), It.IsAny<bool>()))
                 .Returns(new Model.Repository.RiskGroup { IsActive = true });

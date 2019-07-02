@@ -45,6 +45,8 @@ import { PcmManagementComponent } from './admin/pcm-management/pcm-management.co
 import { BcmManagementComponent } from './admin/bcm-management/bcm-management.component';
 import { AeManagementComponent } from './admin/ae-management/ae-management.component';
 import { AaManagementComponent } from './admin/aa-management/aa-management.component';
+import { BolTradeManagementComponent } from './admin/bol-trade-management/bol-trade-management.component';
+import { BolTradeAeManagementComponent } from './admin/bol-trade-ae-management/bol-trade-ae-management.component';
 
 import { BOLCHManagementComponent } from './admin/bol-chargecodes/bol-chargecodes.component';
 import { TransactionTypesManagementComponent } from './admin/transaction-types/transaction-types.component';
@@ -65,29 +67,29 @@ const routes: Routes = [
     { path: 'search', component: SearchComponent },
     { path: 'pricing', component: PricingComponent },
     { path: 'pricing/:riskGroupNumber', component: PricingComponent },
-    { path: 'pricing-lending/:riskGroupNumber', component: PricingLendingComponent },
-    { path: 'pricing-cash/:riskGroupNumber', component: PricingCashComponent },
-    { path: 'pricing-transactional/:riskGroupNumber', component: PricingTransactionalComponent },
-    { path: 'pricing-investments/:riskGroupNumber', component: PricingInvestmentsComponent },
-    { path: 'pricing-bol/:riskGroupNumber', component: PricingBolComponent },
-    { path: 'pricing-trade/:riskGroupNumber', component: PricingTradeComponent },
+    { path: 'pricing-lending/:riskGroupNumber/:sapbpid', component: PricingLendingComponent },
+    { path: 'pricing-cash/:riskGroupNumber/:sapbpid', component: PricingCashComponent },
+    { path: 'pricing-transactional/:riskGroupNumber/:sapbpid', component: PricingTransactionalComponent },
+    { path: 'pricing-investments/:riskGroupNumber/:sapbpid', component: PricingInvestmentsComponent },
+    { path: 'pricing-bol/:riskGroupNumber/:sapbpid', component: PricingBolComponent },
+    { path: 'pricing-trade/:riskGroupNumber/:sapbpid', component: PricingTradeComponent },
     { path: 'pricing-mas', component: PricingMasComponent },
     { path: 'pricing-cashman', component: PricingCashmanComponent },
-    { path: 'transactional-add-concession/:riskGroupNumber', component: TransactionalAddConcessionComponent },
+    { path: 'transactional-add-concession/:riskGroupNumber/:sapbpid', component: TransactionalAddConcessionComponent },
     { path: 'transactional-view-concession/:riskGroupNumber/:concessionReferenceId', component: TransactionalViewConcessionComponent },
-    { path: 'cash-add-concession/:riskGroupNumber', component: CashAddConcessionComponent },
+    { path: 'cash-add-concession/:riskGroupNumber/:sapbpid', component: CashAddConcessionComponent },
     { path: 'cash-view-concession/:riskGroupNumber/:concessionReferenceId', component: CashViewConcessionComponent },
-    { path: 'lending-add-concession/:riskGroupNumber', component: LendingAddConcessionComponent },
+    { path: 'lending-add-concession/:riskGroupNumber/:sapbpid', component: LendingAddConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
-    { path: 'investments-add-concession/:riskGroupNumber', component: InvestmentAddConcessionComponent },
+    { path: 'investments-add-concession/:riskGroupNumber/:sapbpid', component: InvestmentAddConcessionComponent },
     { path: 'investments-view-concession/:riskGroupNumber/:concessionReferenceId', component: InvestmentsViewConcessionComponent },
 
-    { path: 'bol-add-concession/:riskGroupNumber', component: BolAddConcessionComponent },
+    { path: 'bol-add-concession/:riskGroupNumber/:sapbpid', component: BolAddConcessionComponent },
     { path: 'bol-view-concession/:riskGroupNumber/:concessionReferenceId', component: BolViewConcessionComponent },
 
     { path: 'mas-add-concession', component: MasAddConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
-    { path: 'trade-add-concession/:riskGroupNumber', component: TradeAddConcessionComponent },
+    { path: 'trade-add-concession/:riskGroupNumber/:sapbpid', component: TradeAddConcessionComponent },
     { path: 'trade-view-concession/:riskGroupNumber/:concessionReferenceId', component: TradeViewConcessionComponent },
 
     { path: 'cashman-add-concession', component: CashmanAddConcessionComponent },
@@ -101,6 +103,8 @@ const routes: Routes = [
     { path: 'admin/bcm-management', component: BcmManagementComponent },
     { path: 'admin/ae-management', component: AeManagementComponent },
     { path: 'admin/aa-management', component: AaManagementComponent },
+    { path: 'admin/bol-trade-management', component: BolTradeManagementComponent },
+    { path: 'admin/bol-trade-ae-management', component: BolTradeAeManagementComponent },
 
     { path: 'admin/bol-chargecodes', component: BOLCHManagementComponent },
     { path: 'admin/transaction-types', component: TransactionTypesManagementComponent },

@@ -1,3 +1,5 @@
+import { RiskGroup } from "./risk-group";
+
 export class BolChargeCode {
     chargeCodeId: number;
     chargeCodeTypeId: number;
@@ -7,4 +9,6 @@ export class BolChargeCode {
     pkChargeCodeId: number;
     fkChargeCodeTypeId: number;
     isActive: boolean;
+    IsNonUniversal: boolean;
+    riskGroups: Array<RiskGroup>;
 }

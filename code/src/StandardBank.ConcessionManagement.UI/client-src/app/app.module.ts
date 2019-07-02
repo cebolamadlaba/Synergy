@@ -45,11 +45,13 @@ import { RegionService } from './services/region.service';
 import { BusinessCentreService } from './services/business-centre.service';
 import { PcmManagementService } from './services/pcm-management.service';
 import { BcmManagementService } from './services/bcm-management.service';
-import { AeManagementService } from './services/ae-management.service';
+import { AeManagementService } from './services/ae-management.service'; 
 import { AaManagementService } from './services/aa-management.service';
 import { BaseComponentService } from './services/base-component.service';
 import { ConcessionLetterService } from './services/concession-letter.service';
-
+import { BolTradeManagementService } from './services/bol-trade-management.service'
+import { BolTradeAeManagementService } from './services/bol-trade-ae-management.service';
+ 
 import { AdminTransactionTablesService } from './services/admin-transaction-tables.service';
 import { LegalEntityAddressService } from './services/legal-entity-address.service';
 
@@ -93,6 +95,9 @@ import { AaManagementComponent } from './admin/aa-management/aa-management.compo
 import { BOLCHManagementComponent } from './admin/bol-chargecodes/bol-chargecodes.component';
 import { TransactionTypesManagementComponent } from './admin/transaction-types/transaction-types.component';
 import { ChannelTypesManagementComponent } from './admin/channel-types/channel-types.component';
+import { BolTradeManagementComponent } from './admin/bol-trade-management/bol-trade-management.component';
+import { BolTradeAeManagementComponent } from './admin/bol-trade-ae-management/bol-trade-ae-management.component';
+import { FilterPipe } from './filters/filter.pipe';
 
 
 @NgModule({
@@ -150,7 +155,10 @@ import { ChannelTypesManagementComponent } from './admin/channel-types/channel-t
         SearchComponent,
         BOLCHManagementComponent,
         TransactionTypesManagementComponent,
-        ChannelTypesManagementComponent
+        ChannelTypesManagementComponent,
+        BolTradeManagementComponent,
+        BolTradeAeManagementComponent,
+        FilterPipe
 
     ],
     imports: [
@@ -164,6 +172,7 @@ import { ChannelTypesManagementComponent } from './admin/channel-types/channel-t
         ReactiveFormsModule,
         BsDropdownModule.forRoot(),
         MyDatePickerModule
+       
     ],
     providers: [
         LookupDataService,
@@ -187,7 +196,9 @@ import { ChannelTypesManagementComponent } from './admin/channel-types/channel-t
         InvestmentConcessionService,
         BaseComponentService,
         ConcessionLetterService,
-        LegalEntityAddressService
+        LegalEntityAddressService,
+        BolTradeManagementService,
+        BolTradeAeManagementService
     ],
     bootstrap: [AppComponent]
 })

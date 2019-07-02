@@ -4,8 +4,8 @@
     [fkConcessionDetailId]   INT             NOT NULL,
     [fkTradeProductId]       INT             NULL,
     [fkLegalEntityAccountId] INT             NULL,
-    [LoadedRate]             DECIMAL (18, 2) NULL,
-    [ApprovedRate]           DECIMAL (18, 2) NULL,
+    [LoadedRate]             DECIMAL (18, 5) NULL,
+    [ApprovedRate]           DECIMAL (18, 5) NULL,
     [GBBNumber]              VARCHAR (250)   NULL,
     [Term]                   INT             NULL,
     [Min]                    DECIMAL (18, 2) NULL,
@@ -22,6 +22,10 @@
     CONSTRAINT [FK_tblConcessionTrade_tblConcession] FOREIGN KEY ([fkConcessionId]) REFERENCES [dbo].[tblConcession] ([pkConcessionId]),
     CONSTRAINT [FK_tblConcessionTrade_tblConcessionDetail] FOREIGN KEY ([fkConcessionDetailId]) REFERENCES [dbo].[tblConcessionDetail] ([pkConcessionDetailId])
 );
+
+
+
+
 
 
 

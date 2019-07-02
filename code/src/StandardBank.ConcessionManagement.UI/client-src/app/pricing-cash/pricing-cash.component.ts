@@ -17,6 +17,8 @@ import { UserService } from "../services/user.service";
 })
 export class PricingCashComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
+    sapbpid: number;
+
     private sub: any;
     observableCashView: Observable<CashView>;
     cashView: CashView = new CashView();
@@ -41,6 +43,7 @@ export class PricingCashComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
+            this.sapbpid = +params['sapbpid'];
 
             if (this.riskGroupNumber) {
                 this.observableCashView = this.cashConcessionService.getCashViewData(this.riskGroupNumber);

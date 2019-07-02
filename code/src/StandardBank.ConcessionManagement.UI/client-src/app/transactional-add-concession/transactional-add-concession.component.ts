@@ -35,6 +35,8 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
+    sapbpid: number;
+
     selectedConditionTypes: ConditionType[];
     selectedTransactionTypes: TransactionType[];
     isLoading = true;
@@ -75,6 +77,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
+            this.sapbpid = +params['sapbpid'];
         });
 
         this.transactionalConcessionForm = this.formBuilder.group({

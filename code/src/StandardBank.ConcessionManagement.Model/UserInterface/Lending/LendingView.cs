@@ -15,6 +15,8 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Lending
         /// </value>
         public RiskGroup RiskGroup { get; set; }
 
+        public LegalEntity LegalEntity { get; set; }
+
         /// <summary>
         /// Gets or sets the lending concessions.
         /// </summary>

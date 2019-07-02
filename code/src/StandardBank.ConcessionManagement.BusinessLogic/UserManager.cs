@@ -34,6 +34,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IUserRoleRepository _userRoleRepository;
 
         /// <summary>
+        /// The user sub role repository
+        /// </summary>
+        private readonly IRoleSubRoleRepository _RoleSubRoleRepository;
+
+        /// <summary>
         /// The role repository
         /// </summary>
         private readonly IRoleRepository _roleRepository;
@@ -71,6 +76,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="cacheManager">The cache manager.</param>
         /// <param name="userRepository">The user repository.</param>
         /// <param name="userRoleRepository">The user role repository.</param>
+        /// <param name="RoleSubRoleRepository">The user sub role repository.</param>
         /// <param name="roleRepository">The role repository.</param>
         /// <param name="centreRepository">The centre repository.</param>
         /// <param name="centreUserRepository">The centre user repository.</param>
@@ -79,12 +85,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="regionManager">The region manager.</param>
         public UserManager(ICacheManager cacheManager, IUserRepository userRepository,
             IUserRoleRepository userRoleRepository, IRoleRepository roleRepository, ICentreRepository centreRepository,
-            ICentreUserRepository centreUserRepository, IMapper mapper,
+            ICentreUserRepository centreUserRepository, IMapper mapper,IRoleSubRoleRepository RoleSubRoleRepository,
             IAccountExecutiveAssistantRepository accountExecutiveAssistantRepository, IRegionManager regionManager, IMemoryCache memoryCache)
         {
             _cacheManager = cacheManager;
             _userRepository = userRepository;
             _userRoleRepository = userRoleRepository;
+            _RoleSubRoleRepository = RoleSubRoleRepository;
             _roleRepository = roleRepository;
             _centreRepository = centreRepository;
             _centreUserRepository = centreUserRepository;
@@ -113,6 +120,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var usr = _cacheManager.ReturnFromCache(function, 1440, CacheKey.UserInterface.SiteHelper.LoggedInUser, new CacheKeyParameter(nameof(aNumber), aNumber));
 
+            if (usr != null)
+            {
+                var RoleSubRole = _userRoleRepository.ReadByUserId(usr.Id).Select(x => x.SubRoleId);
+            
+                foreach (var subRole in RoleSubRole)
+                {
+                    if (subRole.HasValue)
+                    {
+                        usr.SubRoleId = subRole;
+                    }
+                }
+            }
+           
             //If an accountExecitive was set from UI side, re-populate it.
             if (usr != null)
             {
@@ -128,7 +148,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     }
                 }
             }
-
             return usr;
         }
 
@@ -144,7 +163,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedUser.UserRoles = GetUserRoles(user.Id);
             if (mappedUser.UserRoles.Count() > 0)
                 mappedUser.RoleId = mappedUser.UserRoles.FirstOrDefault().Id;
-
+                var RoleSubRole = _userRoleRepository.ReadByUserId(mappedUser.Id).Select(x=>x.SubRoleId);
+                foreach (var subRole in RoleSubRole)
+                {
+                   if(subRole.HasValue){
+                     mappedUser.SubRoleId = subRole;
+                   }
+                }
+                                
             mappedUser.UserCentres = GetUserCentres(user.Id);
             mappedUser.SelectedCentre = mappedUser.UserCentres.FirstOrDefault();
 
@@ -186,18 +212,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return mappedUser;
         }
 
-        /// <summary>
-        /// Gets the account executive.
-        /// </summary>
-        /// <param name="userId">The user identifier.</param>
-        /// <returns></returns>
-        //private User GetAccountExecutive(int userId)
-        //{
-        //    var accountExecutiveAssistant = _accountExecutiveAssistantRepository.ReadByAccountAssistantUserId(userId);
-
-        //    return accountExecutiveAssistant != null ? GetUser(accountExecutiveAssistant.AccountExecutiveUserId) : null;
-        //}
-
+       
         /// <summary>
         /// Gets the user.
         /// </summary>
@@ -252,6 +267,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             return userCentres;
+        }
+
+        /// <summary>
+        /// Gets the user sub role.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<RoleSubRole> GetRoleSubRole()
+        {
+            return _mapper.Map<IEnumerable<RoleSubRole>>(_RoleSubRoleRepository.ReadAll());
         }
 
         /// <summary>

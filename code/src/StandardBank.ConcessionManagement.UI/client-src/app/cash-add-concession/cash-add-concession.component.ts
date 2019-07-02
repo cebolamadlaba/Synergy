@@ -37,6 +37,8 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
+    sapbpid: number;
+
     public cashConcessionForm: FormGroup;
     selectedConditionTypes: ConditionType[];
     isLoading = true;
@@ -81,6 +83,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
+            this.sapbpid = +params['sapbpid'];
 
             if (this.riskGroupNumber) {
                 this.observableRiskGroup = this.lookupDataService.getRiskGroup(this.riskGroupNumber);

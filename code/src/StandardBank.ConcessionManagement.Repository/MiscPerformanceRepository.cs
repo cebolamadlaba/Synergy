@@ -44,19 +44,24 @@ namespace StandardBank.ConcessionManagement.Repository
             _cacheManager = cacheManager;
         }
 
+        public IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, int? userId, string concessiontype)
+        {
+            return this.GetClientAccounts(riskGroupNumber, userId, concessiontype, 0);
+        }
+
         /// <summary>
         /// Gets the client accounts.
         /// </summary>
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        public IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, int? userId, string concessiontype)
+        public IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, int? userId, string concessiontype, int? legalEntityCustomerNumber = null)
         {
             try
             {
                 IEnumerable<ClientAccount> Function()
                 {
-                   
+
                     using (var db = _dbConnectionFactory.Connection())
                     {
 
@@ -67,19 +72,33 @@ namespace StandardBank.ConcessionManagement.Repository
 
                             if (concessiontype == Model.BusinessLogic.Constants.ConcessionType.Lending)
                             {
-                                sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] , prod.Description 'AccountType' 
-                            FROM [dbo].[tblRiskGroup] rg
-                            JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
-                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
-                            join tblProductLending on lea.pkLegalEntityAccountId = tblProductLending.fkLegalEntityAccountId
-                            join rtblProduct prod on tblProductLending.fkProductId = prod.pkProductId
-                            WHERE rg.[RiskGroupNumber] = @riskGroupNumber                          
-                            AND rg.[IsActive] = 1
-                            AND le.[IsActive] = 1
-                            AND lea.[IsActive] = 1
-                            AND le.[fkUserId] = @userId";
-
-
+                                if (riskGroupNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] , prod.Description 'AccountType' 
+                                            FROM [dbo].[tblRiskGroup] rg
+                                            JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
+                                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                            join tblProductLending on lea.pkLegalEntityAccountId = tblProductLending.fkLegalEntityAccountId
+                                            join rtblProduct prod on tblProductLending.fkProductId = prod.pkProductId
+                                            WHERE rg.[RiskGroupNumber] = @riskGroupNumber                          
+                                            AND rg.[IsActive] = 1
+                                            AND le.[IsActive] = 1
+                                            AND lea.[IsActive] = 1
+                                            AND le.[fkUserId] = @userId";
+                                }
+                                if (legalEntityCustomerNumber.HasValue && legalEntityCustomerNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], lea.[AccountNumber], le.[CustomerName] , prod.Description 'AccountType' 
+                                            FROM [dbo].[tblLegalEntity] le
+                                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                            join tblProductLending on lea.pkLegalEntityAccountId = tblProductLending.fkLegalEntityAccountId
+                                            join rtblProduct prod on tblProductLending.fkProductId = prod.pkProductId
+                                            WHERE le.[CustomerNumber] = @legalEntityCustomerNumber
+                                            AND le.[IsActive] = 1
+                                            AND le.[IsActive] = 1
+                                            AND lea.[IsActive] = 1
+                                            AND le.[fkUserId] = @userId";
+                                }
                             }
                             else if (concessiontype == Model.BusinessLogic.Constants.ConcessionType.Cash)
                             {
@@ -167,8 +186,12 @@ namespace StandardBank.ConcessionManagement.Repository
 
                             }
 
-                            var clientAccounts = db.Query<ClientAccount>(sql,
-                            new { riskGroupNumber, userId }, commandTimeout: Int32.MaxValue);
+                            IEnumerable<ClientAccount> clientAccounts = null;
+
+                            if (riskGroupNumber > 0)
+                                clientAccounts = db.Query<ClientAccount>(sql, new { riskGroupNumber, userId }, commandTimeout: Int32.MaxValue);
+                            else
+                                clientAccounts = db.Query<ClientAccount>(sql, new { legalEntityCustomerNumber, userId }, commandTimeout: Int32.MaxValue);
 
                             if (clientAccounts != null && clientAccounts.Any())
                                 return clientAccounts;
@@ -295,7 +318,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     return null;
                 }
 
-                if(_cacheManager.Exists(CacheKey.Repository.TransactionTableNumberRepository.ReadAll))
+                if (_cacheManager.Exists(CacheKey.Repository.TransactionTableNumberRepository.ReadAll))
                 {
                     return _cacheManager.ReturnFromCache(Function, 30,
                    CacheKey.Repository.MiscPerformanceRepository.GetClientAccounts,
@@ -319,7 +342,7 @@ namespace StandardBank.ConcessionManagement.Repository
 
                 }
 
-               
+
             }
             catch (Exception ex)
             {
@@ -412,6 +435,35 @@ namespace StandardBank.ConcessionManagement.Repository
                 CacheKey.Repository.MiscPerformanceRepository.GetLendingProducts,
                 new CacheKeyParameter(nameof(riskGroupId), riskGroupId),
                 new CacheKeyParameter(nameof(riskGroupName), riskGroupName));
+        }
+
+        public IEnumerable<LendingProduct> GetLendingProductsByLegalEntityId(int legalEntityId, string legalEntityName)
+        {
+            IEnumerable<LendingProduct> Function()
+            {
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    var lendingProducts = db.Query<LendingProduct>(
+                        @"SELECT	pl.[pkProductLendingId] [LendingProductId], p.[Description] [Product], le.[CustomerName], lea.[AccountNumber], pl.[Limit], pl.[AverageBalance], pl.[LoadedMap], le.[CustomerName] [LegalEntityName]
+                            FROM [dbo].[tblProductLending] pl
+                            JOIN [dbo].[rtblProduct] p on p.[pkProductId] = pl.[fkProductId]
+                            JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = pl.[fkLegalEntityId]
+                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = pl.[fkLegalEntityAccountId]
+                        WHERE le.[pkLegalEntityId] = @legalEntityId
+                        AND p.showpricing = 1", new { legalEntityId, legalEntityName },
+                        commandTimeout: Int32.MaxValue);
+
+                    if (lendingProducts != null && lendingProducts.Any())
+                        return lendingProducts;
+                }
+
+                return null;
+            }
+
+            return _cacheManager.ReturnFromCache(Function, 300,
+                CacheKey.Repository.MiscPerformanceRepository.GetLendingProducts,
+                new CacheKeyParameter(nameof(legalEntityId), legalEntityId),
+                new CacheKeyParameter(nameof(legalEntityName), legalEntityName));
         }
 
         /// <summary>
@@ -658,7 +710,8 @@ namespace StandardBank.ConcessionManagement.Repository
                     [ReviewFee], 
                     [UffFee],
                     [Frequency],
-                    [ServiceFee]
+                    [ServiceFee],
+                    [MRS_BRI] [MrsBri]
                     FROM [dbo].[tblConcessionDetail] cd
                     JOIN [dbo].[tblConcessionLending] cl on cl.[fkConcessionDetailId] = cd.[pkConcessionDetailId]
                     JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = cd.[fkLegalEntityId]
@@ -725,7 +778,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     [IsMismatched], 
                     [PriceExported], 
                     [PriceExportedDate],
-                    AdValorem,
+                    AdValorem ,                   
                     Currency,
                     EstablishmentFee,
 					tr.pkConcessionTradeId [TradeConcessionDetailId],
@@ -736,12 +789,12 @@ namespace StandardBank.ConcessionManagement.Repository
 					ty.Description TradeProductType,							
                     tr.fkLegalEntityAccountId,
                     tr.fkTradeProductId,
-                    tr.Communication,
+                    tr.Communication, 
 					tr.EstablishmentFee,
 					tr.FlatFee,
-					IsNull(gb.GBBNumber,tr.GBBNumber) [GBBNumber],
-					tr.[Max],
-					tr.[Min],
+					IsNull(gb.GBBNumber,tr.GBBNumber) [GBBNumber],	
+                    tr.[Max],
+                    tr.[Min],
 					tr.[Term],
                     tr.fkLegalEntityGBBNumber,
 					tr.fkLegalEntityAccountId,

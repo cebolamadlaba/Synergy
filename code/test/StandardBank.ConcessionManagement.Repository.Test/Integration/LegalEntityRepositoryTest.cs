@@ -102,13 +102,17 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         {
             var results = InstantiatedDependencies.LegalEntityRepository.ReadAll();
             var riskGroupId = results.First(_ => _.IsActive).RiskGroupId;
-            var result = InstantiatedDependencies.LegalEntityRepository.ReadByRiskGroupIdIsActive(riskGroupId, true);
+            if (riskGroupId.HasValue)
+            {
+                var result = InstantiatedDependencies.LegalEntityRepository.ReadByRiskGroupIdIsActive(riskGroupId.Value, true);
 
-            Assert.NotNull(result);
-            Assert.NotEmpty(result);
+                Assert.NotNull(result);
+                Assert.NotEmpty(result);
 
-            foreach (var record in result)
-                Assert.Equal(record.RiskGroupId, riskGroupId);
+                foreach (var record in result)
+                    Assert.Equal(record.RiskGroupId, riskGroupId);
+            }
+
         }
 
         /// <summary>
@@ -119,13 +123,18 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
         {
             var results = InstantiatedDependencies.LegalEntityRepository.ReadAll();
             var riskGroupId = results.First(_ => !_.IsActive).RiskGroupId;
-            var result = InstantiatedDependencies.LegalEntityRepository.ReadByRiskGroupIdIsActive(riskGroupId, false);
 
-            Assert.NotNull(result);
-            Assert.NotEmpty(result);
+            if (riskGroupId.HasValue)
+            {
+                var result = InstantiatedDependencies.LegalEntityRepository.ReadByRiskGroupIdIsActive(riskGroupId.Value, false);
 
-            foreach (var record in result)
-                Assert.Equal(record.RiskGroupId, riskGroupId);
+                Assert.NotNull(result);
+                Assert.NotEmpty(result);
+
+                foreach (var record in result)
+                    Assert.Equal(record.RiskGroupId, riskGroupId);
+            }
+
         }
 
         /// <summary>

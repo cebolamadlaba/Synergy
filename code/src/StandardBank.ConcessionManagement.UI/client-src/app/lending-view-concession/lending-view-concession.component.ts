@@ -258,7 +258,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 this.isInProgressExtension = lendingConcession.concession.isInProgressExtension;
                 this.isInProgressRenewal = lendingConcession.concession.isInProgressRenewal;
 
-                this.lendingConcessionForm.controls['mrsCrs'].setValue(this.lendingConcession.concession.mrsCrs);
+                //this.lendingConcessionForm.controls['mrsCrs'].setValue(this.lendingConcession.concession.mrsCrs);
                 this.lendingConcessionForm.controls['smtDealNumber'].setValue(this.lendingConcession.concession.smtDealNumber);
                 this.lendingConcessionForm.controls['motivation'].setValue(this.lendingConcession.concession.motivation);
 
@@ -331,15 +331,16 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
                     currentConcession.get('limit').setValue(this.formatDecimal(lendingConcessionDetail.limit));
                     currentConcession.get('term').setValue(lendingConcessionDetail.term);
-                    currentConcession.get('marginAgainstPrime').setValue(this.formatDecimal3(lendingConcessionDetail.marginAgainstPrime));
-                    currentConcession.get('approvedMarginAgainstPrime').setValue(this.formatDecimal3(lendingConcessionDetail.approvedMap));
-                    currentConcession.get('initiationFee').setValue(this.formatDecimal3(lendingConcessionDetail.initiationFee));
+                    currentConcession.get('marginAgainstPrime').setValue(this.formatDecimal4(lendingConcessionDetail.marginAgainstPrime));
+                    currentConcession.get('approvedMarginAgainstPrime').setValue(this.formatDecimal4(lendingConcessionDetail.approvedMap));
+                    currentConcession.get('initiationFee').setValue(this.formatDecimal4(lendingConcessionDetail.initiationFee));
 
                     let selectedReviewFeeType = this.reviewFeeTypes.filter(_ => _.id == lendingConcessionDetail.reviewFeeTypeId);
                     currentConcession.get('reviewFeeType').setValue(selectedReviewFeeType[0]);
                     currentConcession.get('reviewFee').setValue(this.formatDecimal3(lendingConcessionDetail.reviewFee));
                     currentConcession.get('uffFee').setValue(this.formatDecimal3(lendingConcessionDetail.uffFee));
 
+                    currentConcession.get('mrsBri').setValue(lendingConcessionDetail.mrsBri);
 
                     currentConcession.get('serviceFee').setValue(this.formatDecimal3(lendingConcessionDetail.serviceFee));
                     currentConcession.get('frequency').setValue(lendingConcessionDetail.frequency);
@@ -423,6 +424,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             isExpiring: [''],
             frequency: [{ value: '', disabled: true }],
             serviceFee: [{ value: '', disabled: true }],
+            mrsBri: [''],
         });
     }
 
@@ -672,17 +674,17 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         lendingConcession.concession.concessionType = ConcessionTypes.Lending;
         lendingConcession.concession.referenceNumber = this.concessionReferenceId;
 
-        if (this.lendingConcessionForm.controls['mrsCrs'].value)
-            lendingConcession.concession.mrsCrs = this.lendingConcessionForm.controls['mrsCrs'].value;
-        else
-            if (this.lendingConcessionForm.controls['mrsCrs'].value != 0) {
-                this.addValidationError("MRS/CRS not captured");
-            }
+        //if (this.lendingConcessionForm.controls['mrsCrs'].value)
+        //    lendingConcession.concession.mrsCrs = this.lendingConcessionForm.controls['mrsCrs'].value;
+        //else
+        //    if (this.lendingConcessionForm.controls['mrsCrs'].value != 0) {
+        //        this.addValidationError("MRS/CRS not captured");
+        //    }
 
         if (this.lendingConcessionForm.controls['smtDealNumber'].value)
             lendingConcession.concession.smtDealNumber = this.lendingConcessionForm.controls['smtDealNumber'].value;
-        //else
-        //    this.addValidationError("SMT Deal Number not captured");
+        else
+            this.addValidationError("SMT Deal Number not captured");
 
         if (this.lendingConcessionForm.controls['motivation'].value)
             lendingConcession.concession.motivation = this.lendingConcessionForm.controls['motivation'].value;
@@ -758,6 +760,14 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             if (concessionFormItem.get('expiryDate').value)
                 lendingConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
+            if (concessionFormItem.get('mrsBri').value == "" ||
+                (<string>concessionFormItem.get('mrsBri').value).trim() == "." ||
+                (<string>concessionFormItem.get('mrsBri').value).split(".").length > 1) {
+                this.addValidationError("MRS/BRI cannot be empty or a decimal");
+            }
+            else
+                lendingConcessionDetail.mrsBri = concessionFormItem.get('mrsBri').value;
+
             lendingConcession.lendingConcessionDetails.push(lendingConcessionDetail);
 
             if (hasProductType && hasLegalEntityId && hasLegalEntityAccountId) {
@@ -773,6 +783,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                     break;
                 }
             }
+
         }
 
         const conditions = <FormArray>this.lendingConcessionForm.controls['conditionItemsRows'];
@@ -1152,6 +1163,34 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
+    saveUpdatedConcession() {
+        this.isLoading = true;
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var lendingConcession = this.getLendingConcession(true);
+
+        lendingConcession.concession.type = "Existing";
+        lendingConcession.concession.referenceNumber = this.concessionReferenceId;
+
+        if (!this.validationError) {
+            this.lendingService.postUpdateLendingData(lendingConcession, this.editType).subscribe(entity => {
+                console.log("data saved");
+                this.isEditing = false;
+                this.saveMessage = entity.concession.childReferenceNumber;
+                this.lendingConcession = entity;
+                this.canEdit = false;
+                this.motivationEnabled = false;
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
     recallConcession() {
         this.isLoading = true;
         this.errorMessage = null;
@@ -1269,7 +1308,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
     archiveConcessiondetail(concessionDetailId: number) {
 
-        if (confirm("Are you sure you want to delete the concession item ?")) {
+        if (confirm("Please note that the account will be put back to standard pricing. Are you sure you want to delete this concession ?")) {
             this.isLoading = true;
             this.errorMessage = null;
 
@@ -1289,7 +1328,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     archiveConcession() {
-        if (confirm("Are you sure you want to delete this concession ?")) {
+        if (confirm("Please note that the account will be put back to standard pricing. Are you sure you want to delete this concession ?")) {
             this.isLoading = true;
             this.errorMessage = null;
 
@@ -1343,7 +1382,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         }
         else {
 
-            $event.target.value = null;
+            $event.target.value = 0;
         }
     }
 
@@ -1353,7 +1392,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
         }
 
-        return null;
+        return 0;
     }
 
     formatDecimal3(itemValue: number) {
@@ -1362,9 +1401,18 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             return new DecimalPipe('en-US').transform(itemValue, '1.3-4');
         }
 
-        return null;
+        return 0;
     }
 
+
+    formatDecimal4(itemValue: number) {
+        if (itemValue) {
+
+            return new DecimalPipe('en-US').transform(itemValue, '1.3-4');
+        }
+
+        return 0.00;
+    }
 
     getlendingConcessionDetail(index: number, type: string) {
         if (!this.lendingConcession.lendingConcessionDetails[index]) {

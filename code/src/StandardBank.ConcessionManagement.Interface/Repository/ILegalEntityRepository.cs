@@ -30,6 +30,8 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <returns></returns>
         LegalEntity ReadByIdIsActive(int id, bool isActive);
 
+        LegalEntity ReadBySAPBPIDIsActive(int sapbpid, bool isActive);
+
         /// <summary>
         /// Reads by the risk group id specified
         /// </summary>

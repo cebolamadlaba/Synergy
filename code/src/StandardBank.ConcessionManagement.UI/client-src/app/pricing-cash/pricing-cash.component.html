@@ -122,7 +122,6 @@
                                     <th>Account(No.)</th>
                                     <th>Channel</th>
                                     <th>Table Number</th>
-                                    <th>BP ID</th>
                                     <th>Loaded Price</th>
                                 </tr>
                             </thead>
@@ -131,7 +130,6 @@
                                     <td class="leftAlign">{{cashProduct.accountNumber}}</td>
                                     <td class="leftAlign">{{cashProduct.channel}}</td>
                                     <td class="leftAlign"> {{cashProduct.tariffTable}}</td>
-                                    <td class="rightAlign"> {{cashProduct.bpId}}</td>
                                     <td class="rightAlign"> {{cashProduct.loadedPrice}}</td>
                                 </tr>
                             </tbody>
@@ -140,40 +138,7 @@
                 </div>
 
 
-            </div>
-
-
-            <!-- Products list -->
-            <!--<div class="section-body" *ngFor="let cashProduct of cashView.cashProducts; trackBy: index;">
-        <div class="product-section">
-            <div class="product-name"> {{cashProduct.customerName}}</div>
-            <div>
-                <div class="product-account">Account No: {{cashProduct.accountNumber}}</div>
-                <div class="product-code">Channel: {{cashProduct.channel}}</div>
-            </div>
-        </div>
-        <div class="product-table-container">
-            <table class="table table-bordered table-hover header-fixed table-striped ">
-                <thead>
-                    <tr>
-                        <th>Table Number</th>
-                        <th>BP ID</th>
-
-                        <th>Loaded Price</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="rightAlign"> {{cashProduct.tariffTable}}</td>
-                        <td class="rightAlign"> {{cashProduct.bpId}}</td>
-
-                        <td class="rightAlign"> {{cashProduct.loadedPrice}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>-->
-            <!-- End of products list -->
+            </div>           
 
         </div>
     </div>

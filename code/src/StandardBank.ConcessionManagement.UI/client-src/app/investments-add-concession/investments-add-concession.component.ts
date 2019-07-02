@@ -50,6 +50,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
+    sapbpid: number;
 
     primeRate = "0.00";
     today: string;
@@ -125,7 +126,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
 
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
-
+            this.sapbpid = +params['sapbpid'];
 
             if (this.riskGroupNumber) {
 
@@ -329,16 +330,11 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
         investmentConcession.concession = new Concession();
         investmentConcession.concession.riskGroupId = this.riskGroup.id;
 
-
-
-        //if (this.investmentConcessionForm.controls['smtDealNumber'].value) {
-        //    investmentConcession.concession.smtDealNumber = this.investmentConcessionForm.controls['smtDealNumber'].value;
-        //}
-
-        //else
-        //    this.addValidationError("SMT Deal Number not captured");
-
-
+        if (this.investmentConcessionForm.controls['smtDealNumber'].value) {
+            investmentConcession.concession.smtDealNumber = this.investmentConcessionForm.controls['smtDealNumber'].value;
+        }
+        else
+            this.addValidationError("SMT Deal Number not captured");
 
         if (this.investmentConcessionForm.controls['motivation'].value)
             investmentConcession.concession.motivation = this.investmentConcessionForm.controls['motivation'].value;
