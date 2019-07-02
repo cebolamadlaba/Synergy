@@ -52,6 +52,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     saveMessage: String;
     warningMessage: String;
     riskGroupNumber: number;
+    sapbpid: number;
     selectedConditionTypes: ConditionType[];
     selectedProductTypes: ProductType[];
     isLoading = true;
@@ -141,6 +142,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
+            this.sapbpid = +params['sapbpid'];
             this.concessionReferenceId = params['concessionReferenceId'];
         });
 

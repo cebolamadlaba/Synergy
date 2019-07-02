@@ -24,7 +24,7 @@ import { LendingViewConcessionComponent } from "./lending-view-concession/lendin
 import { CashViewConcessionComponent } from "./cash-view-concession/cash-view-concession.component";
 
 import { InvestmentAddConcessionComponent } from "./investments-add-concession/investments-add-concession.component";
-import { InvestmentsViewConcessionComponent} from "./investments-view-concession/investments-view-concession.component";
+import { InvestmentsViewConcessionComponent } from "./investments-view-concession/investments-view-concession.component";
 
 import { BolAddConcessionComponent } from "./bol-add-concession/bol-add-concession.component";
 import { BolViewConcessionComponent } from "./bol-view-concession/bol-view-concession.component";
@@ -81,6 +81,7 @@ const routes: Routes = [
     { path: 'cash-view-concession/:riskGroupNumber/:concessionReferenceId', component: CashViewConcessionComponent },
     { path: 'lending-add-concession/:riskGroupNumber/:sapbpid', component: LendingAddConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
+    { path: 'lending-view-concession/:riskGroupNumber/:sapbpid/:concessionReferenceId', component: LendingViewConcessionComponent },
     { path: 'investments-add-concession/:riskGroupNumber/:sapbpid', component: InvestmentAddConcessionComponent },
     { path: 'investments-view-concession/:riskGroupNumber/:concessionReferenceId', component: InvestmentsViewConcessionComponent },
 
