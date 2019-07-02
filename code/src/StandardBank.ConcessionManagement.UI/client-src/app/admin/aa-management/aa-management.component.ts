@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { User } from '../../models/user';
 import { Observable } from "rxjs";
 import { Location } from '@angular/common';
 import { Centre } from '../../models/centre';
 import { AaManagementService } from '../../services/aa-management.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
     selector: 'app-aa-management',
@@ -28,10 +29,11 @@ export class AaManagementComponent implements OnInit {
 
     observableSave: Observable<boolean>;
     observableErrors: Observable<string[]>;
+    loggedInUser: User;
 
     accountExecutives: User[];
 
-    constructor(private location: Location, private aaManagementService: AaManagementService) {
+    constructor(private location: Location, private aaManagementService: AaManagementService, private userService: UserService) {
         this.addAaUserModel = new User();
     }
 
@@ -45,11 +47,16 @@ export class AaManagementComponent implements OnInit {
         Observable.forkJoin([
             this.aaManagementService.getAAUsers(),
             this.aaManagementService.getCentres(),
-            this.aaManagementService.getAEUsers()
+            this.aaManagementService.getAEUsers(),
+            this.userService.getData()
         ]).subscribe(results => {
             this.aaUsers = <any>results[0];
             this.centres = <any>results[1];
             this.accountExecutives = <any>results[2];
+            this.loggedInUser = <User>results[3][0];
+
+            if (this.loggedInUser!.centreId)
+                this.addAaUserModel.centreId = this.loggedInUser.centreId;
 
             this.isLoading = false;
         },
