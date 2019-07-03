@@ -37,7 +37,7 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <returns></returns>
         IEnumerable<LendingProduct> GetLendingProducts(int riskGroupId, string riskGroupName);
 
-        IEnumerable<LendingProduct> GetLendingProductsByLegalEntityId(int legalEntityId, string legalEntityName);
+        IEnumerable<LendingProduct> GetLendingProductsByLegalEntity(int legalEntityId, string legalEntityName);
 
         /// <summary>
         /// Gets the cash products.
@@ -46,6 +46,8 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <param name="riskGroupName">Name of the risk group.</param>
         /// <returns></returns>
         IEnumerable<CashProduct> GetCashProducts(int riskGroupId, string riskGroupName);
+
+        IEnumerable<CashProduct> GetCashProductsByLegalEntity(int legalEntityId, string legalEntityName);
 
         IEnumerable<BolProduct> GetBolProducts(int riskGroupId, string riskGroupName);
 

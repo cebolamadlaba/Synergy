@@ -37,14 +37,18 @@ Add fkLegalEntityId Int Null Foreign Key (fkLegalEntityId) References tblLegalEn
 Go
 
 
--- Confirm with Anthony.
---Alter Table tblProductLending
---Alter Column fkRiskGroupId Int Null
---Go
-
---Alter Table tblProductLending
---Alter Column fkLegalEntityId Int Null
---Go
+Alter Table tblProductLending
+Alter Column fkRiskGroupId Int Null
+Go
+Alter Table tblProductLending
+Alter Column fkLegalEntityId Int Null
+Go
+Alter Table tblProductCash
+Alter Column fkRiskGroupId Int Null
+Go
+Alter Table tblProductCash
+Alter Column fkLegalEntityId Int Null
+Go
 
 
     ALTER VIEW [dbo].[ConcessionInboxView]

@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { DecimalPipe, Location, DatePipe } from '@angular/common';
 
 import { ReviewFeeType } from "../models/review-fee-type";
 import { ProductType } from "../models/product-type";
@@ -17,13 +18,13 @@ import { LendingConcession } from "../models/lending-concession";
 import { Concession } from "../models/concession";
 import { LendingConcessionDetail } from "../models/lending-concession-detail";
 import { ConcessionCondition } from "../models/concession-condition";
-import { LendingService } from "../services/lending.service";
-import { Location, DatePipe } from '@angular/common';
-import { LookupDataService } from "../services/lookup-data.service";
-import { UserConcessionsService } from "../services/user-concessions.service";
 import { LendingFinancial } from "../models/lending-financial";
 import { ConcessionComment } from "../models/concession-comment";
-import { DecimalPipe } from '@angular/common';
+import { LegalEntity } from '../models/legal-entity';
+
+import { LookupDataService } from "../services/lookup-data.service";
+import { UserConcessionsService } from "../services/user-concessions.service";
+import { LendingService } from "../services/lending.service";
 import { ConcessionTypes } from '../constants/concession-types';
 import { ConcessionStatus } from '../constants/concession-status';
 import { ConcessionSubStatus } from '../constants/concession-sub-status';
@@ -108,6 +109,8 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     observableLendingFinancial: Observable<LendingFinancial>;
     lendingFinancial: LendingFinancial;
 
+    legalEntity: LegalEntity;
+
     constructor(
         private router: Router,
         private route: ActivatedRoute,
@@ -157,33 +160,34 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
         });
 
-        Observable.forkJoin([
-            this.lookupDataService.getReviewFeeTypes(),
-            this.lookupDataService.getProductTypes(ConcessionTypes.Lending),
-            this.lookupDataService.getPeriods(),
-            this.lookupDataService.getPeriodTypes(),
-            this.lookupDataService.getConditionTypes(),
-            this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-            this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Lending),
-            this.lendingService.getLendingFinancial(this.riskGroupNumber),
+        this.getInitialData();
 
-        ]).subscribe(results => {
-            this.reviewFeeTypes = <any>results[0];
-            this.productTypes = <any>results[1];
-            this.periods = <any>results[2];
-            this.periodTypes = <any>results[3];
-            this.conditionTypes = <any>results[4];
-            this.riskGroup = <any>results[5];
-            this.clientAccounts = <any>results[6];
-            this.clientAccountsCopy = <any>results[6]
-            this.lendingFinancial = <any>results[7];
+        ////Observable.forkJoin([
+        ////    this.lookupDataService.getReviewFeeTypes(),
+        ////    this.lookupDataService.getProductTypes(ConcessionTypes.Lending),
+        ////    this.lookupDataService.getPeriods(),
+        ////    this.lookupDataService.getPeriodTypes(),
+        ////    this.lookupDataService.getConditionTypes(),
+        ////    this.lookupDataService.getRiskGroup(this.riskGroupNumber),
+        ////    this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Lending),
+        ////    this.lendingService.getLendingFinancial(this.riskGroupNumber),
 
-            this.populateForm();
-        },
-            error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
+        ////]).subscribe(results => {
+        ////    this.reviewFeeTypes = <any>results[0];
+        ////    this.productTypes = <any>results[1];
+        ////    this.periods = <any>results[2];
+        ////    this.periodTypes = <any>results[3];
+        ////    this.conditionTypes = <any>results[4];
+        ////    this.riskGroup = <any>results[5];
+        ////    this.clientAccounts = <any>results[6];
+        ////    this.clientAccountsCopy = <any>results[6]
+        ////    this.lendingFinancial = <any>results[7];
+
+        ////    this.populateForm();
+        ////}, error => {
+        ////    this.errorMessage = <any>error;
+        ////    this.isLoading = false;
+        ////});
 
         this.lendingConcessionForm.valueChanges.subscribe((value: any) => {
             if (this.lendingConcessionForm.dirty) {
@@ -445,6 +449,67 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         });
     }
 
+    getInitialData() {
+        if (this.riskGroupNumber != null && this.riskGroupNumber != 0) {
+            Observable.forkJoin([
+                this.lookupDataService.getReviewFeeTypes(),
+                this.lookupDataService.getProductTypes(ConcessionTypes.Lending),
+                this.lookupDataService.getPeriods(),
+                this.lookupDataService.getPeriodTypes(),
+                this.lookupDataService.getConditionTypes(),
+                this.lookupDataService.getRiskGroup(this.riskGroupNumber),
+                this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Lending),
+                this.lendingService.getLendingFinancial(this.riskGroupNumber),
+            ]).subscribe(results => {
+
+                this.setInitialData(results, true);
+                this.populateForm();
+
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        }
+        else if (this.sapbpid != null && this.sapbpid != 0) {
+            Observable.forkJoin([
+                this.lookupDataService.getReviewFeeTypes(),
+                this.lookupDataService.getProductTypes(ConcessionTypes.Lending),
+                this.lookupDataService.getPeriods(),
+                this.lookupDataService.getPeriodTypes(),
+                this.lookupDataService.getConditionTypes(),
+                this.lookupDataService.getLegalEntity(this.sapbpid),
+                this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, this.sapbpid, ConcessionTypes.Lending),
+            ]).subscribe(results => {
+
+                this.setInitialData(results, false);
+                this.populateForm();
+
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+
+        }
+
+    }
+    setInitialData(results: {}[], isForRiskGroup: boolean) {
+        this.reviewFeeTypes = <any>results[0];
+        this.productTypes = <any>results[1];
+        this.periods = <any>results[2];
+        this.periodTypes = <any>results[3];
+        this.conditionTypes = <any>results[4];
+        if (isForRiskGroup) {
+            this.riskGroup = <any>results[5];
+            this.lendingFinancial = <any>results[7];
+        }
+        else {
+            this.legalEntity = <any>results[5];
+        }
+
+        this.clientAccounts = <any>results[6];
+        this.clientAccountsCopy = <any>results[6]
+    }
+
     addNewConcessionRow() {
         const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
         control.push(this.initConcessionItemRows());
@@ -696,7 +761,10 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         if (this.lendingConcessionForm.controls['comments'].value)
             lendingConcession.concession.comments = this.lendingConcessionForm.controls['comments'].value;
 
-        lendingConcession.concession.riskGroupId = this.riskGroup.id;
+        if (this.legalEntity)
+            lendingConcession.concession.legalEntityId = this.legalEntity.id;
+        if (this.riskGroup)
+            lendingConcession.concession.riskGroupId = this.riskGroup.id;
 
         const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
 
@@ -763,8 +831,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 lendingConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
             if (concessionFormItem.get('mrsBri').value == "" ||
-                (<string>concessionFormItem.get('mrsBri').value).trim() == "." ||
-                (<string>concessionFormItem.get('mrsBri').value).split(".").length > 1) {
+                concessionFormItem.get('mrsBri').value.toString().indexOf(".") > -1) {
                 this.addValidationError("MRS/BRI cannot be empty or a decimal");
             }
             else

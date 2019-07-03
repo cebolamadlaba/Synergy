@@ -11,9 +11,9 @@ import { Router, RouterModule } from '@angular/router';
 import { UserService } from "../services/user.service";
 
 @Component({
-  selector: 'app-pricing-cash',
-  templateUrl: './pricing-cash.component.html',
-  styleUrls: ['./pricing-cash.component.css']
+    selector: 'app-pricing-cash',
+    templateUrl: './pricing-cash.component.html',
+    styleUrls: ['./pricing-cash.component.css']
 })
 export class PricingCashComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
@@ -36,7 +36,7 @@ export class PricingCashComponent implements OnInit, OnDestroy {
         this.cashView.riskGroup = new RiskGroup();
         this.cashView.cashConcessions = [new CashConcession()];
         this.cashView.cashConcessions[0].concession = new Concession();
-        
+
 
     }
 
@@ -45,8 +45,8 @@ export class PricingCashComponent implements OnInit, OnDestroy {
             this.riskGroupNumber = +params['riskGroupNumber'];
             this.sapbpid = +params['sapbpid'];
 
-            if (this.riskGroupNumber) {
-                this.observableCashView = this.cashConcessionService.getCashViewData(this.riskGroupNumber);
+            if (this.riskGroupNumber || this.sapbpid) {
+                this.observableCashView = this.cashConcessionService.getCashViewData(this.riskGroupNumber, this.sapbpid);
                 this.observableCashView.subscribe(cashView => {
                     this.cashView = cashView;
                     this.pageLoaded = true;

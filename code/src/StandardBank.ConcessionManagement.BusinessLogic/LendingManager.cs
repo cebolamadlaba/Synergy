@@ -455,7 +455,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         private IEnumerable<LendingProduct> GetLendingProductsByLegalEntityId(int legalEntityId, string legalEntityName)
         {
-            return _miscPerformanceRepository.GetLendingProductsByLegalEntityId(legalEntityId, legalEntityName);
+            return _miscPerformanceRepository.GetLendingProductsByLegalEntity(legalEntityId, legalEntityName);
         }
 
         public async Task ForwardLendingConcession(LendingConcession lendingConcession, User user)

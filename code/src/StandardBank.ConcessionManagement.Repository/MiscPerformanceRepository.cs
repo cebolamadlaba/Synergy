@@ -437,7 +437,7 @@ namespace StandardBank.ConcessionManagement.Repository
                 new CacheKeyParameter(nameof(riskGroupName), riskGroupName));
         }
 
-        public IEnumerable<LendingProduct> GetLendingProductsByLegalEntityId(int legalEntityId, string legalEntityName)
+        public IEnumerable<LendingProduct> GetLendingProductsByLegalEntity(int legalEntityId, string legalEntityName)
         {
             IEnumerable<LendingProduct> Function()
             {
@@ -497,6 +497,34 @@ namespace StandardBank.ConcessionManagement.Repository
                 CacheKey.Repository.MiscPerformanceRepository.GetCashProducts,
                 new CacheKeyParameter(nameof(riskGroupId), riskGroupId),
                 new CacheKeyParameter(nameof(riskGroupName), riskGroupName));
+        }
+
+        public IEnumerable<CashProduct> GetCashProductsByLegalEntity(int legalEntityId, string legalEntityName)
+        {
+            IEnumerable<CashProduct> Function()
+            {
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    var cashProducts = db.Query<CashProduct>(
+                        @"SELECT pc.[pkProductCashId] [CashProductId], @legalEntityName [RiskGroupName], le.[CustomerName], lea.[AccountNumber], tn.[TariffTable], pc.[Channel], pc.[BpId], pc.[Volume], pc.[Value], pc.[LoadedPrice] 
+                            FROM [dbo].[tblProductCash] pc
+                            JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = pc.[fkLegalEntityId]
+                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = pc.[fkLegalEntityAccountId]
+                            JOIN [dbo].[rtblTableNumber] tn on tn.[pkTableNumberId] = pc.[fkTableNumberId]
+                            WHERE pc.[fkLegalEntityId] = @legalEntityId", new { legalEntityId, legalEntityName },
+                        commandTimeout: Int32.MaxValue);
+
+                    if (cashProducts != null && cashProducts.Any())
+                        return cashProducts;
+                }
+
+                return null;
+            }
+
+            return _cacheManager.ReturnFromCache(Function, 300,
+                CacheKey.Repository.MiscPerformanceRepository.GetCashProducts,
+                new CacheKeyParameter(nameof(legalEntityId), legalEntityId),
+                new CacheKeyParameter(nameof(legalEntityName), legalEntityName));
         }
 
         public IEnumerable<BolProduct> GetBolProducts(int riskGroupId, string riskGroupName)

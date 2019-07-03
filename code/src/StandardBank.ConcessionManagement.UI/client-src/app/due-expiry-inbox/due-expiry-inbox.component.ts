@@ -30,8 +30,8 @@ export class DueExpiryInboxComponent implements OnInit, OnDestroy {
                 emptyTable: "No records found!",
                 search: "",
                 searchPlaceholder: "Search"
-			},
-			order: [[6, 'desc']]
+            },
+            order: [[6, 'desc']]
         };
 
         this.loadUserConcessions();
@@ -50,7 +50,7 @@ export class DueExpiryInboxComponent implements OnInit, OnDestroy {
     openConcessionView(concession: InboxConcession) {
         switch (concession.concessionType) {
             case ConcessionTypes.Lending:
-                this.router.navigate(['/lending-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                this.router.navigate(['/lending-view-concession', concession.riskGroupNumber, concession.customerNumber, concession.referenceNumber]);
                 break;
             case ConcessionTypes.Cash:
                 this.router.navigate(['/cash-view-concession', concession.riskGroupNumber, concession.referenceNumber]);

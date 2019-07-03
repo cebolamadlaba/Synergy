@@ -111,46 +111,6 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         });
 
         this.getInitialData();
-
-        //Observable.forkJoin([
-        //    this.lookupDataService.getReviewFeeTypes(),
-        //    this.lookupDataService.getProductTypes(ConcessionTypes.Lending),
-        //    this.lookupDataService.getPeriods(),
-        //    this.lookupDataService.getPeriodTypes(),
-        //    this.lookupDataService.getConditionTypes(),
-        //    this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-        //    this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, this.sapbpid, ConcessionTypes.Lending),
-        //    this.lendingService.getlatestCrsOrMrs(this.riskGroupNumber),
-        //    this.lookupDataService.getPrimeRate(this.today)
-        //]).subscribe(results => {
-        //    this.reviewFeeTypes = <any>results[0];
-        //    this.productTypes = <any>results[1];
-        //    this.periods = <any>results[2];
-        //    this.periodTypes = <any>results[3];
-        //    this.conditionTypes = <any>results[4];
-        //    this.riskGroup = <any>results[5];
-        //    this.clientAccounts = <any>results[6];
-        //    this.latestCrsOrMrs = <any>results[7];
-        //    this.primeRate = <string>results[8];
-
-        //    this.isLoading = false;
-
-        //    const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
-        //    if (this.productTypes) {
-        //        control.controls[0].get('productType').setValue(this.productTypes[0]);
-
-        //        this.selectedProductTypes[0] = this.productTypes[0];
-        //        this.productTypeChanged(0);
-        //    }
-
-        //    if (this.clientAccounts)
-        //        control.controls[0].get('accountNumber').setValue(this.clientAccounts[0]);
-
-
-        //}, error => {
-        //    this.errorMessage = <any>error;
-        //    this.isLoading = false;
-        //});
     }
 
     initConcessionItemRows() {
