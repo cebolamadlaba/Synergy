@@ -59,7 +59,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
             {
                 var expiringConcessions = GetExpiringConcessions(concessions);
 
-                //send notifications about the expiry to the requestors
+                //send notifications about the expiry to the recipients
                 foreach (var expiringConcession in expiringConcessions)
                     BackgroundJob.Schedule(() => _emailManager.SendExpiringConcessionEmail(expiringConcession),
                         DateTime.Now);
@@ -73,35 +73,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
         /// <returns></returns>
         private IEnumerable<ExpiringConcession> GetExpiringConcessions(IEnumerable<ConcessionInboxView> concessions)
         {
-            var expiringConcessions = new List<ExpiringConcession>();
+            var expiringConcessionList = new List<ExpiringConcession>();
 
             foreach (var concession in concessions)
             {
-                if (!this.IsIntervalOfMonthBeforeExpiryDate(concession))
-                    continue;
+                //Get expire before month
+                int month = this.IsIntervalOfMonthBeforeExpiryDate(concession);
 
-                var expiringConcession =
-                    expiringConcessions.FirstOrDefault(_ => _.RequestorId == concession.RequestorId.Value);
+                //don't send notification if expiry time has not yet been a month
+                if (month == 0) continue;
 
-                if (expiringConcession == null)
-                {
-                    var requestor = _userRepository.ReadById(concession.RequestorId.Value);
-
-                    expiringConcession =
-                        new ExpiringConcession
-                        {
-                            ExpiringConcessionDetails = new List<ExpiringConcessionDetail>(),
-                            RequestorEmail = requestor.EmailAddress,
-                            RequestorName = $"{requestor.FirstName} {requestor.Surname}",
-                            RequestorId = requestor.Id
-                        };
-
-                    expiringConcessions.Add(expiringConcession);
-                }
-
-                var expiringConcessionDetails = new List<ExpiringConcessionDetail>();
-                expiringConcessionDetails.AddRange(expiringConcession.ExpiringConcessionDetails);
-                expiringConcessionDetails.Add(new ExpiringConcessionDetail
+                //Create new detail to be sent out
+                var concessionDetail = new ExpiringConcessionDetail
                 {
                     ConcessionType = concession.ConcessionType,
                     ConcessionRef = concession.ConcessionRef,
@@ -110,12 +93,65 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                     RiskGroupNumber = Convert.ToString(concession.RiskGroupNumber),
                     RiskGroupName = concession.RiskGroupName,
                     DateApproved = concession.DateApproved.Value.ToString("yyyy-MM-dd")
-                });
+                };
 
-                expiringConcession.ExpiringConcessionDetails = expiringConcessionDetails;
+                //Send notification to requestor
+                if (concession.RequestorId.HasValue)
+                    AddExpiringConcessionForUser(concession.RequestorId.Value, ref expiringConcessionList, concessionDetail);
+                
+                //Add BCM user if months is more than 1 
+                if(month > 1 && concession.BCMUserId.HasValue)
+                    AddExpiringConcessionForUser(concession.BCMUserId.Value, ref expiringConcessionList, concessionDetail);
+                
+                //Add PCM user if months is more than 2 
+                if (month > 2 && concession.PCMUserId.HasValue)
+                    AddExpiringConcessionForUser(concession.PCMUserId.Value, ref expiringConcessionList, concessionDetail);
+                
+
+                //Add HO user if months is more than 2 
+                if (month > 2 && concession.HOUserId.HasValue)
+                    AddExpiringConcessionForUser(concession.HOUserId.Value, ref expiringConcessionList, concessionDetail);   
             }
-            return expiringConcessions;
+
+            return expiringConcessionList;
         }
+
+
+        /// <summary>
+        /// Gets a expiring concession noti for a user 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="expiringConcessions"></param>
+        /// <returns></returns>
+        private void AddExpiringConcessionForUser(int userId ,ref List<ExpiringConcession> expiringConcessions, ExpiringConcessionDetail concessionDetail)
+        {
+            //checks if there currently is a recipient that matches the userid
+            var expiringConcession =
+                   expiringConcessions.FirstOrDefault(_ => _.RecipientId == userId);
+
+
+            if (expiringConcession == null)
+            {
+                //Get thee recipient from the user table
+                var recipient = _userRepository.ReadById(userId);
+
+                expiringConcession =
+                    new ExpiringConcession
+                    {
+                        ExpiringConcessionDetails = new List<ExpiringConcessionDetail>(),
+                        RecipientEmail = recipient.EmailAddress,
+                        RecipientName = $"{recipient.FirstName} {recipient.Surname}",
+                        RecipientId = recipient.Id
+                    };
+
+                expiringConcessions.Add(expiringConcession);
+            }
+
+            //Only add the concession if it has not already been added to the notification list
+            if (!expiringConcession.ExpiringConcessionDetails.Any(x=> x.ConcessionRef == concessionDetail.ConcessionRef))
+                expiringConcession.ExpiringConcessionDetails.Add(concessionDetail);
+        }
+
 
         private int IsIntervalOfMonthBeforeExpiryDate(ConcessionInboxView concessionInboxView)
         {
@@ -130,7 +166,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
 
             for (int i = 3; i > 0; i--)
             {
-                monthValue = concessionInboxView.ExpiryDate.Value.Date.AddMonths(-Math.Abs(i));
+                monthValue = concessionInboxView.ExpiryDate.Value.Date.AddMonths(-i);
                 if (DateTime.Today.Date == monthValue)
                     return i;
 

@@ -96,25 +96,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public async Task<bool> SendExpiringConcessionEmail(ExpiringConcession expiringConcession)
         {
-            return await SendExpiringConcessionEmail(expiringConcession, expiringConcession.RequestorEmail);
-        }
-
-
-        /// <summary>
-        /// Sends the expiring concession email.
-        /// </summary>
-        /// <param name="expiringConcession">The expiring concession.</param>
-        /// <returns></returns>
-        public async Task<bool> SendExpiringConcessionEmail(ExpiringConcession expiringConcession , string recipientEmail)
-        {
-            return await SendTemplatedEmail(recipientEmail,
-                "CMS Notification: Expiring Concession(s)", string.Empty, "ExpiringConcession",
-                new
-                {
-                    RequestorName = expiringConcession.RequestorName,
-                    ExpiringConcessionDetails = expiringConcession.ExpiringConcessionDetails,
-                    ServerURL = _serverPath
-                });
+            return await SendTemplatedEmail(expiringConcession.RecipientEmail,
+               "CMS Notification: Expiring Concession(s)", string.Empty, "ExpiringConcession",
+               new
+               {
+                   RequestorName = expiringConcession.RecipientName,
+                   ExpiringConcessionDetails = expiringConcession.ExpiringConcessionDetails,
+                   ServerURL = _serverPath
+               });
         }
 
         /// <summary>

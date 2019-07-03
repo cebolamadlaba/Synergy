@@ -25,13 +25,6 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         Task<bool> SendExpiringConcessionEmail(ExpiringConcession expiringConcession);
 
         /// <summary>
-        /// Sends the expiring concession email.
-        /// </summary>
-        /// <param name="expiringConcession">The expiring concession.</param>
-        /// <returns></returns>
-        Task<bool> SendExpiringConcessionEmail(ExpiringConcession expiringConcession, string recipientEmail);
-
-        /// <summary>
         /// Sends the concession added email.
         /// </summary>
         /// <param name="concessionAddedEmail">The concession added email.</param>
