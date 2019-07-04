@@ -1392,7 +1392,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
     archiveConcessiondetail(concessionDetailId: number) {
 
-        if (confirm("Are you sure you want to delete the concession item ?")) {
+        if (confirm("Please note that the account will be put back to standard pricing. Are you sure you want to delete this concession ?")) {
             this.isLoading = true;
             this.errorMessage = null;
 
