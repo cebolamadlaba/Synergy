@@ -39,10 +39,24 @@ namespace StandardBank.ConcessionManagement.Repository
         {           
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<BOLChargeCode>(string.Format(@"SELECT chargeCode.*  
-                                                             FROM rtblBOLChargeCode chargeCode 
-                                                             INNER JOIN tblRiskGroupNonUniversalChargeCode riskChargeCode ON riskChargeCode.ChargeCodeId = chargeCode.pkChargeCodeId
-                                                              WHERE riskChargeCode.RiskGroupId = {0}", riskGroupNumber));
+                //filter by riskgroup.
+                List<BOLChargeCode> chargeCodes = db.Query<BOLChargeCode>(string.Format(@"SELECT chargeCode.*  
+                                                                      FROM rtblBOLChargeCode chargeCode 
+                                                                      INNER JOIN tblRiskGroupNonUniversalChargeCode riskChargeCode ON riskChargeCode.ChargeCodeId = chargeCode.pkChargeCodeId
+                                                                      WHERE riskChargeCode.RiskGroupId = {0}", riskGroupNumber)).ToList();
+
+                //check if current riskgroup contains chargecode, add and return all other non universal codes.
+                if (chargeCodes.Count() > 0)
+                {
+                    var nonUniversalChargeCodes = db.Query<BOLChargeCode>("SELECT * from rtblBOLChargeCode where IsNonUniversal = 0");
+                    chargeCodes.AddRange(nonUniversalChargeCodes);
+                    return chargeCodes.Distinct();
+                }
+                else
+                {
+                    return db.Query<BOLChargeCode>("SELECT * from rtblBOLChargeCode where IsNonUniversal = 0");
+                }
+
             }
         }
 

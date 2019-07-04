@@ -107,7 +107,7 @@ export class BolTradeAeManagementComponent implements OnInit {
         this.addBolTradeAeUserModel = aeUser;
         this.selectedAccountAssistant = null;
         this.selectedAccountAssistants = null;
-
+      
         this.observableSelectedAccountAssistants = this.bolTradeAeManagementService.getAEAAUsers(aeUser.id);
         this.observableSelectedAccountAssistants.subscribe(result => {
             if (result != null && result.length > 0)
@@ -150,6 +150,7 @@ export class BolTradeAeManagementComponent implements OnInit {
         this.validationError = null;
         this.saveMessage = null;
 
+     
         this.observableErrors = this.bolTradeAeManagementService.validateUser(this.addBolTradeAeUserModel);
         this.observableErrors.subscribe(errors => {
             if (errors != null && errors.length > 0) {
