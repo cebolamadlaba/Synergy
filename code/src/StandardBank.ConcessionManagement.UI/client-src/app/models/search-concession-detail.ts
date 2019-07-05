@@ -1,6 +1,8 @@
 export class SearchConcessionDetail {
     riskGroupName: string;
     riskGroupNumber: number;
+    customerName: string;
+    customerNumber: number;
     concessionId: number;
     concessionDetailId: number;
     referenceNumber: string;

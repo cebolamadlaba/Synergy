@@ -44,6 +44,9 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     primeRate = "0.00";
     today: string;
 
+    subHeading: string;
+    title: string;
+
     concessionReferenceId: string;
     public lendingConcessionForm: FormGroup;
     private sub: any;
@@ -161,33 +164,6 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         });
 
         this.getInitialData();
-
-        ////Observable.forkJoin([
-        ////    this.lookupDataService.getReviewFeeTypes(),
-        ////    this.lookupDataService.getProductTypes(ConcessionTypes.Lending),
-        ////    this.lookupDataService.getPeriods(),
-        ////    this.lookupDataService.getPeriodTypes(),
-        ////    this.lookupDataService.getConditionTypes(),
-        ////    this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-        ////    this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Lending),
-        ////    this.lendingService.getLendingFinancial(this.riskGroupNumber),
-
-        ////]).subscribe(results => {
-        ////    this.reviewFeeTypes = <any>results[0];
-        ////    this.productTypes = <any>results[1];
-        ////    this.periods = <any>results[2];
-        ////    this.periodTypes = <any>results[3];
-        ////    this.conditionTypes = <any>results[4];
-        ////    this.riskGroup = <any>results[5];
-        ////    this.clientAccounts = <any>results[6];
-        ////    this.clientAccountsCopy = <any>results[6]
-        ////    this.lendingFinancial = <any>results[7];
-
-        ////    this.populateForm();
-        ////}, error => {
-        ////    this.errorMessage = <any>error;
-        ////    this.isLoading = false;
-        ////});
 
         this.lendingConcessionForm.valueChanges.subscribe((value: any) => {
             if (this.lendingConcessionForm.dirty) {
@@ -501,9 +477,13 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         if (isForRiskGroup) {
             this.riskGroup = <any>results[5];
             this.lendingFinancial = <any>results[7];
+            this.subHeading = this.riskGroup.name;
+            this.title = this.riskGroup.number.toString();
         }
         else {
             this.legalEntity = <any>results[5];
+            this.subHeading = this.legalEntity.customerName;
+            this.title = this.legalEntity.customerNumber;
         }
 
         this.clientAccounts = <any>results[6];

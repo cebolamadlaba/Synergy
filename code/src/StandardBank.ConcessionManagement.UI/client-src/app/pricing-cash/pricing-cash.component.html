@@ -33,10 +33,10 @@
 
         <!-- Dashboard Expanded -->
         <div class="col-md-12 banner-container" *ngIf="showHide">
-            <div class="col-md-11 summary-main">               
+            <div class="col-md-11 summary-main">
                 <div class="col-md-3 summary-sub-title">
-                    <div class="subHeading">{{cashView.riskGroup.name}}</div>
-                    <div class="date lightTitle hidden-element">{{cashView.riskGroup.number}}</div>                    
+                    <div class="subHeading">{{subHeading}}</div>
+                    <div class="date lightTitle hidden-element">{{title}}</div>
                 </div>
                 <div class="col-md-3 summary-items">
                     <h5>CASHCENTR</h5>
@@ -56,7 +56,7 @@
                     <div class="summary-items-sub">Volume <span class="summary-item-value">{{cashView?.cashFinancial?.totalAutosafeCashVolume | number : '1.2-2'}}</span></div>
                     <div class="summary-items-sub">Weighted Avg Price <span class="col-md-12 summary-item-value">{{cashView?.cashFinancial?.weightedAverageAFPrice | number : '1.2-2'}}</span></div>
                 </div>
-                              
+
             </div>
             <div class="col-md-1">
                 <div class="compress">
@@ -71,8 +71,8 @@
             <div class="col-md-11">
                 <div>
                     <div class="col-md-5">
-                        <div class="subHeading">{{cashView.riskGroup.name}}</div>
-                        <div class="date lightTitle hidden-element">{{cashView.riskGroup.number}}</div>
+                        <div class="subHeading">{{subHeading}}</div>
+                        <div class="date lightTitle hidden-element">{{title}}</div>
                     </div>
                 </div>
             </div>
@@ -138,7 +138,7 @@
                 </div>
 
 
-            </div>           
+            </div>
 
         </div>
     </div>
@@ -148,7 +148,7 @@
     <div class="col-md-6 search-and-results-container">
         <h2 class="headings">
             Concessions
-            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/cash-add-concession', cashView.riskGroup.number]" *ngIf="pageLoaded && canRequest">Add Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/cash-add-concession', riskGroupNumber, sapbpid]" *ngIf="pageLoaded && canRequest">Add Concession</button>
         </h2>
 
         <!-- Search bar -->
@@ -157,7 +157,7 @@
         </div>
 
         <div class="section" *ngFor="let cashConcession of cashView.cashConcessions | baseConcessionFilter : filterConcessionId; trackBy: index;">
-            
+
             <div class="section-header">
                 <div class="concessionID-section">
                     <div class="concession-status">
@@ -168,46 +168,46 @@
                 </div>
             </div>
             <div class="section-body">
-                <div class="table-container" [routerLink]="['/cash-view-concession', cashView.riskGroup.number, cashConcession.concession.referenceNumber]">
+                <div class="table-container" [routerLink]="['/cash-view-concession', riskGroupNumber, sapbpid, cashConcession.concession.referenceNumber]">
                     <table class="table table-bordered table-hover header-fixed table-striped">
                         <thead>
-                        <tr>
-                            <th>Channel</th>
-                            <th>Customer</th>
-                            <th>Approved Table</th>
-                            <th>Price</th>
-                        </tr>
+                            <tr>
+                                <th>Channel</th>
+                                <th>Customer</th>
+                                <th>Approved Table</th>
+                                <th>Price</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr *ngFor="let concessiondetail of cashConcession.cashConcessionDetails; trackBy: index;">
-                            <td>{{concessiondetail.channel}}</td>
-                            <td>
-                                <div class="table-row-top">{{concessiondetail.customerName}}</div>
-                                <div class="table-row-bottom">
-                                    <div class="secondaryText">
-                                        Acc No:
-                                        <div class="normalText">{{concessiondetail.accountNumber}}</div>
+                            <tr *ngFor="let concessiondetail of cashConcession.cashConcessionDetails; trackBy: index;">
+                                <td>{{concessiondetail.channel}}</td>
+                                <td>
+                                    <div class="table-row-top">{{concessiondetail.customerName}}</div>
+                                    <div class="table-row-bottom">
+                                        <div class="secondaryText">
+                                            Acc No:
+                                            <div class="normalText">{{concessiondetail.accountNumber}}</div>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                            <td class="rightAlign">{{concessiondetail.approvedTableNumber}}</td>
-                            <td>
-                                <div class="table-row-top">
-                                    <div class="secondaryText">
-                                        Loaded:
-                                        <div class="normalText">{{concessiondetail.displayTextLoaded}}</div>
+                                </td>
+                                <td class="rightAlign">{{concessiondetail.approvedTableNumber}}</td>
+                                <td>
+                                    <div class="table-row-top">
+                                        <div class="secondaryText">
+                                            Loaded:
+                                            <div class="normalText">{{concessiondetail.displayTextLoaded}}</div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="table-row-bottom">
-                                    <div class="secondaryText">
-                                        <!--Approved:
-                                        <div class="normalText">{{concessiondetail.approvedTableNumber}}</div>-->
-                                        Approved:
-                                        <div class="normalText">{{concessiondetail.displayTextApproved}}</div>
+                                    <div class="table-row-bottom">
+                                        <div class="secondaryText">
+                                            <!--Approved:
+                                            <div class="normalText">{{concessiondetail.approvedTableNumber}}</div>-->
+                                            Approved:
+                                            <div class="normalText">{{concessiondetail.displayTextApproved}}</div>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

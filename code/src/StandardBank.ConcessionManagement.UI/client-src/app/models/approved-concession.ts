@@ -5,6 +5,7 @@ export class ApprovedConcession {
     riskGroupNumber: number;
     legalEntityId: number;
     customerName: string;
+    customerNumber: number;
     segment: string;
     approvedConcessionDetails: ApprovedConcessionDetail[];
 }

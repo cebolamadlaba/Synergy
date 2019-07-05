@@ -24,6 +24,10 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// </value>
         public int RiskGroupNumber { get; set; }
 
+        public string CustomerName { get; set; }
+
+        public int CustomerNumber { get; set; }
+
         /// <summary>
         /// Gets or sets the concession identifier.
         /// </summary>

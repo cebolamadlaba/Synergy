@@ -75,26 +75,34 @@ const routes: Routes = [
     { path: 'pricing-trade/:riskGroupNumber/:sapbpid', component: PricingTradeComponent },
     { path: 'pricing-mas', component: PricingMasComponent },
     { path: 'pricing-cashman', component: PricingCashmanComponent },
+
     { path: 'transactional-add-concession/:riskGroupNumber/:sapbpid', component: TransactionalAddConcessionComponent },
     { path: 'transactional-view-concession/:riskGroupNumber/:concessionReferenceId', component: TransactionalViewConcessionComponent },
+    { path: 'transactional-view-concession/:riskGroupNumber/:sapbpid/:concessionReferenceId', component: TransactionalViewConcessionComponent },
+
     { path: 'cash-add-concession/:riskGroupNumber/:sapbpid', component: CashAddConcessionComponent },
     { path: 'cash-view-concession/:riskGroupNumber/:concessionReferenceId', component: CashViewConcessionComponent },
+    { path: 'cash-view-concession/:riskGroupNumber/:sapbpid/:concessionReferenceId', component: CashViewConcessionComponent },
+
     { path: 'lending-add-concession/:riskGroupNumber/:sapbpid', component: LendingAddConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
     { path: 'lending-view-concession/:riskGroupNumber/:sapbpid/:concessionReferenceId', component: LendingViewConcessionComponent },
+
     { path: 'investments-add-concession/:riskGroupNumber/:sapbpid', component: InvestmentAddConcessionComponent },
     { path: 'investments-view-concession/:riskGroupNumber/:concessionReferenceId', component: InvestmentsViewConcessionComponent },
+    { path: 'investments-view-concession/:riskGroupNumber/:sapbpid/:concessionReferenceId', component: InvestmentsViewConcessionComponent },
 
     { path: 'bol-add-concession/:riskGroupNumber/:sapbpid', component: BolAddConcessionComponent },
     { path: 'bol-view-concession/:riskGroupNumber/:concessionReferenceId', component: BolViewConcessionComponent },
+    { path: 'bol-view-concession/:riskGroupNumber/:sapbpid/:concessionReferenceId', component: BolViewConcessionComponent },
 
     { path: 'mas-add-concession', component: MasAddConcessionComponent },
-    { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
+
     { path: 'trade-add-concession/:riskGroupNumber/:sapbpid', component: TradeAddConcessionComponent },
     { path: 'trade-view-concession/:riskGroupNumber/:concessionReferenceId', component: TradeViewConcessionComponent },
+    { path: 'trade-view-concession/:riskGroupNumber/:sapbpid/:concessionReferenceId', component: TradeViewConcessionComponent },
 
     { path: 'cashman-add-concession', component: CashmanAddConcessionComponent },
-    { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
     { path: 'admin', component: AdminMenuComponent },
     { path: 'admin/business-centre', component: BusinessCentreComponent },
     { path: 'admin/users', component: UsersComponent },

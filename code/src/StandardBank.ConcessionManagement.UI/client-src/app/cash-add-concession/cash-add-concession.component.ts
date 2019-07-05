@@ -18,6 +18,7 @@ import { CashConcessionService } from "../services/cash-concession.service";
 import { CashConcessionDetail } from "../models/cash-concession-detail";
 import { ConcessionCondition } from "../models/concession-condition";
 import { TableNumber } from "../models/table-number";
+import { LegalEntity } from "../models/legal-entity";
 import { DecimalPipe } from '@angular/common';
 import { ConcessionTypes } from '../constants/concession-types';
 
@@ -37,13 +38,17 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
+    legalEntity: LegalEntity;
     sapbpid: number;
+
+    subHeading: string;
+    title: string;
 
     public cashConcessionForm: FormGroup;
     selectedConditionTypes: ConditionType[];
     isLoading = true;
     observableLatestCrsOrMrs: Observable<number>;
-    latestCrsOrMrs: number;
+    latestCrsOrMrs: number = 0;
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
@@ -85,16 +90,17 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             this.riskGroupNumber = +params['riskGroupNumber'];
             this.sapbpid = +params['sapbpid'];
 
-            if (this.riskGroupNumber) {
-                this.observableRiskGroup = this.lookupDataService.getRiskGroup(this.riskGroupNumber);
-                this.observableRiskGroup.subscribe(riskGroup => this.riskGroup = riskGroup, error => this.errorMessage = <any>error);
+            // Duplicate call to API...not sure why? :(
+            //if (this.riskGroupNumber) {
+            //this.observableRiskGroup = this.lookupDataService.getRiskGroup(this.riskGroupNumber);
+            //this.observableRiskGroup.subscribe(riskGroup => this.riskGroup = riskGroup, error => this.errorMessage = <any>error);
 
-                this.observableClientAccounts = this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Cash);
-                this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
+            //this.observableClientAccounts = this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Cash);
+            //this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
 
-                this.observableLatestCrsOrMrs = this.cashConcessionService.getlatestCrsOrMrs(this.riskGroupNumber);
-                this.observableLatestCrsOrMrs.subscribe(latestCrsOrMrs => this.latestCrsOrMrs = latestCrsOrMrs, error => this.errorMessage = <any>error);
-            }
+            //this.observableLatestCrsOrMrs = this.cashConcessionService.getlatestCrsOrMrs(this.riskGroupNumber);
+            //this.observableLatestCrsOrMrs.subscribe(latestCrsOrMrs => this.latestCrsOrMrs = latestCrsOrMrs, error => this.errorMessage = <any>error);
+            //}
         });
 
         this.cashConcessionForm = this.formBuilder.group({
@@ -104,54 +110,8 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             motivation: new FormControl()
         });
 
-        Observable.forkJoin([
-            this.lookupDataService.getChannelTypes(),
-            this.lookupDataService.getPeriods(),
-            this.lookupDataService.getPeriodTypes(),
-            this.lookupDataService.getConditionTypes(),
-            this.lookupDataService.getAccrualTypes(),
-            this.lookupDataService.getTableNumbers(ConcessionTypes.Cash),
-            this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-            this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Cash),
-            this.cashConcessionService.getlatestCrsOrMrs(this.riskGroupNumber)
-        ]).subscribe(results => {
-            this.channelTypes = <any>results[0];
-            this.periods = <any>results[1];
-            this.periodTypes = <any>results[2];
-            this.conditionTypes = <any>results[3];
-            this.accrualTypes = <any>results[4];
-            this.tableNumbers = <any>results[5];
-            this.riskGroup = <any>results[6];
-            this.clientAccounts = <any>results[7];
-            this.latestCrsOrMrs = <any>results[8];
+        this.getInitialData();
 
-            const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
-
-            if (this.channelTypes)
-                control.controls[0].get('channelType').setValue(this.channelTypes[0]);
-
-
-            if (this.clientAccounts)
-                control.controls[0].get('accountNumber').setValue(this.clientAccounts[0]);
-
-            if (this.accrualTypes)
-                control.controls[0].get('accrualType').setValue(this.accrualTypes[0]);
-
-            if (this.tableNumbers) {
-                control.controls[0].get('tableNumber').setValue(this.tableNumbers[0]);
-
-                this.tableNumberChanged(0);
-
-            }
-
-
-
-            this.isLoading = false;
-        },
-            error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
     }
 
     initConcessionItemRows() {
@@ -178,6 +138,89 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             periodType: [''],
             period: ['']
         });
+    }
+
+    getInitialData() {
+        if (this.riskGroupNumber != null && this.riskGroupNumber != 0) {
+            Observable.forkJoin([
+                this.lookupDataService.getChannelTypes(),
+                this.lookupDataService.getPeriods(),
+                this.lookupDataService.getPeriodTypes(),
+                this.lookupDataService.getConditionTypes(),
+                this.lookupDataService.getAccrualTypes(),
+                this.lookupDataService.getTableNumbers(ConcessionTypes.Cash),
+                this.lookupDataService.getRiskGroup(this.riskGroupNumber),
+                this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, this.sapbpid, ConcessionTypes.Cash),
+                this.cashConcessionService.getlatestCrsOrMrs(this.riskGroupNumber)
+            ]).subscribe(results => {
+                this.setInitialData(results, true);
+            },
+                error => {
+                    this.errorMessage = <any>error;
+                    this.isLoading = false;
+                });
+        }
+        else if (this.sapbpid != null && this.sapbpid != 0) {
+            Observable.forkJoin([
+                this.lookupDataService.getChannelTypes(),
+                this.lookupDataService.getPeriods(),
+                this.lookupDataService.getPeriodTypes(),
+                this.lookupDataService.getConditionTypes(),
+                this.lookupDataService.getAccrualTypes(),
+                this.lookupDataService.getTableNumbers(ConcessionTypes.Cash),
+                this.lookupDataService.getLegalEntity(this.sapbpid),
+                this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, this.sapbpid, ConcessionTypes.Cash)
+            ]).subscribe(results => {
+                this.setInitialData(results, false);
+            },
+                error => {
+                    this.errorMessage = <any>error;
+                    this.isLoading = false;
+                });
+        }
+    }
+    setInitialData(results: {}[], isForRiskGroup: boolean) {
+        this.channelTypes = <any>results[0];
+        this.periods = <any>results[1];
+        this.periodTypes = <any>results[2];
+        this.conditionTypes = <any>results[3];
+        this.accrualTypes = <any>results[4];
+        this.tableNumbers = <any>results[5];
+        if (isForRiskGroup) {
+            this.riskGroup = <any>results[6];
+            this.latestCrsOrMrs = <any>results[8];
+            this.subHeading = this.riskGroup.name;
+            this.title = this.riskGroup.number.toString();
+        }
+        else {
+            this.legalEntity = <any>results[6];
+            this.subHeading = this.legalEntity.customerName;
+            this.title = this.legalEntity.customerNumber;
+        }
+
+        this.clientAccounts = <any>results[7];
+
+
+        const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
+
+        if (this.channelTypes)
+            control.controls[0].get('channelType').setValue(this.channelTypes[0]);
+
+
+        if (this.clientAccounts)
+            control.controls[0].get('accountNumber').setValue(this.clientAccounts[0]);
+
+        if (this.accrualTypes)
+            control.controls[0].get('accrualType').setValue(this.accrualTypes[0]);
+
+        if (this.tableNumbers) {
+            control.controls[0].get('tableNumber').setValue(this.tableNumbers[0]);
+
+            this.tableNumberChanged(0);
+
+        }
+
+        this.isLoading = false;
     }
 
     addNewConcessionRow() {
@@ -305,7 +348,11 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     getCashConcession(): CashConcession {
         var cashConcession = new CashConcession();
         cashConcession.concession = new Concession();
-        cashConcession.concession.riskGroupId = this.riskGroup.id;
+
+        if (this.riskGroup)
+            cashConcession.concession.riskGroupId = this.riskGroup.id;
+        if (this.legalEntity)
+            cashConcession.concession.legalEntityId = this.legalEntity.id;
 
         if (this.cashConcessionForm.controls['smtDealNumber'].value)
             cashConcession.concession.smtDealNumber = this.cashConcessionForm.controls['smtDealNumber'].value;

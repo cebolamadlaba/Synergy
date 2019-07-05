@@ -19,6 +19,9 @@ export class PricingCashComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
     sapbpid: number;
 
+    subHeading: string;
+    title: string;
+
     private sub: any;
     observableCashView: Observable<CashView>;
     cashView: CashView = new CashView();
@@ -49,6 +52,16 @@ export class PricingCashComponent implements OnInit, OnDestroy {
                 this.observableCashView = this.cashConcessionService.getCashViewData(this.riskGroupNumber, this.sapbpid);
                 this.observableCashView.subscribe(cashView => {
                     this.cashView = cashView;
+
+                    if (this.riskGroupNumber || this.riskGroupNumber > 0) {
+                        this.subHeading = this.cashView.riskGroup.name;
+                        this.title = this.cashView.riskGroup.number.toString();
+                    }
+                    else {
+                        this.subHeading = this.cashView.legalEntity.customerName;
+                        this.title = this.cashView.legalEntity.customerNumber;
+                    }
+
                     this.pageLoaded = true;
                     this.isLoading = false;
                 }, error => {

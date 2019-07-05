@@ -235,7 +235,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public CashView GetCashViewData(int riskGroupNumber, int sapbpid, User currentUser)
         {
-            bool hasOnlySapBpId = riskGroupNumber == 0 && sapbpid > 0;
+            bool hasOnlySapBpId = riskGroupNumber < 1 && sapbpid > 0;
 
             var cashConcessions = new List<CashConcession>();
 

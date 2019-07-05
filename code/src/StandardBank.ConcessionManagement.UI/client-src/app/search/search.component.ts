@@ -53,7 +53,7 @@ export class SearchComponent implements OnInit {
 
     today: String;
     //planModel: any = { start_time: new Date() };
-   // now = 
+    // now = 
 
 
     public myDatePickerOptions: IMyDpOptions = {
@@ -61,7 +61,7 @@ export class SearchComponent implements OnInit {
         dateFormat: 'yyyy-mm-dd',
     };
     // Initialized to specific date (09.10.2018).
-    public model: any = {date: null} // [null];//any = { date: { year: this.displayDate.getFullYear(), month: this.displayDate.getMonth() + 1, day: this.displayDate.getDate() } };
+    public model: any = { date: null } // [null];//any = { date: { year: this.displayDate.getFullYear(), month: this.displayDate.getMonth() + 1, day: this.displayDate.getDate() } };
 
     region: Region;
     businesscentre: Centre;
@@ -81,7 +81,7 @@ export class SearchComponent implements OnInit {
         @Inject(UserConcessionsService) private userConcessionsService,
         @Inject(RegionService) private regionService,
         @Inject(BcmManagementService) private businesscentreService,
-        @Inject(TradeConcessionService) private tradeConcessionService, 
+        @Inject(TradeConcessionService) private tradeConcessionService,
         private router: Router) { }
 
     observableApprovedConcessions: Observable<SearchConcessionDetail[]>;
@@ -123,7 +123,7 @@ export class SearchComponent implements OnInit {
         this.getFilteredView();
     }
 
- 
+
     getFilteredView() {
 
         this.isLoading = true;
@@ -152,12 +152,12 @@ export class SearchComponent implements OnInit {
     }
 
     forwardPCM(concessiondetailed: SearchConcessionDetail) {
-        
-        if (confirm("Are you sure you want to forward this concession to PCM ?")) {             
+
+        if (confirm("Are you sure you want to forward this concession to PCM ?")) {
 
             this.isLoading = true;
             this.errorMessage = null;
-            this.validationError = null;  
+            this.validationError = null;
 
             switch (concessiondetailed.concessionType) {
                 case ConcessionTypes.Lending:
@@ -182,7 +182,7 @@ export class SearchComponent implements OnInit {
                     this.forwardInvestmenttoPCM(concessiondetailed);
                     break;
             }
-        }       
+        }
     }
 
     openConcessionView(event, concessiondetailed: SearchConcessionDetail) {
@@ -191,31 +191,31 @@ export class SearchComponent implements OnInit {
 
             switch (concessiondetailed.concessionType) {
                 case ConcessionTypes.Lending:
-                    this.router.navigate(['/lending-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.referenceNumber]);
+                    this.router.navigate(['/lending-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.customerNumber, concessiondetailed.referenceNumber]);
                     break;
                 case ConcessionTypes.Cash:
-                    this.router.navigate(['/cash-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.referenceNumber]);
+                    this.router.navigate(['/cash-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.customerNumber, concessiondetailed.referenceNumber]);
                     break;
                 case ConcessionTypes.Transactional:
-                    this.router.navigate(['/transactional-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.referenceNumber]);
+                    this.router.navigate(['/transactional-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.customerNumber, concessiondetailed.referenceNumber]);
                     break;
                 case ConcessionTypes.BOL:
-                    this.router.navigate(['/bol-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.referenceNumber]);
+                    this.router.navigate(['/bol-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.customerNumber, concessiondetailed.referenceNumber]);
                     break;
                 case ConcessionTypes.Trade:
-                    this.router.navigate(['/trade-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.referenceNumber]);
+                    this.router.navigate(['/trade-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.customerNumber, concessiondetailed.referenceNumber]);
                     break;
                 case ConcessionTypes.Investment:
-                    this.router.navigate(['/investments-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.referenceNumber]);
+                    this.router.navigate(['/investments-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.customerNumber, concessiondetailed.referenceNumber]);
                     break;
             }
         }
     }
 
-    forwardTransactionaltoPCM(concessiondetailed: SearchConcessionDetail) {     
-       
-        concessiondetailed.subStatus = ConcessionSubStatus.PCMPending;       
-        concessiondetailed.comments = "Forwarded by PCM";     
+    forwardTransactionaltoPCM(concessiondetailed: SearchConcessionDetail) {
+
+        concessiondetailed.subStatus = ConcessionSubStatus.PCMPending;
+        concessiondetailed.comments = "Forwarded by PCM";
 
         if (!this.validationError) {
             this.transactionalConcessionService.postForwardTransactionalPCM(concessiondetailed).subscribe(entity => {

@@ -561,6 +561,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                     RiskGroupNumber = concession.RiskGroupNumber,
                     RiskGroupName = concession.RiskGroupName,
+                    CustomerName = concession.CustomerName,
+                    CustomerNumber = concession.CustomerNumber,
                     Status = concession.Status + " - " + concession.SubStatus,
                     ConcessionType = concession.ConcessionType,
                     ExpiryDate = concession.ExpiryDate,
@@ -593,6 +595,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                     RiskGroupNumber = concession.RiskGroupNumber,
                     RiskGroupName = concession.RiskGroupName,
+                    CustomerName = concession.CustomerName,
+                    CustomerNumber = concession.CustomerNumber,
                     Status = concession.Status + " - " + concession.SubStatus,
                     ConcessionType = concession.ConcessionType,
                     ExpiryDate = concession.ExpiryDate,
@@ -657,6 +661,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         RiskGroupName = concession.RiskGroupName,
                         LegalEntityId = concession.LegalEntityId,
                         CustomerName = concession.CustomerName,
+                        CustomerNumber = concession.CustomerNumber,
                         Segment = concession.Segment,
                         ApprovedConcessionDetails = new List<ApprovedConcessionDetail>()
                     };
