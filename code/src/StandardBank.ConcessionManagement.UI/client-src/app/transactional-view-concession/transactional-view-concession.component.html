@@ -17,8 +17,8 @@
         <div class="col-md-12 banner-container" *ngIf="showHide">
             <div class="col-md-11">
                 <div class="col-md-2">
-                    <div class="subHeading">{{riskGroup?.name}}</div>
-                    <div class="date lightTitle hidden-element">{{riskGroup?.number}}</div>
+                    <div class="subHeading">{{entityName}}</div>
+                    <div class="date lightTitle hidden-element">{{entityNumber}}</div>
                     <div class="requestor"><i class="fa fa-user-circle-o" aria-hidden="true"></i><button (click)="viewRequesterModal.show()">{{transactionalConcession?.concession?.requestor?.fullName}}</button></div>
                 </div>
                 <div class="col-md-3 summary-items">
@@ -63,8 +63,8 @@
             <div class="col-md-11">
                 <div>
                     <div class="col-md-5">
-                        <div class="subHeading">{{riskGroup?.name}}</div>
-                        <div class="date lightTitle hidden-element">{{riskGroup?.number}}</div>
+                        <div class="subHeading">{{entityName}}</div>
+                        <div class="date lightTitle hidden-element">{{entityNumber}}</div>
                     </div>
                 </div>
             </div>

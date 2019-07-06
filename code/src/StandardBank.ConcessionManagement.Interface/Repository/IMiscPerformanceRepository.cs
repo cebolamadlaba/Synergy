@@ -64,6 +64,8 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <returns></returns>
         IEnumerable<TransactionalProduct> GetTransactionalProducts(int riskGroupId, string riskGroupName);
 
+        IEnumerable<TransactionalProduct> GetTransactionalProductsByLegalEntity(int legalEntityId, string legalEntityName);
+
         /// <summary>
         /// Gets the cash concession details.
         /// </summary>

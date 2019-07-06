@@ -49,7 +49,12 @@ Go
 Alter Table tblProductCash
 Alter Column fkLegalEntityId Int Null
 Go
-
+Alter Table tblProductTransactional
+Alter Column fkRiskGroupId Int Null
+Go
+Alter Table tblProductTransactional
+Alter Column fkLegalEntityId Int Null
+Go
 
     ALTER VIEW [dbo].[ConcessionInboxView]
     AS

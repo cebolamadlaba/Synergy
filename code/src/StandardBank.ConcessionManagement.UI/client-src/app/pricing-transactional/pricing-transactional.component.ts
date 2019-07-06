@@ -19,6 +19,8 @@ export class PricingTransactionalComponent implements OnInit, OnDestroy {
     showHide = false;
     riskGroupNumber: number;
     sapbpid: number;
+    entityName: string;
+    entityNumber: string;
     private sub: any;
     observableTransactionalView: Observable<TransactionalView>;
     transactionalView: TransactionalView = new TransactionalView();
@@ -43,17 +45,31 @@ export class PricingTransactionalComponent implements OnInit, OnDestroy {
             this.riskGroupNumber = +params['riskGroupNumber'];
             this.sapbpid = +params['sapbpid'];
 
-            if (this.riskGroupNumber) {
-                this.observableTransactionalView = this.transactionalConcessionService.getTransactionalViewData(this.riskGroupNumber);
+            if (this.riskGroupNumber || this.sapbpid) {
+                this.observableTransactionalView = this.transactionalConcessionService.getTransactionalViewData(this.riskGroupNumber, this.sapbpid);
                 this.observableTransactionalView.subscribe(transactionalView => {
                     this.transactionalView = transactionalView;
+
+                    if (this.riskGroupNumber || this.riskGroupNumber > 0) {
+                        this.entityName = this.transactionalView.riskGroup.name;
+                        this.entityNumber = this.transactionalView.riskGroup.number.toString();
+                    }
+                    else {
+                        this.entityName = this.transactionalView.legalEntity.customerName;
+                        this.entityNumber = this.transactionalView.legalEntity.customerNumber;
+                    }
+
                     this.pageLoaded = true;
                     this.isLoading = false;
                 }, error => {
                     this.errorMessage = <any>error;
                     this.isLoading = false;
                 });
+
+
+
             }
+
         });
 
         this.userService.getData().subscribe(user => {

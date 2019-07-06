@@ -25,6 +25,7 @@ import { ConcessionTypes } from '../constants/concession-types';
 import { ConcessionStatus } from '../constants/concession-status';
 import { ConcessionSubStatus } from '../constants/concession-sub-status';
 import { BaseComponentService } from '../services/base-component.service';
+import { LegalEntity } from "../models/legal-entity";
 
 @Component({
     selector: 'app-transactional-view-concession',
@@ -44,6 +45,11 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
+    legalEntity: LegalEntity;
+    sapbpid: number;
+    entityName: string;
+    entityNumber: string;
+
     selectedConditionTypes: ConditionType[];
     selectedTransactionTypes: TransactionType[];
     isLoading = true;
@@ -113,6 +119,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
+            this.sapbpid = +params['sapbpid'];
             this.concessionReferenceId = params['concessionReferenceId'];
         });
 
@@ -125,29 +132,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
             comments: new FormControl()
         });
 
-        Observable.forkJoin([
-            this.lookupDataService.getPeriods(),
-            this.lookupDataService.getPeriodTypes(),
-            this.lookupDataService.getConditionTypes(),
-            this.lookupDataService.getTransactionTypes(ConcessionTypes.Transactional),
-            this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-            this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Transactional),
-            this.transactionalConcessionService.getTransactionalFinancial(this.riskGroupNumber)
-        ]).subscribe(results => {
-            this.periods = <any>results[0];
-            this.periodTypes = <any>results[1];
-            this.conditionTypes = <any>results[2];
-            this.transactionTypes = <any>results[3];
-            this.riskGroup = <any>results[4];
-            this.clientAccounts = <any>results[5];
-            this.transactionalFinancial = <any>results[6];
-
-            this.populateForm();
-        },
-            error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
+        this.getInitialData();
 
         this.transactionalConcessionForm.valueChanges.subscribe((value: any) => {
             if (this.transactionalConcessionForm.dirty) {
@@ -160,6 +145,65 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
                 this.capturedComments = value.comments;
             }
         });
+    }
+
+    getInitialData() {
+        if (this.riskGroupNumber != null && this.riskGroupNumber != 0) {
+            Observable.forkJoin([
+                this.lookupDataService.getPeriods(),
+                this.lookupDataService.getPeriodTypes(),
+                this.lookupDataService.getConditionTypes(),
+                this.lookupDataService.getTransactionTypes(ConcessionTypes.Transactional),
+                this.lookupDataService.getRiskGroup(this.riskGroupNumber),
+                this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, this.sapbpid, ConcessionTypes.Transactional),
+                this.transactionalConcessionService.getTransactionalFinancial(this.riskGroupNumber)
+            ]).subscribe(results => {
+                this.setInitialData(results, true);
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+
+        }
+        else if (this.sapbpid != null && this.sapbpid != 0) {
+            Observable.forkJoin([
+                this.lookupDataService.getPeriods(),
+                this.lookupDataService.getPeriodTypes(),
+                this.lookupDataService.getConditionTypes(),
+                this.lookupDataService.getTransactionTypes(ConcessionTypes.Transactional),
+                this.lookupDataService.getLegalEntity(this.sapbpid),
+                this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, this.sapbpid, ConcessionTypes.Transactional),
+            ]).subscribe(results => {
+                this.setInitialData(results, false);
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        }
+    }
+
+    setInitialData(results: {}[], isForRiskGroup: boolean) {
+        this.periods = <any>results[0];
+        this.periodTypes = <any>results[1];
+        this.conditionTypes = <any>results[2];
+        this.transactionTypes = <any>results[3];
+
+        if (isForRiskGroup) {
+            this.riskGroup = <any>results[4];
+            this.transactionalFinancial = <any>results[6];
+            this.entityName = this.riskGroup.name;
+            this.entityNumber = this.riskGroup.number.toString();
+        }
+        else {
+            this.legalEntity = <any>results[4];
+            this.entityName = this.legalEntity.customerName;
+            this.entityNumber = this.legalEntity.customerNumber;
+        }
+        this.clientAccounts = <any>results[5];
+
+
+        this.populateForm();
+
     }
 
     populateForm() {
@@ -419,7 +463,12 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
         var transactionalConcession = new TransactionalConcession();
         transactionalConcession.concession = new Concession();
         transactionalConcession.concession.concessionType = ConcessionTypes.Transactional;
-        transactionalConcession.concession.riskGroupId = this.riskGroup.id;
+
+        if (this.riskGroup)
+            transactionalConcession.concession.riskGroupId = this.riskGroup.id;
+        if (this.legalEntity)
+            transactionalConcession.concession.legalEntityId = this.legalEntity.id;
+
         transactionalConcession.concession.referenceNumber = this.concessionReferenceId;
 
         if (this.transactionalConcessionForm.controls['smtDealNumber'].value)
