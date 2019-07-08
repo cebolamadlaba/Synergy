@@ -27,16 +27,16 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             _dbConnectionFactory = dbConnectionFactory;
         }
-              
+
 
         /// <summary>
         /// Reads all.
         /// </summary>
         /// <returns></returns>
-      
+
 
         public IEnumerable<BOLChargeCode> GetBOLChargeCodes(int riskGroupNumber)
-        {           
+        {
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<BOLChargeCode>(string.Format(@"SELECT chargeCode.*  
@@ -70,10 +70,22 @@ namespace StandardBank.ConcessionManagement.Repository
                                                 join tblLegalEntity on tblLegalEntityAccount.fkLegalEntityId = tblLegalEntity.pkLegalEntityId
                                                 join tblRiskGroup on tblLegalEntity.fkRiskGroupId = tblRiskGroup.pkRiskGroupId
 												where RiskGroupNumber = {0}", riskGroupNumber));
-                                                            }
+            }
         }
 
-      
+        public IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsersByLegalEntityId(int legalEntityId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<LegalEntityBOLUser>(string.Format(
+                    @"SELECT pkLegalEntityBOLUserId,fkLegalEntityAccountId, BOLUserId,pkLegalEntityId [legalEntityId] ,pkLegalEntityAccountId [legalEntityAccountId]  
+                        from tblLegalEntityBOLUser
+                        join tblLegalEntityAccount on tblLegalEntityBOLUser.fkLegalEntityAccountId = tblLegalEntityAccount.pkLegalEntityAccountId
+                        join tblLegalEntity on tblLegalEntityAccount.fkLegalEntityId = tblLegalEntity.pkLegalEntityId
+                        Where	tblLegalEntity.pkLegalEntityId = {0}", legalEntityId));
+            }
+        }
+
 
     }
 }

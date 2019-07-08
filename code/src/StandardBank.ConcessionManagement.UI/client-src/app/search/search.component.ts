@@ -170,7 +170,7 @@ export class SearchComponent implements OnInit {
                     this.forwardTransactionaltoPCM(concessiondetailed);
                     break;
 
-                case ConcessionTypes.BOL:
+                case ConcessionTypes.BOLDesc:
                     this.forwardBoltoPCM(concessiondetailed);
                     break;
 
@@ -199,7 +199,7 @@ export class SearchComponent implements OnInit {
                 case ConcessionTypes.Transactional:
                     this.router.navigate(['/transactional-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.customerNumber, concessiondetailed.referenceNumber]);
                     break;
-                case ConcessionTypes.BOL:
+                case ConcessionTypes.BOLDesc:
                     this.router.navigate(['/bol-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.customerNumber, concessiondetailed.referenceNumber]);
                     break;
                 case ConcessionTypes.Trade:

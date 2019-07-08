@@ -21,8 +21,8 @@ export class BolConcessionService {
 
     constructor(private http: Http) { }
 
-    getBolViewData(riskGroupNumber): Observable<CashView> {
-        const url = "/api/Bol/BolView/" + riskGroupNumber;
+    getBolViewData(riskGroupNumber, sapbpid): Observable<CashView> {
+        const url = "/api/Bol/BolView/" + riskGroupNumber + "/" + sapbpid;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
@@ -97,8 +97,8 @@ export class BolConcessionService {
     }
 
     private handleErrorObservable(error: Response | any) {
-             
-        
+
+
         console.error(error.message || error);
         return Observable.throw(error.message || error);
     }

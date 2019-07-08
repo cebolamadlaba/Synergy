@@ -51,6 +51,8 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
 
         IEnumerable<BolProduct> GetBolProducts(int riskGroupId, string riskGroupName);
 
+        IEnumerable<BolProduct> GetBolProductsByLegalEntity(int legalEntityId, string legalEntityName);
+
         IEnumerable<TradeProduct> GetTradeProducts(int riskGroupId, string riskGroupName);
 
         IEnumerable<InvestmentProduct> GetInvestmentProducts(int riskGroupId, string riskGroupName);

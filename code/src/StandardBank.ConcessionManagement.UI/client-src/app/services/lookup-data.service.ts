@@ -107,6 +107,11 @@ export class LookupDataService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    getLegalEntityBOLUsersBySAPBPID(sapbpid): Observable<LegalEntityBOLUser[]> {
+        const url = "/api/Condition/GetLegalEntityBOLUsersBySAPBPID/" + sapbpid;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
     getLegalEntityGBBNumbers(riskGroupNumber): Observable<LegalEntityBOLUser[]> {
         const url = "/api/Condition/LegalEntityGBBNumbers/" + riskGroupNumber;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
