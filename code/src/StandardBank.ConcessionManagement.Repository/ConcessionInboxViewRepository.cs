@@ -307,7 +307,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     AND [IsActive] = 1
                     AND [IsCurrent] = 1
                     AND [Archived] is null
-                    AND ([ExpiryDate] IS NOT NULL AND CAST([ExpiryDate] AS DATE) BETWEEN GETDATE() AND @DateToCheck)",
+                    AND ([ExpiryDate] IS NOT NULL AND CAST([ExpiryDate] AS DATE) BETWEEN CAST(GETDATE() AS DATE) AND CAST(@DateToCheck AS DATE) )",
                     new { DateToCheck = DateTime.Now.AddMonths(3) });
             }
         }

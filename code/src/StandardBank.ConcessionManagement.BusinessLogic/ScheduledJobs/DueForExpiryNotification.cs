@@ -99,16 +99,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                 if (concession.RequestorId.HasValue)
                     AddExpiringConcessionForUser(concession.RequestorId.Value, ref expiringConcessionList, concessionDetail);
                 
-                //Add BCM user if months is more than 1 
+                //Add BCM user if months are less then 3
                 if(month < 3 && concession.BCMUserId.HasValue)
                     AddExpiringConcessionForUser(concession.BCMUserId.Value, ref expiringConcessionList, concessionDetail);
                 
-                //Add PCM user if months is more than 2 
+                //Add PCM user if there is a month left
                 if (month == 1 && concession.PCMUserId.HasValue)
                     AddExpiringConcessionForUser(concession.PCMUserId.Value, ref expiringConcessionList, concessionDetail);
-                
 
-                //Add HO user if months is more than 2 
+
+                //Add HO user if there is a month left
                 if (month == 1 && concession.HOUserId.HasValue)
                     AddExpiringConcessionForUser(concession.HOUserId.Value, ref expiringConcessionList, concessionDetail);   
             }
