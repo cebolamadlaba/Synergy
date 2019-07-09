@@ -685,8 +685,10 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         }
 
         if (!this.validationError) {
+
+            this.canBcmApprove = false;
+
             this.bolConcessionService.postUpdateBolData(bolConcession).subscribe(entity => {
-                this.canBcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
                 this.bolConcession = entity;
@@ -694,6 +696,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             }, error => {
                 this.errorMessage = <any>error;
                 this.isLoading = false;
+                this.canBcmApprove = true;
             });
         } else {
             this.isLoading = false;
@@ -715,10 +718,12 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             bolConcession.concession.comments = ConcessionStatus.Declined;
         }
 
+        this.canBcmApprove = false;
+
         if (!this.validationError) {
             this.bolConcessionService.postUpdateBolData(bolConcession).subscribe(entity => {
                 console.log("data saved");
-                this.canBcmApprove = false;
+                
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
                 this.bolConcession = entity;
@@ -726,6 +731,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             }, error => {
                 this.errorMessage = <any>error;
                 this.isLoading = false;
+                this.canBcmApprove = true;
             });
         } else {
             this.isLoading = false;

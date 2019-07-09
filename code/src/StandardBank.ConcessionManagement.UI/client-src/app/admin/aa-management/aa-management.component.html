@@ -129,7 +129,7 @@
                         <div class="form-group">
                             <label class="control-label col-sm-4" for="email">Business Centre</label>
                             <div class="col-sm-8">
-                                <select [(ngModel)]="addAaUserModel.centreId" name="2" class="form-control">
+                                <select [(ngModel)]="addAaUserModel.centreId" name="2" class="form-control" required>
                                     <option *ngFor="let p of centres"
                                             [ngValue]="p.id">
                                         {{p.name}}

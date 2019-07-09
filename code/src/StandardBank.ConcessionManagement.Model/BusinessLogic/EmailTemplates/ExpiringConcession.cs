@@ -8,28 +8,28 @@ namespace StandardBank.ConcessionManagement.Model.BusinessLogic.EmailTemplates
     public class ExpiringConcession
     {
         /// <summary>
-        /// Gets or sets the name of the requestor.
+        /// Gets or sets the name of the recipient.
         /// </summary>
         /// <value>
-        /// The name of the requestor.
+        /// The name of the recipient.
         /// </value>
-        public string RequestorName { get; set; }
+        public string RecipientName { get; set; }
 
         /// <summary>
-        /// Gets or sets the requestor email.
+        /// Gets or sets the recipient email.
         /// </summary>
         /// <value>
-        /// The requestor email.
+        /// The recipient email.
         /// </value>
-        public string RequestorEmail { get; set; }
+        public string RecipientEmail { get; set; }
 
         /// <summary>
-        /// Gets or sets the requestor identifier.
+        /// Gets or sets the recipient identifier.
         /// </summary>
         /// <value>
-        /// The requestor identifier.
+        /// The recipient identifier.
         /// </value>
-        public int RequestorId { get; set; }
+        public int RecipientId { get; set; }
 
         /// <summary>
         /// Gets or sets the expiring concession details.
@@ -37,6 +37,6 @@ namespace StandardBank.ConcessionManagement.Model.BusinessLogic.EmailTemplates
         /// <value>
         /// The expiring concession details.
         /// </value>
-        public IEnumerable<ExpiringConcessionDetail> ExpiringConcessionDetails { get; set; }
+        public IList<ExpiringConcessionDetail> ExpiringConcessionDetails { get; set; }
     }
 }
