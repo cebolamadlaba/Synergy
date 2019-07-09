@@ -255,12 +255,10 @@
     <Build Include="dbo\Tables\rtblBOLChargeCodeType.sql" />
     <Build Include="dbo\Tables\rtblBOLChargeCode.sql" />
     <Build Include="Audit\Tables\tblConcessionDetail.sql" />
-    <Build Include="dbo\Views\View_1.sql" />
     <Build Include="dbo\Tables\tblAENumberUser.sql" />
     <Build Include="dbo\Tables\tblLegalEntityAddress.sql" />
     <Build Include="dbo\Tables\tblRiskGroupNonUniversalChargeCode.sql" />
     <Build Include="dbo\Tables\rtblSubRole.sql" />
-    <Build Include="dbo\Views\View_1_1.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Change Scripts\09_create_rtblPeriod.sql" />
