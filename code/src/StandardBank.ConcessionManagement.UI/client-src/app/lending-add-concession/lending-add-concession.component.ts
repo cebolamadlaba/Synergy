@@ -51,8 +51,8 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     selectedProductTypes: ProductType[];
     selectedAccountNumbers: ClientAccountArray[];
 
-    subHeading: string;
-    title: string;
+    entityName: string;
+    entityNumber: string;
 
     isLoading = true;
 
@@ -204,13 +204,13 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         if (isForRiskGroup) {
             this.riskGroup = <any>results[5];
             this.latestCrsOrMrs = <any>results[8];
-            this.subHeading = this.riskGroup.name;
-            this.title = this.riskGroup.number.toString();
+            this.entityName = this.riskGroup.name;
+            this.entityNumber = this.riskGroup.number.toString();
         }
         else {
             this.legalEntity = <any>results[5];
-            this.subHeading = this.legalEntity.customerName;
-            this.title = this.legalEntity.customerNumber;
+            this.entityName = this.legalEntity.customerName;
+            this.entityNumber = this.legalEntity.customerNumber;
         }
         this.clientAccounts = <any>results[6];
         this.primeRate = <string>results[7];

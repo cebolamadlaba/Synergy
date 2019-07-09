@@ -27,6 +27,9 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
     canRequest = false;
     isLoading = true;
 
+    entityName: string;
+    entityNumber: string;
+
     subHeading: string = "n/a";
     title: number = 0;
 
@@ -51,6 +54,8 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
                 this.observableLendingView = this.lendingService.getLendingViewData(this.riskGroupNumber);
                 this.observableLendingView.subscribe(lendingView => {
                     this.lendingView = lendingView;
+                    this.entityName = this.lendingView.riskGroup.name;
+                    this.entityNumber = this.lendingView.riskGroup.number.toString();
                     this.pageLoaded = true;
                     this.isLoading = false;
                 }, error => {
@@ -61,6 +66,8 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
                 this.observableLendingView = this.lendingService.getLendingViewDataBySAPBPID(this.sapbpid);
                 this.observableLendingView.subscribe(lendingView => {
                     this.lendingView = lendingView;
+                    this.entityName = this.lendingView.legalEntity.customerName;
+                    this.entityNumber = this.lendingView.legalEntity.customerNumber;
                     this.pageLoaded = true;
                     this.isLoading = false;
                 }, error => {
@@ -73,26 +80,6 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
                 this.canRequest = user.canRequest;
             });
         });
-    }
-
-    getSubHeading(): string {
-        if (this.riskGroupNumber && this.riskGroupNumber != 0) {
-            return this.lendingView.riskGroup.name;
-        }
-        else if (this.sapbpid && this.sapbpid != 0) {
-            return this.lendingView.legalEntity.customerName;
-        }
-
-        return "n/a";
-    }
-
-    getTitle(): number {
-        if (this.riskGroupNumber && this.riskGroupNumber != 0) {
-            return this.lendingView.riskGroup.number;
-        }
-        else if (this.sapbpid && this.sapbpid != 0) {
-            return Number(this.lendingView.legalEntity.customerNumber);
-        }
     }
 
     goBack() {
