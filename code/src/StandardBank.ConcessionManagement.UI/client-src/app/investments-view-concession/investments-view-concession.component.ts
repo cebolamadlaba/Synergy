@@ -29,6 +29,7 @@ import { ConcessionSubStatus } from '../constants/concession-sub-status';
 import { UserService } from "../services/user.service";
 
 import { LegalEntityGBBNumber } from "../models/legal-entity-gbb-number";
+import { LegalEntity } from "../models/legal-entity";
 
 import { InvestmentProduct } from "../models/investment-product";
 import { ProductType } from "../models/product-type";
@@ -62,6 +63,8 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
     riskGroup: RiskGroup;
     riskGroupNumber: number;
+    legalEntity: LegalEntity;
+    sapbpid: number;
 
     primeRate = "0.00";
     today: string;
@@ -89,6 +92,9 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     isInProgressRenewal = false;
     isApproved = false;
     showHide = false;
+
+    entityName: string;
+    entityNumber: string;
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
@@ -166,29 +172,29 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
+            this.sapbpid = +params['sapbpid'];
             this.concessionReferenceId = params['concessionReferenceId'];
         });
 
-        if (this.riskGroupNumber) {
+        this.observableInvestmentView = this.investmentConcessionService.getInvestmentViewData(this.riskGroupNumber, this.sapbpid);
+        this.observableInvestmentView.subscribe(tempView => {
+            this.investmentView = tempView;
 
-            this.observableRiskGroup = this.lookupDataService.getRiskGroup(this.riskGroupNumber);
-            this.observableRiskGroup.subscribe(riskGroup => this.riskGroup = riskGroup, error => this.errorMessage = <any>error);
+            if (this.riskGroupNumber || this.riskGroupNumber > 0) {
+                this.entityName = this.investmentView.riskGroup.name;
+                this.entityNumber = this.investmentView.riskGroup.number.toString();
+            }
+            else {
+                this.entityName = this.investmentView.legalEntity.customerName;
+                this.entityNumber = this.investmentView.legalEntity.customerNumber;
+            }
 
-            this.observableClientAccounts = this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Investment);
-            this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
-        }
+            this.isLoading = false;
+        }, error => {
+            this.errorMessage = <any>error;
+            this.isLoading = false;
+        });
 
-        if (this.riskGroupNumber) {
-            this.observableInvestmentView = this.investmentConcessionService.getInvestmentViewData(this.riskGroupNumber);
-            this.observableInvestmentView.subscribe(tempView => {
-                this.investmentView = tempView;
-
-                this.isLoading = false;
-            }, error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
-        }
 
         this.investmentConcessionForm = this.formBuilder.group({
             concessionItemRows: this.formBuilder.array([this.initConcessionItemRows()]),
@@ -198,32 +204,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             comments: new FormControl()
         });
 
-        Observable.forkJoin([
-
-            this.lookupDataService.getProductTypes(ConcessionTypes.Investment),
-            this.lookupDataService.getPeriods(),
-            this.lookupDataService.getPeriodTypes(),
-            this.lookupDataService.getConditionTypes(),
-            this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-            this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Investment)
-
-
-        ]).subscribe(results => {
-
-            this.productTypes = <any>results[0];
-            this.periods = <any>results[1];
-            this.periodTypes = <any>results[2];
-            this.conditionTypes = <any>results[3];
-            this.riskGroup = <any>results[4];
-            this.clientAccounts = <any>results[5];
-            this.primeRate = <string>results[6];
-
-            this.populateForm();
-        },
-            error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
+        this.getInitialData();
 
         this.investmentConcessionForm.valueChanges.subscribe((value: any) => {
             if (this.investmentConcessionForm.dirty) {
@@ -236,6 +217,57 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                 this.capturedComments = value.comments;
             }
         });
+    }
+
+    getInitialData() {
+        if (this.riskGroupNumber != null && this.riskGroupNumber != 0) {
+            Observable.forkJoin([
+                this.lookupDataService.getProductTypes(ConcessionTypes.Investment),
+                this.lookupDataService.getPeriods(),
+                this.lookupDataService.getPeriodTypes(),
+                this.lookupDataService.getConditionTypes(),
+                this.lookupDataService.getRiskGroup(this.riskGroupNumber),
+                this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, this.sapbpid, ConcessionTypes.Investment)
+            ]).subscribe(results => {
+                this.setInitialData(results, true);
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        }
+        else if (this.sapbpid != null && this.sapbpid != 0) {
+            Observable.forkJoin([
+                this.lookupDataService.getProductTypes(ConcessionTypes.Investment),
+                this.lookupDataService.getPeriods(),
+                this.lookupDataService.getPeriodTypes(),
+                this.lookupDataService.getConditionTypes(),
+                this.lookupDataService.getLegalEntity(this.sapbpid),
+                this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, this.sapbpid, ConcessionTypes.Investment)
+            ]).subscribe(results => {
+                this.setInitialData(results, false);
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        }
+    }
+
+    setInitialData(results: {}[], isForRiskGroup: boolean) {
+        if (isForRiskGroup) {
+            this.riskGroup = <any>results[4];
+        }
+        else {
+            this.legalEntity = <any>results[4];
+        }
+
+        this.productTypes = <any>results[0];
+        this.periods = <any>results[1];
+        this.periodTypes = <any>results[2];
+        this.conditionTypes = <any>results[3];
+        this.clientAccounts = <any>results[5];
+        this.primeRate = <string>results[6];
+
+        this.populateForm();
     }
 
     populateForm() {
@@ -599,7 +631,12 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     getInvestmentConcession(isNew: boolean): InvestmentConcession {
         var investmentConcession = new InvestmentConcession();
         investmentConcession.concession = new Concession();
-        investmentConcession.concession.riskGroupId = this.riskGroup.id;
+
+        if (this.riskGroup)
+            investmentConcession.concession.riskGroupId = this.riskGroup.id;
+        if (this.legalEntity)
+            investmentConcession.concession.legalEntityId = this.legalEntity.id;
+
         investmentConcession.concession.referenceNumber = this.concessionReferenceId;
         investmentConcession.concession.concessionType = ConcessionTypes.Investment;
 

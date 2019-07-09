@@ -41,12 +41,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         }
 
         /// <returns></returns>
-        [Route("InvestmentView/{riskGroupNumber}")]
-        public IActionResult InvestmentView(int riskGroupNumber)
+        [Route("InvestmentView/{riskGroupNumber}/{sapbpid}")]
+        public IActionResult InvestmentView(int riskGroupNumber, int sapbpid)
         {
             var user = _siteHelper.LoggedInUser(this);
 
-            return Ok(_investmentManager.GetInvestmentViewData(riskGroupNumber, user));
+            return Ok(_investmentManager.GetInvestmentViewData(riskGroupNumber, sapbpid, user));
         }
 
 

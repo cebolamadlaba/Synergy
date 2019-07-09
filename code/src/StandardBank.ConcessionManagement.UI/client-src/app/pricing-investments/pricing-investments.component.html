@@ -16,8 +16,8 @@
         <div class="col-md-12 banner-container" *ngIf="showHide">
             <div class="col-md-11">
                 <div class="col-md-5">
-                    <div class="subHeading">{{investmentView.riskGroup.name}}</div>
-                    <div class="date lightTitle hidden-element">{{investmentView.riskGroup.number}}</div>
+                    <div class="subHeading">{{entityName}}</div>
+                    <div class="date lightTitle hidden-element">{{entityNumber}}</div>
 
                 </div>
                 <div class="col-md-2  hidden-element">
@@ -48,8 +48,8 @@
             <div class="col-md-11">
                 <div>
                     <div class="col-md-5">
-                        <div class="subHeading">{{investmentView.riskGroup.name}}</div>
-                        <div class="date lightTitle hidden-element">{{investmentView.riskGroup.number}}</div>
+                        <div class="subHeading">{{entityName}}</div>
+                        <div class="date lightTitle hidden-element">{{entityNumber}}</div>
                     </div>
                 </div>
             </div>
@@ -99,14 +99,14 @@
                             <thead>
                                 <tr>
                                     <th>Account(No.)</th>
-                                    <th>Product </th>                                  
+                                    <th>Product </th>
                                     <th>Loaded Rate</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let investmentprod of investmentprodgroup.investmentProducts">
                                     <td class="leftAlign">{{investmentprod.accountNumber}}</td>
-                                  
+
                                     <td class="leftAlign">{{investmentprod.investmentProductName}}</td>
 
                                     <td class="rightAlign">{{investmentprod.loadedRate}}</td>
@@ -125,7 +125,7 @@
         <h2 class="headings">
             Concessions
 
-            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/investments-add-concession', investmentView.riskGroup.number]" *ngIf="pageLoaded && canRequest">Add Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/investments-add-concession', riskGroupNumber, sapbpid]" *ngIf="pageLoaded && canRequest">Add Concession</button>
         </h2>
 
 
@@ -144,12 +144,12 @@
                 </div>
             </div>
             <div class="section-body">
-                <div class="table-container" [routerLink]="['/investments-view-concession', investmentView.riskGroup.number, investmentConcession.concession.referenceNumber]">
+                <div class="table-container" [routerLink]="['/investments-view-concession', riskGroupNumber, sapbpid, investmentConcession.concession.referenceNumber]">
                     <table class="table table-bordered table-hover header-fixed table-striped">
                         <thead>
                             <tr>
                                 <th>Legal Entity</th>
-                                <th>Product</th>                               
+                                <th>Product</th>
                                 <th>Account(No.)</th>
                                 <th>Rate</th>
                             </tr>
@@ -157,7 +157,7 @@
                         <tbody>
                             <tr *ngFor="let concession of investmentConcession.investmentConcessionDetails; trackBy: index;">
                                 <td>{{concession.legalEntity}}</td>
-                             
+
                                 <td class="leftAlign">{{concession.investmentProduct}}</td>
 
                                 <td class="rightAlign">{{concession.accountNumber}}</td>

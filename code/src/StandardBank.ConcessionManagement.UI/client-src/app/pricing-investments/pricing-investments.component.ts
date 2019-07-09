@@ -23,6 +23,9 @@ export class PricingInvestmentsComponent implements OnInit, OnDestroy {
     sapbpid: number;
     private sub: any;
 
+    entityName: string;
+    entityNumber: string;
+
     observableInvestmentView: Observable<InvestmentView>;
     investmentView: InvestmentView = new InvestmentView();
     errorMessage: String;
@@ -48,18 +51,30 @@ export class PricingInvestmentsComponent implements OnInit, OnDestroy {
             this.riskGroupNumber = +params['riskGroupNumber'];
             this.sapbpid = +params['sapbpid'];
 
-            if (this.riskGroupNumber) {
-                this.observableInvestmentView = this.investmentConcessionService.getInvestmentViewData(this.riskGroupNumber);
-                this.observableInvestmentView.subscribe(investmentView => {
+            if (this.riskGroupNumber || this.sapbpid) {
 
+                this.observableInvestmentView = this.investmentConcessionService.getInvestmentViewData(this.riskGroupNumber, this.sapbpid);
+                this.observableInvestmentView.subscribe(investmentView => {
                     this.investmentView = investmentView;
+
+                    if (this.riskGroupNumber || this.riskGroupNumber > 0) {
+                        this.entityName = this.investmentView.riskGroup.name;
+                        this.entityNumber = this.investmentView.riskGroup.number.toString();
+                    }
+                    else {
+                        this.entityName = this.investmentView.legalEntity.customerName;
+                        this.entityNumber = this.investmentView.legalEntity.customerNumber;
+                    }
+
                     this.pageLoaded = true;
                     this.isLoading = false;
                 }, error => {
                     this.errorMessage = <any>error;
                     this.isLoading = false;
                 });
+
             }
+
         });
 
         this.userService.getData().subscribe(user => {
@@ -67,7 +82,7 @@ export class PricingInvestmentsComponent implements OnInit, OnDestroy {
         });
     }
 
-    goBack() {       
+    goBack() {
         this.router.navigate(['/pricing', this.riskGroupNumber]);
     }
 

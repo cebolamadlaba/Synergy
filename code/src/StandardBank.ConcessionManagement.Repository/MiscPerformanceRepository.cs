@@ -157,8 +157,6 @@ namespace StandardBank.ConcessionManagement.Repository
                             }
                             else if (concessiontype == Model.BusinessLogic.Constants.ConcessionType.BusinessOnline)
                             {
-                                // why are we joining with tblProductLEnding and not tblProductBOL ? 
-                                // awaiting feedback from SBSA.Anthony.........
                                 if (riskGroupNumber > 0)
                                 {
                                     sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
@@ -868,6 +866,35 @@ namespace StandardBank.ConcessionManagement.Repository
                 new CacheKeyParameter(nameof(riskGroupId), riskGroupId),
                 new CacheKeyParameter(nameof(riskGroupName), riskGroupName));
         }
+
+        public IEnumerable<InvestmentProduct> GetInvestmentProductsByLegalEntity(int legalEntityId, string legalEntityName)
+        {
+            IEnumerable<InvestmentProduct> Function()
+            {
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    var bolProducts = db.Query<InvestmentProduct>(
+                        @"SELECT pinv.pkProductInvestmentId [InvestmentProductId], p.[Description] [InvestmentProductName], le.[CustomerName] [legalEntity], lea.[AccountNumber], pinv.[AverageBalance], pinv.LoadedCustomerRate [LoadedRate]
+                        FROM [dbo].tblProductInvestment pinv
+                        JOIN [dbo].[rtblProduct] p on p.[pkProductId] = pinv.[fkProductId]
+                        JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = pinv.[fkLegalEntityId]
+                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = pinv.[fkLegalEntityAccountId]
+                        WHERE le.[pkLegalEntityId] = @legalEntityId", new { legalEntityId, legalEntityName },
+                        commandTimeout: Int32.MaxValue);
+
+                    if (bolProducts != null && bolProducts.Any())
+                        return bolProducts;
+                }
+
+                return null;
+            }
+
+            return _cacheManager.ReturnFromCache(Function, 300,
+                CacheKey.Repository.MiscPerformanceRepository.GetInvestmentProducts,
+                new CacheKeyParameter(nameof(legalEntityId), legalEntityId),
+                new CacheKeyParameter(nameof(legalEntityName), legalEntityName));
+        }
+
         /// <summary>
         /// Gets the transactional products.
         /// </summary>

@@ -59,6 +59,7 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
 
         IEnumerable<InvestmentProduct> GetInvestmentProducts(int riskGroupId, string riskGroupName);
 
+        IEnumerable<InvestmentProduct> GetInvestmentProductsByLegalEntity(int legalEntityId, string legalEntityName);
 
         /// <summary>
         /// Gets the transactional products.
