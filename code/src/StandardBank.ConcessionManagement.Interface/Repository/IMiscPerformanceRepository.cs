@@ -55,6 +55,8 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
 
         IEnumerable<TradeProduct> GetTradeProducts(int riskGroupId, string riskGroupName);
 
+        IEnumerable<TradeProduct> GetTradeProductsBySAPBPID(int legalEntityId, string legalEntityName);
+
         IEnumerable<InvestmentProduct> GetInvestmentProducts(int riskGroupId, string riskGroupName);
 
 

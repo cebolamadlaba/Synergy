@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
+import { LegalEntity } from "../models/legal-entity";
 
 import { TradeConcession } from "../models/trade-concession";
 import { TradeView } from "../models/trade-view";
@@ -31,11 +32,14 @@ export class PricingTradeComponent implements OnInit, OnDestroy {
     isLoading = true;
     canRequest = false;
 
+    entityName: string;
+    entityNumber: string;
+
     constructor(
         private router: Router,
         private route: ActivatedRoute,
         private location: Location,
-         @Inject(TradeConcessionService) private tradeConcessionService, private userService: UserService
+        @Inject(TradeConcessionService) private tradeConcessionService, private userService: UserService
     ) {
         this.tradeView.riskGroup = new RiskGroup();
         this.tradeView.tradeConcessions = [new TradeConcession()];
@@ -48,10 +52,35 @@ export class PricingTradeComponent implements OnInit, OnDestroy {
             this.riskGroupNumber = +params['riskGroupNumber'];
             this.sapbpid = +params['sapbpid'];
 
+            if (this.riskGroupNumber || this.sapbpid) {
+
+                this.observableTradeView = this.tradeConcessionService.getTradeViewData(this.riskGroupNumber, this.sapbpid);
+                this.observableTradeView.subscribe(tradeView => {
+
+                    this.tradeView = tradeView;
+
+                    if (this.riskGroupNumber || this.riskGroupNumber > 0) {
+                        this.entityName = this.tradeView.riskGroup.name;
+                        this.entityNumber = this.tradeView.riskGroup.number.toString();
+                    }
+                    else {
+                        this.entityName = this.tradeView.legalEntity.customerName;
+                        this.entityNumber = this.tradeView.legalEntity.customerNumber;
+                    }
+
+                    this.pageLoaded = true;
+                    this.isLoading = false;
+                }, error => {
+                    this.errorMessage = <any>error;
+                    this.isLoading = false;
+                });
+
+
+            }
+
             if (this.riskGroupNumber) {
                 this.observableTradeView = this.tradeConcessionService.getTradeViewData(this.riskGroupNumber);
                 this.observableTradeView.subscribe(tradeView => {
-
 
                     this.tradeView = tradeView;
                     this.pageLoaded = true;

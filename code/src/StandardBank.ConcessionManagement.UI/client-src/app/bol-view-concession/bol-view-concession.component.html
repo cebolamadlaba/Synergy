@@ -393,13 +393,13 @@
                             <td>{{concessionRelationship.relationshipType}}</td>
                             <td>
                                 <span *ngIf="concessionRelationship.parentConcessionReference == concessionReferenceId"><strong>**</strong></span>
-                                <span *ngIf="concessionRelationship.parentIsActive"><a href="#" target="_blank" [routerLink]="['/bol-view-concession', riskGroup.number, concessionRelationship.parentConcessionReference]">{{concessionRelationship.parentConcession}}</a></span>
+                                <span *ngIf="concessionRelationship.parentIsActive"><a href="#" target="_blank" [routerLink]="['/bol-view-concession', riskGroupNumber, sapbpid, concessionRelationship.parentConcessionReference]">{{concessionRelationship.parentConcession}}</a></span>
                                 <span *ngIf="!concessionRelationship.parentIsActive">{{concessionRelationship.parentConcession}}</span>
                             </td>
                             <td>{{concessionRelationship.relationship}}</td>
                             <td>
                                 <span *ngIf="concessionRelationship.childConcessionReference == concessionReferenceId"><strong>**</strong></span>
-                                <span *ngIf="concessionRelationship.childIsActive"><a href="#" target="_blank" [routerLink]="['/bol-view-concession', riskGroup.number, concessionRelationship.childConcessionReference]">{{concessionRelationship.childConcession}}</a></span>
+                                <span *ngIf="concessionRelationship.childIsActive"><a href="#" target="_blank" [routerLink]="['/bol-view-concession', riskGroupNumber, sapbpid, concessionRelationship.childConcessionReference]">{{concessionRelationship.childConcession}}</a></span>
                                 <span *ngIf="!concessionRelationship.childIsActive">{{concessionRelationship.childConcession}}</span>
                             </td>
                             <td>{{concessionRelationship.date | date: 'yyyy/MM/dd'}}</td>

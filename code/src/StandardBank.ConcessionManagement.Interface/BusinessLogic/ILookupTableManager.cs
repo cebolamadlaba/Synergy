@@ -169,6 +169,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 
         IEnumerable<LegalEntityGBBNumber> GetLegalEntityGBBNumbers(int riskGroupNumber);
 
+        IEnumerable<LegalEntityGBBNumber> GetLegalEntityGBBNumbersBySAPBPID(int sapbpid);
 
         /// <summary>
         /// Gets the accrual types.

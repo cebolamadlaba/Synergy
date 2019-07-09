@@ -115,6 +115,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(_lookupTableManager.GetLegalEntityGBBNumbers(riskGroupNumber));
         }
 
+        [Route("LegalEntityGBBNumbersBySAPBPID/{sapbpid}")]
+        public IActionResult GetLegalEntityGBBNumbersBySAPBPID(int sapbpid)
+        {
+            return Ok(_lookupTableManager.GetLegalEntityGBBNumbersBySAPBPID(sapbpid));
+        }
+
         /// <summary>
         /// Gets the periods
         /// </summary>

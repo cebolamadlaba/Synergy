@@ -505,6 +505,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return _mapper.Map<IEnumerable<Model.UserInterface.Trade.LegalEntityGBBNumber>>(gbbnumbers);
         }
 
+        public IEnumerable<Model.UserInterface.Trade.LegalEntityGBBNumber> GetLegalEntityGBBNumbersBySAPBPID(int sapbpid)
+        {
+            var gbbnumbers = _concessionTradeRepository.GetLegalEntityGBBNumbersBySAPBPID(sapbpid);
+
+            return _mapper.Map<IEnumerable<Model.UserInterface.Trade.LegalEntityGBBNumber>>(gbbnumbers);
+        }
+
         public IEnumerable<TradeProduct> GetTradeProducts()
         {
             return _mapper.Map<IEnumerable<TradeProduct>>(_concessionTradeRepository.GetTradeProducts());

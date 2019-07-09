@@ -149,6 +149,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
         }
         else {
             this.legalEntity = <any>results[4];
+            this.latestCrsOrMrs = 0;
             this.entityName = this.legalEntity.customerName;
             this.entityNumber = this.legalEntity.customerNumber;
         }

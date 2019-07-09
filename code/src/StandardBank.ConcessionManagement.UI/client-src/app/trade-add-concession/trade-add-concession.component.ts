@@ -30,6 +30,7 @@ import { TradeConcessionService } from "../services/trade-concession.service";
 
 import { TradeView } from "../models/trade-view";
 import { Concession } from "../models/concession";
+import { LegalEntity } from "../models/legal-entity";
 import { UserService } from "../services/user.service";
 
 import { BaseComponentService } from '../services/base-component.service';
@@ -51,7 +52,11 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
+    legalEntity: LegalEntity;
     sapbpid: number;
+
+    entityName: string;
+    entityNumber: string;
 
     observableTradeView: Observable<TradeView>;
     tradeView: TradeView = new TradeView();
@@ -121,26 +126,19 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
             this.riskGroupNumber = +params['riskGroupNumber'];
             this.sapbpid = +params['sapbpid'];
 
-            if (this.riskGroupNumber) {
+            this.observableClientAccounts = this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, this.sapbpid, ConcessionTypes.Trade);
+            this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
 
-                this.observableRiskGroup = this.lookupDataService.getRiskGroup(this.riskGroupNumber);
-                this.observableRiskGroup.subscribe(riskGroup => this.riskGroup = riskGroup, error => this.errorMessage = <any>error);
+            this.observableTradeView = this.tradeConcessionService.getTradeViewData(this.riskGroupNumber, this.sapbpid);
+            this.observableTradeView.subscribe(tradeView => {
+                this.tradeView = tradeView;
 
-                this.observableClientAccounts = this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Trade);
-                this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
-            }
+                this.isLoading = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
 
-            if (this.riskGroupNumber) {
-                this.observableTradeView = this.tradeConcessionService.getTradeViewData(this.riskGroupNumber);
-                this.observableTradeView.subscribe(bolView => {
-                    this.tradeView = bolView;
-
-                    this.isLoading = false;
-                }, error => {
-                    this.errorMessage = <any>error;
-                    this.isLoading = false;
-                });
-            }
         });
 
 
@@ -151,51 +149,67 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
             motivation: new FormControl()
         });
 
-        Observable.forkJoin([
+        this.getInitialData();
+    }
 
-            this.lookupDataService.getConditionTypes(),
-
-            this.lookupDataService.getTradeProductTypes(),
-            this.lookupDataService.getTradeProducts(),
-
-            this.lookupDataService.getPeriods(),
-            this.lookupDataService.getPeriodTypes(),
-            this.lookupDataService.getLegalEntityGBBNumbers(this.riskGroupNumber),
-
-        ]).subscribe(results => {
-
-            this.conditionTypes = <any>results[0];
-            this.tradeproducttypes = <any>results[1];
-            this.tradeproducts = <any>results[2];
-
-            this.periods = <any>results[3];
-            this.periodTypes = <any>results[4];
-            this.legalentitygbbnumbers = <any>results[5];
-
-            const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
-
-            //if (this.legalentitygbbnumbers)
-            //    control.controls[0].get('gbbnumber').setValue(this.legalentitygbbnumbers[0]);
-
-            //if (this.bolchargecodetypes)
-            //    control.controls[0].get('product').setValue(this.bolchargecodetypes[0]);
-
-            //if (this.legalentitybolusers)
-            //    control.controls[0].get('userid').setValue(this.legalentitybolusers[0]);
-
-            //this.selectedProducts[0] = this.bolchargecodetypes[0];
-
-            //if (this.selectedProducts && this.selectedProducts[0].bolchargecodes)
-            //    control.controls[0].get('chargecode').setValue(this.selectedProducts[0].bolchargecodes[0]);
-
-            //this.productTypeChanged(0);
-
-            this.isLoading = false;
-        },
-            error => {
+    getInitialData() {
+        if (this.riskGroupNumber != null && this.riskGroupNumber != 0) {
+            Observable.forkJoin([
+                this.lookupDataService.getConditionTypes(),
+                this.lookupDataService.getTradeProductTypes(),
+                this.lookupDataService.getTradeProducts(),
+                this.lookupDataService.getPeriods(),
+                this.lookupDataService.getPeriodTypes(),
+                this.lookupDataService.getLegalEntityGBBNumbers(this.riskGroupNumber),
+                this.lookupDataService.getRiskGroup(this.riskGroupNumber)
+            ]).subscribe(results => {
+                this.setInitialData(results, true);
+            }, error => {
                 this.errorMessage = <any>error;
                 this.isLoading = false;
             });
+        }
+        else if (this.sapbpid != null && this.sapbpid != 0) {
+            Observable.forkJoin([
+                this.lookupDataService.getConditionTypes(),
+                this.lookupDataService.getTradeProductTypes(),
+                this.lookupDataService.getTradeProducts(),
+                this.lookupDataService.getPeriods(),
+                this.lookupDataService.getPeriodTypes(),
+                this.lookupDataService.getLegalEntityGBBNumbersBySAPBPID(this.sapbpid),
+                this.lookupDataService.getLegalEntity(this.sapbpid)
+            ]).subscribe(results => {
+                this.setInitialData(results, false);
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        }
+    }
+
+    setInitialData(results: {}[], isForRiskGroup: boolean) {
+
+        if (isForRiskGroup) {
+            this.riskGroup = <any>results[6];
+            this.entityName = this.riskGroup.name;
+            this.entityNumber = this.riskGroup.number.toString();
+        }
+        else {
+            this.legalEntity = <any>results[6];
+            this.entityName = this.legalEntity.customerName;
+            this.entityNumber = this.legalEntity.customerNumber;
+        }
+
+        this.conditionTypes = <any>results[0];
+        this.tradeproducttypes = <any>results[1];
+        this.tradeproducts = <any>results[2];
+        this.periods = <any>results[3];
+        this.periodTypes = <any>results[4];
+        this.legalentitygbbnumbers = <any>results[5];
+
+        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+
+        this.isLoading = false;
     }
 
     initConcessionItemRows() {
@@ -393,13 +407,17 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
     getTradeConcession(): TradeConcession {
         var tradeConcession = new TradeConcession();
         tradeConcession.concession = new Concession();
-        tradeConcession.concession.riskGroupId = this.riskGroup.id;
+
+        if (this.riskGroup)
+            tradeConcession.concession.riskGroupId = this.riskGroup.id;
+        if (this.legalEntity)
+            tradeConcession.concession.legalEntityId = this.legalEntity.id;
+
 
         if (this.tradeConcessionForm.controls['motivation'].value)
             tradeConcession.concession.motivation = this.tradeConcessionForm.controls['motivation'].value;
         else
             tradeConcession.concession.motivation = '.';
-
 
         const concessions = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
 

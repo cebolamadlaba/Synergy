@@ -811,6 +811,36 @@ namespace StandardBank.ConcessionManagement.Repository
                 new CacheKeyParameter(nameof(riskGroupName), riskGroupName));
         }
 
+        public IEnumerable<TradeProduct> GetTradeProductsBySAPBPID(int legalEntityId, string legalEntityName)
+        {
+            IEnumerable<TradeProduct> Function()
+            {
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    var bolProducts = db.Query<TradeProduct>(
+                        @"Select trade.pkProductTradeId [TradeProductId], lea.[AccountNumber],
+						le.[CustomerName] [LegalEntity], ty.Description [TradeProductType], prod.description [TradeProductName],LoadedRate						
+						from [tblProductTrade] trade
+						JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = trade.[fkLegalEntityId]
+						JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = trade.[fkLegalEntityAccountId]
+						JOIN [dbo].rtblTradeProduct prod on trade.fkTradeProductId = prod.pkTradeProductId
+						JOIN [dbo].rtblTradeProductType ty on prod.fkTradeProductTypeId = ty.pkTradeProductTypeId					
+						where trade.fkLegalEntityId =  @legalEntityId", new { legalEntityId, legalEntityName },
+                        commandTimeout: Int32.MaxValue);
+
+                    if (bolProducts != null && bolProducts.Any())
+                        return bolProducts;
+                }
+
+                return null;
+            }
+
+            return _cacheManager.ReturnFromCache(Function, 300,
+                CacheKey.Repository.MiscPerformanceRepository.GetTradeProducts,
+                new CacheKeyParameter(nameof(legalEntityId), legalEntityId),
+                new CacheKeyParameter(nameof(legalEntityName), legalEntityName));
+        }
+
         public IEnumerable<InvestmentProduct> GetInvestmentProducts(int riskGroupId, string riskGroupName)
         {
             IEnumerable<InvestmentProduct> Function()
@@ -1060,7 +1090,8 @@ namespace StandardBank.ConcessionManagement.Repository
                     Currency,
                     EstablishmentFee,
 					tr.pkConcessionTradeId [TradeConcessionDetailId],
-                    ac.AccountNumber,
+                    --ac.AccountNumber,
+                    lea.AccountNumber,
 					LoadedRate,
 					ApprovedRate,				
                     tp.Description TradeProduct,
@@ -1081,7 +1112,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     left join [dbo].[tblConcessionTrade] tr on cd.pkConcessionDetailId = tr.fkConcessionDetailId
                     left JOIN [dbo].tblLegalEntityAccount lea on tr.fkLegalEntityAccountId = lea.pkLegalEntityAccountId                  
                     left JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = lea.fkLegalEntityId
-                    left join tblLegalEntityAccount ac on tr.fkLegalEntityAccountId = ac.pkLegalEntityAccountId
+                    --left join tblLegalEntityAccount ac on tr.fkLegalEntityAccountId = ac.pkLegalEntityAccountId
 					left join tblLegalEntityGBBNumber gb on tr.fkLegalEntityGBBNumber = gb.pkLegalEntityGBBNumber
 
 				    left JOIN rtblTradeProduct tp on tr.fkTradeProductId = tp.pkTradeProductId

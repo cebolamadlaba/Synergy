@@ -20,8 +20,8 @@ export class TradeConcessionService {
 
     constructor(private http: Http) { }
 
-    getTradeViewData(riskGroupNumber): Observable<TradeView> {
-        const url = "/api/Trade/TradeView/" + riskGroupNumber;
+    getTradeViewData(riskGroupNumber, sapbpid): Observable<TradeView> {
+        const url = "/api/Trade/TradeView/" + riskGroupNumber + "/" + sapbpid;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
@@ -37,7 +37,7 @@ export class TradeConcessionService {
         return this.http.post(url, tradeConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    
+
     postUpdateTradeData(tradeConcession: TradeConcession): Observable<TradeConcession> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
@@ -64,7 +64,7 @@ export class TradeConcessionService {
         let options = new RequestOptions({ headers: headers });
         const url = "/api/Trade/" + relationshipType + "Trade";
         return this.http.post(url, bolConcession, options).map(this.extractData).catch(this.handleErrorObservable);
-    } 
+    }
 
     postRecallTradeData(tradeConcession: TradeConcession): Observable<TradeConcession> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
@@ -72,7 +72,7 @@ export class TradeConcessionService {
         const url = "/api/Trade/UpdateRecalledTrade";
         return this.http.post(url, tradeConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
-      
+
 
     private extractData(response: Response) {
         let body = response.json();
@@ -80,8 +80,8 @@ export class TradeConcessionService {
     }
 
     private handleErrorObservable(error: Response | any) {
-             
-        
+
+
         console.error(error.message || error);
         return Observable.throw(error.message || error);
     }

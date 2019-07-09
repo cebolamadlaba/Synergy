@@ -16,8 +16,8 @@
         <div class="col-md-12 banner-container" *ngIf="showHide">
             <div class="col-md-11">
                 <div class="col-md-5">
-                    <div class="subHeading">{{tradeView.riskGroup.name}}</div>
-                    <div class="date lightTitle hidden-element">{{tradeView.riskGroup.number}}</div>
+                    <div class="subHeading">{{entityName}}</div>
+                    <div class="date lightTitle hidden-element">{{entityNumber}}</div>
 
                 </div>
                 <div class="col-md-2  hidden-element">
@@ -33,7 +33,7 @@
                     <div class="score"><b>{{tradeView.tradeFinancial.overallForexMargin | number : '1.2-2'}}</b></div>
                 </div>
             </div>
-         
+
 
             <div class="col-md-1">
                 <div class="compress">
@@ -48,8 +48,8 @@
             <div class="col-md-11">
                 <div>
                     <div class="col-md-5">
-                        <div class="subHeading">{{tradeView.riskGroup.name}}</div>
-                        <div class="date lightTitle hidden-element">{{tradeView.riskGroup.number}}</div>
+                        <div class="subHeading">{{entityName}}</div>
+                        <div class="date lightTitle hidden-element">{{entityNumber}}</div>
                     </div>
                 </div>
             </div>
@@ -60,7 +60,7 @@
                     </div>
                 </div>
             </div>
-        </div>     
+        </div>
     </div>
 </div>
 
@@ -116,7 +116,7 @@
                         </table>
                     </div>
                 </div>
-            </div>          
+            </div>
 
         </div>
     </div>
@@ -126,7 +126,7 @@
         <h2 class="headings">
             Concessions
 
-            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/trade-add-concession', tradeView.riskGroup.number]" *ngIf="pageLoaded && canRequest">Add Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/trade-add-concession', riskGroupNumber, sapbpid]" *ngIf="pageLoaded && canRequest">Add Concession</button>
         </h2>
 
 
@@ -145,7 +145,7 @@
                 </div>
             </div>
             <div class="section-body">
-                <div class="table-container" [routerLink]="['/trade-view-concession', tradeView.riskGroup.number, tradeConcession.concession.referenceNumber]">
+                <div class="table-container" [routerLink]="['/trade-view-concession', riskGroupNumber, sapbpid, tradeConcession.concession.referenceNumber]">
                     <table class="table table-bordered table-hover header-fixed table-striped">
                         <thead>
                             <tr>
