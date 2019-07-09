@@ -761,8 +761,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 lendingConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
             if (concessionFormItem.get('mrsBri').value == "" ||
-                (<string>concessionFormItem.get('mrsBri').value).trim() == "." ||
-                (<string>concessionFormItem.get('mrsBri').value).split(".").length > 1) {
+                concessionFormItem.get('mrsBri').value.toString().indexOf(".") > -1) {
                 this.addValidationError("MRS/BRI cannot be empty or a decimal");
             }
             else
