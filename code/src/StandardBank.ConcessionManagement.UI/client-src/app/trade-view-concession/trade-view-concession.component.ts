@@ -364,7 +364,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                         }
                     }
 
-                    if (tradeConcessionDetail.adValorem) {
+                    if (tradeConcessionDetail.adValorem || tradeConcessionDetail.adValorem == 0) {
                         currentConcession.get('advalorem').setValue(tradeConcessionDetail.adValorem);
 
                         tradeConcessionDetail.show_advalorem = true;
@@ -383,7 +383,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                         tradeConcessionDetail.show_communication = true;
                     }
 
-                    if (tradeConcessionDetail.flatFee) {
+                    if (tradeConcessionDetail.flatFee || tradeConcessionDetail.flatFee == 0) {
                         currentConcession.get('flatfee').setValue(tradeConcessionDetail.flatFee);
                         tradeConcessionDetail.show_flatfee = true;
                     }
@@ -415,13 +415,13 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                     if (tradeConcessionDetail.rate)
                         currentConcession.get('rate').setValue(tradeConcessionDetail.rate);
 
-                    if (tradeConcessionDetail.min) {
+                    if (tradeConcessionDetail.min || tradeConcessionDetail.min == 0) {
                         let min = this.baseComponentService.formatDecimal(+tradeConcessionDetail.min);
                         currentConcession.get('min').setValue(min);
                         tradeConcessionDetail.show_min = true;
                     }
 
-                    if (tradeConcessionDetail.max) {
+                    if (tradeConcessionDetail.max || tradeConcessionDetail.max == 0) {
                         let max = this.baseComponentService.formatDecimal(+tradeConcessionDetail.max);
                         currentConcession.get('max').setValue(max);
                         tradeConcessionDetail.show_max = true;
