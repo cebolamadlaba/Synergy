@@ -9,6 +9,8 @@ import { BolChargeCodeType } from "../../models/bol-chargecodetype";
 import { BolChargeCode } from "../../models/bol-chargecode";
 import { LookupDataService } from "../../services/lookup-data.service";
 import { RiskGroup } from '../../models/risk-group';
+import { FilterPipe } from '../../filters/filter.pipe';
+
 
 @Component({
     selector: 'app-business-centre',
@@ -65,7 +67,7 @@ export class BOLCHManagementComponent implements OnInit {
 
     loadData(productype: BolChargeCodeType) {
         this.isLoading = true;
-
+        
         Observable.forkJoin([
             this.lookupDataService.getBOLChargeCodeTypes(),
             this.lookupDataService.getBOLChargeCodesAll(),
@@ -74,8 +76,7 @@ export class BOLCHManagementComponent implements OnInit {
 
             this.bolchargecodetypes = <any>results[0];
             this.bolchargecodes = <any>results[1];
-            this.bolchargecodesFiltered = this.bolchargecodes;
-             this.riskGroups = <any>results[2];
+            this.bolchargecodesFiltered = this.bolchargecodes;        
 
             if (this.bolchargecodetypes.length > 0) {
 
@@ -105,6 +106,15 @@ export class BOLCHManagementComponent implements OnInit {
 
         this.selectedProduct = selection;
         this.bolchargecodesFiltered = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selection.pkChargeCodeTypeId);
+    }
+
+    searchRiskGroup(searchGroup: string): void{
+
+        this.bolConcessionService.getRiskGroup(searchGroup)
+            .subscribe(results => {
+                this.riskGroups = <any>results;
+            });
+
     }
 
     createupdateBOLChargeCode() {
@@ -287,20 +297,21 @@ export class BOLCHManagementComponent implements OnInit {
         this.location.back();
     }
 
-
     setRiskGroupSelected(id) {
-        let removeRole = false;
+        const index: number = this.selectedRiskGroups.indexOf(id);
 
-    
-        if (removeRole) {
-            this.selectedRiskGroups =
-                this.selectedRiskGroups.filter((item) => {
-                    return item != id;
-                });
-        }
-        else {
+        if (index == -1) {
             this.selectedRiskGroups.push(id);
-        }
+        } 
+    }
+
+    removeRiskGroupSelected(id) {
+
+        const index: number = this.selectedRiskGroups.indexOf(id);   
+        if (index !== -1) {
+            this.selectedRiskGroups.splice(index, 1);
+        }    
+    
     }
 
     isSelectedRiskGroup(id) {

@@ -34,6 +34,11 @@ export class UsersComponent implements OnInit {
     }
 
     save() {
+
+        if (this.user.subRoleId==3) {
+            this.user.subRoleId = null;
+        }
+
         this.adminService.CreateUser(this.user).subscribe(res => location.reload());
     }
     deleteUser(anumber) {

@@ -44,6 +44,9 @@ export class EditUserComponent implements OnInit {
     }
 
     save() {
+        if (this.user.subRoleId == 3) {
+            this.user.subRoleId = null;
+        }
         this.adminService.UpdateUser(this.user, this.id).subscribe(r =>
         {
             this.adminService.GetUser(this.id).subscribe(res => {

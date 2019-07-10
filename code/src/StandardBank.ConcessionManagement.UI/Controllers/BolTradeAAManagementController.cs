@@ -82,8 +82,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             if (user.IsRequestor)
                 return Ok(_userManager.GetAccountAssistantsForAccountExecutive(user.Id).Where(x=>x.SubRoleId != null));
-
-            return Ok(_userManager.GetUsersByRole(Constants.Roles.AA).Where(x=>x.SubRoleId != null));
+            return Ok(_userManager.GetUsersByRole(Constants.Roles.AA));
+            //return Ok(_userManager.GetUsersByRole(Constants.Roles.AA).Where(x=>x.SubRoleId != null));
         }
 
         /// <summary>

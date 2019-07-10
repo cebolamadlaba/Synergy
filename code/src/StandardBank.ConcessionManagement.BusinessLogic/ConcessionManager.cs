@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
@@ -621,7 +622,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        public IEnumerable<ApprovedConcession> GetApprovedConcessionsForUser(int userId)
+        public IEnumerable<ApprovedConcession> GetApprovedConcessionsForUser(int userId,User currentUser)
         {
             User loggedInUser = this._userManager.GetUser(userId);
 
@@ -659,9 +660,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 }
 
                 var approvedConcessionDetails = new List<ApprovedConcessionDetail>();
-                approvedConcessionDetails.AddRange(approvedConcession.ApprovedConcessionDetails);
+              
+                 approvedConcessionDetails.AddRange(approvedConcession.ApprovedConcessionDetails);
 
-
+               
                 var newapproved = new ApprovedConcessionDetail
                 {
                     Status = concession.Status,
@@ -676,30 +678,47 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     ConcessionLetterURL = concession.ConcessionLetterURL
                 };
 
-                //approvedConcessionDetails.Add(new ApprovedConcessionDetail
-                //{
-                //    Status = concession.Status,
-                //    ConcessionType = concession.ConcessionType,
-                //    ExpiryDate = concession.ExpiryDate,
-                //    DateApproved = concession.DateApproved,
-                //    DateOpened = concession.ConcessionDate,
-                //    DateSentForApproval = concession.DatesentForApproval,
-                //    ConcessionDetailId = concession.ConcessionDetailId,
-                //    ConcessionId = concession.ConcessionId,
-                //    ReferenceNumber = concession.ConcessionRef,
-                //    ConcessionLetterURL = concession.ConcessionLetterURL
-                //});
-
-                //remove doubles.
-                if (!approvedConcessionDetails.Contains(newapproved))
+                //filter by role sub role
+                if (currentUser.SubRoleId.HasValue)
                 {
-                    approvedConcessionDetails.Add(newapproved);
+                    //get which concessions the user needs to see.
+                    var consType = GetSubRoleAndType(currentUser.SubRoleId);
+
+                    if (newapproved.ConcessionType.Equals(consType))
+                    {
+                        //remove doubles.
+                        if (!approvedConcessionDetails.Contains(newapproved))
+                        {
+                            approvedConcessionDetails.Add(newapproved);
+                        }
+
+                        approvedConcession.ApprovedConcessionDetails = approvedConcessionDetails;
+                    }
+                }
+                else
+                {
+                    //remove doubles.
+                    if (!approvedConcessionDetails.Contains(newapproved))
+                    {
+                        approvedConcessionDetails.Add(newapproved);
+                    }
+
+                    approvedConcession.ApprovedConcessionDetails = approvedConcessionDetails;
                 }
 
-                approvedConcession.ApprovedConcessionDetails = approvedConcessionDetails;
             }
 
-            return approvedConcessions;
+            //remove concessions without concessions details..
+            approvedConcessions.ForEach(x =>
+            {
+                if (x.ApprovedConcessionDetails.Count() == 0)
+                {
+                    approvedConcessions.Remove(x);
+                }
+
+            });
+
+            return approvedConcessions;        
         }
 
         /// <summary>

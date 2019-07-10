@@ -55,5 +55,11 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         void Delete(RiskGroup model);
+
+        /// <summary>
+        /// get the specified model.
+        /// </summary>
+        /// <param name="searchGroup">The model.</param>
+        IEnumerable<RiskGroup> SearchBy(string searchGroup);
     }
 }

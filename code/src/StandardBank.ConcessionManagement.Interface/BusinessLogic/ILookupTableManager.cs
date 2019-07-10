@@ -150,7 +150,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <returns></returns>
         IEnumerable<ConditionType> GetConditionTypes();
 
-        IEnumerable<BOLChargeCode> GetBOLChargeCodes();
+        IEnumerable<BOLChargeCode> GetBOLChargeCodes(int riskGroupNumber);
 
         IEnumerable<BOLChargeCode> GetBOLChargeCodesAll();
         IEnumerable<BOLChargeCodeType> GetBOLChargeCodeTypes();
@@ -271,7 +271,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// Gets risk groups.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<RiskGroup> GetRiskGroups();
+        IEnumerable<RiskGroup> GetRiskGroups(string searchGroup);
 
     }
 }

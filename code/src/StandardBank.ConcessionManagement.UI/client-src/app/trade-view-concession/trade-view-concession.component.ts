@@ -229,25 +229,6 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
 
 
-
-    //gbbNumberChanged(rowIndex: number) {
-
-
-    //    const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
-    //    let currentRow = control.controls[rowIndex];
-
-    //    var LegalEntityAccount = currentRow.get('gbbnumber').value;
-
-    //    var legalentityaccount = this.clientAccounts.filter(cli => cli.legalEntityAccountId == LegalEntityAccount.fkLegalEntityAccountId);
-
-    //    if (legalentityaccount) {
-
-    //        var oldaccountnumber = currentRow.get('accountNumber').value;
-    //        currentRow.get('accountNumber').setValue(legalentityaccount[0]);
-    //    }
-
-    //}
-
     populateForm() {
         if (this.concessionReferenceId) {
             this.observableTradeConcession = this.tradeConcessionService.getTradeConcessionData(this.concessionReferenceId);
@@ -566,7 +547,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     deleteConcessionRow(index: number) {
-        if (confirm("Are you sure you want to remove this row?")) {
+        if (confirm("Please note that the account will be put back to standard pricing. Are you sure you want to delete this concession?")) {
             const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
             control.removeAt(index);
 
@@ -1411,7 +1392,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
     archiveConcessiondetail(concessionDetailId: number) {
 
-        if (confirm("Are you sure you want to delete the concession item ?")) {
+        if (confirm("Please note that the account will be put back to standard pricing. Are you sure you want to delete this concession ?")) {
             this.isLoading = true;
             this.errorMessage = null;
 
