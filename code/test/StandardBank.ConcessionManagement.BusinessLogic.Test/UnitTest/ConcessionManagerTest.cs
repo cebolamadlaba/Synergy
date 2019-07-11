@@ -483,7 +483,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 .Setup(_ => _.ReadByRequestorIdStatusIdsIsActive(It.IsAny<int>(), It.IsAny<IEnumerable<int>>(),
                     It.IsAny<bool>())).Returns(new[] { new ConcessionInboxView() });
 
-            var result = _concessionManager.GetApprovedConcessionsForUser(1);
+            var result = _concessionManager.GetApprovedConcessionsForUser(1, null);
 
             Assert.NotNull(result);
             Assert.NotEmpty(result);
