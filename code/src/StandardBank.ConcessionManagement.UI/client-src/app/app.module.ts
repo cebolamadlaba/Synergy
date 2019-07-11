@@ -97,6 +97,7 @@ import { TransactionTypesManagementComponent } from './admin/transaction-types/t
 import { ChannelTypesManagementComponent } from './admin/channel-types/channel-types.component';
 import { BolTradeManagementComponent } from './admin/bol-trade-management/bol-trade-management.component';
 import { BolTradeAeManagementComponent } from './admin/bol-trade-ae-management/bol-trade-ae-management.component';
+import { FilterPipe } from './filters/filter.pipe';
 
 
 @NgModule({
@@ -156,7 +157,8 @@ import { BolTradeAeManagementComponent } from './admin/bol-trade-ae-management/b
         TransactionTypesManagementComponent,
         ChannelTypesManagementComponent,
         BolTradeManagementComponent,
-        BolTradeAeManagementComponent
+        BolTradeAeManagementComponent,
+        FilterPipe
 
     ],
     imports: [

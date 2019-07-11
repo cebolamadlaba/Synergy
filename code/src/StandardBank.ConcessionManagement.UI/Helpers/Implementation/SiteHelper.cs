@@ -91,5 +91,6 @@ namespace StandardBank.ConcessionManagement.UI.Helpers.Implementation
             var user = LoggedInUser(controller);
             return _userManager.GetUserIdForFiltering(user);
         }
+
     }
 }

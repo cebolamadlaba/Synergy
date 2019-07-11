@@ -189,9 +189,9 @@ IsActive Bit Not Null Default(1)
 
 --put user back to normal AA role--
 INSERT INTO [dbo].[rtblSubRole]
-          ([name]
-          ,[Active])
-    VALUES
-          ('No-Subrole'
-          ,1)
+           ([name]
+           ,[Active])
+     VALUES
+           ('No-Subrole'
+           ,1)
 GO

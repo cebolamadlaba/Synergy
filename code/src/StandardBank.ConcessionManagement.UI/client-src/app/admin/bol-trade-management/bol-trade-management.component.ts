@@ -80,8 +80,13 @@ export class BolTradeManagementComponent implements OnInit {
 
     filterBolTradeUsers(selection: RoleSubRole) {
 
+        if (selection.subRoleId == 3) {
+            selection.subRoleId = null;
+        }
+
         this.selectedRoleSubRole = selection;
         this.bolTradeUsersFiltered = this.bolTradeUsers.filter(re => re.subRoleId == selection.subRoleId);
+             
     }
 
     addBolTrade() {
@@ -101,6 +106,9 @@ export class BolTradeManagementComponent implements OnInit {
         this.errorMessage = null;
         this.validationError = null;
         this.saveMessage = null;
+        if (this.addBolTradeUserModel.subRoleId == 3) {
+            this.addBolTradeUserModel.subRoleId = null;
+        }
 
         console.log(this.addBolTradeUserModel);
 

@@ -335,9 +335,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         }
       
         [Route("GetRiskGroups")]
-        public IEnumerable<RiskGroup> GetRiskGroups()
+        public IEnumerable<RiskGroup> GetRiskGroups(string searchGroup)
         {
-            return _lookupTableManager.GetRiskGroups().OrderBy(x=>x.Name);
+            return  _lookupTableManager.GetRiskGroups(searchGroup);          
         }
 
     }

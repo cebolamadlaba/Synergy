@@ -86,8 +86,8 @@ export class LookupDataService {
     }
 
 
-    getBOLChargeCodes(): Observable<BolChargeCode[]> {
-        const url = "/api/Condition/BOLChargeCodes";
+    getBOLChargeCodes(riskGroupNumber): Observable<BolChargeCode[]> {
+        const url = "/api/Condition/BOLChargeCodes/" + riskGroupNumber;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
