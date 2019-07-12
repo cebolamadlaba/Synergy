@@ -38,6 +38,7 @@
     <None Remove="client-src\app\models\pricing-product-enum.ts" />
     <None Remove="client-src\app\models\search-concession-detail.ts" />
     <None Remove="client-src\app\models\Static-Class.ts" />
+    <None Remove="client-src\app\models\subrole-enum.ts" />
     <None Remove="client-src\content\img\sblogo.jpg" />
     <None Remove="LetterTemplates\images\sblogo.jpg" />
     <None Remove="LetterTemplates\TemplateFooter.html" />
@@ -113,6 +114,7 @@
     <TypeScriptCompile Include="client-src\app\models\pricing-product-enum.ts" />
     <TypeScriptCompile Include="client-src\app\models\search-concession-detail.ts" />
     <TypeScriptCompile Include="client-src\app\models\static-class.ts" />
+    <TypeScriptCompile Include="client-src\app\models\subrole-enum.ts" />
   </ItemGroup>
 
   <ItemGroup>

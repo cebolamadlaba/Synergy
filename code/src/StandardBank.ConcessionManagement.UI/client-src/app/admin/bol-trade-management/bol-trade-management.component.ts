@@ -6,11 +6,12 @@ import { Centre } from '../../models/centre';
 import { BolTradeManagementService } from '../../services/bol-trade-management.service';
 import { RoleSubRole } from "../../models/RoleSubRole";
 import { RouteConfigLoadEnd } from '@angular/router';
+import { SubRoleEnum } from "../../models/subrole-enum";
 
 @Component({
-  selector: 'app-bol-trade-management',
-  templateUrl: './bol-trade-management.component.html',
-  styleUrls: ['./bol-trade-management.component.css']
+    selector: 'app-bol-trade-management',
+    templateUrl: './bol-trade-management.component.html',
+    styleUrls: ['./bol-trade-management.component.css']
 })
 export class BolTradeManagementComponent implements OnInit {
 
@@ -51,7 +52,7 @@ export class BolTradeManagementComponent implements OnInit {
             this.bolTradeManagementService.getBolOrTradeUsers(),
             this.bolTradeManagementService.getCentres(),
             this.bolTradeManagementService.getAEUsers(),
-            this.bolTradeManagementService.getRoleSubRoles()           
+            this.bolTradeManagementService.getRoleSubRoles()
         ]).subscribe(results => {
             this.bolTradeUsers = <any>results[0];
             this.centres = <any>results[1];
@@ -80,13 +81,13 @@ export class BolTradeManagementComponent implements OnInit {
 
     filterBolTradeUsers(selection: RoleSubRole) {
 
-        if (selection.subRoleId == 3) {
+        if (selection.subRoleId == SubRoleEnum.NoSubrole) {
             selection.subRoleId = null;
         }
 
         this.selectedRoleSubRole = selection;
         this.bolTradeUsersFiltered = this.bolTradeUsers.filter(re => re.subRoleId == selection.subRoleId);
-             
+
     }
 
     addBolTrade() {

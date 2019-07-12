@@ -7,12 +7,12 @@ import { BolTradeAeManagementService } from '../../services/bol-trade-ae-managem
 import { AccountExecutive } from '../../models/account-executive';
 import { UserService } from '../../services/user.service';
 import { RoleSubRole } from "../../models/RoleSubRole";
-
+import { SubRoleEnum } from "../../models/subrole-enum";
 
 @Component({
-  selector: 'app-bol-trade-ae-management',
-  templateUrl: './bol-trade-ae-management.component.html',
-  styleUrls: ['./bol-trade-ae-management.component.css']
+    selector: 'app-bol-trade-ae-management',
+    templateUrl: './bol-trade-ae-management.component.html',
+    styleUrls: ['./bol-trade-ae-management.component.css']
 })
 export class BolTradeAeManagementComponent implements OnInit {
 
@@ -41,8 +41,7 @@ export class BolTradeAeManagementComponent implements OnInit {
     selectedRoleSubRole: RoleSubRole;
     observableSelectedAccountAssistants: Observable<User[]>;
     accountAssistants: User[];
-    bolTradeAeUsersFiltered: User[];
-
+    accountAssistantsFiltered: User[];
     currentUser: User;
 
     constructor(private location: Location, private bolTradeAeManagementService: BolTradeAeManagementService, private userService: UserService) {
@@ -59,7 +58,7 @@ export class BolTradeAeManagementComponent implements OnInit {
         Observable.forkJoin([
             this.bolTradeAeManagementService.getBolTradAEUsers(),
             this.bolTradeAeManagementService.getCentres(),
-            this.bolTradeAeManagementService.getBolTradAAUsers(),         
+            this.bolTradeAeManagementService.getBolTradAAUsers(),
             this.userService.getData(),
             this.bolTradeAeManagementService.getRoleSubRoles()
         ]).subscribe(results => {
@@ -68,7 +67,7 @@ export class BolTradeAeManagementComponent implements OnInit {
             this.accountAssistants = <any>results[2];
             this.currentUser = <any>results[3];
             this.roleSubRole = <any>results[4];
-            this.bolTradeAeUsersFiltered = this.bolTradeAeUsers;
+
             if (this.currentUser.isRequestor)
                 this.canAdd = false;
 
@@ -76,20 +75,19 @@ export class BolTradeAeManagementComponent implements OnInit {
 
             if (this.roleSubRole.length > 0) {
 
-                if (subRole == null) {
-                    this.selectedRoleSubRole = this.roleSubRole[0];
-                }
-                else {
-                    this.selectedRoleSubRole = this.roleSubRole.filter(c => c.subRoleId == subRole.subRoleId)[0];
-                }
-                this.bolTradeAeUsersFiltered = this.bolTradeAeUsers.filter(re => re.subRoleId == this.selectedRoleSubRole.subRoleId);
+                this.roleSubRole = this.roleSubRole.filter(a => {
+                    return a.subRoleId != SubRoleEnum.NoSubrole;
+                });
+
+                this.selectedRoleSubRole = this.roleSubRole[0];
+
+                this.setSelectedSubRole(this.selectedRoleSubRole);
             }
 
-        },
-            error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
+        }, error => {
+            this.errorMessage = <any>error;
+            this.isLoading = false;
+        });
     }
 
     addBolTradeAE() {
@@ -107,7 +105,7 @@ export class BolTradeAeManagementComponent implements OnInit {
         this.addBolTradeAeUserModel = aeUser;
         this.selectedAccountAssistant = null;
         this.selectedAccountAssistants = null;
-      
+
         this.observableSelectedAccountAssistants = this.bolTradeAeManagementService.getAEAAUsers(aeUser.id);
         this.observableSelectedAccountAssistants.subscribe(result => {
             if (result != null && result.length > 0)
@@ -121,11 +119,12 @@ export class BolTradeAeManagementComponent implements OnInit {
         });
     }
 
-
-    filterBolTradeAeUsers(selection: RoleSubRole) {
-
+    setSelectedSubRole(selection: RoleSubRole) {
         this.selectedRoleSubRole = selection;
-        this.bolTradeAeUsersFiltered = this.bolTradeAeUsers.filter(re => re.subRoleId == selection.subRoleId);
+
+        this.accountAssistantsFiltered = this.accountAssistants.filter(a => {
+            return a.subRoleId != null && a.subRoleId == this.selectedRoleSubRole.subRoleId;
+        });
     }
 
     addAccountAssistant() {
@@ -150,7 +149,7 @@ export class BolTradeAeManagementComponent implements OnInit {
         this.validationError = null;
         this.saveMessage = null;
 
-     
+
         this.observableErrors = this.bolTradeAeManagementService.validateUser(this.addBolTradeAeUserModel);
         this.observableErrors.subscribe(errors => {
             if (errors != null && errors.length > 0) {

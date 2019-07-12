@@ -65,7 +65,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             if (user.IsRequestor)
                 return Ok(new[] {user});
 
-            return Ok(_userManager.GetUsersByRole(Constants.Roles.Requestor).Where(x => x.SubRoleId != null));
+            return Ok(_userManager.GetUsersByRole(Constants.Roles.Requestor));
         }
 
         /// <summary>
@@ -75,12 +75,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("BolOrTradeAAUsers")]
         public IActionResult BolOrTradeAAUsers()
         {
-            var user = _siteHelper.LoggedInUser(this);
-
-            if (user.IsRequestor)
-                return Ok(_userManager.GetAccountAssistantsForAccountExecutive(user.Id).Where(x => x.SubRoleId != null));
-
-            return Ok(_userManager.GetUsersByRole(Constants.Roles.AA).Where(x => x.SubRoleId != null));
+            return Ok(_userManager.GetUsersByRole(Constants.Roles.AA));
         }
 
         /// <summary>

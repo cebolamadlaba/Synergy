@@ -8,10 +8,12 @@ import { User } from "../../../models/user";
 import { Location } from '@angular/common';
 import { RoleSubRole } from "../../../models/RoleSubRole";
 
+import { SubRoleEnum } from "../../../models/subrole-enum";
+
 @Component({
-  selector: 'app-edit-user',
-  templateUrl: './edit-user.component.html',
-  styleUrls: ['./edit-user.component.css']
+    selector: 'app-edit-user',
+    templateUrl: './edit-user.component.html',
+    styleUrls: ['./edit-user.component.css']
 })
 export class EditUserComponent implements OnInit {
     Regions: Region[];
@@ -24,7 +26,7 @@ export class EditUserComponent implements OnInit {
     error: boolean;
 
     constructor( @Inject(AdminService)
-        private adminService,
+    private adminService,
         private route: ActivatedRoute,
         private location: Location,
     ) { }
@@ -36,22 +38,21 @@ export class EditUserComponent implements OnInit {
             this.RoleSubRole = result.roleSubRole as RoleSubRole[];
         });
         this.route.params.subscribe(params => {
-             this.id = +params['id'];
+            this.id = +params['id'];
         });
         this.adminService.GetUser(this.id).subscribe(r => {
-            this.user = r as User;            
-        });     
+            this.user = r as User;
+        });
     }
 
     save() {
-        if (this.user.subRoleId == 3) {
+        if (this.user.subRoleId == SubRoleEnum.NoSubrole) {
             this.user.subRoleId = null;
         }
-        this.adminService.UpdateUser(this.user, this.id).subscribe(r =>
-        {
+        this.adminService.UpdateUser(this.user, this.id).subscribe(r => {
             this.adminService.GetUser(this.id).subscribe(res => {
                 this.user = res as User;
-               
+
                 //location.reload();
             });
 

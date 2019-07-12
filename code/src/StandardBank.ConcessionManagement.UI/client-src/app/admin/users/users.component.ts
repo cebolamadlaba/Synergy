@@ -6,6 +6,7 @@ import { Centre } from '../../models/centre';
 import { Role } from '../../models/role';
 import { User } from "../../models/user";
 import { RoleSubRole } from "../../models/RoleSubRole";
+import { SubRoleEnum } from "../../models/subrole-enum";
 
 @Component({
     selector: 'app-users',
@@ -35,7 +36,7 @@ export class UsersComponent implements OnInit {
 
     save() {
 
-        if (this.user.subRoleId==3) {
+        if (this.user.subRoleId == SubRoleEnum.NoSubrole) {
             this.user.subRoleId = null;
         }
 

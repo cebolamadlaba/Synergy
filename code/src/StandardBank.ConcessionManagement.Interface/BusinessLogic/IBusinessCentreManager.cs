@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Administration;
 
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
@@ -77,5 +78,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         IEnumerable<RegionCentresModel> GetRegionCentres();
 
         BusinessCentreManagementModel GetBusinessCentreManager(int centreid);
+
+        IEnumerable<CentreUser> GetCentresByUserId(int userId);
     }
 }
