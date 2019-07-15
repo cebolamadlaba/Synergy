@@ -18,6 +18,7 @@ export class User {
     RoleSubRole: RoleSubRole[];
     selectedCentre: Centre;
     centreId: number;
+    roleId: number;
     subRoleId: number;
     canRequest: boolean;
     canBcmApprove: boolean;

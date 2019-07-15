@@ -8,6 +8,7 @@ import { User } from "../../../models/user";
 import { Location } from '@angular/common';
 import { RoleSubRole } from "../../../models/RoleSubRole";
 
+import { RoleEnum } from "../../../models/role-enum";
 import { SubRoleEnum } from "../../../models/subrole-enum";
 
 @Component({
@@ -49,6 +50,10 @@ export class EditUserComponent implements OnInit {
         if (this.user.subRoleId == SubRoleEnum.NoSubrole) {
             this.user.subRoleId = null;
         }
+        if (this.user.roleId != RoleEnum.AA) {
+            this.user.subRoleId = null;
+        }
+
         this.adminService.UpdateUser(this.user, this.id).subscribe(r => {
             this.adminService.GetUser(this.id).subscribe(res => {
                 this.user = res as User;
@@ -61,6 +66,10 @@ export class EditUserComponent implements OnInit {
             this.error = true;
             console.log(err);
         });
+    }
+
+    canDisplaySubRole() {
+        return this.user.roleId == RoleEnum.AA;
     }
 
     goBack() {
