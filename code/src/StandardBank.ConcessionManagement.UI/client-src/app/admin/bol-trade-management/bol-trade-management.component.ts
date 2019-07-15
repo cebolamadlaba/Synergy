@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { Location } from '@angular/common';
 import { Centre } from '../../models/centre';
 import { BolTradeManagementService } from '../../services/bol-trade-management.service';
+import { UserService } from '../../services/user.service';
 import { RoleSubRole } from "../../models/RoleSubRole";
 import { RouteConfigLoadEnd } from '@angular/router';
 import { SubRoleEnum } from "../../models/subrole-enum";
@@ -15,11 +16,13 @@ import { SubRoleEnum } from "../../models/subrole-enum";
 })
 export class BolTradeManagementComponent implements OnInit {
 
+    currentUser: User;
     errorMessage: string;
     validationError: string[];
     saveMessage: string;
     isLoading = true;
     isSaving = false;
+    isAdd: boolean;
 
     actionType: string;
 
@@ -37,7 +40,7 @@ export class BolTradeManagementComponent implements OnInit {
     accountExecutives: User[];
     selectedRoleSubRole: RoleSubRole;
 
-    constructor(private location: Location, private bolTradeManagementService: BolTradeManagementService) {
+    constructor(private location: Location, private bolTradeManagementService: BolTradeManagementService, private userService: UserService) {
         this.addBolTradeUserModel = new User();
     }
 
@@ -52,12 +55,14 @@ export class BolTradeManagementComponent implements OnInit {
             this.bolTradeManagementService.getBolOrTradeUsers(),
             this.bolTradeManagementService.getCentres(),
             this.bolTradeManagementService.getAEUsers(),
-            this.bolTradeManagementService.getRoleSubRoles()
+            this.bolTradeManagementService.getRoleSubRoles(),
+            this.userService.getData()
         ]).subscribe(results => {
             this.bolTradeUsers = <any>results[0];
             this.centres = <any>results[1];
             this.accountExecutives = <any>results[2];
             this.roleSubRole = <any>results[3];
+            this.currentUser = <any>results[4];
             this.bolTradeUsersFiltered = this.bolTradeUsers;
             this.isLoading = false;
 
@@ -81,24 +86,33 @@ export class BolTradeManagementComponent implements OnInit {
 
     filterBolTradeUsers(selection: RoleSubRole) {
 
-        if (selection.subRoleId == SubRoleEnum.NoSubrole) {
-            selection.subRoleId = null;
-        }
-
         this.selectedRoleSubRole = selection;
-        this.bolTradeUsersFiltered = this.bolTradeUsers.filter(re => re.subRoleId == selection.subRoleId);
 
+        if (selection.subRoleId == SubRoleEnum.NoSubrole) {
+            this.bolTradeUsersFiltered = this.bolTradeUsers.filter(re => re.subRoleId == null);
+        }
+        else {
+            this.bolTradeUsersFiltered = this.bolTradeUsers.filter(re => re.subRoleId == selection.subRoleId);
+        }
     }
 
     addBolTrade() {
         this.addBolTradeUserModel = new User();
         this.actionType = "Add";
+        this.isAdd = true;
+        if (this.currentUser.isRequestor) {
+            this.addBolTradeUserModel.accountExecutiveUserId = this.currentUser.id;
+        }
         this.addBolTradeModal.show();
     }
 
     editBolTrade(bolTradeUser: User) {
         this.actionType = "Edit";
+        this.isAdd = false;
         this.addBolTradeUserModel = bolTradeUser;
+        if (this.currentUser.isRequestor) {
+            this.addBolTradeUserModel.accountExecutiveUserId = this.currentUser.id;
+        }
         this.addBolTradeModal.show();
     }
 
@@ -120,7 +134,11 @@ export class BolTradeManagementComponent implements OnInit {
                 this.isSaving = false;
             } else {
                 console.log(this.addBolTradeUserModel);
-                this.observableSave = this.bolTradeManagementService.saveBolOrTradeUser(this.addBolTradeUserModel);
+                if (this.isAdd)
+                    this.observableSave = this.bolTradeManagementService.saveBolOrTradeUser(this.addBolTradeUserModel);
+                else
+                    this.observableSave = this.bolTradeManagementService.updateAccountAssistantSubRole(this.addBolTradeUserModel);
+
                 this.observableSave.subscribe(errors => {
 
                     if (this.addBolTradeUserModel.id != null && this.addBolTradeUserModel.id > 0) {

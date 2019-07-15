@@ -227,9 +227,10 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                         this.canPcmApprove = bolConcession.currentUser.canPcmApprove && bolConcession.currentUser.canApprove;
                     }
 
-                    if (!bolConcession.concession.isInProgressExtension) {
+                    // Removed as per SBSA.Anthony's request - 2019-07-15
+                    //if (!bolConcession.concession.isInProgressExtension) {
                         this.canEdit = bolConcession.currentUser.canPcmApprove;
-                    }
+                    //}
                 }
 
                 //if it's still pending and the user is a requestor then they can recall it

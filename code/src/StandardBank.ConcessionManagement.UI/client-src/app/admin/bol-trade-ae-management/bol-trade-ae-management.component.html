@@ -28,7 +28,7 @@
 <div class="col-md-12 search-and-results-container" *ngIf="!isLoading">
 
     <!-- Input form -->
-    <div class="row">
+    <!--<div class="row">
         <div class="col-md-6">
             <div class="row" style="padding: 8px 0px 8px 0px">
                 <div class="col-sm-6">
@@ -42,10 +42,9 @@
                         <option *ngFor="let subRole of roleSubRole" [ngValue]="subRole">{{subRole.name}}</option>
                     </select>
                 </div>
-
             </div>
         </div>
-    </div>
+    </div>-->
 
 
 
@@ -174,6 +173,18 @@
                     </div>
                 </div>
 
+                <div class="row" *ngIf="!isSaving">
+                    <div class="col-md-6 modal-body">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Sub Role</label>
+                            <div class="col-sm-8">
+                                <select [(ngModel)]="selectedRoleSubRole" class="form-control" (change)=" setSelectedSubRole(selectedRoleSubRole)">
+                                    <option *ngFor="let subRole of roleSubRole" [ngValue]="subRole">{{subRole.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="row" *ngIf="!isSaving">
                     <div class="col-md-6 modal-body">
                         <div class="form-group">

@@ -220,9 +220,10 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                         this.canPcmApprove = lendingConcession.currentUser.canPcmApprove && lendingConcession.currentUser.canApprove;
                     }
 
-                    if (!lendingConcession.concession.isInProgressExtension) {
-                        this.canEdit = lendingConcession.currentUser.canPcmApprove;
-                    }
+                    // Removed as per SBSA.Anthony's request - 2019-07-15
+                    //if (!lendingConcession.concession.isInProgressExtension) {
+                    this.canEdit = lendingConcession.currentUser.canPcmApprove;
+                    //}
                 }
 
                 if (lendingConcession.primeRate) {
@@ -1158,7 +1159,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.validationError = null;
 
         var lendingConcession = this.getLendingConcession(true);
-       
+
         lendingConcession.concession.type = "Existing";
         lendingConcession.concession.referenceNumber = this.concessionReferenceId;
 

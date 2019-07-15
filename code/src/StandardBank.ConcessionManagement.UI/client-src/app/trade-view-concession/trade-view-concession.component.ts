@@ -246,9 +246,10 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                         this.canPcmApprove = tradeConcession.currentUser.canPcmApprove && tradeConcession.currentUser.canApprove;
                     }
 
-                    if (!tradeConcession.concession.isInProgressExtension) {
-                        this.canEdit = tradeConcession.currentUser.canPcmApprove;
-                    }
+                    // Removed as per SBSA.Anthony's request - 2019-07-15
+                    //if (!tradeConcession.concession.isInProgressExtension) {
+                    this.canEdit = tradeConcession.currentUser.canPcmApprove;
+                    //}
                 }
 
                 //if it's still pending and the user is a requestor then they can recall it

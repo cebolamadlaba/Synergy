@@ -255,9 +255,10 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                         this.canPcmApprove = investmentConcession.currentUser.canPcmApprove && investmentConcession.currentUser.canApprove;
                     }
 
-                    if (!investmentConcession.concession.isInProgressExtension) {
-                        this.canEdit = investmentConcession.currentUser.canPcmApprove;
-                    }
+                    // Removed as per SBSA.Anthony's request - 2019-07-15
+                    //if (!investmentConcession.concession.isInProgressExtension) {
+                    this.canEdit = investmentConcession.currentUser.canPcmApprove;
+                    //}
                 }
 
 
