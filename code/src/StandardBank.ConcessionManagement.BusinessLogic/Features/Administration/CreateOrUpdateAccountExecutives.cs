@@ -38,15 +38,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
         /// </value>
         public User CurrentUser { get; set; }
 
+        public bool DoNotRemoveAaToAeLinks { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateOrUpdateAccountExecutives"/> class.
         /// </summary>
         /// <param name="accountExecutive">The account executive.</param>
         /// <param name="currentUser">The current user.</param>
-        public CreateOrUpdateAccountExecutives(AccountExecutive accountExecutive, User currentUser)
+        public CreateOrUpdateAccountExecutives(AccountExecutive accountExecutive, User currentUser, bool doNotRemoveAaToAeLinks = false)
         {
             AccountExecutive = accountExecutive;
             CurrentUser = currentUser;
+            DoNotRemoveAaToAeLinks = doNotRemoveAaToAeLinks;
         }
     }
 }

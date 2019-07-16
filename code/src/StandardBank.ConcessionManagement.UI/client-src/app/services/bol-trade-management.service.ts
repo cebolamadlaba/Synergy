@@ -16,6 +16,13 @@ export class BolTradeManagementService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    updateAccountAssistantSubRole(aaUser: User): Observable<boolean> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        const url = "/api/BolTradeAAManagement/UpdateAccountAssistantSubRole";
+        return this.http.post(url, aaUser, options).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
     saveBolOrTradeUser(aaUser: User): Observable<boolean> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });

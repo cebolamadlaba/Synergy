@@ -65,7 +65,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             if (user.IsRequestor)
                 return Ok(_userManager.GetAccountAssistantsForAccountExecutive(user.Id));
 
-            return Ok(_userManager.GetUsersByRole(Constants.Roles.AA).Where(x => x.SubRoleId == null));
+            return Ok(_userManager.GetUsersByRole(Constants.Roles.AA));
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             if (user.IsRequestor)
                 return Ok(new[] { user });
 
-            return Ok(_userManager.GetUsersByRole(Constants.Roles.Requestor).Where(x => x.SubRoleId == null));
+            return Ok(_userManager.GetUsersByRole(Constants.Roles.Requestor));
         }
 
         /// <summary>
@@ -106,10 +106,10 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 var accountExecutive = new AccountExecutive
                 {
                     User = _userManager.GetUser(aaUser.AccountExecutiveUserId.Value),
-                    AccountAssistants = new [] { aaUser }
+                    AccountAssistants = new[] { aaUser }
                 };
 
-                await _mediator.Send(new CreateOrUpdateAccountExecutives(accountExecutive, user));
+                await _mediator.Send(new CreateOrUpdateAccountExecutives(accountExecutive, user, doNotRemoveAaToAeLinks: true));
             }
 
             return Ok(true);

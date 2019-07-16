@@ -253,9 +253,10 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                         this.canPcmApprove = bolConcession.currentUser.canPcmApprove && bolConcession.currentUser.canApprove;
                     }
 
-                    if (!bolConcession.concession.isInProgressExtension) {
+                    // Removed as per SBSA.Anthony's request - 2019-07-15
+                    //if (!bolConcession.concession.isInProgressExtension) {
                         this.canEdit = bolConcession.currentUser.canPcmApprove;
-                    }
+                    //}
                 }
 
                 //if it's still pending and the user is a requestor then they can recall it
@@ -447,7 +448,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     deleteConcessionRow(index: number) {
-        if (confirm("Are you sure you want to remove this row?")) {
+        if (confirm("Please note that the account will be put back to standard pricing. Are you sure you want to delete this concession ?")) {
 
             this.selectedProducts.splice(index, 1);
 
@@ -1120,7 +1121,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
     archiveConcessiondetail(concessionDetailId: number) {
 
-        if (confirm("Are you sure you want to delete the concession item ?")) {
+        if (confirm("Please note that the account will be put back to standard pricing. Are you sure you want to delete this concession ?")) {
             this.isLoading = true;
             this.errorMessage = null;
 

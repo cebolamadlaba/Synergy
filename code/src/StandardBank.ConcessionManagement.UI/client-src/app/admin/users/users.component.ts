@@ -6,6 +6,8 @@ import { Centre } from '../../models/centre';
 import { Role } from '../../models/role';
 import { User } from "../../models/user";
 import { RoleSubRole } from "../../models/RoleSubRole";
+import { RoleEnum } from "../../models/role-enum";
+import { SubRoleEnum } from "../../models/subrole-enum";
 
 @Component({
     selector: 'app-users',
@@ -35,7 +37,7 @@ export class UsersComponent implements OnInit {
 
     save() {
 
-        if (this.user.subRoleId==3) {
+        if (this.user.subRoleId == SubRoleEnum.NoSubrole) {
             this.user.subRoleId = null;
         }
 
@@ -47,6 +49,10 @@ export class UsersComponent implements OnInit {
     edit(i) {
         this.user = this.users[i];
         console.log(this.user);
+    }
+
+    canDisplaySubRole() {
+        return this.user.roleId == RoleEnum.AA;
     }
 
     goBack() {

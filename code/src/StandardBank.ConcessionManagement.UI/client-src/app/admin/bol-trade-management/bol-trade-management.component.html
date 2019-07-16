@@ -37,7 +37,7 @@
 
             <div class="row">
                 <div class="col-sm-6">
-                    <select [(ngModel)]="selectedSubRole" class="form-control" (change)=" filterBolTradeUsers(selectedSubRole)">
+                    <select [(ngModel)]="selectedRoleSubRole" class="form-control" (change)=" filterBolTradeUsers(selectedRoleSubRole)">
                         <option *ngFor="let subRole of roleSubRole" [ngValue]="subRole">{{subRole.name}}</option>
                     </select>
                 </div>

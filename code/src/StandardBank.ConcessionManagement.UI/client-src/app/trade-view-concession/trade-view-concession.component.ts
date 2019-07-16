@@ -277,9 +277,10 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                         this.canPcmApprove = tradeConcession.currentUser.canPcmApprove && tradeConcession.currentUser.canApprove;
                     }
 
-                    if (!tradeConcession.concession.isInProgressExtension) {
-                        this.canEdit = tradeConcession.currentUser.canPcmApprove;
-                    }
+                    // Removed as per SBSA.Anthony's request - 2019-07-15
+                    //if (!tradeConcession.concession.isInProgressExtension) {
+                    this.canEdit = tradeConcession.currentUser.canPcmApprove;
+                    //}
                 }
 
                 //if it's still pending and the user is a requestor then they can recall it
@@ -376,7 +377,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                         }
                     }
 
-                    if (tradeConcessionDetail.adValorem) {
+                    if (tradeConcessionDetail.adValorem || tradeConcessionDetail.adValorem == 0) {
                         currentConcession.get('advalorem').setValue(tradeConcessionDetail.adValorem);
 
                         tradeConcessionDetail.show_advalorem = true;
@@ -395,7 +396,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                         tradeConcessionDetail.show_communication = true;
                     }
 
-                    if (tradeConcessionDetail.flatFee) {
+                    if (tradeConcessionDetail.flatFee || tradeConcessionDetail.flatFee == 0) {
                         currentConcession.get('flatfee').setValue(tradeConcessionDetail.flatFee);
                         tradeConcessionDetail.show_flatfee = true;
                     }
@@ -427,13 +428,13 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                     if (tradeConcessionDetail.rate)
                         currentConcession.get('rate').setValue(tradeConcessionDetail.rate);
 
-                    if (tradeConcessionDetail.min) {
+                    if (tradeConcessionDetail.min || tradeConcessionDetail.min == 0) {
                         let min = this.baseComponentService.formatDecimal(+tradeConcessionDetail.min);
                         currentConcession.get('min').setValue(min);
                         tradeConcessionDetail.show_min = true;
                     }
 
-                    if (tradeConcessionDetail.max) {
+                    if (tradeConcessionDetail.max || tradeConcessionDetail.max == 0) {
                         let max = this.baseComponentService.formatDecimal(+tradeConcessionDetail.max);
                         currentConcession.get('max').setValue(max);
                         tradeConcessionDetail.show_max = true;
@@ -1428,7 +1429,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
     archiveConcessiondetail(concessionDetailId: number) {
 
-        if (confirm("Are you sure you want to delete the concession item ?")) {
+        if (confirm("Please note that the account will be put back to standard pricing. Are you sure you want to delete this concession ?")) {
             this.isLoading = true;
             this.errorMessage = null;
 

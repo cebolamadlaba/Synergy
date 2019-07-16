@@ -26,9 +26,9 @@
 </div>
 
 <div class="col-md-12 search-and-results-container" *ngIf="!isLoading">
-   
+
     <!-- Input form -->
-    <div class="row">
+    <!--<div class="row">
         <div class="col-md-6">
             <div class="row" style="padding: 8px 0px 8px 0px">
                 <div class="col-sm-6">
@@ -38,14 +38,13 @@
 
             <div class="row">
                 <div class="col-sm-6">
-                    <select [(ngModel)]="selectedSubRole" class="form-control" (change)=" filterBolTradeAeUsers(selectedSubRole)">
+                    <select [(ngModel)]="selectedRoleSubRole" class="form-control" (change)=" setSelectedSubRole(selectedRoleSubRole)">
                         <option *ngFor="let subRole of roleSubRole" [ngValue]="subRole">{{subRole.name}}</option>
                     </select>
                 </div>
-
             </div>
         </div>
-    </div>
+    </div>-->
 
 
 
@@ -61,7 +60,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor='let aeUser of bolTradeAeUsersFiltered; trackBy: index' (click)="editBolTradeAe(aeUser)">
+                <tr *ngFor='let aeUser of bolTradeAeUsers; trackBy: index' (click)="editBolTradeAe(aeUser)">
                     <td>{{aeUser.id}}</td>
                     <td>{{aeUser.fullName}}</td>
                     <td>{{aeUser.aNumber}}</td>
@@ -154,7 +153,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label class="control-label col-sm-4" for="email">Sub Role</label>
                             <div class="col-sm-8">
                                 <select [(ngModel)]="addBolTradeAeUserModel.subRoleId" name="2" class="form-control">
@@ -164,7 +163,7 @@
                                     </option>
                                 </select>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="form-group">
                             <label class="control-label col-md-3" for="email">Is Active</label>
                             <div class="col-sm-8">
@@ -177,10 +176,22 @@
                 <div class="row" *ngIf="!isSaving">
                     <div class="col-md-6 modal-body">
                         <div class="form-group">
+                            <label class="control-label col-sm-4">Sub Role</label>
+                            <div class="col-sm-8">
+                                <select [(ngModel)]="selectedRoleSubRole" class="form-control" (change)=" setSelectedSubRole(selectedRoleSubRole)">
+                                    <option *ngFor="let subRole of roleSubRole" [ngValue]="subRole">{{subRole.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" *ngIf="!isSaving">
+                    <div class="col-md-6 modal-body">
+                        <div class="form-group">
                             <label class="control-label col-sm-4">Account Assistant</label>
                             <div class="col-sm-8">
                                 <select [(ngModel)]="selectedAccountAssistant" name="3" class="form-control">
-                                    <option *ngFor="let accountAssistant of accountAssistants" [ngValue]="accountAssistant">
+                                    <option *ngFor="let accountAssistant of accountAssistantsFiltered" [ngValue]="accountAssistant">
                                         {{accountAssistant.fullName}}
                                     </option>
                                 </select>

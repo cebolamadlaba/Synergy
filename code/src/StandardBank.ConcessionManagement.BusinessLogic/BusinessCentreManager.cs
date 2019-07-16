@@ -146,7 +146,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var centreinfo = _miscPerformanceRepository.GetBusinessCentreManager(centreid);
 
-            if(centreinfo == null)
+            if (centreinfo == null)
             {
                 return new BusinessCentreManagementModel() { };
             }
@@ -328,6 +328,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             return regionCentres;
+        }
+
+        public IEnumerable<CentreUser> GetCentresByUserId(int userId)
+        {
+            return this._centreUserRepository.ReadByUserId(userId);
         }
     }
 }

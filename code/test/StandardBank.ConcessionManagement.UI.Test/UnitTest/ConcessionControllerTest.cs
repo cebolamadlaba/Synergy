@@ -129,7 +129,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         [Fact]
         public void UserApprovedConcessions_Executes_Positive()
         {
-            MockConcessionManager.Setup(_ => _.GetApprovedConcessionsForUser(It.IsAny<int>()))
+            MockConcessionManager.Setup(_ => _.GetApprovedConcessionsForUser(It.IsAny<int>(), null))
                 .Returns(new[] { new ApprovedConcession() });
 
             var result = _concessionController.UserApprovedConcessions();

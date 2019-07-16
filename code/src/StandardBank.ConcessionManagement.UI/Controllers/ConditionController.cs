@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -61,10 +62,19 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
         [Route("BOLChargeCodes/{riskGroupNumber}")]
         public IActionResult GetBOLChargeCodes(int riskGroupNumber)
-        {
+        {           
+            var user = _siteHelper.LoggedInUser(this);
 
-            var codes = _lookupTableManager.GetBOLChargeCodes(riskGroupNumber);
-            return Ok(codes);
+            if (user.AccountExecutives.Count() > 0 || user.AccountExecutiveUserId != null)
+            {
+                var codes = _lookupTableManager.GetBOLChargeCodes(riskGroupNumber);
+                return Ok(codes);
+            }
+            else
+            {
+                return Ok(null);
+            }
+          
         }
 
 
