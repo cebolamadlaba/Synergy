@@ -632,7 +632,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        public IEnumerable<ApprovedConcession> GetApprovedConcessionsForUser(int userId,User currentUser)
+        public IEnumerable<ApprovedConcession> GetApprovedConcessionsForUser(int userId, User currentUser)
         {
             User loggedInUser = this._userManager.GetUser(userId);
 
@@ -646,6 +646,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var concessions =
                 _concessionInboxViewRepository.GetapporvedView(requestorId, new[] { approvedStatusId, approvedWithChangesStatusId }, true);
+
+            if (currentUser.SubRoleId != null)
+            {
+                if (currentUser.SubRoleId == (int)Constants.RoleSubRole.BolUser)
+                    concessions = concessions.Where(a => a.ConcessionType == Constants.ConcessionType.BusinessOnlineDesc);
+
+                if (currentUser.SubRoleId == (int)Constants.RoleSubRole.TradeUser)
+                    concessions = concessions.Where(a => a.ConcessionType == Constants.ConcessionType.Trade);
+            }
 
             var approvedConcessions = new List<ApprovedConcession>();
 
@@ -671,10 +680,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 }
 
                 var approvedConcessionDetails = new List<ApprovedConcessionDetail>();
-              
-                 approvedConcessionDetails.AddRange(approvedConcession.ApprovedConcessionDetails);
 
-               
+                approvedConcessionDetails.AddRange(approvedConcession.ApprovedConcessionDetails);
+
+
                 var newapproved = new ApprovedConcessionDetail
                 {
                     Status = concession.Status,
@@ -729,7 +738,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             });
 
-            return approvedConcessions;        
+            return approvedConcessions;
         }
 
         /// <summary>
