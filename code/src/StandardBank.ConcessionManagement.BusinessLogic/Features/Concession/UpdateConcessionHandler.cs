@@ -307,10 +307,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         /// <param name="message">The message.</param>
         private void SendApprovedNotificationEmail(UpdateConcession message)
         {
+            // gets AENumberUser record for an AE
             AENumberUser aeNumberUser = _aeNumberUserRepository.ReadById(message.Concession.AENumberUserId.Value);
 
+            // gets the AE User record
             var requestor = _userManager.GetUser(aeNumberUser.UserId);
 
+            // the below "if statement" should never execute as the above record is for an AE.... - to be verified.
             //send notifcation to Account executive, if it is an assitant
             if (requestor.IsAdminAssistant && requestor.AccountExecutiveUserId != null)
             {
