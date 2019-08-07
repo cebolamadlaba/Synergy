@@ -62,19 +62,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
         [Route("BOLChargeCodes/{riskGroupNumber}")]
         public IActionResult GetBOLChargeCodes(int riskGroupNumber)
-        {           
-            var user = _siteHelper.LoggedInUser(this);
-
-            if (user.AccountExecutives.Count() > 0 || user.AccountExecutiveUserId != null)
-            {
-                var codes = _lookupTableManager.GetBOLChargeCodes(riskGroupNumber);
-                return Ok(codes);
-            }
-            else
-            {
-                return Ok(null);
-            }
-          
+        {
+            var codes = _lookupTableManager.GetBOLChargeCodes(riskGroupNumber);
+            return Ok(codes);
         }
 
 
