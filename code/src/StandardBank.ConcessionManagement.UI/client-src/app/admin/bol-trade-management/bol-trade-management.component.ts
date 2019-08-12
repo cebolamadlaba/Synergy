@@ -121,7 +121,7 @@ export class BolTradeManagementComponent implements OnInit {
         this.errorMessage = null;
         this.validationError = null;
         this.saveMessage = null;
-        if (this.addBolTradeUserModel.subRoleId == 3) {
+        if (this.addBolTradeUserModel.subRoleId == SubRoleEnum.NoSubrole) {
             this.addBolTradeUserModel.subRoleId = null;
         }
 

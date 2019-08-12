@@ -183,7 +183,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             var bolConcessions = new List<BolConcession>();
-            var BolProductGroup = new List<BolProductGroup>();
+            var bolProductGroup = new List<BolProductGroup>();
 
             foreach (var concession in concessions)
             {
@@ -237,7 +237,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                         if (bolConcessionDetail != null)
                         {
-                            BolProductGroup.Add(group);
+                            bolProductGroup.Add(group);
                         }
                     }
                 });
@@ -250,7 +250,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 LegalEntity = legalEntity,
                 BolConcessions = bolConcessions, //.OrderBy(_ => _.Concession.AccountNumber),
                 BolFinancial = bolFinancial,
-                BolProductGroups = BolProductGroup.Distinct().OrderBy(o => o.LegalEntity)
+                BolProductGroups= bolProductGroup.Distinct().OrderBy(o => o.LegalEntity)
             };
         }
 
