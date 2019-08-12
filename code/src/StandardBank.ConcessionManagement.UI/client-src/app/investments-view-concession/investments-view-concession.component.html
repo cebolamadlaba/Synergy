@@ -20,21 +20,21 @@
         <div class="col-md-12 banner-container" *ngIf="showHide">
             <div class="col-md-11">
                 <div class="col-md-5">
-                    <div class="subHeading">{{investmentView.riskGroup.name}}</div>
-                    <div class="date lightTitle hidden-element">{{investmentView.riskGroup.number}}</div>
+                    <div class="subHeading">{{entityName}}</div>
+                    <div class="date lightTitle hidden-element">{{entityNumber}}</div>
 
                 </div>
                 <div class="col-md-2  hidden-element">
-                    <div class="subHeading lightTitle"> Total number of accounts</div>
-                    <div class="score"><b>{{investmentView.investmentFinancial.totalAccounts | number : '1.2-2'}}</b></div>
+                    <div class="subHeading lightTitle"> Total liability balances</div>
+                    <div class="score"><b>{{investmentView.investmentFinancial.totalLiabilityBalances | number : '1.2-2'}}</b></div>
                 </div>
                 <div class="col-md-2  hidden-element">
-                    <div class="subHeading lightTitle"> Average account management fee</div>
-                    <div class="score"><b>{{investmentView.investmentFinancial.avgFee | number : '1.2-2'}}</b></div>
+                    <div class="subHeading lightTitle"> Weighted Average MTP</div>
+                    <div class="score"><b>{{investmentView.investmentFinancial.weightedAverageMTP | number : '1.2-2'}}</b></div>
                 </div>
                 <div class="col-md-2  hidden-element">
-                    <div class="subHeading lightTitle"> Overall forex margin</div>
-                    <div class="score"><b>{{investmentView.investmentFinancial.overallForexMargin | number : '1.2-2'}}</b></div>
+                    <div class="subHeading lightTitle"> Weighted Average Net Margin</div>
+                    <div class="score"><b>{{investmentView.investmentFinancial.weightedAverageNetMargin | number : '1.2-2'}}</b></div>
                 </div>
             </div>
 
@@ -52,8 +52,8 @@
             <div class="col-md-11">
                 <div>
                     <div class="col-md-5">
-                        <div class="subHeading">{{investmentView.riskGroup.name}}</div>
-                        <div class="date lightTitle hidden-element">{{investmentView.riskGroup.number}}</div>
+                        <div class="subHeading">{{entityName}}</div>
+                        <div class="date lightTitle hidden-element">{{entityNumber}}</div>
                     </div>
                 </div>
             </div>
@@ -437,13 +437,13 @@ i + 1
                             <td>{{concessionRelationship.relationshipType}}</td>
                             <td>
                                 <span *ngIf="concessionRelationship.parentConcessionReference == concessionReferenceId"><strong>**</strong></span>
-                                <span *ngIf="concessionRelationship.parentIsActive"><a href="#" target="_blank" [routerLink]="['/investment-view-concession', riskGroup.number, concessionRelationship.parentConcessionReference]">{{concessionRelationship.parentConcession}}</a></span>
+                                <span *ngIf="concessionRelationship.parentIsActive"><a href="#" target="_blank" [routerLink]="['/investment-view-concession', riskGroupNumber, sapbpid, concessionRelationship.parentConcessionReference]">{{concessionRelationship.parentConcession}}</a></span>
                                 <span *ngIf="!concessionRelationship.parentIsActive">{{concessionRelationship.parentConcession}}</span>
                             </td>
                             <td>{{concessionRelationship.relationship}}</td>
                             <td>
                                 <span *ngIf="concessionRelationship.childConcessionReference == concessionReferenceId"><strong>**</strong></span>
-                                <span *ngIf="concessionRelationship.childIsActive"><a href="#" target="_blank" [routerLink]="['/investment-view-concession', riskGroup.number, concessionRelationship.childConcessionReference]">{{concessionRelationship.childConcession}}</a></span>
+                                <span *ngIf="concessionRelationship.childIsActive"><a href="#" target="_blank" [routerLink]="['/investment-view-concession', riskGroupNumber, sapbpid, concessionRelationship.childConcessionReference]">{{concessionRelationship.childConcession}}</a></span>
                                 <span *ngIf="!concessionRelationship.childIsActive">{{concessionRelationship.childConcession}}</span>
                             </td>
                             <td>{{concessionRelationship.date | date: 'yyyy/MM/dd'}}</td>

@@ -82,6 +82,18 @@ namespace StandardBank.ConcessionManagement.Repository
             }
         }
 
+        public IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsersByLegalEntityId(int legalEntityId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<LegalEntityBOLUser>(string.Format(
+                    @"SELECT pkLegalEntityBOLUserId,fkLegalEntityAccountId, BOLUserId,pkLegalEntityId [legalEntityId] ,pkLegalEntityAccountId [legalEntityAccountId]  
+                        from tblLegalEntityBOLUser
+                        join tblLegalEntityAccount on tblLegalEntityBOLUser.fkLegalEntityAccountId = tblLegalEntityAccount.pkLegalEntityAccountId
+                        join tblLegalEntity on tblLegalEntityAccount.fkLegalEntityId = tblLegalEntity.pkLegalEntityId
+                        Where	tblLegalEntity.pkLegalEntityId = {0}", legalEntityId));
+            }
+        }
 
 
     }

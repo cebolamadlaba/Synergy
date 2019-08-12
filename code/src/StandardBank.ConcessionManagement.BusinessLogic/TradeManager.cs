@@ -64,9 +64,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public TradeConcession GetTradeConcession(string concessionReferenceId, User user)
         {
             var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId, user);
-            var tradeConcessionDetails = _miscPerformanceRepository.GetTradeConcessionDetails(concession.Id).Where(x=>x.TradeProductType != null);
+            var tradeConcessionDetails = _miscPerformanceRepository.GetTradeConcessionDetails(concession.Id).Where(x => x.TradeProductType != null);
 
-           return new TradeConcession
+            return new TradeConcession
             {
                 Concession = concession,
                 TradeConcessionDetails = tradeConcessionDetails,
@@ -135,12 +135,36 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
 
-        public TradeView GetTradeViewData(int riskGroupNumber, User currentUser)
+        public TradeView GetTradeViewData(int riskGroupNumber, int sapbpid, User currentUser)
         {
-            var tradeConcessions = new List<TradeConcession>();
-            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+            bool hasOnlySapBpId = riskGroupNumber < 1 && sapbpid > 0;
 
-            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.Trade, currentUser);
+            List<TradeConcession> tradeConcessions = new List<TradeConcession>();
+            RiskGroup riskGroup = null;
+            Model.UserInterface.LegalEntity legalEntity = null;
+            IEnumerable<Concession> concessions = null;
+            TradeFinancial tradeFinancial = null;
+            IEnumerable<Model.UserInterface.Trade.TradeProduct> tradeProducts = null;
+
+            if (!hasOnlySapBpId)
+            {
+                riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+                concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.Trade, currentUser);
+                tradeFinancial = _mapper.Map<TradeFinancial>(_financialTradeRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialTrade());
+                tradeProducts = GetTradeProducts(riskGroup);
+            }
+            else
+            {
+                legalEntity = _lookupTableManager.GetLegalEntity(sapbpid);
+                concessions = _concessionManager.GetApprovedConcessionsForLegalEntityId(legalEntity.Id, Constants.ConcessionType.Trade, currentUser);
+                tradeFinancial = new TradeFinancial()
+                {
+                    AvgFee = 0,
+                    OverallForexMargin = 0,
+                    TotalAccounts = 0
+                };
+                tradeProducts = GetTradeProductsBySAPBPID(legalEntity);
+            }
 
             foreach (var concession in concessions)
             {
@@ -150,11 +174,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     Concession = concession
                 });
             }
-
-            var tradeFinancial = _mapper.Map<TradeFinancial>(_financialTradeRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialTrade());
-
-            var tradeProducts = GetTradeProducts(riskGroup);
-
 
             //grouping of products
             var groupedinfo = new List<TradeProductGroup>();
@@ -187,14 +206,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
 
                 }
-
-
             }
-
 
             return new TradeView
             {
                 RiskGroup = riskGroup,
+                LegalEntity = legalEntity,
                 TradeConcessions = tradeConcessions.OrderBy(_ => _.Concession.AccountNumber),
                 TradeFinancial = tradeFinancial,
                 TradeProductGroups = groupedinfo.OrderBy(o => o.LegalEntity)
@@ -205,6 +222,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private IEnumerable<Model.UserInterface.Trade.TradeProduct> GetTradeProducts(RiskGroup riskGroup)
         {
             return _miscPerformanceRepository.GetTradeProducts(riskGroup.Id, riskGroup.Name);
+        }
+
+        private IEnumerable<Model.UserInterface.Trade.TradeProduct> GetTradeProductsBySAPBPID(Model.UserInterface.LegalEntity legalEntity)
+        {
+            return _miscPerformanceRepository.GetTradeProductsBySAPBPID(legalEntity.Id, legalEntity.CustomerName);
         }
 
         public async Task ForwardTradeConcession(TradeConcession tradeConcession, User user)

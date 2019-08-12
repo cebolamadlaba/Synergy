@@ -40,4 +40,5 @@ export class Concession {
     isInProgressRenewal: boolean;
     isAENumberLinkedAccountExecutiveOrAssistant: boolean;
     aeNumberUserId: number;
+    legalEntityId:number;
 }

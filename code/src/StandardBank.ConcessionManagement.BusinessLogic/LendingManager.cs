@@ -323,7 +323,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 {
                     if (productgrouping != null && productgrouping.LendingProducts != null)
                         productgrouping.LendingProducts = productgrouping.LendingProducts.OrderBy(o => o.AccountNumber).ThenBy(o => o.Product).ToList();
-                    
+
                 }
             }
 
@@ -334,6 +334,83 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 LendingProductGroups = groupedinfo.OrderBy(m => m.CustomerName),
                 LendingFinancial = lendingFinancial
             };
+        }
+
+        /// <summary>
+        /// Only to be used for SAPBPIDs which are not linked to RiskGroups
+        /// </summary>
+        /// <param name="sapbpid"></param>
+        /// <param name="currentUser"></param>
+        /// <returns></returns>
+        public LendingView GetLendingViewDataBySAPBPID(int sapbpid, User currentUser)
+        {
+            var legalEntity = _lookupTableManager.GetLegalEntity(sapbpid);
+            var lendingConcessions = new List<LendingConcession>();
+            var concessions = _concessionManager.GetApprovedConcessionsForLegalEntityId(legalEntity.Id, Constants.ConcessionType.Lending, currentUser);
+
+            foreach (var concession in concessions)
+            {
+                lendingConcessions.Add(new LendingConcession
+                {
+                    Concession = concession,
+                    LendingConcessionDetails = _miscPerformanceRepository.GetLendingConcessionDetails(concession.Id)
+                });
+            }
+
+            var lendingProducts = GetLendingProductsByLegalEntityId(legalEntity.Id, legalEntity.CustomerName);
+
+            // tblFinancialLending does not carry fkLegalEntityId...
+            LendingFinancial lendingFinancial = new LendingFinancial()
+            {
+                LatestCrsOrMrs = 0,
+                TotalExposure = 0,
+                WeightedAverageMap = 0,
+                WeightedCrsOrMrs = 0
+            };
+            //var lendingFinancial = _mapper.Map<LendingFinancial>(
+            //    _financialLendingRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
+            //    new FinancialLending());
+
+            //grouping of products
+            var groupedinfo = new List<LendingProductGroup>();
+            if (lendingProducts != null)
+            {
+                foreach (var product in lendingProducts)
+                {
+                    var productgrouping = groupedinfo.Where(g => g.CustomerName == product.CustomerName).FirstOrDefault();
+                    if (productgrouping == null)
+                    {
+                        LendingProductGroup newgroup = new LendingProductGroup();
+                        newgroup.CustomerName = product.CustomerName;
+                        newgroup.RiskGroupName = product.RiskGroupName;
+                        newgroup.LendingProducts = new List<LendingProduct>();
+                        newgroup.LendingProducts.Add(product);
+
+                        groupedinfo.Add(newgroup);
+                    }
+                    else
+                    {
+                        productgrouping.LendingProducts.Add(product);
+                    }
+
+                }
+                //sort
+                foreach (var productgrouping in groupedinfo)
+                {
+                    if (productgrouping != null && productgrouping.LendingProducts != null)
+                        productgrouping.LendingProducts = productgrouping.LendingProducts.OrderBy(o => o.AccountNumber).ThenBy(o => o.Product).ToList();
+
+                }
+            }
+
+            return new LendingView()
+            {
+                LendingConcessions = lendingConcessions.OrderBy(_ => _.Concession.AccountNumber),
+                LendingFinancial = lendingFinancial,
+                LendingProductGroups = groupedinfo.OrderBy(m => m.CustomerName),
+                LegalEntity = legalEntity
+            };
+
         }
 
         /// <summary>
@@ -376,6 +453,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return _miscPerformanceRepository.GetLendingProducts(riskGroupId, riskGroupName);
         }
 
+        private IEnumerable<LendingProduct> GetLendingProductsByLegalEntityId(int legalEntityId, string legalEntityName)
+        {
+            return _miscPerformanceRepository.GetLendingProductsByLegalEntity(legalEntityId, legalEntityName);
+        }
 
         public async Task ForwardLendingConcession(LendingConcession lendingConcession, User user)
         {

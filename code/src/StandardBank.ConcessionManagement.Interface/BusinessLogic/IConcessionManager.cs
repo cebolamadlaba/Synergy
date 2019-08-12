@@ -78,7 +78,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <param name="user">The user.</param>
         /// <returns></returns>
-        IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, User user, string concessiontype);
+        IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, User user, string concessiontype, int? sapbpid = null);
 
         /// <summary>
         /// Searches the client accounts.
@@ -106,16 +106,16 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         IEnumerable<SearchConcessionDetail> SearchConsessions(int userId);
 
         IEnumerable<SearchConcessionDetail> SearchConsessions(int region, int businesscentre, string status, DateTime datefilter, int userid);
-        
 
-            /// <summary>
-            /// Gets the conditions.
-            /// </summary>
-            /// <param name="periodType">Type of the period.</param>
-            /// <param name="period">The period.</param>
-            /// <param name="requestorId">The requestor identifier.</param>
-            /// <returns></returns>
-            IEnumerable<ConcessionCondition> GetConditions(string periodType, string period, int requestorId);
+
+        /// <summary>
+        /// Gets the conditions.
+        /// </summary>
+        /// <param name="periodType">Type of the period.</param>
+        /// <param name="period">The period.</param>
+        /// <param name="requestorId">The requestor identifier.</param>
+        /// <returns></returns>
+        IEnumerable<ConcessionCondition> GetConditions(string periodType, string period, int requestorId);
 
         /// <summary>
         /// Gets the condition counts.
@@ -211,6 +211,8 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <returns></returns>
         IEnumerable<Model.UserInterface.Concession> GetApprovedConcessionsForRiskGroup(int riskGroupId,
             string concessionType, User currentUser);
+
+        IEnumerable<Model.UserInterface.Concession> GetApprovedConcessionsForLegalEntityId(int legalEntityId, string concessionType, User currentUser);
 
         /// <summary>
         /// Gets the concession for concession reference identifier.

@@ -97,6 +97,19 @@ namespace StandardBank.ConcessionManagement.Repository
             }
         }
 
+        public LegalEntity ReadBySAPBPIDIsActive(int sapbpid, bool isActive)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<LegalEntity>(
+                    @"SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [CustomerName], [CustomerNumber], [IsActive], [ContactPerson], [PostalAddress], [City], [PostalCode], [fkUserId] [UserId] 
+                    FROM [dbo].[tblLegalEntity] 
+                    WHERE [CustomerNumber] = @sapbpid 
+                    AND [IsActive] = @isActive",
+                    new { sapbpid, isActive }).SingleOrDefault();
+            }
+        }
+
         /// <summary>
         /// Reads by the risk group id specified
         /// </summary>

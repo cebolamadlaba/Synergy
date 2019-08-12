@@ -57,7 +57,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 .Returns(new[] { new ConcessionCash() });
 
             MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
-                .Returns(new LegalEntity { IsActive = true });
+                .Returns(new Model.Repository.LegalEntity { IsActive = true });
 
             MockLegalEntityAccountRepository.Setup(_ => _.ReadById(It.IsAny<int>()))
                 .Returns(new LegalEntityAccount { IsActive = true });
@@ -112,7 +112,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockMiscPerformanceRepository.Setup(_ => _.GetCashProducts(It.IsAny<int>(), It.IsAny<string>()))
                 .Returns(new[] { new CashProduct() });
 
-            var result = _cashManager.GetCashViewData(1, null);
+            var result = _cashManager.GetCashViewData(1, 0, null);
 
             Assert.NotNull(result);
             Assert.NotNull(result.RiskGroup);

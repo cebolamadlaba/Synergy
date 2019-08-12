@@ -103,7 +103,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         }
 
-        public void CreateRiskGroupNonUniversalChargeCode(int chargecodeId,List<Model.UserInterface.RiskGroup> riskGroups)
+        public void CreateRiskGroupNonUniversalChargeCode(int chargecodeId, List<Model.UserInterface.RiskGroup> riskGroups)
         {
             //remove all links
             _riskGroupNonUniversalChargeCode.Delete(chargecodeId);
@@ -152,8 +152,36 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return mappedConcessionBol;
         }
 
-        public BolView GetBolViewData(int riskGroupNumber, User currentUser)
+        public BolView GetBolViewData(int riskGroupNumber, int sapbpid, User currentUser)
         {
+            bool hasOnlySapBpId = riskGroupNumber < 1 && sapbpid > 0;
+
+            RiskGroup riskGroup = null;
+            Model.UserInterface.LegalEntity legalEntity = null;
+            IEnumerable<Concession> concessions = null;
+            BolFinancial bolFinancial = null;
+            IEnumerable<BolProduct> bolProducts = null;
+
+            if (!hasOnlySapBpId)
+            {
+                riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+                concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.BusinessOnline, currentUser);
+                bolFinancial = _mapper.Map<BolFinancial>(_financialBolRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialBol());
+                bolProducts = GetBolProducts(riskGroup).OrderBy(o => o.BOLUserId);
+            }
+            else
+            {
+                legalEntity = _lookupTableManager.GetLegalEntity(sapbpid);
+                concessions = _concessionManager.GetApprovedConcessionsForLegalEntityId(legalEntity.Id, Constants.ConcessionType.BusinessOnline, currentUser);
+                bolFinancial = new BolFinancial()
+                {
+                    TotalCollections = 0,
+                    TotalPayments = 0,
+                    TotalValueAdded = 0
+                };
+                bolProducts = GetBolProductsByLegalEntity(legalEntity);
+            }
+
             var bolConcessions = new List<BolConcession>();
             var bolProductGroup = new List<BolProductGroup>();
             var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
@@ -167,12 +195,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     Concession = concession
                 });
             }
-
-            var bolFinancial =
-                _mapper.Map<BolFinancial>(_financialBolRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
-                                           new FinancialBol());
-
-            var bolProducts = GetBolProducts(riskGroup).OrderBy(o => o.BOLUserId);
 
             //grouping of products
             var groupedinfo = new List<BolProductGroup>();
@@ -207,13 +229,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             //only return charge code that are on approved concession
-             foreach(var group in groupedinfo)
-             {              
-                group.BolProducts.ForEach(x=>
+            foreach (var group in groupedinfo)
+            {
+                group.BolProducts.ForEach(x =>
                 {
                     foreach (var bol in bolConcessions)
                     {
-                        var  bolConcessionDetail= bol.BolConcessionDetails.Where(i => i.ChargeCode == x.ChargeCode);
+                        var bolConcessionDetail = bol.BolConcessionDetails.Where(i => i.ChargeCode == x.ChargeCode);
 
                         if (bolConcessionDetail != null)
                         {
@@ -222,11 +244,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     }
                 });
 
-             }
+            }
 
             return new BolView
             {
                 RiskGroup = riskGroup,
+                LegalEntity = legalEntity,
                 BolConcessions = bolConcessions, //.OrderBy(_ => _.Concession.AccountNumber),
                 BolFinancial = bolFinancial,
                 BolProductGroups= bolProductGroup.Distinct().OrderBy(o => o.LegalEntity)
@@ -239,6 +262,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return _miscPerformanceRepository.GetBolProducts(riskGroup.Id, riskGroup.Name);
         }
 
+        private IEnumerable<BolProduct> GetBolProductsByLegalEntity(Model.UserInterface.LegalEntity legalEntity)
+        {
+            return _miscPerformanceRepository.GetBolProductsByLegalEntity(legalEntity.Id, legalEntity.CustomerName);
+        }
 
         public BolFinancial GetBolFinancialForRiskGroupNumber(int riskGroupNumber)
         {

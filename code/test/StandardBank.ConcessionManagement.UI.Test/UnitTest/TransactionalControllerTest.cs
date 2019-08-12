@@ -29,7 +29,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         public TransactionalControllerTest()
         {
             _transactionalController = new TransactionalController(new FakeSiteHelper(),
-                MockTransactionalManager.Object, MockMediator.Object,null,null);
+                MockTransactionalManager.Object, MockMediator.Object, null, null);
         }
 
         /// <summary>
@@ -38,17 +38,17 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         [Fact]
         public void TransactionalView_Executes_Positive()
         {
-            var riskGroup = new RiskGroup {Id = 1, Name = "Unit Test Risk Group", Number = 1};
-            MockTransactionalManager.Setup(_ => _.GetTransactionalViewData(It.IsAny<int>(), null)).Returns(
+            var riskGroup = new RiskGroup { Id = 1, Name = "Unit Test Risk Group", Number = 1 };
+            MockTransactionalManager.Setup(_ => _.GetTransactionalViewData(It.IsAny<int>(), 0, null)).Returns(
                 new TransactionalView
                 {
                     RiskGroup = riskGroup,
                     TransactionalFinancial = new TransactionalFinancial(),
-                    TransactionalConcessions = new[] {new TransactionalConcession()},
-                    TransactionalProductGroups = new[] {new TransactionalProductGroup()}
+                    TransactionalConcessions = new[] { new TransactionalConcession() },
+                    TransactionalProductGroups = new[] { new TransactionalProductGroup() }
                 });
 
-            var result = _transactionalController.TransactionalView(1);
+            var result = _transactionalController.TransactionalView(1, 0);
             var apiResult = Assert.IsType<OkObjectResult>(result);
 
             Assert.NotNull(apiResult.Value);
@@ -88,8 +88,8 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
             var transactionalConcession = new TransactionalConcession
             {
                 Concession = new Concession(),
-                ConcessionConditions = new[] {new ConcessionCondition()},
-                TransactionalConcessionDetails = new[] {new TransactionalConcessionDetail()},
+                ConcessionConditions = new[] { new ConcessionCondition() },
+                TransactionalConcessionDetails = new[] { new TransactionalConcessionDetail() },
                 CurrentUser = new User()
             };
 

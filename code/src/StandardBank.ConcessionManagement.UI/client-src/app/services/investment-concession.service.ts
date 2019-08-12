@@ -20,8 +20,8 @@ export class InvestmentConcessionService {
 
     constructor(private http: Http) { }
 
-    getInvestmentViewData(riskGroupNumber): Observable<InvestmentView> {
-        const url = "/api/Investment/InvestmentView/" + riskGroupNumber;
+    getInvestmentViewData(riskGroupNumber, sapbpid): Observable<InvestmentView> {
+        const url = "/api/Investment/InvestmentView/" + riskGroupNumber + "/" + sapbpid;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
@@ -36,7 +36,7 @@ export class InvestmentConcessionService {
         const url = "/api/Investment/NewInvestment";
         return this.http.post(url, investmentConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
-    
+
     postUpdateInvestmentData(investmentConcession: InvestmentConcession): Observable<InvestmentConcession> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
@@ -63,14 +63,14 @@ export class InvestmentConcessionService {
         let options = new RequestOptions({ headers: headers });
         const url = "/api/Investment/" + relationshipType + "Investment";
         return this.http.post(url, investmentConcession, options).map(this.extractData).catch(this.handleErrorObservable);
-    } 
+    }
 
     postRecallInvestmentData(investmentConcession: InvestmentConcession): Observable<InvestmentConcession> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
         const url = "/api/Investment/UpdateRecalledInvestment";
         return this.http.post(url, investmentConcession, options).map(this.extractData).catch(this.handleErrorObservable);
-    }   
+    }
 
     private extractData(response: Response) {
         let body = response.json();
@@ -78,8 +78,8 @@ export class InvestmentConcessionService {
     }
 
     private handleErrorObservable(error: Response | any) {
-             
-        
+
+
         console.error(error.message || error);
         return Observable.throw(error.message || error);
     }

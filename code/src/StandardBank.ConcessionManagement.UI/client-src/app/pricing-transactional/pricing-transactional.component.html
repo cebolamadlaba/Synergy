@@ -35,8 +35,8 @@
         <div class="col-md-12 banner-container" *ngIf="showHide">
             <div class="col-md-11 summary-main">
                 <div class="col-md-2 summary-sub-title">
-                    <div class="subHeading">{{transactionalView.riskGroup.name}}</div>
-                    <div class="date lightTitle hidden-element">{{transactionalView.riskGroup.number}}</div>
+                    <div class="subHeading">{{entityName}}</div>
+                    <div class="date lightTitle hidden-element">{{entityNumber}}</div>
                 </div>
 
                 <div class="col-md-3 summary-items">
@@ -80,8 +80,8 @@
             <div class="col-md-11">
                 <div>
                     <div class="col-md-5">
-                        <div class="subHeading">{{transactionalView.riskGroup.name}}</div>
-                        <div class="date lightTitle hidden-element">{{transactionalView.riskGroup.number}}</div>
+                        <div class="subHeading">{{entityName}}</div>
+                        <div class="date lightTitle hidden-element">{{entityNumber}}</div>
                     </div>
                 </div>
             </div>
@@ -190,7 +190,7 @@
     <div class="col-md-6 search-and-results-container">
         <h2 class="headings">
             Concessions
-            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/transactional-add-concession', transactionalView.riskGroup.number]" *ngIf="pageLoaded && canRequest">Add Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/transactional-add-concession', riskGroupNumber, sapbpid]" *ngIf="pageLoaded && canRequest">Add Concession</button>
         </h2>
 
         <!-- Search bar -->
@@ -209,7 +209,7 @@
                 </div>
             </div>                       
             <div class="section-body">
-                <div class="table-container" [routerLink]="['/transactional-view-concession', transactionalView.riskGroup.number, transactionalConcession.concession.referenceNumber]">
+                <div class="table-container" [routerLink]="['/transactional-view-concession', riskGroupNumber, sapbpid, transactionalConcession.concession.referenceNumber]">
                     <table class="table table-bordered table-hover header-fixed table-striped">
                         <thead>
                             <tr>

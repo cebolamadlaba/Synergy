@@ -205,6 +205,19 @@ namespace StandardBank.ConcessionManagement.Repository
             }
         }
 
+        public IEnumerable<LegalEntityGBBNumber> GetLegalEntityGBBNumbersBySAPBPID(int sapbpid)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<LegalEntityGBBNumber>(string.Format(
+                    @"SELECT pkLegalEntityGBBNumber,fkLegalEntityAccountId, GBBNumber,pkLegalEntityId [legalEntityId] ,pkLegalEntityAccountId [legalEntityAccountId]  
+                    from tblLegalEntityGBBNumber
+                    join tblLegalEntityAccount on tblLegalEntityGBBNumber.fkLegalEntityAccountId = tblLegalEntityAccount.pkLegalEntityAccountId
+                    join tblLegalEntity on tblLegalEntityAccount.fkLegalEntityId = tblLegalEntity.pkLegalEntityId
+                    where CustomerNumber = {0}", sapbpid));
+            }
+        }
+
         /// <summary>
         /// Updates the specified model.
         /// </summary>

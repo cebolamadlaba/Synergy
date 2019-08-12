@@ -62,12 +62,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// </summary>
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <returns></returns>
-        [Route("CashView/{riskGroupNumber}")]
-        public IActionResult CashView(int riskGroupNumber)
+        [Route("CashView/{riskGroupNumber}/{sapbpid}")]
+        public IActionResult CashView(int riskGroupNumber, int sapbpid)
         {
             var user = _siteHelper.LoggedInUser(this);
 
-            return Ok(_cashManager.GetCashViewData(riskGroupNumber, user));
+            return Ok(_cashManager.GetCashViewData(riskGroupNumber, sapbpid, user));
         }
 
         /// <summary>

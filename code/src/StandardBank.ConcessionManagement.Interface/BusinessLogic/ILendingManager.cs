@@ -48,6 +48,8 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <returns></returns>
         LendingView GetLendingViewData(int riskGroupNumber, User currentUser);
 
+        LendingView GetLendingViewDataBySAPBPID(int sapbpid, User currentUser);
+
         /// <summary>
         /// Gets the latest CRS or MRS.
         /// </summary>

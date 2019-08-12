@@ -58,31 +58,63 @@
 
 <div class="col-md-12" *ngIf="!isLoading">
 
-    <div class="col-md-12 search-and-results-container">
-        <!-- Search bar -->
-        <form (submit)="searchRiskGroupNumber(riskGroupNumber)">
-            <div class="input-group">
-                <input class="form-control" placeholder="Risk Group Number" [(ngModel)]="riskGroupNumber" type="number" name="riskGroupNumber">
-                <div class="input-group-btn">
-                    <!-- updated search bar button -->
-                    <button class="btn btn-default-search" type="submit">Search</button>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="search-and-results-container">
+                <!-- Search bar -->
+                <form (submit)="searchRiskGroupNumber(riskGroupNumber)">
+                    <div class="input-group">
+                        <input class="form-control" placeholder="Risk Group Number" [(ngModel)]="riskGroupNumber" type="number" name="riskGroupNumber">
+                        <div class="input-group-btn">
+                            <!-- updated search bar button -->
+                            <button class="btn btn-default-search" type="submit">Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Risk Group details -->
+            <div *ngIf="!foundRiskGroup && !foundSAPBPID">
+                <div class="searchEmptyState">
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                    <p>
+                        Enter risk group number to return customer products
+                    </p>
                 </div>
             </div>
-        </form>
+        </div>
+
+        <div class="col-md-6">
+            <div class="search-and-results-container">
+                <!-- Search bar -->
+                <form (submit)="searchSAPBPID(sapbpid)">
+                    <div class="input-group">
+                        <input class="form-control" placeholder="SAP BPID" [(ngModel)]="sapbpid" type="number" name="sapbpid">
+                        <div class="input-group-btn">
+                            <!-- updated search bar button -->
+                            <button class="btn btn-default-search" type="submit">Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- SAP BPID -->
+            <div *ngIf="!foundRiskGroup && !foundSAPBPID">
+                <div class="searchEmptyState">
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                    <p>
+                        Enter SAP BPID to return customer products
+                    </p>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- Risk Group details -->
-    <div class="col-md-12" *ngIf="!foundRiskGroup;else pricing_products">
-        <div class="searchEmptyState">
-            <i class="fa fa-info-circle" aria-hidden="true"></i>
-            <p>
-                Enter risk group number to return customer products
-            </p>
-        </div>
+    <div *ngIf="!foundRiskGroup && !foundSAPBPID;else pricing_products">
+
     </div>
 
     <ng-template #pricing_products>
-        <div *ngIf="riskGroup == null">
+        <div *ngIf="riskGroup == null && legalEntity == null">
             <div class="col-md-12">
                 <div class="searchEmptyState">
                     <i class="fa fa-inbox" aria-hidden="true"></i>
@@ -92,7 +124,7 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="riskGroup != null">
+        <div *ngIf="riskGroup != null || legalEntity != null">
 
             <div class="col-md-12">
 
@@ -111,7 +143,7 @@
                 <div class="col-md-8 col-md-offset-2" style="margin-top: 20px">
                     <!-- Lending -->
                     <div class="col-md-3" *ngIf="isVisiblePricingProduct(1)">
-                        <div class="product-item" [routerLink]="['/pricing-lending', riskGroup.number]">
+                        <div class="product-item" [routerLink]="['/pricing-lending', riskGroupNumber, sapbpid]">
                             <div class="product-heading">Lending</div>
                             <div class="container-item-icon">
                                 <i class="fa fa-handshake-o" aria-hidden="true"></i>
@@ -120,7 +152,7 @@
                     </div>
                     <!-- Cash -->
                     <div class="col-md-3" *ngIf="isVisiblePricingProduct(2)">
-                        <div class="product-item" [routerLink]="['/pricing-cash', riskGroup.number]">
+                        <div class="product-item" [routerLink]="['/pricing-cash', riskGroupNumber, sapbpid]">
                             <div class="product-heading">Cash</div>
                             <div class="container-item-icon">
                                 <i class="fa fa-money" aria-hidden="true"></i>
@@ -129,7 +161,7 @@
                     </div>
                     <!-- Transactional -->
                     <div class="col-md-3" *ngIf="isVisiblePricingProduct(3)">
-                        <div class="product-item" [routerLink]="['/pricing-transactional', riskGroup.number]">
+                        <div class="product-item" [routerLink]="['/pricing-transactional', riskGroupNumber, sapbpid]">
                             <div class="product-heading">Transactional</div>
                             <div class="container-item-icon">
                                 <i class="fa fa-exchange" aria-hidden="true"></i>
@@ -139,7 +171,7 @@
 
                     <!-- BOL -->
                     <div class="col-md-3" *ngIf="isVisiblePricingProduct(4)">
-                        <div class="product-item" [routerLink]="['/pricing-bol', riskGroup.number]">
+                        <div class="product-item" [routerLink]="['/pricing-bol', riskGroupNumber, sapbpid]">
                             <div class="product-heading">Business Online</div>
                             <div class="container-item-icon">
                                 <i class="fa fa-desktop" aria-hidden="true"></i>
@@ -159,7 +191,7 @@
                     </div>-->
                     <!-- Trade -->
                     <div class="col-md-3" *ngIf="isVisiblePricingProduct(5)">
-                        <div class="product-item" [routerLink]="['/pricing-trade',riskGroup.number]">
+                        <div class="product-item" [routerLink]="['/pricing-trade',riskGroupNumber, sapbpid]">
                             <div class="product-heading">Trade</div>
                             <div class="container-item-icon">
                                 <i class="fa fa-line-chart" aria-hidden="true"></i>
@@ -168,7 +200,7 @@
                     </div>
                     <!-- Investments -->
                     <div class="col-md-3" *ngIf="isVisiblePricingProduct(6)">
-                        <div class="product-item" [routerLink]="['/pricing-investments',riskGroup.number]">
+                        <div class="product-item" [routerLink]="['/pricing-investments',riskGroupNumber, sapbpid]">
                             <div class="product-heading">Investments</div>
                             <div class="container-item-icon">
                                 <i class="fa fa-bar-chart" aria-hidden="true"></i>
