@@ -5,6 +5,8 @@ using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using System.Threading.Tasks;
 using StandardBank.ConcessionManagement.Interface.Repository;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
 {
@@ -39,6 +41,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         /// </summary>
         private readonly ILookupTableManager _lookupTableManager;
 
+        private readonly IAENumberUserManager _aeNumberUserManager;
+
+        private readonly IBusinessCentreManager _businessCentreManager;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AddConcessionHandler"/> class.
         /// </summary>
@@ -49,13 +55,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         /// <param name="lookupTableManager">The lookup table manager.</param>
         public AddConcessionHandler(IConcessionManager concessionManager, IMediator mediator,
             ILogger<AddConcessionHandler> logger, IRiskGroupRepository riskGroupRepository,
-            ILookupTableManager lookupTableManager)
+            ILookupTableManager lookupTableManager, IAENumberUserManager aeNumberUserManager,
+            IBusinessCentreManager businessCentreManager)
         {
             _concessionManager = concessionManager;
             _mediator = mediator;
             _logger = logger;
             _riskGroupRepository = riskGroupRepository;
             _lookupTableManager = lookupTableManager;
+            _aeNumberUserManager = aeNumberUserManager;
+            _businessCentreManager = businessCentreManager;
         }
 
         /// <summary>
@@ -96,14 +105,35 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         /// <returns></returns>
         private async Task SendNotificationEmail(AddConcession message, Model.Repository.Concession result)
         {
-            await _mediator.Publish(new ConcessionAdded
-            {
-                CenterId = message.User.SelectedCentre.Id,
-                ConsessionId = result.ConcessionRef,
-                RiskGroupName = message.Concession.RiskGroupName,
-                Product = message.Concession.ConcessionType,
-                DateOfRequest = result.ConcessionDate.ToString("yyyy-MM-dd")
-            });
+            // get Concession Business Centre.
+            IEnumerable<CentreUser> centreUsers = this.GetConcessionBusinessCentre(result);
+            centreUsers = centreUsers.Where(a => a.IsActive);
+
+            foreach (CentreUser centreUser in centreUsers)
+                await _mediator.Publish(new ConcessionAdded
+                {
+                    //CenterId = message.User.SelectedCentre.Id,
+                    CenterId = centreUser.CentreId,
+                    ConsessionId = result.ConcessionRef,
+                    RiskGroupName = message.Concession.RiskGroupName,
+                    Product = message.Concession.ConcessionType,
+                    DateOfRequest = result.ConcessionDate.ToString("yyyy-MM-dd")
+                });
+        }
+
+        private IEnumerable<CentreUser> GetConcessionBusinessCentre(Model.Repository.Concession concession)
+        {
+            if (!concession.AENumberUserId.HasValue)
+                return null;
+
+            AENumberUser aeNumberUser = this._aeNumberUserManager.GetAENumberUser(concession.AENumberUserId.Value);
+
+            if (aeNumberUser == null)
+                return null;
+
+            //GetUserCentres
+            return this._businessCentreManager.GetCentresByUserId(aeNumberUser.UserId);
+
         }
     }
 }

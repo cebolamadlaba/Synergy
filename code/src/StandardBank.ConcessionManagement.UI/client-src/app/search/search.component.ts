@@ -170,7 +170,7 @@ export class SearchComponent implements OnInit {
                     this.forwardTransactionaltoPCM(concessiondetailed);
                     break;
 
-                case ConcessionTypes.BOL:
+                case ConcessionTypes.BOLDesc:
                     this.forwardBoltoPCM(concessiondetailed);
                     break;
 

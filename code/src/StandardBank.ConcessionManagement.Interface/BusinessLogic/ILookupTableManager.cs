@@ -150,7 +150,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <returns></returns>
         IEnumerable<ConditionType> GetConditionTypes();
 
-        IEnumerable<BOLChargeCode> GetBOLChargeCodes();
+        IEnumerable<BOLChargeCode> GetBOLChargeCodes(int riskGroupNumber);
 
         IEnumerable<BOLChargeCode> GetBOLChargeCodesAll();
         IEnumerable<BOLChargeCodeType> GetBOLChargeCodeTypes();
@@ -266,5 +266,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="transactionTableNumberId">The transaction table number identifier.</param>
         /// <returns></returns>
         string GetTransactionTableNumberDescription(int transactionTableNumberId);
+
+        /// <summary>
+        /// Gets risk groups.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<RiskGroup> GetRiskGroups(string searchGroup);
+
     }
 }

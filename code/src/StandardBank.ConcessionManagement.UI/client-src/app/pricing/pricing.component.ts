@@ -6,6 +6,8 @@ import { ActivatedRoute } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
 import { LookupDataService } from "../services/lookup-data.service";
 
+import { SubRoleEnum } from "../models/subrole-enum";
+
 @Component({
     selector: 'app-pricing',
     templateUrl: './pricing.component.html',
@@ -86,8 +88,31 @@ export class PricingComponent implements OnInit, OnDestroy {
                 return false;
             }
             else {
+                // for BOL COnsultants and Trade Bankers
+                if (this.user.subRoleId != null) {
+                    // BOL Concessions
+                    if (this.user.subRoleId == SubRoleEnum.BOLConsultant && pricingProductNumber == 4) {
+                        return true;
+                    }
+                    // Trade Concessions
+                    else if (this.user.subRoleId == SubRoleEnum.TradeBanker && pricingProductNumber == 5) {
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                }
+                // for all other users
                 return true;
             }
         }
+
+        //let canView: boolean = true;
+        //if (this.user.subRoleId != null && this.user.subRoleId > 0) {
+        //    switch (this.user.subRoleId) {
+        //        case SubRoleEnum.
+        //    }
+        //}
+
     }
 }

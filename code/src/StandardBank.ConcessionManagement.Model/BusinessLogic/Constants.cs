@@ -28,6 +28,12 @@
             RequestorApproval
         }
 
+        public enum RoleSubRole
+        {
+            BolUser = 1,
+            TradeUser = 2
+        }
+
         public static class ConcessionType
         {
             public const string Lending = "Lending";
@@ -36,8 +42,18 @@
             public const string Trade = "Trade";
             public const string Transactional = "Transactional";
             public const string BusinessOnline = "Bol";
+            public const string BusinessOnlineDesc = "Business Online";
             public const string Cash = "Cash";
+
         }
+
+        public static class SubRoleType
+        {
+            public const string TradeBanker = "Trade Banker";
+            public const string BOLConsultant = "BOL Consultant";
+        }
+
+
 
         public static class ReferenceType
         {
@@ -91,7 +107,7 @@
             public const string FullTransactionalBanking = "Full Transactional Banking";
             public const string MininumAverageCreditBalance = "Mininum Average Credit Balance";
             public const string MininumTurnover = "Mininum Turnover";
-            public const string CreditFacility  = "Credit Facility";
+            public const string CreditFacility = "Credit Facility";
         }
 
         public static class RagStatusResult

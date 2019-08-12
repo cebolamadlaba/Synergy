@@ -187,9 +187,10 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                         this.canPcmApprove = cashConcession.currentUser.canPcmApprove && cashConcession.currentUser.canApprove;
                     }
 
-                    if (!cashConcession.concession.isInProgressExtension) {
-                        this.canEdit = cashConcession.currentUser.canPcmApprove;
-                    }
+                    // Removed as per SBSA.Anthony's request - 2019-07-15
+                    //if (!cashConcession.concession.isInProgressExtension) {
+                    this.canEdit = cashConcession.currentUser.canPcmApprove;
+                    //}
                 }
 
                 //if it's still pending and the user is a requestor then they can recall it
@@ -852,6 +853,35 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
         if (!this.validationError) {
             this.cashConcessionService.postChildConcession(cashConcession, this.editType).subscribe(entity => {
+                console.log("data saved");
+                this.isEditing = false;
+                this.saveMessage = entity.concession.childReferenceNumber;
+                this.cashConcession = entity;
+                this.isLoading = false;
+                this.canEdit = false;
+                this.motivationEnabled = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+
+    saveUpdatedConcession() {
+        this.isLoading = true;
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var cashConcession = this.getCashConcession(true);
+
+        cashConcession.concession.type = "Existing";
+        cashConcession.concession.referenceNumber = this.concessionReferenceId;
+
+        if (!this.validationError) {
+            this.cashConcessionService.postUpdateCashData(cashConcession).subscribe(entity => {
                 console.log("data saved");
                 this.isEditing = false;
                 this.saveMessage = entity.concession.childReferenceNumber;

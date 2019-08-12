@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -59,11 +60,10 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(_lookupTableManager.GetConditionTypes());
         }
 
-        [Route("BOLChargeCodes")]
-        public IActionResult GetBOLChargeCodes()
+        [Route("BOLChargeCodes/{riskGroupNumber}")]
+        public IActionResult GetBOLChargeCodes(int riskGroupNumber)
         {
-
-            var codes = _lookupTableManager.GetBOLChargeCodes();
+            var codes = _lookupTableManager.GetBOLChargeCodes(riskGroupNumber);
             return Ok(codes);
         }
 
@@ -93,7 +93,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult TradeProducts()
         {
             return Ok(_lookupTableManager.GetTradeProducts());
-        }       
+        }
 
 
         [Route("LegalEntityBOLUsers/{riskGroupNumber}")]

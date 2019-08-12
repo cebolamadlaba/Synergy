@@ -180,9 +180,10 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
                         this.canPcmApprove = transactionalConcession.currentUser.canPcmApprove && transactionalConcession.currentUser.canApprove;
                     }
 
-                    if (!transactionalConcession.concession.isInProgressExtension) {
-                        this.canEdit = transactionalConcession.currentUser.canPcmApprove;
-                    }
+                    // Removed as per SBSA.Anthony's request - 2019-07-15
+                    //if (!transactionalConcession.concession.isInProgressExtension) {
+                    this.canEdit = transactionalConcession.currentUser.canPcmApprove;
+                    //}
                 }
 
                 //if it's still pending and the user is a requestor then they can recall it
@@ -856,6 +857,33 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
         if (!this.validationError) {
             this.transactionalConcessionService.postChildConcession(transactionalConcession, this.editType).subscribe(entity => {
+                console.log("data saved");
+                this.isEditing = false;
+                this.saveMessage = entity.concession.childReferenceNumber;
+                this.transactionalConcession = entity;
+                this.isLoading = false;
+                this.canEdit = false;
+                this.motivationEnabled = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+    saveUpdatedConcession() {
+        this.isLoading = true;
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var transactionalConcession = this.getTransactionalConcession(true);
+        transactionalConcession.concession.type = "Existing";
+        transactionalConcession.concession.referenceNumber = this.concessionReferenceId;
+
+        if (!this.validationError) {
+            this.transactionalConcessionService.postUpdateTransactionalData(transactionalConcession, this.editType).subscribe(entity => {
                 console.log("data saved");
                 this.isEditing = false;
                 this.saveMessage = entity.concession.childReferenceNumber;

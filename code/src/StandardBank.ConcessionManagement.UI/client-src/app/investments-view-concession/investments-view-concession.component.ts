@@ -255,9 +255,10 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                         this.canPcmApprove = investmentConcession.currentUser.canPcmApprove && investmentConcession.currentUser.canApprove;
                     }
 
-                    if (!investmentConcession.concession.isInProgressExtension) {
-                        this.canEdit = investmentConcession.currentUser.canPcmApprove;
-                    }
+                    // Removed as per SBSA.Anthony's request - 2019-07-15
+                    //if (!investmentConcession.concession.isInProgressExtension) {
+                    this.canEdit = investmentConcession.currentUser.canPcmApprove;
+                    //}
                 }
 
 
@@ -1083,6 +1084,34 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
+    saveUpdatedConcession() {
+        this.isLoading = true;
+        this.errorMessage = null;
+        this.validationError = null;
+
+        var investmentConcession = this.getInvestmentConcession(true);
+
+        investmentConcession.concession.type = "Existing";
+        investmentConcession.concession.referenceNumber = this.concessionReferenceId;
+
+        if (!this.validationError) {
+            this.investmentConcessionService.postChildConcession(investmentConcession, this.editType).subscribe(entity => {
+                console.log("data saved");
+                this.isEditing = false;
+                this.saveMessage = entity.concession.childReferenceNumber;
+                this.investmentConcession = entity;
+                this.isLoading = false;
+                this.canEdit = false;
+                this.motivationEnabled = false;
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
     recallConcession() {
         this.isLoading = true;
         this.errorMessage = null;
@@ -1218,7 +1247,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
 
     archiveConcession() {
-        if (confirm("Are you sure you want to delete this concession ?")) {
+        if (confirm("Please note that the account will be put back to standard pricing. Are you sure you want to delete this concession ?")) {
             this.isLoading = true;
             this.errorMessage = null;
 

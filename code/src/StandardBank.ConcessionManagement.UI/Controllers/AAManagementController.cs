@@ -106,10 +106,10 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 var accountExecutive = new AccountExecutive
                 {
                     User = _userManager.GetUser(aaUser.AccountExecutiveUserId.Value),
-                    AccountAssistants = new [] { aaUser }
+                    AccountAssistants = new[] { aaUser }
                 };
 
-                await _mediator.Send(new CreateOrUpdateAccountExecutives(accountExecutive, user));
+                await _mediator.Send(new CreateOrUpdateAccountExecutives(accountExecutive, user, doNotRemoveAaToAeLinks: true));
             }
 
             return Ok(true);

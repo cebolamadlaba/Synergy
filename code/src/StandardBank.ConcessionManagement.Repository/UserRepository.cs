@@ -216,7 +216,8 @@ namespace StandardBank.ConcessionManagement.Repository
                         user.RoleId,
                         user.ContactNumber,
                         user.IsActive,
-                        user.CanApprove
+                        user.CanApprove,
+                        user.SubRoleId
                     }, transaction: tx, commandType: System.Data.CommandType.StoredProcedure);
                 tx.Commit();
                 return id;
@@ -240,6 +241,7 @@ namespace StandardBank.ConcessionManagement.Repository
                         user.FirstName,
                         LastName = user.Surname,
                         user.RoleId,
+                        user.SubRoleId,
                         user.Id,
                         user.ContactNumber,
                         user.IsActive,

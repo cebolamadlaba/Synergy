@@ -73,6 +73,14 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public IEnumerable<Role> UserRoles { get; set; }
 
         /// <summary>
+        /// Gets or sets the user sub roles.
+        /// </summary>
+        /// <value>
+        /// The user sub roles.
+        /// </value>
+        public RoleSubRole RoleSubRole { get; set; }
+
+        /// <summary>
         /// Gets or sets the user centres
         /// </summary>
         public IEnumerable<Centre> UserCentres { get; set; }
@@ -97,6 +105,14 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// The role identifier.
         /// </value>
         public int RoleId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the role identifier.
+        /// </summary>
+        /// <value>
+        /// The SubRole identifier.
+        /// </value>
+        public int? SubRoleId { get; set; }
 
         /// <summary>
         /// Gets or sets whether or not the user can request

@@ -7,7 +7,6 @@ namespace StandardBank.ConcessionManagement.Model.Repository
 
     public class BOLChargeCode
     {
-
         public int pkChargeCodeId { get; set; }
 
         public string Description { get; set; }     
@@ -24,5 +23,12 @@ namespace StandardBank.ConcessionManagement.Model.Repository
 
         public bool IsActive { get; set; }
 
+        public decimal StandardPricingOption1 { get; set; }
+
+        public decimal StandardPricingOption2 { get; set; }
+
+        public decimal StandardPricingOption3 { get; set; }
+
+        public bool IsNonUniversal { get; set; }
     }
 }

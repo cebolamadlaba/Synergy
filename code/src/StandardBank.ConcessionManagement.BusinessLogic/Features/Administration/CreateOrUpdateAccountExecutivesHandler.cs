@@ -32,7 +32,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
             var accountAssistants =
                 _accountExecutiveAssistantRepository.ReadByAccountExecutiveUserId(message.AccountExecutive.User.Id);
 
-            if (accountAssistants != null && accountAssistants.Any())
+            if (!message.DoNotRemoveAaToAeLinks && accountAssistants != null && accountAssistants.Any())
                 DeleteRecords(message, accountAssistants, auditRecords);
 
             //if there are records, insert the ones that are not in the database already
@@ -42,7 +42,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Administratio
                 {
                     if (accountAssistants.Where(aa => aa.AccountAssistantUserId == accountAssistant.Id).FirstOrDefault() == null)
                     {
-                       
+
                         AddRecord(message, accountAssistants, accountAssistant, auditRecords);
                     }
                 }

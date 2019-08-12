@@ -116,7 +116,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor='let concessiondetail of approvedConcessions | searchConcessionFilter: filterConcessionId; trackBy: index;' (click)="openConcessionView($event,concessiondetail)">
+                    <tr *ngFor='let concessiondetail of approvedConcessions | searchConcessionFilter : filterConcessionId; trackBy: index;' (click)="openConcessionView($event,concessiondetail)">
                         <td>
                             <p>{{concessiondetail?.riskGroupName}}</p>
                             <p>{{concessiondetail?.riskGroupNumber}}</p>
