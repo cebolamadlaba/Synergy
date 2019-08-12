@@ -47,7 +47,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// </summary>
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <returns></returns>
-        CashView GetCashViewData(int riskGroupNumber, User currentUser);
+        CashView GetCashViewData(int riskGroupNumber, int sapbpid, User currentUser);
 
         /// <summary>
         /// Gets the latest CRS or MRS.

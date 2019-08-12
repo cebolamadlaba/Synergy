@@ -17,8 +17,8 @@
         <div class="col-md-12 banner-container" *ngIf="showHide">
             <div class="col-md-11">
                 <div class="col-md-2">
-                    <div class="subHeading">{{riskGroup?.name}}</div>
-                    <div class="date lightTitle hidden-element">{{riskGroup?.number}}</div>
+                    <div class="subHeading">{{entityName}}</div>
+                    <div class="date lightTitle hidden-element">{{entityNumber}}</div>
                     <div class="requestor"><i class="fa fa-user-circle-o" aria-hidden="true"></i><button (click)="viewRequesterModal.show()">{{transactionalConcession?.concession?.requestor?.fullName}}</button></div>
                 </div>
                 <div class="col-md-3 summary-items">
@@ -63,8 +63,8 @@
             <div class="col-md-11">
                 <div>
                     <div class="col-md-5">
-                        <div class="subHeading">{{riskGroup?.name}}</div>
-                        <div class="date lightTitle hidden-element">{{riskGroup?.number}}</div>
+                        <div class="subHeading">{{entityName}}</div>
+                        <div class="date lightTitle hidden-element">{{entityNumber}}</div>
                     </div>
                 </div>
             </div>
@@ -396,13 +396,13 @@
                             <td>{{concessionRelationship.relationshipType}}</td>
                             <td>
                                 <span *ngIf="concessionRelationship.parentConcessionReference == concessionReferenceId"><strong>**</strong></span>
-                                <span *ngIf="concessionRelationship.parentIsActive"><a href="#" target="_blank" [routerLink]="['/transactional-view-concession', riskGroup.number, concessionRelationship.parentConcessionReference]">{{concessionRelationship.parentConcession}}</a></span>
+                                <span *ngIf="concessionRelationship.parentIsActive"><a href="#" target="_blank" [routerLink]="['/transactional-view-concession', riskGroupNumber, sapbpid, concessionRelationship.parentConcessionReference]">{{concessionRelationship.parentConcession}}</a></span>
                                 <span *ngIf="!concessionRelationship.parentIsActive">{{concessionRelationship.parentConcession}}</span>
                             </td>
                             <td>{{concessionRelationship.relationship}}</td>
                             <td>
                                 <span *ngIf="concessionRelationship.childConcessionReference == concessionReferenceId"><strong>**</strong></span>
-                                <span *ngIf="concessionRelationship.childIsActive"><a href="#" target="_blank" [routerLink]="['/transactional-view-concession', riskGroup.number, concessionRelationship.childConcessionReference]">{{concessionRelationship.childConcession}}</a></span>
+                                <span *ngIf="concessionRelationship.childIsActive"><a href="#" target="_blank" [routerLink]="['/transactional-view-concession', riskGroupNumber, sapbpid, concessionRelationship.childConcessionReference]">{{concessionRelationship.childConcession}}</a></span>
                                 <span *ngIf="!concessionRelationship.childIsActive">{{concessionRelationship.childConcession}}</span>
                             </td>
                             <td>{{concessionRelationship.date | date: 'yyyy/MM/dd'}}</td>

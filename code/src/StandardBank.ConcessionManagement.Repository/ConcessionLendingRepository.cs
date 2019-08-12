@@ -46,8 +46,8 @@ namespace StandardBank.ConcessionManagement.Repository
             model.ConcessionDetailId = concessionDetail.ConcessionDetailId;
 
             const string sql =
-                @"INSERT [dbo].[tblConcessionLending] ([fkConcessionId], [fkConcessionDetailId], [fkProductTypeId], [fkReviewFeeTypeId], [Limit], [Term], [MarginToPrime], [ApprovedMarginToPrime], [LoadedMarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [AverageBalance],[Frequency],[ServiceFee]) 
-                VALUES (@ConcessionId, @ConcessionDetailId, @ProductTypeId, @ReviewFeeTypeId, @Limit, @Term, @MarginToPrime, @ApprovedMarginToPrime, @LoadedMarginToPrime, @InitiationFee, @ReviewFee, @UFFFee, @AverageBalance, @Frequency,@ServiceFee) 
+                @"INSERT [dbo].[tblConcessionLending] ([fkConcessionId], [fkConcessionDetailId], [fkProductTypeId], [fkReviewFeeTypeId], [Limit], [Term], [MarginToPrime], [ApprovedMarginToPrime], [LoadedMarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [AverageBalance],[Frequency],[ServiceFee],[MRS_BRI]) 
+                VALUES (@ConcessionId, @ConcessionDetailId, @ProductTypeId, @ReviewFeeTypeId, @Limit, @Term, @MarginToPrime, @ApprovedMarginToPrime, @LoadedMarginToPrime, @InitiationFee, @ReviewFee, @UFFFee, @AverageBalance, @Frequency,@ServiceFee,@MRS_BRI) 
                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
@@ -69,7 +69,8 @@ namespace StandardBank.ConcessionManagement.Repository
                         UFFFee = model.UFFFee,
                         AverageBalance = model.AverageBalance,
                         ServiceFee = model.ServiceFee,
-                        Frequency = model.Frequency
+                        Frequency = model.Frequency,
+                        MRS_BRI = model.MRS_BRI
                     }).Single();
             }
 
@@ -86,11 +87,11 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionLending>(
-                    @"SELECT [pkConcessionLendingId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkProductTypeId] [ProductTypeId], [fkReviewFeeTypeId] [ReviewFeeTypeId], [Limit], [Term], [MarginToPrime], [ApprovedMarginToPrime], [LoadedMarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [AverageBalance], [Frequency], [ServiceFee], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate], d.[DateApproved] 
+                    @"SELECT [pkConcessionLendingId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkProductTypeId] [ProductTypeId], [fkReviewFeeTypeId] [ReviewFeeTypeId], [Limit], [Term], [MarginToPrime], [ApprovedMarginToPrime], [LoadedMarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [AverageBalance], [Frequency], [ServiceFee], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate], d.[DateApproved], [MRS_BRI]
                     FROM [dbo].[tblConcessionLending] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
                     WHERE [pkConcessionLendingId] = @Id",
-                    new {id}).SingleOrDefault();
+                    new { id }).SingleOrDefault();
             }
         }
 
@@ -104,11 +105,11 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionLending>(
-                    @"SELECT [pkConcessionLendingId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkProductTypeId] [ProductTypeId], [fkReviewFeeTypeId] [ReviewFeeTypeId], [Limit], [Term], [MarginToPrime], [ApprovedMarginToPrime], [LoadedMarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [AverageBalance], [Frequency], [ServiceFee], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate], d.[DateApproved] 
+                    @"SELECT [pkConcessionLendingId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkProductTypeId] [ProductTypeId], [fkReviewFeeTypeId] [ReviewFeeTypeId], [Limit], [Term], [MarginToPrime], [ApprovedMarginToPrime], [LoadedMarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [AverageBalance], [Frequency], [ServiceFee], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate], d.[DateApproved], [MRS_BRI] 
                     FROM [dbo].[tblConcessionLending] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
                     WHERE t.[fkConcessionId] = @concessionId",
-                    new {concessionId});
+                    new { concessionId });
             }
         }
 
@@ -121,7 +122,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionLending>(
-                    @"SELECT [pkConcessionLendingId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkProductTypeId] [ProductTypeId], [fkReviewFeeTypeId] [ReviewFeeTypeId], [Limit], [Term], [MarginToPrime], [ApprovedMarginToPrime], [LoadedMarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [AverageBalance], [Frequency], [ServiceFee], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate], d.[DateApproved] 
+                    @"SELECT [pkConcessionLendingId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkProductTypeId] [ProductTypeId], [fkReviewFeeTypeId] [ReviewFeeTypeId], [Limit], [Term], [MarginToPrime], [ApprovedMarginToPrime], [LoadedMarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [AverageBalance], [Frequency], [ServiceFee], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate], d.[DateApproved], [MRS_BRI] 
                     FROM [dbo].[tblConcessionLending] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]");
             }
@@ -136,7 +137,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblConcessionLending]
-                            SET [fkConcessionId] = @ConcessionId, [fkConcessionDetailId] = @ConcessionDetailId, [fkProductTypeId] = @ProductTypeId, [fkReviewFeeTypeId] = @ReviewFeeTypeId, [Limit] = @Limit, [Term] = @Term, [MarginToPrime] = @MarginToPrime, [ApprovedMarginToPrime] = @ApprovedMarginToPrime, [LoadedMarginToPrime] = @LoadedMarginToPrime, [InitiationFee] = @InitiationFee, [ReviewFee] = @ReviewFee, [UFFFee] = @UFFFee, [AverageBalance] = @AverageBalance, [ServiceFee] = @ServiceFee, [Frequency] = @Frequency
+                            SET [fkConcessionId] = @ConcessionId, [fkConcessionDetailId] = @ConcessionDetailId, [fkProductTypeId] = @ProductTypeId, [fkReviewFeeTypeId] = @ReviewFeeTypeId, [Limit] = @Limit, [Term] = @Term, [MarginToPrime] = @MarginToPrime, [ApprovedMarginToPrime] = @ApprovedMarginToPrime, [LoadedMarginToPrime] = @LoadedMarginToPrime, [InitiationFee] = @InitiationFee, [ReviewFee] = @ReviewFee, [UFFFee] = @UFFFee, [AverageBalance] = @AverageBalance, [ServiceFee] = @ServiceFee, [Frequency] = @Frequency, [MRS_BRI] = @MRS_BRI
                             WHERE [pkConcessionLendingId] = @Id",
                     new
                     {
@@ -155,7 +156,8 @@ namespace StandardBank.ConcessionManagement.Repository
                         UFFFee = model.UFFFee,
                         AverageBalance = model.AverageBalance,
                         ServiceFee = model.ServiceFee,
-                        Frequency = model.Frequency
+                        Frequency = model.Frequency,
+                        MRS_BRI = model.MRS_BRI
                     });
             }
 
@@ -171,7 +173,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[tblConcessionLending] WHERE [pkConcessionLendingId] = @Id",
-                    new {model.Id});
+                    new { model.Id });
             }
 
             _concessionDetailRepository.Delete(model);

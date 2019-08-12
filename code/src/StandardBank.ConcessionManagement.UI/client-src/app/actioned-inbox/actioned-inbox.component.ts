@@ -9,9 +9,9 @@ import { InboxConcession } from "../models/inbox-concession";
 import { ConcessionTypes } from '../constants/concession-types';
 
 @Component({
-  selector: 'app-actioned-inbox',
-  templateUrl: './actioned-inbox.component.html',
-  styleUrls: ['./actioned-inbox.component.css']
+    selector: 'app-actioned-inbox',
+    templateUrl: './actioned-inbox.component.html',
+    styleUrls: ['./actioned-inbox.component.css']
 })
 export class ActionedInboxComponent implements OnInit {
     dtOptions: DataTables.Settings = {};
@@ -49,22 +49,22 @@ export class ActionedInboxComponent implements OnInit {
     openConcessionView(concession: InboxConcession) {
         switch (concession.concessionType) {
             case ConcessionTypes.Lending:
-                this.router.navigate(['/lending-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                this.router.navigate(['/lending-view-concession', concession.riskGroupNumber, concession.customerNumber, concession.referenceNumber]);
                 break;
             case ConcessionTypes.Cash:
-                this.router.navigate(['/cash-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                this.router.navigate(['/cash-view-concession', concession.riskGroupNumber, concession.customerNumber, concession.referenceNumber]);
                 break;
             case ConcessionTypes.Transactional:
-                this.router.navigate(['/transactional-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                this.router.navigate(['/transactional-view-concession', concession.riskGroupNumber, concession.customerNumber, concession.referenceNumber]);
                 break;
-            case ConcessionTypes.BOL:
-                this.router.navigate(['/bol-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
+            case ConcessionTypes.BOLDesc:
+                this.router.navigate(['/bol-view-concession', concession.riskGroupNumber, concession.customerNumber, concession.referenceNumber]);
                 break;
             case ConcessionTypes.Trade:
-                this.router.navigate(['/trade-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                this.router.navigate(['/trade-view-concession', concession.riskGroupNumber, concession.customerNumber, concession.referenceNumber]);
                 break;
             case ConcessionTypes.Investment:
-                this.router.navigate(['/investments-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                this.router.navigate(['/investments-view-concession', concession.riskGroupNumber, concession.customerNumber, concession.referenceNumber]);
                 break;
         }
     }

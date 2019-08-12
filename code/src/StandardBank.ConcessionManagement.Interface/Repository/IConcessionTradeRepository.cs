@@ -47,5 +47,7 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         void Delete(ConcessionTrade model);
 
         IEnumerable<LegalEntityGBBNumber> GetLegalEntityGBBNumbers(int riskGroupNumber);
+
+        IEnumerable<LegalEntityGBBNumber> GetLegalEntityGBBNumbersBySAPBPID(int sapbpid);
     }
 }

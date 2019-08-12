@@ -26,6 +26,7 @@ import { ConcessionTypes } from '../constants/concession-types';
 import { ConcessionStatus } from '../constants/concession-status';
 import { ConcessionSubStatus } from '../constants/concession-sub-status';
 import { BaseComponentService } from '../services/base-component.service';
+import { LegalEntity } from "../models/legal-entity";
 
 @Component({
     selector: 'app-cash-view-concession',
@@ -44,6 +45,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
+    sapbpid: number;
+    legalEntity: LegalEntity;
     public cashConcessionForm: FormGroup;
     selectedConditionTypes: ConditionType[];
     isLoading = true;
@@ -67,6 +70,9 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
     isInProgressRenewal = false;
     isApproved = false;
     showHide = false;
+
+    subHeading: string;
+    title: string;
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
@@ -118,6 +124,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
+            this.sapbpid = +params['sapbpid'];
             this.concessionReferenceId = params['concessionReferenceId'];
         });
 
@@ -129,33 +136,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             comments: new FormControl()
         });
 
-        Observable.forkJoin([
-            this.lookupDataService.getChannelTypes(),
-            this.lookupDataService.getPeriods(),
-            this.lookupDataService.getPeriodTypes(),
-            this.lookupDataService.getConditionTypes(),
-            this.lookupDataService.getAccrualTypes(),
-            this.lookupDataService.getTableNumbers(ConcessionTypes.Cash),
-            this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-            this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Cash),
-            this.cashConcessionService.getCashFinancial(this.riskGroupNumber)
-        ]).subscribe(results => {
-            this.channelTypes = <any>results[0];
-            this.periods = <any>results[1];
-            this.periodTypes = <any>results[2];
-            this.conditionTypes = <any>results[3];
-            this.accrualTypes = <any>results[4];
-            this.tableNumbers = <any>results[5];
-            this.riskGroup = <any>results[6];
-            this.clientAccounts = <any>results[7];
-            this.cashFinancial = <any>results[8];
-
-            this.populateForm();
-        },
-            error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
+        this.getInitialData();
 
         this.cashConcessionForm.valueChanges.subscribe((value: any) => {
             if (this.cashConcessionForm.dirty) {
@@ -316,6 +297,69 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
+    getInitialData() {
+        if (this.riskGroupNumber != null && this.riskGroupNumber != 0) {
+            Observable.forkJoin([
+                this.lookupDataService.getChannelTypes(),
+                this.lookupDataService.getPeriods(),
+                this.lookupDataService.getPeriodTypes(),
+                this.lookupDataService.getConditionTypes(),
+                this.lookupDataService.getAccrualTypes(),
+                this.lookupDataService.getTableNumbers(ConcessionTypes.Cash),
+                this.lookupDataService.getRiskGroup(this.riskGroupNumber),
+                this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, this.sapbpid, ConcessionTypes.Cash),
+                this.cashConcessionService.getCashFinancial(this.riskGroupNumber)
+            ]).subscribe(results => {
+                this.setInitialData(results, true);
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        }
+        else if (this.sapbpid != null && this.sapbpid != 0) {
+            Observable.forkJoin([
+                this.lookupDataService.getChannelTypes(),
+                this.lookupDataService.getPeriods(),
+                this.lookupDataService.getPeriodTypes(),
+                this.lookupDataService.getConditionTypes(),
+                this.lookupDataService.getAccrualTypes(),
+                this.lookupDataService.getTableNumbers(ConcessionTypes.Cash),
+                this.lookupDataService.getLegalEntity(this.sapbpid),
+                this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, this.sapbpid, ConcessionTypes.Cash),
+
+            ]).subscribe(results => {
+                this.setInitialData(results, false);
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        }
+    }
+    setInitialData(results: {}[], isForRiskGroup: boolean) {
+        this.channelTypes = <any>results[0];
+        this.periods = <any>results[1];
+        this.periodTypes = <any>results[2];
+        this.conditionTypes = <any>results[3];
+        this.accrualTypes = <any>results[4];
+        this.tableNumbers = <any>results[5];
+
+        if (isForRiskGroup) {
+            this.riskGroup = <any>results[6];
+            this.cashFinancial = <any>results[8];
+            this.subHeading = this.riskGroup.name;
+            this.title = this.riskGroup.number.toString();
+        }
+        else {
+            this.legalEntity = <any>results[6];
+            this.subHeading = this.legalEntity.customerName;
+            this.title = this.legalEntity.customerNumber;
+        }
+        this.clientAccounts = <any>results[7];
+
+
+        this.populateForm();
+    }
+
     initConcessionItemRows() {
         return this.formBuilder.group({
             cashConcessionDetailId: [''],
@@ -418,7 +462,10 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         var cashConcession = new CashConcession();
         cashConcession.concession = new Concession();
         cashConcession.concession.concessionType = ConcessionTypes.Cash;
-        cashConcession.concession.riskGroupId = this.riskGroup.id;
+        if (this.riskGroup)
+            cashConcession.concession.riskGroupId = this.riskGroup.id;
+        if (this.legalEntity)
+            cashConcession.concession.legalEntityId = this.legalEntity.id;
         cashConcession.concession.referenceNumber = this.concessionReferenceId;
 
         if (this.cashConcessionForm.controls['smtDealNumber'].value)

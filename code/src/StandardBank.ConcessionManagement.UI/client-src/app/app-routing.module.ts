@@ -24,7 +24,7 @@ import { LendingViewConcessionComponent } from "./lending-view-concession/lendin
 import { CashViewConcessionComponent } from "./cash-view-concession/cash-view-concession.component";
 
 import { InvestmentAddConcessionComponent } from "./investments-add-concession/investments-add-concession.component";
-import { InvestmentsViewConcessionComponent} from "./investments-view-concession/investments-view-concession.component";
+import { InvestmentsViewConcessionComponent } from "./investments-view-concession/investments-view-concession.component";
 
 import { BolAddConcessionComponent } from "./bol-add-concession/bol-add-concession.component";
 import { BolViewConcessionComponent } from "./bol-view-concession/bol-view-concession.component";
@@ -67,33 +67,42 @@ const routes: Routes = [
     { path: 'search', component: SearchComponent },
     { path: 'pricing', component: PricingComponent },
     { path: 'pricing/:riskGroupNumber', component: PricingComponent },
-    { path: 'pricing-lending/:riskGroupNumber', component: PricingLendingComponent },
-    { path: 'pricing-cash/:riskGroupNumber', component: PricingCashComponent },
-    { path: 'pricing-transactional/:riskGroupNumber', component: PricingTransactionalComponent },
-    { path: 'pricing-investments/:riskGroupNumber', component: PricingInvestmentsComponent },
-    { path: 'pricing-bol/:riskGroupNumber', component: PricingBolComponent },
-    { path: 'pricing-trade/:riskGroupNumber', component: PricingTradeComponent },
+    { path: 'pricing-lending/:riskGroupNumber/:sapbpid', component: PricingLendingComponent },
+    { path: 'pricing-cash/:riskGroupNumber/:sapbpid', component: PricingCashComponent },
+    { path: 'pricing-transactional/:riskGroupNumber/:sapbpid', component: PricingTransactionalComponent },
+    { path: 'pricing-investments/:riskGroupNumber/:sapbpid', component: PricingInvestmentsComponent },
+    { path: 'pricing-bol/:riskGroupNumber/:sapbpid', component: PricingBolComponent },
+    { path: 'pricing-trade/:riskGroupNumber/:sapbpid', component: PricingTradeComponent },
     { path: 'pricing-mas', component: PricingMasComponent },
     { path: 'pricing-cashman', component: PricingCashmanComponent },
-    { path: 'transactional-add-concession/:riskGroupNumber', component: TransactionalAddConcessionComponent },
-    { path: 'transactional-view-concession/:riskGroupNumber/:concessionReferenceId', component: TransactionalViewConcessionComponent },
-    { path: 'cash-add-concession/:riskGroupNumber', component: CashAddConcessionComponent },
-    { path: 'cash-view-concession/:riskGroupNumber/:concessionReferenceId', component: CashViewConcessionComponent },
-    { path: 'lending-add-concession/:riskGroupNumber', component: LendingAddConcessionComponent },
-    { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
-    { path: 'investments-add-concession/:riskGroupNumber', component: InvestmentAddConcessionComponent },
-    { path: 'investments-view-concession/:riskGroupNumber/:concessionReferenceId', component: InvestmentsViewConcessionComponent },
 
-    { path: 'bol-add-concession/:riskGroupNumber', component: BolAddConcessionComponent },
+    { path: 'transactional-add-concession/:riskGroupNumber/:sapbpid', component: TransactionalAddConcessionComponent },
+    { path: 'transactional-view-concession/:riskGroupNumber/:concessionReferenceId', component: TransactionalViewConcessionComponent },
+    { path: 'transactional-view-concession/:riskGroupNumber/:sapbpid/:concessionReferenceId', component: TransactionalViewConcessionComponent },
+
+    { path: 'cash-add-concession/:riskGroupNumber/:sapbpid', component: CashAddConcessionComponent },
+    { path: 'cash-view-concession/:riskGroupNumber/:concessionReferenceId', component: CashViewConcessionComponent },
+    { path: 'cash-view-concession/:riskGroupNumber/:sapbpid/:concessionReferenceId', component: CashViewConcessionComponent },
+
+    { path: 'lending-add-concession/:riskGroupNumber/:sapbpid', component: LendingAddConcessionComponent },
+    { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
+    { path: 'lending-view-concession/:riskGroupNumber/:sapbpid/:concessionReferenceId', component: LendingViewConcessionComponent },
+
+    { path: 'investments-add-concession/:riskGroupNumber/:sapbpid', component: InvestmentAddConcessionComponent },
+    { path: 'investments-view-concession/:riskGroupNumber/:concessionReferenceId', component: InvestmentsViewConcessionComponent },
+    { path: 'investments-view-concession/:riskGroupNumber/:sapbpid/:concessionReferenceId', component: InvestmentsViewConcessionComponent },
+
+    { path: 'bol-add-concession/:riskGroupNumber/:sapbpid', component: BolAddConcessionComponent },
     { path: 'bol-view-concession/:riskGroupNumber/:concessionReferenceId', component: BolViewConcessionComponent },
+    { path: 'bol-view-concession/:riskGroupNumber/:sapbpid/:concessionReferenceId', component: BolViewConcessionComponent },
 
     { path: 'mas-add-concession', component: MasAddConcessionComponent },
-    { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
-    { path: 'trade-add-concession/:riskGroupNumber', component: TradeAddConcessionComponent },
+
+    { path: 'trade-add-concession/:riskGroupNumber/:sapbpid', component: TradeAddConcessionComponent },
     { path: 'trade-view-concession/:riskGroupNumber/:concessionReferenceId', component: TradeViewConcessionComponent },
+    { path: 'trade-view-concession/:riskGroupNumber/:sapbpid/:concessionReferenceId', component: TradeViewConcessionComponent },
 
     { path: 'cashman-add-concession', component: CashmanAddConcessionComponent },
-    { path: 'lending-view-concession/:riskGroupNumber/:concessionReferenceId', component: LendingViewConcessionComponent },
     { path: 'admin', component: AdminMenuComponent },
     { path: 'admin/business-centre', component: BusinessCentreComponent },
     { path: 'admin/users', component: UsersComponent },

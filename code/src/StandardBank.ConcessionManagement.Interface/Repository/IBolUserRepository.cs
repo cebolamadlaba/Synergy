@@ -9,7 +9,7 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
     /// </summary>
     public interface IBolUserRepository
     {
-       
+
         IEnumerable<BOLChargeCode> GetBOLChargeCodes(int riskGroupNumber);
 
         IEnumerable<BOLChargeCode> GetBOLChargeCodesAll();
@@ -17,7 +17,8 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         IEnumerable<BOLChargeCodeType> GetBOLChargeCodeTypes();
 
         IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsers(int riskGroupNumber);
-       
+
+        IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsersByLegalEntityId(int legalEntityId);
 
     }
 }

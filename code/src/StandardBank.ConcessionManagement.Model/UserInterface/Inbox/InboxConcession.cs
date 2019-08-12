@@ -112,7 +112,13 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Inbox
         public DateTime DateApproved { get; set; }
 
         public string CentreName { get; set; }
-      
+
         public string Region { get; set; }
+
+        public int LegalEntityId { get; set; }
+
+        public string CustomerName { get; set; }
+
+        public int CustomerNumber { get; set; }
     }
 }

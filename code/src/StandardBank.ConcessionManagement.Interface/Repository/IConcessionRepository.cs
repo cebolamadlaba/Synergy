@@ -48,6 +48,8 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <returns></returns>
         IEnumerable<Concession> ReadByRiskGroupIdConcessionTypeIdIsActiveApproved(int riskGroupId, int concessionTypeId, bool isActive);
 
+        IEnumerable<Concession> ReadByLegalEntityIdConcessionTypeIdIsActiveApproved(int legalEntityId, int concessionTypeId, bool isActive);
+
         /// <summary>
         /// Reads all.
         /// </summary>

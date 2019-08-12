@@ -137,12 +137,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(_concessionManager.GetClientAccounts(riskGroupNumber, user, ""));
         }
 
-        [Route("ClientAccountsConcessionType/{riskGroupNumber}/{concessiontype}")]
-        public IActionResult ClientAccountsConcessionType(int riskGroupNumber, string concessiontype)
+        [Route("ClientAccountsConcessionType/{riskGroupNumber}/{sapbpid}/{concessiontype}")]
+        public IActionResult ClientAccountsConcessionType(int riskGroupNumber, int sapbpid, string concessiontype)
         {
             var user = _siteHelper.LoggedInUser(this);
 
-            return Ok(_concessionManager.GetClientAccounts(riskGroupNumber, user, concessiontype));
+            return Ok(_concessionManager.GetClientAccounts(riskGroupNumber, user, concessiontype, sapbpid: sapbpid));
         }
 
         /// <summary>

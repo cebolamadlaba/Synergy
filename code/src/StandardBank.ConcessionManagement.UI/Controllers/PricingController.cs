@@ -28,6 +28,14 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             _configurationData = configurationData;
         }
 
+        [Route("LegalEntity/{sapbpid}")]
+        public IActionResult LegalEntity(int sapbpid)
+        {
+            var legalEntity = _lookupTableManager.GetLegalEntity(sapbpid);
+
+            return Ok(legalEntity);
+        }
+
         /// <summary>
         /// Gets the risk group details for the risk group number specified
         /// </summary>
@@ -39,6 +47,21 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
 
             return Ok(riskGroup);
+        }
+
+        [Route("RiskGroupBySAPBPID/{sapbpid}")]
+        public IActionResult RiskGroupBySAPBPID(int sapbpid)
+        {
+            var riskGroup = _lookupTableManager.GetRiskGroupForSAPBPID(sapbpid);
+
+            var legalEntity = _lookupTableManager.GetLegalEntity(sapbpid);
+
+
+            return Ok(new Model.UserInterface.PricingView
+            {
+                RiskGroup = riskGroup,
+                LegalEntity = legalEntity
+            });
         }
 
         [Route("GetActivePricingProducts")]

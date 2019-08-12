@@ -50,12 +50,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         }
 
         /// <returns></returns>
-        [Route("BolView/{riskGroupNumber}")]
-        public IActionResult BolView(int riskGroupNumber)
+        [Route("BolView/{riskGroupNumber}/{sapbpid}")]
+        public IActionResult BolView(int riskGroupNumber, int sapbpid)
         {
             var user = _siteHelper.LoggedInUser(this);
 
-            return Ok(_bolManager.GetBolViewData(riskGroupNumber, user));
+            return Ok(_bolManager.GetBolViewData(riskGroupNumber, sapbpid, user));
         }
 
 
@@ -95,8 +95,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             var returned = _bolManager.CreateUpdateBOLChargeCode(bolChargecode);
 
-             List<RiskGroup> riskGroups = bolChargecode.RiskGroups;
-            _bolManager.CreateRiskGroupNonUniversalChargeCode(returned.pkChargeCodeId,riskGroups);
+            List<RiskGroup> riskGroups = bolChargecode.RiskGroups;
+            _bolManager.CreateRiskGroupNonUniversalChargeCode(returned.pkChargeCodeId, riskGroups);
 
             return Ok(returned);
         }
@@ -333,11 +333,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             return Ok(_bolManager.GetBolConcession(detail.ReferenceNumber, user));
         }
-      
+
         [Route("GetRiskGroups")]
         public IEnumerable<RiskGroup> GetRiskGroups(string searchGroup)
         {
-            return  _lookupTableManager.GetRiskGroups(searchGroup);          
+            return _lookupTableManager.GetRiskGroups(searchGroup);
         }
 
     }

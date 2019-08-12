@@ -105,6 +105,8 @@ namespace StandardBank.ConcessionManagement.Model.Repository
 
         public decimal? ServiceFee { get; set; }
 
+        public int MRS_BRI { get; set; }
+
         /// <summary>
         /// Gets or the name of the table.
         /// </summary>

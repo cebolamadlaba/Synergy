@@ -63,22 +63,22 @@ export class ApprovedConcessionsComponent implements OnInit {
     openConcessionView(approvedConcession: ApprovedConcession, approvedConcessionDetail: ApprovedConcessionDetail) {
         switch (approvedConcessionDetail.concessionType) {
             case ConcessionTypes.Lending:
-                this.router.navigate(['/lending-view-concession', approvedConcession.riskGroupNumber, approvedConcessionDetail.referenceNumber]);
+                this.router.navigate(['/lending-view-concession', approvedConcession.riskGroupNumber, approvedConcession.customerNumber, approvedConcessionDetail.referenceNumber]);
                 break;
             case ConcessionTypes.Cash:
-                this.router.navigate(['/cash-view-concession', approvedConcession.riskGroupNumber, approvedConcessionDetail.referenceNumber]);
+                this.router.navigate(['/cash-view-concession', approvedConcession.riskGroupNumber, approvedConcession.customerNumber, approvedConcessionDetail.referenceNumber]);
                 break;
             case ConcessionTypes.Transactional:
-                this.router.navigate(['/transactional-view-concession', approvedConcession.riskGroupNumber, approvedConcessionDetail.referenceNumber]);
+                this.router.navigate(['/transactional-view-concession', approvedConcession.riskGroupNumber, approvedConcession.customerNumber, approvedConcessionDetail.referenceNumber]);
                 break;
             case ConcessionTypes.BOLDesc:
-                this.router.navigate(['/bol-view-concession', approvedConcession.riskGroupNumber, approvedConcessionDetail.referenceNumber]);
+                this.router.navigate(['/bol-view-concession', approvedConcession.riskGroupNumber, approvedConcession.customerNumber, approvedConcessionDetail.referenceNumber]);
                 break;
             case ConcessionTypes.Trade:
-                this.router.navigate(['/trade-view-concession', approvedConcession.riskGroupNumber, approvedConcessionDetail.referenceNumber]);
+                this.router.navigate(['/trade-view-concession', approvedConcession.riskGroupNumber, approvedConcession.customerNumber, approvedConcessionDetail.referenceNumber]);
                 break;
             case ConcessionTypes.Investment:
-                this.router.navigate(['/investments-view-concession', approvedConcession.riskGroupNumber, approvedConcessionDetail.referenceNumber]);
+                this.router.navigate(['/investments-view-concession', approvedConcession.riskGroupNumber, approvedConcession.customerNumber, approvedConcessionDetail.referenceNumber]);
                 break;
         }
     }

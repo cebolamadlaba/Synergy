@@ -493,7 +493,8 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
             PeriodTypeRepository, ConditionTypeRepository, Mapper, ConditionProductRepository,
             ConditionTypeProductRepository, AccrualTypeRepository, ChannelTypeRepository, TransactionTypeRepository,
             TableNumberRepository, RelationshipRepository, RoleRepository, CentreRepository,
-            RiskGroupRepository, TransactionTableNumberRepository, BolUserRepository, ConcessionTradeRepository, ConcessionInvestmentRepository);
+            RiskGroupRepository, TransactionTableNumberRepository, BolUserRepository, ConcessionTradeRepository, ConcessionInvestmentRepository,
+            LegalEntityRepository);
 
         /// <summary>
         /// The region manager

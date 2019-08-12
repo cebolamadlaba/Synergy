@@ -136,17 +136,21 @@ namespace StandardBank.ConcessionManagement.Repository.Test.Integration
             var concessionTypeId = results.First().ConcessionTypeId;
             var isActive = results.First().IsActive;
 
-            var result = InstantiatedDependencies.ConcessionRepository.ReadByRiskGroupIdConcessionTypeIdIsActive(riskGroupId, concessionTypeId, isActive);
-
-            Assert.NotNull(result);
-            Assert.NotEmpty(result);
-
-            foreach (var record in result)
+            if (riskGroupId.HasValue)
             {
-                Assert.Equal(record.RiskGroupId, riskGroupId);
-                Assert.Equal(record.ConcessionTypeId, concessionTypeId);
-                Assert.Equal(record.IsActive, isActive);
+                var result = InstantiatedDependencies.ConcessionRepository.ReadByRiskGroupIdConcessionTypeIdIsActive(riskGroupId.Value, concessionTypeId, isActive);
+
+                Assert.NotNull(result);
+                Assert.NotEmpty(result);
+
+                foreach (var record in result)
+                {
+                    Assert.Equal(record.RiskGroupId, riskGroupId);
+                    Assert.Equal(record.ConcessionTypeId, concessionTypeId);
+                    Assert.Equal(record.IsActive, isActive);
+                }
             }
+
         }
 
         /// <summary>

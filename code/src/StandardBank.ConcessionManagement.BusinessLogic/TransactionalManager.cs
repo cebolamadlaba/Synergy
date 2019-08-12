@@ -194,7 +194,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
 
         public Model.Repository.TransactionTableNumber CreateupdateTransactionTableNumber(Model.UserInterface.Transactional.TransactionTableNumber transactionTableNumber)
-        {           
+        {
 
             return _transactionTableNumberRepository.CreateupdateTransactionTableNumber(_mapper.Map<Model.Repository.TransactionTableNumber>(transactionTableNumber));
         }
@@ -204,7 +204,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
 
             int transactionaltypeid = _lookupTableManager.GetConcessionTypeId(Constants.ConcessionType.Transactional);
-            transactionType.ConcessionTypeId = transactionaltypeid;          
+            transactionType.ConcessionTypeId = transactionaltypeid;
 
 
             return _transactionTableNumberRepository.Create(transactionType);
@@ -212,7 +212,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         public IEnumerable<Model.UserInterface.Transactional.TransactionTableNumber> GetTransactionTableNumbers(bool isActive)
         {
-            return _mapper.Map<IEnumerable<Model.UserInterface.Transactional.TransactionTableNumber>>( _transactionTableNumberRepository.ReadAll());
+            return _mapper.Map<IEnumerable<Model.UserInterface.Transactional.TransactionTableNumber>>(_transactionTableNumberRepository.ReadAll());
         }
 
         /// <summary>
@@ -262,11 +262,53 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <returns></returns>
-        public TransactionalView GetTransactionalViewData(int riskGroupNumber, User currentUser)
+        public TransactionalView GetTransactionalViewData(int riskGroupNumber, int sapbpid, User currentUser)
         {
-            var transactionalConcessions = new List<TransactionalConcession>();
-            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
-            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.Transactional, currentUser);
+            bool hasOnlySapBpId = riskGroupNumber < 1 && sapbpid > 0;
+
+            List<TransactionalConcession> transactionalConcessions = new List<TransactionalConcession>();
+            RiskGroup riskGroup = null;
+            Model.UserInterface.LegalEntity legalEntity = null;
+            IEnumerable<Concession> concessions = null;
+            TransactionalFinancial transactionalFinancial = null;
+            IEnumerable<TransactionalProduct> transactionalProducts = null;
+
+            if (!hasOnlySapBpId)
+            {
+                riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+                concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.Transactional, currentUser);
+                transactionalFinancial =
+                    _mapper.Map<TransactionalFinancial>(
+                    _financialTransactionalRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
+                    new FinancialTransactional());
+                transactionalProducts = GetTransactionalProducts(riskGroup);
+            }
+            else
+            {
+                legalEntity = _lookupTableManager.GetLegalEntity(sapbpid);
+                riskGroup = _lookupTableManager.GetRiskGroupForSAPBPID(sapbpid);
+                concessions = _concessionManager.GetApprovedConcessionsForLegalEntityId(legalEntity.Id, Constants.ConcessionType.Transactional, currentUser);
+                transactionalFinancial = new TransactionalFinancial()
+                {
+                    AverageAccountManagementFee = 0,
+                    AverageCashWithdrawalPrice = 0,
+                    AverageChequeDepositPrice = 0,
+                    AverageChequeDepositValue = 0,
+                    AverageChequeEncashmentPrice = 0,
+                    AverageChequeIssuingPrice = 0,
+                    AverageChequeIssuingValue = 0,
+                    AverageMinimumMonthlyFee = 0,
+                    LatestCrsOrMrs = 0,
+                    TotalCashWithdrawalValues = 0,
+                    TotalCashWithdrawalVolumes = 0,
+                    TotalChequeDepositVolumes = 0,
+                    TotalChequeEncashmentValues = 0,
+                    TotalChequeEncashmentVolumes = 0,
+                    TotalChequeIssuingVolumes = 0,
+                    TotalNumberOfAccounts = 0,
+                };
+                transactionalProducts = GetTransactionalProductsByLegalEntity(legalEntity);
+            }
 
             foreach (var concession in concessions)
             {
@@ -277,14 +319,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         _miscPerformanceRepository.GetTransactionalConcessionDetails(concession.Id)
                 });
             }
-
-            var transactionalFinancial =
-                _mapper.Map<TransactionalFinancial>(
-                    _financialTransactionalRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
-                    new FinancialTransactional());
-
-            var transactionalProducts = GetTransactionalProducts(riskGroup);
-
 
             //grouping of products
             var groupedinfo = new List<TransactionalProductGroup>();
@@ -307,13 +341,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     {
                         productgrouping.TransactionalProducts.Add(product);
                     }
- }
+                }
                 //sort
                 foreach (var productgrouping in groupedinfo)
                 {
                     if (productgrouping != null && productgrouping.TransactionalProducts != null)
                         productgrouping.TransactionalProducts = productgrouping.TransactionalProducts.OrderBy(o => o.AccountNumber).ThenBy(o => o.TransactionType).ToList();
-
 
                 }
             }
@@ -321,6 +354,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return new TransactionalView
             {
                 RiskGroup = riskGroup,
+                LegalEntity = legalEntity,
                 TransactionalConcessions = transactionalConcessions.OrderBy(_ => _.Concession.AccountNumber),
                 TransactionalFinancial = transactionalFinancial,
                 TransactionalProductGroups = groupedinfo.OrderBy(o => o.CustomerName)
@@ -382,6 +416,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private IEnumerable<TransactionalProduct> GetTransactionalProducts(RiskGroup riskGroup)
         {
             return _miscPerformanceRepository.GetTransactionalProducts(riskGroup.Id, riskGroup.Name);
+        }
+
+        private IEnumerable<TransactionalProduct> GetTransactionalProductsByLegalEntity(Model.UserInterface.LegalEntity legalEntity)
+        {
+            return _miscPerformanceRepository.GetTransactionalProductsByLegalEntity(legalEntity.Id, legalEntity.CustomerName);
         }
 
         public async Task ForwardTransactionalConcession(TransactionalConcession transactionalConcession, User user)

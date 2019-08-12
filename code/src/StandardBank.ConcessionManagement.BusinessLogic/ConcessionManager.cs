@@ -507,7 +507,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <param name="user">The user.</param>
         /// <returns></returns>
-        public IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, User user, string concessiontype)
+        public IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, User user, string concessiontype, int? sapbpid = null)
         {
             int? userId = null;
 
@@ -523,7 +523,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             }
 
-            return _miscPerformanceRepository.GetClientAccounts(riskGroupNumber, userId, concessiontype);
+            if (riskGroupNumber > 0)
+                return _miscPerformanceRepository.GetClientAccounts(riskGroupNumber, userId, concessiontype);
+            else if (sapbpid.HasValue && sapbpid.Value > 0)
+                return _miscPerformanceRepository.GetClientAccounts(riskGroupNumber, userId, concessiontype, legalEntityCustomerNumber: sapbpid.Value);
+
+            return null;
         }
 
         /// <summary>
@@ -557,6 +562,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                     RiskGroupNumber = concession.RiskGroupNumber,
                     RiskGroupName = concession.RiskGroupName,
+                    CustomerName = concession.CustomerName,
+                    CustomerNumber = concession.CustomerNumber,
                     Status = concession.Status + " - " + concession.SubStatus,
                     ConcessionType = concession.ConcessionType,
                     ExpiryDate = concession.ExpiryDate,
@@ -589,6 +596,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                     RiskGroupNumber = concession.RiskGroupNumber,
                     RiskGroupName = concession.RiskGroupName,
+                    CustomerName = concession.CustomerName,
+                    CustomerNumber = concession.CustomerNumber,
                     Status = concession.Status + " - " + concession.SubStatus,
                     ConcessionType = concession.ConcessionType,
                     ExpiryDate = concession.ExpiryDate,
@@ -662,6 +671,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         RiskGroupName = concession.RiskGroupName,
                         LegalEntityId = concession.LegalEntityId,
                         CustomerName = concession.CustomerName,
+                        CustomerNumber = concession.CustomerNumber,
                         Segment = concession.Segment,
                         ApprovedConcessionDetails = new List<ApprovedConcessionDetail>()
                     };
@@ -1029,6 +1039,23 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// LegalEntityId is referenced as SAPBPID
+        /// </summary>
+        /// <param name="legalEntityId"></param>
+        /// <param name="concessionType"></param>
+        /// <param name="currentUser"></param>
+        /// <returns></returns>
+        public IEnumerable<Model.UserInterface.Concession> GetApprovedConcessionsForLegalEntityId(int legalEntityId,
+            string concessionType, User currentUser)
+        {
+            var concessionTypeId = _lookupTableManager.GetConcessionTypeId(concessionType);
+
+            return Map(_concessionRepository.ReadByLegalEntityIdConcessionTypeIdIsActiveApproved(legalEntityId,
+                concessionTypeId,
+                true), false, currentUser);
+        }
+
+        /// <summary>
         /// Gets the concession for concession reference identifier.
         /// </summary>
         /// <param name="concessionReferenceId">The concession reference identifier.</param>
@@ -1087,10 +1114,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             foreach (var concession in repositoryConcessions)
             {
                 var mappedConcession = _mapper.Map<Model.UserInterface.Concession>(concession);
-                var riskGroup = _riskGroupRepository.ReadById(concession.RiskGroupId);
 
-                mappedConcession.RiskGroupNumber = riskGroup.RiskGroupNumber;
-                mappedConcession.RiskGroupName = riskGroup.RiskGroupName;
+                if (concession.RiskGroupId.HasValue)
+                {
+                    var riskGroup = _riskGroupRepository.ReadById(concession.RiskGroupId.Value);
+
+                    mappedConcession.RiskGroupNumber = riskGroup.RiskGroupNumber;
+                    mappedConcession.RiskGroupName = riskGroup.RiskGroupName;
+                }
+
 
                 mappedConcession.Type = _lookupTableManager.GetReferenceTypeName(concession.TypeId);
                 mappedConcession.ConcessionType = _lookupTableManager.GetConcessionType(concession.ConcessionTypeId)

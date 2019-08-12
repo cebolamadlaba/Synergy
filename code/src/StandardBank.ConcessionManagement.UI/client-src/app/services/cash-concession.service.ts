@@ -21,8 +21,8 @@ export class CashConcessionService {
 
     constructor(private http: Http) { }
 
-    getCashViewData(riskGroupNumber): Observable<CashView> {
-        const url = "/api/Cash/CashView/" + riskGroupNumber;
+    getCashViewData(riskGroupNumber, sapbpid): Observable<CashView> {
+        const url = "/api/Cash/CashView/" + riskGroupNumber + "/" + sapbpid;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
@@ -89,14 +89,14 @@ export class CashConcessionService {
         let options = new RequestOptions({ headers: headers });
         const url = "/api/Cash/CreateupdateTableNumber";
         return this.http.post(url, tablenumber, options).map(this.extractData).catch(this.handleErrorObservable);
-    }  
+    }
 
     createChannelType(channeltype: ChannelType): Observable<ChannelType> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
         const url = "/api/Cash/CreateChannelType";
         return this.http.post(url, channeltype, options).map(this.extractData).catch(this.handleErrorObservable);
-    }  
+    }
 
     private extractData(response: Response) {
         let body = response.json();
@@ -125,7 +125,7 @@ export class MockCashConcessionService extends CashConcessionService {
     cashConcessionModel = new CashConcession();
     cashFinancialModel = new CashFinancial();
 
-    getCashViewData(riskGroupNumber): Observable<CashView> {
+    getCashViewData(riskGroupNumber, sapbpid): Observable<CashView> {
         this.cashViewModel.riskGroup = new RiskGroup();
         this.cashViewModel.cashConcessions = [new CashConcession()];
         return Observable.of(this.cashViewModel);
