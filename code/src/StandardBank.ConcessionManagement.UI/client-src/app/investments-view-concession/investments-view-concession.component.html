@@ -470,7 +470,7 @@ i + 1
             <button type="button" class="btn btn-success" (click)="editConcession('UpdateApproved')" *ngIf="canUpdate">Update</button>
             <button type="button" class="btn btn-warning" (click)="archiveConcession()" *ngIf="canArchive">Archive</button>
 
-            <button type="button" class="btn btn-primary" (click)="saveUpdatedConcession()" *ngIf="isEditing">Save</button>
+            <button type="button" class="btn btn-primary" (click)="saveConcession()" *ngIf="isEditing">Save</button>
 
             <button type="button" class="btn btn-success" (click)="recallConcession()" *ngIf="canRecall && !isRecalling">Recall</button>
             <button type="button" class="btn btn-primary" (click)="saveRecallConcession()" *ngIf="isRecalling">Save</button>
