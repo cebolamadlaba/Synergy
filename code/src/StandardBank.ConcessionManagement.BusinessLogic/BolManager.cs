@@ -155,7 +155,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public BolView GetBolViewData(int riskGroupNumber, User currentUser)
         {
             var bolConcessions = new List<BolConcession>();
-            var BolProductGroup = new List<BolProductGroup>();
+            var bolProductGroup = new List<BolProductGroup>();
             var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
             var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.BusinessOnline, currentUser);
 
@@ -217,7 +217,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                         if (bolConcessionDetail != null)
                         {
-                            BolProductGroup.Add(group);
+                            bolProductGroup.Add(group);
                         }
                     }
                 });
@@ -229,7 +229,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 RiskGroup = riskGroup,
                 BolConcessions = bolConcessions, //.OrderBy(_ => _.Concession.AccountNumber),
                 BolFinancial = bolFinancial,
-                BolProductGroups= BolProductGroup.Distinct().OrderBy(o => o.LegalEntity)
+                BolProductGroups= bolProductGroup.Distinct().OrderBy(o => o.LegalEntity)
             };
         }
 

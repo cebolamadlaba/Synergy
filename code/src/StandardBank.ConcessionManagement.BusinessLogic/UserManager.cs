@@ -85,7 +85,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="regionManager">The region manager.</param>
         public UserManager(ICacheManager cacheManager, IUserRepository userRepository,
             IUserRoleRepository userRoleRepository, IRoleRepository roleRepository, ICentreRepository centreRepository,
-            ICentreUserRepository centreUserRepository, IMapper mapper,IRoleSubRoleRepository RoleSubRoleRepository,
+            ICentreUserRepository centreUserRepository, IMapper mapper, IRoleSubRoleRepository RoleSubRoleRepository,
             IAccountExecutiveAssistantRepository accountExecutiveAssistantRepository, IRegionManager regionManager, IMemoryCache memoryCache)
         {
             _cacheManager = cacheManager;
@@ -123,7 +123,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             if (usr != null)
             {
                 var RoleSubRole = _userRoleRepository.ReadByUserId(usr.Id).Select(x => x.SubRoleId);
-            
+
                 foreach (var subRole in RoleSubRole)
                 {
                     if (subRole.HasValue)
@@ -132,7 +132,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     }
                 }
             }
-           
+
             //If an accountExecitive was set from UI side, re-populate it.
             if (usr != null)
             {
@@ -163,14 +163,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedUser.UserRoles = GetUserRoles(user.Id);
             if (mappedUser.UserRoles.Count() > 0)
                 mappedUser.RoleId = mappedUser.UserRoles.FirstOrDefault().Id;
-                var RoleSubRole = _userRoleRepository.ReadByUserId(mappedUser.Id).Select(x=>x.SubRoleId);
-                foreach (var subRole in RoleSubRole)
-                {
-                   if(subRole.HasValue){
-                     mappedUser.SubRoleId = subRole;
-                   }
-                }
-                                
+
+            var userRole = _userRoleRepository.ReadByUserId(mappedUser.Id).FirstOrDefault(x => x.SubRoleId.HasValue);
+            if (userRole != null)
+                mappedUser.SubRoleId = userRole.SubRoleId.Value;
+
             mappedUser.UserCentres = GetUserCentres(user.Id);
             mappedUser.SelectedCentre = mappedUser.UserCentres.FirstOrDefault();
 
@@ -194,7 +191,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedUser.IsAdminAssistant = mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.AA);
 
             if (mappedUser.IsAdminAssistant)
-            { 
+            {
                 mappedUser.AccountExecutives = _accountExecutiveAssistantRepository.ReadByAccountAssistantUserId(user.Id).ToList();
 
                 if (mappedUser.AccountExecutives != null && mappedUser.AccountExecutives.Count > 0)
@@ -212,7 +209,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return mappedUser;
         }
 
-       
+
         /// <summary>
         /// Gets the user.
         /// </summary>
