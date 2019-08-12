@@ -184,8 +184,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var bolConcessions = new List<BolConcession>();
             var bolProductGroup = new List<BolProductGroup>();
-            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
-            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.BusinessOnline, currentUser);
 
             foreach (var concession in concessions)
             {
