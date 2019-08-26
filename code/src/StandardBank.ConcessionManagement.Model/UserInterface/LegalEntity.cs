@@ -93,5 +93,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// </value>
         public int? UserId { get; set; }
 
+        public string MarketSegment { get; set; }
+
     }
 }

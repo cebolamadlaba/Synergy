@@ -74,7 +74,7 @@ namespace StandardBank.ConcessionManagement.Repository
 					from [dbo].[tblLegalEntity] le
 					left join rtblMarketSegment se on  le.fkMarketSegmentId = se.pkMarketSegmentId	 
                     WHERE [pkLegalEntityId] = @Id",
-                    new {id}).SingleOrDefault();
+                    new { id }).SingleOrDefault();
             }
         }
 
@@ -93,7 +93,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     FROM [dbo].[tblLegalEntity] 
                     WHERE [pkLegalEntityId] = @Id 
                     AND [IsActive] = @isActive",
-                    new {id, isActive}).SingleOrDefault();
+                    new { id, isActive }).SingleOrDefault();
             }
         }
 
@@ -102,10 +102,14 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<LegalEntity>(
-                    @"SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [CustomerName], [CustomerNumber], [IsActive], [ContactPerson], [PostalAddress], [City], [PostalCode], [fkUserId] [UserId] 
-                    FROM [dbo].[tblLegalEntity] 
-                    WHERE [CustomerNumber] = @sapbpid 
-                    AND [IsActive] = @isActive",
+                            @"SELECT Distinct le.[pkLegalEntityId] [Id], le.[fkMarketSegmentId] [MarketSegmentId], le.[fkRiskGroupId] [RiskGroupId], 
+                                    le.[CustomerName], le.[CustomerNumber], le.[IsActive], le.[ContactPerson], le.[PostalAddress], le.[City], 
+                                    le.[PostalCode], le.[fkUserId] [UserId],
+                                    ms.[Description] [MarketSegment]
+                            FROM [dbo].[tblLegalEntity] le
+                            Inner Join	[dbo].[rtblMarketSegment] ms On ms.pkMarketSegmentId = le.fkMarketSegmentId
+                            WHERE le.[CustomerNumber] = @sapbpid 
+                            AND le.[IsActive] = @isActive",
                     new { sapbpid, isActive }).SingleOrDefault();
             }
         }
@@ -125,7 +129,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     FROM [dbo].[tblLegalEntity] 
                     WHERE [fkRiskGroupId] = @riskGroupId
                     AND [IsActive] = @isActive",
-                    new {riskGroupId, isActive});
+                    new { riskGroupId, isActive });
             }
         }
 
@@ -180,7 +184,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[tblLegalEntity] WHERE [pkLegalEntityId] = @Id",
-                    new {model.Id});
+                    new { model.Id });
             }
         }
     }
