@@ -31,6 +31,10 @@ export class PricingComponent implements OnInit, OnDestroy {
     activePricingProducts: number[] = [];
     isLoading = false;
 
+    marketSegment: string = null;
+    entityName: string = null;
+    entityNumber: number = null;
+
     constructor(private route: ActivatedRoute,
         @Inject(UserService) private userService,
         @Inject(LookupDataService) private lookupDataService) {
@@ -59,6 +63,17 @@ export class PricingComponent implements OnInit, OnDestroy {
         this.observableRiskGroup.subscribe(riskGroup => {
             this.riskGroup = riskGroup;
 
+            if (this.riskGroup != null) {
+                this.marketSegment = this.riskGroup.marketSegment;
+                this.entityName = this.riskGroup.name;
+                this.entityNumber = this.riskGroup.number;
+            }
+            else {
+                this.marketSegment = null;
+                this.entityName = null;
+                this.entityNumber = null;
+            }
+
             this.getActivePricingProducts();
 
             this.foundRiskGroup = true;
@@ -82,6 +97,17 @@ export class PricingComponent implements OnInit, OnDestroy {
 
             this.riskGroup = pricingview.riskGroup;
             this.legalEntity = pricingview.legalEntity
+
+            if (this.legalEntity != null) {
+                this.marketSegment = this.legalEntity.marketSegment;
+                this.entityName = this.legalEntity.customerName;
+                this.entityNumber = Number(this.legalEntity.customerNumber);
+            }
+            else {
+                this.marketSegment = null;
+                this.entityName = null;
+                this.entityNumber = null;
+            }
 
             if (this.riskGroup != null) {
                 this.riskGroupNumber = this.riskGroup.number;

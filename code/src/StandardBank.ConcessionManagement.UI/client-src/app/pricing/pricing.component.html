@@ -25,12 +25,12 @@
     </div>
     <div class="col-md-5">
         <div class="pricing-form">
-            <div class="row" *ngIf="riskGroup?.marketSegment">
+            <div class="row" *ngIf="marketSegment">
                 <div class="col-sm-3">
                     <p class="lightTitle">Segment</p>
                 </div>
                 <div class="col-sm-6">
-                    <p>{{riskGroup?.marketSegment}}</p>
+                    <p>{{marketSegment}}</p>
                 </div>
             </div>
         </div>
@@ -134,8 +134,8 @@
                         <i class="fa fa-building-o" aria-hidden="true"></i>
                     </div>
                     <div class="pricing-group-info">
-                        <h3>{{riskGroup?.name}}</h3>
-                        <span class="secondaryText">{{riskGroup?.number}}</span>
+                        <h3>{{entityName}}</h3>
+                        <span class="secondaryText">{{entityNumber}}</span>
                     </div>
                 </div>
 
