@@ -43,9 +43,12 @@ export class PricingComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
+            this.sapbpid = +params['sapbpid'];
 
             if (this.riskGroupNumber)
                 this.searchRiskGroupNumber(this.riskGroupNumber);
+            if (this.sapbpid)
+                this.searchSAPBPID(this.sapbpid);
         });
 
         this.observableLoggedInUser = this.userService.getData();
