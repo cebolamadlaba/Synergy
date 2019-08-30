@@ -79,7 +79,7 @@ export class PricingTransactionalComponent implements OnInit, OnDestroy {
 
     goBack() {
         //this.location.back();
-        this.router.navigate(['/pricing', this.riskGroupNumber]);
+        this.router.navigate(['/pricing', { riskGroupNumber: this.riskGroupNumber, sapbpid: this.sapbpid }]);
     }
 
     ngOnDestroy() {

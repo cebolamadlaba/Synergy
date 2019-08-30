@@ -67,6 +67,7 @@ const routes: Routes = [
     { path: 'search', component: SearchComponent },
     { path: 'pricing', component: PricingComponent },
     { path: 'pricing/:riskGroupNumber', component: PricingComponent },
+    { path: 'pricing/:riskGroupNumber/:sapbpid', component: PricingComponent },
     { path: 'pricing-lending/:riskGroupNumber/:sapbpid', component: PricingLendingComponent },
     { path: 'pricing-cash/:riskGroupNumber/:sapbpid', component: PricingCashComponent },
     { path: 'pricing-transactional/:riskGroupNumber/:sapbpid', component: PricingTransactionalComponent },

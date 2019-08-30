@@ -14,4 +14,5 @@ export class LegalEntity {
     postalCode: string;
     userId: number;
 
+    marketSegment: string;
 }

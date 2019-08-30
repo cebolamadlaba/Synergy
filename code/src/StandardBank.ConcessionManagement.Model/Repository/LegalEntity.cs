@@ -95,5 +95,6 @@ namespace StandardBank.ConcessionManagement.Model.Repository
 
         public string BCMRoleName { get; set; }
         public string RequestorRoleName { get; set; }
+        public string MarketSegment { get; set; }
     }
 }
