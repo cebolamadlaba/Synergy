@@ -350,4 +350,29 @@ export class SearchComponent implements OnInit {
             this.isLoading = false;
         }
     }
+
+    getEntity(fieldName: string, concessiondetail: SearchConcessionDetail) {
+        switch (fieldName) {
+            case "entityName":
+                {
+                    if (concessiondetail.riskGroupName != null && concessiondetail.riskGroupName.trim() != "") {
+                        return concessiondetail.riskGroupName;
+                    }
+                    else {
+                        return concessiondetail.customerName;
+                    }
+                }
+            case "entityNumber":
+                {
+                    if (concessiondetail.riskGroupNumber != null && concessiondetail.riskGroupNumber > 0) {
+                        return concessiondetail.riskGroupNumber;
+                    }
+                    else {
+                        return concessiondetail.customerNumber;
+                    }
+                }
+            default:
+                return "n/a";
+        }
+    }
 }

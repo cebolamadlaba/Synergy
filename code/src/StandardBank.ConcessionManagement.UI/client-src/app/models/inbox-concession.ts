@@ -13,6 +13,6 @@ export class InboxConcession {
     centreName: string;
     region: string;
     legalEntityId: number;
-    CustomerName: string;
+    customerName: string;
     customerNumber: number; /* aka sapbpid */
 }
