@@ -30,6 +30,8 @@ import { ConcessionStatus } from '../constants/concession-status';
 import { ConcessionSubStatus } from '../constants/concession-sub-status';
 
 import { BaseComponentService } from '../services/base-component.service';
+import * as moment from 'moment';
+import { MOnthEnum } from '../models/month-enum';
 
 @Component({
     selector: 'app-lending-view-concession',
@@ -521,6 +523,31 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         control.removeAt(index);
 
         this.selectedConditionTypes.splice(index, 1);
+    }
+
+    onExpiryDateChanged(rowIndex) {
+        const control = <FormArray>this.lendingConcessionForm.controls['conditionItemsRows'];
+        let selectedExpiryDate = control.controls[rowIndex].get('expiryDate').value;
+
+        var currentMonth = moment().month()
+        var selectedExpiryDateMonth = moment(selectedExpiryDate).month();
+        let monthsDifference = currentMonth - selectedExpiryDateMonth;
+
+        if (monthsDifference < MOnthEnum.ThreeMonths) {
+            this.addValidationError("Concession expiry date must be greater than 3 months");
+        };
+    }
+
+    onTermValueChange(rowIndex) {
+        this.errorMessage = null;
+        this.validationError = null;
+
+        const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        let term = control.controls[rowIndex].get('term').value;
+
+        if (term < MOnthEnum.ThreeMonths) {
+            this.addValidationError("Minimum term captured should be 3 months");
+        };
     }
 
     conditionTypeChanged(rowIndex) {

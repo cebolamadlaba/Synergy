@@ -21,6 +21,8 @@ import { TableNumber } from "../models/table-number";
 import { LegalEntity } from "../models/legal-entity";
 import { DecimalPipe } from '@angular/common';
 import { ConcessionTypes } from '../constants/concession-types';
+import * as moment from 'moment';
+import { MOnthEnum } from '../models/month-enum';
 
 import { BaseComponentService } from '../services/base-component.service';
 
@@ -336,6 +338,23 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('tableNumber').value.adValorem.toFixed(3));
         else
             control.controls[rowIndex].get('adValorem').setValue(null);
+    }
+
+    onExpiryDateChanged(rowIndex) {
+
+        this.errorMessage = null;
+        this.validationError = null;
+
+        const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
+        let selectedExpiryDate = control.controls[rowIndex].get('expiryDate').value;
+
+        var currentMonth = moment().month()
+        var selectedExpiryDateMonth = moment(selectedExpiryDate).month();
+        let monthsDifference = currentMonth - selectedExpiryDateMonth;
+
+        if (monthsDifference < MOnthEnum.ThreeMonths) {
+            this.addValidationError("Concession expiry date must be greater than 3 months");
+        };
     }
 
     addValidationError(validationDetail) {

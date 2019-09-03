@@ -26,6 +26,8 @@ import { ConcessionStatus } from '../constants/concession-status';
 import { ConcessionSubStatus } from '../constants/concession-sub-status';
 import { BaseComponentService } from '../services/base-component.service';
 import { LegalEntity } from "../models/legal-entity";
+import * as moment from 'moment';
+import { MOnthEnum } from '../models/month-enum';
 
 @Component({
     selector: 'app-transactional-view-concession',
@@ -204,6 +206,21 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
         this.populateForm();
 
+    }
+
+
+    onExpiryDateChanged(rowIndex) {
+
+        const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+        let selectedExpiryDate = control.controls[rowIndex].get('expiryDate').value;
+
+        var currentMonth = moment().month()
+        var selectedExpiryDateMonth = moment(selectedExpiryDate).month();
+        let monthsDifference = currentMonth - selectedExpiryDateMonth;
+
+        if (monthsDifference < MOnthEnum.ThreeMonths) {
+            this.addValidationError("Concession expiry date must be greater than 3 months");
+        };
     }
 
     populateForm() {

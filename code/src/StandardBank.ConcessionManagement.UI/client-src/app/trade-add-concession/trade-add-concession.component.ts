@@ -34,6 +34,8 @@ import { LegalEntity } from "../models/legal-entity";
 import { UserService } from "../services/user.service";
 
 import { BaseComponentService } from '../services/base-component.service';
+import * as moment from 'moment';
+import { MOnthEnum } from '../models/month-enum';
 
 @Component({
     selector: 'app-trade-add-concession',
@@ -362,6 +364,36 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
             currentProduct.get('rate').setValue(null);
         }
 
+    }
+
+    onExpiryDateChanged(rowIndex) {
+
+        this.errorMessage = null;
+        this.validationError = null;
+
+        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+        let selectedExpiryDate = control.controls[rowIndex].get('expiryDate').value;
+
+        var currentMonth = moment().month()
+        var selectedExpiryDateMonth = moment(selectedExpiryDate).month();
+        let monthsDifference = currentMonth - selectedExpiryDateMonth;
+
+        if (monthsDifference < MOnthEnum.ThreeMonths) {
+            this.addValidationError("Concession expiry date must be 3 months or more");
+        };
+    }
+
+    onTermValueChange(rowIndex) {
+
+        this.errorMessage = null;
+        this.validationError = null;
+
+        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+        let term = control.controls[rowIndex].get('term').value;
+
+        if (term < MOnthEnum.ThreeMonths) {
+            this.addValidationError("Minimum term captured should be 3 months");
+        };
     }
 
     addValidationError(validationDetail) {

@@ -34,6 +34,8 @@ import { Concession } from "../models/concession";
 import { UserService } from "../services/user.service";
 
 import { BaseComponentService } from '../services/base-component.service';
+import * as moment from 'moment';
+import { MOnthEnum } from '../models/month-enum';
 
 @Component({
     selector: 'app-bol-add-concession',
@@ -280,6 +282,23 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
         this.selectedConditionTypes.splice(index, 1);
 
+    }
+
+    onExpiryDateChanged(rowIndex) {
+
+        this.errorMessage = null;
+        this.validationError = null;
+
+        const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+        let selectedExpiryDate = control.controls[rowIndex].get('expiryDate').value;
+
+        var currentMonth = moment().month()
+        var selectedExpiryDateMonth = moment(selectedExpiryDate).month();
+        let monthsDifference = currentMonth - selectedExpiryDateMonth;
+
+        if (monthsDifference < MOnthEnum.ThreeMonths) {
+            this.addValidationError("Concession expiry date must be greater than 3 months");
+        };
     }
 
     conditionTypeChanged(rowIndex) {

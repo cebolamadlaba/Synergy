@@ -174,8 +174,6 @@
                 <th>Limit</th>
                 <th>Term</th>
                 <th>Prime(-/+) / Fixed rate</th>
-
-
                 <th *ngIf="isApproved">Appr. Prime -/+</th>
                 <th>Frequency</th>
                 <th>Initiation Fee (%)</th>
@@ -190,8 +188,6 @@
                 <th *ngIf="canArchive"></th>
             </tr>
         </thead>
-
-
 
         <tbody class="form-concessions-table-content">
             <tr *ngFor="let itemrow of lendingConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
@@ -215,7 +211,7 @@
                 <!-- Limit -->
                 <td class="length-short"><input type="text" numbersOnly="true" formControlName="limit" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimal($event)" [class.markred]="bcmhochanged(i,'limit')" /></td>
                 <!-- Term -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="term" class="form-control" [attr.disabled]="canEdit ? null : ''" [class.markred]="bcmhochanged(i,'term')" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="term" class="form-control" [attr.disabled]="canEdit ? null : ''" [class.markred]="bcmhochanged(i,'term')" (keyup)="onTermValueChange(i)" /></td>
                 <!-- MAP -->
                 <td class="length-short">
 
@@ -257,7 +253,7 @@
                 <!-- MRS/BRI -->
                 <td class="length-short"><input type="text" numbersOnly="true" formControlName="mrsBri" class="form-control" maxlength="2"  [attr.disabled]="canEdit ? null : ''"/></td>
 
-                <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="expiryDate" class="form-control" [style.background-color]="getBackgroundColour(i)" [class.markred]="bcmhochanged(i,'expiryDate')" /></td>
+                <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="expiryDate" class="form-control" [style.background-color]="getBackgroundColour(i)" [class.markred]="bcmhochanged(i,'expiryDate')" (change)="onExpiryDateChanged(i)" /></td>
                 <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>
                 <td *ngIf="canArchive" class="delete">
                     <button *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="archiveConcessiondetail(itemrow.get('concessionDetailId').value)" class="btn-delete" title="Remove"><i class="fa fa-trash" aria-hidden="true" style="color:#920000"></i></button>
