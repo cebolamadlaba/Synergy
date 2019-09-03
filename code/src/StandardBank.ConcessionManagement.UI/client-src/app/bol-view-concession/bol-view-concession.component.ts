@@ -36,6 +36,8 @@ import { LegalEntityBOLUser } from "../models/legal-entity-bol-user";
 import { LegalEntity } from "../models/legal-entity";
 
 import { BaseComponentService } from '../services/base-component.service';
+import * as moment from 'moment';
+import { MOnthEnum } from '../models/month-enum';
 
 @Component({
     selector: 'app-bol-view-concession',
@@ -475,6 +477,22 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         currentCondition.get('interestRate').setValue(null);
         currentCondition.get('volume').setValue(null);
         currentCondition.get('value').setValue(null);
+    }
+
+    onExpiryDateChanged(rowIndex) {
+        this.errorMessage = null;
+        this.validationError = null;
+
+        const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+        let selectedExpiryDate = control.controls[rowIndex].get('expiryDate').value;
+
+        var currentMonth = moment().month()
+        var selectedExpiryDateMonth = moment(selectedExpiryDate).month();
+        let monthsDifference = currentMonth - selectedExpiryDateMonth;
+
+        if (monthsDifference < MOnthEnum.ThreeMonths) {
+            this.addValidationError("Concession expiry date must be greater than 3 months");
+        };
     }
 
     productTypeChanged(rowIndex) {

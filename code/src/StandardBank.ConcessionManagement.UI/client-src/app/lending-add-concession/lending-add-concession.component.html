@@ -150,7 +150,7 @@
                 <!-- Limit -->
                 <td class="length-short"><input type="text" numbersOnly="true" formControlName="limit" class="form-control" (change)="setTwoNumberDecimal($event)" /></td>
                 <!-- Term -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="term" class="form-control" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="term" class="form-control" (keyup)="onTermValueChange(i)" /></td>
 
                 <!-- Prime -->
                 <td class="length-short"><input type="text" formControlName="marginAgainstPrime" class="form-control" (change)="setTwoNumberDecimalMAP($event)" /></td>

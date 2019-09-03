@@ -227,7 +227,7 @@
 
                 <td class="length-short">
 
-                    <input type="number" class="form-control" formControlName="term" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_term && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'term')" />
+                    <input type="number" class="form-control" formControlName="term" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_term && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'term')" (keyup)="onTermValueChange(i)" />
                 </td>
 
                 <td class="length-short"><input type="number" class="form-control" formControlName="advalorem" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_advalorem && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'advalorem')" (change)="setadvalorem($event, i,'advalorem')" /></td>
@@ -247,7 +247,7 @@
                 <td class="length-short"><input type="number" class="form-control" formControlName="rate" [attr.disabled]="(selectedTradeConcession[i]) && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'rate')" (change)="setThreeNumberDecimal($event)" /></td>
                 <td class="length-short" *ngIf="isApproved"><input type="number" class="form-control" formControlName="approvedRate" [attr.disabled]="canEdit ? null : ''" [class.markred]="bcmhochanged(i,'approvedRate')" (change)="setThreeNumberDecimal($event)" /></td>
 
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="(!selectedTradeConcession[i]) && canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" [class.markred]="bcmhochanged(i,'expiryDate')" /></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="(!selectedTradeConcession[i]) && canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" [class.markred]="bcmhochanged(i,'expiryDate')"  (change)="onExpiryDateChanged(i)"/></td>
                 <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>
                 <td *ngIf="canArchive" class="delete">
                     <button *ngIf="tradeConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="archiveConcessiondetail(itemrow.get('concessionDetailId').value)" class="btn-delete" title="Remove"><i class="fa fa-trash" aria-hidden="true" style="color:#920000"></i></button>

@@ -41,6 +41,8 @@ import { InvestmentConcessionService } from "../services/investment-concession.s
 import { InvestmentView } from "../models/investment-view";
 
 import { BaseComponentService } from '../services/base-component.service';
+import * as moment from 'moment';
+import { MOnthEnum } from '../models/month-enum';
 
 @Component({
     selector: 'app-investments-view-concession',
@@ -268,6 +270,19 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.primeRate = <string>results[6];
 
         this.populateForm();
+    }
+
+    onExpiryDateChanged(rowIndex) {
+        const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
+        let selectedExpiryDate = control.controls[rowIndex].get('expiryDate').value;
+
+        var currentMonth = moment().month()
+        var selectedExpiryDateMonth = moment(selectedExpiryDate).month();
+        let monthsDifference = currentMonth - selectedExpiryDateMonth;
+
+        if (monthsDifference < MOnthEnum.ThreeMonths) {
+            this.addValidationError("Concession expiry date must be greater than 3 months");
+        };
     }
 
     populateForm() {

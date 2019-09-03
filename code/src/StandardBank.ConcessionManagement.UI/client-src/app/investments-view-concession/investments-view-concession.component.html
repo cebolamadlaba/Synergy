@@ -236,7 +236,7 @@
 
                 <td class="length-short">
               
-                <input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="isEnabledExpiryDate(i) && canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" [class.markred]="bcmhochanged(i,'expiryDate')" /></td>
+                <input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="isEnabledExpiryDate(i) && canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" [class.markred]="bcmhochanged(i,'expiryDate')" (change)="onExpiryDateChanged(i)" /></td>
 
                 <td class="length-short" *ngIf="isApproved">
                

@@ -18,6 +18,8 @@ import { Concession } from "../models/concession";
 import { LendingConcessionDetail } from "../models/lending-concession-detail";
 import { ConcessionCondition } from "../models/concession-condition";
 import { LegalEntity } from '../models/legal-entity';
+import * as moment from 'moment';
+import { MOnthEnum } from '../models/month-enum';
 
 import { Location } from '@angular/common';
 import { LookupDataService } from "../services/lookup-data.service";
@@ -638,6 +640,18 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             this.validationError = [];
 
         this.validationError.push(validationDetail);
+    }
+
+    onTermValueChange(rowIndex) {
+        this.errorMessage = null;
+        this.validationError = null;
+
+        const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        let term = control.controls[rowIndex].get('term').value;
+
+        if (term < MOnthEnum.ThreeMonths) {
+            this.addValidationError("Minimum term captured should be 3 months");
+        };
     }
 
     setTwoNumberDecimal($event) {

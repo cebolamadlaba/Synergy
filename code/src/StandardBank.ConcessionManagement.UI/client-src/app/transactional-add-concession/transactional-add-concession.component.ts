@@ -21,6 +21,8 @@ import { DecimalPipe } from '@angular/common';
 import { ConcessionTypes } from '../constants/concession-types';
 import { BaseComponentService } from '../services/base-component.service';
 import { LegalEntity } from "../models/legal-entity";
+import * as moment from 'moment';
+import { MOnthEnum } from '../models/month-enum';
 
 @Component({
     selector: 'app-transactional-add-concession',
@@ -38,6 +40,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
     legalEntity: LegalEntity;
     sapbpid: number;
+  
 
     entityName: string;
     entityNumber: string;
@@ -279,6 +282,22 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
         control.controls[rowIndex].get('transactionTableNumber').setValue(this.selectedTransactionTypes[rowIndex].transactionTableNumbers[0]);
     }
 
+    onExpiryDateChanged(rowIndex) {
+        this.errorMessage = null;
+        this.validationError = null;
+
+        const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+        let selectedExpiryDate = control.controls[rowIndex].get('expiryDate').value;
+
+        var currentMonth = moment().month()
+        var selectedExpiryDateMonth = moment(selectedExpiryDate).month();
+        let monthsDifference = currentMonth - selectedExpiryDateMonth;
+
+        if (monthsDifference < MOnthEnum.ThreeMonths) {
+            this.addValidationError("Concession expiry date must be greater than 3 months");
+        };
+    }
+     
     transactionTableNumberChanged(rowIndex) {
         const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
 

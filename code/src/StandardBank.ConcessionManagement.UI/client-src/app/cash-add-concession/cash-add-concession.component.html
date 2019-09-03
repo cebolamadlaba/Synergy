@@ -153,7 +153,7 @@
                     </select>
                 </td>
 
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="saveMessage ? '' : null" /></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="saveMessage ? '' : null"  (change)="onExpiryDateChanged(i)"/></td>
 
                 <td class="delete"><button *ngIf="cashConcessionForm.controls.concessionItemRows.controls.length >= 1 && !saveMessage" (click)="copyConcessionRow(i)" class="btn-delete"><i class="fa fa-copy" aria-hidden="true"></i></button></td>
 
