@@ -128,7 +128,7 @@
                 <th>Review Fee Type</th>
                 <th>Review Fee (%)</th>
                 <th>UFF Fee (%)</th>
-                <th>MRS/BRI</th>
+                <th>MRS/ERI</th>
                 <th></th>
             </tr>
         </thead>
@@ -183,7 +183,7 @@
                 <!-- UFF fee -->
                 <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="uffFee" (change)="setThreeNumberDecimal($event)" /></td>
                 <!-- MRS/BRI -->
-                <td class="length-short"><input type="text" numbersOnly="true" maxlength="2" class="form-control" formControlName="mrsBri" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" maxlength="2" class="form-control" formControlName="mrsEri" (keyup)="onMrsEriValueCapture(i)"/></td>
                 <td><button *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
         </tbody>

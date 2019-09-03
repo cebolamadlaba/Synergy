@@ -82,4 +82,9 @@ export class BaseComponentService {
 
         return null;
     }
+
+    public CheckDateExpiry() {
+
+    }
+
 }
