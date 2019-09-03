@@ -32,6 +32,7 @@ import { ConcessionSubStatus } from '../constants/concession-sub-status';
 import { BaseComponentService } from '../services/base-component.service';
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
+import { MrsEriEnum } from '../models/mrs-eri-enum';
 
 @Component({
     selector: 'app-lending-view-concession',
@@ -325,7 +326,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                     currentConcession.get('reviewFee').setValue(this.formatDecimal3(lendingConcessionDetail.reviewFee));
                     currentConcession.get('uffFee').setValue(this.formatDecimal3(lendingConcessionDetail.uffFee));
 
-                    currentConcession.get('mrsBri').setValue(lendingConcessionDetail.mrsBri);
+                    currentConcession.get('mrsEri').setValue(lendingConcessionDetail.mrsEri);
 
                     currentConcession.get('serviceFee').setValue(this.formatDecimal3(lendingConcessionDetail.serviceFee));
                     currentConcession.get('frequency').setValue(lendingConcessionDetail.frequency);
@@ -409,7 +410,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             isExpiring: [''],
             frequency: [{ value: '', disabled: true }],
             serviceFee: [{ value: '', disabled: true }],
-            mrsBri: [''],
+            mrsEri: [''],
         });
     }
 
@@ -729,7 +730,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     //        currentRow.get('serviceFee').setValue(null);
 
     //    }
-    //}
+    //} 
 
     addValidationError(validationDetail) {
         if (!this.validationError)
@@ -838,12 +839,20 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             if (concessionFormItem.get('expiryDate').value)
                 lendingConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
-            if (concessionFormItem.get('mrsBri').value == "" ||
-                concessionFormItem.get('mrsBri').value.toString().indexOf(".") > -1) {
-                this.addValidationError("MRS/BRI cannot be empty or a decimal");
+            if (concessionFormItem.get('mrsEri').value == "" ||
+                concessionFormItem.get('mrsEri').value.toString().indexOf(".") > -1) {
+                this.addValidationError("MRS/ERI cannot be empty or a decimal");
+            
+            } else {
+
+                var mrsEriValue = parseInt(concessionFormItem.get('mrsEri').value, 10);
+                if (mrsEriValue < MrsEriEnum.MinMrsEri || mrsEriValue > MrsEriEnum.MaxMrsEri) {
+                    this.addValidationError("MRS/ERI numbers must from 12 to 25");
+                } else {
+                    lendingConcessionDetail.mrsEri = concessionFormItem.get('mrsEri').value;
+                }   
             }
-            else
-                lendingConcessionDetail.mrsBri = concessionFormItem.get('mrsBri').value;
+                
 
             lendingConcession.lendingConcessionDetails.push(lendingConcessionDetail);
 
