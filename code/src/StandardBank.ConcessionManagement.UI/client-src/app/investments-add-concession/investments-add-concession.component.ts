@@ -308,17 +308,8 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     onExpiryDateChanged(rowIndex) {
-
         const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
-        let selectedExpiryDate = control.controls[rowIndex].get('expiryDate').value;
-
-        var currentMonth = moment().month()
-        var selectedExpiryDateMonth = moment(selectedExpiryDate).month();
-        let monthsDifference = currentMonth - selectedExpiryDateMonth;
-
-        if (monthsDifference < MOnthEnum.ThreeMonths) {
-            this.addValidationError("Concession expiry date must be greater than 3 months");
-        };
+        this.addValidationError(this.baseComponentService.expiringDateDifferenceValidation(control.controls[rowIndex].get('expiryDate').value));
     }
 
     conditionTypeChanged(rowIndex) {
