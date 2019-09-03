@@ -730,20 +730,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     //        currentRow.get('serviceFee').setValue(null);
 
     //    }
-    //}
-
-    onMrsEriValueCapture(rowIndex) {
-        this.errorMessage = null;
-        this.validationError = null;
-
-        const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
-        var mrsEriValue = control.controls[rowIndex].get('mrsEri').value;
-        mrsEriValue = parseInt(mrsEriValue, 10);
-
-        if (parseInt(mrsEriValue) < MrsEriEnum.MinMrsEri || parseInt(mrsEriValue) > MrsEriEnum.MaxMrsEri) {
-            this.addValidationError("MRS/ERI numbers must from 12 to 25");
-        };
-    }
+    //} 
 
     addValidationError(validationDetail) {
         if (!this.validationError)
@@ -855,9 +842,17 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             if (concessionFormItem.get('mrsEri').value == "" ||
                 concessionFormItem.get('mrsEri').value.toString().indexOf(".") > -1) {
                 this.addValidationError("MRS/ERI cannot be empty or a decimal");
+            
+            } else {
+
+                var mrsEriValue = parseInt(concessionFormItem.get('mrsEri').value, 10);
+                if (mrsEriValue < MrsEriEnum.MinMrsEri || mrsEriValue > MrsEriEnum.MaxMrsEri) {
+                    this.addValidationError("MRS/ERI numbers must from 12 to 25");
+                } else {
+                    lendingConcessionDetail.mrsEri = concessionFormItem.get('mrsEri').value;
+                }   
             }
-            else
-                lendingConcessionDetail.mrsEri = concessionFormItem.get('mrsEri').value;
+                
 
             lendingConcession.lendingConcessionDetails.push(lendingConcessionDetail);
 

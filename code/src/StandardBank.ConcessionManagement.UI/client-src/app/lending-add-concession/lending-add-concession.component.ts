@@ -520,8 +520,14 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
                 (<string>concessionFormItem.get('mrsEri').value).trim() == "." ||
                 (<string>concessionFormItem.get('mrsEri').value).split(".").length > 1) {
                 this.addValidationError("MRS/ERI cannot be empty or a decimal");
-            }
 
+            } else {        
+                var mrsEriValue = parseInt(concessionFormItem.get('mrsEri').value, 10);
+                if (mrsEriValue < MrsEriEnum.MinMrsEri || mrsEriValue > MrsEriEnum.MaxMrsEri) {
+                    this.addValidationError("MRS/ERI numbers must from 12 to 25");
+                };
+            }
+          
 
             if (concessionFormItem.get('limit').value)
                 lendingConcessionDetail.limit = concessionFormItem.get('limit').value;
@@ -655,20 +661,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             this.addValidationError("Minimum term captured should be 3 months");
         };
     }
-
-    onMrsEriValueCapture(rowIndex) {
-        this.errorMessage = null;
-        this.validationError = null;
-
-        const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
-        var mrsEriValue= control.controls[rowIndex].get('mrsEri').value;
-        mrsEriValue = parseInt(mrsEriValue, 10);
-
-        if (mrsEriValue < MrsEriEnum.MinMrsEri || mrsEriValue > MrsEriEnum.MaxMrsEri) {
-            this.addValidationError("MRS/ERI numbers must from 12 to 25");
-        };
-    }
-
+ 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
         //$event.target.value = this.formatDecimal($event.target.value);
