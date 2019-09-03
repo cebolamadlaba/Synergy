@@ -176,7 +176,7 @@
                 </td>
                 <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="rate" [attr.disabled]="saveMessage ? '' : null" (change)="setThreeNumberDecimal($event)" /></td>
 
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="(saveMessage) ? '' : null" (change)="onExpiryDateChanged(i)" /></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="(saveMessage) ? '' : null" (change)="onExpiryDateChanged(itemrow)" /></td>
 
 
                 <td class="delete"><button *ngIf="investmentConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>

@@ -307,9 +307,12 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
 
     }
 
-    onExpiryDateChanged(rowIndex) {
-        const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
-        this.addValidationError(this.baseComponentService.expiringDateDifferenceValidation(control.controls[rowIndex].get('expiryDate').value));
+    onExpiryDateChanged(itemrow) {
+        this.validationError = null;
+        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
+        if (validationErrorMessage != null) {
+            this.addValidationError(validationErrorMessage);
+        }   
     }
 
     conditionTypeChanged(rowIndex) {

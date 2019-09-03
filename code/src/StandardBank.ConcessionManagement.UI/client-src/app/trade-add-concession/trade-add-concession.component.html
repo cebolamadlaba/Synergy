@@ -200,7 +200,7 @@
                 </td>
                 <td class="length-short"><input type="number" class="form-control" formControlName="estfee" [attr.disabled]="(!selectedTradeConcession[i]) || saveMessage ? '' : null" /></td>
                 <td class="length-short"><input type="number" class="form-control" formControlName="rate" [attr.disabled]="(!selectedTradeConcession[i]) || saveMessage ? '' : null" (change)="setThreeNumberDecimal($event)" /></td>
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="(selectedTradeConcession[i]) || saveMessage ? '' : null" (change)="onExpiryDateChanged(i)" /></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="(selectedTradeConcession[i]) || saveMessage ? '' : null" (change)="onExpiryDateChanged(itemrow)" /></td>
                 <td class="delete"><button *ngIf="tradeConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
         </tbody>

@@ -479,20 +479,12 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         currentCondition.get('value').setValue(null);
     }
 
-    onExpiryDateChanged(rowIndex) {
-        this.errorMessage = null;
+    onExpiryDateChanged(itemrow) {
         this.validationError = null;
-
-        const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
-        let selectedExpiryDate = control.controls[rowIndex].get('expiryDate').value;
-
-        var currentMonth = moment().month()
-        var selectedExpiryDateMonth = moment(selectedExpiryDate).month();
-        let monthsDifference = currentMonth - selectedExpiryDateMonth;
-
-        if (monthsDifference < MOnthEnum.ThreeMonths) {
-            this.addValidationError("Concession expiry date must be greater than 3 months");
-        };
+        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
+        if (validationErrorMessage != null) {
+            this.addValidationError(validationErrorMessage);
+        }
     }
 
     productTypeChanged(rowIndex) {

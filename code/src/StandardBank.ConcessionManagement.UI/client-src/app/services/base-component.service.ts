@@ -94,7 +94,5 @@ export class BaseComponentService {
         if (monthsDifference < MOnthEnum.ThreeMonths) {
             return "Concession expiry date must be greater than 3 months";
         };
-
-        return null;
     }
 }
