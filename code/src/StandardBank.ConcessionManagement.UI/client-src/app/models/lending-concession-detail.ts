@@ -19,7 +19,7 @@ export class LendingConcessionDetail extends BaseConcessionDetail {
     frequency: string;
     serviceFee: number;
 
-    mrsBri: number;
+    mrsEri: number;
 
     show_term: boolean;
     show_reviewFeeType: boolean;

@@ -20,6 +20,8 @@ import { ConcessionCondition } from "../models/concession-condition";
 import { LegalEntity } from '../models/legal-entity';
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
+import { MrsEriEnum } from '../models/mrs-eri-enum';
+
 
 import { Location } from '@angular/common';
 import { LookupDataService } from "../services/lookup-data.service";
@@ -135,7 +137,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             uffFee: [''],
             frequency: [{ value: '', disabled: true }],
             serviceFee: [{ value: '', disabled: true }],
-            mrsBri: [''],
+            mrsEri: [''],
         });
     }
 
@@ -514,12 +516,18 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
                 this.addValidationError("Prime fixed rate cannot be empty");
             }
 
-            if (concessionFormItem.get('mrsBri').value == "" ||
-                (<string>concessionFormItem.get('mrsBri').value).trim() == "." ||
-                (<string>concessionFormItem.get('mrsBri').value).split(".").length > 1) {
-                this.addValidationError("MRS/BRI cannot be empty or a decimal");
-            }
+            if (concessionFormItem.get('mrsEri').value == "" ||
+                (<string>concessionFormItem.get('mrsEri').value).trim() == "." ||
+                (<string>concessionFormItem.get('mrsEri').value).split(".").length > 1) {
+                this.addValidationError("MRS/ERI cannot be empty or a decimal");
 
+            } else {        
+                var mrsEriValue = parseInt(concessionFormItem.get('mrsEri').value, 10);
+                if (mrsEriValue < MrsEriEnum.MinMrsEri || mrsEriValue > MrsEriEnum.MaxMrsEri) {
+                    this.addValidationError("MRS/ERI numbers must from 12 to 25");
+                };
+            }
+          
 
             if (concessionFormItem.get('limit').value)
                 lendingConcessionDetail.limit = concessionFormItem.get('limit').value;
@@ -548,8 +556,8 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             if (concessionFormItem.get('frequency').value)
                 lendingConcessionDetail.frequency = concessionFormItem.get('frequency').value;
 
-            if (concessionFormItem.get('mrsBri').value)
-                lendingConcessionDetail.mrsBri = concessionFormItem.get('mrsBri').value;
+            if (concessionFormItem.get('mrsEri').value)
+                lendingConcessionDetail.mrsEri = concessionFormItem.get('mrsEri').value;
 
             lendingConcession.lendingConcessionDetails.push(lendingConcessionDetail);
 
@@ -653,7 +661,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             this.addValidationError("Minimum term captured should be 3 months");
         };
     }
-
+ 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
         //$event.target.value = this.formatDecimal($event.target.value);
