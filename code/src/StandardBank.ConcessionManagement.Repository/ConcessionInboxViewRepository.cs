@@ -293,6 +293,24 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Actioned by PCM and HO user identifier is active.
+        /// </summary>
+        /// <param name="isActive">if set to <c>true</c> [is active].</param>
+        /// <returns></returns>
+        public IEnumerable<ConcessionInboxView> ConcessionsActionedByPcmAndHo(bool isActive)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<ConcessionInboxView>(
+                    @"SELECT [ConcessionId], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [LegalEntityId], [CustomerName], [CustomerNumber], [LegalEntityAccountId], [AccountNumber], [ConcessionTypeId], [ConcessionType], [ConcessionDate], [StatusId], [Status], [SubStatusId], [SubStatus], [ConcessionRef], [MarketSegmentId], [Segment], [DatesentForApproval], [ConcessionDetailId], [ExpiryDate], [DateApproved], [AAUserId], [RequestorId], [BCMUserId], [PCMUserId], [HOUserId], [CentreId], [CentreName], [RegionId], [Region], [IsMismatched], [IsActive], [IsCurrent], [PriceExported], [PriceExportedDate]
+                    FROM [dbo].[ConcessionInboxView]
+                    WHERE ([PCMUserId] IS NOT NULL OR [HOUserId] IS NOT NULL)
+                    AND [IsActive] = @isActive",
+                    new { isActive });
+            }
+        }
+
+        /// <summary>
         /// Reads for due for expiry notification.
         /// </summary>
         /// <returns></returns>

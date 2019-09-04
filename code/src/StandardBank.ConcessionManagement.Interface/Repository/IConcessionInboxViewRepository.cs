@@ -95,6 +95,13 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         IEnumerable<ConcessionInboxView> ReadByHoUserIdIsActive(int hoUserId, bool isActive);
 
         /// <summary>
+        /// Actioned by PCM and HO user identifier is active.
+        /// </summary>
+        /// <param name="isActive">if set to <c>true</c> [is active].</param>
+        /// <returns></returns>
+        IEnumerable<ConcessionInboxView> ConcessionsActionedByPcmAndHo(bool isActive);
+
+        /// <summary>
         /// Reads for due for expiry notification.
         /// </summary>
         /// <returns></returns>

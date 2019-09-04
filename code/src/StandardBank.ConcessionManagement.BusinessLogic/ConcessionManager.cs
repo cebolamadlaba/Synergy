@@ -394,12 +394,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     case Constants.Roles.PCM:
                         inboxConcessions.AddRange(
                             _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
-                                .ReadByPcmUserIdIsActive(user.Id, true)));
+                                .ConcessionsActionedByPcmAndHo(true)));
                         break;
                     case Constants.Roles.HeadOffice:
                         inboxConcessions.AddRange(
                             _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
-                                .ReadByHoUserIdIsActive(user.Id, true)));
+                                .ConcessionsActionedByPcmAndHo(true)));
                         break;
                 }
             }
