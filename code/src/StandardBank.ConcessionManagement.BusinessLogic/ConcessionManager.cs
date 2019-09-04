@@ -392,10 +392,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                                 .ReadByBcmUserIdIsActive(user.Id, true)));
                         break;
                     case Constants.Roles.PCM:
-                        inboxConcessions.AddRange(
-                            _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
-                                .ConcessionsActionedByPcmAndHo(true)));
-                        break;
                     case Constants.Roles.HeadOffice:
                         inboxConcessions.AddRange(
                             _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
