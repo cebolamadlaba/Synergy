@@ -209,18 +209,12 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
     }
 
 
-    onExpiryDateChanged(rowIndex) {
-
-        const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
-        let selectedExpiryDate = control.controls[rowIndex].get('expiryDate').value;
-
-        var currentMonth = moment().month()
-        var selectedExpiryDateMonth = moment(selectedExpiryDate).month();
-        let monthsDifference = currentMonth - selectedExpiryDateMonth;
-
-        if (monthsDifference < MOnthEnum.ThreeMonths) {
-            this.addValidationError("Concession expiry date must be greater than 3 months");
-        };
+    onExpiryDateChanged(itemrow) {
+        this.validationError = null;
+        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
+        if (validationErrorMessage != null) {
+            this.addValidationError(validationErrorMessage);
+        }
     }
 
     populateForm() {

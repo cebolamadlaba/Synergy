@@ -209,9 +209,6 @@
                 </td>
 
               
-
-
-
                 <td class="length-long"><input type="text" class="form-control" [class.markred]="bcmhochanged(i,'balance')" formControlName="balance" [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimal($event)"/></td>
 
                 <td class="length-long">
@@ -236,7 +233,7 @@
 
                 <td class="length-short">
               
-                <input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="isEnabledExpiryDate(i) && canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" [class.markred]="bcmhochanged(i,'expiryDate')" (change)="onExpiryDateChanged(i)" /></td>
+                <input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="isEnabledExpiryDate(i) && canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" [class.markred]="bcmhochanged(i,'expiryDate')" (change)="onExpiryDateChanged(itemrow)" /></td>
 
                 <td class="length-short" *ngIf="isApproved">
                

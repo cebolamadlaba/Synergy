@@ -428,20 +428,12 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         this.selectedConditionTypes.splice(index, 1);
     }
 
-    onExpiryDateChanged(rowIndex) {
-        this.errorMessage = null;
+    onExpiryDateChanged(itemrow) {
         this.validationError = null;
-
-        const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
-        let selectedExpiryDate = control.controls[rowIndex].get('expiryDate').value;
-
-        var currentMonth = moment().month()
-        var selectedExpiryDateMonth = moment(selectedExpiryDate).month();
-        let monthsDifference = currentMonth - selectedExpiryDateMonth;
-
-        if (monthsDifference < MOnthEnum.ThreeMonths) {
-            this.addValidationError("Concession expiry date must be greater than 3 months");
-        };
+        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
+        if (validationErrorMessage != null) {
+            this.addValidationError(validationErrorMessage);
+        }
     }
 
     conditionTypeChanged(rowIndex) {

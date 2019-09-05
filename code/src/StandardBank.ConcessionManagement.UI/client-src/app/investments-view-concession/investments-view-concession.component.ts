@@ -272,17 +272,12 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.populateForm();
     }
 
-    onExpiryDateChanged(rowIndex) {
-        const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
-        let selectedExpiryDate = control.controls[rowIndex].get('expiryDate').value;
-
-        var currentMonth = moment().month()
-        var selectedExpiryDateMonth = moment(selectedExpiryDate).month();
-        let monthsDifference = currentMonth - selectedExpiryDateMonth;
-
-        if (monthsDifference < MOnthEnum.ThreeMonths) {
-            this.addValidationError("Concession expiry date must be greater than 3 months");
-        };
+    onExpiryDateChanged(itemrow) {
+        this.validationError = null;
+        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
+        if (validationErrorMessage != null) {
+            this.addValidationError(validationErrorMessage);
+        }
     }
 
     populateForm() {
@@ -561,7 +556,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
     //    currentProduct.get('disablecontrolset').setValue(true);
 
-    //    currentProduct.get('advalorem').setValue(null);
+    //    currentProduct.get('advalorem').setValue(null); 
     //    currentProduct.get('min').setValue(null);
     //    currentProduct.get('max').setValue(null);
 

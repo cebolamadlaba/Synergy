@@ -366,21 +366,12 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
     }
 
-    onExpiryDateChanged(rowIndex) {
-
-        this.errorMessage = null;
+    onExpiryDateChanged(itemrow) {
         this.validationError = null;
-
-        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
-        let selectedExpiryDate = control.controls[rowIndex].get('expiryDate').value;
-
-        var currentMonth = moment().month()
-        var selectedExpiryDateMonth = moment(selectedExpiryDate).month();
-        let monthsDifference = currentMonth - selectedExpiryDateMonth;
-
-        if (monthsDifference < MOnthEnum.ThreeMonths) {
-            this.addValidationError("Concession expiry date must be 3 months or more");
-        };
+        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
+        if (validationErrorMessage != null) {
+            this.addValidationError(validationErrorMessage);
+        }
     }
 
     onTermValueChange(rowIndex) {

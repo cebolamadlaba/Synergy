@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { DecimalPipe } from '@angular/common';
+import * as moment from 'moment';
+import { MOnthEnum } from '../models/month-enum';
 
 declare var accounting: any;
 
@@ -83,5 +85,14 @@ export class BaseComponentService {
         return null;
     }
 
+    public expiringDateDifferenceValidation(selectedExpiryDate: string) {
 
+        var currentMonth = moment().month()
+        var selectedExpiryDateMonth = moment(selectedExpiryDate).month();
+        let monthsDifference = currentMonth - selectedExpiryDateMonth;
+
+        if (monthsDifference < MOnthEnum.ThreeMonths) {
+            return "Concession expiry date must be greater than 3 months";
+        };
+    }
 }
