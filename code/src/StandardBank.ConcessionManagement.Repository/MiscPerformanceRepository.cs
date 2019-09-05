@@ -14,6 +14,7 @@ using StandardBank.ConcessionManagement.Model.UserInterface.Bol;
 using StandardBank.ConcessionManagement.Model.UserInterface.Trade;
 using static StandardBank.ConcessionManagement.Model.BusinessLogic.Constants;
 using StandardBank.ConcessionManagement.Model.UserInterface.Investment;
+using StandardBank.ConcessionManagement.Model.UserInterface.Glms;
 
 namespace StandardBank.ConcessionManagement.Repository
 {
@@ -957,6 +958,63 @@ namespace StandardBank.ConcessionManagement.Repository
                 new CacheKeyParameter(nameof(legalEntityName), legalEntityName));
         }
 
+
+        public IEnumerable<GlmsProduct> GetGlmsProducts(int riskGroupId, string riskGroupName)
+        {
+            IEnumerable<GlmsProduct> Function()
+            {
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    var glmsProducts = db.Query<GlmsProduct>(
+                        @"SELECT pinv.pkProductInvestmentId [InvestmentProductId], p.[Description] [InvestmentProductName], le.[CustomerName] [legalEntity], lea.[AccountNumber], pinv.[AverageBalance], pinv.LoadedCustomerRate [LoadedRate],@riskGroupName [RiskGroupName] 
+                        FROM [dbo].tblProductInvestment pinv
+                        JOIN [dbo].[rtblProduct] p on p.[pkProductId] = pinv.[fkProductId]
+                        JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = pinv.[fkLegalEntityId]
+                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = pinv.[fkLegalEntityAccountId]
+                        WHERE pinv.[fkRiskGroupId] = @riskGroupId", new { riskGroupId, riskGroupName },
+                        commandTimeout: Int32.MaxValue);
+
+                    if (glmsProducts != null && glmsProducts.Any())
+                        return glmsProducts;
+                }
+
+                return null;
+            }
+
+            return _cacheManager.ReturnFromCache(Function, 300,
+               CacheKey.Repository.MiscPerformanceRepository.GetGlmsProducts,
+                new CacheKeyParameter(nameof(riskGroupId), riskGroupId),
+                new CacheKeyParameter(nameof(riskGroupName), riskGroupName));
+        }
+
+        public IEnumerable<GlmsProduct> GetGlmsProductsByLegalEntity(int legalEntityId, string legalEntityName)
+        {
+            IEnumerable<GlmsProduct> Function()
+            {
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    var glmsProducts = db.Query<GlmsProduct>(
+                        @"SELECT pinv.pkProductInvestmentId [InvestmentProductId], p.[Description] [InvestmentProductName], le.[CustomerName] [legalEntity], lea.[AccountNumber], pinv.[AverageBalance], pinv.LoadedCustomerRate [LoadedRate]
+                        FROM [dbo].tblProductInvestment pinv
+                        JOIN [dbo].[rtblProduct] p on p.[pkProductId] = pinv.[fkProductId]
+                        JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = pinv.[fkLegalEntityId]
+                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = pinv.[fkLegalEntityAccountId]
+                        WHERE le.[pkLegalEntityId] = @legalEntityId", new { legalEntityId, legalEntityName },
+                        commandTimeout: Int32.MaxValue);
+
+                    if (glmsProducts != null && glmsProducts.Any())
+                        return glmsProducts;
+                }
+
+                return null;
+            }
+
+            return _cacheManager.ReturnFromCache(Function, 300,
+                CacheKey.Repository.MiscPerformanceRepository.GetGlmsProducts,
+                new CacheKeyParameter(nameof(legalEntityId), legalEntityId),
+                new CacheKeyParameter(nameof(legalEntityName), legalEntityName));
+        }
+
         /// <summary>
         /// Gets the cash concession details.
         /// </summary>
@@ -1185,6 +1243,42 @@ namespace StandardBank.ConcessionManagement.Repository
             }
         }
 
+
+        public IEnumerable<GlmsConcessionDetail> GetGlmsConcessionDetails(int concessionId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<GlmsConcessionDetail>(@"select cd.[pkConcessionDetailId] [ConcessionDetailId], 
+                    cd.[fkConcessionId] [ConcessionId], 
+                    cd.[fkLegalEntityId] [LegalEntityId],
+                    cd.[fkLegalEntityAccountId] [LegalEntityAccountId],  
+                    le.[CustomerName] [LegalEntity],                    
+                    [ExpiryDate], 
+                    [DateApproved], 
+                    [IsMismatched], 
+                    [PriceExported], 
+                    [PriceExportedDate],                  
+					pinv.pkConcessionInvestmentId [InvestmentConcessionDetailId],
+                    ac.AccountNumber,
+					LoadedRate,
+					ApprovedRate,				
+                    p.Description InvestmentProduct,										
+                    pinv.fkLegalEntityAccountId,
+                    pinv.fkProductId [productTypeId],                  
+					pinv.Balance,				
+					pinv.[Term],                
+					pinv.fkLegalEntityAccountId
+
+                    from [dbo].[tblConcessionDetail] cd
+                    left join [dbo].[tblConcessionInvestment] pinv on cd.pkConcessionDetailId = pinv.fkConcessionDetailId
+                    left JOIN [dbo].tblLegalEntityAccount lea on pinv.fkLegalEntityAccountId = lea.pkLegalEntityAccountId  
+                    left JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = lea.fkLegalEntityId
+                    left join tblLegalEntityAccount ac on pinv.fkLegalEntityAccountId = ac.pkLegalEntityAccountId				
+                    left JOIN [dbo].[rtblProduct] p on p.[pkProductId] = pinv.fkProductId
+
+                    where cd.fkConcessionId = @concessionId  and cd.Archived is null", new { concessionId });
+            }
+        }
         /// <summary>
         /// Gets the transactional concession details.
         /// </summary>

@@ -198,6 +198,8 @@
                 public const string GetTransactionalProducts = "CacheKey.Repository.MiscPerformanceRepository.GetTransactionalProducts";
 
                 public const string GetInvestmentProducts = "CacheKey.Repository.MiscPerformanceRepository.GetInvestmentProducts";
+
+                public const string GetGlmsProducts = "CacheKey.Repository.MiscPerformanceRepository.GetGlmsProducts";
             }
 
             public static class LegalEntityAddressRepository

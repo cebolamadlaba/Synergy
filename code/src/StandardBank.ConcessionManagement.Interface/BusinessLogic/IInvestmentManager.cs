@@ -12,7 +12,6 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
     /// </summary>
     public interface IInvestmentManager
     {
-
         ConcessionInvestment CreateConcessionInvestment(InvestmentConcessionDetail investmentConcessionDetail, Concession concession);
 
         InvestmentConcession GetInvestmentConcession(string concessionReferenceId, User user);
