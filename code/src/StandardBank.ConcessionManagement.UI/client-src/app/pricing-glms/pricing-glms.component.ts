@@ -5,10 +5,10 @@ import { Location } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
 
-import { InvestmentConcession } from "../models/investment-concession";
-import { InvestmentView } from "../models/investment-view";
+import { GlmsConcession } from "../models/glms-concession";
+import { GlmsView } from "../models/glms-view";
 
-import { InvestmentConcessionService } from "../services/investment-concession.service";
+import { GlmsConcessionService } from "../services/glms-concession.service"
 
 import { Concession } from "../models/concession";
 import { UserService } from "../services/user.service";
@@ -27,8 +27,8 @@ export class PricingGlmsComponent implements OnInit {
     entityName: string;
     entityNumber: string;
 
-    observableInvestmentView: Observable<InvestmentView>;
-    investmentView: InvestmentView = new InvestmentView();
+    observableGlmsView: Observable<GlmsView>;
+    glmsView: GlmsView = new GlmsView();
     errorMessage: String;
     showHide = false;
     pageLoaded = false;
@@ -39,11 +39,11 @@ export class PricingGlmsComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         private location: Location,
-        @Inject(InvestmentConcessionService) private investmentConcessionService, private userService: UserService
+        @Inject(GlmsConcessionService) private glmsConcessionService, private userService: UserService
     ) {
-        this.investmentView.riskGroup = new RiskGroup();
-        this.investmentView.investmentConcessions = [new InvestmentConcession()];
-        this.investmentView.investmentConcessions[0].concession = new Concession();
+        this.glmsView.riskGroup = new RiskGroup();
+        this.glmsView.glmsConcessions = [new GlmsConcession()];
+        this.glmsView.glmsConcessions[0].concession = new Concession();
     }
 
 
@@ -54,17 +54,17 @@ export class PricingGlmsComponent implements OnInit {
 
             if (this.riskGroupNumber || this.sapbpid) {
 
-                this.observableInvestmentView = this.investmentConcessionService.getInvestmentViewData(this.riskGroupNumber, this.sapbpid);
-                this.observableInvestmentView.subscribe(investmentView => {
-                    this.investmentView = investmentView;
+                this.observableGlmsView = this.glmsConcessionService.getGlmsViewData(this.riskGroupNumber, this.sapbpid);
+                this.observableGlmsView.subscribe(glmsView => {
+                    this.glmsView = glmsView;
 
                     if (this.riskGroupNumber || this.riskGroupNumber > 0) {
-                        this.entityName = this.investmentView.riskGroup.name;
-                        this.entityNumber = this.investmentView.riskGroup.number.toString();
+                        this.entityName = this.glmsView.riskGroup.name;
+                        this.entityNumber = this.glmsView.riskGroup.number.toString();
                     }
                     else {
-                        this.entityName = this.investmentView.legalEntity.customerName;
-                        this.entityNumber = this.investmentView.legalEntity.customerNumber;
+                        this.entityName = this.glmsView.legalEntity.customerName;
+                        this.entityNumber = this.glmsView.legalEntity.customerNumber;
                     }
 
                     this.pageLoaded = true;
