@@ -98,6 +98,7 @@ import { ChannelTypesManagementComponent } from './admin/channel-types/channel-t
 import { BolTradeManagementComponent } from './admin/bol-trade-management/bol-trade-management.component';
 import { BolTradeAeManagementComponent } from './admin/bol-trade-ae-management/bol-trade-ae-management.component';
 import { FilterPipe } from './filters/filter.pipe';
+import { PricingGlmsComponent } from './pricing-glms/pricing-glms.component';
 
 
 @NgModule({
@@ -158,7 +159,8 @@ import { FilterPipe } from './filters/filter.pipe';
         ChannelTypesManagementComponent,
         BolTradeManagementComponent,
         BolTradeAeManagementComponent,
-        FilterPipe
+        FilterPipe,
+        PricingGlmsComponent
 
     ],
     imports: [

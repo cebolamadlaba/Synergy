@@ -1,0 +1,182 @@
+
+<div class="col-md-12 banner">
+    <div class="row">
+        <!-- Header -->
+        <div class="lending-banner-title">
+            <div class="col-md-1">
+                <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+                <span class="back-button-text" (click)="goBack()">Back</span>
+            </div>
+            <div class="col-md-10 banner-main-title">
+                <i class="fa fa-bar-chart" aria-hidden="true"></i> GLMS
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+        <!-- Dashboard Expanded -->
+        <div class="col-md-12 banner-container" *ngIf="showHide">
+            <div class="col-md-11">
+                <div class="col-md-5">
+                    <div class="subHeading">{{entityName}}</div>
+                    <div class="date lightTitle hidden-element">{{entityNumber}}</div>
+
+                </div>
+                <div class="col-md-2  hidden-element">
+                    <div class="subHeading lightTitle"> Total liability balances</div>
+                    <div class="score"><b>{{investmentView.investmentFinancial.totalLiabilityBalances | number : '1.2-2'}}</b></div>
+                </div>
+                <div class="col-md-2  hidden-element">
+                    <div class="subHeading lightTitle"> Weighted Average MTP</div>
+                    <div class="score"><b>{{investmentView.investmentFinancial.weightedAverageMTP | number : '1.2-2'}}</b></div>
+                </div>
+                <div class="col-md-2  hidden-element">
+                    <div class="subHeading lightTitle"> Weighted Average Net Margin</div>
+                    <div class="score"><b>{{investmentView.investmentFinancial.weightedAverageNetMargin | number : '1.2-2'}}</b></div>
+                </div>
+            </div>
+
+
+            <div class="col-md-1">
+                <div class="compress">
+                    <div>
+                        <i class="fa fa-compress" (click)="showHide = !showHide" aria-hidden="true" id="compress-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Dashboard Collapsed -->
+        <div class="col-md-12 banner-container" *ngIf="!showHide">
+            <div class="col-md-11">
+                <div>
+                    <div class="col-md-5">
+                        <div class="subHeading">{{entityName}}</div>
+                        <div class="date lightTitle hidden-element">{{entityNumber}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="compress">
+                    <div>
+                        <i class="fa fa-expand" (click)="showHide = !showHide" aria-hidden="true" id="compress-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- lending concessions and products-->
+<div class="col-md-12">
+    <div class="col-md-6 search-and-results-container">
+        <h2 class="headings">Products</h2>
+        <div class="section">
+
+            <!-- End of products list -->
+            <!-- Empty state for products if no data is found -->
+            <div *ngIf="!investmentView?.investmentProductGroups || investmentView?.investmentProductGroups?.length == 0">
+                <div class="section-body">
+                    <div class="searchEmptyState">
+                        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                        <p>No product data found</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Products grouping -->
+
+            <div class="section-body" *ngFor="let investmentprodgroup of investmentView.investmentProductGroups">
+
+                <div class="product-section">
+                    <div class="product-name">{{investmentprodgroup.legalEntity}}</div>
+
+                </div>
+
+                <!-- Products list -->
+                <div class="section-body">
+
+                    <div class="product-table-container">
+                        <table class="table table-bordered table-hover header-fixed table-striped ">
+                            <thead>
+                                <tr>
+                                    <th>Account(No.)</th>
+                                    <th>Product </th>
+                                    <th>Loaded Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let investmentprod of investmentprodgroup.investmentProducts">
+                                    <td class="leftAlign">{{investmentprod.accountNumber}}</td>
+
+                                    <td class="leftAlign">{{investmentprod.investmentProductName}}</td>
+
+                                    <td class="rightAlign">{{investmentprod.loadedRate}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Concessions list -->
+    <div class="col-md-6 search-and-results-container" id="lending-search-container">
+        <h2 class="headings">
+            Concessions
+
+            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/investments-add-concession', riskGroupNumber, sapbpid]" *ngIf="pageLoaded && canRequest">Add Concession</button>
+        </h2>
+
+
+        <div class="input-group add-on">
+            <input class="form-control" placeholder="Concession ID" [(ngModel)]="filterConcessionId" type="text">
+        </div>
+
+        <div class="section" *ngFor="let investmentConcession of investmentView.investmentConcessions | baseConcessionFilter : filterConcessionId; trackBy: index;">
+            <div class="section-header">
+                <div class="concessionID-section">
+                    <div class="concession-status">
+                        <div [ngClass]="{'approved-status': (investmentConcession.concession.status==='Approved') || (investmentConcession.concession.status==='Approved With Changes'),'pending-status': investmentConcession.concession.status==='Pending', 'declined-status': investmentConcession.concession.status==='Declined'}">{{investmentConcession.concession.status}}</div>
+                    </div>
+                    <p class="concession-id">{{investmentConcession.concession.referenceNumber}}</p>
+                    <div class="concession-sub-status">{{investmentConcession.concession.subStatus}}</div>
+                </div>
+            </div>
+            <div class="section-body">
+                <div class="table-container" [routerLink]="['/investments-view-concession', riskGroupNumber, sapbpid, investmentConcession.concession.referenceNumber]">
+                    <table class="table table-bordered table-hover header-fixed table-striped">
+                        <thead>
+                            <tr>
+                                <th>Legal Entity</th>
+                                <th>Product</th>
+                                <th>Account(No.)</th>
+                                <th>Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let concession of investmentConcession.investmentConcessionDetails; trackBy: index;">
+                                <td>{{concession.legalEntity}}</td>
+
+                                <td class="leftAlign">{{concession.investmentProduct}}</td>
+
+                                <td class="rightAlign">{{concession.accountNumber}}</td>
+                                <td>
+                                    <p class="mapInfo">Loaded:{{concession.loadedRate | number : '1.5-5'}}</p>
+                                    <p class="mapInfo">Approved:{{concession.approvedRate| number : '1.5-5'}}</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="searchEmptyState" *ngIf="(investmentView.investmentConcessions | baseConcessionFilter: filterConcessionId).length === 0">
+            <i class="fa fa-inbox" aria-hidden="true"></i>
+            <p>No concessions found matching your search</p>
+        </div>
+
+    </div>
+</div>
