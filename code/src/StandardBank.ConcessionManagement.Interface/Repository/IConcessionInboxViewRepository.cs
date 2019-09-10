@@ -143,5 +143,7 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <param name="isActive"></param>
         /// <returns></returns>
         IEnumerable<ConcessionInboxView> GetapporvedView(int requestorId, IEnumerable<int> statusIds, bool isActive);
+
+        IEnumerable<ConcessionInboxView> GetMisMatchedConcession();
     }
 }

@@ -436,5 +436,21 @@ namespace StandardBank.ConcessionManagement.Repository
                     });
             }
         }
+
+        public IEnumerable<ConcessionInboxView> GetMisMatchedConcession()
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<ConcessionInboxView>(
+                    @"  Select	Distinct 
+		                        ConcessionRef, ConcessionDate, ConcessionType,
+		                        RiskGroupName, RiskGroupNumber,
+		                        CustomerName, CustomerNumber
+                        From	ConcessionInboxView 
+                        Where	IsMismatched = 1
+                        And		IsActive = 1
+                        And		DATEADD(day,2,DateApproved) < GETDATE()");
+            }
+        }
     }
 }
