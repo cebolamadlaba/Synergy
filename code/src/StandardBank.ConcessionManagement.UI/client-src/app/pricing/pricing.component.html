@@ -182,13 +182,13 @@
                 <div class="col-md-8 col-md-offset-2" style="margin-top: 20px">
                     <!-- MAS -->
                     <!--<div class="col-md-3">
-                        <div class="product-item" [routerLink]="['/pricing-mas']">
-                            <div class="product-heading">MAS</div>
-                            <div class="container-item-icon">
-                                <i class="fa fa-calculator" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>-->
+        <div class="product-item" [routerLink]="['/pricing-mas']">
+            <div class="product-heading">MAS</div>
+            <div class="container-item-icon">
+                <i class="fa fa-calculator" aria-hidden="true"></i>
+            </div>
+        </div>
+    </div>-->
                     <!-- Trade -->
                     <div class="col-md-3" *ngIf="isVisiblePricingProduct(5)">
                         <div class="product-item" [routerLink]="['/pricing-trade',riskGroupNumber, sapbpid]">
@@ -207,15 +207,15 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Cashman -->
-                    <!--<div class="col-md-3">
-                        <div class="product-item" [routerLink]="['/pricing-cashman']">
-                            <div class="product-heading">Cashman</div>
+                    <!-- GLMS -->
+                    <div class="col-md-3" *ngIf="isVisiblePricingProduct(7)">
+                        <div class="product-item" [routerLink]="['/pricing-glms',riskGroupNumber, sapbpid]">
+                            <div class="product-heading">GLMS</div>
                             <div class="container-item-icon">
-                                <i class="fa fa-user" aria-hidden="true"></i>
+                                <i class="fa fa-buromobelexperte" aria-hidden="true"></i>                             
                             </div>
                         </div>
-                    </div>-->
+                    </div>
                 </div>
 
             </div>
