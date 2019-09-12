@@ -10,7 +10,7 @@ export class GlmsConcessionService {
 
     getGlmsViewData(riskGroupNumber, sapbpid): Observable<GlmsView> {
         const url = "/api/Glms/GlmsView/" + riskGroupNumber + "/" + sapbpid;
-        return this.http.get(null).map(this.extractData).catch(this.handleErrorObservable);
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
     private extractData(response: Response) {

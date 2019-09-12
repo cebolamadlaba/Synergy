@@ -14,9 +14,11 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Glms
         /// </value>
         public int GlmsProductId { get; set; }
 
-        public string GlmsProductType { get; set; }
+        public string GroupType { get; set; }
 
-        public string GlmsProductTypeId { get; set; }
+        public string pricingDescription { get; set; }
+
+        public int AccountNumber { get; set; }
 
         public string GlmsProductName { get; set; }
 
@@ -24,9 +26,9 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Glms
 
         public string LegalEntity  { get; set; }
 
-        public string AccountNumber { get; set; }      
+        public decimal Spread { get; set; }      
 
-        public string LoadedRate { get; set; }
+        public string RateType { get; set; }
 
     }
 
@@ -37,7 +39,6 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Glms
         /// </summary>
         /// <value>
         /// The Glms product identifier.       /// </value>
-
 
         public string RiskGroupName { get; set; }
 

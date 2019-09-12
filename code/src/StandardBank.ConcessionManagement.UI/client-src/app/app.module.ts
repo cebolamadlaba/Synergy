@@ -51,6 +51,7 @@ import { BaseComponentService } from './services/base-component.service';
 import { ConcessionLetterService } from './services/concession-letter.service';
 import { BolTradeManagementService } from './services/bol-trade-management.service'
 import { BolTradeAeManagementService } from './services/bol-trade-ae-management.service';
+import { GlmsConcessionService } from './services/glms-concession.service';
  
 import { AdminTransactionTablesService } from './services/admin-transaction-tables.service';
 import { LegalEntityAddressService } from './services/legal-entity-address.service';
@@ -200,7 +201,8 @@ import { PricingGlmsComponent } from './pricing-glms/pricing-glms.component';
         ConcessionLetterService,
         LegalEntityAddressService,
         BolTradeManagementService,
-        BolTradeAeManagementService
+        BolTradeAeManagementService,
+        GlmsConcessionService
     ],
     bootstrap: [AppComponent]
 })

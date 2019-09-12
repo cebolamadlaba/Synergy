@@ -966,12 +966,20 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     var glmsProducts = db.Query<GlmsProduct>(
-                        @"SELECT pinv.pkProductInvestmentId [InvestmentProductId], p.[Description] [InvestmentProductName], le.[CustomerName] [legalEntity], lea.[AccountNumber], pinv.[AverageBalance], pinv.LoadedCustomerRate [LoadedRate],@riskGroupName [RiskGroupName] 
-                        FROM [dbo].tblProductInvestment pinv
-                        JOIN [dbo].[rtblProduct] p on p.[pkProductId] = pinv.[fkProductId]
-                        JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = pinv.[fkLegalEntityId]
-                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = pinv.[fkLegalEntityAccountId]
-                        WHERE pinv.[fkRiskGroupId] = @riskGroupId", new { riskGroupId, riskGroupName },
+                        @"SELECT 
+                                  pglms.pkProductGlmsId [GlmsProductId],
+		                          pglms.GroupType,
+	                              le.[CustomerName] [legalEntity],
+	                              pricing.Description pricingDescription,
+	                              pglms.Spread,
+		                          pglms.RateType
+
+                        FROM [dbo].tblProductGlms pglms
+                                 JOIN [dbo].[tblLegalEntity] le
+	                                on le.[pkLegalEntityId] = pglms.[fkLegalEntityId]
+                                 JOIN [dbo].tblInterestPricingCategory pricing 
+		                            on pricing.pkInterestPricingCategoryId= pglms.fkInterestPricingCategoryId
+                        WHERE pglms.[fkRiskGroupId] = @riskGroupId", new { riskGroupId, riskGroupName },
                         commandTimeout: Int32.MaxValue);
 
                     if (glmsProducts != null && glmsProducts.Any())
@@ -994,13 +1002,20 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     var glmsProducts = db.Query<GlmsProduct>(
-                        @"SELECT pinv.pkProductInvestmentId [InvestmentProductId], p.[Description] [InvestmentProductName], le.[CustomerName] [legalEntity], lea.[AccountNumber], pinv.[AverageBalance], pinv.LoadedCustomerRate [LoadedRate]
-                        FROM [dbo].tblProductInvestment pinv
-                        JOIN [dbo].[rtblProduct] p on p.[pkProductId] = pinv.[fkProductId]
-                        JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = pinv.[fkLegalEntityId]
-                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = pinv.[fkLegalEntityAccountId]
-                        WHERE le.[pkLegalEntityId] = @legalEntityId", new { legalEntityId, legalEntityName },
-                        commandTimeout: Int32.MaxValue);
+                        @"SELECT pglms.pkProductGlmsId [GlmsProductId],
+		                               pglms.GroupType,
+	                                   le.[CustomerName] [legalEntity],
+	                                   pricing.Description pricingDescription,
+	                                   pglms.Spread,
+		                               pglms.RateType
+
+                            FROM [dbo].tblProductGlms pglms
+                                 JOIN [dbo].[tblLegalEntity] le
+	                                ON le.[pkLegalEntityId] = pglms.[fkLegalEntityId]
+                                 JOIN [dbo].tblInterestPricingCategory pricing 
+		                            ON pricing.pkInterestPricingCategoryId= pglms.fkInterestPricingCategoryId
+                            WHERE le.[pkLegalEntityId] = @legalEntityId", new { legalEntityId, legalEntityName },
+                                                    commandTimeout: Int32.MaxValue);
 
                     if (glmsProducts != null && glmsProducts.Any())
                         return glmsProducts;
@@ -1248,7 +1263,7 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<GlmsConcessionDetail>(@"select cd.[pkConcessionDetailId] [ConcessionDetailId], 
+                return db.Query<GlmsConcessionDetail>(@"SELECT cd.[pkConcessionDetailId] [ConcessionDetailId], 
                     cd.[fkConcessionId] [ConcessionId], 
                     cd.[fkLegalEntityId] [LegalEntityId],
                     cd.[fkLegalEntityAccountId] [LegalEntityAccountId],  
@@ -1258,25 +1273,30 @@ namespace StandardBank.ConcessionManagement.Repository
                     [IsMismatched], 
                     [PriceExported], 
                     [PriceExportedDate],                  
-					pinv.pkConcessionInvestmentId [InvestmentConcessionDetailId],
+					pinv.pkConcessionGlmsId [GlmsConcessionDetailId],
                     ac.AccountNumber,
-					LoadedRate,
-					ApprovedRate,				
-                    p.Description InvestmentProduct,										
+					pinv.TierFrom,
+					pinv.TierTo,				
+                    p.GroupType GlmsProduct,										
                     pinv.fkLegalEntityAccountId,
                     pinv.fkProductId [productTypeId],                  
-					pinv.Balance,				
-					pinv.[Term],                
-					pinv.fkLegalEntityAccountId
+					pinv.Spread,				
+					pinv.Value,                
+					pinv.fkLegalEntityAccountId,
+                    code.Description BaseRate,
+                    glmsGroup.GroupNumber
 
-                    from [dbo].[tblConcessionDetail] cd
-                    left join [dbo].[tblConcessionInvestment] pinv on cd.pkConcessionDetailId = pinv.fkConcessionDetailId
+                    FROM [dbo].[tblConcessionDetail] cd
+                    left join [dbo].[tblConcessionGlms] pinv on cd.pkConcessionDetailId = pinv.fkConcessionDetailId
                     left JOIN [dbo].tblLegalEntityAccount lea on pinv.fkLegalEntityAccountId = lea.pkLegalEntityAccountId  
                     left JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = lea.fkLegalEntityId
                     left join tblLegalEntityAccount ac on pinv.fkLegalEntityAccountId = ac.pkLegalEntityAccountId				
-                    left JOIN [dbo].[rtblProduct] p on p.[pkProductId] = pinv.fkProductId
+                    left JOIN [dbo].[tblProductGlms] p on p.pkProductGlmsId = pinv.fkProductId
+	                left join [dbo].[tblBaseRateCode] code on code.pkBaseRateCodeId=pinv.fkBaseRateCodeId
+                    left join [dbo].[tblGlmsGroup] glmsGroup on glmsGroup.pkGlmsGroupId = pinv.fkGroupId
 
-                    where cd.fkConcessionId = @concessionId  and cd.Archived is null", new { concessionId });
+
+                     WHERE cd.fkConcessionId = @concessionId  and cd.Archived is null", new { concessionId });
             }
         }
         /// <summary>

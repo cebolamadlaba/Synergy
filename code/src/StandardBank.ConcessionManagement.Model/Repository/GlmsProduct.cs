@@ -5,30 +5,33 @@ namespace StandardBank.ConcessionManagement.Model.Repository
     /// </summary>
     public class GlmsProduct
     {
-        /// <summary>
-        /// Gets or sets the Id.
-        /// </summary>
-        /// <value>
-        /// The Id.
-        /// </value>
-        public int GlmsProductId { get; set; }
 
-        /// <summary>
-        /// Gets or sets the ConcessionTypeId.
-        /// </summary>
-        /// <value>
-        /// The ConcessionTypeId.
-        /// </value>
-        public int? GlmsProductTypeId { get; set; }
+        public int pkProductGlmsId { get; set; }
 
-        /// <summary>
-        /// Gets or sets the Description.
-        /// </summary>
-        /// <value>
-        /// The Description.
-        /// </value>
-        public string investmentProductName { get; set; }
+        public int fkRiskGroupId { get; set; }
+  
+        public int fkLegalEntityId { get; set; }
+    
+        public int fkGroupId { get; set; }
 
-      
+        public string GroupType { get; set; }
+
+        public int fkInterestTypeId { get; set; }
+
+        public int fkSlabTypeId { get; set; }
+
+        public int fkInterestPricingCategoryId { get; set; }
+
+        public int TierFrom { get; set; }
+
+        public int TierTo { get; set; }
+
+        public int RateType { get; set; }
+
+        public int fkBaseRateCodeId { get; set; }
+
+        public decimal Spread { get; set; }
+
+
     }
 }

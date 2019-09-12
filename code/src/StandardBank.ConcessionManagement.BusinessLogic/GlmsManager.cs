@@ -108,7 +108,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 foreach (var productgrouping in groupedinfo)
                 {
                     if (productgrouping != null && productgrouping.GlmsProducts != null)
-                        productgrouping.GlmsProducts = productgrouping.GlmsProducts.OrderBy(o => o.AccountNumber).ThenBy(o => o.GlmsProductType).ToList();
+                        productgrouping.GlmsProducts = productgrouping.GlmsProducts.OrderBy(o => o.AccountNumber).ThenBy(o => o.GroupType).ToList();
                 }
             }
 
