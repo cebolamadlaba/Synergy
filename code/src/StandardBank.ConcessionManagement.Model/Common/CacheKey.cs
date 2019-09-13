@@ -84,6 +84,11 @@
                 public const string ReadAll = "CacheKey.Repository.MarketSegmentRepository.ReadAll";
             }
 
+            public static class MarketSegmentEnablementRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.MarketSegmentEnablementRepository.ReadAll";
+            }
+
             public static class ProductRepository
             {
                 public const string ReadAll = "CacheKey.Repository.ProductRepository.ReadAll";
