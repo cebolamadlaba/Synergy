@@ -398,11 +398,10 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
             bolConcession.bolConcessionDetails.push(bolConcessionDetail);
 
             if (hasTypeId && hasLegalEntityId && hasLegalEntityAccountId) {
-                let hasDuplicates = this.baseComponentService.HasDuplicateConcessionAccountChargeCode(
+                let hasDuplicates = this.baseComponentService.HasDuplicateConcessionUserIdChargeCode(
                     bolConcession.bolConcessionDetails,
                     concessionFormItem.get('chargecode').value.pkChargeCodeId,
-                    concessionFormItem.get('userid').value.legalEntityId,
-                    concessionFormItem.get('userid').value.legalEntityAccountId);
+                    concessionFormItem.get('userid').value.pkLegalEntityBOLUserId);
 
                 if (hasDuplicates) {
                     this.addValidationError("Duplicate Account / Product pricing found. Please select different account.");
