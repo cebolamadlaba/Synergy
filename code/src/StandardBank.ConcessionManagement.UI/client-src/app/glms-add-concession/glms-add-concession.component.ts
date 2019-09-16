@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from "rxjs";
+import { Location, DatePipe } from '@angular/common';
 
 import { BaseComponentService } from '../services/base-component.service';
 
@@ -14,14 +15,14 @@ export class GlmsAddConcessionComponent implements OnInit {
    riskGroupNumber: number;
 
 
-  constructor() { }
+    constructor(private location: Location) { }
 
   ngOnInit() {
   }
 
 
     goBack() {
-        this.router.navigate(['/pricing', this.riskGroupNumber]);
+        this.location.back();
     }
 
 }
