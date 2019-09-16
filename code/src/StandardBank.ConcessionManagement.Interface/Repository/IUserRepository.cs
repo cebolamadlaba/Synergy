@@ -58,6 +58,13 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         IEnumerable<User> ReadByCentreId(int centreId);
 
         /// <summary>
+        /// Reads the by risk group identifier.
+        /// </summary>
+        /// <param name="riskGroupNumber">The risk group identifier.</param>
+        /// <returns></returns>
+        User ReadByRiskGroupNumber(int riskGroupNumber);
+
+        /// <summary>
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>

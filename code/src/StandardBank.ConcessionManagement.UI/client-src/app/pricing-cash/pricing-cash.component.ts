@@ -9,13 +9,14 @@ import { RiskGroup } from "../models/risk-group";
 import { Concession } from "../models/concession";
 import { Router, RouterModule } from '@angular/router';
 import { UserService } from "../services/user.service";
+import { BaseComponentService } from '../services/base-component.service';
 
 @Component({
     selector: 'app-pricing-cash',
     templateUrl: './pricing-cash.component.html',
     styleUrls: ['./pricing-cash.component.css']
 })
-export class PricingCashComponent implements OnInit, OnDestroy {
+export class PricingCashComponent extends BaseComponentService implements OnInit, OnDestroy {
     riskGroupNumber: number;
     sapbpid: number;
 
@@ -31,11 +32,13 @@ export class PricingCashComponent implements OnInit, OnDestroy {
     isLoading = true;
     canRequest = false;
 
+
     constructor(
-        private router: Router,
+        public router: Router,
         private route: ActivatedRoute,
         private location: Location,
-        @Inject(CashConcessionService) private cashConcessionService, private userService: UserService) {
+        @Inject(CashConcessionService) private cashConcessionService, public userService: UserService) {
+        super(router, userService);
         this.cashView.riskGroup = new RiskGroup();
         this.cashView.cashConcessions = [new CashConcession()];
         this.cashView.cashConcessions[0].concession = new Concession();

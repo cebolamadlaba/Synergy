@@ -1,15 +1,21 @@
 import { Injectable } from '@angular/core';
-
+import { Router, RouterModule } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
+import { UserService } from "../services/user.service";
+import { User } from '../models/user';
 
 declare var accounting: any;
 
 @Injectable()
 export class BaseComponentService {
 
-    constructor() { }
+    validationError: String[];
+    aeUser: User;
+    riskGroupAEUser: User;
+
+    constructor(public router: Router, public userService: UserService) { }
 
     public HasDuplicateConcessionAccountProduct(concessionDetails: any[], productTypeId: number, legalEntityId: number, legalEntityAccountId: number): boolean {
         let duplicates = concessionDetails.filter((item) => {
@@ -65,6 +71,38 @@ export class BaseComponentService {
         return accounting.unformat(itemValue);
     }
 
+    public addConcessionValidationError(validationDetail) {
+        this.validationError.push(validationDetail);
+    }
+
+    public async checkForExistingConcessions(concessionListLength, url,riskGroupNumber, sapbpid) {
+        this.validationError = [];
+
+        await this.getUserRiskGroupDetails(riskGroupNumber);
+        await this.getUserData();
+        this.checkAEExistOnriskGroupNumber();
+        
+        if (concessionListLength > 0 ) {
+            if (sapbpid == 0) {
+                this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Risk group. Please select the concession below and update");
+            } else {
+                this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Legal Entity. Please select the concession below and update");
+            }
+        } else {
+            if(this.validationError.length < 1) {
+                this.router.navigate([url, riskGroupNumber, sapbpid]);
+            }          
+        }
+    }
+
+    public checkAEExistOnriskGroupNumber() {
+
+        if (this.riskGroupAEUser.id != this.aeUser.accountExecutiveUserId) {
+            this.addConcessionValidationError("The logged in user does not have access to the account in the Risk group." + this.riskGroupAEUser.firstName + " " + this.riskGroupAEUser.surname + " is the responsible person for this Risk Group, please refer this concession request to them");
+        }
+
+    }
+
     public formatDecimal(itemValue: number) {
 
         if (itemValue != null) {
@@ -95,4 +133,26 @@ export class BaseComponentService {
             return "Concession expiry date must be greater than 3 months";
         };
     }
+
+    getUserData(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.userService.getData().subscribe(user => {
+            resolve(user);
+            this.aeUser = user;
+               
+            });
+        });
+    }
+
+    getUserRiskGroupDetails(riskGroupNumber): Promise<any>{
+        return new Promise((resolve, reject) => {
+            this.userService.getUserRiskGroupDetailsData(riskGroupNumber).subscribe(user => {
+            resolve(user);
+            this.riskGroupAEUser = user;
+              
+            });
+        });
+    }
+
+
 }

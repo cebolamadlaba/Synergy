@@ -100,6 +100,7 @@ import { BolTradeManagementComponent } from './admin/bol-trade-management/bol-tr
 import { BolTradeAeManagementComponent } from './admin/bol-trade-ae-management/bol-trade-ae-management.component';
 import { FilterPipe } from './filters/filter.pipe';
 import { PricingGlmsComponent } from './pricing-glms/pricing-glms.component';
+import { AddGlmsConcessionComponent } from './add-glms-concession/add-glms-concession.component';
 
 
 @NgModule({
@@ -161,7 +162,8 @@ import { PricingGlmsComponent } from './pricing-glms/pricing-glms.component';
         BolTradeManagementComponent,
         BolTradeAeManagementComponent,
         FilterPipe,
-        PricingGlmsComponent
+        PricingGlmsComponent,
+        AddGlmsConcessionComponent
 
     ],
     imports: [

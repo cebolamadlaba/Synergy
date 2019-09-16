@@ -13,13 +13,14 @@ import { TradeConcessionService } from "../services/trade-concession.service";
 
 import { Concession } from "../models/concession";
 import { UserService } from "../services/user.service";
+import { BaseComponentService } from '../services/base-component.service';
 
 @Component({
     selector: 'app-pricing-trade',
     templateUrl: './pricing-trade.component.html',
     styleUrls: ['./pricing-trade.component.css']
 })
-export class PricingTradeComponent implements OnInit, OnDestroy {
+export class PricingTradeComponent extends BaseComponentService implements OnInit, OnDestroy {
     riskGroupNumber: number;
     sapbpid: number;
     private sub: any;
@@ -31,16 +32,16 @@ export class PricingTradeComponent implements OnInit, OnDestroy {
     pageLoaded = false;
     isLoading = true;
     canRequest = false;
-
     entityName: string;
     entityNumber: string;
 
     constructor(
-        private router: Router,
+        public router: Router,
         private route: ActivatedRoute,
         private location: Location,
-        @Inject(TradeConcessionService) private tradeConcessionService, private userService: UserService
+        @Inject(TradeConcessionService) private tradeConcessionService, public userService: UserService
     ) {
+        super(router,userService);
         this.tradeView.riskGroup = new RiskGroup();
         this.tradeView.tradeConcessions = [new TradeConcession()];
         this.tradeView.tradeConcessions[0].concession = new Concession();

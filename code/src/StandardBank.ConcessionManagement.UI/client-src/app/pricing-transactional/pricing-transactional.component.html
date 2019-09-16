@@ -97,7 +97,24 @@
     </div>
 </div>
 
+
+<!-- Error message -->
+<div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
+            <p>{{errorMessage}}</p>
+
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 <!--Table information -->
+
+
 
 <div class="col-md-12" *ngIf="!isLoading">
     <div class="col-md-6 search-and-results-container">
@@ -154,32 +171,32 @@
 
             <!-- Products list -->
             <!--<div class="section-body" *ngFor="let transactionalProduct of transactionalView.transactionalProducts; trackBy: index;">
-        <div class="product-section">
-            <div class="product-name"> {{transactionalProduct.customerName}}</div>
-            <div>
-                <div class="product-account">Account No: {{transactionalProduct.accountNumber}}</div>
-                <div class="product-code">Transaction Type: {{transactionalProduct.transactionType}}</div>
-            </div>
-        </div>
-        <div class="product-table-container">
-            <table class="table table-bordered table-hover header-fixed table-striped ">
-                <thead>
-                <tr>
-                    <th>Tariff Table</th>
+                <div class="product-section">
+                    <div class="product-name"> {{transactionalProduct.customerName}}</div>
+                    <div>
+                        <div class="product-account">Account No: {{transactionalProduct.accountNumber}}</div>
+                        <div class="product-code">Transaction Type: {{transactionalProduct.transactionType}}</div>
+                    </div>
+                </div>
+                <div class="product-table-container">
+                    <table class="table table-bordered table-hover header-fixed table-striped ">
+                        <thead>
+                        <tr>
+                            <th>Tariff Table</th>
 
-                    <th>Loaded Price</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td class="rightAlign"> {{transactionalProduct.tariffTable}}</td>
+                            <th>Loaded Price</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="rightAlign"> {{transactionalProduct.tariffTable}}</td>
 
-                    <td class="rightAlign"> {{transactionalProduct.loadedPrice}}</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>-->
+                            <td class="rightAlign"> {{transactionalProduct.loadedPrice}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>-->
             <!-- End of products list -->
 
         </div>
@@ -190,7 +207,7 @@
     <div class="col-md-6 search-and-results-container">
         <h2 class="headings">
             Concessions
-            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/transactional-add-concession', riskGroupNumber, sapbpid]" *ngIf="pageLoaded && canRequest">Add Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="checkForExistingConcessions(transactionalView.transactionalConcessions.length,'/transactional-add-concession', riskGroupNumber, sapbpid)" *ngIf="pageLoaded && canRequest">Add Concession</button>
         </h2>
 
         <!-- Search bar -->
@@ -198,7 +215,7 @@
             <input class="form-control" placeholder="Concession ID" [(ngModel)]="filterConcessionId" type="text">
         </div>
 
-        <div class="section" *ngFor="let transactionalConcession of transactionalView.transactionalConcessions | baseConcessionFilter : filterConcessionId; trackBy: index;">            
+        <div class="section" *ngFor="let transactionalConcession of transactionalView.transactionalConcessions | baseConcessionFilter : filterConcessionId; trackBy: index;">
             <div class="section-header">
                 <div class="concessionID-section">
                     <div class="concession-status">
@@ -207,7 +224,7 @@
                     <p class="concession-id">{{transactionalConcession.concession.referenceNumber}}</p>
                     <div class="concession-sub-status">{{transactionalConcession.concession.subStatus}}</div>
                 </div>
-            </div>                       
+            </div>
             <div class="section-body">
                 <div class="table-container" [routerLink]="['/transactional-view-concession', riskGroupNumber, sapbpid, transactionalConcession.concession.referenceNumber]">
                     <table class="table table-bordered table-hover header-fixed table-striped">
@@ -234,7 +251,7 @@
                                 <!--<td class="rightAlign">{{concession.tariffTable}}</td>
                                     <td class="rightAlign">{{concession.volume}}</td>
                                     <td class="rightAlign">{{concession.value | number : '1.2-2'}}</td>-->
-                                                                <td>
+                                <td>
                                     <p class="mapInfo">Loaded: {{concession.displayTextLoaded}}</p>
                                     <p class="mapInfo">Approved: {{concession.displayTextApproved}}</p>
                                 </td>
