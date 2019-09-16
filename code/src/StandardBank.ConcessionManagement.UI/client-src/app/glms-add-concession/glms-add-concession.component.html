@@ -142,12 +142,12 @@
                         </tr>
                     </thead>
                     <tbody class="secondary-text">
-                        <tr *ngIf="bolConcessionForm.controls.conditionItemsRows.controls.length == 0">
+                        <tr *ngIf="glmsConcessionForm.controls.conditionItemsRows.controls.length == 0">
                             <td colspan="8" class="searchEmptyState">
                                 No conditions added
                             </td>
                         </tr>
-                        <tr *ngFor="let itemrow of bolConcessionForm.controls.conditionItemsRows.controls; let i=index">
+                        <tr *ngFor="let itemrow of glmsConcessionForm.controls.conditionItemsRows.controls; let i=index">
                             <td># {{i + 1}}</td>
                             <td>{{itemrow.get('conditionType').value?.description}}</td>
                             <td>{{itemrow.get('conditionProduct').value?.description}}</td>
@@ -178,7 +178,7 @@
                     </div>
                     <table class="form-concessions-table" formArrayName="conditionItemsRows" style="width:100%">
                         <thead class="form-concessions-table-headings">
-                            <tr *ngIf="bolConcessionForm.controls.conditionItemsRows.controls.length > 0">
+                            <tr *ngIf="glmsConcessionForm.controls.conditionItemsRows.controls.length > 0">
                                 <th>Condition Type</th>
                                 <th>Product Type</th>
                                 <th>Interest Rate</th>
@@ -190,12 +190,12 @@
                             </tr>
                         </thead>
                         <tbody class="form-concessions-table-content">
-                            <tr *ngIf="bolConcessionForm.controls.conditionItemsRows.controls.length == 0">
+                            <tr *ngIf="glmsConcessionForm.controls.conditionItemsRows.controls.length == 0">
                                 <td colspan="8" class="searchEmptyState">
                                     No conditions added
                                 </td>
                             </tr>
-                            <tr *ngFor="let itemrow of bolConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
+                            <tr *ngFor="let itemrow of glmsConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
                                 <td class="length-long">
                                     <!-- Condition type -->
                                     <select formControlName="conditionType" (change)="conditionTypeChanged(i)">
