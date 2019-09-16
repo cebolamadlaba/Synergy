@@ -102,42 +102,22 @@
     <table class="form-concessions-table" formArrayName="concessionItemRows">
         <thead class="form-concessions-table-headings">
             <tr>
-                <th>Product (Charge Code Type)</th>
-                <th>User ID</th>
-                <th>Charge code</th>
-                <th>Rate</th>
-
+                <th>Group #</th>
+                <th>Interest Pricing Category</th>
+                <th>Interest Type</th>
+                <th>Slap Type</th>
+                <th>Tiered From</th>
+                <th>Tiered To</th>
+                <th>Rate Type</th>
+                <th>Base Rate</th>
+                <th>Spread</th>
+                <th>Value</th>
                 <th>Expiry Date</th>
                 <th></th>
             </tr>
         </thead>
         <tbody class="form-concessions-table-content">
 
-
-            <tr *ngFor="let itemrow of bolConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
-                <td class="length-long">
-                    <select formControlName="product" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="productTypeChanged(i)">
-                        <option *ngFor="let productOption of bolchargecodetypes" [ngValue]="productOption">{{productOption.description}}</option>
-                    </select>
-                </td>
-                <td class="length-medium">
-                    <select formControlName="userid" class="form-control" [attr.disabled]="saveMessage ? '' : null">
-                        <option *ngFor="let useridOption of legalentitybolusers" [ngValue]="useridOption">{{useridOption.bolUserId}}</option>
-                    </select>
-                </td>
-                <td class="length-long">
-                    <select formControlName="chargecode" class="form-control" [attr.disabled]="saveMessage ? '' : null">
-                        <option *ngFor="let bolchargecodeOption of selectedProducts[i].bolchargecodes" [ngValue]="bolchargecodeOption">{{bolchargecodeOption.description}}</option>
-                    </select>
-                </td>
-
-
-
-                <td class="length-long"><input type="number" class="form-control" formControlName="unitcharge" [attr.disabled]="saveMessage ? '' : null" /></td>
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="onExpiryDateChanged(itemrow)" /></td>
-
-                <td class="delete"><button *ngIf="bolConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
-            </tr>
         </tbody>
     </table>
 
