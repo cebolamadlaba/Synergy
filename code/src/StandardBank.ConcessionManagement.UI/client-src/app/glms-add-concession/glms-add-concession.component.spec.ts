@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddGlmsConcessionComponent } from './add-glms-concession.component';
+import { GlmsAddConcessionComponent } from './glms-add-concession.component';
 
-describe('AddGlmsConcessionComponent', () => {
-  let component: AddGlmsConcessionComponent;
-  let fixture: ComponentFixture<AddGlmsConcessionComponent>;
+describe('GlmsAddConcessionComponent', () => {
+  let component: GlmsAddConcessionComponent;
+  let fixture: ComponentFixture<GlmsAddConcessionComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AddGlmsConcessionComponent ]
+      declarations: [ GlmsAddConcessionComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddGlmsConcessionComponent);
+    fixture = TestBed.createComponent(GlmsAddConcessionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

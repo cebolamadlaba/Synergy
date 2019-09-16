@@ -97,10 +97,13 @@ export class BaseComponentService {
 
     public checkAEExistOnriskGroupNumber() {
 
+        if(this.aeUser.accountExecutiveUserId == null && this.aeUser.isRequestor) {
+            this.aeUser.accountExecutiveUserId = this.aeUser.id;
+        }
+
         if (this.riskGroupAEUser.id != this.aeUser.accountExecutiveUserId) {
             this.addConcessionValidationError("The logged in user does not have access to the account in the Risk group." + this.riskGroupAEUser.firstName + " " + this.riskGroupAEUser.surname + " is the responsible person for this Risk Group, please refer this concession request to them");
         }
-
     }
 
     public formatDecimal(itemValue: number) {
