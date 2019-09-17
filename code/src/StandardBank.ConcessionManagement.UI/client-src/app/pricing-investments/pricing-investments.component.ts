@@ -13,6 +13,7 @@ import { InvestmentConcessionService } from "../services/investment-concession.s
 import { Concession } from "../models/concession";
 import { UserService } from "../services/user.service";
 import { BaseComponentService } from '../services/base-component.service';
+import { Http } from '@angular/http';
 
 @Component({
     selector: 'app-pricing-investments',
@@ -39,9 +40,9 @@ export class PricingInvestmentsComponent extends BaseComponentService implements
         public router: Router,
         private route: ActivatedRoute,
         private location: Location,
-        @Inject(InvestmentConcessionService) private investmentConcessionService, public userService: UserService
+        @Inject(InvestmentConcessionService) private investmentConcessionService, public userService: UserService, public http: Http
     ) {
-        super(router, userService);
+        super(router, userService, http);
         this.investmentView.riskGroup = new RiskGroup();
         this.investmentView.investmentConcessions = [new InvestmentConcession()];
         this.investmentView.investmentConcessions[0].concession = new Concession();

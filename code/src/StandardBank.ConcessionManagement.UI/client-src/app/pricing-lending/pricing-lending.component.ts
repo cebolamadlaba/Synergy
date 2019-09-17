@@ -11,6 +11,7 @@ import { Router, RouterModule } from '@angular/router';
 import { LendingFinancial } from "../models/lending-financial";
 import { UserService } from "../services/user.service";
 import { BaseComponentService } from '../services/base-component.service';
+import { Http } from '@angular/http';
 
 @Component({
     selector: 'app-pricing-lending',
@@ -40,8 +41,9 @@ export class PricingLendingComponent extends BaseComponentService implements OnI
         private route: ActivatedRoute,
         private location: Location,
         @Inject(LendingService) private lendingService,
-        public userService: UserService) {
-        super(router, userService);
+        public userService: UserService,
+        public http: Http) {
+        super(router, userService, http);
         this.lendingView.riskGroup = new RiskGroup();
         this.lendingView.lendingFinancial = new LendingFinancial();
         this.lendingView.lendingConcessions = [new LendingConcession()];

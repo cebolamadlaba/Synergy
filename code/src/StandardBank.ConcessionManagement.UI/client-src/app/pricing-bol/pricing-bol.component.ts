@@ -12,6 +12,7 @@ import { Concession } from "../models/concession";
 
 import { UserService } from "../services/user.service";
 import { BaseComponentService } from '../services/base-component.service';
+import { Http } from '@angular/http';
 
 @Component({
     selector: 'app-pricing-bol',
@@ -39,8 +40,8 @@ export class PricingBolComponent extends BaseComponentService implements OnInit,
         private route: ActivatedRoute,
         private location: Location,
         public router: Router,
-        @Inject(BolConcessionService) private bolConcessionService, public userService: UserService) {
-        super(router, userService);
+        @Inject(BolConcessionService) private bolConcessionService, public userService: UserService, public http: Http) {
+        super(router, userService, http);
         this.bolView.riskGroup = new RiskGroup();
         this.bolView.bolConcessions = [new BolConcession()];
         this.bolView.bolConcessions[0].concession = new Concession();

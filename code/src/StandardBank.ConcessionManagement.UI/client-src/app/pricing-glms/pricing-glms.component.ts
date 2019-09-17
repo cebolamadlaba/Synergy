@@ -13,6 +13,7 @@ import { GlmsConcessionService } from "../services/glms-concession.service"
 import { Concession } from "../models/concession";
 import { UserService } from "../services/user.service";
 import { BaseComponentService } from '../services/base-component.service';
+import { Http } from '@angular/http';
 
 @Component({
   selector: 'app-pricing-glms',
@@ -40,9 +41,9 @@ export class PricingGlmsComponent extends BaseComponentService implements OnInit
         public router: Router,
         private route: ActivatedRoute,
         private location: Location,
-        @Inject(GlmsConcessionService) private glmsConcessionService, public userService: UserService
+        @Inject(GlmsConcessionService) private glmsConcessionService, public userService: UserService, public http: Http
     ) {
-        super(router, userService);
+        super(router, userService, http);
         this.glmsView.riskGroup = new RiskGroup();
         this.glmsView.glmsConcessions = [new GlmsConcession()];
         this.glmsView.glmsConcessions[0].concession = new Concession();

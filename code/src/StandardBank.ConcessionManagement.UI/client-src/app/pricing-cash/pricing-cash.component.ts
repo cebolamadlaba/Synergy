@@ -10,6 +10,7 @@ import { Concession } from "../models/concession";
 import { Router, RouterModule } from '@angular/router';
 import { UserService } from "../services/user.service";
 import { BaseComponentService } from '../services/base-component.service';
+import { Http } from '@angular/http';
 
 @Component({
     selector: 'app-pricing-cash',
@@ -37,8 +38,8 @@ export class PricingCashComponent extends BaseComponentService implements OnInit
         public router: Router,
         private route: ActivatedRoute,
         private location: Location,
-        @Inject(CashConcessionService) private cashConcessionService, public userService: UserService) {
-        super(router, userService);
+        @Inject(CashConcessionService) private cashConcessionService, public userService: UserService, public http: Http) {
+        super(router, userService, http);
         this.cashView.riskGroup = new RiskGroup();
         this.cashView.cashConcessions = [new CashConcession()];
         this.cashView.cashConcessions[0].concession = new Concession();
