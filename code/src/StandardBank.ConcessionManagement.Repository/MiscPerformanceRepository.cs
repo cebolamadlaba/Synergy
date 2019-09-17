@@ -721,10 +721,12 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             IEnumerable<BolProduct> Function()
             {
-                using (var db = _dbConnectionFactory.Connection())
+                try
                 {
-                    var bolProducts = db.Query<BolProduct>(
-                        @"Select bol.[pkProductBOLId] [BolProductId],@riskGroupName [RiskGroupName],
+                    using (var db = _dbConnectionFactory.Connection())
+                    {
+                        var bolProducts = db.Query<BolProduct>(
+                            @"Select bol.[pkProductBOLId] [BolProductId],@riskGroupName [RiskGroupName],
 						le.[CustomerName] [LegalEntity], lu.BOLUserId, bol.[LoadedRate], ch.ChargeCode, ch.[Description] [ChargeCodeDesc], ty.Description [BolProductType]
 					    FROM [dbo].[tblProductBOL] bol
 						JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = bol.[fkLegalEntityId]
@@ -732,13 +734,19 @@ namespace StandardBank.ConcessionManagement.Repository
 						JOIN [dbo].rtblBOLChargeCode ch on bol.fkChargeCodeId = ch.pkChargeCodeId
                         left join rtblBOLChargeCode cc on bol.fkChargeCodeId = cc.pkChargeCodeId
 						left join rtblBOLChargeCodeType ty on cc.fkChargeCodeTypeId = ty.pkChargeCodeTypeId
-						where (cc.IsNonUniversal = 1 And bol.fkRiskGroupId =  @riskGroupId)
-						Or (cc.IsNonUniversal = 0)", new { riskGroupId, riskGroupName },
-                        commandTimeout: Int32.MaxValue);
+						where bol.fkRiskGroupId =  @riskGroupId", new { riskGroupId, riskGroupName },
+                            commandTimeout: Int32.MaxValue);
 
-                    if (bolProducts != null && bolProducts.Any())
-                        return bolProducts;
+                        if (bolProducts != null && bolProducts.Any())
+                            return bolProducts;
+                    }
                 }
+                catch (Exception ex)
+                {
+                    string str = ex.ToString();
+                }
+
+
 
                 return null;
             }
@@ -764,8 +772,7 @@ namespace StandardBank.ConcessionManagement.Repository
 						JOIN [dbo].rtblBOLChargeCode ch on bol.fkChargeCodeId = ch.pkChargeCodeId
                         left join rtblBOLChargeCode cc on bol.fkChargeCodeId = cc.pkChargeCodeId
 						left join rtblBOLChargeCodeType ty on cc.fkChargeCodeTypeId = ty.pkChargeCodeTypeId
-						where (cc.IsNonUniversal = 1 And bol.fkLegalEntityId =  @legalEntityId)
-                        Or (cc.IsNonUniversal = 0)", new { legalEntityId, legalEntityName },
+						where bol.fkLegalEntityId =  @legalEntityId", new { legalEntityId, legalEntityName },
                         commandTimeout: Int32.MaxValue);
 
                     if (bolProducts != null && bolProducts.Any())

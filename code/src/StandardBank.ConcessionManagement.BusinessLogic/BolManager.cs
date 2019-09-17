@@ -226,23 +226,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 }
             }
 
-            //only return charge code that are on approved concession
-            foreach (var group in groupedinfo)
-            {
-                group.BolProducts.ForEach(x =>
-                {
-                    foreach (var bol in bolConcessions)
-                    {
-                        var bolConcessionDetail = bol.BolConcessionDetails.Where(i => i.ChargeCode == x.ChargeCode);
+            ////only return charge code that are on approved concession
+            //foreach (var group in groupedinfo)
+            //{
+            //    group.BolProducts.ForEach(x =>
+            //    {
+            //        foreach (var bol in bolConcessions)
+            //        {
+            //            var bolConcessionDetail = bol.BolConcessionDetails.Where(i => i.ChargeCode == x.ChargeCode);
 
-                        if (bolConcessionDetail != null)
-                        {
-                            bolProductGroup.Add(group);
-                        }
-                    }
-                });
-
-            }
+            //            if (bolConcessionDetail != null)
+            //            {
+            //                bolProductGroup.Add(group);
+            //            }
+            //        }
+            //    });
+            //}
 
             return new BolView
             {
@@ -250,7 +249,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 LegalEntity = legalEntity,
                 BolConcessions = bolConcessions, //.OrderBy(_ => _.Concession.AccountNumber),
                 BolFinancial = bolFinancial,
-                BolProductGroups= bolProductGroup.Distinct().OrderBy(o => o.LegalEntity)
+                BolProductGroups= groupedinfo.Distinct().OrderBy(o => o.LegalEntity)
             };
         }
 
