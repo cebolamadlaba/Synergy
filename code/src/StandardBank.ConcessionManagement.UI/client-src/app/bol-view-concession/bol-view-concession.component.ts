@@ -576,11 +576,10 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             bolConcession.bolConcessionDetails.push(bolConcessionDetail);
 
             if (hasTypeId && hasLegalEntityId && hasLegalEntityAccountId) {
-                let hasDuplicates = this.baseComponentService.HasDuplicateConcessionAccountChargeCode(
+                let hasDuplicates = this.baseComponentService.HasDuplicateConcessionUserIdChargeCode(
                     bolConcession.bolConcessionDetails,
                     concessionFormItem.get('chargecode').value.pkChargeCodeId,
-                    concessionFormItem.get('userid').value.legalEntityId,
-                    concessionFormItem.get('userid').value.legalEntityAccountId);
+                    concessionFormItem.get('userid').value.pkLegalEntityBOLUserId);
 
                 if (hasDuplicates) {
                     this.addValidationError("Duplicate Account / Product pricing found. Please select different account.");
@@ -1172,17 +1171,10 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-        //$event.target.value = this.formatDecimal($event.target.value);
+      
     }
 
-    //formatDecimal(itemValue: number) {
-    //    if (itemValue) {
-    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-    //    }
-
-    //    return null;
-    //}
-
+ 
     validatePeriod(itemrow) {
         this.validationError = null;
 
