@@ -85,8 +85,7 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         private location: Location,
         public http: Http,
         @Inject(LookupDataService) private lookupDataService,
-        @Inject(GlmsConcessionService) private glmsConcessionService
-        , private baseComponentService: BaseComponentService,
+        @Inject(GlmsConcessionService) private glmsConcessionService,
         public userService: UserService) {
         super(http,router,userService);
         this.riskGroup = new RiskGroup();
@@ -101,7 +100,7 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
 
     ngOnInit() {
 
-        this.today = this.baseComponentService.GetTodayDate();
+        this.today = this.GetTodayDate();
 
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
@@ -128,7 +127,6 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
             });
 
         });
-
 
         this.glmsConcessionForm = this.formBuilder.group({
             concessionItemRows: this.formBuilder.array([this.initConcessionItemRows()]),
@@ -250,7 +248,7 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
             glmsConcession.concession.smtDealNumber = this.glmsConcessionForm.controls['smtDealNumber'].value;
         }
         else
-            this.addValidationError("SMT Deal Number not captured");
+            this.addConcessionValidationError("SMT Deal Number not captured");
 
         if (this.glmsConcessionForm.controls['motivation'].value)
             glmsConcession.concession.motivation = this.glmsConcessionForm.controls['motivation'].value;
@@ -278,7 +276,7 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
                 hasTypeId = true;
             }
             else
-                this.baseComponentService.addConcessionValidationError("Product not selected");
+                this.addConcessionValidationError("Product not selected");
 
 
             if ((concessionFormItem.get('accountNumber').value && concessionFormItem.get('accountNumber').value.legalEntityId)) {
@@ -288,7 +286,7 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
                 hasLegalEntityAccountId = true;
             } else {
 
-                this.baseComponentService.addConcessionValidationError("Client account not selected");
+                this.addConcessionValidationError("Client account not selected");
 
             }
 
@@ -297,7 +295,7 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
             }
             else {
                 if (!applyexpirydate) {
-                    this.baseComponentService.addConcessionValidationError("Expiry date not selected");
+                    this.addConcessionValidationError("Expiry date not selected");
                 }
             }
 
@@ -316,12 +314,12 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
             if (conditionFormItem.get('conditionType').value)
                 concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;
             else
-                this.baseComponentService.addConcessionValidationError("Condition type not selected");
+                this.addConcessionValidationError("Condition type not selected");
 
             if (conditionFormItem.get('conditionProduct').value)
                 concessionCondition.conditionProductId = conditionFormItem.get('conditionProduct').value.id;
             else
-                this.baseComponentService.addConcessionValidationError("Condition product not selected");
+                this.addConcessionValidationError("Condition product not selected");
 
             if (conditionFormItem.get('interestRate').value)
                 concessionCondition.interestRate = conditionFormItem.get('interestRate').value;
@@ -332,7 +330,7 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
             if (conditionFormItem.get('value').value == null || (<string>conditionFormItem.get('value').value).length < 1) {
                 var value = conditionFormItem.get('conditionType').value;
                 if (value != null && value.enableConditionValue == true)
-                    this.baseComponentService.addConcessionValidationError("Conditions: 'Value' is a mandatory field");
+                    this.addConcessionValidationError("Conditions: 'Value' is a mandatory field");
             }
             else if (conditionFormItem.get('value').value)
                 concessionCondition.conditionValue = conditionFormItem.get('value').value;
@@ -340,23 +338,23 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
             if (conditionFormItem.get('periodType').value) {
                 concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
             } else {
-                this.baseComponentService.addConcessionValidationError("Period type not selected");
+                this.addConcessionValidationError("Period type not selected");
             }
 
             if (conditionFormItem.get('period').value) {
                 concessionCondition.periodId = conditionFormItem.get('period').value.id;
             } else {
-                this.baseComponentService.addConcessionValidationError("Period not selected");
+                this.addConcessionValidationError("Period not selected");
             }
 
             if (conditionFormItem.get('period').value) {
                 concessionCondition.periodId = conditionFormItem.get('period').value.id;
             } else {
-                this.baseComponentService.addConcessionValidationError("Period not selected");
+                this.addConcessionValidationError("Period not selected");
             }
 
             if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
-                this.baseComponentService.addConcessionValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+                this.addConcessionValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
             }
 
             glmsConcession.concessionConditions.push(concessionCondition);
