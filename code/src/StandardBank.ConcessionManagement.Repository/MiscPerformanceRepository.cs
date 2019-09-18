@@ -488,20 +488,6 @@ namespace StandardBank.ConcessionManagement.Repository
 
                             if (clientAccounts != null && clientAccounts.Any())
                                 return clientAccounts;
-
-                            //var clientAccounts = db.Query<ClientAccount>(
-                            //    @"SELECT le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
-                            //FROM [dbo].[tblRiskGroup] rg
-                            //JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
-                            //JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
-                            //WHERE rg.[RiskGroupNumber] = @riskGroupNumber
-                            //AND rg.[IsActive] = 1
-                            //AND le.[IsActive] = 1
-                            //AND lea.[IsActive] = 1",
-                            //    new { riskGroupNumber }, commandTimeout: Int32.MaxValue);
-
-                            //if (clientAccounts != null && clientAccounts.Any())
-                            //    return clientAccounts;
                         }
                     }
 

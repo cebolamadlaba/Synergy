@@ -226,28 +226,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 }
             }
 
-            ////only return charge code that are on approved concession
-            //foreach (var group in groupedinfo)
-            //{
-            //    group.BolProducts.ForEach(x =>
-            //    {
-            //        foreach (var bol in bolConcessions)
-            //        {
-            //            var bolConcessionDetail = bol.BolConcessionDetails.Where(i => i.ChargeCode == x.ChargeCode);
-
-            //            if (bolConcessionDetail != null)
-            //            {
-            //                bolProductGroup.Add(group);
-            //            }
-            //        }
-            //    });
-            //}
-
             return new BolView
             {
                 RiskGroup = riskGroup,
                 LegalEntity = legalEntity,
-                BolConcessions = bolConcessions, //.OrderBy(_ => _.Concession.AccountNumber),
+                BolConcessions = bolConcessions,
                 BolFinancial = bolFinancial,
                 BolProductGroups= groupedinfo.Distinct().OrderBy(o => o.LegalEntity)
             };
