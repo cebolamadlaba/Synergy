@@ -87,9 +87,6 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
     observableConditionTypes: Observable<ConditionType[]>;
     conditionTypes: ConditionType[];
 
-    //observableClientAccounts: Observable<ClientAccount[]>;
-    //clientAccounts: ClientAccount[];
-
 
     constructor(private route: ActivatedRoute,
         private router: Router,
@@ -109,11 +106,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         this.conditionTypes = [new ConditionType()];
         this.selectedConditionTypes = [new ConditionType()];
         this.selectedProducts = [new BolChargeCodeType()];
-        //this.clientAccounts = [new ClientAccount()];
-
-        //this.bolView.riskGroup = new RiskGroup();
-        //this.bolView.bolConcessions = [new BolConcession()];
-        //this.bolView.bolConcessions[0].concession = new Concession();
+       
     }
 
     ngOnInit() {
@@ -398,11 +391,10 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
             bolConcession.bolConcessionDetails.push(bolConcessionDetail);
 
             if (hasTypeId && hasLegalEntityId && hasLegalEntityAccountId) {
-                let hasDuplicates = this.baseComponentService.HasDuplicateConcessionAccountChargeCode(
+                let hasDuplicates = this.baseComponentService.HasDuplicateConcessionUserIdChargeCode(
                     bolConcession.bolConcessionDetails,
                     concessionFormItem.get('chargecode').value.pkChargeCodeId,
-                    concessionFormItem.get('userid').value.legalEntityId,
-                    concessionFormItem.get('userid').value.legalEntityAccountId);
+                    concessionFormItem.get('userid').value.pkLegalEntityBOLUserId);
 
                 if (hasDuplicates) {
                     this.addValidationError("Duplicate Account / Product pricing found. Please select different account.");
@@ -506,17 +498,10 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-        //$event.target.value = this.formatDecimal($event.target.value);
+       
     }
 
-    //formatDecimal(itemValue: number) {
-    //    if (itemValue) {
-    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-    //    }
-
-    //    return null;
-    //}
-
+    
     goBack() {
         this.router.navigate(['/pricing', this.riskGroupNumber]);
     }

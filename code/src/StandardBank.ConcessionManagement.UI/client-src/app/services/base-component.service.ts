@@ -41,11 +41,11 @@ export class BaseComponentService {
         return duplicates.length > 1;
     }
 
-    public HasDuplicateConcessionAccountChargeCode(concessionDetails: any[], fkChargeCodeId: number, legalEntityId: number, legalEntityAccountId: number): boolean {
+    // BOL
+    public HasDuplicateConcessionUserIdChargeCode(concessionDetails: any[], fkChargeCodeId: number, legalEntityBOLUserId: number): boolean {
         let duplicates = concessionDetails.filter((item) => {
             return item.fkChargeCodeId == fkChargeCodeId
-                && item.legalEntityId == legalEntityId
-                && item.legalEntityAccountId == legalEntityAccountId;
+                && item.fkLegalEntityBOLUserId == legalEntityBOLUserId;
         });
 
         return duplicates.length > 1;
