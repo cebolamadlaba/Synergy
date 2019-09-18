@@ -7,11 +7,15 @@ import { GlmsGroup } from '../models/glms-group';
 import { InterestPricingCategory } from '../models/interest-pricing-category';
 import { RateType } from '../models/rate-type';
 import { SlabType } from '../models/slab-type';
+import { BaseComponentService } from './base-component.service';
+import { Router } from '@angular/router';
+import { UserService } from './user.service';
 
 @Injectable()
-export class GlmsBaseService {
+export class GlmsBaseService extends BaseComponentService {
 
-    constructor(public http: Http) {
+    constructor(public http: Http, public router: Router, public userService: UserService) {
+        super(router,userService);
     }
 
     //add glms concession look up section

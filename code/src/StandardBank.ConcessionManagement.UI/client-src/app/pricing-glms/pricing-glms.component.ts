@@ -41,9 +41,9 @@ export class PricingGlmsComponent extends BaseComponentService implements OnInit
         public router: Router,
         private route: ActivatedRoute,
         private location: Location,
-        @Inject(GlmsConcessionService) private glmsConcessionService, public userService: UserService, public http: Http
+        @Inject(GlmsConcessionService) private glmsConcessionService, public userService: UserService
     ) {
-        super(router, userService, http);
+        super(router, userService);
         this.glmsView.riskGroup = new RiskGroup();
         this.glmsView.glmsConcessions = [new GlmsConcession()];
         this.glmsView.glmsConcessions[0].concession = new Concession();

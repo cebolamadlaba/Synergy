@@ -40,9 +40,9 @@ export class PricingTradeComponent extends BaseComponentService implements OnIni
         public router: Router,
         private route: ActivatedRoute,
         private location: Location,
-        @Inject(TradeConcessionService) private tradeConcessionService, public userService: UserService, public http: Http
+        @Inject(TradeConcessionService) private tradeConcessionService, public userService: UserService
     ) {
-        super(router, userService, http);
+        super(router, userService);
         this.tradeView.riskGroup = new RiskGroup();
         this.tradeView.tradeConcessions = [new TradeConcession()];
         this.tradeView.tradeConcessions[0].concession = new Concession();

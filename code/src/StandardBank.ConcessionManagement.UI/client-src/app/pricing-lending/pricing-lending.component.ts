@@ -41,9 +41,8 @@ export class PricingLendingComponent extends BaseComponentService implements OnI
         private route: ActivatedRoute,
         private location: Location,
         @Inject(LendingService) private lendingService,
-        public userService: UserService,
-        public http: Http) {
-        super(router, userService, http);
+        public userService: UserService) {
+        super(router, userService);
         this.lendingView.riskGroup = new RiskGroup();
         this.lendingView.lendingFinancial = new LendingFinancial();
         this.lendingView.lendingConcessions = [new LendingConcession()];

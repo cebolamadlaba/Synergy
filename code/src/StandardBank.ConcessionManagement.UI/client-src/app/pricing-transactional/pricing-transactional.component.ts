@@ -36,9 +36,8 @@ export class PricingTransactionalComponent extends BaseComponentService implemen
         private route: ActivatedRoute,
         private location: Location,
         @Inject(TransactionalConcessionService) private transactionalConcessionService,
-        public userService: UserService,
-        public http: Http) {
-        super(router, userService, http);
+        public userService: UserService) {
+        super(router, userService);
         this.transactionalView.riskGroup = new RiskGroup();
         this.transactionalView.transactionalConcessions = [new TransactionalConcession()];
         this.transactionalView.transactionalConcessions[0].concession = new Concession();

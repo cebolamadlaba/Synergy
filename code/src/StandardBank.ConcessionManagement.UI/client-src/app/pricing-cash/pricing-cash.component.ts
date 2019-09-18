@@ -38,8 +38,8 @@ export class PricingCashComponent extends BaseComponentService implements OnInit
         public router: Router,
         private route: ActivatedRoute,
         private location: Location,
-        @Inject(CashConcessionService) private cashConcessionService, public userService: UserService, public http: Http) {
-        super(router, userService, http);
+        @Inject(CashConcessionService) private cashConcessionService, public userService: UserService) {
+        super(router, userService);
         this.cashView.riskGroup = new RiskGroup();
         this.cashView.cashConcessions = [new CashConcession()];
         this.cashView.cashConcessions[0].concession = new Concession();

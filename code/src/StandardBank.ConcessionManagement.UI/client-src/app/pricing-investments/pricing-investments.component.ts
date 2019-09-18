@@ -40,9 +40,9 @@ export class PricingInvestmentsComponent extends BaseComponentService implements
         public router: Router,
         private route: ActivatedRoute,
         private location: Location,
-        @Inject(InvestmentConcessionService) private investmentConcessionService, public userService: UserService, public http: Http
+        @Inject(InvestmentConcessionService) private investmentConcessionService, public userService: UserService
     ) {
-        super(router, userService, http);
+        super(router, userService);
         this.investmentView.riskGroup = new RiskGroup();
         this.investmentView.investmentConcessions = [new InvestmentConcession()];
         this.investmentView.investmentConcessions[0].concession = new Concession();
