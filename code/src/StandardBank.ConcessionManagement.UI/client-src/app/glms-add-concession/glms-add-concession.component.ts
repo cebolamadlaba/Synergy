@@ -30,13 +30,16 @@ import { ClientAccount } from '../models/client-account';
 import { GlmsConcession } from '../models/glms-concession';
 import { Concession } from '../models/concession';
 import { GlmsConcessionDetail } from '../models/glms-concession-detail';
+import { GlmsBaseService } from '../services/glms-base.service';
+import { UserService } from '../services/user.service';
+import { Http } from '@angular/http';
 
 @Component({
   selector: 'app-glms-add-concession',
   templateUrl: './glms-add-concession.component.html',
   styleUrls: ['./glms-add-concession.component.css']
 })
-export class GlmsAddConcessionComponent implements OnInit {
+export class GlmsAddConcessionComponent extends GlmsBaseService implements OnInit {
     private sub: any;
 
     errorMessage: String;
@@ -77,13 +80,15 @@ export class GlmsAddConcessionComponent implements OnInit {
 
 
     constructor(private route: ActivatedRoute,
-        private router: Router,
+        public router: Router,
         private formBuilder: FormBuilder,
         private location: Location,
+        public http: Http,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(GlmsConcessionService) private glmsConcessionService
-        ,private baseComponentService: BaseComponentService) {
-
+        , private baseComponentService: BaseComponentService,
+        public userService: UserService) {
+        super(http,router,userService);
         this.riskGroup = new RiskGroup();
   
         this.periods = [new Period()];
@@ -96,7 +101,7 @@ export class GlmsAddConcessionComponent implements OnInit {
 
     ngOnInit() {
 
-        this.today = new Date().toISOString().split('T')[0];
+        this.today = this.baseComponentService.GetTodayDate();
 
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
@@ -153,10 +158,10 @@ export class GlmsAddConcessionComponent implements OnInit {
         if (this.riskGroupNumber != null && this.riskGroupNumber != 0) {
             Observable.forkJoin([
                 this.lookupDataService.getProductTypes(ConcessionTypes.Glms),
-                this.baseComponentService.getGlmsGroup(),
-                this.baseComponentService.getInterestType(),
-                this.baseComponentService.getSlabType(),
-                this.baseComponentService.getRateType(),
+                this.getGlmsGroup(),
+                this.getInterestType(),
+                this.getSlabType(),
+                this.getRateType(),
                 this.lookupDataService.getPeriods(),
                 this.lookupDataService.getPeriodTypes(),
                 this.lookupDataService.getConditionTypes(),
@@ -172,10 +177,10 @@ export class GlmsAddConcessionComponent implements OnInit {
         else if (this.sapbpid != null && this.sapbpid != 0) {
             Observable.forkJoin([
                 this.lookupDataService.getProductTypes(ConcessionTypes.Glms),
-                this.baseComponentService.getGlmsGroup(),
-                this.baseComponentService.getInterestType(),
-                this.baseComponentService.getSlabType(),
-                this.baseComponentService.getRateType(),
+                this.getGlmsGroup(),
+                this.getInterestType(),
+                this.getSlabType(),
+                this.getRateType(),
                 this.lookupDataService.getPeriods(),
                 this.lookupDataService.getPeriodTypes(),
                 this.lookupDataService.getConditionTypes(),

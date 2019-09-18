@@ -40,8 +40,8 @@ export class PricingBolComponent extends BaseComponentService implements OnInit,
         private route: ActivatedRoute,
         private location: Location,
         public router: Router,
-        @Inject(BolConcessionService) private bolConcessionService, public userService: UserService, public http: Http) {
-        super(router, userService, http);
+        @Inject(BolConcessionService) private bolConcessionService, public userService: UserService) {
+        super(router, userService);
         this.bolView.riskGroup = new RiskGroup();
         this.bolView.bolConcessions = [new BolConcession()];
         this.bolView.bolConcessions[0].concession = new Concession();

@@ -6,18 +6,17 @@ import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
 import { UserService } from "../services/user.service";
 import { User } from '../models/user';
-import { GlmsBaseService } from '../services/glms-base.service';
 declare var accounting: any;
 
 @Injectable()
-export class BaseComponentService extends GlmsBaseService  {
+export class BaseComponentService   {
 
     validationError: String[];
     aeUser: User;
     riskGroupAEUser: User
 
-    constructor(public router: Router, public userService: UserService, public http: Http) {
-        super(http);
+    constructor(public router: Router, public userService: UserService) {
+        
     }
 
     public HasDuplicateConcessionAccountProduct(concessionDetails: any[], productTypeId: number, legalEntityId: number, legalEntityAccountId: number): boolean {
@@ -119,6 +118,10 @@ export class BaseComponentService extends GlmsBaseService  {
         return 0.00;
     }
 
+    public GetTodayDate() {     
+      return new Date().toISOString().split('T')[0];
+    }
+
     public formatDecimalThree(itemValue: number) {
 
         if (itemValue != null) {
@@ -160,5 +163,6 @@ export class BaseComponentService extends GlmsBaseService  {
         });
     }
 
+  
 
 }
