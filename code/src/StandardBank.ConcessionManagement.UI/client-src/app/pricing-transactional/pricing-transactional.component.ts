@@ -10,6 +10,7 @@ import { TransactionalConcessionService } from "../services/transactional-conces
 import { TransactionalConcession } from "../models/transactional-concession";
 import { UserService } from "../services/user.service";
 import { BaseComponentService } from '../services/base-component.service';
+import { Http } from '@angular/http';
 
 @Component({
     selector: 'app-pricing-transactional',
@@ -36,7 +37,7 @@ export class PricingTransactionalComponent extends BaseComponentService implemen
         private location: Location,
         @Inject(TransactionalConcessionService) private transactionalConcessionService,
         public userService: UserService) {
-        super(router,userService);
+        super(router, userService);
         this.transactionalView.riskGroup = new RiskGroup();
         this.transactionalView.transactionalConcessions = [new TransactionalConcession()];
         this.transactionalView.transactionalConcessions[0].concession = new Concession();

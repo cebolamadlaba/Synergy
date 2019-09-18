@@ -14,6 +14,7 @@ import { TradeConcessionService } from "../services/trade-concession.service";
 import { Concession } from "../models/concession";
 import { UserService } from "../services/user.service";
 import { BaseComponentService } from '../services/base-component.service';
+import { Http } from '@angular/http';
 
 @Component({
     selector: 'app-pricing-trade',
@@ -41,7 +42,7 @@ export class PricingTradeComponent extends BaseComponentService implements OnIni
         private location: Location,
         @Inject(TradeConcessionService) private tradeConcessionService, public userService: UserService
     ) {
-        super(router,userService);
+        super(router, userService);
         this.tradeView.riskGroup = new RiskGroup();
         this.tradeView.tradeConcessions = [new TradeConcession()];
         this.tradeView.tradeConcessions[0].concession = new Concession();

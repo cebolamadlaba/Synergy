@@ -12,6 +12,7 @@ import { Concession } from "../models/concession";
 
 import { UserService } from "../services/user.service";
 import { BaseComponentService } from '../services/base-component.service';
+import { Http } from '@angular/http';
 
 @Component({
     selector: 'app-pricing-bol',

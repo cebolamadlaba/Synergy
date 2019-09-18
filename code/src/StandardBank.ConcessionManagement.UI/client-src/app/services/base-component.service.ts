@@ -1,21 +1,23 @@
 import { Injectable } from '@angular/core';
+import { Http} from '@angular/http';
 import { Router, RouterModule } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
 import { UserService } from "../services/user.service";
 import { User } from '../models/user';
-
 declare var accounting: any;
 
 @Injectable()
-export class BaseComponentService {
+export class BaseComponentService   {
 
     validationError: String[];
     aeUser: User;
-    riskGroupAEUser: User;
+    riskGroupAEUser: User
 
-    constructor(public router: Router, public userService: UserService) { }
+    constructor(public router: Router, public userService: UserService) {
+        
+    }
 
     public HasDuplicateConcessionAccountProduct(concessionDetails: any[], productTypeId: number, legalEntityId: number, legalEntityAccountId: number): boolean {
         let duplicates = concessionDetails.filter((item) => {
@@ -116,6 +118,10 @@ export class BaseComponentService {
         return 0.00;
     }
 
+    public GetTodayDate() {     
+      return new Date().toISOString().split('T')[0];
+    }
+
     public formatDecimalThree(itemValue: number) {
 
         if (itemValue != null) {
@@ -157,5 +163,6 @@ export class BaseComponentService {
         });
     }
 
+  
 
 }

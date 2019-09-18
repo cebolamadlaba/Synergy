@@ -11,6 +11,7 @@ import { Router, RouterModule } from '@angular/router';
 import { LendingFinancial } from "../models/lending-financial";
 import { UserService } from "../services/user.service";
 import { BaseComponentService } from '../services/base-component.service';
+import { Http } from '@angular/http';
 
 @Component({
     selector: 'app-pricing-lending',

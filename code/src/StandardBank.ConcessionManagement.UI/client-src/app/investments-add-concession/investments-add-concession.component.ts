@@ -595,14 +595,6 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
-    //formatDecimal(itemValue: number) {
-    //    if (itemValue) {
-    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-    //    }
-
-    //    return null;
-    //}
-
     goBack() {
         this.router.navigate(['/pricing', this.riskGroupNumber]);
     }

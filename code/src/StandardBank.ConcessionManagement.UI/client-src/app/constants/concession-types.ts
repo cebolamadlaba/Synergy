@@ -6,4 +6,5 @@ export class ConcessionTypes {
     public static readonly BOLDesc = "Business Online";
     public static readonly Trade = "Trade";
     public static readonly Investment = "Investment";
+    public static readonly Glms = "Glms";
 }

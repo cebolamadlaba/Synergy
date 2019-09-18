@@ -52,6 +52,7 @@ import { ConcessionLetterService } from './services/concession-letter.service';
 import { BolTradeManagementService } from './services/bol-trade-management.service'
 import { BolTradeAeManagementService } from './services/bol-trade-ae-management.service';
 import { GlmsConcessionService } from './services/glms-concession.service';
+import { GlmsBaseService } from './services/glms-base.service';
  
 import { AdminTransactionTablesService } from './services/admin-transaction-tables.service';
 import { LegalEntityAddressService } from './services/legal-entity-address.service';
@@ -205,7 +206,8 @@ import { GlmsAddConcessionComponent } from './glms-add-concession/glms-add-conce
         LegalEntityAddressService,
         BolTradeManagementService,
         BolTradeAeManagementService,
-        GlmsConcessionService
+        GlmsConcessionService,
+        GlmsBaseService
     ],
     bootstrap: [AppComponent]
 })
