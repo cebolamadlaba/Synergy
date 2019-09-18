@@ -245,7 +245,7 @@ export class GlmsAddConcessionComponent implements OnInit {
             glmsConcession.concession.smtDealNumber = this.glmsConcessionForm.controls['smtDealNumber'].value;
         }
         else
-            this.addValidationError("SMT Deal Number not captured");
+            this.baseComponentService.addConcessionValidationError("SMT Deal Number not captured");
 
         if (this.glmsConcessionForm.controls['motivation'].value)
             glmsConcession.concession.motivation = this.glmsConcessionForm.controls['motivation'].value;

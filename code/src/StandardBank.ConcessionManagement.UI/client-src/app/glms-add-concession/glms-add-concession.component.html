@@ -13,36 +13,36 @@
             <div class="col-md-1"></div>
         </div>
 
-            <div class="col-md-1">
-                <div class="compress">
-                    <div>
-                        <i class="fa fa-compress" (click)="showHide = !showHide" aria-hidden="true" id="compress-icon"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Dashboard Collapsed -->
-        <div class="col-md-12 banner-container" *ngIf="!showHide">
-            <div class="col-md-11">
+        <div class="col-md-1">
+            <div class="compress">
                 <div>
-                    <div class="col-md-5">
-                        <div class="subHeading">{{entityName}}</div>
-                        <div class="date lightTitle hidden-element">{{entityNumber}}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-1">
-                <div class="compress">
-                    <div>
-                        <i class="fa fa-expand" (click)="showHide = !showHide" aria-hidden="true" id="compress-icon"></i>
-                    </div>
+                    <i class="fa fa-compress" (click)="showHide = !showHide" aria-hidden="true" id="compress-icon"></i>
                 </div>
             </div>
         </div>
-
     </div>
+    <!-- Dashboard Collapsed -->
+    <div class="col-md-12 banner-container" *ngIf="!showHide">
+        <div class="col-md-11">
+            <div>
+                <div class="col-md-5">
+                    <div class="subHeading">{{entityName}}</div>
+                    <div class="date lightTitle hidden-element">{{entityNumber}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <div class="compress">
+                <div>
+                    <i class="fa fa-expand" (click)="showHide = !showHide" aria-hidden="true" id="compress-icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
-<!-- Error message -->
+
+<!-- Error message
 <div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
     <div class="form-feedback-container">
         <div class="alert-danger">
@@ -54,7 +54,7 @@
             </ul>
         </div>
     </div>
-</div>
+</div>-->
 
 <!-- Success message -->
 <div class="col-md-12" *ngIf="saveMessage && !isLoading">
@@ -116,9 +116,7 @@
                 <th></th>
             </tr>
         </thead>
-        <tbody class="form-concessions-table-content">
-
-        </tbody>
+        <tbody class="form-concessions-table-content"></tbody>
     </table>
 
 

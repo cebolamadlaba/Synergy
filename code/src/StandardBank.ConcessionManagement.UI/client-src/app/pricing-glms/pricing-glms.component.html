@@ -114,11 +114,11 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let glmsprod of glmsprodgroup.glmsProducts">
-                                    <td class="leftAlign">{{glmsprod.accountNumber}}</td>
+                                    <td class="leftAlign">{{glmsprod.GroupType}}</td>
 
-                                    <td class="leftAlign">{{glmsprod.glmsProductName}}</td>
+                                    <td class="leftAlign">{{glmsprod.pricingDescription}}</td>
 
-                                    <td class="rightAlign">{{glmsprod.loadedRate}}</td>
+                                    <td class="rightAlign">{{glmsprod.Spread}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -133,7 +133,8 @@
     <div class="col-md-6 search-and-results-container" id="lending-search-container">
         <h2 class="headings">
             Concessions
-            <button type="button" class="btn btn-primary btn-concession" *ngIf="pageLoaded && canRequest" (click)="checkForExistingConcessions(glmsView.glmsConcessions.length,'/glms-add-concession', riskGroupNumber, sapbpid)">Add Concession</button>
+            <!--(click)="checkForExistingConcessions(glmsView.glmsConcessions.length,'/glms-add-concession', riskGroupNumber, sapbpid)"-->
+            <button type="button" class="btn btn-primary btn-concession" *ngIf="pageLoaded && canRequest">Add Concession</button>
         </h2>
 
 
