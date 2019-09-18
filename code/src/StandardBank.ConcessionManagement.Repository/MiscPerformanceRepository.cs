@@ -488,20 +488,6 @@ namespace StandardBank.ConcessionManagement.Repository
 
                             if (clientAccounts != null && clientAccounts.Any())
                                 return clientAccounts;
-
-                            //var clientAccounts = db.Query<ClientAccount>(
-                            //    @"SELECT le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
-                            //FROM [dbo].[tblRiskGroup] rg
-                            //JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
-                            //JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
-                            //WHERE rg.[RiskGroupNumber] = @riskGroupNumber
-                            //AND rg.[IsActive] = 1
-                            //AND le.[IsActive] = 1
-                            //AND lea.[IsActive] = 1",
-                            //    new { riskGroupNumber }, commandTimeout: Int32.MaxValue);
-
-                            //if (clientAccounts != null && clientAccounts.Any())
-                            //    return clientAccounts;
                         }
                     }
 
@@ -721,10 +707,12 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             IEnumerable<BolProduct> Function()
             {
-                using (var db = _dbConnectionFactory.Connection())
+                try
                 {
-                    var bolProducts = db.Query<BolProduct>(
-                        @"Select bol.[pkProductBOLId] [BolProductId],@riskGroupName [RiskGroupName],
+                    using (var db = _dbConnectionFactory.Connection())
+                    {
+                        var bolProducts = db.Query<BolProduct>(
+                            @"Select bol.[pkProductBOLId] [BolProductId],@riskGroupName [RiskGroupName],
 						le.[CustomerName] [LegalEntity], lu.BOLUserId, bol.[LoadedRate], ch.ChargeCode, ch.[Description] [ChargeCodeDesc], ty.Description [BolProductType]
 					    FROM [dbo].[tblProductBOL] bol
 						JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = bol.[fkLegalEntityId]
@@ -733,11 +721,18 @@ namespace StandardBank.ConcessionManagement.Repository
                         left join rtblBOLChargeCode cc on bol.fkChargeCodeId = cc.pkChargeCodeId
 						left join rtblBOLChargeCodeType ty on cc.fkChargeCodeTypeId = ty.pkChargeCodeTypeId
 						where bol.fkRiskGroupId =  @riskGroupId", new { riskGroupId, riskGroupName },
-                        commandTimeout: Int32.MaxValue);
+                            commandTimeout: Int32.MaxValue);
 
-                    if (bolProducts != null && bolProducts.Any())
-                        return bolProducts;
+                        if (bolProducts != null && bolProducts.Any())
+                            return bolProducts;
+                    }
                 }
+                catch (Exception ex)
+                {
+                    string str = ex.ToString();
+                }
+
+
 
                 return null;
             }
@@ -785,7 +780,7 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 using (var db = _dbConnectionFactory.Connection())
                 {
-                    var bolProducts = db.Query<TradeProduct>(
+                    var tradeProduct = db.Query<TradeProduct>(
                         @"Select trade.pkProductTradeId [TradeProductId], @riskGroupName [RiskGroupName],lea.[AccountNumber],
 						le.[CustomerName] [LegalEntity], ty.Description [TradeProductType], prod.description [TradeProductName],LoadedRate						
 						from [tblProductTrade] trade
@@ -796,8 +791,8 @@ namespace StandardBank.ConcessionManagement.Repository
 						where trade.fkRiskGroupId =  @riskGroupId", new { riskGroupId, riskGroupName },
                         commandTimeout: Int32.MaxValue);
 
-                    if (bolProducts != null && bolProducts.Any())
-                        return bolProducts;
+                    if (tradeProduct != null && tradeProduct.Any())
+                        return tradeProduct;
                 }
 
                 return null;
@@ -815,7 +810,7 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 using (var db = _dbConnectionFactory.Connection())
                 {
-                    var bolProducts = db.Query<TradeProduct>(
+                    var tradeProduct = db.Query<TradeProduct>(
                         @"Select trade.pkProductTradeId [TradeProductId], lea.[AccountNumber],
 						le.[CustomerName] [LegalEntity], ty.Description [TradeProductType], prod.description [TradeProductName],LoadedRate						
 						from [tblProductTrade] trade
@@ -826,8 +821,8 @@ namespace StandardBank.ConcessionManagement.Repository
 						where trade.fkLegalEntityId =  @legalEntityId", new { legalEntityId, legalEntityName },
                         commandTimeout: Int32.MaxValue);
 
-                    if (bolProducts != null && bolProducts.Any())
-                        return bolProducts;
+                    if (tradeProduct != null && tradeProduct.Any())
+                        return tradeProduct;
                 }
 
                 return null;
@@ -845,7 +840,7 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 using (var db = _dbConnectionFactory.Connection())
                 {
-                    var bolProducts = db.Query<InvestmentProduct>(
+                    var investmentProduct = db.Query<InvestmentProduct>(
                         @"SELECT pinv.pkProductInvestmentId [InvestmentProductId], p.[Description] [InvestmentProductName], le.[CustomerName] [legalEntity], lea.[AccountNumber], pinv.[AverageBalance], pinv.LoadedCustomerRate [LoadedRate],@riskGroupName [RiskGroupName] 
                         FROM [dbo].tblProductInvestment pinv
                         JOIN [dbo].[rtblProduct] p on p.[pkProductId] = pinv.[fkProductId]
@@ -854,8 +849,8 @@ namespace StandardBank.ConcessionManagement.Repository
                         WHERE pinv.[fkRiskGroupId] = @riskGroupId", new { riskGroupId, riskGroupName },
                         commandTimeout: Int32.MaxValue);
 
-                    if (bolProducts != null && bolProducts.Any())
-                        return bolProducts;
+                    if (investmentProduct != null && investmentProduct.Any())
+                        return investmentProduct;
                 }
 
                 return null;
@@ -873,7 +868,7 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 using (var db = _dbConnectionFactory.Connection())
                 {
-                    var bolProducts = db.Query<InvestmentProduct>(
+                    var investmentProduct = db.Query<InvestmentProduct>(
                         @"SELECT pinv.pkProductInvestmentId [InvestmentProductId], p.[Description] [InvestmentProductName], le.[CustomerName] [legalEntity], lea.[AccountNumber], pinv.[AverageBalance], pinv.LoadedCustomerRate [LoadedRate]
                         FROM [dbo].tblProductInvestment pinv
                         JOIN [dbo].[rtblProduct] p on p.[pkProductId] = pinv.[fkProductId]
@@ -882,8 +877,8 @@ namespace StandardBank.ConcessionManagement.Repository
                         WHERE le.[pkLegalEntityId] = @legalEntityId", new { legalEntityId, legalEntityName },
                         commandTimeout: Int32.MaxValue);
 
-                    if (bolProducts != null && bolProducts.Any())
-                        return bolProducts;
+                    if (investmentProduct != null && investmentProduct.Any())
+                        return investmentProduct;
                 }
 
                 return null;
