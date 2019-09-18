@@ -109,16 +109,16 @@
                                 <tr>
                                     <th>Account(No.)</th>
                                     <th>Product </th>
-                                    <th>Loaded Rate</th>
+                                    <th>Pricing</th>
+                                    <th>Spread</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let glmsprod of glmsprodgroup.glmsProducts">
-                                    <td class="leftAlign">{{glmsprod.GroupType}}</td>
-
+                                    <td class="leftAlign">{{glmsprod.accountNumber}}</td>
+                                    <td class="leftAlign">{{glmsprod.groupType}}</td>
                                     <td class="leftAlign">{{glmsprod.pricingDescription}}</td>
-
-                                    <td class="rightAlign">{{glmsprod.Spread}}</td>
+                                    <td class="rightAlign">{{glmsprod.spread}}</td>
                                 </tr>
                             </tbody>
                         </table>
