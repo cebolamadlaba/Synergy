@@ -37,3 +37,17 @@ VALUES(@marketSegmentId,@userId,1)
 
 Select * From [tblMarketSegmentEnablementTeamUser]
 Go
+
+Create Table tblConcessionTypeMismatchEscalation
+(
+	pkConcessionTypeMismatchEscalationId Int Identity(1,1) Not Null Primary Key,
+	fkConcessionTypeId Int Not Null Foreign Key (fkConcessionTypeId) References rtblConcessionType(pkConcessionTypeId),
+	LastEscalationSentDateTime DateTime Not Null Default(GetDate())
+)
+Go
+Alter Table tblConcessionTypeMismatchEscalation
+Add Constraint UC_ConcessionTypeMismatchEscalation Unique(fkConcessionTypeId)
+Go
+Insert Into tblConcessionTypeMismatchEscalation(fkConcessionTypeId)
+Select	pkConcessionTypeId
+From	rtblConcessionType

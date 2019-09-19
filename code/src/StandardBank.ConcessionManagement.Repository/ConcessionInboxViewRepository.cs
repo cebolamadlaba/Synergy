@@ -442,14 +442,30 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionInboxView>(
-                    @"  Select	Distinct 
-		                        ConcessionRef, ConcessionDate, ConcessionType,
-		                        RiskGroupName, RiskGroupNumber,
-		                        CustomerName, CustomerNumber
-                        From	ConcessionInboxView 
-                        Where	IsMismatched = 1
-                        And		IsActive = 1
-                        And		DATEADD(day,2,DateApproved) < GETDATE()");
+                    @"  Select		Distinct 
+			                        cv.ConcessionRef, cv.ConcessionDate, cv.ConcessionType,
+			                        cv.RiskGroupName, cv.RiskGroupNumber,
+			                        cv.CustomerName, cv.CustomerNumber,
+			                        u.FirstName + ' ' + u.Surname [Fullname], u.EmailAddress,
+			                        ms.Description [MarketSegment], me.LastEscalationSentDateTime
+                        From		ConcessionInboxView cv
+                        Inner Join	tblMarketSegmentEnablementTeamUser et	On	et.fkMarketSegmentId	=	cv.MarketSegmentId
+                        Inner Join	tblUser u								On	u.pkUserId				=	et.fkUserId
+                        Inner Join	tblConcessionTypeMismatchEscalation me	On	me.fkConcessionTypeId	=	cv.ConcessionTypeId
+                        Inner Join	rtblMarketSegment ms					On	ms.pkMarketSegmentId	=	cv.MarketSegmentId
+                        Where		cv.IsMismatched = 1
+                        And			cv.IsActive = 1
+                        And			DATEADD(day,2,cv.DateApproved) < GETDATE()");
+
+                //return db.Query<ConcessionInboxView>(
+                //    @"  Select	Distinct 
+                //          ConcessionRef, ConcessionDate, ConcessionType,
+                //          RiskGroupName, RiskGroupNumber,
+                //          CustomerName, CustomerNumber
+                //        From	ConcessionInboxView 
+                //        Where	IsMismatched = 1
+                //        And		IsActive = 1
+                //        And		DATEADD(day,2,DateApproved) < GETDATE()");
             }
         }
     }

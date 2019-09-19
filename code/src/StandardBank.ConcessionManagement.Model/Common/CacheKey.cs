@@ -89,6 +89,11 @@
                 public const string ReadAll = "CacheKey.Repository.MarketSegmentEnablementRepository.ReadAll";
             }
 
+            public static class ConcessionTypeMismatchEscalation
+            {
+                public const string ReadAll = "CacheKey.Repository.ConcessionTypeMismatchEscalation.ReadAll";
+            }
+
             public static class ProductRepository
             {
                 public const string ReadAll = "CacheKey.Repository.ProductRepository.ReadAll";
