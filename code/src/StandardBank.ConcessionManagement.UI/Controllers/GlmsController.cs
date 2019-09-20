@@ -58,12 +58,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             var concession = await _mediator.Send(new AddConcession(glmsConcession.Concession, user));
 
-            //foreach (var investmentConcessionDetail in glmsConcession.GlmsConcessionDetails)
-            //    await _mediator.Send(new BusinessLogic.Features.InvestmentConcession.AddOrUpdateInvestmentConcessionDetail(investmentConcessionDetail, user, concession));
+            foreach (var glmsConcessionDetail in glmsConcession.GlmsConcessionDetails)
+                await _mediator.Send(new BusinessLogic.Features.GlmsConcession.AddOrUpdateGlmsConcessionDetail(glmsConcessionDetail, user, concession));
 
-            //if (glmsConcession.ConcessionConditions != null && glmsConcession.ConcessionConditions.Any())
-            //    foreach (var concessionCondition in investmentConcession.ConcessionConditions)
-            //        await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+            if (glmsConcession.ConcessionConditions != null && glmsConcession.ConcessionConditions.Any())
+                foreach (var concessionCondition in glmsConcession.ConcessionConditions)
+                    await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
 
 
             var bcmPendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.NewSubmission);

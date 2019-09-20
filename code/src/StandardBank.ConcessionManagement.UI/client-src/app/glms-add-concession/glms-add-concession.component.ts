@@ -18,6 +18,11 @@ import { ConcessionTypes } from '../constants/concession-types';
 import { ConditionType } from "../models/condition-type";
 import { LegalEntity } from "../models/legal-entity";
 
+import { InterestType } from "../models/interest-type";
+import { SlabType } from "../models/slab-type";
+import { InterestPricingCategory } from "../models/interest-pricing-category";
+import { GlmsGroup } from "../models/glms-group"
+import { RateType } from "../models/rate-type";
 
 import { BaseComponentService } from '../services/base-component.service';
 import * as moment from 'moment';
@@ -62,6 +67,21 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
     selectedAccountNumbers: ClientAccountArray[];
     clientAccounts: ClientAccount[];
 
+    selectedSlabType: SlabType[];
+    slabType: SlabType[];
+
+    selectedRateType: RateType[];
+    rateType: RateType[];
+
+    selectedGlmsGroup: GlmsGroup[];
+    glmsGroup: GlmsGroup[];
+
+    selectedInterestType: InterestType[];
+    interestType: InterestType[];
+
+    selectedInterestPricingCategory: InterestPricingCategory[];
+    interestPricingCategory: InterestPricingCategory[];
+
     observableGlmsView: Observable<GlmsView>;
     glmsView: GlmsView = new GlmsView();
     selectedProductTypes: ProductType[];
@@ -93,9 +113,31 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
 
+        this.productTypes = [new ProductType()];
+        this.selectedProductTypes = [new ProductType()];
+
+        this.periods = [new Period()];
+        this.periodTypes = [new PeriodType()];
         this.conditionTypes = [new ConditionType()];
         this.selectedConditionTypes = [new ConditionType()];
 
+        this.clientAccounts = [new ClientAccount()];
+        this.selectedAccountNumbers = [new ClientAccountArray()];
+
+        this.interestType = [new InterestType()];
+        this.selectedInterestType = [new InterestType()];
+
+        this.glmsGroup = [new GlmsGroup()];
+        this.selectedGlmsGroup = [new GlmsGroup()];
+
+        this.interestPricingCategory = [new InterestPricingCategory()];
+        this.selectedInterestPricingCategory = [new InterestPricingCategory()];
+
+        this.slabType = [new SlabType()];
+        this.selectedSlabType = [new SlabType()];
+
+        this.rateType = [new RateType()];
+        this.selectedRateType = [new RateType()];
     }
 
     ngOnInit() {
@@ -105,7 +147,6 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
             this.sapbpid = +params['sapbpid'];
-
 
             this.observableGlmsView = this.glmsConcessionService.getGlmsViewData(this.riskGroupNumber, this.sapbpid);
             this.observableGlmsView.subscribe(glmsView => {
@@ -125,7 +166,6 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
                 this.errorMessage = <any>error;
                 this.isLoading = false;
             });
-
         });
 
         this.glmsConcessionForm = this.formBuilder.group({
@@ -148,7 +188,17 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
             disablecontrolset: [''],
             productType: [''],
             accountNumber: [''],
-            expiryDate: ['']
+            expiryDate: [''],
+            tieredTo: [''],
+            tieredFrom: [''],
+            slabType: [''],
+            interestType: [''],
+            interestPricingCategory: [''],
+            groupType: [''],
+            rateType: [''],
+            baseRate: [''],
+            spread: [''],
+            value: [''],
         });
     }
 
@@ -156,10 +206,10 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         if (this.riskGroupNumber != null && this.riskGroupNumber != 0) {
             Observable.forkJoin([
                 this.lookupDataService.getProductTypes(ConcessionTypes.Glms),
-                this.getGlmsGroup(),
-                this.getInterestType(),
-                this.getSlabType(),
-                this.getRateType(),
+                //this.getGlmsGroup(),
+                //this.getInterestType(),
+                //this.getSlabType(),
+                //this.getRateType(),
                 this.lookupDataService.getPeriods(),
                 this.lookupDataService.getPeriodTypes(),
                 this.lookupDataService.getConditionTypes(),
@@ -175,10 +225,10 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         else if (this.sapbpid != null && this.sapbpid != 0) {
             Observable.forkJoin([
                 this.lookupDataService.getProductTypes(ConcessionTypes.Glms),
-                this.getGlmsGroup(),
-                this.getInterestType(),
-                this.getSlabType(),
-                this.getRateType(),
+                //this.getGlmsGroup(),
+                //this.getInterestType(),
+                //this.getSlabType(),
+                //this.getRateType(),
                 this.lookupDataService.getPeriods(),
                 this.lookupDataService.getPeriodTypes(),
                 this.lookupDataService.getConditionTypes(),
@@ -208,7 +258,8 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         this.periodTypes = <any>results[2];
         this.conditionTypes = <any>results[3];
         this.clientAccounts = <any>results[5];
-       
+        this.conditionTypes = <any>results[3];
+        this.clientAccounts = <any>results[5];
 
         this.isLoading = false;
 
@@ -363,6 +414,19 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         return glmsConcession;
     }
 
+    conditionTypeChanged(rowIndex) {
+
+        const control = <FormArray>this.glmsConcessionForm.controls['conditionItemsRows'];
+        this.selectedConditionTypes[rowIndex] = control.controls[rowIndex].get('conditionType').value;
+
+        let currentCondition = control.controls[rowIndex];
+
+        currentCondition.get('conditionProduct').setValue(null);
+        currentCondition.get('interestRate').setValue(null);
+        currentCondition.get('volume').setValue(null);
+        currentCondition.get('value').setValue(null);
+    }
+
     addNewConcessionRow() {
 
         const control = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
@@ -388,6 +452,42 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         const control = <FormArray>this.glmsConcessionForm.controls['conditionItemsRows'];
         if (control.length == 0)
             control.push(this.initConditionItemRows());
+    }
+
+    deleteConcessionRow(index: number) {
+        if (confirm("Are you sure you want to remove this row?")) {
+            const control = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
+
+            this.selectedProductTypes.splice(index, 1);
+            this.selectedAccountNumbers.splice(index, 1);
+
+            this.selectedInterestType.splice(index, 1);
+            this.selectedRateType.splice(index, 1);
+            this.selectedGlmsGroup.splice(index, 1);
+            this.selectedInterestPricingCategory.splice(index, 1);
+            this.selectedSlabType.splice(index, 1);
+
+            control.removeAt(index);
+        }
+    }
+
+    setTwoNumberDecimal($event) {
+        $event.target.value = this.formatDecimal($event.target.value);
+    }
+
+    deleteConditionRow(index: number) {
+        const control = <FormArray>this.glmsConcessionForm.controls['conditionItemsRows'];
+        control.removeAt(index);
+        this.selectedConditionTypes.splice(index, 1);
+    }
+
+    disableRows() {
+
+        const concessions = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
+        for (let concessionFormItem of concessions.controls) {
+
+            concessionFormItem.disable();
+        }
     }
 
     onSubmit() {

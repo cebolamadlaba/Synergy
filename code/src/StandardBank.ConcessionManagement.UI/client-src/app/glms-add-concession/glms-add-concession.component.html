@@ -4,15 +4,13 @@
         <!-- Header -->
         <div class="lending-banner-title">
             <div class="col-md-1">
-                <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
                 <span class="back-button-text" (click)="goBack()">Back</span>
             </div>
             <div class="col-md-10 banner-main-title">
-                <i class="fa fa-desktop" aria-hidden="true"></i> Glms
+                <i class="fa fa-area-chart" aria-hidden="true"></i> Glms
             </div>
             <div class="col-md-1"></div>
         </div>
-
         <div class="col-md-1">
             <div class="compress">
                 <div>
@@ -42,20 +40,6 @@
 
 </div>
 
-<!-- Error message
-<div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
-    <div class="form-feedback-container">
-        <div class="alert-danger">
-            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
-            <p>{{errorMessage}}</p>
-
-            <ul *ngIf="validationError">
-                <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
-            </ul>
-        </div>
-    </div>
-</div>-->
-
 <!-- Success message -->
 <div class="col-md-12" *ngIf="saveMessage && !isLoading">
     <div class="form-feedback-container">
@@ -75,7 +59,7 @@
 </div>
 
 <!-- Form entries -->
-<form class="col-md-12 product-form" [formGroup]="bolConcessionForm" *ngIf="!isLoading">
+<form class="col-md-12 product-form" [formGroup]="glmsConcessionForm" *ngIf="!isLoading">
     <div class="col-md-4">
 
         <div class="row">
@@ -98,7 +82,6 @@
     </div>
 
     <!--New-->
-
     <table class="form-concessions-table" formArrayName="concessionItemRows">
         <thead class="form-concessions-table-headings">
             <tr>
@@ -116,9 +99,61 @@
                 <th></th>
             </tr>
         </thead>
-        <tbody class="form-concessions-table-content"></tbody>
-    </table>
+        <tbody class="form-concessions-table-content">
+            <tr *ngFor="let itemrow of glmsConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
+                <td class="length-long">
+                    <!-- Group -->
+                    <select formControlName="productType" class="form-control" (change)="productTypeChanged(i)">
+                        <option *ngFor="let productTypeOption of productTypes" [ngValue]="productTypeOption">{{productTypeOption.description}}</option>
+                    </select>
+                </td>
+                <td class="length-long">
+                    <!-- Interest Pricing Category -->
+                    <select formControlName="accountNumber" class="form-control">
+                        <option *ngFor="let clientAccountOption of selectedAccountNumbers[i].clientaccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
+                    </select>
+                </td>
+                <td class="length-short">
+                    <!-- Interest Type -->
+                    <select formControlName="productType" class="form-control">
+                        <option *ngFor="let clientAccountOption of selectedAccountNumbers[i].clientaccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
+                    </select>
+                </td>
+                <td class="length-short">
+                    <!-- Slab Type -->
+                    <select formControlName="accountNumber" class="form-control">
+                        <option *ngFor="let clientAccountOption of selectedAccountNumbers[i].clientaccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
+                    </select>
 
+                </td>
+                <!-- Tiered From -->
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="tieredFrom" class="form-control" /></td>
+
+                <!-- Tiered To -->
+                <td class="length-short"><input type="text" formControlName="tieredTo" class="form-control" /></td>
+
+                <td class="length-short">
+                    <!-- Rate Type -->
+                    <select formControlName="accountNumber" class="form-control">
+                        <option *ngFor="let clientAccountOption of selectedAccountNumbers[i].clientaccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
+                    </select>
+                </td>
+                <!-- base Rate -->
+                <td class="length-short"><input type="text" formControlName="baseRate" class="form-control" /></td>
+
+                <!-- Spread -->
+                <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="spread" /></td>
+
+                <!-- Value-->
+                <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="value" /></td>
+
+                <!-- expiry Date-->
+                <td class="length-short"><input type="date" numbersOnly="true" class="form-control" formControlName="expiryDate" /></td>
+
+                <td><button *ngIf="glmsConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+            </tr>
+        </tbody>
+    </table>
 
     <!-- Conditions table -->
     <div class="col-md-12">
@@ -157,7 +192,6 @@
                     </tbody>
                 </table>
             </div>
-
         </div>
     </div>
 
@@ -246,7 +280,5 @@
         </div>
     </div>
 
-
 </form>
 
-<!--<pre>{{bolConcessionForm.value | json}}</pre>-->

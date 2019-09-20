@@ -8,7 +8,7 @@
                 <span class="back-button-text" (click)="goBack()">Back</span>
             </div>
             <div class="col-md-10 banner-main-title">
-                <i class="fa fa-bar-chart" aria-hidden="true"></i> GLMS
+                <i class="fa fa-area-chart" aria-hidden="true"></i> GLMS
             </div>
             <div class="col-md-1"></div>
         </div>
@@ -90,7 +90,6 @@
                 </div>
             </div>
 
-
             <!-- Products grouping -->
 
             <div class="section-body" *ngFor="let glmsprodgroup of glmsView.glmsProductGroups">
@@ -133,8 +132,7 @@
     <div class="col-md-6 search-and-results-container" id="lending-search-container">
         <h2 class="headings">
             Concessions
-            <!--(click)="checkForExistingConcessions(glmsView.glmsConcessions.length,'/glms-add-concession', riskGroupNumber, sapbpid)"-->
-            <button type="button" class="btn btn-primary btn-concession" *ngIf="pageLoaded && canRequest">Add Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="checkForExistingConcessions(glmsView.glmsConcessions.length,'/glms-add-concession', riskGroupNumber, sapbpid)" *ngIf="pageLoaded && canRequest">Add Concession</button>
         </h2>
 
 
