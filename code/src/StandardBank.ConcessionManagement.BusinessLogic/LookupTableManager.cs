@@ -282,6 +282,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return subStatuses.First(_ => _.Description == subStatusName && _.IsActive).Id;
         }
 
+
+
         /// <summary>
         /// Gets the sub status description
         /// </summary>
