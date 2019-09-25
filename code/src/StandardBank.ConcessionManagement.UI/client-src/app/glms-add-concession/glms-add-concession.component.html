@@ -103,26 +103,26 @@
             <tr *ngFor="let itemrow of glmsConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
                 <td class="length-long">
                     <!-- Group -->
-                    <select formControlName="productType" class="form-control" (change)="productTypeChanged(i)">
-                        <option *ngFor="let productTypeOption of productTypes" [ngValue]="productTypeOption">{{productTypeOption.description}}</option>
+                    <select formControlName="glmsGroup" class="form-control">
+                        <option *ngFor="let glmsGroupOption of glmsGroup" [ngValue]="glmsGroupOption">{{glmsGroupOption.groupName}}</option>
                     </select>
                 </td>
                 <td class="length-long">
                     <!-- Interest Pricing Category -->
-                    <select formControlName="accountNumber" class="form-control">
-                        <option *ngFor="let clientAccountOption of selectedAccountNumbers[i].clientaccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
+                    <select formControlName="interestPricingCategory" class="form-control">
+                        <option *ngFor="let interestPricingCategoryOption of interestPricingCategory" [ngValue]="interestPricingCategoryOption">{{interestPricingCategoryOption.description}}</option>
                     </select>
                 </td>
                 <td class="length-short">
                     <!-- Interest Type -->
-                    <select formControlName="productType" class="form-control">
-                        <option *ngFor="let clientAccountOption of selectedAccountNumbers[i].clientaccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
+                    <select formControlName="interestType" class="form-control">
+                        <option *ngFor="let interestTypeOption of interestType" [ngValue]="interestTypeOption"> {{interestTypeOption.description}}</option>
                     </select>
                 </td>
                 <td class="length-short">
                     <!-- Slab Type -->
-                    <select formControlName="accountNumber" class="form-control">
-                        <option *ngFor="let clientAccountOption of selectedAccountNumbers[i].clientaccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
+                    <select formControlName="slabType" class="form-control">
+                        <option *ngFor="let slabTypeOption of slabType" [ngValue]="slabTypeOption"> {{slabTypeOption.description}}</option>
                     </select>
 
                 </td>
@@ -134,8 +134,8 @@
 
                 <td class="length-short">
                     <!-- Rate Type -->
-                    <select formControlName="accountNumber" class="form-control">
-                        <option *ngFor="let clientAccountOption of selectedAccountNumbers[i].clientaccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
+                    <select formControlName="rateType" class="form-control">
+                        <option *ngFor="let rateTypeOption of rateType" [ngValue]="rateTypeOption"> {{rateTypeOption.description}}</option>
                     </select>
                 </td>
                 <!-- base Rate -->

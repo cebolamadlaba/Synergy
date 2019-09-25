@@ -33,6 +33,7 @@ using TradeProductType = StandardBank.ConcessionManagement.Model.UserInterface.T
 using InvestmentProduct = StandardBank.ConcessionManagement.Model.UserInterface.Investment.InvestmentProduct;
 using LegalEntity = StandardBank.ConcessionManagement.Model.UserInterface.LegalEntity;
 
+
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
     /// <summary>
@@ -229,7 +230,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _bolRepository = bolRepository;
             _concessionTradeRepository = concessionTradeRepository;
             _concessionInvestmentRepository = concessionInvestmentRepository;
-            _legalEntityRepository = legalEntityRepository;
+            _legalEntityRepository = legalEntityRepository;       
         }
 
         /// <summary>
@@ -531,7 +532,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return tradeProductType.tradeProductType;
         }
 
-
         /// <summary>
         /// Gets the condition types
         /// </summary>
@@ -671,8 +671,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var transactionTypes = _transactionTypeRepository.ReadAll(isActive);
 
             return GetTransactionTypesForConcessionType(Constants.ConcessionType.Transactional);
-
-            //return _mapper.Map<IEnumerable<TransactionType>>(transactionTypes);
 
         }
 

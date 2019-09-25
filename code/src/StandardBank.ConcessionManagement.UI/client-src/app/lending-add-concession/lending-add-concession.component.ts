@@ -385,12 +385,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
         var lendingConcession = new LendingConcession();
         lendingConcession.concession = new Concession();
-
-        //if (this.lendingConcessionForm.controls['mrsCrs'].value)
-        //    lendingConcession.concession.mrsCrs = this.lendingConcessionForm.controls['mrsCrs'].value;
-        //else
-        //    this.addValidationError("MRS/CRS not captured");
-
+     
         if (this.lendingConcessionForm.controls['smtDealNumber'].value)
             lendingConcession.concession.smtDealNumber = this.lendingConcessionForm.controls['smtDealNumber'].value;
         else

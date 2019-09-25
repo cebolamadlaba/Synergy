@@ -1,17 +1,19 @@
 import { BaseConcessionDetail } from "./base-concession-detail";
 
 export class GlmsConcessionDetail extends BaseConcessionDetail {
+
     glmsConcessionDetailId: number;
     legalEntity: string;   
     glmsProduct: string;
     glmsProductType: string;
-    interestPricingCategory: string;
+    interestPricingCategoryId: number;
+    glmsGroupId: number;
     interestTypeId: number;
-    rateType: number;
-    slabType: number;  
+    rateTypeId: number;
+    slabTypeId: number;  
     tieredFrom: number;
     tieredTo: number;
     baseRate: number;
-    Value: number;
+    value: number;
 
 }

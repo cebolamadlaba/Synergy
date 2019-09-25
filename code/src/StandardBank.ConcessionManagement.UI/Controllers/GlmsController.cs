@@ -47,9 +47,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(_glmsManager.GetGlmsViewData(riskGroupNumber, sapbpid, user));
         }
 
-        [Route("NewGmls")]
-        [ValidateModel]
-        public async Task<IActionResult> NewGmls([FromBody] GlmsConcession glmsConcession)
+        [Route("NewGlms")]
+         [ValidateModel]
+        public async Task<IActionResult> NewGlms([FromBody] GlmsConcession glmsConcession)
         {
             var user = _siteHelper.LoggedInUser(this);
 

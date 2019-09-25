@@ -178,7 +178,6 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         this.getInitialData();
     }
 
-
     initConcessionItemRows() {
 
         this.selectedProductTypes.push(new ProductType());
@@ -194,7 +193,7 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
             slabType: [''],
             interestType: [''],
             interestPricingCategory: [''],
-            groupType: [''],
+            glmsGroup: [''],
             rateType: [''],
             baseRate: [''],
             spread: [''],
@@ -205,16 +204,17 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
     getInitialData() {
         if (this.riskGroupNumber != null && this.riskGroupNumber != 0) {
             Observable.forkJoin([
-                this.lookupDataService.getProductTypes(ConcessionTypes.Glms),
-                //this.getGlmsGroup(),
-                //this.getInterestType(),
-                //this.getSlabType(),
-                //this.getRateType(),
+                this.lookupDataService.getProductTypes(ConcessionTypes.Glms),                                       
                 this.lookupDataService.getPeriods(),
                 this.lookupDataService.getPeriodTypes(),
                 this.lookupDataService.getConditionTypes(),
                 this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-                
+                this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, this.sapbpid, ConcessionTypes.Glms),
+                this.getGlmsGroup(),
+                this.getInterestType(),
+                this.getSlabType(),
+                this.getRateType(),
+                this.getInterestPricingCategory(),
             ]).subscribe(results => {
                 this.setInitialData(results, true);
             }, error => {
@@ -225,15 +225,15 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         else if (this.sapbpid != null && this.sapbpid != 0) {
             Observable.forkJoin([
                 this.lookupDataService.getProductTypes(ConcessionTypes.Glms),
-                //this.getGlmsGroup(),
-                //this.getInterestType(),
-                //this.getSlabType(),
-                //this.getRateType(),
                 this.lookupDataService.getPeriods(),
                 this.lookupDataService.getPeriodTypes(),
                 this.lookupDataService.getConditionTypes(),
                 this.lookupDataService.getLegalEntity(this.sapbpid),
                 this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, this.sapbpid, ConcessionTypes.Glms),
+                this.getGlmsGroup(),
+                this.getInterestType(),
+                this.getSlabType(),
+                this.getRateType(),
                
             ]).subscribe(results => {
                 this.setInitialData(results, false);
@@ -251,15 +251,18 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         }
         else {
             this.legalEntity = <any>results[4];
-        }
-
-        this.productTypes = <any>results[0];
+        }     
         this.periods = <any>results[1];
         this.periodTypes = <any>results[2];
         this.conditionTypes = <any>results[3];
         this.clientAccounts = <any>results[5];
         this.conditionTypes = <any>results[3];
         this.clientAccounts = <any>results[5];
+        this.glmsGroup = <any>results[6];
+        this.interestType = <any>results[7];
+        this.slabType = <any>results[8];
+        this.rateType = <any>results[9];
+        this.interestPricingCategory = <any>results[10];
 
         this.isLoading = false;
 
@@ -269,6 +272,37 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
 
             this.selectedProductTypes[0] = this.productTypes[0]; 
         }
+
+        if (this.glmsGroup) {
+            control.controls[0].get('glmsGroup').setValue(this.glmsGroup[0]);
+
+            this.selectedGlmsGroup[0] = this.glmsGroup[0];
+        }
+
+        if (this.interestType) {
+            control.controls[0].get('interestType').setValue(this.interestType[0]);
+
+            this.selectedInterestType[0] = this.interestType[0];
+        }
+
+        if (this.slabType) {
+            control.controls[0].get('slabType').setValue(this.slabType[0]);
+
+            this.selectedSlabType[0] = this.slabType[0];
+        }
+
+        if (this.rateType) {
+            control.controls[0].get('rateType').setValue(this.rateType[0]);
+
+            this.selectedRateType[0] = this.rateType[0];
+        }
+
+        if (this.interestPricingCategory) {
+            control.controls[0].get('interestPricingCategory').setValue(this.interestPricingCategory[0]);
+
+            this.selectedInterestPricingCategory[0] = this.interestPricingCategory[0];
+        }
+
     }
 
     initConditionItemRows() {
@@ -321,24 +355,52 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
 
             let applyexpirydate = false;
 
-            if (concessionFormItem.get('glmsProductType').value) {
+            if (concessionFormItem.get('glmsGroup').value) {
 
-                glmsConcessionDetail.glmsProductType = concessionFormItem.get('glmsProductType').value.id;
-                hasTypeId = true;
+                glmsConcessionDetail.glmsGroupId = concessionFormItem.get('glmsGroup').value.id;          
             }
             else
-                this.addConcessionValidationError("Product not selected");
+                this.addConcessionValidationError("Group not selected");
 
 
-            if ((concessionFormItem.get('accountNumber').value && concessionFormItem.get('accountNumber').value.legalEntityId)) {
-                glmsConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
-                glmsConcessionDetail.legalEntityAccountId = concessionFormItem.get('accountNumber').value.legalEntityAccountId;
-                hasLegalEntityId = true;
-                hasLegalEntityAccountId = true;
+            if (concessionFormItem.get('interestPricingCategory').value) {
+                glmsConcessionDetail.interestPricingCategoryId = concessionFormItem.get('interestPricingCategory').value.id;     
             } else {
 
-                this.addConcessionValidationError("Client account not selected");
+                this.addConcessionValidationError("Interest Pricing Category not selected");
+            }
 
+            if (concessionFormItem.get('rateType').value) {
+                glmsConcessionDetail.rateTypeId = concessionFormItem.get('rateType').value.id; 
+            } else {
+
+                this.addConcessionValidationError("Rate Type not selected");
+            }
+
+            if (concessionFormItem.get('tieredFrom').value)
+                glmsConcessionDetail.tieredFrom = concessionFormItem.get('tieredFrom').value;
+
+            if (concessionFormItem.get('tieredTo').value)
+                glmsConcessionDetail.tieredTo = concessionFormItem.get('tieredTo').value;
+
+            if (concessionFormItem.get('baseRate').value)
+                glmsConcessionDetail.baseRate = concessionFormItem.get('baseRate').value;
+
+            if (concessionFormItem.get('value').value)
+                glmsConcessionDetail.value = concessionFormItem.get('value').value;
+
+            if (concessionFormItem.get('slabType').value) {
+                glmsConcessionDetail.slabTypeId = concessionFormItem.get('slabType').value.id; 
+            } else {
+
+                this.addConcessionValidationError("Slab Type not selected");
+            }
+
+            if (concessionFormItem.get('interestType').value) {
+                glmsConcessionDetail.interestTypeId = concessionFormItem.get('interestType').value.id; 
+            } else {
+
+                this.addConcessionValidationError("Rate Type not selected");
             }
 
             if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
@@ -460,12 +522,12 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
 
             this.selectedProductTypes.splice(index, 1);
             this.selectedAccountNumbers.splice(index, 1);
-
             this.selectedInterestType.splice(index, 1);
             this.selectedRateType.splice(index, 1);
             this.selectedGlmsGroup.splice(index, 1);
             this.selectedInterestPricingCategory.splice(index, 1);
             this.selectedSlabType.splice(index, 1);
+
 
             control.removeAt(index);
         }

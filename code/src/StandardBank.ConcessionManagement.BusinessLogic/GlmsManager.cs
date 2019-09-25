@@ -69,8 +69,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 Concession = concession,
                 GlmsConcessionDetails = glmsConcessionDetails,
                 ConcessionConditions = _concessionManager.GetConcessionConditions(concession.Id),
-                CurrentUser = user,
-                PrimeRate = primerate
+                CurrentUser = user
             };
 
         }

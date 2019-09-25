@@ -30,6 +30,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// </summary>
         private readonly ILookupTableManager _lookupTableManager;
 
+        /// <summary>
+        /// The Glms lookup table manager
+        /// </summary>
+        private readonly IGlmsLookupTableManager _glmsLookupTableManager;
+
         private readonly ILegalEntityAddressManager _legalEntityAddressManager;
 
         /// <summary>
@@ -56,7 +61,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="letterGeneratorManager">The letter generator manager.</param>
         /// <param name="mediator">The mediator.</param>
         public ConcessionController(IConcessionManager concessionManager, ILookupTableManager lookupTableManager, ILegalEntityAddressManager legalEntityAddressManager,
-            ISiteHelper siteHelper, ILetterGeneratorManager letterGeneratorManager, IMediator mediator)
+            ISiteHelper siteHelper, ILetterGeneratorManager letterGeneratorManager, IMediator mediator,
+            IGlmsLookupTableManager glmsLookupTableManager)
         {
             _concessionManager = concessionManager;
             _lookupTableManager = lookupTableManager;
@@ -64,6 +70,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             _siteHelper = siteHelper;
             _letterGeneratorManager = letterGeneratorManager;
             _mediator = mediator;
+            _glmsLookupTableManager = glmsLookupTableManager;
         }
 
         /// <summary>
@@ -325,8 +332,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
                     //save the entry to the db
                     _concessionManager.CreateConcessionLetter(new Model.Repository.ConcessionLetter { fkConcessionDetailId = int.Parse(ConcessionDetailedId), Location = FQDNLocation });
-
-
                 }
             }
 
@@ -353,10 +358,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             };
 
             return result;
-
-
         }
-
 
         /// <summary>
         /// Generates the concession letter for concession details.-- Used.
@@ -427,17 +429,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("InterestType")]
         public IActionResult InterestType()
         {
-            return Ok(_lookupTableManager.GetAccrualTypes());
-        }
-
-        /// <summary>
-        /// Gets the Base Rate Code.
-        /// </summary>
-        /// <returns></returns>
-        [Route("BaseRateCode")]
-        public IActionResult BaseRateCode()
-        {
-            return Ok(_lookupTableManager.GetAccrualTypes());
+            return Ok(_glmsLookupTableManager.GetInterestTypes());
         }
 
         /// <summary>
@@ -447,7 +439,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("GlmsGroup")]
         public IActionResult GlmsGroup()
         {
-            return Ok(_lookupTableManager.GetAccrualTypes());
+            return Ok(_glmsLookupTableManager.GetGlmsGroups());
         }
 
         /// <summary>
@@ -457,7 +449,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("InterestPricingCategory")]
         public IActionResult InterestPricingCategory()
         {
-            return Ok(_lookupTableManager.GetAccrualTypes());
+            return Ok(_glmsLookupTableManager.GetInterestPricingCategories());
         }
 
         /// <summary>
@@ -467,7 +459,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("RateType")]
         public IActionResult RateType()
         {
-            return Ok(_lookupTableManager.GetAccrualTypes());
+            return Ok(_glmsLookupTableManager.GetRateTypes());
         }
 
         /// <summary>
@@ -477,7 +469,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("SlabType")]
         public IActionResult SlabType()
         {
-            return Ok(_lookupTableManager.GetAccrualTypes());
+            return Ok(_glmsLookupTableManager.GetSlabTypes());
         }
     }
 }

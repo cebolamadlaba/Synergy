@@ -1,4 +1,4 @@
 export class SlabType {
-    SlabTypeId: number;
+    Id: number;
     Description: string;
 }

@@ -569,7 +569,6 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-        //$event.target.value = this.formatDecimal($event.target.value);
     }
 
     setThreeNumberDecimal($event) {
