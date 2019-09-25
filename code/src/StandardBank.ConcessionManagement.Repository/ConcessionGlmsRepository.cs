@@ -42,9 +42,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public ConcessionGlms Create(ConcessionGlms model)
         {
-            try
-            {
-                var concessionDetail = _concessionDetailRepository.Create(model);
+             var concessionDetail = _concessionDetailRepository.Create(model);
                 model.ConcessionDetailId = concessionDetail.ConcessionDetailId;
 
                 const string sql =
@@ -69,12 +67,7 @@ namespace StandardBank.ConcessionManagement.Repository
                 }
 
                 return model;
-            }
-            catch (System.Exception ex)
-            {
-
-                throw ex;
-            }
+           
         }
 
         /// <summary>
