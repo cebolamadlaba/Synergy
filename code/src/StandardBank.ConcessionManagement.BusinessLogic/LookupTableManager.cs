@@ -538,8 +538,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<ConditionType> GetConditionTypes()
         {
-            try
-            {
+            
                 var mappedConditionTypes = new List<ConditionType>();
                 var conditionTypes = _conditionTypeRepository.ReadAll();
                 var conditionProducts = _conditionProductRepository.ReadAll().Where(_ => _.IsActive);
@@ -571,12 +570,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 }
 
                 return mappedConditionTypes;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+          
         }
 
         /// <summary>
