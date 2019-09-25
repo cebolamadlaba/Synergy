@@ -124,9 +124,35 @@
                 public const string ReadAll = "CacheKey.Repository.TransactionTypeRepository.ReadAll";
             }
 
+            public static class RateTypeRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.RateTypeRepository.ReadAll";
+            }
+
             public static class ReferenceTypeRepository
             {
                 public const string ReadAll = "CacheKey.Repository.ReferenceTypeRepository.ReadAll";
+            }
+
+            public static class InterestTypeRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.InterestTypeRepository.ReadAll";
+            }
+
+            public static class SlabTypeRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.SlabTypeRepository.ReadAll";
+            }
+
+            public static class GlmsGroupRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.GlmsGroupRepository.ReadAll";
+            }
+
+
+            public static class InterestPricingCategory
+            {
+                public const string ReadAll = "CacheKey.Repository.InterestPricingCategory.ReadAll";
             }
 
             public static class RegionRepository

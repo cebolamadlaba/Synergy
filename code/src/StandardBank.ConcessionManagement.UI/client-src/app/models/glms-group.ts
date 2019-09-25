@@ -1,6 +1,6 @@
 
 export class GlmsGroup {
-    GlmsGroupId: number
+    Id: number
     GroupNumber: number
     GroupName: string 
 }

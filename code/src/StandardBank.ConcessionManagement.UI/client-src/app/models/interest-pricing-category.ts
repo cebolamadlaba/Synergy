@@ -1,4 +1,4 @@
 export class InterestPricingCategory {
-    InterestPricingCategoryId: number;
-    Name: string;
+    id: number;
+    Description: string;
 }

@@ -1,4 +1,4 @@
 export class RateType {
-    RateTypeId: number;
-    Name: string;
+    Id: number;
+    Description: string;
 }

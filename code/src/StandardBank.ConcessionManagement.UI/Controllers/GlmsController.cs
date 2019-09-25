@@ -12,6 +12,7 @@ using StandardBank.ConcessionManagement.Model.UserInterface.Investment;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.UI.Validation;
+using StandardBank.ConcessionManagement.Model.UserInterface.Glms;
 
 namespace StandardBank.ConcessionManagement.UI.Controllers
 {
@@ -24,12 +25,17 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
         private readonly IGlmsManager _glmsManager;
 
+        private readonly IMediator _mediator;
 
-        public GlmsController(ISiteHelper siteHelper, IGlmsManager glmsManager, IMediator mediator, IBusinessCentreManager businessCentreManager, ILookupTableManager lookupTableManager)
+        private readonly ILookupTableManager _lookupTableManager;
+
+
+        public GlmsController(ISiteHelper siteHelper, IGlmsManager glmsManager, IMediator mediator,ILookupTableManager lookupTableManager)
         {
             _siteHelper = siteHelper;
             _glmsManager = glmsManager;
-
+            _mediator = mediator;
+            _lookupTableManager = lookupTableManager;
         }
 
         /// <returns></returns>
@@ -39,6 +45,34 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var user = _siteHelper.LoggedInUser(this);
 
             return Ok(_glmsManager.GetGlmsViewData(riskGroupNumber, sapbpid, user));
+        }
+
+        [Route("NewGlms")]
+         [ValidateModel]
+        public async Task<IActionResult> NewGlms([FromBody] GlmsConcession glmsConcession)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            glmsConcession.Concession.ConcessionType = Constants.ConcessionType.Glms;
+            glmsConcession.Concession.Type = Constants.ReferenceType.New;
+
+            var concession = await _mediator.Send(new AddConcession(glmsConcession.Concession, user));
+
+            foreach (var glmsConcessionDetail in glmsConcession.GlmsConcessionDetails)
+                await _mediator.Send(new BusinessLogic.Features.GlmsConcession.AddOrUpdateGlmsConcessionDetail(glmsConcessionDetail, user, concession));
+
+            if (glmsConcession.ConcessionConditions != null && glmsConcession.ConcessionConditions.Any())
+                foreach (var concessionCondition in glmsConcession.ConcessionConditions)
+                    await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+
+
+            var bcmPendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.NewSubmission);
+
+            if (!string.IsNullOrWhiteSpace(glmsConcession.Concession.Comments))
+                await _mediator.Send(new AddConcessionComment(concession.Id, bcmPendingStatusId,
+                    glmsConcession.Concession.Comments, user));
+
+            return Ok(glmsConcession);
         }
 
     }

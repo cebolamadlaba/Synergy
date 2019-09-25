@@ -1,4 +1,4 @@
 export class InterestType {
-    InterestTypeId: number;
-    Name: string;
+    Id: number;
+    Description: string;
 }

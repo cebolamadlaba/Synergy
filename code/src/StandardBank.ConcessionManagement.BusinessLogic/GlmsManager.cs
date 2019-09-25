@@ -22,7 +22,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         private readonly IConcessionManager _concessionManager;
 
-        private readonly IConcessionInvestmentRepository _concessionInvestmentRpository;
+        private readonly IConcessionGlmsRepository _concessionGlmsRepository;
 
         private readonly IMapper _mapper;
 
@@ -36,18 +36,50 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         private readonly IPrimeRateRepository _primeRateRepository;
 
-        public GlmsManager(IConcessionManager concessionManager, IConcessionInvestmentRepository concessionInvestmentRpository,
+        public GlmsManager(IConcessionManager concessionManager, IConcessionGlmsRepository concessionGlmsRepository,
             IMapper mapper,ILookupTableManager lookupTableManager, IRuleManager ruleManager,
             IMiscPerformanceRepository miscPerformanceRepository, IMediator mediator, IPrimeRateRepository primeRateRepository)
         {
             _concessionManager = concessionManager;
-            _concessionInvestmentRpository = concessionInvestmentRpository;
+            _concessionGlmsRepository = concessionGlmsRepository;
             _mapper = mapper;
             _lookupTableManager = lookupTableManager;
             _ruleManager = ruleManager;
             _miscPerformanceRepository = miscPerformanceRepository;
             _mediator = mediator;
             _primeRateRepository = primeRateRepository;
+        }
+
+        public ConcessionGlms CreateConcessionGlms(GlmsConcessionDetail glmsConcessionDetail, Concession concession)
+        {
+            var concessionGlms = _mapper.Map<ConcessionGlms>(glmsConcessionDetail);
+            concessionGlms.ConcessionId = concession.Id;
+            return _concessionGlmsRepository.Create(concessionGlms);
+        }
+
+        public GlmsConcession GetGlmsConcession(string concessionReferenceId, User user)
+        {
+            var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId, user);
+            var glmsConcessionDetails = _miscPerformanceRepository.GetGlmsConcessionDetails(concession.Id);
+
+            var primerate = _primeRateRepository.PrimeRate(concession.DateOpened);
+
+            return new GlmsConcession
+            {
+                Concession = concession,
+                GlmsConcessionDetails = glmsConcessionDetails,
+                ConcessionConditions = _concessionManager.GetConcessionConditions(concession.Id),
+                CurrentUser = user
+            };
+
+        }
+
+        public ConcessionGlms DeleteConcessionGlms(GlmsConcessionDetail glmsConcessionDetail)
+        {
+            var concessionGlms = _concessionGlmsRepository.ReadById(glmsConcessionDetail.GlmsConcessionDetailId);
+
+            _concessionGlmsRepository.Delete(concessionGlms);
+            return concessionGlms;
         }
 
         public GlmsView GetGlmsViewData(int riskGroupNumber, int sapbpid, User currentUser)

@@ -86,8 +86,7 @@ export class PricingLendingComponent extends BaseComponentService implements OnI
         });
     }
 
-    goBack() {
-        //this.location.back();
+    goBack() {     
         this.router.navigate(['/pricing', { riskGroupNumber: this.riskGroupNumber, sapbpid: this.sapbpid }]);
     }
 

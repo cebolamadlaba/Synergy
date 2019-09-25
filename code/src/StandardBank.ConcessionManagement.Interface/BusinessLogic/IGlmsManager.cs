@@ -13,5 +13,11 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
     public interface IGlmsManager
     {
         GlmsView GetGlmsViewData(int riskGroupNumber, int sapbpid, User currentUser);
+
+        ConcessionGlms CreateConcessionGlms(GlmsConcessionDetail glmsConcessionDetail, Concession concession);
+
+        ConcessionGlms DeleteConcessionGlms(GlmsConcessionDetail glmsConcessionDetail);
+
+        GlmsConcession GetGlmsConcession(string concessionReferenceId, User user);
     }
 }

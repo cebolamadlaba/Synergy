@@ -8,7 +8,7 @@
                 <span class="back-button-text" (click)="goBack()">Back</span>
             </div>
             <div class="col-md-10 banner-main-title">
-                <i class="fa fa-bar-chart" aria-hidden="true"></i> GLMS
+                <i class="fa fa-area-chart" aria-hidden="true"></i> GLMS
             </div>
             <div class="col-md-1"></div>
         </div>
@@ -90,7 +90,6 @@
                 </div>
             </div>
 
-
             <!-- Products grouping -->
 
             <div class="section-body" *ngFor="let glmsprodgroup of glmsView.glmsProductGroups">
@@ -109,16 +108,16 @@
                                 <tr>
                                     <th>Account(No.)</th>
                                     <th>Product </th>
-                                    <th>Loaded Rate</th>
+                                    <th>Pricing</th>
+                                    <th>Spread</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let glmsprod of glmsprodgroup.glmsProducts">
                                     <td class="leftAlign">{{glmsprod.accountNumber}}</td>
-
-                                    <td class="leftAlign">{{glmsprod.glmsProductName}}</td>
-
-                                    <td class="rightAlign">{{glmsprod.loadedRate}}</td>
+                                    <td class="leftAlign">{{glmsprod.groupType}}</td>
+                                    <td class="leftAlign">{{glmsprod.pricingDescription}}</td>
+                                    <td class="rightAlign">{{glmsprod.spread}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -133,7 +132,7 @@
     <div class="col-md-6 search-and-results-container" id="lending-search-container">
         <h2 class="headings">
             Concessions
-            <button type="button" class="btn btn-primary btn-concession" *ngIf="pageLoaded && canRequest" (click)="checkForExistingConcessions(glmsView.glmsConcessions.length,'/glms-add-concession', riskGroupNumber, sapbpid)">Add Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="checkForExistingConcessions(glmsView.glmsConcessions.length,'/glms-add-concession', riskGroupNumber, sapbpid)" *ngIf="pageLoaded && canRequest">Add Concession</button>
         </h2>
 
 
