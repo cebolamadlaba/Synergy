@@ -437,17 +437,18 @@ namespace StandardBank.ConcessionManagement.Repository
             }
         }
 
-        public IEnumerable<ConcessionInboxView> GetMisMatchedConcession()
+        public IEnumerable<ConcessionMismatchEscalationView> GetMisMatchedConcession()
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<ConcessionInboxView>(
+                return db.Query<ConcessionMismatchEscalationView>(
                     @"  Select		Distinct 
-			                        cv.ConcessionRef, cv.ConcessionDate, cv.ConcessionType,
-			                        cv.RiskGroupName, cv.RiskGroupNumber,
-			                        cv.CustomerName, cv.CustomerNumber,
-			                        u.FirstName + ' ' + u.Surname [Fullname], u.EmailAddress,
-			                        ms.Description [MarketSegment], me.LastEscalationSentDateTime
+			                        cv.ConcessionId, cv.ConcessionRef, cv.ConcessionDate, 
+			                        cv.ConcessionTypeId, cv.ConcessionType,
+			                        cv.RiskGroupId, cv.RiskGroupName, cv.RiskGroupNumber,
+			                        cv.LegalEntityId, cv.CustomerName, cv.CustomerNumber,
+			                        u.pkUserId [EnablementTeamUserId], u.FirstName + ' ' + u.Surname [EnablementTeamUserFullname], u.EmailAddress [EnablementTeamUserEmailAddress],
+			                        ms.pkMarketSegmentId [MarketSegmentId], ms.Description [MarketSegment], me.LastEscalationSentDateTime
                         From		ConcessionInboxView cv
                         Inner Join	tblMarketSegmentEnablementTeamUser et	On	et.fkMarketSegmentId	=	cv.MarketSegmentId
                         Inner Join	tblUser u								On	u.pkUserId				=	et.fkUserId
