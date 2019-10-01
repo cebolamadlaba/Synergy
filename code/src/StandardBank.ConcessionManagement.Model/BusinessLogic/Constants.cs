@@ -44,6 +44,8 @@
             public const string BusinessOnline = "Bol";
             public const string BusinessOnlineDesc = "Business Online";
             public const string Cash = "Cash";
+            public const string Glms = "Glms";
+            
 
         }
 

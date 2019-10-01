@@ -33,6 +33,7 @@ using TradeProductType = StandardBank.ConcessionManagement.Model.UserInterface.T
 using InvestmentProduct = StandardBank.ConcessionManagement.Model.UserInterface.Investment.InvestmentProduct;
 using LegalEntity = StandardBank.ConcessionManagement.Model.UserInterface.LegalEntity;
 
+
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
     /// <summary>
@@ -229,7 +230,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _bolRepository = bolRepository;
             _concessionTradeRepository = concessionTradeRepository;
             _concessionInvestmentRepository = concessionInvestmentRepository;
-            _legalEntityRepository = legalEntityRepository;
+            _legalEntityRepository = legalEntityRepository;       
         }
 
         /// <summary>
@@ -281,6 +282,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return subStatuses.First(_ => _.Description == subStatusName && _.IsActive).Id;
         }
+
+
 
         /// <summary>
         /// Gets the sub status description
@@ -529,15 +532,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return tradeProductType.tradeProductType;
         }
 
-
         /// <summary>
         /// Gets the condition types
         /// </summary>
         /// <returns></returns>
         public IEnumerable<ConditionType> GetConditionTypes()
         {
-            try
-            {
+            
                 var mappedConditionTypes = new List<ConditionType>();
                 var conditionTypes = _conditionTypeRepository.ReadAll();
                 var conditionProducts = _conditionProductRepository.ReadAll().Where(_ => _.IsActive);
@@ -569,12 +570,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 }
 
                 return mappedConditionTypes;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+          
         }
 
         /// <summary>
@@ -669,8 +665,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var transactionTypes = _transactionTypeRepository.ReadAll(isActive);
 
             return GetTransactionTypesForConcessionType(Constants.ConcessionType.Transactional);
-
-            //return _mapper.Map<IEnumerable<TransactionType>>(transactionTypes);
 
         }
 

@@ -106,7 +106,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         this.conditionTypes = [new ConditionType()];
         this.selectedConditionTypes = [new ConditionType()];
         this.selectedProducts = [new BolChargeCodeType()];
-       
+     
     }
 
     ngOnInit() {
@@ -498,10 +498,8 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-       
     }
 
-    
     goBack() {
         this.router.navigate(['/pricing', this.riskGroupNumber]);
     }

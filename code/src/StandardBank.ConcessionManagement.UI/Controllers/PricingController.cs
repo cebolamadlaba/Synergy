@@ -18,14 +18,17 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
         private readonly IConfigurationData _configurationData;
 
+        private readonly IUserManager _userManager;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PricingController"/> class.
         /// </summary>
         /// <param name="lookupTableManager">The lookup table manager.</param>
-        public PricingController(ILookupTableManager lookupTableManager, IConfigurationData configurationData)
+        public PricingController(ILookupTableManager lookupTableManager, IConfigurationData configurationData, IUserManager userManager)
         {
             _lookupTableManager = lookupTableManager;
             _configurationData = configurationData;
+            _userManager = userManager;
         }
 
         [Route("LegalEntity/{sapbpid}")]
@@ -70,6 +73,19 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             int[] activePricingProducts = _configurationData.GetVisiblePricingProducts;
 
             return Ok(activePricingProducts);
+        }
+
+        /// <summary>
+        /// Gets the user details for the risk group number specified
+        /// </summary>
+        /// <param name="riskGroupNumber"></param>
+        /// <returns></returns>
+        [Route("PricingRiskGroupUser/{riskGroupNumber}")]
+        public IActionResult PricingRiskGroupUser(int riskGroupNumber)
+        {
+            var user =_userManager.GetUserByRiskGroupNumber(riskGroupNumber);
+
+            return Ok(user);
         }
     }
 }

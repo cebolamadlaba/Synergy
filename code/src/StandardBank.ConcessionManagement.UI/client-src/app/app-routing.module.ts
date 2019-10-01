@@ -51,6 +51,8 @@ import { BolTradeAeManagementComponent } from './admin/bol-trade-ae-management/b
 import { BOLCHManagementComponent } from './admin/bol-chargecodes/bol-chargecodes.component';
 import { TransactionTypesManagementComponent } from './admin/transaction-types/transaction-types.component';
 import { ChannelTypesManagementComponent } from './admin/channel-types/channel-types.component';
+import { PricingGlmsComponent } from './pricing-glms/pricing-glms.component';
+import { GlmsAddConcessionComponent } from './glms-add-concession/glms-add-concession.component';
 
 
 
@@ -74,6 +76,7 @@ const routes: Routes = [
     { path: 'pricing-investments/:riskGroupNumber/:sapbpid', component: PricingInvestmentsComponent },
     { path: 'pricing-bol/:riskGroupNumber/:sapbpid', component: PricingBolComponent },
     { path: 'pricing-trade/:riskGroupNumber/:sapbpid', component: PricingTradeComponent },
+    { path: 'pricing-glms/:riskGroupNumber/:sapbpid', component: PricingGlmsComponent },
     { path: 'pricing-mas', component: PricingMasComponent },
     { path: 'pricing-cashman', component: PricingCashmanComponent },
 
@@ -102,6 +105,8 @@ const routes: Routes = [
     { path: 'trade-add-concession/:riskGroupNumber/:sapbpid', component: TradeAddConcessionComponent },
     { path: 'trade-view-concession/:riskGroupNumber/:concessionReferenceId', component: TradeViewConcessionComponent },
     { path: 'trade-view-concession/:riskGroupNumber/:sapbpid/:concessionReferenceId', component: TradeViewConcessionComponent },
+
+    { path: 'glms-add-concession/:riskGroupNumber/:sapbpid', component: GlmsAddConcessionComponent },
 
     { path: 'cashman-add-concession', component: CashmanAddConcessionComponent },
     { path: 'admin', component: AdminMenuComponent },

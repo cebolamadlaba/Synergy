@@ -64,6 +64,20 @@
     </div>
 </div>
 
+<!-- Error message -->
+<div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
+            <p>{{errorMessage}}</p>
+
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 <!-- lending concessions and products-->
 <div class="col-md-12">
     <div class="col-md-6 search-and-results-container">
@@ -125,7 +139,7 @@
         <h2 class="headings">
             Concessions
 
-            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/investments-add-concession', riskGroupNumber, sapbpid]" *ngIf="pageLoaded && canRequest">Add Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="checkForExistingConcessions(investmentView.investmentConcessions.length,'/investments-add-concession', riskGroupNumber, sapbpid)" *ngIf="pageLoaded && canRequest">Add Concession</button>
         </h2>
 
 

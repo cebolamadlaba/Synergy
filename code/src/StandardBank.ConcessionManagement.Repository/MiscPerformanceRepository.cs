@@ -14,6 +14,7 @@ using StandardBank.ConcessionManagement.Model.UserInterface.Bol;
 using StandardBank.ConcessionManagement.Model.UserInterface.Trade;
 using static StandardBank.ConcessionManagement.Model.BusinessLogic.Constants;
 using StandardBank.ConcessionManagement.Model.UserInterface.Investment;
+using StandardBank.ConcessionManagement.Model.UserInterface.Glms;
 
 namespace StandardBank.ConcessionManagement.Repository
 {
@@ -743,6 +744,84 @@ namespace StandardBank.ConcessionManagement.Repository
                 new CacheKeyParameter(nameof(legalEntityName), legalEntityName));
         }
 
+
+        public IEnumerable<GlmsProduct> GetGlmsProducts(int riskGroupId, string riskGroupName)
+        {
+            IEnumerable<GlmsProduct> Function()
+            {
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    var glmsProducts = db.Query<GlmsProduct>(
+                        @"SELECT 
+                                  pglms.pkProductGlmsId [GlmsProductId],
+		                          pglms.GroupType,
+	                              le.[CustomerName] [legalEntity],
+	                              pricing.Description pricingDescription,
+	                              pglms.Spread,
+		                          pglms.RateType
+                                 ,@riskGroupName [RiskGroupName]
+                                 ,lea.[AccountNumber]
+                        FROM [dbo].tblProductGlms pglms
+                                 JOIN [dbo].[tblLegalEntity] le
+	                                on le.[pkLegalEntityId] = pglms.[fkLegalEntityId]
+                                 JOIN [dbo].tblInterestPricingCategory pricing 
+		                            on pricing.pkInterestPricingCategoryId= pglms.fkInterestPricingCategoryId
+                                JOIN [dbo].[tblLegalEntityAccount] lea
+                                    on lea.[pkLegalEntityAccountId] = pglms.[fkLegalEntityAccountId]
+                        WHERE pglms.[fkRiskGroupId] = @riskGroupId", new { riskGroupId, riskGroupName },
+                        commandTimeout: Int32.MaxValue);
+
+                    if (glmsProducts != null && glmsProducts.Any())
+                        return glmsProducts;
+                }
+
+                return null;
+            }
+
+            return _cacheManager.ReturnFromCache(Function, 300,
+               CacheKey.Repository.MiscPerformanceRepository.GetGlmsProducts,
+                new CacheKeyParameter(nameof(riskGroupId), riskGroupId),
+                new CacheKeyParameter(nameof(riskGroupName), riskGroupName));
+        }
+
+        public IEnumerable<GlmsProduct> GetGlmsProductsByLegalEntity(int legalEntityId, string legalEntityName)
+        {
+            IEnumerable<GlmsProduct> Function()
+            {
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    var glmsProducts = db.Query<GlmsProduct>(
+                        @"SELECT pglms.pkProductGlmsId [GlmsProductId],
+		                               pglms.GroupType,
+	                                   le.[CustomerName] [legalEntity],
+	                                   pricing.Description pricingDescription,
+	                                   pglms.Spread,
+		                               pglms.RateType,
+                                       lea.[AccountNumber]
+
+                            FROM [dbo].tblProductGlms pglms
+                                 JOIN [dbo].[tblLegalEntity] le
+	                                ON le.[pkLegalEntityId] = pglms.[fkLegalEntityId]
+                                 JOIN [dbo].tblInterestPricingCategory pricing 
+		                            ON pricing.pkInterestPricingCategoryId= pglms.fkInterestPricingCategoryId
+                                 JOIN [dbo].[tblLegalEntityAccount] lea 
+                                     on lea.[pkLegalEntityAccountId] = pglms.[fkLegalEntityAccountId]
+                            WHERE le.[pkLegalEntityId] = @legalEntityId", new { legalEntityId, legalEntityName },
+                                                    commandTimeout: Int32.MaxValue);
+
+                    if (glmsProducts != null && glmsProducts.Any())
+                        return glmsProducts;
+                }
+
+                return null;
+            }
+
+            return _cacheManager.ReturnFromCache(Function, 300,
+                CacheKey.Repository.MiscPerformanceRepository.GetGlmsProducts,
+                new CacheKeyParameter(nameof(legalEntityId), legalEntityId),
+                new CacheKeyParameter(nameof(legalEntityName), legalEntityName));
+        }
+
         /// <summary>
         /// Gets the cash concession details.
         /// </summary>
@@ -971,6 +1050,47 @@ namespace StandardBank.ConcessionManagement.Repository
             }
         }
 
+
+        public IEnumerable<GlmsConcessionDetail> GetGlmsConcessionDetails(int concessionId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<GlmsConcessionDetail>(@"SELECT cd.[pkConcessionDetailId] [ConcessionDetailId], 
+                    cd.[fkConcessionId] [ConcessionId], 
+                    cd.[fkLegalEntityId] [LegalEntityId],
+                    cd.[fkLegalEntityAccountId] [LegalEntityAccountId],  
+                    le.[CustomerName] [LegalEntity],                    
+                    [ExpiryDate], 
+                    [DateApproved], 
+                    [IsMismatched], 
+                    [PriceExported], 
+                    [PriceExportedDate],                  
+					pinv.pkConcessionGlmsId [GlmsConcessionDetailId],
+                    ac.AccountNumber,
+					pinv.TierFrom,
+					pinv.TierTo,				
+                    p.GroupType GlmsProduct,										
+                    pinv.fkLegalEntityAccountId,
+                    pinv.fkProductId [productTypeId],                  
+					pinv.Spread,				
+					pinv.Value,                
+					pinv.fkLegalEntityAccountId,
+                    code.Description BaseRate,
+                    glmsGroup.GroupNumber
+
+                    FROM [dbo].[tblConcessionDetail] cd
+                    left join [dbo].[tblConcessionGlms] pinv on cd.pkConcessionDetailId = pinv.fkConcessionDetailId
+                    left JOIN [dbo].tblLegalEntityAccount lea on pinv.fkLegalEntityAccountId = lea.pkLegalEntityAccountId  
+                    left JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = lea.fkLegalEntityId
+                    left join tblLegalEntityAccount ac on pinv.fkLegalEntityAccountId = ac.pkLegalEntityAccountId				
+                    left JOIN [dbo].[tblProductGlms] p on p.pkProductGlmsId = pinv.fkProductId
+	                left join [dbo].[tblBaseRateCode] code on code.pkBaseRateCodeId=pinv.fkBaseRateCodeId
+                    left join [dbo].[tblGlmsGroup] glmsGroup on glmsGroup.pkGlmsGroupId = pinv.fkGroupId
+
+
+                     WHERE cd.fkConcessionId = @concessionId  and cd.Archived is null", new { concessionId });
+            }
+        }
         /// <summary>
         /// Gets the transactional concession details.
         /// </summary>

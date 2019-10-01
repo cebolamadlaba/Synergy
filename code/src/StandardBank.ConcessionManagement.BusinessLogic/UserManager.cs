@@ -228,6 +228,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Gets the user.
+        /// </summary>
+        /// <param name="riskGroupNumber">The user identifier.</param>
+        /// <returns></returns>
+        public User GetUserByRiskGroupNumber(int riskGroupNumber)
+        {
+            return _mapper.Map<User>(_userRepository.ReadByRiskGroupNumber(riskGroupNumber));  
+        }
+
+        /// <summary>
         /// Gets the name of the user.
         /// </summary>
         /// <param name="userId">The user identifier.</param>
