@@ -148,6 +148,12 @@ namespace StandardBank.ConcessionManagement.UI
         {
             foreach (var torunJob in builder.ApplicationServices.GetRequiredService<IEnumerable<IDailyScheduledJob>>())
             {
+                //// ONLY FOR TESTING:
+                //if (torunJob.Name == "Mismatched Scheduled Job")
+                //    torunJob.Run();
+                //else
+                //    continue;
+
                 //the UTC hour needs to be passed to the cron as it works in UTC time
                 var hourToRun = torunJob.HourToRun - (DateTime.Now.Hour - DateTime.UtcNow.Hour);
 

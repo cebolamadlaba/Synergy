@@ -29,6 +29,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="EmailTemplates\MismatchEscalation.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="client-src\app\models\bol-chargecode.ts" />
     <None Remove="client-src\app\models\bol-chargecodetype.ts" />
     <None Remove="client-src\app\models\bol-view.ts" />
@@ -106,6 +110,7 @@
     <None Include="EmailTemplates\ExpiringConcession.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="EmailTemplates\MismatchEscalation.cshtml" />
     <None Include="EmailTemplates\NewConcession.cshtml" />
   </ItemGroup>
 

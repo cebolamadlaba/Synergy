@@ -9,7 +9,7 @@
             public const string ConcessionApprovedWithChanges = "ApprovedWithChanges";
             public const string ConcessionDeclined = "Declined";
             public const string ConcessionForwarded = "Forwarded";
-
+            public const string MisMatchEscalation = "MisMatchEscalation";
         }
 
         public static class Roles
@@ -168,6 +168,13 @@
                 public const string LocalGuarantee = "Local guarantee";
                 public const string OutwardTT = "Outward TT";
             }
+        }
+
+        public static class MarketSegment
+        {
+            public const string Business = "Business";
+            public const string Commercial = "Commercial";
+            public const string SmallEnterprise = "Small Enterprise";
         }
     }
 }

@@ -1,0 +1,93 @@
+@model dynamic
+<body>
+    <table style="margin:25px; width:100%; font-family:Arial !important;">
+        <tr style="text-align:center; font-size:50px; font-weight:bold; color:red;">
+            <td>ESCALATION!</td>
+        </tr>
+
+        <tr style="font-size:25px; font-weight:bold; color:darkblue;">
+            <td>Synergy System Notification</td>
+        </tr>
+
+        <tr>
+            <td style="padding-left:15px !important;">
+                <br />
+                Dear Enablement Team,
+                <br />
+                <br />
+                Please be advised that the concessions below are mismatches. Please view the mismatched concessions and resolve.
+                <br />
+                <br />
+                <a href="@Model.MismatchEscalationEmail.CmsServerLocation" target="_blank">Click to go to Concession Pricing Tool</a>
+            </td>
+        </tr>
+        <tr id="escalationTable">
+            <td>
+                <table>
+                    <tr>
+                        <th>Date Of Request</th>
+                        <th>Risk Group</th>
+                        <th>Concession Ref</th>
+                        <th>Product</th>
+                    </tr>
+                    @foreach (var item in Model.MismatchEscalationEmail.ConcessionMismatchEscalationViews)
+                    {
+                        <tr>
+                            <td>@item.ConcessionDate.ToString("yyyy-MM-dd")</td>
+                            <td>@item.RiskGroupName</td>
+                            <td>@item.ConcessionRef</td>
+                            <td>@item.ConcessionType</td>
+                        </tr>
+                    }
+                </table>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="padding-left:15px !important;">
+                <br />
+                Regards,
+                <br />
+                <br />
+                Synergy System
+                <br />
+                <br />
+                <span style="font-style:italic; color:#808080;">Please do not reply to this email.</span>
+            </td>
+        </tr>
+    </table>
+</body>
+
+<style>
+    #escalationTable {
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+    }
+
+        #escalationTable table {
+            width: 75%;
+            margin: 25px;
+        }
+
+        #escalationTable td, #customers th {
+            /*border: 1px solid #ddd;*/
+            padding: 8px;
+        }
+
+        #escalationTable tr:nth-child(even) {
+            background-color: #efecec;
+        }
+
+        #escalationTable tr:hover {
+            background-color: #ddd;
+        }
+
+        #escalationTable th {
+            /*padding-top: 12px;
+            padding-bottom: 12px;*/
+            padding: 12px;
+            text-align: left;
+            background-color: #0033A1;
+            color: white;
+        }
+</style>

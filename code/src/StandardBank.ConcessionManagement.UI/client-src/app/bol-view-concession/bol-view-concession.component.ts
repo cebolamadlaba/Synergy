@@ -1181,17 +1181,10 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-        //$event.target.value = this.formatDecimal($event.target.value);
+      
     }
 
-    //formatDecimal(itemValue: number) {
-    //    if (itemValue) {
-    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-    //    }
-
-    //    return null;
-    //}
-
+ 
     validatePeriod(itemrow) {
         this.validationError = null;
 
