@@ -12,5 +12,7 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         IEnumerable<MarketSegmentEnablementTeamUser> ReadAll();
 
         IEnumerable<ConcessionTypeMismatchEscalation> GetConcessionTypeMismatchEscalation();
+
+        void Update(ConcessionTypeMismatchEscalation model);
     }
 }

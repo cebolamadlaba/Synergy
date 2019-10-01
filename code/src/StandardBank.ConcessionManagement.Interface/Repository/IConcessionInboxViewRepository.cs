@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using StandardBank.ConcessionManagement.Model.BusinessLogic.EmailTemplates;
 using StandardBank.ConcessionManagement.Model.Repository;
 
 namespace StandardBank.ConcessionManagement.Interface.Repository

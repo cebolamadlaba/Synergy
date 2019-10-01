@@ -7,6 +7,8 @@ using FluentEmail.Razor;
 using RazorLight.Extensions;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.BusinessLogic.EmailTemplates;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -227,6 +229,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     sapDataImportIssuesEmail.ImportFolder,
                     sapDataImportIssuesEmail.SapDataImportIssues
                 });
+        }
+
+        public async Task<bool> SendMismatchEscalationEmail(MismatchEscalationEmail mismatchEscalationEmail)
+        {
+            string emailList = string.Join(";", mismatchEscalationEmail.RecipientEmailList);
+
+            return await SendTemplatedEmail(
+                emailList,
+                "CMS Notification: Mismatch Escalation", string.Empty, "MismatchEscalation",
+               new
+               {
+                   MismatchEscalationEmail = mismatchEscalationEmail
+               });
         }
     }
 }

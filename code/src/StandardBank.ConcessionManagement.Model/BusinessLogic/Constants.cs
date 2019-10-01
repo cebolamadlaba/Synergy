@@ -9,7 +9,7 @@
             public const string ConcessionApprovedWithChanges = "ApprovedWithChanges";
             public const string ConcessionDeclined = "Declined";
             public const string ConcessionForwarded = "Forwarded";
-
+            public const string MisMatchEscalation = "MisMatchEscalation";
         }
 
         public static class Roles

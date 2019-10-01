@@ -31,6 +31,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return this._marketSegmentEnablementTeamRepository.GetConcessionTypeMismatchEscalation();
         }
 
+        public void Update(ConcessionTypeMismatchEscalation model)
+        {
+            this._marketSegmentEnablementTeamRepository.Update(model);
+        }
+
         public IEnumerable<MarketSegment> GetMarketSegments(Func<MarketSegment, bool> predicate)
         {
             return this._marketSegmentRepository.ReadAll().Where(predicate);

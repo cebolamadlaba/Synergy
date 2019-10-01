@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Dapper;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Model.BusinessLogic.EmailTemplates;
 using StandardBank.ConcessionManagement.Model.Repository;
 
 namespace StandardBank.ConcessionManagement.Repository
@@ -457,16 +458,6 @@ namespace StandardBank.ConcessionManagement.Repository
                         Where		cv.IsMismatched = 1
                         And			cv.IsActive = 1
                         And			DATEADD(day,2,cv.DateApproved) < GETDATE()");
-
-                //return db.Query<ConcessionInboxView>(
-                //    @"  Select	Distinct 
-                //          ConcessionRef, ConcessionDate, ConcessionType,
-                //          RiskGroupName, RiskGroupNumber,
-                //          CustomerName, CustomerNumber
-                //        From	ConcessionInboxView 
-                //        Where	IsMismatched = 1
-                //        And		IsActive = 1
-                //        And		DATEADD(day,2,DateApproved) < GETDATE()");
             }
         }
     }

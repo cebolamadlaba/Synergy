@@ -69,5 +69,19 @@ namespace StandardBank.ConcessionManagement.Repository
 
             return _cacheManager.ReturnFromCache(function, 1440, CacheKey.Repository.ConcessionTypeMismatchEscalation.ReadAll);
         }
+
+        public void Update(ConcessionTypeMismatchEscalation model)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                db.Execute(@"UPDATE [dbo].[tblConcessionTypeMismatchEscalation]
+                            SET [LastEscalationSentDateTime] = @LastEscalationSentDateTime
+                            WHERE fkConcessionTypeId = @ConcessionTypeId",
+                    new { LastEscalationSentDateTime = model.LastEscalationSentDateTime, ConcessionTypeId = model.ConcessionTypeId });
+            }
+
+            //clear out the cache because the data has changed
+            _cacheManager.Remove(CacheKey.Repository.MarketSegmentRepository.ReadAll);
+        }
     }
 }
