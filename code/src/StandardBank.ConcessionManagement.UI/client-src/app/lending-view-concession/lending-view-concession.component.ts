@@ -745,13 +745,6 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         lendingConcession.concession.concessionType = ConcessionTypes.Lending;
         lendingConcession.concession.referenceNumber = this.concessionReferenceId;
 
-        //if (this.lendingConcessionForm.controls['mrsCrs'].value)
-        //    lendingConcession.concession.mrsCrs = this.lendingConcessionForm.controls['mrsCrs'].value;
-        //else
-        //    if (this.lendingConcessionForm.controls['mrsCrs'].value != 0) {
-        //        this.addValidationError("MRS/CRS not captured");
-        //    }
-
         if (this.lendingConcessionForm.controls['smtDealNumber'].value)
             lendingConcession.concession.smtDealNumber = this.lendingConcessionForm.controls['smtDealNumber'].value;
         else

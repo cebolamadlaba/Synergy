@@ -382,6 +382,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
 
             if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
+                this.onExpiryDateChanged(concessionFormItem);
                 bolConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
             else {

@@ -544,6 +544,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
             }
 
             if (concessionFormItem.get('expiryDate').value)
+                this.onExpiryDateChanged(concessionFormItem);
                 transactionalConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
             transactionalConcession.transactionalConcessionDetails.push(transactionalConcessionDetail);

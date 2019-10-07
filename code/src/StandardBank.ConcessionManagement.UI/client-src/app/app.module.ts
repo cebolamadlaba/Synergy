@@ -102,6 +102,7 @@ import { BolTradeAeManagementComponent } from './admin/bol-trade-ae-management/b
 import { FilterPipe } from './filters/filter.pipe';
 import { PricingGlmsComponent } from './pricing-glms/pricing-glms.component';
 import { GlmsAddConcessionComponent } from './glms-add-concession/glms-add-concession.component';
+import { GlmsViewConcessionComponent } from './glms-view-concession/glms-view-concession.component';
 
 
 
@@ -165,7 +166,8 @@ import { GlmsAddConcessionComponent } from './glms-add-concession/glms-add-conce
         BolTradeAeManagementComponent,
         FilterPipe,
         PricingGlmsComponent,
-        GlmsAddConcessionComponent
+        GlmsAddConcessionComponent,
+        GlmsViewConcessionComponent
 
     ],
     imports: [

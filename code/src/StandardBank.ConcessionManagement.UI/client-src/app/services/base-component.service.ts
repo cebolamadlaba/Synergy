@@ -74,13 +74,13 @@ export class BaseComponentService   {
     }
 
     public addConcessionValidationError(validationDetail) {
+        this.validationError = []
         this.validationError.push(validationDetail);
     }
 
     public async checkForExistingConcessions(concessionListLength, url,riskGroupNumber, sapbpid) {
-        this.validationError = [];
 
-        await this.getUserRiskGroupDetails(riskGroupNumber);
+        await this.getUserRiskGroupDetails(riskGroupNumber,sapbpid);
         await this.getUserData();
         this.checkAEExistOnriskGroupNumber();
         
@@ -91,9 +91,9 @@ export class BaseComponentService   {
                 this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Legal Entity. Please select the concession below and update");
             }
         } else {
-            if(this.validationError.length < 1) {
+            if (this.validationError == undefined) {
                 this.router.navigate([url, riskGroupNumber, sapbpid]);
-            }          
+            }         
         }
     }
 
@@ -153,16 +153,17 @@ export class BaseComponentService   {
         });
     }
 
-    getUserRiskGroupDetails(riskGroupNumber): Promise<any>{
+    getUserRiskGroupDetails(riskGroupNumber, sapbpid): Promise<any>{
+
+        var sapbpidOrRiskGroupNumber = riskGroupNumber == 0 ? sapbpid : riskGroupNumber;
+
         return new Promise((resolve, reject) => {
-            this.userService.getUserRiskGroupDetailsData(riskGroupNumber).subscribe(user => {
+            this.userService.getUserRiskGroupDetailsData(sapbpidOrRiskGroupNumber).subscribe(user => {
             resolve(user);
             this.riskGroupAEUser = user;
               
             });
         });
     }
-
-  
 
 }

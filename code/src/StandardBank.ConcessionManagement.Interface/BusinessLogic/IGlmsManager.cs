@@ -19,5 +19,6 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         ConcessionGlms DeleteConcessionGlms(GlmsConcessionDetail glmsConcessionDetail);
 
         GlmsConcession GetGlmsConcession(string concessionReferenceId, User user);
+
     }
 }

@@ -7,9 +7,12 @@
                 <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
                 <span class="back-button-text" (click)="goBack()">Back</span>
             </div>
+
             <div class="col-md-10 banner-main-title">
-                <i class="fa fa-line-chart" aria-hidden="true"></i> Investment
+                <i class="fa fa-chart-o" aria-hidden="true"></i> View GLMS Concession - {{concessionReferenceId}}
+                <span class="label label-warning" style="float: right;">{{glmsConcession?.concession?.status}} - {{glmsConcession?.concession?.subStatus}}</span>
             </div>
+
             <div class="col-md-1"></div>
         </div>
 
@@ -21,21 +24,7 @@
                     <div class="date lightTitle hidden-element">{{entityNumber}}</div>
 
                 </div>
-                <div class="col-md-2  hidden-element">
-                    <div class="subHeading lightTitle"> Total liability balances</div>
-                    <div class="score"><b>{{investmentView.investmentFinancial.totalLiabilityBalances | number : '1.2-2'}}</b></div>
-                </div>
-                <div class="col-md-2  hidden-element">
-                    <div class="subHeading lightTitle"> Weighted Average MTP</div>
-                    <div class="score"><b>{{investmentView.investmentFinancial.weightedAverageMTP | number : '1.2-2'}}</b></div>
-                </div>
-                <div class="col-md-2  hidden-element">
-                    <div class="subHeading lightTitle"> Weighted Average Net Margin</div>
-                    <div class="score"><b>{{investmentView.investmentFinancial.weightedAverageNetMargin | number : '1.2-2'}}</b></div>
-                </div>
             </div>
-
-
             <div class="col-md-1">
                 <div class="compress">
                     <div>
@@ -66,33 +55,6 @@
     </div>
 </div>
 
-<!-- Error message -->
-<div class="col-md-12" *ngIf="(errorMessage) && !isLoading">
-    <div class="form-feedback-container">
-        <div class="alert-danger">
-            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
-            <p>{{errorMessage}}</p>
-
-            <ul *ngIf="validationError">
-                <li *ngFor="let validationMessage of validationError ">{{validationMessage}}</li>
-            </ul>
-        </div>
-    </div>
-</div>
-
-<!-- Error message -->
-<div class="col-md-12" *ngIf="(validationError) && !isLoading">
-    <div class="form-feedback-container">
-        <div class="alert-danger">
-            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Below errors requires your attention..</p>
-            <p>{{errorMessage}}</p>
-
-            <ul *ngIf="validationError">
-                <li *ngFor="let validationMessage of validationError | slice:0:1;">{{validationMessage}}</li>
-            </ul>
-        </div>
-    </div>
-</div>
 <!-- Success message -->
 <div class="col-md-12" *ngIf="saveMessage && !isLoading">
     <div class="form-feedback-container">
@@ -106,28 +68,24 @@
 <div class="col-md-12" *ngIf="isLoading">
     <div class="form-feedback-container">
         <div class="alert-info">
-            <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Loading...</p>
+            <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Saving</p>
         </div>
     </div>
 </div>
 
 <!-- Form entries -->
-<form class="col-md-12 product-form" [formGroup]="investmentConcessionForm" *ngIf="!isLoading">
+<form class="col-md-12 product-form" [formGroup]="glmsConcessionForm" *ngIf="!isLoading">
     <div class="col-md-4">
+
         <div class="row">
             <label>SMT Deal Number</label>
-            <input type="text" numbersOnly="true" class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="saveMessage ? '' : null" />
+            <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="saveMessage ? '' : null" />
         </div>
+
     </div>
     <div class="col-md-7 col-md-offset-1">
-        <div class="row">
-            <label>Prime</label>
-            <input name="prime" value="{{primeRate}}" type="text" required class="form-control" disabled="disabled">
-        </div>
-        <div class="row">
-            <label>Motivation</label>
-            <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="saveMessage ? '' : null"></textarea>
-        </div>
+        <label>Motivation</label>
+        <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="saveMessage ? '' : null"></textarea>
     </div>
 
     <!-- Concession table -->
@@ -139,67 +97,54 @@
     </div>
 
     <!--New-->
-
     <table class="form-concessions-table" formArrayName="concessionItemRows">
         <thead class="form-concessions-table-headings">
             <tr>
-                <th>Product</th>
-
-                <th>Acc No.</th>
-
-                <th>Balance</th>
-
-                <th>Notice Period</th>
-
-                <th>Rate %</th>
+                <th>Group #</th>
+                <th>Interest Pricing Category</th>
+                <th>Interest Type</th>
+                <th>Slap Type</th>
                 <th>Expiry Date</th>
                 <th></th>
             </tr>
         </thead>
         <tbody class="form-concessions-table-content">
-
-            <tr *ngFor="let itemrow of investmentConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
+            <tr *ngFor="let itemrow of glmsConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
                 <td class="length-long">
-                    <input formControlName="disablecontrolset" style="display: none;" />
-
-                    <select formControlName="productType" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="productTypeChanged(i)">
-                        <option *ngFor="let investmentproductypteOption of productTypes" [ngValue]="investmentproductypteOption">{{investmentproductypteOption.description}}</option>
+                    <!-- Group -->
+                    <select formControlName="glmsGroup" class="form-control">
+                        <option *ngFor="let glmsGroupOption of glmsGroup" [ngValue]="glmsGroupOption">{{glmsGroupOption.groupName}}</option>
                     </select>
                 </td>
-
                 <td class="length-long">
-                    <!-- Account No -->
-                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="saveMessage ? '' : null">
-                        <option *ngFor="let clientAccountOption of selectedAccountNumbers[i].clientaccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
+                    <!-- Interest Pricing Category -->
+                    <select formControlName="interestPricingCategory" class="form-control">
+                        <option *ngFor="let interestPricingCategoryOption of interestPricingCategory" [ngValue]="interestPricingCategoryOption" [attr.disabled]="saveMessage ? '' : null">{{interestPricingCategoryOption.description}}</option>
                     </select>
                 </td>
-
-                <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="balance" [attr.disabled]="saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
-
                 <td class="length-short">
-
-                    <select formControlName="noticeperiod" class="form-control" [attr.disabled]="((selectedInvestmentConcession[i] == true) || saveMessage) ? 'disabled' : null">
-
-                        <option value="1">33 days</option>
-                        <option value="2">60 days</option>
-                        <option value="3">90 days</option>
-                        <option value="4">120 days</option>
-                        <option value="5">150 days</option>
-                        <option value="6">180 days</option>
+                    <!-- Interest Type -->
+                    <select formControlName="interestType" class="form-control">
+                        <option *ngFor="let interestTypeOption of interestType" [ngValue]="interestTypeOption" [attr.disabled]="saveMessage ? '' : null"> {{interestTypeOption.description}}</option>
                     </select>
                 </td>
-                <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="rate" [attr.disabled]="saveMessage ? '' : null" (change)="setThreeNumberDecimal($event)" /></td>
-
+                <td class="length-short">
+                    <!-- Slab Type -->
+                    <select formControlName="slabType" class="form-control">
+                        <option *ngFor="let slabTypeOption of slabType" [ngValue]="slabTypeOption" [attr.disabled]="saveMessage ? '' : null"> {{slabTypeOption.description}}</option>
+                    </select>
+                </td>
+                <!-- expiry Date-->
                 <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="(saveMessage) ? '' : null" (change)="onExpiryDateChanged(itemrow)" /></td>
 
+                <!--Tier information-->
+                <td><button class="length-long btn btn-primary" (click)="openTier(manageTierModal.show(),i)" [attr.disabled]="saveMessage ? '' : null">Add Tier</button></td>
 
-                <td class="delete"><button *ngIf="investmentConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
-
+                <td><button *ngIf="glmsConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
 
             </tr>
         </tbody>
     </table>
-
 
     <!-- Conditions table -->
     <div class="col-md-12">
@@ -221,12 +166,12 @@
                         </tr>
                     </thead>
                     <tbody class="secondary-text">
-                        <tr *ngIf="investmentConcessionForm.controls.conditionItemsRows.controls.length == 0">
+                        <tr *ngIf="glmsConcessionForm.controls.conditionItemsRows.controls.length == 0">
                             <td colspan="8" class="searchEmptyState">
                                 No conditions added
                             </td>
                         </tr>
-                        <tr *ngFor="let itemrow of investmentConcessionForm.controls.conditionItemsRows.controls; let i=index">
+                        <tr *ngFor="let itemrow of glmsConcessionForm.controls.conditionItemsRows.controls; let i=index">
                             <td># {{i + 1}}</td>
                             <td>{{itemrow.get('conditionType').value?.description}}</td>
                             <td>{{itemrow.get('conditionProduct').value?.description}}</td>
@@ -238,8 +183,81 @@
                     </tbody>
                 </table>
             </div>
-
         </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <h3 class="table-title">Comments</h3>
+
+            <div class="table-container">
+                <table class="table table-bordered table-hover header-fixed table-striped">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Sub-Status</th>
+                            <th>Comment</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="4" class="searchEmptyState">
+                                No comments added.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>{{comment.userDescription}}</td>
+                            <td>{{comment.concessionSubStatusDescription}}</td>
+                            <td>{{comment.comment}}</td>
+                            <td>{{comment.systemDate | date: 'yyyy/MM/dd'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <h3 class="table-title">Related Concessions</h3>
+
+            <div class="table-container">
+                <table class="table table-bordered table-hover header-fixed table-striped">
+                    <thead>
+                        <tr>
+                            <th>Relationship Type</th>
+                            <th>Parent Concession</th>
+                            <th>Relationship</th>
+                            <th>Child Concession</th>
+                            <th>Date</th>
+                            <th>User</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="6" class="searchEmptyState">
+                                No related concessions.
+                            </td>
+                        </tr>
+                        <tr >
+                            <td>{{concessionRelationship.relationshipType}}</td>
+                            <td>
+                                <span *ngIf="concessionRelationship.parentConcessionReference == concessionReferenceId"><strong>**</strong></span>
+                                <span *ngIf="concessionRelationship.parentIsActive"><a href="#" target="_blank" [routerLink]="['/glms-view-concession', riskGroupNumber, sapbpid, concessionRelationship.parentConcessionReference]">{{concessionRelationship.parentConcession}}</a></span>
+                                <span *ngIf="!concessionRelationship.parentIsActive">{{concessionRelationship.parentConcession}}</span>
+                            </td>
+                            <td>{{concessionRelationship.relationship}}</td>
+                            <td>
+                                <span *ngIf="concessionRelationship.childConcessionReference == concessionReferenceId"><strong>**</strong></span>
+                                <span *ngIf="concessionRelationship.childIsActive"><a href="#" target="_blank" [routerLink]="['/glms-view-concession', riskGroupNumber, sapbpid, concessionRelationship.childConcessionReference]">{{concessionRelationship.childConcession}}</a></span>
+                                <span *ngIf="!concessionRelationship.childIsActive">{{concessionRelationship.childConcession}}</span>
+                            </td>
+                            <td>{{concessionRelationship.date | date: 'yyyy/MM/dd'}}</td>
+                            <td>{{concessionRelationship.user}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
     <!-- Modal conditions -->
@@ -257,24 +275,24 @@
                     </div>
                     <table class="form-concessions-table" formArrayName="conditionItemsRows" style="width:100%">
                         <thead class="form-concessions-table-headings">
-                            <tr *ngIf="investmentConcessionForm.controls.conditionItemsRows.controls.length > 0">
+                            <tr *ngIf="glmsConcessionForm.controls.conditionItemsRows.controls.length > 0">
                                 <th>Condition Type</th>
                                 <th>Product Type</th>
                                 <th>Interest Rate</th>
                                 <th>Volume</th>
-                                <th>Value</th>
+                                <th>Value/Balance</th>
                                 <th>Period Type</th>
                                 <th>Period</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody class="form-concessions-table-content">
-                            <tr *ngIf="investmentConcessionForm.controls.conditionItemsRows.controls.length == 0">
+                            <tr *ngIf="glmsConcessionForm.controls.conditionItemsRows.controls.length == 0">
                                 <td colspan="8" class="searchEmptyState">
                                     No conditions added
                                 </td>
                             </tr>
-                            <tr *ngFor="let itemrow of investmentConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
+                            <tr *ngFor="let itemrow of glmsConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
                                 <td class="length-long">
                                     <!-- Condition type -->
                                     <select formControlName="conditionType" (change)="conditionTypeChanged(i)">
@@ -318,16 +336,29 @@
             </div>
         </div>
     </div>
-
     <!-- Form buttons -->
     <div class="footer-buttons">
         <div class="float-right">
-            <button type="button" class="btn btn-cancel" (click)="goBack()">Close</button>
-            <button class="btn btn-primary" type="button" (click)="onSubmit()" *ngIf="!saveMessage">Submit</button>
+            <button type="button" class="btn btn-cancel" (click)="goBack()" >Close</button>
+            <button type="button" class="btn btn-danger" (click)="bcmDeclineConcession()" *ngIf="canBcmApprove">Decline</button>
+            <button type="button" class="btn btn-success" (click)="bcmApproveConcession()" *ngIf="canBcmApprove">Forward</button>
+            <button type="button" class="btn btn-danger" (click)="pcmDeclineConcession()" *ngIf="canPcmApprove">Decline</button>
+            <button type="button" class="btn btn-success" (click)="pcmApproveConcession()" *ngIf="canPcmApprove">Approve</button>
+            <button type="button" class="btn btn-success" (click)="editConcession('Resubmit')" *ngIf="canResubmit">Resubmit</button>
+            <button type="button" class="btn btn-success" (click)="editConcession('UpdateApproved')" >Update</button>
+            <button type="button" class="btn btn-warning" (click)="archiveConcession()">Archive</button>
+
+            <button type="button" class="btn btn-primary" (click)="saveConcession()" *ngIf="isEditing">Save</button>
+
+            <button type="button" class="btn btn-success" (click)="recallConcession()" *ngIf="canRecall && !isRecalling">Recall</button>
+            <button type="button" class="btn btn-primary" (click)="saveRecallConcession()" >Save</button>
+            <button type="button" class="btn btn-danger" (click)="requestorDeclineConcession()" *ngIf="canApproveChanges">Decline</button>
+            <button type="button" class="btn btn-success" (click)="requestorApproveConcession()" *ngIf="canApproveChanges">Accept</button>
         </div>
     </div>
-
-
 </form>
 
-<!--<pre>{{investmentConcessionForm.value | json}}</pre>-->
+<!--<pre>{{glmsConcessionForm.value | json}}</pre>-->
+
+<p>&nbsp;</p>
+

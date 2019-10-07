@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -52,9 +53,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         public ConcessionGlms CreateConcessionGlms(GlmsConcessionDetail glmsConcessionDetail, Concession concession)
         {
-            var concessionGlms = _mapper.Map<ConcessionGlms>(glmsConcessionDetail);
-            concessionGlms.ConcessionId = concession.Id;
-            return _concessionGlmsRepository.Create(concessionGlms);
+             var concessionGlms = MapGlms(glmsConcessionDetail);
+             concessionGlms.ConcessionId = concession.Id;
+             return _concessionGlmsRepository.Create(concessionGlms);
         }
 
         public GlmsConcession GetGlmsConcession(string concessionReferenceId, User user)
@@ -62,7 +63,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId, user);
             var glmsConcessionDetails = _miscPerformanceRepository.GetGlmsConcessionDetails(concession.Id);
 
-            var primerate = _primeRateRepository.PrimeRate(concession.DateOpened);
+            foreach(var glmsConcessionDetail in  glmsConcessionDetails)
+            {
+               // glmsConcessionDetail.GlmsTierData=
+            }
 
             return new GlmsConcession
             {
@@ -122,10 +126,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     var productgrouping = groupedinfo.Where(g => g.LegalEntity == product.LegalEntity).FirstOrDefault();
                     if (productgrouping == null)
                     {
-                        GlmsProductGroup newgroup = new GlmsProductGroup();
-                        newgroup.LegalEntity = product.LegalEntity;
-                        newgroup.RiskGroupName = product.RiskGroupName;
-                        newgroup.GlmsProducts = new List<Model.UserInterface.Glms.GlmsProduct>();
+                        GlmsProductGroup newgroup = new GlmsProductGroup
+                        {
+                            LegalEntity = product.LegalEntity,
+                            RiskGroupName = product.RiskGroupName,
+                            GlmsProducts = new List<Model.UserInterface.Glms.GlmsProduct>()
+                        };
                         newgroup.GlmsProducts.Add(product);
 
                         groupedinfo.Add(newgroup);
@@ -162,6 +168,21 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             return _miscPerformanceRepository.GetGlmsProductsByLegalEntity(legalEntity.Id, legalEntity.CustomerName);
         }
+
+        private ConcessionGlms MapGlms(GlmsConcessionDetail glmsConcessionDetail)
+        {
+            ConcessionGlms glmsConcession = new ConcessionGlms() {       
+             InterestPricingCategoryId = glmsConcessionDetail.interestPricingCategoryId,
+             SlabTypeId= glmsConcessionDetail.SlabTypeId,
+             ConcessionDetailId= glmsConcessionDetail.ConcessionDetailId,
+             GlmsGroupId= glmsConcessionDetail.GlmsGroupId,
+             LegalEntityAccountId= 2022,
+             ProductTypeId= 1
+            };
+
+            return glmsConcession;
+        }
+
      
     }
 }

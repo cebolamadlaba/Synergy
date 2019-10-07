@@ -31,6 +31,15 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Glms
         public IEnumerable<ConcessionCondition> ConcessionConditions { get; set; }
 
         /// <summary>
+        /// Gets or sets the concession glms tier data.
+        /// </summary>
+        /// <value>
+        /// The concession glms tier data.
+        /// </value>
+      ///  public IEnumerable<GlmsTierData> GlmsTierData { get; set; }
+
+
+        /// <summary>
         /// Gets or sets the current user.
         /// </summary>
         /// <value>

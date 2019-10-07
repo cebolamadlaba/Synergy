@@ -170,6 +170,9 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             //PeriodType
             CreateMap<Model.Repository.PeriodType, Model.UserInterface.PeriodType>().ReverseMap();
 
+            //BaseRateCode
+            CreateMap<Model.Repository.BaseRateCode, Model.UserInterface.BaseRateCode>().ReverseMap();
+
             //ProductCash
             CreateMap<Model.Repository.ProductCash, Model.UserInterface.Cash.CashProduct>()
                     .ForMember(target => target.CashProductId, _ => _.MapFrom(source => source.Id));

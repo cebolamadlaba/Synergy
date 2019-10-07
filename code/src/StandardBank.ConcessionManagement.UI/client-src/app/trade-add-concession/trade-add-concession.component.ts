@@ -592,6 +592,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
             }
 
             if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
+                this.onExpiryDateChanged(concessionFormItem);
                 tradeConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
             else {

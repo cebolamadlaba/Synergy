@@ -80,10 +80,10 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// </summary>
         /// <param name="riskGroupNumber"></param>
         /// <returns></returns>
-        [Route("PricingRiskGroupUser/{riskGroupNumber}")]
-        public IActionResult PricingRiskGroupUser(int riskGroupNumber)
+        [Route("PricingRiskGroupUser/{sapbpidOrRiskGroupNumber}")]
+        public IActionResult PricingRiskGroupUser(int sapbpidOrRiskGroupNumber)
         {
-            var user =_userManager.GetUserByRiskGroupNumber(riskGroupNumber);
+            var user =_userManager.GetUserByRiskGroupNumber(sapbpidOrRiskGroupNumber);
 
             return Ok(user);
         }

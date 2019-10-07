@@ -59,19 +59,35 @@
     </div>
 </div>
 
+
 <!-- Error message -->
-<div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
+<div class="col-md-12" *ngIf="(errorMessage) && !isLoading">
     <div class="form-feedback-container">
         <div class="alert-danger">
             <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
             <p>{{errorMessage}}</p>
 
             <ul *ngIf="validationError">
-                <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
+                <li *ngFor="let validationMessage of validationError ">{{validationMessage}}</li>
             </ul>
         </div>
     </div>
 </div>
+
+<!-- Error message -->
+<div class="col-md-12" *ngIf="(validationError) && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Unable to continue..</p>
+            <p>{{errorMessage}}</p>
+
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError | slice:0:1;">{{validationMessage}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 
 <!-- lending concessions and products-->
 <div class="col-md-12">
@@ -135,7 +151,6 @@
             <button type="button" class="btn btn-primary btn-concession" (click)="checkForExistingConcessions(glmsView.glmsConcessions.length,'/glms-add-concession', riskGroupNumber, sapbpid)" *ngIf="pageLoaded && canRequest">Add Concession</button>
         </h2>
 
-
         <div class="input-group add-on">
             <input class="form-control" placeholder="Concession ID" [(ngModel)]="filterConcessionId" type="text">
         </div>
@@ -151,29 +166,20 @@
                 </div>
             </div>
             <div class="section-body">
-                <div class="table-container" [routerLink]="['/glmss-view-concession', riskGroupNumber, sapbpid, glmsConcession.concession.referenceNumber]">
+                <div class="table-container" [routerLink]="['/glms-view-concession', riskGroupNumber, sapbpid, glmsConcession.concession.referenceNumber]">
                     <table class="table table-bordered table-hover header-fixed table-striped">
                         <thead>
                             <tr>
                                 <th>Interest pricing category</th>
                                 <th>Customer</th>
-                                <th>Tiered rFom</th>
-                                <th>Tiered To</th>
-                                <th>Base Rate</th>
+                                <th>Tiered Information</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let concession of glmsConcession.glmsConcessionDetails; trackBy: index;">
-                                <td>{{concession.legalEntity}}</td>
-
-                                <td class="leftAlign">{{concession.glmsProduct}}</td>
-
-                                <td class="rightAlign">{{concession.accountNumber}}</td>
-                                <td>
-                                    <p class="mapInfo">Loaded:{{concession.loadedRate | number : '1.5-5'}}</p>
-                                    <p class="mapInfo">Approved:{{concession.approvedRate| number : '1.5-5'}}</p>
-                                </td>
-                                <td>{{concession.legalEntity}}</td>
+                                <td>{{concession.interestPricingCategory}}</td>
+                                <td class="leftAlign">{{concession.groupNumber}}</td>
+                                <td class="rightAlign">Waiting for Anthony/Perushka feedback</td>
                             </tr>
                         </tbody>
                     </table>

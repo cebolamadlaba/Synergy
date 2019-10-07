@@ -34,7 +34,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.GlmsConcessio
             {
                 var result = _glmsManager.CreateConcessionGlms(message.GlmsConcessionDetail, message.Concession);
 
-                message.AuditRecord = new AuditRecord(result, message.User, AuditType.Insert);
+              //  message.AuditRecord = new AuditRecord(result, message.User, AuditType.Insert);
                 message.GlmsConcessionDetail.GlmsConcessionDetailId = result.Id;
             }
             else

@@ -48,6 +48,7 @@ export class GlmsBaseService extends BaseComponentService {
         const url = "/api/Concession/SlabType";
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
+  
 
     private extractData(response: Response) {
         let body = response.json();
@@ -58,6 +59,8 @@ export class GlmsBaseService extends BaseComponentService {
         console.error(error.message || error);
         return Observable.throw(error.message || error);
     }
+
+  
 
 
 }

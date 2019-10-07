@@ -1269,7 +1269,7 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<GlmsConcessionDetail>(@"SELECT cd.[pkConcessionDetailId] [ConcessionDetailId], 
+                var query =  db.Query<GlmsConcessionDetail>(@"SELECT cd.[pkConcessionDetailId] [ConcessionDetailId], 
                     cd.[fkConcessionId] [ConcessionId], 
                     cd.[fkLegalEntityId] [LegalEntityId],
                     cd.[fkLegalEntityAccountId] [LegalEntityAccountId],  
@@ -1280,17 +1280,16 @@ namespace StandardBank.ConcessionManagement.Repository
                     [PriceExported], 
                     [PriceExportedDate],                  
 					pinv.pkConcessionGlmsId [GlmsConcessionDetailId],
-                    ac.AccountNumber,
-					pinv.TierFrom,
-					pinv.TierTo,				
+                    ac.AccountNumber,			
                     p.GroupType GlmsProduct,										
                     pinv.fkLegalEntityAccountId,
-                    pinv.fkProductId [productTypeId],                  
-					pinv.Spread,				
-					pinv.Value,                
+                    pinv.fkProductId [productTypeId],                  				               
 					pinv.fkLegalEntityAccountId,
-                    code.Description BaseRate,
-                    glmsGroup.GroupNumber
+                    glmsGroup.GroupNumber,
+                    pinv.fkSlabTypeId SlabTypeId,
+					pinv.fkInterestPricingCategoryId interestPricingCategoryId,
+					pinv.RateType RateTypeId,
+                    intCat.Description InterestPricingCategory
 
                     FROM [dbo].[tblConcessionDetail] cd
                     left join [dbo].[tblConcessionGlms] pinv on cd.pkConcessionDetailId = pinv.fkConcessionDetailId
@@ -1300,9 +1299,13 @@ namespace StandardBank.ConcessionManagement.Repository
                     left JOIN [dbo].[tblProductGlms] p on p.pkProductGlmsId = pinv.fkProductId
 	                left join [dbo].[tblBaseRateCode] code on code.pkBaseRateCodeId=pinv.fkBaseRateCodeId
                     left join [dbo].[tblGlmsGroup] glmsGroup on glmsGroup.pkGlmsGroupId = pinv.fkGroupId
+	                left join [dbo].[tblInterestPricingCategory] intCat on intCat.pkInterestPricingCategoryId = pinv.fkInterestPricingCategoryId
+					left join [dbo].[tblBaseRateCode] base on base.pkBaseRateCodeId = pinv.fkBaseRateCodeId
 
 
                      WHERE cd.fkConcessionId = @concessionId  and cd.Archived is null", new { concessionId });
+
+                return query;
             }
         }
         /// <summary>

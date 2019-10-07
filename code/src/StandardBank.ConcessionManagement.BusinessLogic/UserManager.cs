@@ -230,11 +230,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <summary>
         /// Gets the user.
         /// </summary>
-        /// <param name="riskGroupNumber">The user identifier.</param>
+        /// <param name="sapbpidOrRiskGroupNumber">The user identifier.</param>
         /// <returns></returns>
-        public User GetUserByRiskGroupNumber(int riskGroupNumber)
+        public User GetUserByRiskGroupNumber(int sapbpidOrRiskGroupNumber)
         {
-            return _mapper.Map<User>(_userRepository.ReadByRiskGroupNumber(riskGroupNumber));  
+            return _mapper.Map<User>(_userRepository.ReadByCustOrRiskGroupNumber(sapbpidOrRiskGroupNumber));  
         }
 
         /// <summary>
