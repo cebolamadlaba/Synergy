@@ -242,6 +242,85 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(_glmsManager.GetGlmsConcession(detail.ReferenceNumber, user));
         }
 
+        [Route("RenewGlms")]
+        [ValidateModel]
+        public async Task<IActionResult> RenewGlms([FromBody] GlmsConcession glmsConcession)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            var returnConcession = await CreateChildConcession(glmsConcession, user, Constants.RelationshipType.Renewal);
+
+            return Ok(returnConcession);
+        }
+
+
+        [Route("ResubmitGlms")]
+        [ValidateModel]
+        public async Task<IActionResult> ResubmitGlms([FromBody] GlmsConcession lendingConcession)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            var returnConcession = await CreateChildConcession(lendingConcession, user, Constants.RelationshipType.Resubmit);
+
+            return Ok(returnConcession);
+        }
+
+        [Route("UpdateApprovedGlms")]
+        [ValidateModel]
+        public async Task<IActionResult> UpdateApprovedGlms([FromBody] GlmsConcession lendingConcession)
+        {
+            var user = _siteHelper.LoggedInUser(this);
+
+            var returnConcession = await CreateChildConcession(lendingConcession, user, Constants.RelationshipType.Update);
+
+            return Ok(returnConcession);
+        }
+
+       
+        private async Task<GlmsConcession> CreateChildConcession(GlmsConcession glmsConcession, User user, string relationship)
+        {
+    
+            var parentGlmsConcession =
+                _glmsManager.GetGlmsConcession(glmsConcession.Concession.ReferenceNumber, user);
+
+            var parentConcessionId = parentGlmsConcession.Concession.Id;
+
+            glmsConcession.Concession.ReferenceNumber = string.Empty;
+            glmsConcession.Concession.ConcessionType = Constants.ConcessionType.Lending;
+            glmsConcession.Concession.Type = Constants.ReferenceType.Existing;
+
+            var concession = await _mediator.Send(new AddConcession(glmsConcession.Concession, user));
+
+            foreach (var glmsConcessionDetail in glmsConcession.GlmsConcessionDetails)
+            {
+                if (relationship != Constants.RelationshipType.Extension)
+                    glmsConcessionDetail.ExpiryDate = null;
+
+                await _mediator.Send(new AddOrUpdateGlmsConcessionDetail(glmsConcessionDetail, user, concession));
+            }
+
+            if (glmsConcession.ConcessionConditions != null && glmsConcession.ConcessionConditions.Any())
+                foreach (var concessionCondition in glmsConcession.ConcessionConditions)
+                    await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+
+            //link the new concession to the old concession
+            var concessionRelationship = new ConcessionRelationship
+            {
+                CreationDate = DateTime.Now,
+                UserId = user.Id,
+                RelationshipDescription = relationship,
+                ParentConcessionId = parentConcessionId,
+                ChildConcessionId = concession.Id
+            };
+
+            await _mediator.Send(new AddConcessionRelationship(concessionRelationship, user));
+
+            var returnConcession =
+                _glmsManager.GetGlmsConcession(parentGlmsConcession.Concession.ReferenceNumber, user);
+
+            returnConcession.Concession.ChildReferenceNumber = concession.ReferenceNumber;
+            return returnConcession;
+        }
 
 
     }

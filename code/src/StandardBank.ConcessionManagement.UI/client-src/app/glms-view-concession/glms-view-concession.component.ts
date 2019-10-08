@@ -766,8 +766,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         this.canUpdate = false;
         this.canArchive = false;
 
-
-
         this.glmsConcessionForm.controls['motivation'].setValue('');
     }
 
@@ -1167,7 +1165,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         let rowIndex = 0;
         for (let concessionFormItem of concessions.controls)
         {
-
             rowIndex++;
         }
 
