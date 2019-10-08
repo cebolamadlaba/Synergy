@@ -101,11 +101,24 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             return Ok(_lookupTableManager.GetLegalEntityBOLUsers(riskGroupNumber));
         }
+        //GetLegalEntityBOLUsersByLegalEntityId
+        [Route("GetLegalEntityBOLUsersBySAPBPID/{sapbpid}")]
+        public IActionResult GetLegalEntityBOLUsersBySAPBPID(int sapbpid)
+        {
+            LegalEntity legalEntity = this._lookupTableManager.GetLegalEntity(sapbpid);
+            return Ok(_lookupTableManager.GetLegalEntityBOLUsersByLegalEntityId(legalEntity.Id));
+        }
 
         [Route("LegalEntityGBBNumbers/{riskGroupNumber}")]
         public IActionResult GetLegalEntityGBBNumbers(int riskGroupNumber)
         {
             return Ok(_lookupTableManager.GetLegalEntityGBBNumbers(riskGroupNumber));
+        }
+
+        [Route("LegalEntityGBBNumbersBySAPBPID/{sapbpid}")]
+        public IActionResult GetLegalEntityGBBNumbersBySAPBPID(int sapbpid)
+        {
+            return Ok(_lookupTableManager.GetLegalEntityGBBNumbersBySAPBPID(sapbpid));
         }
 
         /// <summary>

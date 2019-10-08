@@ -15,23 +15,24 @@ using StandardBank.ConcessionManagement.UI.Validation;
 
 namespace StandardBank.ConcessionManagement.UI.Controllers
 {
- 
+
     [Produces("application/json")]
     [Route("api/Trade")]
-    public class TradeController : Controller    {
-       
+    public class TradeController : Controller
+    {
+
         private readonly ISiteHelper _siteHelper;
-      
+
         private readonly ITradeManager _tradeManager;
-      
+
         private readonly IMediator _mediator;
 
         private readonly IBusinessCentreManager _bcmManager;
 
-        private readonly ILookupTableManager _lookupTableManager;        
+        private readonly ILookupTableManager _lookupTableManager;
 
 
-        public TradeController(ISiteHelper siteHelper, ITradeManager tradeManager, IMediator mediator,  IBusinessCentreManager businessCentreManager, ILookupTableManager lookupTableManager)
+        public TradeController(ISiteHelper siteHelper, ITradeManager tradeManager, IMediator mediator, IBusinessCentreManager businessCentreManager, ILookupTableManager lookupTableManager)
         {
             _siteHelper = siteHelper;
             _tradeManager = tradeManager;
@@ -39,14 +40,14 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             _bcmManager = businessCentreManager;
             _lookupTableManager = lookupTableManager;
         }
-     
+
         /// <returns></returns>
-        [Route("TradeView/{riskGroupNumber}")]
-        public IActionResult TradeView(int riskGroupNumber)
+        [Route("TradeView/{riskGroupNumber}/{sapbpid}")]
+        public IActionResult TradeView(int riskGroupNumber, int sapbpid)
         {
             var user = _siteHelper.LoggedInUser(this);
 
-            return Ok(_tradeManager.GetTradeViewData(riskGroupNumber, user));
+            return Ok(_tradeManager.GetTradeViewData(riskGroupNumber, sapbpid, user));
         }
 
 
@@ -85,7 +86,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var user = _siteHelper.LoggedInUser(this);
 
             await UpdateTradeConcession(tradeConcession, user);
-       
+
             return Ok(_tradeManager.GetTradeConcession(tradeConcession.Concession.ReferenceNumber, user));
         }
 

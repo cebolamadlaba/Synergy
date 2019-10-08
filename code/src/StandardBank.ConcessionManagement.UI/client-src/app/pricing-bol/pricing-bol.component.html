@@ -17,8 +17,8 @@
         <div class="col-md-12 banner-container" *ngIf="showHide">
             <div class="col-md-11">
                 <div class="col-md-5">
-                    <div class="subHeading">{{bolView.riskGroup.name}}</div>
-                    <div class="date lightTitle hidden-element">{{bolView.riskGroup.number}}</div>
+                    <div class="subHeading">{{entityName}}</div>
+                    <div class="date lightTitle hidden-element">{{entityNumber}}</div>
                 </div>
                 <div class="col-md-2  hidden-element">
                     <div class="subHeading lightTitle">Total Payments</div>
@@ -48,8 +48,8 @@
             <div class="col-md-11">
                 <div>
                     <div class="col-md-5">
-                        <div class="subHeading">{{bolView.riskGroup.name}}</div>
-                        <div class="date lightTitle hidden-element">{{bolView.riskGroup.number}}</div>
+                        <div class="subHeading">{{entityName}}</div>
+                        <div class="date lightTitle hidden-element">{{entityNumber}}</div>
                     </div>
                 </div>
             </div>
@@ -132,7 +132,7 @@
         <h2 class="headings">
             Concessions
 
-            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/bol-add-concession', bolView.riskGroup.number]" *ngIf="pageLoaded && canRequest">Add Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/bol-add-concession', riskGroupNumber, sapbpid]" *ngIf="pageLoaded && canRequest">Add Concession</button>
         </h2>
 
         <!-- Search bar -->
@@ -151,7 +151,7 @@
                 </div>
             </div>
             <div class="section-body">
-                <div class="table-container" [routerLink]="['/bol-view-concession', bolView.riskGroup.number, bolConcession.concession.referenceNumber]">
+                <div class="table-container" [routerLink]="['/bol-view-concession', riskGroupNumber, sapbpid, bolConcession.concession.referenceNumber]">
                     <table class="table table-bordered table-hover header-fixed table-striped">
                         <thead>
                             <tr>

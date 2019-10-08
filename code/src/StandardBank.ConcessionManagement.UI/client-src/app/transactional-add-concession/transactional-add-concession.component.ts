@@ -20,6 +20,7 @@ import { TransactionalConcessionDetail } from "../models/transactional-concessio
 import { DecimalPipe } from '@angular/common';
 import { ConcessionTypes } from '../constants/concession-types';
 import { BaseComponentService } from '../services/base-component.service';
+import { LegalEntity } from "../models/legal-entity";
 
 @Component({
     selector: 'app-transactional-add-concession',
@@ -35,6 +36,12 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
+    legalEntity: LegalEntity;
+    sapbpid: number;
+
+    entityName: string;
+    entityNumber: string;
+
     selectedConditionTypes: ConditionType[];
     selectedTransactionTypes: TransactionType[];
     isLoading = true;
@@ -75,6 +82,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
+            this.sapbpid = +params['sapbpid'];
         });
 
         this.transactionalConcessionForm = this.formBuilder.group({
@@ -85,48 +93,90 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
             motivation: new FormControl()
         });
 
-        Observable.forkJoin([
-            this.lookupDataService.getPeriods(),
-            this.lookupDataService.getPeriodTypes(),
-            this.lookupDataService.getConditionTypes(),
-            this.lookupDataService.getTransactionTypes(ConcessionTypes.Transactional),
-            this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-            this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Transactional),
-            this.transactionalConcessionService.getlatestCrsOrMrs(this.riskGroupNumber)
-        ]).subscribe(results => {
-            this.periods = <any>results[0];
-            this.periodTypes = <any>results[1];
-            this.conditionTypes = <any>results[2];
-            this.transactionTypes = <any>results[3];
-            this.riskGroup = <any>results[4];
-            this.clientAccounts = <any>results[5];
-            this.latestCrsOrMrs = <any>results[6];
+        this.getInitialData();
+    }
 
+    getInitialData() {
+        if (this.riskGroupNumber != null && this.riskGroupNumber != 0) {
+            Observable.forkJoin([
+                this.lookupDataService.getPeriods(),
+                this.lookupDataService.getPeriodTypes(),
+                this.lookupDataService.getConditionTypes(),
+                this.lookupDataService.getTransactionTypes(ConcessionTypes.Transactional),
+                this.lookupDataService.getRiskGroup(this.riskGroupNumber),
+                this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, this.sapbpid, ConcessionTypes.Transactional),
+                this.transactionalConcessionService.getlatestCrsOrMrs(this.riskGroupNumber)
+            ]).subscribe(results => {
 
-            const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+                this.setInitialData(results, true);
 
-            if (this.transactionTypes)
-                control.controls[0].get('transactionType').setValue(this.transactionTypes[0]);
-
-            if (this.clientAccounts)
-                control.controls[0].get('accountNumber').setValue(this.clientAccounts[0]);
-
-            this.selectedTransactionTypes[0] = this.transactionTypes[0];
-            let currentTransactionType = control.controls[0];
-            currentTransactionType.get('adValorem').setValue(null);
-            currentTransactionType.get('flatFeeOrRate').setValue(null);
-
-            if (this.selectedTransactionTypes[0].transactionTableNumbers)
-                control.controls[0].get('transactionTableNumber').setValue(this.selectedTransactionTypes[0].transactionTableNumbers[0]);
-
-            this.transactionTableNumberChanged(0);
-
-            this.isLoading = false;
-        },
-            error => {
+            }, error => {
                 this.errorMessage = <any>error;
                 this.isLoading = false;
             });
+        }
+        else if (this.sapbpid != null && this.sapbpid != 0) {
+            Observable.forkJoin([
+                this.lookupDataService.getPeriods(),
+                this.lookupDataService.getPeriodTypes(),
+                this.lookupDataService.getConditionTypes(),
+                this.lookupDataService.getTransactionTypes(ConcessionTypes.Transactional),
+                this.lookupDataService.getLegalEntity(this.sapbpid),
+                this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, this.sapbpid, ConcessionTypes.Transactional),
+
+            ]).subscribe(results => {
+
+                this.setInitialData(results, false);
+
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        }
+    }
+
+    setInitialData(results: {}[], isForRiskGroup: boolean) {
+        this.periods = <any>results[0];
+        this.periodTypes = <any>results[1];
+        this.conditionTypes = <any>results[2];
+        this.transactionTypes = <any>results[3];
+
+        if (isForRiskGroup) {
+            this.riskGroup = <any>results[4];
+            this.latestCrsOrMrs = <any>results[6];
+            this.entityName = this.riskGroup.name;
+            this.entityNumber = this.riskGroup.number.toString();
+        }
+        else {
+            this.legalEntity = <any>results[4];
+            this.latestCrsOrMrs = 0;
+            this.entityName = this.legalEntity.customerName;
+            this.entityNumber = this.legalEntity.customerNumber;
+        }
+
+        this.clientAccounts = <any>results[5];
+
+        const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+
+        if (this.transactionTypes)
+            control.controls[0].get('transactionType').setValue(this.transactionTypes[0]);
+
+        if (this.clientAccounts)
+            control.controls[0].get('accountNumber').setValue(this.clientAccounts[0]);
+
+        this.selectedTransactionTypes[0] = this.transactionTypes[0];
+        let currentTransactionType = control.controls[0];
+        currentTransactionType.get('adValorem').setValue(null);
+        currentTransactionType.get('flatFeeOrRate').setValue(null);
+
+        if (this.selectedTransactionTypes[0].transactionTableNumbers)
+            control.controls[0].get('transactionTableNumber').setValue(this.selectedTransactionTypes[0].transactionTableNumbers[0]);
+
+        this.transactionTableNumberChanged(0);
+
+        this.isLoading = false;
+
+
     }
 
     initConcessionItemRows() {
@@ -246,7 +296,12 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
     getTransactionalConcession(): TransactionalConcession {
         var transactionalConcession = new TransactionalConcession();
         transactionalConcession.concession = new Concession();
-        transactionalConcession.concession.riskGroupId = this.riskGroup.id;
+
+        if (this.riskGroup)
+            transactionalConcession.concession.riskGroupId = this.riskGroup.id;
+        if (this.legalEntity)
+            transactionalConcession.concession.legalEntityId = this.legalEntity.id;
+
 
         if (this.transactionalConcessionForm.controls['smtDealNumber'].value)
             transactionalConcession.concession.smtDealNumber = this.transactionalConcessionForm.controls['smtDealNumber'].value;

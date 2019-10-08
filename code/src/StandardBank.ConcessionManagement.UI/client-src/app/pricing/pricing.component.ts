@@ -4,6 +4,8 @@ import { UserService } from "../services/user.service";
 import { User } from "../models/user";
 import { ActivatedRoute } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
+import { LegalEntity } from "../models/legal-entity";
+import { PricingView } from "../models/pricing-view";
 import { LookupDataService } from "../services/lookup-data.service";
 
 import { SubRoleEnum } from "../models/subrole-enum";
@@ -19,11 +21,19 @@ export class PricingComponent implements OnInit, OnDestroy {
     user: User;
     errorMessage: String;
     observableRiskGroup: Observable<RiskGroup>;
+    observablePricingView: Observable<PricingView>;
     riskGroup: RiskGroup;
+    legalEntity: LegalEntity;
     riskGroupNumber: number;
+    sapbpid: number;
     foundRiskGroup = false;
+    foundSAPBPID = false;
     activePricingProducts: number[] = [];
     isLoading = false;
+
+    marketSegment: string = null;
+    entityName: string = null;
+    entityNumber: number = null;
 
     constructor(private route: ActivatedRoute,
         @Inject(UserService) private userService,
@@ -33,9 +43,12 @@ export class PricingComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
+            this.sapbpid = +params['sapbpid'];
 
             if (this.riskGroupNumber)
                 this.searchRiskGroupNumber(this.riskGroupNumber);
+            if (this.sapbpid)
+                this.searchSAPBPID(this.sapbpid);
         });
 
         this.observableLoggedInUser = this.userService.getData();
@@ -48,9 +61,64 @@ export class PricingComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         this.foundRiskGroup = false;
         this.riskGroupNumber = riskGroupNumber;
+        this.sapbpid = 0;
         this.observableRiskGroup = this.lookupDataService.getRiskGroup(riskGroupNumber);
         this.observableRiskGroup.subscribe(riskGroup => {
             this.riskGroup = riskGroup;
+
+            if (this.riskGroup != null) {
+                this.marketSegment = this.riskGroup.marketSegment;
+                this.entityName = this.riskGroup.name;
+                this.entityNumber = this.riskGroup.number;
+            }
+            else {
+                this.marketSegment = null;
+                this.entityName = null;
+                this.entityNumber = null;
+            }
+
+            this.getActivePricingProducts();
+
+            this.foundRiskGroup = true;
+            this.isLoading = false;
+        },
+            error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+    }
+
+    searchSAPBPID(sapbpid: number) {
+        this.errorMessage = null;
+        this.isLoading = true;
+        this.foundRiskGroup = false;
+        this.foundSAPBPID = false;
+        this.riskGroupNumber = 0;
+        this.sapbpid = sapbpid;
+        this.observablePricingView = this.lookupDataService.getRiskGroupBySAPBPID(sapbpid);
+        this.observablePricingView.subscribe(pricingview => {
+
+            this.riskGroup = pricingview.riskGroup;
+            this.legalEntity = pricingview.legalEntity
+
+            if (this.legalEntity != null) {
+                this.marketSegment = this.legalEntity.marketSegment;
+                this.entityName = this.legalEntity.customerName;
+                this.entityNumber = Number(this.legalEntity.customerNumber);
+            }
+            else {
+                this.marketSegment = null;
+                this.entityName = null;
+                this.entityNumber = null;
+            }
+
+            if (this.riskGroup != null) {
+                this.riskGroupNumber = this.riskGroup.number;
+                this.foundRiskGroup = true;
+            }
+            else if (this.legalEntity != null) {
+                this.foundSAPBPID = true;
+            }
 
             this.lookupDataService.getActivePricingProducts().subscribe(activePricingProducts => {
 
@@ -62,13 +130,25 @@ export class PricingComponent implements OnInit, OnDestroy {
                 }
             });
 
-            this.foundRiskGroup = true;
+
             this.isLoading = false;
         },
             error => {
                 this.errorMessage = <any>error;
                 this.isLoading = false;
             });
+    }
+
+    private getActivePricingProducts() {
+        this.lookupDataService.getActivePricingProducts().subscribe(activePricingProducts => {
+
+            if (activePricingProducts === null) {
+                this.errorMessage = "No Pricing Products have been set active. Please contact the administrator.";
+            }
+            else {
+                this.activePricingProducts = activePricingProducts;
+            }
+        });
     }
 
     ngOnDestroy() {

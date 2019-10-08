@@ -76,7 +76,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="cacheManager">The cache manager.</param>
         /// <param name="userRepository">The user repository.</param>
         /// <param name="userRoleRepository">The user role repository.</param>
-        /// /// <param name="RoleSubRoleRepository">The user sub role repository.</param>
+        /// <param name="RoleSubRoleRepository">The user sub role repository.</param>
         /// <param name="roleRepository">The role repository.</param>
         /// <param name="centreRepository">The centre repository.</param>
         /// <param name="centreUserRepository">The centre user repository.</param>

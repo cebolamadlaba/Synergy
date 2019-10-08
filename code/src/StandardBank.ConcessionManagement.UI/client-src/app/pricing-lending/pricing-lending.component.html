@@ -36,8 +36,8 @@
         <div class="col-md-12 banner-container" *ngIf="showHide">
             <div class="col-md-11">
                 <div class="col-md-5">
-                    <div class="subHeading">{{lendingView.riskGroup.name}}</div>
-                    <div class="date lightTitle hidden-element">{{lendingView.riskGroup.number}}</div>
+                    <div class="subHeading">{{entityName}}</div>
+                    <div class="date lightTitle hidden-element">{{entityNumber}}</div>
                 </div>
                 <div class="col-md-2  hidden-element">
                     <div class="subHeading lightTitle">Total Exposure</div>
@@ -65,8 +65,8 @@
             <div class="col-md-11">
                 <div>
                     <div class="col-md-5">
-                        <div class="subHeading">{{lendingView.riskGroup.name}}</div>
-                        <div class="date lightTitle hidden-element">{{lendingView.riskGroup.number}}</div>
+                        <div class="subHeading">{{entityName}}</div>
+                        <div class="date lightTitle hidden-element">{{entityNumber}}</div>
                     </div>
                 </div>
             </div>
@@ -137,37 +137,6 @@
 
             </div>
 
-
-            <!-- Products list -->
-            <!--<div class="section-body" *ngFor="let lendingProduct of lendingView.lendingProducts; trackBy: index;">
-        <div class="product-section">
-            <div class="product-name"> {{lendingProduct.customerName}}</div>
-            <div>
-                <div class="product-account">Account No: {{lendingProduct.accountNumber}}</div>
-                <div class="product-code">Product: {{lendingProduct.product}}</div>
-            </div>
-        </div>
-        <div class="product-table-container">
-            <table class="table table-bordered table-hover header-fixed table-striped ">
-                <thead>
-                    <tr>
-                        <th>Limit</th>
-                        <th>Average Balance</th>
-                        <th>Loaded MAP</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="rightAlign"> {{lendingProduct.limit | number : '1.2-2'}}</td>
-                        <td class="rightAlign"> {{lendingProduct.averageBalance | number : '1.2-2'}}</td>
-                        <td class="rightAlign"> {{lendingProduct.loadedMap | number : '1.2-2'}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>-->
-            <!-- End of products list -->
-
         </div>
     </div>
 
@@ -175,7 +144,7 @@
     <div class="col-md-6 search-and-results-container" id="lending-search-container">
         <h2 class="headings">
             Concessions
-            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/lending-add-concession', lendingView.riskGroup.number]" *ngIf="pageLoaded && canRequest">Add Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/lending-add-concession', riskGroupNumber, sapbpid]" *ngIf="pageLoaded && canRequest">Add Concession</button>
         </h2>
 
         <!-- Search bar -->
@@ -189,37 +158,35 @@
                         <div [ngClass]="{'approved-status': (lendingConcession.concession.status==='Approved') || (lendingConcession.concession.status==='Approved With Changes'),'pending-status': lendingConcession.concession.status==='Pending', 'declined-status': lendingConcession.concession.status==='Declined'}">{{lendingConcession.concession.status}}</div>
                     </div>
                     <p class="concession-id">{{lendingConcession.concession.referenceNumber}}</p>
-                    <div class="concession-sub-status">{{lendingConcession.concession.subStatus}}</div>                   
-                </div>          
+                    <div class="concession-sub-status">{{lendingConcession.concession.subStatus}}</div>
+                </div>
             </div>
             <div class="section-body">
-                <div class="table-container" [routerLink]="['/lending-view-concession', lendingView.riskGroup.number, lendingConcession.concession.referenceNumber]">
+                <div class="table-container" [routerLink]="['/lending-view-concession', riskGroupNumber, sapbpid, lendingConcession.concession.referenceNumber]">
                     <table class="table table-bordered table-hover header-fixed table-striped">
                         <thead>
-                        <tr>
-                            <th style="width: 25%;">Product</th>
-                            <th style="width: 20%;">Customer</th>
-                            <th style="width: 10%;">Limit</th>
-                            <th style="width: 15%;">Average Balance</th>
-                            <th style="width: 10%;">Term</th>
-                            <th style="width: 20%;">MAP</th>
-                        </tr>
+                            <tr>
+                                <th style="width: 25%;">Product</th>
+                                <th style="width: 35%;">Customer</th>
+                                <th style="width: 10%;">Limit</th>
+                                <th style="width: 10%;">Term</th>
+                                <th style="width: 20%;">MAP</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr *ngFor="let concession of lendingConcession.lendingConcessionDetails; trackBy: index;">
-                            <td>{{concession.productType}}</td>
-                            <td>
-                                <p class="customerInfo">{{concession.customerName}}</p>
-                                <p class="accInfo">Acc No : {{concession.accountNumber}}</p>
-                            </td>
-                            <td class="rightAlign">{{concession.limit | number : '1.2-2'}}</td>
-                            <td class="rightAlign">{{concession.averageBalance | number : '1.2-2'}}</td>
-                            <td class="rightAlign">{{concession.term}}</td>
-                            <td>
-                                <p class="mapInfo">Loaded:{{concession.loadedMap | number : '1.2-2'}}</p>
-                                <p class="mapInfo">Approved:{{concession.approvedMap | number : '1.2-2'}}</p>
-                            </td>
-                        </tr>
+                            <tr *ngFor="let concession of lendingConcession.lendingConcessionDetails; trackBy: index;">
+                                <td>{{concession.productType}}</td>
+                                <td>
+                                    <p class="customerInfo">{{concession.customerName}}</p>
+                                    <p class="accInfo">Acc No : {{concession.accountNumber}}</p>
+                                </td>
+                                <td class="rightAlign">{{concession.limit | number : '1.2-2'}}</td>
+                                <td class="rightAlign">{{concession.term}}</td>
+                                <td>
+                                    <p class="mapInfo">Loaded:{{concession.loadedMap | number : '1.2-2'}}</p>
+                                    <p class="mapInfo">Approved:{{concession.approvedMap | number : '1.2-2'}}</p>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

@@ -233,11 +233,47 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <returns></returns>
-        public CashView GetCashViewData(int riskGroupNumber, User currentUser)
+        public CashView GetCashViewData(int riskGroupNumber, int sapbpid, User currentUser)
         {
+            bool hasOnlySapBpId = riskGroupNumber < 1 && sapbpid > 0;
+
             var cashConcessions = new List<CashConcession>();
-            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
-            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.Cash, currentUser);
+
+            RiskGroup riskGroup = null;
+            Model.UserInterface.LegalEntity legalEntity = null;
+            IEnumerable<Concession> concessions = null;
+            CashFinancial cashFinancial = null;
+            IEnumerable<CashProduct> cashProducts = null;
+
+            if (!hasOnlySapBpId)
+            {
+                riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+                concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.Cash, currentUser);
+                cashFinancial = _mapper.Map<CashFinancial>(_financialCashRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
+                               new FinancialCash());
+                cashProducts = GetCashProducts(riskGroup);
+            }
+            else
+            {
+                legalEntity = _lookupTableManager.GetLegalEntity(sapbpid);
+
+                riskGroup = _lookupTableManager.GetRiskGroupForSAPBPID(sapbpid);
+                concessions = _concessionManager.GetApprovedConcessionsForLegalEntityId(legalEntity.Id, Constants.ConcessionType.Cash, currentUser);
+                cashFinancial = new CashFinancial()
+                {
+                    LatestCrsOrMrs = 0,
+                    TotalAutosafeCashTurnover = 0,
+                    TotalAutosafeCashVolume = 0,
+                    TotalBranchCashTurnover = 0,
+                    TotalBranchCashVolume = 0,
+                    TotalCashCentrCashTurnover = 0,
+                    TotalCashCentrCashVolume = 0,
+                    WeightedAverageAFPrice = 0,
+                    WeightedAverageBranchPrice = 0,
+                    WeightedAverageCCPrice = 0
+                };
+                cashProducts = GetCashProductsByLegalEntity(legalEntity);
+            }
 
             foreach (var concession in concessions)
             {
@@ -247,12 +283,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     Concession = concession
                 });
             }
-
-            var cashFinancial =
-                _mapper.Map<CashFinancial>(_financialCashRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
-                                           new FinancialCash());
-
-            var cashProducts = GetCashProducts(riskGroup);
 
             //grouping of products
             var groupedinfo = new List<CashProductGroup>();
@@ -289,6 +319,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return new CashView
             {
                 RiskGroup = riskGroup,
+                LegalEntity = legalEntity,
                 CashConcessions = cashConcessions.OrderBy(_ => _.Concession.AccountNumber),
                 CashFinancial = cashFinancial,
                 CashProductGroups = groupedinfo.OrderBy(o => o.CustomerName)
@@ -303,6 +334,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private IEnumerable<CashProduct> GetCashProducts(RiskGroup riskGroup)
         {
             return _miscPerformanceRepository.GetCashProducts(riskGroup.Id, riskGroup.Name);
+        }
+
+        private IEnumerable<CashProduct> GetCashProductsByLegalEntity(Model.UserInterface.LegalEntity legalEntity)
+        {
+            return _miscPerformanceRepository.GetCashProductsByLegalEntity(legalEntity.Id, legalEntity.CustomerName);
         }
 
         /// <summary>

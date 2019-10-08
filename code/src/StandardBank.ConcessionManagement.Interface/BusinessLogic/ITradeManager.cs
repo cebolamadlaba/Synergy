@@ -21,7 +21,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 
         ConcessionTrade UpdateConcessionTrade(TradeConcessionDetail tradedConcessionDetail, Concession concession);
 
-        TradeView GetTradeViewData(int riskGroupNumber, User currentUser); 
+        TradeView GetTradeViewData(int riskGroupNumber, int sapbpid, User currentUser);
 
         Task ForwardTradeConcession(TradeConcession bolConcession, User user);
 

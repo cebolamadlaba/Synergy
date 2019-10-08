@@ -34,7 +34,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ILookupTableManager _lookupTableManager;
 
         private readonly IRuleManager _ruleManager;
-      
+
         private readonly IMiscPerformanceRepository _miscPerformanceRepository;
 
         private readonly IMediator _mediator;
@@ -133,16 +133,39 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionInvestmentRpository.Update(mappedConcessionInvestment);
 
             return mappedConcessionInvestment;
-         
+
         }
 
 
-        public InvestmentView GetInvestmentViewData(int riskGroupNumber, User currentUser)
+        public InvestmentView GetInvestmentViewData(int riskGroupNumber, int sapbpid, User currentUser)
         {
-            var investmentConcessions = new List<InvestmentConcession>();
-            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+            bool hasOnlySapBpId = riskGroupNumber < 1 && sapbpid > 0;
 
-            var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.Investment, currentUser);
+            var investmentConcessions = new List<InvestmentConcession>();
+            RiskGroup riskGroup = null;
+            Model.UserInterface.LegalEntity legalEntity = null;
+            IEnumerable<Concession> concessions = null;
+            InvestmentFinancial investmentFinancial = null;
+            IEnumerable<Model.UserInterface.Investment.InvestmentProduct> investmentProducts = null;
+            if (!hasOnlySapBpId)
+            {
+                riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
+                concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.Investment, currentUser);
+                investmentFinancial = _mapper.Map<InvestmentFinancial>(_financialInvestmentRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialInvestment());
+                investmentProducts = GetInvestmentProducts(riskGroup);
+            }
+            else
+            {
+                legalEntity = _lookupTableManager.GetLegalEntity(sapbpid);
+                concessions = _concessionManager.GetApprovedConcessionsForLegalEntityId(legalEntity.Id, Constants.ConcessionType.Investment, currentUser);
+                investmentFinancial = new InvestmentFinancial()
+                {
+                    TotalLiabilityBalances = 0,
+                    WeightedAverageMTP = 0,
+                    WeightedAverageNetMargin = 0
+                };
+                investmentProducts = GetInvestmentProductsByLegalEntity(legalEntity);
+            }
 
             foreach (var concession in concessions)
             {
@@ -152,11 +175,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     Concession = concession
                 });
             }
-
-            var investmentFinancial = _mapper.Map<InvestmentFinancial>(_financialInvestmentRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialInvestment());                      
-
-            var investmentProducts = GetInvestmentProducts(riskGroup);
-
 
             //grouping of products
             var groupedinfo = new List<InvestmentProductGroup>();
@@ -179,24 +197,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     {
                         productgrouping.InvestmentProducts.Add(product);
                     }
-                 
+
                 }
                 //sort
                 foreach (var productgrouping in groupedinfo)
                 {
                     if (productgrouping != null && productgrouping.InvestmentProducts != null)
                         productgrouping.InvestmentProducts = productgrouping.InvestmentProducts.OrderBy(o => o.AccountNumber).ThenBy(o => o.InvestmentProductType).ToList();
-
-
                 }
-
-
             }
-
 
             return new InvestmentView
             {
                 RiskGroup = riskGroup,
+                LegalEntity = legalEntity,
                 InvestmentConcessions = investmentConcessions.OrderBy(_ => _.Concession.AccountNumber),
                 InvestmentFinancial = investmentFinancial,
                 InvestmentProductGroups = groupedinfo.OrderBy(o => o.LegalEntity)
@@ -207,7 +221,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private IEnumerable<Model.UserInterface.Investment.InvestmentProduct> GetInvestmentProducts(RiskGroup riskGroup)
         {
             return _miscPerformanceRepository.GetInvestmentProducts(riskGroup.Id, riskGroup.Name);
-        }   
+        }
+
+        private IEnumerable<Model.UserInterface.Investment.InvestmentProduct> GetInvestmentProductsByLegalEntity(Model.UserInterface.LegalEntity legalEntity)
+        {
+            return _miscPerformanceRepository.GetInvestmentProductsByLegalEntity(legalEntity.Id, legalEntity.CustomerName);
+        }
 
         public async Task ForwardInvestmentConcession(InvestmentConcession investmentConcession, User user)
         {

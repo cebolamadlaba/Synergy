@@ -44,19 +44,24 @@ namespace StandardBank.ConcessionManagement.Repository
             _cacheManager = cacheManager;
         }
 
+        public IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, int? userId, string concessiontype)
+        {
+            return this.GetClientAccounts(riskGroupNumber, userId, concessiontype, 0);
+        }
+
         /// <summary>
         /// Gets the client accounts.
         /// </summary>
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <param name="userId">The user identifier.</param>
         /// <returns></returns>
-        public IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, int? userId, string concessiontype)
+        public IEnumerable<ClientAccount> GetClientAccounts(int riskGroupNumber, int? userId, string concessiontype, int? legalEntityCustomerNumber = null)
         {
             try
             {
                 IEnumerable<ClientAccount> Function()
                 {
-                   
+
                     using (var db = _dbConnectionFactory.Connection())
                     {
 
@@ -67,108 +72,212 @@ namespace StandardBank.ConcessionManagement.Repository
 
                             if (concessiontype == Model.BusinessLogic.Constants.ConcessionType.Lending)
                             {
-                                sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] , prod.Description 'AccountType' 
-                            FROM [dbo].[tblRiskGroup] rg
-                            JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
-                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
-                            join tblProductLending on lea.pkLegalEntityAccountId = tblProductLending.fkLegalEntityAccountId
-                            join rtblProduct prod on tblProductLending.fkProductId = prod.pkProductId
-                            WHERE rg.[RiskGroupNumber] = @riskGroupNumber                          
-                            AND rg.[IsActive] = 1
-                            AND le.[IsActive] = 1
-                            AND lea.[IsActive] = 1
-                            AND le.[fkUserId] = @userId";
-
-
+                                if (riskGroupNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] , prod.Description 'AccountType' 
+                                            FROM [dbo].[tblRiskGroup] rg
+                                            JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
+                                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                            join tblProductLending on lea.pkLegalEntityAccountId = tblProductLending.fkLegalEntityAccountId
+                                            join rtblProduct prod on tblProductLending.fkProductId = prod.pkProductId
+                                            WHERE rg.[RiskGroupNumber] = @riskGroupNumber                          
+                                            AND rg.[IsActive] = 1
+                                            AND le.[IsActive] = 1
+                                            AND lea.[IsActive] = 1
+                                            AND le.[fkUserId] = @userId";
+                                }
+                                else if (legalEntityCustomerNumber.HasValue && legalEntityCustomerNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], lea.[AccountNumber], le.[CustomerName] , prod.Description 'AccountType' 
+                                            FROM [dbo].[tblLegalEntity] le
+                                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                            join tblProductLending on lea.pkLegalEntityAccountId = tblProductLending.fkLegalEntityAccountId
+                                            join rtblProduct prod on tblProductLending.fkProductId = prod.pkProductId
+                                            WHERE le.[CustomerNumber] = @legalEntityCustomerNumber
+                                            AND le.[IsActive] = 1
+                                            AND lea.[IsActive] = 1
+                                            AND le.[fkUserId] = @userId";
+                                }
                             }
                             else if (concessiontype == Model.BusinessLogic.Constants.ConcessionType.Cash)
                             {
-                                sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
-                            FROM [dbo].[tblRiskGroup] rg
-                            JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
-                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
-                            join tblProductCash on lea.pkLegalEntityAccountId = tblProductCash.fkLegalEntityAccountId
-                            WHERE rg.[RiskGroupNumber] = @riskGroupNumber
-                            AND rg.[IsActive] = 1
-                            AND le.[IsActive] = 1
-                            AND lea.[IsActive] = 1
-                            AND le.[fkUserId] = @userId";
+                                if (riskGroupNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
+                                        FROM [dbo].[tblRiskGroup] rg
+                                        JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
+                                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                        join tblProductCash on lea.pkLegalEntityAccountId = tblProductCash.fkLegalEntityAccountId
+                                        WHERE rg.[RiskGroupNumber] = @riskGroupNumber
+                                        AND rg.[IsActive] = 1
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1
+                                        AND le.[fkUserId] = @userId";
+                                }
+                                else if (legalEntityCustomerNumber.HasValue && legalEntityCustomerNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], lea.[AccountNumber], le.[CustomerName] 
+                                        FROM [dbo].[tblLegalEntity] le
+                                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                        join tblProductCash on lea.pkLegalEntityAccountId = tblProductCash.fkLegalEntityAccountId
+                                        WHERE le.[CustomerNumber] = @legalEntityCustomerNumber
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1
+                                        AND le.[fkUserId] = @userId";
+                                }
+
 
                             }
                             else if (concessiontype == Model.BusinessLogic.Constants.ConcessionType.Transactional)
                             {
-                                sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
-                            FROM [dbo].[tblRiskGroup] rg
-                            JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
-                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
-                            join tblProductTransactional on lea.pkLegalEntityAccountId = tblProductTransactional.fkLegalEntityAccountId
-                            WHERE rg.[RiskGroupNumber] = @riskGroupNumber
-                            AND rg.[IsActive] = 1
-                            AND le.[IsActive] = 1
-                            AND lea.[IsActive] = 1
-                            AND le.[fkUserId] = @userId";
-
+                                if (riskGroupNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
+                                        FROM [dbo].[tblRiskGroup] rg
+                                        JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
+                                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                        join tblProductTransactional on lea.pkLegalEntityAccountId = tblProductTransactional.fkLegalEntityAccountId
+                                        WHERE rg.[RiskGroupNumber] = @riskGroupNumber
+                                        AND rg.[IsActive] = 1
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1
+                                        AND le.[fkUserId] = @userId";
+                                }
+                                else if (legalEntityCustomerNumber.HasValue && legalEntityCustomerNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId][LegalEntityId], lea.[pkLegalEntityAccountId][LegalEntityAccountId], lea.[AccountNumber], le.[CustomerName]
+                                        FROM[dbo].[tblLegalEntity] le
+                                        JOIN[dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                        join tblProductTransactional on lea.pkLegalEntityAccountId = tblProductTransactional.fkLegalEntityAccountId
+                                        WHERE le.[CustomerNumber] = @legalEntityCustomerNumber
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1
+                                        AND le.[fkUserId] = @userId";
+                                }
                             }
                             else if (concessiontype == Model.BusinessLogic.Constants.ConcessionType.BusinessOnline)
                             {
-                                sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
-                            FROM [dbo].[tblRiskGroup] rg
-                            JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
-                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
-                           join tblProductLending on lea.pkLegalEntityAccountId = tblProductLending.fkLegalEntityAccountId
-                            WHERE rg.[RiskGroupNumber] = @riskGroupNumber
-                            AND rg.[IsActive] = 1
-                            AND le.[IsActive] = 1
-                            AND lea.[IsActive] = 1
-                            AND le.[fkUserId] = @userId";
+                                if (riskGroupNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
+                                            FROM	[dbo].[tblRiskGroup] rg
+                                            JOIN	[dbo].[tblLegalEntity] le	on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
+                                            JOIN	[dbo].[tblLegalEntityAccount] lea	on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                            JOIN	[dbo].[tblLegalEntityBOLUser] lebu	On lebu.fkLegalEntityAccountId = lea.pkLegalEntityAccountId
+                                            Join	[dbo].[tblProductBOL] pb	On pb.fkLegalEntityBOLUserId = lebu.pkLegalEntityBOLUserId
+                                        WHERE rg.[RiskGroupNumber] = @riskGroupNumber
+                                        AND rg.[IsActive] = 1
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1
+                                        AND le.[fkUserId] = @userId";
+                                }
+                                else if (legalEntityCustomerNumber.HasValue && legalEntityCustomerNumber > 0)
+                                {
+                                    sql = @"SELECT	distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], lea.[AccountNumber], le.[CustomerName]
+                                            FROM	[dbo].[tblLegalEntity] le
+                                            JOIN	[dbo].[tblLegalEntityAccount] lea	on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                            JOIN	[dbo].[tblLegalEntityBOLUser] lebu	On lebu.fkLegalEntityAccountId = lea.pkLegalEntityAccountId
+                                            Join	[dbo].[tblProductBOL] pb	On pb.fkLegalEntityBOLUserId = lebu.pkLegalEntityBOLUserId
+                                            WHERE le.[CustomerNumber] = @legalEntityCustomerNumber
+                                            AND le.[IsActive] = 1
+                                            AND lea.[IsActive] = 1
+                                            AND le.[fkUserId] = @userId";
+                                }
 
                             }
                             else if (concessiontype == Model.BusinessLogic.Constants.ConcessionType.Trade)
                             {
-                                sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
-                            FROM [dbo].[tblRiskGroup] rg
-                            JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
-                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
-                            join tblProductTrade on lea.pkLegalEntityAccountId = tblProductTrade.fkLegalEntityAccountId
-                            WHERE rg.[RiskGroupNumber] = @riskGroupNumber
-                            AND rg.[IsActive] = 1
-                            AND le.[IsActive] = 1
-                            AND lea.[IsActive] = 1
-                            AND le.[fkUserId] = @userId";
+                                if (riskGroupNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
+                                        FROM [dbo].[tblRiskGroup] rg
+                                        JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
+                                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                        join tblProductTrade on lea.pkLegalEntityAccountId = tblProductTrade.fkLegalEntityAccountId
+                                        WHERE rg.[RiskGroupNumber] = @riskGroupNumber
+                                        AND rg.[IsActive] = 1
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1
+                                        AND le.[fkUserId] = @userId";
+                                }
+                                else if (legalEntityCustomerNumber.HasValue && legalEntityCustomerNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], lea.[AccountNumber], le.[CustomerName] 
+                                        FROM [dbo].[tblLegalEntity] le
+                                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                        join tblProductTrade on lea.pkLegalEntityAccountId = tblProductTrade.fkLegalEntityAccountId
+                                        WHERE le.[CustomerNumber] = @legalEntityCustomerNumber
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1
+                                        AND le.[fkUserId] = @userId";
+                                }
+
 
                             }
                             else if (concessiontype == Model.BusinessLogic.Constants.ConcessionType.Investment)
                             {
-                                sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] , prod.Description 'AccountType' 
-                            FROM [dbo].[tblRiskGroup] rg
-                            JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
-                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
-                             join tblProductInvestment on lea.pkLegalEntityAccountId = tblProductInvestment.fkLegalEntityAccountId
-                            join rtblProduct prod on tblProductInvestment.fkProductId = prod.pkProductId
-                            WHERE rg.[RiskGroupNumber] = @riskGroupNumber
-                            AND rg.[IsActive] = 1
-                            AND le.[IsActive] = 1
-                            AND lea.[IsActive] = 1
-                            AND le.[fkUserId] = @userId";
-
+                                if (riskGroupNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] , prod.Description 'AccountType' 
+                                        FROM [dbo].[tblRiskGroup] rg
+                                        JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
+                                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                         join tblProductInvestment on lea.pkLegalEntityAccountId = tblProductInvestment.fkLegalEntityAccountId
+                                        join rtblProduct prod on tblProductInvestment.fkProductId = prod.pkProductId
+                                        WHERE rg.[RiskGroupNumber] = @riskGroupNumber
+                                        AND rg.[IsActive] = 1
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1
+                                        AND le.[fkUserId] = @userId";
+                                }
+                                else if (legalEntityCustomerNumber.HasValue && legalEntityCustomerNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], lea.[AccountNumber], le.[CustomerName] , prod.Description 'AccountType' 
+                                        FROM [dbo].[tblLegalEntity] le
+                                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                         join tblProductInvestment on lea.pkLegalEntityAccountId = tblProductInvestment.fkLegalEntityAccountId
+                                        join rtblProduct prod on tblProductInvestment.fkProductId = prod.pkProductId
+                                        WHERE le.[CustomerNumber] = @legalEntityCustomerNumber
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1
+                                        AND le.[fkUserId] = @userId";
+                                }
 
                             }
                             else
                             {
-                                sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
-                            FROM [dbo].[tblRiskGroup] rg
-                            JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
-                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
-                            WHERE rg.[RiskGroupNumber] = @riskGroupNumber
-                            AND rg.[IsActive] = 1
-                            AND le.[IsActive] = 1
-                            AND lea.[IsActive] = 1
-                            AND le.[fkUserId] = @userId";
+                                if (riskGroupNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
+                                        FROM [dbo].[tblRiskGroup] rg
+                                        JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
+                                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                        WHERE rg.[RiskGroupNumber] = @riskGroupNumber
+                                        AND rg.[IsActive] = 1
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1
+                                        AND le.[fkUserId] = @userId";
+                                }
+                                else if (legalEntityCustomerNumber.HasValue && legalEntityCustomerNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], lea.[AccountNumber], le.[CustomerName] 
+                                        FROM [dbo].[tblLegalEntity] le
+                                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                        WHERE le.[CustomerNumber] = @legalEntityCustomerNumber
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1
+                                        AND le.[fkUserId] = @userId";
+                                }
+
 
                             }
 
-                            var clientAccounts = db.Query<ClientAccount>(sql,
-                            new { riskGroupNumber, userId }, commandTimeout: Int32.MaxValue);
+                            IEnumerable<ClientAccount> clientAccounts = null;
+
+                            if (riskGroupNumber > 0)
+                                clientAccounts = db.Query<ClientAccount>(sql, new { riskGroupNumber, userId }, commandTimeout: Int32.MaxValue);
+                            else
+                                clientAccounts = db.Query<ClientAccount>(sql, new { legalEntityCustomerNumber, userId }, commandTimeout: Int32.MaxValue);
 
                             if (clientAccounts != null && clientAccounts.Any())
                                 return clientAccounts;
@@ -178,124 +287,214 @@ namespace StandardBank.ConcessionManagement.Repository
                             string sql = "";
                             if (concessiontype == Model.BusinessLogic.Constants.ConcessionType.Lending)
                             {
-                                sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] , prod.Description 'AccountType' 
-                            FROM [dbo].[tblRiskGroup] rg
-                            JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
-                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
-                            join tblProductLending on lea.pkLegalEntityAccountId = tblProductLending.fkLegalEntityAccountId
-                            join rtblProduct prod on tblProductLending.fkProductId = prod.pkProductId
-                            WHERE rg.[RiskGroupNumber] = @riskGroupNumber
-                            AND rg.[IsActive] = 1
-                            AND le.[IsActive] = 1
-                            AND lea.[IsActive] = 1";
+                                if (riskGroupNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] , prod.Description 'AccountType' 
+                                        FROM [dbo].[tblRiskGroup] rg
+                                        JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
+                                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                        join tblProductLending on lea.pkLegalEntityAccountId = tblProductLending.fkLegalEntityAccountId
+                                        join rtblProduct prod on tblProductLending.fkProductId = prod.pkProductId
+                                        WHERE rg.[RiskGroupNumber] = @riskGroupNumber
+                                        AND rg.[IsActive] = 1
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1";
+                                }
+                                else if (legalEntityCustomerNumber.HasValue && legalEntityCustomerNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], lea.[AccountNumber], le.[CustomerName] , prod.Description 'AccountType' 
+                                        FROM [dbo].[tblLegalEntity] le
+                                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                        join tblProductLending on lea.pkLegalEntityAccountId = tblProductLending.fkLegalEntityAccountId
+                                        join rtblProduct prod on tblProductLending.fkProductId = prod.pkProductId
+                                        WHERE le.[CustomerNumber] = @legalEntityCustomerNumber
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1";
+                                }
+
 
 
                             }
                             else if (concessiontype == Model.BusinessLogic.Constants.ConcessionType.Cash)
                             {
-                                sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
-                            FROM [dbo].[tblRiskGroup] rg
-                            JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
-                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
-                            join tblProductCash on lea.pkLegalEntityAccountId = tblProductCash.fkLegalEntityAccountId
-                            WHERE rg.[RiskGroupNumber] = @riskGroupNumber
-                            AND rg.[IsActive] = 1
-                            AND le.[IsActive] = 1
-                            AND lea.[IsActive] = 1";
+                                if (riskGroupNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
+                                        FROM [dbo].[tblRiskGroup] rg
+                                        JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
+                                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                        join tblProductCash on lea.pkLegalEntityAccountId = tblProductCash.fkLegalEntityAccountId
+                                        WHERE rg.[RiskGroupNumber] = @riskGroupNumber
+                                        AND rg.[IsActive] = 1
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1";
+                                }
+                                else if (legalEntityCustomerNumber.HasValue && legalEntityCustomerNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], lea.[AccountNumber], le.[CustomerName] 
+                                        FROM [dbo].[tblLegalEntity] le
+                                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                        join tblProductCash on lea.pkLegalEntityAccountId = tblProductCash.fkLegalEntityAccountId
+                                        WHERE le.[CustomerNumber] = @legalEntityCustomerNumber
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1";
+                                }
+
 
                             }
                             else if (concessiontype == Model.BusinessLogic.Constants.ConcessionType.Transactional)
                             {
-                                sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
-                            FROM [dbo].[tblRiskGroup] rg
-                            JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
-                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
-                            join tblProductTransactional on lea.pkLegalEntityAccountId = tblProductTransactional.fkLegalEntityAccountId
-                            WHERE rg.[RiskGroupNumber] = @riskGroupNumber
-                            AND rg.[IsActive] = 1
-                            AND le.[IsActive] = 1
-                            AND lea.[IsActive] = 1";
+                                if (riskGroupNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
+                                        FROM [dbo].[tblRiskGroup] rg
+                                        JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
+                                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                        join tblProductTransactional on lea.pkLegalEntityAccountId = tblProductTransactional.fkLegalEntityAccountId
+                                        WHERE rg.[RiskGroupNumber] = @riskGroupNumber
+                                        AND rg.[IsActive] = 1
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1";
+                                }
+                                else if (legalEntityCustomerNumber.HasValue && legalEntityCustomerNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], lea.[AccountNumber], le.[CustomerName] 
+                                        FROM [dbo].[tblLegalEntity] le
+                                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                        join tblProductTransactional on lea.pkLegalEntityAccountId = tblProductTransactional.fkLegalEntityAccountId
+                                        WHERE le.[CustomerNumber] = @legalEntityCustomerNumber
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1";
+                                }
+
 
                             }
                             else if (concessiontype == Model.BusinessLogic.Constants.ConcessionType.BusinessOnline)
                             {
-                                sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
-                            FROM [dbo].[tblRiskGroup] rg
-                            JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
-                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
-                           join tblProductLending on lea.pkLegalEntityAccountId = tblProductLending.fkLegalEntityAccountId
-                            WHERE rg.[RiskGroupNumber] = @riskGroupNumber
-                            AND rg.[IsActive] = 1
-                            AND le.[IsActive] = 1
-                            AND lea.[IsActive] = 1";
+                                if (riskGroupNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
+                                        FROM [dbo].[tblRiskGroup] rg
+                                        JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
+                                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                        join tblProductLending on lea.pkLegalEntityAccountId = tblProductLending.fkLegalEntityAccountId
+                                        WHERE rg.[RiskGroupNumber] = @riskGroupNumber
+                                        AND rg.[IsActive] = 1
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1";
+                                }
+                                else if (legalEntityCustomerNumber.HasValue && legalEntityCustomerNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], lea.[AccountNumber], le.[CustomerName] 
+                                        FROM [dbo].[tblLegalEntity] le
+                                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                        join tblProductLending on lea.pkLegalEntityAccountId = tblProductLending.fkLegalEntityAccountId
+                                        WHERE le.[CustomerNumber] = @legalEntityCustomerNumber
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1";
+                                }
+
 
                             }
                             else if (concessiontype == Model.BusinessLogic.Constants.ConcessionType.Trade)
                             {
-                                sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
-                            FROM [dbo].[tblRiskGroup] rg
-                            JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
-                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
-                            join tblProductTrade on lea.pkLegalEntityAccountId = tblProductTrade.fkLegalEntityAccountId
-                            WHERE rg.[RiskGroupNumber] = @riskGroupNumber
-                            AND rg.[IsActive] = 1
-                            AND le.[IsActive] = 1
-                            AND lea.[IsActive] = 1";
+                                if (riskGroupNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
+                                        FROM [dbo].[tblRiskGroup] rg
+                                        JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
+                                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                        join tblProductTrade on lea.pkLegalEntityAccountId = tblProductTrade.fkLegalEntityAccountId
+                                        WHERE rg.[RiskGroupNumber] = @riskGroupNumber
+                                        AND rg.[IsActive] = 1
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1";
+                                }
+                                else if (legalEntityCustomerNumber.HasValue && legalEntityCustomerNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], lea.[AccountNumber], le.[CustomerName] 
+                                        FROM [dbo].[tblLegalEntity] le
+                                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                        join tblProductTrade on lea.pkLegalEntityAccountId = tblProductTrade.fkLegalEntityAccountId
+                                        WHERE le.[CustomerNumber] = @legalEntityCustomerNumber
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1";
+
+                                }
+
 
                             }
                             else if (concessiontype == Model.BusinessLogic.Constants.ConcessionType.Investment)
                             {
-                                sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] , prod.Description 'AccountType' 
-                            FROM [dbo].[tblRiskGroup] rg
-                            JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
-                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
-                             join tblProductInvestment on lea.pkLegalEntityAccountId = tblProductInvestment.fkLegalEntityAccountId
-                            join rtblProduct prod on tblProductInvestment.fkProductId = prod.pkProductId
-                            WHERE rg.[RiskGroupNumber] = @riskGroupNumber
-                            AND rg.[IsActive] = 1
-                            AND le.[IsActive] = 1
-                            AND lea.[IsActive] = 1";
+                                if (riskGroupNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] , prod.Description 'AccountType' 
+                                        FROM [dbo].[tblRiskGroup] rg
+                                        JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
+                                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                        join tblProductInvestment on lea.pkLegalEntityAccountId = tblProductInvestment.fkLegalEntityAccountId
+                                        join rtblProduct prod on tblProductInvestment.fkProductId = prod.pkProductId
+                                        WHERE rg.[RiskGroupNumber] = @riskGroupNumber
+                                        AND rg.[IsActive] = 1
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1";
+                                }
+                                else if (legalEntityCustomerNumber.HasValue && legalEntityCustomerNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], lea.[AccountNumber], le.[CustomerName] , prod.Description 'AccountType' 
+                                        FROM [dbo].[tblLegalEntity] le
+                                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                        join tblProductInvestment on lea.pkLegalEntityAccountId = tblProductInvestment.fkLegalEntityAccountId
+                                        join rtblProduct prod on tblProductInvestment.fkProductId = prod.pkProductId
+                                        WHERE le.[CustomerNumber] = @legalEntityCustomerNumber
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1";
+                                }
+
 
                             }
                             else
                             {
-                                sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
-                            FROM [dbo].[tblRiskGroup] rg
-                            JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
-                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
-                            WHERE rg.[RiskGroupNumber] = @riskGroupNumber
-                            AND rg.[IsActive] = 1
-                            AND le.[IsActive] = 1
-                            AND lea.[IsActive] = 1";
+                                if (riskGroupNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
+                                        FROM [dbo].[tblRiskGroup] rg
+                                        JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
+                                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                        WHERE rg.[RiskGroupNumber] = @riskGroupNumber
+                                        AND rg.[IsActive] = 1
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1";
+                                }
+                                else if (legalEntityCustomerNumber.HasValue && legalEntityCustomerNumber > 0)
+                                {
+                                    sql = @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], lea.[AccountNumber], le.[CustomerName] 
+                                        FROM [dbo].[tblLegalEntity] le
+                                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                        WHERE le.[CustomerNumber] = @legalEntityCustomerNumber
+                                        AND le.[IsActive] = 1
+                                        AND lea.[IsActive] = 1";
+                                }
+
 
                             }
 
-                            var clientAccounts = db.Query<ClientAccount>(sql,
-                            new { riskGroupNumber, userId }, commandTimeout: Int32.MaxValue);
+                            IEnumerable<ClientAccount> clientAccounts = null;
+
+                            if (riskGroupNumber > 0)
+                                clientAccounts = db.Query<ClientAccount>(sql, new { riskGroupNumber, userId }, commandTimeout: Int32.MaxValue);
+                            else
+                                clientAccounts = db.Query<ClientAccount>(sql, new { legalEntityCustomerNumber, userId }, commandTimeout: Int32.MaxValue);
 
                             if (clientAccounts != null && clientAccounts.Any())
                                 return clientAccounts;
-
-                            //var clientAccounts = db.Query<ClientAccount>(
-                            //    @"SELECT le.[pkLegalEntityId] [LegalEntityId], lea.[pkLegalEntityAccountId] [LegalEntityAccountId], rg.[pkRiskGroupId] [RiskGroupId], lea.[AccountNumber], le.[CustomerName] 
-                            //FROM [dbo].[tblRiskGroup] rg
-                            //JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
-                            //JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
-                            //WHERE rg.[RiskGroupNumber] = @riskGroupNumber
-                            //AND rg.[IsActive] = 1
-                            //AND le.[IsActive] = 1
-                            //AND lea.[IsActive] = 1",
-                            //    new { riskGroupNumber }, commandTimeout: Int32.MaxValue);
-
-                            //if (clientAccounts != null && clientAccounts.Any())
-                            //    return clientAccounts;
                         }
                     }
 
                     return null;
                 }
 
-                if(_cacheManager.Exists(CacheKey.Repository.TransactionTableNumberRepository.ReadAll))
+                if (_cacheManager.Exists(CacheKey.Repository.TransactionTableNumberRepository.ReadAll))
                 {
                     return _cacheManager.ReturnFromCache(Function, 30,
                    CacheKey.Repository.MiscPerformanceRepository.GetClientAccounts,
@@ -319,7 +518,7 @@ namespace StandardBank.ConcessionManagement.Repository
 
                 }
 
-               
+
             }
             catch (Exception ex)
             {
@@ -414,6 +613,35 @@ namespace StandardBank.ConcessionManagement.Repository
                 new CacheKeyParameter(nameof(riskGroupName), riskGroupName));
         }
 
+        public IEnumerable<LendingProduct> GetLendingProductsByLegalEntity(int legalEntityId, string legalEntityName)
+        {
+            IEnumerable<LendingProduct> Function()
+            {
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    var lendingProducts = db.Query<LendingProduct>(
+                        @"SELECT	pl.[pkProductLendingId] [LendingProductId], p.[Description] [Product], le.[CustomerName], lea.[AccountNumber], pl.[Limit], pl.[AverageBalance], pl.[LoadedMap], le.[CustomerName] [LegalEntityName]
+                            FROM [dbo].[tblProductLending] pl
+                            JOIN [dbo].[rtblProduct] p on p.[pkProductId] = pl.[fkProductId]
+                            JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = pl.[fkLegalEntityId]
+                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = pl.[fkLegalEntityAccountId]
+                        WHERE le.[pkLegalEntityId] = @legalEntityId
+                        AND p.showpricing = 1", new { legalEntityId, legalEntityName },
+                        commandTimeout: Int32.MaxValue);
+
+                    if (lendingProducts != null && lendingProducts.Any())
+                        return lendingProducts;
+                }
+
+                return null;
+            }
+
+            return _cacheManager.ReturnFromCache(Function, 300,
+                CacheKey.Repository.MiscPerformanceRepository.GetLendingProducts,
+                new CacheKeyParameter(nameof(legalEntityId), legalEntityId),
+                new CacheKeyParameter(nameof(legalEntityName), legalEntityName));
+        }
+
         /// <summary>
         /// Gets the cash products.
         /// </summary>
@@ -447,14 +675,44 @@ namespace StandardBank.ConcessionManagement.Repository
                 new CacheKeyParameter(nameof(riskGroupName), riskGroupName));
         }
 
+        public IEnumerable<CashProduct> GetCashProductsByLegalEntity(int legalEntityId, string legalEntityName)
+        {
+            IEnumerable<CashProduct> Function()
+            {
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    var cashProducts = db.Query<CashProduct>(
+                        @"SELECT pc.[pkProductCashId] [CashProductId], @legalEntityName [RiskGroupName], le.[CustomerName], lea.[AccountNumber], tn.[TariffTable], pc.[Channel], pc.[BpId], pc.[Volume], pc.[Value], pc.[LoadedPrice] 
+                            FROM [dbo].[tblProductCash] pc
+                            JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = pc.[fkLegalEntityId]
+                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = pc.[fkLegalEntityAccountId]
+                            JOIN [dbo].[rtblTableNumber] tn on tn.[pkTableNumberId] = pc.[fkTableNumberId]
+                            WHERE pc.[fkLegalEntityId] = @legalEntityId", new { legalEntityId, legalEntityName },
+                        commandTimeout: Int32.MaxValue);
+
+                    if (cashProducts != null && cashProducts.Any())
+                        return cashProducts;
+                }
+
+                return null;
+            }
+
+            return _cacheManager.ReturnFromCache(Function, 300,
+                CacheKey.Repository.MiscPerformanceRepository.GetCashProducts,
+                new CacheKeyParameter(nameof(legalEntityId), legalEntityId),
+                new CacheKeyParameter(nameof(legalEntityName), legalEntityName));
+        }
+
         public IEnumerable<BolProduct> GetBolProducts(int riskGroupId, string riskGroupName)
         {
             IEnumerable<BolProduct> Function()
             {
-                using (var db = _dbConnectionFactory.Connection())
+                try
                 {
-                    var bolProducts = db.Query<BolProduct>(
-                        @"Select bol.[pkProductBOLId] [BolProductId],@riskGroupName [RiskGroupName],
+                    using (var db = _dbConnectionFactory.Connection())
+                    {
+                        var bolProducts = db.Query<BolProduct>(
+                            @"Select bol.[pkProductBOLId] [BolProductId],@riskGroupName [RiskGroupName],
 						le.[CustomerName] [LegalEntity], lu.BOLUserId, bol.[LoadedRate], ch.ChargeCode, ch.[Description] [ChargeCodeDesc], ty.Description [BolProductType]
 					    FROM [dbo].[tblProductBOL] bol
 						JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = bol.[fkLegalEntityId]
@@ -463,6 +721,44 @@ namespace StandardBank.ConcessionManagement.Repository
                         left join rtblBOLChargeCode cc on bol.fkChargeCodeId = cc.pkChargeCodeId
 						left join rtblBOLChargeCodeType ty on cc.fkChargeCodeTypeId = ty.pkChargeCodeTypeId
 						where bol.fkRiskGroupId =  @riskGroupId", new { riskGroupId, riskGroupName },
+                            commandTimeout: Int32.MaxValue);
+
+                        if (bolProducts != null && bolProducts.Any())
+                            return bolProducts;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    string str = ex.ToString();
+                }
+
+
+
+                return null;
+            }
+
+            return _cacheManager.ReturnFromCache(Function, 300,
+                CacheKey.Repository.MiscPerformanceRepository.GetBolProducts,
+                new CacheKeyParameter(nameof(riskGroupId), riskGroupId),
+                new CacheKeyParameter(nameof(riskGroupName), riskGroupName));
+        }
+
+        public IEnumerable<BolProduct> GetBolProductsByLegalEntity(int legalEntityId, string legalEntityName)
+        {
+            IEnumerable<BolProduct> Function()
+            {
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    var bolProducts = db.Query<BolProduct>(
+                        @"Select bol.[pkProductBOLId] [BolProductId],
+						le.[CustomerName] [LegalEntity], lu.BOLUserId, bol.[LoadedRate], ch.ChargeCode, ch.[Description] [ChargeCodeDesc], ty.Description [BolProductType]
+					    FROM [dbo].[tblProductBOL] bol
+						JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = bol.[fkLegalEntityId]
+						JOIN [dbo].tblLegalEntityBOLUser lu on bol.fkLegalEntityBOLUserId = lu.pkLegalEntityBOLUserId
+						JOIN [dbo].rtblBOLChargeCode ch on bol.fkChargeCodeId = ch.pkChargeCodeId
+                        left join rtblBOLChargeCode cc on bol.fkChargeCodeId = cc.pkChargeCodeId
+						left join rtblBOLChargeCodeType ty on cc.fkChargeCodeTypeId = ty.pkChargeCodeTypeId
+						where bol.fkLegalEntityId =  @legalEntityId", new { legalEntityId, legalEntityName },
                         commandTimeout: Int32.MaxValue);
 
                     if (bolProducts != null && bolProducts.Any())
@@ -474,10 +770,9 @@ namespace StandardBank.ConcessionManagement.Repository
 
             return _cacheManager.ReturnFromCache(Function, 300,
                 CacheKey.Repository.MiscPerformanceRepository.GetBolProducts,
-                new CacheKeyParameter(nameof(riskGroupId), riskGroupId),
-                new CacheKeyParameter(nameof(riskGroupName), riskGroupName));
+                new CacheKeyParameter(nameof(legalEntityId), legalEntityId),
+                new CacheKeyParameter(nameof(legalEntityName), legalEntityName));
         }
-
 
         public IEnumerable<TradeProduct> GetTradeProducts(int riskGroupId, string riskGroupName)
         {
@@ -485,7 +780,7 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 using (var db = _dbConnectionFactory.Connection())
                 {
-                    var bolProducts = db.Query<TradeProduct>(
+                    var tradeProduct = db.Query<TradeProduct>(
                         @"Select trade.pkProductTradeId [TradeProductId], @riskGroupName [RiskGroupName],lea.[AccountNumber],
 						le.[CustomerName] [LegalEntity], ty.Description [TradeProductType], prod.description [TradeProductName],LoadedRate						
 						from [tblProductTrade] trade
@@ -496,8 +791,8 @@ namespace StandardBank.ConcessionManagement.Repository
 						where trade.fkRiskGroupId =  @riskGroupId", new { riskGroupId, riskGroupName },
                         commandTimeout: Int32.MaxValue);
 
-                    if (bolProducts != null && bolProducts.Any())
-                        return bolProducts;
+                    if (tradeProduct != null && tradeProduct.Any())
+                        return tradeProduct;
                 }
 
                 return null;
@@ -509,13 +804,43 @@ namespace StandardBank.ConcessionManagement.Repository
                 new CacheKeyParameter(nameof(riskGroupName), riskGroupName));
         }
 
+        public IEnumerable<TradeProduct> GetTradeProductsBySAPBPID(int legalEntityId, string legalEntityName)
+        {
+            IEnumerable<TradeProduct> Function()
+            {
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    var tradeProduct = db.Query<TradeProduct>(
+                        @"Select trade.pkProductTradeId [TradeProductId], lea.[AccountNumber],
+						le.[CustomerName] [LegalEntity], ty.Description [TradeProductType], prod.description [TradeProductName],LoadedRate						
+						from [tblProductTrade] trade
+						JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = trade.[fkLegalEntityId]
+						JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = trade.[fkLegalEntityAccountId]
+						JOIN [dbo].rtblTradeProduct prod on trade.fkTradeProductId = prod.pkTradeProductId
+						JOIN [dbo].rtblTradeProductType ty on prod.fkTradeProductTypeId = ty.pkTradeProductTypeId					
+						where trade.fkLegalEntityId =  @legalEntityId", new { legalEntityId, legalEntityName },
+                        commandTimeout: Int32.MaxValue);
+
+                    if (tradeProduct != null && tradeProduct.Any())
+                        return tradeProduct;
+                }
+
+                return null;
+            }
+
+            return _cacheManager.ReturnFromCache(Function, 300,
+                CacheKey.Repository.MiscPerformanceRepository.GetTradeProducts,
+                new CacheKeyParameter(nameof(legalEntityId), legalEntityId),
+                new CacheKeyParameter(nameof(legalEntityName), legalEntityName));
+        }
+
         public IEnumerable<InvestmentProduct> GetInvestmentProducts(int riskGroupId, string riskGroupName)
         {
             IEnumerable<InvestmentProduct> Function()
             {
                 using (var db = _dbConnectionFactory.Connection())
                 {
-                    var bolProducts = db.Query<InvestmentProduct>(
+                    var investmentProduct = db.Query<InvestmentProduct>(
                         @"SELECT pinv.pkProductInvestmentId [InvestmentProductId], p.[Description] [InvestmentProductName], le.[CustomerName] [legalEntity], lea.[AccountNumber], pinv.[AverageBalance], pinv.LoadedCustomerRate [LoadedRate],@riskGroupName [RiskGroupName] 
                         FROM [dbo].tblProductInvestment pinv
                         JOIN [dbo].[rtblProduct] p on p.[pkProductId] = pinv.[fkProductId]
@@ -524,8 +849,8 @@ namespace StandardBank.ConcessionManagement.Repository
                         WHERE pinv.[fkRiskGroupId] = @riskGroupId", new { riskGroupId, riskGroupName },
                         commandTimeout: Int32.MaxValue);
 
-                    if (bolProducts != null && bolProducts.Any())
-                        return bolProducts;
+                    if (investmentProduct != null && investmentProduct.Any())
+                        return investmentProduct;
                 }
 
                 return null;
@@ -536,6 +861,35 @@ namespace StandardBank.ConcessionManagement.Repository
                 new CacheKeyParameter(nameof(riskGroupId), riskGroupId),
                 new CacheKeyParameter(nameof(riskGroupName), riskGroupName));
         }
+
+        public IEnumerable<InvestmentProduct> GetInvestmentProductsByLegalEntity(int legalEntityId, string legalEntityName)
+        {
+            IEnumerable<InvestmentProduct> Function()
+            {
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    var investmentProduct = db.Query<InvestmentProduct>(
+                        @"SELECT pinv.pkProductInvestmentId [InvestmentProductId], p.[Description] [InvestmentProductName], le.[CustomerName] [legalEntity], lea.[AccountNumber], pinv.[AverageBalance], pinv.LoadedCustomerRate [LoadedRate]
+                        FROM [dbo].tblProductInvestment pinv
+                        JOIN [dbo].[rtblProduct] p on p.[pkProductId] = pinv.[fkProductId]
+                        JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = pinv.[fkLegalEntityId]
+                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = pinv.[fkLegalEntityAccountId]
+                        WHERE le.[pkLegalEntityId] = @legalEntityId", new { legalEntityId, legalEntityName },
+                        commandTimeout: Int32.MaxValue);
+
+                    if (investmentProduct != null && investmentProduct.Any())
+                        return investmentProduct;
+                }
+
+                return null;
+            }
+
+            return _cacheManager.ReturnFromCache(Function, 300,
+                CacheKey.Repository.MiscPerformanceRepository.GetInvestmentProducts,
+                new CacheKeyParameter(nameof(legalEntityId), legalEntityId),
+                new CacheKeyParameter(nameof(legalEntityName), legalEntityName));
+        }
+
         /// <summary>
         /// Gets the transactional products.
         /// </summary>
@@ -568,6 +922,34 @@ namespace StandardBank.ConcessionManagement.Repository
                 CacheKey.Repository.MiscPerformanceRepository.GetTransactionalProducts,
                 new CacheKeyParameter(nameof(riskGroupId), riskGroupId),
                 new CacheKeyParameter(nameof(riskGroupName), riskGroupName));
+        }
+
+        public IEnumerable<TransactionalProduct> GetTransactionalProductsByLegalEntity(int legalEntityId, string legalEntityName)
+        {
+            IEnumerable<TransactionalProduct> Function()
+            {
+                using (var db = _dbConnectionFactory.Connection())
+                {
+                    var transactionalProducts = db.Query<TransactionalProduct>(
+                        @"SELECT pt.[pkProductTransactionalId] [TransactionalProductId], le.[CustomerName], lea.[AccountNumber], ttn.[TariffTable], tt.[Description] [TransactionType], pt.[Volume], pt.[Value], pt.[LoadedPrice] FROM [dbo].[tblProductTransactional] pt
+                        JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = pt.[fkLegalEntityId]
+                        JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = pt.[fkLegalEntityAccountId]
+                        JOIN [dbo].[rtblTransactionType] tt on tt.[pkTransactionTypeId] = pt.[fkTransactionTypeId]
+                        JOIN [dbo].[rtblTransactionTableNumber] ttn on ttn.[pkTransactionTableNumberId] = pt.[fkTransactionTableNumberId]
+                        WHERE le.[pkLegalEntityId] = @legalEntityId", new { legalEntityId, legalEntityName },
+                        commandTimeout: Int32.MaxValue);
+
+                    if (transactionalProducts != null && transactionalProducts.Any())
+                        return transactionalProducts;
+                }
+
+                return null;
+            }
+
+            return _cacheManager.ReturnFromCache(Function, 300,
+                CacheKey.Repository.MiscPerformanceRepository.GetTransactionalProducts,
+                new CacheKeyParameter(nameof(legalEntityId), legalEntityId),
+                new CacheKeyParameter(nameof(legalEntityName), legalEntityName));
         }
 
         /// <summary>
@@ -658,7 +1040,8 @@ namespace StandardBank.ConcessionManagement.Repository
                     [ReviewFee], 
                     [UffFee],
                     [Frequency],
-                    [ServiceFee]
+                    [ServiceFee],
+                    [MRS_BRI] [MrsBri]
                     FROM [dbo].[tblConcessionDetail] cd
                     JOIN [dbo].[tblConcessionLending] cl on cl.[fkConcessionDetailId] = cd.[pkConcessionDetailId]
                     JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = cd.[fkLegalEntityId]
@@ -729,7 +1112,8 @@ namespace StandardBank.ConcessionManagement.Repository
                     Currency,
                     EstablishmentFee,
 					tr.pkConcessionTradeId [TradeConcessionDetailId],
-                    ac.AccountNumber,
+                    --ac.AccountNumber,
+                    lea.AccountNumber,
 					LoadedRate,
 					ApprovedRate,				
                     tp.Description TradeProduct,
@@ -750,7 +1134,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     left join [dbo].[tblConcessionTrade] tr on cd.pkConcessionDetailId = tr.fkConcessionDetailId
                     left JOIN [dbo].tblLegalEntityAccount lea on tr.fkLegalEntityAccountId = lea.pkLegalEntityAccountId                  
                     left JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = lea.fkLegalEntityId
-                    left join tblLegalEntityAccount ac on tr.fkLegalEntityAccountId = ac.pkLegalEntityAccountId
+                    --left join tblLegalEntityAccount ac on tr.fkLegalEntityAccountId = ac.pkLegalEntityAccountId
 					left join tblLegalEntityGBBNumber gb on tr.fkLegalEntityGBBNumber = gb.pkLegalEntityGBBNumber
 
 				    left JOIN rtblTradeProduct tp on tr.fkTradeProductId = tp.pkTradeProductId

@@ -12,5 +12,7 @@ export class InboxConcession {
     dateApproved: Date;
     centreName: string;
     region: string;
-
+    legalEntityId: number;
+    customerName: string;
+    customerNumber: number; /* aka sapbpid */
 }

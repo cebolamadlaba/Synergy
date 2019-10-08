@@ -19,8 +19,9 @@ import { UserService } from "../services/user.service";
 })
 export class PricingBolComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
+    sapbpid: number;
     private sub: any;
-  
+
     observableBolView: Observable<BolView>;
     bolView: BolView = new BolView();
     errorMessage: String;
@@ -28,7 +29,10 @@ export class PricingBolComponent implements OnInit, OnDestroy {
     pageLoaded = false;
     isLoading = true;
     canRequest = false;
- 
+
+    entityName: string;
+    entityNumber: string;
+
     constructor(
         private router: Router,
         private route: ActivatedRoute,
@@ -38,24 +42,39 @@ export class PricingBolComponent implements OnInit, OnDestroy {
         this.bolView.bolConcessions = [new BolConcession()];
         this.bolView.bolConcessions[0].concession = new Concession();
     }
-  
+
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
+            this.sapbpid = +params['sapbpid'];
 
-            if (this.riskGroupNumber) {
-                this.observableBolView = this.bolConcessionService.getBolViewData(this.riskGroupNumber);
+            if (this.riskGroupNumber || this.sapbpid) {
+                this.observableBolView = this.bolConcessionService.getBolViewData(this.riskGroupNumber, this.sapbpid);
                 this.observableBolView.subscribe(bolView => {
-                  
+
 
                     this.bolView = bolView;
+
+                    if (this.riskGroupNumber || this.riskGroupNumber > 0) {
+                        this.entityName = this.bolView.riskGroup.name;
+                        this.entityNumber = this.bolView.riskGroup.number.toString();
+                    }
+                    else {
+                        this.entityName = this.bolView.legalEntity.customerName;
+                        this.entityNumber = this.bolView.legalEntity.customerNumber;
+                    }
+
                     this.pageLoaded = true;
                     this.isLoading = false;
                 }, error => {
                     this.errorMessage = <any>error;
                     this.isLoading = false;
                 });
+
+
+
             }
+
         });
 
         this.userService.getData().subscribe(user => {
@@ -66,8 +85,7 @@ export class PricingBolComponent implements OnInit, OnDestroy {
 
 
     goBack() {
-
-        this.router.navigate(['/pricing', this.riskGroupNumber]);
+        this.router.navigate(['/pricing', { riskGroupNumber: this.riskGroupNumber, sapbpid: this.sapbpid }]);
     }
 
     ngOnDestroy() {

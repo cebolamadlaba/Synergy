@@ -93,7 +93,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// <value>
         /// The RiskGroupId.
         /// </value>
-        public int RiskGroupId { get; set; }
+        public int? RiskGroupId { get; set; }
 
         /// <summary>
         /// Gets or sets the RegionId.
@@ -194,6 +194,8 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public DateTime? Archived { get; set; }
 
         public int? AENumberUserId { get; set; }
+
+        public int? LegalEntityId { get; set; }
 
         /// <summary>
         /// Gets or sets the IsActive.

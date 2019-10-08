@@ -39,10 +39,10 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         {
             var riskGroup = new RiskGroup { Id = 1, Name = "Unit Test Risk Group", Number = 1 };
 
-            MockCashManager.Setup(_ => _.GetCashViewData(It.IsAny<int>(), null))
-                .Returns(new CashView {RiskGroup = riskGroup});
+            MockCashManager.Setup(_ => _.GetCashViewData(It.IsAny<int>(), 0, null))
+                .Returns(new CashView { RiskGroup = riskGroup });
 
-            var result = _cashController.CashView(1);
+            var result = _cashController.CashView(1, 0);
             var apiResult = Assert.IsType<OkObjectResult>(result);
 
             Assert.NotNull(apiResult.Value);
@@ -68,8 +68,8 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
             var cashConcession = new CashConcession
             {
                 Concession = new Concession(),
-                CashConcessionDetails = new[] {new CashConcessionDetail()},
-                ConcessionConditions = new[] {new ConcessionCondition()}
+                CashConcessionDetails = new[] { new CashConcessionDetail() },
+                ConcessionConditions = new[] { new ConcessionCondition() }
             };
 
             var result = await _cashController.NewCash(cashConcession);
@@ -129,7 +129,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
             var cashConcession = new CashConcession
             {
                 Concession = new Concession(),
-                CashConcessionDetails = new [] { new CashConcessionDetail() },
+                CashConcessionDetails = new[] { new CashConcessionDetail() },
                 ConcessionConditions = new[] { new ConcessionCondition() }
             };
 

@@ -17,8 +17,8 @@ export class TransactionalConcessionService {
 
     constructor(private http: Http) { }
 
-    getTransactionalViewData(riskGroupNumber): Observable<TransactionalView> {
-        const url = "/api/Transactional/TransactionalView/" + riskGroupNumber;
+    getTransactionalViewData(riskGroupNumber, sapbpid): Observable<TransactionalView> {
+        const url = "/api/Transactional/TransactionalView/" + riskGroupNumber + "/" + sapbpid;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
@@ -33,14 +33,14 @@ export class TransactionalConcessionService {
         const url = "/api/Transactional/NewTransactional";
         return this.http.post(url, transactionalConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
-        
+
     postForwardTransactionalPCM(transactionalConcession: SearchConcessionDetail): Observable<ApprovedConcessionDetail> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
         const url = "/api/Transactional/ForwardTransactionalPCM";
         return this.http.post(url, transactionalConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
-   
+
 
     postUpdateTransactionalData(transactionalConcession: TransactionalConcession): Observable<TransactionalConcession> {
         let headers = new Headers({ 'Content-Type': 'application/json' });

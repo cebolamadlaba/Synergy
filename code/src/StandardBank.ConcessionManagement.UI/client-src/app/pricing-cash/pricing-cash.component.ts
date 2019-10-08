@@ -11,12 +11,17 @@ import { Router, RouterModule } from '@angular/router';
 import { UserService } from "../services/user.service";
 
 @Component({
-  selector: 'app-pricing-cash',
-  templateUrl: './pricing-cash.component.html',
-  styleUrls: ['./pricing-cash.component.css']
+    selector: 'app-pricing-cash',
+    templateUrl: './pricing-cash.component.html',
+    styleUrls: ['./pricing-cash.component.css']
 })
 export class PricingCashComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
+    sapbpid: number;
+
+    subHeading: string;
+    title: string;
+
     private sub: any;
     observableCashView: Observable<CashView>;
     cashView: CashView = new CashView();
@@ -34,18 +39,29 @@ export class PricingCashComponent implements OnInit, OnDestroy {
         this.cashView.riskGroup = new RiskGroup();
         this.cashView.cashConcessions = [new CashConcession()];
         this.cashView.cashConcessions[0].concession = new Concession();
-        
+
 
     }
 
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
+            this.sapbpid = +params['sapbpid'];
 
-            if (this.riskGroupNumber) {
-                this.observableCashView = this.cashConcessionService.getCashViewData(this.riskGroupNumber);
+            if (this.riskGroupNumber || this.sapbpid) {
+                this.observableCashView = this.cashConcessionService.getCashViewData(this.riskGroupNumber, this.sapbpid);
                 this.observableCashView.subscribe(cashView => {
                     this.cashView = cashView;
+
+                    if (this.riskGroupNumber || this.riskGroupNumber > 0) {
+                        this.subHeading = this.cashView.riskGroup.name;
+                        this.title = this.cashView.riskGroup.number.toString();
+                    }
+                    else {
+                        this.subHeading = this.cashView.legalEntity.customerName;
+                        this.title = this.cashView.legalEntity.customerNumber;
+                    }
+
                     this.pageLoaded = true;
                     this.isLoading = false;
                 }, error => {
@@ -63,7 +79,7 @@ export class PricingCashComponent implements OnInit, OnDestroy {
 
     goBack() {
         //this.location.back();
-        this.router.navigate(['/pricing', this.riskGroupNumber]);
+        this.router.navigate(['/pricing', { riskGroupNumber: this.riskGroupNumber, sapbpid: this.sapbpid }]);
     }
 
     ngOnDestroy() {

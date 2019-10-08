@@ -104,7 +104,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockMiscPerformanceRepository.Setup(_ => _.GetTransactionalProducts(It.IsAny<int>(), It.IsAny<string>()))
                 .Returns(new[] { new TransactionalProduct() });
 
-            var result = _transactionalManager.GetTransactionalViewData(1, null);
+            var result = _transactionalManager.GetTransactionalViewData(1, 0, null);
 
             Assert.NotNull(result);
             Assert.NotNull(result.RiskGroup);

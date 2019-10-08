@@ -57,7 +57,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             MockConcessionLendingRepository.Setup(_ => _.ReadByConcessionId(It.IsAny<int>()))
                 .Returns(new[] {new ConcessionLending()});
 
-            MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new LegalEntity());
+            MockLegalEntityRepository.Setup(_ => _.ReadById(It.IsAny<int>())).Returns(new Model.Repository.LegalEntity());
 
             MockConcessionManager.Setup(_ => _.GetConcessionConditions(It.IsAny<int>()))
                 .Returns(new[] {new Model.UserInterface.ConcessionCondition()});

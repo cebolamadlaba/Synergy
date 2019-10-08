@@ -126,10 +126,10 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         IEnumerable<ConcessionType> GetConcessionTypes(bool isActive);
 
 
-            /// <summary>
-            /// Gets the review fee types.
-            /// </summary>
-            /// <returns></returns>
+        /// <summary>
+        /// Gets the review fee types.
+        /// </summary>
+        /// <returns></returns>
         IEnumerable<ReviewFeeType> GetReviewFeeTypes();
 
         /// <summary>
@@ -161,10 +161,15 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 
         IEnumerable<TradeProduct> GetTradeProducts();
 
+        LegalEntity GetLegalEntity(int sapbpid);
+
         IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsers(int riskGroupNumber);
+
+        IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsersByLegalEntityId(int legalEntityId);
 
         IEnumerable<LegalEntityGBBNumber> GetLegalEntityGBBNumbers(int riskGroupNumber);
 
+        IEnumerable<LegalEntityGBBNumber> GetLegalEntityGBBNumbersBySAPBPID(int sapbpid);
 
         /// <summary>
         /// Gets the accrual types.
@@ -253,6 +258,8 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="riskGroupNumber"></param>
         /// <returns></returns>
         RiskGroup GetRiskGroupForRiskGroupNumber(int riskGroupNumber);
+
+        RiskGroup GetRiskGroupForSAPBPID(int sapbpid);
 
         /// <summary>
         /// Gets the transaction table numbers.

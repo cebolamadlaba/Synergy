@@ -202,7 +202,14 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionBol>(
-                    @"SELECT [pkConcessionBolId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkTransactionGroupId] [TransactionGroupId], [fkBusinesOnlineTransactionTypeId] [BusinesOnlineTransactionTypeId], [BolUseId], [TransactionVolume], [TransactionValue], [Fee], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
+                    @"SELECT	[pkConcessionBolId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], 
+		                    --[fkTransactionGroupId] [TransactionGroupId], 
+		                    --[fkBusinesOnlineTransactionTypeId] [BusinesOnlineTransactionTypeId], 
+		                    --[BolUseId], 
+		                    --[TransactionVolume], 
+		                    --[TransactionValue], 
+		                    --[Fee], 
+		                    d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
                     FROM [dbo].[tblConcessionBol] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
                     WHERE [pkConcessionBolId] = @Id",
@@ -219,7 +226,14 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionBol>(
-                    @"SELECT [pkConcessionBolId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkTransactionGroupId] [TransactionGroupId], [fkBusinesOnlineTransactionTypeId] [BusinesOnlineTransactionTypeId], [BolUseId], [TransactionVolume], [TransactionValue], [Fee], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
+                    @"SELECT [pkConcessionBolId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], 
+		                    --[fkTransactionGroupId] [TransactionGroupId], 
+		                    --[fkBusinesOnlineTransactionTypeId] [BusinesOnlineTransactionTypeId], 
+		                    --[BolUseId], 
+		                    --[TransactionVolume], 
+		                    --[TransactionValue], 
+		                    --[Fee], 
+		                    d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
                     FROM [dbo].[tblConcessionBol] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]");
             }

@@ -27,7 +27,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// <value>
         /// The RiskGroupId.
         /// </value>
-        public int RiskGroupId { get; set; }
+        public int? RiskGroupId { get; set; }
 
         /// <summary>
         /// Gets or sets the CustomerName.
@@ -95,5 +95,6 @@ namespace StandardBank.ConcessionManagement.Model.Repository
 
         public string BCMRoleName { get; set; }
         public string RequestorRoleName { get; set; }
+        public string MarketSegment { get; set; }
     }
 }

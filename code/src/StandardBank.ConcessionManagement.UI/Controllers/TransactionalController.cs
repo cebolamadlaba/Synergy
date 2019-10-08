@@ -63,12 +63,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// </summary>
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <returns></returns>
-        [Route("TransactionalView/{riskGroupNumber}")]
-        public IActionResult TransactionalView(int riskGroupNumber)
+        [Route("TransactionalView/{riskGroupNumber}/{sapbpid}")]
+        public IActionResult TransactionalView(int riskGroupNumber, int sapbpid)
         {
             var user = _siteHelper.LoggedInUser(this);
 
-            return Ok(_transactionalManager.GetTransactionalViewData(riskGroupNumber, user));
+            return Ok(_transactionalManager.GetTransactionalViewData(riskGroupNumber, sapbpid, user));
         }
 
         /// <summary>
@@ -442,7 +442,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
         [Route("CreateupdateTransactionTableNumber")]
         public async Task<IActionResult> CreateupdateTransactionTableNumber([FromBody] TransactionTableNumber transactionTableNumber)
-        {            
+        {
 
             return Ok(_transactionalManager.CreateupdateTransactionTableNumber(transactionTableNumber));
         }

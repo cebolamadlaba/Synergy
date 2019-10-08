@@ -30,8 +30,8 @@ export class DueExpiryInboxComponent implements OnInit, OnDestroy {
                 emptyTable: "No records found!",
                 search: "",
                 searchPlaceholder: "Search"
-			},
-			order: [[6, 'desc']]
+            },
+            order: [[6, 'desc']]
         };
 
         this.loadUserConcessions();
@@ -50,23 +50,48 @@ export class DueExpiryInboxComponent implements OnInit, OnDestroy {
     openConcessionView(concession: InboxConcession) {
         switch (concession.concessionType) {
             case ConcessionTypes.Lending:
-                this.router.navigate(['/lending-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                this.router.navigate(['/lending-view-concession', concession.riskGroupNumber, concession.customerNumber, concession.referenceNumber]);
                 break;
             case ConcessionTypes.Cash:
-                this.router.navigate(['/cash-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                this.router.navigate(['/cash-view-concession', concession.riskGroupNumber, concession.customerNumber, concession.referenceNumber]);
                 break;
             case ConcessionTypes.Transactional:
-                this.router.navigate(['/transactional-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                this.router.navigate(['/transactional-view-concession', concession.riskGroupNumber, concession.customerNumber, concession.referenceNumber]);
                 break;
             case ConcessionTypes.BOLDesc:
-                this.router.navigate(['/bol-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                this.router.navigate(['/bol-view-concession', concession.riskGroupNumber, concession.customerNumber, concession.referenceNumber]);
                 break;
             case ConcessionTypes.Trade:
-                this.router.navigate(['/trade-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                this.router.navigate(['/trade-view-concession', concession.riskGroupNumber, concession.customerNumber, concession.referenceNumber]);
                 break;
             case ConcessionTypes.Investment:
-                this.router.navigate(['/investments-view-concession', concession.riskGroupNumber, concession.referenceNumber]);
+                this.router.navigate(['/investments-view-concession', concession.riskGroupNumber, concession.customerNumber, concession.referenceNumber]);
                 break;
+        }
+    }
+
+    getEntity(fieldName: string, concession: InboxConcession) {
+        switch (fieldName) {
+            case "entityName":
+                {
+                    if (concession.riskGroupName != null && concession.riskGroupName.trim() != "") {
+                        return concession.riskGroupName;
+                    }
+                    else {
+                        return concession.customerName;
+                    }
+                }
+            case "entityNumber":
+                {
+                    if (concession.riskGroupNumber != null && concession.riskGroupNumber > 0) {
+                        return concession.riskGroupNumber;
+                    }
+                    else {
+                        return concession.customerNumber;
+                    }
+                }
+            default:
+                return "n/a";
         }
     }
 
