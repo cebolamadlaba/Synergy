@@ -62,7 +62,16 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var concession = await _mediator.Send(new AddConcession(glmsConcession.Concession, user));
 
             foreach (var glmsConcessionDetail in glmsConcession.GlmsConcessionDetails)
-                await _mediator.Send(new BusinessLogic.Features.GlmsConcession.AddOrUpdateGlmsConcessionDetail(glmsConcessionDetail, user, concession));
+                try
+                {
+                    await _mediator.Send(new BusinessLogic.Features.GlmsConcession.AddOrUpdateGlmsConcessionDetail(glmsConcessionDetail, user, concession));
+                }
+                catch (Exception ex)
+                {
+                    ex.ToString();
+                }
+               
+        
 
             if (glmsConcession.ConcessionConditions != null && glmsConcession.ConcessionConditions.Any())
                 foreach (var concessionCondition in glmsConcession.ConcessionConditions)
@@ -154,10 +163,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var user = _siteHelper.LoggedInUser(this);
 
             //activate the concession after the recall disabled it
-            await _mediator.Send(new ActivateConcession(glmsConcession.Concession.ReferenceNumber, user));
-
+             await _mediator.Send(new ActivateConcession(glmsConcession.Concession.ReferenceNumber, user));
+                 
+   
             //update the concession accordingly
             await UpdateGlmsConcession(glmsConcession, user);
+ 
 
             return Ok(_glmsManager.GetGlmsConcession(glmsConcession.Concession.ReferenceNumber, user));
         }
@@ -195,7 +206,15 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             {
                 glmsConcessionDetail.DateApproved = null;
                 glmsConcessionDetail.GlmsConcessionDetailId = 0;
-                await _mediator.Send(new AddOrUpdateGlmsConcessionDetail(glmsConcessionDetail, user, concession));
+                try
+                {
+                    await _mediator.Send(new AddOrUpdateGlmsConcessionDetail(glmsConcessionDetail, user, concession));
+                }
+                catch(Exception ex)
+                {
+                    ex.ToString();
+                }
+              
             }
 
             if (glmsConcession.ConcessionConditions != null && glmsConcession.ConcessionConditions.Any())
@@ -237,7 +256,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             glmsConcession.Concession.Comments = "Manually forwarded by PCM";
             glmsConcession.Concession.IsInProgressForwarding = true;
 
-          //  await _glmsManager.ForwardGlmsConcession(lendingConcession, user);
+           await _glmsManager.ForwardGlmsConcession(glmsConcession, user);
 
             return Ok(_glmsManager.GetGlmsConcession(detail.ReferenceNumber, user));
         }
@@ -286,7 +305,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var parentConcessionId = parentGlmsConcession.Concession.Id;
 
             glmsConcession.Concession.ReferenceNumber = string.Empty;
-            glmsConcession.Concession.ConcessionType = Constants.ConcessionType.Lending;
+            glmsConcession.Concession.ConcessionType = Constants.ConcessionType.Glms;
             glmsConcession.Concession.Type = Constants.ReferenceType.Existing;
 
             var concession = await _mediator.Send(new AddConcession(glmsConcession.Concession, user));
@@ -295,16 +314,29 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             {
                 if (relationship != Constants.RelationshipType.Extension)
                     glmsConcessionDetail.ExpiryDate = null;
-
-                await _mediator.Send(new AddOrUpdateGlmsConcessionDetail(glmsConcessionDetail, user, concession));
+                try
+                {
+                    await _mediator.Send(new AddOrUpdateGlmsConcessionDetail(glmsConcessionDetail, user, concession));
+                }
+                catch (Exception ex)
+                {
+                    ex.ToString();
+                }
+               
             }
 
             if (glmsConcession.ConcessionConditions != null && glmsConcession.ConcessionConditions.Any())
                 foreach (var concessionCondition in glmsConcession.ConcessionConditions)
+                    try { 
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+        }
+                catch (Exception ex)
+                {
+                    ex.ToString();
+                }
 
-            //link the new concession to the old concession
-            var concessionRelationship = new ConcessionRelationship
+    //link the new concession to the old concession
+    var concessionRelationship = new ConcessionRelationship
             {
                 CreationDate = DateTime.Now,
                 UserId = user.Id,
@@ -312,10 +344,14 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 ParentConcessionId = parentConcessionId,
                 ChildConcessionId = concession.Id
             };
-
-            await _mediator.Send(new AddConcessionRelationship(concessionRelationship, user));
-
-            var returnConcession =
+                try { 
+                  await _mediator.Send(new AddConcessionRelationship(concessionRelationship, user));
+                 }
+                catch (Exception ex)
+                {
+                    ex.ToString();
+                }
+    var returnConcession =
                 _glmsManager.GetGlmsConcession(parentGlmsConcession.Concession.ReferenceNumber, user);
 
             returnConcession.Concession.ChildReferenceNumber = concession.ReferenceNumber;

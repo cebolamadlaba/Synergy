@@ -48,7 +48,8 @@ import { ConcessionSubStatus } from '../constants/concession-sub-status';
 @Component({
     selector: 'app-glms-view-concession',
     templateUrl: './glms-view-concession.component.html',
-    styleUrls: ['./glms-view-concession.component.css']
+    styleUrls: ['./glms-view-concession.component.css'],
+    providers: [DatePipe]
 })
 export class GlmsViewConcessionComponent extends GlmsBaseService implements OnInit {
     private sub: any;
@@ -148,6 +149,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         @Inject(LookupDataService) private lookupDataService,
         @Inject(GlmsConcessionService) private glmsConcessionService,
         @Inject(UserConcessionsService) private userConcessionsService,
+        private datepipe: DatePipe,
         public userService: UserService) {
         super(http, router, userService);
         this.riskGroup = new RiskGroup();
@@ -188,6 +190,8 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         this.baseRateCode = [new BaseRateCode()];
         this.selectedBaseRateCode = [new BaseRateCode()];
 
+        this.glmsConcession = new GlmsConcession();
+        this.glmsConcession.concession = new Concession();
         this.glmsConcession.concession.concessionComments = [new ConcessionComment()];
 
     }
@@ -269,102 +273,115 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
                 let rowIndex = 0;
 
-                //for (let glmsConcessionDetail of this.glmsConcession.glmsConcessionDetails) {
+                for (let glmsConcessionDetail of this.glmsConcession.glmsConcessionDetails) {
 
-                //    if (rowIndex != 0) {
-                //        this.addNewConcessionRow();
-                //    }
+                    if (rowIndex != 0) {
+                        this.addNewConcessionRow();
+                    }
+                    
+                    const concessions = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
+                    let currentConcession = concessions.controls[concessions.length - 1];
 
-                //    if (glmsConcessionDetail.productType == 'Overdraft') {
+                    currentConcession.get('glmsConcessionDetailId').setValue(glmsConcessionDetail.glmsConcessionDetailId);
+                    currentConcession.get('concessionDetailId').setValue(glmsConcessionDetail.concessionDetailId);
 
-                //        glmsConcessionDetail.show_term = false;
-                //        glmsConcessionDetail.show_reviewFeeType = true;
-                //        glmsConcessionDetail.show_reviewFee = true;
-                //        glmsConcessionDetail.show_uffFee = true;
-                //        glmsConcessionDetail.show_frequency = false;
-                //        glmsConcessionDetail.show_serviceFee = false;
+                    let selectedglmsGroup = this.glmsGroup.filter(_ => _.groupNumber === glmsConcessionDetail.groupNumber);
+                    currentConcession.get('glmsGroup').setValue(selectedglmsGroup[0]);
+                    
+                    this.selectedGlmsGroup[rowIndex] = selectedglmsGroup[0];
 
-                //    }
-                //    else if (glmsConcessionDetail.productType === "Temporary Overdraft") {
+                    let selectedSlapType = this.slabType.filter(_ => _.id === glmsConcessionDetail.slabTypeId);
+                    currentConcession.get('slabType').setValue(selectedSlapType[0]);
 
+                    this.slabType[rowIndex] = selectedSlapType[0];
 
-                //        glmsConcessionDetail.show_term = true;
-                //        glmsConcessionDetail.show_reviewFeeType = true;
-                //        glmsConcessionDetail.show_reviewFee = true;
-                //        glmsConcessionDetail.show_uffFee = true;
-                //        glmsConcessionDetail.show_frequency = false;
-                //        glmsConcessionDetail.show_serviceFee = false;
+                    let selectedInterestType = this.interestType.filter(_ => _.id === glmsConcessionDetail.interestTypeId);
+                    currentConcession.get('interestType').setValue(selectedInterestType[0]);
 
+                    //this.interestType[rowIndex] = selectedInterestType[0];
 
-                //    }
-                //    else if (glmsConcessionDetail.productType.indexOf("VAF") == 0) {
+                    let selectedInterestPricingCategory = this.interestPricingCategory.filter(_ => _.id === glmsConcessionDetail.interestPricingCategoryId);
+                    currentConcession.get('interestPricingCategory').setValue(selectedInterestPricingCategory[0]);
 
-                //        glmsConcessionDetail.show_term = true;
-                //        glmsConcessionDetail.show_reviewFeeType = false;
-                //        glmsConcessionDetail.show_reviewFee = false;
-                //        glmsConcessionDetail.show_uffFee = false;
-                //        glmsConcessionDetail.show_frequency = true;
-                //        glmsConcessionDetail.show_serviceFee = true;
-                //    }
-                //    else {
+                    this.interestPricingCategory[rowIndex] = selectedInterestPricingCategory[0];
 
-                //        glmsConcessionDetail.show_term = true;
-                //        glmsConcessionDetail.show_reviewFeeType = false;
-                //        glmsConcessionDetail.show_reviewFee = false;
-                //        glmsConcessionDetail.show_uffFee = false;
-                //        glmsConcessionDetail.show_frequency = false;
-                //        glmsConcessionDetail.show_serviceFee = false;
-                //    }
+                    if (this.clientAccounts) {
+                        let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == glmsConcessionDetail.legalEntityAccountId);
+                        currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
+                    }
 
+     
+                    if (glmsConcessionDetail.expiryDate) {
+                        var formattedExpiryDate = this.datepipe.transform(glmsConcessionDetail.expiryDate, 'yyyy-MM-dd');
+                        currentConcession.get('expiryDate').setValue(formattedExpiryDate);
+                    }
 
-                //    const concessions = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
-                //    let currentConcession = concessions.controls[concessions.length - 1];
+                    if (glmsConcessionDetail.dateApproved) {
+                        var formattedDateApproved = this.datepipe.transform(glmsConcessionDetail.dateApproved, 'yyyy-MM-dd');
+                        currentConcession.get('dateApproved').setValue(formattedDateApproved);
+                    }
 
-                //    currentConcession.get('glmsConcessionDetailId').setValue(glmsConcessionDetail.glmsConcessionDetailId);
-                //    currentConcession.get('concessionDetailId').setValue(glmsConcessionDetail.concessionDetailId);
+                    currentConcession.get('isExpired').setValue(glmsConcessionDetail.isExpired);
+                    currentConcession.get('isExpiring').setValue(glmsConcessionDetail.isExpiring);
 
-                //    let selectedProductType = this.productTypes.filter(_ => _.id === glmsConcessionDetail.productTypeId);
-                //    currentConcession.get('productType').setValue(selectedProductType[0]);
+                    const tierForm = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
+                    var rowAtIndex = glmsConcessionDetail.glmsTierData;
 
-                //    this.selectedProductTypes[rowIndex] = selectedProductType[0];
+                    if (glmsConcessionDetail.glmsTierData.length > 0) {
 
+                        let roIndex = 0;
 
-                //    if (this.clientAccounts) {
-                //        let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == glmsConcessionDetail.legalEntityAccountId);
-                //        currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
-                //    }
+                        for (let x in tierForm.controls) {
+                            while (tierForm.length > 0) {
+                                var i = 0;
+                                this.deleteTierRow(i);
+                                i++;
+                            }
+                        }
 
-                //    currentConcession.get('limit').setValue(this.formatDecimal(glmsConcessionDetail.limit));
-                //    currentConcession.get('term').setValue(glmsConcessionDetail.term);
-                //    currentConcession.get('marginAgainstPrime').setValue(this.formatDecimal4(glmsConcessionDetail.marginAgainstPrime));
-                //    currentConcession.get('approvedMarginAgainstPrime').setValue(this.formatDecimal4(glmsConcessionDetail.approvedMap));
-                //    currentConcession.get('initiationFee').setValue(this.formatDecimal4(glmsConcessionDetail.initiationFee));
+                        for (let glmsTierFormItem of glmsConcessionDetail.glmsTierData) {
 
-                //    let selectedReviewFeeType = this.reviewFeeTypes.filter(_ => _.id == glmsConcessionDetail.reviewFeeTypeId);
-                //    currentConcession.get('reviewFeeType').setValue(selectedReviewFeeType[0]);
-                //    currentConcession.get('reviewFee').setValue(this.formatDecimal3(glmsConcessionDetail.reviewFee));
-                //    currentConcession.get('uffFee').setValue(this.formatDecimal3(glmsConcessionDetail.uffFee));
+                            this.addNewTierRow();
 
-                //    currentConcession.get('mrsEri').setValue(glmsConcessionDetail.mrsEri);
+                            const newTierForm = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
+                            let currentConcession = newTierForm.controls[newTierForm.length - 1];
 
-                //    currentConcession.get('serviceFee').setValue(this.formatDecimal3(glmsConcessionDetail.serviceFee));
-                //    currentConcession.get('frequency').setValue(glmsConcessionDetail.frequency);
+                            let selectedRateType = this.rateType.filter(_ => _.id === glmsTierFormItem.rateTypeId);
+                            if (selectedRateType.length > 0) {
+                                currentConcession.get('rateType').setValue(selectedRateType[0]);
+                            }
 
-                //    if (glmsConcessionDetail.expiryDate) {
-                //        var formattedExpiryDate = this.datepipe.transform(glmsConcessionDetail.expiryDate, 'yyyy-MM-dd');
-                //        currentConcession.get('expiryDate').setValue(formattedExpiryDate);
-                //    }
+                            let selectedBaseRate = this.baseRateCode.filter(_ => _.id === glmsTierFormItem.baseRateId);
+                            if (selectedBaseRate.length > 0) {
+                                currentConcession.get('baseRate').setValue(selectedBaseRate[0]);
+                            } else {
 
-                //    if (glmsConcessionDetail.dateApproved) {
-                //        var formattedDateApproved = this.datepipe.transform(glmsConcessionDetail.dateApproved, 'yyyy-MM-dd');
-                //        currentConcession.get('dateApproved').setValue(formattedDateApproved);
-                //    }
+                                currentConcession.get('baseRate').disable();
+                            }
 
-                //    currentConcession.get('isExpired').setValue(glmsConcessionDetail.isExpired);
-                //    currentConcession.get('isExpiring').setValue(glmsConcessionDetail.isExpiring);
+                            currentConcession.get('tieredFrom').setValue(glmsTierFormItem.tierFrom);
+                            currentConcession.get('spread').setValue(glmsTierFormItem.spread);
+                            currentConcession.get('tieredTo').setValue(glmsTierFormItem.tierTo);
+                            currentConcession.get('value').setValue(glmsTierFormItem.value);
 
-                //    rowIndex++;
-                //}
+                            roIndex++;
+                        }
+
+                    } else {
+
+                        for (let x in tierForm.controls) {
+                            while (tierForm.length > 0) {
+                                var i = 0;
+                                this.deleteTierRow(i);
+                                i++;
+                            }
+                        }
+
+                        this.addNewTierRow();
+                    }
+
+                    rowIndex++;
+                }
 
                 this.changearray = this.lookupDataService.checkforLC(this.glmsConcession.concession.status, this.glmsConcession.concession.subStatus, glmsConcession.concession.concessionComments);
 
@@ -422,6 +439,11 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
             interestPricingCategory: [''],
             glmsGroup: [''],
             concessionItemTier: [''],
+            glmsConcessionDetailId: [''],
+            concessionDetailId: [''],
+            dateApproved: [{ value: '', disabled: true }],
+            isExpired: [''],
+            isExpiring: [''],
 
         });
     }
@@ -568,6 +590,18 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         });
     }
 
+    onTierLineAdd(index) {
+        const control = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
+        if (index == 0) {
+            control.controls[index].get('tieredFrom').setValue(0);
+        }
+        if (index > 0) {
+            var newValue = control.controls[index - 1].get('tieredTo').value;
+            newValue = Number(newValue) + 1;
+            control.controls[index].get('tieredFrom').setValue(newValue);
+        }
+    }
+
     getGlmsConcession(isNew: boolean): GlmsConcession {
         var glmsConcession = new GlmsConcession();
         glmsConcession.concession = new Concession();
@@ -649,6 +683,9 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                 this.addValidationError("Concession line Tier data not set");
             }
 
+            glmsConcessionDetail.legalEntityId = this.clientAccounts[0].legalEntityId;
+            glmsConcessionDetail.legalEntityAccountId = this.clientAccounts[0].legalEntityAccountId;
+
             glmsConcession.glmsConcessionDetails.push(glmsConcessionDetail);
 
         }
@@ -728,28 +765,35 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
     openTier(x, i) {
         this.glmsConcessionItemIndex = i;
+        this.populateTierForm(i);
     }
 
     rateTypeChange(rowIndex: number) {
-
-        console.log('Row:' + rowIndex);
 
         const control = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
         let currentRow = control.controls[rowIndex];
         var rateType = currentRow.get('rateType').value;
 
-        this.selectedProductTypes[rowIndex] = rateType;
-
         if (rateType.description === "V") {
-
-            currentRow.get('spread').disable();
-            currentRow.get('spread').setValue(null);
 
             currentRow.get('value').disable();
             currentRow.get('value').setValue(null);
 
+            currentRow.get('baseRate').enable();
+            currentRow.get('spread').enable();
+        }
+        else {
+
+            currentRow.get('baseRate').disable();
+            currentRow.get('baseRate').setValue(null);
+
+            currentRow.get('spread').disable();
+            currentRow.get('spread').setValue(null);
+
+            currentRow.get('value').enable();
         }
     }
+
 
     editConcession(editType: string) {
         this.canBcmApprove = false;
@@ -769,56 +813,124 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         this.glmsConcessionForm.controls['motivation'].setValue('');
     }
 
-    closeTierModal(x) {
-
-        let tierItemsList = [new GlmsTierData()];
-
-        let tierItem = new GlmsTierData();
+    populateTierForm(rowIndex: number) {
 
         const concessions = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
         const tierForm = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
 
-        for (let glmsTierFormItem of tierForm.controls) {
+        var rowAtIndex = concessions.controls[rowIndex].get('concessionItemTier').value;
 
-            if (glmsTierFormItem.get('spread').value) {
-                tierItem.spread = glmsTierFormItem.get('spread').value;
-            } else {
-                this.addValidationError("Spread not selected");
+        if (rowAtIndex.length > 0) {
+
+            let roIndex = 0;
+
+            for (let x in tierForm.controls) {
+                while (tierForm.length > 0) {
+                    var i = 0;
+                    this.deleteTierRow(i);
+                    i++;
+                }
             }
 
-            if (glmsTierFormItem.get('tieredFrom').value) {
-                tierItem.tierFrom = glmsTierFormItem.get('tieredFrom').value;
-            } else {
-                this.addValidationError("TieredFrom not selected");
+            for (let glmsTierFormItem of concessions.controls[rowIndex].get('concessionItemTier').value) {
+
+                this.addNewTierRow();
+
+                const newTierForm = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
+                let currentConcession = newTierForm.controls[newTierForm.length - 1];
+
+                let selectedRateType = this.rateType.filter(_ => _.id === glmsTierFormItem.rateTypeId);
+                if (selectedRateType.length > 0) {
+                    currentConcession.get('rateType').setValue(selectedRateType[0]);
+                }
+
+                let selectedBaseRate = this.baseRateCode.filter(_ => _.id === glmsTierFormItem.baseRateId);
+                if (selectedBaseRate.length > 0) {
+                    currentConcession.get('baseRate').setValue(selectedBaseRate[0]);
+                } else {
+
+                    currentConcession.get('baseRate').disable();
+                }
+
+                currentConcession.get('tieredFrom').setValue(glmsTierFormItem.tierFrom);
+                currentConcession.get('spread').setValue(glmsTierFormItem.spread);
+                currentConcession.get('tieredTo').setValue(glmsTierFormItem.tierTo);
+                currentConcession.get('value').setValue(glmsTierFormItem.value);
+
+                roIndex++;
             }
 
-            if (glmsTierFormItem.get('tieredTo').value) {
-                tierItem.tierTo = glmsTierFormItem.get('tieredTo').value;
+        } else {
+
+            for (let x in tierForm.controls) {
+                while (tierForm.length > 0) {
+                    var i = 0;
+                    this.deleteTierRow(i);
+                    i++;
+                }
+            }
+
+            this.addNewTierRow();
+        }
+
+    }
+
+    closeTierModal(x) {
+
+        let tierItemsList = [new GlmsTierData()];
+
+        const concessions = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
+        const tierForm = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
+
+        for (let glmsTierFormItem of tierForm.value) {
+
+            let tierItem = new GlmsTierData();
+
+            if (glmsTierFormItem.tieredFrom) {
+                tierItem.tierFrom = glmsTierFormItem.tieredFrom;
+            } else {
+                tierItem.tierFrom = 0;
+            }
+
+            if (glmsTierFormItem.tieredTo) {
+                tierItem.tierTo = glmsTierFormItem.tieredTo;
             } else {
                 this.addValidationError("TieredTo not selected");
             }
 
-            if (glmsTierFormItem.get('value').value) {
-                tierItem.value = glmsTierFormItem.get('value').value;
-            } else {
-                this.addValidationError("Value not selected");
+            if (glmsTierFormItem.rateType.description === "F") {
+                if (glmsTierFormItem.value) {
+                    tierItem.value = glmsTierFormItem.value;
+                } else {
+                    this.addValidationError("Value not selected");
+                }
             }
 
-            if (glmsTierFormItem.get('baseRate').value.id) {
-                tierItem.baseRateId = glmsTierFormItem.get('baseRate').value.id;
-            } else {
-                this.addValidationError("Base Rate not selected");
+            if (glmsTierFormItem.rateType.description === "V") {
+
+                if (glmsTierFormItem.baseRate) {
+                    tierItem.baseRateId = glmsTierFormItem.baseRate.id;
+                } else {
+                    this.addValidationError("BaseRate not selected");
+                }
+
+                if (glmsTierFormItem.spread) {
+                    tierItem.spread = glmsTierFormItem.spread;
+                } else {
+                    this.addValidationError("Spread not selected");
+                }
             }
 
-            if (glmsTierFormItem.get('rateType').value.id) {
-                tierItem.rateTypeId = glmsTierFormItem.get('rateType').value.id;
+            if (glmsTierFormItem.rateType) {
+                tierItem.rateTypeId = glmsTierFormItem.rateType.id;
             } else {
-                this.addValidationError("Rate Type not selected");
+                this.addValidationError("RateType not selected");
             }
 
             tierItemsList.push(tierItem);
         }
 
+        tierItemsList.splice(0, 1);
         concessions.controls[this.glmsConcessionItemIndex].get('concessionItemTier').setValue(tierItemsList);
     }
 
@@ -852,6 +964,8 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
     addNewTierRow() {
         const control = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
         control.push(this.initTierItemRows());
+        var rowNumber = control.length;
+        this.onTierLineAdd(rowNumber - 1);
     }
 
     addNewTierRowIfNone() {
@@ -904,7 +1018,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
     }
 
     onExpiryDateChanged(itemrow) {
-        this.validationError = null;
+   
         var validationErrorMessage = this.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);
@@ -1390,9 +1504,8 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         }
     }
 
-
     goBack() {
-        this.router.navigate(['/pricing', this.riskGroupNumber]);
+        this.location.back();
     }
 
     ngOnDestroy() {

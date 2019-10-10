@@ -9,7 +9,6 @@
             <div class="col-md-10 banner-main-title">
                 <i class="fa fa-area-chart" aria-hidden="true"></i> GLMS
             </div>
-            <div class="col-md-1"></div>
         </div>
         <div class="col-md-1">
             <div class="compress">
@@ -127,30 +126,30 @@
             <tr *ngFor="let itemrow of glmsConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
                 <td class="length-long">
                     <!-- Group -->
-                    <select formControlName="glmsGroup" class="form-control">
+                    <select formControlName="glmsGroup" class="form-control" [attr.disabled]="saveMessage ? '' : null">
                         <option *ngFor="let glmsGroupOption of glmsGroup" [ngValue]="glmsGroupOption">{{glmsGroupOption.groupName}}</option>
                     </select>
                 </td>
                 <td class="length-long">
                     <!-- Interest Pricing Category -->
-                    <select formControlName="interestPricingCategory" class="form-control">
-                        <option *ngFor="let interestPricingCategoryOption of interestPricingCategory" [ngValue]="interestPricingCategoryOption" [attr.disabled]="saveMessage ? '' : null">{{interestPricingCategoryOption.description}}</option>
+                    <select formControlName="interestPricingCategory" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                        <option *ngFor="let interestPricingCategoryOption of interestPricingCategory" [ngValue]="interestPricingCategoryOption" >{{interestPricingCategoryOption.description}}</option>
                     </select>
                 </td>
                 <td class="length-short">
                     <!-- Interest Type -->
-                    <select formControlName="interestType" class="form-control">
-                        <option *ngFor="let interestTypeOption of interestType" [ngValue]="interestTypeOption" [attr.disabled]="saveMessage ? '' : null"> {{interestTypeOption.description}}</option>
+                    <select formControlName="interestType" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                        <option *ngFor="let interestTypeOption of interestType" [ngValue]="interestTypeOption" > {{interestTypeOption.description}}</option>
                     </select>
                 </td>
                 <td class="length-short">
                     <!-- Slab Type -->
-                    <select formControlName="slabType" class="form-control">
-                        <option *ngFor="let slabTypeOption of slabType" [ngValue]="slabTypeOption" [attr.disabled]="saveMessage ? '' : null"> {{slabTypeOption.description}}</option>
+                    <select formControlName="slabType" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                        <option *ngFor="let slabTypeOption of slabType" [ngValue]="slabTypeOption" > {{slabTypeOption.description}}</option>
                     </select>
                 </td>
                 <!-- expiry Date-->
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="(saveMessage) ? '' : null" (change)="onExpiryDateChanged(itemrow)" /></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="(saveMessage) ? '' : null"  /></td>
 
                 <!--Tier information-->
                 <td><button class="length-long btn btn-primary" (click)="openTier(manageTierModal.show(),i)" [attr.disabled]="saveMessage ? '' : null">Add Tier</button></td>
@@ -288,7 +287,7 @@
                 <div class="col-md-12 modal-body">
                     <div class="row">
                         <div class="col-md-12 modal-title">
-                            <button type="button" class="btn btn-primary" (click)="addNewTierRow()">Add Line</button>
+                            <button type="button" class="btn btn-primary" (click)="addNewTierRow(1)">Add Line</button>
                         </div>
                     </div>
                     <table class="form-concessions-table" formArrayName="tierItemsRows" style="width:100%">
@@ -305,7 +304,7 @@
                         <tbody class="form-concessions-table-content" >
                             <tr *ngFor="let itemrow of glmsConcessionForm.controls.tierItemsRows.controls; let i=index" [formGroupName]="i">
                                 <!-- Tiered From -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="tieredFrom" class="form-control" /></td>
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="tieredFrom" class="form-control"  /></td>
                                 <!-- Tiered To -->
                                 <td class="length-short"><input type="text" formControlName="tieredTo" class="form-control" /></td>
 

@@ -74,7 +74,7 @@
             <p>{{errorMessage}}</p>
 
             <ul *ngIf="validationError">
-                <li *ngFor="let validationMessage of validationError | slice:0:1;">{{validationMessage}}</li>
+                <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
             </ul>
         </div>
     </div>

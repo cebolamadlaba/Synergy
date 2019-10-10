@@ -208,9 +208,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
     }
 
-
     onExpiryDateChanged(itemrow) {
-        this.validationError = null;
         var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);

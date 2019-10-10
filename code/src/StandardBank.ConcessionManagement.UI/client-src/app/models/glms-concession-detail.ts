@@ -9,6 +9,7 @@ export class GlmsConcessionDetail extends BaseConcessionDetail {
     glmsProductType: string;
     interestPricingCategoryId: number;
     glmsGroupId: number;
+    groupNumber: number;
     interestTypeId: number;
     rateTypeId: number;
     slabTypeId: number;  

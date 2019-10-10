@@ -429,7 +429,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     onExpiryDateChanged(itemrow) {
-        this.validationError = null;
+      
         var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);
@@ -504,6 +504,14 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
             let cashConcessionDetail = new CashConcessionDetail();
 
+            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
+                this.onExpiryDateChanged(concessionFormItem);
+                cashConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+            }
+            else {
+                this.addValidationError("Expiry date not selected");
+            }
+
             if (!isNew && concessionFormItem.get('cashConcessionDetailId').value)
                 cashConcessionDetail.cashConcessionDetailId = concessionFormItem.get('cashConcessionDetailId').value;
 
@@ -540,11 +548,6 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                 cashConcessionDetail.accrualTypeId = concessionFormItem.get('accrualType').value.id;
             } else {
                 this.addValidationError("Accrual type not selected");
-            }
-
-            if (concessionFormItem.get('expiryDate').value) {
-                this.onExpiryDateChanged(concessionFormItem);
-                cashConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
 
             cashConcession.cashConcessionDetails.push(cashConcessionDetail);

@@ -104,7 +104,7 @@
             <p>{{errorMessage}}</p>
 
             <ul *ngIf="validationError">
-                <li *ngFor="let validationMessage of validationError | slice:0:1;">{{validationMessage}}</li>
+                <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
             </ul>
         </div>
     </div>
@@ -218,7 +218,7 @@
 
 
 
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" [class.markred]="bcmhochanged(i,'expiryDate')" (change)="onExpiryDateChanged(itemrow)" /></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" [class.markred]="bcmhochanged(i,'expiryDate')" /></td>
                 <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>
                 <td *ngIf="canArchive" class="delete">
                     <button *ngIf="bolConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="archiveConcessiondetail(itemrow.get('concessionDetailId').value)" class="btn-delete" title="Remove"><i class="fa fa-trash" aria-hidden="true" style="color:#920000"></i></button>

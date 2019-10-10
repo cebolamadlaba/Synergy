@@ -74,7 +74,8 @@ export class BaseComponentService   {
     }
 
     public addConcessionValidationError(validationDetail) {
-        this.validationError = []
+        if (!this.validationError)
+            this.validationError = [];
         this.validationError.push(validationDetail);
     }
 
@@ -84,12 +85,15 @@ export class BaseComponentService   {
         await this.getUserData();
         this.checkAEExistOnriskGroupNumber();
         
-        if (concessionListLength > 0 ) {
-            if (sapbpid == 0) {
-                this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Risk group. Please select the concession below and update");
-            } else {
-                this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Legal Entity. Please select the concession below and update");
-            }
+        if (concessionListLength > 0) {
+            if (this.validationError == undefined) {
+                this.router.navigate([url, riskGroupNumber, sapbpid]);
+            } 
+            //if (sapbpid == 0) {
+            //    this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Risk group. Please select the concession below and update");
+            //} else {
+            //    this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Legal Entity. Please select the concession below and update");
+            //}
         } else {
             if (this.validationError == undefined) {
                 this.router.navigate([url, riskGroupNumber, sapbpid]);
@@ -137,9 +141,10 @@ export class BaseComponentService   {
         var currentMonth = moment().month()
         var selectedExpiryDateMonth = moment(selectedExpiryDate).month();
         let monthsDifference = currentMonth - selectedExpiryDateMonth;
+        var futureMonth = moment().add(moment.duration({ M: 2 })).format("DD/MM/YYYY");
 
         if (monthsDifference < MOnthEnum.ThreeMonths) {
-            return "Concession expiry date must be greater than 3 months";
+            return "Concession expiry date should be later than " + futureMonth;
         };
     }
 

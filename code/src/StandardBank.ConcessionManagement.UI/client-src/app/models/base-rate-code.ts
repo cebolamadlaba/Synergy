@@ -1,4 +1,4 @@
 export class BaseRateCode {
-    Id: number;
+    id: number;
     Description: string;
 }

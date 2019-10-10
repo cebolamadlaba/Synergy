@@ -4,6 +4,7 @@ using StandardBank.ConcessionManagement.Model.Repository;
 using System.Collections.Generic;
 using System.Linq;
 using StandardBank.ConcessionManagement.Interface.Common;
+using System;
 
 namespace StandardBank.ConcessionManagement.Repository
 {
@@ -42,18 +43,20 @@ namespace StandardBank.ConcessionManagement.Repository
 
                 using (var db = _dbConnectionFactory.Connection())
                 {
-                    model.Id = db.Query<int>(sql,
-                        new
-                        {
-                            fkGlmsConcessionId = model.GlmsConcessionId,
-                            TierFrom = model.TierFrom,
-                            TierTo = model.TierTo,
-                            fkRateTypeId = model.RateTypeId,
-                            fkBaseRateId = model.BaseRateId,
-                            Spread = model.Spread,
-                            Value = model.Value
 
-                        }).Single();
+                        model.Id = db.Query<int>(sql,
+                            new
+                            {
+                                fkGlmsConcessionId = model.GlmsConcessionId,
+                                TierFrom = model.TierFrom,
+                                TierTo = model.TierTo,
+                                fkRateTypeId = model.RateTypeId,
+                                fkBaseRateId = model.BaseRateId,
+                                Spread = model.Spread,
+                                Value = model.Value
+
+                            }).Single();      
+                
                 }
 
                 return model;          
@@ -81,6 +84,34 @@ namespace StandardBank.ConcessionManagement.Repository
                       [dbo].[tblGlmsTierData] 
                     WHERE [GlmsTierDataId] = @Id",
                     new { id }).SingleOrDefault();
+            }
+        }
+
+
+        /// <summary>
+        /// Reads the by identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
+        public IEnumerable<GlmsTierData> ReadAllById(int Id)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+               var results= db.Query<GlmsTierData>(
+                    @"SELECT [GlmsTierDataId] [Id],
+                                [fkGlmsConcessionId] [GlmsConcessionId],
+                                [TierFrom], 
+                                [TierTo],
+                                [fkRateTypeId] [RateTypeId],
+                                [fkBaseRateId] [BaseRateId], 
+                                [Spread],
+                                [Value]
+                    FROM 
+                      [dbo].[tblGlmsTierData] 
+                    WHERE [fkGlmsConcessionId] = @Id",
+                    new { Id }).ToList();
+
+                return results;
             }
         }
 
@@ -140,13 +171,13 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <summary>
         /// Deletes the specified model.
         /// </summary>
-        /// <param name="model">The model.</param>
-        public void Delete(GlmsTierData model)
+        /// <param name="ID">The model.</param>
+        public void Delete(int Id)
         {
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute("DELETE [dbo].[tblGlmsTierData] WHERE [fkGlmsConcessionId] = @Id",
-                    new { model.Id });
+                    new { Id });
             }
         }
     }

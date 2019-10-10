@@ -90,7 +90,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
-            this.sapbpid = +params['sapbpid'];        
+            this.sapbpid = +params['sapbpid'];
         });
 
         this.cashConcessionForm = this.formBuilder.group({
@@ -316,7 +316,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     onExpiryDateChanged(itemrow) {
-        this.validationError = null;
+        
         var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);
@@ -392,7 +392,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
                 cashConcessionDetail.accrualTypeId = concessionFormItem.get('accrualType').value.id;
             } else {
                 this.addValidationError("Accrual type not selected");
-            }     
+            }
 
             cashConcession.cashConcessionDetails.push(cashConcessionDetail);
 
@@ -492,10 +492,10 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-        
+
     }
 
-    
+
 
     goBack() {
         this.location.back();

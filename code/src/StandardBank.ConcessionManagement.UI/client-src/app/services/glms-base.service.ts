@@ -60,7 +60,12 @@ export class GlmsBaseService extends BaseComponentService {
         return Observable.throw(error.message || error);
     }
 
-  
+    public ValidateTierFromAndTo(tierTo: number):number
+    {
+
+
+        return 0
+    }
 
 
 }

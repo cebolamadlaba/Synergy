@@ -107,7 +107,7 @@
             <p>{{errorMessage}}</p>
 
             <ul *ngIf="validationError">
-                <li *ngFor="let validationMessage of validationError | slice:0:1;">{{validationMessage}}</li>
+                <li *ngFor="let validationMessage of validationError;">{{validationMessage}}</li>
             </ul>
         </div>
     </div>
@@ -248,7 +248,7 @@
 
                 <td class="length-short">
 
-                    <input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="isEnabledExpiryDate(i) && canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" [class.markred]="bcmhochanged(i,'expiryDate')" (change)="onExpiryDateChanged(itemrow)" />
+                    <input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="isEnabledExpiryDate(i) && canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" [class.markred]="bcmhochanged(i,'expiryDate')" />
                 </td>
 
                 <td class="length-short" *ngIf="isApproved">
@@ -471,7 +471,7 @@ i + 1
 
     </div>
 
-    <!-- Form buttons -->
+      <!-- Form buttons -->
     <div class="footer-buttons">
         <div class="float-right">
             <button type="button" class="btn btn-cancel" (click)="goBack()" *ngIf="!isRecalling">Close</button>

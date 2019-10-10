@@ -109,7 +109,7 @@ const routes: Routes = [
 
     { path: 'glms-add-concession/:riskGroupNumber/:sapbpid', component: GlmsAddConcessionComponent },
     { path: 'glms-view-concession/:riskGroupNumber/:concessionReferenceId', component: GlmsViewConcessionComponent },
-    { path: 'glms-view-concession/:riskGroupNumber/:sapbpid:concessionReferenceId', component: GlmsViewConcessionComponent },
+    { path: 'glms-view-concession/:riskGroupNumber/:sapbpid/:concessionReferenceId', component: GlmsViewConcessionComponent },
 
     { path: 'cashman-add-concession', component: CashmanAddConcessionComponent },
     { path: 'admin', component: AdminMenuComponent },
