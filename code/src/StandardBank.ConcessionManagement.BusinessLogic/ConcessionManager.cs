@@ -372,6 +372,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         }
 
+
         /// <summary>
         /// Gets the actioned concessions for user.
         /// </summary>
