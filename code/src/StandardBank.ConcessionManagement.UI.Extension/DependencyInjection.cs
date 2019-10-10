@@ -38,6 +38,7 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             services.AddScoped<IDailyScheduledJob, DailyAutoEscalation>();
             services.AddScoped<IDailyScheduledJob, DueForExpiryNotification>();
             services.AddScoped<IDailyScheduledJob, RenewOngoingConditions>();
+            services.AddScoped<IDailyScheduledJob, MismatchedScheduledJob>();
 
             //SAP services have been replaced by manual SQL jobs
             //services.AddScoped<IDailyScheduledJob, ImportSapData>();
