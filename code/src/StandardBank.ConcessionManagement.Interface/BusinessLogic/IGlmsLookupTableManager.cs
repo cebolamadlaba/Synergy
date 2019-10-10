@@ -23,5 +23,6 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 
         IEnumerable<SlabType> GetSlabTypes();
 
+        IEnumerable<BaseRateCode> GetBaseRateCodes();
     }
 }

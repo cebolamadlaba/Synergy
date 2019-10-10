@@ -1,6 +1,6 @@
 
 CREATE TABLE [dbo].[tblConcessionGlms](
-	[pkConcessionGlmsId] [int] IDENTITY(1,1) NOT NULL,
+	[pkConcessionGlmsId] [int] IDENTITY(1,1) PRIMARY KEY IDENTITY NOT NULL,
 	[fkConcessionId] [int] NOT NULL,
 	[fkConcessionDetailId] [int] NOT NULL,
 	[fkProductId] [int] NOT NULL,
@@ -9,12 +9,6 @@ CREATE TABLE [dbo].[tblConcessionGlms](
 	[fkInterestPricingCategoryId][int] NULL,
 	[fkSlabTypeId] [int] NULL,
 	[fkInterestTypeId] [int] NULL,
-	[fkBaseRateCodeId] [int] NULL,
-	[TierFrom] [int] NULL,
-	[TierTo] [int] NULL,
-	[RateType] [varchar](50) NULL,
-	[Spread] [decimal](10, 2) NULL,
-	[Value] [decimal](18, 2) NULL,
 )
 
 ALTER TABLE [dbo].[tblConcessionGlms]  WITH CHECK ADD FOREIGN KEY([fkConcessionId])
@@ -33,17 +27,8 @@ ALTER TABLE [dbo].[tblConcessionGlms]  WITH CHECK ADD FOREIGN KEY([fkProductId])
 REFERENCES [dbo].[tblProductGlms] ([pkProductGlmsId])
 GO
 
-
-ALTER TABLE [dbo].[tblConcessionGlms]  WITH CHECK ADD FOREIGN KEY([fkBaseRateCodeId])
-REFERENCES [dbo].[tblBaseRateCode] ([pkBaseRateCodeId])
-GO
-
 ALTER TABLE [dbo].[tblConcessionGlms]  WITH CHECK ADD FOREIGN KEY([fkGroupId])
 REFERENCES [dbo].[tblGlmsGroup] ([pkGlmsGroupId])
-GO
-
-ALTER TABLE [dbo].[tblConcessionGlms]  WITH CHECK ADD FOREIGN KEY([fkInterestTypeId])
-REFERENCES [dbo].[tblInterestType] ([pkInterestTypeId])
 GO
 
 ALTER TABLE [dbo].[tblConcessionGlms]  WITH CHECK ADD FOREIGN KEY([fkInterestPricingCategoryId])
@@ -53,5 +38,10 @@ GO
 ALTER TABLE [dbo].[tblProductGlms]  WITH CHECK ADD FOREIGN KEY([fkSlabTypeId])
 REFERENCES [dbo].[tblSlabType] ([pkSlabTypeId])
 GO
+
+ALTER TABLE [dbo].[tblConcessionGlms]  WITH CHECK ADD FOREIGN KEY([fkInterestTypeId])
+REFERENCES [dbo].[tblInterestType] ([pkInterestTypeId])
+GO
+
 
 

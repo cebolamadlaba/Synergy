@@ -7,7 +7,7 @@ using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface;
-
+using BaseRateCode = StandardBank.ConcessionManagement.Model.UserInterface.BaseRateCode;
 using GlmsGroup = StandardBank.ConcessionManagement.Model.UserInterface.GlmsGroup;
 using InterestPricingCategory = StandardBank.ConcessionManagement.Model.UserInterface.InterestPricingCategory;
 using InterestType = StandardBank.ConcessionManagement.Model.UserInterface.InterestType;
@@ -54,6 +54,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ISlabTypeRepository _slabTypeRepository;
 
         /// <summary>
+        /// The Slab Type repository
+        /// </summary>
+        private readonly IBaseRateCodeRepository _baseRateCodeRepository;
+
+        /// <summary>
         /// The risk group repository
         /// </summary>
         private readonly IRiskGroupRepository _riskGroupRepository;
@@ -66,7 +71,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IInterestPricingCategoryRepository interestPricingCategoryRepository,
             IInterestTypeRepository interestTypeRepository,
             IRateTypeRepository rateTypeRepository,
-            ISlabTypeRepository slabTypeRepository)
+            ISlabTypeRepository slabTypeRepository,
+            IBaseRateCodeRepository baseRateCodeRepository)
         {
             _mapper = mapper;
              _glmsGroupRepository = glmsGroupRepository;
@@ -74,6 +80,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _interestTypeRepository = interestTypeRepository;
             _rateTypeRepository = rateTypeRepository;
             _slabTypeRepository = slabTypeRepository;
+            _baseRateCodeRepository = baseRateCodeRepository;
 
         }  
 
@@ -105,6 +112,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var results = _slabTypeRepository.ReadAll();
             return _mapper.Map<IEnumerable<SlabType>>(results);
+        }
+
+        public IEnumerable<BaseRateCode> GetBaseRateCodes()
+        {
+            var results = _baseRateCodeRepository.ReadAll();
+            return _mapper.Map<IEnumerable<BaseRateCode>>(results);
         }
 
     }

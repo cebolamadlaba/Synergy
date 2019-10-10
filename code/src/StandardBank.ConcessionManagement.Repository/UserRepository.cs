@@ -161,9 +161,9 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <summary>
         /// Reads the by risk group identifier.
         /// </summary>
-        /// <param name="riskGroupNumber">The risk group identifier.</param>
+        /// <param name="sapbpidOrRiskGroupNumber">The risk group identifier.</param>
         /// <returns></returns>
-        public User ReadByRiskGroupNumber(int riskGroupNumber)
+        public User ReadByCustOrRiskGroupNumber(int sapbpidOrRiskGroupNumber)
         {
             using (var db = _dbConnectionFactory.Connection())
             {
@@ -177,7 +177,8 @@ namespace StandardBank.ConcessionManagement.Repository
 	                        ON lea.fkRiskGroupId = riskgroup.pkRiskGroupId
                           INNER JOIN tblUser us 
 	                        ON us.pkUserId=lea.fkUserId
-                      WHERE riskgroup.RiskGroupNumber = @riskGroupNumber", new { riskGroupNumber }).FirstOrDefault();
+                      WHERE riskgroup.RiskGroupNumber = @sapbpidOrRiskGroupNumber 
+                            OR lea.CustomerNumber  = @sapbpidOrRiskGroupNumber ", new { sapbpidOrRiskGroupNumber }).FirstOrDefault();
             }
         }
 

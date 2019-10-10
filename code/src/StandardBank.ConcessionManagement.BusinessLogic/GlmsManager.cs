@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -11,6 +12,10 @@ using StandardBank.ConcessionManagement.Model.UserInterface.Glms;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 using RiskGroup = StandardBank.ConcessionManagement.Model.UserInterface.RiskGroup;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
+using GlmsTierData = StandardBank.ConcessionManagement.Model.UserInterface.GlmsTierData;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCondition;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.GlmsConcession;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -34,11 +39,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         private readonly IMediator _mediator;
 
-        private readonly IPrimeRateRepository _primeRateRepository;
+        private readonly IGlmsTierDataRepository _glmsTierDataRepository;
+        private GlmsConcessionDetail glmsConcessionDetail;
 
         public GlmsManager(IConcessionManager concessionManager, IConcessionGlmsRepository concessionGlmsRepository,
             IMapper mapper,ILookupTableManager lookupTableManager, IRuleManager ruleManager,
-            IMiscPerformanceRepository miscPerformanceRepository, IMediator mediator, IPrimeRateRepository primeRateRepository)
+            IMiscPerformanceRepository miscPerformanceRepository, IMediator mediator, IGlmsTierDataRepository glmsTierDataRepository)
         {
             _concessionManager = concessionManager;
             _concessionGlmsRepository = concessionGlmsRepository;
@@ -47,14 +53,23 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _ruleManager = ruleManager;
             _miscPerformanceRepository = miscPerformanceRepository;
             _mediator = mediator;
-            _primeRateRepository = primeRateRepository;
+            _glmsTierDataRepository = glmsTierDataRepository;
         }
 
         public ConcessionGlms CreateConcessionGlms(GlmsConcessionDetail glmsConcessionDetail, Concession concession)
         {
-            var concessionGlms = _mapper.Map<ConcessionGlms>(glmsConcessionDetail);
-            concessionGlms.ConcessionId = concession.Id;
-            return _concessionGlmsRepository.Create(concessionGlms);
+             var concessionGlms = MapGlms(glmsConcessionDetail);
+             concessionGlms.ConcessionId = concession.Id;
+             return _concessionGlmsRepository.Create(concessionGlms);
+        }
+
+        public ConcessionGlms UpdateConcessionGlms(GlmsConcessionDetail glmsConcessionDetail, Concession concession)
+        {
+             var concessionGlms = MapGlms(glmsConcessionDetail);
+             concessionGlms.ConcessionId = concession.Id;
+             _concessionGlmsRepository.Update(concessionGlms);
+
+            return concessionGlms;
         }
 
         public GlmsConcession GetGlmsConcession(string concessionReferenceId, User user)
@@ -62,7 +77,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId, user);
             var glmsConcessionDetails = _miscPerformanceRepository.GetGlmsConcessionDetails(concession.Id);
 
-            var primerate = _primeRateRepository.PrimeRate(concession.DateOpened);
+            foreach(var glmsConcessionDetail in  glmsConcessionDetails)
+            {
+                
+                glmsConcessionDetail.GlmsTierData = _mapper.Map<IEnumerable<GlmsTierData>>(_glmsTierDataRepository.ReadAllById(glmsConcessionDetail.GlmsConcessionDetailId));
+            }
 
             return new GlmsConcession
             {
@@ -71,7 +90,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 ConcessionConditions = _concessionManager.GetConcessionConditions(concession.Id),
                 CurrentUser = user
             };
-
         }
 
         public ConcessionGlms DeleteConcessionGlms(GlmsConcessionDetail glmsConcessionDetail)
@@ -122,10 +140,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     var productgrouping = groupedinfo.Where(g => g.LegalEntity == product.LegalEntity).FirstOrDefault();
                     if (productgrouping == null)
                     {
-                        GlmsProductGroup newgroup = new GlmsProductGroup();
-                        newgroup.LegalEntity = product.LegalEntity;
-                        newgroup.RiskGroupName = product.RiskGroupName;
-                        newgroup.GlmsProducts = new List<Model.UserInterface.Glms.GlmsProduct>();
+                        GlmsProductGroup newgroup = new GlmsProductGroup
+                        {
+                            LegalEntity = product.LegalEntity,
+                            RiskGroupName = product.RiskGroupName,
+                            GlmsProducts = new List<Model.UserInterface.Glms.GlmsProduct>()
+                        };
                         newgroup.GlmsProducts.Add(product);
 
                         groupedinfo.Add(newgroup);
@@ -134,7 +154,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     {
                         productgrouping.GlmsProducts.Add(product);
                     }
-
                 }
                 //sort
                 foreach (var productgrouping in groupedinfo)
@@ -162,6 +181,75 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             return _miscPerformanceRepository.GetGlmsProductsByLegalEntity(legalEntity.Id, legalEntity.CustomerName);
         }
-     
+
+        private ConcessionGlms MapGlms(GlmsConcessionDetail glmsConcessionDetail)
+        {
+            ConcessionGlms glmsConcession = new ConcessionGlms() {       
+                 InterestPricingCategoryId = glmsConcessionDetail.interestPricingCategoryId,
+                 SlabTypeId= glmsConcessionDetail.SlabTypeId,
+                 ConcessionDetailId= glmsConcessionDetail.ConcessionDetailId,
+                 GlmsGroupId= glmsConcessionDetail.GlmsGroupId,
+                 InterestTypeId=glmsConcessionDetail.InterestTypeId,
+                 LegalEntityAccountId= glmsConcessionDetail.LegalEntityAccountId,
+                 LegalEntityId= glmsConcessionDetail.LegalEntityId,
+                 ExpiryDate= glmsConcessionDetail.ExpiryDate,
+                 ProductTypeId = 1
+            };
+
+            return glmsConcession;
+        }
+
+        public void AddGlmsTierData(IEnumerable<GlmsTierData> tierData, int concessionDetailId)
+        {
+            tierData.ToList().ForEach( x=> 
+            {
+                x.GlmsConcessionId = concessionDetailId;
+                _glmsTierDataRepository.Create(_mapper.Map<Model.Repository.GlmsTierData>(x));
+
+            });        
+        }
+
+        public void DeleteGlmsTierData(int concessionDetailId)
+        {
+           _glmsTierDataRepository.Delete(concessionDetailId);
+        }
+
+        public async Task ForwardGlmsConcession(GlmsConcession glmsConcession, User user)
+        {
+            var databaseGlmsConcession =
+               this.GetGlmsConcession(glmsConcession.Concession.ReferenceNumber, user);
+
+            //if there are any conditions that have been removed, delete them
+            foreach (var condition in databaseGlmsConcession.ConcessionConditions)
+                if (glmsConcession.ConcessionConditions.All(_ => _.ConcessionConditionId != condition.ConcessionConditionId))
+                    await _mediator.Send(new DeleteConcessionCondition(condition, user));
+
+            //if there are any lending concession details that have been removed delete them
+            foreach (var glmsConcessionDetail in databaseGlmsConcession.GlmsConcessionDetails)
+                if (glmsConcession.GlmsConcessionDetails.All(_ => _.GlmsConcessionDetailId !=
+                                                                        glmsConcessionDetail
+                                                                            .GlmsConcessionDetailId))
+                    await _mediator.Send(new DeleteGlmsConcessionDetail(glmsConcessionDetail, user));
+
+            //update the concession
+            var concession = await _mediator.Send(new UpdateConcession(glmsConcession.Concession, user));
+
+            //add all the new conditions and lending details and comments
+            foreach (var lendingConcessionDetail in glmsConcession.GlmsConcessionDetails)
+                await _mediator.Send(new AddOrUpdateGlmsConcessionDetail(glmsConcessionDetail, user, concession));
+
+            if (glmsConcession.ConcessionConditions != null && glmsConcession.ConcessionConditions.Any())
+                foreach (var concessionCondition in glmsConcession.ConcessionConditions)
+                    await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+
+            if (!string.IsNullOrWhiteSpace(glmsConcession.Concession.Comments))
+                await _mediator.Send(new AddConcessionComment(concession.Id, databaseGlmsConcession.Concession.SubStatusId,
+                    glmsConcession.Concession.Comments, user));
+
+            //send the notification email
+            await _mediator.Send(new ForwardConcession(glmsConcession.Concession, user));
+
+        }
+
     }
 }

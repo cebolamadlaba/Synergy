@@ -53,11 +53,26 @@
     </div>
 </div>
 
+
 <!-- Error message -->
-<div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
+<div class="col-md-12" *ngIf="(errorMessage) && !isLoading">
     <div class="form-feedback-container">
         <div class="alert-danger">
             <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
+            <p>{{errorMessage}}</p>
+
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError ">{{validationMessage}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Error message -->
+<div class="col-md-12" *ngIf="(validationError) && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Below errors requires your attention..</p>
             <p>{{errorMessage}}</p>
 
             <ul *ngIf="validationError">
@@ -146,7 +161,7 @@
                 <td class="length-long"><input formControlName="flatFeeOrRate" class="form-control"></td>
                 <td class="length-medium"><input formControlName="adValorem" class="form-control"></td>
 
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="onExpiryDateChanged(itemrow)" /></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="saveMessage ? '' : null" /></td>
 
                 <td><button *ngIf="transactionalConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
@@ -179,7 +194,7 @@
                                 No conditions added
                             </td>
                         </tr>
-                       
+
                         <tr *ngFor="let itemrow of transactionalConcessionForm.controls.conditionItemsRows.controls; let i=index">
                             <td># {{i + 1}}</td>
                             <td>{{itemrow.get('conditionType').value?.description}}</td>

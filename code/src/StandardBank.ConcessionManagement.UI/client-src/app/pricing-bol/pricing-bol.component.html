@@ -66,14 +66,28 @@
 </div>
 
 <!-- Error message -->
-<div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
+<div class="col-md-12" *ngIf="(errorMessage) && !isLoading">
     <div class="form-feedback-container">
         <div class="alert-danger">
             <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
             <p>{{errorMessage}}</p>
 
             <ul *ngIf="validationError">
-                <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
+                <li *ngFor="let validationMessage of validationError ">{{validationMessage}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Error message -->
+<div class="col-md-12" *ngIf="(validationError) && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Unable to continue..</p>
+            <p>{{errorMessage}}</p>
+
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError | slice:0:1;">{{validationMessage}}</li>
             </ul>
         </div>
     </div>
@@ -97,7 +111,6 @@
             </div>
 
             <!-- Products grouping -->
-
             <div class="section-body" *ngFor="let bolprodgroup of bolView.bolProductGroups">
 
                 <div class="product-section">
@@ -110,7 +123,6 @@
 
                 <!-- Products list -->
                 <div class="section-body">
-
                     <div class="product-table-container">
                         <table class="table table-bordered table-hover header-fixed table-striped ">
                             <thead>
@@ -134,7 +146,6 @@
                         </table>
                     </div>
                 </div>
-
 
             </div>
 

@@ -1,4 +1,4 @@
 export class BaseRateCode {
-    BaseRateCodeId: number;
-    Name: string;
+    id: number;
+    Description: string;
 }

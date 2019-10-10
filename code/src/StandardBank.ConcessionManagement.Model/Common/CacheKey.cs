@@ -139,6 +139,11 @@
                 public const string ReadAll = "CacheKey.Repository.RateTypeRepository.ReadAll";
             }
 
+            public static class BaseRateCodeRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.BaseRateCodeRepository.ReadAll";
+            }
+
             public static class ReferenceTypeRepository
             {
                 public const string ReadAll = "CacheKey.Repository.ReferenceTypeRepository.ReadAll";

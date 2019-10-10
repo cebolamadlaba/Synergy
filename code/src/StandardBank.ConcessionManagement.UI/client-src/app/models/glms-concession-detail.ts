@@ -1,4 +1,5 @@
 import { BaseConcessionDetail } from "./base-concession-detail";
+import { GlmsTierData } from "./glms-tier-data";
 
 export class GlmsConcessionDetail extends BaseConcessionDetail {
 
@@ -8,6 +9,7 @@ export class GlmsConcessionDetail extends BaseConcessionDetail {
     glmsProductType: string;
     interestPricingCategoryId: number;
     glmsGroupId: number;
+    groupNumber: number;
     interestTypeId: number;
     rateTypeId: number;
     slabTypeId: number;  
@@ -15,5 +17,6 @@ export class GlmsConcessionDetail extends BaseConcessionDetail {
     tieredTo: number;
     baseRate: number;
     value: number;
+    glmsTierData: GlmsTierData[];
 
 }

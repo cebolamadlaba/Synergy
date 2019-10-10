@@ -124,7 +124,6 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
         this.investmentView.riskGroup = new RiskGroup();
         this.investmentView.investmentConcessions = [new InvestmentConcession()];
         this.investmentView.investmentConcessions[0].concession = new Concession();
-
     }
 
     ngOnInit() {
@@ -308,7 +307,6 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     onExpiryDateChanged(itemrow) {
-        this.validationError = null;
         var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);
@@ -378,6 +376,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
         if (this.legalEntity)
             investmentConcession.concession.legalEntityId = this.legalEntity.id;
 
+        
         if (this.investmentConcessionForm.controls['smtDealNumber'].value) {
             investmentConcession.concession.smtDealNumber = this.investmentConcessionForm.controls['smtDealNumber'].value;
         }
@@ -455,6 +454,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
             }
 
             if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
+                this.onExpiryDateChanged(concessionFormItem);
                 investmentConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
             else {

@@ -480,7 +480,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     onExpiryDateChanged(itemrow) {
-        this.validationError = null;
+       
         var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);
@@ -581,6 +581,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             }
 
             if (concessionFormItem.get('expiryDate').value)
+                this.onExpiryDateChanged(concessionFormItem);
                 bolConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
             bolConcession.bolConcessionDetails.push(bolConcessionDetail);

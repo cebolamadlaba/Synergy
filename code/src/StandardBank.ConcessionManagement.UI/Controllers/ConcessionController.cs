@@ -471,5 +471,15 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             return Ok(_glmsLookupTableManager.GetSlabTypes());
         }
+
+        /// <summary>
+        /// Gets the Base Rate Code.
+        /// </summary>
+        /// <returns></returns>
+        [Route("BaseRateCode")]
+        public IActionResult BaseRateCode()
+        {
+            return Ok(_glmsLookupTableManager.GetBaseRateCodes());
+        }
     }
 }

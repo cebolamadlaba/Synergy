@@ -1,4 +1,4 @@
 export class InterestType {
-    Id: number;
+    id: number;
     Description: string;
 }

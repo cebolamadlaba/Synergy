@@ -81,8 +81,9 @@
 </div>
 
 
+
 <!-- Error message -->
-<div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
+<div class="col-md-12" *ngIf="(errorMessage) && !isLoading">
     <div class="form-feedback-container">
         <div class="alert-danger">
             <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
@@ -90,6 +91,20 @@
 
             <ul *ngIf="validationError">
                 <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Error message -->
+<div class="col-md-12" *ngIf="(validationError) && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Below errors requires your attention..</p>
+            <p>{{errorMessage}}</p>
+
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError | slice:0:1;">{{validationMessage}}</li>
             </ul>
         </div>
     </div>
@@ -251,7 +266,7 @@
                 <!-- uffFee -->
                 <td class="length-short"><input type="text" numbersOnly="true" formControlName="uffFee" class="form-control" [attr.disabled]="getlendingConcessionDetail(i,'show_uffFee') ? null : ''" (change)="setThreeNumberDecimal($event)" [class.markred]="bcmhochanged(i,'uffFee')" /></td>
                 <!-- MRS/BRI -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="mrsEri" class="form-control" maxlength="2"  [attr.disabled]="canEdit ? null : ''"/></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="mrsEri" class="form-control" maxlength="2" [attr.disabled]="canEdit ? null : ''" /></td>
 
                 <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="expiryDate" class="form-control" [style.background-color]="getBackgroundColour(i)" [class.markred]="bcmhochanged(i,'expiryDate')" (change)="onExpiryDateChanged(i)" /></td>
                 <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>

@@ -21,26 +21,13 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// </value>
         public int ProductTypeId { get; set; }
 
-        /// <summary>
-        /// Gets or sets the Balance.
-        /// </summary>
-        /// <value>
-        /// The Balance.
-        /// </value>
-        public decimal Balance { get; set; }
+        public int? InterestPricingCategoryId { get; set; }
 
-        /// <summary>
-        /// Gets or sets the Term.
-        /// </summary>
-        /// <value>
-        /// The Term.
-        /// </value>
-        public int Term { get; set; }
+        public int? GlmsGroupId { get; set; }
 
-        public decimal? LoadedRate { get; set; }
+        public int? InterestTypeId { get; set; }
 
-        public decimal? ApprovedRate { get; set; }
-
+        public int? SlabTypeId { get; set; }
 
         /// <summary>
         /// Gets or the name of the table.
