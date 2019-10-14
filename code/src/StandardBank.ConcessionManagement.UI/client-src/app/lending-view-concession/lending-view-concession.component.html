@@ -62,8 +62,6 @@
     </div>
 </div>
 
-
-
 <!-- Requester modal content -->
 <div bsModal #viewRequesterModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="viewRequesterModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm">
@@ -247,7 +245,6 @@
 
                 <!-- Initiation fee -->
                 <td class="length-short">
-
                     <input type="text" numbersOnly="true" formControlName="initiationFee" class="form-control" [attr.disabled]="canEdit ? null :''" (change)="setThreeNumberDecimal($event)" [class.markred]="bcmhochanged(i,'initiationFee')" />
                 </td>
 

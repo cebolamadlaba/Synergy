@@ -272,7 +272,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(returnConcession);
         }
 
-
         [Route("ResubmitGlms")]
         [ValidateModel]
         public async Task<IActionResult> ResubmitGlms([FromBody] GlmsConcession lendingConcession)
@@ -294,7 +293,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             return Ok(returnConcession);
         }
-
        
         private async Task<GlmsConcession> CreateChildConcession(GlmsConcession glmsConcession, User user, string relationship)
         {
@@ -351,13 +349,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 {
                     ex.ToString();
                 }
+
     var returnConcession =
                 _glmsManager.GetGlmsConcession(parentGlmsConcession.Concession.ReferenceNumber, user);
 
             returnConcession.Concession.ChildReferenceNumber = concession.ReferenceNumber;
             return returnConcession;
         }
-
-
     }
 }

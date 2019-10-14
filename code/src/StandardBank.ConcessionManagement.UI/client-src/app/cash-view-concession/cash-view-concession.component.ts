@@ -429,8 +429,12 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     onExpiryDateChanged(itemrow) {
-      
-        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
+
+        if (this.cashConcession.concession.dateOpened) {
+            var formattedDateOpened = this.datepipe.transform(this.cashConcession.concession.dateOpened, 'yyyy-MM-dd');
+        }
+
+        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidationForView(itemrow.controls['expiryDate'].value, formattedDateOpened);
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);
         }

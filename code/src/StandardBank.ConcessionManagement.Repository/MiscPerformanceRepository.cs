@@ -1060,7 +1060,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     cd.[fkLegalEntityId] [LegalEntityId],
                     cd.[fkLegalEntityAccountId] [LegalEntityAccountId],  
                     le.[CustomerName] [LegalEntity],                    
-                    [ExpiryDate], 
+                    cd.[ExpiryDate], 
                     [DateApproved], 
                     [IsMismatched], 
                     [PriceExported], 
@@ -1073,8 +1073,9 @@ namespace StandardBank.ConcessionManagement.Repository
 					pinv.fkLegalEntityAccountId,
                     glmsGroup.GroupNumber,
                     pinv.fkSlabTypeId SlabTypeId,
-					pinv.fkInterestPricingCategoryId interestPricingCategoryId,
-					pinv.RateType RateTypeId,
+					pinv.fkInterestPricingCategoryId interestPricingCategoryId,				
+                    pinv.fkGroupId GlmsGroupId,
+                    pinv.fkInterestTypeId InterestTypeId,
                     intCat.Description InterestPricingCategory
 
                     FROM [dbo].[tblConcessionDetail] cd

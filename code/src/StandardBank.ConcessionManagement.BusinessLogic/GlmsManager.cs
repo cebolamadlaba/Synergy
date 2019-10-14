@@ -235,7 +235,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var concession = await _mediator.Send(new UpdateConcession(glmsConcession.Concession, user));
 
             //add all the new conditions and lending details and comments
-            foreach (var lendingConcessionDetail in glmsConcession.GlmsConcessionDetails)
+            foreach (var glmsConcessionDetail in glmsConcession.GlmsConcessionDetails)
                 await _mediator.Send(new AddOrUpdateGlmsConcessionDetail(glmsConcessionDetail, user, concession));
 
             if (glmsConcession.ConcessionConditions != null && glmsConcession.ConcessionConditions.Any())

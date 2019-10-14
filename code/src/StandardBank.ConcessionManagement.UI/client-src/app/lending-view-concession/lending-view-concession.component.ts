@@ -527,8 +527,12 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     onExpiryDateChanged(itemrow) {
-   
-        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
+
+        if (this.lendingConcession.concession.dateOpened) {
+            var formattedDateOpened = this.datepipe.transform(this.lendingConcession.concession.dateOpened, 'yyyy-MM-dd');
+        }
+
+        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidationForView(itemrow.controls['expiryDate'].value, formattedDateOpened);
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);
         }
@@ -825,6 +829,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 lendingConcessionDetail.frequency = concessionFormItem.get('frequency').value;
 
             if (concessionFormItem.get('expiryDate').value)
+                this.onExpiryDateChanged(concessionFormItem);
                 lendingConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
             if (concessionFormItem.get('mrsEri').value == "" ||
