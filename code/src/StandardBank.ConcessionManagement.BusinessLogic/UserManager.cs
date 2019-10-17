@@ -122,13 +122,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (usr != null)
             {
-                var RoleSubRole = _userRoleRepository.ReadByUserId(usr.Id).Select(x => x.SubRoleId);
+                var subRoleIds = _userRoleRepository.ReadByUserId(usr.Id).Select(x => x.SubRoleId);
 
-                foreach (var subRole in RoleSubRole)
+                foreach (var subRoleId in subRoleIds)
                 {
-                    if (subRole.HasValue)
+                    if (subRoleId.HasValue)
                     {
-                        usr.SubRoleId = subRole;
+                        usr.SubRoleId = subRoleId;
                     }
                 }
             }
