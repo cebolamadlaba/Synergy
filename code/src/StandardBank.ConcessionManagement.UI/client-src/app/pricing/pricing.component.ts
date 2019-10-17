@@ -168,7 +168,7 @@ export class PricingComponent implements OnInit, OnDestroy {
                 return false;
             }
             else {
-                // for BOL COnsultants and Trade Bankers
+                // for BOL COnsultants, Trade Bankers and PCM S&I
                 if (this.user.subRoleId != null) {
                     // BOL Concessions
                     if (this.user.subRoleId == SubRoleEnum.BOLConsultant && pricingProductNumber == 4) {
@@ -178,10 +178,19 @@ export class PricingComponent implements OnInit, OnDestroy {
                     else if (this.user.subRoleId == SubRoleEnum.TradeBanker && pricingProductNumber == 5) {
                         return true;
                     }
+                    // PCM S & I
+                    else if (this.user.subRoleId == SubRoleEnum.PCMSnI && pricingProductNumber == 6) {
+                        return true;
+                    }
                     else {
                         return false;
                     }
                 }
+
+                if (this.user.subRoleId == null && pricingProductNumber == 6) {
+                    return false;
+                }
+
                 // for all other users
                 return true;
             }
