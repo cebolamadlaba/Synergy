@@ -29,6 +29,7 @@ namespace StandardBank.ConcessionManagement.UI.Extension
 
             //GlmsTierData
             CreateMap<Model.Repository.GlmsTierData, Model.UserInterface.GlmsTierData>().ReverseMap();
+            CreateMap<Model.Repository.GlmsTierDataView, Model.UserInterface.GlmsTierDataView>().ReverseMap();
 
             //ChannelType
             CreateMap<Model.Repository.ChannelType, Model.UserInterface.ChannelType>().ReverseMap();

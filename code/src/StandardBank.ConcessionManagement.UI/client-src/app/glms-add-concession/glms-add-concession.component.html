@@ -278,13 +278,29 @@
     </div>
 
     <!-- Modal Tier -->
-    <div bsModal #manageTierModal="bs-modal" class="modal" data-backdrop="static"  tabindex="-1" role="dialog" aria-labelledby="manageTierModalLabel" aria-hidden="true">
+    <div bsModal #manageTierModal="bs-modal" class="modal fade preview-modal"  id="manageTierModal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="manageTierModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
+
                 <div class="col-md-12 modal-header">
                     <h4>Manage Tier</h4>
                 </div>
                 <div class="col-md-12 modal-body">
+
+                    <!-- Error message -->
+                    <div class="col-md-12" *ngIf="(tierValidationError)">
+                        <div class="form-feedback-container">
+                            <div class="alert-danger">
+                                <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Below errors requires your attention..</p>
+                                <p>{{errorMessage}}</p>
+
+                                <ul *ngIf="tierValidationError">
+                                    <li *ngFor="let validationMessage of tierValidationError;">{{validationMessage}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-12 modal-title">
                             <button type="button" class="btn btn-primary" (click)="addNewTierRow(1)">Add Line</button>
@@ -301,17 +317,17 @@
                                 <th>Value</th>
                             </tr>
                         </thead>
-                        <tbody class="form-concessions-table-content" >
+                        <tbody class="form-concessions-table-content">
                             <tr *ngFor="let itemrow of glmsConcessionForm.controls.tierItemsRows.controls; let i=index" [formGroupName]="i">
                                 <!-- Tiered From -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="tieredFrom" class="form-control"  /></td>
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="tieredFrom" class="form-control" /></td>
                                 <!-- Tiered To -->
                                 <td class="length-short"><input type="text" formControlName="tieredTo" class="form-control" /></td>
 
                                 <td class="length-short">
                                     <!-- Rate Type -->
-                                    <select formControlName="rateType"  class="form-control" (change)="rateTypeChange(i) ">
-                                        <option *ngFor="let rateTypeOption of rateType" [ngValue]="rateTypeOption"  > {{rateTypeOption.description}}</option>
+                                    <select formControlName="rateType" class="form-control" (change)="rateTypeChange(i) ">
+                                        <option *ngFor="let rateTypeOption of rateType" [ngValue]="rateTypeOption"> {{rateTypeOption.description}}</option>
                                     </select>
                                 </td>
                                 <td class="length-short">
@@ -324,7 +340,7 @@
                                 <td class="length-short"><input type="text" formControlName="spread" numbersOnly="true" class="form-control" /></td>
 
                                 <!-- Value-->
-                                <td class="length-short"><input type="text"  formControlName="value" numbersOnly="true" class="form-control" /></td>
+                                <td class="length-short"><input type="text" formControlName="value" numbersOnly="true" class="form-control" /></td>
 
                                 <td><button class="btn-delete" type="button" (click)="deleteTierRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
                             </tr>
@@ -350,4 +366,6 @@
     </div>
 
 </form>
+
+
 

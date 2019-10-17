@@ -76,6 +76,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
     canEdit = false;
     glmsConcessionItemIndex: number;
     concessionReferenceId: string;
+    isApproving = false;
 
     capturedComments: string;
     canApproveChanges: boolean;
@@ -552,9 +553,34 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         if (index > 0) {
             var newValue = control.controls[index - 1].get('tieredTo').value;
             newValue = Number(newValue) + 1;
+            control.controls[index].get('tieredFrom').disable();
             control.controls[index].get('tieredFrom').setValue(newValue);
         }
     }
+
+    checkTiervalidation(row) {
+
+        let tieredFrom = 0;
+        let tieredTo = 0;
+        this.tierValidationError = null;
+
+        if (row.get('tieredFrom').value == "") {
+            tieredFrom = 0;
+        } else {
+            tieredFrom = row.get('tieredFrom').value;
+        }
+
+        if (row.get('tieredTo').value == "") {
+            this.addTierValidationError("Tier To cannot be empty");
+        } else {
+            tieredTo = row.get('tieredTo').value;
+        }
+
+        if (tieredFrom > tieredTo) {
+            this.addTierValidationError("Tier To cannot be less than Tier From");
+        }
+    }
+
 
     getGlmsConcession(isNew: boolean): GlmsConcession {
         var glmsConcession = new GlmsConcession();
@@ -636,6 +662,10 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
             else {
 
                 this.addValidationError("Concession line Tier data not set");
+            }
+
+            if (this.isApproving) {
+                glmsConcessionDetail.dateApproved = new Date();
             }
 
             glmsConcessionDetail.legalEntityId = this.clientAccounts[0].legalEntityId;
@@ -749,7 +779,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         }
     }
 
-
     editConcession(editType: string) {
         this.canBcmApprove = false;
         this.motivationEnabled = true;
@@ -803,14 +832,30 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                 if (selectedBaseRate.length > 0) {
                     currentConcession.get('baseRate').setValue(selectedBaseRate[0]);
                 } else {
-
                     currentConcession.get('baseRate').disable();
                 }
 
+                if (glmsTierFormItem.rateTypeId == 1) {
+                    if (glmsTierFormItem.value) {
+                        currentConcession.get('value').setValue(glmsTierFormItem.value);
+                    } else {
+                        currentConcession.get('value').disable();
+                    }
+                    currentConcession.get('spread').disable();
+                }
+
+                if (glmsTierFormItem.rateTypeId == 2) {
+
+                    if (glmsTierFormItem.spread) {
+                        currentConcession.get('spread').setValue(glmsTierFormItem.spread);
+                    } else {
+                        currentConcession.get('spread').disable();
+                    }
+                    currentConcession.get('value').disable();
+                }
+
                 currentConcession.get('tieredFrom').setValue(glmsTierFormItem.tierFrom);
-                currentConcession.get('spread').setValue(glmsTierFormItem.spread);
                 currentConcession.get('tieredTo').setValue(glmsTierFormItem.tierTo);
-                currentConcession.get('value').setValue(glmsTierFormItem.value);
 
                 roIndex++;
             }
@@ -824,10 +869,8 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                     i++;
                 }
             }
-
             this.addNewTierRow();
         }
-
     }
 
     closeTierModal(x) {
@@ -836,6 +879,11 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
         const concessions = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
         const tierForm = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
+
+        var lastRow = tierForm.length - 1;
+        if (tierForm.length > 0) {
+            tierForm.controls[lastRow].get('tieredTo').setValue(0);
+        }
 
         for (let glmsTierFormItem of tierForm.value) {
 
@@ -850,7 +898,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
             if (glmsTierFormItem.tieredTo) {
                 tierItem.tierTo = glmsTierFormItem.tieredTo;
             } else {
-                this.addValidationError("TieredTo not selected");
+                tierItem.tierTo = 0;
             }
 
             if (glmsTierFormItem.rateType.description === "F") {
@@ -917,10 +965,18 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
     }
 
     addNewTierRow() {
+        this.tierValidationError == null;
         const control = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
-        control.push(this.initTierItemRows());
         var rowNumber = control.length;
-        this.onTierLineAdd(rowNumber - 1);
+        let currentRow = control.controls[rowNumber - 1];
+        if (rowNumber > 0) {
+            this.checkTiervalidation(currentRow);
+        }
+
+        if (this.tierValidationError == null) {
+            control.push(this.initTierItemRows());
+            this.onTierLineAdd(rowNumber);
+        }
     }
 
     addNewTierRowIfNone() {
@@ -994,7 +1050,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
     bcmApproveConcession() {
         this.isLoading = true;
-
+        this.isApproving = true;
         this.errorMessage = null;
         this.validationError = null;
 
@@ -1011,6 +1067,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
             this.glmsConcessionService.postUpdateGlmsData(glmsConcession).subscribe(entity => {
              
                 this.canBcmApprove = false;
+                this.isApproving = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.glmsConcession = entity;
                 this.canEdit = false;
@@ -1059,7 +1116,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
     pcmApproveConcession() {
         this.isLoading = true;
-
+        this.isApproving = true;
         this.errorMessage = null;
         this.validationError = null;
 
@@ -1104,6 +1161,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
             this.glmsConcessionService.postUpdateGlmsData(glmsConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canPcmApprove = false;
+                this.isApproving = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.glmsConcession = entity;
                 this.canEdit = false;
@@ -1352,7 +1410,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
     requestorApproveConcession() {
         this.isLoading = true;
-
+        this.isApproving = true;
         this.errorMessage = null;
         this.validationError = null;
 
@@ -1361,6 +1419,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         glmsConcession.concession.subStatus = ConcessionSubStatus.RequestorAcceptedChanges;
         glmsConcession.concession.requestorId = this.glmsConcession.currentUser.id;
         glmsConcession.concession.referenceNumber = this.concessionReferenceId;
+       
 
         if (!glmsConcession.concession.comments) {
             glmsConcession.concession.comments = "Accepted Changes";
@@ -1370,6 +1429,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
             this.glmsConcessionService.postUpdateGlmsData(glmsConcession).subscribe(entity => {
                
                 this.canApproveChanges = false;
+                this.isApproving = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.glmsConcession = entity;
                 this.canEdit = false;

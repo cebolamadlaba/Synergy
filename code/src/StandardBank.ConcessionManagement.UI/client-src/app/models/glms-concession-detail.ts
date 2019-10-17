@@ -1,5 +1,6 @@
 import { BaseConcessionDetail } from "./base-concession-detail";
 import { GlmsTierData } from "./glms-tier-data";
+import { GlmsTierDataView } from "./glms-tier-data-view";
 
 export class GlmsConcessionDetail extends BaseConcessionDetail {
 
@@ -18,5 +19,5 @@ export class GlmsConcessionDetail extends BaseConcessionDetail {
     baseRate: number;
     value: number;
     glmsTierData: GlmsTierData[];
-
+    glmsTierDataView: GlmsTierDataView[];
 }

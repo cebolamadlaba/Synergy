@@ -131,7 +131,8 @@
                 <th>Interest Type</th>
                 <th>Slap Type</th>
                 <th>Expiry Date</th>
-                <th></th>
+                <th *ngIf="isApproved">Date Approved</th>
+                <th *ngIf="canArchive"></th>
             </tr>
         </thead>
         <tbody class="form-concessions-table-content">
@@ -162,11 +163,7 @@
                 </td>
                 <!-- expiry Date-->
                 <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
-
-                <td class="length-short" *ngIf="isApproved">
-
-                    <input type="date" formControlName="dateApproved" class="form-control" />
-                </td>
+                <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>
 
                 <!--Tier information-->
                 <td><button class="length-long btn btn-primary" (click)="openTier(manageTierModal.show(),i)" [attr.disabled]="canEdit ? null : ''">Add Tier</button></td>
@@ -375,13 +372,28 @@
         </div>
     </div>
     <!-- Modal Tier -->
-    <div bsModal #manageTierModal="bs-modal" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="manageTierModalLabel" aria-hidden="true">
+    <div bsModal #manageTierModal="bs-modal" class="modal" id="manageTierModal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="manageTierModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="col-md-12 modal-header">
                     <h4>Manage Tier</h4>
                 </div>
                 <div class="col-md-12 modal-body">
+
+                    <!-- Error message -->
+                    <div class="col-md-12" *ngIf="(tierValidationError)">
+                        <div class="form-feedback-container">
+                            <div class="alert-danger">
+                                <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Below errors requires your attention..</p>
+                                <p>{{errorMessage}}</p>
+
+                                <ul *ngIf="tierValidationError">
+                                    <li *ngFor="let validationMessage of tierValidationError;">{{validationMessage}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-12 modal-title">
                             <button type="button" class="btn btn-primary" (click)="addNewTierRow()">Add Line</button>
@@ -447,7 +459,7 @@
             <button type="button" class="btn btn-danger" (click)="pcmDeclineConcession()" *ngIf="canPcmApprove">Decline</button>
             <button type="button" class="btn btn-success" (click)="pcmApproveConcession()" *ngIf="canPcmApprove">Approve</button>
             <button type="button" class="btn btn-success" (click)="extendConcession()" *ngIf="canExtend">Extend</button>
-             <button type="button" class="btn btn-success" (click)="editConcession('Renew')" *ngIf="canRenew">Renew</button>
+            <button type="button" class="btn btn-success" (click)="editConcession('Renew')" *ngIf="canRenew">Renew</button>
             <button type="button" class="btn btn-success" (click)="editConcession('Resubmit')" *ngIf="canResubmit">Resubmit</button>
             <button type="button" class="btn btn-success" (click)="editConcession('UpdateApproved')" *ngIf="canUpdate">Update</button>
             <button type="button" class="btn btn-warning" (click)="archiveConcession()" *ngIf="canArchive">Archive</button>
@@ -461,6 +473,8 @@
         </div>
     </div>
 </form>
+
+
 
 <!--<pre>{{glmsConcessionForm.value | json}}</pre>-->
 

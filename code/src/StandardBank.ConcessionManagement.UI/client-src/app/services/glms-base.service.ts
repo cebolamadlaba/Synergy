@@ -14,6 +14,8 @@ import { UserService } from './user.service';
 @Injectable()
 export class GlmsBaseService extends BaseComponentService {
 
+    tierValidationError: String[];
+
     constructor(public http: Http, public router: Router, public userService: UserService) {
         super(router,userService);
     }
@@ -60,12 +62,10 @@ export class GlmsBaseService extends BaseComponentService {
         return Observable.throw(error.message || error);
     }
 
-    public ValidateTierFromAndTo(tierTo: number):number
-    {
-
-
-        return 0
+    public addTierValidationError(validationDetail) {
+        if (!this.tierValidationError)
+            this.tierValidationError = [];
+        this.tierValidationError.push(validationDetail);
     }
-
 
 }

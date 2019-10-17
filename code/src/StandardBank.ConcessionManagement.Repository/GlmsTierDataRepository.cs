@@ -115,6 +115,38 @@ namespace StandardBank.ConcessionManagement.Repository
             }
         }
 
+
+        /// <summary>
+        /// Reads the by identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
+        public IEnumerable<GlmsTierDataView> GetGlmsTierDataViewById(int Id)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                var results = db.Query<GlmsTierDataView>(
+                     @"SELECT
+                            rate.Description Rate,
+		                    code.Description BaseRate
+		                    ,tierData.TierTo
+		                    ,tierData.TierFrom
+		                    ,tierData.Spread
+		                    ,tierData.Value
+                      FROM 
+                            tblGlmsTierData tierData
+                            INNER JOIN tblRateType rate 
+	                          ON rate.pkRateTypeId=tierData.fkRateTypeId
+	                        LEFT JOIN tblBaseRateCode code 
+		                      ON code.pkBaseRateCodeId = tierData.fkBaseRateId
+                      WHERE 
+                            tierData.fkGlmsConcessionId =@Id",
+                     new { Id }).ToList();
+
+                return results;
+            }
+        }
+
         /// <summary>
         /// Reads all.
         /// </summary>

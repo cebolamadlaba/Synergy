@@ -195,7 +195,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             newConcession.PcmUserId = null;
             newConcession.ReferenceNumber = string.Empty;
             newConcession.SubStatus = Constants.ConcessionSubStatus.BcmPending;
-            newConcession.Type = Constants.ReferenceType.Existing;
+            newConcession.Type = Constants.ReferenceType.Existing;       
 
             var concession = await _mediator.Send(new AddConcession(newConcession, user));
 
@@ -205,6 +205,13 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             foreach (var glmsConcessionDetail in glmsConcession.GlmsConcessionDetails)
             {
                 glmsConcessionDetail.DateApproved = null;
+                if (glmsConcessionDetail.ExpiryDate != null)
+                {
+                    var dateExp = Convert.ToDateTime(glmsConcessionDetail.ExpiryDate);
+                    dateExp = dateExp.AddMonths(3);
+                    glmsConcessionDetail.ExpiryDate = dateExp;
+                }
+                
                 glmsConcessionDetail.GlmsConcessionDetailId = 0;
                 try
                 {
