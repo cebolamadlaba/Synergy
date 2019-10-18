@@ -9,6 +9,7 @@ import { PricingView } from "../models/pricing-view";
 import { LookupDataService } from "../services/lookup-data.service";
 
 import { SubRoleEnum } from "../models/subrole-enum";
+import { PricingProductEnum } from "../models/pricing-product-enum"
 
 @Component({
     selector: 'app-pricing',
@@ -168,18 +169,12 @@ export class PricingComponent implements OnInit, OnDestroy {
                 return false;
             }
             else {
-                // for BOL COnsultants, Trade Bankers and PCM S&I
+
                 if (this.user.subRoleId != null) {
-                    // BOL Concessions
-                    if (this.user.subRoleId == SubRoleEnum.BOLConsultant && pricingProductNumber == 4) {
-                        return true;
-                    }
-                    // Trade Concessions
-                    else if (this.user.subRoleId == SubRoleEnum.TradeBanker && pricingProductNumber == 5) {
-                        return true;
-                    }
-                    // PCM S & I
-                    else if (this.user.subRoleId == SubRoleEnum.PCMSnI && pricingProductNumber == 6) {
+                    // BOL Concessions or Trade Concessions or PCM S & I
+                    if ((this.user.subRoleId == SubRoleEnum.BOLConsultant && pricingProductNumber == PricingProductEnum.BOL) ||
+                        (this.user.subRoleId == SubRoleEnum.TradeBanker && pricingProductNumber == PricingProductEnum.Trade) ||
+                        (this.user.subRoleId == SubRoleEnum.PCMSnI && pricingProductNumber == PricingProductEnum.Investment)) {
                         return true;
                     }
                     else {
@@ -187,21 +182,9 @@ export class PricingComponent implements OnInit, OnDestroy {
                     }
                 }
 
-                if (this.user.subRoleId == null && pricingProductNumber == 6) {
-                    return false;
-                }
-
                 // for all other users
                 return true;
             }
         }
-
-        //let canView: boolean = true;
-        //if (this.user.subRoleId != null && this.user.subRoleId > 0) {
-        //    switch (this.user.subRoleId) {
-        //        case SubRoleEnum.
-        //    }
-        //}
-
     }
 }
