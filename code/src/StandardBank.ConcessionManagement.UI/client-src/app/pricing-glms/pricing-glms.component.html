@@ -179,7 +179,7 @@
                             <tr *ngFor="let concession of glmsConcession.glmsConcessionDetails; trackBy: index;">
                                 <td [routerLink]="['/glms-view-concession', riskGroupNumber, sapbpid, glmsConcession.concession.referenceNumber]">{{concession.interestPricingCategory}}</td>
                                 <td class="leftAlign" [routerLink]="['/glms-view-concession', riskGroupNumber, sapbpid, glmsConcession.concession.referenceNumber]">{{concession.groupNumber}}</td>
-                                <td class="rightAlign"><button type="button" class="btn btn-primary" (click)="openManageTier(manageTierModal.show(),concession)">View</button></td>
+                                <td class="viewButton"><button type="button" class="btn btn-primary" (click)="openManageTier(manageTierModal.show(),concession)">View</button></td>
                             </tr>
                         </tbody>
                     </table>

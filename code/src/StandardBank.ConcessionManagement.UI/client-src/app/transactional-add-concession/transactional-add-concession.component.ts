@@ -23,6 +23,8 @@ import { BaseComponentService } from '../services/base-component.service';
 import { LegalEntity } from "../models/legal-entity";
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
+import * as fileSaver from 'file-saver';
+import { FileService } from '../services/file.service';
 
 @Component({
     selector: 'app-transactional-add-concession',
@@ -72,6 +74,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
         private location: Location,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(TransactionalConcessionService) private transactionalConcessionService,
+        private fileService: FileService,
         private baseComponentService: BaseComponentService) {
         this.riskGroup = new RiskGroup();
         this.periods = [new Period()];
@@ -208,6 +211,15 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
             period: ['']
         });
     }
+
+
+    downloadFile(name:string) {
+        this.fileService.downloadFile(name).subscribe(response => {
+            window.location.href = response.url;
+        }), error => console.log('Error downloading the file'),
+            () => console.info('File downloaded successfully');
+    }
+
 
     addNewConcessionRow() {
         const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
@@ -477,16 +489,9 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-        //$event.target.value = this.formatDecimal($event.target.value);
     }
 
-    //formatDecimal(itemValue: number) {
-    //    if (itemValue) {
-    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-    //    }
 
-    //    return null;
-    //}
 
     goBack() {
         this.location.back();

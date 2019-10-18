@@ -23,6 +23,11 @@ import { DecimalPipe } from '@angular/common';
 import { ConcessionTypes } from '../constants/concession-types';
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
+import * as fileSaver from 'file-saver';
+import { FileService } from '../services/file.service';
+import * as XLSX from 'xlsx';
+import { XlsxModel } from '../models/XlsxModel';
+import { CashBaseService } from '../services/cash-base.service';
 
 import { BaseComponentService } from '../services/base-component.service';
 
@@ -42,6 +47,8 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
     legalEntity: LegalEntity;
     sapbpid: number;
+    cashConcessionDetail = new CashConcessionDetail();
+    xlsxModel = new XlsxModel();
 
     subHeading: string;
     title: string;
@@ -78,6 +85,8 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         private location: Location,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(CashConcessionService) private cashConcessionService,
+        @Inject(CashBaseService) private cashBaseService,
+        private fileService: FileService,
         private baseComponentService: BaseComponentService) {
         this.riskGroup = new RiskGroup();
         this.periods = [new Period()];
@@ -211,6 +220,37 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         }
 
         this.isLoading = false;
+    }
+
+    downloadFile(name: string) {
+        this.fileService.downloadFile(name).subscribe(response => {
+            window.location.href = response.url;
+        }), error => console.log('Error downloading the file'),
+            () => console.info('File downloaded successfully');
+    }
+
+    onFileSelected(event) {
+
+        var file: File = event.target.files[0];
+        var fileReader: FileReader = new FileReader();
+
+        this.xlsxModel = new XlsxModel();
+        this.cashConcessionDetail = new CashConcessionDetail();
+
+        var self = this;
+        fileReader.onload = function (e) {
+            // set initial properties in order to process the file
+            self.xlsxModel.fileContent = fileReader.result;
+            self.xlsxModel.selectedFileName = file.name;
+
+            self.cashConcessionDetail = self.cashBaseService.processFileContent(self.xlsxModel);
+
+            // reset the input:file which allows you to upload the same file again
+           /// self.fileInput.nativeElement.value = '';
+        }
+
+        // execute reading of the file
+        fileReader.readAsBinaryString(file);
     }
 
     addNewConcessionRow() {

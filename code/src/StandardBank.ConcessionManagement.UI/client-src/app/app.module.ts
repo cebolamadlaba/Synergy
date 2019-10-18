@@ -9,7 +9,6 @@ import { DataTablesModule } from 'angular-datatables';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { MyDatePickerModule } from 'angular4-datepicker/src/my-date-picker/my-date-picker.module';
 
-
 import { AppComponent } from './app.component';
 import { PageHeaderComponent } from './page-header/page-header.component';
 import { PendingInboxComponent } from './pending-inbox/pending-inbox.component';
@@ -53,6 +52,8 @@ import { BolTradeManagementService } from './services/bol-trade-management.servi
 import { BolTradeAeManagementService } from './services/bol-trade-ae-management.service';
 import { GlmsConcessionService } from './services/glms-concession.service';
 import { GlmsBaseService } from './services/glms-base.service';
+import { FileService } from './services/file.service';
+import { CashBaseService } from './services/cash-base.service';
  
 import { AdminTransactionTablesService } from './services/admin-transaction-tables.service';
 import { LegalEntityAddressService } from './services/legal-entity-address.service';
@@ -103,7 +104,6 @@ import { FilterPipe } from './filters/filter.pipe';
 import { PricingGlmsComponent } from './pricing-glms/pricing-glms.component';
 import { GlmsAddConcessionComponent } from './glms-add-concession/glms-add-concession.component';
 import { GlmsViewConcessionComponent } from './glms-view-concession/glms-view-concession.component';
-
 
 
 @NgModule({
@@ -209,7 +209,9 @@ import { GlmsViewConcessionComponent } from './glms-view-concession/glms-view-co
         BolTradeManagementService,
         BolTradeAeManagementService,
         GlmsConcessionService,
-        GlmsBaseService
+        GlmsBaseService,
+        FileService,
+        CashBaseService
     ],
     bootstrap: [AppComponent]
 })
