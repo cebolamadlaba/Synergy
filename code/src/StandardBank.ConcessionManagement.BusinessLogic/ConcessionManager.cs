@@ -179,10 +179,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                                 var consType = GetSubRoleAndType(user.SubRoleId);
 
-                                inboxConcessions.AddRange(
-                                _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
-                                    .ReadByRequestorIdStatusIdsIsActive(_userManager.GetUserIdForFiltering(user), new[] { pendingStatusId },
-                                        true).Where(x => x.ConcessionType == consType)));
+                                var concessions = _concessionInboxViewRepository
+                                    .ReadByRequestorIdStatusIdsIsActive(_userManager.GetUserIdForFiltering(user), new[] { pendingStatusId }, true)
+                                    .Where(x => x.ConcessionType == consType);
+
+                                if (user.SubRoleId == (int)Constants.RoleSubRole.SnIUser)
+                                {
+                                    concessions = concessions.Where(x => x.SubStatus == Constants.ConcessionSubStatus.PcmSnIPending);
+                                }
+
+                                inboxConcessions.AddRange(_mapper.Map<IEnumerable<InboxConcession>>(concessions));
                             }
                             else
                             {
@@ -361,15 +367,21 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         private string GetSubRoleAndType(int? subRoleId)
         {
-            if (subRoleId == (int)Constants.RoleSubRole.BolUser)
+            string concessionType;
+            switch (subRoleId)
             {
-                return Constants.ConcessionType.BusinessOnlineDesc;
-            }
-            else
-            {
-                return Constants.ConcessionType.Trade;
+                case (int)Constants.RoleSubRole.BolUser:
+                    concessionType = Constants.ConcessionType.BusinessOnlineDesc;
+                    break;
+                case (int)Constants.RoleSubRole.SnIUser:
+                    concessionType = Constants.ConcessionType.Investment;
+                    break;
+                default:
+                    concessionType = Constants.ConcessionType.Trade;
+                    break;
             }
 
+            return concessionType;
         }
 
         /// <summary>
@@ -530,22 +542,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return null;
         }
-
-        /// <summary>
-        /// Searches the client accounts.
-        /// </summary>
-        /// <param name="riskGroupNumber">The risk group number.</param>
-        /// <param name="accountNumber">The account number.</param>
-        ///// <returns></returns>
-        //public IEnumerable<ClientAccount> SearchClientAccounts(int riskGroupNumber, string accountNumber)
-        //{
-        //    var clientAccounts = GetClientAccounts(riskGroupNumber, null);
-
-        //    if (clientAccounts != null && clientAccounts.Any())
-        //        return clientAccounts.Where(_ => _.AccountNumber.Contains(accountNumber)).Take(10);
-
-        //    return null;
-        //}
 
         public IEnumerable<SearchConcessionDetail> SearchConsessions(int userId)
         {
