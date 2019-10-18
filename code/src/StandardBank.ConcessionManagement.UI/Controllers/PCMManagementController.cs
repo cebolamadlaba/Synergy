@@ -85,6 +85,16 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             return Ok(_businessCentreManager.GetRegionCentres());
         }
+        
+        /// <summary>
+        /// Gets the region centres.
+        /// </summary>
+        /// <returns></returns>
+        [Route("RoleSubRoles")]
+        public IActionResult RoleSubRoles()
+        {
+            return Ok(_userManager.GetRoleSubRole());
+        }
 
         /// <summary>
         /// Saves the PCM user.
