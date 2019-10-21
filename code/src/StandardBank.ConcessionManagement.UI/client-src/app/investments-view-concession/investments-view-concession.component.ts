@@ -840,7 +840,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.validationError = null;
 
         var investmentConcession = this.getInvestmentConcession(false);
-        investmentConcession.concession.subStatus = ConcessionSubStatus.PCMPending;
+        investmentConcession.concession.subStatus = ConcessionSubStatus.PCMSnIPending;
         investmentConcession.concession.bcmUserId = this.investmentConcession.currentUser.id;
 
         if (!investmentConcession.concession.comments) {

@@ -32,7 +32,7 @@
         {
             BolUser = 1,
             TradeUser = 2,
-            SnIUser = 4
+            PCMSnIUser = 4
         }
 
         public static class ConcessionType
