@@ -18,6 +18,11 @@ export class UserService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    getUserRiskGroupDetailsData(sapbpidOrRiskGroupNumber): Observable<User> {
+        const url = "/api/Pricing/PricingRiskGroupUser/" + sapbpidOrRiskGroupNumber;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
     getLoggedInUserMyAccess(): any {
       
         const url = "/api/Application/ValidateUserMyAccess";

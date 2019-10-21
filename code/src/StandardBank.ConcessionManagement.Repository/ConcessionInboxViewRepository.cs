@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Dapper;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
+using StandardBank.ConcessionManagement.Model.BusinessLogic.EmailTemplates;
 using StandardBank.ConcessionManagement.Model.Repository;
 
 namespace StandardBank.ConcessionManagement.Repository
@@ -434,6 +435,29 @@ namespace StandardBank.ConcessionManagement.Repository
                     {
                         ConcessionIds = concessionIds
                     });
+            }
+        }
+
+        public IEnumerable<ConcessionMismatchEscalationView> GetMisMatchedConcession()
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<ConcessionMismatchEscalationView>(
+                    @"  Select		Distinct 
+			                        cv.ConcessionId, cv.ConcessionRef, cv.ConcessionDate, 
+			                        cv.ConcessionTypeId, cv.ConcessionType,
+			                        cv.RiskGroupId, cv.RiskGroupName, cv.RiskGroupNumber,
+			                        cv.LegalEntityId, cv.CustomerName, cv.CustomerNumber,
+			                        u.pkUserId [EnablementTeamUserId], u.FirstName + ' ' + u.Surname [EnablementTeamUserFullname], u.EmailAddress [EnablementTeamUserEmailAddress],
+			                        ms.pkMarketSegmentId [MarketSegmentId], ms.Description [MarketSegment], me.LastEscalationSentDateTime
+                        From		ConcessionInboxView cv
+                        Inner Join	tblMarketSegmentEnablementTeamUser et	On	et.fkMarketSegmentId	=	cv.MarketSegmentId
+                        Inner Join	tblUser u								On	u.pkUserId				=	et.fkUserId
+                        Inner Join	tblConcessionTypeMismatchEscalation me	On	me.fkConcessionTypeId	=	cv.ConcessionTypeId
+                        Inner Join	rtblMarketSegment ms					On	ms.pkMarketSegmentId	=	cv.MarketSegmentId
+                        Where		cv.IsMismatched = 1
+                        And			cv.IsActive = 1
+                        And			DATEADD(day,2,cv.DateApproved) < GETDATE()");
             }
         }
     }

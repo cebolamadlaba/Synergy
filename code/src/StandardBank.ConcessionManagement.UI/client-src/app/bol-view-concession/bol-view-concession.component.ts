@@ -480,8 +480,12 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     onExpiryDateChanged(itemrow) {
-        this.validationError = null;
-        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
+
+        if (this.bolConcession.concession.dateOpened) {
+            var formattedDateOpened = this.datepipe.transform(this.bolConcession.concession.dateOpened, 'yyyy-MM-dd');
+        }
+
+        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidationForView(itemrow.controls['expiryDate'].value,formattedDateOpened);
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);
         }
@@ -581,16 +585,16 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             }
 
             if (concessionFormItem.get('expiryDate').value)
+                this.onExpiryDateChanged(concessionFormItem);
                 bolConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
             bolConcession.bolConcessionDetails.push(bolConcessionDetail);
 
             if (hasTypeId && hasLegalEntityId && hasLegalEntityAccountId) {
-                let hasDuplicates = this.baseComponentService.HasDuplicateConcessionAccountChargeCode(
+                let hasDuplicates = this.baseComponentService.HasDuplicateConcessionUserIdChargeCode(
                     bolConcession.bolConcessionDetails,
                     concessionFormItem.get('chargecode').value.pkChargeCodeId,
-                    concessionFormItem.get('userid').value.legalEntityId,
-                    concessionFormItem.get('userid').value.legalEntityAccountId);
+                    concessionFormItem.get('userid').value.pkLegalEntityBOLUserId);
 
                 if (hasDuplicates) {
                     this.addValidationError("Duplicate Account / Product pricing found. Please select different account.");
@@ -1182,17 +1186,10 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-        //$event.target.value = this.formatDecimal($event.target.value);
+      
     }
 
-    //formatDecimal(itemValue: number) {
-    //    if (itemValue) {
-    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-    //    }
-
-    //    return null;
-    //}
-
+ 
     validatePeriod(itemrow) {
         this.validationError = null;
 

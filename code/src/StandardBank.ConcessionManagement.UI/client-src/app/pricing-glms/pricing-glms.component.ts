@@ -7,18 +7,21 @@ import { RiskGroup } from "../models/risk-group";
 
 import { GlmsConcession } from "../models/glms-concession";
 import { GlmsView } from "../models/glms-view";
+import { GlmsTierDataView } from "../models/glms-tier-data-view";
 
 import { GlmsConcessionService } from "../services/glms-concession.service"
 
 import { Concession } from "../models/concession";
 import { UserService } from "../services/user.service";
+import { BaseComponentService } from '../services/base-component.service';
+import { Http } from '@angular/http';
 
 @Component({
   selector: 'app-pricing-glms',
   templateUrl: './pricing-glms.component.html',
   styleUrls: ['./pricing-glms.component.css']
 })
-export class PricingGlmsComponent implements OnInit {
+export class PricingGlmsComponent extends BaseComponentService implements OnInit {
 
     riskGroupNumber: number;
     sapbpid: number;
@@ -35,12 +38,15 @@ export class PricingGlmsComponent implements OnInit {
     isLoading = true;
     canRequest = false;
 
+    glmsTierDataViewList: GlmsTierDataView[];
+
     constructor(
-        private router: Router,
+        public router: Router,
         private route: ActivatedRoute,
         private location: Location,
-        @Inject(GlmsConcessionService) private glmsConcessionService, private userService: UserService
+        @Inject(GlmsConcessionService) private glmsConcessionService, public userService: UserService
     ) {
+        super(router, userService);
         this.glmsView.riskGroup = new RiskGroup();
         this.glmsView.glmsConcessions = [new GlmsConcession()];
         this.glmsView.glmsConcessions[0].concession = new Concession();
@@ -81,6 +87,10 @@ export class PricingGlmsComponent implements OnInit {
         this.userService.getData().subscribe(user => {
             this.canRequest = user.canRequest;
         });
+    }
+
+    openManageTier(x, tier) {
+        this.glmsTierDataViewList = tier.glmsTierDataView;
     }
 
     goBack() {

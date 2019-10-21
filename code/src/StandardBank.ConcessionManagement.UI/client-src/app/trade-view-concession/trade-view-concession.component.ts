@@ -591,8 +591,12 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     onExpiryDateChanged(itemrow) {
-        this.validationError = null;
-        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
+
+        if (this.tradeConcession.concession.dateOpened) {
+            var formattedDateOpened = this.datepipe.transform(this.tradeConcession.concession.dateOpened, 'yyyy-MM-dd');
+        }
+
+        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidationForView(itemrow.controls['expiryDate'].value, formattedDateOpened);
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);
         }
@@ -918,6 +922,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                 }
             }
             if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
+                this.onExpiryDateChanged(concessionFormItem);
                 tradeConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
             else {

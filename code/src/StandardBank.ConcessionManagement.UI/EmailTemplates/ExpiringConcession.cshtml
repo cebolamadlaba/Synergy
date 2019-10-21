@@ -25,17 +25,17 @@
             </tr>
 
             @foreach (var item in Model.ExpiringConcessionDetails)
-        {
-            <tr>
-                <td style="border: 1px solid #7a7a7a;">@item.ConcessionRef</td>
-                <td style="border: 1px solid #7a7a7a;">@item.ConcessionType</td>
-                <td style="border: 1px solid #7a7a7a;">@item.RiskGroupNumber</td>
-                <td style="border: 1px solid #7a7a7a;">@item.RiskGroupName</td>
-                <td style="border: 1px solid #7a7a7a;">@item.CustomerName</td>
-                <td style="border: 1px solid #7a7a7a;">@item.ExpiryDate</td>
-                <td style="border: 1px solid #7a7a7a;">@item.DateApproved</td>
-            </tr>
-    }
+            {
+                <tr>
+                    <td style="border: 1px solid #7a7a7a;">@item.ConcessionRef</td>
+                    <td style="border: 1px solid #7a7a7a;">@item.ConcessionType</td>
+                    <td style="border: 1px solid #7a7a7a;">@item.RiskGroupNumber</td>
+                    <td style="border: 1px solid #7a7a7a;">@item.RiskGroupName</td>
+                    <td style="border: 1px solid #7a7a7a;">@item.CustomerName</td>
+                    <td style="border: 1px solid #7a7a7a;">@item.ExpiryDate</td>
+                    <td style="border: 1px solid #7a7a7a;">@item.DateApproved</td>
+                </tr>
+            }
 
         </table>
 

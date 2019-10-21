@@ -527,8 +527,12 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     onExpiryDateChanged(itemrow) {
-        this.validationError = null;
-        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
+
+        if (this.lendingConcession.concession.dateOpened) {
+            var formattedDateOpened = this.datepipe.transform(this.lendingConcession.concession.dateOpened, 'yyyy-MM-dd');
+        }
+
+        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidationForView(itemrow.controls['expiryDate'].value, formattedDateOpened);
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);
         }
@@ -745,13 +749,6 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         lendingConcession.concession.concessionType = ConcessionTypes.Lending;
         lendingConcession.concession.referenceNumber = this.concessionReferenceId;
 
-        //if (this.lendingConcessionForm.controls['mrsCrs'].value)
-        //    lendingConcession.concession.mrsCrs = this.lendingConcessionForm.controls['mrsCrs'].value;
-        //else
-        //    if (this.lendingConcessionForm.controls['mrsCrs'].value != 0) {
-        //        this.addValidationError("MRS/CRS not captured");
-        //    }
-
         if (this.lendingConcessionForm.controls['smtDealNumber'].value)
             lendingConcession.concession.smtDealNumber = this.lendingConcessionForm.controls['smtDealNumber'].value;
         else
@@ -832,6 +829,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 lendingConcessionDetail.frequency = concessionFormItem.get('frequency').value;
 
             if (concessionFormItem.get('expiryDate').value)
+                this.onExpiryDateChanged(concessionFormItem);
                 lendingConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
             if (concessionFormItem.get('mrsEri').value == "" ||

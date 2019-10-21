@@ -8,7 +8,7 @@
                 <span class="back-button-text" (click)="goBack()">Back</span>
             </div>
             <div class="col-md-10 banner-main-title">
-                <i class="fa fa-bar-chart" aria-hidden="true"></i> GLMS
+                <i class="fa fa-area-chart" aria-hidden="true"></i> GLMS
             </div>
             <div class="col-md-1"></div>
         </div>
@@ -20,13 +20,13 @@
                     <div class="date lightTitle hidden-element">{{entityNumber}}</div>
                 </div>
                 <div class="col-md-2  hidden-element">
-             
+
                 </div>
                 <div class="col-md-2  hidden-element">
-                 
+
                 </div>
                 <div class="col-md-2  hidden-element">
-                  
+
                 </div>
             </div>
 
@@ -59,6 +59,36 @@
     </div>
 </div>
 
+
+<!-- Error message -->
+<div class="col-md-12" *ngIf="(errorMessage) && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
+            <p>{{errorMessage}}</p>
+
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError ">{{validationMessage}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Error message -->
+<div class="col-md-12" *ngIf="(validationError) && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Unable to continue..</p>
+            <p>{{errorMessage}}</p>
+
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError | slice:0:1;">{{validationMessage}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
 <!-- lending concessions and products-->
 <div class="col-md-12">
     <div class="col-md-6 search-and-results-container">
@@ -75,7 +105,6 @@
                     </div>
                 </div>
             </div>
-
 
             <!-- Products grouping -->
 
@@ -95,16 +124,16 @@
                                 <tr>
                                     <th>Account(No.)</th>
                                     <th>Product </th>
-                                    <th>Loaded Rate</th>
+                                    <th>Pricing</th>
+                                    <th>Spread</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let glmsprod of glmsprodgroup.glmsProducts">
                                     <td class="leftAlign">{{glmsprod.accountNumber}}</td>
-
-                                    <td class="leftAlign">{{glmsprod.glmsProductName}}</td>
-
-                                    <td class="rightAlign">{{glmsprod.loadedRate}}</td>
+                                    <td class="leftAlign">{{glmsprod.groupType}}</td>
+                                    <td class="leftAlign">{{glmsprod.pricingDescription}}</td>
+                                    <td class="rightAlign">{{glmsprod.spread}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -119,10 +148,8 @@
     <div class="col-md-6 search-and-results-container" id="lending-search-container">
         <h2 class="headings">
             Concessions
-
-            <button type="button" class="btn btn-primary btn-concession"  *ngIf="pageLoaded && canRequest">Add Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="checkForExistingConcessions(glmsView.glmsConcessions.length,'/glms-add-concession', riskGroupNumber, sapbpid)" *ngIf="pageLoaded && canRequest">Add Concession</button>
         </h2>
-
 
         <div class="input-group add-on">
             <input class="form-control" placeholder="Concession ID" [(ngModel)]="filterConcessionId" type="text">
@@ -139,29 +166,20 @@
                 </div>
             </div>
             <div class="section-body">
-                <div class="table-container" [routerLink]="['/glmss-view-concession', riskGroupNumber, sapbpid, glmsConcession.concession.referenceNumber]">
+                <div class="table-container" >
                     <table class="table table-bordered table-hover header-fixed table-striped">
-                        <thead>
+                        <thead [routerLink]="['/glms-view-concession', riskGroupNumber, sapbpid, glmsConcession.concession.referenceNumber]">
                             <tr>
                                 <th>Interest pricing category</th>
                                 <th>Customer</th>
-                                <th>Tiered rFom</th>
-                                <th>Tiered To</th>
-                                <th>Base Rate</th>
+                                <th>Tiered Information</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let concession of glmsConcession.glmsConcessionDetails; trackBy: index;">
-                                <td>{{concession.legalEntity}}</td>
-
-                                <td class="leftAlign">{{concession.glmsProduct}}</td>
-
-                                <td class="rightAlign">{{concession.accountNumber}}</td>
-                                <td>
-                                    <p class="mapInfo">Loaded:{{concession.loadedRate | number : '1.5-5'}}</p>
-                                    <p class="mapInfo">Approved:{{concession.approvedRate| number : '1.5-5'}}</p>
-                                </td>
-                                <td>{{concession.legalEntity}}</td>
+                                <td [routerLink]="['/glms-view-concession', riskGroupNumber, sapbpid, glmsConcession.concession.referenceNumber]">{{concession.interestPricingCategory}}</td>
+                                <td class="leftAlign" [routerLink]="['/glms-view-concession', riskGroupNumber, sapbpid, glmsConcession.concession.referenceNumber]">{{concession.groupNumber}}</td>
+                                <td class="viewButton"><button type="button" class="btn btn-primary" (click)="openManageTier(manageTierModal.show(),concession)">View</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -169,11 +187,56 @@
             </div>
         </div>
 
-
         <div class="searchEmptyState" *ngIf="(glmsView.glmsConcessions | baseConcessionFilter: filterConcessionId).length === 0">
             <i class="fa fa-inbox" aria-hidden="true"></i>
             <p>No concessions found matching your search</p>
         </div>
 
+    </div>
+
+    <!-- Modal Tier -->
+    <div bsModal #manageTierModal="bs-modal" class="modal fade preview-modal" data-backdrop="" tabindex="-1" role="dialog" aria-labelledby="manageTierModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="col-md-12 modal-header">
+                    <h4>Tier information</h4>
+                </div>
+                <div class="col-md-12 modal-body">
+                    <table class="table table-bordered table-hover header-fixed table-striped"  style="width:100%">
+                        <thead >
+                            <tr>
+                                <th>Tiered From</th>
+                                <th>Tiered To</th>
+                                <th>Rate Type</th>
+                                <th>Base Rate</th>
+                                <th>Spread</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody >
+                            <tr *ngFor="let glmsDataView of glmsTierDataViewList">
+                                <!-- Tiered From -->
+                                <td class="length-short">{{glmsDataView.tierFrom}}</td>
+                                <!-- Tiered To -->
+                                <td class="length-short">{{glmsDataView.tierTo}}</td>
+                                <!-- Tiered To -->
+                                <td class="length-short">{{glmsDataView.rate}}</td>
+                                <!-- Tiered To -->
+                                <td class="length-short">{{glmsDataView.baseRate}}</td>
+                                <!-- Spread -->
+                                <td class="length-short">{{glmsDataView.spread}}</td>
+                                <!-- Value-->
+                                <td class="length-short">{{glmsDataView.value}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <div class="float-right">
+                        <button type="button" class="btn btn-primary" (click)="manageTierModal.hide()">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

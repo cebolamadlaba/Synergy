@@ -84,6 +84,16 @@
                 public const string ReadAll = "CacheKey.Repository.MarketSegmentRepository.ReadAll";
             }
 
+            public static class MarketSegmentEnablementRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.MarketSegmentEnablementRepository.ReadAll";
+            }
+
+            public static class ConcessionTypeMismatchEscalation
+            {
+                public const string ReadAll = "CacheKey.Repository.ConcessionTypeMismatchEscalation.ReadAll";
+            }
+
             public static class ProductRepository
             {
                 public const string ReadAll = "CacheKey.Repository.ProductRepository.ReadAll";
@@ -124,9 +134,40 @@
                 public const string ReadAll = "CacheKey.Repository.TransactionTypeRepository.ReadAll";
             }
 
+            public static class RateTypeRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.RateTypeRepository.ReadAll";
+            }
+
+            public static class BaseRateCodeRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.BaseRateCodeRepository.ReadAll";
+            }
+
             public static class ReferenceTypeRepository
             {
                 public const string ReadAll = "CacheKey.Repository.ReferenceTypeRepository.ReadAll";
+            }
+
+            public static class InterestTypeRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.InterestTypeRepository.ReadAll";
+            }
+
+            public static class SlabTypeRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.SlabTypeRepository.ReadAll";
+            }
+
+            public static class GlmsGroupRepository
+            {
+                public const string ReadAll = "CacheKey.Repository.GlmsGroupRepository.ReadAll";
+            }
+
+
+            public static class InterestPricingCategory
+            {
+                public const string ReadAll = "CacheKey.Repository.InterestPricingCategory.ReadAll";
             }
 
             public static class RegionRepository
@@ -198,6 +239,8 @@
                 public const string GetTransactionalProducts = "CacheKey.Repository.MiscPerformanceRepository.GetTransactionalProducts";
 
                 public const string GetInvestmentProducts = "CacheKey.Repository.MiscPerformanceRepository.GetInvestmentProducts";
+
+                public const string GetGlmsProducts = "CacheKey.Repository.MiscPerformanceRepository.GetGlmsProducts";
             }
 
             public static class LegalEntityAddressRepository

@@ -55,10 +55,24 @@
 </div>
 
 <!-- Error message -->
-<div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
+<div class="col-md-12" *ngIf="(errorMessage) && !isLoading">
     <div class="form-feedback-container">
         <div class="alert-danger">
             <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
+            <p>{{errorMessage}}</p>
+
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError ">{{validationMessage}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Error message -->
+<div class="col-md-12" *ngIf="(validationError) && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Below errors requires your attention..</p>
             <p>{{errorMessage}}</p>
 
             <ul *ngIf="validationError">
@@ -106,7 +120,8 @@
     <div class="col-md-12" style="border-bottom: 1px solid gray; margin-bottom: 15px;">
         <div class="row">
             <h3 class="table-title">Concessions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" style="margin-top: 15px;" *ngIf="!saveMessage">New Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="manageBulkUploadModal.show()" style="margin-top: 15px;" *ngIf="!saveMessage">Bulk Upload</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" style="margin-top: 15px;margin-right: 10px;" *ngIf="!saveMessage">New Concession</button>
         </div>
     </div>
 
@@ -153,7 +168,7 @@
                     </select>
                 </td>
 
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="saveMessage ? '' : null"  (change)="onExpiryDateChanged(itemrow)"/></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="saveMessage ? '' : null" /></td>
 
                 <td class="delete"><button *ngIf="cashConcessionForm.controls.concessionItemRows.controls.length >= 1 && !saveMessage" (click)="copyConcessionRow(i)" class="btn-delete"><i class="fa fa-copy" aria-hidden="true"></i></button></td>
 
@@ -281,6 +296,30 @@
         </div>
     </div>
 
+    <!-- Modal bulk upload -->
+    <div bsModal #manageBulkUploadModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="manageBulkUploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="col-md-12 modal-header">
+                    <h4>Manage Cash Bulk Upload</h4>
+                </div>
+                <div class="col-md-12 modal-body">
+                    <div class="row">
+                        <div class="col-md-12 modal-title">
+                            <button type="button" class="btn btn-primary" (click)="downloadFile('cash')">Download</button>
+                            <input  type="file" (change)="onFileSelected($event)"  />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="float-right">
+                        <button type="button" class="btn btn-primary" (click)="manageBulkUploadModal.hide()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Form buttons -->
     <div class="footer-buttons">
         <div class="float-right">
@@ -289,5 +328,6 @@
         </div>
     </div>
 </form>
+
 
 <!--<pre>{{cashConcessionForm.value | json}}</pre>-->

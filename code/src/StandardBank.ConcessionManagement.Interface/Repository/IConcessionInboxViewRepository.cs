@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using StandardBank.ConcessionManagement.Model.BusinessLogic.EmailTemplates;
 using StandardBank.ConcessionManagement.Model.Repository;
 
 namespace StandardBank.ConcessionManagement.Interface.Repository
@@ -143,5 +144,7 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <param name="isActive"></param>
         /// <returns></returns>
         IEnumerable<ConcessionInboxView> GetapporvedView(int requestorId, IEnumerable<int> statusIds, bool isActive);
+
+        IEnumerable<ConcessionMismatchEscalationView> GetMisMatchedConcession();
     }
 }

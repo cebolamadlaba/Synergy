@@ -23,6 +23,11 @@ import { BaseComponentService } from '../services/base-component.service';
 import { LegalEntity } from "../models/legal-entity";
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
+import * as fileSaver from 'file-saver';
+import { FileService } from '../services/file.service';
+import * as XLSX from 'xlsx';
+import { XlsxModel } from '../models/XlsxModel';
+import { TransactionalBaseService } from '../services/transactional-base.service';
 
 @Component({
     selector: 'app-transactional-add-concession',
@@ -40,7 +45,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
     legalEntity: LegalEntity;
     sapbpid: number;
-  
+    transactionalConcessionDetail : TransactionalConcessionDetail[];
 
     entityName: string;
     entityNumber: string;
@@ -51,6 +56,8 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
     observableLatestCrsOrMrs: Observable<number>;
     latestCrsOrMrs: number;
     showHide = false;
+
+    xlsxModel = new XlsxModel();
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
@@ -72,6 +79,8 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
         private location: Location,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(TransactionalConcessionService) private transactionalConcessionService,
+        @Inject(TransactionalBaseService) private transactionalBaseService,
+        private fileService: FileService,
         private baseComponentService: BaseComponentService) {
         this.riskGroup = new RiskGroup();
         this.periods = [new Period()];
@@ -209,6 +218,39 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
         });
     }
 
+
+    downloadFile(name:string) {
+        this.fileService.downloadFile(name).subscribe(response => {
+            window.location.href = response.url;
+        }), error => console.log('Error downloading the file'),
+            () => console.info('File downloaded successfully');
+    }
+
+    onFileSelected(event) {
+
+        var file: File = event.target.files[0];
+        var fileReader: FileReader = new FileReader();
+
+        this.xlsxModel = new XlsxModel();
+       // this.transactionalConcessionDetail = new TransactionalConcessionDetail();
+
+        var self = this;
+        fileReader.onload = function (e) {
+            // set initial properties in order to process the file
+            self.xlsxModel.fileContent = fileReader.result;
+            self.xlsxModel.selectedFileName = file.name;
+
+            self.transactionalConcessionDetail = self.transactionalBaseService.processFileContent(self.xlsxModel);
+
+            // reset the input:file which allows you to upload the same file again
+            /// self.fileInput.nativeElement.value = '';
+        }
+
+        // execute reading of the file
+        fileReader.readAsBinaryString(file);
+    }
+
+
     addNewConcessionRow() {
         const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
 
@@ -283,7 +325,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     onExpiryDateChanged(itemrow) {
-        this.validationError = null;
+     
         var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);
@@ -365,6 +407,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
             }
 
             if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
+                this.onExpiryDateChanged(concessionFormItem);
                 transactionalConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
             else {
@@ -476,16 +519,9 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-        //$event.target.value = this.formatDecimal($event.target.value);
     }
 
-    //formatDecimal(itemValue: number) {
-    //    if (itemValue) {
-    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-    //    }
 
-    //    return null;
-    //}
 
     goBack() {
         this.location.back();

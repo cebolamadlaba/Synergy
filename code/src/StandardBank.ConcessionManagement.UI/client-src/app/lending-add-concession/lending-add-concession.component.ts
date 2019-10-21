@@ -385,12 +385,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
         var lendingConcession = new LendingConcession();
         lendingConcession.concession = new Concession();
-
-        //if (this.lendingConcessionForm.controls['mrsCrs'].value)
-        //    lendingConcession.concession.mrsCrs = this.lendingConcessionForm.controls['mrsCrs'].value;
-        //else
-        //    this.addValidationError("MRS/CRS not captured");
-
+     
         if (this.lendingConcessionForm.controls['smtDealNumber'].value)
             lendingConcession.concession.smtDealNumber = this.lendingConcessionForm.controls['smtDealNumber'].value;
         else
@@ -441,6 +436,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             if (concessionFormItem.get('productType').value.description === "Overdraft") {
 
                 if (concessionFormItem.get('term').value == "") {
+                 
                     this.addValidationError("Term cannot be empty");
                 }
 
@@ -533,6 +529,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
                 lendingConcessionDetail.limit = concessionFormItem.get('limit').value;
 
             if (concessionFormItem.get('term').value)
+                this.onTermValueChange(concessionFormItem);
                 lendingConcessionDetail.term = concessionFormItem.get('term').value;
 
             if (concessionFormItem.get('marginAgainstPrime').value)
@@ -664,7 +661,6 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
  
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-        //$event.target.value = this.formatDecimal($event.target.value);
     }
 
     setTwoNumberDecimalMAP($event) {

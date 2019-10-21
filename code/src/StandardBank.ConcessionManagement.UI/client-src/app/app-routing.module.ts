@@ -52,6 +52,8 @@ import { BOLCHManagementComponent } from './admin/bol-chargecodes/bol-chargecode
 import { TransactionTypesManagementComponent } from './admin/transaction-types/transaction-types.component';
 import { ChannelTypesManagementComponent } from './admin/channel-types/channel-types.component';
 import { PricingGlmsComponent } from './pricing-glms/pricing-glms.component';
+import { GlmsAddConcessionComponent } from './glms-add-concession/glms-add-concession.component';
+import { GlmsViewConcessionComponent } from './glms-view-concession/glms-view-concession.component';
 
 
 
@@ -104,6 +106,10 @@ const routes: Routes = [
     { path: 'trade-add-concession/:riskGroupNumber/:sapbpid', component: TradeAddConcessionComponent },
     { path: 'trade-view-concession/:riskGroupNumber/:concessionReferenceId', component: TradeViewConcessionComponent },
     { path: 'trade-view-concession/:riskGroupNumber/:sapbpid/:concessionReferenceId', component: TradeViewConcessionComponent },
+
+    { path: 'glms-add-concession/:riskGroupNumber/:sapbpid', component: GlmsAddConcessionComponent },
+    { path: 'glms-view-concession/:riskGroupNumber/:concessionReferenceId', component: GlmsViewConcessionComponent },
+    { path: 'glms-view-concession/:riskGroupNumber/:sapbpid/:concessionReferenceId', component: GlmsViewConcessionComponent },
 
     { path: 'cashman-add-concession', component: CashmanAddConcessionComponent },
     { path: 'admin', component: AdminMenuComponent },

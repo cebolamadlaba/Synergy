@@ -9,7 +9,6 @@ import { DataTablesModule } from 'angular-datatables';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { MyDatePickerModule } from 'angular4-datepicker/src/my-date-picker/my-date-picker.module';
 
-
 import { AppComponent } from './app.component';
 import { PageHeaderComponent } from './page-header/page-header.component';
 import { PendingInboxComponent } from './pending-inbox/pending-inbox.component';
@@ -51,6 +50,11 @@ import { BaseComponentService } from './services/base-component.service';
 import { ConcessionLetterService } from './services/concession-letter.service';
 import { BolTradeManagementService } from './services/bol-trade-management.service'
 import { BolTradeAeManagementService } from './services/bol-trade-ae-management.service';
+import { GlmsConcessionService } from './services/glms-concession.service';
+import { GlmsBaseService } from './services/glms-base.service';
+import { FileService } from './services/file.service';
+import { CashBaseService } from './services/cash-base.service';
+import { TransactionalBaseService } from './services/transactional-base.service';
  
 import { AdminTransactionTablesService } from './services/admin-transaction-tables.service';
 import { LegalEntityAddressService } from './services/legal-entity-address.service';
@@ -99,6 +103,8 @@ import { BolTradeManagementComponent } from './admin/bol-trade-management/bol-tr
 import { BolTradeAeManagementComponent } from './admin/bol-trade-ae-management/bol-trade-ae-management.component';
 import { FilterPipe } from './filters/filter.pipe';
 import { PricingGlmsComponent } from './pricing-glms/pricing-glms.component';
+import { GlmsAddConcessionComponent } from './glms-add-concession/glms-add-concession.component';
+import { GlmsViewConcessionComponent } from './glms-view-concession/glms-view-concession.component';
 
 
 @NgModule({
@@ -160,7 +166,9 @@ import { PricingGlmsComponent } from './pricing-glms/pricing-glms.component';
         BolTradeManagementComponent,
         BolTradeAeManagementComponent,
         FilterPipe,
-        PricingGlmsComponent
+        PricingGlmsComponent,
+        GlmsAddConcessionComponent,
+        GlmsViewConcessionComponent
 
     ],
     imports: [
@@ -200,7 +208,12 @@ import { PricingGlmsComponent } from './pricing-glms/pricing-glms.component';
         ConcessionLetterService,
         LegalEntityAddressService,
         BolTradeManagementService,
-        BolTradeAeManagementService
+        BolTradeAeManagementService,
+        GlmsConcessionService,
+        GlmsBaseService,
+        FileService,
+        CashBaseService,
+        TransactionalBaseService
     ],
     bootstrap: [AppComponent]
 })
