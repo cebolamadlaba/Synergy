@@ -3,9 +3,11 @@ import { Location } from '@angular/common';
 import { PcmManagementService } from '../../services/pcm-management.service';
 import { Observable } from "rxjs";
 import { User } from '../../models/user';
+import { RoleSubRole } from '../../models/RoleSubRole';
 import { RegionCentresModel } from '../../models/region-centres-model';
 import { Centre } from '../../models/centre';
 import { UserService } from '../../services/user.service';
+import { SubRoleEnum } from "../../models/subrole-enum";
 
 @Component({
     selector: 'app-pcm-management',
@@ -30,6 +32,8 @@ export class PcmManagementComponent implements OnInit {
     selectedRegionCentresModel: RegionCentresModel;
     selectedCentre: Centre;
     isPcmBcmsLoading = false;
+    roleSubRoles: RoleSubRole[];
+    selectedRoleSubRole: RoleSubRole;
 
     observableSave: Observable<boolean>;
     observableErrors: Observable<string[]>;
@@ -52,11 +56,19 @@ export class PcmManagementComponent implements OnInit {
         Observable.forkJoin([
             this.pcmManagementService.getPCMUsers(),
             this.pcmManagementService.getRegionCentres(),
+            this.pcmManagementService.getRoleSubRoles(),
             this.userService.getData()
         ]).subscribe(results => {
             this.pcmUsers = <any>results[0];
             this.regionCentresModels = <any>results[1];
-            this.currentUser = <any>results[2];
+            this.roleSubRoles = <any>results[2];
+            this.currentUser = <any>results[3];
+
+            if (this.roleSubRoles.length > 0) {
+                this.roleSubRoles = this.roleSubRoles.filter(a => {
+                    return a.subRoleId == SubRoleEnum.NoSubrole || a.subRoleId == SubRoleEnum.PCMSnI;
+                });
+            }
 
             this.isLoading = false;
         },
@@ -70,6 +82,7 @@ export class PcmManagementComponent implements OnInit {
         this.addPcmUserModel = new User();
         this.selectedRegionCentresModel = new RegionCentresModel();
         this.selectedCentre = new Centre();
+        this.selectedRoleSubRole = new RoleSubRole();
         this.actionType = "Add";
         this.addPCMModal.show();
     }
@@ -79,6 +92,7 @@ export class PcmManagementComponent implements OnInit {
         this.addPcmUserModel = pcmUser;
         this.selectedRegionCentresModel = new RegionCentresModel();
         this.selectedCentre = new Centre();
+        this.selectedRoleSubRole = this.setSelectedSubRole();
         this.addPCMModal.show();
     }
 
@@ -88,12 +102,15 @@ export class PcmManagementComponent implements OnInit {
         this.validationError = null;
         this.saveMessage = null;
 
+        this.addUSubRole();
+
         this.observableErrors = this.pcmManagementService.validateUser(this.addPcmUserModel);
         this.observableErrors.subscribe(errors => {
             if (errors != null && errors.length > 0) {
                 this.validationError = errors;
                 this.isSaving = false;
-            } else {
+            } else {               
+
                 this.observableSave = this.pcmManagementService.savePcmUser(this.addPcmUserModel);
                 this.observableSave.subscribe(errors => {
 
@@ -106,6 +123,7 @@ export class PcmManagementComponent implements OnInit {
                     this.addPcmUserModel = new User();
                     this.selectedRegionCentresModel = new RegionCentresModel();
                     this.selectedCentre = new Centre();
+                    this.selectedRoleSubRole = new RoleSubRole();
 
                     this.isSaving = false;
 
@@ -137,6 +155,26 @@ export class PcmManagementComponent implements OnInit {
                 this.addPcmUserModel.userCentres.push(this.selectedCentre);
             }
         }
+    }
+
+    addUSubRole() {
+        if (this.selectedRoleSubRole != null) {
+            if (this.addPcmUserModel.roleSubRole == null) {
+                this.addPcmUserModel.roleSubRole = new RoleSubRole();
+            }
+
+            this.addPcmUserModel.roleSubRole = this.selectedRoleSubRole;
+            this.addPcmUserModel.subRoleId = this.selectedRoleSubRole.subRoleId;
+        }
+    }
+
+    setSelectedSubRole() {
+        let roleSubRole = new RoleSubRole();
+        if (this.addPcmUserModel.roleSubRole) {
+            roleSubRole = this.addPcmUserModel.roleSubRole;
+        }
+
+        return roleSubRole;
     }
 
     goBack() {
