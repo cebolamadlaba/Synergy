@@ -121,12 +121,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <summary>
         /// Validates the user.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="pcmUser">The pcmUser.</param>
         /// <returns></returns>
         [Route("ValidateUser")]
-        public IActionResult ValidateUser([FromBody] User model)
+        public IActionResult ValidateUser([FromBody] User pcmUser)
         {
-            return Ok(_userManager.ValidateUser(model, Constants.Roles.PCM));
+            return Ok(_userManager.ValidateUser(pcmUser, Constants.Roles.PCM));
         }
     }
 }

@@ -92,7 +92,7 @@ export class PcmManagementComponent implements OnInit {
         this.addPcmUserModel = pcmUser;
         this.selectedRegionCentresModel = new RegionCentresModel();
         this.selectedCentre = new Centre();
-        this.selectedRoleSubRole = new RoleSubRole();
+        this.selectedRoleSubRole = this.setSelectedSubRole();
         this.addPCMModal.show();
     }
 
@@ -102,14 +102,14 @@ export class PcmManagementComponent implements OnInit {
         this.validationError = null;
         this.saveMessage = null;
 
+        this.addUSubRole();
+
         this.observableErrors = this.pcmManagementService.validateUser(this.addPcmUserModel);
         this.observableErrors.subscribe(errors => {
             if (errors != null && errors.length > 0) {
                 this.validationError = errors;
                 this.isSaving = false;
-            } else {
-                this.addPcmUserModel.subRoleId = this.selectedRoleSubRole.subRoleId;
-                this.addPcmUserModel.RoleSubRole.push(this.selectedRoleSubRole);
+            } else {               
 
                 this.observableSave = this.pcmManagementService.savePcmUser(this.addPcmUserModel);
                 this.observableSave.subscribe(errors => {
@@ -155,6 +155,26 @@ export class PcmManagementComponent implements OnInit {
                 this.addPcmUserModel.userCentres.push(this.selectedCentre);
             }
         }
+    }
+
+    addUSubRole() {
+        if (this.selectedRoleSubRole != null) {
+            if (this.addPcmUserModel.roleSubRole == null) {
+                this.addPcmUserModel.roleSubRole = new RoleSubRole();
+            }
+
+            this.addPcmUserModel.roleSubRole = this.selectedRoleSubRole;
+            this.addPcmUserModel.subRoleId = this.selectedRoleSubRole.subRoleId;
+        }
+    }
+
+    setSelectedSubRole() {
+        let roleSubRole = new RoleSubRole();
+        if (this.addPcmUserModel.roleSubRole) {
+            roleSubRole = this.addPcmUserModel.roleSubRole;
+        }
+
+        return roleSubRole;
     }
 
     goBack() {
