@@ -26,6 +26,8 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
 
         GlmsTierData Update(GlmsTierData model);
 
+        IEnumerable<GlmsTierDataView> GetGlmsTierDataViewById(int Id);
+
         IEnumerable<GlmsTierData> ReadAllById(int Id);
 
         void Delete(int Id);

@@ -436,6 +436,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             if (concessionFormItem.get('productType').value.description === "Overdraft") {
 
                 if (concessionFormItem.get('term').value == "") {
+                 
                     this.addValidationError("Term cannot be empty");
                 }
 
@@ -528,6 +529,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
                 lendingConcessionDetail.limit = concessionFormItem.get('limit').value;
 
             if (concessionFormItem.get('term').value)
+                this.onTermValueChange(concessionFormItem);
                 lendingConcessionDetail.term = concessionFormItem.get('term').value;
 
             if (concessionFormItem.get('marginAgainstPrime').value)

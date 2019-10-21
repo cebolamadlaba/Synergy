@@ -86,14 +86,13 @@ export class BaseComponentService   {
         this.checkAEExistOnriskGroupNumber();
         
         if (concessionListLength > 0) {
-            if (this.validationError == undefined) {
-                this.router.navigate([url, riskGroupNumber, sapbpid]);
-            } 
-            //if (sapbpid == 0) {
-            //    this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Risk group. Please select the concession below and update");
-            //} else {
-            //    this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Legal Entity. Please select the concession below and update");
-            //}
+
+            if (sapbpid == 0) {
+                this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Risk group. Please select the concession below and update");
+            } else {
+                this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Legal Entity. Please select the concession below and update");
+            }
+
         } else {
             if (this.validationError == undefined) {
                 this.router.navigate([url, riskGroupNumber, sapbpid]);
@@ -138,14 +137,23 @@ export class BaseComponentService   {
 
     public expiringDateDifferenceValidation(selectedExpiryDate: string) {
 
-        var currentMonth = moment().month()
-        var selectedExpiryDateMonth = moment(selectedExpiryDate).month();
-        let monthsDifference = currentMonth - selectedExpiryDateMonth;
-        var futureMonth = moment().add(moment.duration({ M: 2 })).format("DD/MM/YYYY");
+        var currentDate  = moment();
+        var expDate = moment(selectedExpiryDate);
+        var futureMonth1 = moment(currentDate).add(MOnthEnum.ThreeMonths, 'M').format('YYYY-MM-DD');
+        var futureMonth = moment(futureMonth1);
+        if (expDate <= futureMonth) {
+            return "Concession expiry date should be later than " + futureMonth.format('DD-MM-YYYY');
+        }
+    }
 
-        if (monthsDifference < MOnthEnum.ThreeMonths) {
-            return "Concession expiry date should be later than " + futureMonth;
-        };
+    public expiringDateDifferenceValidationForView(selectedExpiryDate: string, createdDate: string) {
+        var currentDate = moment(createdDate);
+        var expDate = moment(selectedExpiryDate);
+        var futureMonth1 = moment(currentDate).add(MOnthEnum.ThreeMonths, 'M').format('YYYY-MM-DD');
+        var futureMonth = moment(futureMonth1);
+        if (expDate <= futureMonth) {
+            return "Concession expiry date should be later than " + futureMonth.format('DD-MM-YYYY');
+        }
     }
 
     getUserData(): Promise<any> {

@@ -22,6 +22,8 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Glms
  
         public IEnumerable<GlmsTierData> GlmsTierData { get; set; }
 
+        public IEnumerable<GlmsTierDataView> GlmsTierDataView { get; set; }
+
 
     }
 }

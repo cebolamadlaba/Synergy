@@ -443,7 +443,6 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
             glmsConcessionDetail.legalEntityAccountId = this.clientAccounts[0].legalEntityAccountId;
 
             glmsConcession.glmsConcessionDetails.push(glmsConcessionDetail);
-
         }
 
         const conditions = <FormArray>this.glmsConcessionForm.controls['conditionItemsRows'];
@@ -548,7 +547,6 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
 
             currentRow.get('value').enable();
         }
-
     }
 
     closeTierModal(x) {
@@ -558,6 +556,11 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         const concessions = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
         const tierForm = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
 
+        var lastRow = tierForm.length - 1;
+        if (tierForm.length > 0) {
+          tierForm.controls[lastRow].get('tieredTo').setValue(0);
+        }
+       
         for (let glmsTierFormItem of tierForm.value) {
 
             let tierItem = new GlmsTierData();        
@@ -571,7 +574,7 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
             if (glmsTierFormItem.tieredTo) {
                 tierItem.tierTo = glmsTierFormItem.tieredTo;
             } else {
-                this.addValidationError("TieredTo not selected");
+                tierItem.tierTo = 0;
             }
 
             if (glmsTierFormItem.rateType.description === "F") {
@@ -605,6 +608,9 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
                  
             tierItemsList.push(tierItem);
         }
+
+      
+
 
         tierItemsList.splice(0,1);
         concessions.controls[this.glmsConcessionItemIndex].get('concessionItemTier').setValue(tierItemsList);       
@@ -645,14 +651,31 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
                 if (selectedBaseRate.length>0) {
                     currentConcession.get('baseRate').setValue(selectedBaseRate[0]);         
                 } else {
-
                     currentConcession.get('baseRate').disable();
                 }
 
+                if (glmsTierFormItem.rateTypeId ==1) {
+                    if (glmsTierFormItem.value) {
+                        currentConcession.get('value').setValue(glmsTierFormItem.value);
+                    } else {
+                        currentConcession.get('value').disable();
+                    }
+                    currentConcession.get('spread').disable();
+                }
+
+                if (glmsTierFormItem.rateTypeId == 2) {
+
+                    if (glmsTierFormItem.spread) {
+                        currentConcession.get('spread').setValue(glmsTierFormItem.spread);
+                    } else {
+                        currentConcession.get('spread').disable();
+                    }
+                    currentConcession.get('value').disable();
+                }
+
                 currentConcession.get('tieredFrom').setValue(glmsTierFormItem.tierFrom);
-                currentConcession.get('spread').setValue(glmsTierFormItem.spread);
                 currentConcession.get('tieredTo').setValue(glmsTierFormItem.tierTo);
-                currentConcession.get('value').setValue(glmsTierFormItem.value);
+               
                             
                 roIndex++;
             }
@@ -701,11 +724,44 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
     }
 
     addNewTierRow() {
+        this.tierValidationError == null;
         const control = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
-        control.push(this.initTierItemRows());
         var rowNumber = control.length;
-        this.onTierLineAdd(rowNumber-1);
+        let currentRow = control.controls[rowNumber - 1];
+        if (rowNumber > 0) {
+            this.checkTiervalidation(currentRow);
+        }
+
+        if (this.tierValidationError == null) {
+            control.push(this.initTierItemRows());
+            this.onTierLineAdd(rowNumber);
+        }
+           
     }
+
+    checkTiervalidation(row) {
+        
+        let tieredFrom = 0;
+        let tieredTo = 0;
+        this.tierValidationError = null;
+
+        if (row.get('tieredFrom').value == "") {
+            tieredFrom = 0;
+        } else {
+            tieredFrom = row.get('tieredFrom').value;
+        }
+
+        if (row.get('tieredTo').value == "") {
+            this.addTierValidationError("Tier To cannot be empty");
+        } else {
+            tieredTo=row.get('tieredTo').value;
+        }
+
+        if (tieredFrom > tieredTo) {
+            this.addTierValidationError("Tier To cannot be less than Tier From");
+        }
+    }
+
 
     addNewTierRowIfNone() {
         const control = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
@@ -774,7 +830,8 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         if (index > 0) {
             var newValue = control.controls[index - 1].get('tieredTo').value;
             newValue = Number(newValue) + 1;
-            control.controls[index].get('tieredFrom').setValue(newValue);
+            control.controls[index].get('tieredFrom').disable();
+            control.controls[index].get('tieredFrom').setValue(newValue);      
         }      
     }
 

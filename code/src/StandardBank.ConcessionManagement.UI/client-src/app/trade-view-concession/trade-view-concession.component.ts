@@ -591,8 +591,12 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     onExpiryDateChanged(itemrow) {
-      
-        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
+
+        if (this.tradeConcession.concession.dateOpened) {
+            var formattedDateOpened = this.datepipe.transform(this.tradeConcession.concession.dateOpened, 'yyyy-MM-dd');
+        }
+
+        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidationForView(itemrow.controls['expiryDate'].value, formattedDateOpened);
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);
         }

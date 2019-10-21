@@ -131,7 +131,8 @@
                 <th>Interest Type</th>
                 <th>Slap Type</th>
                 <th>Expiry Date</th>
-                <th></th>
+                <th *ngIf="isApproved">Date Approved</th>
+                <th *ngIf="canArchive"></th>
             </tr>
         </thead>
         <tbody class="form-concessions-table-content">
@@ -162,17 +163,12 @@
                 </td>
                 <!-- expiry Date-->
                 <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>
 
                 <!--Tier information-->
                 <td><button class="length-long btn btn-primary" (click)="openTier(manageTierModal.show(),i)" [attr.disabled]="canEdit ? null : ''">Add Tier</button></td>
 
-                <td class="length-short" *ngIf="isApproved">
-
-                    <input type="date" formControlName="dateApproved" class="form-control" />
-                </td>
-                <!--*ngIf="canArchive"-->
-
-                <td class="delete">
+                <td class="delete" *ngIf="canArchive">
 
                     <button *ngIf="glmsConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="archiveConcessiondetail(itemrow.get('concessionDetailId').value)" class="btn-delete" title="Remove"><i class="fa fa-trash" aria-hidden="true" style="color:#920000"></i></button>
                 </td>
@@ -376,13 +372,28 @@
         </div>
     </div>
     <!-- Modal Tier -->
-    <div bsModal #manageTierModal="bs-modal" class="modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="manageTierModalLabel" aria-hidden="true">
+    <div bsModal #manageTierModal="bs-modal" class="modal" id="manageTierModal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="manageTierModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="col-md-12 modal-header">
                     <h4>Manage Tier</h4>
                 </div>
                 <div class="col-md-12 modal-body">
+
+                    <!-- Error message -->
+                    <div class="col-md-12" *ngIf="(tierValidationError)">
+                        <div class="form-feedback-container">
+                            <div class="alert-danger">
+                                <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Below errors requires your attention..</p>
+                                <p>{{errorMessage}}</p>
+
+                                <ul *ngIf="tierValidationError">
+                                    <li *ngFor="let validationMessage of tierValidationError;">{{validationMessage}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-12 modal-title">
                             <button type="button" class="btn btn-primary" (click)="addNewTierRow()">Add Line</button>
@@ -425,6 +436,7 @@
                                 <td class="length-short"><input type="text" formControlName="value" numbersOnly="true" class="form-control" /></td>
 
                                 <td><button class="btn-delete" type="button" (click)="deleteTierRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+
                             </tr>
                         </tbody>
                     </table>
@@ -438,7 +450,6 @@
             </div>
         </div>
     </div>
-
     <!-- Form buttons -->
     <div class="footer-buttons">
         <div class="float-right">
@@ -459,10 +470,11 @@
             <button type="button" class="btn btn-primary" (click)="saveRecallConcession()" *ngIf="isRecalling">Save</button>
             <button type="button" class="btn btn-danger" (click)="requestorDeclineConcession()" *ngIf="canApproveChanges">Decline</button>
             <button type="button" class="btn btn-success" (click)="requestorApproveConcession()" *ngIf="canApproveChanges">Accept</button>
-
         </div>
     </div>
 </form>
+
+
 
 <!--<pre>{{glmsConcessionForm.value | json}}</pre>-->
 

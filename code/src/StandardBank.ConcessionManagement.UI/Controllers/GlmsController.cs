@@ -195,7 +195,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             newConcession.PcmUserId = null;
             newConcession.ReferenceNumber = string.Empty;
             newConcession.SubStatus = Constants.ConcessionSubStatus.BcmPending;
-            newConcession.Type = Constants.ReferenceType.Existing;
+            newConcession.Type = Constants.ReferenceType.Existing;       
 
             var concession = await _mediator.Send(new AddConcession(newConcession, user));
 
@@ -205,6 +205,13 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             foreach (var glmsConcessionDetail in glmsConcession.GlmsConcessionDetails)
             {
                 glmsConcessionDetail.DateApproved = null;
+                if (glmsConcessionDetail.ExpiryDate != null)
+                {
+                    var dateExp = Convert.ToDateTime(glmsConcessionDetail.ExpiryDate);
+                    dateExp = dateExp.AddMonths(3);
+                    glmsConcessionDetail.ExpiryDate = dateExp;
+                }
+                
                 glmsConcessionDetail.GlmsConcessionDetailId = 0;
                 try
                 {
@@ -272,7 +279,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(returnConcession);
         }
 
-
         [Route("ResubmitGlms")]
         [ValidateModel]
         public async Task<IActionResult> ResubmitGlms([FromBody] GlmsConcession lendingConcession)
@@ -294,7 +300,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             return Ok(returnConcession);
         }
-
        
         private async Task<GlmsConcession> CreateChildConcession(GlmsConcession glmsConcession, User user, string relationship)
         {
@@ -351,13 +356,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 {
                     ex.ToString();
                 }
+
     var returnConcession =
                 _glmsManager.GetGlmsConcession(parentGlmsConcession.Concession.ReferenceNumber, user);
 
             returnConcession.Concession.ChildReferenceNumber = concession.ReferenceNumber;
             return returnConcession;
         }
-
-
     }
 }

@@ -166,9 +166,9 @@
                 </div>
             </div>
             <div class="section-body">
-                <div class="table-container" [routerLink]="['/glms-view-concession', riskGroupNumber, sapbpid, glmsConcession.concession.referenceNumber]">
+                <div class="table-container" >
                     <table class="table table-bordered table-hover header-fixed table-striped">
-                        <thead>
+                        <thead [routerLink]="['/glms-view-concession', riskGroupNumber, sapbpid, glmsConcession.concession.referenceNumber]">
                             <tr>
                                 <th>Interest pricing category</th>
                                 <th>Customer</th>
@@ -177,9 +177,9 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let concession of glmsConcession.glmsConcessionDetails; trackBy: index;">
-                                <td>{{concession.interestPricingCategory}}</td>
-                                <td class="leftAlign">{{concession.groupNumber}}</td>
-                                <td class="rightAlign">Waiting for Anthony/Perushka feedback</td>
+                                <td [routerLink]="['/glms-view-concession', riskGroupNumber, sapbpid, glmsConcession.concession.referenceNumber]">{{concession.interestPricingCategory}}</td>
+                                <td class="leftAlign" [routerLink]="['/glms-view-concession', riskGroupNumber, sapbpid, glmsConcession.concession.referenceNumber]">{{concession.groupNumber}}</td>
+                                <td class="viewButton"><button type="button" class="btn btn-primary" (click)="openManageTier(manageTierModal.show(),concession)">View</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -187,11 +187,56 @@
             </div>
         </div>
 
-
         <div class="searchEmptyState" *ngIf="(glmsView.glmsConcessions | baseConcessionFilter: filterConcessionId).length === 0">
             <i class="fa fa-inbox" aria-hidden="true"></i>
             <p>No concessions found matching your search</p>
         </div>
 
+    </div>
+
+    <!-- Modal Tier -->
+    <div bsModal #manageTierModal="bs-modal" class="modal fade preview-modal" data-backdrop="" tabindex="-1" role="dialog" aria-labelledby="manageTierModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="col-md-12 modal-header">
+                    <h4>Tier information</h4>
+                </div>
+                <div class="col-md-12 modal-body">
+                    <table class="table table-bordered table-hover header-fixed table-striped"  style="width:100%">
+                        <thead >
+                            <tr>
+                                <th>Tiered From</th>
+                                <th>Tiered To</th>
+                                <th>Rate Type</th>
+                                <th>Base Rate</th>
+                                <th>Spread</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody >
+                            <tr *ngFor="let glmsDataView of glmsTierDataViewList">
+                                <!-- Tiered From -->
+                                <td class="length-short">{{glmsDataView.tierFrom}}</td>
+                                <!-- Tiered To -->
+                                <td class="length-short">{{glmsDataView.tierTo}}</td>
+                                <!-- Tiered To -->
+                                <td class="length-short">{{glmsDataView.rate}}</td>
+                                <!-- Tiered To -->
+                                <td class="length-short">{{glmsDataView.baseRate}}</td>
+                                <!-- Spread -->
+                                <td class="length-short">{{glmsDataView.spread}}</td>
+                                <!-- Value-->
+                                <td class="length-short">{{glmsDataView.value}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <div class="float-right">
+                        <button type="button" class="btn btn-primary" (click)="manageTierModal.hide()">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

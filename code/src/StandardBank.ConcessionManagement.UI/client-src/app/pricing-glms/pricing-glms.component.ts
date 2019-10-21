@@ -7,6 +7,7 @@ import { RiskGroup } from "../models/risk-group";
 
 import { GlmsConcession } from "../models/glms-concession";
 import { GlmsView } from "../models/glms-view";
+import { GlmsTierDataView } from "../models/glms-tier-data-view";
 
 import { GlmsConcessionService } from "../services/glms-concession.service"
 
@@ -36,6 +37,8 @@ export class PricingGlmsComponent extends BaseComponentService implements OnInit
     pageLoaded = false;
     isLoading = true;
     canRequest = false;
+
+    glmsTierDataViewList: GlmsTierDataView[];
 
     constructor(
         public router: Router,
@@ -84,6 +87,10 @@ export class PricingGlmsComponent extends BaseComponentService implements OnInit
         this.userService.getData().subscribe(user => {
             this.canRequest = user.canRequest;
         });
+    }
+
+    openManageTier(x, tier) {
+        this.glmsTierDataViewList = tier.glmsTierDataView;
     }
 
     goBack() {

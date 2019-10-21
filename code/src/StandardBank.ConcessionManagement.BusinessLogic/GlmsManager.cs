@@ -13,6 +13,7 @@ using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concess
 using RiskGroup = StandardBank.ConcessionManagement.Model.UserInterface.RiskGroup;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 using GlmsTierData = StandardBank.ConcessionManagement.Model.UserInterface.GlmsTierData;
+using GlmsTierDataView = StandardBank.ConcessionManagement.Model.UserInterface.GlmsTierDataView;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCondition;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.GlmsConcession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
@@ -131,6 +132,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 });
             }
 
+            GlmsConcessions.ForEach(x=>
+            {
+                foreach (var detail in x.GlmsConcessionDetails)
+                {                 
+                    detail.GlmsTierDataView = _mapper.Map<IEnumerable<GlmsTierDataView>>(_glmsTierDataRepository.GetGlmsTierDataViewById(detail.GlmsConcessionDetailId));
+                }
+            });
+
             ////grouping of products
             var groupedinfo = new List<GlmsProductGroup>();
             if (GlmsProducts != null)
@@ -194,6 +203,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                  LegalEntityId= glmsConcessionDetail.LegalEntityId,
                  ExpiryDate= glmsConcessionDetail.ExpiryDate,
                  ProductTypeId = 1
+                 
             };
 
             return glmsConcession;
@@ -235,7 +245,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var concession = await _mediator.Send(new UpdateConcession(glmsConcession.Concession, user));
 
             //add all the new conditions and lending details and comments
-            foreach (var lendingConcessionDetail in glmsConcession.GlmsConcessionDetails)
+            foreach (var glmsConcessionDetail in glmsConcession.GlmsConcessionDetails)
                 await _mediator.Send(new AddOrUpdateGlmsConcessionDetail(glmsConcessionDetail, user, concession));
 
             if (glmsConcession.ConcessionConditions != null && glmsConcession.ConcessionConditions.Any())
