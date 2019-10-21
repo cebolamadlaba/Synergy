@@ -25,6 +25,9 @@ import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
 import * as fileSaver from 'file-saver';
 import { FileService } from '../services/file.service';
+import * as XLSX from 'xlsx';
+import { XlsxModel } from '../models/XlsxModel';
+import { TransactionalBaseService } from '../services/transactional-base.service';
 
 @Component({
     selector: 'app-transactional-add-concession',
@@ -42,7 +45,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
     legalEntity: LegalEntity;
     sapbpid: number;
-  
+    transactionalConcessionDetail : TransactionalConcessionDetail[];
 
     entityName: string;
     entityNumber: string;
@@ -53,6 +56,8 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
     observableLatestCrsOrMrs: Observable<number>;
     latestCrsOrMrs: number;
     showHide = false;
+
+    xlsxModel = new XlsxModel();
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
@@ -74,6 +79,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
         private location: Location,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(TransactionalConcessionService) private transactionalConcessionService,
+        @Inject(TransactionalBaseService) private transactionalBaseService,
         private fileService: FileService,
         private baseComponentService: BaseComponentService) {
         this.riskGroup = new RiskGroup();
@@ -218,6 +224,30 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
             window.location.href = response.url;
         }), error => console.log('Error downloading the file'),
             () => console.info('File downloaded successfully');
+    }
+
+    onFileSelected(event) {
+
+        var file: File = event.target.files[0];
+        var fileReader: FileReader = new FileReader();
+
+        this.xlsxModel = new XlsxModel();
+       // this.transactionalConcessionDetail = new TransactionalConcessionDetail();
+
+        var self = this;
+        fileReader.onload = function (e) {
+            // set initial properties in order to process the file
+            self.xlsxModel.fileContent = fileReader.result;
+            self.xlsxModel.selectedFileName = file.name;
+
+            self.transactionalConcessionDetail = self.transactionalBaseService.processFileContent(self.xlsxModel);
+
+            // reset the input:file which allows you to upload the same file again
+            /// self.fileInput.nativeElement.value = '';
+        }
+
+        // execute reading of the file
+        fileReader.readAsBinaryString(file);
     }
 
 

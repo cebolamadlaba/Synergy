@@ -36,6 +36,7 @@
     <None Remove="client-src\app\models\bol-chargecode.ts" />
     <None Remove="client-src\app\models\bol-chargecodetype.ts" />
     <None Remove="client-src\app\models\bol-view.ts" />
+    <None Remove="client-src\app\models\cash-concession-enum.ts" />
     <None Remove="client-src\app\models\legal-entity-address.ts" />
     <None Remove="client-src\app\models\legal-entity-bol-user.ts" />
     <None Remove="client-src\app\models\legal-entity-gbb-number.ts" />
@@ -48,6 +49,7 @@
     <None Remove="client-src\app\models\search-concession-detail.ts" />
     <None Remove="client-src\app\models\Static-Class.ts" />
     <None Remove="client-src\app\models\subrole-enum.ts" />
+    <None Remove="client-src\app\models\transactional-concession-enum.ts" />
     <None Remove="client-src\content\img\sblogo.jpg" />
     <None Remove="LetterTemplates\images\sblogo.jpg" />
     <None Remove="LetterTemplates\TemplateFooter.html" />
@@ -115,6 +117,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="client-src\app\models\transactional-concession-enum.ts" />
     <TypeScriptCompile Include="client-src\app\models\legal-entity-address.ts" />
     <TypeScriptCompile Include="client-src\app\models\legal-entity-gbb-number.ts" />
     <TypeScriptCompile Include="client-src\app\models\legal-entity-bol-user.ts" />
@@ -122,6 +125,7 @@
     <TypeScriptCompile Include="client-src\app\models\bol-chargecodetype.ts" />
     <TypeScriptCompile Include="client-src\app\models\bol-view.ts" />
     <TypeScriptCompile Include="client-src\app\models\legal-entity.ts" />
+    <TypeScriptCompile Include="client-src\app\models\cash-concession-enum.ts" />
     <TypeScriptCompile Include="client-src\app\models\pricing-product-enum.ts" />
     <TypeScriptCompile Include="client-src\app\models\month-enum.ts" />
     <TypeScriptCompile Include="client-src\app\models\mrs-eri-enum.ts" />

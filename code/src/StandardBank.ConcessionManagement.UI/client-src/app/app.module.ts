@@ -54,6 +54,7 @@ import { GlmsConcessionService } from './services/glms-concession.service';
 import { GlmsBaseService } from './services/glms-base.service';
 import { FileService } from './services/file.service';
 import { CashBaseService } from './services/cash-base.service';
+import { TransactionalBaseService } from './services/transactional-base.service';
  
 import { AdminTransactionTablesService } from './services/admin-transaction-tables.service';
 import { LegalEntityAddressService } from './services/legal-entity-address.service';
@@ -211,7 +212,8 @@ import { GlmsViewConcessionComponent } from './glms-view-concession/glms-view-co
         GlmsConcessionService,
         GlmsBaseService,
         FileService,
-        CashBaseService
+        CashBaseService,
+        TransactionalBaseService
     ],
     bootstrap: [AppComponent]
 })

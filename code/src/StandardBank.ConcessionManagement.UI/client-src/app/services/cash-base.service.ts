@@ -4,6 +4,7 @@ import { XlsxModel } from '../models/XlsxModel';
 import * as fileSaver from 'file-saver';
 import { FileService } from '../services/file.service';
 import { CashConcessionDetail } from "../models/cash-concession-detail";
+import { CashConcessionEnum } from "../models/cash-concession-enum";
 
 @Injectable()
 export class CashBaseService {
@@ -46,18 +47,27 @@ export class CashBaseService {
                 if (cell == null) { continue; }
 
                 switch (colNum) {
-                    //case ColumnEnum.Product:
-                    //    product.product = cell.v;
+                    //case CashConcessionEnum.ANumber:
+                    //    detail. = cell.v;
                     //    break;
-                    //case ColumnEnum.Quantity:
-                    //    product.quantity = cell.v;
+                    //case CashConcessionEnum.RiskGroup:
+                    //    detail. = cell.v;
                     //    break;
-                    //case ColumnEnum.PricePerProduct:
-                    //    product.pricePerProduct = cell.v;
-                    //    break;
-                    //case ColumnEnum.DateOfSale:
-                    //    product.dateOfSale = new Date(cell.w);
-                    //    break;
+                    case CashConcessionEnum.AccNumber:
+                        detail.accountNumber = cell.v;
+                        break;
+                    case CashConcessionEnum.Channel:
+                        detail.channel = cell.v;
+                        break;
+                    case CashConcessionEnum.TableNumber:
+                        detail.approvedTableNumber = cell.v;
+                        break;
+                    case CashConcessionEnum.Accrual:
+                        detail.accrualTypeId = cell.v;
+                        break;
+                    case CashConcessionEnum.ExpiryDate:
+                        detail.expiryDate = new Date(cell.w);
+                        break;
                 }
                
             }
