@@ -46,7 +46,7 @@ export class TransactionalBaseService {
                 if (cell == null) { continue; }
 
                 switch (colNum) {
-                    //case CashConcessionEnum.ANumber:
+                    //case CashConcessionEnum.ANumber: -- might be used 
                     //    detail. = cell.v;
                     //    break;
                     //case CashConcessionEnum.RiskGroup:
