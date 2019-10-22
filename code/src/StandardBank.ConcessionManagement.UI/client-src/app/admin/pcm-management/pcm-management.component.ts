@@ -109,7 +109,7 @@ export class PcmManagementComponent implements OnInit {
             if (errors != null && errors.length > 0) {
                 this.validationError = errors;
                 this.isSaving = false;
-            } else {               
+            } else {
 
                 this.observableSave = this.pcmManagementService.savePcmUser(this.addPcmUserModel);
                 this.observableSave.subscribe(errors => {
@@ -138,7 +138,7 @@ export class PcmManagementComponent implements OnInit {
             this.isSaving = false;
             this.errorMessage = <any>error;
         });
-        
+
     }
 
     removeUserCentre(index: number) {
@@ -169,10 +169,9 @@ export class PcmManagementComponent implements OnInit {
     }
 
     setSelectedSubRole() {
-        let roleSubRole = new RoleSubRole();
-        if (this.addPcmUserModel.roleSubRole) {
-            roleSubRole = this.addPcmUserModel.roleSubRole;
-        }
+        let roleSubRole = this.roleSubRoles.filter(item => {
+            return item.subRoleId == this.addPcmUserModel.roleSubRole.subRoleId;
+        })[0];
 
         return roleSubRole;
     }
