@@ -179,16 +179,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                                 var consType = GetSubRoleAndType(user.SubRoleId);
 
-                                var concessions = _concessionInboxViewRepository
+                                inboxConcessions.AddRange(_mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
                                     .ReadByRequestorIdStatusIdsIsActive(_userManager.GetUserIdForFiltering(user), new[] { pendingStatusId }, true)
-                                    .Where(x => x.ConcessionType == consType);
-
-                                if (user.SubRoleId == (int)Constants.RoleSubRole.PCMSnIUser)
-                                {
-                                    concessions = concessions.Where(x => x.SubStatus == Constants.ConcessionSubStatus.PcmSnIPending);
-                                }
-
-                                inboxConcessions.AddRange(_mapper.Map<IEnumerable<InboxConcession>>(concessions));
+                                    .Where(x => x.ConcessionType == consType)));
                             }
                             else
                             {
@@ -219,10 +212,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         case Constants.Roles.HeadOffice:
 
                             //we will only look for concessions with status BCM Pending..
-                            var pendingStatusIds = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.PcmPending);
-
-                            inboxConcessions.AddRange(_mapper.Map<IEnumerable<InboxConcession>>(
-                                   _concessionInboxViewRepository.ReadbyPCMPending(null, null, null, new[] { pendingStatusIds })));
+                            var pcmSnIpendingStatusIds = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.PcmSnIPending);
+                            if (user.SubRoleId.HasValue)
+                            {
+                                var consType = GetSubRoleAndType(user.SubRoleId);
+                                
+                                inboxConcessions.AddRange(_mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
+                                    .ReadbyPCMPending(null, null, null, new[] { pcmSnIpendingStatusIds })
+                                    .Where(x => x.ConcessionType == consType)));
+                            }
+                            else
+                            {
+                                inboxConcessions.AddRange(_mapper.Map<IEnumerable<InboxConcession>>(
+                                   _concessionInboxViewRepository.ReadbyPCMPending(null, null, null, new[] { pcmPendingStatusId, pcmSnIpendingStatusIds})));
+                            }                            
 
                             break;
                     }
