@@ -159,19 +159,31 @@ export class PcmManagementComponent implements OnInit {
 
     addUSubRole() {
         if (this.selectedRoleSubRole != null) {
+
             if (this.addPcmUserModel.roleSubRole == null) {
                 this.addPcmUserModel.roleSubRole = new RoleSubRole();
             }
 
-            this.addPcmUserModel.roleSubRole = this.selectedRoleSubRole;
-            this.addPcmUserModel.subRoleId = this.selectedRoleSubRole.subRoleId;
+            if (this.selectedRoleSubRole.subRoleId == SubRoleEnum.NoSubrole) {
+                this.addPcmUserModel.subRoleId = null;
+                this.addPcmUserModel.roleSubRole = null;
+            }
+            else {
+                this.addPcmUserModel.roleSubRole = this.selectedRoleSubRole;
+                this.addPcmUserModel.subRoleId = this.selectedRoleSubRole.subRoleId;
+            }            
         }
     }
 
     setSelectedSubRole() {
-        let roleSubRole = this.roleSubRoles.filter(item => {
-            return item.subRoleId == this.addPcmUserModel.roleSubRole.subRoleId;
-        })[0];
+
+        let roleSubRole = new RoleSubRole();
+
+        if (this.addPcmUserModel.roleSubRole != null) {
+            roleSubRole = this.roleSubRoles.filter(item => {
+                return item.subRoleId == this.addPcmUserModel.roleSubRole.subRoleId;
+            })[0];
+        }      
 
         return roleSubRole;
     }
