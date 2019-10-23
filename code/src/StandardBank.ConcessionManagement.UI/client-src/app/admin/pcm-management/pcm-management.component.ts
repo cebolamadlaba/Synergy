@@ -109,7 +109,7 @@ export class PcmManagementComponent implements OnInit {
             if (errors != null && errors.length > 0) {
                 this.validationError = errors;
                 this.isSaving = false;
-            } else {               
+            } else {
 
                 this.observableSave = this.pcmManagementService.savePcmUser(this.addPcmUserModel);
                 this.observableSave.subscribe(errors => {
@@ -138,7 +138,7 @@ export class PcmManagementComponent implements OnInit {
             this.isSaving = false;
             this.errorMessage = <any>error;
         });
-        
+
     }
 
     removeUserCentre(index: number) {
@@ -159,20 +159,31 @@ export class PcmManagementComponent implements OnInit {
 
     addUSubRole() {
         if (this.selectedRoleSubRole != null) {
+
             if (this.addPcmUserModel.roleSubRole == null) {
                 this.addPcmUserModel.roleSubRole = new RoleSubRole();
             }
 
-            this.addPcmUserModel.roleSubRole = this.selectedRoleSubRole;
-            this.addPcmUserModel.subRoleId = this.selectedRoleSubRole.subRoleId;
+            if (this.selectedRoleSubRole.subRoleId == SubRoleEnum.NoSubrole) {
+                this.addPcmUserModel.subRoleId = null;
+                this.addPcmUserModel.roleSubRole = null;
+            }
+            else {
+                this.addPcmUserModel.roleSubRole = this.selectedRoleSubRole;
+                this.addPcmUserModel.subRoleId = this.selectedRoleSubRole.subRoleId;
+            }            
         }
     }
 
     setSelectedSubRole() {
+
         let roleSubRole = new RoleSubRole();
-        if (this.addPcmUserModel.roleSubRole) {
-            roleSubRole = this.addPcmUserModel.roleSubRole;
-        }
+
+        if (this.addPcmUserModel.roleSubRole != null) {
+            roleSubRole = this.roleSubRoles.filter(item => {
+                return item.subRoleId == this.addPcmUserModel.roleSubRole.subRoleId;
+            })[0];
+        }      
 
         return roleSubRole;
     }

@@ -183,7 +183,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                                     .ReadByRequestorIdStatusIdsIsActive(_userManager.GetUserIdForFiltering(user), new[] { pendingStatusId }, true)
                                     .Where(x => x.ConcessionType == consType);
 
-                                if (user.SubRoleId == (int)Constants.RoleSubRole.SnIUser)
+                                if (user.SubRoleId == (int)Constants.RoleSubRole.PCMSnIUser)
                                 {
                                     concessions = concessions.Where(x => x.SubStatus == Constants.ConcessionSubStatus.PcmSnIPending);
                                 }
@@ -373,7 +373,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 case (int)Constants.RoleSubRole.BolUser:
                     concessionType = Constants.ConcessionType.BusinessOnlineDesc;
                     break;
-                case (int)Constants.RoleSubRole.SnIUser:
+                case (int)Constants.RoleSubRole.PCMSnIUser:
                     concessionType = Constants.ConcessionType.Investment;
                     break;
                 default:
