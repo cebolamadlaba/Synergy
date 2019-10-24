@@ -177,18 +177,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                             if (user.SubRoleId.HasValue)
                             {
 
-                                var consType = GetSubRoleAndType(user.SubRoleId);
+                                var concessionType = GetSubRoleAndType(user.SubRoleId);
 
-                                var concessions = _concessionInboxViewRepository
+                                inboxConcessions.AddRange(_mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
                                     .ReadByRequestorIdStatusIdsIsActive(_userManager.GetUserIdForFiltering(user), new[] { pendingStatusId }, true)
-                                    .Where(x => x.ConcessionType == consType);
-
-                                if (user.SubRoleId == (int)Constants.RoleSubRole.PCMSnIUser)
-                                {
-                                    concessions = concessions.Where(x => x.SubStatus == Constants.ConcessionSubStatus.PcmSnIPending);
-                                }
-
-                                inboxConcessions.AddRange(_mapper.Map<IEnumerable<InboxConcession>>(concessions));
+                                    .Where(x => x.ConcessionType == concessionType)));
                             }
                             else
                             {
@@ -219,10 +212,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         case Constants.Roles.HeadOffice:
 
                             //we will only look for concessions with status BCM Pending..
-                            var pendingStatusIds = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.PcmPending);
-
-                            inboxConcessions.AddRange(_mapper.Map<IEnumerable<InboxConcession>>(
-                                   _concessionInboxViewRepository.ReadbyPCMPending(null, null, null, new[] { pendingStatusIds })));
+                            var pcmSnIpendingStatusIds = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.PcmSnIPending);
+                            if (user.SubRoleId.HasValue)
+                            {
+                                var concessionType = GetSubRoleAndType(user.SubRoleId);
+                                
+                                inboxConcessions.AddRange(_mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
+                                    .ReadbyPCMPending(null, null, null, new[] { pcmSnIpendingStatusIds })
+                                    .Where(x => x.ConcessionType == concessionType)));
+                            }
+                            else
+                            {
+                                inboxConcessions.AddRange(_mapper.Map<IEnumerable<InboxConcession>>(
+                                   _concessionInboxViewRepository.ReadbyPCMPending(null, null, null, new[] { pcmPendingStatusId, pcmSnIpendingStatusIds})));
+                            }                            
 
                             break;
                     }
@@ -263,11 +266,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (user.SubRoleId.HasValue)
             {
-                var consType = GetSubRoleAndType(user.SubRoleId);
+                var concessionType = GetSubRoleAndType(user.SubRoleId);
 
                 return _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
                          .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(userId, DateTime.Now,
-                             DateTime.Now.AddMonths(3), new[] { approvedStatusId, approvedWithChangesStatusId }, true).Where(x => x.ConcessionType == consType));
+                             DateTime.Now.AddMonths(3), new[] { approvedStatusId, approvedWithChangesStatusId }, true).Where(x => x.ConcessionType == concessionType));
             }
             else
             {
@@ -293,11 +296,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (user.SubRoleId.HasValue)
             {
-                var consType = GetSubRoleAndType(user.SubRoleId);
+                var concessionType = GetSubRoleAndType(user.SubRoleId);
 
                 return _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
                    .ReadByRequestorIdBetweenStartExpiryDateEndExpiryDateStatusIdsIsActive(userId, DateTime.MinValue,
-                       DateTime.Now, new[] { approvedStatusId, approvedWithChangesStatusId }, true).Where(x => x.ConcessionType == consType));
+                       DateTime.Now, new[] { approvedStatusId, approvedWithChangesStatusId }, true).Where(x => x.ConcessionType == concessionType));
             }
             else
             {
@@ -323,10 +326,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (user.SubRoleId.HasValue)
             {
-                var consType = GetSubRoleAndType(user.SubRoleId);
+                var concessionType = GetSubRoleAndType(user.SubRoleId);
                 return _mapper.Map<IEnumerable<InboxConcession>>(
                        _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsMismatchedIsActive(userId,
-                           new[] { approvedStatusId, approvedWithChangesStatusId }, true, true).Where(x => x.ConcessionType == consType));
+                           new[] { approvedStatusId, approvedWithChangesStatusId }, true, true).Where(x => x.ConcessionType == concessionType));
 
             }
             else
@@ -351,10 +354,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (user.SubRoleId.HasValue)
             {
-                var consType = GetSubRoleAndType(user.SubRoleId);
+                var concessionType = GetSubRoleAndType(user.SubRoleId);
                 return _mapper.Map<IEnumerable<InboxConcession>>(
                         _concessionInboxViewRepository.ReadByRequestorIdStatusIdsIsActive(userId, new[] { declinedStatusId },
-                            true).Where(x => x.ConcessionType == consType));
+                            true).Where(x => x.ConcessionType == concessionType));
             }
             else
             {
@@ -367,21 +370,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         private string GetSubRoleAndType(int? subRoleId)
         {
-            string concessionType;
             switch (subRoleId)
             {
                 case (int)Constants.RoleSubRole.BolUser:
-                    concessionType = Constants.ConcessionType.BusinessOnlineDesc;
-                    break;
-                case (int)Constants.RoleSubRole.PCMSnIUser:
-                    concessionType = Constants.ConcessionType.Investment;
-                    break;
-                default:
-                    concessionType = Constants.ConcessionType.Trade;
-                    break;
-            }
+                    return  Constants.ConcessionType.BusinessOnlineDesc;
 
-            return concessionType;
+                case (int)Constants.RoleSubRole.PCMSnIUser:
+                    return Constants.ConcessionType.Investment;
+
+                default:
+                    return Constants.ConcessionType.Trade;
+            }
         }
 
         /// <summary>
@@ -698,9 +697,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 if (currentUser.SubRoleId.HasValue)
                 {
                     //get which concessions the user needs to see.
-                    var consType = GetSubRoleAndType(currentUser.SubRoleId);
+                    var concessionType = GetSubRoleAndType(currentUser.SubRoleId);
 
-                    if (newapproved.ConcessionType.Equals(consType))
+                    if (newapproved.ConcessionType.Equals(concessionType))
                     {
                         //remove doubles.
                         if (!approvedConcessionDetails.Contains(newapproved))
