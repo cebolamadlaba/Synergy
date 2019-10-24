@@ -1,6 +1,6 @@
 
 CREATE TABLE [dbo].[tblConcessionGlms](
-	[pkConcessionGlmsId] [int] IDENTITY(1,1) PRIMARY KEY IDENTITY NOT NULL,
+	[pkConcessionGlmsId] [int] IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	[fkConcessionId] [int] NOT NULL,
 	[fkConcessionDetailId] [int] NOT NULL,
 	[fkProductId] [int] NOT NULL,
