@@ -34,6 +34,8 @@ import { Concession } from "../models/concession";
 import { UserService } from "../services/user.service";
 
 import { BaseComponentService } from '../services/base-component.service';
+import * as moment from 'moment';
+import { MOnthEnum } from '../models/month-enum';
 
 @Component({
     selector: 'app-bol-add-concession',
@@ -104,7 +106,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         this.conditionTypes = [new ConditionType()];
         this.selectedConditionTypes = [new ConditionType()];
         this.selectedProducts = [new BolChargeCodeType()];
-       
+     
     }
 
     ngOnInit() {
@@ -275,6 +277,14 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
     }
 
+    onExpiryDateChanged(itemrow) {
+
+        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
+        if (validationErrorMessage != null) {
+            this.addValidationError(validationErrorMessage);
+        }
+    }
+
     conditionTypeChanged(rowIndex) {
         const control = <FormArray>this.bolConcessionForm.controls['conditionItemsRows'];
         this.selectedConditionTypes[rowIndex] = control.controls[rowIndex].get('conditionType').value;
@@ -372,6 +382,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
 
             if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
+                this.onExpiryDateChanged(concessionFormItem);
                 bolConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
             else {
@@ -488,10 +499,8 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-       
     }
 
-    
     goBack() {
         this.router.navigate(['/pricing', this.riskGroupNumber]);
     }

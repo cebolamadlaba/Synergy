@@ -26,6 +26,8 @@ import { ConcessionStatus } from '../constants/concession-status';
 import { ConcessionSubStatus } from '../constants/concession-sub-status';
 import { BaseComponentService } from '../services/base-component.service';
 import { LegalEntity } from "../models/legal-entity";
+import * as moment from 'moment';
+import { MOnthEnum } from '../models/month-enum';
 
 @Component({
     selector: 'app-transactional-view-concession',
@@ -49,6 +51,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
     sapbpid: number;
     entityName: string;
     entityNumber: string;
+    createdDate: string;
 
     selectedConditionTypes: ConditionType[];
     selectedTransactionTypes: TransactionType[];
@@ -204,6 +207,13 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
         this.populateForm();
 
+    }2
+
+    onExpiryDateChanged(itemrow) {
+        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidationForView(itemrow.controls['expiryDate'].value, this.createdDate);
+        if (validationErrorMessage != null) {
+            this.addValidationError(validationErrorMessage);
+        }
     }
 
     populateForm() {
@@ -260,6 +270,13 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
                 this.transactionalConcessionForm.controls['mrsCrs'].setValue(this.transactionalConcession.concession.mrsCrs);
                 this.transactionalConcessionForm.controls['smtDealNumber'].setValue(this.transactionalConcession.concession.smtDealNumber);
                 this.transactionalConcessionForm.controls['motivation'].setValue(this.transactionalConcession.concession.motivation);
+
+
+                if (transactionalConcession.concession.dateOpened) {
+                    var formattedDateOpened = this.datepipe.transform(transactionalConcession.concession.dateOpened, 'yyyy-MM-dd');
+                    this.createdDate = formattedDateOpened;
+                }
+
 
                 let rowIndex = 0;
 
@@ -533,6 +550,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
             }
 
             if (concessionFormItem.get('expiryDate').value)
+                this.onExpiryDateChanged(concessionFormItem);
                 transactionalConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
             transactionalConcession.transactionalConcessionDetails.push(transactionalConcessionDetail);

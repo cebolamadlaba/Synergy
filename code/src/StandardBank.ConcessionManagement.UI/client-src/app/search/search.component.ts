@@ -26,6 +26,7 @@ import { SearchConcessionFilterPipe } from "../filters/search-concession-filter.
 
 import { TradeConcessionService } from "../services/trade-concession.service";
 import { InvestmentConcessionService } from "../services/investment-concession.service";
+import { GlmsConcessionService } from "../services/glms-concession.service";
 
 import { IMyDpOptions, IMyDateModel } from 'angular4-datepicker/src/my-date-picker/interfaces'
 
@@ -77,6 +78,7 @@ export class SearchComponent implements OnInit {
         @Inject(CashConcessionService) private cashConcessionService,
         @Inject(LendingService) private lendingConcessionService,
         @Inject(BolConcessionService) private bolConcessionService,
+        @Inject(GlmsConcessionService) private glmsConcessionService,
 
         @Inject(UserConcessionsService) private userConcessionsService,
         @Inject(RegionService) private regionService,
@@ -181,6 +183,10 @@ export class SearchComponent implements OnInit {
                 case ConcessionTypes.Investment:
                     this.forwardInvestmenttoPCM(concessiondetailed);
                     break;
+
+                case ConcessionTypes.Glms:
+                    this.forwardGlmstoPCM(concessiondetailed);
+                    break;
             }
         }
     }
@@ -207,6 +213,9 @@ export class SearchComponent implements OnInit {
                     break;
                 case ConcessionTypes.Investment:
                     this.router.navigate(['/investments-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.customerNumber, concessiondetailed.referenceNumber]);
+                    break;
+                case ConcessionTypes.Glms:
+                    this.router.navigate(['/glms-view-concession', concessiondetailed.riskGroupNumber, concessiondetailed.customerNumber, concessiondetailed.referenceNumber]);
                     break;
             }
         }
@@ -243,6 +252,30 @@ export class SearchComponent implements OnInit {
 
         if (!this.validationError) {
             this.investmentConcessionService.postForwardInvestmentPCM(concessiondetailed).subscribe(entity => {
+                console.log("data saved");
+
+                this.saveMessage = entity.concession.referenceNumber;
+                this.isLoading = false;
+
+                this.getFilteredView();
+
+            }, error => {
+                this.errorMessage = <any>error;
+                this.isLoading = false;
+            });
+        } else {
+            this.isLoading = false;
+        }
+    }
+
+
+    forwardGlmstoPCM(concessiondetailed: SearchConcessionDetail) {
+
+        concessiondetailed.subStatus = ConcessionSubStatus.PCMPending;
+        concessiondetailed.comments = "Forwarded by PCM";
+
+        if (!this.validationError) {
+            this.glmsConcessionService.postForwardGlmsPCM(concessiondetailed).subscribe(entity => {
                 console.log("data saved");
 
                 this.saveMessage = entity.concession.referenceNumber;

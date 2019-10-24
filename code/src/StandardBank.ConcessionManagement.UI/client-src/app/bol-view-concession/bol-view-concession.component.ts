@@ -36,6 +36,8 @@ import { LegalEntityBOLUser } from "../models/legal-entity-bol-user";
 import { LegalEntity } from "../models/legal-entity";
 
 import { BaseComponentService } from '../services/base-component.service';
+import * as moment from 'moment';
+import { MOnthEnum } from '../models/month-enum';
 
 @Component({
     selector: 'app-bol-view-concession',
@@ -477,6 +479,18 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         currentCondition.get('value').setValue(null);
     }
 
+    onExpiryDateChanged(itemrow) {
+
+        if (this.bolConcession.concession.dateOpened) {
+            var formattedDateOpened = this.datepipe.transform(this.bolConcession.concession.dateOpened, 'yyyy-MM-dd');
+        }
+
+        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidationForView(itemrow.controls['expiryDate'].value,formattedDateOpened);
+        if (validationErrorMessage != null) {
+            this.addValidationError(validationErrorMessage);
+        }
+    }
+
     productTypeChanged(rowIndex) {
 
         const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
@@ -571,6 +585,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             }
 
             if (concessionFormItem.get('expiryDate').value)
+                this.onExpiryDateChanged(concessionFormItem);
                 bolConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
             bolConcession.bolConcessionDetails.push(bolConcessionDetail);

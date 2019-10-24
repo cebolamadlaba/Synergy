@@ -29,11 +29,7 @@ export class ApprovedConcessionsComponent implements OnInit {
     isLoading = true;
 
     legalEntityId: number;
-    //clientContactPerson: string;
-    //clientName: string;
-    //clientPostalAddress: string;
-    //clientCity: string;
-    //clientPostalCode: string;
+
     legalEntityConcessionLetterModel: LegalEntityConcessionLetterModel;
 
     public uploadProgress: number;
@@ -79,6 +75,9 @@ export class ApprovedConcessionsComponent implements OnInit {
                 break;
             case ConcessionTypes.Investment:
                 this.router.navigate(['/investments-view-concession', approvedConcession.riskGroupNumber, approvedConcession.customerNumber, approvedConcessionDetail.referenceNumber]);
+                break;
+            case ConcessionTypes.Glms:
+                this.router.navigate(['/glms-view-concession', approvedConcession.riskGroupNumber, approvedConcession.customerNumber, approvedConcessionDetail.referenceNumber]);
                 break;
         }
     }
