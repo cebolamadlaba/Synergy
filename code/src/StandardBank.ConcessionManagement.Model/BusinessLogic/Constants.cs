@@ -31,7 +31,8 @@
         public enum RoleSubRole
         {
             BolUser = 1,
-            TradeUser = 2
+            TradeUser = 2,
+            PCMSnIUser = 4
         }
 
         public static class ConcessionType
@@ -79,6 +80,9 @@
             public const string PcmPending = "PCM Pending";
             public const string PcmApproved = "PCM Approved";
             public const string PcmDeclined = "PCM Declined";
+            public const string PcmSnIPending = "PCM S&I Pending";
+            public const string PcmSnIApproved = "PCM S&I Approved";
+            public const string PcmSnIDeclined = "PCM S&I Declined";
             public const string HoPending = "HO Pending";
             public const string HoApproved = "HO Approved";
             public const string HoDeclined = "HO Declined";

@@ -122,14 +122,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (usr != null)
             {
-                var RoleSubRole = _userRoleRepository.ReadByUserId(usr.Id).Select(x => x.SubRoleId);
+                var subRoleIds = _userRoleRepository.ReadByUserId(usr.Id).Where(f => f.SubRoleId != null).Select(x => x.SubRoleId);
 
-                foreach (var subRole in RoleSubRole)
+                foreach (var subRoleId in subRoleIds)
                 {
-                    if (subRole.HasValue)
-                    {
-                        usr.SubRoleId = subRole;
-                    }
+                    usr.SubRoleId = subRoleId;
                 }
             }
 
@@ -164,9 +161,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             if (mappedUser.UserRoles.Count() > 0)
                 mappedUser.RoleId = mappedUser.UserRoles.FirstOrDefault().Id;
 
-            var userRole = _userRoleRepository.ReadByUserId(mappedUser.Id).FirstOrDefault(x => x.SubRoleId.HasValue);
+            var userRole = _userRoleRepository.ReadByUserId(mappedUser.Id).FirstOrDefault(x => x.SubRoleId.HasValue);            
             if (userRole != null)
                 mappedUser.SubRoleId = userRole.SubRoleId.Value;
+
+            if (mappedUser.SubRoleId != null)
+            {
+                mappedUser.RoleSubRole = GetRoleSubRole().FirstOrDefault(x => x.SubRoleId == mappedUser.SubRoleId);
+            }
 
             mappedUser.UserCentres = GetUserCentres(user.Id);
             mappedUser.SelectedCentre = mappedUser.UserCentres.FirstOrDefault();

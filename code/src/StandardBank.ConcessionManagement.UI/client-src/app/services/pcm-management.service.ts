@@ -20,6 +20,11 @@ export class PcmManagementService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    getRoleSubRoles(): Observable<RegionCentresModel[]> {
+        const url = "/api/PCMManagement/RoleSubRoles";
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
     savePcmUser(pcmUser: User): Observable<boolean> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
