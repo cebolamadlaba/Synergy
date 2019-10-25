@@ -36,7 +36,9 @@ export class CashBaseService {
                 continue;
 
             let detail = new CashConcessionDetail();
-             cashConcessionDetails.push(detail);
+            if(detail != null) {
+               cashConcessionDetails.push(detail);
+            }  
 
             for (let colNum = range.s.c; colNum <= colCount; colNum++) {
 
@@ -47,12 +49,7 @@ export class CashBaseService {
                 if (cell == null) { continue; }
 
                 switch (colNum) {
-                    //case CashConcessionEnum.ANumber:-- might be used 
-                    //    detail. = cell.v;
-                    //    break;
-                    //case CashConcessionEnum.RiskGroup:
-                    //    detail. = cell.v;
-                    //    break;
+
                     case CashConcessionEnum.AccNumber:
                         detail.accountNumber = cell.v;
                         break;
@@ -60,10 +57,10 @@ export class CashBaseService {
                         detail.channel = cell.v;
                         break;
                     case CashConcessionEnum.TableNumber:
-                        detail.approvedTableNumber = cell.v;
+                        detail.tableNumberId = cell.v;
                         break;
                     case CashConcessionEnum.Accrual:
-                        detail.accrualTypeId = cell.v;
+                        detail.accrualType = cell.v;
                         break;
                     case CashConcessionEnum.ExpiryDate:
                         detail.expiryDate = new Date(cell.w);
@@ -72,8 +69,8 @@ export class CashBaseService {
                
             }
         }
-
-        return cashConcessionDetails;
+        
+        return cashConcessionDetails.filter(value => JSON.stringify(value) !== '{}');
     }
 
 }

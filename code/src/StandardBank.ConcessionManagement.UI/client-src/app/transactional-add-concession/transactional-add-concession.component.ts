@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { Location } from '@angular/common';
+import { Location, DatePipe } from '@angular/common';
 import { LookupDataService } from "../services/lookup-data.service";
 import { TransactionalConcessionService } from "../services/transactional-concession.service";
 import { Period } from "../models/period";
@@ -32,7 +32,8 @@ import { TransactionalBaseService } from '../services/transactional-base.service
 @Component({
     selector: 'app-transactional-add-concession',
     templateUrl: './transactional-add-concession.component.html',
-    styleUrls: ['./transactional-add-concession.component.css']
+    styleUrls: ['./transactional-add-concession.component.css'],
+    providers: [DatePipe]
 })
 export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
     public transactionalConcessionForm: FormGroup;
@@ -77,6 +78,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
     constructor(private route: ActivatedRoute,
         private formBuilder: FormBuilder,
         private location: Location,
+        private datepipe: DatePipe,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(TransactionalConcessionService) private transactionalConcessionService,
         @Inject(TransactionalBaseService) private transactionalBaseService,
@@ -218,8 +220,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
         });
     }
 
-
-    downloadFile(name:string) {
+    downloadFile(name) {
         this.fileService.downloadFile(name).subscribe(response => {
             window.location.href = response.url;
         }), error => console.log('Error downloading the file'),
@@ -232,7 +233,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
         var fileReader: FileReader = new FileReader();
 
         this.xlsxModel = new XlsxModel();
-       // this.transactionalConcessionDetail = new TransactionalConcessionDetail();
+        this.transactionalConcessionDetail = [new TransactionalConcessionDetail()];
 
         var self = this;
         fileReader.onload = function (e) {
@@ -241,7 +242,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
             self.xlsxModel.selectedFileName = file.name;
 
             self.transactionalConcessionDetail = self.transactionalBaseService.processFileContent(self.xlsxModel);
-
+            self.populateTransactionalConcessionByFile();
             // reset the input:file which allows you to upload the same file again
             /// self.fileInput.nativeElement.value = '';
         }
@@ -250,6 +251,67 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
         fileReader.readAsBinaryString(file);
     }
 
+    populateTransactionalConcessionByFile() {
+
+        let rowIndex = 0;
+
+        for (let transactionalConcessionDetail of this.transactionalConcessionDetail) {
+
+            if (rowIndex != 0) {
+                this.addNewConcessionRow();
+            }
+
+            const concessions = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+            let currentConcession = concessions.controls[concessions.length - 1];
+
+            if (transactionalConcessionDetail.transactionType) {
+                let selectedTransactionType = this.transactionTypes.filter(_ => _.description === transactionalConcessionDetail.transactionType);
+                if (selectedTransactionType.length > 0) {
+                    currentConcession.get('transactionType').setValue(selectedTransactionType[0]);
+
+                    this.selectedTransactionTypes[concessions.length - 1] = selectedTransactionType[0];
+                    if (transactionalConcessionDetail.approvedTransactionTableNumberId && selectedTransactionType.length > 0) {
+
+                        let selectedTransactionTableNumber = selectedTransactionType[0].transactionTableNumbers.filter(_ => _.tariffTable == transactionalConcessionDetail.approvedTransactionTableNumberId);
+                        if (selectedTransactionTableNumber.length > 0) {
+
+                            currentConcession.get('transactionTableNumber').setValue(selectedTransactionTableNumber[0]);
+                            this.transactionTableNumberChanged(concessions.length - 1);
+
+                        } else {
+                            this.addValidationError('Table number is not linked to transactional type.');
+                        }
+                    }
+
+                } else {
+
+                    this.addValidationError('Transactional type added does not exist.');
+                    currentConcession.get('transactionType').setValue(null);
+                    currentConcession.get('transactionTableNumber').setValue(null);
+                    currentConcession.get('flatFeeOrRate').setValue(null);
+                }
+             
+            }
+
+            if (transactionalConcessionDetail.accountNumber) {
+                if (this.clientAccounts) {
+                    let selectedAccountNo = this.clientAccounts.filter(_ => _.accountNumber == transactionalConcessionDetail.accountNumber);
+                    if (selectedAccountNo != null) {
+                        currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
+                    } else {
+                        this.addValidationError('AccountNumber doesnt belong to selected risk group');
+                    }  
+                }
+            }
+
+            if (transactionalConcessionDetail.expiryDate) {
+                var formattedExpiryDate = this.datepipe.transform(transactionalConcessionDetail.expiryDate, 'yyyy-MM-dd');
+                currentConcession.get('expiryDate').setValue(formattedExpiryDate);
+            }
+
+            rowIndex++;
+        }
+    }
 
     addNewConcessionRow() {
         const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];

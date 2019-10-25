@@ -1,5 +1,5 @@
 
 export enum MrsEriEnum {
-    MinMrsEri = 12,
+    MinMrsEri = 10,
     MaxMrsEri = 25 
 }
