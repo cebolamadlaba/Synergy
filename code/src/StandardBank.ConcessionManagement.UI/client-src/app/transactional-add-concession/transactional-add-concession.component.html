@@ -296,10 +296,29 @@
                 <div class="col-md-12 modal-body">
                     <div class="row">
                         <div class="col-md-12 modal-title">
-                            <button type="button" class="btn btn-primary" (click)="downloadFile('transactional')">Download</button>
-                            <button type="button" class="btn btn-primary" (click)="addNewConditionRow()">Upload</button>
+                            <div class="col-md-6">
+                                upload
+                                <div class="image-upload">
+                                    <label for="file-input">
+                                        <img src="../../content/img/upload.png" />
+
+                                    </label>
+
+                                    <input id="file-input" type="file" (change)="onFileSelected($event)" />
+
+                                </div>
+                            </div>
+                     <div class="col-md-6">
+                         <div class="image-download">
+                             download
+                             <a (click)="downloadFile('transactional')">
+
+                                 <img src="../../content/img/download.png" />
+                             </a>
+                          </div>
+                       </div>
+                     </div>
                         </div>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <div class="float-right">

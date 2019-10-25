@@ -804,8 +804,13 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             if (concessionFormItem.get('limit').value)
                 lendingConcessionDetail.limit = concessionFormItem.get('limit').value;
 
-            if (concessionFormItem.get('term').value)
-                lendingConcessionDetail.term = concessionFormItem.get('term').value;
+            if (concessionFormItem.get('term').value) {
+                if (concessionFormItem.get('term').value < MOnthEnum.ThreeMonths) {
+                    this.addValidationError("Minimum term captured should be 3 months");
+                } else {
+                    lendingConcessionDetail.term = concessionFormItem.get('term').value;
+                }
+            }
 
             if (concessionFormItem.get('marginAgainstPrime').value)
                 lendingConcessionDetail.marginAgainstPrime = concessionFormItem.get('marginAgainstPrime').value;
