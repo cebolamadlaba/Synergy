@@ -75,13 +75,7 @@ export class EditUserComponent implements OnInit {
     }
 
     canDisplaySubRole() {
-        var canDisplay = false;
-        if (this.user.roleId == RoleEnum.AA || this.user.roleId == RoleEnum.PCM) {
-            canDisplay = true;
-            this.updateSubRoles();
-        }
-
-        return canDisplay;
+        return this.user.roleId == RoleEnum.AA || this.user.roleId == RoleEnum.PCM;
     }
 
     updateSubRoles() {

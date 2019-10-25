@@ -54,12 +54,7 @@ export class UsersComponent implements OnInit {
     }
 
     canDisplaySubRole() {
-        var canDisplay = false;
-        if (this.user.roleId == RoleEnum.AA || this.user.roleId == RoleEnum.PCM) {
-            canDisplay = true;
-        }
-
-        return canDisplay;
+        return this.user.roleId == RoleEnum.AA || this.user.roleId == RoleEnum.PCM;
     }
 
     onRoleChange() {

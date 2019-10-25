@@ -1,6 +1,6 @@
 
 CREATE TABLE [dbo].[tblProductGlms](
-	[pkProductGlmsId] [int] IDENTITY(1,1) PRIMARY KEY IDENTITY NOT NULL,
+	[pkProductGlmsId] [int] IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	[fkRiskGroupId] [int] NULL,
 	[fkLegalEntityId] [int] NULL,
 	fkLegalEntityAccountId [int] NULL,
