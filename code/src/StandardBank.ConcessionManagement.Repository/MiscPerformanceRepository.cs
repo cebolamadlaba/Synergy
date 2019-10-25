@@ -1084,11 +1084,8 @@ namespace StandardBank.ConcessionManagement.Repository
                     left JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = lea.fkLegalEntityId
                     left join tblLegalEntityAccount ac on pinv.fkLegalEntityAccountId = ac.pkLegalEntityAccountId				
                     left JOIN [dbo].[tblProductGlms] p on p.pkProductGlmsId = pinv.fkProductId
-	                left join [dbo].[tblBaseRateCode] code on code.pkBaseRateCodeId=pinv.fkBaseRateCodeId
                     left join [dbo].[tblGlmsGroup] glmsGroup on glmsGroup.pkGlmsGroupId = pinv.fkGroupId
 	                left join [dbo].[tblInterestPricingCategory] intCat on intCat.pkInterestPricingCategoryId = pinv.fkInterestPricingCategoryId
-					left join [dbo].[tblBaseRateCode] base on base.pkBaseRateCodeId = pinv.fkBaseRateCodeId
-
 
                      WHERE cd.fkConcessionId = @concessionId  and cd.Archived is null", new { concessionId });
 
