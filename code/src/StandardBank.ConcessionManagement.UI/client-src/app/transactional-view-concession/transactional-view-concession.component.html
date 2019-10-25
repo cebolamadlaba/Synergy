@@ -95,11 +95,26 @@
     </div>
 </div>
 
+
 <!-- Error message -->
-<div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
+<div class="col-md-12" *ngIf="(errorMessage) && !isLoading">
     <div class="form-feedback-container">
         <div class="alert-danger">
             <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
+            <p>{{errorMessage}}</p>
+
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError ">{{validationMessage}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Error message -->
+<div class="col-md-12" *ngIf="(validationError) && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Below errors requires your attention..</p>
             <p>{{errorMessage}}</p>
 
             <ul *ngIf="validationError">
@@ -190,29 +205,29 @@
                     <input formControlName="isExpired" style="display: none;" />
                     <input formControlName="isExpiring" style="display: none;" />
 
-                    <select formControlName="transactionType" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="transactionTypeChanged(i)"  [class.markred]="bcmhochanged(i,'transactionType')">
+                    <select formControlName="transactionType" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="transactionTypeChanged(i)" [class.markred]="bcmhochanged(i,'transactionType')">
                         <option *ngFor="let transactionTypeOption of transactionTypes" [ngValue]="transactionTypeOption">{{transactionTypeOption.description}}</option>
                     </select>
                 </td>
 
                 <td class="length-long">
-                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit ? null : ''"  [class.markred]="bcmhochanged(i,'accountNumber')">
+                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit ? null : ''" [class.markred]="bcmhochanged(i,'accountNumber')">
                         <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
                 </td>
 
                 <td class="length-long">
-                    <select formControlName="transactionTableNumber" class="form-control" (change)="transactionTableNumberChanged(i)" [attr.disabled]="canEdit ? null : ''" *ngIf="selectedTransactionTypes[i] != null"  [class.markred]="bcmhochanged(i,'transactionTableNumber')">
+                    <select formControlName="transactionTableNumber" class="form-control" (change)="transactionTableNumberChanged(i)" [attr.disabled]="canEdit ? null : ''" *ngIf="selectedTransactionTypes[i] != null" [class.markred]="bcmhochanged(i,'transactionTableNumber')">
                         <option *ngFor="let transactionTableNumberOption of selectedTransactionTypes[i].transactionTableNumbers" [ngValue]="transactionTableNumberOption">{{transactionTableNumberOption.displayText}}</option>
                     </select>
                 </td>
 
-                <td class="length-long"><input formControlName="flatFeeOrRate" class="form-control"  [class.markred]="bcmhochanged(i,'flatFeeOrRate')"></td>
-                <td class="length-medium"><input formControlName="adValorem" class="form-control"  [class.markred]="bcmhochanged(i,'adValorem')"></td>
+                <td class="length-long"><input formControlName="flatFeeOrRate" class="form-control" [class.markred]="bcmhochanged(i,'flatFeeOrRate')"></td>
+                <td class="length-medium"><input formControlName="adValorem" class="form-control" [class.markred]="bcmhochanged(i,'adValorem')"></td>
 
                 <td class="length-long" *ngIf="isApproved"><input formControlName="approvedTableNumber" class="form-control"></td>
 
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)"  [class.markred]="bcmhochanged(i,'expiryDate')" /></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" [class.markred]="bcmhochanged(i,'expiryDate')" /></td>
                 <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>
                 <td *ngIf="canArchive" class="delete">
                     <button *ngIf="transactionalConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="archiveConcessiondetail(itemrow.get('concessionDetailId').value)" class="btn-delete" title="Remove"><i class="fa fa-trash" aria-hidden="true" style="color:#920000"></i></button>

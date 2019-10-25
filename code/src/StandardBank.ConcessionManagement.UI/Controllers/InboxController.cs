@@ -36,12 +36,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             _siteHelper = siteHelper;
             _cache = memoryCache;
         }
-
-        //[Route("NewTransactional")]
-        //[ValidateModel]
-        //public async Task<IActionResult> NewTransactional([FromBody] TransactionalConcession transactionalConcession)
-
-
+    
         [Route("CacheAEUser")]
         public IActionResult CacheAEUser([FromBody] int accountExecutiveUserId)
         {
@@ -49,9 +44,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
 
             int cacheEntry;
-
-            // Look for cache key.
-           // if (!_cache.TryGetValue(usr.ANumber.ToLower() +  "_accountExecutiveUserId", out cacheEntry))
             {
                 // Key not in cache, so get data.
                 cacheEntry = accountExecutiveUserId;//DateTime.Now;

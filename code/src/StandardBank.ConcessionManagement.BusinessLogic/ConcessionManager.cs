@@ -383,6 +383,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
         }
 
+
         /// <summary>
         /// Gets the actioned concessions for user.
         /// </summary>
@@ -403,14 +404,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                                 .ReadByBcmUserIdIsActive(user.Id, true)));
                         break;
                     case Constants.Roles.PCM:
-                        inboxConcessions.AddRange(
-                            _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
-                                .ReadByPcmUserIdIsActive(user.Id, true)));
-                        break;
                     case Constants.Roles.HeadOffice:
                         inboxConcessions.AddRange(
                             _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
-                                .ReadByHoUserIdIsActive(user.Id, true)));
+                                .ConcessionsActionedByPcmAndHo(true)));
                         break;
                 }
             }
