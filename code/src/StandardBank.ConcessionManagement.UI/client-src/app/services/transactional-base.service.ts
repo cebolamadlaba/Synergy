@@ -36,7 +36,7 @@ export class TransactionalBaseService {
 
             let detail = new TransactionalConcessionDetail();
             transactionalConcessionDetails.push(detail);
-
+           
             for (let colNum = range.s.c; colNum <= colCount; colNum++) {
 
                 // get the cell value.
@@ -45,18 +45,12 @@ export class TransactionalBaseService {
                 // ignore null cells.
                 if (cell == null) { continue; }
 
-                switch (colNum) {
-                    //case CashConcessionEnum.ANumber: -- might be used 
-                    //    detail. = cell.v;
-                    //    break;
-                    //case CashConcessionEnum.RiskGroup:
-                    //    detail. = cell.v;
-                    //    break;
+                switch (colNum) {               
                     case TransactionalConcessionEnum.AccNumber:
                         detail.accountNumber = cell.v;
                         break;
                     case TransactionalConcessionEnum.TableNumber:
-                        detail.approvedTableNumber = cell.v;
+                        detail.approvedTransactionTableNumberId = cell.v;
                         break;
                     case TransactionalConcessionEnum.TransType:
                         detail.transactionType = cell.v;
@@ -69,7 +63,7 @@ export class TransactionalBaseService {
             }
         }
 
-        return transactionalConcessionDetails;
+        return transactionalConcessionDetails.filter(value => JSON.stringify(value) !== '{}');;
     }
 
 }

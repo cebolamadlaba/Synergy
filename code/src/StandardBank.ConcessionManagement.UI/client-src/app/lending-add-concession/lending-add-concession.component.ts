@@ -520,7 +520,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             } else {        
                 var mrsEriValue = parseInt(concessionFormItem.get('mrsEri').value, 10);
                 if (mrsEriValue < MrsEriEnum.MinMrsEri || mrsEriValue > MrsEriEnum.MaxMrsEri) {
-                    this.addValidationError("MRS/ERI numbers must from 12 to 25");
+                    this.addValidationError("MRS/ERI numbers must from 10 to 25");
                 };
             }
           
@@ -529,8 +529,11 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
                 lendingConcessionDetail.limit = concessionFormItem.get('limit').value;
 
             if (concessionFormItem.get('term').value)
-                this.onTermValueChange(concessionFormItem);
-                lendingConcessionDetail.term = concessionFormItem.get('term').value;
+                if (concessionFormItem.get('term').value < MOnthEnum.ThreeMonths) {
+                    this.addValidationError("Minimum term captured should be 3 months");
+                } else {
+                    lendingConcessionDetail.term = concessionFormItem.get('term').value;
+                }
 
             if (concessionFormItem.get('marginAgainstPrime').value)
                 lendingConcessionDetail.marginAgainstPrime = concessionFormItem.get('marginAgainstPrime').value;
@@ -658,7 +661,10 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             this.addValidationError("Minimum term captured should be 3 months");
         };
     }
- 
+
+
+
+
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
     }

@@ -1,10 +1,10 @@
 
 export enum CashConcessionEnum {
-    ANumber = 1,
-    RiskGroup = 2,
-    AccNumber = 3,
-    Channel = 4,
-    TableNumber = 5,
-    Accrual = 6,
-    ExpiryDate = 7
+    ANumber = 0,
+    RiskGroup = 1,
+    AccNumber = 2,
+    Channel = 3,
+    TableNumber = 4,
+    Accrual = 5,
+    ExpiryDate = 6
 }
