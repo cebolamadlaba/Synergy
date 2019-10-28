@@ -536,10 +536,6 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     productTypeChanged(rowIndex: number) {
-
-
-        //console.log('Row:' + rowIndex);
-        this.clientAccounts = this.clientAccountsCopy;
         const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
 
         let currentRow = control.controls[rowIndex];
@@ -548,15 +544,13 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.selectedProductTypes[rowIndex] = productType;
 
         if (this.clientAccounts && this.clientAccounts.length > 0) {
-            this.clientAccounts = this.clientAccounts.filter(re => re.accountType == productType.description);
+            this.selectedAccountNumbers[rowIndex].clientaccounts = this.clientAccounts.filter(re => re.accountType == productType.description);
 
             if (this.selectedAccountNumbers[rowIndex].clientaccounts.length == 0) {
                 control.controls[rowIndex].get('accountNumber').setValue(null);
             }
             else {
-
-                control.controls[rowIndex].get('accountNumber').setValue(this.clientAccounts);
-
+                control.controls[rowIndex].get('accountNumber').setValue(this.selectedAccountNumbers[rowIndex].clientaccounts);
             }
 
         }
