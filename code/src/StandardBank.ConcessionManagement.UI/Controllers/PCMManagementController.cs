@@ -85,6 +85,16 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             return Ok(_businessCentreManager.GetRegionCentres());
         }
+        
+        /// <summary>
+        /// Gets the region centres.
+        /// </summary>
+        /// <returns></returns>
+        [Route("RoleSubRoles")]
+        public IActionResult RoleSubRoles()
+        {
+            return Ok(_userManager.GetRoleSubRole());
+        }
 
         /// <summary>
         /// Saves the PCM user.
@@ -111,12 +121,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <summary>
         /// Validates the user.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="pcmUser">The pcmUser.</param>
         /// <returns></returns>
         [Route("ValidateUser")]
-        public IActionResult ValidateUser([FromBody] User model)
+        public IActionResult ValidateUser([FromBody] User pcmUser)
         {
-            return Ok(_userManager.ValidateUser(model, Constants.Roles.PCM));
+            return Ok(_userManager.ValidateUser(pcmUser, Constants.Roles.PCM));
         }
     }
 }

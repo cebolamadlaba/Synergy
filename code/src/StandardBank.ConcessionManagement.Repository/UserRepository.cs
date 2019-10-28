@@ -159,6 +159,30 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
         /// <summary>
+        /// Reads the by risk group identifier.
+        /// </summary>
+        /// <param name="sapbpidOrRiskGroupNumber">The risk group identifier.</param>
+        /// <returns></returns>
+        public User ReadByCustOrRiskGroupNumber(int sapbpidOrRiskGroupNumber)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<User>(
+                    @" SELECT Distinct
+                            us.FirstName
+		                    ,us.Surname
+		                    ,us.pkUserId Id
+                       FROM [dbo].[tblRiskGroup] riskgroup
+                          INNER JOIN [dbo].[tblLegalEntity] lea 
+	                        ON lea.fkRiskGroupId = riskgroup.pkRiskGroupId
+                          INNER JOIN tblUser us 
+	                        ON us.pkUserId=lea.fkUserId
+                      WHERE riskgroup.RiskGroupNumber = @sapbpidOrRiskGroupNumber 
+                            OR lea.CustomerNumber  = @sapbpidOrRiskGroupNumber ", new { sapbpidOrRiskGroupNumber }).FirstOrDefault();
+            }
+        }
+
+        /// <summary>
         /// Updates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>

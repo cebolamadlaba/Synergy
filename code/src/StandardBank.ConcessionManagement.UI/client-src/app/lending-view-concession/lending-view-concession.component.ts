@@ -30,6 +30,9 @@ import { ConcessionStatus } from '../constants/concession-status';
 import { ConcessionSubStatus } from '../constants/concession-sub-status';
 
 import { BaseComponentService } from '../services/base-component.service';
+import * as moment from 'moment';
+import { MOnthEnum } from '../models/month-enum';
+import { MrsEriEnum } from '../models/mrs-eri-enum';
 
 @Component({
     selector: 'app-lending-view-concession',
@@ -323,7 +326,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                     currentConcession.get('reviewFee').setValue(this.formatDecimal3(lendingConcessionDetail.reviewFee));
                     currentConcession.get('uffFee').setValue(this.formatDecimal3(lendingConcessionDetail.uffFee));
 
-                    currentConcession.get('mrsBri').setValue(lendingConcessionDetail.mrsBri);
+                    currentConcession.get('mrsEri').setValue(lendingConcessionDetail.mrsEri);
 
                     currentConcession.get('serviceFee').setValue(this.formatDecimal3(lendingConcessionDetail.serviceFee));
                     currentConcession.get('frequency').setValue(lendingConcessionDetail.frequency);
@@ -407,7 +410,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             isExpiring: [''],
             frequency: [{ value: '', disabled: true }],
             serviceFee: [{ value: '', disabled: true }],
-            mrsBri: [''],
+            mrsEri: [''],
         });
     }
 
@@ -521,6 +524,30 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         control.removeAt(index);
 
         this.selectedConditionTypes.splice(index, 1);
+    }
+
+    onExpiryDateChanged(itemrow) {
+
+        if (this.lendingConcession.concession.dateOpened) {
+            var formattedDateOpened = this.datepipe.transform(this.lendingConcession.concession.dateOpened, 'yyyy-MM-dd');
+        }
+
+        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidationForView(itemrow.controls['expiryDate'].value, formattedDateOpened);
+        if (validationErrorMessage != null) {
+            this.addValidationError(validationErrorMessage);
+        }
+    }
+
+    onTermValueChange(rowIndex) {
+        this.errorMessage = null;
+        this.validationError = null;
+
+        const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        let term = control.controls[rowIndex].get('term').value;
+
+        if (term < MOnthEnum.ThreeMonths) {
+            this.addValidationError("Minimum term captured should be 3 months");
+        };
     }
 
     conditionTypeChanged(rowIndex) {
@@ -696,7 +723,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
     //        currentRow.get('serviceFee').setValue(null);
 
     //    }
-    //}
+    //} 
 
     addValidationError(validationDetail) {
         if (!this.validationError)
@@ -715,13 +742,6 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         lendingConcession.concession = new Concession();
         lendingConcession.concession.concessionType = ConcessionTypes.Lending;
         lendingConcession.concession.referenceNumber = this.concessionReferenceId;
-
-        //if (this.lendingConcessionForm.controls['mrsCrs'].value)
-        //    lendingConcession.concession.mrsCrs = this.lendingConcessionForm.controls['mrsCrs'].value;
-        //else
-        //    if (this.lendingConcessionForm.controls['mrsCrs'].value != 0) {
-        //        this.addValidationError("MRS/CRS not captured");
-        //    }
 
         if (this.lendingConcessionForm.controls['smtDealNumber'].value)
             lendingConcession.concession.smtDealNumber = this.lendingConcessionForm.controls['smtDealNumber'].value;
@@ -778,8 +798,13 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             if (concessionFormItem.get('limit').value)
                 lendingConcessionDetail.limit = concessionFormItem.get('limit').value;
 
-            if (concessionFormItem.get('term').value)
-                lendingConcessionDetail.term = concessionFormItem.get('term').value;
+            if (concessionFormItem.get('term').value) {
+                if (concessionFormItem.get('term').value < MOnthEnum.ThreeMonths) {
+                    this.addValidationError("Minimum term captured should be 3 months");
+                } else {
+                    lendingConcessionDetail.term = concessionFormItem.get('term').value;
+                }
+            }
 
             if (concessionFormItem.get('marginAgainstPrime').value)
                 lendingConcessionDetail.marginAgainstPrime = concessionFormItem.get('marginAgainstPrime').value;
@@ -803,14 +828,23 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
                 lendingConcessionDetail.frequency = concessionFormItem.get('frequency').value;
 
             if (concessionFormItem.get('expiryDate').value)
+                this.onExpiryDateChanged(concessionFormItem);
                 lendingConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
-            if (concessionFormItem.get('mrsBri').value == "" ||
-                concessionFormItem.get('mrsBri').value.toString().indexOf(".") > -1) {
-                this.addValidationError("MRS/BRI cannot be empty or a decimal");
+            if (concessionFormItem.get('mrsEri').value == "" ||
+                concessionFormItem.get('mrsEri').value.toString().indexOf(".") > -1) {
+                this.addValidationError("MRS/ERI cannot be empty or a decimal");
+            
+            } else {
+
+                var mrsEriValue = parseInt(concessionFormItem.get('mrsEri').value, 10);
+                if (mrsEriValue < MrsEriEnum.MinMrsEri || mrsEriValue > MrsEriEnum.MaxMrsEri) {
+                    this.addValidationError("MRS/ERI numbers must from 12 to 25");
+                } else {
+                    lendingConcessionDetail.mrsEri = concessionFormItem.get('mrsEri').value;
+                }   
             }
-            else
-                lendingConcessionDetail.mrsBri = concessionFormItem.get('mrsBri').value;
+                
 
             lendingConcession.lendingConcessionDetails.push(lendingConcessionDetail);
 

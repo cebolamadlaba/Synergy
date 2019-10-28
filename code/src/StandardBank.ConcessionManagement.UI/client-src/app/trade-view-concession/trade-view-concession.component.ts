@@ -39,6 +39,8 @@ import { TradeView } from "../models/trade-view";
 import { LegalEntity } from "../models/legal-entity";
 
 import { BaseComponentService } from '../services/base-component.service';
+import * as moment from 'moment';
+import { MOnthEnum } from '../models/month-enum';
 
 @Component({
     selector: 'app-trade-view-concession',
@@ -588,6 +590,30 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
+    onExpiryDateChanged(itemrow) {
+
+        if (this.tradeConcession.concession.dateOpened) {
+            var formattedDateOpened = this.datepipe.transform(this.tradeConcession.concession.dateOpened, 'yyyy-MM-dd');
+        }
+
+        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidationForView(itemrow.controls['expiryDate'].value, formattedDateOpened);
+        if (validationErrorMessage != null) {
+            this.addValidationError(validationErrorMessage);
+        }
+    }
+
+    onTermValueChange(rowIndex) {
+        this.errorMessage = null;
+        this.validationError = null;
+
+        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+        let term = control.controls[rowIndex].get('term').value;
+
+        if (term < MOnthEnum.ThreeMonths) {
+            this.addValidationError("Minimum term captured should be 3 months");
+        };
+    }
+
     deleteConditionRow(index: number) {
         const control = <FormArray>this.tradeConcessionForm.controls['conditionItemsRows'];
         control.removeAt(index);
@@ -896,6 +922,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                 }
             }
             if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
+                this.onExpiryDateChanged(concessionFormItem);
                 tradeConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
             else {

@@ -1,0 +1,1 @@
+sp_rename 'tblConcessionLending.MRS_BRI', 'MRS_ERI', 'COLUMN';

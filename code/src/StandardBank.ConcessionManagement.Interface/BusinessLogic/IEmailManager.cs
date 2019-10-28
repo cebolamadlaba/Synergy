@@ -61,5 +61,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="sapDataImportIssuesEmail">The sap data import issues email.</param>
         /// <returns></returns>
         Task<bool> SendSapDataImportIssuesEmail(SapDataImportIssuesEmail sapDataImportIssuesEmail);
+
+        Task<bool> SendMismatchEscalationEmail(MismatchEscalationEmail mismatchEscalationEmail);
     }
 }

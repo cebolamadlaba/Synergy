@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { Location } from '@angular/common';
+import { Location, DatePipe } from '@angular/common';
 import { Period } from "../models/period";
 import { PeriodType } from "../models/period-type";
 import { ConditionType } from "../models/condition-type";
@@ -21,13 +21,21 @@ import { TableNumber } from "../models/table-number";
 import { LegalEntity } from "../models/legal-entity";
 import { DecimalPipe } from '@angular/common';
 import { ConcessionTypes } from '../constants/concession-types';
+import * as moment from 'moment';
+import { MOnthEnum } from '../models/month-enum';
+import * as fileSaver from 'file-saver';
+import { FileService } from '../services/file.service';
+import * as XLSX from 'xlsx';
+import { XlsxModel } from '../models/XlsxModel';
+import { CashBaseService } from '../services/cash-base.service';
 
 import { BaseComponentService } from '../services/base-component.service';
 
 @Component({
     selector: 'app-cash-add-concession',
     templateUrl: './cash-add-concession.component.html',
-    styleUrls: ['./cash-add-concession.component.css']
+    styleUrls: ['./cash-add-concession.component.css'],
+    providers: [DatePipe]
 })
 export class CashAddConcessionComponent implements OnInit, OnDestroy {
     private sub: any;
@@ -40,6 +48,8 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
     legalEntity: LegalEntity;
     sapbpid: number;
+    cashConcessionDetail = [new CashConcessionDetail()];
+    xlsxModel = new XlsxModel();
 
     subHeading: string;
     title: string;
@@ -76,6 +86,9 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         private location: Location,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(CashConcessionService) private cashConcessionService,
+        @Inject(CashBaseService) private cashBaseService,
+        private fileService: FileService,
+        private datepipe: DatePipe,
         private baseComponentService: BaseComponentService) {
         this.riskGroup = new RiskGroup();
         this.periods = [new Period()];
@@ -89,18 +102,6 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
             this.sapbpid = +params['sapbpid'];
-
-            // Duplicate call to API...not sure why? :(
-            //if (this.riskGroupNumber) {
-            //this.observableRiskGroup = this.lookupDataService.getRiskGroup(this.riskGroupNumber);
-            //this.observableRiskGroup.subscribe(riskGroup => this.riskGroup = riskGroup, error => this.errorMessage = <any>error);
-
-            //this.observableClientAccounts = this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, ConcessionTypes.Cash);
-            //this.observableClientAccounts.subscribe(clientAccounts => this.clientAccounts = clientAccounts, error => this.errorMessage = <any>error);
-
-            //this.observableLatestCrsOrMrs = this.cashConcessionService.getlatestCrsOrMrs(this.riskGroupNumber);
-            //this.observableLatestCrsOrMrs.subscribe(latestCrsOrMrs => this.latestCrsOrMrs = latestCrsOrMrs, error => this.errorMessage = <any>error);
-            //}
         });
 
         this.cashConcessionForm = this.formBuilder.group({
@@ -223,6 +224,88 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         this.isLoading = false;
     }
 
+    downloadFile(name: string) {
+        this.fileService.downloadFile(name).subscribe(response => {
+            window.location.href = response.url;
+        }), error => console.log('Error downloading the file'),
+            () => console.info('File downloaded successfully');
+    }
+
+    onFileSelected(event) {
+
+        var file: File = event.target.files[0];
+        var fileReader: FileReader = new FileReader();
+
+        this.xlsxModel = new XlsxModel();
+        this.cashConcessionDetail = [new CashConcessionDetail()];
+
+        var self = this;
+        fileReader.onload = function (e) {
+            // set initial properties in order to process the file
+            self.xlsxModel.fileContent = fileReader.result;
+            self.xlsxModel.selectedFileName = file.name;
+
+            self.cashConcessionDetail = self.cashBaseService.processFileContent(self.xlsxModel);
+            self.populateCashConcessionByFile();
+
+           // self.fileInput.nativeElement.value = '';
+        }
+
+        fileReader.readAsBinaryString(file);
+    }
+
+    populateCashConcessionByFile() {
+
+        let rowIndex = 0;
+
+        for (let cashConcessionDetail of this.cashConcessionDetail) {
+
+            if (rowIndex != 0) {
+                this.addNewConcessionRow();
+            }
+
+            const concessions = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
+            let currentConcession = concessions.controls[concessions.length - 1];
+
+            if (cashConcessionDetail.channel) {
+                let selectedChannelType = this.channelTypes.filter(_ => _.description == cashConcessionDetail.channel);
+                currentConcession.get('channelType').setValue(selectedChannelType[0]);
+            }
+
+            if (cashConcessionDetail.accountNumber) {
+
+                if (this.clientAccounts) {
+
+                    let selectedAccountNo = this.clientAccounts.filter(_ => _.accountNumber == cashConcessionDetail.accountNumber);
+                    if (selectedAccountNo.length > 0) {
+                        currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
+                    } else {
+                        this.addValidationError('AccountNumber does not belong to selected risk group');
+                    }  
+                }  
+            }
+
+            if (cashConcessionDetail.tableNumberId) {
+                let selectedTableNumber = this.tableNumbers.filter(_ => _.tariffTable == cashConcessionDetail.tableNumberId);
+                currentConcession.get('tableNumber').setValue(selectedTableNumber[0]);
+                this.tableNumberChanged(concessions.length - 1);
+            }
+
+            if (cashConcessionDetail.accrualType) {
+                let selectedAccrualType = this.accrualTypes.filter(_ => _.description == cashConcessionDetail.accrualType);
+                currentConcession.get('accrualType').setValue(selectedAccrualType[0]);
+            }
+
+            if (cashConcessionDetail.expiryDate) {
+                var formattedExpiryDate = this.datepipe.transform(cashConcessionDetail.expiryDate, 'yyyy-MM-dd');
+                currentConcession.get('expiryDate').setValue(formattedExpiryDate);
+            }
+
+            rowIndex++;
+        }
+    }
+
+
     addNewConcessionRow() {
         const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
         var newRow = this.initConcessionItemRows();
@@ -259,19 +342,6 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
 
         var newRow = this.initConcessionItemRows();
-
-        //if (this.channelTypes)
-        //    newRow.controls['channelType'].setValue(this.channelTypes[0]);
-
-        //if (this.tableNumbers)
-        //    newRow.controls['tableNumber'].setValue(this.tableNumbers[0]);
-
-        //if (this.clientAccounts)
-        //    newRow.controls['accountNumber'].setValue(this.clientAccounts[0]);
-
-        //if (this.accrualTypes)
-        //    newRow.controls['accrualType'].setValue(this.accrualTypes[0]);
-
 
         if (control.controls[index].get('channelType').value)
             newRow.controls['channelType'].setValue(control.controls[index].get('channelType').value);
@@ -338,6 +408,14 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             control.controls[rowIndex].get('adValorem').setValue(null);
     }
 
+    onExpiryDateChanged(itemrow) {
+        
+        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
+        if (validationErrorMessage != null) {
+            this.addValidationError(validationErrorMessage);
+        }
+    }
+
     addValidationError(validationDetail) {
         if (!this.validationError)
             this.validationError = [];
@@ -378,7 +456,13 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
                 this.addValidationError("Channel type not selected");
             }
 
-
+            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
+                this.onExpiryDateChanged(concessionFormItem);
+                cashConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+            }
+            else {
+                this.addValidationError("Expiry date not selected");
+            }
 
             if (concessionFormItem.get('accountNumber').value && concessionFormItem.get('accountNumber').value.legalEntityId) {
                 cashConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
@@ -401,13 +485,6 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
                 cashConcessionDetail.accrualTypeId = concessionFormItem.get('accrualType').value.id;
             } else {
                 this.addValidationError("Accrual type not selected");
-            }
-
-            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
-                cashConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
-            }
-            else {
-                this.addValidationError("Expiry date not selected");
             }
 
             cashConcession.cashConcessionDetails.push(cashConcessionDetail);
@@ -508,16 +585,10 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-        //$event.target.value = this.formatDecimal($event.target.value);
+
     }
 
-    //formatDecimal(itemValue: number) {
-    //    if (itemValue) {
-    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-    //    }
 
-    //    return null;
-    //}
 
     goBack() {
         this.location.back();

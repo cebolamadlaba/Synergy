@@ -10,12 +10,15 @@ import { LendingService } from "../services/lending.service";
 import { Router, RouterModule } from '@angular/router';
 import { LendingFinancial } from "../models/lending-financial";
 import { UserService } from "../services/user.service";
+import { BaseComponentService } from '../services/base-component.service';
+import { Http } from '@angular/http';
+
 @Component({
     selector: 'app-pricing-lending',
     templateUrl: './pricing-lending.component.html',
     styleUrls: ['./pricing-lending.component.css']
 })
-export class PricingLendingComponent implements OnInit, OnDestroy {
+export class PricingLendingComponent extends BaseComponentService implements OnInit, OnDestroy {
     riskGroupNumber: number;
     sapbpid: number;
     private sub: any;
@@ -34,11 +37,12 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
     title: number = 0;
 
     constructor(
-        private router: Router,
+        public router: Router,
         private route: ActivatedRoute,
         private location: Location,
         @Inject(LendingService) private lendingService,
-        private userService: UserService) {
+        public userService: UserService) {
+        super(router, userService);
         this.lendingView.riskGroup = new RiskGroup();
         this.lendingView.lendingFinancial = new LendingFinancial();
         this.lendingView.lendingConcessions = [new LendingConcession()];
@@ -82,8 +86,7 @@ export class PricingLendingComponent implements OnInit, OnDestroy {
         });
     }
 
-    goBack() {
-        //this.location.back();
+    goBack() {     
         this.router.navigate(['/pricing', { riskGroupNumber: this.riskGroupNumber, sapbpid: this.sapbpid }]);
     }
 

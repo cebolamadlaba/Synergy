@@ -41,6 +41,8 @@ import { InvestmentConcessionService } from "../services/investment-concession.s
 import { InvestmentView } from "../models/investment-view";
 
 import { BaseComponentService } from '../services/base-component.service';
+import * as moment from 'moment';
+import { MOnthEnum } from '../models/month-enum';
 
 @Component({
     selector: 'app-investments-view-concession',
@@ -270,6 +272,18 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.populateForm();
     }
 
+    onExpiryDateChanged(itemrow) {
+
+        if (this.investmentConcession.concession.dateOpened) {
+            var formattedDateOpened = this.datepipe.transform(this.investmentConcession.concession.dateOpened, 'yyyy-MM-dd');
+        }
+
+        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidationForView(itemrow.controls['expiryDate'].value, formattedDateOpened);
+        if (validationErrorMessage != null) {
+            this.addValidationError(validationErrorMessage);
+        }
+    }
+
     populateForm() {
         if (this.concessionReferenceId) {
             this.observableInvestmentConcession = this.investmentConcessionService.getInvestmentConcessionData(this.concessionReferenceId);
@@ -280,7 +294,8 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                     this.canBcmApprove = investmentConcession.currentUser.canBcmApprove;
                 }
 
-                if (investmentConcession.concession.status == ConcessionStatus.Pending && investmentConcession.concession.subStatus == ConcessionSubStatus.PCMPending) {
+                if (investmentConcession.concession.status == ConcessionStatus.Pending && (investmentConcession.concession.subStatus == ConcessionSubStatus.PCMPending ||
+                    investmentConcession.concession.subStatus == ConcessionSubStatus.PCMSnIPending)) {
                     if (this.investmentConcession.currentUser.isHO) {
                         this.canPcmApprove = investmentConcession.currentUser.canPcmApprove
                     } else {
@@ -546,7 +561,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
     //    currentProduct.get('disablecontrolset').setValue(true);
 
-    //    currentProduct.get('advalorem').setValue(null);
+    //    currentProduct.get('advalorem').setValue(null); 
     //    currentProduct.get('min').setValue(null);
     //    currentProduct.get('max').setValue(null);
 
@@ -641,6 +656,8 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         investmentConcession.concession.referenceNumber = this.concessionReferenceId;
         investmentConcession.concession.concessionType = ConcessionTypes.Investment;
 
+       
+
         if (this.investmentConcessionForm.controls['smtDealNumber'].value) {
             investmentConcession.concession.smtDealNumber = this.investmentConcessionForm.controls['smtDealNumber'].value;
         }
@@ -728,6 +745,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             }
 
             if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
+                this.onExpiryDateChanged(concessionFormItem);
                 investmentConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
             else {
@@ -840,7 +858,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.validationError = null;
 
         var investmentConcession = this.getInvestmentConcession(false);
-        investmentConcession.concession.subStatus = ConcessionSubStatus.PCMPending;
+        investmentConcession.concession.subStatus = ConcessionSubStatus.PCMSnIPending;
         investmentConcession.concession.bcmUserId = this.investmentConcession.currentUser.id;
 
         if (!investmentConcession.concession.comments) {

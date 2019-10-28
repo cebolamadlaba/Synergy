@@ -27,6 +27,9 @@ import { ConcessionStatus } from '../constants/concession-status';
 import { ConcessionSubStatus } from '../constants/concession-sub-status';
 import { BaseComponentService } from '../services/base-component.service';
 import { LegalEntity } from "../models/legal-entity";
+import * as moment from 'moment';
+import { MOnthEnum } from '../models/month-enum';
+
 
 @Component({
     selector: 'app-cash-view-concession',
@@ -425,6 +428,18 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         this.selectedConditionTypes.splice(index, 1);
     }
 
+    onExpiryDateChanged(itemrow) {
+
+        if (this.cashConcession.concession.dateOpened) {
+            var formattedDateOpened = this.datepipe.transform(this.cashConcession.concession.dateOpened, 'yyyy-MM-dd');
+        }
+
+        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidationForView(itemrow.controls['expiryDate'].value, formattedDateOpened);
+        if (validationErrorMessage != null) {
+            this.addValidationError(validationErrorMessage);
+        }
+    }
+
     conditionTypeChanged(rowIndex) {
         const control = <FormArray>this.cashConcessionForm.controls['conditionItemsRows'];
         this.selectedConditionTypes[rowIndex] = control.controls[rowIndex].get('conditionType').value;
@@ -493,6 +508,14 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
             let cashConcessionDetail = new CashConcessionDetail();
 
+            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
+                this.onExpiryDateChanged(concessionFormItem);
+                cashConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+            }
+            else {
+                this.addValidationError("Expiry date not selected");
+            }
+
             if (!isNew && concessionFormItem.get('cashConcessionDetailId').value)
                 cashConcessionDetail.cashConcessionDetailId = concessionFormItem.get('cashConcessionDetailId').value;
 
@@ -529,10 +552,6 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                 cashConcessionDetail.accrualTypeId = concessionFormItem.get('accrualType').value.id;
             } else {
                 this.addValidationError("Accrual type not selected");
-            }
-
-            if (concessionFormItem.get('expiryDate').value) {
-                cashConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
 
             cashConcession.cashConcessionDetails.push(cashConcessionDetail);
@@ -1109,16 +1128,10 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-        //$event.target.value = this.formatDecimal($event.target.value);
+        
     }
 
-    //formatDecimal(itemValue: number) {
-    //    if (itemValue) {
-    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-    //    }
-
-    //    return null;
-    //}
+    
 
     validatePeriod(itemrow) {
         this.validationError = null;

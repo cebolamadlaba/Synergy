@@ -30,6 +30,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// </summary>
         private readonly ILookupTableManager _lookupTableManager;
 
+        /// <summary>
+        /// The Glms lookup table manager
+        /// </summary>
+        private readonly IGlmsLookupTableManager _glmsLookupTableManager;
+
         private readonly ILegalEntityAddressManager _legalEntityAddressManager;
 
         /// <summary>
@@ -56,7 +61,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="letterGeneratorManager">The letter generator manager.</param>
         /// <param name="mediator">The mediator.</param>
         public ConcessionController(IConcessionManager concessionManager, ILookupTableManager lookupTableManager, ILegalEntityAddressManager legalEntityAddressManager,
-            ISiteHelper siteHelper, ILetterGeneratorManager letterGeneratorManager, IMediator mediator)
+            ISiteHelper siteHelper, ILetterGeneratorManager letterGeneratorManager, IMediator mediator,
+            IGlmsLookupTableManager glmsLookupTableManager)
         {
             _concessionManager = concessionManager;
             _lookupTableManager = lookupTableManager;
@@ -64,6 +70,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             _siteHelper = siteHelper;
             _letterGeneratorManager = letterGeneratorManager;
             _mediator = mediator;
+            _glmsLookupTableManager = glmsLookupTableManager;
         }
 
         /// <summary>
@@ -227,14 +234,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             return Ok(_lookupTableManager.GetConcessionTypes(isActive));
         }
-
-
-        //[Route("ActiveTableNumbers/{isActive}")]
-        //public IActionResult TableNumbers(bool isActive)
-        //{
-        //    return Ok(_lookupTableManager.GetTableNumbers(isActive));
-        //}
-
         /// <summary>
         /// Tables the numbers.
         /// </summary>
@@ -333,8 +332,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
                     //save the entry to the db
                     _concessionManager.CreateConcessionLetter(new Model.Repository.ConcessionLetter { fkConcessionDetailId = int.Parse(ConcessionDetailedId), Location = FQDNLocation });
-
-
                 }
             }
 
@@ -361,13 +358,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             };
 
             return result;
-
-
         }
-
-
-
-
 
         /// <summary>
         /// Generates the concession letter for concession details.-- Used.
@@ -413,21 +404,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             };
 
             return Ok(file);
-
-            //var userId = _siteHelper.GetUserIdForFiltering(this);
-            //HttpContext.Response.ContentType = "application/pdf";
-
-            //var convertedConcessionIds = from concessionDetailId in concessionIds.Split(',')
-            //                             select Convert.ToInt32(concessionDetailId);
-
-            //var result = new FileContentResult(
-            //    _letterGeneratorManager.GenerateLettersForConcessions(convertedConcessionIds, userId),
-            //    "application/pdf")
-            //{
-            //    FileDownloadName = $"ConcessionLetter_{concessionIds.Replace(",", "_")}.pdf"
-            //};
-
-            //return result;
+            
         }
 
 
@@ -443,6 +420,66 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                     City = legalEntityConcessionLetter.ClientCity,
                     PostalCode = legalEntityConcessionLetter.ClientPostalCode,
                 });
+        }
+
+        /// <summary>
+        /// Gets the  type.
+        /// </summary>
+        /// <returns></returns>
+        [Route("InterestType")]
+        public IActionResult InterestType()
+        {
+            return Ok(_glmsLookupTableManager.GetInterestTypes());
+        }
+
+        /// <summary>
+        /// Gets the Glms Group.
+        /// </summary>
+        /// <returns></returns>
+        [Route("GlmsGroup")]
+        public IActionResult GlmsGroup()
+        {
+            return Ok(_glmsLookupTableManager.GetGlmsGroups());
+        }
+
+        /// <summary>
+        /// Gets the Interest Pricing Category.
+        /// </summary>
+        /// <returns></returns>
+        [Route("InterestPricingCategory")]
+        public IActionResult InterestPricingCategory()
+        {
+            return Ok(_glmsLookupTableManager.GetInterestPricingCategories());
+        }
+
+        /// <summary>
+        /// Gets the Rate Type.
+        /// </summary>
+        /// <returns></returns>
+        [Route("RateType")]
+        public IActionResult RateType()
+        {
+            return Ok(_glmsLookupTableManager.GetRateTypes());
+        }
+
+        /// <summary>
+        /// Gets the Slab Type.
+        /// </summary>
+        /// <returns></returns>
+        [Route("SlabType")]
+        public IActionResult SlabType()
+        {
+            return Ok(_glmsLookupTableManager.GetSlabTypes());
+        }
+
+        /// <summary>
+        /// Gets the Base Rate Code.
+        /// </summary>
+        /// <returns></returns>
+        [Route("BaseRateCode")]
+        public IActionResult BaseRateCode()
+        {
+            return Ok(_glmsLookupTableManager.GetBaseRateCodes());
         }
     }
 }

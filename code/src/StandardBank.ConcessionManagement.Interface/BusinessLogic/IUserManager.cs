@@ -98,5 +98,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="accountExecutiveUserId">The account executive user identifier.</param>
         /// <returns></returns>
         IEnumerable<User> GetAccountAssistantsForAccountExecutive(int accountExecutiveUserId);
+
+        /// <summary>
+        /// Gets the user.
+        /// </summary>
+        /// <param name="riskGroupNumber">The user identifier.</param>
+        /// <returns></returns>
+         User GetUserByRiskGroupNumber(int riskGroupNumber);
     }
 }

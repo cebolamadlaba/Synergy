@@ -21,6 +21,7 @@ export class EditUserComponent implements OnInit {
     Centres: Centre[];
     Roles: Role[];
     RoleSubRole: RoleSubRole[];
+    subRolesCopy: RoleSubRole[];
     user = {} as User;
     id: number;
     success: boolean;
@@ -37,6 +38,7 @@ export class EditUserComponent implements OnInit {
             this.Centres = result.centres as Centre[];
             this.Roles = result.roles as Role[];
             this.RoleSubRole = result.roleSubRole as RoleSubRole[];
+            this.subRolesCopy = this.RoleSubRole;
         });
         this.route.params.subscribe(params => {
             this.id = +params['id'];
@@ -44,13 +46,17 @@ export class EditUserComponent implements OnInit {
         this.adminService.GetUser(this.id).subscribe(r => {
             this.user = r as User;
         });
+
     }
 
     save() {
-        if (this.user.subRoleId == SubRoleEnum.NoSubrole) {
+        if (this.user.subRoleId == SubRoleEnum.NoSubrole ||
+            (this.user.subRoleId == SubRoleEnum.PCMSnI && this.user.roleId == RoleEnum.AA) ||
+            ((this.user.subRoleId == SubRoleEnum.BOLConsultant ||
+                this.user.subRoleId == SubRoleEnum.TradeBanker) && this.user.roleId == RoleEnum.PCM)) {
             this.user.subRoleId = null;
         }
-        if (this.user.roleId != RoleEnum.AA) {
+        if (this.user.roleId != RoleEnum.AA && this.user.roleId != RoleEnum.PCM) {
             this.user.subRoleId = null;
         }
 
@@ -69,7 +75,21 @@ export class EditUserComponent implements OnInit {
     }
 
     canDisplaySubRole() {
-        return this.user.roleId == RoleEnum.AA;
+        return this.user.roleId == RoleEnum.AA || this.user.roleId == RoleEnum.PCM;
+    }
+
+    updateSubRoles() {
+        if (this.user.roleId == RoleEnum.AA) {
+            this.RoleSubRole = this.subRolesCopy.filter(a => {
+                return a.subRoleId != SubRoleEnum.PCMSnI;
+            });
+        }
+
+        if (this.user.roleId == RoleEnum.PCM) {
+            this.RoleSubRole = this.subRolesCopy.filter(a => {
+                return a.subRoleId == SubRoleEnum.NoSubrole || a.subRoleId == SubRoleEnum.PCMSnI;
+            });
+        }        
     }
 
     goBack() {
