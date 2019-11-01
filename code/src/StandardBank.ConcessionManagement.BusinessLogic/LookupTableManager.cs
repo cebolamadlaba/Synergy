@@ -143,6 +143,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         private readonly IRoleRepository _roleRepository;
 
+        private readonly IRoleSubRoleRepository _roleSubRoleRepository;
+
         /// <summary>
         /// The centre repository
         /// </summary>
@@ -203,7 +205,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IBolUserRepository bolRepository,
             IConcessionTradeRepository concessionTradeRepository,
             IConcessionInvestmentRepository concessionInvestmentRepository,
-            ILegalEntityRepository legalEntityRepository)
+            ILegalEntityRepository legalEntityRepository,
+            IRoleSubRoleRepository roleSubRoleRepository)
         {
             _statusRepository = statusRepository;
             _subStatusRepository = subStatusRepository;
@@ -230,7 +233,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _bolRepository = bolRepository;
             _concessionTradeRepository = concessionTradeRepository;
             _concessionInvestmentRepository = concessionInvestmentRepository;
-            _legalEntityRepository = legalEntityRepository;       
+            _legalEntityRepository = legalEntityRepository;
+            _roleSubRoleRepository = roleSubRoleRepository;
         }
 
         /// <summary>
@@ -239,6 +243,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<Model.UserInterface.Role> GetRoles() =>
             _mapper.Map<IEnumerable<Model.UserInterface.Role>>(_roleRepository.ReadAll());
+
+        public IEnumerable<RoleSubRole> GetRoleSubRole(int? roleId = null)
+        {
+            IEnumerable<RoleSubRole> subRoles = this._roleSubRoleRepository.ReadAll();
+
+            if (roleId.HasValue)
+                return subRoles.Where(a => a.RoleId == null || a.RoleId.Value == roleId.Value);
+
+            return subRoles;
+        }
 
         /// <summary>
         /// Gets the centres.
@@ -538,39 +552,39 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<ConditionType> GetConditionTypes()
         {
-            
-                var mappedConditionTypes = new List<ConditionType>();
-                var conditionTypes = _conditionTypeRepository.ReadAll();
-                var conditionProducts = _conditionProductRepository.ReadAll().Where(_ => _.IsActive);
-                var conditionTypeProducts = _conditionTypeProductRepository.ReadAll().Where(_ => _.IsActive);
 
-                foreach (var conditionType in conditionTypes.Where(_ => _.IsActive))
-                {
-                    var mappedConditionType = _mapper.Map<ConditionType>(conditionType);
+            var mappedConditionTypes = new List<ConditionType>();
+            var conditionTypes = _conditionTypeRepository.ReadAll();
+            var conditionProducts = _conditionProductRepository.ReadAll().Where(_ => _.IsActive);
+            var conditionTypeProducts = _conditionTypeProductRepository.ReadAll().Where(_ => _.IsActive);
 
-                    mappedConditionType.EnableInterestRate =
-                        ((mappedConditionType.Description == Constants.ConditionType.MininumAverageCreditBalance) | (mappedConditionType.Description == Constants.ConditionType.CreditFacility));
+            foreach (var conditionType in conditionTypes.Where(_ => _.IsActive))
+            {
+                var mappedConditionType = _mapper.Map<ConditionType>(conditionType);
 
-                    mappedConditionType.EnableConditionValue =
-                        mappedConditionType.Description == Constants.ConditionType.FullTransactionalBanking |
-                        mappedConditionType.Description == Constants.ConditionType.MininumTurnover |
-                        mappedConditionType.Description == Constants.ConditionType.MininumAverageCreditBalance;
+                mappedConditionType.EnableInterestRate =
+                    ((mappedConditionType.Description == Constants.ConditionType.MininumAverageCreditBalance) | (mappedConditionType.Description == Constants.ConditionType.CreditFacility));
 
-                    mappedConditionType.EnableConditionVolume =
-                        mappedConditionType.Description == Constants.ConditionType.MininumTurnover |
-                        mappedConditionType.Description == Constants.ConditionType.FullTransactionalBanking;
+                mappedConditionType.EnableConditionValue =
+                    mappedConditionType.Description == Constants.ConditionType.FullTransactionalBanking |
+                    mappedConditionType.Description == Constants.ConditionType.MininumTurnover |
+                    mappedConditionType.Description == Constants.ConditionType.MininumAverageCreditBalance;
 
-                    mappedConditionType.EnableExpectedTurnoverValue =
-                        mappedConditionType.Description == Constants.ConditionType.FullTransactionalBanking;
+                mappedConditionType.EnableConditionVolume =
+                    mappedConditionType.Description == Constants.ConditionType.MininumTurnover |
+                    mappedConditionType.Description == Constants.ConditionType.FullTransactionalBanking;
 
-                    mappedConditionType.ConditionProducts =
-                        GetConditionProducts(conditionType.Id, conditionProducts, conditionTypeProducts);
+                mappedConditionType.EnableExpectedTurnoverValue =
+                    mappedConditionType.Description == Constants.ConditionType.FullTransactionalBanking;
 
-                    mappedConditionTypes.Add(mappedConditionType);
-                }
+                mappedConditionType.ConditionProducts =
+                    GetConditionProducts(conditionType.Id, conditionProducts, conditionTypeProducts);
 
-                return mappedConditionTypes;
-          
+                mappedConditionTypes.Add(mappedConditionType);
+            }
+
+            return mappedConditionTypes;
+
         }
 
         /// <summary>

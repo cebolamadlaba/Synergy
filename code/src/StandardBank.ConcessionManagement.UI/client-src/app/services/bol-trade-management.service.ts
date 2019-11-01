@@ -42,11 +42,6 @@ export class BolTradeManagementService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    getRoleSubRoles(): Observable<RoleSubRole[]> {
-        const url = "/api/BolTradeAAManagement/RoleSubRoles";
-        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
-    }
-
     getAEUsers(): Observable<User[]> {
         const url = "/api/BolTradeAAManagement/AEUsers";
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
@@ -83,11 +78,6 @@ export class MockAaManagementService extends BolTradeManagementService {
 
     getCentres(): Observable<Centre[]> {
         var model = [new Centre()];
-        return Observable.of(model);
-    }
-
-    getRoleSubRoles(): Observable<RoleSubRole[]> {
-        var model = [new RoleSubRole()];
         return Observable.of(model);
     }
 

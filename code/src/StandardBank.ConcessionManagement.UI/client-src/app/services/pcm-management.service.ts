@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import { User } from '../models/user';
 import { RegionCentresModel } from '../models/region-centres-model';
+import { RoleSubRole } from '../models/RoleSubRole';
 
 @Injectable()
 export class PcmManagementService {
@@ -17,11 +18,6 @@ export class PcmManagementService {
 
     getRegionCentres(): Observable<RegionCentresModel[]> {
         const url = "/api/PCMManagement/RegionCentres";
-        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
-    }
-
-    getRoleSubRoles(): Observable<RegionCentresModel[]> {
-        const url = "/api/PCMManagement/RoleSubRoles";
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 

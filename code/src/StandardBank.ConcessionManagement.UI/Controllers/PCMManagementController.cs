@@ -72,7 +72,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             if (user.IsPCM)
                 pcmUsers = pcmUsers.Where(_ => _.Id == user.Id);
-        
+
             return Ok(pcmUsers);
         }
 
@@ -84,16 +84,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult RegionCentres()
         {
             return Ok(_businessCentreManager.GetRegionCentres());
-        }
-        
-        /// <summary>
-        /// Gets the region centres.
-        /// </summary>
-        /// <returns></returns>
-        [Route("RoleSubRoles")]
-        public IActionResult RoleSubRoles()
-        {
-            return Ok(_userManager.GetRoleSubRole());
         }
 
         /// <summary>
@@ -109,7 +99,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             pcmUser.RoleId = roles.First(_ => _.Name == Constants.Roles.PCM).Id;
             pcmUser.CentreId = 0;
-            
+
             if (pcmUser.Id > 0)
                 await _mediator.Send(new UpdateUser(pcmUser, user));
             else

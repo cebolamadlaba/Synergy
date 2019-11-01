@@ -18,6 +18,8 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <returns></returns>
         IEnumerable<Role> GetRoles();
 
+        IEnumerable<RoleSubRole> GetRoleSubRole(int? roleId = null);
+
         /// <summary>
         /// Gets the centres.
         /// </summary>

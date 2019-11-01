@@ -1,0 +1,25 @@
+﻿CREATE TABLE [dbo].[tblProductGlms] (
+    [pkProductGlmsId]             INT             IDENTITY (1, 1) NOT NULL,
+    [fkRiskGroupId]               INT             NULL,
+    [fkLegalEntityId]             INT             NULL,
+    [fkLegalEntityAccountId]      INT             NULL,
+    [fkGroupId]                   INT             NULL,
+    [GroupType]                   VARCHAR (50)    NULL,
+    [fkInterestTypeId]            INT             NULL,
+    [fkSlabTypeId]                INT             NULL,
+    [fkInterestPricingCategoryId] INT             NULL,
+    [TierFrom]                    INT             NULL,
+    [TierTo]                      INT             NULL,
+    [RateType]                    VARCHAR (50)    NULL,
+    [fkBaseRateCodeId]            INT             NULL,
+    [Spread]                      DECIMAL (10, 2) NULL,
+    PRIMARY KEY CLUSTERED ([pkProductGlmsId] ASC),
+    FOREIGN KEY ([fkBaseRateCodeId]) REFERENCES [dbo].[tblBaseRateCode] ([pkBaseRateCodeId]),
+    FOREIGN KEY ([fkGroupId]) REFERENCES [dbo].[tblGlmsGroup] ([pkGlmsGroupId]),
+    FOREIGN KEY ([fkInterestPricingCategoryId]) REFERENCES [dbo].[tblInterestPricingCategory] ([pkInterestPricingCategoryId]),
+    FOREIGN KEY ([fkInterestTypeId]) REFERENCES [dbo].[tblInterestType] ([pkInterestTypeId]),
+    FOREIGN KEY ([fkLegalEntityId]) REFERENCES [dbo].[tblLegalEntity] ([pkLegalEntityId]),
+    FOREIGN KEY ([fkRiskGroupId]) REFERENCES [dbo].[tblRiskGroup] ([pkRiskGroupId]),
+    FOREIGN KEY ([fkSlabTypeId]) REFERENCES [dbo].[tblSlabType] ([pkSlabTypeId])
+);
+

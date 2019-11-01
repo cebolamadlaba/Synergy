@@ -27,7 +27,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// The mediator
         /// </summary>
         private readonly IMediator _mediator;
-  
+
         /// <summary>
         /// The user manager
         /// </summary>
@@ -72,7 +72,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             {
                 Centres = _lookupTableManager.GetCentres(),
                 Roles = _lookupTableManager.GetRoles(),
-                RoleSubRole = _userManager.GetRoleSubRole()
+                RoleSubRole = _lookupTableManager.GetRoleSubRole()
             };
             return Ok(model);
         }
@@ -107,7 +107,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 if (model.UserCentres != null)
                     userCentres.AddRange(model.UserCentres);
 
-                userCentres.Add(new Centre {Id = model.CentreId});
+                userCentres.Add(new Centre { Id = model.CentreId });
                 model.UserCentres = userCentres;
             }
         }
@@ -135,9 +135,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("users")]
-        public  IActionResult GetUsers()
+        public IActionResult GetUsers()
         {
-            var users =  _userManager.GetUsers();
+            var users = _userManager.GetUsers();
             return Ok(users);
         }
 
@@ -149,7 +149,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [HttpGet("users/{id}")]
         public async Task<IActionResult> GetUser(int id)
         {
-            var user = await _mediator.Send(new GetUserById {  Id = id });
+            var user = await _mediator.Send(new GetUserById { Id = id });
             return Ok(user);
         }
 

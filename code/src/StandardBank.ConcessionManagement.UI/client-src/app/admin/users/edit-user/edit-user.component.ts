@@ -34,18 +34,24 @@ export class EditUserComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.route.params.subscribe(params => {
+            this.id = +params['id'];
+        });
+
         this.adminService.GetUserLookupData().subscribe(result => {
             this.Centres = result.centres as Centre[];
             this.Roles = result.roles as Role[];
             this.RoleSubRole = result.roleSubRole as RoleSubRole[];
             this.subRolesCopy = this.RoleSubRole;
+
+            this.adminService.GetUser(this.id).subscribe(r => {
+                this.user = r as User;
+                this.updateSubRoles();
+            });
+
         });
-        this.route.params.subscribe(params => {
-            this.id = +params['id'];
-        });
-        this.adminService.GetUser(this.id).subscribe(r => {
-            this.user = r as User;
-        });
+
+
 
     }
 
@@ -89,7 +95,7 @@ export class EditUserComponent implements OnInit {
             this.RoleSubRole = this.subRolesCopy.filter(a => {
                 return a.subRoleId == SubRoleEnum.NoSubrole || a.subRoleId == SubRoleEnum.PCMSnI;
             });
-        }        
+        }
     }
 
     goBack() {

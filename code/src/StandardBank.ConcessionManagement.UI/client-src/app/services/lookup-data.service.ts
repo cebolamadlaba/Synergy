@@ -30,6 +30,7 @@ import { LegalEntityBOLUser } from "../models/legal-entity-bol-user";
 import { ConcessionStatus } from '../constants/concession-status';
 import { ConcessionSubStatus } from '../constants/concession-sub-status';
 import { PricingView } from '../models/pricing-view';
+import { RoleSubRole } from '../models/RoleSubRole';
 
 @Injectable()
 export class LookupDataService {
@@ -128,6 +129,17 @@ export class LookupDataService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    getRoleSubRoles(): Observable<RoleSubRole[]> {
+
+        return this.getRoleSubRolesByRoleId(0);
+    }
+    getRoleSubRolesByRoleId(roleId: number): Observable<RoleSubRole[]> {
+        let url = "/api/Common/RoleSubRoles";
+        if (roleId != null && roleId > 0) {
+            url += "/" + roleId;
+        }
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
 
     getPeriods(): Observable<Period[]> {
         const url = "/api/Condition/Periods";
@@ -209,7 +221,7 @@ export class LookupDataService {
         return null;
     }
 
-   
+
     private extractData(response: Response) {
         let body = response.json();
         return body;

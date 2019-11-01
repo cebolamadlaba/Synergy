@@ -159,16 +159,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(_lookupTableManager.GetCentres());
         }
 
-        /// <summary>
-        /// Gets the roleSubRoles.
-        /// </summary>
-        /// <returns></returns>
-        [Route("RoleSubRoles")]
-        public IActionResult RoleSubRoles()
-        {
-            return Ok(_userManager.GetRoleSubRole());
-        }
-
 
         private async Task<IActionResult> SaveBolOrTradeAccountExecutive(User bolTradeuser, bool updateUser, bool updateAaAeLink)
         {

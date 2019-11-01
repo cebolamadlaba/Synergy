@@ -1,13 +1,17 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
-import { PcmManagementService } from '../../services/pcm-management.service';
+
 import { Observable } from "rxjs";
 import { User } from '../../models/user';
 import { RoleSubRole } from '../../models/RoleSubRole';
 import { RegionCentresModel } from '../../models/region-centres-model';
 import { Centre } from '../../models/centre';
-import { UserService } from '../../services/user.service';
+import { RoleEnum } from "../../models/role-enum";
 import { SubRoleEnum } from "../../models/subrole-enum";
+import { UserService } from '../../services/user.service';
+import { PcmManagementService } from '../../services/pcm-management.service';
+import { LookupDataService } from '../../services/lookup-data.service';
+
 
 @Component({
     selector: 'app-pcm-management',
@@ -40,7 +44,11 @@ export class PcmManagementComponent implements OnInit {
 
     currentUser: User;
 
-    constructor(private location: Location, private pcmManagementService: PcmManagementService, private userService: UserService) {
+    constructor(
+        private location: Location,
+        private pcmManagementService: PcmManagementService,
+        private userService: UserService,
+        private lookupDataService: LookupDataService, ) {
         this.addPcmUserModel = new User();
         this.selectedRegionCentresModel = new RegionCentresModel();
         this.selectedCentre = new Centre();
@@ -56,7 +64,7 @@ export class PcmManagementComponent implements OnInit {
         Observable.forkJoin([
             this.pcmManagementService.getPCMUsers(),
             this.pcmManagementService.getRegionCentres(),
-            this.pcmManagementService.getRoleSubRoles(),
+            this.lookupDataService.getRoleSubRolesByRoleId(RoleEnum.PCM),
             this.userService.getData()
         ]).subscribe(results => {
             this.pcmUsers = <any>results[0];
@@ -171,7 +179,7 @@ export class PcmManagementComponent implements OnInit {
             else {
                 this.addPcmUserModel.roleSubRole = this.selectedRoleSubRole;
                 this.addPcmUserModel.subRoleId = this.selectedRoleSubRole.subRoleId;
-            }            
+            }
         }
     }
 
@@ -186,7 +194,7 @@ export class PcmManagementComponent implements OnInit {
             if (subRoles != null && subRoles.length > 0) {
                 roleSubRole = subRoles[0];
             }
-        }       
+        }
 
         return roleSubRole;
     }
