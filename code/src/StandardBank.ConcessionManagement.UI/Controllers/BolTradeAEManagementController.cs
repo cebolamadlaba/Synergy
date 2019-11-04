@@ -63,7 +63,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var user = _siteHelper.LoggedInUser(this);
 
             if (user.IsRequestor)
-                return Ok(new[] {user});
+                return Ok(new[] { user });
 
             return Ok(_userManager.GetUsersByRole(Constants.Roles.Requestor));
         }
@@ -136,16 +136,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult BolTradeAEAAUsers(int aeUserId)
         {
             return Ok(_userManager.GetAccountAssistantsForAccountExecutive(aeUserId));
-        }
-
-        /// <summary>
-        /// Gets the roleSubRoles.
-        /// </summary>
-        /// <returns></returns>
-        [Route("RoleSubRoles")]
-        public IActionResult RoleSubRoles()
-        {
-            return Ok(_userManager.GetRoleSubRole());
         }
 
     }
