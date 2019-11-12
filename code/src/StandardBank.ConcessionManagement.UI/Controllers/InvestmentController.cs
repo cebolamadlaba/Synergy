@@ -295,13 +295,13 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
         [Route("ForwardInvestmentPCM")]
         [ValidateModel]
-        public async Task<IActionResult> ForwardBolPCM([FromBody] SearchConcessionDetail detail)
+        public async Task<IActionResult> ForwardInvestmentPCM([FromBody] SearchConcessionDetail detail)
         {
             var user = _siteHelper.LoggedInUser(this);
 
             var investmentconsession = _investmentManager.GetInvestmentConcession(detail.ReferenceNumber, user);
 
-            investmentconsession.Concession.SubStatus = Constants.ConcessionSubStatus.PcmPending;
+            investmentconsession.Concession.SubStatus = Constants.ConcessionSubStatus.PcmSnIPending;
             investmentconsession.Concession.BcmUserId = _bcmManager.GetBusinessCentreManager(investmentconsession.Concession.CentreId).BusinessCentreManagerId;
 
             investmentconsession.Concession.Comments = "Manually forwarded by PCM";

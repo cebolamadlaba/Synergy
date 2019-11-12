@@ -247,7 +247,7 @@ export class SearchComponent implements OnInit {
 
     forwardInvestmenttoPCM(concessiondetailed: SearchConcessionDetail) {
 
-        concessiondetailed.subStatus = ConcessionSubStatus.PCMPending;
+        concessiondetailed.subStatus = ConcessionSubStatus.PCMSnIPending;
         concessiondetailed.comments = "Forwarded by PCM";
 
         if (!this.validationError) {
