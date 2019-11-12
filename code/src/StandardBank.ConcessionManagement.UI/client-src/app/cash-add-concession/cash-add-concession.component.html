@@ -305,18 +305,25 @@
                 </div>
                 <div class="col-md-12 modal-body">
                     <div class="row">
-                        <div class="col-md-12 modal-title">                         
-                                <div class="image-upload col-md-4">
+                        <div class="col-md-12 modal-title">
+                            <div class="col-md-6">
+                                <div class="image-upload">
+                                    Upload
                                     <label for="file-input">
                                         <img src="../../content/img/upload.png" />
                                     </label>
                                     <input id="file-input" type="file" (change)="onFileSelected($event)" />
                                 </div>
-                            <div class="image-download float-right">
-                                <a (click)="downloadFile('cash')">
-
-                                    <img src="../../content/img/download.png" />
-                                </a>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="image-download">
+                                    <div class="col-md-6">
+                                        Download
+                                        <a (click)="downloadFile('cash')">
+                                            <img src="../../content/img/download.png" />
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
