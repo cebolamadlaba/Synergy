@@ -221,11 +221,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                                     .ReadbyPCMPending(null, null, null, new[] { pcmSnIpendingStatusIds })
                                     .Where(x => x.ConcessionType == concessionType)));
                             }
+                            else if (userRole.Name.Trim().Equals(Constants.Roles.PCM))
+                            {
+                                inboxConcessions.AddRange(_mapper.Map<IEnumerable<InboxConcession>>(
+                                   _concessionInboxViewRepository.ReadbyPCMPending(null, null, null, new[] { pcmPendingStatusId })
+                                   .Where(x => x.ConcessionType != Constants.ConcessionType.Investment)));
+                            }
                             else
                             {
                                 inboxConcessions.AddRange(_mapper.Map<IEnumerable<InboxConcession>>(
-                                   _concessionInboxViewRepository.ReadbyPCMPending(null, null, null, new[] { pcmPendingStatusId, pcmSnIpendingStatusIds})));
-                            }                            
+                                   _concessionInboxViewRepository.ReadbyPCMPending(null, null, null, new[] { pcmPendingStatusId })));
+                            }
 
                             break;
                     }
