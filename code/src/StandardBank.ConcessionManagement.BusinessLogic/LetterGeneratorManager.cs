@@ -3,6 +3,7 @@ using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator;
+using StandardBank.ConcessionManagement.Model.Common;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Bol;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
@@ -474,9 +475,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     CurrentDate = DateTime.Now.ToString("dd/MM/yyyy"),
                     TemplatePath = _templatePath,
                     RiskGroupNumber = Convert.ToString(riskGroupNumber),
-                    BCMEmailAddress = bcm != null ? bcm.EmailAddress : "N/A",
-                    BCMContactNumber = bcm != null ? bcm.ContactNumber : "N/A",
-                    BCMName = bcm != null ? bcm.FullName : "Name N/A",
+                    BCMEmailAddress = bcm != null ? bcm.EmailAddress : LetterConstants.NotApplicable,
+                    BCMContactNumber = bcm != null ? bcm.ContactNumber : LetterConstants.NotApplicable,
+                    BCMName = bcm != null ? bcm.FullName : $"Name {LetterConstants.NotApplicable}",
                     RequestorEmailAddress = requestor?.EmailAddress,
                     RequestorName = requestor?.FullName,
                     RequestorContactNumber = requestor?.ContactNumber,
@@ -665,11 +666,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     EstFee = tradeConcessionDetail.EstablishmentFee.ToString(),
                     RatePercentage = tradeConcessionDetail.ApprovedRate.ToString(),
 
-                    Communication = "NA",
-                    AdValorem = "NA",
-                    Min = "NA",
-                    Max = "NA",
-                    FlatFee = "NA",
+                    Communication = LetterConstants.NotApplicable,
+                    AdValorem = LetterConstants.NotApplicable,
+                    Min = LetterConstants.NotApplicable,
+                    Max = LetterConstants.NotApplicable,
+                    FlatFee = LetterConstants.NotApplicable,
                 };
             }
             else
@@ -685,8 +686,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     ConcessionEndDate = tradeConcessionDetail.ExpiryDate.HasValue
                   ? tradeConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
                   : string.Empty,
-                    EstFee = "NA",
-                    RatePercentage = "NA",
+                    EstFee = LetterConstants.NotApplicable,
+                    RatePercentage = LetterConstants.NotApplicable,
 
                     Communication = tradeConcessionDetail.Communication,
                     AdValorem = tradeConcessionDetail.AdValorem.ToString(),
@@ -715,7 +716,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 Product = investmentConcessionDetail.InvestmentProduct,
                 AccountNumber = investmentConcessionDetail.AccountNumber,
                 Balance = investmentConcessionDetail.Balance.Value,
-                NoticePeriod = investmentConcessionDetail.Term > 0 ? Termdictionary[investmentConcessionDetail.Term] : "NA",
+                NoticePeriod = investmentConcessionDetail.Term > 0 ? Termdictionary[investmentConcessionDetail.Term] : LetterConstants.NotApplicable,
 
                 Rate = investmentConcessionDetail.ApprovedRate,
                 ConcessionStartDate = investmentConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
