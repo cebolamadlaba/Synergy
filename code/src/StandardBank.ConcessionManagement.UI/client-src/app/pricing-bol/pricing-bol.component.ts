@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, Injector } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -11,13 +11,15 @@ import { BolView } from "../models/bol-view";
 import { Concession } from "../models/concession";
 
 import { UserService } from "../services/user.service";
+import { BaseComponentService } from '../services/base-component.service';
+import { Http } from '@angular/http';
 
 @Component({
     selector: 'app-pricing-bol',
     templateUrl: './pricing-bol.component.html',
     styleUrls: ['./pricing-bol.component.css']
 })
-export class PricingBolComponent implements OnInit, OnDestroy {
+export class PricingBolComponent extends BaseComponentService implements OnInit, OnDestroy {
     riskGroupNumber: number;
     sapbpid: number;
     private sub: any;
@@ -34,10 +36,12 @@ export class PricingBolComponent implements OnInit, OnDestroy {
     entityNumber: string;
 
     constructor(
-        private router: Router,
+        injector: Injector,
         private route: ActivatedRoute,
         private location: Location,
-        @Inject(BolConcessionService) private bolConcessionService, private userService: UserService) {
+        public router: Router,
+        @Inject(BolConcessionService) private bolConcessionService, public userService: UserService) {
+        super(router, userService);
         this.bolView.riskGroup = new RiskGroup();
         this.bolView.bolConcessions = [new BolConcession()];
         this.bolView.bolConcessions[0].concession = new Concession();
@@ -83,10 +87,8 @@ export class PricingBolComponent implements OnInit, OnDestroy {
 
     }
 
-
     goBack() {
-
-        this.router.navigate(['/pricing', this.riskGroupNumber]);
+        this.router.navigate(['/pricing', { riskGroupNumber: this.riskGroupNumber, sapbpid: this.sapbpid }]);
     }
 
     ngOnDestroy() {

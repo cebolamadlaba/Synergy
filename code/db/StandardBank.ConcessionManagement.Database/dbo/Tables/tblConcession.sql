@@ -9,7 +9,7 @@
     [fkBCMUserId]         INT             NULL,
     [fkPCMUserId]         INT             NULL,
     [fkHOUserId]          INT             NULL,
-    [fkRiskGroupId]       INT             NOT NULL,
+    [fkRiskGroupId]       INT             NULL,
     [fkRegionId]          INT             NOT NULL,
     [fkCentreId]          INT             NOT NULL,
     [ConcessionRef]       VARCHAR (30)    NULL,
@@ -25,8 +25,10 @@
     [IsActive]            BIT             NOT NULL,
     [Archived]            DATETIME        NULL,
     [fkAENumberUserId]    INT             NULL,
+    [fkLegalEntityId]     INT             NULL,
     CONSTRAINT [PK_tblConcession] PRIMARY KEY CLUSTERED ([pkConcessionId] ASC),
-    FOREIGN KEY ([fkAENumberUserId]) REFERENCES [dbo].[tblAENumberUser] ([pkAENumberUserId]),
+    FOREIGN KEY ([fkLegalEntityId]) REFERENCES [dbo].[tblLegalEntity] ([pkLegalEntityId]),
+    CONSTRAINT [FK__tblConces__fkAEN__5DEAEAF5] FOREIGN KEY ([fkAENumberUserId]) REFERENCES [dbo].[tblAENumberUser] ([pkAENumberUserId]),
     CONSTRAINT [FK_tblConcession_rtblConcessionType] FOREIGN KEY ([fkConcessionTypeId]) REFERENCES [dbo].[rtblConcessionType] ([pkConcessionTypeId]),
     CONSTRAINT [FK_tblConcession_rtblRegion] FOREIGN KEY ([fkRegionId]) REFERENCES [dbo].[rtblRegion] ([pkRegionId]),
     CONSTRAINT [FK_tblConcession_rtblStatus] FOREIGN KEY ([fkStatusId]) REFERENCES [dbo].[rtblStatus] ([pkStatusId]),
@@ -40,6 +42,8 @@
     CONSTRAINT [FK_tblConcession_tblUserHO] FOREIGN KEY ([fkHOUserId]) REFERENCES [dbo].[tblUser] ([pkUserId]),
     CONSTRAINT [FK_tblConcession_tblUserPCM] FOREIGN KEY ([fkPCMUserId]) REFERENCES [dbo].[tblUser] ([pkUserId])
 );
+
+
 
 
 

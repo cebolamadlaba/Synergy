@@ -19,6 +19,7 @@ export class UsersComponent implements OnInit {
     Roles: Role[];
     user: User;
     RoleSubRole: RoleSubRole[];
+    subRolesCopy: RoleSubRole[];
     users: User[];
 
     constructor(private location: Location, private adminService: AdminService) { }
@@ -28,6 +29,7 @@ export class UsersComponent implements OnInit {
             this.Centres = result.centres as Centre[];
             this.Roles = result.roles as Role[];
             this.RoleSubRole = result.roleSubRole as RoleSubRole[];
+            this.subRolesCopy = this.RoleSubRole;
         });
         this.adminService.GetUsers().subscribe(r => {
             this.users = r as User[];
@@ -52,7 +54,21 @@ export class UsersComponent implements OnInit {
     }
 
     canDisplaySubRole() {
-        return this.user.roleId == RoleEnum.AA;
+        return this.user.roleId == RoleEnum.AA || this.user.roleId == RoleEnum.PCM;
+    }
+
+    onRoleChange() {
+        if (this.user.roleId == RoleEnum.AA) {
+            this.RoleSubRole = this.subRolesCopy.filter(a => {
+                return a.subRoleId != SubRoleEnum.PCMSnI;
+            });
+        }
+
+        if (this.user.roleId == RoleEnum.PCM) {
+            this.RoleSubRole = this.subRolesCopy.filter(a => {
+                return a.subRoleId == SubRoleEnum.NoSubrole || a.subRoleId == SubRoleEnum.PCMSnI;
+            });
+        }
     }
 
     goBack() {

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import { User } from '../models/user';
 import { RegionCentresModel } from '../models/region-centres-model';
+import { RoleSubRole } from '../models/RoleSubRole';
 
 @Injectable()
 export class PcmManagementService {

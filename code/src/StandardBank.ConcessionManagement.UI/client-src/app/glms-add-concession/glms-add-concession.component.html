@@ -1,0 +1,371 @@
+<!-- Banner expanded -->
+<div class="col-md-12 banner">
+    <div class="row">
+        <!-- Header -->
+        <div class="lending-banner-title">
+            <div class="col-md-1">
+                <span class="back-button-text" (click)="goBack()">Back</span>
+            </div>
+            <div class="col-md-10 banner-main-title">
+                <i class="fa fa-area-chart" aria-hidden="true"></i> GLMS
+            </div>
+        </div>
+        <div class="col-md-1">
+            <div class="compress">
+                <div>
+                    <i class="fa fa-compress" (click)="showHide = !showHide" aria-hidden="true" id="compress-icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Dashboard Collapsed -->
+    <div class="col-md-12 banner-container" *ngIf="!showHide">
+        <div class="col-md-11">
+            <div>
+                <div class="col-md-5">
+                    <div class="subHeading">{{entityName}}</div>
+                    <div class="date lightTitle hidden-element">{{entityNumber}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <div class="compress">
+                <div>
+                    <i class="fa fa-expand" (click)="showHide = !showHide" aria-hidden="true" id="compress-icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Error message -->
+<div class="col-md-12" *ngIf="(errorMessage) && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
+            <p>{{errorMessage}}</p>
+
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError ">{{validationMessage}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Error message -->
+<div class="col-md-12" *ngIf="(validationError) && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Below errors requires your attention..</p>
+            <p>{{errorMessage}}</p>
+
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError;">{{validationMessage}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<!-- Success message -->
+<div class="col-md-12" *ngIf="saveMessage && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-success">
+            <p class="message-heading"><i class="fa fa-check-circle" aria-hidden="true"></i>Concession submitted successfully with ID: {{saveMessage}}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Loading message -->
+<div class="col-md-12" *ngIf="isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-info">
+            <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Saving</p>
+        </div>
+    </div>
+</div>
+
+<!-- Form entries -->
+<form class="col-md-12 product-form" [formGroup]="glmsConcessionForm" *ngIf="!isLoading">
+    <div class="col-md-4">
+
+        <div class="row">
+            <label>SMT Deal Number</label>
+            <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="saveMessage ? '' : null" />
+        </div>
+
+    </div>
+
+    <div class="col-md-7 col-md-offset-1">
+        <label>Motivation</label>
+        <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="saveMessage ? '' : null"></textarea>
+    </div>
+
+    <!-- Concession table -->
+    <div class="col-md-12" style="border-bottom: 1px solid gray; margin-bottom: 15px;">
+        <div class="row">
+            <h3 class="table-title">Concessions</h3>
+            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" style="margin-top: 15px;" *ngIf="!saveMessage">New Concession</button>
+        </div>
+    </div>
+
+    <!--New-->
+    <table class="form-concessions-table" formArrayName="concessionItemRows">
+        <thead class="form-concessions-table-headings">
+            <tr>
+                <th>Group #</th>
+                <th>Interest Pricing Category</th>
+                <th>Interest Type</th>
+                <th>Slap Type</th>
+                <th>Expiry Date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody class="form-concessions-table-content">
+            <tr *ngFor="let itemrow of glmsConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
+                <td class="length-long">
+                    <!-- Group -->
+                    <select formControlName="glmsGroup" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                        <option *ngFor="let glmsGroupOption of glmsGroup" [ngValue]="glmsGroupOption">{{glmsGroupOption.groupName}}</option>
+                    </select>
+                </td>
+                <td class="length-long">
+                    <!-- Interest Pricing Category -->
+                    <select formControlName="interestPricingCategory" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                        <option *ngFor="let interestPricingCategoryOption of interestPricingCategory" [ngValue]="interestPricingCategoryOption" >{{interestPricingCategoryOption.description}}</option>
+                    </select>
+                </td>
+                <td class="length-short">
+                    <!-- Interest Type -->
+                    <select formControlName="interestType" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                        <option *ngFor="let interestTypeOption of interestType" [ngValue]="interestTypeOption" > {{interestTypeOption.description}}</option>
+                    </select>
+                </td>
+                <td class="length-short">
+                    <!-- Slab Type -->
+                    <select formControlName="slabType" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                        <option *ngFor="let slabTypeOption of slabType" [ngValue]="slabTypeOption" > {{slabTypeOption.description}}</option>
+                    </select>
+                </td>
+                <!-- expiry Date-->
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="(saveMessage) ? '' : null"  /></td>
+
+                <!--Tier information-->
+                <td><button class="length-long btn btn-primary" (click)="openTier(manageTierModal.show(),i)" [attr.disabled]="saveMessage ? '' : null">Add Tier</button></td>
+
+                <td><button *ngIf="glmsConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Conditions table -->
+    <div class="col-md-12">
+        <div class="row">
+            <h3 class="table-title">Conditions</h3>
+            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;" *ngIf="!saveMessage">Manage Conditions</button>
+
+            <div class="table-container">
+                <table class="table table-bordered table-hover header-fixed table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Condition Type</th>
+                            <th>Product Type</th>
+                            <th>Interest Rate</th>
+                            <th>Volume</th>
+                            <th>Value</th>
+                            <th>Period</th>
+                        </tr>
+                    </thead>
+                    <tbody class="secondary-text">
+                        <tr *ngIf="glmsConcessionForm.controls.conditionItemsRows.controls.length == 0">
+                            <td colspan="8" class="searchEmptyState">
+                                No conditions added
+                            </td>
+                        </tr>
+                        <tr *ngFor="let itemrow of glmsConcessionForm.controls.conditionItemsRows.controls; let i=index">
+                            <td># {{i + 1}}</td>
+                            <td>{{itemrow.get('conditionType').value?.description}}</td>
+                            <td>{{itemrow.get('conditionProduct').value?.description}}</td>
+                            <td><span *ngIf="itemrow.get('interestRate').value">{{itemrow.get('interestRate').value | number:'1.2-2'}}</span></td>
+                            <td>{{itemrow.get('volume').value}}</td>
+                            <td><span *ngIf="itemrow.get('value').value">{{itemrow.get('value').value | number:'1.2-2'}}</span></td>
+                            <td>{{itemrow.get('periodType').value.description}} {{itemrow.get('period').value.description}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal conditions -->
+    <div bsModal #manageConditionsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="manageConditionsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="col-md-12 modal-header">
+                    <h4>Manage Conditions</h4>
+                </div>
+                <div class="col-md-12 modal-body">
+                    <div class="row">
+                        <div class="col-md-12 modal-title">
+                            <button type="button" class="btn btn-primary" (click)="addNewConditionRow()">Add Condition</button>
+                        </div>
+                    </div>
+                    <table class="form-concessions-table" formArrayName="conditionItemsRows" style="width:100%">
+                        <thead class="form-concessions-table-headings">
+                            <tr *ngIf="glmsConcessionForm.controls.conditionItemsRows.controls.length > 0">
+                                <th>Condition Type</th>
+                                <th>Product Type</th>
+                                <th>Interest Rate</th>
+                                <th>Volume</th>
+                                <th>Value/Balance</th>
+                                <th>Period Type</th>
+                                <th>Period</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody class="form-concessions-table-content">
+                            <tr *ngIf="glmsConcessionForm.controls.conditionItemsRows.controls.length == 0">
+                                <td colspan="8" class="searchEmptyState">
+                                    No conditions added
+                                </td>
+                            </tr>
+                            <tr *ngFor="let itemrow of glmsConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
+                                <td class="length-long">
+                                    <!-- Condition type -->
+                                    <select formControlName="conditionType" (change)="conditionTypeChanged(i)">
+                                        <option *ngFor="let conditionTypeOption of conditionTypes" [ngValue]="conditionTypeOption">{{conditionTypeOption.description}}</option>
+                                    </select>
+                                </td>
+                                <td class="length-long">
+                                    <!-- Product type -->
+                                    <select formControlName="conditionProduct" *ngIf="selectedConditionTypes[i] != null">
+                                        <option *ngFor="let conditionProductOption of selectedConditionTypes[i].conditionProducts" [ngValue]="conditionProductOption">{{conditionProductOption.description}}</option>
+                                    </select>
+                                </td>
+                                <!-- Interest rate -->
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="interestRate" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableInterestRate ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
+                                <!-- Volume -->
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionVolume ? null : ''" /></td>
+                                <!-- Value -->
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionValue ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
+                                <!-- Period type -->
+                                <td class="length-medium">
+                                    <select formControlName="periodType" (change)="validatePeriod(itemrow)">
+                                        <option *ngFor="let periodTypeOption of periodTypes" [ngValue]="periodTypeOption">{{periodTypeOption?.description}}</option>
+                                    </select>
+                                </td>
+                                <!-- Period -->
+                                <td class="length-long">
+                                    <select formControlName="period" (change)="validatePeriod(itemrow)">
+                                        <option *ngFor="let periodOption of periods" [ngValue]="periodOption">{{periodOption?.description}}</option>
+                                    </select>
+                                </td>
+                                <td><button class="btn-delete" type="button" (click)="deleteConditionRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <div class="float-right">
+                        <button type="button" class="btn btn-primary" (click)="manageConditionsModal.hide()">Done</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Tier -->
+    <div bsModal #manageTierModal="bs-modal" class="modal fade preview-modal"  id="manageTierModal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="manageTierModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="col-md-12 modal-header">
+                    <h4>Manage Tier</h4>
+                </div>
+                <div class="col-md-12 modal-body">
+
+                    <!-- Error message -->
+                    <div class="col-md-12" *ngIf="(tierValidationError)">
+                        <div class="form-feedback-container">
+                            <div class="alert-danger">
+                                <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Below errors requires your attention..</p>
+                                <p>{{errorMessage}}</p>
+
+                                <ul *ngIf="tierValidationError">
+                                    <li *ngFor="let validationMessage of tierValidationError;">{{validationMessage}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 modal-title">
+                            <button type="button" class="btn btn-primary" (click)="addNewTierRow(1)">Add Line</button>
+                        </div>
+                    </div>
+                    <table class="form-concessions-table" formArrayName="tierItemsRows" style="width:100%">
+                        <thead class="form-concessions-table-headings">
+                            <tr>
+                                <th>Tiered From</th>
+                                <th>Tiered To</th>
+                                <th>Rate Type</th>
+                                <th>Base Rate</th>
+                                <th>Spread</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody class="form-concessions-table-content">
+                            <tr *ngFor="let itemrow of glmsConcessionForm.controls.tierItemsRows.controls; let i=index" [formGroupName]="i">
+                                <!-- Tiered From -->
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="tieredFrom" class="form-control" /></td>
+                                <!-- Tiered To -->
+                                <td class="length-short"><input type="text" formControlName="tieredTo" class="form-control" /></td>
+
+                                <td class="length-short">
+                                    <!-- Rate Type -->
+                                    <select formControlName="rateType" class="form-control" (change)="rateTypeChange(i) ">
+                                        <option *ngFor="let rateTypeOption of rateType" [ngValue]="rateTypeOption"> {{rateTypeOption.description}}</option>
+                                    </select>
+                                </td>
+                                <td class="length-short">
+                                    <!-- base Rate -->
+                                    <select formControlName="baseRate" class="form-control">
+                                        <option *ngFor="let baseRateCodeOption of baseRateCode" [ngValue]="baseRateCodeOption"> {{baseRateCodeOption.description}}</option>
+                                    </select>
+                                </td>
+                                <!-- Spread -->
+                                <td class="length-short"><input type="text" formControlName="spread" numbersOnly="true" class="form-control" /></td>
+
+                                <!-- Value-->
+                                <td class="length-short"><input type="text" formControlName="value" numbersOnly="true" class="form-control" /></td>
+
+                                <td><button class="btn-delete" type="button" (click)="deleteTierRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <div class="float-right">
+                        <!--<button type="button" class="btn btn-primary" (click)="manageTierModal.hide()">Cancel</button>-->
+                        <button type="button" class="btn btn-primary" (click)="closeTierModal(manageTierModal.hide())">Done</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form buttons -->
+    <div class="footer-buttons">
+        <div class="float-right">
+            <button type="button" class="btn btn-cancel" (click)="goBack()">Close</button>
+            <button class="btn btn-primary" type="button" (click)="onSubmit()" *ngIf="!saveMessage">Submit</button>
+        </div>
+    </div>
+
+</form>
+
+
+

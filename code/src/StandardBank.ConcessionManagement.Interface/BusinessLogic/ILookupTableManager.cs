@@ -4,6 +4,7 @@ using StandardBank.ConcessionManagement.Model.UserInterface.Bol;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
 using StandardBank.ConcessionManagement.Model.UserInterface.Trade;
 
+
 namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 {
     /// <summary>
@@ -16,6 +17,8 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// </summary>
         /// <returns></returns>
         IEnumerable<Role> GetRoles();
+
+        IEnumerable<RoleSubRole> GetRoleSubRole(int? roleId = null);
 
         /// <summary>
         /// Gets the centres.
@@ -279,6 +282,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// </summary>
         /// <returns></returns>
         IEnumerable<RiskGroup> GetRiskGroups(string searchGroup);
+
 
     }
 }

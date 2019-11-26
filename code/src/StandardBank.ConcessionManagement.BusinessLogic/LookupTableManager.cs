@@ -33,6 +33,7 @@ using TradeProductType = StandardBank.ConcessionManagement.Model.UserInterface.T
 using InvestmentProduct = StandardBank.ConcessionManagement.Model.UserInterface.Investment.InvestmentProduct;
 using LegalEntity = StandardBank.ConcessionManagement.Model.UserInterface.LegalEntity;
 
+
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
     /// <summary>
@@ -142,6 +143,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         private readonly IRoleRepository _roleRepository;
 
+        private readonly IRoleSubRoleRepository _roleSubRoleRepository;
+
         /// <summary>
         /// The centre repository
         /// </summary>
@@ -202,7 +205,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IBolUserRepository bolRepository,
             IConcessionTradeRepository concessionTradeRepository,
             IConcessionInvestmentRepository concessionInvestmentRepository,
-            ILegalEntityRepository legalEntityRepository)
+            ILegalEntityRepository legalEntityRepository,
+            IRoleSubRoleRepository roleSubRoleRepository)
         {
             _statusRepository = statusRepository;
             _subStatusRepository = subStatusRepository;
@@ -230,6 +234,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionTradeRepository = concessionTradeRepository;
             _concessionInvestmentRepository = concessionInvestmentRepository;
             _legalEntityRepository = legalEntityRepository;
+            _roleSubRoleRepository = roleSubRoleRepository;
         }
 
         /// <summary>
@@ -238,6 +243,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<Model.UserInterface.Role> GetRoles() =>
             _mapper.Map<IEnumerable<Model.UserInterface.Role>>(_roleRepository.ReadAll());
+
+        public IEnumerable<RoleSubRole> GetRoleSubRole(int? roleId = null)
+        {
+            IEnumerable<RoleSubRole> subRoles = this._roleSubRoleRepository.ReadAll();
+
+            if (roleId.HasValue)
+                return subRoles.Where(a => a.RoleId == null || a.RoleId.Value == roleId.Value);
+
+            return subRoles;
+        }
 
         /// <summary>
         /// Gets the centres.
@@ -281,6 +296,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return subStatuses.First(_ => _.Description == subStatusName && _.IsActive).Id;
         }
+
+
 
         /// <summary>
         /// Gets the sub status description
@@ -529,52 +546,45 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return tradeProductType.tradeProductType;
         }
 
-
         /// <summary>
         /// Gets the condition types
         /// </summary>
         /// <returns></returns>
         public IEnumerable<ConditionType> GetConditionTypes()
         {
-            try
+
+            var mappedConditionTypes = new List<ConditionType>();
+            var conditionTypes = _conditionTypeRepository.ReadAll();
+            var conditionProducts = _conditionProductRepository.ReadAll().Where(_ => _.IsActive);
+            var conditionTypeProducts = _conditionTypeProductRepository.ReadAll().Where(_ => _.IsActive);
+
+            foreach (var conditionType in conditionTypes.Where(_ => _.IsActive))
             {
-                var mappedConditionTypes = new List<ConditionType>();
-                var conditionTypes = _conditionTypeRepository.ReadAll();
-                var conditionProducts = _conditionProductRepository.ReadAll().Where(_ => _.IsActive);
-                var conditionTypeProducts = _conditionTypeProductRepository.ReadAll().Where(_ => _.IsActive);
+                var mappedConditionType = _mapper.Map<ConditionType>(conditionType);
 
-                foreach (var conditionType in conditionTypes.Where(_ => _.IsActive))
-                {
-                    var mappedConditionType = _mapper.Map<ConditionType>(conditionType);
+                mappedConditionType.EnableInterestRate =
+                    ((mappedConditionType.Description == Constants.ConditionType.MininumAverageCreditBalance) | (mappedConditionType.Description == Constants.ConditionType.CreditFacility));
 
-                    mappedConditionType.EnableInterestRate =
-                        ((mappedConditionType.Description == Constants.ConditionType.MininumAverageCreditBalance) | (mappedConditionType.Description == Constants.ConditionType.CreditFacility));
+                mappedConditionType.EnableConditionValue =
+                    mappedConditionType.Description == Constants.ConditionType.FullTransactionalBanking |
+                    mappedConditionType.Description == Constants.ConditionType.MininumTurnover |
+                    mappedConditionType.Description == Constants.ConditionType.MininumAverageCreditBalance;
 
-                    mappedConditionType.EnableConditionValue =
-                        mappedConditionType.Description == Constants.ConditionType.FullTransactionalBanking |
-                        mappedConditionType.Description == Constants.ConditionType.MininumTurnover |
-                        mappedConditionType.Description == Constants.ConditionType.MininumAverageCreditBalance;
+                mappedConditionType.EnableConditionVolume =
+                    mappedConditionType.Description == Constants.ConditionType.MininumTurnover |
+                    mappedConditionType.Description == Constants.ConditionType.FullTransactionalBanking;
 
-                    mappedConditionType.EnableConditionVolume =
-                        mappedConditionType.Description == Constants.ConditionType.MininumTurnover |
-                        mappedConditionType.Description == Constants.ConditionType.FullTransactionalBanking;
+                mappedConditionType.EnableExpectedTurnoverValue =
+                    mappedConditionType.Description == Constants.ConditionType.FullTransactionalBanking;
 
-                    mappedConditionType.EnableExpectedTurnoverValue =
-                        mappedConditionType.Description == Constants.ConditionType.FullTransactionalBanking;
+                mappedConditionType.ConditionProducts =
+                    GetConditionProducts(conditionType.Id, conditionProducts, conditionTypeProducts);
 
-                    mappedConditionType.ConditionProducts =
-                        GetConditionProducts(conditionType.Id, conditionProducts, conditionTypeProducts);
-
-                    mappedConditionTypes.Add(mappedConditionType);
-                }
-
-                return mappedConditionTypes;
+                mappedConditionTypes.Add(mappedConditionType);
             }
-            catch (Exception)
-            {
 
-                throw;
-            }
+            return mappedConditionTypes;
+
         }
 
         /// <summary>
@@ -669,8 +679,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var transactionTypes = _transactionTypeRepository.ReadAll(isActive);
 
             return GetTransactionTypesForConcessionType(Constants.ConcessionType.Transactional);
-
-            //return _mapper.Map<IEnumerable<TransactionType>>(transactionTypes);
 
         }
 

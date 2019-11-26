@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using StandardBank.ConcessionManagement.Model.UserInterface;
 
 namespace StandardBank.ConcessionManagement.Model.Repository
 {
@@ -114,5 +116,10 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The contact number.
         /// </value>
         public string ContactNumber { get; set; }
+
+        public static explicit operator User(UserInterface.User v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

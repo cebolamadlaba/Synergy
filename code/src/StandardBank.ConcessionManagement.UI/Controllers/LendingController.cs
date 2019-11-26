@@ -362,15 +362,28 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             lendingConcession.Concession.ReferenceNumber = string.Empty;
             lendingConcession.Concession.ConcessionType = Constants.ConcessionType.Lending;
             lendingConcession.Concession.Type = Constants.ReferenceType.Existing;
+            var concession = new Concession();
+            try
+            {
+                 concession = await _mediator.Send(new AddConcession(lendingConcession.Concession, user));
+            }
+            catch (Exception ex)
+            {
 
-            var concession = await _mediator.Send(new AddConcession(lendingConcession.Concession, user));
-
+            }
             foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
             {
                 if (relationship != Constants.RelationshipType.Extension)
                     lendingConcessionDetail.ExpiryDate = null;
+                try
+                {
+                    await _mediator.Send(new AddOrUpdateLendingConcessionDetail(lendingConcessionDetail, user, concession));
+                }
+                catch (Exception ex)
+                {
 
-                await _mediator.Send(new AddOrUpdateLendingConcessionDetail(lendingConcessionDetail, user, concession));
+                }
+                
             }
 
             if (lendingConcession.ConcessionConditions != null && lendingConcession.ConcessionConditions.Any())
@@ -386,10 +399,14 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 ParentConcessionId = parentConcessionId,
                 ChildConcessionId = concession.Id
             };
-
+            try { 
             await _mediator.Send(new AddConcessionRelationship(concessionRelationship, user));
+        }
+                catch (Exception ex)
+                {
 
-            var returnConcession =
+                }
+    var returnConcession =
                 _lendingManager.GetLendingConcession(parentLendingConcession.Concession.ReferenceNumber, user);
 
             returnConcession.Concession.ChildReferenceNumber = concession.ReferenceNumber;

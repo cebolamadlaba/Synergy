@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[tblLegalEntity] (
     [pkLegalEntityId]   INT           IDENTITY (1, 1) NOT NULL,
     [fkMarketSegmentId] INT           NOT NULL,
-    [fkRiskGroupId]     INT           NOT NULL,
+    [fkRiskGroupId]     INT           NULL,
     [fkUserId]          INT           NULL,
     [CustomerName]      VARCHAR (200) NOT NULL,
     [CustomerNumber]    VARCHAR (20)  NULL,
@@ -16,6 +16,8 @@
     CONSTRAINT [FK_tblCustomer_tblRiskGroup] FOREIGN KEY ([fkRiskGroupId]) REFERENCES [dbo].[tblRiskGroup] ([pkRiskGroupId]),
     CONSTRAINT [FK_tblLegalEntity_tblUser] FOREIGN KEY ([fkUserId]) REFERENCES [dbo].[tblUser] ([pkUserId])
 );
+
+
 
 
 

@@ -6,17 +6,6 @@
         </div>
     </div>
 </div>
-
-<!-- Error message -->
-<div class="col-md-12" *ngIf="errorMessage && !isLoading">
-    <div class="form-feedback-container">
-        <div class="alert-danger">
-            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
-            <p>{{errorMessage}}</p>
-        </div>
-    </div>
-</div>
-
 <!-- banner-->
 <div class="col-md-12 banner" *ngIf="!isLoading">
     <div class="row">
@@ -88,6 +77,33 @@
 </div>
 <!--Table information -->
 
+<!-- Error message -->
+<div class="col-md-12" *ngIf="(errorMessage) && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
+            <p>{{errorMessage}}</p>
+
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError ">{{validationMessage}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- Error message -->
+<div class="col-md-12" *ngIf="(validationError) && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Unable to continue..</p>
+            <p>{{errorMessage}}</p>
+
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError | slice:0:1;">{{validationMessage}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 <div class="col-md-12" *ngIf="!isLoading">
     <div class="col-md-6 search-and-results-container">
         <h2 class="headings">Products</h2>
@@ -148,7 +164,7 @@
     <div class="col-md-6 search-and-results-container">
         <h2 class="headings">
             Concessions
-            <button type="button" class="btn btn-primary btn-concession" [routerLink]="['/cash-add-concession', riskGroupNumber, sapbpid]" *ngIf="pageLoaded && canRequest">Add Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="checkForExistingConcessions(cashView.cashConcessions.length,'/cash-add-concession', riskGroupNumber, sapbpid)" *ngIf="pageLoaded && canRequest">Add Concession</button>
         </h2>
 
         <!-- Search bar -->

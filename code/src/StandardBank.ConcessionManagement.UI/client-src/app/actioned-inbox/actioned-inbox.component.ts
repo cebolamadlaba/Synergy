@@ -66,6 +66,34 @@ export class ActionedInboxComponent implements OnInit {
             case ConcessionTypes.Investment:
                 this.router.navigate(['/investments-view-concession', concession.riskGroupNumber, concession.customerNumber, concession.referenceNumber]);
                 break;
+            case ConcessionTypes.Glms:
+                this.router.navigate(['/glms-view-concession', concession.riskGroupNumber, concession.customerNumber, concession.referenceNumber]);
+                break;
+        }
+    }
+
+    getEntity(fieldName: string, concession: InboxConcession) {
+        switch (fieldName) {
+            case "entityName":
+                {
+                    if (concession.riskGroupName != null && concession.riskGroupName.trim() != "") {
+                        return concession.riskGroupName;
+                    }
+                    else {
+                        return concession.customerName;
+                    }
+                }
+            case "entityNumber":
+                {
+                    if (concession.riskGroupNumber != null && concession.riskGroupNumber > 0) {
+                        return concession.riskGroupNumber;
+                    }
+                    else {
+                        return concession.customerNumber;
+                    }
+                }
+            default:
+                return "n/a";
         }
     }
 }

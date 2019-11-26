@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Hangfire;
@@ -114,27 +115,36 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         }
 
 
-
         private void SendForwardNotificationEmail(ForwardConcession message)
         {
+            var userList = new List<User>();
+
             int? aeUserId = this._aeNumberUserManager.GetCurrentAccountExecutiveUserId(message.Concession.AENumberUserId);
             User user = this._aeNumberUserManager.GetAccountExecutiveUser(aeUserId.Value);
+            userList.Add(user);
+           
+            if (message.Concession.AAUserId != null)
+            {
+                userList.Add(this._aeNumberUserManager.GetAccountExecutiveUser((int)message.Concession.AAUserId));
+            }
 
-            //var requestor = message.Concession.Requestor ?? _userManager.GetUser(message.Concession.RequestorId);
-
-            BackgroundJob.Schedule(() =>
-                _emailManager.SendForwardedConcessionEmail(new ApprovedConcessionEmail
+            userList.ForEach(x =>
+            {
                 {
-
-                    EmailAddress = user.EmailAddress,
-                    ConcessionId = message.Concession.ReferenceNumber,
-                    Name = user.FirstName,
-                    DateOfRequest = message.Concession.DateOpened.ToString("yyyy-MM-dd"),
-                    DateActioned = DateTime.Now.ToString("yyyy-MM-dd"),
-                    RiskGroupName = message.Concession.RiskGroupName,
-                    Product = message.Concession.ConcessionType
-                }), DateTime.Now);
+                    BackgroundJob.Schedule(() =>
+                     _emailManager.SendForwardedConcessionEmail(new ApprovedConcessionEmail
+                       {
+                         EmailAddress = x.EmailAddress,
+                         ConcessionId = message.Concession.ReferenceNumber,
+                         Name = x.FirstName,
+                         DateOfRequest = message.Concession.DateOpened.ToString("yyyy-MM-dd"),
+                         DateActioned = DateTime.Now.ToString("yyyy-MM-dd"),
+                         RiskGroupName = message.Concession.RiskGroupName,
+                         Product = message.Concession.ConcessionType
+                         }), DateTime.Now);
+                }
+            });
+         
         }
-
     }
 }

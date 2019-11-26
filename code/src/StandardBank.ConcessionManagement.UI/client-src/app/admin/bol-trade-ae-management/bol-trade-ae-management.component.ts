@@ -4,10 +4,12 @@ import { Observable } from "rxjs";
 import { Location } from '@angular/common';
 import { Centre } from '../../models/centre';
 import { BolTradeAeManagementService } from '../../services/bol-trade-ae-management.service';
+import { LookupDataService } from '../../services/lookup-data.service';
 import { AccountExecutive } from '../../models/account-executive';
 import { UserService } from '../../services/user.service';
 import { RoleSubRole } from "../../models/RoleSubRole";
 import { SubRoleEnum } from "../../models/subrole-enum";
+import { RoleEnum } from '../../models/role-enum';
 
 @Component({
     selector: 'app-bol-trade-ae-management',
@@ -44,7 +46,11 @@ export class BolTradeAeManagementComponent implements OnInit {
     accountAssistantsFiltered: User[];
     currentUser: User;
 
-    constructor(private location: Location, private bolTradeAeManagementService: BolTradeAeManagementService, private userService: UserService) {
+    constructor(
+        private location: Location,
+        private bolTradeAeManagementService: BolTradeAeManagementService,
+        private userService: UserService,
+        private lookupDataService: LookupDataService, ) {
         this.addBolTradeAeUserModel = new User();
     }
 
@@ -60,7 +66,7 @@ export class BolTradeAeManagementComponent implements OnInit {
             this.bolTradeAeManagementService.getCentres(),
             this.bolTradeAeManagementService.getBolTradAAUsers(),
             this.userService.getData(),
-            this.bolTradeAeManagementService.getRoleSubRoles()
+            this.lookupDataService.getRoleSubRolesByRoleId(RoleEnum.AA)
         ]).subscribe(results => {
             this.bolTradeAeUsers = <any>results[0];
             this.centres = <any>results[1];

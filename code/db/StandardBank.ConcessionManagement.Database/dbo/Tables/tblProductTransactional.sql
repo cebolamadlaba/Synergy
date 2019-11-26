@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[tblProductTransactional] (
     [pkProductTransactionalId]   INT             IDENTITY (1, 1) NOT NULL,
-    [fkRiskGroupId]              INT             NOT NULL,
-    [fkLegalEntityId]            INT             NOT NULL,
+    [fkRiskGroupId]              INT             NULL,
+    [fkLegalEntityId]            INT             NULL,
     [fkLegalEntityAccountId]     INT             NOT NULL,
     [fkTransactionTypeId]        INT             NOT NULL,
     [fkTransactionTableNumberId] INT             NOT NULL,
@@ -15,4 +15,6 @@
     CONSTRAINT [FK_tblProductTransactional_tblLegalEntityAccount] FOREIGN KEY ([fkLegalEntityAccountId]) REFERENCES [dbo].[tblLegalEntityAccount] ([pkLegalEntityAccountId]),
     CONSTRAINT [FK_tblProductTransactional_tblRiskGroup] FOREIGN KEY ([fkRiskGroupId]) REFERENCES [dbo].[tblRiskGroup] ([pkRiskGroupId])
 );
+
+
 

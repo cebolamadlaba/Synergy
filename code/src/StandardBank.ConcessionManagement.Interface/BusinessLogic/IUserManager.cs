@@ -79,12 +79,6 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         IEnumerable<User> GetUsersByCentreId(int centreId);
 
         /// <summary>
-        /// Gets the users sub role
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<RoleSubRole> GetRoleSubRole();
-
-        /// <summary>
         /// Validates the user.
         /// </summary>
         /// <param name="user">The user.</param>
@@ -98,5 +92,12 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="accountExecutiveUserId">The account executive user identifier.</param>
         /// <returns></returns>
         IEnumerable<User> GetAccountAssistantsForAccountExecutive(int accountExecutiveUserId);
+
+        /// <summary>
+        /// Gets the user.
+        /// </summary>
+        /// <param name="riskGroupNumber">The user identifier.</param>
+        /// <returns></returns>
+        User GetUserByRiskGroupNumber(int riskGroupNumber);
     }
 }

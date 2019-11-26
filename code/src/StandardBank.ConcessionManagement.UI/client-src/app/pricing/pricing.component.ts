@@ -9,6 +9,7 @@ import { PricingView } from "../models/pricing-view";
 import { LookupDataService } from "../services/lookup-data.service";
 
 import { SubRoleEnum } from "../models/subrole-enum";
+import { PricingProductEnum } from "../models/pricing-product-enum"
 
 @Component({
     selector: 'app-pricing',
@@ -31,6 +32,10 @@ export class PricingComponent implements OnInit, OnDestroy {
     activePricingProducts: number[] = [];
     isLoading = false;
 
+    marketSegment: string = null;
+    entityName: string = null;
+    entityNumber: number = null;
+
     constructor(private route: ActivatedRoute,
         @Inject(UserService) private userService,
         @Inject(LookupDataService) private lookupDataService) {
@@ -39,9 +44,12 @@ export class PricingComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.riskGroupNumber = +params['riskGroupNumber'];
+            this.sapbpid = +params['sapbpid'];
 
             if (this.riskGroupNumber)
                 this.searchRiskGroupNumber(this.riskGroupNumber);
+            if (this.sapbpid)
+                this.searchSAPBPID(this.sapbpid);
         });
 
         this.observableLoggedInUser = this.userService.getData();
@@ -58,6 +66,17 @@ export class PricingComponent implements OnInit, OnDestroy {
         this.observableRiskGroup = this.lookupDataService.getRiskGroup(riskGroupNumber);
         this.observableRiskGroup.subscribe(riskGroup => {
             this.riskGroup = riskGroup;
+
+            if (this.riskGroup != null) {
+                this.marketSegment = this.riskGroup.marketSegment;
+                this.entityName = this.riskGroup.name;
+                this.entityNumber = this.riskGroup.number;
+            }
+            else {
+                this.marketSegment = null;
+                this.entityName = null;
+                this.entityNumber = null;
+            }
 
             this.getActivePricingProducts();
 
@@ -82,6 +101,17 @@ export class PricingComponent implements OnInit, OnDestroy {
 
             this.riskGroup = pricingview.riskGroup;
             this.legalEntity = pricingview.legalEntity
+
+            if (this.legalEntity != null) {
+                this.marketSegment = this.legalEntity.marketSegment;
+                this.entityName = this.legalEntity.customerName;
+                this.entityNumber = Number(this.legalEntity.customerNumber);
+            }
+            else {
+                this.marketSegment = null;
+                this.entityName = null;
+                this.entityNumber = null;
+            }
 
             if (this.riskGroup != null) {
                 this.riskGroupNumber = this.riskGroup.number;
@@ -139,31 +169,22 @@ export class PricingComponent implements OnInit, OnDestroy {
                 return false;
             }
             else {
-                // for BOL COnsultants and Trade Bankers
+
                 if (this.user.subRoleId != null) {
-                    // BOL Concessions
-                    if (this.user.subRoleId == SubRoleEnum.BOLConsultant && pricingProductNumber == 4) {
-                        return true;
-                    }
-                    // Trade Concessions
-                    else if (this.user.subRoleId == SubRoleEnum.TradeBanker && pricingProductNumber == 5) {
+                    // BOL Concessions or Trade Concessions or PCM S & I
+                    if ((this.user.subRoleId == SubRoleEnum.BOLConsultant && pricingProductNumber == PricingProductEnum.BOL) ||
+                        (this.user.subRoleId == SubRoleEnum.TradeBanker && pricingProductNumber == PricingProductEnum.Trade) ||
+                        (this.user.subRoleId == SubRoleEnum.PCMSnI && pricingProductNumber == PricingProductEnum.Investment)) {
                         return true;
                     }
                     else {
                         return false;
                     }
                 }
+
                 // for all other users
                 return true;
             }
         }
-
-        //let canView: boolean = true;
-        //if (this.user.subRoleId != null && this.user.subRoleId > 0) {
-        //    switch (this.user.subRoleId) {
-        //        case SubRoleEnum.
-        //    }
-        //}
-
     }
 }

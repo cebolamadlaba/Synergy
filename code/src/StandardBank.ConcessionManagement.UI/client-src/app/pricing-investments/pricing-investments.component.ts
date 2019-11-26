@@ -12,13 +12,15 @@ import { InvestmentConcessionService } from "../services/investment-concession.s
 
 import { Concession } from "../models/concession";
 import { UserService } from "../services/user.service";
+import { BaseComponentService } from '../services/base-component.service';
+import { Http } from '@angular/http';
 
 @Component({
     selector: 'app-pricing-investments',
     templateUrl: './pricing-investments.component.html',
     styleUrls: ['./pricing-investments.component.css']
 })
-export class PricingInvestmentsComponent implements OnInit, OnDestroy {
+export class PricingInvestmentsComponent extends BaseComponentService implements OnInit, OnDestroy {
     riskGroupNumber: number;
     sapbpid: number;
     private sub: any;
@@ -35,11 +37,12 @@ export class PricingInvestmentsComponent implements OnInit, OnDestroy {
     canRequest = false;
 
     constructor(
-        private router: Router,
+        public router: Router,
         private route: ActivatedRoute,
         private location: Location,
-        @Inject(InvestmentConcessionService) private investmentConcessionService, private userService: UserService
+        @Inject(InvestmentConcessionService) private investmentConcessionService, public userService: UserService
     ) {
+        super(router, userService);
         this.investmentView.riskGroup = new RiskGroup();
         this.investmentView.investmentConcessions = [new InvestmentConcession()];
         this.investmentView.investmentConcessions[0].concession = new Concession();
@@ -83,7 +86,7 @@ export class PricingInvestmentsComponent implements OnInit, OnDestroy {
     }
 
     goBack() {
-        this.router.navigate(['/pricing', this.riskGroupNumber]);
+        this.router.navigate(['/pricing', { riskGroupNumber: this.riskGroupNumber, sapbpid: this.sapbpid }]);
     }
 
     ngOnDestroy() {

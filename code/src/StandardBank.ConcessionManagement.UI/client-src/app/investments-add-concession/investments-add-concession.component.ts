@@ -35,6 +35,8 @@ import { Concession } from "../models/concession";
 import { UserService } from "../services/user.service";
 
 import { BaseComponentService } from '../services/base-component.service';
+import * as moment from 'moment';
+import { MOnthEnum } from '../models/month-enum';
 
 @Component({
     selector: 'app-investments-add-concession',
@@ -122,7 +124,6 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
         this.investmentView.riskGroup = new RiskGroup();
         this.investmentView.investmentConcessions = [new InvestmentConcession()];
         this.investmentView.investmentConcessions[0].concession = new Concession();
-
     }
 
     ngOnInit() {
@@ -305,6 +306,13 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
 
     }
 
+    onExpiryDateChanged(itemrow) {
+        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
+        if (validationErrorMessage != null) {
+            this.addValidationError(validationErrorMessage);
+        }   
+    }
+
     conditionTypeChanged(rowIndex) {
         const control = <FormArray>this.investmentConcessionForm.controls['conditionItemsRows'];
         this.selectedConditionTypes[rowIndex] = control.controls[rowIndex].get('conditionType').value;
@@ -368,6 +376,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
         if (this.legalEntity)
             investmentConcession.concession.legalEntityId = this.legalEntity.id;
 
+        
         if (this.investmentConcessionForm.controls['smtDealNumber'].value) {
             investmentConcession.concession.smtDealNumber = this.investmentConcessionForm.controls['smtDealNumber'].value;
         }
@@ -445,6 +454,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
             }
 
             if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
+                this.onExpiryDateChanged(concessionFormItem);
                 investmentConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
             else {
@@ -559,7 +569,6 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-        //$event.target.value = this.formatDecimal($event.target.value);
     }
 
     setThreeNumberDecimal($event) {
@@ -584,14 +593,6 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
             $event.target.value = null;
         }
     }
-
-    //formatDecimal(itemValue: number) {
-    //    if (itemValue) {
-    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-    //    }
-
-    //    return null;
-    //}
 
     goBack() {
         this.router.navigate(['/pricing', this.riskGroupNumber]);

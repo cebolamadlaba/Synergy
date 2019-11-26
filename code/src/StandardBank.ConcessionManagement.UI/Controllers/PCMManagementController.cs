@@ -72,7 +72,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             if (user.IsPCM)
                 pcmUsers = pcmUsers.Where(_ => _.Id == user.Id);
-        
+
             return Ok(pcmUsers);
         }
 
@@ -99,7 +99,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             pcmUser.RoleId = roles.First(_ => _.Name == Constants.Roles.PCM).Id;
             pcmUser.CentreId = 0;
-            
+
             if (pcmUser.Id > 0)
                 await _mediator.Send(new UpdateUser(pcmUser, user));
             else
@@ -111,12 +111,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <summary>
         /// Validates the user.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="pcmUser">The pcmUser.</param>
         /// <returns></returns>
         [Route("ValidateUser")]
-        public IActionResult ValidateUser([FromBody] User model)
+        public IActionResult ValidateUser([FromBody] User pcmUser)
         {
-            return Ok(_userManager.ValidateUser(model, Constants.Roles.PCM));
+            return Ok(_userManager.ValidateUser(pcmUser, Constants.Roles.PCM));
         }
     }
 }

@@ -36,7 +36,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <summary>
         /// The user sub role repository
         /// </summary>
-        private readonly IRoleSubRoleRepository _RoleSubRoleRepository;
+        private readonly IRoleSubRoleRepository _roleSubRoleRepository;
 
         /// <summary>
         /// The role repository
@@ -85,13 +85,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="regionManager">The region manager.</param>
         public UserManager(ICacheManager cacheManager, IUserRepository userRepository,
             IUserRoleRepository userRoleRepository, IRoleRepository roleRepository, ICentreRepository centreRepository,
-            ICentreUserRepository centreUserRepository, IMapper mapper, IRoleSubRoleRepository RoleSubRoleRepository,
+            ICentreUserRepository centreUserRepository, IMapper mapper, IRoleSubRoleRepository roleSubRoleRepository,
             IAccountExecutiveAssistantRepository accountExecutiveAssistantRepository, IRegionManager regionManager, IMemoryCache memoryCache)
         {
             _cacheManager = cacheManager;
             _userRepository = userRepository;
             _userRoleRepository = userRoleRepository;
-            _RoleSubRoleRepository = RoleSubRoleRepository;
+            _roleSubRoleRepository = roleSubRoleRepository;
             _roleRepository = roleRepository;
             _centreRepository = centreRepository;
             _centreUserRepository = centreUserRepository;
@@ -122,14 +122,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             if (usr != null)
             {
-                var RoleSubRole = _userRoleRepository.ReadByUserId(usr.Id).Select(x => x.SubRoleId);
+                var subRoleIds = _userRoleRepository.ReadByUserId(usr.Id).Where(f => f.SubRoleId != null).Select(x => x.SubRoleId);
 
-                foreach (var subRole in RoleSubRole)
+                foreach (var subRoleId in subRoleIds)
                 {
-                    if (subRole.HasValue)
-                    {
-                        usr.SubRoleId = subRole;
-                    }
+                    usr.SubRoleId = subRoleId;
                 }
             }
 
@@ -167,6 +164,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var userRole = _userRoleRepository.ReadByUserId(mappedUser.Id).FirstOrDefault(x => x.SubRoleId.HasValue);
             if (userRole != null)
                 mappedUser.SubRoleId = userRole.SubRoleId.Value;
+
+            if (mappedUser.SubRoleId != null)
+            {
+                mappedUser.RoleSubRole = this._roleSubRoleRepository.ReadAll().FirstOrDefault(x => x.SubRoleId == mappedUser.SubRoleId);
+            }
 
             mappedUser.UserCentres = GetUserCentres(user.Id);
             mappedUser.SelectedCentre = mappedUser.UserCentres.FirstOrDefault();
@@ -228,6 +230,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Gets the user.
+        /// </summary>
+        /// <param name="sapbpidOrRiskGroupNumber">The user identifier.</param>
+        /// <returns></returns>
+        public User GetUserByRiskGroupNumber(int sapbpidOrRiskGroupNumber)
+        {
+            return _mapper.Map<User>(_userRepository.ReadByCustOrRiskGroupNumber(sapbpidOrRiskGroupNumber));
+        }
+
+        /// <summary>
         /// Gets the name of the user.
         /// </summary>
         /// <param name="userId">The user identifier.</param>
@@ -264,15 +276,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             return userCentres;
-        }
-
-        /// <summary>
-        /// Gets the user sub role.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<RoleSubRole> GetRoleSubRole()
-        {
-            return _mapper.Map<IEnumerable<RoleSubRole>>(_RoleSubRoleRepository.ReadAll());
         }
 
         /// <summary>

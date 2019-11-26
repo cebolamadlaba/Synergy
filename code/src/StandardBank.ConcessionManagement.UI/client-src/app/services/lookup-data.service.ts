@@ -30,6 +30,7 @@ import { LegalEntityBOLUser } from "../models/legal-entity-bol-user";
 import { ConcessionStatus } from '../constants/concession-status';
 import { ConcessionSubStatus } from '../constants/concession-sub-status';
 import { PricingView } from '../models/pricing-view';
+import { RoleSubRole } from '../models/RoleSubRole';
 
 @Injectable()
 export class LookupDataService {
@@ -62,11 +63,6 @@ export class LookupDataService {
         const url = "/api/Concession/ClientAccountsConcessionType/" + riskGroupNumber + "/" + sapbpid + "/" + concessiontype;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
-
-    //searchClientAccounts(riskGroupNumber, accountNumber): Observable<ClientAccount[]> {
-    //    const url = "/api/Concession/SearchClientAccounts/" + riskGroupNumber + "/" + accountNumber;
-    //    return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
-    //}    
 
 
     searchConsessions(): Observable<ApprovedConcessionDetail[]> {
@@ -133,6 +129,17 @@ export class LookupDataService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    getRoleSubRoles(): Observable<RoleSubRole[]> {
+
+        return this.getRoleSubRolesByRoleId(0);
+    }
+    getRoleSubRolesByRoleId(roleId: number): Observable<RoleSubRole[]> {
+        let url = "/api/Common/RoleSubRoles";
+        if (roleId != null && roleId > 0) {
+            url += "/" + roleId;
+        }
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
 
     getPeriods(): Observable<Period[]> {
         const url = "/api/Condition/Periods";
@@ -214,6 +221,7 @@ export class LookupDataService {
         return null;
     }
 
+
     private extractData(response: Response) {
         let body = response.json();
         return body;
@@ -260,15 +268,6 @@ export class MockLookupDataService extends LookupDataService {
         this.clientAccountModel[0].customerName = "Test Customer Name";
         return Observable.of(this.clientAccountModel);
     }
-
-    //searchClientAccounts(riskGroupNumber, accountNumber): Observable<ClientAccount[]> {
-    //    this.clientAccountModel[0].accountNumber = "Test Account Number";
-    //    this.clientAccountModel[0].legalEntityAccountId = 1;
-    //    this.clientAccountModel[0].legalEntityId = 1;
-    //    this.clientAccountModel[0].riskGroupId = 1;
-    //    this.clientAccountModel[0].customerName = "Test Customer Name";
-    //    return Observable.of(this.clientAccountModel);
-    //}
 
     getConditionTypes(): Observable<ConditionType[]> {
         this.conditionTypeModel[0].id = 1;
