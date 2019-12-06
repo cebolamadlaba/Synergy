@@ -30,5 +30,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// The Active.
         /// </value>
         public bool Active { get; set; }
+
+        public int? RoleId { get; set; }
     }
 }

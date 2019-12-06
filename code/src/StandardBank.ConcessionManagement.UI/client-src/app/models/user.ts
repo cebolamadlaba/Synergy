@@ -15,7 +15,7 @@ export class User {
     isActive: boolean;
     userRoles: Role[];
     userCentres: Centre[];
-    RoleSubRole: RoleSubRole[];
+    roleSubRole: RoleSubRole;
     selectedCentre: Centre;
     centreId: number;
     roleId: number;

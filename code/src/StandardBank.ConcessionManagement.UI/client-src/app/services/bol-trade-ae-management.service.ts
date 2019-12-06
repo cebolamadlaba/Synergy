@@ -47,12 +47,6 @@ export class BolTradeAeManagementService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    getRoleSubRoles(): Observable<RoleSubRole[]> {
-        const url = "/api/BolTradeAAManagement/RoleSubRoles";
-        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
-    }
-
-
     private extractData(response: Response) {
         let body = response.json();
         return body;
@@ -84,11 +78,6 @@ export class MockBolTradeAeManagementService extends BolTradeAeManagementService
 
     validateUser(aeUser: User): Observable<string[]> {
         var model = [''];
-        return Observable.of(model);
-    }
-
-    getRoleSubRoles(): Observable<RoleSubRole[]> {
-        var model = [new RoleSubRole()];
         return Observable.of(model);
     }
 

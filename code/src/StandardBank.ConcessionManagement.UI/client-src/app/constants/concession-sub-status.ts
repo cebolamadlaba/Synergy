@@ -5,6 +5,7 @@ export class ConcessionSubStatus {
     public static readonly PCMPending = "PCM Pending";
     public static readonly PCMApproved = "PCM Approved";
     public static readonly PCMDeclined = "PCM Declined";
+    public static readonly PCMSnIPending = "PCM S&I Pending";
     public static readonly HOPending = "HO Pending";
     public static readonly HOApproved = "HO Approved";
     public static readonly HODeclined = "HO Declined";

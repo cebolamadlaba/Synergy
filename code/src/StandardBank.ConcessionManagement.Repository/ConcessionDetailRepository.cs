@@ -61,7 +61,6 @@ namespace StandardBank.ConcessionManagement.Repository
             }
             catch (System.Exception ex)
             {
-
                 throw ex;
             }
         }

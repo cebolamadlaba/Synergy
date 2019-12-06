@@ -81,11 +81,26 @@
     </div>
 </div>
 
+
 <!-- Error message -->
-<div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
+<div class="col-md-12" *ngIf="(errorMessage) && !isLoading">
     <div class="form-feedback-container">
         <div class="alert-danger">
             <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
+            <p>{{errorMessage}}</p>
+
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError ">{{validationMessage}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Error message -->
+<div class="col-md-12" *ngIf="(validationError) && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Below errors requires your attention..</p>
             <p>{{errorMessage}}</p>
 
             <ul *ngIf="validationError">
@@ -227,7 +242,7 @@
 
                 <td class="length-short">
 
-                    <input type="number" class="form-control" formControlName="term" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_term && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'term')" />
+                    <input type="number" class="form-control" formControlName="term" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_term && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'term')" (keyup)="onTermValueChange(i)" />
                 </td>
 
                 <td class="length-short"><input type="number" class="form-control" formControlName="advalorem" [attr.disabled]="this.tradeConcession.tradeConcessionDetails[i].show_advalorem && canEdit ? null : ''" [class.markred]="bcmhochanged(i,'advalorem')" (change)="setadvalorem($event, i,'advalorem')" /></td>

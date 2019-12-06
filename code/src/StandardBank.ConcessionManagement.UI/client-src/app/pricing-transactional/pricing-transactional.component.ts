@@ -9,13 +9,15 @@ import { TransactionalView } from "../models/transactional-view";
 import { TransactionalConcessionService } from "../services/transactional-concession.service";
 import { TransactionalConcession } from "../models/transactional-concession";
 import { UserService } from "../services/user.service";
+import { BaseComponentService } from '../services/base-component.service';
+import { Http } from '@angular/http';
 
 @Component({
     selector: 'app-pricing-transactional',
     templateUrl: './pricing-transactional.component.html',
     styleUrls: ['./pricing-transactional.component.css']
 })
-export class PricingTransactionalComponent implements OnInit, OnDestroy {
+export class PricingTransactionalComponent extends BaseComponentService implements OnInit, OnDestroy {
     showHide = false;
     riskGroupNumber: number;
     sapbpid: number;
@@ -30,11 +32,12 @@ export class PricingTransactionalComponent implements OnInit, OnDestroy {
     isLoading = true;
 
     constructor(
-        private router: Router,
+        public router: Router,
         private route: ActivatedRoute,
         private location: Location,
         @Inject(TransactionalConcessionService) private transactionalConcessionService,
-        private userService: UserService) {
+        public userService: UserService) {
+        super(router, userService);
         this.transactionalView.riskGroup = new RiskGroup();
         this.transactionalView.transactionalConcessions = [new TransactionalConcession()];
         this.transactionalView.transactionalConcessions[0].concession = new Concession();

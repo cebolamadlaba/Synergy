@@ -27,6 +27,10 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             CreateMap<Model.UserInterface.Centre, Model.Repository.Centre>()
                 .ForMember(target => target.CentreName, _ => _.MapFrom(source => source.Name));
 
+            //GlmsTierData
+            CreateMap<Model.Repository.GlmsTierData, Model.UserInterface.GlmsTierData>().ReverseMap();
+            CreateMap<Model.Repository.GlmsTierDataView, Model.UserInterface.GlmsTierDataView>().ReverseMap();
+
             //ChannelType
             CreateMap<Model.Repository.ChannelType, Model.UserInterface.ChannelType>().ReverseMap();
 
@@ -37,9 +41,8 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                 .ForMember(target => target.DateSentForApproval, _ => _.MapFrom(source => source.DatesentForApproval))
                 .ForMember(target => target.Requestor, _ => _.Ignore())
                 .ForMember(target => target.SmtDealNumber, _ => _.MapFrom(source => source.SMTDealNumber))
+
                 .ForMember(target => target.MrsCrs, _ => _.MapFrom(source => source.MRS_CRS));
-            //.ForMember(target => target.CurrentAEUserId, _ => _.MapFrom(source => this.GetCurrentAccountExecutiveUserId(source.AENumberUserId)))
-            //.ForMember(target => target.CurrentAAList, _ => _.MapFrom(source => this.GetAccountAssistantIds(source.AENumberUserId)));
             CreateMap<Model.UserInterface.Concession, Model.Repository.Concession>()
                 .ForMember(target => target.ConcessionRef, _ => _.MapFrom(source => source.ReferenceNumber))
                 .ForMember(target => target.ConcessionDate, _ => _.MapFrom(source => source.DateOpened))
@@ -98,13 +101,13 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                 .ForMember(target => target.LendingConcessionDetailId, _ => _.MapFrom(source => source.Id))
                 .ForMember(target => target.ApprovedMap, _ => _.MapFrom(source => source.ApprovedMarginToPrime))
                 .ForMember(target => target.LoadedMap, _ => _.MapFrom(source => source.LoadedMarginToPrime))
-                .ForMember(target => target.MrsBri, _ => _.MapFrom(source => source.MRS_BRI));
+                .ForMember(target => target.MrsEri, _ => _.MapFrom(source => source.MRS_BRI));
             CreateMap<Model.UserInterface.Lending.LendingConcessionDetail, Model.Repository.ConcessionLending>()
                 .ForMember(target => target.MarginToPrime, _ => _.MapFrom(source => source.MarginAgainstPrime))
                 .ForMember(target => target.Id, _ => _.MapFrom(source => source.LendingConcessionDetailId))
                 .ForMember(target => target.ApprovedMarginToPrime, _ => _.MapFrom(source => source.ApprovedMap))
                 .ForMember(target => target.LoadedMarginToPrime, _ => _.MapFrom(source => source.LoadedMap))
-                .ForMember(target => target.MRS_BRI, _ => _.MapFrom(source => source.MrsBri));
+                .ForMember(target => target.MRS_BRI, _ => _.MapFrom(source => source.MrsEri));
 
             //ConcessionRelationship
             CreateMap<Model.Repository.ConcessionRelationship, Model.UserInterface.ConcessionRelationship>()
@@ -152,9 +155,27 @@ namespace StandardBank.ConcessionManagement.UI.Extension
 
             //Period
             CreateMap<Model.Repository.Period, Model.UserInterface.Period>().ReverseMap();
+     
+            //GlmsGroup
+            CreateMap<Model.Repository.GlmsGroup, Model.UserInterface.GlmsGroup>().ReverseMap();
+
+            //InterestPricingCategory
+            CreateMap<Model.Repository.InterestPricingCategory, Model.UserInterface.InterestPricingCategory>().ReverseMap();
+
+            //InterestType
+            CreateMap<Model.Repository.InterestType, Model.UserInterface.InterestType>().ReverseMap();
+
+            //RateType
+            CreateMap<Model.Repository.RateType, Model.UserInterface.RateType>().ReverseMap();
+
+            //SlabType
+            CreateMap<Model.Repository.SlabType, Model.UserInterface.SlabType>().ReverseMap();
 
             //PeriodType
             CreateMap<Model.Repository.PeriodType, Model.UserInterface.PeriodType>().ReverseMap();
+
+            //BaseRateCode
+            CreateMap<Model.Repository.BaseRateCode, Model.UserInterface.BaseRateCode>().ReverseMap();
 
             //ProductCash
             CreateMap<Model.Repository.ProductCash, Model.UserInterface.Cash.CashProduct>()
@@ -233,35 +254,5 @@ namespace StandardBank.ConcessionManagement.UI.Extension
             CreateMap<Model.Repository.LegalEntity, Model.UserInterface.LegalEntity>().ReverseMap();
         }
 
-
-
-
-        //private int? GetCurrentAccountExecutiveUserId(int? aeNumberUserId)
-        //{
-        //    if (aeNumberUserId == null)
-        //        return null;
-
-        //    AENumberUser aeNumberUser = this._aeNumberUserManager.GetAENumberUser(aeNumberUserId.Value);
-
-        //    if (aeNumberUser == null)
-        //        return null;
-
-        //    return aeNumberUser.UserId;
-        //}
-
-        //private int?[] GetAccountAssistantIds(int? aeNumberUserId)
-        //{
-        //    int? accountExecutiveUserId = this.GetCurrentAccountExecutiveUserId(aeNumberUserId);
-
-        //    if (accountExecutiveUserId == null)
-        //        return null;
-
-        //    IEnumerable<Model.UserInterface.User> accountAssistants = this._userManager.GetAccountAssistantsForAccountExecutive(accountExecutiveUserId.Value);
-
-        //    if (accountAssistants != null && accountAssistants.Count() > 0)
-        //        return accountAssistants.Select(a => (int?)a.Id).ToArray();
-
-        //    return null;
-        //}
     }
 }

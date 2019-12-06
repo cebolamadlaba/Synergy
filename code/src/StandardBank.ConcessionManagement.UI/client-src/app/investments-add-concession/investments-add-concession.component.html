@@ -65,20 +65,34 @@
 
     </div>
 </div>
+
 <!-- Error message -->
-<div class="col-md-12" *ngIf="(errorMessage || validationError) && !isLoading">
+<div class="col-md-12" *ngIf="(errorMessage) && !isLoading">
     <div class="form-feedback-container">
         <div class="alert-danger">
             <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
             <p>{{errorMessage}}</p>
 
             <ul *ngIf="validationError">
-                <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
+                <li *ngFor="let validationMessage of validationError ">{{validationMessage}}</li>
             </ul>
         </div>
     </div>
 </div>
 
+<!-- Error message -->
+<div class="col-md-12" *ngIf="(validationError) && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Below errors requires your attention..</p>
+            <p>{{errorMessage}}</p>
+
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError;">{{validationMessage}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
 <!-- Success message -->
 <div class="col-md-12" *ngIf="saveMessage && !isLoading">
     <div class="form-feedback-container">
@@ -99,7 +113,7 @@
 
 <!-- Form entries -->
 <form class="col-md-12 product-form" [formGroup]="investmentConcessionForm" *ngIf="!isLoading">
-    <div class="col-md-4">       
+    <div class="col-md-4">
         <div class="row">
             <label>SMT Deal Number</label>
             <input type="text" numbersOnly="true" class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="saveMessage ? '' : null" />
@@ -115,7 +129,6 @@
             <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="saveMessage ? '' : null"></textarea>
         </div>
     </div>
-
 
     <!-- Concession table -->
     <div class="col-md-12" style="border-bottom: 1px solid gray; margin-bottom: 15px;">
@@ -160,13 +173,13 @@
                         <option *ngFor="let clientAccountOption of selectedAccountNumbers[i].clientaccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
                 </td>
-                
+
                 <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="balance" [attr.disabled]="saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
 
-                <td class="length-short">               
+                <td class="length-short">
 
                     <select formControlName="noticeperiod" class="form-control" [attr.disabled]="((selectedInvestmentConcession[i] == true) || saveMessage) ? 'disabled' : null">
-                   
+
                         <option value="1">33 days</option>
                         <option value="2">60 days</option>
                         <option value="3">90 days</option>
