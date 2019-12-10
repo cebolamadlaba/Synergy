@@ -940,6 +940,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var lendingConcession = this.getLendingConcession(false);
         lendingConcession.concession.subStatus = ConcessionSubStatus.PCMPending;
@@ -971,6 +972,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var lendingConcession = this.getLendingConcession(false);
         lendingConcession.concession.status = ConcessionStatus.Declined;
@@ -1003,6 +1005,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var lendingConcession = this.getLendingConcession(false);
 
@@ -1111,6 +1114,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var lendingConcession = this.getLendingConcession(false);
 
@@ -1325,6 +1329,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var lendingConcession = this.getLendingConcession(false);
         lendingConcession.concession.status = ConcessionStatus.ApprovedWithChanges;
@@ -1357,6 +1362,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var lendingConcession = this.getLendingConcession(false);
         lendingConcession.concession.status = ConcessionStatus.Declined;

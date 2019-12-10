@@ -356,26 +356,6 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                                     currentConcession.get('disablecontrolset').setValue(false);
                                     break;
                             }
-
-                            //if (selectedproducttype[0].tradeProductType == "Local guarantee") {
-
-                            //    this.isProductLocalGuarantee = true;
-                            //    this.selectedTradeConcession[rowIndex] = true;
-                            //    currentConcession.get('disablecontrolset').setValue(true);
-
-                            //}
-                            //else {
-                            //    this.isProductLocalGuarantee = false;
-                            //    this.selectedTradeConcession[rowIndex] = false;
-                            //    currentConcession.get('disablecontrolset').setValue(false);
-                            //}
-
-                            //if (selectedproducttype[0].tradeProductType == "Outward TT") {
-                            //    this.isNotProductOutwardTT = false;
-                            //}
-                            //else {
-                            //    this.isNotProductOutwardTT = true;
-                            //}
                         }
                     }
 
@@ -820,7 +800,6 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
             let hasValueGbbNumber = (concessionFormItem.get('gbbnumberText').value);
 
-            //if (concessionFormItem.get('gbbnumber').value) {
             if (hasValueGbbNumber) {
                 tradeConcessionDetail.gbbNumber = concessionFormItem.get('gbbnumberText').value;
             } else {
@@ -844,11 +823,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                 concessionFormItem.get('advalorem').value === 0) {
                 advaloremfound = true;
                 tradeConcessionDetail.adValorem = concessionFormItem.get('advalorem').value;
-            } else {
-                // if (!tradeConcessionDetail.disablecontrolset) {
-                // this.addValidationError("AdValorem value not entered");
-                //}
-            }
+            } 
 
             if (concessionFormItem.get('min').value && advaloremfound) {
                 tradeConcessionDetail.min = concessionFormItem.get('min').value;
@@ -865,8 +840,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                     this.addValidationError("Max value not entered");
                 }
             }
-            ///---
-            //if (!concessionFormItem.get('communication').disabled) {
+
             if (concessionFormItem.get('communication').value != null && concessionFormItem.get('communication').value > -1) {
                 let communicationVal = this.baseComponentService.unformat(concessionFormItem.get('communication').value);
                 if (communicationVal != null || communicationVal == 0) {
@@ -921,7 +895,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
                     this.addValidationError("Rate not entered");
                 }
             }
-            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
+            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "" && !this.baseComponentService.isAppprovingOrDeclining) {
                 this.onExpiryDateChanged(concessionFormItem);
                 tradeConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
@@ -1033,6 +1007,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var tradeConcession = this.getTradeConcession(false);
         tradeConcession.concession.subStatus = ConcessionSubStatus.PCMPending;
@@ -1114,6 +1089,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var tradeConcession = this.getTradeConcession(false);
         tradeConcession.concession.status = ConcessionStatus.Declined;
@@ -1146,6 +1122,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var tradeConcession = this.getTradeConcession(false);
 
@@ -1204,6 +1181,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var tradeConcession = this.getTradeConcession(false);
 
@@ -1394,6 +1372,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var tradeConcession = this.getTradeConcession(false);
         tradeConcession.concession.status = ConcessionStatus.ApprovedWithChanges;
@@ -1426,7 +1405,7 @@ export class TradeViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
-
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var tradeConcession = this.getTradeConcession(false);
         tradeConcession.concession.status = ConcessionStatus.Declined;

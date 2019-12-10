@@ -13,7 +13,8 @@ export class BaseComponentService   {
 
     validationError: String[];
     aeUser: User;
-    riskGroupAEUser: User
+    riskGroupAEUser: User;
+    isAppprovingOrDeclining: boolean = false;
 
     constructor(public router: Router, public userService: UserService) {
         
