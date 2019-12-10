@@ -549,7 +549,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
                 this.addValidationError("Table Number not selected");
             }
 
-            if (concessionFormItem.get('expiryDate').value)
+            if (concessionFormItem.get('expiryDate').value && !this.baseComponentService.isAppprovingOrDeclining)
                 this.onExpiryDateChanged(concessionFormItem);
                 transactionalConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
@@ -661,6 +661,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var transactionalConcession = this.getTransactionalConcession(false);
         transactionalConcession.concession.subStatus = ConcessionSubStatus.PCMPending;
@@ -692,6 +693,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var transactionalConcession = this.getTransactionalConcession(false);
         transactionalConcession.concession.status = ConcessionStatus.Declined;
@@ -724,6 +726,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var transactionalConcession = this.getTransactionalConcession(false);
 
@@ -801,7 +804,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
             let controls = (<FormGroup>concessionFormItem).controls;
 
-            for (const fieldname in controls) { // 'field' is a string
+            for (const fieldname in controls) { 
 
                 const abstractControl = controls[fieldname];
                 if (abstractControl.dirty) {
@@ -833,6 +836,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var transactionalConcession = this.getTransactionalConcession(false);
 
@@ -1019,6 +1023,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var transactionalConcession = this.getTransactionalConcession(false);
         transactionalConcession.concession.status = ConcessionStatus.ApprovedWithChanges;
@@ -1051,6 +1056,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var transactionalConcession = this.getTransactionalConcession(false);
         transactionalConcession.concession.status = ConcessionStatus.Declined;
@@ -1131,16 +1137,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-        //$event.target.value = this.formatDecimal($event.target.value);
     }
-
-    //formatDecimal(itemValue: number) {
-    //    if (itemValue) {
-    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-    //    }
-
-    //    return null;
-    //}
 
     validatePeriod(itemrow) {
         this.validationError = null;

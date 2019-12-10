@@ -243,7 +243,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                     let selectedAccrualType = this.accrualTypes.filter(_ => _.id == cashConcessionDetail.accrualTypeId);
                     currentConcession.get('accrualType').setValue(selectedAccrualType[0]);
 
-                    if (cashConcessionDetail.expiryDate) {
+                    if (cashConcessionDetail.expiryDate && !this.baseComponentService.isAppprovingOrDeclining) {
                         var formattedExpiryDate = this.datepipe.transform(cashConcessionDetail.expiryDate, 'yyyy-MM-dd');
                         currentConcession.get('expiryDate').setValue(formattedExpiryDate);
                     }
@@ -655,6 +655,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var cashConcession = this.getCashConcession(false);
         cashConcession.concession.subStatus = ConcessionSubStatus.PCMPending;
@@ -685,6 +686,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var cashConcession = this.getCashConcession(false);
         cashConcession.concession.status = ConcessionStatus.Declined;
@@ -717,6 +719,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var cashConcession = this.getCashConcession(false);
 
@@ -796,7 +799,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
             let controls = (<FormGroup>concessionFormItem).controls;
 
-            for (const fieldname in controls) { // 'field' is a string
+            for (const fieldname in controls) { 
 
                 const abstractControl = controls[fieldname];
                 if (abstractControl.dirty) {
@@ -828,6 +831,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var cashConcession = this.getCashConcession(false);
 
@@ -1016,6 +1020,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var cashConcession = this.getCashConcession(false);
         cashConcession.concession.status = ConcessionStatus.ApprovedWithChanges;
@@ -1048,6 +1053,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var cashConcession = this.getCashConcession(false);
         cashConcession.concession.status = ConcessionStatus.Declined;

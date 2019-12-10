@@ -514,7 +514,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     getBolConcession(isNew: boolean): BolConcession {
         var bolConcession = new BolConcession();
         bolConcession.concession = new Concession();
-
+       
         if (this.riskGroup)
             bolConcession.concession.riskGroupId = this.riskGroup.id;
         if (this.legalEntity)
@@ -581,10 +581,10 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                 hasLegalEntityId = true;
                 hasLegalEntityAccountId = true;
             } else {
-                this.addValidationError("User ID not selected");
+               this.addValidationError("User ID not selected");
             }
 
-            if (concessionFormItem.get('expiryDate').value)
+            if (concessionFormItem.get('expiryDate').value && !this.baseComponentService.isAppprovingOrDeclining)
                 this.onExpiryDateChanged(concessionFormItem);
                 bolConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
@@ -598,7 +598,6 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
                 if (hasDuplicates) {
                     this.addValidationError("Duplicate Account / Product pricing found. Please select different account.");
-
                     break;
                 }
             }
@@ -687,7 +686,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
     bcmApproveConcession() {
         this.isLoading = true;
-
+        this.baseComponentService.isAppprovingOrDeclining = true;
         this.errorMessage = null;
         this.validationError = null;
 
@@ -720,6 +719,8 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
     bcmDeclineConcession() {
         this.isLoading = true;
+
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         this.errorMessage = null;
         this.validationError = null;
@@ -755,7 +756,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
     pcmApproveConcession() {
         this.isLoading = true;
-
+        this.baseComponentService.isAppprovingOrDeclining = true;
         this.errorMessage = null;
         this.validationError = null;
 
@@ -887,6 +888,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var bolConcession = this.getBolConcession(false);
 
@@ -1071,7 +1073,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
     requestorApproveConcession() {
         this.isLoading = true;
-
+        this.baseComponentService.isAppprovingOrDeclining = true;
         this.errorMessage = null;
         this.validationError = null;
 
@@ -1106,6 +1108,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var bolConcession = this.getBolConcession(false);
         bolConcession.concession.status = ConcessionStatus.Declined;

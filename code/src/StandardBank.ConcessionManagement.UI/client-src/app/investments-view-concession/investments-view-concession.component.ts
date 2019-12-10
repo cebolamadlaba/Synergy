@@ -396,7 +396,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                     if (investmentConcessionDetail.term)
                         currentConcession.get('noticeperiod').setValue(investmentConcessionDetail.term);
 
-                    if (investmentConcessionDetail.expiryDate) {
+                    if (investmentConcessionDetail.expiryDate && !this.baseComponentService.isAppprovingOrDeclining) {
                         var formattedExpiryDate = this.datepipe.transform(investmentConcessionDetail.expiryDate, 'yyyy-MM-dd');
                         currentConcession.get('expiryDate').setValue(formattedExpiryDate);
                     }
@@ -544,44 +544,6 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         currentCondition.get('value').setValue(null);
     }
 
-    // productTypeChanged(rowIndex) {
-
-    //  const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];      
-
-    // let currentProduct = control.controls[rowIndex];
-    // var selectedproducttype = currentProduct.get('producttype').value;
-
-    //this.selectedProductTypes[rowIndex].products = this.investmentproducts.filter(re => re.investmentProductTypeId == selectedproducttype.investmentProductTypeID);
-
-    // currentProduct.get('product').setValue(this.selectedProductTypes[rowIndex].products[0]);
-
-    //if (selectedproducttype.investmentProductType == "Local guarantee") {
-
-    //    this.selectedInvestmentConcession[rowIndex] = true;
-
-    //    currentProduct.get('disablecontrolset').setValue(true);
-
-    //    currentProduct.get('advalorem').setValue(null); 
-    //    currentProduct.get('min').setValue(null);
-    //    currentProduct.get('max').setValue(null);
-
-    //    currentProduct.get('communication').setValue(null);
-    //    currentProduct.get('flatfee').setValue(null);
-    //    currentProduct.get('currency').setValue(null);
-
-    //}
-    //else {
-
-    //    this.selectedInvestmentConcession[rowIndex] = false;
-
-    //    currentProduct.get('disablecontrolset').setValue(false);
-
-    //    currentProduct.get('gbbnumber').setValue(null);
-    //    currentProduct.get('term').setValue(null);
-    //    currentProduct.get('estfee').setValue(null);
-    //    currentProduct.get('loadedRate').setValue(null);
-    //}
-    // }
 
     isEnabledExpiryDate(rowIndex: number) {
         const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
@@ -589,12 +551,10 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         let currentRow = control.controls[rowIndex];
         var productType = currentRow.get('productType').value;
 
-        if (productType.description == 'Notice deposit (BND)') {
-            //currentRow.get('expiryDate').disable();
+        if (productType.description == 'Notice deposit (BND)') {           
             return false;
         }
         else {
-            //currentRow.get('expiryDate').enable();
             return true;
         }
     }
@@ -856,6 +816,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var investmentConcession = this.getInvestmentConcession(false);
         investmentConcession.concession.subStatus = ConcessionSubStatus.PCMSnIPending;
@@ -886,6 +847,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var investmentConcession = this.getInvestmentConcession(false);
         investmentConcession.concession.status = ConcessionStatus.Declined;
@@ -920,6 +882,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var investmentConcession = this.getInvestmentConcession(false);
 
@@ -1030,6 +993,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var investmentConcession = this.getInvestmentConcession(false);
 
@@ -1217,6 +1181,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var investmentConcession = this.getInvestmentConcession(false);
         investmentConcession.concession.status = ConcessionStatus.ApprovedWithChanges;
@@ -1249,7 +1214,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
-
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var investmentConcession = this.getInvestmentConcession(false);
         investmentConcession.concession.status = ConcessionStatus.Declined;

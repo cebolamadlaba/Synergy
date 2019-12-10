@@ -321,7 +321,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                     }
 
      
-                    if (glmsConcessionDetail.expiryDate) {
+                    if (glmsConcessionDetail.expiryDate && !this.isAppprovingOrDeclining) {
                         var formattedExpiryDate = this.datepipe.transform(glmsConcessionDetail.expiryDate, 'yyyy-MM-dd');
                         currentConcession.get('expiryDate').setValue(formattedExpiryDate);
                     }
@@ -1053,6 +1053,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         this.isApproving = true;
         this.errorMessage = null;
         this.validationError = null;
+        this.isAppprovingOrDeclining = true;
 
         var glmsConcession = this.getGlmsConcession(false);
         glmsConcession.concession.subStatus = ConcessionSubStatus.PCMPending;
@@ -1086,6 +1087,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
         this.errorMessage = null;
         this.validationError = null;
+        this.isAppprovingOrDeclining = true;
 
         var glmsConcession = this.getGlmsConcession(false);
         glmsConcession.concession.status = ConcessionStatus.Declined;
@@ -1119,6 +1121,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         this.isApproving = true;
         this.errorMessage = null;
         this.validationError = null;
+        this.isAppprovingOrDeclining = true;
 
         var glmsConcession = this.getGlmsConcession(false);
 
@@ -1230,6 +1233,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         this.isLoading = true;
         this.errorMessage = null;
         this.validationError = null;
+        this.isAppprovingOrDeclining = true;
 
         var glmsConcession = this.getGlmsConcession(false);
 
@@ -1413,6 +1417,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         this.isApproving = true;
         this.errorMessage = null;
         this.validationError = null;
+        this.isAppprovingOrDeclining = true;
 
         var glmsConcession = this.getGlmsConcession(false);
         glmsConcession.concession.status = ConcessionStatus.ApprovedWithChanges;
@@ -1448,6 +1453,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
         this.errorMessage = null;
         this.validationError = null;
+        this.isAppprovingOrDeclining = true;
 
         var glmsConcession = this.getGlmsConcession(false);
         glmsConcession.concession.status = ConcessionStatus.Declined;
