@@ -396,7 +396,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                     if (investmentConcessionDetail.term)
                         currentConcession.get('noticeperiod').setValue(investmentConcessionDetail.term);
 
-                    if (investmentConcessionDetail.expiryDate && !this.baseComponentService.isAppprovingOrDeclining) {
+                    if (investmentConcessionDetail.expiryDate) {
                         var formattedExpiryDate = this.datepipe.transform(investmentConcessionDetail.expiryDate, 'yyyy-MM-dd');
                         currentConcession.get('expiryDate').setValue(formattedExpiryDate);
                     }
@@ -704,7 +704,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
             }
 
-            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
+            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "" && !this.baseComponentService.isAppprovingOrDeclining) {
                 this.onExpiryDateChanged(concessionFormItem);
                 investmentConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }

@@ -729,7 +729,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
             if (concessionFormItem.get('frequency').value)
                 lendingConcessionDetail.frequency = concessionFormItem.get('frequency').value;
 
-            if (concessionFormItem.get('expiryDate').value && !this.baseComponentService.isRenewing)
+            if (concessionFormItem.get('expiryDate').value && !this.baseComponentService.isRenewing && !this.baseComponentService.isAppprovingOrDeclining)
                 this.onExpiryDateChanged(concessionFormItem);
                 lendingConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 

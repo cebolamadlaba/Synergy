@@ -7,6 +7,7 @@ using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCondition;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.LendingConcession;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
@@ -38,20 +39,25 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
         private readonly ILookupTableManager _lookupTableManager;
 
+        private readonly IConfigurationData _configurationData;
+
         /// <summary>
         /// Initializes the controller
         /// </summary>
         /// <param name="lendingManager"></param>
         /// <param name="siteHelper"></param>
         /// <param name="mediator"></param>
-        public LendingController(ILendingManager lendingManager, ISiteHelper siteHelper, IMediator mediator, IBusinessCentreManager businessCentreManager, ILookupTableManager lookupTableManager)
+        public LendingController(ILendingManager lendingManager, ISiteHelper siteHelper, IMediator mediator, IBusinessCentreManager businessCentreManager, ILookupTableManager lookupTableManager,
+            IConfigurationData configurationData)
         {
             _lendingManager = lendingManager;
             _siteHelper = siteHelper;
             _mediator = mediator;
             _bcmManager = businessCentreManager;
             _lookupTableManager = lookupTableManager;
+            _configurationData = configurationData;
         }
+        
 
         /// <summary>
         /// Gets the lending view data
@@ -252,16 +258,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 if (relationshipType != Constants.RelationshipType.Extension)
                 {
                     lendingConcessionDetail.ExpiryDate = null;
-                }
-                else
-                {
-                    if (lendingConcessionDetail.ExpiryDate != null)
-                    {
-                        var dateExp = Convert.ToDateTime(lendingConcessionDetail.ExpiryDate);
-                        lendingConcessionDetail.ExpiryDate = dateExp.AddMonths(3);   
-                    }
-                }
-
+                }             
 
                 lendingConcessionDetail.LendingConcessionDetailId = 0;
                 await _mediator.Send(new AddOrUpdateLendingConcessionDetail(lendingConcessionDetail, user, concession));
@@ -386,7 +383,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                     if(lendingConcessionDetail.ExpiryDate != null)
                     {
                         var dateExp = Convert.ToDateTime(lendingConcessionDetail.ExpiryDate);
-                        lendingConcessionDetail.ExpiryDate = dateExp.AddMonths(3);
+                        lendingConcessionDetail.ExpiryDate = dateExp.AddMonths(_configurationData.MonthOfExpiry);
                     }
                 }
                 await _mediator.Send(new AddOrUpdateLendingConcessionDetail(lendingConcessionDetail, user, concession));            

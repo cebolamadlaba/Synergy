@@ -243,7 +243,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                     let selectedAccrualType = this.accrualTypes.filter(_ => _.id == cashConcessionDetail.accrualTypeId);
                     currentConcession.get('accrualType').setValue(selectedAccrualType[0]);
 
-                    if (cashConcessionDetail.expiryDate && !this.baseComponentService.isAppprovingOrDeclining) {
+                    if (cashConcessionDetail.expiryDate) {
                         var formattedExpiryDate = this.datepipe.transform(cashConcessionDetail.expiryDate, 'yyyy-MM-dd');
                         currentConcession.get('expiryDate').setValue(formattedExpiryDate);
                     }
@@ -508,7 +508,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
             let cashConcessionDetail = new CashConcessionDetail();
 
-            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
+            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "" && !this.baseComponentService.isAppprovingOrDeclining) {
                 this.onExpiryDateChanged(concessionFormItem);
                 cashConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
