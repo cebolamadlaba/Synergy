@@ -27,7 +27,7 @@ namespace StandardBank.ConcessionManagement.Common
         /// <param name="letterTemplatePath">The letter template path.</param>
         public ConfigurationData(string connectionString, string overrideLoggedInUser, string databaseType,
             string smtpServer, string smtpUserName, string smtpPassword, string defaultEmail, int smtpPort,
-            string emailTemplatePath, string letterTemplatePath, string enforceMyAccess, string serverURL)
+            string emailTemplatePath, string letterTemplatePath, string enforceMyAccess, string serverURL, int monthOfExpiry)
         {
             ConnectionString = connectionString;
             OverrideLoggedInUser = overrideLoggedInUser;
@@ -41,6 +41,7 @@ namespace StandardBank.ConcessionManagement.Common
             LetterTemplatePath = letterTemplatePath;
             EnforceMyAccess = enforceMyAccess;
             ServerURL = serverURL;
+            MonthOfExpiry = monthOfExpiry;
         }
 
         /// <summary>
@@ -80,6 +81,11 @@ namespace StandardBank.ConcessionManagement.Common
         /// Gets the smtp password
         /// </summary>
         public string SmtpServerPassword { get; set; }
+
+        /// <summary>
+        /// Gets the MonthOfExpiry
+        /// </summary>
+        public int MonthOfExpiry { get; set; }
 
         /// <summary>
         /// Get the default email address to use when sending emails

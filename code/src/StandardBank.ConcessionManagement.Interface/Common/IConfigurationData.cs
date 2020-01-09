@@ -34,6 +34,8 @@ namespace StandardBank.ConcessionManagement.Interface.Common
 
         string EnforceMyAccess { get; set; }
 
+        int MonthOfExpiry { get; set; }
+
         string ServerURL { get; set; }
 
         /// <summary>

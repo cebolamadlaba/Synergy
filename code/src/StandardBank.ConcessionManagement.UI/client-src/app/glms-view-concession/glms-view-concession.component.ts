@@ -321,7 +321,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                     }
 
      
-                    if (glmsConcessionDetail.expiryDate && !this.isAppprovingOrDeclining) {
+                    if (glmsConcessionDetail.expiryDate) {
                         var formattedExpiryDate = this.datepipe.transform(glmsConcessionDetail.expiryDate, 'yyyy-MM-dd');
                         currentConcession.get('expiryDate').setValue(formattedExpiryDate);
                     }
@@ -646,7 +646,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                 this.addValidationError("Interest Type not selected");
             }
 
-            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
+            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "" && !this.isAppprovingOrDeclining) {
                  this.onExpiryDateChanged(concessionFormItem);
                 glmsConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }

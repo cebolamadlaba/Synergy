@@ -15,6 +15,7 @@ export class BaseComponentService   {
     aeUser: User;
     riskGroupAEUser: User;
     isAppprovingOrDeclining: boolean = false;
+    isRenewing: boolean = false;
 
     constructor(public router: Router, public userService: UserService) {
         
