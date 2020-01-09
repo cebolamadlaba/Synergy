@@ -704,8 +704,11 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
             }
 
-            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "" && !this.baseComponentService.isAppprovingOrDeclining) {
-                this.onExpiryDateChanged(concessionFormItem);
+            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
+                if (!this.baseComponentService.isAppprovingOrDeclining) {
+                    this.onExpiryDateChanged(concessionFormItem);
+                }
+
                 investmentConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
             else {

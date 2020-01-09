@@ -33,6 +33,7 @@ import { BaseComponentService } from '../services/base-component.service';
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
 import { MrsEriEnum } from '../models/mrs-eri-enum';
+import { EditTypeEnum } from '../models/edit-type-enum';
 
 @Component({
     selector: 'app-lending-view-concession',
@@ -1112,7 +1113,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         this.canUpdate = false;
         this.canArchive = false;
 
-        if (editType == 'Renew') {
+        if (editType == EditTypeEnum.Renew) {
             this.baseComponentService.isRenewing = true;
         }
 

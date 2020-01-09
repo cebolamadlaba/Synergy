@@ -508,8 +508,12 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
             let cashConcessionDetail = new CashConcessionDetail();
 
-            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "" && !this.baseComponentService.isAppprovingOrDeclining) {
-                this.onExpiryDateChanged(concessionFormItem);
+            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "" ) {
+
+                if (!this.baseComponentService.isAppprovingOrDeclining) {
+                    this.onExpiryDateChanged(concessionFormItem);
+                }
+
                 cashConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
             else {
