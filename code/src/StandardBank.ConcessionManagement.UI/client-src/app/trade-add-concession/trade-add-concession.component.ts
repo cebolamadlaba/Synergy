@@ -335,39 +335,73 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
         currentProduct.get('product').setValue(this.selectedProductTypes[rowIndex].products[0]);
 
-        if (selectedproducttype.tradeProductType == "Local guarantee") {
+        switch (selectedproducttype.tradeProductType) {
+            case TradeProductType.LocalGuarantee:
+                this.notificationMessage = "Please note there is no system integration for GBBs, therefore collateral Centres need to load fees/ rates.";
 
-            this.notificationMessage = "Please note there is no system integration for GBBs, therefore collateral Centres need to load fees/ rates.";
+                this.selectedTradeConcession[rowIndex] = true;
 
-            this.selectedTradeConcession[rowIndex] = true;
+                currentProduct.get('disablecontrolset').setValue(true);
+                currentProduct.get('accountNumber').setValue(null);
+                currentProduct.get('advalorem').setValue(null);
+                currentProduct.get('min').setValue(null);
+                currentProduct.get('max').setValue(null);
 
-            currentProduct.get('disablecontrolset').setValue(true);
-            currentProduct.get('accountNumber').setValue(null);
-            currentProduct.get('advalorem').setValue(null);
-            currentProduct.get('min').setValue(null);
-            currentProduct.get('max').setValue(null);
+                currentProduct.get('communication').setValue(null);
+                currentProduct.get('flatfee').setValue(null);
+                currentProduct.get('currency').setValue(null);
+                currentProduct.get('expiryDate').setValue('');
+                break;
+            //case TradeProductType.InwardTT:
+            //case TradeProductType.OutwardTT:
+            //    currentProduct.get('advalorem').setValue(false);
+            //    currentProduct.get('min').setValue(false);
+            //    currentProduct.get('max').setValue(false);
+            //    break;
+            default:
+                this.selectedTradeConcession[rowIndex] = false;
+                currentProduct.get('disablecontrolset').setValue(false);
+                currentProduct.get('gbbnumber').setValue(null);
 
-            currentProduct.get('communication').setValue(null);
-            currentProduct.get('flatfee').setValue(null);
-            currentProduct.get('currency').setValue(null);
-            currentProduct.get('expiryDate').setValue('');
-
+                currentProduct.get('term').setValue(null);
+                currentProduct.get('estfee').setValue(null);
+                currentProduct.get('rate').setValue(null);
+                break;
         }
-        else {
 
-            this.selectedTradeConcession[rowIndex] = false;
-            currentProduct.get('disablecontrolset').setValue(false);
-            currentProduct.get('gbbnumber').setValue(null);
+        //if (selectedproducttype.tradeProductType == "Local guarantee") {
 
-            currentProduct.get('term').setValue(null);
-            currentProduct.get('estfee').setValue(null);
-            currentProduct.get('rate').setValue(null);
-        }
+        //    this.notificationMessage = "Please note there is no system integration for GBBs, therefore collateral Centres need to load fees/ rates.";
+
+        //    this.selectedTradeConcession[rowIndex] = true;
+
+        //    currentProduct.get('disablecontrolset').setValue(true);
+        //    currentProduct.get('accountNumber').setValue(null);
+        //    currentProduct.get('advalorem').setValue(null);
+        //    currentProduct.get('min').setValue(null);
+        //    currentProduct.get('max').setValue(null);
+
+        //    currentProduct.get('communication').setValue(null);
+        //    currentProduct.get('flatfee').setValue(null);
+        //    currentProduct.get('currency').setValue(null);
+        //    currentProduct.get('expiryDate').setValue('');
+
+        //}
+        //else {
+
+        //    this.selectedTradeConcession[rowIndex] = false;
+        //    currentProduct.get('disablecontrolset').setValue(false);
+        //    currentProduct.get('gbbnumber').setValue(null);
+
+        //    currentProduct.get('term').setValue(null);
+        //    currentProduct.get('estfee').setValue(null);
+        //    currentProduct.get('rate').setValue(null);
+        //}
 
     }
 
     onExpiryDateChanged(itemrow) {
-       
+
         var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);
@@ -396,6 +430,38 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
     showGbbDeclaimer() {
         this.notificationMessage = "For New GBB, insert C/A number and update once the M-number is issued. For existing GBB use existing M- number.";
+    }
+
+    disableField(rowIndex, fieldname) {
+
+        // get the selected product type......
+
+        switch (fieldname) {
+            case "producttype":
+            case "product":
+                return this.saveMessage ? '' : null;
+            case "accountNumber":
+                return this.selectedTradeConcession[rowIndex] || this.saveMessage ? '' : null
+            case "gbbnumberText":
+            case "term":
+                return !this.selectedTradeConcession[rowIndex] || this.saveMessage ? '' : null;
+            case "advalorem":
+            case "min":
+            case "max":
+                if()
+                return (this.selectedTradeConcession[rowIndex]) || this.saveMessage ? '' : null;
+            case "communication":
+                this.disableCommunicationFee(rowIndex);
+                break;
+            case "flatfee":
+            case "currency":
+                return this.selectedTradeConcession[rowIndex] || this.saveMessage ? '' : null;
+            case "estfee":
+            case "rate":
+                return !this.selectedTradeConcession[rowIndex] || this.saveMessage ? '' : null;
+            case "expiryDate":
+                return this.selectedTradeConcession[rowIndex] || this.saveMessage ? '' : null;
+        }
     }
 
     disableCommunicationFee(rowIndex) {
