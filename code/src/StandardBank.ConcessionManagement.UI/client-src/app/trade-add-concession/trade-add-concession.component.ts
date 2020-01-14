@@ -352,12 +352,6 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                 currentProduct.get('currency').setValue(null);
                 currentProduct.get('expiryDate').setValue('');
                 break;
-            //case TradeProductType.InwardTT:
-            //case TradeProductType.OutwardTT:
-            //    currentProduct.get('advalorem').setValue(false);
-            //    currentProduct.get('min').setValue(false);
-            //    currentProduct.get('max').setValue(false);
-            //    break;
             default:
                 this.selectedTradeConcession[rowIndex] = false;
                 currentProduct.get('disablecontrolset').setValue(false);
@@ -368,35 +362,6 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                 currentProduct.get('rate').setValue(null);
                 break;
         }
-
-        //if (selectedproducttype.tradeProductType == "Local guarantee") {
-
-        //    this.notificationMessage = "Please note there is no system integration for GBBs, therefore collateral Centres need to load fees/ rates.";
-
-        //    this.selectedTradeConcession[rowIndex] = true;
-
-        //    currentProduct.get('disablecontrolset').setValue(true);
-        //    currentProduct.get('accountNumber').setValue(null);
-        //    currentProduct.get('advalorem').setValue(null);
-        //    currentProduct.get('min').setValue(null);
-        //    currentProduct.get('max').setValue(null);
-
-        //    currentProduct.get('communication').setValue(null);
-        //    currentProduct.get('flatfee').setValue(null);
-        //    currentProduct.get('currency').setValue(null);
-        //    currentProduct.get('expiryDate').setValue('');
-
-        //}
-        //else {
-
-        //    this.selectedTradeConcession[rowIndex] = false;
-        //    currentProduct.get('disablecontrolset').setValue(false);
-        //    currentProduct.get('gbbnumber').setValue(null);
-
-        //    currentProduct.get('term').setValue(null);
-        //    currentProduct.get('estfee').setValue(null);
-        //    currentProduct.get('rate').setValue(null);
-        //}
 
     }
 
@@ -434,7 +399,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
     disableField(rowIndex, fieldname) {
 
-        // get the selected product type......
+        let selectedProductType = this.getSelectedProductType(rowIndex);
 
         switch (fieldname) {
             case "producttype":
@@ -448,8 +413,24 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
             case "advalorem":
             case "min":
             case "max":
-                if()
-                return (this.selectedTradeConcession[rowIndex]) || this.saveMessage ? '' : null;
+                let disabled = false;
+
+                if (selectedProductType.tradeProductType == TradeProductType.InwardTT ||
+                    selectedProductType.tradeProductType == TradeProductType.OutwardTT) {
+                    disabled = true;
+                }
+                else if (selectedProductType.tradeProductType == TradeProductType.LocalGuarantee)
+                    disabled = false;
+
+                let selectedTradeConcessionNotNull = this.selectedTradeConcession[rowIndex] != null;
+                let saveMessageNotNull = this.saveMessage != null;
+
+                if (saveMessageNotNull)
+                    return '';
+                else if (selectedTradeConcessionNotNull && disabled)
+                    return '';
+                else
+                    return null;
             case "communication":
                 this.disableCommunicationFee(rowIndex);
                 break;
@@ -471,7 +452,8 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
         let productype = currentrow.get('producttype').value;
 
-        if (productype != null && productype.tradeProductType != "" && productype.tradeProductType != "Outward TT") {
+        //if (productype != null && productype.tradeProductType != "" && productype.tradeProductType != "Outward TT") {
+        if (productype != null && productype.tradeProductType != "" && productype.tradeProductType != TradeProductType.OutwardTT) {
             currentrow.get('communication').disable();
             currentrow.get('communication').setValue(null);
         }
@@ -533,7 +515,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
             if (concessionFormItem.get('producttype').value) {
                 tradeConcessionDetail.tradeProductTypeID = concessionFormItem.get('producttype').value.tradeProductTypeID;
 
-                if (concessionFormItem.get('producttype').value.tradeProductType == "Local guarantee") {
+                if (concessionFormItem.get('producttype').value.tradeProductType == TradeProductType.LocalGuarantee) {
                     applyexpirydate = false;
                 }
                 hasTypeId = true;
@@ -854,30 +836,15 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
+    getSelectedProductType(rowIndex): TradeProductType {
+        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
 
-    //formatThousandSeparator(rowIndex, controlname) {
-    //    const concessionItemRows = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
-    //    let currentrow = concessionItemRows.controls[rowIndex];
+        let currentConcession = control.controls[rowIndex];
 
-    //    let control = currentrow.get(controlname);
+        let selectedProductType: TradeProductType = currentConcession.get('producttype').value;
 
-    //    control.setValue(this.numberWithCommas(control.value));
-
-    //}
-    //numberWithCommas(x) {
-    //    var parts = x.toString().split(".");
-    //    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    //    return parts[0];
-    //}
-
-    //formatDecimal(itemValue: number) {
-
-    //    if (itemValue) {
-    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-    //    }
-
-    //    return null;
-    //}
+        return selectedProductType;
+    }
 
     goBack() {
         this.router.navigate(['/pricing', this.riskGroupNumber]);
