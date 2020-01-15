@@ -450,7 +450,6 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
         let productype = currentrow.get('producttype').value;
 
-        //if (productype != null && productype.tradeProductType != "" && productype.tradeProductType != "Outward TT") {
         if (productype != null && productype.tradeProductType != "" && productype.tradeProductType != TradeProductType.OutwardTT) {
             currentrow.get('communication').disable();
             currentrow.get('communication').setValue(null);
@@ -560,10 +559,6 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                 concessionFormItem.get('advalorem').value === 0) {
                 advaloremfound = true;
                 tradeConcessionDetail.adValorem = concessionFormItem.get('advalorem').value;
-            } else {
-                //if (!tradeConcessionDetail.disablecontrolset) {
-                //    this.addValidationError("AdValorem value not entered");
-                //}
             }
 
             if (concessionFormItem.get('min').value && advaloremfound) {
