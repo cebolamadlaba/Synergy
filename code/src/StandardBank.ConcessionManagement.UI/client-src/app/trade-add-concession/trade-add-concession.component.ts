@@ -419,8 +419,6 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
                     selectedProductType.tradeProductType == TradeProductType.OutwardTT) {
                     disabled = true;
                 }
-                else if (selectedProductType.tradeProductType == TradeProductType.LocalGuarantee)
-                    disabled = false;
 
                 let selectedTradeConcessionNotNull = this.selectedTradeConcession[rowIndex] != null;
                 let saveMessageNotNull = this.saveMessage != null;
