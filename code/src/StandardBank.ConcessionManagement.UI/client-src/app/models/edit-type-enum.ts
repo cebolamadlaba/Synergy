@@ -1,6 +1,6 @@
 
-export enum EditTypeEnum {
+export class EditTypeEnum {
 
-    Renew = 'Renew'
-   
+    public static readonly Renew = 'Renew';
+
 }

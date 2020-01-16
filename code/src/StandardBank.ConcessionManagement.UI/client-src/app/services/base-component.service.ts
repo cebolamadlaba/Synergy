@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http} from '@angular/http';
+import { Http } from '@angular/http';
 import { Router, RouterModule } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
 import * as moment from 'moment';
@@ -9,7 +9,7 @@ import { User } from '../models/user';
 declare var accounting: any;
 
 @Injectable()
-export class BaseComponentService   {
+export class BaseComponentService {
 
     validationError: String[];
     aeUser: User;
@@ -18,7 +18,7 @@ export class BaseComponentService   {
     isRenewing: boolean = false;
 
     constructor(public router: Router, public userService: UserService) {
-        
+
     }
 
     public HasDuplicateConcessionAccountProduct(concessionDetails: any[], productTypeId: number, legalEntityId: number, legalEntityAccountId: number): boolean {
@@ -81,30 +81,31 @@ export class BaseComponentService   {
         this.validationError.push(validationDetail);
     }
 
-    public async checkForExistingConcessions(concessionListLength, url,riskGroupNumber, sapbpid) {
+    public async checkForExistingConcessions(concessionListLength, url, riskGroupNumber, sapbpid) {
 
-        await this.getUserRiskGroupDetails(riskGroupNumber,sapbpid);
+        await this.getUserRiskGroupDetails(riskGroupNumber, sapbpid);
         await this.getUserData();
         this.checkAEExistOnriskGroupNumber();
-        
+
         if (concessionListLength > 0) {
 
-            if (sapbpid == 0) {
-                this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Risk group. Please select the concession below and update");
-            } else {
-                this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Legal Entity. Please select the concession below and update");
-            }
+        //    // FOR TESTING: comment out the first part of the if-statement.
+        //    if (sapbpid == 0) {
+        //        this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Risk group. Please select the concession below and update");
+        //    } else {
+        //        this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Legal Entity. Please select the concession below and update");
+        //    }
 
-        } else {
+        //} else {
             if (this.validationError == undefined) {
                 this.router.navigate([url, riskGroupNumber, sapbpid]);
-            }         
+            }
         }
     }
 
     public checkAEExistOnriskGroupNumber() {
 
-        if(this.aeUser.accountExecutiveUserId == null && this.aeUser.isRequestor) {
+        if (this.aeUser.accountExecutiveUserId == null && this.aeUser.isRequestor) {
             this.aeUser.accountExecutiveUserId = this.aeUser.id;
         }
 
@@ -123,8 +124,8 @@ export class BaseComponentService   {
         return 0.00;
     }
 
-    public GetTodayDate() {     
-      return new Date().toISOString().split('T')[0];
+    public GetTodayDate() {
+        return new Date().toISOString().split('T')[0];
     }
 
     public formatDecimalThree(itemValue: number) {
@@ -139,7 +140,7 @@ export class BaseComponentService   {
 
     public expiringDateDifferenceValidation(selectedExpiryDate: string) {
 
-        var currentDate  = moment();
+        var currentDate = moment();
         var expDate = moment(selectedExpiryDate);
         var futureMonth1 = moment(currentDate).add(MOnthEnum.ThreeMonths, 'M').format('YYYY-MM-DD');
         var futureMonth = moment(futureMonth1);
@@ -161,22 +162,22 @@ export class BaseComponentService   {
     getUserData(): Promise<any> {
         return new Promise((resolve, reject) => {
             this.userService.getData().subscribe(user => {
-            resolve(user);
-            this.aeUser = user;
-               
+                resolve(user);
+                this.aeUser = user;
+
             });
         });
     }
 
-    getUserRiskGroupDetails(riskGroupNumber, sapbpid): Promise<any>{
+    getUserRiskGroupDetails(riskGroupNumber, sapbpid): Promise<any> {
 
         var sapbpidOrRiskGroupNumber = riskGroupNumber == 0 ? sapbpid : riskGroupNumber;
 
         return new Promise((resolve, reject) => {
             this.userService.getUserRiskGroupDetailsData(sapbpidOrRiskGroupNumber).subscribe(user => {
-            resolve(user);
-            this.riskGroupAEUser = user;
-              
+                resolve(user);
+                this.riskGroupAEUser = user;
+
             });
         });
     }

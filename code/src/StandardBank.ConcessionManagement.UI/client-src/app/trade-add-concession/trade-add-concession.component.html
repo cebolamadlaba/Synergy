@@ -172,50 +172,45 @@
                 <td class="length-short">
                     <input formControlName="disablecontrolset" style="display: none;" />
 
-                    <select formControlName="producttype" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="productTypeChanged(i)">
+                    <select formControlName="producttype" class="form-control" [attr.disabled]="disableField(i,'producttype')" (change)="productTypeChanged(i)">
                         <option *ngFor="let tradeproductypteOption of tradeproducttypes" [ngValue]="tradeproductypteOption">{{tradeproductypteOption.tradeProductType}}</option>
                     </select>
 
                 </td>
                 <td class="length-short">
-
-                    <select formControlName="product" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                    <select formControlName="product" class="form-control" [attr.disabled]="disableField(i,'product')">
                         <option *ngFor="let productOption of selectedProductTypes[i].products" [ngValue]="productOption">{{productOption.tradeProductName}}</option>
                     </select>
                 </td>
                 <td class="length-short">
-                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="(selectedTradeConcession[i]) || saveMessage ? '' : null">
+                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="disableField(i,'accountNumber')">
                         <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
                 </td>
 
                 <td class="length-short">
-                    <!--<select formControlName="gbbnumber" class="form-control" [attr.disabled]="(!selectedTradeConcession[i]) || saveMessage ? '' : null" *ngIf="!isProductLocalGuarantee">
-                        <option *ngFor="let clientGBBOption of legalentitygbbnumbers" [ngValue]="clientGBBOption">{{clientGBBOption.gbbNumber}}</option>
-                    </select>-->
-                    <input type="text" class="form-control" formControlName="gbbnumberText" [attr.disabled]="(!selectedTradeConcession[i]) || saveMessage ? '' : null"
+                    <input type="text" class="form-control" formControlName="gbbnumberText" [attr.disabled]="disableField(i,'gbbnumberText')"
                            (click)="showGbbDeclaimer()" />
                 </td>
 
 
-                <td class="length-short"><input type="number" class="form-control" formControlName="term" [attr.disabled]="(!selectedTradeConcession[i]) || saveMessage ? '' : null" (keyup)="onTermValueChange(i)" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="advalorem" [attr.disabled]="(selectedTradeConcession[i]) || saveMessage ? '' : null" (change)="setadvalorem($event, i,'advalorem')" /></td>
-                <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="min" [attr.disabled]="(selectedTradeConcession[i]) || saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
-                <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="max" [attr.disabled]="(selectedTradeConcession[i]) || saveMessage ? '' : null" (change)="setTwoNumberDecimal($event)" /></td>
-                <!--<td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="communication" [attr.disabled]="disableCommunicationFee(i)" (change)="formatThousandSeparator(i,'communication')" /></td>-->
-                <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="communication" [attr.disabled]="disableCommunicationFee(i)" (change)="setTwoNumberDecimal($event)" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="flatfee" [attr.disabled]="(selectedTradeConcession[i]) || saveMessage ? '' : null" (change)="setFlatFee($event, i,'flatfee')" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="term" [attr.disabled]="disableField(i,'term')" (keyup)="onTermValueChange(i)" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="advalorem" [attr.disabled]="disableField(i,'advalorem')" (change)="setadvalorem($event, i,'advalorem')" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="min" [attr.disabled]="disableField(i,'min')" (change)="setTwoNumberDecimal($event)" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="max" [attr.disabled]="disableField(i,'max')" (change)="setTwoNumberDecimal($event)" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="communication" [attr.disabled]="disableField(i,'communication')" (change)="setTwoNumberDecimal($event)" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="flatfee" [attr.disabled]="disableField(i,'flatfee')" (change)="setFlatFee($event, i,'flatfee')" /></td>
                 <td class="length-short">
-                    <select formControlName="currency" class="form-control" [attr.disabled]="(selectedTradeConcession[i]) || saveMessage ? '' : null">
+                    <select formControlName="currency" class="form-control" [attr.disabled]="disableField(i,'currency')">
                         <option>EUR</option>
                         <option>ZAR</option>
                         <option>GBP</option>
                         <option>USD</option>
                     </select>
                 </td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="estfee" [attr.disabled]="(!selectedTradeConcession[i]) || saveMessage ? '' : null" /></td>
-                <td class="length-short"><input type="number" class="form-control" formControlName="rate" [attr.disabled]="(!selectedTradeConcession[i]) || saveMessage ? '' : null" (change)="setThreeNumberDecimal($event)" /></td>
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="(selectedTradeConcession[i]) || saveMessage ? '' : null"  /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="estfee" [attr.disabled]="disableField(i,'estfee')" /></td>
+                <td class="length-short"><input type="number" class="form-control" formControlName="rate" [attr.disabled]="disableField(i,'rate')" (change)="setThreeNumberDecimal($event)" /></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="disableField(i,'expiryDate')" /></td>
                 <td class="delete"><button *ngIf="tradeConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
         </tbody>
