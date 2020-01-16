@@ -30,7 +30,12 @@ export class TradeConcessionBaseService {
             case "gbbnumberText":
                 return isSelectedTradeConcessionDetail && canEdit ? null : '';
             case "term":
-                return tradeConcessionDetail.show_term && canEdit ? null : '';
+                if (tradeConcessionDetail != null) {
+                    return tradeConcessionDetail.show_term && canEdit ? null : '';
+                }
+                else {
+                    return canEdit ? null : '';
+                }
             case "advalorem":
             case "min":
             case "max":
@@ -43,7 +48,7 @@ export class TradeConcessionBaseService {
 
                 let selectedTradeConcessionNotNull = isSelectedTradeConcessionDetail != null;
 
-                if (isSaved)
+                if (isSaved || !canEdit)
                     return '';
                 else if (selectedTradeConcessionNotNull && disabled)
                     return '';
@@ -53,7 +58,12 @@ export class TradeConcessionBaseService {
                 this.disableCommunicationFeeBase(tradeConcessionForm, rowIndex, canEdit);
                 break;
             case "flatfee":
-                return tradeConcessionDetail.show_flatfee && canEdit ? null : '';
+                if (tradeConcessionDetail != null) {
+                    return tradeConcessionDetail.show_flatfee && canEdit ? null : '';
+                }
+                else {
+                    return canEdit ? null : '';
+                }
             case "currency":
                 return (!isSelectedTradeConcessionDetail) && canEdit ? null : '';
             case "estfee":
@@ -62,7 +72,7 @@ export class TradeConcessionBaseService {
             case "approvedRate":
                 return canEdit ? null : ''
             case "expiryDate":
-                return !isSelectedTradeConcessionDetail && canEdit ? null : '';
+                return !isSelectedTradeConcessionDetail && (canEdit || !isSaved) ? null : '';
 
         }
     }

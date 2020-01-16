@@ -32,6 +32,7 @@ import { TradeView } from "../models/trade-view";
 import { Concession } from "../models/concession";
 import { LegalEntity } from "../models/legal-entity";
 import { UserService } from "../services/user.service";
+import { TradeConcessionBaseService } from "../services/trade-concession-base.service";
 
 import { BaseComponentService } from '../services/base-component.service';
 import * as moment from 'moment';
@@ -42,7 +43,7 @@ import { MOnthEnum } from '../models/month-enum';
     templateUrl: './trade-add-concession.component.html',
     styleUrls: ['./trade-add-concession.component.css']
 })
-export class TradeAddConcessionComponent implements OnInit, OnDestroy {
+export class TradeAddConcessionComponent extends TradeConcessionBaseService implements OnInit, OnDestroy {
     private sub: any;
 
     errorMessage: String;
@@ -100,6 +101,7 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
         @Inject(LookupDataService) private lookupDataService,
         @Inject(TradeConcessionService) private tradeConcessionService,
         private baseComponentService: BaseComponentService) {
+        super();
         this.riskGroup = new RiskGroup();
 
         this.tradeproducttypes = [new TradeProductType()];
@@ -399,48 +401,15 @@ export class TradeAddConcessionComponent implements OnInit, OnDestroy {
 
     disableField(rowIndex, fieldname) {
 
-        let selectedProductType = this.getSelectedProductType(rowIndex);
-
-        switch (fieldname) {
-            case "producttype":
-            case "product":
-                return this.saveMessage ? '' : null;
-            case "accountNumber":
-                return this.selectedTradeConcession[rowIndex] || this.saveMessage ? '' : null
-            case "gbbnumberText":
-            case "term":
-                return !this.selectedTradeConcession[rowIndex] || this.saveMessage ? '' : null;
-            case "advalorem":
-            case "min":
-            case "max":
-                let disabled = false;
-
-                if (selectedProductType.tradeProductType == TradeProductType.InwardTT ||
-                    selectedProductType.tradeProductType == TradeProductType.OutwardTT) {
-                    disabled = true;
-                }
-
-                let selectedTradeConcessionNotNull = this.selectedTradeConcession[rowIndex] != null;
-                let saveMessageNotNull = this.saveMessage != null;
-
-                if (saveMessageNotNull)
-                    return '';
-                else if (selectedTradeConcessionNotNull && disabled)
-                    return '';
-                else
-                    return null;
-            case "communication":
-                this.disableCommunicationFee(rowIndex);
-                break;
-            case "flatfee":
-            case "currency":
-                return this.selectedTradeConcession[rowIndex] || this.saveMessage ? '' : null;
-            case "estfee":
-            case "rate":
-                return !this.selectedTradeConcession[rowIndex] || this.saveMessage ? '' : null;
-            case "expiryDate":
-                return this.selectedTradeConcession[rowIndex] || this.saveMessage ? '' : null;
-        }
+        return super.disableFieldBase(
+            this.selectedTradeConcession[rowIndex],
+            null,
+            this.tradeConcessionForm,
+            rowIndex,
+            fieldname,
+            this.saveMessage == null,
+            this.saveMessage != null
+        )
     }
 
     disableCommunicationFee(rowIndex) {
