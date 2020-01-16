@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { FormGroup, FormArray, FormBuilder, Validators, FormControl, AbstractControl } from '@angular/forms';
 
 import { TradeProductType } from "../models/trade-product-type";
 import { TradeConcessionDetail } from "../models/trade-concession-detail";
@@ -19,7 +19,9 @@ export class TradeConcessionBaseService {
         canEdit: boolean,
         isSaved: boolean) {
 
-        let selectedProductType = this.getSelectedProductTypeBase(rowIndex, tradeConcessionForm);
+        let currentConcession = this.getCurrentConcesion(rowIndex, tradeConcessionForm);
+        let selectedProductType = this.getFieldValueBase(currentConcession, 'producttype');
+        let isLocalGuarantee = !(selectedProductType.tradeProductType == TradeProductType.InwardTT || selectedProductType.tradeProductType == TradeProductType.OutwardTT);
 
         switch (fieldname) {
             case "producttype":
@@ -39,21 +41,42 @@ export class TradeConcessionBaseService {
             case "advalorem":
             case "min":
             case "max":
-                let disabled = false;
 
-                if (selectedProductType.tradeProductType == TradeProductType.InwardTT ||
-                    selectedProductType.tradeProductType == TradeProductType.OutwardTT) {
-                    disabled = true;
+                //disable:
+                // if !canEdit or isSaved;
+                // if not local guarantee.
+                // if local guarantee and flat fee value not null or empty.
+
+                if (!canEdit || isSaved) {
+                    return '';
+                }
+                else if (!isLocalGuarantee) {
+                    return '';
+                }
+                else if (isLocalGuarantee && this.isNullOrEmptyFlatFee(currentConcession)) {
+                    return null;
+                }
+                else if (isLocalGuarantee && !this.isNullOrEmptyFlatFee(currentConcession)) {
+                    return '';
+                }
+                else {
+                    return null;
                 }
 
-                let selectedTradeConcessionNotNull = isSelectedTradeConcessionDetail != null;
+            //let disabled = false;
 
-                if (isSaved || !canEdit)
-                    return '';
-                else if (selectedTradeConcessionNotNull && disabled)
-                    return '';
-                else
-                    return null;
+            //if (!isLocalGuarantee) {
+            //    disabled = true;
+            //}
+
+            //let selectedTradeConcessionNotNull = isSelectedTradeConcessionDetail != null;
+
+            //if (isSaved || !canEdit)
+            //    return '';
+            //else if (selectedTradeConcessionNotNull && disabled)
+            //    return '';
+            //else
+            //    return null;
             case "communication":
                 this.disableCommunicationFeeBase(tradeConcessionForm, rowIndex, canEdit);
                 break;
@@ -72,7 +95,7 @@ export class TradeConcessionBaseService {
             case "approvedRate":
                 return canEdit ? null : ''
             case "expiryDate":
-                return !isSelectedTradeConcessionDetail && (canEdit || !isSaved) ? null : '';
+                return !isSelectedTradeConcessionDetail && canEdit ? null : '';
 
         }
     }
@@ -100,13 +123,17 @@ export class TradeConcessionBaseService {
         }
     }
 
-    getSelectedProductTypeBase(rowIndex, tradeConcessionForm: FormGroup): TradeProductType {
+    getCurrentConcesion(rowIndex, tradeConcessionForm: FormGroup) {
         const control = <FormArray>tradeConcessionForm.controls['concessionItemRows'];
+        return control.controls[rowIndex];
+    }
 
-        let currentConcession = control.controls[rowIndex];
+    getFieldValueBase(currentConcession: AbstractControl, fieldName: string) {
+        return currentConcession.get(fieldName).value;
+    }
 
-        let selectedProductType: TradeProductType = currentConcession.get('producttype').value;
-
-        return selectedProductType;
+    isNullOrEmptyFlatFee(currentConcession: AbstractControl) {
+        let flatFeeValue = this.getFieldValueBase(currentConcession, 'flatfee');
+        return flatFeeValue == null || (<string>flatFeeValue).trim() == '';
     }
 }
