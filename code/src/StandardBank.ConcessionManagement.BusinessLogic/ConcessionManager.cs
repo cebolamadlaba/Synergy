@@ -402,9 +402,25 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         break;
 
                     case Constants.Roles.PCM:
+                        if (user.SubRoleId.HasValue)
+                        {
+                            inboxConcessions.AddRange(
+                                _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
+                                .ConcessionsActionedByPcmAndHo(true)
+                                .Where(x => x.ConcessionType == Constants.ConcessionType.Investment)));
+                        }
+                        else
+                        {
+                            inboxConcessions.AddRange(
+                                _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
+                                .ConcessionsActionedByPcmAndHo(true)
+                                .Where(x => x.ConcessionType != Constants.ConcessionType.Investment)));
+                        }
+                            
+                        break;
                     case Constants.Roles.HeadOffice:
                         inboxConcessions.AddRange(
-                            _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
+                                _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
                                 .ConcessionsActionedByPcmAndHo(true)));
                         break;
                 }
