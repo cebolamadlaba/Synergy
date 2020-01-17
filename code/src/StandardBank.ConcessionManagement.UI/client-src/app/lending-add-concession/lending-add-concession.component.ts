@@ -30,13 +30,14 @@ import { DecimalPipe } from '@angular/common';
 import { ConcessionTypes } from '../constants/concession-types';
 
 import { BaseComponentService } from '../services/base-component.service';
+import { LendingBaseService } from '../services/lending-base.service';
 
 @Component({
     selector: 'app-lending-add-concession',
     templateUrl: './lending-add-concession.component.html',
     styleUrls: ['./lending-add-concession.component.css']
 })
-export class LendingAddConcessionComponent implements OnInit, OnDestroy {
+export class LendingAddConcessionComponent extends LendingBaseService implements OnInit, OnDestroy {
     public lendingConcessionForm: FormGroup;
     private sub: any;
     showHide = false;
@@ -88,6 +89,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         @Inject(LookupDataService) private lookupDataService,
         @Inject(LendingService) private lendingService,
         private baseComponentService: BaseComponentService) {
+        super();
         this.riskGroup = new RiskGroup();
         this.reviewFeeTypes = [new ReviewFeeType()];
         this.productTypes = [new ProductType()];
@@ -691,6 +693,10 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
             $event.target.value = null;
         }
+    }
+
+    showField(index: number, type: string) {
+        return super.showFieldBase(this.selectedConditionTypes, index, type);
     }
 
     //formatDecimal(itemValue: number) {

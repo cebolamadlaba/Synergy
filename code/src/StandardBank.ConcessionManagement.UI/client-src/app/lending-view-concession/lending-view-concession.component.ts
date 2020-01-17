@@ -30,6 +30,7 @@ import { ConcessionStatus } from '../constants/concession-status';
 import { ConcessionSubStatus } from '../constants/concession-sub-status';
 
 import { BaseComponentService } from '../services/base-component.service';
+import { LendingBaseService } from '../services/lending-base.service';
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
 import { MrsEriEnum } from '../models/mrs-eri-enum';
@@ -41,7 +42,7 @@ import { EditTypeEnum } from '../models/edit-type-enum';
     styleUrls: ['./lending-view-concession.component.css'],
     providers: [DatePipe]
 })
-export class LendingViewConcessionComponent implements OnInit, OnDestroy {
+export class LendingViewConcessionComponent extends LendingBaseService implements OnInit, OnDestroy {
 
     myDecimal: number;
 
@@ -128,6 +129,7 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         @Inject(LendingService) private lendingService,
         @Inject(UserConcessionsService) private userConcessionsService,
         private baseComponentService: BaseComponentService) {
+        super();
         this.riskGroup = new RiskGroup();
         this.reviewFeeTypes = [new ReviewFeeType()];
         this.productTypes = [new ProductType()];
@@ -1402,27 +1404,31 @@ export class LendingViewConcessionComponent implements OnInit, OnDestroy {
         return 0.00;
     }
 
-    getlendingConcessionDetail(index: number, type: string) {
-        if (!this.lendingConcession.lendingConcessionDetails[index]) {
-            return this.canEdit;
+    showField(index: number, type: string) {
+        switch (type) {
+            case 'productType':
+            case 'accountNumber':
+            case 'limit':
+            case 'term':
+            case 'marginAgainstPrime':
+            case 'initiationFee':
+            case 'mrsEri':
+                return this.canEdit ? null : '';
+            case 'reviewFeeType':
+                return (this.lendingConcession.lendingConcessionDetails[index].show_reviewFeeType && this.canEdit) ? null : '';
+            case 'reviewFee':
+                return (this.lendingConcession.lendingConcessionDetails[index].show_reviewFee && this.canEdit) ? null : '';
+            case 'uffFee':
+                return (this.lendingConcession.lendingConcessionDetails[index].show_uffFee && this.canEdit) ? null : '';
+            case 'frequency':
+                return (this.lendingConcession.lendingConcessionDetails[index].show_frequency && this.canEdit) ? null : '';
+            case 'serviceFee':
+                return (this.lendingConcession.lendingConcessionDetails[index].show_serviceFee && this.canEdit) ? null : '';
+            case 'interestRate':
+            case 'volume':
+            case 'value':
+                return super.showFieldBase(this.selectedConditionTypes, index, type);
         }
-        else {
-            switch (type) {
-                case 'show_term':
-                    return this.lendingConcession.lendingConcessionDetails[index].show_term && this.canEdit;
-                case 'show_reviewFeeType':
-                    return this.lendingConcession.lendingConcessionDetails[index].show_reviewFeeType && this.canEdit;
-                case 'show_reviewFee':
-                    return this.lendingConcession.lendingConcessionDetails[index].show_reviewFee && this.canEdit;
-                case 'show_uffFee':
-                    return this.lendingConcession.lendingConcessionDetails[index].show_uffFee && this.canEdit;
-                case 'show_frequency':
-                    return this.lendingConcession.lendingConcessionDetails[index].show_frequency && this.canEdit;
-                case 'show_serviceFee':
-                    return this.lendingConcession.lendingConcessionDetails[index].show_serviceFee && this.canEdit;
-            }
-        }
-
     }
 
     validatePeriod(itemrow) {
