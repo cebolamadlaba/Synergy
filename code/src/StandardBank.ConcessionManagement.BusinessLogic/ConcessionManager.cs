@@ -533,12 +533,45 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return null;
         }
 
-        public IEnumerable<SearchConcessionDetail> SearchConsessions(int userId)
+        public IEnumerable<SearchConcessionDetail> SearchConsessions(User user)
+        { 
+            return SearchUserConcessions(null, null, null, user);
+        }
+
+        public IEnumerable<SearchConcessionDetail> SearchConsessions(int region, int businesscentre, string status, DateTime datefilter, User user)
+        {
+            return SearchUserConcessions(region, businesscentre, datefilter, user);
+        }
+
+        public IEnumerable<SearchConcessionDetail> SearchUserConcessions(int? region, int? businesscentre, DateTime? datefilter, User user)
         {
             //we will only look for concessions with status BCM Pending..
             var bcmpendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.BcmPending);
 
-            var concessions = _concessionInboxViewRepository.Search(null, null, null, new[] { bcmpendingStatusId });
+            var concessions = new List<ConcessionInboxView>();
+            foreach (var userRole in user.UserRoles)
+            {
+                switch (userRole.Name.Trim())
+                {
+                    case Constants.Roles.PCM:
+                        if (user.SubRoleId.HasValue)
+                        {
+                            concessions.AddRange(_concessionInboxViewRepository.Search(region, businesscentre, datefilter, new[] { bcmpendingStatusId })
+                                .Where(x => x.ConcessionType == Constants.ConcessionType.Investment));
+                        }
+                        else
+                        {
+                            concessions.AddRange(_concessionInboxViewRepository.Search(region, businesscentre, datefilter, new[] { bcmpendingStatusId })
+                                .Where(x => x.ConcessionType != Constants.ConcessionType.Investment));
+                        }
+
+                        break;
+
+                    default:
+                        concessions.AddRange(_concessionInboxViewRepository.Search(region, businesscentre, datefilter, new[] { bcmpendingStatusId }));
+                        break;
+                }
+            }
 
             var approvedConcessionDetails = new List<SearchConcessionDetail>();
             foreach (var concession in concessions.OrderByDescending(_ => _.DateApproved ?? _.ConcessionDate))
@@ -562,39 +595,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             return approvedConcessionDetails;
-        }
-
-        public IEnumerable<SearchConcessionDetail> SearchConsessions(int region, int businesscentre, string status, DateTime datefilter, int userid)
-        {
-            //we will only look for concessions with status BCM Pending..
-
-            var bcmpendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.BcmPending);
-
-            var concessions = _concessionInboxViewRepository.Search(region, businesscentre, datefilter, new[] { bcmpendingStatusId });
-
-            var approvedConcessionDetails = new List<SearchConcessionDetail>();
-            foreach (var concession in concessions.OrderByDescending(_ => _.DateApproved ?? _.ConcessionDate))
-            {
-                approvedConcessionDetails.Add(new SearchConcessionDetail
-                {
-                    RiskGroupNumber = concession.RiskGroupNumber,
-                    RiskGroupName = concession.RiskGroupName,
-                    CustomerName = concession.CustomerName,
-                    CustomerNumber = concession.CustomerNumber,
-                    Status = concession.Status + " - " + concession.SubStatus,
-                    ConcessionType = concession.ConcessionType,
-                    ExpiryDate = concession.ExpiryDate,
-                    DateApproved = concession.DateApproved,
-                    DateOpened = concession.ConcessionDate,
-                    DateSentForApproval = concession.DatesentForApproval,
-                    ConcessionDetailId = concession.ConcessionDetailId,
-                    ConcessionId = concession.ConcessionId,
-                    ReferenceNumber = concession.ConcessionRef
-                });
-            }
-
-            return approvedConcessionDetails;
-        }
+        }  
 
         /// <summary>
         /// Gets the applicable prime rate for the timeframe
