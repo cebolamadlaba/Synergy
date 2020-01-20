@@ -106,6 +106,7 @@ import { FilterPipe } from './filters/filter.pipe';
 import { PricingGlmsComponent } from './pricing-glms/pricing-glms.component';
 import { GlmsAddConcessionComponent } from './glms-add-concession/glms-add-concession.component';
 import { GlmsViewConcessionComponent } from './glms-view-concession/glms-view-concession.component';
+import { ConcessionConditionModalComponent } from './concession-condition-modal/concession-condition-modal.component';
 
 
 @NgModule({
@@ -169,7 +170,8 @@ import { GlmsViewConcessionComponent } from './glms-view-concession/glms-view-co
         FilterPipe,
         PricingGlmsComponent,
         GlmsAddConcessionComponent,
-        GlmsViewConcessionComponent
+        GlmsViewConcessionComponent,
+        ConcessionConditionModalComponent
 
     ],
     imports: [

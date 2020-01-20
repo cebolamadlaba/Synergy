@@ -1,6 +1,9 @@
 ﻿
+
+
 /*  
 	2019-07-19 - Update: Add LEFT JOIN tblAENumberUser and LEFT JOIN tblCentreUser to get Concession AE Business Center
+	2020-01-16 - UPdate: tblLegalEntity/tblLegalEntityAccount changes "Inner Join" to "Left Join";
 */
 
 
@@ -18,8 +21,8 @@
 		LEFT JOIN	dbo.tblRiskGroup AS rg ON rg.pkRiskGroupId = c.fkRiskGroupId 
 		INNER JOIN	dbo.rtblConcessionType AS ct ON ct.pkConcessionTypeId = c.fkConcessionTypeId 
 		INNER JOIN	dbo.tblConcessionDetail AS cd ON cd.fkConcessionId = c.pkConcessionId 
-		Inner JOIN	dbo.tblLegalEntity AS le ON le.pkLegalEntityId = cd.fkLegalEntityId Or le.pkLegalEntityId = c.fkLegalEntityId 
-		Inner JOIN	dbo.tblLegalEntityAccount AS lea ON lea.pkLegalEntityAccountId = cd.fkLegalEntityAccountId 
+		Left JOIN	dbo.tblLegalEntity AS le ON le.pkLegalEntityId = cd.fkLegalEntityId Or le.pkLegalEntityId = c.fkLegalEntityId 
+		Left JOIN	dbo.tblLegalEntityAccount AS lea ON lea.pkLegalEntityAccountId = cd.fkLegalEntityAccountId 
 		INNER JOIN	dbo.rtblStatus AS s ON s.pkStatusId = c.fkStatusId
 		INNER JOIN	dbo.rtblSubStatus AS ss ON ss.pkSubStatusId = c.fkSubStatusId 
 		LEFT JOIN	dbo.rtblMarketSegment AS ms ON ms.pkMarketSegmentId = rg.fkMarketSegmentId 

@@ -1,5 +1,6 @@
 ﻿
 
+-- 4.1 --
 
 /*  
 	2019-07-19 - Update: Add LEFT JOIN tblAENumberUser and LEFT JOIN tblCentreUser to get Concession AE Business Center
@@ -34,5 +35,42 @@
 		LEFT JOIN	dbo.tblAccountExecutiveAssistant AS aea ON aea.fkAccountExecutiveUserId = anu.fkUserId
 
 GO
+---------
 
+-- 4.2 --
+    Declare @conditionTypeId Int,
+		    @conditionProductId Int
+
+    If Not Exists(Select Null From rtblConditionType Where [Description] = 'Other')
+    Begin
+	    Insert Into rtblConditionType([Description], IsActive)
+	    Values('Other', 1)
+	    Select @conditionTypeId = @@IDENTITY
+    End
+
+    If Not Exists(Select Null From rtblConditionProduct Where [Description] = 'Other')
+    Begin
+	    Insert Into rtblConditionProduct([Description], IsActive)
+	    Values('Other', 1)
+	    Select @conditionProductId = @@IDENTITY
+    End
+
+    Declare @isNew bit
+    Select @isNew = Case When @conditionTypeId Is Not Null And @conditionProductId Is Not Null
+			    Then 1
+			    Else 0
+		    End
+
+    If @isNew = 1 And Not Exists(Select * From tblConditionTypeProduct Where fkConditionTypeId = @conditionTypeId And fkConditionProductId = @conditionProductId)
+    Begin
+	    Insert Into tblConditionTypeProduct(fkConditionTypeId, fkConditionProductId, IsActive)
+	    Values(@conditionTypeId, @conditionProductId, 1)
+    End
+---------
+    IF COL_LENGTH('dbo.tblConcessionCondition', 'ConditionComment') IS NULL
+    BEGIN
+	    Alter Table tblConcessionCondition
+	    Add ConditionComment Varchar(500) Null
+    END
+---------
 

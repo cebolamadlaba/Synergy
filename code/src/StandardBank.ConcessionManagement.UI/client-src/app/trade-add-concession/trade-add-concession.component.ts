@@ -260,22 +260,6 @@ export class TradeAddConcessionComponent extends TradeConcessionBaseService impl
         const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
         var newRow = this.initConcessionItemRows();
 
-        //if (this.legalentitygbbnumbers)
-        //    newRow.controls['gbbnumber'].setValue(this.legalentitygbbnumbers[0]);
-
-        //var length = control.controls.length;
-
-        //if (this.bolchargecodetypes)
-        //    newRow.controls['product'].setValue(this.bolchargecodetypes[0]);
-
-        //if (this.legalentitybolusers)
-        //    newRow.controls['userid'].setValue(this.legalentitybolusers[0]);
-
-        //this.selectedProducts[length] = this.bolchargecodetypes[0];
-
-        //if (this.selectedProducts && this.selectedProducts[0].bolchargecodes)
-        //    newRow.controls['chargecode'].setValue(this.selectedProducts[0].bolchargecodes[0]);
-
         control.push(newRow);
 
         this.productTypeChanged(length);
