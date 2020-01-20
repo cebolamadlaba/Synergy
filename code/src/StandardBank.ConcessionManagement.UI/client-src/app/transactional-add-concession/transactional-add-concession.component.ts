@@ -544,7 +544,22 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
             transactionalConcession.concessionConditions.push(concessionCondition);
         }
 
+        this.checkConcessionExpiryDate(transactionalConcession);
+
         return transactionalConcession;
+    }
+
+    checkConcessionExpiryDate(transactionalConcession: TransactionalConcession) {
+        if (transactionalConcession.transactionalConcessionDetails.length > 1) {
+            var firstDate;
+            transactionalConcession.transactionalConcessionDetails.forEach(concession => {
+                if (!firstDate) {
+                    firstDate = concession.expiryDate;
+                } else if (firstDate.getTime() != concession.expiryDate.getTime()) {
+                    this.addValidationError("All concessions must have the same expiry date.");
+                }
+            });
+        }
     }
 
     onSubmit() {

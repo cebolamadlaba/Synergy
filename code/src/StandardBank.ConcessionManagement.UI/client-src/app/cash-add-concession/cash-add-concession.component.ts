@@ -232,7 +232,6 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     onFileSelected(event) {
-
         var file: File = event.target.files[0];
         var fileReader: FileReader = new FileReader();
 
@@ -553,7 +552,23 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             cashConcession.concessionConditions.push(concessionCondition);
         }
 
+        this.checkConcessionExpiryDate(cashConcession);
+
         return cashConcession;
+    }
+
+    checkConcessionExpiryDate(cashConcession: CashConcession) {
+        if (cashConcession.cashConcessionDetails.length > 1) {
+            var firstDate;
+            cashConcession.cashConcessionDetails.forEach(concession => {
+                debugger
+                if (!firstDate) {
+                    firstDate = concession.expiryDate;
+                } else if (firstDate.getTime() != concession.expiryDate.getTime()) {
+                    this.addValidationError("All concessions must have the same expiry date.");
+                }
+            });
+        }
     }
 
     onSubmit() {
@@ -587,8 +602,6 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
 
     }
-
-
 
     goBack() {
         this.location.back();
