@@ -78,4 +78,17 @@ export class ConcessionConditionModalComponent implements OnInit {
         this.selectedConditionTypes.splice(index, 1);
 
     }
+
+    disableField(fieldName: string, rowIndex: number) {
+        switch (fieldName) {
+            case "interestRate":
+                return this.selectedConditionTypes[rowIndex] != null && this.selectedConditionTypes[rowIndex].enableInterestRate ? null : '';
+            case "volume":
+                return this.selectedConditionTypes[rowIndex] != null && this.selectedConditionTypes[rowIndex].enableConditionVolume ? null : '';
+            case "value":
+                return this.selectedConditionTypes[rowIndex] != null && this.selectedConditionTypes[rowIndex].enableConditionValue ? null : '';
+            default:
+                return null;
+        }
+    }
 }

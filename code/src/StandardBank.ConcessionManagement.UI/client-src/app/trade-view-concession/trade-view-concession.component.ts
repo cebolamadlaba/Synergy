@@ -929,7 +929,8 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
 
             let concessionCondition = new ConcessionCondition();
 
-            if (!isNew && conditionFormItem.get('concessionConditionId').value)
+            let concessionConditionId = conditionFormItem.get('concessionConditionId');
+            if (!isNew && concessionConditionId != null && concessionConditionId.value)
                 concessionCondition.concessionConditionId = conditionFormItem.get('concessionConditionId').value;
 
             if (conditionFormItem.get('conditionType').value)
