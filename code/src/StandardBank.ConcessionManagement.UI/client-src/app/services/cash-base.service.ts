@@ -1,23 +1,19 @@
 import { Injectable } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { XlsxModel } from '../models/XlsxModel';
-import * as fileSaver from 'file-saver';
-import { FileService } from '../services/file.service';
 import { CashConcessionDetail } from "../models/cash-concession-detail";
 import { CashConcessionEnum } from "../models/cash-concession-enum";
+import { ConditionType } from "../models/condition-type";
 
 @Injectable()
 export class CashBaseService {
-
     constructor() { }
 
-
     public processFileContent(xlsxModel: XlsxModel): CashConcessionDetail[] {
-
         var self = this;
 
-        let cashConcessionDetails = [ new CashConcessionDetail()];
-         
+        let cashConcessionDetails = [new CashConcessionDetail()];
+
         let workbook = XLSX.read(xlsxModel.fileContent, { type: "binary" });
         let sheetName = workbook.SheetNames[0];
         let sheet = workbook.Sheets[sheetName];
@@ -36,12 +32,11 @@ export class CashBaseService {
                 continue;
 
             let detail = new CashConcessionDetail();
-            if(detail != null) {
-               cashConcessionDetails.push(detail);
-            }  
+            if (detail != null) {
+                cashConcessionDetails.push(detail);
+            }
 
             for (let colNum = range.s.c; colNum <= colCount; colNum++) {
-
                 // get the cell value.
                 cell = sheet[XLSX.utils.encode_cell({ r: rowNum, c: colNum })];
 
@@ -49,7 +44,6 @@ export class CashBaseService {
                 if (cell == null) { continue; }
 
                 switch (colNum) {
-
                     case CashConcessionEnum.AccNumber:
                         detail.accountNumber = cell.v;
                         break;
@@ -66,11 +60,20 @@ export class CashBaseService {
                         detail.expiryDate = new Date(cell.w);
                         break;
                 }
-               
             }
         }
-        
+
         return cashConcessionDetails.filter(value => JSON.stringify(value) !== '{}');
     }
 
+    disableFieldBase(selectedConditionTypes: ConditionType[], index: number, fieldname: string) {
+        switch (fieldname) {
+            case 'interestRate':
+                return selectedConditionTypes[index] != null && selectedConditionTypes[index].enableInterestRate ? null : '';
+            case 'volume':
+                return selectedConditionTypes[index] != null && selectedConditionTypes[index].enableConditionVolume ? null : '';
+            case 'value':
+                return selectedConditionTypes[index] != null && selectedConditionTypes[index].enableConditionValue ? null : '';
+        }
+    }
 }

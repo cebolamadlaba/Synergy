@@ -105,13 +105,13 @@
         <div class="row">
             <!-- SMT deal number -->
             <label>SMT Deal Number</label>
-            <input type="text" numbersOnly="true" class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="saveMessage ? '' : null" />
+            <input type="text" numbersOnly="true" class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="disableField()" />
         </div>
     </div>
     <div class="col-md-7 col-md-offset-1">
         <div class="row">
             <label>Motivation</label>
-            <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="saveMessage ? '' : null"></textarea>
+            <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="disableField()"></textarea>
         </div>
     </div>
 
@@ -141,20 +141,20 @@
         <tbody class="form-concessions-table-content">
             <tr *ngFor="let itemrow of cashConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
                 <td class="length-long">
-                    <select formControlName="channelType" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                    <select formControlName="channelType" class="form-control" [attr.disabled]="disableField()">
                         <option *ngFor="let channelTypeOption of channelTypes" [ngValue]="channelTypeOption">{{channelTypeOption.description}}</option>
                     </select>
 
                 </td>
 
                 <td class="length-long">
-                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="disableField()">
                         <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
                 </td>
 
                 <td class="length-long">
-                    <select formControlName="tableNumber" class="form-control" (change)="tableNumberChanged(i)" [attr.disabled]="saveMessage ? '' : null">
+                    <select formControlName="tableNumber" class="form-control" (change)="tableNumberChanged(i)" [attr.disabled]="disableField()">
                         <option *ngFor="let tableNumberOption of tableNumbers" [ngValue]="tableNumberOption">{{tableNumberOption.displayText}}</option>
                     </select>
                 </td>
@@ -163,12 +163,12 @@
                 <td class="length-short"><input class="form-control" formControlName="adValorem" /></td>
 
                 <td class="length-medium">
-                    <select formControlName="accrualType" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                    <select formControlName="accrualType" class="form-control" [attr.disabled]="disableField()">
                         <option *ngFor="let accrualTypeOption of accrualTypes" [ngValue]="accrualTypeOption">{{accrualTypeOption.description}}</option>
                     </select>
                 </td>
 
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="saveMessage ? '' : null" /></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="disableField()" /></td>
 
                 <td class="delete"><button *ngIf="cashConcessionForm.controls.concessionItemRows.controls.length >= 1 && !saveMessage" (click)="copyConcessionRow(i)" class="btn-delete"><i class="fa fa-copy" aria-hidden="true"></i></button></td>
 
@@ -265,11 +265,11 @@
                                     </select>
                                 </td>
                                 <!-- Interest rate -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="interestRate" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableInterestRate ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="interestRate" [attr.disabled]="disableSelectedContitionTypeField(i, 'interestRate')" (change)="setTwoNumberDecimal($event)" /></td>
                                 <!-- Volume -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionVolume ? null : ''" /></td>
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="disableSelectedContitionTypeField(i, 'volume')" /></td>
                                 <!-- Value -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionValue ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="disableSelectedContitionTypeField(i, 'value')" (change)="setTwoNumberDecimal($event)" /></td>
                                 <!-- Period type -->
                                 <td class="length-medium">
                                     <select formControlName="periodType" (change)="validatePeriod(itemrow)">

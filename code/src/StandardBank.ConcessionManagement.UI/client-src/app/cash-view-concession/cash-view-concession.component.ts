@@ -26,6 +26,7 @@ import { ConcessionTypes } from '../constants/concession-types';
 import { ConcessionStatus } from '../constants/concession-status';
 import { ConcessionSubStatus } from '../constants/concession-sub-status';
 import { BaseComponentService } from '../services/base-component.service';
+import { CashBaseService } from '../services/cash-base.service';
 import { LegalEntity } from "../models/legal-entity";
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
@@ -111,6 +112,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         @Inject(LookupDataService) private lookupDataService,
         @Inject(CashConcessionService) private cashConcessionService,
         @Inject(UserConcessionsService) private userConcessionsService,
+        @Inject(CashBaseService) private cashBaseService,
         private baseComponentService: BaseComponentService) {
         this.riskGroup = new RiskGroup();
         this.periods = [new Period()];
@@ -1141,7 +1143,21 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         
     }
 
-    
+    canEditSMTDealNumber() {
+        return (this.isRecalling || this.canEdit) ? null : '';
+    }
+
+    isMotivationEnabled() {
+        return this.motivationEnabled ? null : '';
+    }
+
+    disableField() {
+        return this.canEdit ? null : '';
+    }
+
+    disableSelectedContitionTypeField(index: number, fieldname: string) {
+        return this.cashBaseService.disableFieldBase(this.selectedConditionTypes, index, fieldname);
+    }
 
     validatePeriod(itemrow) {
         this.validationError = null;

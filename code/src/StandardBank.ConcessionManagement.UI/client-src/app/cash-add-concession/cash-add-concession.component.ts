@@ -247,8 +247,6 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
             self.cashConcessionDetail = self.cashBaseService.processFileContent(self.xlsxModel);
             self.populateCashConcessionByFile();
-
-           // self.fileInput.nativeElement.value = '';
         }
 
         fileReader.readAsBinaryString(file);
@@ -588,7 +586,13 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
     }
 
+    disableField() {
+        return this.saveMessage ? '' : null;
+    }
 
+    disableSelectedContitionTypeField(index: number, fieldname: string) {
+        return this.cashBaseService.disableFieldBase(this.selectedConditionTypes, index, fieldname);
+    }
 
     goBack() {
         this.location.back();
