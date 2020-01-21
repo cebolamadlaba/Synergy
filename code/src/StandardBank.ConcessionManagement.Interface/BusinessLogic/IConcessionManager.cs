@@ -103,9 +103,9 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        IEnumerable<SearchConcessionDetail> SearchConsessions(int userId);
+        IEnumerable<SearchConcessionDetail> SearchConsessions(User currentUser);
 
-        IEnumerable<SearchConcessionDetail> SearchConsessions(int region, int businesscentre, string status, DateTime datefilter, int userid);
+        IEnumerable<SearchConcessionDetail> SearchConsessions(int region, int businesscentre, string status, DateTime datefilter, User currentUser);
 
 
         /// <summary>
