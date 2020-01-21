@@ -30,6 +30,7 @@ import { XlsxModel } from '../models/XlsxModel';
 import { CashBaseService } from '../services/cash-base.service';
 
 import { BaseComponentService } from '../services/base-component.service';
+import { CashConcessionBaseService } from '../services/cash-concession-base.service';
 
 @Component({
     selector: 'app-cash-add-concession',
@@ -37,7 +38,7 @@ import { BaseComponentService } from '../services/base-component.service';
     styleUrls: ['./cash-add-concession.component.css'],
     providers: [DatePipe]
 })
-export class CashAddConcessionComponent implements OnInit, OnDestroy {
+export class CashAddConcessionComponent extends CashConcessionBaseService implements OnInit, OnDestroy {
     private sub: any;
     errorMessage: String;
     validationError: String[];
@@ -90,6 +91,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         private fileService: FileService,
         private datepipe: DatePipe,
         private baseComponentService: BaseComponentService) {
+        super();
         this.riskGroup = new RiskGroup();
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
@@ -415,13 +417,6 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
-    }
-
     getCashConcession(): CashConcession {
         var cashConcession = new CashConcession();
         cashConcession.concession = new Concession();
@@ -555,20 +550,6 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         this.checkConcessionExpiryDate(cashConcession);
 
         return cashConcession;
-    }
-
-    checkConcessionExpiryDate(cashConcession: CashConcession) {
-        if (cashConcession.cashConcessionDetails.length > 1) {
-            var firstDate;
-            cashConcession.cashConcessionDetails.forEach(concession => {
-                debugger
-                if (!firstDate) {
-                    firstDate = concession.expiryDate;
-                } else if (firstDate.getTime() != concession.expiryDate.getTime()) {
-                    this.addValidationError("All concessions must have the same expiry date.");
-                }
-            });
-        }
     }
 
     onSubmit() {

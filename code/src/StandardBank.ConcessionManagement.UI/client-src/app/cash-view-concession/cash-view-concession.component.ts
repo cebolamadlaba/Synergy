@@ -29,6 +29,7 @@ import { BaseComponentService } from '../services/base-component.service';
 import { LegalEntity } from "../models/legal-entity";
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
+import { CashConcessionBaseService } from '../services/cash-concession-base.service';
 
 
 @Component({
@@ -37,12 +38,11 @@ import { MOnthEnum } from '../models/month-enum';
     styleUrls: ['./cash-view-concession.component.css'],
     providers: [DatePipe]
 })
-export class CashViewConcessionComponent implements OnInit, OnDestroy {
+export class CashViewConcessionComponent extends CashConcessionBaseService implements OnInit, OnDestroy {
 
     concessionReferenceId: string;
     private sub: any;
     errorMessage: String;
-    validationError: String[];
     saveMessage: String;
     warningMessage: String;
     observableRiskGroup: Observable<RiskGroup>;
@@ -112,6 +112,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         @Inject(CashConcessionService) private cashConcessionService,
         @Inject(UserConcessionsService) private userConcessionsService,
         private baseComponentService: BaseComponentService) {
+        super();
         this.riskGroup = new RiskGroup();
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
@@ -466,13 +467,6 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             control.controls[rowIndex].get('adValorem').setValue(null);
     }
 
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
-    }
-
     getCashConcession(isNew: boolean): CashConcession {
         var cashConcession = new CashConcession();
         cashConcession.concession = new Concession();
@@ -628,6 +622,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
             cashConcession.concessionConditions.push(concessionCondition);
         }
+
+        this.checkConcessionExpiryDate(cashConcession);
 
         return cashConcession;
     }

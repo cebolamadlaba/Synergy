@@ -28,6 +28,7 @@ import { BaseComponentService } from '../services/base-component.service';
 import { LegalEntity } from "../models/legal-entity";
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
+import { TransactionalConcessionBaseService } from '../services/transactional-concession-base.service';
 
 @Component({
     selector: 'app-transactional-view-concession',
@@ -35,13 +36,12 @@ import { MOnthEnum } from '../models/month-enum';
     styleUrls: ['./transactional-view-concession.component.css'],
     providers: [DatePipe]
 })
-export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
+export class TransactionalViewConcessionComponent extends TransactionalConcessionBaseService implements OnInit, OnDestroy {
 
     concessionReferenceId: string;
     public transactionalConcessionForm: FormGroup;
     private sub: any;
     errorMessage: String;
-    validationError: String[];
     saveMessage: String;
     warningMessage: String;
     observableRiskGroup: Observable<RiskGroup>;
@@ -106,6 +106,7 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
         @Inject(TransactionalConcessionService) private transactionalConcessionService,
         @Inject(UserConcessionsService) private userConcessionsService,
         private baseComponentService: BaseComponentService) {
+        super();
         this.riskGroup = new RiskGroup();
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
@@ -624,14 +625,9 @@ export class TransactionalViewConcessionComponent implements OnInit, OnDestroy {
             transactionalConcession.concessionConditions.push(concessionCondition);
         }
 
+        this.checkConcessionExpiryDate(transactionalConcession);
+
         return transactionalConcession;
-    }
-
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
     }
 
     goBack() {
