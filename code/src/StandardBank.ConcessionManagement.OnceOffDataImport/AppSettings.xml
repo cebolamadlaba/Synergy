@@ -1,6 +1,6 @@
 <AppSettings xmlns="http://schemas.datacontract.org/2004/07/StandardBank.ConcessionManagement.OnceOffDataImport.Model" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
 	<ConfigurationData xmlns:a="http://schemas.datacontract.org/2004/07/StandardBank.ConcessionManagement.Common">
-		<a:ConnectionString>Server=DESKTOP-8U6A2D9\JANHDT;Database=CMS_Dev_V2;Integrated Security=true;MultipleActiveResultSets=true</a:ConnectionString>
+		<a:ConnectionString>Server=.;Database=CMS_Dev_V2;Integrated Security=true;MultipleActiveResultSets=true</a:ConnectionString>
 		<a:DatabaseType>SqlServer</a:DatabaseType>
 		<a:DateDatabaseConnection>Server=23267JNBDAB001V;Database=DataRepository;User Id=lean;Password=lean1;MultipleActiveResultSets=true</a:DateDatabaseConnection>
 		<a:DefaultEmail>pricingtool@localhost.com</a:DefaultEmail>
