@@ -187,8 +187,7 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
                 this.lookupDataService.getConditionTypes(),
                 this.lookupDataService.getLegalEntity(this.sapbpid),
                 this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, this.sapbpid, ConcessionTypes.Lending),
-                this.lookupDataService.getPrimeRate(this.today),
-                //this.lendingService.getlatestCrsOrMrs(this.riskGroupNumber)
+                this.lookupDataService.getPrimeRate(this.today)
             ]).subscribe(results => {
 
                 this.setInitialData(results, false);
@@ -698,14 +697,6 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
     showField(index: number, type: string) {
         return super.showFieldBase(this.selectedConditionTypes, index, type);
     }
-
-    //formatDecimal(itemValue: number) {
-    //    if (itemValue) {
-    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-    //    }
-
-    //    return null;
-    //}
 
     goBack() {
         this.location.back();
