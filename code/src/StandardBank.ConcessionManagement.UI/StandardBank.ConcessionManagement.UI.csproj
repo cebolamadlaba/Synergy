@@ -136,7 +136,6 @@
     <TypeScriptCompile Include="client-src\app\models\search-concession-detail.ts" />
     <TypeScriptCompile Include="client-src\app\models\static-class.ts" />
     <TypeScriptCompile Include="client-src\app\models\subrole-enum.ts" />
-    <TypeScriptCompile Include="client-src\app\services\bol-concession-base.service.ts" />
     <TypeScriptCompile Include="client-src\app\services\transactional-concession-base.service.ts" />
   </ItemGroup>
 
