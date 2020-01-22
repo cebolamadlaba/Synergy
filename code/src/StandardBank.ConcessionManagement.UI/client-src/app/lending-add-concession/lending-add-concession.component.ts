@@ -30,13 +30,14 @@ import { DecimalPipe } from '@angular/common';
 import { ConcessionTypes } from '../constants/concession-types';
 
 import { BaseComponentService } from '../services/base-component.service';
+import { LendingBaseService } from '../services/lending-base.service';
 
 @Component({
     selector: 'app-lending-add-concession',
     templateUrl: './lending-add-concession.component.html',
     styleUrls: ['./lending-add-concession.component.css']
 })
-export class LendingAddConcessionComponent implements OnInit, OnDestroy {
+export class LendingAddConcessionComponent extends LendingBaseService implements OnInit, OnDestroy {
     public lendingConcessionForm: FormGroup;
     private sub: any;
     showHide = false;
@@ -88,6 +89,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         @Inject(LookupDataService) private lookupDataService,
         @Inject(LendingService) private lendingService,
         private baseComponentService: BaseComponentService) {
+        super();
         this.riskGroup = new RiskGroup();
         this.reviewFeeTypes = [new ReviewFeeType()];
         this.productTypes = [new ProductType()];
@@ -185,8 +187,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
                 this.lookupDataService.getConditionTypes(),
                 this.lookupDataService.getLegalEntity(this.sapbpid),
                 this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, this.sapbpid, ConcessionTypes.Lending),
-                this.lookupDataService.getPrimeRate(this.today),
-                //this.lendingService.getlatestCrsOrMrs(this.riskGroupNumber)
+                this.lookupDataService.getPrimeRate(this.today)
             ]).subscribe(results => {
 
                 this.setInitialData(results, false);
@@ -693,13 +694,13 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
-    //formatDecimal(itemValue: number) {
-    //    if (itemValue) {
-    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-    //    }
+    canSaveMessage() {
+        return this.saveMessage ? '' : null;
+    }
 
-    //    return null;
-    //}
+    disableField(index: number, type: string) {
+        return super.disableFieldBase(this.selectedConditionTypes, index, type);
+    }
 
     goBack() {
         this.location.back();
