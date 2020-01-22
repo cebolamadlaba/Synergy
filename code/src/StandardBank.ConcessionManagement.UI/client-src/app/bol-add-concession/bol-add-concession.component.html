@@ -38,7 +38,7 @@
             <div class="col-md-1">
                 <div class="compress">
                     <div>
-                        <i class="fa fa-compress" (click)="showHide = !showHide" aria-hidden="true" id="compress-icon"></i>
+                        <i class="fa fa-compress" (click)="disableFieldBase('compress')" aria-hidden="true" id="compress-icon"></i>
                     </div>
                 </div>
             </div>
@@ -56,7 +56,7 @@
             <div class="col-md-1">
                 <div class="compress">
                     <div>
-                        <i class="fa fa-expand" (click)="showHide = !showHide" aria-hidden="true" id="compress-icon"></i>
+                        <i class="fa fa-expand" (click)="disableFieldBase('compress')" aria-hidden="true" id="compress-icon"></i>
                     </div>
                 </div>
             </div>
@@ -66,7 +66,7 @@
 </div>
 
 <!-- Error message -->
-<div class="col-md-12" *ngIf="(errorMessage) && !isLoading">
+<div class="col-md-12" *ngIf="disableFieldBase('errorMessage')">
     <div class="form-feedback-container">
         <div class="alert-danger">
             <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
@@ -80,7 +80,7 @@
 </div>
 
 <!-- Error message -->
-<div class="col-md-12" *ngIf="(validationError) && !isLoading">
+<div class="col-md-12" *ngIf="disableFieldBase('validationError')">
     <div class="form-feedback-container">
         <div class="alert-danger">
             <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Below errors requires your attention..</p>
@@ -94,7 +94,7 @@
 </div>
 
 <!-- Success message -->
-<div class="col-md-12" *ngIf="saveMessage && !isLoading">
+<div class="col-md-12" *ngIf="disableFieldBase('saveMessage')">
     <div class="form-feedback-container">
         <div class="alert-success">
             <p class="message-heading"><i class="fa fa-check-circle" aria-hidden="true"></i>Concession submitted successfully with ID: {{saveMessage}}</p>
@@ -117,13 +117,13 @@
 
         <div class="row">
             <label>SMT Deal Number</label>
-            <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="saveMessage ? '' : null" />
+            <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="disableFieldBase('addSMTDealNumberMotivation')" />
         </div>
 
     </div>
     <div class="col-md-7 col-md-offset-1">
         <label>Motivation</label>
-        <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="saveMessage ? '' : null"></textarea>
+        <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="disableFieldBase('addSMTDealNumberMotivation')"></textarea>
     </div>
 
     <!-- Concession table -->
@@ -173,7 +173,7 @@
                 <td class="length-long"><input type="number" class="form-control" formControlName="unitcharge" [attr.disabled]="saveMessage ? '' : null" /></td>
                 <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="saveMessage ? '' : null" /></td>
 
-                <td class="delete"><button *ngIf="bolConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                <td class="delete"><button *ngIf="disableFieldBase('concessionItemRowsDelete')" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
         </tbody>
     </table>
@@ -199,7 +199,7 @@
                         </tr>
                     </thead>
                     <tbody class="secondary-text">
-                        <tr *ngIf="bolConcessionForm.controls.conditionItemsRows.controls.length == 0">
+                        <tr *ngIf="disableFieldBase('hasNoConditions')">
                             <td colspan="8" class="searchEmptyState">
                                 No conditions added
                             </td>
@@ -235,7 +235,7 @@
                     </div>
                     <table class="form-concessions-table" formArrayName="conditionItemsRows" style="width:100%">
                         <thead class="form-concessions-table-headings">
-                            <tr *ngIf="bolConcessionForm.controls.conditionItemsRows.controls.length > 0">
+                            <tr *ngIf="disableFieldBase('hasConditions')">
                                 <th>Condition Type</th>
                                 <th>Product Type</th>
                                 <th>Interest Rate</th>
@@ -247,7 +247,7 @@
                             </tr>
                         </thead>
                         <tbody class="form-concessions-table-content">
-                            <tr *ngIf="bolConcessionForm.controls.conditionItemsRows.controls.length == 0">
+                            <tr *ngIf="disableFieldBase('hasNoConditions')">
                                 <td colspan="8" class="searchEmptyState">
                                     No conditions added
                                 </td>
@@ -261,16 +261,16 @@
                                 </td>
                                 <td class="length-long">
                                     <!-- Product type -->
-                                    <select formControlName="conditionProduct" *ngIf="selectedConditionTypes[i] != null">
+                                    <select formControlName="conditionProduct" *ngIf="disableFieldBase('ProductType',i)">
                                         <option *ngFor="let conditionProductOption of selectedConditionTypes[i].conditionProducts" [ngValue]="conditionProductOption">{{conditionProductOption.description}}</option>
                                     </select>
                                 </td>
                                 <!-- Interest rate -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="interestRate" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableInterestRate ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="interestRate" [attr.disabled]="disableFieldBase('InterestRateDisable',i)" (change)="setTwoNumberDecimal($event)" /></td>
                                 <!-- Volume -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionVolume ? null : ''" /></td>
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="disableFieldBase('VolumeDisable',i)" /></td>
                                 <!-- Value -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionValue ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="disableFieldBase('ValueDisable',i)" (change)="setTwoNumberDecimal($event)" /></td>
                                 <!-- Period type -->
                                 <td class="length-medium">
                                     <select formControlName="periodType" (change)="validatePeriod(itemrow)">
@@ -307,5 +307,3 @@
 
 
 </form>
-
-<!--<pre>{{bolConcessionForm.value | json}}</pre>-->

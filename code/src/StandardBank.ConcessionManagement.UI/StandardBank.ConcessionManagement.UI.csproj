@@ -50,7 +50,6 @@
     <None Remove="client-src\app\models\Static-Class.ts" />
     <None Remove="client-src\app\models\subrole-enum.ts" />
     <None Remove="client-src\app\models\transactional-concession-enum.ts" />
-    <None Remove="client-src\app\services\bol-concession-base.service.ts" />
     <None Remove="client-src\app\services\transactional-concession-base.service.ts" />
     <None Remove="client-src\content\img\sblogo.jpg" />
     <None Remove="LetterTemplates\images\sblogo.jpg" />

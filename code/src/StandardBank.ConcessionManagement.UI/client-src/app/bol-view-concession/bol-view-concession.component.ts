@@ -38,6 +38,7 @@ import { LegalEntity } from "../models/legal-entity";
 import { BaseComponentService } from '../services/base-component.service';
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
+import { BolConcessionBaseService } from '../services/bol-concession-base.service';
 
 @Component({
     selector: 'app-bol-view-concession',
@@ -45,14 +46,9 @@ import { MOnthEnum } from '../models/month-enum';
     styleUrls: ['./bol-view-concession.component.css'],
     providers: [DatePipe]
 })
-export class BolViewConcessionComponent implements OnInit, OnDestroy {
+export class BolViewConcessionComponent extends BolConcessionBaseService implements OnInit, OnDestroy {
 
-    concessionReferenceId: string;
     private sub: any;
-    errorMessage: String;
-    validationError: String[];
-    saveMessage: String;
-    warningMessage: String;
     observableRiskGroup: Observable<RiskGroup>;
 
     observableBolView: Observable<BolView>;
@@ -67,21 +63,11 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     entityName: string;
     entityNumber: string;
 
-    public bolConcessionForm: FormGroup;
-    selectedConditionTypes: ConditionType[];
-    isLoading = true;
-    canBcmApprove = false;
-    canPcmApprove = false;
     hasChanges = false;
     canExtend = false;
     canRenew = false;
     canRecall = false;
-    isEditing = false;
-    motivationEnabled = false;
-    canEdit = false;
-    isRecalling = false;
     capturedComments: string;
-    canApproveChanges = false;
     canResubmit = false;
     canUpdate = false;
     editType: string;
@@ -89,7 +75,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     isInProgressExtension = false;
     isInProgressRenewal = false;
     isApproved = false;
-    showHide = false;
+
 
 
     observablePeriods: Observable<Period[]>;
@@ -114,7 +100,6 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     clientAccounts: ClientAccount[];
 
     observableBolConcession: Observable<BolConcession>;
-    bolConcession: BolConcession;
 
     selectedProducts: BolChargeCodeType[];
 
@@ -127,6 +112,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         @Inject(BolConcessionService) private bolConcessionService,
         private baseComponentService: BaseComponentService) {
 
+        super();
         this.riskGroup = new RiskGroup();
         this.bolchargecodetypes = [new BolChargeCodeType()];
         this.bolchargecodes = [new BolChargeCode()];
@@ -257,7 +243,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
                     // Removed as per SBSA.Anthony's request - 2019-07-15
                     //if (!bolConcession.concession.isInProgressExtension) {
-                        this.canEdit = bolConcession.currentUser.canPcmApprove;
+                    this.canEdit = bolConcession.currentUser.canPcmApprove;
                     //}
                 }
 
@@ -485,7 +471,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             var formattedDateOpened = this.datepipe.transform(this.bolConcession.concession.dateOpened, 'yyyy-MM-dd');
         }
 
-        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidationForView(itemrow.controls['expiryDate'].value,formattedDateOpened);
+        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidationForView(itemrow.controls['expiryDate'].value, formattedDateOpened);
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);
         }
@@ -514,7 +500,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     getBolConcession(isNew: boolean): BolConcession {
         var bolConcession = new BolConcession();
         bolConcession.concession = new Concession();
-       
+
         if (this.riskGroup)
             bolConcession.concession.riskGroupId = this.riskGroup.id;
         if (this.legalEntity)
@@ -581,12 +567,12 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                 hasLegalEntityId = true;
                 hasLegalEntityAccountId = true;
             } else {
-               this.addValidationError("User ID not selected");
+                this.addValidationError("User ID not selected");
             }
 
             if (concessionFormItem.get('expiryDate').value && !this.baseComponentService.isAppprovingOrDeclining)
                 this.onExpiryDateChanged(concessionFormItem);
-                bolConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+            bolConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
             bolConcession.bolConcessionDetails.push(bolConcessionDetail);
 
@@ -739,7 +725,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         if (!this.validationError) {
             this.bolConcessionService.postUpdateBolData(bolConcession).subscribe(entity => {
                 console.log("data saved");
-                
+
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
                 this.bolConcession = entity;
@@ -1189,10 +1175,10 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-      
+
     }
 
- 
+
     validatePeriod(itemrow) {
         this.validationError = null;
 
