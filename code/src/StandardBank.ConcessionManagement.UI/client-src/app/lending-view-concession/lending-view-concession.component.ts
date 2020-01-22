@@ -1404,8 +1404,16 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         return 0.00;
     }
 
-    showField(index: number, type: string) {
-        switch (type) {
+    canEditSmtDealNumber() {
+        return (this.isRecalling || this.canEdit) ? null : '';
+    }
+
+    isMotivationEnabled() {
+        return this.motivationEnabled ? null : '';
+    }
+
+    disableField(index: number, type: string) {
+        switch (type) {                
             case 'productType':
             case 'accountNumber':
             case 'limit':
@@ -1427,7 +1435,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             case 'interestRate':
             case 'volume':
             case 'value':
-                return super.showFieldBase(this.selectedConditionTypes, index, type);
+                return super.disableFieldBase(this.selectedConditionTypes, index, type);
         }
     }
 

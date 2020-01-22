@@ -101,13 +101,9 @@
 <!-- Form entries -->
 <form class="col-md-12 product-form" [formGroup]="lendingConcessionForm" *ngIf="!isLoading">
     <div class="col-md-4">
-        <!--<div class="row">
-            <label>MRS/CRS</label>
-            <input type="text" numbersOnly="true" class="form-control" formControlName="mrsCrs" [attr.disabled]="saveMessage ? '' : null" />
-        </div>-->
         <div class="row">
             <label>SMT Deal Number</label>
-            <input type="text" numbersOnly="true" class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="saveMessage ? '' : null" />
+            <input type="text" numbersOnly="true" class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="canSaveMessage()" />
         </div>
     </div>
     <div class="col-md-7 col-md-offset-1">
@@ -117,7 +113,7 @@
         </div>
         <div class="row">
             <label>Motivation</label>
-            <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="saveMessage ? '' : null"></textarea>
+            <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="canSaveMessage()"></textarea>
         </div>
     </div>
 
@@ -290,11 +286,11 @@
                                     </select>
                                 </td>
                                 <!-- Interest rate -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="interestRate" [attr.disabled]="showField(i,'interestRate')" (change)="setTwoNumberDecimal($event)" /></td>
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="interestRate" [attr.disabled]="disableField(i,'interestRate')" (change)="setTwoNumberDecimal($event)" /></td>
                                 <!-- Volume -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="showField(i,'volume')" /></td>
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="disableField(i,'volume')" /></td>
                                 <!-- Value -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="showField(i,'value')" (change)="setTwoNumberDecimal($event)" /></td>
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="disableField(i,'value')" (change)="setTwoNumberDecimal($event)" /></td>
                                 <!-- Period type -->
                                 <td class="length-short">
                                     <select formControlName="periodType" (change)="validatePeriod(itemrow)">

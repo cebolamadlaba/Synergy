@@ -694,8 +694,12 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
         }
     }
 
-    showField(index: number, type: string) {
-        return super.showFieldBase(this.selectedConditionTypes, index, type);
+    canSaveMessage() {
+        return this.saveMessage ? '' : null;
+    }
+
+    disableField(index: number, type: string) {
+        return super.disableFieldBase(this.selectedConditionTypes, index, type);
     }
 
     goBack() {

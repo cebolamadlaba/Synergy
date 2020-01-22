@@ -5,7 +5,7 @@ import { ConditionType } from "../models/condition-type";
 export class LendingBaseService {
     constructor() { }
 
-    showFieldBase(
+    disableFieldBase(
         selectedConditionTypes: ConditionType[],
         index: number,
         fieldname: string
