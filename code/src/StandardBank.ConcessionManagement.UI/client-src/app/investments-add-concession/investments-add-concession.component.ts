@@ -35,6 +35,7 @@ import { Concession } from "../models/concession";
 import { UserService } from "../services/user.service";
 
 import { BaseComponentService } from '../services/base-component.service';
+import { InvestmentBaseService } from '../services/investment-base.service';
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
 
@@ -101,6 +102,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
         private formBuilder: FormBuilder,
         private location: Location,
         @Inject(LookupDataService) private lookupDataService,
+        @Inject(InvestmentBaseService) private investmentBaseService,
         @Inject(InvestmentConcessionService) private investmentConcessionService,
         private baseComponentService: BaseComponentService) {
         this.riskGroup = new RiskGroup();
@@ -592,6 +594,18 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
 
             $event.target.value = null;
         }
+    }
+
+    disableField() {
+        return this.saveMessage ? '' : null;
+    }
+
+    disableNoticePeriod(index) {
+        return ((this.selectedInvestmentConcession[index] == true) || this.saveMessage) ? 'disabled' : null;
+    }
+
+    disableSelectedConditionTypeField(index, fieldName) {
+        return this.investmentBaseService.disableFieldBase(this.selectedConditionTypes, index, fieldName);
     }
 
     goBack() {

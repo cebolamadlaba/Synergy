@@ -41,6 +41,7 @@ import { InvestmentConcessionService } from "../services/investment-concession.s
 import { InvestmentView } from "../models/investment-view";
 
 import { BaseComponentService } from '../services/base-component.service';
+import { InvestmentBaseService } from '../services/investment-base.service';
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
 
@@ -133,13 +134,12 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         private location: Location,
         private datepipe: DatePipe,
         @Inject(LookupDataService) private lookupDataService,
+        @Inject(InvestmentBaseService) private investmentBaseService,
         @Inject(UserConcessionsService) private userConcessionsService,
         @Inject(InvestmentConcessionService) private investmentConcessionService,
         private baseComponentService: BaseComponentService) {
 
         this.riskGroup = new RiskGroup();
-        //this.investmentproducttypes = [new InvestmentProductType()];
-        //this.investmentproducts = [new InvestmentProduct()];
 
         this.productTypes = [new ProductType()];
         this.periods = [new Period()];
@@ -149,7 +149,6 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
         this.conditionTypes = [new ConditionType()];
         this.selectedConditionTypes = [new ConditionType()];
-        //this.selectedProductTypes = [new InvestmentProductType()];
 
         this.selectedInvestmentConcession = [false];
 
@@ -303,9 +302,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                     }
 
                     // Removed as per SBSA.Anthony's request - 2019-07-15
-                    //if (!investmentConcession.concession.isInProgressExtension) {
                     this.canEdit = investmentConcession.currentUser.canPcmApprove;
-                    //}
                 }
 
 
@@ -1299,7 +1296,6 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-        //$event.target.value = this.formatDecimal($event.target.value);
     }
 
     setZeroNumberDecimal($event) {
@@ -1308,7 +1304,6 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.0-0');
         }
         else {
-
             $event.target.value = null;
         }
     }
@@ -1317,21 +1312,46 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     setThreeNumberDecimal($event) {
         if ($event.target.value) {
             $event.target.value = this.baseComponentService.formatDecimalThree($event.target.value);
-            //$event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
         }
         else {
-
             $event.target.value = null;
         }
     }
 
-    //formatDecimal(itemValue: number) {
-    //    if (itemValue) {
-    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-    //    }
+    canAddConcessionRowOrManageCondition() {
+        return this.canPcmApprove || this.isEditing || this.isRecalling;
+    }
 
-    //    return null;
-    //}
+    canAddNewCondition() {
+        return this.canBcmApprove || this.canPcmApprove || this.isEditing || this.isRecalling;
+    }
+
+    canAddComments() {
+        return this.canBcmApprove || this.canPcmApprove || this.canApproveChanges;
+    }
+
+    disableField(index, fieldName) {
+        switch (fieldName) {
+            case 'productType':
+            case 'accountNumber':
+            case 'balance':
+            case 'loadedRate':
+            case 'approvedRate':
+                return this.canEdit ? null : '';
+            case 'noticeperiod':
+                return !this.selectedInvestmentConcession[index] && this.canEdit ? null : '';
+            case 'expiryDate':
+                return this.isEnabledExpiryDate(index) && this.canEdit ? null : '';
+            case 'smtDealNumber':
+                return (this.isRecalling || this.canEdit) ? null : '';
+            case 'motivation':
+                return this.motivationEnabled ? null : '';
+        }
+    }
+
+    disableSelectedConditionTypeField(index, fieldName) {
+        return this.investmentBaseService.disableFieldBase(this.selectedConditionTypes, index, fieldName);
+    }
 
     validatePeriod(itemrow) {
         this.validationError = null;
