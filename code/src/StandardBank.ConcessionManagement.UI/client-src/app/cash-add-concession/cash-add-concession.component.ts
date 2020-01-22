@@ -246,8 +246,6 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
             self.cashConcessionDetail = self.cashBaseService.processFileContent(self.xlsxModel);
             self.populateCashConcessionByFile();
-
-           // self.fileInput.nativeElement.value = '';
         }
 
         fileReader.readAsBinaryString(file);
