@@ -1151,12 +1151,13 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         return this.motivationEnabled ? null : '';
     }
 
-    disableField() {
-        return this.canEdit ? null : '';
-    }
-
-    disableSelectedContitionTypeField(index: number, fieldname: string) {
-        return this.cashBaseService.disableFieldBase(this.selectedConditionTypes, index, fieldname);
+    disableField(index: number, fieldname: string) {
+        return this.cashBaseService.disableFieldBase(
+            this.selectedConditionTypes[index],
+            fieldname,
+            this.canEdit,
+            this.canEdit != null
+        );
     }
 
     validatePeriod(itemrow) {

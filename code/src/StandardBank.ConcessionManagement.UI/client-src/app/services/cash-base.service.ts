@@ -66,14 +66,24 @@ export class CashBaseService {
         return cashConcessionDetails.filter(value => JSON.stringify(value) !== '{}');
     }
 
-    disableFieldBase(selectedConditionTypes: ConditionType[], index: number, fieldname: string) {
-        switch (fieldname) {
+    disableFieldBase(
+        selectedConditionType: ConditionType,
+        fieldName: string,
+        canEdit: boolean,
+        canSaveMessage: boolean) {
+        switch (fieldName) {
+            case 'channelType':
+            case 'accountNumber':
+            case 'tableNumber':
+            case 'accrualType':
+            case 'expiryDate':
+                return (!canSaveMessage || canEdit) ? null : '';
             case 'interestRate':
-                return selectedConditionTypes[index] != null && selectedConditionTypes[index].enableInterestRate ? null : '';
+                return selectedConditionType != null && selectedConditionType.enableInterestRate ? null : '';
             case 'volume':
-                return selectedConditionTypes[index] != null && selectedConditionTypes[index].enableConditionVolume ? null : '';
+                return selectedConditionType != null && selectedConditionType.enableConditionVolume ? null : '';
             case 'value':
-                return selectedConditionTypes[index] != null && selectedConditionTypes[index].enableConditionValue ? null : '';
+                return selectedConditionType != null && selectedConditionType.enableConditionValue ? null : '';
         }
     }
 }

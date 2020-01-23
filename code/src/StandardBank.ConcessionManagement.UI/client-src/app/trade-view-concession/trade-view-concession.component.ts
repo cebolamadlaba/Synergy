@@ -711,7 +711,6 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
             fieldname,
             this.canEdit,
             this.saveMessage != null);
-
     }
 
     disableCommunicationFee(rowIndex) {
