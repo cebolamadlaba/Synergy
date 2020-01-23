@@ -44,7 +44,7 @@ export class BolConcessionBaseService {
                 return (this.isRecalling || this.canEdit) ? null : '';
             case 'motivationEnabled':
                 return this.motivationEnabled ? null : '';
-            case 'addSMTDealNumberMotivation':
+            case 'saveDisable':
                 return this.saveMessage ? '' : null;
             case 'Comments':
                 return this.canBcmApprove || this.canPcmApprove || this.canApproveChanges;
@@ -58,6 +58,8 @@ export class BolConcessionBaseService {
                 return this.bolConcessionForm.controls.conditionItemsRows.value.length == 0;
             case 'hasConditions':
                 return this.bolConcessionForm.controls.conditionItemsRows.value.length > 0;
+            case 'archiveDelete':
+                return this.bolConcessionForm.controls.concessionItemRows.value.length > 1;
             case 'noCommentsAdded':
                 return !this.bolConcession.concession.concessionComments || this.bolConcession.concession.concessionComments.length == 0;
             case 'noRelatedConcessions':

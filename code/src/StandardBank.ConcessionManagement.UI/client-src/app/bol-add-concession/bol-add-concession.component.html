@@ -117,13 +117,13 @@
 
         <div class="row">
             <label>SMT Deal Number</label>
-            <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="disableFieldBase('addSMTDealNumberMotivation')" />
+            <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="disableFieldBase('saveDisable')" />
         </div>
 
     </div>
     <div class="col-md-7 col-md-offset-1">
         <label>Motivation</label>
-        <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="disableFieldBase('addSMTDealNumberMotivation')"></textarea>
+        <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="disableFieldBase('saveDisable')"></textarea>
     </div>
 
     <!-- Concession table -->
@@ -153,25 +153,25 @@
 
             <tr *ngFor="let itemrow of bolConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
                 <td class="length-long">
-                    <select formControlName="product" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="productTypeChanged(i)">
+                    <select formControlName="product" class="form-control" [attr.disabled]="disableFieldBase('saveDisable')" (change)="productTypeChanged(i)">
                         <option *ngFor="let productOption of bolchargecodetypes" [ngValue]="productOption">{{productOption.description}}</option>
                     </select>
                 </td>
                 <td class="length-medium">
-                    <select formControlName="userid" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                    <select formControlName="userid" class="form-control" [attr.disabled]="disableFieldBase('saveDisable')">
                         <option *ngFor="let useridOption of legalentitybolusers" [ngValue]="useridOption">{{useridOption.bolUserId}}</option>
                     </select>
                 </td>
                 <td class="length-long">
-                    <select formControlName="chargecode" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                    <select formControlName="chargecode" class="form-control" [attr.disabled]="disableFieldBase('saveDisable')">
                         <option *ngFor="let bolchargecodeOption of selectedProducts[i].bolchargecodes" [ngValue]="bolchargecodeOption">{{bolchargecodeOption.description}}</option>
                     </select>
                 </td>
 
 
 
-                <td class="length-long"><input type="number" class="form-control" formControlName="unitcharge" [attr.disabled]="saveMessage ? '' : null" /></td>
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="saveMessage ? '' : null" /></td>
+                <td class="length-long"><input type="number" class="form-control" formControlName="unitcharge" [attr.disabled]="disableFieldBase('saveDisable')" /></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="disableFieldBase('saveDisable')" /></td>
 
                 <td class="delete"><button *ngIf="disableFieldBase('concessionItemRowsDelete')" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
             </tr>
