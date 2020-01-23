@@ -4,10 +4,13 @@ import { XlsxModel } from '../models/XlsxModel';
 import { CashConcessionDetail } from "../models/cash-concession-detail";
 import { CashConcessionEnum } from "../models/cash-concession-enum";
 import { ConditionType } from "../models/condition-type";
+import { CashConcession } from '../models/cash-concession';
 
 @Injectable()
 export class CashBaseService {
     constructor() { }
+
+    validationError: String[];
 
     public processFileContent(xlsxModel: XlsxModel): CashConcessionDetail[] {
         var self = this;
@@ -86,4 +89,26 @@ export class CashBaseService {
                 return selectedConditionType != null && selectedConditionType.enableConditionValue ? null : '';
         }
     }
+    addValidationError(validationDetail) {
+        if (!this.validationError)
+            this.validationError = [];
+
+        if (!this.validationError.includes(validationDetail)) {
+            this.validationError.push(validationDetail);
+        }
+    }
+
+    checkConcessionExpiryDate(cashConcession: CashConcession) {
+        if (cashConcession.cashConcessionDetails.length > 1) {
+            var firstDate;
+            cashConcession.cashConcessionDetails.forEach(concession => {
+                if (!firstDate) {
+                    firstDate = concession.expiryDate;
+                } else if (firstDate.getTime() != concession.expiryDate.getTime()) {
+                    this.addValidationError("All concessions must have the same expiry date.");
+                }
+            });
+        }
+    }
+
 }
