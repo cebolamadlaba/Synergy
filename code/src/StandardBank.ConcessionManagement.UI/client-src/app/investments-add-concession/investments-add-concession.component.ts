@@ -42,7 +42,8 @@ import { MOnthEnum } from '../models/month-enum';
 @Component({
     selector: 'app-investments-add-concession',
     templateUrl: './investments-add-concession.component.html',
-    styleUrls: ['./investments-add-concession.component.css']
+    styleUrls: ['./investments-add-concession.component.css'],
+    providers: [InvestmentBaseService]
 })
 export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
     private sub: any;
@@ -596,16 +597,18 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
-    disableField() {
-        return this.saveMessage ? '' : null;
-    }
-
     disableNoticePeriod(index) {
         return ((this.selectedInvestmentConcession[index] == true) || this.saveMessage) ? 'disabled' : null;
     }
 
-    disableSelectedConditionTypeField(index, fieldName) {
-        return this.investmentBaseService.disableFieldBase(this.selectedConditionTypes, index, fieldName);
+    disableField(index, fieldName) {
+        return this.investmentBaseService.disableFieldBase(
+            this.selectedConditionTypes[index],
+            fieldName,
+            this.saveMessage == null,
+            this.saveMessage != null,
+            this.saveMessage == null,
+            this.selectedInvestmentConcession[index]);
     }
 
     goBack() {

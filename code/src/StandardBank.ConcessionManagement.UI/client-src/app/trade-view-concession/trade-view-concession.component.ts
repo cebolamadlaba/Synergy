@@ -282,9 +282,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
                     }
 
                     // Removed as per SBSA.Anthony's request - 2019-07-15
-                    //if (!tradeConcession.concession.isInProgressExtension) {
                     this.canEdit = tradeConcession.currentUser.canPcmApprove;
-                    //}
                 }
 
                 //if it's still pending and the user is a requestor then they can recall it
@@ -1525,14 +1523,10 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
 
             }
         }
-
-
-        //$event.target.value = this.formatDecimal($event.target.value);
     }
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-        //$event.target.value = this.formatDecimal($event.target.value);
     }
 
     setThreeNumberDecimal($event) {

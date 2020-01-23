@@ -145,7 +145,7 @@
         <div class="row">
             <!-- SMT deal number -->
             <label>SMT Deal Number</label>
-            <input type="text" numbersOnly="true" class="form-control" [attr.disabled]="disableField(0, 'smtDealNumber')" formControlName="smtDealNumber" maxlength="16" required />
+            <input type="text" numbersOnly="true" class="form-control" [attr.disabled]="canEditSmtDealNumber()" formControlName="smtDealNumber" maxlength="16" required />
         </div>
     </div>
     <div class="col-md-7 col-md-offset-1">
@@ -156,7 +156,7 @@
         <div class="row">
             <!-- Motivation -->
             <label>Motivation</label>
-            <textarea class="form-control large-input" [attr.disabled]="disableField(0, 'motivation')" maxlength="800" formControlName="motivation"></textarea>
+            <textarea class="form-control large-input" [attr.disabled]="isMotivationEnabled()" maxlength="800" formControlName="motivation"></textarea>
         </div>
 
         <div class="row" *ngIf="canAddComments()">
@@ -359,11 +359,11 @@ i + 1
                                     </select>
                                 </td>
 
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="interestRate" [attr.disabled]="disableSelectedConditionTypeField(i, 'interestRate')" (change)="setTwoNumberDecimal($event)" /></td>
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="interestRate" [attr.disabled]="disableField(i, 'interestRate')" (change)="setTwoNumberDecimal($event)" /></td>
 
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="disableSelectedConditionTypeField(i, 'volume')" /></td>
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="disableField(i, 'volume')" /></td>
 
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="disableSelectedConditionTypeField(i, 'value')" (change)="setTwoNumberDecimal($event)" /></td>
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="disableField(i, 'value')" (change)="setTwoNumberDecimal($event)" /></td>
 
                                 <td class="length-medium">
 

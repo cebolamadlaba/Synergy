@@ -49,7 +49,7 @@ import { MOnthEnum } from '../models/month-enum';
     selector: 'app-investments-view-concession',
     templateUrl: './investments-view-concession.component.html',
     styleUrls: ['./investments-view-concession.component.css'],
-    providers: [DatePipe]
+    providers: [DatePipe, InvestmentBaseService]
 })
 export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
@@ -1330,27 +1330,22 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         return this.canBcmApprove || this.canPcmApprove || this.canApproveChanges;
     }
 
-    disableField(index, fieldName) {
-        switch (fieldName) {
-            case 'productType':
-            case 'accountNumber':
-            case 'balance':
-            case 'loadedRate':
-            case 'approvedRate':
-                return this.canEdit ? null : '';
-            case 'noticeperiod':
-                return !this.selectedInvestmentConcession[index] && this.canEdit ? null : '';
-            case 'expiryDate':
-                return this.isEnabledExpiryDate(index) && this.canEdit ? null : '';
-            case 'smtDealNumber':
-                return (this.isRecalling || this.canEdit) ? null : '';
-            case 'motivation':
-                return this.motivationEnabled ? null : '';
-        }
+    canEditSmtDealNumber() {
+        return (this.isRecalling || this.canEdit) ? null : '';
     }
 
-    disableSelectedConditionTypeField(index, fieldName) {
-        return this.investmentBaseService.disableFieldBase(this.selectedConditionTypes, index, fieldName);
+    isMotivationEnabled() {
+        return this.motivationEnabled ? null : '';
+    }
+
+    disableField(index, fieldName) {
+        return this.investmentBaseService.disableFieldBase(
+            this.selectedConditionTypes[index],
+            fieldName,
+            this.canEdit,
+            this.canEdit != null,
+            this.isEnabledExpiryDate(index),
+            this.selectedInvestmentConcession[index]);
     }
 
     validatePeriod(itemrow) {
