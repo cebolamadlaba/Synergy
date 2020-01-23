@@ -527,6 +527,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
             interestRate: [''],
             volume: [''],
             value: [''],
+            conditionComment: [''],
             periodType: [''],
             period: ['']
         });

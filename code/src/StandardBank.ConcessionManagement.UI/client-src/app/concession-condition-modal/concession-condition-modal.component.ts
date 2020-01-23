@@ -20,6 +20,8 @@ export class ConcessionConditionModalComponent implements OnInit {
 
     @Output() parentValidatePeriod = new EventEmitter<any>();
 
+    showComment: boolean = false;
+
     constructor(
         private formBuilder: FormBuilder
     ) { }
@@ -41,6 +43,7 @@ export class ConcessionConditionModalComponent implements OnInit {
             interestRate: [''],
             volume: [''],
             value: [''],
+            conditionComment: [''],
             periodType: [''],
             period: ['']
         });
@@ -60,15 +63,6 @@ export class ConcessionConditionModalComponent implements OnInit {
 
     validatePeriod(itemrow) {
         this.parentValidatePeriod.emit(itemrow);
-        //this.validationError = null;
-
-        //let selectedPeriodType = itemrow.controls.periodType.value.description;
-
-        //let selectedPeriod = itemrow.controls.period.value.description;
-
-        //if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
-        //    this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
-        //}
     }
 
     deleteConditionRow(index: number) {
@@ -80,15 +74,31 @@ export class ConcessionConditionModalComponent implements OnInit {
     }
 
     disableField(fieldName: string, rowIndex: number) {
+        if (this.selectedConditionTypes[rowIndex] == null)
+            return '';
+
+        this.setShowComment(rowIndex);
+
         switch (fieldName) {
             case "interestRate":
-                return this.selectedConditionTypes[rowIndex] != null && this.selectedConditionTypes[rowIndex].enableInterestRate ? null : '';
+                return this.selectedConditionTypes[rowIndex].enableInterestRate ? null : '';
             case "volume":
-                return this.selectedConditionTypes[rowIndex] != null && this.selectedConditionTypes[rowIndex].enableConditionVolume ? null : '';
+                return this.selectedConditionTypes[rowIndex].enableConditionVolume ? null : '';
             case "value":
-                return this.selectedConditionTypes[rowIndex] != null && this.selectedConditionTypes[rowIndex].enableConditionValue ? null : '';
+                return this.selectedConditionTypes[rowIndex].enableConditionValue ? null : '';
+            case "conditionComment":
+                return this.showComment ? null : '';
             default:
                 return null;
         }
+    }
+
+    setShowComment(rowIndex) {
+        if (!this.selectedConditionTypes[rowIndex].enableInterestRate &&
+            !this.selectedConditionTypes[rowIndex].enableConditionVolume &&
+            !this.selectedConditionTypes[rowIndex].enableConditionValue)
+            this.showComment = true;
+        else
+            this.showComment = false;
     }
 }
