@@ -28,9 +28,6 @@ import { ConcessionSubStatus } from '../constants/concession-sub-status';
 import { BaseComponentService } from '../services/base-component.service';
 import { CashBaseService } from '../services/cash-base.service';
 import { LegalEntity } from "../models/legal-entity";
-import * as moment from 'moment';
-import { MOnthEnum } from '../models/month-enum';
-import { CashBaseService } from '../services/cash-base.service';
 
 
 @Component({
