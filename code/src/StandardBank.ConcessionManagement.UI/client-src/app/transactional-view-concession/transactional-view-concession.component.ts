@@ -28,7 +28,7 @@ import { BaseComponentService } from '../services/base-component.service';
 import { LegalEntity } from "../models/legal-entity";
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
-import { TransactionalConcessionBaseService } from '../services/transactional-concession-base.service';
+import { TransactionalBaseService } from '../services/transactional-base.service';
 
 @Component({
     selector: 'app-transactional-view-concession',
@@ -36,14 +36,9 @@ import { TransactionalConcessionBaseService } from '../services/transactional-co
     styleUrls: ['./transactional-view-concession.component.css'],
     providers: [DatePipe]
 })
-export class TransactionalViewConcessionComponent extends TransactionalConcessionBaseService implements OnInit, OnDestroy {
+export class TransactionalViewConcessionComponent extends TransactionalBaseService implements OnInit, OnDestroy {
 
-    concessionReferenceId: string;
-    public transactionalConcessionForm: FormGroup;
     private sub: any;
-    errorMessage: String;
-    saveMessage: String;
-    warningMessage: String;
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
@@ -53,21 +48,11 @@ export class TransactionalViewConcessionComponent extends TransactionalConcessio
     entityNumber: string;
     createdDate: string;
 
-    selectedConditionTypes: ConditionType[];
     selectedTransactionTypes: TransactionType[];
-    isLoading = true;
-    canBcmApprove = false;
-    canPcmApprove = false;
     hasChanges = false;
     canExtend = false;
     canRenew = false;
-    canRecall = false;
-    isEditing = false;
-    motivationEnabled = false;
-    canEdit = false;
-    isRecalling = false;
     capturedComments: string;
-    canApproveChanges: boolean;
     canResubmit = false;
     canUpdate = false;
     editType: string;
@@ -75,7 +60,6 @@ export class TransactionalViewConcessionComponent extends TransactionalConcessio
     isInProgressExtension = false;
     isInProgressRenewal = false;
     isApproved = false;
-    showHide = false;
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
@@ -93,7 +77,6 @@ export class TransactionalViewConcessionComponent extends TransactionalConcessio
     transactionTypes: TransactionType[];
 
     observableTransactionalConcession: Observable<TransactionalConcession>;
-    transactionalConcession: TransactionalConcession;
 
     observableTransactionalFinancial: Observable<TransactionalFinancial>;
     transactionalFinancial: TransactionalFinancial;
@@ -208,7 +191,7 @@ export class TransactionalViewConcessionComponent extends TransactionalConcessio
 
         this.populateForm();
 
-    }2
+    } 2
 
     onExpiryDateChanged(itemrow) {
         var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidationForView(itemrow.controls['expiryDate'].value, this.createdDate);
@@ -552,7 +535,7 @@ export class TransactionalViewConcessionComponent extends TransactionalConcessio
 
             if (concessionFormItem.get('expiryDate').value && !this.baseComponentService.isAppprovingOrDeclining)
                 this.onExpiryDateChanged(concessionFormItem);
-                transactionalConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+            transactionalConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
             transactionalConcession.transactionalConcessionDetails.push(transactionalConcessionDetail);
 
@@ -800,7 +783,7 @@ export class TransactionalViewConcessionComponent extends TransactionalConcessio
 
             let controls = (<FormGroup>concessionFormItem).controls;
 
-            for (const fieldname in controls) { 
+            for (const fieldname in controls) {
 
                 const abstractControl = controls[fieldname];
                 if (abstractControl.dirty) {

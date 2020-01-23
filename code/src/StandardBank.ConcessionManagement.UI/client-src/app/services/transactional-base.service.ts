@@ -5,9 +5,32 @@ import * as fileSaver from 'file-saver';
 import { FileService } from '../services/file.service';
 import { TransactionalConcessionDetail } from "../models/transactional-concession-detail";
 import { TransactionalConcessionEnum } from "../models//transactional-concession-enum";
+import { TransactionalConcession } from '../models/transactional-concession';
+import { FormGroup } from '@angular/forms';
+import { ConditionType } from '../models/condition-type';
+import { ConcessionRelationshipDetail } from '../models/concession-relationship-detail';
 
 @Injectable()
 export class TransactionalBaseService {
+    showHide = false;
+    errorMessage: String;
+    saveMessage: String;
+    warningMessage: String;
+    isLoading = true;
+    canEdit = false;
+    isRecalling = false;
+    canBcmApprove = false;
+    canPcmApprove = false;
+    canApproveChanges: boolean;
+    motivationEnabled = false;
+    isEditing = false;
+    canRecall = false;
+    public transactionalConcessionForm: FormGroup;
+    selectedConditionTypes: ConditionType[];
+    transactionalConcession: TransactionalConcession;
+    concessionReferenceId: string;
+
+    validationError: String[];
 
     constructor() { }
 
@@ -36,7 +59,7 @@ export class TransactionalBaseService {
 
             let detail = new TransactionalConcessionDetail();
             transactionalConcessionDetails.push(detail);
-           
+
             for (let colNum = range.s.c; colNum <= colCount; colNum++) {
 
                 // get the cell value.
@@ -45,7 +68,7 @@ export class TransactionalBaseService {
                 // ignore null cells.
                 if (cell == null) { continue; }
 
-                switch (colNum) {               
+                switch (colNum) {
                     case TransactionalConcessionEnum.AccNumber:
                         detail.accountNumber = cell.v;
                         break;
@@ -66,4 +89,85 @@ export class TransactionalBaseService {
         return transactionalConcessionDetails.filter(value => JSON.stringify(value) !== '{}');;
     }
 
+    addValidationError(validationDetail) {
+        if (!this.validationError)
+            this.validationError = [];
+
+        if (!this.validationError.includes(validationDetail)) {
+            this.validationError.push(validationDetail);
+        }
+    }
+
+    checkConcessionExpiryDate(transactionalConcession: TransactionalConcession) {
+        if (transactionalConcession.transactionalConcessionDetails.length > 1) {
+            var firstDate;
+            transactionalConcession.transactionalConcessionDetails.forEach(concession => {
+                if (!firstDate) {
+                    firstDate = concession.expiryDate;
+                } else if (firstDate.getTime() != concession.expiryDate.getTime()) {
+                    this.addValidationError("All concessions must have the same expiry date.");
+                }
+            });
+        }
+    }
+
+    disableFieldBase(fieldname: string, index: number = null, concessionRelationship: ConcessionRelationshipDetail = null) {
+        switch (fieldname) {
+            case 'compress':
+                this.showHide = !this.showHide;
+                break;
+            case 'errorMessage':
+                return (this.errorMessage) && !this.isLoading;
+            case 'validationError':
+                return (this.validationError) && !this.isLoading;
+            case 'saveMessage':
+                return this.saveMessage && !this.isLoading;
+            case 'warningMessage':
+                return this.warningMessage && !this.isLoading;
+            case 'viewSMTDealNumber':
+                return (this.isRecalling || this.canEdit) ? null : '';
+            case 'viewMotivation':
+                return this.motivationEnabled ? null : '';
+            case 'viewComments':
+                return this.canBcmApprove || this.canPcmApprove || this.canApproveChanges;
+            case 'addSMTDealNumberAndMotivation':
+                return this.saveMessage ? '' : null;
+            case 'viewConcessions':
+                return this.canPcmApprove || this.isEditing || this.isRecalling;
+            case 'viewConcessionFeildDisable':
+                return this.canEdit ? null : '';
+            case 'addConcessionFeildDisable':
+                return this.saveMessage ? '' : null;
+            case 'deleteConcessionCol':
+                return this.canBcmApprove || this.canPcmApprove || this.isEditing || this.isRecalling;
+            case 'concessionItemRowsDelete':
+                return this.transactionalConcessionForm.controls.concessionItemRows.value.length > 1 && !this.saveMessage;
+            case 'hasNoConditions':
+                return this.transactionalConcessionForm.controls.conditionItemsRows.value.length == 0;
+            case 'hasConditions':
+                return this.transactionalConcessionForm.controls.conditionItemsRows.value.length > 0;
+            case 'canArchiveDelete':
+                return this.transactionalConcessionForm.controls.concessionItemRows.value.length > 1;
+            case 'noCommentsAdded':
+                return !this.transactionalConcession.concession.concessionComments || this.transactionalConcession.concession.concessionComments.length == 0;
+            case 'noRelatedConcessions':
+                return !this.transactionalConcession.concession.concessionRelationshipDetails || this.transactionalConcession.concession.concessionRelationshipDetails.length == 0;
+            case 'productType':
+                return this.selectedConditionTypes[index] != null;
+            case 'InterestRateDisable':
+                return this.selectedConditionTypes[index] != null && this.selectedConditionTypes[index].enableInterestRate ? null : '';
+            case 'VolumeDisable':
+                return this.selectedConditionTypes[index] != null && this.selectedConditionTypes[index].enableConditionVolume ? null : '';
+            case 'ValueDisable':
+                return this.selectedConditionTypes[index] != null && this.selectedConditionTypes[index].enableConditionValue ? null : '';
+            case 'parentReferenceCheck':
+                return concessionRelationship.parentConcessionReference == this.concessionReferenceId;
+            case 'childReferenceCheck':
+                return concessionRelationship.childConcessionReference == this.concessionReferenceId;
+            case 'recall':
+                return this.canRecall && !this.isRecalling;
+            default:
+                break;
+        }
+    }
 }

@@ -28,7 +28,6 @@ import { FileService } from '../services/file.service';
 import * as XLSX from 'xlsx';
 import { XlsxModel } from '../models/XlsxModel';
 import { TransactionalBaseService } from '../services/transactional-base.service';
-import { TransactionalConcessionBaseService } from '../services/transactional-concession-base.service';
 
 @Component({
     selector: 'app-transactional-add-concession',
@@ -36,28 +35,22 @@ import { TransactionalConcessionBaseService } from '../services/transactional-co
     styleUrls: ['./transactional-add-concession.component.css'],
     providers: [DatePipe]
 })
-export class TransactionalAddConcessionComponent extends TransactionalConcessionBaseService implements OnInit, OnDestroy {
-    public transactionalConcessionForm: FormGroup;
+export class TransactionalAddConcessionComponent extends TransactionalBaseService implements OnInit, OnDestroy {
+
     private sub: any;
-    errorMessage: String;
-    validationError: String[];
-    saveMessage: String;
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
     legalEntity: LegalEntity;
     sapbpid: number;
-    transactionalConcessionDetail : TransactionalConcessionDetail[];
+    transactionalConcessionDetail: TransactionalConcessionDetail[];
 
     entityName: string;
     entityNumber: string;
 
-    selectedConditionTypes: ConditionType[];
     selectedTransactionTypes: TransactionType[];
-    isLoading = true;
     observableLatestCrsOrMrs: Observable<number>;
     latestCrsOrMrs: number;
-    showHide = false;
 
     xlsxModel = new XlsxModel();
 
@@ -82,7 +75,6 @@ export class TransactionalAddConcessionComponent extends TransactionalConcession
         private datepipe: DatePipe,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(TransactionalConcessionService) private transactionalConcessionService,
-        @Inject(TransactionalBaseService) private transactionalBaseService,
         private fileService: FileService,
         private baseComponentService: BaseComponentService) {
         super();
@@ -243,7 +235,7 @@ export class TransactionalAddConcessionComponent extends TransactionalConcession
             self.xlsxModel.fileContent = fileReader.result;
             self.xlsxModel.selectedFileName = file.name;
 
-            self.transactionalConcessionDetail = self.transactionalBaseService.processFileContent(self.xlsxModel);
+            self.transactionalConcessionDetail = self.processFileContent(self.xlsxModel);
             self.populateTransactionalConcessionByFile();
             // reset the input:file which allows you to upload the same file again
             /// self.fileInput.nativeElement.value = '';
@@ -292,7 +284,7 @@ export class TransactionalAddConcessionComponent extends TransactionalConcession
                     currentConcession.get('transactionTableNumber').setValue(null);
                     currentConcession.get('flatFeeOrRate').setValue(null);
                 }
-             
+
             }
 
             if (transactionalConcessionDetail.accountNumber) {
@@ -302,7 +294,7 @@ export class TransactionalAddConcessionComponent extends TransactionalConcession
                         currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
                     } else {
                         this.addValidationError('AccountNumber doesnt belong to selected risk group');
-                    }  
+                    }
                 }
             }
 
@@ -389,13 +381,13 @@ export class TransactionalAddConcessionComponent extends TransactionalConcession
     }
 
     onExpiryDateChanged(itemrow) {
-     
+
         var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);
         }
     }
-     
+
     transactionTableNumberChanged(rowIndex) {
         const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
 
