@@ -580,6 +580,15 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
     }
 
+    disableField(index: number, fieldname: string) {
+        return this.cashBaseService.disableFieldBase(
+            this.selectedConditionTypes[index],
+            fieldname,
+            this.saveMessage == null,
+            this.saveMessage != null
+        );
+    }
+
     goBack() {
         this.location.back();
     }

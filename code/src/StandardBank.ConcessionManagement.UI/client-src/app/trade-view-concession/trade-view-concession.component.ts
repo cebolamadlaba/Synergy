@@ -281,7 +281,6 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
                         this.canPcmApprove = tradeConcession.currentUser.canPcmApprove && tradeConcession.currentUser.canApprove;
                     }
 
-                    // Removed as per SBSA.Anthony's request - 2019-07-15
                     this.canEdit = tradeConcession.currentUser.canPcmApprove;
                 }
 
@@ -709,7 +708,6 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
             fieldname,
             this.canEdit,
             this.saveMessage != null);
-
     }
 
     disableCommunicationFee(rowIndex) {
@@ -1519,8 +1517,6 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
                 currentrow.get('advalorem').enable();
                 currentrow.get('min').enable();
                 currentrow.get('max').enable();
-
-
             }
         }
     }
