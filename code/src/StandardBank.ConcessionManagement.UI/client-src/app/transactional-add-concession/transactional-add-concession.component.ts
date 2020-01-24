@@ -23,6 +23,7 @@ import { BaseComponentService } from '../services/base-component.service';
 import { LegalEntity } from "../models/legal-entity";
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
+import { ConcessionConditionReturnObject } from '../models/concession-condition-return-object';
 import * as fileSaver from 'file-saver';
 import { FileService } from '../services/file.service';
 import * as XLSX from 'xlsx';
@@ -46,7 +47,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
     riskGroupNumber: number;
     legalEntity: LegalEntity;
     sapbpid: number;
-    transactionalConcessionDetail : TransactionalConcessionDetail[];
+    transactionalConcessionDetail: TransactionalConcessionDetail[];
 
     entityName: string;
     entityNumber: string;
@@ -215,6 +216,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
             interestRate: [''],
             volume: [''],
             value: [''],
+            conditionComment: [''],
             periodType: [''],
             period: ['']
         });
@@ -290,7 +292,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
                     currentConcession.get('transactionTableNumber').setValue(null);
                     currentConcession.get('flatFeeOrRate').setValue(null);
                 }
-             
+
             }
 
             if (transactionalConcessionDetail.accountNumber) {
@@ -300,7 +302,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
                         currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
                     } else {
                         this.addValidationError('AccountNumber doesnt belong to selected risk group');
-                    }  
+                    }
                 }
             }
 
@@ -387,13 +389,13 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     onExpiryDateChanged(itemrow) {
-     
+
         var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);
         }
     }
-     
+
     transactionTableNumberChanged(rowIndex) {
         const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
 
@@ -495,54 +497,9 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
 
         const conditions = <FormArray>this.transactionalConcessionForm.controls['conditionItemsRows'];
 
-        for (let conditionFormItem of conditions.controls) {
-            if (!transactionalConcession.concessionConditions)
-                transactionalConcession.concessionConditions = [];
-
-            let concessionCondition = new ConcessionCondition();
-
-            if (conditionFormItem.get('conditionType').value)
-                concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;
-            else
-                this.addValidationError("Condition type not selected");
-
-            if (conditionFormItem.get('conditionProduct').value)
-                concessionCondition.conditionProductId = conditionFormItem.get('conditionProduct').value.id;
-            else
-                this.addValidationError("Condition product not selected");
-
-            if (conditionFormItem.get('interestRate').value)
-                concessionCondition.interestRate = conditionFormItem.get('interestRate').value;
-
-            if (conditionFormItem.get('volume').value)
-                concessionCondition.conditionVolume = conditionFormItem.get('volume').value;
-
-            if (conditionFormItem.get('value').value == null || (<string>conditionFormItem.get('value').value).length < 1) {
-                var value = conditionFormItem.get('conditionType').value;
-                if (value != null && value.enableConditionValue == true)
-                    this.addValidationError("Conditions: 'Value' is a mandatory field");
-            }
-            else if (conditionFormItem.get('value').value)
-                concessionCondition.conditionValue = conditionFormItem.get('value').value;
-
-            if (conditionFormItem.get('periodType').value) {
-                concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
-            } else {
-                this.addValidationError("Period type not selected");
-            }
-
-            if (conditionFormItem.get('period').value) {
-                concessionCondition.periodId = conditionFormItem.get('period').value.id;
-            } else {
-                this.addValidationError("Period not selected");
-            }
-
-            if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
-                this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
-            }
-
-            transactionalConcession.concessionConditions.push(concessionCondition);
-        }
+        let concessionConditionReturnObject = this.baseComponentService.getConsessionConditionData(conditions, transactionalConcession.concessionConditions, this.validationError);
+        transactionalConcession.concessionConditions = concessionConditionReturnObject.concessionConditions;
+        this.validationError = concessionConditionReturnObject.validationError;
 
         return transactionalConcession;
     }

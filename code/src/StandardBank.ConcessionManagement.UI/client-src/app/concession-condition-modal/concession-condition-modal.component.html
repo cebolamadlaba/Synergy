@@ -38,7 +38,7 @@
                             <option *ngFor="let conditionTypeOption of conditionTypes" [ngValue]="conditionTypeOption">{{conditionTypeOption.description}}</option>
                         </select>
                     </td>
-                    <td class="length-long">
+                    <td class="length-short">
                         <!-- Product type -->
                         <select formControlName="conditionProduct" *ngIf="selectedConditionTypes[i] != null">
                             <option *ngFor="let conditionProductOption of selectedConditionTypes[i].conditionProducts" [ngValue]="conditionProductOption">{{conditionProductOption.description}}</option>
@@ -51,7 +51,7 @@
                     <!-- Value -->
                     <td class="length-short"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="disableField('value',i)" (change)="setTwoNumberDecimal($event)" /></td>
                     <!-- Comment -->
-                    <td rowspan="3" class="length-short"><input type="text" maxlength="500" formControlName="conditionComment" [attr.disabled]="disableField('conditionComment',i)" /></td>
+                    <td class="length-long"><input type="text" maxlength="500" formControlName="conditionComment" [attr.disabled]="disableField('conditionComment',i)" /></td>
                     <!-- Period type -->
                     <td class="length-medium">
                         <select formControlName="periodType" (change)="validatePeriod(itemrow)">
