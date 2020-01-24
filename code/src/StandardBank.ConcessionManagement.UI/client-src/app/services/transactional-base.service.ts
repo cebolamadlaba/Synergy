@@ -111,11 +111,12 @@ export class TransactionalBaseService {
         }
     }
 
+    compressClick() {
+        this.showHide = !this.showHide;
+    }
+
     disableFieldBase(fieldname: string, index: number = null, concessionRelationship: ConcessionRelationshipDetail = null) {
         switch (fieldname) {
-            case 'compress':
-                this.showHide = !this.showHide;
-                break;
             case 'errorMessage':
                 return (this.errorMessage) && !this.isLoading;
             case 'validationError':
