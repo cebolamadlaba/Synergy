@@ -281,10 +281,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
                         this.canPcmApprove = tradeConcession.currentUser.canPcmApprove && tradeConcession.currentUser.canApprove;
                     }
 
-                    // Removed as per SBSA.Anthony's request - 2019-07-15
-                    //if (!tradeConcession.concession.isInProgressExtension) {
                     this.canEdit = tradeConcession.currentUser.canPcmApprove;
-                    //}
                 }
 
                 //if it's still pending and the user is a requestor then they can recall it
@@ -711,7 +708,6 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
             fieldname,
             this.canEdit,
             this.saveMessage != null);
-
     }
 
     disableCommunicationFee(rowIndex) {
@@ -1521,18 +1517,12 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
                 currentrow.get('advalorem').enable();
                 currentrow.get('min').enable();
                 currentrow.get('max').enable();
-
-
             }
         }
-
-
-        //$event.target.value = this.formatDecimal($event.target.value);
     }
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-        //$event.target.value = this.formatDecimal($event.target.value);
     }
 
     setThreeNumberDecimal($event) {

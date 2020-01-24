@@ -62,21 +62,6 @@ export class TradeConcessionBaseService {
                 else {
                     return null;
                 }
-
-            //let disabled = false;
-
-            //if (!isLocalGuarantee) {
-            //    disabled = true;
-            //}
-
-            //let selectedTradeConcessionNotNull = isSelectedTradeConcessionDetail != null;
-
-            //if (isSaved || !canEdit)
-            //    return '';
-            //else if (selectedTradeConcessionNotNull && disabled)
-            //    return '';
-            //else
-            //    return null;
             case "communication":
                 this.disableCommunicationFeeBase(tradeConcessionForm, rowIndex, canEdit);
                 break;
