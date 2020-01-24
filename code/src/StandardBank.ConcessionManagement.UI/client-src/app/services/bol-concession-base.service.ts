@@ -27,11 +27,21 @@ export class BolConcessionBaseService {
 
     constructor() { }
 
+    compressClick() {
+        this.showHide = !this.showHide;
+    }
+
+    addValidationError(validationDetail) {
+        if (!this.validationError)
+            this.validationError = [];
+
+        if (!this.validationError.includes(validationDetail)) {
+            this.validationError.push(validationDetail);
+        }
+    }
+
     disableFieldBase(fieldname: string, index: number = null, concessionRelationship: ConcessionRelationshipDetail = null) {
         switch (fieldname) {
-            case 'compress':
-                this.showHide = !this.showHide;
-                break;
             case 'errorMessage':
                 return (this.errorMessage) && !this.isLoading;
             case 'validationError':

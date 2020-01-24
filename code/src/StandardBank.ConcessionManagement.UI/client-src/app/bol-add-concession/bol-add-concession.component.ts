@@ -303,14 +303,6 @@ export class BolAddConcessionComponent extends BolConcessionBaseService implemen
 
     }
 
-
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
-    }
-
     getBolConcession(): BolConcession {
         var bolConcession = new BolConcession();
         bolConcession.concession = new Concession();

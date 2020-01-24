@@ -490,13 +490,6 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
 
     }
 
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
-    }
-
     getBolConcession(isNew: boolean): BolConcession {
         var bolConcession = new BolConcession();
         bolConcession.concession = new Concession();
