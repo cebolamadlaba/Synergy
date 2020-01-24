@@ -28,6 +28,7 @@ import { FileService } from '../services/file.service';
 import * as XLSX from 'xlsx';
 import { XlsxModel } from '../models/XlsxModel';
 import { TransactionalBaseService } from '../services/transactional-base.service';
+import { TransactionalConcessionBaseService } from '../services/transactional-concession-base.service';
 
 @Component({
     selector: 'app-transactional-add-concession',
@@ -35,7 +36,7 @@ import { TransactionalBaseService } from '../services/transactional-base.service
     styleUrls: ['./transactional-add-concession.component.css'],
     providers: [DatePipe]
 })
-export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
+export class TransactionalAddConcessionComponent extends TransactionalConcessionBaseService implements OnInit, OnDestroy {
     public transactionalConcessionForm: FormGroup;
     private sub: any;
     errorMessage: String;
@@ -84,6 +85,7 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
         @Inject(TransactionalBaseService) private transactionalBaseService,
         private fileService: FileService,
         private baseComponentService: BaseComponentService) {
+        super();
         this.riskGroup = new RiskGroup();
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
@@ -544,6 +546,8 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
             transactionalConcession.concessionConditions.push(concessionCondition);
         }
 
+        this.checkConcessionExpiryDate(transactionalConcession);
+
         return transactionalConcession;
     }
 
@@ -570,13 +574,6 @@ export class TransactionalAddConcessionComponent implements OnInit, OnDestroy {
         } else {
             this.isLoading = false;
         }
-    }
-
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
     }
 
     setTwoNumberDecimal($event) {
