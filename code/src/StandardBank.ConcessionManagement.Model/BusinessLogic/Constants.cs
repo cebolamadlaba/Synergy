@@ -114,6 +114,7 @@
             public const string MininumAverageCreditBalance = "Mininum Average Credit Balance";
             public const string MininumTurnover = "Mininum Turnover";
             public const string CreditFacility = "Credit Facility";
+            public const string Other = "Other";
         }
 
         public static class RagStatusResult

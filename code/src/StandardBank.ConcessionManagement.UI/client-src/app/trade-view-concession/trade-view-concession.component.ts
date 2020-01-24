@@ -461,6 +461,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
                     currentCondition.get('interestRate').setValue(concessionCondition.interestRate);
                     currentCondition.get('volume').setValue(concessionCondition.conditionVolume);
                     currentCondition.get('value').setValue(concessionCondition.conditionValue);
+                    currentCondition.get('conditionComment').setValue(concessionCondition.conditionComment);
 
                     let selectedPeriodType = this.periodTypes.filter(_ => _.id == concessionCondition.periodTypeId);
                     currentCondition.get('periodType').setValue(selectedPeriodType[0]);
@@ -527,6 +528,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
             interestRate: [''],
             volume: [''],
             value: [''],
+            conditionComment: [''],
             periodType: [''],
             period: ['']
         });
@@ -929,7 +931,8 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
 
             let concessionCondition = new ConcessionCondition();
 
-            if (!isNew && conditionFormItem.get('concessionConditionId').value)
+            let concessionConditionId = conditionFormItem.get('concessionConditionId');
+            if (!isNew && concessionConditionId != null && concessionConditionId.value)
                 concessionCondition.concessionConditionId = conditionFormItem.get('concessionConditionId').value;
 
             if (conditionFormItem.get('conditionType').value)
@@ -955,6 +958,9 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
             }
             else if (conditionFormItem.get('value').value)
                 concessionCondition.conditionValue = conditionFormItem.get('value').value;
+
+            if (conditionFormItem.get('conditionComment').value)
+                concessionCondition.conditionComment = conditionFormItem.get('conditionComment').value;
 
             if (conditionFormItem.get('periodType').value) {
                 concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;

@@ -251,6 +251,7 @@ export class TradeAddConcessionComponent extends TradeConcessionBaseService impl
             interestRate: [''],
             volume: [''],
             value: [''],
+            conditionComment: [''],
             periodType: [''],
             period: ['']
         });
@@ -259,22 +260,6 @@ export class TradeAddConcessionComponent extends TradeConcessionBaseService impl
     addNewConcessionRow() {
         const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
         var newRow = this.initConcessionItemRows();
-
-        //if (this.legalentitygbbnumbers)
-        //    newRow.controls['gbbnumber'].setValue(this.legalentitygbbnumbers[0]);
-
-        //var length = control.controls.length;
-
-        //if (this.bolchargecodetypes)
-        //    newRow.controls['product'].setValue(this.bolchargecodetypes[0]);
-
-        //if (this.legalentitybolusers)
-        //    newRow.controls['userid'].setValue(this.legalentitybolusers[0]);
-
-        //this.selectedProducts[length] = this.bolchargecodetypes[0];
-
-        //if (this.selectedProducts && this.selectedProducts[0].bolchargecodes)
-        //    newRow.controls['chargecode'].setValue(this.selectedProducts[0].bolchargecodes[0]);
 
         control.push(newRow);
 
@@ -630,54 +615,9 @@ export class TradeAddConcessionComponent extends TradeConcessionBaseService impl
 
         const conditions = <FormArray>this.tradeConcessionForm.controls['conditionItemsRows'];
 
-        for (let conditionFormItem of conditions.controls) {
-            if (!tradeConcession.concessionConditions)
-                tradeConcession.concessionConditions = [];
-
-            let concessionCondition = new ConcessionCondition();
-
-            if (conditionFormItem.get('conditionType').value)
-                concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;
-            else
-                this.addValidationError("Condition type not selected");
-
-            if (conditionFormItem.get('conditionProduct').value)
-                concessionCondition.conditionProductId = conditionFormItem.get('conditionProduct').value.id;
-            else
-                this.addValidationError("Condition product not selected");
-
-            if (conditionFormItem.get('interestRate').value)
-                concessionCondition.interestRate = conditionFormItem.get('interestRate').value;
-
-            if (conditionFormItem.get('volume').value)
-                concessionCondition.conditionVolume = conditionFormItem.get('volume').value;
-
-            if (conditionFormItem.get('value').value == null || (<string>conditionFormItem.get('value').value).length < 1) {
-                var value = conditionFormItem.get('conditionType').value;
-                if (value != null && value.enableConditionValue == true)
-                    this.addValidationError("Conditions: 'Value' is a mandatory field");
-            }
-            else if (conditionFormItem.get('value').value)
-                concessionCondition.conditionValue = conditionFormItem.get('value').value;
-
-            if (conditionFormItem.get('periodType').value) {
-                concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
-            } else {
-                this.addValidationError("Period type not selected");
-            }
-
-            if (conditionFormItem.get('period').value) {
-                concessionCondition.periodId = conditionFormItem.get('period').value.id;
-            } else {
-                this.addValidationError("Period not selected");
-            }
-
-            if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
-                this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
-            }
-
-            tradeConcession.concessionConditions.push(concessionCondition);
-        }
+        let concessionConditionReturnObject = this.baseComponentService.getConsessionConditionData(conditions, tradeConcession.concessionConditions, this.validationError);
+        tradeConcession.concessionConditions = concessionConditionReturnObject.concessionConditions;
+        this.validationError = concessionConditionReturnObject.validationError;
 
         return tradeConcession;
     }

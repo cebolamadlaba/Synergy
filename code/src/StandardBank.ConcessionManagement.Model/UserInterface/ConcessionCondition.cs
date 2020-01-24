@@ -30,7 +30,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         /// <summary>
         /// Gets or sets the product type
         /// </summary>
-        public string ProductType {get; set; }
+        public string ProductType { get; set; }
 
         /// <summary>
         /// Gets or sets the condition product id
@@ -139,5 +139,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
         public string ActualVolume { get; set; }
         public string ActualValue { get; set; }
         public string ActualTurnover { get; set; }
+
+        public string ConditionComment { get; set; }
     }
 }

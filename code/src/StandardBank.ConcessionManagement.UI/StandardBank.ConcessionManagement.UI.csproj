@@ -37,6 +37,7 @@
     <None Remove="client-src\app\models\bol-chargecodetype.ts" />
     <None Remove="client-src\app\models\bol-view.ts" />
     <None Remove="client-src\app\models\cash-concession-enum.ts" />
+    <None Remove="client-src\app\models\concession-condition-return-object.ts" />
     <None Remove="client-src\app\models\legal-entity-address.ts" />
     <None Remove="client-src\app\models\legal-entity-bol-user.ts" />
     <None Remove="client-src\app\models\legal-entity-gbb-number.ts" />
@@ -119,6 +120,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="client-src\app\models\concession-condition-return-object.ts" />
     <TypeScriptCompile Include="client-src\app\models\transactional-concession-enum.ts" />
     <TypeScriptCompile Include="client-src\app\models\legal-entity-address.ts" />
     <TypeScriptCompile Include="client-src\app\models\legal-entity-gbb-number.ts" />
