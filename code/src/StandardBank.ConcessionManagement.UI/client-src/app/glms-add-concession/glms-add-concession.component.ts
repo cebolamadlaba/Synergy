@@ -51,10 +51,6 @@ import { forEach } from '@angular/router/src/utils/collection';
 export class GlmsAddConcessionComponent extends GlmsBaseService implements OnInit {
     private sub: any;
 
-    errorMessage: String;
-    validationError: String[];
-    saveMessage: String;
-    showHide = false;
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
@@ -62,13 +58,10 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
     sapbpid: number;
     today: string;
     glmsConcessionItemIndex: number;
-  
-    public glmsConcessionForm: FormGroup;
 
     entityName: string;
     entityNumber: string;
 
-    isLoading = true;
     selectedAccountNumbers: ClientAccountArray[];
     clientAccounts: ClientAccount[];
 
@@ -100,8 +93,6 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
 
     observablePeriodTypes: Observable<PeriodType[]>;
     periodTypes: PeriodType[];
-
-    selectedConditionTypes: ConditionType[];
 
     observableConditionTypes: Observable<ConditionType[]>;
     conditionTypes: ConditionType[];
@@ -276,13 +267,6 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
                 this.isLoading = false;
             });
         }
-    }
-
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
     }
 
     setInitialData(results: {}[], isForRiskGroup: boolean) {

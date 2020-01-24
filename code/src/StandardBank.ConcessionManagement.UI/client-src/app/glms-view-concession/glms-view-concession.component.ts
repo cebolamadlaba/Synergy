@@ -54,32 +54,19 @@ import { ConcessionSubStatus } from '../constants/concession-sub-status';
 export class GlmsViewConcessionComponent extends GlmsBaseService implements OnInit {
     private sub: any;
 
-    errorMessage: String;
-    validationError: String[];
-    saveMessage: String;
-    warningMessage: String;
-    showHide = false;
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
     legalEntity: LegalEntity;
     sapbpid: number;
     today: string;
-    canBcmApprove = false;
-    canPcmApprove = false;
     hasChanges = false;
     canExtend = false;
     canRenew = false;
-    canRecall = false;
-    isEditing = false;
-    motivationEnabled = false;
-    canEdit = false;
     glmsConcessionItemIndex: number;
-    concessionReferenceId: string;
     isApproving = false;
 
     capturedComments: string;
-    canApproveChanges: boolean;
     canResubmit = false;
     canUpdate = false;
     editType: string;
@@ -88,14 +75,9 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
     isInProgressRenewal = false;
     isApproved = false;
 
-    isRecalling = false;
-
-    public glmsConcessionForm: FormGroup;
-
     entityName: string;
     entityNumber: string;
 
-    isLoading = true;
     selectedAccountNumbers: ClientAccountArray[];
     clientAccounts: ClientAccount[];
 
@@ -128,15 +110,12 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
     observablePeriodTypes: Observable<PeriodType[]>;
     periodTypes: PeriodType[];
 
-    selectedConditionTypes: ConditionType[];
-
     observableConditionTypes: Observable<ConditionType[]>;
     conditionTypes: ConditionType[];
 
     selectedGlmsTierData: GlmsTierData[];
 
     observableGlmsConcession: Observable<GlmsConcession>;
-    glmsConcession: GlmsConcession;
 
     observableGlmsTierData: Observable<GlmsTierData[]>;
     glmsTierData: GlmsTierData[];
@@ -462,13 +441,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                 this.isLoading = false;
             });
         }
-    }
-
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
     }
 
     setInitialData(results: {}[], isForRiskGroup: boolean) {
