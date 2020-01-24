@@ -144,7 +144,7 @@
         <div class="row">
             <!-- SMT deal number -->
             <label>SMT Deal Number</label>
-            <input type="text" numbersOnly="true" class="form-control" [attr.disabled]="(isRecalling || canEdit) ? null : ''" formControlName="smtDealNumber" maxlength="16" required />
+            <input type="text" numbersOnly="true" class="form-control" [attr.disabled]="canEditSmtDealNumber()" formControlName="smtDealNumber" maxlength="16" required />
         </div>
     </div>
     <div class="col-md-7 col-md-offset-1">
@@ -155,7 +155,7 @@
         <div class="row">
             <!-- Motivation -->
             <label>Motivation</label>
-            <textarea class="form-control large-input" [attr.disabled]="motivationEnabled ? null : ''" maxlength="800" formControlName="motivation"></textarea>
+            <textarea class="form-control large-input" [attr.disabled]="isMotivationEnabled()" maxlength="800" formControlName="motivation"></textarea>
         </div>
 
         <div class="row" *ngIf="canBcmApprove || canPcmApprove || canApproveChanges">
@@ -207,31 +207,31 @@
                     <input formControlName="isExpiring" style="display: none;" />
 
                     <!-- Product type -->
-                    <select formControlName="productType" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="productTypeChanged(i)" [class.markred]="bcmhochanged(i,'productType')">
+                    <select formControlName="productType" class="form-control" [attr.disabled]="disableField(i,'productType')" (change)="productTypeChanged(i)" [class.markred]="bcmhochanged(i,'productType')">
                         <option *ngFor="let productTypeOption of productTypes" [ngValue]="productTypeOption">{{productTypeOption.description}}</option>
                     </select>
                 </td>
                 <td class="length-short">
                     <!-- Account number -->
-                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="canEdit ? null : ''" [class.markred]="bcmhochanged(i,'accountNumber')">
+                    <select formControlName="accountNumber" class="form-control" [attr.disabled]="disableField(i,'accountNumber')" [class.markred]="bcmhochanged(i,'accountNumber')">
                         <option *ngFor="let clientAccountOption of clientAccounts" [ngValue]="clientAccountOption">{{clientAccountOption.accountNumber}} - {{clientAccountOption.customerName}}</option>
                     </select>
                 </td>
                 <!-- Limit -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="limit" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimal($event)" [class.markred]="bcmhochanged(i,'limit')" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="limit" class="form-control" [attr.disabled]="disableField(i,'limit')" (change)="setTwoNumberDecimal($event)" [class.markred]="bcmhochanged(i,'limit')" /></td>
                 <!-- Term -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="term" class="form-control" [attr.disabled]="canEdit ? null : ''" [class.markred]="bcmhochanged(i,'term')" (keyup)="onTermValueChange(i)" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="term" class="form-control" [attr.disabled]="disableField(i,'term')" [class.markred]="bcmhochanged(i,'term')" (keyup)="onTermValueChange(i)" /></td>
                 <!-- MAP -->
                 <td class="length-short">
 
-                    <input type="text" formControlName="marginAgainstPrime" [attr.disabled]="canEdit ? null : ''" (change)="setTwoNumberDecimalMAP($event)" class="form-control" [class.markred]="bcmhochanged(i,'marginAgainstPrime')" />
+                    <input type="text" formControlName="marginAgainstPrime" [attr.disabled]="disableField(i,'marginAgainstPrime')" (change)="setTwoNumberDecimalMAP($event)" class="form-control" [class.markred]="bcmhochanged(i,'marginAgainstPrime')" />
 
                 </td>
                 <td class="length-short" *ngIf="isApproved"><input type="text" numbersOnly="true" formControlName="approvedMarginAgainstPrime" class="form-control" /></td>
 
                 <!-- Frequency -->
                 <td class="length-short">
-                    <select formControlName="frequency" class="form-control" [attr.disabled]="getlendingConcessionDetail(i,'show_frequency') ? null : ''" [class.markred]="bcmhochanged(i,'frequency')">
+                    <select formControlName="frequency" class="form-control" [attr.disabled]="disableField(i,'frequency')" [class.markred]="bcmhochanged(i,'frequency')">
                         <option>Monthly</option>
                         <option>Quarterly</option>
                         <option>Bi-annually </option>
@@ -241,25 +241,25 @@
 
                 <!-- Initiation fee -->
                 <td class="length-short">
-                    <input type="text" numbersOnly="true" formControlName="initiationFee" class="form-control" [attr.disabled]="canEdit ? null :''" (change)="setThreeNumberDecimal($event)" [class.markred]="bcmhochanged(i,'initiationFee')" />
+                    <input type="text" numbersOnly="true" formControlName="initiationFee" class="form-control" [attr.disabled]="disableField(i,'initiationFee')" (change)="setThreeNumberDecimal($event)" [class.markred]="bcmhochanged(i,'initiationFee')" />
                 </td>
 
                 <!-- Service fee -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="serviceFee" class="form-control" [attr.disabled]="getlendingConcessionDetail(i,'show_serviceFee') ? null :''" (change)="setThreeNumberDecimal($event)" [class.markred]="bcmhochanged(i,'serviceFee')" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="serviceFee" class="form-control" [attr.disabled]="disableField(i,'serviceFee')" (change)="setThreeNumberDecimal($event)" [class.markred]="bcmhochanged(i,'serviceFee')" /></td>
 
 
                 <td class="length-short">
                     <!-- Review fee type -->
-                    <select formControlName="reviewFeeType" class="form-control" [attr.disabled]="getlendingConcessionDetail(i,'show_reviewFeeType') ? null : ''" [class.markred]="bcmhochanged(i,'reviewFeeType')">
+                    <select formControlName="reviewFeeType" class="form-control" [attr.disabled]="disableField(i,'reviewFeeType')" [class.markred]="bcmhochanged(i,'reviewFeeType')">
                         <option *ngFor="let reviewFeeTypeOption of reviewFeeTypes" [ngValue]="reviewFeeTypeOption">{{reviewFeeTypeOption.description}}</option>
                     </select>
                 </td>
                 <!-- Review fee -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="reviewFee" class="form-control" [attr.disabled]="getlendingConcessionDetail(i,'show_reviewFee') ? null : ''" (change)="setThreeNumberDecimal($event)" [class.markred]="bcmhochanged(i,'reviewFee')" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="reviewFee" class="form-control" [attr.disabled]="disableField(i,'reviewFee')" (change)="setThreeNumberDecimal($event)" [class.markred]="bcmhochanged(i,'reviewFee')" /></td>
                 <!-- uffFee -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="uffFee" class="form-control" [attr.disabled]="getlendingConcessionDetail(i,'show_uffFee') ? null : ''" (change)="setThreeNumberDecimal($event)" [class.markred]="bcmhochanged(i,'uffFee')" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="uffFee" class="form-control" [attr.disabled]="disableField(i,'uffFee')" (change)="setThreeNumberDecimal($event)" [class.markred]="bcmhochanged(i,'uffFee')" /></td>
                 <!-- MRS/BRI -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="mrsEri" class="form-control" maxlength="2" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="mrsEri" class="form-control" maxlength="2" [attr.disabled]="disableField(i,'mrsEri')" /></td>
 
                 <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="expiryDate" class="form-control" [style.background-color]="getBackgroundColour(i)" [class.markred]="bcmhochanged(i,'expiryDate')" (change)="onExpiryDateChanged(i)" /></td>
                 <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>

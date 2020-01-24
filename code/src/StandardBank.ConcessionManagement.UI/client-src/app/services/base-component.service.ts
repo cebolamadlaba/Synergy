@@ -94,13 +94,13 @@ export class BaseComponentService {
         if (concessionListLength > 0) {
 
             //    // FOR TESTING: comment out the first part of the if-statement.
-            //    if (sapbpid == 0) {
-            //        this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Risk group. Please select the concession below and update");
-            //    } else {
-            //        this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Legal Entity. Please select the concession below and update");
-            //    }
+                if (sapbpid == 0) {
+                    this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Risk group. Please select the concession below and update");
+                } else {
+                    this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Legal Entity. Please select the concession below and update");
+                }
 
-            //} else {
+        } else {
             if (this.validationError == undefined) {
                 this.router.navigate([url, riskGroupNumber, sapbpid]);
             }

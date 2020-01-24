@@ -147,7 +147,6 @@
         <div class="row">
             <!-- SMT deal number -->
             <label>SMT Deal Number</label>
-            <!--<input type="text" numbersOnly="true" class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="isRecalling ? null : ''" />-->
             <input type="text" numbersOnly="true" class="form-control" [attr.disabled]="(isRecalling || canEdit) ? null : ''" formControlName="smtDealNumber" maxlength="16" required />
         </div>
     </div>
@@ -397,7 +396,5 @@
         </div>
     </div>
 </form>
-
-<!--<pre>{{cashConcessionForm.value | json}}</pre>-->
 
 <p>&nbsp;</p>

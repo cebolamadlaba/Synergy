@@ -135,7 +135,7 @@ export class TradeConcessionBaseService {
     isNullOrEmptyFlatFee(currentConcession: AbstractControl) {
         let flatFeeValue = this.getFieldValueBase(currentConcession, 'flatfee');
 
-        if (flatFeeValue == null || (<string>flatFeeValue).trim() == '')
+        if (flatFeeValue == null)
             return true;
 
         return false;
