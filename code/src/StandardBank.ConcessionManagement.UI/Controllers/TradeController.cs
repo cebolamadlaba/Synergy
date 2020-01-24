@@ -103,7 +103,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             //if there are any conditions that have been removed, delete them
             foreach (var condition in databaseTradeConcession.ConcessionConditions)
-                if (tradeConcession.ConcessionConditions.All(_ => _.ConcessionConditionId != condition.ConcessionConditionId))
+                if (tradeConcession.ConcessionConditions == null ||
+                    tradeConcession.ConcessionConditions.All(_ => _.ConcessionConditionId != condition.ConcessionConditionId))
                     await _mediator.Send(new DeleteConcessionCondition(condition, user));
 
             //if there are any concession details that have been removed delete them

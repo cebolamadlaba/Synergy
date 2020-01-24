@@ -194,6 +194,7 @@
                             <th>Interest Rate</th>
                             <th>Volume</th>
                             <th>Value</th>
+                            <th>Comment</th>
                             <th>Period</th>
                         </tr>
                     </thead>
@@ -210,6 +211,7 @@
                             <td><span *ngIf="itemrow.get('interestRate').value">{{itemrow.get('interestRate').value | number:'1.2-2'}}</span></td>
                             <td>{{itemrow.get('volume').value}}</td>
                             <td><span *ngIf="itemrow.get('value').value">{{itemrow.get('value').value | number:'1.2-2'}}</span></td>
+                            <td>{{itemrow.get('conditionComment').value}}</td>
                             <td>{{itemrow.get('periodType').value.description}} {{itemrow.get('period').value.description}}</td>
                         </tr>
                     </tbody>
@@ -223,70 +225,13 @@
     <div bsModal #manageConditionsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="manageConditionsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="col-md-12 modal-header">
-                    <h4>Manage Conditions</h4>
-                </div>
-                <div class="col-md-12 modal-body">
-                    <div class="row">
-                        <div class="col-md-12 modal-title">
-                            <button type="button" class="btn btn-primary" (click)="addNewConditionRow()">Add Condition</button>
-                        </div>
-                    </div>
-                    <table class="form-concessions-table" formArrayName="conditionItemsRows" style="width:100%">
-                        <thead class="form-concessions-table-headings">
-                            <tr *ngIf="cashConcessionForm.controls.conditionItemsRows.controls.length > 0">
-                                <th>Condition Type</th>
-                                <th>Product Type</th>
-                                <th>Interest Rate</th>
-                                <th>Volume</th>
-                                <th>Value</th>
-                                <th>Period Type</th>
-                                <th>Period</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody class="form-concessions-table-content">
-                            <tr *ngIf="cashConcessionForm.controls.conditionItemsRows.controls.length == 0">
-                                <td colspan="8" class="searchEmptyState">
-                                    No conditions added
-                                </td>
-                            </tr>
-                            <tr *ngFor="let itemrow of cashConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
-                                <td class="length-long">
-                                    <!-- Condition type -->
-                                    <select formControlName="conditionType" (change)="conditionTypeChanged(i)">
-                                        <option *ngFor="let conditionTypeOption of conditionTypes" [ngValue]="conditionTypeOption">{{conditionTypeOption.description}}</option>
-                                    </select>
-                                </td>
-                                <td class="length-long">
-                                    <!-- Product type -->
-                                    <select formControlName="conditionProduct" *ngIf="selectedConditionTypes[i] != null">
-                                        <option *ngFor="let conditionProductOption of selectedConditionTypes[i].conditionProducts" [ngValue]="conditionProductOption">{{conditionProductOption.description}}</option>
-                                    </select>
-                                </td>
-                                <!-- Interest rate -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="interestRate" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableInterestRate ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
-                                <!-- Volume -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionVolume ? null : ''" /></td>
-                                <!-- Value -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionValue ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
-                                <!-- Period type -->
-                                <td class="length-medium">
-                                    <select formControlName="periodType" (change)="validatePeriod(itemrow)">
-                                        <option *ngFor="let periodTypeOption of periodTypes" [ngValue]="periodTypeOption">{{periodTypeOption?.description}}</option>
-                                    </select>
-                                </td>
-                                <!-- Period -->
-                                <td class="length-long">
-                                    <select formControlName="period" (change)="validatePeriod(itemrow)">
-                                        <option *ngFor="let periodOption of periods" [ngValue]="periodOption">{{periodOption?.description}}</option>
-                                    </select>
-                                </td>
-                                <td><button class="btn-delete" type="button" (click)="deleteConditionRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <app-concession-condition-modal [selectedConditionTypes]="selectedConditionTypes"
+                                                [concessionForm]="cashConcessionForm"
+                                                [conditionTypes]="conditionTypes"
+                                                [periodTypes]="periodTypes"
+                                                [periods]="periods"
+                                                (myEvent)="validatePeriod($event)"></app-concession-condition-modal>
+
                 <div class="modal-footer">
                     <div class="float-right">
                         <button type="button" class="btn btn-primary" (click)="manageConditionsModal.hide()">Done</button>
@@ -306,24 +251,16 @@
                 <div class="col-md-12 modal-body">
                     <div class="row">
                         <div class="col-md-12 modal-title">
-                            <div class="col-md-6">
-                                <div class="image-upload">
-                                    Upload
-                                    <label for="file-input">
-                                        <img src="../../content/img/upload.png" />
-                                    </label>
-                                    <input id="file-input" type="file" (change)="onFileSelected($event)" />
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="image-download">
-                                    <div class="col-md-6">
-                                        Download
-                                        <a (click)="downloadFile('cash')">
-                                            <img src="../../content/img/download.png" />
-                                        </a>
-                                    </div>
-                                </div>
+                            <div class="image-upload">
+                                <label class="upImage btn" for="file-input">
+                                    <span>Upload</span>
+                                    <i class="fa fa-chevron-up" aria-hidden="true"></i>
+                                </label>
+                                <input id="file-input" type="file" (change)="onFileSelected($event)" />
+                                <button class="downImage btn" for="file-output" (click)="downloadFile('cash')">
+                                    <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                                    <span>Download</span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -345,6 +282,3 @@
         </div>
     </div>
 </form>
-
-
-<!--<pre>{{cashConcessionForm.value | json}}</pre>-->

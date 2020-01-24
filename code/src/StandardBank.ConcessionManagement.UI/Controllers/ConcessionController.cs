@@ -174,15 +174,15 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("SearchConsessions")]
         public IActionResult SearchConsessions()
         {
-            var userId = _siteHelper.GetUserIdForFiltering(this);
-            return Ok(_concessionManager.SearchConsessions(userId));
+            var user = _siteHelper.LoggedInUser(this);
+            return Ok(_concessionManager.SearchConsessions(user));
         }
 
         [Route("SearchConsessions/{region}/{centre}/{status}/{datefilter}")]
         public IActionResult SearchConsessions(int region, int centre, string status, DateTime datefilter)
         {
-            var userId = _siteHelper.GetUserIdForFiltering(this);
-            return Ok(_concessionManager.SearchConsessions(region, centre, status, datefilter, userId));
+            var user = _siteHelper.LoggedInUser(this);
+            return Ok(_concessionManager.SearchConsessions(region, centre, status, datefilter, user));
         }
 
         [Route("GetLegalEntityAddress/{legalEntityId}")]

@@ -24,4 +24,5 @@ export class ConcessionCondition {
     actualVolume: string;
     actualValue: string;
     actualTurnover: string;
+    conditionComment: string;
 }

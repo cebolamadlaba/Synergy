@@ -9,7 +9,7 @@ export class FileService {
     constructor(private http: Http) { }
 
     downloadFile(name: string): Observable<HttpResponse<Blob>> {
-        return this.http.get('http://localhost:20201/assets/documents/'+name+'.xlsx').map(this.extractData).catch(this.handleErrorObservable);
+        return this.http.get('http://psdc-sw001inav:20201/assets/documents/'+name+'.xlsx').map(this.extractData).catch(this.handleErrorObservable);
     }
 
     private extractData(response: Response) {
