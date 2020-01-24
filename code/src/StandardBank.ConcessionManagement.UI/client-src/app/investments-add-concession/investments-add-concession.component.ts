@@ -578,7 +578,6 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
 
         if ($event.target.value) {
             $event.target.value = this.baseComponentService.formatDecimalThree($event.target.value);
-            //$event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
         }
         else {
 
