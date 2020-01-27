@@ -114,7 +114,7 @@ export class GlmsBaseService extends BaseComponentService {
                 return this.saveMessage && !this.isLoading;
             case 'warningMessage':
                 return this.warningMessage && !this.isLoading;
-            case 'SMTDealNumber':
+            case 'sntDealNumber':
                 return (this.isRecalling || this.canEdit) ? null : '';
             case 'motivationEnabled':
                 return this.motivationEnabled ? null : '';
@@ -122,7 +122,7 @@ export class GlmsBaseService extends BaseComponentService {
                 return this.saveMessage ? '' : null;
             case 'Comments':
                 return this.canBcmApprove || this.canPcmApprove || this.canApproveChanges;
-            case 'NewConcession':
+            case 'newConcession':
                 return this.canPcmApprove || this.isEditing || this.isRecalling;
             case 'viewConcessionTableCanEdit':
                 return this.canEdit ? null : '';
@@ -140,13 +140,13 @@ export class GlmsBaseService extends BaseComponentService {
                 return !this.glmsConcession.concession.concessionRelationshipDetails || this.glmsConcession.concession.concessionRelationshipDetails.length == 0;
             case 'ProductType':
                 return this.selectedConditionTypes[index] != null;
-            case 'InterestRateDisable':
+            case 'interestRateDisable':
                 return this.selectedConditionTypes[index] != null && this.selectedConditionTypes[index].enableInterestRate ? null : '';
-            case 'VolumeDisable':
+            case 'volumeDisable':
                 return this.selectedConditionTypes[index] != null && this.selectedConditionTypes[index].enableConditionVolume ? null : '';
-            case 'ValueDisable':
+            case 'valueDisable':
                 return this.selectedConditionTypes[index] != null && this.selectedConditionTypes[index].enableConditionValue ? null : '';
-            case 'AddCondition':
+            case 'addCondition':
                 return this.canBcmApprove || this.canPcmApprove || this.isEditing || this.isRecalling;
             case 'parentReferenceCheck':
                 return concessionRelationship.parentConcessionReference == this.concessionReferenceId;
