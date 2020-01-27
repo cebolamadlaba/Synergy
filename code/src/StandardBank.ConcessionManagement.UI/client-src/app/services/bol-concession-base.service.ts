@@ -50,15 +50,15 @@ export class BolConcessionBaseService {
                 return this.saveMessage && !this.isLoading;
             case 'warningMessage':
                 return this.warningMessage && !this.isLoading;
-            case 'SMTDealNumber':
+            case 'smtDealNumber':
                 return (this.isRecalling || this.canEdit) ? null : '';
             case 'motivationEnabled':
                 return this.motivationEnabled ? null : '';
             case 'saveDisable':
                 return this.saveMessage ? '' : null;
-            case 'Comments':
+            case 'comments':
                 return this.canBcmApprove || this.canPcmApprove || this.canApproveChanges;
-            case 'NewConcession':
+            case 'newConcession':
                 return this.canPcmApprove || this.isEditing || this.isRecalling;
             case 'viewConcessionTableCanEdit':
                 return this.canEdit ? null : '';
@@ -74,15 +74,15 @@ export class BolConcessionBaseService {
                 return !this.bolConcession.concession.concessionComments || this.bolConcession.concession.concessionComments.length == 0;
             case 'noRelatedConcessions':
                 return !this.bolConcession.concession.concessionRelationshipDetails || this.bolConcession.concession.concessionRelationshipDetails.length == 0;
-            case 'ProductType':
+            case 'productType':
                 return this.selectedConditionTypes[index] != null;
-            case 'InterestRateDisable':
+            case 'interestRateDisable':
                 return this.selectedConditionTypes[index] != null && this.selectedConditionTypes[index].enableInterestRate ? null : '';
-            case 'VolumeDisable':
+            case 'volumeDisable':
                 return this.selectedConditionTypes[index] != null && this.selectedConditionTypes[index].enableConditionVolume ? null : '';
-            case 'ValueDisable':
+            case 'valueDisable':
                 return this.selectedConditionTypes[index] != null && this.selectedConditionTypes[index].enableConditionValue ? null : '';
-            case 'AddCondition':
+            case 'addCondition':
                 return this.canBcmApprove || this.canPcmApprove || this.isEditing || this.isRecalling;
             case 'parentReferenceCheck':
                 return concessionRelationship.parentConcessionReference == this.concessionReferenceId;
