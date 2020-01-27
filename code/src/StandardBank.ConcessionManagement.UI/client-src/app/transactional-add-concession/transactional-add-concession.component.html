@@ -253,9 +253,9 @@
                                         <option *ngFor="let conditionProductOption of selectedConditionTypes[i].conditionProducts" [ngValue]="conditionProductOption">{{conditionProductOption.description}}</option>
                                     </select>
                                 </td>
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="interestRate" [attr.disabled]="disableFieldBase('InterestRateDisable',i)" (change)="setTwoNumberDecimal($event)" /></td>
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="disableFieldBase('VolumeDisable',i)" /></td>
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="disableFieldBase('ValueDisable',i)" (change)="setTwoNumberDecimal($event)" /></td>
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="interestRate" [attr.disabled]="disableFieldBase('interestRateDisable',i)" (change)="setTwoNumberDecimal($event)" /></td>
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="disableFieldBase('volumeDisable',i)" /></td>
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="disableFieldBase('valueDisable',i)" (change)="setTwoNumberDecimal($event)" /></td>
                                 <td class="length-medium">
                                     <!-- Period type -->
                                     <select formControlName="periodType" (change)="validatePeriod(itemrow)">

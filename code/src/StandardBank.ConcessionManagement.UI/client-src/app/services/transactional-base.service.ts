@@ -155,11 +155,11 @@ export class TransactionalBaseService {
                 return !this.transactionalConcession.concession.concessionRelationshipDetails || this.transactionalConcession.concession.concessionRelationshipDetails.length == 0;
             case 'productType':
                 return this.selectedConditionTypes[index] != null;
-            case 'InterestRateDisable':
+            case 'interestRateDisable':
                 return this.selectedConditionTypes[index] != null && this.selectedConditionTypes[index].enableInterestRate ? null : '';
-            case 'VolumeDisable':
+            case 'volumeDisable':
                 return this.selectedConditionTypes[index] != null && this.selectedConditionTypes[index].enableConditionVolume ? null : '';
-            case 'ValueDisable':
+            case 'valueDisable':
                 return this.selectedConditionTypes[index] != null && this.selectedConditionTypes[index].enableConditionValue ? null : '';
             case 'parentReferenceCheck':
                 return concessionRelationship.parentConcessionReference == this.concessionReferenceId;
