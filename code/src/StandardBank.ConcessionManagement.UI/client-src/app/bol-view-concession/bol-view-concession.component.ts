@@ -168,7 +168,7 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
     }
 
     getInitialData() {
-        if (this.riskGroupNumber != null && this.riskGroupNumber != 0) {
+        if (this.riskGroupNumber !== 0) {
             Observable.forkJoin([
                 this.lookupDataService.getConditionTypes(),
                 this.lookupDataService.getBOLChargeCodeTypes(),
@@ -184,7 +184,7 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
                 this.isLoading = false;
             });
         }
-        else if (this.sapbpid != null && this.sapbpid != 0) {
+        else if (this.sapbpid !== 0) {
             Observable.forkJoin([
                 this.lookupDataService.getConditionTypes(),
                 this.lookupDataService.getBOLChargeCodeTypes(),
