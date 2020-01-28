@@ -10,6 +10,7 @@ import { SlabType } from '../models/slab-type';
 import { BaseComponentService } from './base-component.service';
 import { Router } from '@angular/router';
 import { UserService } from './user.service';
+import { ConditionType } from "../models/condition-type";
 
 @Injectable()
 export class GlmsBaseService extends BaseComponentService {
@@ -17,7 +18,7 @@ export class GlmsBaseService extends BaseComponentService {
     tierValidationError: String[];
 
     constructor(public http: Http, public router: Router, public userService: UserService) {
-        super(router,userService);
+        super(router, userService);
     }
 
     //add glms concession look up section
@@ -50,7 +51,7 @@ export class GlmsBaseService extends BaseComponentService {
         const url = "/api/Concession/SlabType";
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
-  
+
 
     private extractData(response: Response) {
         let body = response.json();
@@ -66,6 +67,40 @@ export class GlmsBaseService extends BaseComponentService {
         if (!this.tierValidationError)
             this.tierValidationError = [];
         this.tierValidationError.push(validationDetail);
+    }
+
+    disableFieldBase(fieldname: string, canEdit: boolean, index: number = null, selectedConditionTypes: ConditionType[], isRecalling: boolean = null, motivationEnabled: boolean = null) {
+        switch (fieldname) {
+            case 'smtDealNumber':
+                if (isRecalling == null) {
+                    return canEdit ? null : '';
+                } else {
+                    return (isRecalling || canEdit) ? null : '';
+                }
+            case 'motivation':
+                if (motivationEnabled == null) {
+                    return canEdit ? null : '';
+                } else {
+                    return motivationEnabled ? null : '';
+                }
+            case 'concessions':
+            case 'glmsGroup':
+            case 'interestPricingCategory':
+            case 'interestType':
+            case 'slabType':
+            case 'expiryDate':
+            case 'addTier':
+            case 'manageConditions':
+                return canEdit ? null : '';
+            case 'interestRate':
+                return selectedConditionTypes[index] != null && selectedConditionTypes[index].enableInterestRate ? null : '';
+            case 'volume':
+                return selectedConditionTypes[index] != null && selectedConditionTypes[index].enableConditionVolume ? null : '';
+            case 'value':
+                return selectedConditionTypes[index] != null && selectedConditionTypes[index].enableConditionValue ? null : '';
+            default:
+                break;
+        }
     }
 
 }

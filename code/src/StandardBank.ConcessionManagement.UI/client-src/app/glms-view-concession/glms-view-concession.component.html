@@ -105,20 +105,20 @@
 
         <div class="row">
             <label>SMT Deal Number</label>
-            <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="(isRecalling || canEdit) ? null : ''" />
+            <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="disableField('smtDealNumber')" />
         </div>
 
     </div>
     <div class="col-md-7 col-md-offset-1">
         <label>Motivation</label>
-        <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="motivationEnabled ? null : ''"></textarea>
+        <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="disableField('motivation')"></textarea>
     </div>
 
     <!-- Concession table -->
     <div class="col-md-12" style="border-bottom: 1px solid gray; margin-bottom: 15px;">
         <div class="row">
             <h3 class="table-title">Concessions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" style="margin-top: 15px;" [attr.disabled]="canEdit ? null : ''" *ngIf="!saveMessage">New Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" style="margin-top: 15px;" [attr.disabled]="disableField('concessions')" *ngIf="!saveMessage">New Concession</button>
         </div>
     </div>
 
@@ -139,34 +139,34 @@
             <tr *ngFor="let itemrow of glmsConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
                 <td class="length-long">
                     <!-- Group -->
-                    <select formControlName="glmsGroup" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                    <select formControlName="glmsGroup" class="form-control" [attr.disabled]="disableField('glmsGroup',i)">
                         <option *ngFor="let glmsGroupOption of glmsGroup" [ngValue]="glmsGroupOption">{{glmsGroupOption.groupName}}</option>
                     </select>
                 </td>
                 <td class="length-long">
                     <!-- Interest Pricing Category -->
-                    <select formControlName="interestPricingCategory" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                    <select formControlName="interestPricingCategory" class="form-control" [attr.disabled]="disableField('interestPricingCategory',i)">
                         <option *ngFor="let interestPricingCategoryOption of interestPricingCategory" [ngValue]="interestPricingCategoryOption">{{interestPricingCategoryOption.description}}</option>
                     </select>
                 </td>
                 <td class="length-short">
                     <!-- Interest Type -->
-                    <select formControlName="interestType" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                    <select formControlName="interestType" class="form-control" [attr.disabled]="disableField('interestType',i)">
                         <option *ngFor="let interestTypeOption of interestType" [ngValue]="interestTypeOption"> {{interestTypeOption.description}}</option>
                     </select>
                 </td>
                 <td class="length-short">
                     <!-- Slab Type -->
-                    <select formControlName="slabType" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                    <select formControlName="slabType" class="form-control" [attr.disabled]="disableField('slabType',i)">
                         <option *ngFor="let slabTypeOption of slabType" [ngValue]="slabTypeOption"> {{slabTypeOption.description}}</option>
                     </select>
                 </td>
                 <!-- expiry Date-->
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="disableField('expiryDate',i)" /></td>
                 <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>
 
                 <!--Tier information-->
-                <td><button class="length-long btn btn-primary" (click)="openTier(manageTierModal.show(),i)" [attr.disabled]="canEdit ? null : ''">Add Tier</button></td>
+                <td><button class="length-long btn btn-primary" (click)="openTier(manageTierModal.show(),i)" [attr.disabled]="disableField('addTier',i)">Add Tier</button></td>
 
                 <td class="delete" *ngIf="canArchive">
 
@@ -184,7 +184,7 @@
     <div class="col-md-12">
         <div class="row">
             <h3 class="table-title">Conditions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;" [attr.disabled]="canEdit ? null : ''" *ngIf="!saveMessage">Manage Conditions</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;" [attr.disabled]="disableField('manageConditions')" *ngIf="!saveMessage">Manage Conditions</button>
 
             <div class="table-container">
                 <table class="table table-bordered table-hover header-fixed table-striped">
@@ -341,11 +341,11 @@
                                     </select>
                                 </td>
                                 <!-- Interest rate -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="interestRate" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableInterestRate ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="interestRate" [attr.disabled]="disableField('interestRate',i)" (change)="setTwoNumberDecimal($event)" /></td>
                                 <!-- Volume -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionVolume ? null : ''" /></td>
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="disableField('volume',i)" /></td>
                                 <!-- Value -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionValue ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
+                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="disableField('value',i)" (change)="setTwoNumberDecimal($event)" /></td>
                                 <!-- Period type -->
                                 <td class="length-medium">
                                     <select formControlName="periodType" (change)="validatePeriod(itemrow)">
@@ -443,7 +443,6 @@
                 </div>
                 <div class="modal-footer">
                     <div class="float-right">
-                        <!--<button type="button" class="btn btn-primary" (click)="manageTierModal.hide()">Cancel</button>-->
                         <button type="button" class="btn btn-primary" (click)="closeTierModal(manageTierModal.hide())">Done</button>
                     </div>
                 </div>
@@ -474,9 +473,4 @@
     </div>
 </form>
 
-
-
-<!--<pre>{{glmsConcessionForm.value | json}}</pre>-->
-
 <p>&nbsp;</p>
-

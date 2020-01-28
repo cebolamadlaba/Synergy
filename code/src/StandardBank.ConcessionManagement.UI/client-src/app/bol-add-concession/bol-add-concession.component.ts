@@ -36,19 +36,16 @@ import { UserService } from "../services/user.service";
 import { BaseComponentService } from '../services/base-component.service';
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
+import { BolConcessionBaseService } from '../services/bol-concession-base.service';
 
 @Component({
     selector: 'app-bol-add-concession',
     templateUrl: './bol-add-concession.component.html',
     styleUrls: ['./bol-add-concession.component.css']
 })
-export class BolAddConcessionComponent implements OnInit, OnDestroy {
+export class BolAddConcessionComponent extends BolConcessionBaseService implements OnInit, OnDestroy {
     private sub: any;
 
-    errorMessage: String;
-    validationError: String[];
-    saveMessage: String;
-    showHide = false;
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
@@ -58,12 +55,8 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
     observableBolView: Observable<BolView>;
     bolView: BolView = new BolView();
 
-    public bolConcessionForm: FormGroup;
-
     entityName: string;
     entityNumber: string;
-
-    isLoading = true;
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
@@ -80,8 +73,6 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
     observableLegalEntityBOLUsers: Observable<LegalEntityBOLUser[]>;
     legalentitybolusers: LegalEntityBOLUser[];
 
-    selectedConditionTypes: ConditionType[];
-
     selectedProducts: BolChargeCodeType[];
 
     observableConditionTypes: Observable<ConditionType[]>;
@@ -95,6 +86,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         @Inject(LookupDataService) private lookupDataService,
         @Inject(BolConcessionService) private bolConcessionService,
         private baseComponentService: BaseComponentService) {
+        super();
         this.riskGroup = new RiskGroup();
 
         this.bolchargecodetypes = [new BolChargeCodeType()];
@@ -106,7 +98,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         this.conditionTypes = [new ConditionType()];
         this.selectedConditionTypes = [new ConditionType()];
         this.selectedProducts = [new BolChargeCodeType()];
-     
+
     }
 
     ngOnInit() {
