@@ -38,7 +38,13 @@ import { TransactionalBaseService } from '../services/transactional-base.service
 })
 export class TransactionalViewConcessionComponent extends TransactionalBaseService implements OnInit, OnDestroy {
 
+    concessionReferenceId: string;
+    public transactionalConcessionForm: FormGroup;
     private sub: any;
+    errorMessage: String;
+    validationError: String[];
+    saveMessage: String;
+    warningMessage: String;
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
@@ -48,11 +54,21 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
     entityNumber: string;
     createdDate: string;
 
+    selectedConditionTypes: ConditionType[];
     selectedTransactionTypes: TransactionType[];
+    isLoading = true;
+    canBcmApprove = false;
+    canPcmApprove = false;
     hasChanges = false;
     canExtend = false;
     canRenew = false;
+    canRecall = false;
+    isEditing = false;
+    motivationEnabled = false;
+    canEdit = false;
+    isRecalling = false;
     capturedComments: string;
+    canApproveChanges: boolean;
     canResubmit = false;
     canUpdate = false;
     editType: string;
@@ -60,6 +76,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
     isInProgressExtension = false;
     isInProgressRenewal = false;
     isApproved = false;
+    showHide = false;
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
@@ -77,6 +94,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
     transactionTypes: TransactionType[];
 
     observableTransactionalConcession: Observable<TransactionalConcession>;
+    transactionalConcession: TransactionalConcession;
 
     observableTransactionalFinancial: Observable<TransactionalFinancial>;
     transactionalFinancial: TransactionalFinancial;
@@ -608,9 +626,14 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
             transactionalConcession.concessionConditions.push(concessionCondition);
         }
 
-        this.checkConcessionExpiryDate(transactionalConcession);
-
         return transactionalConcession;
+    }
+
+    addValidationError(validationDetail) {
+        if (!this.validationError)
+            this.validationError = [];
+
+        this.validationError.push(validationDetail);
     }
 
     goBack() {
@@ -1128,5 +1151,9 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
         if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
             this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
         }
+    }
+
+    disableField(fieldname: string, index: number = null) {
+        return this.disableFieldBase(fieldname, this.canEdit, index, this.selectedConditionTypes, this.isRecalling, this.motivationEnabled)
     }
 }
