@@ -10,37 +10,15 @@ import { SlabType } from '../models/slab-type';
 import { BaseComponentService } from './base-component.service';
 import { Router } from '@angular/router';
 import { UserService } from './user.service';
-import { ConcessionRelationshipDetail } from '../models/concession-relationship-detail';
-import { FormGroup } from '@angular/forms';
-import { GlmsConcession } from '../models/glms-concession';
-import { ConditionType } from '../models/condition-type';
+import { ConditionType } from "../models/condition-type";
 
 @Injectable()
 export class GlmsBaseService extends BaseComponentService {
 
     tierValidationError: String[];
 
-    errorMessage: String;
-    validationError: String[];
-    saveMessage: String;
-    warningMessage: String;
-    showHide = false;
-    isLoading = true;
-    isRecalling = false;
-    canEdit = false;
-    motivationEnabled = false;
-    canBcmApprove = false;
-    canPcmApprove = false;
-    canApproveChanges: boolean;
-    isEditing = false;
-    public glmsConcessionForm: FormGroup;
-    glmsConcession: GlmsConcession;
-    selectedConditionTypes: ConditionType[];
-    concessionReferenceId: string;
-    canRecall = false;
-
     constructor(public http: Http, public router: Router, public userService: UserService) {
-        super(router,userService);
+        super(router, userService);
     }
 
     //add glms concession look up section
@@ -73,7 +51,7 @@ export class GlmsBaseService extends BaseComponentService {
         const url = "/api/Concession/SlabType";
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
-  
+
 
     private extractData(response: Response) {
         let body = response.json();
@@ -91,73 +69,38 @@ export class GlmsBaseService extends BaseComponentService {
         this.tierValidationError.push(validationDetail);
     }
 
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        if (!this.validationError.includes(validationDetail)) {
-            this.validationError.push(validationDetail);
-        }
-    }
-
-    compressClick() {
-        this.showHide = !this.showHide;
-    }
-
-    disableFieldBase(fieldname: string, index: number = null, concessionRelationship: ConcessionRelationshipDetail = null) {
+    disableFieldBase(fieldname: string, canEdit: boolean, index: number = null, selectedConditionTypes: ConditionType[], isRecalling: boolean = null, motivationEnabled: boolean = null) {
         switch (fieldname) {
-            case 'errorMessage':
-                return (this.errorMessage) && !this.isLoading;
-            case 'validationError':
-                return (this.validationError) && !this.isLoading;
-            case 'saveMessage':
-                return this.saveMessage && !this.isLoading;
-            case 'warningMessage':
-                return this.warningMessage && !this.isLoading;
-            case 'sntDealNumber':
-                return (this.isRecalling || this.canEdit) ? null : '';
-            case 'motivationEnabled':
-                return this.motivationEnabled ? null : '';
-            case 'saveDisable':
-                return this.saveMessage ? '' : null;
-            case 'Comments':
-                return this.canBcmApprove || this.canPcmApprove || this.canApproveChanges;
-            case 'newConcession':
-                return this.canPcmApprove || this.isEditing || this.isRecalling;
-            case 'viewConcessionTableCanEdit':
-                return this.canEdit ? null : '';
-            case 'concessionItemRowsDelete':
-                return this.glmsConcessionForm.controls.concessionItemRows.value.length > 1 && !this.saveMessage;
-            case 'hasNoConditions':
-                return this.glmsConcessionForm.controls.conditionItemsRows.value.length == 0;
-            case 'hasConditions':
-                return this.glmsConcessionForm.controls.conditionItemsRows.value.length > 0;
-            case 'archiveDelete':
-                return this.glmsConcessionForm.controls.concessionItemRows.value.length > 1;
-            case 'noCommentsAdded':
-                return !this.glmsConcession.concession.concessionComments || this.glmsConcession.concession.concessionComments.length == 0;
-            case 'noRelatedConcessions':
-                return !this.glmsConcession.concession.concessionRelationshipDetails || this.glmsConcession.concession.concessionRelationshipDetails.length == 0;
-            case 'ProductType':
-                return this.selectedConditionTypes[index] != null;
-            case 'interestRateDisable':
-                return this.selectedConditionTypes[index] != null && this.selectedConditionTypes[index].enableInterestRate ? null : '';
-            case 'volumeDisable':
-                return this.selectedConditionTypes[index] != null && this.selectedConditionTypes[index].enableConditionVolume ? null : '';
-            case 'valueDisable':
-                return this.selectedConditionTypes[index] != null && this.selectedConditionTypes[index].enableConditionValue ? null : '';
-            case 'addCondition':
-                return this.canBcmApprove || this.canPcmApprove || this.isEditing || this.isRecalling;
-            case 'parentReferenceCheck':
-                return concessionRelationship.parentConcessionReference == this.concessionReferenceId;
-            case 'childReferenceCheck':
-                return concessionRelationship.childConcessionReference == this.concessionReferenceId;
-            case 'deleteConcessionRow':
-                return (this.canBcmApprove || this.canPcmApprove || this.isEditing || this.isRecalling) && this.glmsConcessionForm.controls.concessionItemRows.value.length > 1;
-            case 'canRecall':
-                return this.canRecall && !this.isRecalling;
+            case 'smtDealNumber':
+                if (isRecalling == null) {
+                    return canEdit ? null : '';
+                } else {
+                    return (isRecalling || canEdit) ? null : '';
+                }
+            case 'motivation':
+                if (motivationEnabled == null) {
+                    return canEdit ? null : '';
+                } else {
+                    return motivationEnabled ? null : '';
+                }
+            case 'concessions':
+            case 'glmsGroup':
+            case 'interestPricingCategory':
+            case 'interestType':
+            case 'slabType':
+            case 'expiryDate':
+            case 'addTier':
+            case 'manageConditions':
+                return canEdit ? null : '';
+            case 'interestRate':
+                return selectedConditionTypes[index] != null && selectedConditionTypes[index].enableInterestRate ? null : '';
+            case 'volume':
+                return selectedConditionTypes[index] != null && selectedConditionTypes[index].enableConditionVolume ? null : '';
+            case 'value':
+                return selectedConditionTypes[index] != null && selectedConditionTypes[index].enableConditionValue ? null : '';
             default:
                 break;
         }
     }
+
 }
