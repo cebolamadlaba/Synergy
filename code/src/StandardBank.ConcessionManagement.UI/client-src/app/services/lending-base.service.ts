@@ -3,6 +3,8 @@ import { ConditionType } from "../models/condition-type";
 
 @Injectable()
 export class LendingBaseService {
+    validationError: String[];
+
     constructor() { }
 
     disableFieldBase(
@@ -18,5 +20,12 @@ export class LendingBaseService {
             case 'value':
                 return selectedConditionTypes[index] != null && selectedConditionTypes[index].enableConditionValue ? null : '';
         }
+    }
+
+    addValidationError(validationDetail) {
+        if (!this.validationError)
+            this.validationError = [];
+
+        this.validationError.push(validationDetail);
     }
 }

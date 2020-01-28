@@ -42,7 +42,7 @@ import { EditTypeEnum } from '../models/edit-type-enum';
     styleUrls: ['./lending-view-concession.component.css'],
     providers: [DatePipe]
 })
-export class LendingViewConcessionComponent extends LendingBaseService implements OnInit, OnDestroy {
+export class LendingViewConcessionComponent implements OnInit, OnDestroy {
 
     myDecimal: number;
 
@@ -127,9 +127,10 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         private datepipe: DatePipe,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(LendingService) private lendingService,
+        @Inject(LendingBaseService) private lendingBaseService,
         @Inject(UserConcessionsService) private userConcessionsService,
         private baseComponentService: BaseComponentService) {
-        super();
+        
         this.riskGroup = new RiskGroup();
         this.reviewFeeTypes = [new ReviewFeeType()];
         this.productTypes = [new ProductType()];
@@ -533,7 +534,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
         var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidationForView(itemrow.controls['expiryDate'].value, formattedDateOpened);
         if (validationErrorMessage != null) {
-            this.addValidationError(validationErrorMessage);
+            this.lendingBaseService.addValidationError(validationErrorMessage);
         }
     }
 
@@ -545,7 +546,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         let term = control.controls[rowIndex].get('term').value;
 
         if (term < MOnthEnum.ThreeMonths) {
-            this.addValidationError("Minimum term captured should be 3 months");
+            this.lendingBaseService.addValidationError("Minimum term captured should be 3 months");
         };
     }
 
@@ -630,13 +631,6 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         }
     }  
 
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
-    }
-
     goBack() {
         this.location.back();
     }
@@ -651,7 +645,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         if (this.lendingConcessionForm.controls['smtDealNumber'].value)
             lendingConcession.concession.smtDealNumber = this.lendingConcessionForm.controls['smtDealNumber'].value;
         else
-            this.addValidationError("SMT Deal Number not captured");
+            this.lendingBaseService.addValidationError("SMT Deal Number not captured");
 
         if (this.lendingConcessionForm.controls['motivation'].value)
             lendingConcession.concession.motivation = this.lendingConcessionForm.controls['motivation'].value;
@@ -689,7 +683,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                 hasProductType = true;
             }
             else
-                this.addValidationError("Product type not selected");
+                this.lendingBaseService.addValidationError("Product type not selected");
 
             if (concessionFormItem.get('accountNumber').value) {
                 lendingConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
@@ -697,7 +691,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                 hasLegalEntityId = true;
                 hasLegalEntityAccountId = true;
             } else {
-                this.addValidationError("Client account not selected");
+                this.lendingBaseService.addValidationError("Client account not selected");
             }
 
             if (concessionFormItem.get('limit').value)
@@ -705,7 +699,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
             if (concessionFormItem.get('term').value) {
                 if (concessionFormItem.get('term').value < MOnthEnum.ThreeMonths) {
-                    this.addValidationError("Minimum term captured should be 3 months");
+                    this.lendingBaseService.addValidationError("Minimum term captured should be 3 months");
                 } else {
                     lendingConcessionDetail.term = concessionFormItem.get('term').value;
                 }
@@ -738,13 +732,13 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
             if (concessionFormItem.get('mrsEri').value == "" ||
                 concessionFormItem.get('mrsEri').value.toString().indexOf(".") > -1) {
-                this.addValidationError("MRS/ERI cannot be empty or a decimal");
+                this.lendingBaseService.addValidationError("MRS/ERI cannot be empty or a decimal");
             
             } else {
 
                 var mrsEriValue = parseInt(concessionFormItem.get('mrsEri').value, 10);
                 if (mrsEriValue < MrsEriEnum.MinMrsEri || mrsEriValue > MrsEriEnum.MaxMrsEri) {
-                    this.addValidationError("MRS/ERI numbers must from 12 to 25");
+                    this.lendingBaseService.addValidationError("MRS/ERI numbers must from 12 to 25");
                 } else {
                     lendingConcessionDetail.mrsEri = concessionFormItem.get('mrsEri').value;
                 }   
@@ -761,7 +755,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                     concessionFormItem.get('accountNumber').value.legalEntityAccountId);
 
                 if (hasDuplicates) {
-                    this.addValidationError("Duplicate Account / Product pricing found. Please select different account.");
+                    this.lendingBaseService.addValidationError("Duplicate Account / Product pricing found. Please select different account.");
 
                     break;
                 }
@@ -783,12 +777,12 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             if (conditionFormItem.get('conditionType').value)
                 concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;
             else
-                this.addValidationError("Condition type not selected");
+                this.lendingBaseService.addValidationError("Condition type not selected");
 
             if (conditionFormItem.get('conditionProduct').value)
                 concessionCondition.conditionProductId = conditionFormItem.get('conditionProduct').value.id;
             else
-                this.addValidationError("Condition product not selected");
+                this.lendingBaseService.addValidationError("Condition product not selected");
 
             if (conditionFormItem.get('interestRate').value)
                 concessionCondition.interestRate = conditionFormItem.get('interestRate').value;
@@ -799,7 +793,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             if (conditionFormItem.get('value').value == null || (<string>conditionFormItem.get('value').value).length < 1) {
                 var value = conditionFormItem.get('conditionType').value;
                 if (value != null && value.enableConditionValue == true)
-                    this.addValidationError("Conditions: 'Value' is a mandatory field");
+                    this.lendingBaseService.addValidationError("Conditions: 'Value' is a mandatory field");
             }
             else if (conditionFormItem.get('value').value)
                 concessionCondition.conditionValue = conditionFormItem.get('value').value;
@@ -807,17 +801,17 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             if (conditionFormItem.get('periodType').value) {
                 concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
             } else {
-                this.addValidationError("Period type not selected");
+                this.lendingBaseService.addValidationError("Period type not selected");
             }
 
             if (conditionFormItem.get('period').value) {
                 concessionCondition.periodId = conditionFormItem.get('period').value.id;
             } else {
-                this.addValidationError("Period not selected");
+                this.lendingBaseService.addValidationError("Period not selected");
             }
 
             if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
-                this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+                this.lendingBaseService.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
             }
 
             lendingConcession.concessionConditions.push(concessionCondition);
@@ -844,7 +838,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         this.isLoading = true;
 
         this.errorMessage = null;
-        this.validationError = null;
+        this.lendingBaseService.validationError = null;
         this.baseComponentService.isAppprovingOrDeclining = true;
 
         var lendingConcession = this.getLendingConcession(false);
@@ -876,7 +870,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         this.isLoading = true;
 
         this.errorMessage = null;
-        this.validationError = null;
+        this.lendingBaseService.validationError = null;
         this.baseComponentService.isAppprovingOrDeclining = true;
 
         var lendingConcession = this.getLendingConcession(false);
@@ -909,7 +903,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         this.isLoading = true;
 
         this.errorMessage = null;
-        this.validationError = null;
+        this.lendingBaseService.validationError = null;
         this.baseComponentService.isAppprovingOrDeclining = true;
 
         var lendingConcession = this.getLendingConcession(false);
@@ -1018,7 +1012,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     pcmDeclineConcession() {
         this.isLoading = true;
         this.errorMessage = null;
-        this.validationError = null;
+        this.lendingBaseService.validationError = null;
         this.baseComponentService.isAppprovingOrDeclining = true;
 
         var lendingConcession = this.getLendingConcession(false);
@@ -1058,7 +1052,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         if (confirm("Are you sure you want to extend this concession?")) {
             this.isLoading = true;
             this.errorMessage = null;
-            this.validationError = null;
+            this.lendingBaseService.validationError = null;
 
             this.lendingService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
                 console.log("data saved");
@@ -1125,7 +1119,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     saveConcession() {
         this.isLoading = true;
         this.errorMessage = null;
-        this.validationError = null;
+        this.lendingBaseService.validationError = null;
 
         var lendingConcession = this.getLendingConcession(true);
 
@@ -1155,7 +1149,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     saveUpdatedConcession() {
         this.isLoading = true;
         this.errorMessage = null;
-        this.validationError = null;
+        this.lendingBaseService.validationError = null;
 
         var lendingConcession = this.getLendingConcession(true);
 
@@ -1201,7 +1195,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         this.warningMessage = "";
         this.isLoading = true;
         this.errorMessage = null;
-        this.validationError = null;
+        this.lendingBaseService.validationError = null;
 
         var lendingConcession = this.getLendingConcession(true);
 
@@ -1235,7 +1229,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         this.isLoading = true;
 
         this.errorMessage = null;
-        this.validationError = null;
+        this.lendingBaseService.validationError = null;
         this.baseComponentService.isAppprovingOrDeclining = true;
 
         var lendingConcession = this.getLendingConcession(false);
@@ -1268,7 +1262,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         this.isLoading = true;
 
         this.errorMessage = null;
-        this.validationError = null;
+        this.lendingBaseService.validationError = null;
         this.baseComponentService.isAppprovingOrDeclining = true;
 
         var lendingConcession = this.getLendingConcession(false);
@@ -1435,19 +1429,19 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             case 'interestRate':
             case 'volume':
             case 'value':
-                return super.disableFieldBase(this.selectedConditionTypes, index, type);
+                return this.lendingBaseService.disableFieldBase(this.selectedConditionTypes, index, type);
         }
     }
 
     validatePeriod(itemrow) {
-        this.validationError = null;
+        this.lendingBaseService.validationError = null;
 
         let selectedPeriodType = itemrow.controls.periodType.value.description;
 
         let selectedPeriod = itemrow.controls.period.value.description;
 
         if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
-            this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+            this.lendingBaseService.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
         }
     }
 }
