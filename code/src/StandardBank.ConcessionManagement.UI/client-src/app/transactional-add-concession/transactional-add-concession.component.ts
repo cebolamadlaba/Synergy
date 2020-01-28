@@ -36,8 +36,11 @@ import { TransactionalBaseService } from '../services/transactional-base.service
     providers: [DatePipe]
 })
 export class TransactionalAddConcessionComponent extends TransactionalBaseService implements OnInit, OnDestroy {
-
+    public transactionalConcessionForm: FormGroup;
     private sub: any;
+    errorMessage: String;
+    validationError: String[];
+    saveMessage: String;
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
@@ -48,9 +51,12 @@ export class TransactionalAddConcessionComponent extends TransactionalBaseServic
     entityName: string;
     entityNumber: string;
 
+    selectedConditionTypes: ConditionType[];
     selectedTransactionTypes: TransactionType[];
+    isLoading = true;
     observableLatestCrsOrMrs: Observable<number>;
     latestCrsOrMrs: number;
+    showHide = false;
 
     xlsxModel = new XlsxModel();
 
@@ -538,8 +544,6 @@ export class TransactionalAddConcessionComponent extends TransactionalBaseServic
             transactionalConcession.concessionConditions.push(concessionCondition);
         }
 
-        this.checkConcessionExpiryDate(transactionalConcession);
-
         return transactionalConcession;
     }
 
@@ -568,6 +572,13 @@ export class TransactionalAddConcessionComponent extends TransactionalBaseServic
         }
     }
 
+    addValidationError(validationDetail) {
+        if (!this.validationError)
+            this.validationError = [];
+
+        this.validationError.push(validationDetail);
+    }
+
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
     }
@@ -592,5 +603,9 @@ export class TransactionalAddConcessionComponent extends TransactionalBaseServic
         if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
             this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
         }
+    }
+
+    disableField(fieldname: string, index: number = null) {
+        return this.disableFieldBase(fieldname, this.saveMessage == null, index, this.selectedConditionTypes, null, null)
     }
 }
