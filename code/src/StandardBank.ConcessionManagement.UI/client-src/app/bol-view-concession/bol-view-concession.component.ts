@@ -48,7 +48,12 @@ import { BolConcessionBaseService } from '../services/bol-concession-base.servic
 })
 export class BolViewConcessionComponent extends BolConcessionBaseService implements OnInit, OnDestroy {
 
+    concessionReferenceId: string;
     private sub: any;
+    errorMessage: String;
+    validationError: String[];
+    saveMessage: String;
+    warningMessage: String;
     observableRiskGroup: Observable<RiskGroup>;
 
     observableBolView: Observable<BolView>;
@@ -63,11 +68,21 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
     entityName: string;
     entityNumber: string;
 
+    public bolConcessionForm: FormGroup;
+    selectedConditionTypes: ConditionType[];
+    isLoading = true;
+    canBcmApprove = false;
+    canPcmApprove = false;
     hasChanges = false;
     canExtend = false;
     canRenew = false;
     canRecall = false;
+    isEditing = false;
+    motivationEnabled = false;
+    canEdit = false;
+    isRecalling = false;
     capturedComments: string;
+    canApproveChanges = false;
     canResubmit = false;
     canUpdate = false;
     editType: string;
@@ -75,7 +90,7 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
     isInProgressExtension = false;
     isInProgressRenewal = false;
     isApproved = false;
-
+    showHide = false;
 
 
     observablePeriods: Observable<Period[]>;
@@ -100,6 +115,7 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
     clientAccounts: ClientAccount[];
 
     observableBolConcession: Observable<BolConcession>;
+    bolConcession: BolConcession;
 
     selectedProducts: BolChargeCodeType[];
 
@@ -168,7 +184,7 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
     }
 
     getInitialData() {
-        if (this.riskGroupNumber != null && this.riskGroupNumber != 0) {
+        if (this.riskGroupNumber !== 0) {
             Observable.forkJoin([
                 this.lookupDataService.getConditionTypes(),
                 this.lookupDataService.getBOLChargeCodeTypes(),
@@ -1189,5 +1205,9 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
         if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
             this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
         }
+    }
+
+    disableField(fieldname: string, index: number = null) {
+        return this.disableFieldBase(fieldname, this.canEdit, index, this.selectedConditionTypes, this.isRecalling, this.motivationEnabled)
     }
 }
