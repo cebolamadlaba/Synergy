@@ -46,6 +46,10 @@ import { BolConcessionBaseService } from '../services/bol-concession-base.servic
 export class BolAddConcessionComponent extends BolConcessionBaseService implements OnInit, OnDestroy {
     private sub: any;
 
+    errorMessage: String;
+    validationError: String[];
+    saveMessage: String;
+    showHide = false;
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
     riskGroupNumber: number;
@@ -55,8 +59,12 @@ export class BolAddConcessionComponent extends BolConcessionBaseService implemen
     observableBolView: Observable<BolView>;
     bolView: BolView = new BolView();
 
+    public bolConcessionForm: FormGroup;
+
     entityName: string;
     entityNumber: string;
+
+    isLoading = true;
 
     observablePeriods: Observable<Period[]>;
     periods: Period[];
@@ -72,6 +80,8 @@ export class BolAddConcessionComponent extends BolConcessionBaseService implemen
 
     observableLegalEntityBOLUsers: Observable<LegalEntityBOLUser[]>;
     legalentitybolusers: LegalEntityBOLUser[];
+
+    selectedConditionTypes: ConditionType[];
 
     selectedProducts: BolChargeCodeType[];
 
@@ -303,6 +313,14 @@ export class BolAddConcessionComponent extends BolConcessionBaseService implemen
 
     }
 
+
+    addValidationError(validationDetail) {
+        if (!this.validationError)
+            this.validationError = [];
+
+        this.validationError.push(validationDetail);
+    }
+
     getBolConcession(): BolConcession {
         var bolConcession = new BolConcession();
         bolConcession.concession = new Concession();
@@ -491,5 +509,9 @@ export class BolAddConcessionComponent extends BolConcessionBaseService implemen
 
     ngOnDestroy() {
         this.sub.unsubscribe();
+    }
+
+    disableField(fieldname: string, index: number = null) {
+        return this.disableFieldBase(fieldname, this.saveMessage == null, index, this.selectedConditionTypes, null, null)
     }
 }
