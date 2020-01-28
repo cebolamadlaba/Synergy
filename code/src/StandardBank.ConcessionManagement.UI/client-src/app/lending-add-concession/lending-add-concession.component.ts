@@ -35,7 +35,8 @@ import { LendingBaseService } from '../services/lending-base.service';
 @Component({
     selector: 'app-lending-add-concession',
     templateUrl: './lending-add-concession.component.html',
-    styleUrls: ['./lending-add-concession.component.css']
+    styleUrls: ['./lending-add-concession.component.css'],
+    providers: [LendingBaseService]
 })
 export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     public lendingConcessionForm: FormGroup;
@@ -381,6 +382,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         this.isLoading = true;
 
         this.errorMessage = null;
+        this.lendingBaseService.validationError = null;
 
         var lendingConcession = new LendingConcession();
         lendingConcession.concession = new Concession();
@@ -686,8 +688,14 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         return this.saveMessage ? '' : null;
     }
 
-    disableField(index: number, type: string) {
-        return this.lendingBaseService.disableFieldBase(this.selectedConditionTypes, index, type);
+    disableField(index: number, fieldname: string) {
+        return this.lendingBaseService.disableFieldBase(
+            this.selectedConditionTypes[index],
+            new LendingConcessionDetail(),
+            fieldname,
+            this.saveMessage == null,
+            this.saveMessage != null
+        );
     }
 
     goBack() {
