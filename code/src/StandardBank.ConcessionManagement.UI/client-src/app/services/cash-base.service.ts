@@ -8,9 +8,9 @@ import { CashConcession } from '../models/cash-concession';
 
 @Injectable()
 export class CashBaseService {
-    constructor() { }
-
     validationError: String[];
+
+    constructor() { }
 
     public processFileContent(xlsxModel: XlsxModel): CashConcessionDetail[] {
         var self = this;

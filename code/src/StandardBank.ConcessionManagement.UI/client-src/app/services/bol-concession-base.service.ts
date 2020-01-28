@@ -1,13 +1,10 @@
 import { ConditionType } from "../models/condition-type";
-import { ConcessionRelationshipDetail } from "../models/concession-relationship-detail";
-
-
 
 export class BolConcessionBaseService {
 
     constructor() { }
 
-    disableFieldBase(fieldname: string, canEdit: boolean, index: number = null, selectedConditionTypes: ConditionType[], isRecalling: boolean = null, motivationEnabled: boolean = null) {
+    disableFieldBase(fieldname: string, canEdit: boolean, index: number, selectedConditionTypes: ConditionType[], isRecalling: boolean = null, motivationEnabled: boolean = null) {
         switch (fieldname) {
             case 'smtDealNumber':
                 if (isRecalling == null) {
@@ -37,7 +34,5 @@ export class BolConcessionBaseService {
                 break;
         }
     }
-
-
 }
 

@@ -218,7 +218,6 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             control.controls[0].get('tableNumber').setValue(this.tableNumbers[0]);
 
             this.tableNumberChanged(0);
-
         }
 
         this.isLoading = false;
@@ -320,7 +319,6 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             newRow.controls['accrualType'].setValue(this.accrualTypes[0]);
 
         control.push(newRow);
-
     }
 
     addNewConditionRow() {
@@ -414,6 +412,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     getCashConcession(): CashConcession {
+
         var cashConcession = new CashConcession();
         cashConcession.concession = new Concession();
 
@@ -552,7 +551,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         this.isLoading = true;
 
         this.errorMessage = null;
-        this.validationError = null;
+        this.cashBaseService.validationError = null;
 
 
         var cashConcession = this.getCashConcession();
@@ -561,7 +560,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         cashConcession.concession.type = "New";
         cashConcession.concession.comments = "Created";
 
-        if (!this.validationError) {
+        if (!this.cashBaseService.validationError) {
             this.cashConcessionService.postNewCashData(cashConcession).subscribe(entity => {
                 console.log("data saved");
                 this.saveMessage = entity.concession.referenceNumber;
@@ -577,7 +576,6 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-
     }
 
     disableField(index: number, fieldname: string) {
@@ -598,7 +596,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     validatePeriod(itemrow) {
-        this.validationError = null;
+        this.cashBaseService.validationError = null;
 
         let selectedPeriodType = itemrow.controls.periodType.value.description;
 

@@ -356,7 +356,6 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         }
         this.clientAccounts = <any>results[7];
 
-
         this.populateForm();
     }
 
@@ -735,8 +734,6 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             }
 
             cashConcession.concession.concessionComments = this.GetChanges(cashConcession.concession.id);
-
-
 
         } else {
             cashConcession.concession.status = ConcessionStatus.Approved;
@@ -1129,8 +1126,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     setTwoNumberDecimal($event) {
-        $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-        
+        $event.target.value = this.baseComponentService.formatDecimal($event.target.value);        
     }
 
     canEditSMTDealNumber() {
