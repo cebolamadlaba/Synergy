@@ -3,6 +3,7 @@ import { ConditionType } from "../models/condition-type";
 
 @Injectable()
 export class InvestmentBaseService {
+    validationError: String[];
 
     constructor() { }
 
@@ -32,5 +33,12 @@ export class InvestmentBaseService {
             case 'value':
                 return selectedConditionType != null && selectedConditionType.enableConditionValue ? null : '';
         }
+    }
+
+    addValidationError(validationDetail) {
+        if (!this.validationError)
+            this.validationError = [];
+
+        this.validationError.push(validationDetail);
     }
 }
