@@ -1,9 +1,8 @@
 import { ConditionType } from "../models/condition-type";
-import { ConcessionRelationshipDetail } from "../models/concession-relationship-detail";
-
-
 
 export class BolConcessionBaseService {
+
+    validationError: String[];
 
     constructor() { }
 
@@ -38,6 +37,11 @@ export class BolConcessionBaseService {
         }
     }
 
+    addValidationError(validationDetail) {
+        if (!this.validationError)
+            this.validationError = [];
 
+        this.validationError.push(validationDetail);
+    }
 }
 
