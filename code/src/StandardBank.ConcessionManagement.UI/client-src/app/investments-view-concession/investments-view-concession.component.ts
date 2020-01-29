@@ -51,7 +51,7 @@ import { MOnthEnum } from '../models/month-enum';
     styleUrls: ['./investments-view-concession.component.css'],
     providers: [DatePipe, InvestmentBaseService]
 })
-export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
+export class InvestmentsViewConcessionComponent extends InvestmentBaseService implements OnInit, OnDestroy {
 
     concessionReferenceId: string;
     private sub: any;
@@ -133,11 +133,11 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         private location: Location,
         private datepipe: DatePipe,
         @Inject(LookupDataService) private lookupDataService,
-        @Inject(InvestmentBaseService) private investmentBaseService,
         @Inject(UserConcessionsService) private userConcessionsService,
         @Inject(InvestmentConcessionService) private investmentConcessionService,
         private baseComponentService: BaseComponentService) {
 
+        super();
         this.riskGroup = new RiskGroup();
 
         this.productTypes = [new ProductType()];
@@ -278,7 +278,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
         var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidationForView(itemrow.controls['expiryDate'].value, formattedDateOpened);
         if (validationErrorMessage != null) {
-            this.investmentBaseService.addValidationError(validationErrorMessage);
+            this.addValidationError(validationErrorMessage);
         }
     }
 
@@ -608,7 +608,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             investmentConcession.concession.smtDealNumber = this.investmentConcessionForm.controls['smtDealNumber'].value;
         }
         else
-            this.investmentBaseService.addValidationError("SMT Deal Number not captured");
+            this.addValidationError("SMT Deal Number not captured");
 
         if (this.investmentConcessionForm.controls['comments'].value)
             investmentConcession.concession.comments = this.investmentConcessionForm.controls['comments'].value;
@@ -650,7 +650,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                 hasTypeId = true;
             }
             else
-                this.investmentBaseService.addValidationError("Product not selected");
+                this.addValidationError("Product not selected");
 
 
             if ((concessionFormItem.get('accountNumber').value && concessionFormItem.get('accountNumber').value.legalEntityId)) {
@@ -660,7 +660,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                 hasLegalEntityAccountId = true;
             } else {
 
-                this.investmentBaseService.addValidationError("Client account not selected");
+                this.addValidationError("Client account not selected");
 
             }
 
@@ -668,7 +668,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                 investmentConcessionDetail.balance = concessionFormItem.get('balance').value;
             } else {
 
-                this.investmentBaseService.addValidationError("Balance not entered");
+                this.addValidationError("Balance not entered");
 
             }
 
@@ -678,7 +678,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
                 if (applyexpirydate) {
 
-                    this.investmentBaseService.addValidationError("Notice period value not entered");
+                    this.addValidationError("Notice period value not entered");
                 }
             }
 
@@ -686,7 +686,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                 investmentConcessionDetail.loadedRate = concessionFormItem.get('loadedRate').value;
             } else {
 
-                this.investmentBaseService.addValidationError("Rate value not entered");
+                this.addValidationError("Rate value not entered");
 
             }
 
@@ -699,7 +699,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             }
             else {
                 if (!applyexpirydate) {
-                    this.investmentBaseService.addValidationError("Expiry date not selected");
+                    this.addValidationError("Expiry date not selected");
                 }
             }
 
@@ -713,7 +713,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                     concessionFormItem.get('accountNumber').value.legalEntityAccountId);
 
                 if (hasDuplicates) {
-                    this.investmentBaseService.addValidationError("Duplicate Account / Product pricing found. Please select different account.");
+                    this.addValidationError("Duplicate Account / Product pricing found. Please select different account.");
 
                     break;
                 }
@@ -734,12 +734,12 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             if (conditionFormItem.get('conditionType').value)
                 concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;
             else
-                this.investmentBaseService.addValidationError("Condition type not selected");
+                this.addValidationError("Condition type not selected");
 
             if (conditionFormItem.get('conditionProduct').value)
                 concessionCondition.conditionProductId = conditionFormItem.get('conditionProduct').value.id;
             else
-                this.investmentBaseService.addValidationError("Condition product not selected");
+                this.addValidationError("Condition product not selected");
 
             if (conditionFormItem.get('interestRate').value)
                 concessionCondition.interestRate = conditionFormItem.get('interestRate').value;
@@ -750,7 +750,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             if (conditionFormItem.get('value').value == null || (<string>conditionFormItem.get('value').value).length < 1) {
                 var value = conditionFormItem.get('conditionType').value;
                 if (value != null && value.enableConditionValue == true)
-                    this.investmentBaseService.addValidationError("Conditions: 'Value' is a mandatory field");
+                    this.addValidationError("Conditions: 'Value' is a mandatory field");
             }
             else if (conditionFormItem.get('value').value)
                 concessionCondition.conditionValue = conditionFormItem.get('value').value;
@@ -758,17 +758,17 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             if (conditionFormItem.get('periodType').value) {
                 concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
             } else {
-                this.investmentBaseService.addValidationError("Period type not selected");
+                this.addValidationError("Period type not selected");
             }
 
             if (conditionFormItem.get('period').value) {
                 concessionCondition.periodId = conditionFormItem.get('period').value.id;
             } else {
-                this.investmentBaseService.addValidationError("Period not selected");
+                this.addValidationError("Period not selected");
             }
 
             if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
-                this.investmentBaseService.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+                this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
             }
 
             investmentConcession.concessionConditions.push(concessionCondition);
@@ -804,7 +804,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.isLoading = true;
 
         this.errorMessage = null;
-        this.investmentBaseService.validationError = null;
+        this.validationError = null;
         this.baseComponentService.isAppprovingOrDeclining = true;
 
         var investmentConcession = this.getInvestmentConcession(false);
@@ -815,7 +815,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             investmentConcession.concession.comments = "Forwarded";
         }
 
-        if (!this.investmentBaseService.validationError) {
+        if (!this.validationError) {
             this.investmentConcessionService.postUpdateInvestmentData(investmentConcession).subscribe(entity => {
                 this.canBcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
@@ -835,7 +835,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.isLoading = true;
 
         this.errorMessage = null;
-        this.investmentBaseService.validationError = null;
+        this.validationError = null;
         this.baseComponentService.isAppprovingOrDeclining = true;
 
         var investmentConcession = this.getInvestmentConcession(false);
@@ -847,7 +847,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             investmentConcession.concession.comments = ConcessionStatus.Declined;
         }
 
-        if (!this.investmentBaseService.validationError) {
+        if (!this.validationError) {
             this.investmentConcessionService.postUpdateInvestmentData(investmentConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canBcmApprove = false;
@@ -870,7 +870,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.isLoading = true;
 
         this.errorMessage = null;
-        this.investmentBaseService.validationError = null;
+        this.validationError = null;
         this.baseComponentService.isAppprovingOrDeclining = true;
 
         var investmentConcession = this.getInvestmentConcession(false);
@@ -909,7 +909,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             }
         }
 
-        if (!this.investmentBaseService.validationError) {
+        if (!this.validationError) {
             this.investmentConcessionService.postUpdateInvestmentData(investmentConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canPcmApprove = false;
@@ -981,7 +981,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.isLoading = true;
 
         this.errorMessage = null;
-        this.investmentBaseService.validationError = null;
+        this.validationError = null;
         this.baseComponentService.isAppprovingOrDeclining = true;
 
         var investmentConcession = this.getInvestmentConcession(false);
@@ -1000,7 +1000,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             investmentConcession.concession.comments = ConcessionStatus.Declined;
         }
 
-        if (!this.investmentBaseService.validationError) {
+        if (!this.validationError) {
             this.investmentConcessionService.postUpdateInvestmentData(investmentConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canPcmApprove = false;
@@ -1021,7 +1021,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         if (confirm("Are you sure you want to extend this concession?")) {
             this.isLoading = true;
             this.errorMessage = null;
-            this.investmentBaseService.validationError = null;
+            this.validationError = null;
 
             this.investmentConcessionService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
                 console.log("data saved");
@@ -1063,7 +1063,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     saveConcession() {
         this.isLoading = true;
         this.errorMessage = null;
-        this.investmentBaseService.validationError = null;
+        this.validationError = null;
 
         var investmentConcession = this.getInvestmentConcession(true);
 
@@ -1072,7 +1072,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         investmentConcession.concession.type = "Existing";
         investmentConcession.concession.referenceNumber = this.concessionReferenceId;
 
-        if (!this.investmentBaseService.validationError) {
+        if (!this.validationError) {
             this.investmentConcessionService.postChildConcession(investmentConcession, this.editType).subscribe(entity => {
                 console.log("data saved");
                 this.isEditing = false;
@@ -1093,14 +1093,14 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     saveUpdatedConcession() {
         this.isLoading = true;
         this.errorMessage = null;
-        this.investmentBaseService.validationError = null;
+        this.validationError = null;
 
         var investmentConcession = this.getInvestmentConcession(true);
 
         investmentConcession.concession.type = "Existing";
         investmentConcession.concession.referenceNumber = this.concessionReferenceId;
 
-        if (!this.investmentBaseService.validationError) {
+        if (!this.validationError) {
             this.investmentConcessionService.postChildConcession(investmentConcession, this.editType).subscribe(entity => {
                 console.log("data saved");
                 this.isEditing = false;
@@ -1139,7 +1139,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.warningMessage = "";
         this.isLoading = true;
         this.errorMessage = null;
-        this.investmentBaseService.validationError = null;
+        this.validationError = null;
 
         var investmentConcession = this.getInvestmentConcession(false);
 
@@ -1147,7 +1147,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         investmentConcession.concession.subStatus = ConcessionSubStatus.BCMPending;
         investmentConcession.concession.referenceNumber = this.concessionReferenceId;
 
-        if (!this.investmentBaseService.validationError) {
+        if (!this.validationError) {
             this.investmentConcessionService.postRecallInvestmentData(investmentConcession).subscribe(entity => {
                 console.log("data saved");
                 this.isRecalling = false;
@@ -1169,7 +1169,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.isLoading = true;
 
         this.errorMessage = null;
-        this.investmentBaseService.validationError = null;
+        this.validationError = null;
         this.baseComponentService.isAppprovingOrDeclining = true;
 
         var investmentConcession = this.getInvestmentConcession(false);
@@ -1181,7 +1181,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             investmentConcession.concession.comments = "Accepted Changes";
         }
 
-        if (!this.investmentBaseService.validationError) {
+        if (!this.validationError) {
             this.investmentConcessionService.postUpdateInvestmentData(investmentConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canApproveChanges = false;
@@ -1202,7 +1202,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         this.isLoading = true;
 
         this.errorMessage = null;
-        this.investmentBaseService.validationError = null;
+        this.validationError = null;
         this.baseComponentService.isAppprovingOrDeclining = true;
 
         var investmentConcession = this.getInvestmentConcession(false);
@@ -1214,7 +1214,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             investmentConcession.concession.comments = "Declined Changes";
         }
 
-        if (!this.investmentBaseService.validationError) {
+        if (!this.validationError) {
             this.investmentConcessionService.postUpdateInvestmentData(investmentConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canApproveChanges = false;
@@ -1328,7 +1328,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     disableField(index, fieldName) {
-        return this.investmentBaseService.disableFieldBase(
+        return this.disableFieldBase(
             this.selectedConditionTypes[index],
             fieldName,
             this.canEdit,
@@ -1338,14 +1338,14 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     validatePeriod(itemrow) {
-        this.investmentBaseService.validationError = null;
+        this.validationError = null;
 
         let selectedPeriodType = itemrow.controls.periodType.value.description;
 
         let selectedPeriod = itemrow.controls.period.value.description;
 
         if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
-            this.investmentBaseService.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+            this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
         }
     }
 }

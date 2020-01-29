@@ -92,22 +92,22 @@
             <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
             <p>{{errorMessage}}</p>
 
-            <ul *ngIf="investmentBaseService.validationError">
-                <li *ngFor="let validationMessage of investmentBaseService.validationError ">{{validationMessage}}</li>
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError ">{{validationMessage}}</li>
             </ul>
         </div>
     </div>
 </div>
 
 <!-- Error message -->
-<div class="col-md-12" *ngIf="(investmentBaseService.validationError) && !isLoading">
+<div class="col-md-12" *ngIf="(validationError) && !isLoading">
     <div class="form-feedback-container">
         <div class="alert-danger">
             <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Below errors require your attention..</p>
             <p>{{errorMessage}}</p>
 
-            <ul *ngIf="investmentBaseService.validationError">
-                <li *ngFor="let validationMessage of investmentBaseService.validationError">{{validationMessage}}</li>
+            <ul *ngIf="validationError">
+                <li *ngFor="let validationMessage of validationError">{{validationMessage}}</li>
             </ul>
         </div>
     </div>
