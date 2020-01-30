@@ -93,7 +93,6 @@ export class TradeAddConcessionComponent extends TradeConcessionBaseService impl
     observableClientAccounts: Observable<ClientAccount[]>;
     clientAccounts: ClientAccount[];
 
-
     constructor(private route: ActivatedRoute,
         private router: Router,
         private formBuilder: FormBuilder,
@@ -122,7 +121,6 @@ export class TradeAddConcessionComponent extends TradeConcessionBaseService impl
         this.tradeView.riskGroup = new RiskGroup();
         this.tradeView.tradeConcessions = [new TradeConcession()];
         this.tradeView.tradeConcessions[0].concession = new Concession();
-
     }
 
     ngOnInit() {
@@ -142,9 +140,7 @@ export class TradeAddConcessionComponent extends TradeConcessionBaseService impl
                 this.errorMessage = <any>error;
                 this.isLoading = false;
             });
-
         });
-
 
         this.tradeConcessionForm = this.formBuilder.group({
             concessionItemRows: this.formBuilder.array([this.initConcessionItemRows()]),
@@ -260,26 +256,9 @@ export class TradeAddConcessionComponent extends TradeConcessionBaseService impl
         const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
         var newRow = this.initConcessionItemRows();
 
-        //if (this.legalentitygbbnumbers)
-        //    newRow.controls['gbbnumber'].setValue(this.legalentitygbbnumbers[0]);
-
-        //var length = control.controls.length;
-
-        //if (this.bolchargecodetypes)
-        //    newRow.controls['product'].setValue(this.bolchargecodetypes[0]);
-
-        //if (this.legalentitybolusers)
-        //    newRow.controls['userid'].setValue(this.legalentitybolusers[0]);
-
-        //this.selectedProducts[length] = this.bolchargecodetypes[0];
-
-        //if (this.selectedProducts && this.selectedProducts[0].bolchargecodes)
-        //    newRow.controls['chargecode'].setValue(this.selectedProducts[0].bolchargecodes[0]);
-
         control.push(newRow);
 
         this.productTypeChanged(length);
-
     }
 
     addNewConditionRow() {
@@ -388,13 +367,6 @@ export class TradeAddConcessionComponent extends TradeConcessionBaseService impl
         };
     }
 
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
-    }
-
     showGbbDeclaimer() {
         this.notificationMessage = "For New GBB, insert C/A number and update once the M-number is issued. For existing GBB use existing M- number.";
     }
@@ -450,7 +422,6 @@ export class TradeAddConcessionComponent extends TradeConcessionBaseService impl
         if (this.legalEntity)
             tradeConcession.concession.legalEntityId = this.legalEntity.id;
 
-
         if (this.tradeConcessionForm.controls['motivation'].value)
             tradeConcession.concession.motivation = this.tradeConcessionForm.controls['motivation'].value;
         else
@@ -504,7 +475,6 @@ export class TradeAddConcessionComponent extends TradeConcessionBaseService impl
 
             let hasValueGbbNumber = (concessionFormItem.get('gbbnumberText').value);
 
-            //if (concessionFormItem.get('gbbnumber').value) {
             if (hasValueGbbNumber) {
                 tradeConcessionDetail.gbbNumber = concessionFormItem.get('gbbnumberText').value;
             } else {
@@ -512,7 +482,6 @@ export class TradeAddConcessionComponent extends TradeConcessionBaseService impl
                     this.addValidationError("GBB Number not entered");
                 }
             }
-
 
             if (concessionFormItem.get('term').value) {
                 tradeConcessionDetail.term = concessionFormItem.get('term').value;
@@ -556,7 +525,6 @@ export class TradeAddConcessionComponent extends TradeConcessionBaseService impl
                     }
                 }
             }
-
 
             let flatfeefound = false;
 
@@ -710,9 +678,7 @@ export class TradeAddConcessionComponent extends TradeConcessionBaseService impl
     }
 
     setTwoNumberDecimal($event) {
-
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-        //$event.target.value = this.formatDecimal($event.target.value);
     }
 
 
@@ -747,7 +713,6 @@ export class TradeAddConcessionComponent extends TradeConcessionBaseService impl
                 currentrow.get('advalorem').setValue(null);
                 currentrow.get('min').setValue(null);
                 currentrow.get('max').setValue(null);
-
             }
         }
         else {
@@ -763,13 +728,8 @@ export class TradeAddConcessionComponent extends TradeConcessionBaseService impl
                 currentrow.get('advalorem').enable();
                 currentrow.get('min').enable();
                 currentrow.get('max').enable();
-
-
             }
         }
-
-
-        //$event.target.value = this.formatDecimal($event.target.value);
     }
 
     setFlatFee($event, rowIndex, controlname) {

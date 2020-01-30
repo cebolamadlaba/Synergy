@@ -7,6 +7,7 @@ import { TradeConcessionDetail } from "../models/trade-concession-detail";
 
 @Injectable()
 export class TradeConcessionBaseService {
+    validationError: String[];
 
     constructor() { }
 
@@ -120,5 +121,12 @@ export class TradeConcessionBaseService {
     isNullOrEmptyFlatFee(currentConcession: AbstractControl) {
         let flatFeeValue = this.getFieldValueBase(currentConcession, 'flatfee');
         return flatFeeValue == null || (<string>flatFeeValue).trim() == '';
+    }
+
+    addValidationError(validationDetail) {
+        if (!this.validationError)
+            this.validationError = [];
+
+        this.validationError.push(validationDetail);
     }
 }
