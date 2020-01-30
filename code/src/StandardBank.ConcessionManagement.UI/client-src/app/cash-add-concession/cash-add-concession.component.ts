@@ -38,10 +38,9 @@ import { BaseComponentService } from '../services/base-component.service';
     styleUrls: ['./cash-add-concession.component.css'],
     providers: [DatePipe]
 })
-export class CashAddConcessionComponent implements OnInit, OnDestroy {
+export class CashAddConcessionComponent extends CashBaseService implements OnInit, OnDestroy {
     private sub: any;
     errorMessage: String;
-    validationError: String[];
     saveMessage: String;
     showHide = false;
     observableRiskGroup: Observable<RiskGroup>;
@@ -87,10 +86,10 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         private location: Location,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(CashConcessionService) private cashConcessionService,
-        @Inject(CashBaseService) private cashBaseService,
         private fileService: FileService,
         private datepipe: DatePipe,
         private baseComponentService: BaseComponentService) {
+        super();
         this.riskGroup = new RiskGroup();
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
@@ -246,7 +245,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             self.xlsxModel.fileContent = fileReader.result;
             self.xlsxModel.selectedFileName = file.name;
 
-            self.cashConcessionDetail = self.cashBaseService.processFileContent(self.xlsxModel);
+            self.cashConcessionDetail = self.processFileContent(self.xlsxModel);
             self.populateCashConcessionByFile();
         }
 
@@ -279,7 +278,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
                     if (selectedAccountNo.length > 0) {
                         currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
                     } else {
-                        this.cashBaseService.addValidationError('AccountNumber does not belong to selected risk group');
+                        this.addValidationError('AccountNumber does not belong to selected risk group');
                     }  
                 }  
             }
@@ -411,7 +410,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
         var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
         if (validationErrorMessage != null) {
-            this.cashBaseService.addValidationError(validationErrorMessage);
+            this.addValidationError(validationErrorMessage);
         }
     }
 
@@ -427,7 +426,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         if (this.cashConcessionForm.controls['smtDealNumber'].value)
             cashConcession.concession.smtDealNumber = this.cashConcessionForm.controls['smtDealNumber'].value;
         else
-            this.cashBaseService.addValidationError("SMT Deal Number not captured");
+            this.addValidationError("SMT Deal Number not captured");
 
         if (this.cashConcessionForm.controls['motivation'].value)
             cashConcession.concession.motivation = this.cashConcessionForm.controls['motivation'].value;
@@ -445,7 +444,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             if (concessionFormItem.get('channelType').value) {
                 cashConcessionDetail.channelTypeId = concessionFormItem.get('channelType').value.id;
             } else {
-                this.cashBaseService.addValidationError("Channel type not selected");
+                this.addValidationError("Channel type not selected");
             }
 
             if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
@@ -453,14 +452,14 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
                 cashConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
             else {
-                this.cashBaseService.addValidationError("Expiry date not selected");
+                this.addValidationError("Expiry date not selected");
             }
 
             if (concessionFormItem.get('accountNumber').value && concessionFormItem.get('accountNumber').value.legalEntityId) {
                 cashConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
                 cashConcessionDetail.legalEntityAccountId = concessionFormItem.get('accountNumber').value.legalEntityAccountId;
             } else {
-                this.cashBaseService.addValidationError("Client account not selected");
+                this.addValidationError("Client account not selected");
             }
 
             if (concessionFormItem.get('tableNumber').value) {
@@ -470,13 +469,13 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
                 if (concessionFormItem.get('tableNumber').value.baseRate)
                     cashConcessionDetail.baseRate = concessionFormItem.get('tableNumber').value.baseRate;
             } else {
-                this.cashBaseService.addValidationError("Table Number not selected");
+                this.addValidationError("Table Number not selected");
             }
 
             if (concessionFormItem.get('accrualType').value) {
                 cashConcessionDetail.accrualTypeId = concessionFormItem.get('accrualType').value.id;
             } else {
-                this.cashBaseService.addValidationError("Accrual type not selected");
+                this.addValidationError("Accrual type not selected");
             }
 
             cashConcession.cashConcessionDetails.push(cashConcessionDetail);
@@ -488,7 +487,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
                 concessionFormItem.get('accountNumber').value.legalEntityAccountId);
 
             if (hasDuplicates) {
-                this.cashBaseService.addValidationError("Duplicate Account / Channel pricing found. Please select different account.");
+                this.addValidationError("Duplicate Account / Channel pricing found. Please select different account.");
 
                 break;
             }
@@ -500,7 +499,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         cashConcession.concessionConditions = concessionConditionReturnObject.concessionConditions;
         this.validationError = concessionConditionReturnObject.validationError;
 
-        this.cashBaseService.checkConcessionExpiryDate(cashConcession);
+        this.checkConcessionExpiryDate(cashConcession);
 
         return cashConcession;
     }
@@ -553,7 +552,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         let selectedPeriod = itemrow.controls.period.value.description;
 
         if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
-            this.cashBaseService.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+            this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
         }
     }
 }
