@@ -9,6 +9,7 @@ import { ConditionType } from "../models/condition-type";
 
 @Injectable()
 export class TransactionalBaseService {
+    validationError: String[];
 
     constructor() { }
 
@@ -97,4 +98,10 @@ export class TransactionalBaseService {
         }
     }
 
+    addValidationError(validationDetail) {
+        if (!this.validationError)
+            this.validationError = [];
+
+        this.validationError.push(validationDetail);
+    }
 }
