@@ -16,6 +16,7 @@ import { ConditionType } from "../models/condition-type";
 export class GlmsBaseService extends BaseComponentService {
 
     tierValidationError: String[];
+    validationError: String[];
 
     constructor(public http: Http, public router: Router, public userService: UserService) {
         super(router, userService);
@@ -103,4 +104,10 @@ export class GlmsBaseService extends BaseComponentService {
         }
     }
 
+    addValidationError(validationDetail) {
+        if (!this.validationError)
+            this.validationError = [];
+
+        this.validationError.push(validationDetail);
+    }
 }
