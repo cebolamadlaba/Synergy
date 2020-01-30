@@ -42,7 +42,6 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
     public transactionalConcessionForm: FormGroup;
     private sub: any;
     errorMessage: String;
-    validationError: String[];
     saveMessage: String;
     warningMessage: String;
     observableRiskGroup: Observable<RiskGroup>;
@@ -206,10 +205,8 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
         }
         this.clientAccounts = <any>results[5];
 
-
         this.populateForm();
-
-    } 2
+    }
 
     onExpiryDateChanged(itemrow) {
         var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidationForView(itemrow.controls['expiryDate'].value, this.createdDate);
@@ -237,9 +234,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
                     }
 
                     // Removed as per SBSA.Anthony's request - 2019-07-15
-                    //if (!transactionalConcession.concession.isInProgressExtension) {
                     this.canEdit = transactionalConcession.currentUser.canPcmApprove;
-                    //}
                 }
 
                 //if it's still pending and the user is a requestor then they can recall it
@@ -273,12 +268,10 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
                 this.transactionalConcessionForm.controls['smtDealNumber'].setValue(this.transactionalConcession.concession.smtDealNumber);
                 this.transactionalConcessionForm.controls['motivation'].setValue(this.transactionalConcession.concession.motivation);
 
-
                 if (transactionalConcession.concession.dateOpened) {
                     var formattedDateOpened = this.datepipe.transform(transactionalConcession.concession.dateOpened, 'yyyy-MM-dd');
                     this.createdDate = formattedDateOpened;
                 }
-
 
                 let rowIndex = 0;
 
@@ -352,7 +345,6 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
 
                         currentCondition.get('conditionProduct').setValue(selectedConditionProduct[0]);
                     }
-
 
                     currentCondition.get('interestRate').setValue(concessionCondition.interestRate);
                     currentCondition.get('volume').setValue(concessionCondition.conditionVolume);
@@ -627,13 +619,6 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
         }
 
         return transactionalConcession;
-    }
-
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
     }
 
     goBack() {
