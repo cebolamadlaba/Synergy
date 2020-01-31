@@ -53,8 +53,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
 
     concessionReferenceId: string;
     private sub: any;
-    errorMessage: String;
-    validationError: String[];
+    errorMessage: String;    
     saveMessage: String;
     warningMessage: String;
     notificationMessage: string;
@@ -125,7 +124,6 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
     observableTradeConcession: Observable<TradeConcession>;
     tradeConcession: TradeConcession;
 
-
     constructor(private route: ActivatedRoute,
         private formBuilder: FormBuilder,
         private location: Location,
@@ -158,12 +156,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
         this.tradeConcession = new TradeConcession();
         this.tradeConcession.concession = new Concession();
         this.tradeConcession.concession.concessionComments = [new ConcessionComment()];
-
-
-
     }
-
-
 
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
@@ -180,7 +173,6 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
             }, error => {
                 this.errorMessage = <any>error;
             });
-
         });
 
         this.tradeConcessionForm = this.formBuilder.group({
@@ -362,7 +354,6 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
                         currentConcession.get('advalorem').setValue(tradeConcessionDetail.adValorem);
 
                         tradeConcessionDetail.show_advalorem = true;
-
                     }
 
                     if (tradeConcessionDetail.communication) {
@@ -370,7 +361,6 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
                         currentConcession.get('communication').setValue(communication);
 
                         tradeConcessionDetail.show_communication = true;
-
                     }
                     else {
 
@@ -384,7 +374,6 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
 
                     if (tradeConcessionDetail.currency) {
                         currentConcession.get('currency').setValue(tradeConcessionDetail.currency);
-
                     }
 
                     if (tradeConcessionDetail.gbbNumber) {
@@ -478,9 +467,6 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
     }
 
     initConcessionItemRows() {
-
-
-
         this.selectedProductTypes.push(new TradeProductType());
         this.selectedTradeConcession.push(false)
 
@@ -510,7 +496,6 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
             dateApproved: [{ value: '', disabled: true }],
             isExpired: [''],
             isExpiring: ['']
-
         });
     }
 
@@ -678,13 +663,6 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
             currentProduct.get('communication').setValue(null);
         }
 
-    }
-
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
     }
 
     showGbbDeclaimer() {
@@ -1313,8 +1291,6 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
         }
     }
 
-
-
     recallConcession() {
         this.isLoading = true;
         this.errorMessage = null;
@@ -1449,7 +1425,6 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
         }
     }
 
-
     archiveConcession() {
         if (confirm("Please note that the account will be put back to standard pricing. Are you sure you want to delete this concession ?")) {
             this.isLoading = true;
@@ -1480,7 +1455,6 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
         }
     }
 
-
     setadvalorem($event, rowIndex, controlname) {
 
         if (event.target != null && $event.target.value != "") {
@@ -1501,7 +1475,6 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
                 currentrow.get('advalorem').setValue(null);
                 currentrow.get('min').setValue(null);
                 currentrow.get('max').setValue(null);
-
             }
         }
         else {
