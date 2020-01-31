@@ -31,7 +31,6 @@ import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
 import { ConcessionConditionReturnObject } from '../models/concession-condition-return-object';	
 import { CashBaseService } from '../services/cash-base.service';
-import { LegalEntity } from "../models/legal-entity";
 
 
 @Component({
@@ -572,9 +571,9 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
 
         const conditions = <FormArray>this.cashConcessionForm.controls['conditionItemsRows'];
 
-        let concessionConditionReturnObject = this.baseComponentService.getConsessionConditionData(conditions, cashConcession.concessionConditions, this.cashBaseService.validationError);
+        let concessionConditionReturnObject = this.baseComponentService.getConsessionConditionData(conditions, cashConcession.concessionConditions, this.validationError);
         cashConcession.concessionConditions = concessionConditionReturnObject.concessionConditions;
-        this.cashBaseService.validationError = concessionConditionReturnObject.validationError;
+        this.validationError = concessionConditionReturnObject.validationError;
 
         this.checkConcessionExpiryDate(cashConcession);
 
