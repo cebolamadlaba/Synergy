@@ -41,7 +41,6 @@ import { BaseComponentService } from '../services/base-component.service';
 export class CashAddConcessionComponent extends CashBaseService implements OnInit, OnDestroy {
     private sub: any;
     errorMessage: String;
-    validationError: String[];
     saveMessage: String;
     showHide = false;
     observableRiskGroup: Observable<RiskGroup>;

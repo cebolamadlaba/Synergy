@@ -37,7 +37,7 @@ export class TradeConcessionBaseService {
                     return tradeConcessionDetail.show_term && canEdit ? null : '';
                 }
                 else {
-                    return canEdit ? null : '';
+                    return (!isSelectedTradeConcessionDetail) || isSaved ? '' : null;
                 }
             case "advalorem":
             case "min":
