@@ -38,7 +38,7 @@ import { LendingBaseService } from '../services/lending-base.service';
     styleUrls: ['./lending-add-concession.component.css'],
     providers: [LendingBaseService]
 })
-export class LendingAddConcessionComponent implements OnInit, OnDestroy {
+export class LendingAddConcessionComponent extends LendingBaseService implements OnInit, OnDestroy {
     public lendingConcessionForm: FormGroup;
     private sub: any;
     showHide = false;
@@ -88,8 +88,8 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         private location: Location,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(LendingService) private lendingService,
-        @Inject(LendingBaseService) private lendingBaseService,
         private baseComponentService: BaseComponentService) {
+        super();
         this.riskGroup = new RiskGroup();
         this.reviewFeeTypes = [new ReviewFeeType()];
         this.productTypes = [new ProductType()];
@@ -382,7 +382,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         this.isLoading = true;
 
         this.errorMessage = null;
-        this.lendingBaseService.validationError = null;
+        this.validationError = null;
 
         var lendingConcession = new LendingConcession();
         lendingConcession.concession = new Concession();
@@ -390,7 +390,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
         if (this.lendingConcessionForm.controls['smtDealNumber'].value)
             lendingConcession.concession.smtDealNumber = this.lendingConcessionForm.controls['smtDealNumber'].value;
         else
-            this.lendingBaseService.addValidationError("SMT Deal Number not captured");
+            this.addValidationError("SMT Deal Number not captured");
 
         if (this.lendingConcessionForm.controls['motivation'].value)
             lendingConcession.concession.motivation = this.lendingConcessionForm.controls['motivation'].value;
@@ -423,7 +423,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
                 hasProductType = true;
             }
             else
-                this.lendingBaseService.addValidationError("Product type not selected");
+                this.addValidationError("Product type not selected");
 
             if (concessionFormItem.get('accountNumber').value) {
                 lendingConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
@@ -431,45 +431,45 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
                 hasLegalEntityId = true;
                 hasLegalEntityAccountId = true;
             } else {
-                this.lendingBaseService.addValidationError("Client account not selected");
+                this.addValidationError("Client account not selected");
             }
 
             if (concessionFormItem.get('productType').value.description === "Overdraft") {
 
                 if (concessionFormItem.get('term').value == "") {
                  
-                    this.lendingBaseService.addValidationError("Term cannot be empty");
+                    this.addValidationError("Term cannot be empty");
                 }
 
                 if (concessionFormItem.get('reviewFeeType').value == "") {
-                    this.lendingBaseService.addValidationError("Review Fee Type cannot be empty");
+                    this.addValidationError("Review Fee Type cannot be empty");
                 }
 
                 if (concessionFormItem.get('reviewFee').value == "") {
-                    this.lendingBaseService.addValidationError("Review Fee cannot be empty");
+                    this.addValidationError("Review Fee cannot be empty");
                 }
 
                 if (concessionFormItem.get('uffFee').value == "") {
-                    this.lendingBaseService.addValidationError("UffFee cannot be empty");
+                    this.addValidationError("UffFee cannot be empty");
                 }
             }
             else if (concessionFormItem.get('productType').value.description === "Temporary Overdraft") {
 
 
                 if (concessionFormItem.get('term').value == "") {
-                    this.lendingBaseService.addValidationError("Term cannot be empty");
+                    this.addValidationError("Term cannot be empty");
                 }
 
                 if (concessionFormItem.get('reviewFeeType').value == "") {
-                    this.lendingBaseService.addValidationError("Review Fee Type cannot be empty");
+                    this.addValidationError("Review Fee Type cannot be empty");
                 }
 
                 if (concessionFormItem.get('reviewFee').value == "") {
-                    this.lendingBaseService.addValidationError("Review Fee cannot be empty");
+                    this.addValidationError("Review Fee cannot be empty");
                 }
 
                 if (concessionFormItem.get('uffFee').value == "") {
-                    this.lendingBaseService.addValidationError("UffFee cannot be empty");
+                    this.addValidationError("UffFee cannot be empty");
                 }
 
             }
@@ -480,7 +480,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
                 concessionFormItem.get('productType').value.description === "BTL (Business Term Loan)") {
 
                 if (concessionFormItem.get('term').value == "") {
-                    this.lendingBaseService.addValidationError("Term cannot be empty");
+                    this.addValidationError("Term cannot be empty");
                 }
 
             } else if (concessionFormItem.get('productType').value.description === "VAF Installment sale" ||
@@ -488,40 +488,40 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
                 concessionFormItem.get('productType').value.description === "VAF operating rental") {
 
                 if (concessionFormItem.get('term').value == "") {
-                    this.lendingBaseService.addValidationError("Term cannot be empty");
+                    this.addValidationError("Term cannot be empty");
                 }
 
                 if (concessionFormItem.get('serviceFee').value == "") {
-                    this.lendingBaseService.addValidationError("Service Fee cannot be empty");
+                    this.addValidationError("Service Fee cannot be empty");
                 }
 
                 if (concessionFormItem.get('frequency').value == "") {
-                    this.lendingBaseService.addValidationError("Frequency cannot be empty");
+                    this.addValidationError("Frequency cannot be empty");
                 }
             }
 
             // validate for all.
             if (concessionFormItem.get('limit').value == "") {
-                this.lendingBaseService.addValidationError("Limit cannot be empty");
+                this.addValidationError("Limit cannot be empty");
             }
 
             if (concessionFormItem.get('initiationFee').value == "") {
-                this.lendingBaseService.addValidationError("Initiation Fee cannot be empty");
+                this.addValidationError("Initiation Fee cannot be empty");
             }
 
             if (concessionFormItem.get('marginAgainstPrime').value == "") {
-                this.lendingBaseService.addValidationError("Prime fixed rate cannot be empty");
+                this.addValidationError("Prime fixed rate cannot be empty");
             }
 
             if (concessionFormItem.get('mrsEri').value == "" ||
                 (<string>concessionFormItem.get('mrsEri').value).trim() == "." ||
                 (<string>concessionFormItem.get('mrsEri').value).split(".").length > 1) {
-                this.lendingBaseService.addValidationError("MRS/ERI cannot be empty or a decimal");
+                this.addValidationError("MRS/ERI cannot be empty or a decimal");
 
             } else {        
                 var mrsEriValue = parseInt(concessionFormItem.get('mrsEri').value, 10);
                 if (mrsEriValue < MrsEriEnum.MinMrsEri || mrsEriValue > MrsEriEnum.MaxMrsEri) {
-                    this.lendingBaseService.addValidationError("MRS/ERI numbers must from 10 to 25");
+                    this.addValidationError("MRS/ERI numbers must from 10 to 25");
                 };
             }
           
@@ -531,7 +531,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
             if (concessionFormItem.get('term').value)
                 if (concessionFormItem.get('term').value < MOnthEnum.ThreeMonths) {
-                    this.lendingBaseService.addValidationError("Minimum term captured should be 3 months");
+                    this.addValidationError("Minimum term captured should be 3 months");
                 } else {
                     lendingConcessionDetail.term = concessionFormItem.get('term').value;
                 }
@@ -570,7 +570,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
                     concessionFormItem.get('accountNumber').value.legalEntityAccountId);
 
                 if (hasDuplicates) {
-                    this.lendingBaseService.addValidationError("Duplicate Account / Product pricing found. Please select different account.");
+                    this.addValidationError("Duplicate Account / Product pricing found. Please select different account.");
 
                     break;
                 }
@@ -589,12 +589,12 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             if (conditionFormItem.get('conditionType').value)
                 concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;
             else
-                this.lendingBaseService.addValidationError("Condition type not selected");
+                this.addValidationError("Condition type not selected");
 
             if (conditionFormItem.get('conditionProduct').value)
                 concessionCondition.conditionProductId = conditionFormItem.get('conditionProduct').value.id;
             else
-                this.lendingBaseService.addValidationError("Condition product not selected");
+                this.addValidationError("Condition product not selected");
 
             if (conditionFormItem.get('interestRate').value)
                 concessionCondition.interestRate = conditionFormItem.get('interestRate').value;
@@ -605,7 +605,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             if (conditionFormItem.get('value').value == null || (<string>conditionFormItem.get('value').value).length < 1) {
                 var value = conditionFormItem.get('conditionType').value;
                 if (value != null && value.enableConditionValue == true)
-                    this.lendingBaseService.addValidationError("Conditions: 'Value' is a mandatory field");
+                    this.addValidationError("Conditions: 'Value' is a mandatory field");
             }
             else if (conditionFormItem.get('value').value)
                 concessionCondition.conditionValue = conditionFormItem.get('value').value;
@@ -613,23 +613,23 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
             if (conditionFormItem.get('periodType').value) {
                 concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
             } else {
-                this.lendingBaseService.addValidationError("Period type not selected");
+                this.addValidationError("Period type not selected");
             }
 
             if (conditionFormItem.get('period').value) {
                 concessionCondition.periodId = conditionFormItem.get('period').value.id;
             } else {
-                this.lendingBaseService.addValidationError("Period not selected");
+                this.addValidationError("Period not selected");
             }
 
             if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
-                this.lendingBaseService.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+                this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
             }
 
             lendingConcession.concessionConditions.push(concessionCondition);
         }
 
-        if (!this.lendingBaseService.validationError) {
+        if (!this.validationError) {
             this.disableRows();
             this.lendingService.postNewLendingData(lendingConcession).subscribe(entity => {
                 console.log("data saved");
@@ -646,13 +646,13 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
 
     onTermValueChange(rowIndex) {
         this.errorMessage = null;
-        this.lendingBaseService.validationError = null;
+        this.validationError = null;
 
         const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
         let term = control.controls[rowIndex].get('term').value;
 
         if (term < MOnthEnum.ThreeMonths) {
-            this.lendingBaseService.addValidationError("Minimum term captured should be 3 months");
+            this.addValidationError("Minimum term captured should be 3 months");
         };
     }
 
@@ -689,7 +689,7 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     disableField(index: number, fieldname: string) {
-        return this.lendingBaseService.disableFieldBase(
+        return this.disableFieldBase(
             this.selectedConditionTypes[index],
             new LendingConcessionDetail(),
             fieldname,
@@ -707,14 +707,14 @@ export class LendingAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     validatePeriod(itemrow) {
-        this.lendingBaseService.validationError = null;
+        this.validationError = null;
 
         let selectedPeriodType = itemrow.controls.periodType.value.description;
 
         let selectedPeriod = itemrow.controls.period.value.description;
 
         if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
-            this.lendingBaseService.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+            this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
         }
     }
 }
