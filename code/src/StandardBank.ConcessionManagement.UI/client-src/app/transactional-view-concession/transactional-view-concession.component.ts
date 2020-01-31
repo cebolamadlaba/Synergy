@@ -29,7 +29,7 @@ import { LegalEntity } from "../models/legal-entity";
 import { ConcessionConditionReturnObject } from '../models/concession-condition-return-object';
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
-import { TransactionalConcessionBaseService } from '../services/transactional-concession-base.service';
+import { TransactionalBaseService } from '../services/transactional-base.service';
 
 @Component({
     selector: 'app-transactional-view-concession',
@@ -37,7 +37,7 @@ import { TransactionalConcessionBaseService } from '../services/transactional-co
     styleUrls: ['./transactional-view-concession.component.css'],
     providers: [DatePipe]
 })
-export class TransactionalViewConcessionComponent extends TransactionalConcessionBaseService implements OnInit, OnDestroy {
+export class TransactionalViewConcessionComponent extends TransactionalBaseService implements OnInit, OnDestroy {
 
     concessionReferenceId: string;
     public transactionalConcessionForm: FormGroup;
@@ -206,10 +206,8 @@ export class TransactionalViewConcessionComponent extends TransactionalConcessio
         }
         this.clientAccounts = <any>results[5];
 
-
         this.populateForm();
-
-    } 2
+    }
 
     onExpiryDateChanged(itemrow) {
         var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidationForView(itemrow.controls['expiryDate'].value, this.createdDate);
@@ -237,9 +235,7 @@ export class TransactionalViewConcessionComponent extends TransactionalConcessio
                     }
 
                     // Removed as per SBSA.Anthony's request - 2019-07-15
-                    //if (!transactionalConcession.concession.isInProgressExtension) {
                     this.canEdit = transactionalConcession.currentUser.canPcmApprove;
-                    //}
                 }
 
                 //if it's still pending and the user is a requestor then they can recall it
@@ -273,12 +269,10 @@ export class TransactionalViewConcessionComponent extends TransactionalConcessio
                 this.transactionalConcessionForm.controls['smtDealNumber'].setValue(this.transactionalConcession.concession.smtDealNumber);
                 this.transactionalConcessionForm.controls['motivation'].setValue(this.transactionalConcession.concession.motivation);
 
-
                 if (transactionalConcession.concession.dateOpened) {
                     var formattedDateOpened = this.datepipe.transform(transactionalConcession.concession.dateOpened, 'yyyy-MM-dd');
                     this.createdDate = formattedDateOpened;
                 }
-
 
                 let rowIndex = 0;
 
@@ -352,7 +346,6 @@ export class TransactionalViewConcessionComponent extends TransactionalConcessio
 
                         currentCondition.get('conditionProduct').setValue(selectedConditionProduct[0]);
                     }
-
 
                     currentCondition.get('interestRate').setValue(concessionCondition.interestRate);
                     currentCondition.get('volume').setValue(concessionCondition.conditionVolume);
@@ -579,8 +572,6 @@ export class TransactionalViewConcessionComponent extends TransactionalConcessio
         let concessionConditionReturnObject = this.baseComponentService.getConsessionConditionData(conditions, transactionalConcession.concessionConditions, this.validationError);
         transactionalConcession.concessionConditions = concessionConditionReturnObject.concessionConditions;
         this.validationError = concessionConditionReturnObject.validationError;
-
-        this.checkConcessionExpiryDate(transactionalConcession);
 
         return transactionalConcession;
     }
@@ -1100,5 +1091,9 @@ export class TransactionalViewConcessionComponent extends TransactionalConcessio
         if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
             this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
         }
+    }
+
+    disableField(fieldname: string, index: number = null) {
+        return this.disableFieldBase(fieldname, this.canEdit, index, this.selectedConditionTypes, this.isRecalling, this.motivationEnabled)
     }
 }

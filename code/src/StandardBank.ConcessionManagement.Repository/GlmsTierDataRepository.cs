@@ -51,7 +51,7 @@ namespace StandardBank.ConcessionManagement.Repository
                                 TierFrom = model.TierFrom,
                                 TierTo = model.TierTo,
                                 fkRateTypeId = model.RateTypeId,
-                                fkBaseRateId = model.BaseRateId,
+                                fkBaseRateId = model.BaseRateId == 0 ? null : model.BaseRateId,
                                 Spread = model.Spread,
                                 Value = model.Value
 

@@ -1,50 +1,47 @@
-
-
+import { ConditionType } from "../models/condition-type";
 
 export class BolConcessionBaseService {
 
-    showHide = false;
-    errorMessage: String;
-    isLoading = true;
     validationError: String[];
-    saveMessage: String;
-    warningMessage: String;
-    canEdit = false;
-    isRecalling = false;
-    motivationEnabled = false;
-    canBcmApprove = false;
-    canPcmApprove = false;
-    canApproveChanges = false;
 
     constructor() { }
 
-    disableFieldBase(fieldname: string) {
+    disableFieldBase(fieldname: string, canEdit: boolean, index: number, selectedConditionTypes: ConditionType[], isRecalling: boolean = null, motivationEnabled: boolean = null) {
         switch (fieldname) {
-            case 'compress':
-                this.showHide = !this.showHide;
-                break;
-            case 'errorMessage':
-                return (this.errorMessage) && !this.isLoading;
-            case 'validationError':
-                return (this.validationError) && !this.isLoading;
-            case 'saveMessage':
-                return this.saveMessage && !this.isLoading
-            case 'warningMessage':
-                return this.warningMessage && !this.isLoading
-            case 'SMTDealNumber':
-                return (this.isRecalling || this.canEdit) ? null : ''
-            case 'motivationEnabled':
-                return this.motivationEnabled ? null : ''
-            case 'addSMTDealNumber':
-                return this.saveMessage ? '' : null
-            case 'addMotivationEnabled':
-                return this.motivationEnabled ? null : ''
-            case 'Comments':
-                return this.canBcmApprove || this.canPcmApprove || this.canApproveChanges
+            case 'smtDealNumber':
+                if (isRecalling == null) {
+                    return canEdit ? null : '';
+                } else {
+                    return (isRecalling || canEdit) ? null : '';
+                }
+            case 'motivation':
+                if (motivationEnabled == null) {
+                    return canEdit ? null : '';
+                } else {
+                    return motivationEnabled ? null : '';
+                }
+            case 'product':
+            case 'userid':
+            case 'chargecode':
+            case 'unitcharge':
+            case 'expiryDate':
+                return canEdit ? null : '';
+            case 'interestRate':
+                return selectedConditionTypes[index] != null && selectedConditionTypes[index].enableInterestRate ? null : '';
+            case 'volume':
+                return selectedConditionTypes[index] != null && selectedConditionTypes[index].enableConditionVolume ? null : '';
+            case 'value':
+                return selectedConditionTypes[index] != null && selectedConditionTypes[index].enableConditionValue ? null : '';
             default:
                 break;
         }
     }
 
+    addValidationError(validationDetail) {
+        if (!this.validationError)
+            this.validationError = [];
+
+        this.validationError.push(validationDetail);
+    }
 }
 

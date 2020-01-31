@@ -35,14 +35,14 @@ import { LendingBaseService } from '../services/lending-base.service';
 @Component({
     selector: 'app-lending-add-concession',
     templateUrl: './lending-add-concession.component.html',
-    styleUrls: ['./lending-add-concession.component.css']
+    styleUrls: ['./lending-add-concession.component.css'],
+    providers: [LendingBaseService]
 })
 export class LendingAddConcessionComponent extends LendingBaseService implements OnInit, OnDestroy {
     public lendingConcessionForm: FormGroup;
     private sub: any;
     showHide = false;
     errorMessage: String;
-    validationError: String[];
     saveMessage: String;
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
@@ -600,13 +600,6 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
         }
     }
 
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
-    }
-
     onTermValueChange(rowIndex) {
         this.errorMessage = null;
         this.validationError = null;
@@ -618,9 +611,6 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
             this.addValidationError("Minimum term captured should be 3 months");
         };
     }
-
-
-
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
@@ -654,8 +644,14 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
         return this.saveMessage ? '' : null;
     }
 
-    disableField(index: number, type: string) {
-        return super.disableFieldBase(this.selectedConditionTypes, index, type);
+    disableField(index: number, fieldname: string) {
+        return this.disableFieldBase(
+            this.selectedConditionTypes[index],
+            new LendingConcessionDetail(),
+            fieldname,
+            this.saveMessage == null,
+            this.saveMessage != null
+        );
     }
 
     goBack() {
