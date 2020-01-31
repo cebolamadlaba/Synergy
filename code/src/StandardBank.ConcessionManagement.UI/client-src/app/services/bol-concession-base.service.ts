@@ -2,6 +2,8 @@ import { ConditionType } from "../models/condition-type";
 
 export class BolConcessionBaseService {
 
+    validationError: String[];
+
     constructor() { }
 
     disableFieldBase(fieldname: string, canEdit: boolean, index: number, selectedConditionTypes: ConditionType[], isRecalling: boolean = null, motivationEnabled: boolean = null) {
@@ -33,6 +35,13 @@ export class BolConcessionBaseService {
             default:
                 break;
         }
+    }
+
+    addValidationError(validationDetail) {
+        if (!this.validationError)
+            this.validationError = [];
+
+        this.validationError.push(validationDetail);
     }
 }
 

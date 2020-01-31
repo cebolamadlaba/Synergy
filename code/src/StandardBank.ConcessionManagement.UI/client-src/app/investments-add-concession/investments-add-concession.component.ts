@@ -45,11 +45,10 @@ import { MOnthEnum } from '../models/month-enum';
     styleUrls: ['./investments-add-concession.component.css'],
     providers: [InvestmentBaseService]
 })
-export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
+export class InvestmentAddConcessionComponent extends InvestmentBaseService implements OnInit, OnDestroy {
     private sub: any;
 
     errorMessage: String;
-    validationError: String[];
     saveMessage: String;
     showHide = false;
     observableRiskGroup: Observable<RiskGroup>;
@@ -106,6 +105,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
         @Inject(InvestmentBaseService) private investmentBaseService,
         @Inject(InvestmentConcessionService) private investmentConcessionService,
         private baseComponentService: BaseComponentService) {
+        super();
         this.riskGroup = new RiskGroup();
 
         this.productTypes = [new ProductType()];
@@ -363,13 +363,6 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
-    }
-
     getInvestmentConcession(): InvestmentConcession {
         var investmentConcession = new InvestmentConcession();
         investmentConcession.concession = new Concession();
@@ -601,7 +594,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     disableField(index, fieldName) {
-        return this.investmentBaseService.disableFieldBase(
+        return this.disableFieldBase(
             this.selectedConditionTypes[index],
             fieldName,
             this.saveMessage == null,

@@ -51,7 +51,6 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
     concessionReferenceId: string;
     private sub: any;
     errorMessage: String;
-    validationError: String[];
     saveMessage: String;
     warningMessage: String;
     observableRiskGroup: Observable<RiskGroup>;
@@ -179,8 +178,6 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
                 this.capturedComments = value.comments;
             }
         });
-
-
     }
 
     getInitialData() {
@@ -258,9 +255,7 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
                     }
 
                     // Removed as per SBSA.Anthony's request - 2019-07-15
-                    //if (!bolConcession.concession.isInProgressExtension) {
                     this.canEdit = bolConcession.currentUser.canPcmApprove;
-                    //}
                 }
 
                 //if it's still pending and the user is a requestor then they can recall it
@@ -503,14 +498,6 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
         this.selectedProducts[rowIndex].bolchargecodes = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId);
 
         currentProduct.get('chargecode').setValue(this.selectedProducts[rowIndex].bolchargecodes[0]);
-
-    }
-
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
     }
 
     getBolConcession(isNew: boolean): BolConcession {
@@ -851,22 +838,6 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
         }
 
         const conditions = <FormArray>this.bolConcessionForm.controls['conditionItemsRows'];
-        //this is detailed line items,  but not yet the controls
-        //for (let conditionFormItem of conditions.controls) {
-
-        //    let controls = (<FormGroup>conditionFormItem).controls;
-
-        //    for (const fieldname in controls) { // 'field' is a string
-
-        //        const abstractControl = controls[fieldname];
-        //        if (abstractControl.dirty) {
-
-        //            changedProperties.push({ rowIndex, fieldname });
-        //        }
-        //    }
-        //    rowIndex++;
-        //}
-
 
         return JSON.stringify(changedProperties);
     }
@@ -1191,7 +1162,6 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-
     }
 
 

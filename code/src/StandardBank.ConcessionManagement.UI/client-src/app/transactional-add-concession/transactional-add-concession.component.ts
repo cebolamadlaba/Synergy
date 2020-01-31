@@ -39,7 +39,6 @@ export class TransactionalAddConcessionComponent extends TransactionalBaseServic
     public transactionalConcessionForm: FormGroup;
     private sub: any;
     errorMessage: String;
-    validationError: String[];
     saveMessage: String;
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
@@ -189,8 +188,6 @@ export class TransactionalAddConcessionComponent extends TransactionalBaseServic
         this.transactionTableNumberChanged(0);
 
         this.isLoading = false;
-
-
     }
 
     initConcessionItemRows() {
@@ -243,8 +240,6 @@ export class TransactionalAddConcessionComponent extends TransactionalBaseServic
 
             self.transactionalConcessionDetail = self.processFileContent(self.xlsxModel);
             self.populateTransactionalConcessionByFile();
-            // reset the input:file which allows you to upload the same file again
-            /// self.fileInput.nativeElement.value = '';
         }
 
         // execute reading of the file
@@ -290,7 +285,6 @@ export class TransactionalAddConcessionComponent extends TransactionalBaseServic
                     currentConcession.get('transactionTableNumber').setValue(null);
                     currentConcession.get('flatFeeOrRate').setValue(null);
                 }
-
             }
 
             if (transactionalConcessionDetail.accountNumber) {
@@ -387,8 +381,8 @@ export class TransactionalAddConcessionComponent extends TransactionalBaseServic
     }
 
     onExpiryDateChanged(itemrow) {
-
         var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
+
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);
         }
@@ -416,7 +410,6 @@ export class TransactionalAddConcessionComponent extends TransactionalBaseServic
             transactionalConcession.concession.riskGroupId = this.riskGroup.id;
         if (this.legalEntity)
             transactionalConcession.concession.legalEntityId = this.legalEntity.id;
-
 
         if (this.transactionalConcessionForm.controls['smtDealNumber'].value)
             transactionalConcession.concession.smtDealNumber = this.transactionalConcessionForm.controls['smtDealNumber'].value;
@@ -572,18 +565,9 @@ export class TransactionalAddConcessionComponent extends TransactionalBaseServic
         }
     }
 
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
-    }
-
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
     }
-
-
 
     goBack() {
         this.location.back();
