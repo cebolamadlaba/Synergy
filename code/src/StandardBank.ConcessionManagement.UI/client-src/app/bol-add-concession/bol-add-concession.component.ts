@@ -36,17 +36,17 @@ import { UserService } from "../services/user.service";
 import { BaseComponentService } from '../services/base-component.service';
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
+import { BolConcessionBaseService } from '../services/bol-concession-base.service';
 
 @Component({
     selector: 'app-bol-add-concession',
     templateUrl: './bol-add-concession.component.html',
     styleUrls: ['./bol-add-concession.component.css']
 })
-export class BolAddConcessionComponent implements OnInit, OnDestroy {
+export class BolAddConcessionComponent extends BolConcessionBaseService implements OnInit, OnDestroy {
     private sub: any;
 
     errorMessage: String;
-    validationError: String[];
     saveMessage: String;
     showHide = false;
     observableRiskGroup: Observable<RiskGroup>;
@@ -95,6 +95,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         @Inject(LookupDataService) private lookupDataService,
         @Inject(BolConcessionService) private bolConcessionService,
         private baseComponentService: BaseComponentService) {
+        super();
         this.riskGroup = new RiskGroup();
 
         this.bolchargecodetypes = [new BolChargeCodeType()];
@@ -106,7 +107,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
         this.conditionTypes = [new ConditionType()];
         this.selectedConditionTypes = [new ConditionType()];
         this.selectedProducts = [new BolChargeCodeType()];
-     
+
     }
 
     ngOnInit() {
@@ -127,7 +128,7 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     getInitialData() {
-        if (this.riskGroupNumber != null && this.riskGroupNumber != 0) {
+        if (this.riskGroupNumber !== 0) {
             Observable.forkJoin([
                 this.lookupDataService.getConditionTypes(),
                 this.lookupDataService.getBOLChargeCodeTypes(),
@@ -312,14 +313,6 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
     }
 
-
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
-    }
-
     getBolConcession(): BolConcession {
         var bolConcession = new BolConcession();
         bolConcession.concession = new Concession();
@@ -463,5 +456,9 @@ export class BolAddConcessionComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.sub.unsubscribe();
+    }
+
+    disableField(fieldname: string, index: number = null) {
+        return this.disableFieldBase(fieldname, this.saveMessage == null, index, this.selectedConditionTypes, null, null)
     }
 }

@@ -219,7 +219,6 @@ export class CashAddConcessionComponent extends CashBaseService implements OnIni
             control.controls[0].get('tableNumber').setValue(this.tableNumbers[0]);
 
             this.tableNumberChanged(0);
-
         }
 
         this.isLoading = false;
@@ -321,7 +320,6 @@ export class CashAddConcessionComponent extends CashBaseService implements OnIni
             newRow.controls['accrualType'].setValue(this.accrualTypes[0]);
 
         control.push(newRow);
-
     }
 
     addNewConditionRow() {
@@ -415,6 +413,7 @@ export class CashAddConcessionComponent extends CashBaseService implements OnIni
     }
 
     getCashConcession(): CashConcession {
+
         var cashConcession = new CashConcession();
         cashConcession.concession = new Concession();
 
@@ -533,7 +532,15 @@ export class CashAddConcessionComponent extends CashBaseService implements OnIni
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
+    }
 
+    disableField(index: number, fieldname: string) {
+        return this.disableFieldBase(
+            this.selectedConditionTypes[index],
+            fieldname,
+            this.saveMessage == null,
+            this.saveMessage != null
+        );
     }
 
     goBack() {

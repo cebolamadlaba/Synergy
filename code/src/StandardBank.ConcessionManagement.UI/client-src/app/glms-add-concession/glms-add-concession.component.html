@@ -92,14 +92,14 @@
 
         <div class="row">
             <label>SMT Deal Number</label>
-            <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="saveMessage ? '' : null" />
+            <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="disableField('smtDealNumber')" />
         </div>
 
     </div>
 
     <div class="col-md-7 col-md-offset-1">
         <label>Motivation</label>
-        <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="saveMessage ? '' : null"></textarea>
+        <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="disableField('motivation')"></textarea>
     </div>
 
     <!-- Concession table -->
@@ -126,33 +126,33 @@
             <tr *ngFor="let itemrow of glmsConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
                 <td class="length-long">
                     <!-- Group -->
-                    <select formControlName="glmsGroup" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                    <select formControlName="glmsGroup" class="form-control" [attr.disabled]="disableField('glmsGroup',i)">
                         <option *ngFor="let glmsGroupOption of glmsGroup" [ngValue]="glmsGroupOption">{{glmsGroupOption.groupName}}</option>
                     </select>
                 </td>
                 <td class="length-long">
                     <!-- Interest Pricing Category -->
-                    <select formControlName="interestPricingCategory" class="form-control" [attr.disabled]="saveMessage ? '' : null">
-                        <option *ngFor="let interestPricingCategoryOption of interestPricingCategory" [ngValue]="interestPricingCategoryOption" >{{interestPricingCategoryOption.description}}</option>
+                    <select formControlName="interestPricingCategory" class="form-control" [attr.disabled]="disableField('interestPricingCategory',i)">
+                        <option *ngFor="let interestPricingCategoryOption of interestPricingCategory" [ngValue]="interestPricingCategoryOption">{{interestPricingCategoryOption.description}}</option>
                     </select>
                 </td>
                 <td class="length-short">
                     <!-- Interest Type -->
-                    <select formControlName="interestType" class="form-control" [attr.disabled]="saveMessage ? '' : null">
-                        <option *ngFor="let interestTypeOption of interestType" [ngValue]="interestTypeOption" > {{interestTypeOption.description}}</option>
+                    <select formControlName="interestType" class="form-control" [attr.disabled]="disableField('interestType',i)">
+                        <option *ngFor="let interestTypeOption of interestType" [ngValue]="interestTypeOption"> {{interestTypeOption.description}}</option>
                     </select>
                 </td>
                 <td class="length-short">
                     <!-- Slab Type -->
-                    <select formControlName="slabType" class="form-control" [attr.disabled]="saveMessage ? '' : null">
-                        <option *ngFor="let slabTypeOption of slabType" [ngValue]="slabTypeOption" > {{slabTypeOption.description}}</option>
+                    <select formControlName="slabType" class="form-control" [attr.disabled]="disableField('slabType',i)">
+                        <option *ngFor="let slabTypeOption of slabType" [ngValue]="slabTypeOption"> {{slabTypeOption.description}}</option>
                     </select>
                 </td>
                 <!-- expiry Date-->
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="(saveMessage) ? '' : null"  /></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="disableField('expiryDate',i)" /></td>
 
                 <!--Tier information-->
-                <td><button class="length-long btn btn-primary" (click)="openTier(manageTierModal.show(),i)" [attr.disabled]="saveMessage ? '' : null">Add Tier</button></td>
+                <td><button class="length-long btn btn-primary" (click)="openTier(manageTierModal.show(),i)" [attr.disabled]="disableField('addTier',i)">Add Tier</button></td>
 
                 <td><button *ngIf="glmsConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
 
@@ -222,7 +222,7 @@
     </div>
 
     <!-- Modal Tier -->
-    <div bsModal #manageTierModal="bs-modal" class="modal fade preview-modal"  id="manageTierModal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="manageTierModalLabel" aria-hidden="true">
+    <div bsModal #manageTierModal="bs-modal" class="modal fade preview-modal" id="manageTierModal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="manageTierModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
 
@@ -293,7 +293,6 @@
                 </div>
                 <div class="modal-footer">
                     <div class="float-right">
-                        <!--<button type="button" class="btn btn-primary" (click)="manageTierModal.hide()">Cancel</button>-->
                         <button type="button" class="btn btn-primary" (click)="closeTierModal(manageTierModal.hide())">Done</button>
                     </div>
                 </div>
@@ -310,6 +309,3 @@
     </div>
 
 </form>
-
-
-

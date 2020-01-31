@@ -41,6 +41,7 @@ import { InvestmentConcessionService } from "../services/investment-concession.s
 import { InvestmentView } from "../models/investment-view";
 
 import { BaseComponentService } from '../services/base-component.service';
+import { InvestmentBaseService } from '../services/investment-base.service';
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
 
@@ -48,14 +49,13 @@ import { MOnthEnum } from '../models/month-enum';
     selector: 'app-investments-view-concession',
     templateUrl: './investments-view-concession.component.html',
     styleUrls: ['./investments-view-concession.component.css'],
-    providers: [DatePipe]
+    providers: [DatePipe, InvestmentBaseService]
 })
-export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
+export class InvestmentsViewConcessionComponent extends InvestmentBaseService implements OnInit, OnDestroy {
 
     concessionReferenceId: string;
     private sub: any;
     errorMessage: String;
-    validationError: String[];
     saveMessage: String;
     warningMessage: String;
 
@@ -137,9 +137,8 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         @Inject(InvestmentConcessionService) private investmentConcessionService,
         private baseComponentService: BaseComponentService) {
 
+        super();
         this.riskGroup = new RiskGroup();
-        //this.investmentproducttypes = [new InvestmentProductType()];
-        //this.investmentproducts = [new InvestmentProduct()];
 
         this.productTypes = [new ProductType()];
         this.periods = [new Period()];
@@ -149,7 +148,6 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
         this.conditionTypes = [new ConditionType()];
         this.selectedConditionTypes = [new ConditionType()];
-        //this.selectedProductTypes = [new InvestmentProductType()];
 
         this.selectedInvestmentConcession = [false];
 
@@ -303,9 +301,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
                     }
 
                     // Removed as per SBSA.Anthony's request - 2019-07-15
-                    //if (!investmentConcession.concession.isInProgressExtension) {
                     this.canEdit = investmentConcession.currentUser.canPcmApprove;
-                    //}
                 }
 
 
@@ -594,16 +590,6 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             this.selectedInvestmentConcession[rowIndex] = true;
 
         }
-    }
-
-
-
-
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
     }
 
     getInvestmentConcession(isNew: boolean): InvestmentConcession {
@@ -1253,7 +1239,6 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-        //$event.target.value = this.formatDecimal($event.target.value);
     }
 
     setZeroNumberDecimal($event) {
@@ -1262,7 +1247,6 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.0-0');
         }
         else {
-
             $event.target.value = null;
         }
     }
@@ -1271,21 +1255,41 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     setThreeNumberDecimal($event) {
         if ($event.target.value) {
             $event.target.value = this.baseComponentService.formatDecimalThree($event.target.value);
-            //$event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
         }
         else {
-
             $event.target.value = null;
         }
     }
 
-    //formatDecimal(itemValue: number) {
-    //    if (itemValue) {
-    //        return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-    //    }
+    canAddConcessionRowOrManageCondition() {
+        return this.canPcmApprove || this.isEditing || this.isRecalling;
+    }
 
-    //    return null;
-    //}
+    canAddNewCondition() {
+        return this.canBcmApprove || this.canPcmApprove || this.isEditing || this.isRecalling;
+    }
+
+    canAddComments() {
+        return this.canBcmApprove || this.canPcmApprove || this.canApproveChanges;
+    }
+
+    canEditSmtDealNumber() {
+        return (this.isRecalling || this.canEdit) ? null : '';
+    }
+
+    isMotivationEnabled() {
+        return this.motivationEnabled ? null : '';
+    }
+
+    disableField(index, fieldName) {
+        return this.disableFieldBase(
+            this.selectedConditionTypes[index],
+            fieldName,
+            this.canEdit,
+            this.canEdit != null,
+            this.isEnabledExpiryDate(index),
+            this.selectedInvestmentConcession[index]);
+    }
 
     validatePeriod(itemrow) {
         this.validationError = null;

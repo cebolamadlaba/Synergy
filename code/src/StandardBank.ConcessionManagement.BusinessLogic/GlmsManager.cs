@@ -97,6 +97,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var concessionGlms = _concessionGlmsRepository.ReadById(glmsConcessionDetail.GlmsConcessionDetailId);
 
+            DeleteGlmsTierData(concessionGlms.Id);
             _concessionGlmsRepository.Delete(concessionGlms);
             return concessionGlms;
         }
