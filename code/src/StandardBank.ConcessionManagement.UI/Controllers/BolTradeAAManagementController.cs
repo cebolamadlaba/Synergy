@@ -66,7 +66,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var user = _siteHelper.LoggedInUser(this);
 
             if (user.IsRequestor)
+            {
                 return Ok(new[] { user });
+            }
 
             return Ok(_userManager.GetUsersByRole(Constants.Roles.Requestor));
         }
@@ -81,28 +83,18 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var user = _siteHelper.LoggedInUser(this);
 
             if (user.IsRequestor)
-                return Ok(_userManager.GetAccountAssistantsForAccountExecutive(user.Id));//.Where(x=>x.SubRoleId != null));
+            {
+                return Ok(_userManager.GetAccountAssistantsForAccountExecutive(user.Id));
+            }
 
             return Ok(_userManager.GetUsersByRole(Constants.Roles.AA));
 
-            //return Ok(_userManager.GetUsersByRole(Constants.Roles.AA).Where(x=>x.SubRoleId != null));
         }
 
         [Route("UpdateAccountAssistantSubRole")]
         public async Task<IActionResult> UpdateAccountAssistantSubRole([FromBody] User bolTradeuser)
         {
             return this.SaveBolOrTradeAccountExecutive(bolTradeuser, true, false).Result;
-            //var user = _siteHelper.LoggedInUser(this);
-            //var roles = _lookupTableManager.GetRoles();
-
-            //bolTradeuser.RoleId = roles.First(_ => _.Name == Constants.Roles.AA).Id;
-
-            //if (bolTradeuser.Id > 0)
-            //    await _mediator.Send(new UpdateUser(bolTradeuser, user));
-            //else
-            //    bolTradeuser.Id = await _mediator.Send(new CreateUser(bolTradeuser, user));
-
-            //return Ok(true);
         }
 
         /// <summary>
@@ -114,28 +106,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public async Task<IActionResult> SaveBolOrTradeAccountExecutive([FromBody] User bolTradeuser)
         {
             return this.SaveBolOrTradeAccountExecutive(bolTradeuser, true, true).Result;
-            //var user = _siteHelper.LoggedInUser(this);
-            //var roles = _lookupTableManager.GetRoles();
-
-            //bolTradeuser.RoleId = roles.First(_ => _.Name == Constants.Roles.AA).Id;
-
-            //if (bolTradeuser.Id > 0)
-            //    await _mediator.Send(new UpdateUser(bolTradeuser, user));
-            //else
-            //    bolTradeuser.Id = await _mediator.Send(new CreateUser(bolTradeuser, user));
-
-            //if (bolTradeuser.AccountExecutiveUserId.HasValue && bolTradeuser.AccountExecutiveUserId.Value > 0)
-            //{
-            //    var accountExecutive = new AccountExecutive
-            //    {
-            //        User = _userManager.GetUser(bolTradeuser.AccountExecutiveUserId.Value),
-            //        AccountAssistants = new[] { bolTradeuser }
-            //    };
-
-            //    await _mediator.Send(new CreateOrUpdateAccountExecutives(accountExecutive, user));
-            //}
-
-            //return Ok(true);
         }
 
         /// <summary>
@@ -171,9 +141,13 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 bolTradeuser.RoleId = roles.First(_ => _.Name == Constants.Roles.AA).Id;
 
                 if (bolTradeuser.Id > 0)
+                {
                     await _mediator.Send(new UpdateUser(bolTradeuser, user));
+                }
                 else
+                {
                     bolTradeuser.Id = await _mediator.Send(new CreateUser(bolTradeuser, user));
+                }
             }
 
             if (updateAaAeLink)

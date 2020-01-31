@@ -63,18 +63,24 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var concession = await _mediator.Send(new AddConcession(tradeConcession.Concession, user));
 
             foreach (var tradeConcessionDetail in tradeConcession.TradeConcessionDetails)
+            {
                 await _mediator.Send(new BusinessLogic.Features.TradeConcession.AddOrUpdateTradeConcessionDetail(tradeConcessionDetail, user, concession));
+            }
 
             if (tradeConcession.ConcessionConditions != null && tradeConcession.ConcessionConditions.Any())
+            {
                 foreach (var concessionCondition in tradeConcession.ConcessionConditions)
+                {
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
-
+                }
+            }
 
             var bcmPendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.NewSubmission);
 
             if (!string.IsNullOrWhiteSpace(tradeConcession.Concession.Comments))
-                await _mediator.Send(new AddConcessionComment(concession.Id, bcmPendingStatusId,
-                    tradeConcession.Concession.Comments, user));
+            {
+                await _mediator.Send(new AddConcessionComment(concession.Id, bcmPendingStatusId, tradeConcession.Concession.Comments, user));
+            }
 
             return Ok(tradeConcession);
         }
@@ -98,45 +104,58 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
         private async Task UpdateTradeConcession(TradeConcession tradeConcession, User user)
         {
-            var databaseTradeConcession =
-                _tradeManager.GetTradeConcession(tradeConcession.Concession.ReferenceNumber, user);
+            var databaseTradeConcession = _tradeManager.GetTradeConcession(tradeConcession.Concession.ReferenceNumber, user);
 
             //if there are any conditions that have been removed, delete them
             foreach (var condition in databaseTradeConcession.ConcessionConditions)
+            {
                 if (tradeConcession.ConcessionConditions.All(_ => _.ConcessionConditionId != condition.ConcessionConditionId))
+                {
                     await _mediator.Send(new DeleteConcessionCondition(condition, user));
+                }
+            }
 
             //if there are any concession details that have been removed delete them
             foreach (var tradeConcessionDetail in databaseTradeConcession.TradeConcessionDetails)
-                if (tradeConcession.TradeConcessionDetails.All(_ => _.TradeConcessionDetailId !=
-                                                                  tradeConcessionDetail.TradeConcessionDetailId))
+            {
+                if (tradeConcession.TradeConcessionDetails.All(_ => _.TradeConcessionDetailId != tradeConcessionDetail.TradeConcessionDetailId))
+                {
                     await _mediator.Send(new DeleteTradeConcessionDetail(tradeConcessionDetail, user));
+                }
+            }
 
             if (!tradeConcession.Concession.AENumberUserId.HasValue)
+            {
                 tradeConcession.Concession.AENumberUserId = databaseTradeConcession.Concession.AENumberUserId;
+            }
 
             //update the concession
             var concession = await _mediator.Send(new UpdateConcession(tradeConcession.Concession, user));
 
             //add all the new conditions and details and comments
             foreach (var tradeConcessionDetail in tradeConcession.TradeConcessionDetails)
+            {
                 await _mediator.Send(new AddOrUpdateTradeConcessionDetail(tradeConcessionDetail, user, concession));
+            }
 
             if (tradeConcession.ConcessionConditions != null && tradeConcession.ConcessionConditions.Any())
+            {
                 foreach (var concessionCondition in tradeConcession.ConcessionConditions)
+                {
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+                }
+            }
 
             if (!string.IsNullOrWhiteSpace(tradeConcession.Concession.Comments))
-                await _mediator.Send(new AddConcessionComment(concession.Id, databaseTradeConcession.Concession.SubStatusId,
-                    tradeConcession.Concession.Comments, user));
+            {
+                await _mediator.Send(new AddConcessionComment(concession.Id, databaseTradeConcession.Concession.SubStatusId, tradeConcession.Concession.Comments, user));
+            }
 
             if ((tradeConcession.Concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges || tradeConcession.Concession.SubStatus == Constants.ConcessionSubStatus.HoApprovedWithChanges) && tradeConcession.Concession.ConcessionComments != null)
             {
                 if (tradeConcession.Concession.ConcessionComments.Count() > 0 && tradeConcession.Concession.ConcessionComments.First().UserDescription == "LogChanges")
                 {
                     await _mediator.Send(new AddConcessionComment(concession.Id, databaseTradeConcession.Concession.SubStatusId, "LogChanges:" + tradeConcession.Concession.ConcessionComments.First().Comment, user));
-
-
                 }
             }
         }
@@ -163,8 +182,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var user = _siteHelper.LoggedInUser(this);
 
             //get the concession details
-            var tradeConcession =
-                _tradeManager.GetTradeConcession(concessionReferenceId, user);
+            var tradeConcession = _tradeManager.GetTradeConcession(concessionReferenceId, user);
 
             var parentConcessionId = tradeConcession.Concession.Id;
 
@@ -268,11 +286,17 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var concession = await _mediator.Send(new AddConcession(tradeConcession.Concession, user));
 
             foreach (var tradeConcessionDetail in tradeConcession.TradeConcessionDetails)
+            {
                 await _mediator.Send(new AddOrUpdateTradeConcessionDetail(tradeConcessionDetail, user, concession));
+            }
 
             if (tradeConcession.ConcessionConditions != null && tradeConcession.ConcessionConditions.Any())
+            {
                 foreach (var concessionCondition in tradeConcession.ConcessionConditions)
+                {
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+                }
+            }
 
             //link the new concession to the old concession
             var concessionRelationship = new ConcessionRelationship
@@ -309,9 +333,5 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             return Ok(_tradeManager.GetTradeConcession(detail.ReferenceNumber, user));
         }
-
-
-
-
     }
 }

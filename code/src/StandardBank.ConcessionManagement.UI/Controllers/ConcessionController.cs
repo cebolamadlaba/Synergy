@@ -189,12 +189,16 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult GetLegalEntityAddress(int legalEntityId)
         {
             if (legalEntityId < 1)
+            {
                 return NoContent();
+            }
 
             LegalEntityAddress legalEntityAddress = this._legalEntityAddressManager.GetLegalEntityAddressByLegalEntityId(legalEntityId);
 
             if (legalEntityAddress == null)
+            {
                 legalEntityAddress = this._legalEntityAddressManager.GetLegalEntityAddressFromLegalEntityRepository(legalEntityId);
+            }
 
             return Ok(legalEntityAddress);
         }
@@ -207,9 +211,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult UserApprovedConcessions()
         {
             var userAEId = _siteHelper.GetUserIdForFiltering(this);
-            var currentUser= _siteHelper.LoggedInUser(this);
+            var currentUser = _siteHelper.LoggedInUser(this);
 
-            return Ok(_concessionManager.GetApprovedConcessionsForUser(userAEId,currentUser));
+            return Ok(_concessionManager.GetApprovedConcessionsForUser(userAEId, currentUser));
         }
 
         /// <summary>
@@ -347,11 +351,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var convertedConcessionDetailId = Convert.ToInt32(concessionDetailId);
 
             var result = new FileContentResult(
-
                 //this will be repalced by the actual bytes retrieved from db or disk  - TBA
                 _letterGeneratorManager.DownloadLetterForConcessionDetail(convertedConcessionDetailId, userId),
-
-
                 "application/pdf")
             {
                 FileDownloadName = $"ConcessionLetter_{concessionDetailId.Replace(",", "_")}.pdf"
@@ -404,7 +405,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             };
 
             return Ok(file);
-            
         }
 
 

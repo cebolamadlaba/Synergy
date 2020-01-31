@@ -62,18 +62,24 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var concession = await _mediator.Send(new AddConcession(investmentConcession.Concession, user));
 
             foreach (var investmentConcessionDetail in investmentConcession.InvestmentConcessionDetails)
+            {
                 await _mediator.Send(new BusinessLogic.Features.InvestmentConcession.AddOrUpdateInvestmentConcessionDetail(investmentConcessionDetail, user, concession));
+            }
 
             if (investmentConcession.ConcessionConditions != null && investmentConcession.ConcessionConditions.Any())
+            {
                 foreach (var concessionCondition in investmentConcession.ConcessionConditions)
+                {
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
-
+                }
+            }
 
             var bcmPendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.NewSubmission);
 
             if (!string.IsNullOrWhiteSpace(investmentConcession.Concession.Comments))
-                await _mediator.Send(new AddConcessionComment(concession.Id, bcmPendingStatusId,
-                    investmentConcession.Concession.Comments, user));
+            {
+                await _mediator.Send(new AddConcessionComment(concession.Id, bcmPendingStatusId, investmentConcession.Concession.Comments, user));
+            }
 
             return Ok(investmentConcession);
         }
@@ -97,39 +103,51 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
         private async Task UpdateInvestmentConcession(InvestmentConcession investmentConcession, User user)
         {
-            var databaseInvestmentConcession =
-                _investmentManager.GetInvestmentConcession(investmentConcession.Concession.ReferenceNumber, user);
+            var databaseInvestmentConcession = _investmentManager.GetInvestmentConcession(investmentConcession.Concession.ReferenceNumber, user);
 
             //if there are any conditions that have been removed, delete them
             foreach (var condition in databaseInvestmentConcession.ConcessionConditions)
+            {
                 if (investmentConcession.ConcessionConditions.All(_ => _.ConcessionConditionId != condition.ConcessionConditionId))
+                {
                     await _mediator.Send(new DeleteConcessionCondition(condition, user));
+                }
+            }
 
             //if there are any concession details that have been removed delete them
             foreach (var investmentConcessionDetail in databaseInvestmentConcession.InvestmentConcessionDetails)
-                if (investmentConcession.InvestmentConcessionDetails.All(_ => _.InvestmentConcessionDetailId !=
-                                                                  investmentConcessionDetail.InvestmentConcessionDetailId))
+            {
+                if (investmentConcession.InvestmentConcessionDetails.All(_ => _.InvestmentConcessionDetailId != investmentConcessionDetail.InvestmentConcessionDetailId))
+                {
                     await _mediator.Send(new DeleteInvestmentConcessionDetail(investmentConcessionDetail, user));
+                }
+            }
 
             if (!investmentConcession.Concession.AENumberUserId.HasValue)
+            {
                 investmentConcession.Concession.AENumberUserId = databaseInvestmentConcession.Concession.AENumberUserId;
+            }
 
             //update the concession
             var concession = await _mediator.Send(new UpdateConcession(investmentConcession.Concession, user));
 
             //add all the new conditions and details and comments
             foreach (var investmentConcessionDetail in investmentConcession.InvestmentConcessionDetails)
+            {
                 await _mediator.Send(new AddOrUpdateInvestmentConcessionDetail(investmentConcessionDetail, user, concession));
+            }
 
             if (investmentConcession.ConcessionConditions != null && investmentConcession.ConcessionConditions.Any())
+            {
                 foreach (var concessionCondition in investmentConcession.ConcessionConditions)
+                {
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+                }
+            }
 
             if (!string.IsNullOrWhiteSpace(investmentConcession.Concession.Comments))
             {
-                await _mediator.Send(new AddConcessionComment(concession.Id, databaseInvestmentConcession.Concession.SubStatusId,
-                    investmentConcession.Concession.Comments, user));
-
+                await _mediator.Send(new AddConcessionComment(concession.Id, databaseInvestmentConcession.Concession.SubStatusId, investmentConcession.Concession.Comments, user));
             }
 
             if ((investmentConcession.Concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges || investmentConcession.Concession.SubStatus == Constants.ConcessionSubStatus.HoApprovedWithChanges) && investmentConcession.Concession.ConcessionComments != null)
@@ -137,10 +155,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 if (investmentConcession.Concession.ConcessionComments.Count() > 0 && investmentConcession.Concession.ConcessionComments.First().UserDescription == "LogChanges")
                 {
                     await _mediator.Send(new AddConcessionComment(concession.Id, databaseInvestmentConcession.Concession.SubStatusId, "LogChanges:" + investmentConcession.Concession.ConcessionComments.First().Comment, user));
-
                 }
             }
-
         }
 
 
@@ -165,8 +181,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var user = _siteHelper.LoggedInUser(this);
 
             //get the concession details
-            var investmentConcession =
-                _investmentManager.GetInvestmentConcession(concessionReferenceId, user);
+            var investmentConcession = _investmentManager.GetInvestmentConcession(concessionReferenceId, user);
 
             var parentConcessionId = investmentConcession.Concession.Id;
 
@@ -270,11 +285,17 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var concession = await _mediator.Send(new AddConcession(investmentConcession.Concession, user));
 
             foreach (var investmentConcessionDetail in investmentConcession.InvestmentConcessionDetails)
+            {
                 await _mediator.Send(new AddOrUpdateInvestmentConcessionDetail(investmentConcessionDetail, user, concession));
+            }
 
             if (investmentConcession.ConcessionConditions != null && investmentConcession.ConcessionConditions.Any())
+            {
                 foreach (var concessionCondition in investmentConcession.ConcessionConditions)
+                {
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+                }
+            }
 
             //link the new concession to the old concession
             var concessionRelationship = new ConcessionRelationship
@@ -311,9 +332,5 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             return Ok(_investmentManager.GetInvestmentConcession(detail.ReferenceNumber, user));
         }
-
-
-
-
     }
 }
