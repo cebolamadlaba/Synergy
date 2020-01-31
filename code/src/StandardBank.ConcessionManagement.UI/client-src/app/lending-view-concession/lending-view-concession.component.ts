@@ -41,7 +41,7 @@ import { ConcessionConditionReturnObject } from '../models/concession-condition-
     selector: 'app-lending-view-concession',
     templateUrl: './lending-view-concession.component.html',
     styleUrls: ['./lending-view-concession.component.css'],
-    providers: [DatePipe]
+    providers: [DatePipe, LendingBaseService]
 })
 export class LendingViewConcessionComponent extends LendingBaseService implements OnInit, OnDestroy {
 
@@ -631,13 +631,6 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             currentRow.get('frequency').disable();
             currentRow.get('serviceFee').disable();
         }
-    }
-
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
     }
 
     goBack() {
@@ -1367,31 +1360,14 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         return this.motivationEnabled ? null : '';
     }
 
-    disableField(index: number, type: string) {
-        switch (type) {                
-            case 'productType':
-            case 'accountNumber':
-            case 'limit':
-            case 'term':
-            case 'marginAgainstPrime':
-            case 'initiationFee':
-            case 'mrsEri':
-                return this.canEdit ? null : '';
-            case 'reviewFeeType':
-                return (this.lendingConcession.lendingConcessionDetails[index].show_reviewFeeType && this.canEdit) ? null : '';
-            case 'reviewFee':
-                return (this.lendingConcession.lendingConcessionDetails[index].show_reviewFee && this.canEdit) ? null : '';
-            case 'uffFee':
-                return (this.lendingConcession.lendingConcessionDetails[index].show_uffFee && this.canEdit) ? null : '';
-            case 'frequency':
-                return (this.lendingConcession.lendingConcessionDetails[index].show_frequency && this.canEdit) ? null : '';
-            case 'serviceFee':
-                return (this.lendingConcession.lendingConcessionDetails[index].show_serviceFee && this.canEdit) ? null : '';
-            case 'interestRate':
-            case 'volume':
-            case 'value':
-                return super.disableFieldBase(this.selectedConditionTypes, index, type);
-        }
+    disableField(index: number, fieldname: string) {
+        return this.disableFieldBase(
+            this.selectedConditionTypes[index],
+            this.lendingConcession.lendingConcessionDetails[index],
+            fieldname,
+            this.canEdit,
+            this.canEdit != null
+        );
     }
 
     validatePeriod(itemrow) {

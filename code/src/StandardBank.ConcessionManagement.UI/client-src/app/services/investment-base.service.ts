@@ -1,39 +1,31 @@
 import { Injectable } from '@angular/core';
 import { ConditionType } from "../models/condition-type";
-import { LendingConcessionDetail } from "../models/lending-concession-detail";
 
 @Injectable()
-export class LendingBaseService {
+export class InvestmentBaseService {
     validationError: String[];
 
     constructor() { }
 
     disableFieldBase(
         selectedConditionType: ConditionType,
-        lendingConcessionDetail: LendingConcessionDetail,
-        fieldname: string,
+        fieldName: string,
         canEdit: boolean,
-        canSaveMessage: boolean
+        canSaveMessage: boolean,
+        isEnabledExpiryDate: boolean,
+        selectedInvestmentConcession: boolean
     ) {
-        switch (fieldname) {
+        switch (fieldName) {
             case 'productType':
             case 'accountNumber':
-            case 'limit':
-            case 'term':
-            case 'marginAgainstPrime':
-            case 'initiationFee':
-            case 'mrsEri':
+            case 'balance':
+            case 'loadedRate':
+            case 'approvedRate':
                 return (!canSaveMessage || canEdit) ? null : '';
-            case 'reviewFeeType':
-                return (lendingConcessionDetail.show_reviewFeeType && canEdit) ? null : '';
-            case 'reviewFee':
-                return (lendingConcessionDetail.show_reviewFee && canEdit) ? null : '';
-            case 'uffFee':
-                return (lendingConcessionDetail.show_uffFee && canEdit) ? null : '';
-            case 'frequency':
-                return (lendingConcessionDetail.show_frequency && canEdit) ? null : '';
-            case 'serviceFee':
-                return (lendingConcessionDetail.show_serviceFee && canEdit) ? null : '';
+            case 'noticeperiod':
+                return (selectedInvestmentConcession && canEdit) || !(selectedInvestmentConcession || canSaveMessage) ? null : '';
+            case 'expiryDate':
+                return (isEnabledExpiryDate && canEdit) || !canSaveMessage ? null : '';
             case 'interestRate':
                 return selectedConditionType != null && selectedConditionType.enableInterestRate ? null : '';
             case 'volume':

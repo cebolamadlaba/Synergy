@@ -35,19 +35,20 @@ import { Concession } from "../models/concession";
 import { UserService } from "../services/user.service";
 
 import { BaseComponentService } from '../services/base-component.service';
+import { InvestmentBaseService } from '../services/investment-base.service';
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
 
 @Component({
     selector: 'app-investments-add-concession',
     templateUrl: './investments-add-concession.component.html',
-    styleUrls: ['./investments-add-concession.component.css']
+    styleUrls: ['./investments-add-concession.component.css'],
+    providers: [InvestmentBaseService]
 })
-export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
+export class InvestmentAddConcessionComponent extends InvestmentBaseService implements OnInit, OnDestroy {
     private sub: any;
 
     errorMessage: String;
-    validationError: String[];
     saveMessage: String;
     showHide = false;
     observableRiskGroup: Observable<RiskGroup>;
@@ -101,8 +102,10 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
         private formBuilder: FormBuilder,
         private location: Location,
         @Inject(LookupDataService) private lookupDataService,
+        @Inject(InvestmentBaseService) private investmentBaseService,
         @Inject(InvestmentConcessionService) private investmentConcessionService,
         private baseComponentService: BaseComponentService) {
+        super();
         this.riskGroup = new RiskGroup();
 
         this.productTypes = [new ProductType()];
@@ -361,13 +364,6 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
-    }
-
     getInvestmentConcession(): InvestmentConcession {
         var investmentConcession = new InvestmentConcession();
         investmentConcession.concession = new Concession();
@@ -525,7 +521,6 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
 
         if ($event.target.value) {
             $event.target.value = this.baseComponentService.formatDecimalThree($event.target.value);
-            //$event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
         }
         else {
 
@@ -542,6 +537,20 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
 
             $event.target.value = null;
         }
+    }
+
+    disableNoticePeriod(index) {
+        return ((this.selectedInvestmentConcession[index] == true) || this.saveMessage) ? 'disabled' : null;
+    }
+
+    disableField(index, fieldName) {
+        return this.disableFieldBase(
+            this.selectedConditionTypes[index],
+            fieldName,
+            this.saveMessage == null,
+            this.saveMessage != null,
+            this.saveMessage == null,
+            this.selectedInvestmentConcession[index]);
     }
 
     goBack() {

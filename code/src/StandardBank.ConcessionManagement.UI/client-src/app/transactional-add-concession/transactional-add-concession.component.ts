@@ -29,7 +29,6 @@ import { FileService } from '../services/file.service';
 import * as XLSX from 'xlsx';
 import { XlsxModel } from '../models/XlsxModel';
 import { TransactionalBaseService } from '../services/transactional-base.service';
-import { TransactionalConcessionBaseService } from '../services/transactional-concession-base.service';
 
 @Component({
     selector: 'app-transactional-add-concession',
@@ -37,11 +36,10 @@ import { TransactionalConcessionBaseService } from '../services/transactional-co
     styleUrls: ['./transactional-add-concession.component.css'],
     providers: [DatePipe]
 })
-export class TransactionalAddConcessionComponent extends TransactionalConcessionBaseService implements OnInit, OnDestroy {
+export class TransactionalAddConcessionComponent extends TransactionalBaseService implements OnInit, OnDestroy {
     public transactionalConcessionForm: FormGroup;
     private sub: any;
     errorMessage: String;
-    validationError: String[];
     saveMessage: String;
     observableRiskGroup: Observable<RiskGroup>;
     riskGroup: RiskGroup;
@@ -83,7 +81,6 @@ export class TransactionalAddConcessionComponent extends TransactionalConcession
         private datepipe: DatePipe,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(TransactionalConcessionService) private transactionalConcessionService,
-        @Inject(TransactionalBaseService) private transactionalBaseService,
         private fileService: FileService,
         private baseComponentService: BaseComponentService) {
         super();
@@ -192,8 +189,6 @@ export class TransactionalAddConcessionComponent extends TransactionalConcession
         this.transactionTableNumberChanged(0);
 
         this.isLoading = false;
-
-
     }
 
     initConcessionItemRows() {
@@ -245,10 +240,8 @@ export class TransactionalAddConcessionComponent extends TransactionalConcession
             self.xlsxModel.fileContent = fileReader.result;
             self.xlsxModel.selectedFileName = file.name;
 
-            self.transactionalConcessionDetail = self.transactionalBaseService.processFileContent(self.xlsxModel);
+            self.transactionalConcessionDetail = self.processFileContent(self.xlsxModel);
             self.populateTransactionalConcessionByFile();
-            // reset the input:file which allows you to upload the same file again
-            /// self.fileInput.nativeElement.value = '';
         }
 
         // execute reading of the file
@@ -294,7 +287,6 @@ export class TransactionalAddConcessionComponent extends TransactionalConcession
                     currentConcession.get('transactionTableNumber').setValue(null);
                     currentConcession.get('flatFeeOrRate').setValue(null);
                 }
-
             }
 
             if (transactionalConcessionDetail.accountNumber) {
@@ -391,8 +383,8 @@ export class TransactionalAddConcessionComponent extends TransactionalConcession
     }
 
     onExpiryDateChanged(itemrow) {
-
         var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
+
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);
         }
@@ -420,7 +412,6 @@ export class TransactionalAddConcessionComponent extends TransactionalConcession
             transactionalConcession.concession.riskGroupId = this.riskGroup.id;
         if (this.legalEntity)
             transactionalConcession.concession.legalEntityId = this.legalEntity.id;
-
 
         if (this.transactionalConcessionForm.controls['smtDealNumber'].value)
             transactionalConcession.concession.smtDealNumber = this.transactionalConcessionForm.controls['smtDealNumber'].value;
@@ -503,8 +494,6 @@ export class TransactionalAddConcessionComponent extends TransactionalConcession
         transactionalConcession.concessionConditions = concessionConditionReturnObject.concessionConditions;
         this.validationError = concessionConditionReturnObject.validationError;
 
-        this.checkConcessionExpiryDate(transactionalConcession);
-
         return transactionalConcession;
     }
 
@@ -537,8 +526,6 @@ export class TransactionalAddConcessionComponent extends TransactionalConcession
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
     }
 
-
-
     goBack() {
         this.location.back();
     }
@@ -557,5 +544,9 @@ export class TransactionalAddConcessionComponent extends TransactionalConcession
         if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
             this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
         }
+    }
+
+    disableField(fieldname: string, index: number = null) {
+        return this.disableFieldBase(fieldname, this.saveMessage == null, index, this.selectedConditionTypes, null, null)
     }
 }

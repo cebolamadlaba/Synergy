@@ -55,7 +55,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
     private sub: any;
 
     errorMessage: String;
-    validationError: String[];
     saveMessage: String;
     warningMessage: String;
     showHide = false;
@@ -143,7 +142,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
     createdDate: string;
 
-
     constructor(private route: ActivatedRoute,
         public router: Router,
         private formBuilder: FormBuilder,
@@ -197,7 +195,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         this.glmsConcession = new GlmsConcession();
         this.glmsConcession.concession = new Concession();
         this.glmsConcession.concession.concessionComments = [new ConcessionComment()];
-
     }
 
     ngOnInit() {
@@ -208,9 +205,8 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
             this.riskGroupNumber = +params['riskGroupNumber'];
             this.sapbpid = +params['sapbpid'];
             this.concessionReferenceId = params['concessionReferenceId'];
-            
-        });
 
+        });
 
         this.glmsConcessionForm = this.formBuilder.group({
             concessionItemRows: this.formBuilder.array([this.initConcessionItemRows()]),
@@ -229,7 +225,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
             this.observableGlmsConcession.subscribe(glmsConcession => {
                 this.glmsConcession = glmsConcession;
 
-
                 if (glmsConcession.concession.status == ConcessionStatus.Pending && glmsConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
                     this.canBcmApprove = glmsConcession.currentUser.canBcmApprove;
                 }
@@ -242,7 +237,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                     }
 
                     this.canEdit = glmsConcession.currentUser.canPcmApprove;
-
                 }
 
                 //if it's still pending and the user is a requestor then they can recall it
@@ -287,7 +281,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                     if (rowIndex != 0) {
                         this.addNewConcessionRow();
                     }
-                    
+
                     const concessions = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
                     let currentConcession = concessions.controls[concessions.length - 1];
 
@@ -296,7 +290,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
                     let selectedglmsGroup = this.glmsGroup.filter(_ => _.id === glmsConcessionDetail.glmsGroupId);
                     currentConcession.get('glmsGroup').setValue(selectedglmsGroup[0]);
-                    
+
                     this.selectedGlmsGroup[rowIndex] = selectedglmsGroup[0];
 
                     let selectedSlapType = this.slabType.filter(_ => _.id === glmsConcessionDetail.slabTypeId);
@@ -310,7 +304,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                     if (glmsConcessionDetail.glmsTierData.length > 0) {
                         currentConcession.get('concessionItemTier').setValue(glmsConcessionDetail.glmsTierData);
                     }
-                   
+
                     let selectedInterestPricingCategory = this.interestPricingCategory.filter(_ => _.id === glmsConcessionDetail.interestPricingCategoryId);
                     currentConcession.get('interestPricingCategory').setValue(selectedInterestPricingCategory[0]);
 
@@ -321,7 +315,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                         currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
                     }
 
-     
                     if (glmsConcessionDetail.expiryDate) {
                         var formattedExpiryDate = this.datepipe.transform(glmsConcessionDetail.expiryDate, 'yyyy-MM-dd');
                         currentConcession.get('expiryDate').setValue(formattedExpiryDate);
@@ -330,11 +323,10 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                     if (glmsConcessionDetail.dateApproved) {
                         var formattedDateApproved = this.datepipe.transform(glmsConcessionDetail.dateApproved, 'yyyy-MM-dd');
                         currentConcession.get('dateApproved').setValue(formattedDateApproved);
-                    }            
+                    }
 
                     currentConcession.get('isExpired').setValue(glmsConcessionDetail.isExpired);
                     currentConcession.get('isExpiring').setValue(glmsConcessionDetail.isExpiring);
-   
 
                     rowIndex++;
                 }
@@ -401,7 +393,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
             dateApproved: [{ value: '', disabled: true }],
             isExpired: [''],
             isExpiring: [''],
-
         });
     }
 
@@ -466,13 +457,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         }
     }
 
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
-    }
-
     setInitialData(results: {}[], isForRiskGroup: boolean) {
 
         if (isForRiskGroup) {
@@ -498,7 +482,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
         const control = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
         const tierForm = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
-
 
         if (this.productTypes) {
             control.controls[0].get('productType').setValue(this.productTypes[0]);
@@ -529,7 +512,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
             this.selectedInterestPricingCategory[0] = this.interestPricingCategory[0];
         }
-
     }
 
     initConditionItemRows() {
@@ -584,7 +566,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         }
     }
 
-
     getGlmsConcession(isNew: boolean): GlmsConcession {
         var glmsConcession = new GlmsConcession();
         glmsConcession.concession = new Concession();
@@ -597,15 +578,18 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         if (this.glmsConcessionForm.controls['smtDealNumber'].value) {
             glmsConcession.concession.smtDealNumber = this.glmsConcessionForm.controls['smtDealNumber'].value;
         }
-        else
-            this.addConcessionValidationError("SMT Deal Number not captured");
+        else {
+
+            this.addValidationError("SMT Deal Number not captured");
+        }            
 
         if (this.glmsConcessionForm.controls['motivation'].value)
             glmsConcession.concession.motivation = this.glmsConcessionForm.controls['motivation'].value;
-        else
+        else {
+
             glmsConcession.concession.motivation = '.';
-
-
+        }           
+        
         const concessions = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
 
         let hasTypeId: boolean = false;
@@ -624,9 +608,10 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
                 glmsConcessionDetail.glmsGroupId = concessionFormItem.get('glmsGroup').value.id;
             }
-            else
-                this.addValidationError("Group not selected");
+            else {
 
+                this.addValidationError("Group not selected");
+            }             
 
             if (concessionFormItem.get('interestPricingCategory').value) {
                 glmsConcessionDetail.interestPricingCategoryId = concessionFormItem.get('interestPricingCategory').value.id;
@@ -650,7 +635,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
             }
 
             if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "" && !this.isAppprovingOrDeclining) {
-                 this.onExpiryDateChanged(concessionFormItem);
+                this.onExpiryDateChanged(concessionFormItem);
                 glmsConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
             else {
@@ -675,7 +660,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
             glmsConcessionDetail.legalEntityAccountId = this.clientAccounts[0].legalEntityAccountId;
 
             glmsConcession.glmsConcessionDetails.push(glmsConcessionDetail);
-
         }
 
         const conditions = <FormArray>this.glmsConcessionForm.controls['conditionItemsRows'];
@@ -895,14 +879,15 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
         var newRow = this.initConcessionItemRows();
 
-        if (this.productTypes)
+        if (this.productTypes) {
             newRow.controls['productType'].setValue(this.productTypes[0]);
+        }            
 
-        if (this.clientAccounts)
+        if (this.clientAccounts) {
             newRow.controls['accountNumber'].setValue(this.clientAccounts[0]);
+        }            
 
         control.push(newRow);
-
     }
 
     addNewConditionRow() {
@@ -912,8 +897,9 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
     addNewConditionRowIfNone() {
         const control = <FormArray>this.glmsConcessionForm.controls['conditionItemsRows'];
-        if (control.length == 0)
+        if (control.length == 0) {
             control.push(this.initConditionItemRows());
+        }            
     }
 
     addNewTierRow() {
@@ -933,10 +919,10 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
     addNewTierRowIfNone() {
         const control = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
-        if (control.length == 0)
+        if (control.length == 0) {
             control.push(this.initTierItemRows());
+        }            
     }
-
 
     deleteConcessionRow(index: number) {
         if (confirm("Are you sure you want to remove this row?")) {
@@ -964,7 +950,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         this.selectedConditionTypes.splice(index, 1);
     }
 
-
     deleteTierRow(index: number) {
         const control = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
         control.removeAt(index);
@@ -980,12 +965,13 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         }
     }
 
-    onExpiryDateChanged(itemrow) {         
+    onExpiryDateChanged(itemrow) {
         var validationErrorMessage = this.expiringDateDifferenceValidationForView(itemrow.controls['expiryDate'].value, this.createdDate);
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);
         }
     }
+
     getBackgroundColour(rowIndex: number) {
         const control = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
 
@@ -1018,7 +1004,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
         if (!this.validationError) {
             this.glmsConcessionService.postUpdateGlmsData(glmsConcession).subscribe(entity => {
-             
+
                 this.canBcmApprove = false;
                 this.isApproving = false;
                 this.saveMessage = entity.concession.referenceNumber;
@@ -1053,7 +1039,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
         if (!this.validationError) {
             this.glmsConcessionService.postUpdateGlmsData(glmsConcession).subscribe(entity => {
-               
+
                 this.canBcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.glmsConcession = entity;
@@ -1230,7 +1216,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
             this.validationError = null;
 
             this.glmsConcessionService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
-               
+
                 this.canBcmApprove = false;
                 this.canBcmApprove = false;
                 this.canExtend = false;
@@ -1248,15 +1234,12 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         }
     }
 
-
     loopRows() {
         const concessions = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
         let rowIndex = 0;
-        for (let concessionFormItem of concessions.controls)
-        {
+        for (let concessionFormItem of concessions.controls) {
             rowIndex++;
         }
-
     }
 
     saveConcession() {
@@ -1273,7 +1256,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
         if (!this.validationError) {
             this.glmsConcessionService.postChildConcession(glmsConcession, this.editType).subscribe(entity => {
-              
+
                 this.isEditing = false;
                 this.saveMessage = entity.concession.childReferenceNumber;
                 this.glmsConcession = entity;
@@ -1301,7 +1284,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
         if (!this.validationError) {
             this.glmsConcessionService.postUpdateGlmsData(glmsConcession, this.editType).subscribe(entity => {
-              
+
                 this.isEditing = false;
                 this.saveMessage = entity.concession.childReferenceNumber;
                 this.glmsConcession = entity;
@@ -1348,7 +1331,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
         if (!this.validationError) {
             this.glmsConcessionService.postRecallGlmsData(glmsConcession).subscribe(entity => {
-               
+
                 this.isRecalling = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.glmsConcession = entity;
@@ -1376,7 +1359,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         glmsConcession.concession.subStatus = ConcessionSubStatus.RequestorAcceptedChanges;
         glmsConcession.concession.requestorId = this.glmsConcession.currentUser.id;
         glmsConcession.concession.referenceNumber = this.concessionReferenceId;
-       
 
         if (!glmsConcession.concession.comments) {
             glmsConcession.concession.comments = "Accepted Changes";
@@ -1384,7 +1366,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
         if (!this.validationError) {
             this.glmsConcessionService.postUpdateGlmsData(glmsConcession).subscribe(entity => {
-               
+
                 this.canApproveChanges = false;
                 this.isApproving = false;
                 this.saveMessage = entity.concession.referenceNumber;
@@ -1419,7 +1401,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
         if (!this.validationError) {
             this.glmsConcessionService.postUpdateGlmsData(glmsConcession).subscribe(entity => {
-                
+
                 this.canApproveChanges = false;
                 this.saveMessage = entity.concession.referenceNumber;
                 this.glmsConcession = entity;
@@ -1493,4 +1475,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         this.sub.unsubscribe();
     }
 
+    disableField(fieldname: string, index: number = null) {
+        return this.disableFieldBase(fieldname, this.canEdit, index, this.selectedConditionTypes, this.isRecalling, this.motivationEnabled)
+    }
 }

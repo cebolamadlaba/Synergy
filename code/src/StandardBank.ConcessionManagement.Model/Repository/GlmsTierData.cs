@@ -15,9 +15,9 @@ namespace StandardBank.ConcessionManagement.Model.Repository
 
         public decimal TierTo { get; set; }
 
-        public int RateTypeId { get; set; }
+        public int? RateTypeId { get; set; }
 
-        public int BaseRateId { get; set; }
+        public int? BaseRateId { get; set; }
 
         public decimal Spread { get; set; }
 

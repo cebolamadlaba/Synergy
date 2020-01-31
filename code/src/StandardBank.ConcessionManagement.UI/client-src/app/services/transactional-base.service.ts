@@ -5,9 +5,11 @@ import * as fileSaver from 'file-saver';
 import { FileService } from '../services/file.service';
 import { TransactionalConcessionDetail } from "../models/transactional-concession-detail";
 import { TransactionalConcessionEnum } from "../models//transactional-concession-enum";
+import { ConditionType } from "../models/condition-type";
 
 @Injectable()
 export class TransactionalBaseService {
+    validationError: String[];
 
     constructor() { }
 
@@ -36,7 +38,7 @@ export class TransactionalBaseService {
 
             let detail = new TransactionalConcessionDetail();
             transactionalConcessionDetails.push(detail);
-           
+
             for (let colNum = range.s.c; colNum <= colCount; colNum++) {
 
                 // get the cell value.
@@ -45,7 +47,7 @@ export class TransactionalBaseService {
                 // ignore null cells.
                 if (cell == null) { continue; }
 
-                switch (colNum) {               
+                switch (colNum) {
                     case TransactionalConcessionEnum.AccNumber:
                         detail.accountNumber = cell.v;
                         break;
@@ -66,4 +68,40 @@ export class TransactionalBaseService {
         return transactionalConcessionDetails.filter(value => JSON.stringify(value) !== '{}');;
     }
 
+    disableFieldBase(fieldname: string, canEdit: boolean, index: number = null, selectedConditionTypes: ConditionType[], isRecalling: boolean = null, motivationEnabled: boolean = null) {
+        switch (fieldname) {
+            case 'smtDealNumber':
+                if (isRecalling == null) {
+                    return canEdit ? null : '';
+                } else {
+                    return (isRecalling || canEdit) ? null : '';
+                }
+            case 'motivation':
+                if (motivationEnabled == null) {
+                    return canEdit ? null : '';
+                } else {
+                    return motivationEnabled ? null : '';
+                }
+            case 'transactionType':
+            case 'accountNumber':
+            case 'transactionTableNumber':
+            case 'expiryDate':
+                return canEdit ? null : '';
+            case 'interestRate':
+                return selectedConditionTypes[index] != null && selectedConditionTypes[index].enableInterestRate ? null : '';
+            case 'volume':
+                return selectedConditionTypes[index] != null && selectedConditionTypes[index].enableConditionVolume ? null : '';
+            case 'value':
+                return selectedConditionTypes[index] != null && selectedConditionTypes[index].enableConditionValue ? null : '';
+            default:
+                break;
+        }
+    }
+
+    addValidationError(validationDetail) {
+        if (!this.validationError)
+            this.validationError = [];
+
+        this.validationError.push(validationDetail);
+    }
 }

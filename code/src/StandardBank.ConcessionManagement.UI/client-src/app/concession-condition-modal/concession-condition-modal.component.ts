@@ -59,6 +59,7 @@ export class ConcessionConditionModalComponent implements OnInit {
         currentCondition.get('interestRate').setValue(null);
         currentCondition.get('volume').setValue(null);
         currentCondition.get('value').setValue(null);
+        currentCondition.get('conditionComment').setValue(null);
     }
 
     validatePeriod(itemrow) {
