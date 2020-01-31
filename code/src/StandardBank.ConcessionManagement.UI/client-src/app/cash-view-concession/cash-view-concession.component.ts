@@ -36,7 +36,7 @@ import { LegalEntity } from "../models/legal-entity";
     styleUrls: ['./cash-view-concession.component.css'],
     providers: [DatePipe]
 })
-export class CashViewConcessionComponent implements OnInit, OnDestroy {
+export class CashViewConcessionComponent extends CashBaseService implements OnInit, OnDestroy {
 
     concessionReferenceId: string;
     private sub: any;
@@ -109,8 +109,8 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         @Inject(LookupDataService) private lookupDataService,
         @Inject(CashConcessionService) private cashConcessionService,
         @Inject(UserConcessionsService) private userConcessionsService,
-        @Inject(CashBaseService) private cashBaseService,
         private baseComponentService: BaseComponentService) {
+        super();
         this.riskGroup = new RiskGroup();
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
@@ -356,7 +356,6 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         }
         this.clientAccounts = <any>results[7];
 
-
         this.populateForm();
     }
 
@@ -433,7 +432,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
         var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidationForView(itemrow.controls['expiryDate'].value, formattedDateOpened);
         if (validationErrorMessage != null) {
-            this.cashBaseService.addValidationError(validationErrorMessage);
+            this.addValidationError(validationErrorMessage);
         }
     }
 
@@ -476,7 +475,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         if (this.cashConcessionForm.controls['smtDealNumber'].value)
             cashConcession.concession.smtDealNumber = this.cashConcessionForm.controls['smtDealNumber'].value;
         else
-            this.cashBaseService.addValidationError("SMT Deal Number not captured");
+            this.addValidationError("SMT Deal Number not captured");
 
         if (this.cashConcessionForm.controls['comments'].value)
             cashConcession.concession.comments = this.cashConcessionForm.controls['comments'].value;
@@ -507,7 +506,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                 cashConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
             else {
-                this.cashBaseService.addValidationError("Expiry date not selected");
+                this.addValidationError("Expiry date not selected");
             }
 
             if (!isNew && concessionFormItem.get('cashConcessionDetailId').value)
@@ -520,7 +519,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                 cashConcessionDetail.channelTypeId = concessionFormItem.get('channelType').value.id;
                 hasChannelType = true;
             } else {
-                this.cashBaseService.addValidationError("Channel type not selected");
+                this.addValidationError("Channel type not selected");
             }
 
             if (concessionFormItem.get('accountNumber').value) {
@@ -529,7 +528,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                 hasLegalEntityId = true;
                 hasLegalEntityAccountId = true;
             } else {
-                this.cashBaseService.addValidationError("Client account not selected");
+                this.addValidationError("Client account not selected");
             }
 
             if (concessionFormItem.get('tableNumber').value) {
@@ -539,13 +538,13 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                 if (concessionFormItem.get('tableNumber').value.baseRate)
                     cashConcessionDetail.baseRate = concessionFormItem.get('tableNumber').value.baseRate;
             } else {
-                this.cashBaseService.addValidationError("Table Number not selected");
+                this.addValidationError("Table Number not selected");
             }
 
             if (concessionFormItem.get('accrualType').value) {
                 cashConcessionDetail.accrualTypeId = concessionFormItem.get('accrualType').value.id;
             } else {
-                this.cashBaseService.addValidationError("Accrual type not selected");
+                this.addValidationError("Accrual type not selected");
             }
 
             cashConcession.cashConcessionDetails.push(cashConcessionDetail);
@@ -558,7 +557,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                     concessionFormItem.get('accountNumber').value.legalEntityAccountId);
 
                 if (hasDuplicates) {
-                    this.cashBaseService.addValidationError("Duplicate Account / Channel pricing found. Please select different account.");
+                    this.addValidationError("Duplicate Account / Channel pricing found. Please select different account.");
 
                     break;
                 }
@@ -579,12 +578,12 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             if (conditionFormItem.get('conditionType').value)
                 concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;
             else
-                this.cashBaseService.addValidationError("Condition type not selected");
+                this.addValidationError("Condition type not selected");
 
             if (conditionFormItem.get('conditionProduct').value)
                 concessionCondition.conditionProductId = conditionFormItem.get('conditionProduct').value.id;
             else
-                this.cashBaseService.addValidationError("Condition product not selected");
+                this.addValidationError("Condition product not selected");
 
             if (conditionFormItem.get('interestRate').value)
                 concessionCondition.interestRate = conditionFormItem.get('interestRate').value;
@@ -595,7 +594,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             if (conditionFormItem.get('value').value == null || (<string>conditionFormItem.get('value').value).length < 1) {
                 var value = conditionFormItem.get('conditionType').value;
                 if (value != null && value.enableConditionValue == true)
-                    this.cashBaseService.addValidationError("Conditions: 'Value' is a mandatory field");
+                    this.addValidationError("Conditions: 'Value' is a mandatory field");
             }
             else if (conditionFormItem.get('value').value)
                 concessionCondition.conditionValue = conditionFormItem.get('value').value;
@@ -603,23 +602,23 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             if (conditionFormItem.get('periodType').value) {
                 concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
             } else {
-                this.cashBaseService.addValidationError("Period type not selected");
+                this.addValidationError("Period type not selected");
             }
 
             if (conditionFormItem.get('period').value) {
                 concessionCondition.periodId = conditionFormItem.get('period').value.id;
             } else {
-                this.cashBaseService.addValidationError("Period not selected");
+                this.addValidationError("Period not selected");
             }
 
             if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
-                this.cashBaseService.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+                this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
             }
 
             cashConcession.concessionConditions.push(concessionCondition);
         }
 
-        this.cashBaseService.checkConcessionExpiryDate(cashConcession);
+        this.checkConcessionExpiryDate(cashConcession);
 
         return cashConcession;
     }
@@ -650,7 +649,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         this.isLoading = true;
 
         this.errorMessage = null;
-        this.cashBaseService.validationError = null;
+        this.validationError = null;
         this.baseComponentService.isAppprovingOrDeclining = true;
 
         var cashConcession = this.getCashConcession(false);
@@ -661,7 +660,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             cashConcession.concession.comments = "Forwarded";
         }
 
-        if (!this.cashBaseService.validationError) {
+        if (!this.validationError) {
             this.cashConcessionService.postUpdateCashData(cashConcession).subscribe(entity => {
                 this.canBcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
@@ -681,7 +680,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         this.isLoading = true;
 
         this.errorMessage = null;
-        this.cashBaseService.validationError = null;
+        this.validationError = null;
         this.baseComponentService.isAppprovingOrDeclining = true;
 
         var cashConcession = this.getCashConcession(false);
@@ -693,7 +692,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             cashConcession.concession.comments = ConcessionStatus.Declined;
         }
 
-        if (!this.cashBaseService.validationError) {
+        if (!this.validationError) {
             this.cashConcessionService.postUpdateCashData(cashConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canBcmApprove = false;
@@ -714,7 +713,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         this.isLoading = true;
 
         this.errorMessage = null;
-        this.cashBaseService.validationError = null;
+        this.validationError = null;
         this.baseComponentService.isAppprovingOrDeclining = true;
 
         var cashConcession = this.getCashConcession(false);
@@ -736,8 +735,6 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
             cashConcession.concession.concessionComments = this.GetChanges(cashConcession.concession.id);
 
-
-
         } else {
             cashConcession.concession.status = ConcessionStatus.Approved;
 
@@ -754,7 +751,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             }
         }
 
-        if (!this.cashBaseService.validationError) {
+        if (!this.validationError) {
             this.cashConcessionService.postUpdateCashData(cashConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canPcmApprove = false;
@@ -826,7 +823,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         this.isLoading = true;
 
         this.errorMessage = null;
-        this.cashBaseService.validationError = null;
+        this.validationError = null;
         this.baseComponentService.isAppprovingOrDeclining = true;
 
         var cashConcession = this.getCashConcession(false);
@@ -845,7 +842,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             cashConcession.concession.comments = ConcessionStatus.Declined;
         }
 
-        if (!this.cashBaseService.validationError) {
+        if (!this.validationError) {
             this.cashConcessionService.postUpdateCashData(cashConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canPcmApprove = false;
@@ -866,7 +863,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         if (confirm("Are you sure you want to extend this concession?")) {
             this.isLoading = true;
             this.errorMessage = null;
-            this.cashBaseService.validationError = null;
+            this.validationError = null;
 
             this.cashConcessionService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
                 console.log("data saved");
@@ -908,7 +905,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
     saveConcession() {
         this.isLoading = true;
         this.errorMessage = null;
-        this.cashBaseService.validationError = null;
+        this.validationError = null;
 
         var cashConcession = this.getCashConcession(true);
 
@@ -917,7 +914,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         cashConcession.concession.type = "Existing";
         cashConcession.concession.referenceNumber = this.concessionReferenceId;
 
-        if (!this.cashBaseService.validationError) {
+        if (!this.validationError) {
             this.cashConcessionService.postChildConcession(cashConcession, this.editType).subscribe(entity => {
                 console.log("data saved");
                 this.isEditing = false;
@@ -939,14 +936,14 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
     saveUpdatedConcession() {
         this.isLoading = true;
         this.errorMessage = null;
-        this.cashBaseService.validationError = null;
+        this.validationError = null;
 
         var cashConcession = this.getCashConcession(true);
 
         cashConcession.concession.type = "Existing";
         cashConcession.concession.referenceNumber = this.concessionReferenceId;
 
-        if (!this.cashBaseService.validationError) {
+        if (!this.validationError) {
             this.cashConcessionService.postUpdateCashData(cashConcession).subscribe(entity => {
                 console.log("data saved");
                 this.isEditing = false;
@@ -985,7 +982,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         this.warningMessage = "";
         this.isLoading = true;
         this.errorMessage = null;
-        this.cashBaseService.validationError = null;
+        this.validationError = null;
 
         var cashConcession = this.getCashConcession(true);
 
@@ -993,7 +990,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         cashConcession.concession.subStatus = ConcessionSubStatus.BCMPending;
         cashConcession.concession.referenceNumber = this.concessionReferenceId;
 
-        if (!this.cashBaseService.validationError) {
+        if (!this.validationError) {
             this.cashConcessionService.postRecallCashData(cashConcession).subscribe(entity => {
                 console.log("data saved");
                 this.isRecalling = false;
@@ -1015,7 +1012,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         this.isLoading = true;
 
         this.errorMessage = null;
-        this.cashBaseService.validationError = null;
+        this.validationError = null;
         this.baseComponentService.isAppprovingOrDeclining = true;
 
         var cashConcession = this.getCashConcession(false);
@@ -1027,7 +1024,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             cashConcession.concession.comments = "Accepted Changes";
         }
 
-        if (!this.cashBaseService.validationError) {
+        if (!this.validationError) {
             this.cashConcessionService.postUpdateCashData(cashConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canApproveChanges = false;
@@ -1048,7 +1045,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         this.isLoading = true;
 
         this.errorMessage = null;
-        this.cashBaseService.validationError = null;
+        this.validationError = null;
         this.baseComponentService.isAppprovingOrDeclining = true;
 
         var cashConcession = this.getCashConcession(false);
@@ -1060,7 +1057,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             cashConcession.concession.comments = "Declined Changes";
         }
 
-        if (!this.cashBaseService.validationError) {
+        if (!this.validationError) {
             this.cashConcessionService.postUpdateCashData(cashConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canApproveChanges = false;
@@ -1129,8 +1126,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     setTwoNumberDecimal($event) {
-        $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-        
+        $event.target.value = this.baseComponentService.formatDecimal($event.target.value);        
     }
 
     canEditSMTDealNumber() {
@@ -1142,7 +1138,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     disableField(index: number, fieldname: string) {
-        return this.cashBaseService.disableFieldBase(
+        return this.disableFieldBase(
             this.selectedConditionTypes[index],
             fieldname,
             this.canEdit,
@@ -1151,14 +1147,14 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     validatePeriod(itemrow) {
-        this.cashBaseService.validationError = null;
+        this.validationError = null;
 
         let selectedPeriodType = itemrow.controls.periodType.value.description;
 
         let selectedPeriod = itemrow.controls.period.value.description;
 
         if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
-            this.cashBaseService.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+            this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
         }
     }
 }
