@@ -47,7 +47,6 @@ export class BolAddConcessionComponent extends BolConcessionBaseService implemen
     private sub: any;
 
     errorMessage: String;
-    validationError: String[];
     saveMessage: String;
     showHide = false;
     observableRiskGroup: Observable<RiskGroup>;
@@ -311,14 +310,6 @@ export class BolAddConcessionComponent extends BolConcessionBaseService implemen
 
         currentProduct.get('chargecode').setValue(this.selectedProducts[rowIndex].bolchargecodes[0]);
 
-    }
-
-
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
     }
 
     getBolConcession(): BolConcession {

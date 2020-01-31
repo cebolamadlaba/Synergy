@@ -51,12 +51,11 @@ import { MOnthEnum } from '../models/month-enum';
     styleUrls: ['./investments-view-concession.component.css'],
     providers: [DatePipe, InvestmentBaseService]
 })
-export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
+export class InvestmentsViewConcessionComponent extends InvestmentBaseService implements OnInit, OnDestroy {
 
     concessionReferenceId: string;
     private sub: any;
     errorMessage: String;
-    validationError: String[];
     saveMessage: String;
     warningMessage: String;
 
@@ -134,11 +133,11 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
         private location: Location,
         private datepipe: DatePipe,
         @Inject(LookupDataService) private lookupDataService,
-        @Inject(InvestmentBaseService) private investmentBaseService,
         @Inject(UserConcessionsService) private userConcessionsService,
         @Inject(InvestmentConcessionService) private investmentConcessionService,
         private baseComponentService: BaseComponentService) {
 
+        super();
         this.riskGroup = new RiskGroup();
 
         this.productTypes = [new ProductType()];
@@ -589,16 +588,6 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
             this.selectedInvestmentConcession[rowIndex] = true;
 
         }
-    }
-
-
-
-
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
     }
 
     getInvestmentConcession(isNew: boolean): InvestmentConcession {
@@ -1339,7 +1328,7 @@ export class InvestmentsViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     disableField(index, fieldName) {
-        return this.investmentBaseService.disableFieldBase(
+        return this.disableFieldBase(
             this.selectedConditionTypes[index],
             fieldName,
             this.canEdit,
