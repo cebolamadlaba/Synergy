@@ -6,6 +6,10 @@ import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
 import { UserService } from "../services/user.service";
 import { User } from '../models/user';
+import { FormArray } from '@angular/forms';
+import { ConcessionCondition } from '../models/concession-condition';
+import { ConcessionConditionReturnObject } from '../models/concession-condition-return-object';
+
 declare var accounting: any;
 
 @Injectable()
@@ -88,14 +92,15 @@ export class BaseComponentService {
         this.checkAEExistOnriskGroupNumber();
 
         if (concessionListLength > 0) {
-        //    // FOR TESTING: comment out the first part of the if-statement.
-        //    if (sapbpid == 0) {
-        //        this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Risk group. Please select the concession below and update");
-        //    } else {
-        //        this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Legal Entity. Please select the concession below and update");
-        //    
-        }
-        else {
+
+            //    // FOR TESTING: comment out the first part of the if-statement.
+                if (sapbpid == 0) {
+                    this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Risk group. Please select the concession below and update");
+                } else {
+                    this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Legal Entity. Please select the concession below and update");
+                }
+
+        } else {
             if (this.validationError == undefined) {
                 this.router.navigate([url, riskGroupNumber, sapbpid]);
             }
@@ -179,6 +184,69 @@ export class BaseComponentService {
 
             });
         });
+    }
+
+    getConsessionConditionData(conditions: FormArray, concessionConditions: ConcessionCondition[], validationError: String[]): ConcessionConditionReturnObject {
+
+        this.validationError = validationError;
+
+        for (let conditionFormItem of conditions.controls) {
+            if (!concessionConditions)
+                concessionConditions = [];
+
+            let concessionCondition = new ConcessionCondition();
+
+            if (conditionFormItem.get('conditionType').value)
+                concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;
+            else
+                this.addConcessionValidationError("Condition type not selected");
+
+            if (conditionFormItem.get('conditionProduct').value)
+                concessionCondition.conditionProductId = conditionFormItem.get('conditionProduct').value.id;
+            else
+                this.addConcessionValidationError("Condition product not selected");
+
+            if (conditionFormItem.get('interestRate').value)
+                concessionCondition.interestRate = conditionFormItem.get('interestRate').value;
+
+            if (conditionFormItem.get('volume').value)
+                concessionCondition.conditionVolume = conditionFormItem.get('volume').value;
+
+            if (conditionFormItem.get('value').value == null || (<string>conditionFormItem.get('value').value).length < 1) {
+                var value = conditionFormItem.get('conditionType').value;
+                if (value != null && value.enableConditionValue == true)
+                    this.addConcessionValidationError("Conditions: 'Value' is a mandatory field");
+            }
+            else if (conditionFormItem.get('value').value)
+                concessionCondition.conditionValue = conditionFormItem.get('value').value;
+
+            if (conditionFormItem.get('conditionComment').value)
+                concessionCondition.conditionComment = conditionFormItem.get('conditionComment').value;
+
+            if (conditionFormItem.get('periodType').value) {
+                concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
+            } else {
+                this.addConcessionValidationError("Period type not selected");
+            }
+
+            if (conditionFormItem.get('period').value) {
+                concessionCondition.periodId = conditionFormItem.get('period').value.id;
+            } else {
+                this.addConcessionValidationError("Period not selected");
+            }
+
+            if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
+                this.addConcessionValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
+            }
+
+            concessionConditions.push(concessionCondition);
+        }
+
+        let concessionConditionReturnObject = new ConcessionConditionReturnObject();
+        concessionConditionReturnObject.concessionConditions = concessionConditions;
+        concessionConditionReturnObject.validationError = this.validationError;
+
+        return concessionConditionReturnObject;
     }
 
 }

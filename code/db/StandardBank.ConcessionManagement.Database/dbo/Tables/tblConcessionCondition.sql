@@ -15,6 +15,7 @@
     [ActualVolume]            INT             NULL,
     [ActualValue]             DECIMAL (18, 2) NULL,
     [ActualTurnover]          DECIMAL (18, 2) NULL,
+    [ConditionComment]        VARCHAR (500)   NULL,
     CONSTRAINT [PK_tblConcessionCondition] PRIMARY KEY CLUSTERED ([pkConcessionConditionId] ASC),
     CONSTRAINT [FK_tblConcessionCondition_rtblConditionProduct] FOREIGN KEY ([fkConditionProductId]) REFERENCES [dbo].[rtblConditionProduct] ([pkConditionProductId]),
     CONSTRAINT [FK_tblConcessionCondition_rtblConditionType] FOREIGN KEY ([fkConditionTypeId]) REFERENCES [dbo].[rtblConditionType] ([pkConditionTypeId]),
@@ -22,6 +23,8 @@
     CONSTRAINT [FK_tblConcessionCondition_rtblPeriodType] FOREIGN KEY ([fkPeriodTypeId]) REFERENCES [dbo].[rtblPeriodType] ([pkPeriodTypeId]),
     CONSTRAINT [FK_tblConcessionCondition_tblConcession] FOREIGN KEY ([fkConcessionId]) REFERENCES [dbo].[tblConcession] ([pkConcessionId])
 );
+
+
 
 
 

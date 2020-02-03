@@ -111,6 +111,8 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// </value>
         public bool IsActive { get; set; }
 
+        public string ConditionComment { get; set; }
+
         /// <summary>
         /// Gets or the name of the table.
         /// </summary>

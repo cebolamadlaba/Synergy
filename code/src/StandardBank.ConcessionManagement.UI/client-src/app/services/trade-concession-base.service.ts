@@ -37,7 +37,7 @@ export class TradeConcessionBaseService {
                     return tradeConcessionDetail.show_term && canEdit ? null : '';
                 }
                 else {
-                    return canEdit ? null : '';
+                    return (!isSelectedTradeConcessionDetail) || isSaved ? '' : null;
                 }
             case "advalorem":
             case "min":
@@ -120,7 +120,11 @@ export class TradeConcessionBaseService {
 
     isNullOrEmptyFlatFee(currentConcession: AbstractControl) {
         let flatFeeValue = this.getFieldValueBase(currentConcession, 'flatfee');
-        return flatFeeValue == null || (<string>flatFeeValue).trim() == '';
+
+        if (flatFeeValue == null)
+            return true;
+
+        return false;
     }
 
     addValidationError(validationDetail) {

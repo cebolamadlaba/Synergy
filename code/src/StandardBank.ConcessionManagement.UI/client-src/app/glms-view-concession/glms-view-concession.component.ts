@@ -150,6 +150,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         @Inject(LookupDataService) private lookupDataService,
         @Inject(GlmsConcessionService) private glmsConcessionService,
         @Inject(UserConcessionsService) private userConcessionsService,
+        @Inject(BaseComponentService) private baseComponentService,
         private datepipe: DatePipe,
         public userService: UserService) {
         super(http, router, userService);
@@ -353,6 +354,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                     currentCondition.get('interestRate').setValue(concessionCondition.interestRate);
                     currentCondition.get('volume').setValue(concessionCondition.conditionVolume);
                     currentCondition.get('value').setValue(concessionCondition.conditionValue);
+                    currentCondition.get('conditionComment').setValue(concessionCondition.conditionComment);
 
                     let selectedPeriodType = this.periodTypes.filter(_ => _.id == concessionCondition.periodTypeId);
                     currentCondition.get('periodType').setValue(selectedPeriodType[0]);
@@ -522,6 +524,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
             interestRate: [''],
             volume: [''],
             value: [''],
+            conditionComment: [''],
             periodType: [''],
             period: ['']
         });
@@ -661,76 +664,9 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
         const conditions = <FormArray>this.glmsConcessionForm.controls['conditionItemsRows'];
 
-        for (let conditionFormItem of conditions.controls) {
-            if (!glmsConcession.concessionConditions) {
-                glmsConcession.concessionConditions = [];
-            }                
-
-            let concessionCondition = new ConcessionCondition();
-
-            if (conditionFormItem.get('conditionType').value) {
-                concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;
-            }
-            else {
-
-                this.addValidationError("Condition type not selected");
-            }                
-
-            if (conditionFormItem.get('conditionProduct').value) {
-                concessionCondition.conditionProductId = conditionFormItem.get('conditionProduct').value.id;
-            }                
-            else {
-
-                this.addValidationError("Condition product not selected");
-            }                
-
-            if (conditionFormItem.get('interestRate').value) {
-                concessionCondition.interestRate = conditionFormItem.get('interestRate').value;
-            }                
-
-            if (conditionFormItem.get('volume').value) {
-                concessionCondition.conditionVolume = conditionFormItem.get('volume').value;
-            }                
-
-            if (conditionFormItem.get('value').value == null || (<string>conditionFormItem.get('value').value).length < 1) {
-                var value = conditionFormItem.get('conditionType').value;
-                if (value != null && value.enableConditionValue == true) {
-
-                    this.addValidationError("Conditions: 'Value' is a mandatory field");
-                }                    
-            }
-            else if (conditionFormItem.get('value').value) {
-                concessionCondition.conditionValue = conditionFormItem.get('value').value;
-            }
-                
-
-            if (conditionFormItem.get('periodType').value) {
-                concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
-            } else {
-
-                this.addValidationError("Period type not selected");
-            }
-
-            if (conditionFormItem.get('period').value) {
-                concessionCondition.periodId = conditionFormItem.get('period').value.id;
-            } else {
-
-                this.addValidationError("Period not selected");
-            }
-
-            if (conditionFormItem.get('period').value) {
-                concessionCondition.periodId = conditionFormItem.get('period').value.id;
-            } else {
-
-                this.addValidationError("Period not selected");
-            }
-
-            if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
-                this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
-            }
-
-            glmsConcession.concessionConditions.push(concessionCondition);
-        }
+        let concessionConditionReturnObject = this.baseComponentService.getConsessionConditionData(conditions, glmsConcession.concessionConditions, this.validationError);
+        glmsConcession.concessionConditions = concessionConditionReturnObject.concessionConditions;
+        this.validationError = concessionConditionReturnObject.validationError;
 
         return glmsConcession;
     }
