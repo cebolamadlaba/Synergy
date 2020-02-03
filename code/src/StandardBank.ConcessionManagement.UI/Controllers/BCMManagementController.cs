@@ -76,9 +76,13 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             bcmUser.RoleId = roles.First(_ => _.Name == Constants.Roles.BCM).Id;
 
             if (bcmUser.Id > 0)
+            {
                 await _mediator.Send(new UpdateUser(bcmUser, user));
+            }
             else
+            {
                 await _mediator.Send(new CreateUser(bcmUser, user));
+            }
 
             return Ok(true);
         }

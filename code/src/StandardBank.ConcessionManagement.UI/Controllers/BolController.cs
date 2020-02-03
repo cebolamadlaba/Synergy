@@ -71,18 +71,25 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var concession = await _mediator.Send(new AddConcession(bolConcession.Concession, user));
 
             foreach (var bolConcessionDetail in bolConcession.BolConcessionDetails)
+            {
                 await _mediator.Send(new BusinessLogic.Features.BolConcession.AddOrUpdateBolConcessionDetail(bolConcessionDetail, user, concession));
+            }
 
             if (bolConcession.ConcessionConditions != null && bolConcession.ConcessionConditions.Any())
+            {
                 foreach (var concessionCondition in bolConcession.ConcessionConditions)
+                {
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+                }
+            }
 
 
             var bcmPendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.NewSubmission);
 
             if (!string.IsNullOrWhiteSpace(bolConcession.Concession.Comments))
-                await _mediator.Send(new AddConcessionComment(concession.Id, bcmPendingStatusId,
-                    bolConcession.Concession.Comments, user));
+            {
+                await _mediator.Send(new AddConcessionComment(concession.Id, bcmPendingStatusId, bolConcession.Concession.Comments, user));
+            }
 
             return Ok(bolConcession);
         }
@@ -155,37 +162,52 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
         private async Task UpdateBolConcession(BolConcession bolConcession, User user)
         {
-            var databaseBolConcession =
-                _bolManager.GetBolConcession(bolConcession.Concession.ReferenceNumber, user);
+            var databaseBolConcession = _bolManager.GetBolConcession(bolConcession.Concession.ReferenceNumber, user);
 
             //if there are any conditions that have been removed, delete them
             foreach (var condition in databaseBolConcession.ConcessionConditions)
+            {
                 if (bolConcession.ConcessionConditions.All(_ => _.ConcessionConditionId != condition.ConcessionConditionId))
+                {
                     await _mediator.Send(new DeleteConcessionCondition(condition, user));
+                }
+            }
 
             //if there are any bol concession details that have been removed delete them
             foreach (var bolConcessionDetail in databaseBolConcession.BolConcessionDetails)
-                if (bolConcession.BolConcessionDetails.All(_ => _.BolConcessionDetailId !=
-                                                                  bolConcessionDetail.BolConcessionDetailId))
+            {
+                if (bolConcession.BolConcessionDetails.All(_ => _.BolConcessionDetailId != bolConcessionDetail.BolConcessionDetailId))
+                {
                     await _mediator.Send(new DeleteBolConcessionDetail(bolConcessionDetail, user));
+                }
+            }
 
             if (!bolConcession.Concession.AENumberUserId.HasValue)
+            {
                 bolConcession.Concession.AENumberUserId = databaseBolConcession.Concession.AENumberUserId;
+            }
 
             //update the concession
             var concession = await _mediator.Send(new UpdateConcession(bolConcession.Concession, user));
 
             //add all the new conditions and bol details and comments
             foreach (var bolConcessionDetail in bolConcession.BolConcessionDetails)
+            {
                 await _mediator.Send(new AddOrUpdateBolConcessionDetail(bolConcessionDetail, user, concession));
+            }
 
             if (bolConcession.ConcessionConditions != null && bolConcession.ConcessionConditions.Any())
+            {
                 foreach (var concessionCondition in bolConcession.ConcessionConditions)
+                {
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+                }
+            }
 
             if (!string.IsNullOrWhiteSpace(bolConcession.Concession.Comments))
-                await _mediator.Send(new AddConcessionComment(concession.Id, databaseBolConcession.Concession.SubStatusId,
-                    bolConcession.Concession.Comments, user));
+            {
+                await _mediator.Send(new AddConcessionComment(concession.Id, databaseBolConcession.Concession.SubStatusId, bolConcession.Concession.Comments, user));
+            }
 
 
             if ((bolConcession.Concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges || bolConcession.Concession.SubStatus == Constants.ConcessionSubStatus.HoApprovedWithChanges) && bolConcession.Concession.ConcessionComments != null)
@@ -193,8 +215,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 if (bolConcession.Concession.ConcessionComments.Count() > 0 && bolConcession.Concession.ConcessionComments.First().UserDescription == "LogChanges")
                 {
                     await _mediator.Send(new AddConcessionComment(concession.Id, databaseBolConcession.Concession.SubStatusId, "LogChanges:" + bolConcession.Concession.ConcessionComments.First().Comment, user));
-
-
                 }
             }
         }
@@ -292,11 +312,17 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var concession = await _mediator.Send(new AddConcession(bolConcession.Concession, user));
 
             foreach (var bolConcessionDetail in bolConcession.BolConcessionDetails)
+            {
                 await _mediator.Send(new AddOrUpdateBolConcessionDetail(bolConcessionDetail, user, concession));
+            }
 
             if (bolConcession.ConcessionConditions != null && bolConcession.ConcessionConditions.Any())
+            {
                 foreach (var concessionCondition in bolConcession.ConcessionConditions)
+                {
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+                }
+            }
 
             //link the new concession to the old concession
             var concessionRelationship = new ConcessionRelationship

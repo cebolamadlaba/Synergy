@@ -83,7 +83,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("PricingRiskGroupUser/{sapbpidOrRiskGroupNumber}")]
         public IActionResult PricingRiskGroupUser(int sapbpidOrRiskGroupNumber)
         {
-            var user =_userManager.GetUserByRiskGroupNumber(sapbpidOrRiskGroupNumber);
+            var user = _userManager.GetUserByRiskGroupNumber(sapbpidOrRiskGroupNumber);
 
             return Ok(user);
         }

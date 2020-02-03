@@ -36,7 +36,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             _siteHelper = siteHelper;
             _cache = memoryCache;
         }
-    
+
         [Route("CacheAEUser")]
         public IActionResult CacheAEUser([FromBody] int accountExecutiveUserId)
         {

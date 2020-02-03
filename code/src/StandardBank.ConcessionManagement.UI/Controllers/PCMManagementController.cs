@@ -71,7 +71,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var pcmUsers = _userManager.GetUsersByRole(Constants.Roles.PCM);
 
             if (user.IsPCM)
+            {
                 pcmUsers = pcmUsers.Where(_ => _.Id == user.Id);
+            }
 
             return Ok(pcmUsers);
         }
@@ -101,9 +103,13 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             pcmUser.CentreId = 0;
 
             if (pcmUser.Id > 0)
+            {
                 await _mediator.Send(new UpdateUser(pcmUser, user));
+            }
             else
+            {
                 await _mediator.Send(new CreateUser(pcmUser, user));
+            }
 
             return Ok(true);
         }
