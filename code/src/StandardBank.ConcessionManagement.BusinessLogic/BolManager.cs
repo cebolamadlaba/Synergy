@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.BolConcession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
@@ -11,20 +8,21 @@ using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Bol;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 using RiskGroup = StandardBank.ConcessionManagement.Model.UserInterface.RiskGroup;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
-
+    /// <summary>
+    /// The Business Online Concession Manager
+    /// </summary>
     public class BolManager : IBolManager
     {
-        /// <summary>
-        /// The concession manager
-        /// </summary>
         private readonly IConcessionManager _concessionManager;
-
 
         private readonly IConcessionBolRepository _concessionBolRepository;
 
@@ -35,9 +33,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly ILookupTableManager _lookupTableManager;
 
         private readonly IRuleManager _ruleManager;
-        /// <summary>
-        /// The misc performance repository
-        /// </summary>
         private readonly IMiscPerformanceRepository _miscPerformanceRepository;
 
         private readonly IMediator _mediator;
@@ -66,7 +61,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return _concessionBolRepository.Create(concessionBol);
         }
 
-
         public BolConcession GetBolConcession(string concessionReferenceId, User user)
         {
             var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId, user);
@@ -80,7 +74,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 ConcessionConditions = _concessionManager.GetConcessionConditions(concession.Id),
                 CurrentUser = user
             };
-
         }
 
         public ConcessionBol DeleteConcessionBol(BolConcessionDetail cashConcessionDetail)
@@ -90,7 +83,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _concessionBolRepository.Delete(concessionBol);
 
             return concessionBol;
-
         }
 
         public Model.UserInterface.Bol.BOLChargeCode CreateUpdateBOLChargeCode(Model.UserInterface.Bol.BOLChargeCode bolchargecode)
@@ -100,7 +92,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             bolchargecode.pkChargeCodeId = returned.pkChargeCodeId;
             return bolchargecode;
-
         }
 
         public void CreateRiskGroupNonUniversalChargeCode(int chargecodeId, List<Model.UserInterface.RiskGroup> riskGroups)
@@ -112,7 +103,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             riskGroups.ForEach(x =>
              _riskGroupNonUniversalChargeCode.Create(x.Id, chargecodeId)
             );
-
         }
 
         public Model.UserInterface.Bol.BOLChargeCodeType CreateBOLChargeCodeType(Model.UserInterface.Bol.BOLChargeCodeType bolchargecodetype)
@@ -122,7 +112,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             bolchargecodetype.pkChargeCodeTypeId = returned.pkChargeCodeTypeId;
             return bolchargecodetype;
-
         }
 
         public ConcessionBol UpdateConcessionBol(BolConcessionDetail bolConcessionDetail, Concession concession)
@@ -142,7 +131,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             else if (concession.Status == Constants.ConcessionStatus.Pending &&
                      concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges)
             {
-
                 //Loaded rate becomes approved rate
                 mappedConcessionBol.ApprovedRate = mappedConcessionBol.LoadedRate;
             }
@@ -203,10 +191,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     var productgrouping = groupedinfo.Where(g => g.LegalEntity == product.LegalEntity).FirstOrDefault();
                     if (productgrouping == null)
                     {
-                        BolProductGroup newgroup = new BolProductGroup();
-                        newgroup.LegalEntity = product.LegalEntity;
-                        newgroup.RiskGroupName = product.RiskGroupName;
-                        newgroup.BolProducts = new List<BolProduct>();
+                        BolProductGroup newgroup = new BolProductGroup
+                        {
+                            LegalEntity = product.LegalEntity,
+                            RiskGroupName = product.RiskGroupName,
+                            BolProducts = new List<BolProduct>()
+                        };
                         newgroup.BolProducts.Add(product);
 
                         groupedinfo.Add(newgroup);
@@ -216,13 +206,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         productgrouping.BolProducts.Add(product);
                     }
                 }
-                //sort
+
                 foreach (var productgrouping in groupedinfo)
                 {
                     if (productgrouping != null && productgrouping.BolProducts != null)
+                    {
                         productgrouping.BolProducts = productgrouping.BolProducts.OrderBy(o => o.BOLUserId).ThenBy(o => o.BolProductType).ToList();
-
-
+                    }
                 }
             }
 
@@ -232,13 +222,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 LegalEntity = legalEntity,
                 BolConcessions = bolConcessions,
                 BolFinancial = bolFinancial,
-                BolProductGroups= groupedinfo.Distinct().OrderBy(o => o.LegalEntity)
+                BolProductGroups = groupedinfo.Distinct().OrderBy(o => o.LegalEntity)
             };
         }
 
         private IEnumerable<BolProduct> GetBolProducts(RiskGroup riskGroup)
         {
-
             return _miscPerformanceRepository.GetBolProducts(riskGroup.Id, riskGroup.Name);
         }
 
@@ -262,29 +251,44 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             //if there are any conditions that have been removed, delete them
             foreach (var condition in databaseBolConcession.ConcessionConditions)
+            {
                 if (bolConcession.ConcessionConditions.All(_ => _.ConcessionConditionId != condition.ConcessionConditionId))
+                {
                     await _mediator.Send(new DeleteConcessionCondition(condition, user));
+                }
+            }
 
             //if there are any bol concession details that have been removed delete them
             foreach (var bolConcessionDetail in databaseBolConcession.BolConcessionDetails)
-                if (bolConcession.BolConcessionDetails.All(_ => _.BolConcessionDetailId !=
-                                                                  bolConcessionDetail.BolConcessionDetailId))
+            {
+                if (bolConcession.BolConcessionDetails.All(_ => _.BolConcessionDetailId != bolConcessionDetail.BolConcessionDetailId))
+                {
                     await _mediator.Send(new DeleteBolConcessionDetail(bolConcessionDetail, user));
+                }
+            }
 
             //update the concession
             var concession = await _mediator.Send(new UpdateConcession(bolConcession.Concession, user));
 
             //add all the new conditions and bol details and comments
             foreach (var bolConcessionDetail in bolConcession.BolConcessionDetails)
+            {
                 await _mediator.Send(new AddOrUpdateBolConcessionDetail(bolConcessionDetail, user, concession));
+            }
 
             if (bolConcession.ConcessionConditions != null && bolConcession.ConcessionConditions.Any())
+            {
                 foreach (var concessionCondition in bolConcession.ConcessionConditions)
+                {
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+                }
+            }
 
             if (!string.IsNullOrWhiteSpace(bolConcession.Concession.Comments))
+            {
                 await _mediator.Send(new AddConcessionComment(concession.Id, databaseBolConcession.Concession.SubStatusId,
-                    bolConcession.Concession.Comments, user));
+                                   bolConcession.Concession.Comments, user));
+            }
 
             //send the notification email
             await _mediator.Send(new ForwardConcession(bolConcession.Concession, user));

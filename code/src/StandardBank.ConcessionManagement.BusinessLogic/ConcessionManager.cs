@@ -19,7 +19,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
     /// <summary>
     /// Concession manager
     /// </summary>
-    /// <seealso cref="StandardBank.ConcessionManagement.Interface.BusinessLogic.IConcessionManager" />
+    /// <seealso cref="IConcessionManager" />
     public class ConcessionManager : IConcessionManager
     {
         /// <summary>
@@ -416,8 +416,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                                 .ConcessionsActionedByPcmAndHo(true)
                                 .Where(x => x.ConcessionType != Constants.ConcessionType.Investment)));
                         }
-                            
+
                         break;
+
                     case Constants.Roles.HeadOffice:
                         inboxConcessions.AddRange(
                                 _mapper.Map<IEnumerable<InboxConcession>>(_concessionInboxViewRepository
@@ -507,12 +508,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     _lookupTableManager.GetConditionProductName(concessionCondition.ConditionProductId);
 
                 if (concessionCondition.PeriodTypeId.HasValue)
+                {
                     mappedConcessionCondition.PeriodType =
                         _lookupTableManager.GetPeriodTypeName(concessionCondition.PeriodTypeId.Value);
+                }
 
                 if (concessionCondition.PeriodId.HasValue)
+                {
                     mappedConcessionCondition.Period =
                         _lookupTableManager.GetPeriodName(concessionCondition.PeriodId.Value);
+                }
 
                 concessionConditions.Add(mappedConcessionCondition);
             }
@@ -531,9 +536,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             int? userId = null;
 
             if (user.CanRequest && user.IsAdminAssistant)
+            {
                 userId = user.AccountExecutiveUserId;
+            }
             else if (user.CanRequest && !user.IsAdminAssistant)
+            {
                 userId = user.Id;
+            }
 
             if (user.IsPCM || user.IsHO || user.IsBCM)
             {
@@ -542,15 +551,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             if (riskGroupNumber > 0)
+            {
                 return _miscPerformanceRepository.GetClientAccounts(riskGroupNumber, userId, concessiontype);
+            }
             else if (sapbpid.HasValue && sapbpid.Value > 0)
+            {
                 return _miscPerformanceRepository.GetClientAccounts(riskGroupNumber, userId, concessiontype, legalEntityCustomerNumber: sapbpid.Value);
+            }
 
             return null;
         }
 
         public IEnumerable<SearchConcessionDetail> SearchConsessions(User user)
-        { 
+        {
             return SearchUserConcessions(null, null, null, user);
         }
 
@@ -611,7 +624,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             return approvedConcessionDetails;
-        }  
+        }
 
         /// <summary>
         /// Gets the applicable prime rate for the timeframe
@@ -634,7 +647,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             int requestorId = userId;
             if (loggedInUser != null && loggedInUser.IsAdminAssistant && loggedInUser.AccountExecutiveUserId.HasValue)
+            {
                 requestorId = loggedInUser.AccountExecutiveUserId.Value;
+            }
 
             var approvedStatusId = _lookupTableManager.GetStatusId(Constants.ConcessionStatus.Approved);
             var approvedWithChangesStatusId =
@@ -744,7 +759,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public IEnumerable<ConcessionCondition> GetConditions(string periodType, string period, int requestorId)
         {
             if (periodType == "Standard")
-                periodType = "Once-off";
+            {
+                periodType = Constants.PeriodType.Standard;
+            }                
 
             var periodId = _lookupTableManager.GetPeriods().First(x => x.Description == period).Id;
             var periodTypeId = _lookupTableManager.GetPeriodTypes().First(x => x.Description == periodType).Id;
@@ -770,12 +787,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return new ConditionCounts
             {
-                OngoingCount =
-                    conditionCounts?.FirstOrDefault(_ => _.PeriodType == Constants.PeriodType.Ongoing)?.RecordCount ??
-                    0,
-                StandardCount =
-                    conditionCounts?.FirstOrDefault(_ => _.PeriodType == Constants.PeriodType.Standard)?.RecordCount ??
-                    0
+                OngoingCount = conditionCounts?.FirstOrDefault(_ => _.PeriodType == Constants.PeriodType.Ongoing)?.RecordCount ?? 0,
+                StandardCount = conditionCounts?.FirstOrDefault(_ => _.PeriodType == Constants.PeriodType.Standard)?.RecordCount ?? 0
             };
         }
 
@@ -855,7 +868,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public Concession CreateConcession(Model.UserInterface.Concession concession, User user)
         {
-            var mappedConcession = _mapper.Map<Model.Repository.Concession>(concession);
+            var mappedConcession = _mapper.Map<Concession>(concession);
             mappedConcession.TypeId = _lookupTableManager.GetReferenceTypeId(concession.Type);
 
             mappedConcession.ConcessionTypeId =
@@ -866,7 +879,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedConcession.ConcessionDate = DateTime.Now;
 
             if (user.IsAdminAssistant)
+            {
                 mappedConcession.AAUserId = user.Id;
+            }
 
             mappedConcession.RequestorId = _userManager.GetUserIdForFiltering(user);
 
@@ -878,7 +893,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             AENumberUser aeNumberUser = this._aeNumberUserManager.GetAENumberUserByAccountExecutiveUserId(mappedConcession.RequestorId);
             if (aeNumberUser != null)
+            {
                 mappedConcession.AENumberUserId = aeNumberUser.AENumberUserId;
+            }
 
             var result = _concessionRepository.Create(mappedConcession);
 
@@ -914,7 +931,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             Model.UserInterface.ConcessionRelationship concessionRelationship)
         {
             var mappedConcessionRelationship =
-                _mapper.Map<Model.Repository.ConcessionRelationship>(concessionRelationship);
+                _mapper.Map<ConcessionRelationship>(concessionRelationship);
 
             mappedConcessionRelationship.RelationshipId =
                 _lookupTableManager.GetRelationshipId(concessionRelationship.RelationshipDescription);
@@ -1055,8 +1072,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var concessions = _concessionRepository.ReadByConcessionRefIsActive(concessionReferenceId, true);
 
             if (concessions == null || !concessions.Any())
+            {
                 throw new Exception(
                     $"No active concession found for concession reference id {concessionReferenceId}. The concession could have been recalled.");
+            }               
 
             //if there is more than one record returned then there is something wrong,
             //there shouldn't be two active concessions with the same concession reference number
@@ -1129,10 +1148,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 isAccountExecutiveOrAssistant = false;
 
                 if (currentUser != null)
+                {
                     if (mappedConcession.CurrentAEUserId.HasValue && mappedConcession.CurrentAEUserId.Value == currentUser.Id)
                         isAccountExecutiveOrAssistant = true;
                     else if (mappedConcession.CurrentAAList != null && mappedConcession.CurrentAAList.Any(a => a.Value == currentUser.Id))
                         isAccountExecutiveOrAssistant = true;
+                }
 
                 mappedConcession.AENumberUserId = concession.AENumberUserId;
 
@@ -1149,7 +1170,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         //is currently in the approved state
                         mappedConcession.CanRenew = CalculateIfCanRenew(concession, mappedConcession.Status);
                         mappedConcession.CanExtend = CalculateIfCanExtend(concession, mappedConcession.CanRenew);
-                        mappedConcession.CanResubmit = CalculateIfCanResubmit(concession, mappedConcession.Status);
+                        mappedConcession.CanResubmit = CalculateIfCanResubmit(mappedConcession.Status);
                         mappedConcession.CanUpdate = isApproved;// && isAccountExecutiveOrAssistant;
                         mappedConcession.CanArchive = isApproved;
                         mappedConcession.IsAENumberLinkedAccountExecutiveOrAssistant = isAccountExecutiveOrAssistant;
@@ -1206,10 +1227,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <summary>
         /// Calculates if can resubmit.
         /// </summary>
-        /// <param name="concession">The concession.</param>
         /// <param name="currentStatus">The current status.</param>
         /// <returns></returns>
-        private bool CalculateIfCanResubmit(Model.Repository.Concession concession, string currentStatus)
+        private bool CalculateIfCanResubmit(string currentStatus)
         {
             return currentStatus == Constants.ConcessionStatus.Declined;
         }
@@ -1220,7 +1240,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="concession">The concession.</param>
         /// <param name="currentStatus">The current status.</param>
         /// <returns></returns>
-        private bool CalculateIfCanRenew(Model.Repository.Concession concession, string currentStatus)
+        private bool CalculateIfCanRenew(Concession concession, string currentStatus)
         {
             if (currentStatus == Constants.ConcessionStatus.Approved ||
                 currentStatus == Constants.ConcessionStatus.ApprovedWithChanges)
@@ -1244,11 +1264,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="concession">The concession.</param>
         /// <param name="canRenew">if set to <c>true</c> [can renew].</param>
         /// <returns></returns>
-        private bool CalculateIfCanExtend(Model.Repository.Concession concession, bool canRenew)
+        private bool CalculateIfCanExtend(Concession concession, bool canRenew)
         {
             //if we can't renew this has already failed that check so there's no point in carrying on
             if (!canRenew)
+            {
                 return false;
+            }
 
             //you can only extend a concession three times
             var extensionRelationshipId = _lookupTableManager.GetRelationshipId(Constants.RelationshipType.Extension);
@@ -1258,7 +1280,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     extensionRelationshipId);
 
             if (relationships != null && relationships.Count() >= 3)
+            {
                 return false;
+            }
 
             //if we get up to this point that means all the checks have passed and we can extend
             return true;
@@ -1403,7 +1427,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             for (var date = from.AddDays(1); date <= to; date = date.AddDays(1))
             {
                 if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday)
+                {
                     totalDays++;
+                }
             }
 
             return totalDays;
@@ -1422,12 +1448,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             //there shouldn't be two active concessions with the same concession reference number
             var currentConcession = concessions.Single();
 
-            var mappedConcession = _mapper.Map<Model.Repository.Concession>(concession);
+            var mappedConcession = _mapper.Map<Concession>(concession);
 
             if (!string.IsNullOrWhiteSpace(concession.Type))
+            {
                 mappedConcession.TypeId = _lookupTableManager.GetReferenceTypeId(concession.Type);
+            }
             else
+            {
                 mappedConcession.TypeId = currentConcession.TypeId;
+            }
 
             mappedConcession.StatusId = string.IsNullOrWhiteSpace(concession.Status)
                 ? currentConcession.StatusId
@@ -1460,7 +1490,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 mappedConcession.DateActionedByBCM = DateTime.Now;
             }
             else
+            {
                 mappedConcession.BCMUserId = currentConcession.BCMUserId;
+            }
 
             if (concession.PcmUserId.HasValue)
             {
@@ -1468,7 +1500,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 mappedConcession.DateActionedByPCM = DateTime.Now;
             }
             else
+            {
                 mappedConcession.PCMUserId = currentConcession.PCMUserId;
+            }
 
             if (concession.HoUserId.HasValue)
             {
@@ -1476,7 +1510,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 mappedConcession.DateActionedByHO = DateTime.Now;
             }
             else
+            {
                 mappedConcession.HOUserId = currentConcession.HOUserId;
+            }
 
             return mappedConcession;
         }

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.CashConcession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
@@ -11,6 +8,9 @@ using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 using RiskGroup = StandardBank.ConcessionManagement.Model.UserInterface.RiskGroup;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
@@ -20,7 +20,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
     /// <summary>
     /// Cash manager
     /// </summary>
-    /// <seealso cref="StandardBank.ConcessionManagement.Interface.BusinessLogic.ICashManager" />
+    /// <seealso cref="ICashManager" />
     public class CashManager : ICashManager
     {
         /// <summary>
@@ -211,9 +211,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 return;
             }
 
-            var loadedPriceCash =
-                _loadedPriceCashRepository.ReadByChannelTypeIdLegalEntityAccountId(
-                    mappedConcessionCash.ChannelTypeId, mappedConcessionCash.LegalEntityAccountId.Value);
+            var loadedPriceCash = _loadedPriceCashRepository.ReadByChannelTypeIdLegalEntityAccountId(
+                mappedConcessionCash.ChannelTypeId, mappedConcessionCash.LegalEntityAccountId.Value);
 
             if (loadedPriceCash != null)
             {
@@ -232,7 +231,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// Gets the cash view data.
         /// </summary>
         /// <param name="riskGroupNumber">The risk group number.</param>
-        /// <returns></returns>
+        /// <returns>Cash View data</returns>
         public CashView GetCashViewData(int riskGroupNumber, int sapbpid, User currentUser)
         {
             bool hasOnlySapBpId = riskGroupNumber < 1 && sapbpid > 0;
@@ -293,10 +292,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     var productgrouping = groupedinfo.Where(g => g.CustomerName == product.CustomerName).FirstOrDefault();
                     if (productgrouping == null)
                     {
-                        CashProductGroup newgroup = new CashProductGroup();
-                        newgroup.CustomerName = product.CustomerName;
-                        newgroup.RiskGroupName = product.RiskGroupName;
-                        newgroup.CashProducts = new List<CashProduct>();
+                        CashProductGroup newgroup = new CashProductGroup
+                        {
+                            CustomerName = product.CustomerName,
+                            RiskGroupName = product.RiskGroupName,
+                            CashProducts = new List<CashProduct>()
+                        };
                         newgroup.CashProducts.Add(product);
 
                         groupedinfo.Add(newgroup);
@@ -305,14 +306,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     {
                         productgrouping.CashProducts.Add(product);
                     }
-
-
                 }
+
                 //sort
                 foreach (var productgrouping in groupedinfo)
                 {
                     if (productgrouping != null && productgrouping.CashProducts != null)
+                    {
                         productgrouping.CashProducts = productgrouping.CashProducts.OrderBy(o => o.AccountNumber).ThenBy(o => o.Channel).ToList();
+                    }
                 }
             }
 
@@ -376,29 +378,44 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             //if there are any conditions that have been removed, delete them
             foreach (var condition in databaseCashConcession.ConcessionConditions)
+            {
                 if (cashConcession.ConcessionConditions.All(_ => _.ConcessionConditionId != condition.ConcessionConditionId))
+                {
                     await _mediator.Send(new DeleteConcessionCondition(condition, user));
+                }
+            }
 
             //if there are any cash concession details that have been removed delete them
             foreach (var cashConcessionDetail in databaseCashConcession.CashConcessionDetails)
-                if (cashConcession.CashConcessionDetails.All(_ => _.CashConcessionDetailId !=
-                                                                  cashConcessionDetail.CashConcessionDetailId))
+            {
+                if (cashConcession.CashConcessionDetails.All(_ => _.CashConcessionDetailId != cashConcessionDetail.CashConcessionDetailId))
+                {
                     await _mediator.Send(new DeleteCashConcessionDetail(cashConcessionDetail, user));
+                }
+            }
 
             //update the concession
             var concession = await _mediator.Send(new UpdateConcession(cashConcession.Concession, user));
 
             //add all the new conditions and cash details and comments
             foreach (var cashConcessionDetail in cashConcession.CashConcessionDetails)
+            {
                 await _mediator.Send(new AddOrUpdateCashConcessionDetail(cashConcessionDetail, user, concession));
+            }
 
             if (cashConcession.ConcessionConditions != null && cashConcession.ConcessionConditions.Any())
+            {
                 foreach (var concessionCondition in cashConcession.ConcessionConditions)
+                {
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+                }
+            }
 
             if (!string.IsNullOrWhiteSpace(cashConcession.Concession.Comments))
+            {
                 await _mediator.Send(new AddConcessionComment(concession.Id, databaseCashConcession.Concession.SubStatusId,
-                    cashConcession.Concession.Comments, user));
+                                    cashConcession.Concession.Comments, user));
+            }
 
             //send the notification email
             await _mediator.Send(new ForwardConcession(cashConcession.Concession, user));
@@ -409,25 +426,21 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return channelType;
         }
 
-        public Model.Repository.TableNumber CreateupdateTableNumber(Model.UserInterface.TableNumber cashTableNumber)
+        public TableNumber CreateupdateTableNumber(Model.UserInterface.TableNumber cashTableNumber)
         {
-
             int cashtypeid = _lookupTableManager.GetConcessionTypeId(Constants.ConcessionType.Cash);
             cashTableNumber.ConcessionTypeId = cashtypeid;
 
             if (cashTableNumber.Id == 0)
             {
-
-                return _tableNumberRepository.Create(_mapper.Map<Model.Repository.TableNumber>(cashTableNumber));
+                return _tableNumberRepository.Create(_mapper.Map<TableNumber>(cashTableNumber));
             }
             else
             {
-                _tableNumberRepository.Update(_mapper.Map<Model.Repository.TableNumber>(cashTableNumber));
+                _tableNumberRepository.Update(_mapper.Map<TableNumber>(cashTableNumber));
 
-                return _mapper.Map<Model.Repository.TableNumber>(cashTableNumber);
-
+                return _mapper.Map<TableNumber>(cashTableNumber);
             }
-
         }
     }
 }
