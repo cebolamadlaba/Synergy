@@ -40,18 +40,39 @@ namespace StandardBank.ConcessionManagement.Repository
                
 
                 return db.Query<ConcessionConditionView>(
-                    @"SELECT [ConcessionConditionId], [ConcessionId], [RequestorId], [ReferenceNumber], [ConcessionTypeId], [ConcessionType], [RiskGroupId], [RiskGroupNumber], [RiskGroupName],
-                             [ConditionTypeId], [ConditionType], [ConditionProductId], [ConditionProduct], [PeriodTypeId], [PeriodType], [PeriodId], [Period], [InterestRate], [Volume], [Value], 
-                             [ConditionMet], cd.[DateApproved], cv.[ExpiryDate], [IsActive],
-                             isnull(cast([ActualVolume] as varchar),'Unavailable') 'ActualVolume', isnull(cast([ActualValue] as varchar),'Unavailable') 'ActualValue', isnull(cast([ActualTurnover] as varchar),'Unavailable') 'ActualTurnover'
-                    FROM 
-                           [dbo].[ConcessionConditionView] cv
-					       join tblConcessionDetail cd on cv.ConcessionId = cd.fkConcessionId
-                    WHERE 
-                           [ConditionMet] IS NULL
-                            AND [PeriodId] = @periodId
-                            AND [PeriodTypeId] = @periodTypeId
-                            AND [CurrentAEUserId] = @RequestorId and cv.ExpiryDate <= @ExpiryDate",
+                    @"SELECT [ConcessionConditionId], 
+                             [ConcessionId], 
+                             [RequestorId], 
+                             [ReferenceNumber], 
+                             [ConcessionTypeId], 
+                             [ConcessionType], 
+                             [RiskGroupId], 
+                             [RiskGroupNumber], 
+                             [RiskGroupName],
+                             [ConditionTypeId], 
+                             [ConditionType], 
+                             [ConditionProductId], 
+                             [ConditionProduct], 
+                             [PeriodTypeId], 
+                             [PeriodType], 
+                             [PeriodId], 
+                             [Period], 
+                             [InterestRate], 
+                             [Volume], 
+                             [Value], 
+                             [ConditionMet], 
+                             cd.[DateApproved], 
+                             cv.[ExpiryDate], 
+                             [IsActive],
+                             isnull(cast([ActualVolume] as varchar),'Unavailable') 'ActualVolume', 
+                             isnull(cast([ActualValue] as varchar),'Unavailable') 'ActualValue', 
+                             isnull(cast([ActualTurnover] as varchar),'Unavailable') 'ActualTurnover'
+                    FROM [dbo].[ConcessionConditionView] cv
+					     join tblConcessionDetail cd on cv.ConcessionId = cd.fkConcessionId
+                    WHERE [ConditionMet] IS NULL
+                          AND [PeriodId] = @periodId
+                          AND [PeriodTypeId] = @periodTypeId
+                          AND [CurrentAEUserId] = @RequestorId and cv.ExpiryDate <= @ExpiryDate",
                     new { periodId, periodTypeId, requestorId, ExpiryDate = System.DateTime.Today.AddMonths(1) });
             }
         }
@@ -66,11 +87,14 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionCount>(
-                    @"SELECT [PeriodType], COUNT(*) [RecordCount] FROM [dbo].[ConcessionConditionView] cv
-                  	join tblConcessionDetail cd on cv.ConcessionId = cd.fkConcessionId
+                    @"SELECT [PeriodType], 
+                             COUNT(*) [RecordCount] 
+                    FROM [dbo].[ConcessionConditionView] cv
+                  	     join tblConcessionDetail cd on cv.ConcessionId = cd.fkConcessionId
                     WHERE [ConditionMet] IS NULL
-                    AND [CurrentAEUserId] = @RequestorId  and cv.ExpiryDate <= @ExpiryDate
-                    GROUP BY [PeriodType]", new { requestorId, ExpiryDate = System.DateTime.Today.AddMonths(1) });
+                          AND [CurrentAEUserId] = @RequestorId  and cv.ExpiryDate <= @ExpiryDate
+                    GROUP BY [PeriodType]", 
+                    new { requestorId, ExpiryDate = System.DateTime.Today.AddMonths(1) });
             }
         }
 
@@ -83,11 +107,34 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionConditionView>(
-                    @"SELECT [ConcessionConditionId], [ConcessionId], [RequestorId], [ReferenceNumber], [ConcessionTypeId], [ConcessionType], [RiskGroupId], [RiskGroupNumber], [RiskGroupName], [ConditionTypeId], [ConditionType], [ConditionProductId], [ConditionProduct], [PeriodTypeId], [PeriodType], [PeriodId], [Period], [InterestRate], [Volume], [Value], [ConditionMet], [DateApproved], [ExpiryDate], [IsActive]
+                    @"SELECT [ConcessionConditionId], 
+                             [ConcessionId], 
+                             [RequestorId], 
+                             [ReferenceNumber], 
+                             [ConcessionTypeId], 
+                             [ConcessionType], 
+                             [RiskGroupId], 
+                             [RiskGroupNumber], 
+                             [RiskGroupName], 
+                             [ConditionTypeId], 
+                             [ConditionType], 
+                             [ConditionProductId], 
+                             [ConditionProduct], 
+                             [PeriodTypeId], 
+                             [PeriodType], 
+                             [PeriodId], 
+                             [Period], 
+                             [InterestRate], 
+                             [Volume], 
+                             [Value], 
+                             [ConditionMet], 
+                             [DateApproved], 
+                             [ExpiryDate], 
+                             [IsActive]
                     FROM [dbo].[ConcessionConditionView]
                     WHERE [PeriodTypeId] = 2
-                    AND [IsActive] = 1
-                    AND [ExpiryDate] < GETDATE()");
+                          AND [IsActive] = 1
+                          AND [ExpiryDate] < GETDATE()");
             }
         }
     }

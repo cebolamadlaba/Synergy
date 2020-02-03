@@ -37,7 +37,12 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<RoleSubRole>(
-                    "SELECT [SubRoleId],[Name], [Active], [fkRoleId] [RoleId] FROM [dbo].[rtblSubRole] WHERE [SubRoleId] = @id",
+                    @"SELECT [SubRoleId],
+                        [Name], 
+                        [Active], 
+                        [fkRoleId] [RoleId] 
+                    FROM [dbo].[rtblSubRole] 
+                    WHERE [SubRoleId] = @id",
                     new { id }).SingleOrDefault();
             }
         }
@@ -51,7 +56,11 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<RoleSubRole>(
-                    "SELECT [SubRoleId],[Name], [Active], [fkRoleId] [RoleId] FROM [dbo].[rtblSubRole]");
+                    @"SELECT [SubRoleId],
+                        [Name], 
+                        [Active], 
+                        [fkRoleId] [RoleId] 
+                    FROM [dbo].[rtblSubRole]");
             }
         }
 

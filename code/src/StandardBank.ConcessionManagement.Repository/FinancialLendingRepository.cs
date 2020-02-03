@@ -36,8 +36,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             const string sql =
                 @"INSERT [dbo].[tblFinancialLending] ([fkRiskGroupId], [TotalExposure], [WeightedAverageMap], [WeightedCrsOrMrs], [LatestCrsOrMrs]) 
-                                VALUES (@RiskGroupId, @TotalExposure, @WeightedAverageMap, @WeightedCrsOrMrs, @LatestCrsOrMrs) 
-                                SELECT CAST(SCOPE_IDENTITY() as int)";
+                VALUES (@RiskGroupId, @TotalExposure, @WeightedAverageMap, @WeightedCrsOrMrs, @LatestCrsOrMrs) 
+                SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
@@ -65,7 +65,14 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<FinancialLending>(
-                    "SELECT [pkFinancialLendingId] [Id], [fkRiskGroupId] [RiskGroupId], [TotalExposure], [WeightedAverageMap], [WeightedCrsOrMrs], [LatestCrsOrMrs] FROM [dbo].[tblFinancialLending] WHERE [pkFinancialLendingId] = @Id",
+                    @"SELECT [pkFinancialLendingId] [Id],
+		                    [fkRiskGroupId] [RiskGroupId],
+		                    [TotalExposure],
+		                    [WeightedAverageMap],
+		                    [WeightedCrsOrMrs],
+		                    [LatestCrsOrMrs] 
+                    FROM [dbo].[tblFinancialLending] 
+                    WHERE [pkFinancialLendingId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -80,7 +87,10 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<FinancialLending>(
-                    @"SELECT [pkFinancialLendingId] [Id], [fkRiskGroupId] [RiskGroupId], [TotalExposure], [WeightedAverageMap], [WeightedCrsOrMrs], [LatestCrsOrMrs] 
+                    @"SELECT [pkFinancialLendingId] [Id], 
+                            [fkRiskGroupId] [RiskGroupId], 
+                            [TotalExposure], [WeightedAverageMap], 
+                            [WeightedCrsOrMrs], [LatestCrsOrMrs] 
                     FROM [dbo].[tblFinancialLending] 
                     WHERE [fkRiskGroupId] = @riskGroupId",
                     new {riskGroupId});
@@ -96,7 +106,13 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<FinancialLending>(
-                    "SELECT [pkFinancialLendingId] [Id], [fkRiskGroupId] [RiskGroupId], [TotalExposure], [WeightedAverageMap], [WeightedCrsOrMrs], [LatestCrsOrMrs] FROM [dbo].[tblFinancialLending]");
+                    @"SELECT [pkFinancialLendingId] [Id],
+		                    [fkRiskGroupId] [RiskGroupId],
+		                    [TotalExposure],
+		                    [WeightedAverageMap],
+		                    [WeightedCrsOrMrs],
+		                    [LatestCrsOrMrs] 
+                    FROM [dbo].[tblFinancialLending]");
             }
         }
 
@@ -108,9 +124,14 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblFinancialLending]
-                            SET [fkRiskGroupId] = @RiskGroupId, [TotalExposure] = @TotalExposure, [WeightedAverageMap] = @WeightedAverageMap, [WeightedCrsOrMrs] = @WeightedCrsOrMrs, [LatestCrsOrMrs] = @LatestCrsOrMrs
-                            WHERE [pkFinancialLendingId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblFinancialLending]
+                    SET [fkRiskGroupId] = @RiskGroupId,
+                        [TotalExposure] = @TotalExposure,
+                        [WeightedAverageMap] = @WeightedAverageMap,
+                        [WeightedCrsOrMrs] = @WeightedCrsOrMrs,
+                        [LatestCrsOrMrs] = @LatestCrsOrMrs
+                    WHERE [pkFinancialLendingId] = @Id",
                     new
                     {
                         Id = model.Id,
@@ -131,7 +152,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblFinancialLending] WHERE [pkFinancialLendingId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblFinancialLending] 
+                            WHERE [pkFinancialLendingId] = @Id",
                     new {model.Id});
             }
         }

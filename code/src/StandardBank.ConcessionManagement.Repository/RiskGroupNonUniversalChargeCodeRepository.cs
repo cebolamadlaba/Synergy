@@ -58,7 +58,10 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<RiskGroupNonUniversalChargeCode>(
-                    @"SELECT [Id], [RiskGroupId], [ChargeCodeId], [IsActive] 
+                    @"SELECT [Id], 
+                        [RiskGroupId], 
+                        [ChargeCodeId], 
+                        [IsActive] 
                     FROM [dbo].[tblRiskGroupNonUniversalChargeCode] 
                     WHERE [ChargeCodeId] = @chargeCodeId",
                     new { chargeCodeId });
@@ -73,7 +76,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblRiskGroupNonUniversalChargeCode] WHERE [ChargeCodeId] = @chargeCodeId",
+                db.Execute(@"DELETE [dbo].[tblRiskGroupNonUniversalChargeCode] 
+                            WHERE [ChargeCodeId] = @chargeCodeId",
                     new { chargeCodeId });
             }
         }

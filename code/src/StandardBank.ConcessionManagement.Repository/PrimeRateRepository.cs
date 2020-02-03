@@ -34,7 +34,8 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 var result = db.Query<string>(
-                    @"select top 1 isnull(prm_prime_rate,0) from rtblprimerate 
+                    @"select top 1 isnull(prm_prime_rate,0) 
+                    from rtblprimerate 
                     where  prm_active_from <= @reftime
                     order by prm_active_from desc",
                     new { reftime }).FirstOrDefault();

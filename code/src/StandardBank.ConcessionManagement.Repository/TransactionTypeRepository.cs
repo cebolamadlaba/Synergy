@@ -45,8 +45,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             const string sql =
                 @"INSERT [dbo].[rtblTransactionType] ([fkConcessionTypeId], [Description], [IsActive]) 
-                                VALUES (@ConcessionTypeId, @Description, @IsActive) 
-                                SELECT CAST(SCOPE_IDENTITY() as int)";
+                VALUES (@ConcessionTypeId, @Description, @IsActive) 
+                SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
@@ -107,7 +107,11 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<TransactionType>(
-                        "SELECT [pkTransactionTypeId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [Description], [IsActive] FROM [dbo].[rtblTransactionType]");
+                        @"SELECT [pkTransactionTypeId] [Id], 
+                            [fkConcessionTypeId] [ConcessionTypeId], 
+                            [Description], 
+                            [IsActive] 
+                        FROM [dbo].[rtblTransactionType]");
                 }
             };
 
@@ -122,9 +126,12 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[rtblTransactionType]
-                            SET [fkConcessionTypeId] = @ConcessionTypeId, [Description] = @Description, [IsActive] = @IsActive
-                            WHERE [pkTransactionTypeId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[rtblTransactionType]
+                    SET [fkConcessionTypeId] = @ConcessionTypeId, 
+                        [Description] = @Description,
+                        [IsActive] = @IsActive
+                    WHERE [pkTransactionTypeId] = @Id",
                     new
                     {
                         Id = model.Id,
@@ -146,7 +153,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[rtblTransactionType] WHERE [pkTransactionTypeId] = @Id",
+                db.Execute(@"DELETE [dbo].[rtblTransactionType] 
+                            WHERE [pkTransactionTypeId] = @Id",
                     new {model.Id});
             }
 

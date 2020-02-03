@@ -56,7 +56,10 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<SlabType>(
-                        "SELECT [pkSlabTypeId] [Id], [Description], [IsActive] FROM [dbo].[tblSlabType]");
+                        @"SELECT [pkSlabTypeId] [Id], 
+                            [Description], 
+                            [IsActive] 
+                        FROM [dbo].[tblSlabType]");
                 }
             };
 

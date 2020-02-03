@@ -77,7 +77,16 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionMas>(
-                    @"SELECT [pkConcessionMasId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkTransactionTypeId] [TransactionTypeId], [MerchantNumber], [Turnover], [CommissionRate], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
+                    @"SELECT [pkConcessionMasId] [Id],
+		                    t.[fkConcessionId] [ConcessionId],
+		                    [fkConcessionDetailId] [ConcessionDetailId],
+		                    [fkTransactionTypeId] [TransactionTypeId],
+		                    [MerchantNumber],
+		                    [Turnover],
+		                    [CommissionRate],
+		                    d.[fkLegalEntityId] [LegalEntityId],
+		                    d.[fkLegalEntityAccountId] [LegalEntityAccountId],
+		                    d.[ExpiryDate] 
                     FROM [dbo].[tblConcessionMas] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
                     WHERE [pkConcessionMasId] = @Id",
@@ -94,7 +103,16 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionMas>(
-                    @"SELECT [pkConcessionMasId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkTransactionTypeId] [TransactionTypeId], [MerchantNumber], [Turnover], [CommissionRate], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
+                    @"SELECT [pkConcessionMasId] [Id],
+		                    t.[fkConcessionId] [ConcessionId],
+		                    [fkConcessionDetailId] [ConcessionDetailId],
+		                    [fkTransactionTypeId] [TransactionTypeId],
+		                    [MerchantNumber],
+		                    [Turnover],
+		                    [CommissionRate],
+		                    d.[fkLegalEntityId] [LegalEntityId],
+		                    d.[fkLegalEntityAccountId] [LegalEntityAccountId],
+		                    d.[ExpiryDate] 
                     FROM [dbo].[tblConcessionMas] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]");
             }
@@ -108,9 +126,15 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblConcessionMas]
-                            SET [fkConcessionId] = @ConcessionId, [fkConcessionDetailId] = @ConcessionDetailId, [fkTransactionTypeId] = @TransactionTypeId, [MerchantNumber] = @MerchantNumber, [Turnover] = @Turnover, [CommissionRate] = @CommissionRate
-                            WHERE [pkConcessionMasId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblConcessionMas]
+                    SET [fkConcessionId] = @ConcessionId,
+	                    [fkConcessionDetailId] = @ConcessionDetailId,
+	                    [fkTransactionTypeId] = @TransactionTypeId,
+	                    [MerchantNumber] = @MerchantNumber,
+	                    [Turnover] = @Turnover,
+	                    [CommissionRate] = @CommissionRate
+                    WHERE [pkConcessionMasId] = @Id",
                     new
                     {
                         Id = model.Id,
@@ -134,7 +158,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblConcessionMas] WHERE [pkConcessionMasId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblConcessionMas] 
+                            WHERE [pkConcessionMasId] = @Id",
                     new {model.Id});
             }
 

@@ -78,7 +78,11 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 using (var db = _dbConnectionFactory.Connection())
             	{
-                	return db.Query<ChannelTypeImport>("SELECT [pkChannelTypeImportId] [Id], [fkChannelTypeId] [ChannelTypeId], [ImportFileChannel] FROM [dbo].[rtblChannelTypeImport]");
+                	return db.Query<ChannelTypeImport>(
+                        @"SELECT [pkChannelTypeImportId] [Id], 
+                                 [fkChannelTypeId] [ChannelTypeId], 
+                                 [ImportFileChannel] 
+                        FROM [dbo].[rtblChannelTypeImport]");
             	}
             };
 
@@ -93,9 +97,11 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[rtblChannelTypeImport]
-                            SET [fkChannelTypeId] = @ChannelTypeId, [ImportFileChannel] = @ImportFileChannel
-                            WHERE [pkChannelTypeImportId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[rtblChannelTypeImport]
+                    SET [fkChannelTypeId] = @ChannelTypeId, 
+                        [ImportFileChannel] = @ImportFileChannel
+                    WHERE [pkChannelTypeImportId] = @Id",
                     new {Id = model.Id, ChannelTypeId = model.ChannelTypeId, ImportFileChannel = model.ImportFileChannel});
             }
 
@@ -111,7 +117,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[rtblChannelTypeImport] WHERE [pkChannelTypeImportId] = @Id",
+                db.Execute(@"DELETE [dbo].[rtblChannelTypeImport] 
+                            WHERE [pkChannelTypeImportId] = @Id",
                     new {model.Id});
             }
 

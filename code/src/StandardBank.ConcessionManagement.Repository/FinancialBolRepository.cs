@@ -29,7 +29,11 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<FinancialBol>(
-                    @"SELECT [pkFinancialBolId] [Id], [fkRiskGroupId] [RiskGroupId], [TotalPayments], [TotalCollections], [TotalValueAdded] 
+                    @"SELECT [pkFinancialBolId] [Id], 
+                            [fkRiskGroupId] [RiskGroupId], 
+                            [TotalPayments], 
+                            [TotalCollections], 
+                            [TotalValueAdded] 
                     FROM [dbo].[tblFinancialBol] 
                     WHERE [fkRiskGroupId] = @riskGroupId",
                     new { riskGroupId });

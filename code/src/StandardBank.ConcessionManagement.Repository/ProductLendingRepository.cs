@@ -36,8 +36,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             const string sql =
                 @"INSERT [dbo].[tblProductLending] ([fkRiskGroupId], [fkLegalEntityId], [fkLegalEntityAccountId], [fkProductId], [Limit], [AverageBalance], [LoadedMap]) 
-                                VALUES (@RiskGroupId, @LegalEntityId, @LegalEntityAccountId, @ProductId, @Limit, @AverageBalance, @LoadedMap) 
-                                SELECT CAST(SCOPE_IDENTITY() as int)";
+                VALUES (@RiskGroupId, @LegalEntityId, @LegalEntityAccountId, @ProductId, @Limit, @AverageBalance, @LoadedMap) 
+                SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
@@ -67,7 +67,16 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ProductLending>(
-                    "SELECT [pkProductLendingId] [Id], [fkRiskGroupId] [RiskGroupId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [fkProductId] [ProductId], [Limit], [AverageBalance], [LoadedMap] FROM [dbo].[tblProductLending] WHERE [pkProductLendingId] = @Id",
+                    @"SELECT [pkProductLendingId] [Id],
+                        [fkRiskGroupId] [RiskGroupId],
+                        [fkLegalEntityId] [LegalEntityId],
+                        [fkLegalEntityAccountId] [LegalEntityAccountId],
+                        [fkProductId] [ProductId],
+                        [Limit],
+                        [AverageBalance],
+                        [LoadedMap] 
+                    FROM [dbo].[tblProductLending] 
+                    WHERE [pkProductLendingId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -82,7 +91,14 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ProductLending>(
-                    @"SELECT [pkProductLendingId] [Id], [fkRiskGroupId] [RiskGroupId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [fkProductId] [ProductId], [Limit], [AverageBalance], [LoadedMap] 
+                    @"SELECT [pkProductLendingId] [Id],
+                        [fkRiskGroupId] [RiskGroupId],
+                        [fkLegalEntityId] [LegalEntityId],
+                        [fkLegalEntityAccountId] [LegalEntityAccountId],
+                        [fkProductId] [ProductId],
+                        [Limit],
+                        [AverageBalance],
+                        [LoadedMap] 
                     FROM [dbo].[tblProductLending] 
                     WHERE [fkRiskGroupId] = @riskGroupId",
                     new { riskGroupId });
@@ -98,7 +114,15 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ProductLending>(
-                    "SELECT [pkProductLendingId] [Id], [fkRiskGroupId] [RiskGroupId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [fkProductId] [ProductId], [Limit], [AverageBalance], [LoadedMap] FROM [dbo].[tblProductLending]");
+                    @"SELECT [pkProductLendingId] [Id],
+	                    [fkRiskGroupId] [RiskGroupId],
+	                    [fkLegalEntityId] [LegalEntityId],
+	                    [fkLegalEntityAccountId] [LegalEntityAccountId],
+	                    [fkProductId] [ProductId],
+	                    [Limit],
+	                    [AverageBalance],
+	                    [LoadedMap] 
+                    FROM [dbo].[tblProductLending]");
             }
         }
 
@@ -110,9 +134,16 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblProductLending]
-                            SET [fkRiskGroupId] = @RiskGroupId, [fkLegalEntityId] = @LegalEntityId, [fkLegalEntityAccountId] = @LegalEntityAccountId, [fkProductId] = @ProductId, [Limit] = @Limit, [AverageBalance] = @AverageBalance, [LoadedMap] = @LoadedMap
-                            WHERE [pkProductLendingId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblProductLending]
+                    SET [fkRiskGroupId] = @RiskGroupId,
+                        [fkLegalEntityId] = @LegalEntityId,
+                        [fkLegalEntityAccountId] = @LegalEntityAccountId,
+                        [fkProductId] = @ProductId,
+                        [Limit] = @Limit,
+                        [AverageBalance] = @AverageBalance,
+                        [LoadedMap] = @LoadedMap
+                    WHERE [pkProductLendingId] = @Id",
                     new
                     {
                         Id = model.Id,
@@ -135,7 +166,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblProductLending] WHERE [pkProductLendingId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblProductLending] 
+                            WHERE [pkProductLendingId] = @Id",
                     new {model.Id});
             }
         }
