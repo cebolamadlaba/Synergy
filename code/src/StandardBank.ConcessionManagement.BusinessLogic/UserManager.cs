@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.Extensions.Caching.Memory;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Common;
@@ -9,13 +6,15 @@ using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Common;
 using StandardBank.ConcessionManagement.Model.UserInterface;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
     /// <summary>
     /// User manager
     /// </summary>
-    /// <seealso cref="StandardBank.ConcessionManagement.Interface.BusinessLogic.IUserManager" />
+    /// <seealso cref="IUserManager" />
     public class UserManager : IUserManager
     {
         /// <summary>
@@ -108,15 +107,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public User GetUser(string aNumber)
         {
-            Func<User> function = () =>
+            User function()
             {
                 var user = _userRepository.ReadByANumber(aNumber);
 
                 if (user != null)
+                {
                     return Map(user);
+                }
 
                 return null;
-            };
+            }
 
             var usr = _cacheManager.ReturnFromCache(function, 1440, CacheKey.UserInterface.SiteHelper.LoggedInUser, new CacheKeyParameter(nameof(aNumber), aNumber));
 
@@ -135,10 +136,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 if (usr.IsAdminAssistant)
                 {
-                    int accountExecutiveUserId;
-
                     // Look for cache key.
-                    if (_cache.TryGetValue(aNumber.ToLower() + "_accountExecutiveUserId", out accountExecutiveUserId))
+                    if (_cache.TryGetValue(aNumber.ToLower() + "_accountExecutiveUserId", out int accountExecutiveUserId))
                     {
                         usr.AccountExecutiveUserId = accountExecutiveUserId;
                         usr.AccountExecutive = usr.AccountExecutiveUserId != null ? GetUser(usr.AccountExecutiveUserId) : null;
@@ -159,11 +158,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             mappedUser.UserRoles = GetUserRoles(user.Id);
             if (mappedUser.UserRoles.Count() > 0)
+            {
                 mappedUser.RoleId = mappedUser.UserRoles.FirstOrDefault().Id;
+            }
 
             var userRole = _userRoleRepository.ReadByUserId(mappedUser.Id).FirstOrDefault(x => x.SubRoleId.HasValue);
             if (userRole != null)
+            {
                 mappedUser.SubRoleId = userRole.SubRoleId.Value;
+            }
 
             if (mappedUser.SubRoleId != null)
             {
@@ -174,7 +177,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             mappedUser.SelectedCentre = mappedUser.UserCentres.FirstOrDefault();
 
             if (mappedUser.SelectedCentre != null)
+            {
                 mappedUser.CentreId = mappedUser.SelectedCentre.Id;
+            }
 
             mappedUser.CanRequest =
                 mappedUser.UserRoles.Any(_ => _.Name == Constants.Roles.Requestor || _.Name == Constants.Roles.AA);
@@ -210,7 +215,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return mappedUser;
         }
-
 
         /// <summary>
         /// Gets the user.
@@ -293,8 +297,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 var roles = _roleRepository.ReadAll();
 
                 foreach (var role in roles)
+                {
                     if (userRoleIds.Any(_ => _.RoleId == role.Id && _.IsActive && role.IsActive))
+                    {
                         userRoles.Add(_mapper.Map<Role>(role));
+                    }
+                }
             }
 
             return userRoles;
@@ -331,7 +339,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var userId = user.Id;
 
             if (user.IsAdminAssistant && user.AccountExecutiveUserId.HasValue)
+            {
                 userId = user.AccountExecutiveUserId.Value;
+            }
 
             return userId;
         }
@@ -346,7 +356,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var users = _userRepository.ReadByRole(roleName);
 
             foreach (var user in users)
+            {
                 yield return Map(user);
+            }
         }
 
         /// <summary>
@@ -404,30 +416,35 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 {
                     var possibleDuplicateUser = GetUser(user.ANumber);
 
-                    if (possibleDuplicateUser != null)
-                        if (possibleDuplicateUser.Id != user.Id)
-                            errors.Add("You are attempting to add a duplicate A Number");
+                    if (possibleDuplicateUser != null && possibleDuplicateUser.Id != user.Id)
+                    {
+                        errors.Add("You are attempting to add a duplicate A Number");
+                    }
                 }
 
                 if (string.IsNullOrWhiteSpace(user.EmailAddress))
-                    errors.Add("Please supply an email address");
-
-                if (string.IsNullOrWhiteSpace(user.FirstName))
-                    errors.Add("Please supply a first name");
-
-                if (string.IsNullOrWhiteSpace(user.Surname))
-                    errors.Add("Please supply a surname");
-
-                if (roleName == Constants.Roles.PCM)
                 {
-                    if (user.UserCentres == null || !user.UserCentres.Any())
-                        errors.Add("Please link the user to a centre");
+                    errors.Add("Please supply an email address");
                 }
 
-                if (roleName == Constants.Roles.BCM)
+                if (string.IsNullOrWhiteSpace(user.FirstName))
                 {
-                    if (user.CentreId == 0)
-                        errors.Add("Please select a business centre");
+                    errors.Add("Please supply a first name");
+                }
+
+                if (string.IsNullOrWhiteSpace(user.Surname))
+                {
+                    errors.Add("Please supply a surname");
+                }
+
+                if (roleName == Constants.Roles.PCM && (user.UserCentres == null || !user.UserCentres.Any()))
+                {
+                    errors.Add("Please link the user to a centre");
+                }
+
+                if (roleName == Constants.Roles.BCM && user.CentreId == 0)
+                {
+                    errors.Add("Please select a business centre");
                 }
             }
 
@@ -445,7 +462,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 _accountExecutiveAssistantRepository.ReadByAccountExecutiveUserId(accountExecutiveUserId);
 
             foreach (var accountAssistant in accountAssistants)
+            {
                 yield return GetUser(accountAssistant.AccountAssistantUserId);
+            }
         }
     }
 }
